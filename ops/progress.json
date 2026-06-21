@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered exact-input direct 0x4a8d2c -> 0x4a93a2 placement path in addition to exact-input 0x4a901a: branch order +0x24/+0x20/+0x34/+0x30, nearest-distance candidate vector from 0x7d00, 0x49aa93 eligibility, 0x4e7276 modulo choice, 0x540a9c allocation, selected index/flag fields, and 0x4a54a7 commit. Native mirrors direct placement counters/provenance. This still does not complete live map generation: the live source-pair producer/feed, true source-record +0x30/+0x34 fields, generic town/reward/guard/fallback materialization, 0x49a318 object-metadata branch, downstream caller order, same-run comparison, roads/rivers, and final payload generation remain unported.",
+      "notes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement and source-backed 0x49a318 bit22 object-metadata policy: recovered 0x598300 +0/+1/+2 descriptor flags, object-reference descriptor resolution, five-direction source policy, candidate rejection gates, and fail-closed unresolved tracking. This still does not complete live map generation: the live source-pair producer/feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, generic town/reward/guard/fallback materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-20T23:39:12Z",
-      "latestEvidenceId": "native-rmg-4a8d2c-direct-placement-20260620",
-      "remainingWork": "Port the remaining source-order object-bearing materialization path: live source-pair producer/feed for generic direct/weighted calls including 0x4a8db2 feed into 0x4a901a, true source-record +0x30/+0x34 fields, 0x49a318 object-metadata branch, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, same-run private-state comparison, roads/rivers, and final payload generation before enabling comparable map output.",
-      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns the recovered exact-input direct 0x4a8d2c -> 0x4a93a2 placement path in addition to exact-input 0x4a901a: branch order +0x24/+0x20/+0x34/+0x30, nearest-distance candidate vector from 0x7d00, 0x49aa93 eligibility, 0x4e7276 modulo choice, 0x540a9c allocation, selected index/flag fields, and 0x4a54a7 commit. Native mirrors direct placement counters/provenance. This still does not complete live map generation: the live source-pair producer/feed, true source-record +0x30/+0x34 fields, generic town/reward/guard/fallback materialization, 0x49a318 object-metadata branch, downstream caller order, same-run comparison, roads/rivers, and final payload generation remain unported.",
-      "blocker": "Live source-pair producer/feed for generic direct/weighted object placement, true source-record +0x30/+0x34 fields, 0x49a318 object-metadata branch, town/reward/guard/fallback payload materialization, downstream caller order, same-run comparison, roads/rivers, and final payload generation remain unported."
+      "updatedAt": "2026-06-21T00:04:19Z",
+      "latestEvidenceId": "native-rmg-49a318-metadata-policy-20260621",
+      "remainingWork": "Port the remaining source-order object-bearing materialization path: live source-pair producer/feed for generic direct/weighted calls including 0x4a8db2 feed into 0x4a901a, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order and same-run private-state comparison around the ported bit22 policy, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+      "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement and source-backed 0x49a318 bit22 object-metadata policy: recovered 0x598300 +0/+1/+2 descriptor flags, object-reference descriptor resolution, five-direction source policy, candidate rejection gates, and fail-closed unresolved tracking. This still does not complete live map generation: the live source-pair producer/feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, generic town/reward/guard/fallback materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
+      "blocker": "Live source-pair producer/feed for generic direct/weighted object placement, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, town/reward/guard/fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
     },
     {
       "id": "battle-benchmark-no-round-cap-10184",
@@ -535,7 +535,7 @@
           "relation_high_owner_sentinel_count_49a318": 213,
           "relation_owner_non_default_0x4a1f3b_bounds_updates_ported": false,
           "relation_scan_bounds_0x4a1f3b_scan_consumers_ported": false,
-          "relation_high_owner_0x49a318_object_metadata_branch_ported": false,
+          "relation_high_owner_0x49a318_object_metadata_branch_ported": true,
           "relation_local_scan_0x4a5767_and_0x49a318_replay_ported": false,
           "object_reference_vector_contents_ported": false,
           "generated_cell_reset_object_reference_vectors_known_empty": true,
@@ -784,9 +784,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct 0x4a8d2c -> 0x4a93a2 placement in addition to exact-input weighted 0x4a901a: source-field branch priority, nearest-distance vector selection from 0x7d00, 0x49aa93 eligibility, 0x4e7276 modulo choice, 0x540a9c allocation, selected index/flag writes, and 0x4a54a7 commit. Native mirrors direct counters/provenance. Live map generation remains blocked by the live source-pair producer/feed, true source-record +0x30/+0x34 fields, generic town/reward/guard/fallback materialization, 0x49a318 object-metadata branch, downstream caller order, same-run comparison, roads/rivers, and final payload generation.",
-    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct 0x4a8d2c -> 0x4a93a2 placement in addition to exact-input weighted 0x4a901a: source-field branch priority, nearest-distance vector selection from 0x7d00, 0x49aa93 eligibility, 0x4e7276 modulo choice, 0x540a9c allocation, selected index/flag writes, and 0x4a54a7 commit. Native mirrors direct counters/provenance. Live map generation remains blocked by the live source-pair producer/feed, true source-record +0x30/+0x34 fields, generic town/reward/guard/fallback materialization, 0x49a318 object-metadata branch, downstream caller order, same-run comparison, roads/rivers, and final payload generation.",
-    "currentSliceUpdatedAt": "2026-06-20T23:39:12Z",
+    "currentNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement and source-backed 0x49a318 bit22 object-metadata policy: recovered 0x598300 +0/+1/+2 descriptor flags, object-reference descriptor resolution, five-direction source policy, candidate rejection gates, and fail-closed unresolved tracking. Live map generation remains blocked by the live source-pair producer/feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, generic town/reward/guard/fallback materialization, downstream caller order, roads/rivers, and final payload generation.",
+    "currentSliceNotes": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now owns exact-input direct/weighted placement and source-backed 0x49a318 bit22 object-metadata policy: recovered 0x598300 +0/+1/+2 descriptor flags, object-reference descriptor resolution, five-direction source policy, candidate rejection gates, and fail-closed unresolved tracking. Live map generation remains blocked by the live source-pair producer/feed, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order/same-run private-state comparison, generic town/reward/guard/fallback materialization, downstream caller order, roads/rivers, and final payload generation.",
+    "currentSliceUpdatedAt": "2026-06-21T00:04:19Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -1611,7 +1611,7 @@
       "scan_frontier_0x4a9d6a_0x4aadd2_object_ref_producer_recovered": false,
       "scan_bound_writer_0x4a1f3b_ported": false,
       "relation_high_owner_0x49a318_projection_word_mutations_ported": true,
-      "relation_high_owner_0x49a318_object_metadata_branch_ported": false,
+      "relation_high_owner_0x49a318_object_metadata_branch_ported": true,
       "endpoint_pointer_vector_0xd8_0xdc_contents_known": false,
       "endpoint_cursor_0xf5c_known": false,
       "weighted_object_record_key_callers_ported": false,
@@ -16436,7 +16436,7 @@
     "scan_frontier_0x4a9d6a_0x4aadd2_object_ref_producer_recovered": false,
     "scan_bound_writer_0x4a1f3b_ported": false,
     "relation_high_owner_0x49a318_projection_word_mutations_ported": true,
-    "relation_high_owner_0x49a318_object_metadata_branch_ported": false,
+    "relation_high_owner_0x49a318_object_metadata_branch_ported": true,
     "endpoint_pointer_vector_0xd8_0xdc_contents_known": false,
     "endpoint_cursor_0xf5c_known": false,
     "weighted_object_record_key_callers_ported": false,
@@ -57193,8 +57193,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port the remaining source-order object-bearing materialization path: live 0x4a8d2c/0x4a8db2 dispatcher feed into the implemented 0x4a901a scan, 0x49a318 object-metadata branch, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, same-run private-state comparison, roads/rivers, and final payload generation before enabling comparable map output.",
-  "remainingWork": "Port the remaining source-order object-bearing materialization path: live 0x4a8d2c/0x4a8db2 dispatcher feed into the implemented 0x4a901a scan, 0x49a318 object-metadata branch, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, same-run private-state comparison, roads/rivers, and final payload generation before enabling comparable map output.",
+  "remainingGap": "Port the remaining source-order object-bearing materialization path: live 0x4a8d2c/0x4a8db2 dispatcher feed into the implemented 0x4a901a scan, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order and same-run private-state comparison around the ported bit22 policy, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+  "remainingWork": "Port the remaining source-order object-bearing materialization path: live 0x4a8d2c/0x4a8db2 dispatcher feed into the implemented 0x4a901a scan, true source-record +0x30/+0x34 fields, exact 0x49a318 call-site order and same-run private-state comparison around the ported bit22 policy, generic town/reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, source-order 0x4a7605 -> 0x4a5e03 fallback payload/object materialization, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
   "reportOnlyEvidence": [
     {
       "entries": [
