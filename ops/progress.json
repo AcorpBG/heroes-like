@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress. Current update removes the rejected helper/count direction from the active worktree and routes the no-Godot CLI through one native H3MapEd workflow result in rmg_native_core.cpp. The workflow executes the currently ported ordered phases once, records phase status, and blocks at relation_object_materialization instead of treating helper/count/snapshot surfaces as progress. No parity-complete or final map writeout claim is made.",
+      "notes": "Native RMG source-order alignment remains in progress. Current update keeps the no-Godot CLI routed through one native H3MapEd workflow result in rmg_native_core.cpp and makes that workflow consume the currently ported relation/object state instead of hiding it behind a generic partial-state stop. The workflow now sequences relation scan consumers, source-order object replay, and relation high-owner propagation, then blocks at reward_guard_materialization. No parity-complete or final map writeout claim is made.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T06:01:08Z",
-      "latestEvidenceId": "native-rmg-single-workflow-routing-20260621",
-      "remainingWork": "Port relation/object materialization into the single native H3MapEd workflow: complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs, exact 0x49a318 call-site order and same-run private-state comparison, live reward/guard source-relation/wrapper caller feed into the recovered helper chain, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, then connection/road/river phases and final tile/object/header writeout before enabling map output.",
-      "latestFinding": "Native RMG is now routed through a single native H3MapEd workflow result for no-Godot CLI cases. The focused small_3p_seed_11_controlled smoke executes setup/template, coordinate/boundary/terrain, and generator-object-private-state phases, then blocks at relation_object_materialization with final_writeout_complete=false. This is implementation plumbing toward one generator authority, not parity.",
-      "blocker": "The single native H3MapEd workflow still stops at relation_object_materialization. Relation/object caller order, reward/guard materialization, connection/road/river phases, and final tile/object/header writeout remain unowned by the native workflow.",
+      "updatedAt": "2026-06-21T06:34:17Z",
+      "latestEvidenceId": "native-rmg-single-workflow-relation-object-sequencing-20260621",
+      "remainingWork": "Continue the single native H3MapEd workflow from reward_guard_materialization: port the live 0x4ad7f7 source-relation/wrapper caller feed, the 0x10f4/0x10f8 reward-guard candidate producer contents before 0x4a9f1c and 0x4aa1db selected-create, remaining descriptor producer coverage for generic non-type98 source pairs, exact 0x49a318 call-site order and same-run private-state comparison, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records, then connection/road/river phases and final tile/object/header writeout before enabling map output.",
+      "latestFinding": "Native RMG no-Godot CLI cases now route through one workflow that explicitly sequences relation scan consumers, source-order object replay, and relation high-owner propagation before stopping. The focused small_3p_seed_11_controlled smoke reaches current_phase=reward_guard_materialization and blocks on 0x4ad7f7_live_source_relation_wrapper_caller_pending with final_writeout_complete=false. This moves the single workflow past the previous generic relation_object_materialization stop but is not parity.",
+      "blocker": "The single native H3MapEd workflow now stops at reward_guard_materialization. The live 0x4ad7f7 source-relation/wrapper caller feed and reward-guard candidate producer contents remain unowned; connection/road/river phases and final tile/object/header writeout also remain unowned.",
       "startedAt": "2026-06-21T05:16:18Z"
     },
     {
