@@ -394,6 +394,11 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.scan_bound_high_y_0x2c = input.scan_bound_high_y_0x2c;
 	out.byte_0x3c_known = input.byte_0x3c_known;
 	out.byte_0x3c = input.byte_0x3c;
+	out.reward_guard_priority_0x40_known = input.reward_guard_priority_0x40_known;
+	out.reward_guard_priority_0x40 = input.reward_guard_priority_0x40;
+	out.reward_guard_priority_before_randomization_0x4ad7f7 = input.reward_guard_priority_before_randomization_0x4ad7f7;
+	out.reward_guard_priority_rng_value_0x4e7276 = input.reward_guard_priority_rng_value_0x4e7276;
+	out.reward_guard_priority_source_relation_0x4ad6a8 = input.reward_guard_priority_source_relation_0x4ad6a8;
 	out.descriptor_type_counter_table_0x44_known = input.descriptor_type_counter_table_0x44_known;
 	out.descriptor_type_counter_table_0x44_byte_size = input.descriptor_type_counter_table_0x44_byte_size;
 	out.descriptor_type_counter_table_0x44_zero_count = input.descriptor_type_counter_table_0x44_zero_count;
@@ -728,6 +733,9 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.relation_owner_vector_count_10e4_10e8 = input.relation_owner_vector_count_10e4_10e8;
 	out.relation_record_count_10e4_10e8 = input.relation_record_count_10e4_10e8;
 	out.relation_record_missing_endpoint_count_10e4_10e8 = input.relation_record_missing_endpoint_count_10e4_10e8;
+	out.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = input.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported;
+	out.reward_guard_relation_priority_live_replay_blocked = input.reward_guard_relation_priority_live_replay_blocked;
+	out.reward_guard_relation_priority_live_replay_blocker = input.reward_guard_relation_priority_live_replay_blocker;
 	out.relation_owner_vectors_10e4_10e8.reserve(input.relation_owner_vectors_10e4_10e8.size());
 	for (const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : input.relation_owner_vectors_10e4_10e8) {
 		out.relation_owner_vectors_10e4_10e8.push_back(from_h3maped_generator_relation_owner_state(owner));
@@ -1881,6 +1889,11 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"scan_bound_high_y_0x2c\":" << owner.scan_bound_high_y_0x2c
 			<< ",\"byte_0x3c_known\":" << (owner.byte_0x3c_known ? "true" : "false")
 			<< ",\"byte_0x3c\":" << int32_t(owner.byte_0x3c)
+			<< ",\"reward_guard_priority_0x40_known\":" << (owner.reward_guard_priority_0x40_known ? "true" : "false")
+			<< ",\"reward_guard_priority_0x40\":" << owner.reward_guard_priority_0x40
+			<< ",\"reward_guard_priority_before_randomization_0x4ad7f7\":" << owner.reward_guard_priority_before_randomization_0x4ad7f7
+			<< ",\"reward_guard_priority_rng_value_0x4e7276\":" << owner.reward_guard_priority_rng_value_0x4e7276
+			<< ",\"reward_guard_priority_source_relation_0x4ad6a8\":" << (owner.reward_guard_priority_source_relation_0x4ad6a8 ? "true" : "false")
 			<< ",\"descriptor_type_counter_table_0x44_known\":" << (owner.descriptor_type_counter_table_0x44_known ? "true" : "false")
 			<< ",\"descriptor_type_counter_table_0x44_byte_size\":" << owner.descriptor_type_counter_table_0x44_byte_size
 			<< ",\"descriptor_type_counter_table_0x44_zero_count\":" << owner.descriptor_type_counter_table_0x44_zero_count
@@ -2226,6 +2239,9 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_record_count_10e4_10e8\":" << state.relation_record_count_10e4_10e8 << ","
 		<< "\"relation_record_missing_endpoint_count_10e4_10e8\":" << state.relation_record_missing_endpoint_count_10e4_10e8 << ","
 		<< "\"relation_record_source\":\"0x49b452_constructs_relation_owner_source_pointer_town_choice_default_scan_bounds_local_vectors_then_0x4a1f3b_materializes_non_sentinel_scan_bounds_and_0x4a218c_clones_selected_relation_owners_and_0x49f7c4_appends_reciprocal_7_dword_relation_records_guard_wide_border_guard_fields\","
+		<< "\"reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported\":" << (state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported ? "true" : "false") << ","
+		<< "\"reward_guard_relation_priority_live_replay_blocked\":" << (state.reward_guard_relation_priority_live_replay_blocked ? "true" : "false") << ","
+		<< "\"reward_guard_relation_priority_live_replay_blocker\":\"" << json_escape(state.reward_guard_relation_priority_live_replay_blocker) << "\","
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","

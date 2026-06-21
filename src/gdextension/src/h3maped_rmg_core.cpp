@@ -2340,6 +2340,146 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 	return result;
 }
 
+RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known) {
+	RewardGuardRelationPriorityResult4ad7f7 result;
+	result.relation_owner_count = int32_t(owners.size());
+	result.source_owner_vector_index = source_owner_vector_index;
+	result.rng_state_before = rng.state;
+	result.rng_state_after = rng.state;
+	if (owners.empty()) {
+		result.blocked_reason = "0x4ad7f7_relation_vector_10e4_10e8_empty";
+		return result;
+	}
+	auto owner_index_by_vector_index = [&](int32_t owner_vector_index) -> int32_t {
+		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+			if (owners[size_t(index)].owner_vector_index == owner_vector_index) {
+				return index;
+			}
+		}
+		return -1;
+	};
+	auto owner_index_by_runtime_zone = [&](int32_t runtime_zone_index) -> int32_t {
+		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+			if (owners[size_t(index)].runtime_zone_index == runtime_zone_index) {
+				return index;
+			}
+		}
+		return -1;
+	};
+	auto insert_by_priority_0x4ccecb = [&](std::vector<int32_t> &indices, int32_t owner_index) {
+		const int32_t priority = owners[size_t(owner_index)].reward_guard_priority_0x40;
+		auto it = indices.begin();
+		for (; it != indices.end(); ++it) {
+			const int32_t existing = owners[size_t(*it)].reward_guard_priority_0x40;
+			if (priority < existing) {
+				break;
+			}
+		}
+		indices.insert(it, owner_index);
+	};
+
+	const int32_t source_index = owner_index_by_vector_index(source_owner_vector_index);
+	if (source_index < 0) {
+		result.blocked_reason = "0x4ad7f7_source_relation_owner_index_missing";
+		return result;
+	}
+	result.source_relation_known = true;
+	result.applied = true;
+
+	for (GeneratorRelationOwnerState4a218c &owner : owners) {
+		owner.reward_guard_priority_0x40_known = true;
+		owner.reward_guard_priority_0x40 = 0x4e20;
+		owner.reward_guard_priority_before_randomization_0x4ad7f7 = 0x4e20;
+		owner.reward_guard_priority_rng_value_0x4e7276 = -1;
+		owner.reward_guard_priority_source_relation_0x4ad6a8 = false;
+		result.distance_prepass_reset_count += 1;
+	}
+	owners[size_t(source_index)].reward_guard_priority_0x40 = 0;
+	owners[size_t(source_index)].reward_guard_priority_source_relation_0x4ad6a8 = true;
+
+	std::vector<int32_t> work;
+	work.push_back(source_index);
+	while (!work.empty()) {
+		const int32_t current_index = work.back();
+		work.pop_back();
+		const int32_t next_priority = owners[size_t(current_index)].reward_guard_priority_0x40 + 1;
+		for (const GeneratorSourceEndpointRecordState4a1f3b &edge : owners[size_t(current_index)].source_endpoint_records_0xc8_0xcc) {
+			const int32_t target_index = owner_index_by_runtime_zone(edge.target_runtime_zone_index);
+			if (target_index < 0) {
+				result.distance_prepass_missing_target_count += 1;
+				continue;
+			}
+			GeneratorRelationOwnerState4a218c &target = owners[size_t(target_index)];
+			if (!target.reward_guard_priority_0x40_known || target.reward_guard_priority_0x40 > next_priority) {
+				target.reward_guard_priority_0x40_known = true;
+				target.reward_guard_priority_0x40 = next_priority;
+				result.distance_prepass_relax_count += 1;
+				insert_by_priority_0x4ccecb(work, target_index);
+			}
+		}
+	}
+	result.distance_prepass_0x4ad6a8_applied = true;
+
+	for (GeneratorRelationOwnerState4a218c &owner : owners) {
+		const int32_t priority_before = owner.reward_guard_priority_0x40;
+		const int32_t rng_value = rng.next();
+		result.rng_call_count += 1;
+		owner.reward_guard_priority_before_randomization_0x4ad7f7 = priority_before;
+		owner.reward_guard_priority_rng_value_0x4e7276 = rng_value;
+		if (priority_before == 1) {
+			owner.reward_guard_priority_0x40 = 1000 + (rng_value % 10);
+		} else {
+			owner.reward_guard_priority_0x40 = priority_before * 10 + (rng_value % 10);
+		}
+		result.randomized_priority_count += 1;
+	}
+	result.randomized_priority_pass_0x4ad7f7_applied = true;
+	result.rng_state_after = rng.state;
+
+	std::vector<int32_t> ordered_indices;
+	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(index)];
+		RewardGuardRelationPriorityEntry4ad7f7 entry;
+		entry.owner_vector_index = owner.owner_vector_index;
+		entry.runtime_zone_index = owner.runtime_zone_index;
+		entry.source_relation = index == source_index;
+		entry.priority_after_0x4ad6a8 = owner.reward_guard_priority_before_randomization_0x4ad7f7;
+		entry.rng_value_0x4e7276 = owner.reward_guard_priority_rng_value_0x4e7276;
+		entry.priority_after_0x4ad7f7 = owner.reward_guard_priority_0x40;
+		if (entry.source_relation) {
+			entry.blocked_reason = "0x4ad7f7_skips_source_relation_argument";
+			result.entries.push_back(entry);
+			continue;
+		}
+		entry.priority_limit_0x7d0_passed = owner.reward_guard_priority_0x40 <= 0x7d0;
+		if (!entry.priority_limit_0x7d0_passed) {
+			entry.blocked_reason = "0x4ad7f7_priority_above_0x7d0";
+			result.priority_limit_reject_count += 1;
+			result.entries.push_back(entry);
+			continue;
+		}
+		entry.descriptor_filter_fields_known = descriptor_filter_fields_known;
+		entry.descriptor_filter_passed = descriptor_filter_fields_known;
+		if (!descriptor_filter_fields_known) {
+			entry.blocked_reason = "0x4ad7f7_descriptor_filter_fields_plus_04_plus_0c_missing";
+			result.descriptor_filter_unknown_count += 1;
+			result.entries.push_back(entry);
+			continue;
+		}
+		insert_by_priority_0x4ccecb(ordered_indices, index);
+		result.entries.push_back(entry);
+	}
+	for (const int32_t owner_index : ordered_indices) {
+		result.ordered_owner_vector_indexes_0x4ccecb.push_back(owners[size_t(owner_index)].owner_vector_index);
+	}
+	result.ordered_vector_0x4ccecb_built = descriptor_filter_fields_known;
+	result.ordered_vector_ready_for_0x4aa9b7 = descriptor_filter_fields_known;
+	if (!descriptor_filter_fields_known) {
+		result.blocked_reason = "0x4ad7f7_ordered_vector_descriptor_filters_missing_for_0x4aa9b7";
+	}
+	return result;
+}
+
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat) {
 	return flat >= 0
 			&& flat < int64_t(word_0x28.size())
@@ -6189,6 +6329,11 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
+	state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = true;
+	state.reward_guard_relation_priority_live_replay_blocked = true;
+	state.reward_guard_relation_priority_live_replay_blocker = "0x4ad7f7_live_source_relation_wrapper_caller_pending";
+	state.reward_guard_relation_priority_0x4ad7f7.blocked_reason = state.reward_guard_relation_priority_live_replay_blocker;
+	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
 	SourceObjectResolverState4af785 relation_scan_resolver_state;
 	H3MapedRng relation_scan_rng;
@@ -6235,6 +6380,7 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.remaining_private_state_blockers = {
 		"object_record_vector_0xec4_0xecc_live_contents_incomplete_until_generic_source_order_town_reward_guard_object_caller_order_ported",
 		"generic_non_type98_source_pair_feed_into_0x4a8d2c_0x4a8db2_pending_after_type98_runtime_zone_replay",
+		"reward_guard_relation_priority_0x4ad7f7_live_source_relation_wrapper_caller_pending_after_0x4ad6a8_0x4ad7f7_helper_port",
 		"relation_vector_0x10e4_0x10e8_0x49a318_callsite_order_private_state_compare_pending_after_bit22_policy_port",
 		"generic_live_source_order_fallback_0x4a7605_0x4a5e03_caller_order_pending_after_exact_prestate_replay",
 		"live_0x4a5e73_to_0x4a606b_and_0x4a696b_endpoint_paths_target_mode_excluded_until_source_order_fallback_caller_is_ported",

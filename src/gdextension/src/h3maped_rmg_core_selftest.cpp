@@ -24,8 +24,10 @@ using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
+using aurelion::h3maped_rmg_core::H3MapedRng;
 using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
+using aurelion::h3maped_rmg_core::RewardGuardRelationPriorityResult4ad7f7;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
@@ -373,6 +375,62 @@ int main() {
 		const SourceObjectMaskLaneResult4af89f blank_lane =
 				aurelion::h3maped_rmg_core::source_object_mask_lane_selector_0x4af89f(blank_record);
 		if (!require(blank_lane.selected_lane == 9 && !blank_lane.selected_by_mask && blank_lane.scanned_lane_count == 9, "0x4af89f zero-mask record did not return sentinel lane 9")) {
+			return 1;
+		}
+	}
+
+	{
+		std::vector<GeneratorRelationOwnerState4a218c> owners(3);
+		for (int32_t index = 0; index < 3; ++index) {
+			owners[size_t(index)].owner_vector_index = index;
+			owners[size_t(index)].runtime_zone_index = index;
+		}
+		GeneratorSourceEndpointRecordState4a1f3b edge_0_to_1;
+		edge_0_to_1.target_runtime_zone_index = 1;
+		owners[0].source_endpoint_records_0xc8_0xcc.push_back(edge_0_to_1);
+		GeneratorSourceEndpointRecordState4a1f3b edge_1_to_2;
+		edge_1_to_2.target_runtime_zone_index = 2;
+		owners[1].source_endpoint_records_0xc8_0xcc.push_back(edge_1_to_2);
+		H3MapedRng priority_rng;
+		priority_rng.state = 1U;
+		const RewardGuardRelationPriorityResult4ad7f7 priority_result =
+				aurelion::h3maped_rmg_core::reward_guard_relation_priority_ordering_0x4ad7f7(owners, 0, priority_rng, true);
+		if (!require(priority_result.applied
+						&& priority_result.distance_prepass_0x4ad6a8_applied
+						&& priority_result.randomized_priority_pass_0x4ad7f7_applied
+						&& priority_result.ordered_vector_ready_for_0x4aa9b7,
+					"0x4ad7f7 relation priority ordering did not complete for explicit source-backed inputs")) {
+			return 1;
+		}
+		if (!require(priority_result.distance_prepass_relax_count == 2
+						&& priority_result.rng_call_count == 3
+						&& priority_result.rng_state_after == 0x18be873aU,
+					"0x4ad6a8/0x4ad7f7 relation priority pass did not preserve recovered RNG and graph walk counts")) {
+			return 1;
+		}
+		if (!require(owners[0].reward_guard_priority_before_randomization_0x4ad7f7 == 0
+						&& owners[0].reward_guard_priority_rng_value_0x4e7276 == 41
+						&& owners[0].reward_guard_priority_0x40 == 1
+						&& owners[0].reward_guard_priority_source_relation_0x4ad6a8,
+					"0x4ad7f7 source relation priority did not use old*10 plus rng%10")) {
+			return 1;
+		}
+		if (!require(owners[1].reward_guard_priority_before_randomization_0x4ad7f7 == 1
+						&& owners[1].reward_guard_priority_rng_value_0x4e7276 == 18467
+						&& owners[1].reward_guard_priority_0x40 == 1007,
+					"0x4ad7f7 direct-neighbor relation priority did not use the recovered old==1 special path")) {
+			return 1;
+		}
+		if (!require(owners[2].reward_guard_priority_before_randomization_0x4ad7f7 == 2
+						&& owners[2].reward_guard_priority_rng_value_0x4e7276 == 6334
+						&& owners[2].reward_guard_priority_0x40 == 24,
+					"0x4ad7f7 second-hop relation priority did not use old*10 plus rng%10")) {
+			return 1;
+		}
+		if (!require(priority_result.ordered_owner_vector_indexes_0x4ccecb.size() == 2
+						&& priority_result.ordered_owner_vector_indexes_0x4ccecb[0] == 2
+						&& priority_result.ordered_owner_vector_indexes_0x4ccecb[1] == 1,
+					"0x4ad7f7 ordered relation vector did not sort non-source relations by recovered priority")) {
 			return 1;
 		}
 	}

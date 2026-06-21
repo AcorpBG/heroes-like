@@ -1442,6 +1442,11 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
 	bool byte_0x3c_known = false;
 	uint8_t byte_0x3c = 0U;
+	bool reward_guard_priority_0x40_known = false;
+	int32_t reward_guard_priority_0x40 = 0;
+	int32_t reward_guard_priority_before_randomization_0x4ad7f7 = 0;
+	int32_t reward_guard_priority_rng_value_0x4e7276 = -1;
+	bool reward_guard_priority_source_relation_0x4ad6a8 = false;
 	bool descriptor_type_counter_table_0x44_known = false;
 	int32_t descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
 	int32_t descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
@@ -1457,6 +1462,42 @@ struct GeneratorRelationOwnerState4a218c {
 	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
 	std::vector<GeneratorCoordinateCandidateVectorState4a1f3b> coordinate_candidate_vectors_0x4a1f3b;
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
+};
+
+struct RewardGuardRelationPriorityEntry4ad7f7 {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	bool source_relation = false;
+	int32_t priority_after_0x4ad6a8 = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t priority_after_0x4ad7f7 = 0;
+	bool priority_limit_0x7d0_passed = false;
+	bool descriptor_filter_fields_known = false;
+	bool descriptor_filter_passed = false;
+	std::string blocked_reason;
+};
+
+struct RewardGuardRelationPriorityResult4ad7f7 {
+	bool applied = false;
+	bool source_relation_known = false;
+	bool distance_prepass_0x4ad6a8_applied = false;
+	bool randomized_priority_pass_0x4ad7f7_applied = false;
+	bool ordered_vector_0x4ccecb_built = false;
+	bool ordered_vector_ready_for_0x4aa9b7 = false;
+	int32_t source_owner_vector_index = -1;
+	uint32_t rng_state_before = 0U;
+	uint32_t rng_state_after = 0U;
+	int32_t rng_call_count = 0;
+	int32_t relation_owner_count = 0;
+	int32_t distance_prepass_reset_count = 0;
+	int32_t distance_prepass_relax_count = 0;
+	int32_t distance_prepass_missing_target_count = 0;
+	int32_t randomized_priority_count = 0;
+	int32_t priority_limit_reject_count = 0;
+	int32_t descriptor_filter_unknown_count = 0;
+	std::vector<int32_t> ordered_owner_vector_indexes_0x4ccecb;
+	std::vector<RewardGuardRelationPriorityEntry4ad7f7> entries;
+	std::string blocked_reason;
 };
 
 struct RelationHighOwnerPropagationSeedReport49a318 {
@@ -1680,6 +1721,10 @@ struct GeneratorObjectPrivateState {
 	int32_t relation_record_count_10e4_10e8 = 0;
 	int32_t relation_record_missing_endpoint_count_10e4_10e8 = 0;
 	std::vector<GeneratorRelationOwnerState4a218c> relation_owner_vectors_10e4_10e8;
+	bool reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = false;
+	bool reward_guard_relation_priority_live_replay_blocked = false;
+	std::string reward_guard_relation_priority_live_replay_blocker;
+	RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_0x4ad7f7;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
@@ -1886,6 +1931,7 @@ RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4
 RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, const std::vector<GeneratorRelationOwnerState4a218c> &owners);
 bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset);
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records = nullptr);
+RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known = false);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);
