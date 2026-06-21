@@ -2056,12 +2056,21 @@ int main() {
 	if (!require(generator_state.object_record_vector_ec4_ecc.present && !generator_state.object_record_vector_ec4_ecc.contents_known, "generator object private state must keep object-vector contents unclaimed until materialization is ported")) {
 		return 1;
 	}
-	if (!require(generator_state.source_order_scheduler_replay_0x4a8db2_known
-					&& generator_state.source_order_scheduler_replay_count_0x4a8db2 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size())
-					&& !generator_state.source_order_scheduler_replays_0x4a8db2.empty()
-					&& generator_state.source_order_scheduler_replays_0x4a8db2[0].source_record_id_0x00 >= 0
-					&& generator_state.source_order_scheduler_replays_0x4a8db2[0].lanes.size() == 4,
-				"generator object private state did not run live 0x4a8db2 scheduler replay from runtime-zone source records")) {
+	const std::string route_free_cell_blocker =
+			"route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e";
+	if (!require(!generator_state.route_container_free_cell_sweep_0x4a8260_ported
+					&& !generator_state.route_container_free_cell_sweep_0x4a8260_input_known
+					&& !generator_state.route_container_free_cell_sweep_0x4a8260_applied
+					&& generator_state.route_container_free_cell_sweep_0x4a8260_blocked_reason == route_free_cell_blocker
+					&& std::find(generator_state.remaining_private_state_blockers.begin(), generator_state.remaining_private_state_blockers.end(), route_free_cell_blocker) != generator_state.remaining_private_state_blockers.end(),
+				"generator object private state did not fail closed at the missing 0x4a8260 route/free-cell phase")) {
+		return 1;
+	}
+	if (!require(!generator_state.source_order_scheduler_replay_0x4a8db2_known
+					&& generator_state.source_order_scheduler_replay_count_0x4a8db2 == 0
+					&& generator_state.source_order_scheduler_replays_0x4a8db2.empty()
+					&& !generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2,
+				"generator object private state ran source-order scheduler/object replay before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && !generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -2095,21 +2104,8 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(owner.scan_bounds_0x20_0x2c_known
-						&& owner.scan_bound_low_x_0x20 >= 0
-						&& owner.scan_bound_low_y_0x24 >= 0
-						&& owner.scan_bound_high_x_0x28 <= generator_state.width
-						&& owner.scan_bound_high_y_0x2c <= generator_state.height
-						&& owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
-						&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c,
-					"0x4a1f3b relation owner scan bounds were not materialized as a valid exclusive rectangle")) {
-			return 1;
-		}
-		if (!require(owner.coordinate_x_0x10 >= owner.scan_bound_low_x_0x20
-						&& owner.coordinate_x_0x10 < owner.scan_bound_high_x_0x28
-						&& owner.coordinate_y_0x14 >= owner.scan_bound_low_y_0x24
-						&& owner.coordinate_y_0x14 < owner.scan_bound_high_y_0x2c,
-					"0x4a1f3b relation owner scan bounds do not contain the source coordinate triple")) {
+		if (!require(!owner.scan_bounds_0x20_0x2c_known,
+					"0x4a1f3b relation owner scan bounds were materialized before 0x4a8260/0x4a4c8e were owned")) {
 			return 1;
 		}
 		if (!require(owner.byte_0x3c_known && owner.byte_0x3c == 0U, "0x49b452 relation owner byte +0x3c was not zeroed")) {
@@ -2233,10 +2229,10 @@ int main() {
 	if (!require(relation_owner_town_choice_known_count > 0, "0x49b452 relation owner town choice +0x04 was not carried from post-0x49b3c1 seed state")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_owner_scan_bounds_0x4a1f3b_applied
-					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b == generator_state.relation_owner_vector_count_10e4_10e8
+	if (!require(!generator_state.relation_owner_scan_bounds_0x4a1f3b_applied
+					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b == 0
 					&& generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b == 0,
-				"0x4a1f3b relation-owner scan-bound pass did not materialize every selected relation owner")) {
+				"0x4a1f3b relation-owner scan-bound pass ran before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
@@ -2252,31 +2248,30 @@ int main() {
 				"generator endpoint projection vector +0xc8/+0xcc was promoted before reward/guard source-order commits were owned")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply recovered 0x4a5767 full-grid reset")) {
+	if (!require(!generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state applied 0x4a5767 full-grid reset before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == 0, "0x4a5767 full-grid reset visited generated-cell records before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped records with known word inputs")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not mutate every generated-cell record from reset/terrain state")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == 0, "0x4a5767 full-grid reset mutated generated-cell records before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_scan_consumers_4a5767_applied
-					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == generator_state.relation_owner_vector_count_10e4_10e8,
-				"generator object private state did not run relation scan-consumer pass after 0x4a1f3b bounds")) {
+	if (!require(!generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == 0,
+				"generator object private state ran relation scan-consumer pass before 0x4a8260/0x4a4c8e were owned")) {
 		return 1;
 	}
 	if (!require(std::all_of(generator_state.generated_cell_buffer.records.begin(), generator_state.generated_cell_buffer.records.end(), [](const aurelion::h3maped_rmg_core::GeneratedCellRecord0x30 &record) {
 			return record.word_0x10_known
-					&& record.word_0x14_known
-					&& record.word_0x18_known
-					&& record.word_0x1c_known
 					&& record.word_0x20_known
-					&& record.word_0x28_known;
-		}), "0x4a5767 full-grid reset did not claim the recovered projection word fields")) {
+					&& record.word_0x24_known
+					&& record.word_0x28_known
+					&& record.word_0x2c_known;
+		}), "generator object private state lost reset/terrain generated-cell word fields before the route/free-cell blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_0xf58_present && generator_state.endpoint_cursor_0xf58_known && generator_state.endpoint_cursor_0xf58 == 0, "generator object private state did not preserve recovered 0x49ecf2 zeroed 0xf58 cursor field")) {
@@ -4062,32 +4057,33 @@ int main() {
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "reward_guard_materialization"
+						&& workflow.current_phase_id == "route_free_cell_sweep"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not run through the owned phases before blocking at reward/guard zero-commit materialization")) {
+					"entry-to-writeout workflow did not stop at the missing 0x4a8260 route/free-cell phase")) {
 			return 1;
 		}
-		const std::string current_reward_guard_blocker =
-				"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
-		if (!require(workflow.blocked_reason == current_reward_guard_blocker,
-					std::string("entry-to-writeout workflow did not fail closed at the reward/guard zero-success source-order blocker; actual=")
+		if (!require(workflow.blocked_reason == route_free_cell_blocker,
+					std::string("entry-to-writeout workflow did not fail closed at the route/free-cell source-order blocker; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 9
+		if (!require(workflow.phases.size() >= 10
 						&& workflow.phases[0].id == "entry_scope"
 						&& workflow.phases[1].id == "setup_template_selection"
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
 						&& workflow.phases[3].id == "generator_object_private_state"
-						&& workflow.phases[4].id == "relation_scan_consumers"
-						&& workflow.phases[5].id == "source_order_object_materialization"
-						&& workflow.phases[6].id == "relation_high_owner_propagation"
+						&& workflow.phases[4].id == "route_free_cell_sweep"
+						&& workflow.phases[4].status == "blocked"
+						&& workflow.phases[5].id == "relation_scan_consumers"
+						&& workflow.phases[5].status == "pending"
+						&& workflow.phases[6].id == "source_order_object_materialization"
+						&& workflow.phases[6].status == "pending"
 						&& workflow.phases[7].id == "reward_guard_materialization"
-						&& workflow.phases[7].status == "blocked"
+						&& workflow.phases[7].status == "pending"
 						&& workflow.phases[8].id == "connection_road_river"
 						&& workflow.phases[8].status == "pending",
-					"entry-to-writeout workflow did not preserve recovered phase order up to the reward/guard zero-commit blocker")) {
+					"entry-to-writeout workflow did not preserve recovered phase order up to the route/free-cell blocker")) {
 			return 1;
 		}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4095,8 +4091,9 @@ int main() {
 						&& !workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.empty()
 						&& workflow.coordinate_owner_grid_0x4a218c.owner_grid_executed
 						&& workflow.generator_object_private_state.generated_cell_buffer_owned
-						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
-						&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied,
+						&& !workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& !workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
+						&& !workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied,
 					"entry-to-writeout workflow did not carry setup/template/coordinate/object private state through the shared core runner")) {
 			return 1;
 		}
@@ -4128,53 +4125,29 @@ int main() {
 		const RewardGuardSourceStreamResult4aab7e &source_stream =
 				workflow_generator_state.reward_guard_source_stream_0x4aab7e;
 		if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e_ported
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e_input_known
-						&& workflow_generator_state.reward_guard_source_stream_owner_kind_0x0c_known
-						&& workflow_generator_state.reward_guard_source_stream_records_0x4aab7e.size() == size_t(3)
-						&& source_stream.invoked
-						&& source_stream.source_triplet_known
-						&& source_stream.source_object_kind_0x0c_known
-						&& source_stream.active_lane_count > 0
-						&& source_stream.selected_lane_count > 0
-						&& !source_stream.attempts.empty()
-						&& source_stream.attempts.size() == size_t(18)
-						&& source_stream.materialization_attempt_count == 18
+						&& !workflow_generator_state.reward_guard_source_stream_0x4aab7e_input_known
+						&& !workflow_generator_state.reward_guard_source_stream_owner_kind_0x0c_known
+						&& workflow_generator_state.reward_guard_source_stream_records_0x4aab7e.empty()
+						&& !source_stream.invoked
+						&& !source_stream.source_triplet_known
+						&& !source_stream.source_object_kind_0x0c_known
+						&& source_stream.active_lane_count == 0
+						&& source_stream.selected_lane_count == 0
+						&& source_stream.attempts.empty()
+						&& source_stream.materialization_attempt_count == 0
 						&& source_stream.successful_coordinate_scan_count == 0
 						&& source_stream.blocked_reason.empty(),
-					"entry-to-writeout workflow did not carry recovered 0x4aab7e source bands and terrain policy through selected-object materialization attempts")) {
+					"entry-to-writeout workflow invoked reward/guard source-stream before 0x4a8260/0x4a4c8e were owned")) {
 			return 1;
 		}
-		if (!require(workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
-						&& workflow_generator_state.reward_guard_materialization_driver_input_known
-						&& materialization_driver.invoked
-						&& materialization_driver.wrapper_reset_0x49ce64_applied
-						&& materialization_driver.selected_object_helper_invoked_0x4aa1db
-						&& materialization_driver.selected_object_0x4aa1db.invoked
-						&& materialization_driver.selected_object_0x4aa1db.candidate_selector_invoked_0x4a9f1c
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.applied
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.blocked_reason.empty()
-						&& materialization_driver.selected_object_0x4aa1db.generator_descriptor_vector_0x398_0x39c_known
-						&& materialization_driver.selected_object_0x4aa1db.selected_descriptor_state_0x94_0x95_known
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_catalog_index_0x49da08 == 1268
-						&& materialization_driver.selected_object_0x4aa1db.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 == 785
-						&& materialization_driver.selected_object_0x4aa1db.applied
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_allocated_0x4a5c07
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_key_known_0x4a5c07
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_record_key_0x4a5c07 == 144U
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_sequence_0x1c_0x4a5c07 == 144
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A88
-						&& materialization_driver.selected_object_0x4aa1db.selected_object_body_anchor_fallback_0x4a5c07
-						&& materialization_driver.selected_object_0x4aa1db.initial_member_appended_0x40bb26
-						&& materialization_driver.selected_object_0x4aa1db.initial_member_count_after == 1
-						&& materialization_driver.selected_object_0x4aa1db.initial_center_coordinate_known
-						&& materialization_driver.selected_object_0x4aa1db.initial_center_x == 8
-						&& materialization_driver.selected_object_0x4aa1db.initial_center_y == 10
-						&& materialization_driver.selected_object_0x4aa1db.initial_body_stamp_count_0x49abd6 == 1
-						&& materialization_driver.selected_object_0x4aa1db.bounds_refresh_applied_0x49d6e0
-						&& materialization_driver.applied
-						&& materialization_driver.blocked_reason.empty(),
-					"entry-to-writeout workflow did not advance from 0x4aab7e through 0x4aa354/0x4aa1db/0x4a9f1c/0x4a9e40/0x4a5c07 initial wrapper seeding before the current source-triplet blocker")) {
+		if (!require(!workflow_generator_state.reward_guard_materialization_driver_0x4aa354_ported
+						&& !workflow_generator_state.reward_guard_materialization_driver_input_known
+						&& !materialization_driver.invoked
+						&& !materialization_driver.wrapper_reset_0x49ce64_applied
+						&& !materialization_driver.selected_object_helper_invoked_0x4aa1db
+						&& !materialization_driver.selected_object_0x4aa1db.invoked
+						&& !materialization_driver.applied,
+					"entry-to-writeout workflow invoked reward/guard selected-object materialization before 0x4a8260/0x4a4c8e were owned")) {
 			return 1;
 		}
 		const RewardGuardProjectionChainResult49c0a6 &projection_chain =
@@ -4187,25 +4160,25 @@ int main() {
 			return 1;
 		}
 		if (!require(materialization_driver.selected_object_0x4aa1db.blocked_reason.empty(),
-					"entry-to-writeout workflow did not complete selected-object allocation and initial wrapper seeding before the current source-stream blocker")) {
+					"entry-to-writeout workflow recorded reward/guard selected-object blocker despite not invoking that phase")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
 				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
 		if (!require(!workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-						&& !decorative_dispatch.invoked
-						&& !decorative_dispatch.applied,
-					"entry-to-writeout workflow executed decorative dispatch after reward/guard produced zero source-order commits")) {
+					&& !decorative_dispatch.invoked
+					&& !decorative_dispatch.applied,
+				"entry-to-writeout workflow executed decorative dispatch before 0x4a8260/0x4a4c8e were owned")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
 				workflow_generator_state.connection_tail_replay_0x4a79a3;
 		if (!require(!workflow_generator_state.connection_tail_replay_0x4a79a3_ported
 						&& !connection_tail.invoked
-						&& !connection_tail.applied
-						&& !workflow_generator_state.connection_fallback_materialization_scope_known
-						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-					"entry-to-writeout workflow executed connection/fallback helpers after reward/guard produced zero source-order commits")) {
+					&& !connection_tail.applied
+					&& !workflow_generator_state.connection_fallback_materialization_scope_known
+					&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
+				"entry-to-writeout workflow executed connection/fallback helpers before 0x4a8260/0x4a4c8e were owned")) {
 			return 1;
 		}
 	}

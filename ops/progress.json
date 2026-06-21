@@ -16,26 +16,26 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Enforced the single shared native H3MapEd workflow boundary at reward/guard materialization. When the active 0x4aab7e source stream has materialization attempts but zero successful 0x4aa9b7 coordinate commits, the generator object private-state builder now stops there and does not execute D-014 endpoint prep, 0x49eb8d decorative dispatch, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, roads/rivers, or final writeout.",
+      "notes": "Enforced the single shared native H3MapEd workflow boundary before relation/object/reward consumers. The generator object private-state builder now stops at route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e and does not execute 0x4a5767 relation scan consumers, 0x4a8db2 source-order scheduler replay, 0x49a318 high-owner propagation, reward/guard 0x4aab7e, D-014 endpoint prep, 0x49eb8d decorative dispatch, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, roads/rivers, or final writeout.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-21T13:29:34Z",
-      "latestEvidenceId": "native-rmg-reward-guard-zero-commit-gate-20260621",
-      "remainingWork": "Port source-order reward/guard coordinate materialization so 0x4aab7e attempts can produce source-owned 0x4aa9b7 -> 0x4aa3e9 commits. Only after reward/guard commits are owned should the workflow enter D-014 endpoint prep, 0x49eb8d, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
-      "latestFinding": "No-Godot Small seed 11 and Medium seed 10 now both stop at reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. Connection/fallback helpers remain uninvoked, so the workflow no longer advances downstream on a helper-only prestate.",
-      "blocker": "The shared workflow has source-stream reward/guard attempts but zero source-owned 0x4aa9b7 coordinate commits. Final tile/object/header writeout remains unowned.",
+      "updatedAt": "2026-06-21T13:47:54Z",
+      "latestEvidenceId": "native-rmg-route-free-cell-workflow-gate-20260621",
+      "remainingWork": "Port source-order 0x4a8c15 -> 0x4a8260 -> 0x4a4c8e route/free-cell candidate phase ownership. Only after that private-state boundary is source-owned should the workflow resume 0x4a5767 relation scan consumers, source-order object materialization, reward/guard 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9, D-014 endpoint prep, 0x49eb8d, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
+      "latestFinding": "No-Godot Small seed 11 and Medium seed 10 now both stop at route_free_cell_sweep with route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e. Relation scan, source-order scheduler/object replay, reward/guard, decorative, endpoint, connection, fallback, roads/rivers, and final writeout remain uninvoked.",
+      "blocker": "The shared workflow does not yet source-own the 0x4a8260 route/free-cell center feed or the 0x4a4c8e candidate/relation boundary. Final tile/object/header writeout remains unowned.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-reward-guard-zero-commit-gate-20260621",
+        "id": "native-rmg-route-free-cell-workflow-gate-20260621",
         "sliceId": "rmg-small-generalization-hardening-10184",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Reward Guard Zero Commit Workflow Gate",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared workflow now fails closed at reward/guard when active 0x4aab7e attempts produce zero successful 0x4aa9b7 commits, and leaves endpoint, decorative, connection, fallback, road/river, and final writeout phases pending.",
-        "remainingWork": "Port source-order reward/guard coordinate materialization so 0x4aab7e attempts can produce source-owned 0x4aa9b7 -> 0x4aa3e9 commits. Only after reward/guard commits are owned should the workflow enter D-014 endpoint prep, 0x49eb8d, 0x4a79a3 connection tail, 0x4a7605 -> 0x4a5e03 fallback replay, 0x4ab52a road/river/object-adjacency replay, and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object/header writeout.",
-        "blocker": "The shared workflow has source-stream reward/guard attempts but zero source-owned 0x4aa9b7 coordinate commits. Final tile/object/header writeout remains unowned.",
+        "title": "Route Free Cell Workflow Gate",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared workflow now fails closed at route_free_cell_sweep before relation/object/reward consumers, with blocker route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e.",
+        "remainingWork": "Port source-order 0x4a8c15 -> 0x4a8260 -> 0x4a4c8e route/free-cell candidate phase ownership before resuming relation scan, source-order object materialization, reward/guard, endpoint, connection, road/river, and final writeout phases.",
+        "blocker": "The shared workflow does not yet source-own the 0x4a8260 route/free-cell center feed or the 0x4a4c8e candidate/relation boundary. Final tile/object/header writeout remains unowned.",
         "artifacts": [
           ".artifacts/tmp_workflow_current/medium_2p_seed10.phase_snapshot.json",
           ".artifacts/tmp_workflow_current/small_3p_seed11.phase_snapshot.json"
@@ -43,9 +43,9 @@
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --phase-snapshot-only --out .artifacts/tmp_workflow_current --controlled-case medium_2p_seed10:medium:2:10:land:1:1:2:0 --controlled-case small_3p_seed11:small:3:11:land:1:1:2:0 --print-manifest || true (blocked as expected at reward_guard_materialization for both cases)"
+          "./bin/rmg_native_batch_export_cli --phase-snapshot-only --out .artifacts/tmp_workflow_current --controlled-case medium_2p_seed10:medium:2:10:land:1:1:2:0 --controlled-case small_3p_seed11:small:3:11:land:1:1:2:0 --print-manifest || true (blocked as expected at route_free_cell_sweep for both cases)"
         ],
-        "updatedAt": "2026-06-21T13:29:34Z"
+        "updatedAt": "2026-06-21T13:47:54Z"
       }
     },
     {
