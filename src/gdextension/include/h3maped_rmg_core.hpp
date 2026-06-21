@@ -130,6 +130,20 @@ struct SourceObjectRecord0x4c {
 	int32_t subtype_0x20 = 0;
 	int32_t group_0x24 = 0;
 	int32_t last_flag_0x28 = 0;
+	bool raw_field_0x20_known = false;
+	int32_t raw_field_0x20 = 0;
+	bool raw_field_0x24_known = false;
+	int32_t raw_field_0x24 = 0;
+	bool raw_field_0x28_known = false;
+	int32_t raw_field_0x28 = 0;
+	bool raw_field_0x2c_known = false;
+	int32_t raw_field_0x2c = 0;
+	bool raw_field_0x30_known = false;
+	int32_t raw_field_0x30 = 0;
+	bool raw_field_0x34_known = false;
+	int32_t raw_field_0x34 = 0;
+	bool raw_field_0x38_known = false;
+	int32_t raw_field_0x38 = 0;
 	int32_t pass_count = 0;
 	int32_t action_count = 0;
 	std::string passability_mask;
@@ -1673,7 +1687,9 @@ struct SourceOrderObjectDispatcherBranch4a8d2c {
 };
 
 struct SourceOrderObjectDispatcherResult4a8d2c {
+	bool source_field_0x20_known = false;
 	int32_t source_field_0x20 = 0;
+	bool source_field_0x24_known = false;
 	int32_t source_field_0x24 = 0;
 	bool source_field_0x30_known = false;
 	int32_t source_field_0x30 = 0;

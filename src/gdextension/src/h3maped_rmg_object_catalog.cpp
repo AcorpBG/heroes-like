@@ -10,6 +10,8 @@
 // Recovered H3MapEd anchor: 0x49da08 object table loader, copied 0x4c source records.
 // Recovered bucket anchor: object metadata entry +0x08 routes wrappers into generator bucket lanes.
 // Recovered descriptor-mask anchor: 0x4903e8 copies .msk width/height/mask fields into descriptor +0x34..+0x48.
+// Copied source-record raw +0x20/+0x24/+0x28 are represented by subtype/group/last_flag in this catalog feed.
+// Copied source-record raw +0x2c/+0x30/+0x34/+0x38 are not present in the current catalog artifact.
 
 #include "h3maped_rmg_core.hpp"
 
@@ -1390,6 +1392,20 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 	out.subtype_0x20 = row.subtype_0x20;
 	out.group_0x24 = row.group_0x24;
 	out.last_flag_0x28 = row.last_flag_0x28;
+	out.raw_field_0x20_known = true;
+	out.raw_field_0x20 = row.subtype_0x20;
+	out.raw_field_0x24_known = true;
+	out.raw_field_0x24 = row.group_0x24;
+	out.raw_field_0x28_known = true;
+	out.raw_field_0x28 = row.last_flag_0x28;
+	out.raw_field_0x2c_known = false;
+	out.raw_field_0x2c = 0;
+	out.raw_field_0x30_known = false;
+	out.raw_field_0x30 = 0;
+	out.raw_field_0x34_known = false;
+	out.raw_field_0x34 = 0;
+	out.raw_field_0x38_known = false;
+	out.raw_field_0x38 = 0;
 	out.pass_count = row.pass_count;
 	out.action_count = row.action_count;
 	out.passability_mask = row.passability_mask;

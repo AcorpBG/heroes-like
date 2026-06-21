@@ -778,6 +778,20 @@ SharedSourceObjectRecord0x4c from_h3maped_source_object_record(const h3maped_rmg
 		input.subtype_0x20,
 		input.group_0x24,
 		input.last_flag_0x28,
+		input.raw_field_0x20_known,
+		input.raw_field_0x20,
+		input.raw_field_0x24_known,
+		input.raw_field_0x24,
+		input.raw_field_0x28_known,
+		input.raw_field_0x28,
+		input.raw_field_0x2c_known,
+		input.raw_field_0x2c,
+		input.raw_field_0x30_known,
+		input.raw_field_0x30,
+		input.raw_field_0x34_known,
+		input.raw_field_0x34,
+		input.raw_field_0x38_known,
+		input.raw_field_0x38,
 		input.pass_count,
 		input.action_count,
 		input.passability_mask,
@@ -802,7 +816,21 @@ bool same_source_object_record_sample(const SharedSourceObjectRecord0x4c &left, 
 			&& left.def_name == right.def_name
 			&& left.type_id_0x1c == right.type_id_0x1c
 			&& left.metadata_bucket_index_0x08 == right.metadata_bucket_index_0x08
-			&& left.subtype_0x20 == right.subtype_0x20;
+			&& left.subtype_0x20 == right.subtype_0x20
+			&& left.raw_field_0x20_known == right.raw_field_0x20_known
+			&& left.raw_field_0x20 == right.raw_field_0x20
+			&& left.raw_field_0x24_known == right.raw_field_0x24_known
+			&& left.raw_field_0x24 == right.raw_field_0x24
+			&& left.raw_field_0x28_known == right.raw_field_0x28_known
+			&& left.raw_field_0x28 == right.raw_field_0x28
+			&& left.raw_field_0x2c_known == right.raw_field_0x2c_known
+			&& left.raw_field_0x2c == right.raw_field_0x2c
+			&& left.raw_field_0x30_known == right.raw_field_0x30_known
+			&& left.raw_field_0x30 == right.raw_field_0x30
+			&& left.raw_field_0x34_known == right.raw_field_0x34_known
+			&& left.raw_field_0x34 == right.raw_field_0x34
+			&& left.raw_field_0x38_known == right.raw_field_0x38_known
+			&& left.raw_field_0x38 == right.raw_field_0x38;
 }
 
 void add_source_object_sample(RecoveredOwnerGridPayload &payload, const h3maped_rmg_core::SourceObjectRecord0x4c &input) {
@@ -1208,6 +1236,20 @@ void append_source_object_record_sample_json(std::ostream &out, const SharedSour
 		<< ",\"subtype_0x20\":" << record.subtype_0x20
 		<< ",\"group_0x24\":" << record.group_0x24
 		<< ",\"last_flag_0x28\":" << record.last_flag_0x28
+		<< ",\"raw_field_0x20_known\":" << (record.raw_field_0x20_known ? "true" : "false")
+		<< ",\"raw_field_0x20\":" << record.raw_field_0x20
+		<< ",\"raw_field_0x24_known\":" << (record.raw_field_0x24_known ? "true" : "false")
+		<< ",\"raw_field_0x24\":" << record.raw_field_0x24
+		<< ",\"raw_field_0x28_known\":" << (record.raw_field_0x28_known ? "true" : "false")
+		<< ",\"raw_field_0x28\":" << record.raw_field_0x28
+		<< ",\"raw_field_0x2c_known\":" << (record.raw_field_0x2c_known ? "true" : "false")
+		<< ",\"raw_field_0x2c\":" << record.raw_field_0x2c
+		<< ",\"raw_field_0x30_known\":" << (record.raw_field_0x30_known ? "true" : "false")
+		<< ",\"raw_field_0x30\":" << record.raw_field_0x30
+		<< ",\"raw_field_0x34_known\":" << (record.raw_field_0x34_known ? "true" : "false")
+		<< ",\"raw_field_0x34\":" << record.raw_field_0x34
+		<< ",\"raw_field_0x38_known\":" << (record.raw_field_0x38_known ? "true" : "false")
+		<< ",\"raw_field_0x38\":" << record.raw_field_0x38
 		<< ",\"pass_count\":" << record.pass_count
 		<< ",\"action_count\":" << record.action_count
 		<< ",\"passability_mask\":\"" << json_escape(record.passability_mask) << "\""
