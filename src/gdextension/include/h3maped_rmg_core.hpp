@@ -1749,6 +1749,31 @@ struct RewardGuardSelectorResult4a9f1c {
 	std::string blocked_reason;
 };
 
+struct RewardGuardSelectedObjectResult4aa1db {
+	bool invoked = false;
+	bool applied = false;
+	bool candidate_selector_invoked_0x4a9f1c = false;
+	bool generator_descriptor_vector_0x398_0x39c_known = false;
+	bool selected_descriptor_state_0x94_0x95_known = false;
+	int32_t selector_retry_limit = 3;
+	int32_t selector_attempt_count = 0;
+	RewardGuardSelectorResult4a9f1c selector_0x4a9f1c;
+	std::string blocked_reason;
+};
+
+struct RewardGuardMaterializationDriverResult4aa354 {
+	bool invoked = false;
+	bool applied = false;
+	bool wrapper_reset_0x49ce64_applied = false;
+	int32_t wrapper_reset_cell_count_0x49ce64 = 0;
+	bool selected_object_helper_invoked_0x4aa1db = false;
+	RewardGuardSelectedObjectResult4aa1db selected_object_0x4aa1db;
+	bool final_candidate_rebuild_invoked_0x49d7c3 = false;
+	bool final_mark_invoked_0x49cefb = false;
+	int32_t final_candidate_count_0x49cefb = 0;
+	std::string blocked_reason;
+};
+
 struct GeneratorObjectPrivateState {
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
@@ -1870,6 +1895,9 @@ struct GeneratorObjectPrivateState {
 	int32_t reward_guard_candidate_record_count_10f4_10f8 = 0;
 	std::vector<RewardGuardCandidateRecord4a9f1c> reward_guard_candidate_records_10f4_10f8;
 	RewardGuardSelectorResult4a9f1c reward_guard_selector_0x4a9f1c;
+	bool reward_guard_materialization_driver_0x4aa354_ported = false;
+	bool reward_guard_materialization_driver_input_known = false;
+	RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_0x4aa354;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
@@ -2360,6 +2388,8 @@ RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng);
 RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cells_0x49cefb(RewardGuardWrapperState4aa3e9 &wrapper);
+RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound);
+RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
 RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
