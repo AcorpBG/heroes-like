@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <deque>
+#include <iomanip>
 #include <limits>
 #include <queue>
 #include <set>
@@ -37,6 +38,12 @@ struct ScoreFrontierCompare {
 		return left.score > right.score;
 	}
 };
+
+static std::string hex_u32(uint32_t value) {
+	std::ostringstream stream;
+	stream << "0x" << std::hex << std::setw(8) << std::setfill('0') << value;
+	return stream.str();
+}
 
 constexpr int32_t SUPPORTED_LAND_ENDPOINT_CURSOR_KEY_COUNT_0XD8_0XDC = 8;
 constexpr uint32_t SUPPORTED_LAND_OBSERVED_STALE_CURSOR_0XF5C = 0x7a1befdfU;
@@ -1268,10 +1275,16 @@ int32_t H3MapedRng::next() {
 	return int32_t((state >> 16U) & 0x7fffu);
 }
 
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44) {
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48) {
 	GeneratorSetupModeResult49ecf2 result;
 	result.setup_object_0x44 = setup_object_0x44;
 	result.generator_mode_0x10b8 = setup_object_0x44;
+	result.setup_object_0x48_known = setup_object_0x48_known;
+	result.setup_object_0x48 = setup_object_0x48;
+	if (setup_object_0x48_known) {
+		result.generator_value_band_0x10bc_known = true;
+		result.generator_value_band_0x10bc = std::min<int32_t>(5, std::max<int32_t>(1, setup_object_0x48 + 3));
+	}
 	result.rng_state_before_setup = seed;
 	result.rng_state_before_template_selection = seed;
 	if (setup_object_0x44 == 3) {
@@ -1441,6 +1454,83 @@ static int32_t source_object_metadata_bucket_for_type_0x57c648_0x08(int32_t type
 	return -1;
 }
 
+static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+		const SourceObjectRecord0x4c &record,
+		int32_t &source_cell_x_0x2c,
+		int32_t &source_cell_y_0x30) {
+	if (record.action_mask.size() < 48U) {
+		return false;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t col = 0; col < 8; ++col) {
+			if (record.action_mask[size_t(row * 8 + col)] == '1') {
+				source_cell_x_0x2c = col;
+				source_cell_y_0x30 = row;
+				return true;
+			}
+		}
+	}
+	source_cell_x_0x2c = 0;
+	source_cell_y_0x30 = 0;
+	return true;
+}
+
+static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
+		return false;
+	}
+	const size_t text_index = size_t(y * 8 + x);
+	if (record.action_mask.size() > text_index) {
+		return record.action_mask[text_index] == '1';
+	}
+	if (record.descriptor_mask_fields_0x34_0x48_known) {
+		const int32_t bit_index = 47 - (8 * y) - x;
+		return (record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1U) << uint32_t(bit_index))) != 0U;
+	}
+	return false;
+}
+
+static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
+		return false;
+	}
+	const size_t text_index = size_t(y * 8 + x);
+	if (record.passability_mask.size() > text_index) {
+		return record.passability_mask[text_index] == '0';
+	}
+	if (record.descriptor_mask_fields_0x34_0x48_known) {
+		const int32_t bit_index = 47 - (8 * y) - x;
+		return (record.descriptor_mask_b_0x44_0x48 & (uint64_t(1U) << uint32_t(bit_index))) != 0U;
+	}
+	return false;
+}
+
+static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_primary_mask_0x49a6f9(
+		const SourceObjectRecord0x4c &record,
+		int32_t source_cell_x_0x2c,
+		int32_t source_cell_y_0x30) {
+	(void)source_cell_x_0x2c;
+	(void)source_cell_y_0x30;
+	std::vector<CoordinateCandidate4a17f5> offsets;
+	const int32_t descriptor_width = record.descriptor_width_0x34 > 0 ? record.descriptor_width_0x34 : 8;
+	const int32_t descriptor_height = record.descriptor_height_0x38 > 0 ? record.descriptor_height_0x38 : 6;
+	if (descriptor_width <= 0 || descriptor_height <= 0) {
+		return offsets;
+	}
+	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
+		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+			if (!source_object_descriptor_mask_bit_0x4268eb(record, col, row)) {
+				continue;
+			}
+			offsets.push_back(CoordinateCandidate4a17f5 {
+					-col,
+					-row,
+					0 });
+		}
+	}
+	return offsets;
+}
+
 static std::vector<GeneratorDescriptorVectorEntry0x398> generator_descriptor_vector_entries_from_source_catalog_0x49da08_0x398_0x39c() {
 	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
 	std::vector<GeneratorDescriptorVectorEntry0x398> entries;
@@ -1453,6 +1543,13 @@ static std::vector<GeneratorDescriptorVectorEntry0x398> generator_descriptor_vec
 		entry.descriptor_source_field_0x20 = record.subtype_0x20;
 		entry.descriptor_group_0x24 = record.group_0x24;
 		entry.descriptor_last_flag_0x28 = record.last_flag_0x28;
+		entry.descriptor_source_cell_offsets_0x2c_0x30_known =
+				descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+						record,
+						entry.descriptor_source_cell_x_0x2c,
+						entry.descriptor_source_cell_y_0x30);
+		entry.descriptor_projection_enabled_0x29 = entry.descriptor_source_cell_offsets_0x2c_0x30_known
+				&& record.action_count > 0;
 		entry.descriptor_dimensions_known = record.descriptor_mask_fields_0x34_0x48_known;
 		entry.descriptor_width_0x34 = record.descriptor_width_0x34;
 		entry.descriptor_height_0x38 = record.descriptor_height_0x38;
@@ -2878,6 +2975,10 @@ static uint8_t generated_cell_word20_owner_byte2(uint32_t word_0x20) {
 	return uint8_t((word_0x20 >> 16U) & 0xffU);
 }
 
+static int32_t generated_cell_word20_owner_byte2_signed(uint32_t word_0x20) {
+	return int32_t(int8_t((word_0x20 >> 16U) & 0xffU));
+}
+
 static int32_t generated_cell_word20_owner_byte3_signed(uint32_t word_0x20) {
 	return int32_t(int8_t((word_0x20 >> 24U) & 0xffU));
 }
@@ -4103,6 +4204,94 @@ static bool reward_guard_candidate_vtable_returns_0x540b14(uint32_t candidate_vt
 			|| candidate_vtable == REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80;
 }
 
+static bool reward_guard_candidate_vtable_returned_object_vtable_0x4aa166(uint32_t candidate_vtable, uint32_t &object_vtable) {
+	switch (candidate_vtable) {
+		case 0x00540ba0U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540A74;
+			return true;
+		case 0x00540bb0U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540AC4;
+			return true;
+		case 0x00540bc0U:
+		case 0x00540bd0U:
+		case 0x00540be0U:
+		case 0x00540bf0U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540AEC;
+			return true;
+		case 0x00540c00U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540AB0;
+			return true;
+		case 0x00540c10U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540AD8;
+			return true;
+		case 0x00540c20U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540B3C;
+			return true;
+		case 0x00540c30U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540B50;
+			return true;
+		case 0x00540c40U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540B64;
+			return true;
+		case 0x00540c50U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540B8C;
+			return true;
+		case REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_A_0X540C60:
+		case REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_B_0X540C70:
+		case REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80:
+			object_vtable = PROJECTION_OBJECT_VTABLE_0X540B14;
+			return true;
+		case 0x00540c90U:
+			object_vtable = OBJECT_RECORD_VTABLE_0X540B78;
+			return true;
+		case REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_ADJACENT_0X540CA0:
+			object_vtable = PROJECTION_OBJECT_VTABLE_0X540B00;
+			return true;
+		default:
+			return false;
+	}
+}
+
+static int32_t reward_guard_attach_value_from_band_0x4a65a5(int32_t selected_value, int32_t effective_band) {
+	static constexpr std::array<int32_t, 6> first_thresholds_0x58db18 = { 50000, 2500, 1500, 1000, 500, 0 };
+	static constexpr std::array<int32_t, 6> second_thresholds_0x58db30 = { 50000, 7500, 7500, 7500, 5000, 5000 };
+	static constexpr std::array<int32_t, 6> first_multipliers_0x58db48 = { 0, 2, 3, 4, 6, 6 };
+	static constexpr std::array<int32_t, 6> second_multipliers_0x58db60 = { 0, 2, 3, 4, 4, 6 };
+	const int32_t band = std::min<int32_t>(5, std::max<int32_t>(0, effective_band));
+	int32_t scaled_value = 0;
+	if (selected_value > first_thresholds_0x58db18[size_t(band)]) {
+		scaled_value += ((selected_value - first_thresholds_0x58db18[size_t(band)]) * first_multipliers_0x58db48[size_t(band)]) / 4;
+	}
+	if (selected_value > second_thresholds_0x58db30[size_t(band)]) {
+		scaled_value += ((selected_value - second_thresholds_0x58db30[size_t(band)]) * second_multipliers_0x58db60[size_t(band)]) / 4;
+	}
+	return scaled_value < 0x7d0 ? 0 : scaled_value;
+}
+
+static RewardGuardAttachValueGateResult4a960a reward_guard_attach_value_gate_0x4a960a(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t selected_value) {
+	RewardGuardAttachValueGateResult4a960a result;
+	result.invoked = true;
+	result.selected_value_input = selected_value;
+	result.generator_value_band_0x10bc_known = state.generator_value_band_0x10bc_known;
+	result.generator_value_band_0x10bc = state.generator_value_band_0x10bc;
+	if (!state.generator_value_band_0x10bc_known) {
+		result.blocked_reason = "0x4a960a_generator_value_band_0x10bc_missing_from_0x49ecf2_setup_plus_0x48";
+		return result;
+	}
+	if (selector == nullptr || !selector->source_pointer_value_0x90_known) {
+		result.blocked_reason = "0x4a960a_selector_context_source_value_0x90_missing";
+		return result;
+	}
+	result.selector_source_value_0x90_known = true;
+	result.selector_source_value_0x90 = selector->source_pointer_value_0x90;
+	result.effective_value_band_0x4a960a =
+			std::min<int32_t>(5, std::max<int32_t>(0, selector->source_pointer_value_0x90 + state.generator_value_band_0x10bc - 3));
+	result.scaled_attach_value_0x4a65a5 =
+			reward_guard_attach_value_from_band_0x4a65a5(selected_value, result.effective_value_band_0x4a960a);
+	result.applied = true;
+	return result;
+}
+
 static bool reward_guard_candidate_vtable_has_direct_value_score(uint32_t candidate_vtable) {
 	switch (candidate_vtable) {
 		case 0x00540ba0U:
@@ -4267,9 +4456,25 @@ static RewardGuardProjectionObject540b14 reward_guard_projection_object_from_sel
 	return object;
 }
 
-RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng) {
+static int32_t reward_guard_descriptor_mask_extent_count_0x4aa195(const SourceObjectRecord0x4c &source) {
+	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 0;
+	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 0;
+	int32_t count = 0;
+	for (int32_t col = 0; col < descriptor_width; ++col) {
+		for (int32_t row = 0; row < descriptor_height; ++row) {
+			const bool secondary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
+			if (!secondary_mask || source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+				count += 1;
+			}
+		}
+	}
+	return count;
+}
+
+RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args) {
 	RewardGuardSelectorResult4a9f1c result;
 	result.applied = true;
+	result.callsite_args = callsite_args;
 	result.candidate_vector_present = state.reward_guard_candidate_vector_10f4_10f8.present;
 	result.candidate_vector_contents_known = state.reward_guard_candidate_records_10f4_10f8_contents_known;
 	result.rng_state_after_0x4aa110 = rng.state;
@@ -4292,6 +4497,9 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	}
 
 	std::vector<int32_t> accepted_candidate_indexes;
+	if (callsite_args.coordinate_tuple_0x24_known && callsite_args.coordinate_tuple_0x24.x < 0) {
+		result.coordinate_tuple_gate_0x24_skipped_negative = true;
+	}
 	result.candidate_scan_count = int32_t(state.reward_guard_candidate_records_10f4_10f8.size());
 	result.candidate_decisions.reserve(state.reward_guard_candidate_records_10f4_10f8.size());
 	for (int32_t candidate_index = 0; candidate_index < int32_t(state.reward_guard_candidate_records_10f4_10f8.size()); ++candidate_index) {
@@ -4311,6 +4519,23 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 			decision.blocked_reason = "candidate_descriptor_type_0x04_missing_or_out_of_range";
 			result.candidate_decisions.push_back(decision);
 			continue;
+		}
+
+		if (callsite_args.metadata_gate_byte_0x18 == 0U
+				&& object_metadata_flag_0x598300(candidate.descriptor_type_0x04, 0)
+				&& !object_metadata_flag_0x598300(candidate.descriptor_type_0x04, 2)) {
+			decision.rejected_by_metadata_gate_0x18 = true;
+			result.metadata_gate_reject_count_0x18 += 1;
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+		if (callsite_args.precheck_byte_0x1c == 0U) {
+			decision.rejected_by_score_dispatch = true;
+			decision.blocked_reason = "0x4a9f1c_candidate_vtable_plus_0x08_precheck_unported_for_callsite_0x1c_zero";
+			result.score_dispatch_missing_count += 1;
+			result.blocked_reason = decision.blocked_reason;
+			result.candidate_decisions.push_back(decision);
+			return result;
 		}
 
 		const size_t descriptor_type_index = size_t(candidate.descriptor_type_0x04);
@@ -4345,15 +4570,15 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 		}
 		decision.score_dispatch_0x04_known = true;
 		decision.score_dispatch_value_0x04 = score;
-		if (score < lower_value_bound || score > upper_value_bound) {
-			decision.rejected_by_value_bounds = true;
-			result.value_bound_reject_count += 1;
-			result.candidate_decisions.push_back(decision);
-			continue;
-		}
 		if (score < 0) {
 			decision.rejected_by_score_dispatch = true;
 			result.score_dispatch_reject_count += 1;
+			result.candidate_decisions.push_back(decision);
+			continue;
+		}
+		if (score < lower_value_bound || score > upper_value_bound) {
+			decision.rejected_by_value_bounds = true;
+			result.value_bound_reject_count += 1;
 			result.candidate_decisions.push_back(decision);
 			continue;
 		}
@@ -4435,6 +4660,54 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 				return result;
 			}
 		}
+		if (callsite_args.coordinate_tuple_0x24_known
+				&& callsite_args.coordinate_tuple_0x24.x >= 0) {
+			decision.rejected_by_score_dispatch = true;
+			decision.blocked_reason = "0x4a9f1c_0x49a6f9_callsite_0x24_gate_unported_for_nonnegative_tuple";
+			result.score_dispatch_missing_count += 1;
+			result.blocked_reason = decision.blocked_reason;
+			result.candidate_decisions.push_back(decision);
+			return result;
+		}
+		if (callsite_args.policy_extent_byte_0x20 != 0U) {
+			result.policy_extent_gate_invoked_0x20 = true;
+			decision.policy_extent_gate_0x20_invoked = true;
+			if (!decision.selected_source_record_known_0x4a9e40) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_0x4aa195_selected_descriptor_missing_for_policy_gate_0x20";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			const int32_t extent_count_0x4aa195 =
+					reward_guard_descriptor_mask_extent_count_0x4aa195(decision.selected_source_record_copy);
+			decision.policy_extent_mask_count_0x4aa195 = extent_count_0x4aa195;
+			if (extent_count_0x4aa195 <= 0) {
+				decision.rejected_by_score_dispatch = true;
+				decision.blocked_reason = "0x4a9f1c_0x4aa195_descriptor_mask_extent_count_nonpositive";
+				result.score_dispatch_missing_count += 1;
+				result.blocked_reason = decision.blocked_reason;
+				result.candidate_decisions.push_back(decision);
+				return result;
+			}
+			const int32_t score_per_mask_cell = score / extent_count_0x4aa195;
+			decision.policy_extent_score_per_mask_cell = score_per_mask_cell;
+			const int32_t previous_best = result.policy_extent_best_score_per_mask_cell;
+			if (score_per_mask_cell < (previous_best * 3) / 4) {
+				decision.rejected_by_policy_extent_gate_0x20 = true;
+				result.policy_extent_gate_reject_count_0x20 += 1;
+				result.candidate_decisions.push_back(decision);
+				continue;
+			}
+			if (previous_best < (score_per_mask_cell * 3) / 4) {
+				accepted_candidate_indexes.clear();
+				result.accepted_count = 0;
+				result.accepted_weight_total_0x14 = 0;
+				result.policy_extent_best_score_per_mask_cell = score_per_mask_cell;
+				result.policy_extent_vector_clear_count_0x42bde9 += 1;
+			}
+		}
 		decision.accepted_after_score_dispatch = true;
 		result.accepted_count += 1;
 		result.accepted_weight_total_0x14 += candidate.selection_weight_0x10;
@@ -4477,9 +4750,23 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	result.selected_descriptor_vector_index_0x398 = selected_decision.selected_descriptor_vector_index_0x398;
 	result.selected_source_record_copy = selected_decision.selected_source_record_copy;
 	result.selected_score_dispatch_replayed_0x4aa151 = true;
+	result.selected_score_value_known_0x04 = selected_decision.score_dispatch_0x04_known;
+	result.selected_score_value_0x04 = selected_decision.score_dispatch_value_0x04;
 	selected_decision.selected_create_dispatched_0x4aa166 = true;
 	result.selected_create_dispatched_0x4aa166 = true;
 	const RewardGuardCandidateRecord4a9f1c &selected_candidate = state.reward_guard_candidate_records_10f4_10f8[size_t(result.selected_candidate_index)];
+	uint32_t selected_object_vtable_0x00 = 0U;
+	if (!selected_candidate.candidate_vtable_0x00_known
+			|| !reward_guard_candidate_vtable_returned_object_vtable_0x4aa166(
+					selected_candidate.candidate_vtable_0x00,
+					selected_object_vtable_0x00)) {
+		result.blocked_reason = selected_candidate.candidate_vtable_0x00_known
+				? "0x4a9f1c_selected_candidate_create_vtable_" + hex_u32(selected_candidate.candidate_vtable_0x00) + "_return_object_contract_unrecovered"
+				: "0x4a9f1c_selected_candidate_create_vtable_missing_before_return_object_contract";
+		return result;
+	}
+	result.selected_object_vtable_0x00_known = true;
+	result.selected_object_vtable_0x00 = selected_object_vtable_0x00;
 	if (selected_candidate.candidate_vtable_0x00_known
 			&& reward_guard_candidate_vtable_returns_0x540b14(selected_candidate.candidate_vtable_0x00)) {
 		result.selected_projection_object_0x540b14 =
@@ -4496,6 +4783,21 @@ static bool reward_guard_coordinate_vector_contains(const std::vector<Coordinate
 }
 
 static const GeneratedCellRecord0x30 *reward_guard_wrapper_cell_0x49d2e0(const RewardGuardWrapperState4aa3e9 &wrapper, int32_t x, int32_t y, int32_t level) {
+	if (!wrapper.generated_cell_grid_0x08_0x10_known
+			|| wrapper.generated_cell_grid_0x08_0x10.width <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.height <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.level_count <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.records.empty()) {
+		return nullptr;
+	}
+	const int64_t flat = cell_index(wrapper.generated_cell_grid_0x08_0x10.width, wrapper.generated_cell_grid_0x08_0x10.height, x, y, level);
+	if (flat < 0 || flat >= int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())) {
+		return nullptr;
+	}
+	return &wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
+}
+
+static GeneratedCellRecord0x30 *reward_guard_wrapper_cell_mutable_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, int32_t x, int32_t y, int32_t level) {
 	if (!wrapper.generated_cell_grid_0x08_0x10_known
 			|| wrapper.generated_cell_grid_0x08_0x10.width <= 0
 			|| wrapper.generated_cell_grid_0x08_0x10.height <= 0
@@ -4529,32 +4831,119 @@ static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(const RewardGuardW
 	return -1;
 }
 
-static bool reward_guard_footprint_rejects_0x49a6f9(const RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, const CoordinateCandidate4a17f5 &candidate, bool require_candidate_bit26, RewardGuardCandidateFilterResult49d2e0 &result) {
-	if (!member.descriptor_body_offsets_0x49a6f9_known || member.descriptor_body_offsets_0x49a6f9.empty()) {
+struct SourceDescriptorFootprintResult49a6f9 {
+	bool inputs_available = true;
+	bool rejected = false;
+	int32_t scanned_cell_count = 0;
+	std::string blocked_reason;
+};
+
+static bool source_object_secondary_mask_terrain_rejects_0x49a6f9(const SourceObjectRecord0x4c &source, const GeneratedCellRecord0x30 &cell) {
+	const bool generated_terrain8 = generated_cell_terrain_code_0x24(cell) == 8;
+	const bool source_field_0x24_nonzero = source.group_0x24 != 0;
+	const bool source_terrain8_flag_0x18 = (source.terrain_mask_b_0x18 & 0x0100U) != 0U;
+	if (generated_terrain8) {
+		return source_field_0x24_nonzero || !source_terrain8_flag_0x18;
+	}
+	return !source_field_0x24_nonzero && source_terrain8_flag_0x18;
+}
+
+static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects_0x49a6f9(
+		const GeneratedCellRecordGrid0x30 &grid,
+		const SourceObjectRecord0x4c &source,
+		int32_t anchor_x,
+		int32_t anchor_y,
+		int32_t anchor_level,
+		int32_t owner_byte2,
+		bool reject_existing_bit26) {
+	SourceDescriptorFootprintResult49a6f9 result;
+	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
+	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()) {
 		result.inputs_available = false;
-		result.blocked_reason = "0x49d2e0_0x49a6f9_descriptor_body_offsets_missing";
+		result.rejected = true;
+		result.blocked_reason = "0x49a6f9_generated_cell_grid_missing";
+		return result;
+	}
+	if (anchor_x < descriptor_width - 1 || anchor_x >= grid.width || anchor_y < descriptor_height - 1 || anchor_y >= grid.height || anchor_level < 0 || anchor_level >= grid.level_count) {
+		result.rejected = true;
+		result.blocked_reason = "0x49a6f9_descriptor_anchor_outside_grid_bounds";
+		return result;
+	}
+
+	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
+		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+			const bool primary_mask = source_object_descriptor_mask_bit_0x4268eb(source, col, row);
+			const bool secondary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
+			if (!primary_mask && secondary_mask) {
+				continue;
+			}
+			result.scanned_cell_count += 1;
+			const int64_t flat = cell_index(grid.width, grid.height, anchor_x - col, anchor_y - row, anchor_level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				result.inputs_available = false;
+				result.rejected = true;
+				result.blocked_reason = "0x49a6f9_footprint_cell_missing";
+				return result;
+			}
+			const GeneratedCellRecord0x30 &cell = grid.records[size_t(flat)];
+			if (!cell.word_0x24_known || !cell.word_0x28_known || !generated_cell_49a1d8_valid_record(cell) || (cell.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+				result.rejected = true;
+				result.blocked_reason = "0x49a6f9_footprint_cell_rejected";
+				return result;
+			}
+			if (!cell.word_0x20_known) {
+				result.inputs_available = false;
+				result.rejected = true;
+				result.blocked_reason = "0x49a6f9_footprint_cell_owner_word_missing";
+				return result;
+			}
+			if (generated_cell_word20_owner_byte2_signed(cell.word_0x20) != int32_t(int8_t(owner_byte2 & 0xff))) {
+				result.rejected = true;
+				result.blocked_reason = "0x49a6f9_footprint_owner_byte_rejected";
+				return result;
+			}
+			if (primary_mask) {
+				if (reject_existing_bit26 && (cell.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+					result.rejected = true;
+					result.blocked_reason = "0x49a6f9_footprint_existing_bit26_rejected";
+					return result;
+				}
+			} else if (source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
+				result.rejected = true;
+				result.blocked_reason = "0x49a6f9_secondary_mask_terrain_rejected";
+				return result;
+			}
+		}
+	}
+	return result;
+}
+
+static bool reward_guard_footprint_rejects_0x49a6f9(const RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, const CoordinateCandidate4a17f5 &candidate, bool reject_existing_bit26, RewardGuardCandidateFilterResult49d2e0 &result) {
+	if (!member.source_record_copy_known_0x04) {
+		result.inputs_available = false;
+		result.blocked_reason = "0x49d2e0_0x49a6f9_source_record_copy_missing";
 		return true;
 	}
-	for (const CoordinateCandidate4a17f5 &offset : member.descriptor_body_offsets_0x49a6f9) {
-		result.footprint_scan_count_0x49a6f9 += 1;
-		const GeneratedCellRecord0x30 *record = reward_guard_wrapper_cell_0x49d2e0(
-				wrapper,
-				candidate.x + offset.x,
-				candidate.y + offset.y,
-				candidate.level + offset.level);
-		if (record == nullptr || !record->word_0x28_known) {
-			result.footprint_reject_count_0x49a6f9 += 1;
-			result.blocked_reason = "0x49d2e0_0x49a6f9_footprint_cell_missing";
-			return true;
-		}
-		const bool bit22 = (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
-		const bool bit26 = (record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
-		const bool bit27 = (record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
-		if (!generated_cell_49a1d8_valid_record(*record) || bit22 || bit27 || (require_candidate_bit26 && !bit26)) {
-			result.footprint_reject_count_0x49a6f9 += 1;
-			result.blocked_reason = "0x49d2e0_0x49a6f9_footprint_rejected";
-			return true;
-		}
+	const SourceDescriptorFootprintResult49a6f9 footprint =
+			source_descriptor_footprint_rejects_0x49a6f9(
+					wrapper.generated_cell_grid_0x08_0x10,
+					member.source_record_copy,
+					candidate.x,
+					candidate.y,
+					candidate.level,
+					-1,
+					reject_existing_bit26);
+	result.footprint_scan_count_0x49a6f9 += footprint.scanned_cell_count;
+	if (!footprint.inputs_available) {
+		result.inputs_available = false;
+	}
+	if (footprint.rejected) {
+		result.footprint_reject_count_0x49a6f9 += 1;
+		result.blocked_reason = footprint.blocked_reason.empty()
+				? "0x49d2e0_0x49a6f9_footprint_rejected"
+				: "0x49d2e0_" + footprint.blocked_reason;
+		return true;
 	}
 	return false;
 }
@@ -4903,6 +5292,8 @@ RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cell
 	return result;
 }
 
+static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member);
+
 RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng) {
 	RewardGuardAttachResult49cf34 result;
 	auto finish_blocked = [&](const std::string &reason) {
@@ -4930,6 +5321,47 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 		return finish_blocked(result.candidate_rebuild_0x49d7c3.blocked_reason.empty()
 				? "0x49cf34_initial_0x49d7c3_candidate_refresh_failed"
 				: result.candidate_rebuild_0x49d7c3.blocked_reason);
+	}
+
+	for (const RewardGuardWrapperMember4aa3e9 &selected_member : wrapper.selected_members_0x2c_0x30) {
+		if (selected_member.descriptor_type_0x1c < 0) {
+			continue;
+		}
+		const int32_t direction_count = object_metadata_flag_0x598300(selected_member.descriptor_type_0x1c, 1) ? 8 : 5;
+		const int32_t base_x = selected_member.relative_x_0x08 - selected_member.descriptor_offset_x_0x2c;
+		const int32_t base_y = selected_member.relative_y_0x0c - selected_member.descriptor_offset_y_0x30;
+		for (int32_t direction_index = direction_count - 1; direction_index >= 0; --direction_index) {
+			result.existing_member_probe_count_0x49cf34 += 1;
+			const int32_t probe_x = base_x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+			const int32_t probe_y = base_y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+			const int32_t probe_level = selected_member.relative_level_0x10;
+			GeneratedCellRecord0x30 *probe_record = reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, probe_x, probe_y, probe_level);
+			if (probe_record == nullptr || !probe_record->word_0x28_known) {
+				continue;
+			}
+			const bool probe_bit22 = (probe_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+			if (probe_bit22 || !generated_cell_49a1d8_valid_record(*probe_record)) {
+				continue;
+			}
+			if (generated_cell_49aa63(*probe_record, true)) {
+				result.existing_member_candidate_set_count_0x49aa63 += 1;
+			}
+			for (int32_t y = std::max<int32_t>(0, probe_y - 1); y <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.height - 1, probe_y + 1); ++y) {
+				for (int32_t x = std::max<int32_t>(0, probe_x - 1); x <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.width - 1, probe_x + 1); ++x) {
+					GeneratedCellRecord0x30 *nearby = reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, x, y, probe_level);
+					if (nearby == nullptr || !nearby->word_0x28_known) {
+						continue;
+					}
+					const bool nearby_bit22 = (nearby->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+					if (nearby_bit22 || !generated_cell_49a1d8_valid_record(*nearby)) {
+						continue;
+					}
+					if (generated_cell_49a932(*nearby, false)) {
+						result.existing_member_neighbor_bit27_clear_count_0x49a932 += 1;
+					}
+				}
+			}
+		}
 	}
 
 	result.candidate_count_before_filter = int32_t(wrapper.candidate_coordinates_0x3c_0x40.size());
@@ -4979,26 +5411,22 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	wrapper.selected_members_0x2c_0x30.push_back(placed_member);
 	result.appended_member_0x49d69d = true;
 	result.selected_member_count_after = int32_t(wrapper.selected_members_0x2c_0x30.size());
-
-	const int64_t selected_flat = cell_index(wrapper.generated_cell_grid_0x08_0x10.width, wrapper.generated_cell_grid_0x08_0x10.height, result.selected_candidate.x, result.selected_candidate.y, result.selected_candidate.level);
-	if (selected_flat >= 0 && selected_flat < int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())) {
-		if (generated_cell_49abd6_action_stamp(wrapper.generated_cell_grid_0x08_0x10.records[size_t(selected_flat)])) {
-			result.stamped_member_0x49abd6 = true;
-		}
-		if (generated_cell_49a932(wrapper.generated_cell_grid_0x08_0x10.records[size_t(selected_flat)], true)) {
-			result.primary_bit27_write_count_0x49d1ed += 1;
-		}
+	result.body_stamp_count_0x49abd6 = reward_guard_stamp_member_body_0x49abd6(wrapper, placed_member);
+	result.stamped_member_0x49abd6 = result.body_stamp_count_0x49abd6 > 0;
+	if (result.body_stamp_count_0x49abd6 <= 0) {
+		return finish_blocked("0x49cf34_0x49d69d_0x49abd6_member_body_stamp_empty");
 	}
-	for (int32_t y = std::max<int32_t>(0, result.selected_candidate.y - 1); y <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.height - 1, result.selected_candidate.y + 1); ++y) {
-		for (int32_t x = std::max<int32_t>(0, result.selected_candidate.x - 1); x <= std::min<int32_t>(wrapper.generated_cell_grid_0x08_0x10.width - 1, result.selected_candidate.x + 1); ++x) {
-			if (x == result.selected_candidate.x && y == result.selected_candidate.y) {
-				continue;
-			}
-			const int64_t flat = cell_index(wrapper.generated_cell_grid_0x08_0x10.width, wrapper.generated_cell_grid_0x08_0x10.height, x, y, result.selected_candidate.level);
-			if (flat >= 0 && flat < int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())
-					&& generated_cell_49a932(wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)], true)) {
-				result.neighbor_bit27_write_count_0x49d270 += 1;
-			}
+
+	const int32_t direction_count = object_metadata_flag_0x598300(placed_member.descriptor_type_0x1c, 1) ? 8 : 5;
+	for (int32_t direction_index = 0; direction_index < direction_count; ++direction_index) {
+		const int32_t x = placed_member.relative_x_0x08 + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+		const int32_t y = placed_member.relative_y_0x0c + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+		GeneratedCellRecord0x30 *record = reward_guard_wrapper_cell_mutable_0x49cf34(wrapper, x, y, placed_member.relative_level_0x10);
+		if (record == nullptr || !record->word_0x28_known || !generated_cell_49a1d8_valid_record(*record)) {
+			continue;
+		}
+		if (generated_cell_49a932(*record, true)) {
+			result.primary_bit27_write_count_0x49d1ed += 1;
 		}
 	}
 
@@ -5027,42 +5455,287 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	return result;
 }
 
+struct RewardGuardMemberAllocationResult4a5c07 {
+	bool applied = false;
+	RewardGuardWrapperMember4aa3e9 member;
+	int32_t selected_source_catalog_index_0x49da08 = -1;
+	int32_t selected_descriptor_vector_index_0x398 = -1;
+	SourceObjectRecord0x4c selected_source_record_copy;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	int32_t sequence_0x1c = -1;
+	bool body_anchor_fallback = false;
+	std::string blocked_reason;
+};
+
+static const GeneratorDescriptorVectorEntry0x398 *selected_descriptor_vector_entry_0x4a5c07(
+		const GeneratorObjectPrivateState &state,
+		const RewardGuardSelectorResult4a9f1c &selector) {
+	if (selector.selected_descriptor_vector_index_0x398 < 0) {
+		return nullptr;
+	}
+	for (const GeneratorDescriptorVectorEntry0x398 &entry : state.descriptor_vector_entries_398_39c) {
+		if (entry.vector_index == selector.selected_descriptor_vector_index_0x398) {
+			return &entry;
+		}
+	}
+	return nullptr;
+}
+
+static RewardGuardMemberAllocationResult4a5c07 reward_guard_allocate_member_from_selector_0x4a5c07(
+		GeneratorObjectPrivateState &state,
+		const RewardGuardSelectorResult4a9f1c &selector,
+		uint32_t object_vtable_0x00,
+		bool object_vtable_known) {
+	RewardGuardMemberAllocationResult4a5c07 result;
+	if (!selector.selected_source_record_known_0x4a9e40) {
+		result.blocked_reason = "0x4a5c07_selected_source_record_missing_before_reward_guard_member_allocation";
+		return result;
+	}
+	if (!object_vtable_known) {
+		result.blocked_reason = "0x4a5c07_selected_object_vtable_missing_before_reward_guard_member_allocation";
+		return result;
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x4a5c07_object_record_key_allocator_missing";
+		return result;
+	}
+	if (!state.object_record_sequence_allocator_0xf44_known) {
+		result.blocked_reason = "0x4a5c07_object_sequence_allocator_0xf44_missing";
+		return result;
+	}
+	if (!state.descriptor_vector_398_39c_source_owned || state.descriptor_vector_entries_398_39c.empty()) {
+		result.blocked_reason = "0x4a5c07_generator_descriptor_vector_0x398_0x39c_missing";
+		return result;
+	}
+
+	const GeneratorDescriptorVectorEntry0x398 *selected_descriptor =
+			selected_descriptor_vector_entry_0x4a5c07(state, selector);
+	if (selected_descriptor == nullptr) {
+		result.blocked_reason = "0x4a5c07_selected_descriptor_vector_entry_missing";
+		return result;
+	}
+	if (!selected_descriptor->descriptor_source_cell_offsets_0x2c_0x30_known) {
+		result.blocked_reason = "0x4a5c07_selected_descriptor_source_cell_offsets_0x2c_0x30_missing";
+		return result;
+	}
+	const SourceObjectRecord0x4c &selected_source = selected_descriptor->source_record_copy;
+	std::vector<CoordinateCandidate4a17f5> body_offsets =
+			descriptor_body_offsets_from_primary_mask_0x49a6f9(
+					selected_source,
+					selected_descriptor->descriptor_source_cell_x_0x2c,
+					selected_descriptor->descriptor_source_cell_y_0x30);
+	if (body_offsets.empty()) {
+		body_offsets.push_back(CoordinateCandidate4a17f5 { 0, 0, 0 });
+		result.body_anchor_fallback = true;
+	}
+
+	result.selected_source_catalog_index_0x49da08 = selected_descriptor->source_catalog_index_0x49da08;
+	result.selected_descriptor_vector_index_0x398 = selected_descriptor->vector_index;
+	result.selected_source_record_copy = selected_source;
+	result.object_record_key_known = true;
+	result.object_record_key = state.next_native_object_record_key_0x4a93a2;
+	state.next_native_object_record_key_0x4a93a2 += 1U;
+	state.object_record_allocation_count_0x4a93a2 += 1;
+	result.sequence_0x1c = state.object_record_sequence_allocator_0xf44;
+	state.object_record_sequence_allocator_0xf44 += 1;
+
+	result.member.object_record_key = result.object_record_key;
+	result.member.object_record_key_known = true;
+	result.member.object_record_vtable_0x00 = object_vtable_0x00;
+	result.member.descriptor_type_0x1c = selected_descriptor->descriptor_type_0x1c;
+	result.member.descriptor_projection_enabled_0x29 = selected_descriptor->descriptor_projection_enabled_0x29;
+	result.member.descriptor_offset_x_0x2c = selected_descriptor->descriptor_source_cell_x_0x2c;
+	result.member.descriptor_offset_y_0x30 = selected_descriptor->descriptor_source_cell_y_0x30;
+	result.member.source_record_copy_known_0x04 = true;
+	result.member.source_record_copy = selected_source;
+	result.member.descriptor_body_offsets_0x49a6f9_known = true;
+	result.member.descriptor_body_offsets_0x49a6f9 = body_offsets;
+	result.applied = true;
+	return result;
+}
+
+static bool generated_cell_append_object_reference_0x40bb26(GeneratedCellRecord0x30 &cell, uint32_t object_record_key) {
+	if (!cell.object_reference_vector_contents_known) {
+		return false;
+	}
+	const auto existing = std::find(
+			cell.object_references_0x04_0x08.begin(),
+			cell.object_references_0x04_0x08.end(),
+			object_record_key);
+	if (existing != cell.object_references_0x04_0x08.end()) {
+		return false;
+	}
+	cell.object_references_0x04_0x08.push_back(object_record_key);
+	cell.object_reference_count = int32_t(cell.object_references_0x04_0x08.size());
+	return true;
+}
+
+static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member) {
+	if (!wrapper.generated_cell_grid_0x08_0x10_known
+			|| wrapper.generated_cell_grid_0x08_0x10.width <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.height <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.level_count <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.records.empty()
+			|| !member.source_record_copy_known_0x04) {
+		return 0;
+	}
+	const SourceObjectRecord0x4c &source = member.source_record_copy;
+	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
+	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
+	int32_t stamp_count = 0;
+	for (int32_t row = 0; row < descriptor_height && row < 6; ++row) {
+		for (int32_t col = 0; col < descriptor_width && col < 8; ++col) {
+			const int64_t flat = cell_index(
+					wrapper.generated_cell_grid_0x08_0x10.width,
+					wrapper.generated_cell_grid_0x08_0x10.height,
+					member.relative_x_0x08 - col,
+					member.relative_y_0x0c - row,
+					member.relative_level_0x10);
+			if (flat < 0 || flat >= int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())) {
+				continue;
+			}
+			GeneratedCellRecord0x30 &cell = wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
+			bool stamped = false;
+			if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+				const uint8_t before_byte_0x2a = cell.byte_0x2a;
+				const uint32_t before_word_0x28 = cell.word_0x28;
+				cell.byte_0x2a_known = true;
+				cell.byte_0x2a_known_mask |= 0x40U;
+				cell.byte_0x2a |= 0x40U;
+				if (cell.word_0x28_known) {
+					cell.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
+				}
+				const bool occupied_stamped = generated_cell_49a932(cell, true);
+				const bool reference_stamped = member.object_record_key_known
+						&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
+				stamped = occupied_stamped
+						|| reference_stamped
+						|| before_byte_0x2a != cell.byte_0x2a
+						|| (cell.word_0x28_known && before_word_0x28 != cell.word_0x28);
+			} else if (!source_object_descriptor_mask_bit_0x41e951(source, col, row)) {
+				const bool body_reject_stamped = generated_cell_49abd6_body_reject_stamp(cell);
+				const bool reference_stamped = member.object_record_key_known
+						&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
+				stamped = body_reject_stamped || reference_stamped;
+			}
+			if (stamped) {
+				stamp_count += 1;
+			}
+		}
+	}
+	return stamp_count;
+}
+
+struct RewardGuardSecondaryMemberResult49d471 {
+	bool applied = false;
+	int32_t existing_member_scan_count = 0;
+	int32_t coordinate_probe_count = 0;
+	int32_t accepted_candidate_count = 0;
+	int32_t filter_missing_input_count = 0;
+	int32_t filter_reject_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	int32_t selected_candidate_index = -1;
+	bool selected_candidate_known = false;
+	CoordinateCandidate4a17f5 selected_candidate;
+	int32_t selected_member_count_after = 0;
+	int32_t body_stamp_count_0x49abd6 = 0;
+	std::string blocked_reason;
+};
+
+static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_validator_0x49d471(
+		RewardGuardWrapperState4aa3e9 &wrapper,
+		RewardGuardWrapperMember4aa3e9 member,
+		const SourceObjectRecord0x4c &selected_source,
+		H3MapedRng &rng) {
+	RewardGuardSecondaryMemberResult49d471 result;
+	auto finish_blocked = [&](const std::string &reason) {
+		result.blocked_reason = reason;
+		return result;
+	};
+	if (!wrapper.selected_member_vector_0x2c_0x30_known || wrapper.selected_members_0x2c_0x30.empty()) {
+		return finish_blocked("0x49d471_selected_member_vector_empty_before_secondary_validation");
+	}
+	if (!wrapper.generated_cell_grid_0x08_0x10_known
+			|| wrapper.generated_cell_grid_0x08_0x10.width <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.height <= 0
+			|| wrapper.generated_cell_grid_0x08_0x10.records.empty()) {
+		return finish_blocked("0x49d471_wrapper_generated_cell_grid_missing");
+	}
+
+	const int32_t descriptor_width = selected_source.descriptor_width_0x34 > 0 ? selected_source.descriptor_width_0x34 : 1;
+	const int32_t descriptor_height = selected_source.descriptor_height_0x38 > 0 ? selected_source.descriptor_height_0x38 : 1;
+	const int32_t min_x = descriptor_width + 2;
+	const int32_t min_y = descriptor_height + 2;
+	const int32_t max_x = wrapper.generated_cell_grid_0x08_0x10.width - 3;
+	const int32_t max_y = wrapper.generated_cell_grid_0x08_0x10.height - 3;
+	std::vector<CoordinateCandidate4a17f5> accepted_candidates;
+
+	for (const RewardGuardWrapperMember4aa3e9 &existing_member : wrapper.selected_members_0x2c_0x30) {
+		result.existing_member_scan_count += 1;
+		if (existing_member.descriptor_type_0x1c < 0) {
+			continue;
+		}
+		const int32_t base_x = existing_member.relative_x_0x08 - existing_member.descriptor_offset_x_0x2c;
+		const int32_t base_y = existing_member.relative_y_0x0c - existing_member.descriptor_offset_y_0x30;
+		const bool full_direction_policy = object_metadata_flag_0x598300(existing_member.descriptor_type_0x1c, 1);
+		const int32_t direction_count = full_direction_policy ? 8 : 5;
+		for (int32_t direction_index = direction_count - 1; direction_index >= 0; --direction_index) {
+			result.coordinate_probe_count += 1;
+			CoordinateCandidate4a17f5 candidate;
+			candidate.x = base_x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0] + member.descriptor_offset_x_0x2c;
+			candidate.y = base_y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1] + member.descriptor_offset_y_0x30;
+			candidate.level = existing_member.relative_level_0x10;
+			if (candidate.x < min_x || candidate.x >= max_x || candidate.y < min_y || candidate.y >= max_y) {
+				continue;
+			}
+			const RewardGuardCandidateFilterResult49d2e0 filter_result =
+					reward_guard_candidate_filter_0x49d2e0(wrapper, member, candidate);
+			if (!filter_result.inputs_available) {
+				result.filter_missing_input_count += 1;
+				continue;
+			}
+			if (!filter_result.accepted) {
+				result.filter_reject_count += 1;
+				continue;
+			}
+			accepted_candidates.push_back(candidate);
+		}
+	}
+
+	result.accepted_candidate_count = int32_t(accepted_candidates.size());
+	if (accepted_candidates.empty()) {
+		return finish_blocked(result.filter_missing_input_count > 0 && result.filter_reject_count == 0
+				? "0x49d471_0x49d2e0_candidate_filter_inputs_missing"
+				: "0x49d471_candidate_vector_empty_after_0x49d2e0");
+	}
+
+	result.rng_value_0x4e7276 = rng.next();
+	result.selected_candidate_index = result.rng_value_0x4e7276 % int32_t(accepted_candidates.size());
+	result.selected_candidate = accepted_candidates[size_t(result.selected_candidate_index)];
+	result.selected_candidate_known = true;
+	member.relative_x_0x08 = result.selected_candidate.x;
+	member.relative_y_0x0c = result.selected_candidate.y;
+	member.relative_level_0x10 = result.selected_candidate.level;
+	wrapper.selected_members_0x2c_0x30.push_back(member);
+	result.selected_member_count_after = int32_t(wrapper.selected_members_0x2c_0x30.size());
+	result.body_stamp_count_0x49abd6 = reward_guard_stamp_member_body_0x49abd6(wrapper, member);
+	result.applied = true;
+	return result;
+}
+
 RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng) {
 	RewardGuardSelectedObjectResult4aa1db result;
 	result.invoked = true;
 	result.policy_word_0x10 = policy_word_0x10;
 	result.selected_value_0x14 = selected_value_0x14;
 	result.candidate_selector_invoked_0x4a9f1c = true;
-	result.selector_attempt_count = 1;
-	result.selector_0x4a9f1c = reward_guard_selected_create_dispatch_0x4a9f1c(
-			state,
-			selector,
-			0,
-			selected_value_0x14,
-			rng);
-	if (!result.selector_0x4a9f1c.blocked_reason.empty()) {
-		result.blocked_reason = result.selector_0x4a9f1c.blocked_reason;
-		return result;
-	}
-	result.selected_object_vtable_0x00_known = result.selector_0x4a9f1c.selected_candidate_vtable_known;
-	if (result.selector_0x4a9f1c.selected_projection_object_0x540b14_known) {
-		result.selected_object_vtable_0x00 = PROJECTION_OBJECT_VTABLE_0X540B14;
-		result.selected_projection_object_0x540b14_known = true;
-		result.selected_projection_object_0x540b14 = result.selector_0x4a9f1c.selected_projection_object_0x540b14;
-	}
 	result.generator_descriptor_vector_0x398_0x39c_known =
 			state.descriptor_vector_398_39c_source_owned
 			&& state.descriptor_vector_entry_count_398_39c > 0
 			&& !state.descriptor_vector_entries_398_39c.empty();
 	if (!result.generator_descriptor_vector_0x398_0x39c_known) {
 		result.blocked_reason = "0x4aa1db_generator_descriptor_vector_0x398_0x39c_pending_before_0x4a5c07_selected_object_create";
-		return result;
-	}
-	result.selected_descriptor_state_0x94_0x95_known =
-			result.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
-			&& result.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 >= 0;
-	if (!result.selected_descriptor_state_0x94_0x95_known) {
-		result.blocked_reason = "0x4aa1db_selected_descriptor_state_0x94_0x95_pending_before_0x4a5c07_0x49cf34_attach";
 		return result;
 	}
 	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
@@ -5073,27 +5746,6 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 		result.blocked_reason = "0x4aa1db_0x4a5c07_object_sequence_allocator_0xf44_missing";
 		return result;
 	}
-
-	const SourceObjectRecord0x4c &selected_source = result.selector_0x4a9f1c.selected_source_record_copy;
-	std::vector<SourceObjectMaskPoint490f3f> body_points =
-			source_object_text_mask_points_0x490f3f(selected_source.passability_mask, false);
-	if (body_points.empty()) {
-		body_points.push_back(SourceObjectMaskPoint490f3f { 0, 0 });
-		result.selected_object_body_anchor_fallback_0x4a5c07 = true;
-	}
-
-	result.selected_object_record_key_known_0x4a5c07 = true;
-	result.selected_object_record_key_0x4a5c07 = state.next_native_object_record_key_0x4a93a2;
-	state.next_native_object_record_key_0x4a93a2 += 1U;
-	state.object_record_allocation_count_0x4a93a2 += 1;
-	result.selected_object_sequence_0x1c_0x4a5c07 = state.object_record_sequence_allocator_0xf44;
-	state.object_record_sequence_allocator_0xf44 += 1;
-	result.selected_object_descriptor_type_0x1c = selected_source.type_id_0x1c;
-	result.selected_object_selected_value_0x20 = selected_value_0x14;
-	result.selected_object_enabled_word_0x24 = 3U;
-	result.selected_object_record_allocated_0x4a5c07 = true;
-	result.selected_object_vtable_0x00_known = true;
-	result.selected_object_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
 
 	if (!wrapper.selected_member_vector_0x2c_0x30_known) {
 		result.blocked_reason = "0x4aa1db_wrapper_selected_member_vector_0x2c_0x30_missing_before_initial_append";
@@ -5108,21 +5760,88 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 		return result;
 	}
 
-	RewardGuardWrapperMember4aa3e9 member;
-	member.object_record_key = result.selected_object_record_key_0x4a5c07;
-	member.object_record_key_known = true;
-	member.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
-	member.descriptor_type_0x1c = selected_source.type_id_0x1c;
-	member.descriptor_body_offsets_0x49a6f9_known = true;
-	member.descriptor_body_offsets_0x49a6f9.reserve(body_points.size());
-	for (const SourceObjectMaskPoint490f3f &point : body_points) {
-		member.descriptor_body_offsets_0x49a6f9.push_back(CoordinateCandidate4a17f5 { point.dx, point.dy, 0 });
+	result.initial_lower_value_bound_0x4aa1db = selected_value_0x14 / 4;
+	RewardGuardSelectorResult4a9f1c initial_selector;
+	RewardGuardSelectorCallsiteArgs4a9f1c initial_selector_callsite;
+	initial_selector_callsite.metadata_gate_byte_0x18 = 1U;
+	initial_selector_callsite.precheck_byte_0x1c = 1U;
+	initial_selector_callsite.policy_extent_byte_0x20 = uint8_t(policy_word_0x10 != 0 ? 1U : 0U);
+	initial_selector_callsite.coordinate_tuple_0x24_known = true;
+	initial_selector_callsite.coordinate_tuple_0x24 = CoordinateCandidate4a17f5 { -1, -1, -1 };
+	for (int32_t attempt = 0; attempt < result.selector_retry_limit; ++attempt) {
+		result.selector_attempt_count += 1;
+		initial_selector = reward_guard_selected_create_dispatch_0x4a9f1c(
+				state,
+				selector,
+				result.initial_lower_value_bound_0x4aa1db,
+				selected_value_0x14,
+				rng,
+				initial_selector_callsite);
+		state.reward_guard_selector_0x4a9f1c = initial_selector;
+		result.selector_0x4a9f1c = initial_selector;
+		if (initial_selector.blocked_reason.empty()) {
+			break;
+		}
+		if (initial_selector.blocked_reason != "0x4a9f1c_no_weighted_candidate_after_score_dispatch") {
+			result.blocked_reason = initial_selector.blocked_reason;
+			return result;
+		}
+	}
+	if (!result.selector_0x4a9f1c.blocked_reason.empty()) {
+		result.blocked_reason = result.selector_0x4a9f1c.blocked_reason;
+		return result;
+	}
+	result.selected_object_vtable_0x00_known = result.selector_0x4a9f1c.selected_object_vtable_0x00_known;
+	result.selected_object_vtable_0x00 = result.selector_0x4a9f1c.selected_object_vtable_0x00;
+	if (!result.selected_object_vtable_0x00_known) {
+		result.blocked_reason = "0x4aa1db_selected_object_vtable_from_0x4a9f1c_missing_before_initial_member_append";
+		return result;
+	}
+	if (result.selector_0x4a9f1c.selected_projection_object_0x540b14_known) {
+		result.selected_projection_object_0x540b14_known = true;
+		result.selected_projection_object_0x540b14 = result.selector_0x4a9f1c.selected_projection_object_0x540b14;
+	}
+	result.selected_descriptor_state_0x94_0x95_known =
+			result.selector_0x4a9f1c.selected_source_record_known_0x4a9e40
+			&& result.selector_0x4a9f1c.selected_descriptor_vector_index_0x398 >= 0;
+	if (!result.selected_descriptor_state_0x94_0x95_known) {
+		result.blocked_reason = "0x4aa1db_selected_descriptor_state_0x94_0x95_pending_before_0x4a5c07_0x49cf34_attach";
+		return result;
+	}
+	if (!result.selector_0x4a9f1c.selected_score_value_known_0x04) {
+		result.blocked_reason = "0x4aa1db_selected_score_value_0x04_missing_from_0x4a9f1c";
+		return result;
 	}
 
+	RewardGuardMemberAllocationResult4a5c07 initial_member_allocation =
+			reward_guard_allocate_member_from_selector_0x4a5c07(
+					state,
+					result.selector_0x4a9f1c,
+					result.selected_object_vtable_0x00,
+					result.selected_object_vtable_0x00_known);
+	if (!initial_member_allocation.applied) {
+		result.blocked_reason = initial_member_allocation.blocked_reason.empty()
+				? "0x4aa1db_initial_0x4a5c07_member_allocation_failed"
+				: initial_member_allocation.blocked_reason;
+		return result;
+	}
+	const SourceObjectRecord0x4c &selected_source = initial_member_allocation.selected_source_record_copy;
+	result.selected_object_record_key_known_0x4a5c07 = initial_member_allocation.object_record_key_known;
+	result.selected_object_record_key_0x4a5c07 = initial_member_allocation.object_record_key;
+	result.selected_object_sequence_0x1c_0x4a5c07 = initial_member_allocation.sequence_0x1c;
+	result.selected_object_descriptor_type_0x1c = selected_source.type_id_0x1c;
+	result.selected_object_selected_value_0x20 = result.selector_0x4a9f1c.selected_score_value_0x04;
+	result.selected_object_enabled_word_0x24 = 3U;
+	result.selected_object_body_anchor_fallback_0x4a5c07 = initial_member_allocation.body_anchor_fallback;
+	result.selected_object_score_value_known_0x04 = true;
+	result.selected_object_score_value_0x04 = result.selector_0x4a9f1c.selected_score_value_0x04;
+	result.selected_object_record_allocated_0x4a5c07 = true;
+
+	RewardGuardWrapperMember4aa3e9 member = initial_member_allocation.member;
 	const int32_t descriptor_width = selected_source.descriptor_width_0x34 > 0 ? selected_source.descriptor_width_0x34 : 1;
 	const int32_t descriptor_height = selected_source.descriptor_height_0x38 > 0 ? selected_source.descriptor_height_0x38 : 1;
-	member.relative_x_0x08 = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.width + descriptor_width - 1) / 2);
-	member.relative_y_0x0c = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.height + descriptor_height - 1) / 2);
+	member.relative_x_0x08 = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.width + descriptor_width) / 2);
+	member.relative_y_0x0c = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.height + descriptor_height) / 2);
 	member.relative_level_0x10 = 0;
 	result.initial_center_coordinate_known = true;
 	result.initial_center_x = member.relative_x_0x08;
@@ -5132,27 +5851,99 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 	result.initial_member_appended_0x40bb26 = true;
 	result.initial_member_count_after = int32_t(wrapper.selected_members_0x2c_0x30.size());
 
-	for (const CoordinateCandidate4a17f5 &offset : member.descriptor_body_offsets_0x49a6f9) {
-		const int64_t flat = cell_index(
-				wrapper.generated_cell_grid_0x08_0x10.width,
-				wrapper.generated_cell_grid_0x08_0x10.height,
-				member.relative_x_0x08 + offset.x,
-				member.relative_y_0x0c + offset.y,
-				member.relative_level_0x10 + offset.level);
-		if (flat < 0 || flat >= int64_t(wrapper.generated_cell_grid_0x08_0x10.records.size())) {
-			continue;
-		}
-		GeneratedCellRecord0x30 &cell = wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
-		const bool action_stamped = generated_cell_49abd6_action_stamp(cell);
-		const bool occupied_stamped = generated_cell_49a932(cell, true);
-		if (action_stamped || occupied_stamped) {
-			result.initial_body_stamp_count_0x49abd6 += 1;
-		}
-	}
+	result.initial_body_stamp_count_0x49abd6 = reward_guard_stamp_member_body_0x49abd6(wrapper, member);
 	if (result.initial_body_stamp_count_0x49abd6 <= 0) {
 		result.blocked_reason = "0x4aa1db_initial_selected_object_body_stamp_empty";
 		return result;
 	}
+	result.current_value_after_initial_0x4aa1db = result.selector_0x4a9f1c.selected_score_value_0x04;
+	int32_t current_value = result.current_value_after_initial_0x4aa1db;
+
+	int32_t secondary_reject_count = 0;
+	while (current_value < selected_value_0x14) {
+		const int32_t remaining_value = selected_value_0x14 - current_value;
+		result.secondary_remaining_value_before_last_attempt_0x4aa1db = remaining_value;
+		if (remaining_value < 0x5dc) {
+			const int32_t half_current_value = current_value / 2;
+			if (remaining_value < half_current_value) {
+				break;
+			}
+		}
+		result.secondary_lower_value_bound_0x4aa1db = remaining_value / 4;
+		result.secondary_upper_value_bound_0x4aa1db = (remaining_value * 5) / 4;
+		int32_t secondary_null_count_this_budget = 0;
+		bool accepted_secondary = false;
+		while (secondary_null_count_this_budget < result.selector_retry_limit) {
+			result.secondary_selector_attempt_count_0x4a9f1c += 1;
+			RewardGuardSelectorCallsiteArgs4a9f1c secondary_selector_callsite;
+			secondary_selector_callsite.metadata_gate_byte_0x18 = 0U;
+			secondary_selector_callsite.precheck_byte_0x1c = 1U;
+			secondary_selector_callsite.policy_extent_byte_0x20 = uint8_t(policy_word_0x10 != 0 ? 1U : 0U);
+			secondary_selector_callsite.coordinate_tuple_0x24_known = true;
+			secondary_selector_callsite.coordinate_tuple_0x24 = CoordinateCandidate4a17f5 { -1, -1, -1 };
+			RewardGuardSelectorResult4a9f1c secondary_selector =
+					reward_guard_selected_create_dispatch_0x4a9f1c(
+							state,
+							selector,
+							result.secondary_lower_value_bound_0x4aa1db,
+							result.secondary_upper_value_bound_0x4aa1db,
+							rng,
+							secondary_selector_callsite);
+			if (!secondary_selector.blocked_reason.empty()) {
+				if (secondary_selector.blocked_reason == "0x4a9f1c_no_weighted_candidate_after_score_dispatch") {
+					secondary_null_count_this_budget += 1;
+					result.secondary_null_selection_count_0x4a9f1c += 1;
+					continue;
+				}
+				result.blocked_reason = secondary_selector.blocked_reason;
+				return result;
+			}
+			if (!secondary_selector.selected_score_value_known_0x04) {
+				result.blocked_reason = "0x4aa1db_secondary_selected_score_value_0x04_missing_from_0x4a9f1c";
+				return result;
+			}
+			RewardGuardMemberAllocationResult4a5c07 secondary_member_allocation =
+					reward_guard_allocate_member_from_selector_0x4a5c07(
+							state,
+							secondary_selector,
+							secondary_selector.selected_object_vtable_0x00,
+							secondary_selector.selected_object_vtable_0x00_known);
+			if (!secondary_member_allocation.applied) {
+				result.blocked_reason = secondary_member_allocation.blocked_reason.empty()
+						? "0x4aa1db_secondary_0x4a5c07_member_allocation_failed"
+						: secondary_member_allocation.blocked_reason;
+				return result;
+			}
+			result.secondary_validator_invocation_count_0x49d471 += 1;
+			const RewardGuardSecondaryMemberResult49d471 secondary_validation =
+					reward_guard_secondary_member_validator_0x49d471(
+							wrapper,
+							secondary_member_allocation.member,
+							secondary_selector.selected_source_record_copy,
+							rng);
+			if (secondary_validation.applied) {
+				result.secondary_accepted_count_0x49d471 += 1;
+				current_value += secondary_selector.selected_score_value_0x04;
+				accepted_secondary = true;
+				break;
+			}
+			result.secondary_rejected_count_0x49d471 += 1;
+			result.secondary_destroyed_rejected_record_count += 1;
+			secondary_reject_count += 1;
+			if (secondary_validation.blocked_reason == "0x49d471_0x49d2e0_candidate_filter_inputs_missing") {
+				result.blocked_reason = secondary_validation.blocked_reason;
+				return result;
+			}
+			if (secondary_reject_count >= result.selector_retry_limit) {
+				secondary_null_count_this_budget = result.selector_retry_limit;
+				break;
+			}
+		}
+		if (!accepted_secondary) {
+			break;
+		}
+	}
+	result.current_value_after_0x4aa1db = current_value;
 
 	result.bounds_refresh_invoked_0x49d6e0 = true;
 	const RewardGuardWrapperRefreshResult49d6e0 bounds_refresh =
@@ -5211,6 +6002,75 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 				: result.selected_object_0x4aa1db.blocked_reason;
 		return result;
 	}
+	if (result.selected_object_0x4aa1db.selected_projection_object_0x540b14_known) {
+		RewardGuardProjectionObject540b14 projection_object =
+				result.selected_object_0x4aa1db.selected_projection_object_0x540b14;
+		if (result.selected_object_0x4aa1db.initial_center_coordinate_known) {
+			projection_object.projection_coordinate_known = true;
+			projection_object.projection_x = result.selected_object_0x4aa1db.initial_center_x;
+			projection_object.projection_y = result.selected_object_0x4aa1db.initial_center_y;
+			projection_object.projection_level = result.selected_object_0x4aa1db.initial_center_level;
+		}
+		state.reward_guard_projection_object_0x540b14_input_known = true;
+		state.reward_guard_projection_object_0x540b14 = projection_object;
+	}
+
+	if (!result.selected_object_0x4aa1db.selected_object_record_key_known_0x4a5c07
+			|| !result.selected_object_0x4aa1db.selector_0x4a9f1c.selected_source_record_known_0x4a9e40) {
+		result.blocked_reason = "0x4aa354_selected_object_record_or_source_missing_before_0x49cf34_attach";
+		return result;
+	}
+	result.attach_value_gate_invoked_0x4a960a = true;
+	result.attach_value_gate_0x4a960a =
+			reward_guard_attach_value_gate_0x4a960a(
+					state,
+					selector,
+					result.selected_object_0x4aa1db.current_value_after_0x4aa1db);
+	result.attach_value_band_0x4a960a = result.attach_value_gate_0x4a960a.effective_value_band_0x4a960a;
+	result.attach_value_0x4a960a = result.attach_value_gate_0x4a960a.scaled_attach_value_0x4a65a5;
+	if (!result.attach_value_gate_0x4a960a.applied) {
+		result.blocked_reason = result.attach_value_gate_0x4a960a.blocked_reason.empty()
+				? "0x4aa354_0x4a960a_attach_value_gate_failed"
+				: result.attach_value_gate_0x4a960a.blocked_reason;
+		return result;
+	}
+	if (result.attach_value_0x4a960a <= 0) {
+		result.blocked_reason = "0x4aa354_0x4a960a_attach_value_not_positive";
+		return result;
+	}
+	result.attach_value_positive_0x4a960a = true;
+	const RewardGuardMemberAllocationResult4a5c07 attach_member_allocation =
+			reward_guard_allocate_member_from_selector_0x4a5c07(
+					state,
+					result.selected_object_0x4aa1db.selector_0x4a9f1c,
+					OBJECT_RECORD_VTABLE_0X540A88,
+					true);
+	if (!attach_member_allocation.applied) {
+		result.blocked_reason = attach_member_allocation.blocked_reason.empty()
+				? "0x4aa354_0x4a5c07_ordinary_attach_member_allocation_failed"
+				: attach_member_allocation.blocked_reason;
+		return result;
+	}
+	result.ordinary_attach_record_allocated_0x4a5c07 = true;
+	result.ordinary_attach_record_key_known_0x4a5c07 = attach_member_allocation.object_record_key_known;
+	result.ordinary_attach_record_key_0x4a5c07 = attach_member_allocation.object_record_key;
+	result.ordinary_attach_record_sequence_0x1c_0x4a5c07 = attach_member_allocation.sequence_0x1c;
+	result.ordinary_attach_record_value_0x20_0x4a5c07 = result.attach_value_0x4a960a;
+	result.ordinary_attach_record_enabled_word_0x24_0x4a5c07 = 3U;
+	const RewardGuardWrapperMember4aa3e9 attach_member = attach_member_allocation.member;
+	result.selected_object_attach_invoked_0x49cf34 = true;
+	const RewardGuardAttachResult49cf34 selected_attach =
+			reward_guard_attach_member_0x49cf34(wrapper, attach_member, rng);
+	result.selected_object_attach_applied_0x49cf34 = selected_attach.applied;
+	result.selected_object_attach_candidate_count_after_filter_0x49cf34 = selected_attach.candidate_count_after_filter;
+	result.selected_object_attach_member_count_after_0x49cf34 = selected_attach.selected_member_count_after;
+	result.selected_object_attach_blocked_reason_0x49cf34 = selected_attach.blocked_reason;
+	if (!selected_attach.applied) {
+		result.blocked_reason = selected_attach.blocked_reason.empty()
+				? "0x4aa354_0x49cf34_selected_object_attach_failed"
+				: selected_attach.blocked_reason;
+		return result;
+	}
 
 	result.final_candidate_rebuild_invoked_0x49d7c3 = true;
 	const RewardGuardWrapperCandidateRebuildResult49d7c3 final_rebuild =
@@ -5235,6 +6095,11 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 
 	result.applied = true;
 	return result;
+}
+
+static bool reward_guard_materialization_false_is_source_order_attempt_failure_0x4aab7e(const std::string &reason) {
+	return reason == "0x4aa354_0x4a960a_attach_value_not_positive"
+			|| reason == "0x49cf34_candidate_vector_empty_after_bit26_and_0x49d2e0_filters";
 }
 
 RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng) {
@@ -5337,8 +6202,11 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 					attempt.blocked_reason = attempt.materialization_0x4aa354.blocked_reason.empty()
 							? "0x4aab7e_0x4aa354_materialization_failed"
 							: attempt.materialization_0x4aa354.blocked_reason;
-					result.blocked_reason = attempt.blocked_reason;
 					result.attempts.push_back(attempt);
+					if (reward_guard_materialization_false_is_source_order_attempt_failure_0x4aab7e(attempt.blocked_reason)) {
+						continue;
+					}
+					result.blocked_reason = attempt.blocked_reason;
 					return result;
 				}
 
@@ -5357,6 +6225,46 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 					lane_success = true;
 					result.attempts.push_back(attempt);
 					break;
+				}
+				if (selector != nullptr) {
+					RewardGuardRelationPriorityResult4ad7f7 ordered_relations =
+							reward_guard_relation_priority_ordering_0x4ad7f7(
+									state.relation_owner_vectors_10e4_10e8,
+									selector->owner_vector_index,
+									rng,
+									false);
+					state.reward_guard_relation_priority_0x4ad7f7 = ordered_relations;
+					if (ordered_relations.ordered_vector_ready_for_0x4aa9b7) {
+						for (const int32_t owner_vector_index : ordered_relations.ordered_owner_vector_indexes_0x4ccecb) {
+							auto relation_it = std::find_if(
+									state.relation_owner_vectors_10e4_10e8.begin(),
+									state.relation_owner_vectors_10e4_10e8.end(),
+									[&](const GeneratorRelationOwnerState4a218c &owner) {
+										return owner.owner_vector_index == owner_vector_index;
+									});
+							if (relation_it == state.relation_owner_vectors_10e4_10e8.end()) {
+								continue;
+							}
+							const RewardGuardCoordinateScanResult4aa9b7 ordered_coordinate_scan =
+									reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+											state,
+											wrapper,
+											*relation_it,
+											result.minimum_low_word_score_0x10,
+											true,
+											rng);
+							if (ordered_coordinate_scan.applied && ordered_coordinate_scan.blocked_reason.empty()) {
+								result.successful_coordinate_scan_count += 1;
+								lane_success = true;
+								attempt.coordinate_scan_applied_0x4aa9b7 = true;
+								result.attempts.push_back(attempt);
+								break;
+							}
+						}
+						if (lane_success) {
+							break;
+						}
+					}
 				}
 				attempt.wrapper_cleanup_invoked_0x49cebd = true;
 				attempt.blocked_reason = coordinate_scan.blocked_reason.empty()
@@ -5463,39 +6371,39 @@ static bool reward_guard_generated_footprint_rejects_0x4aa603(
 		int32_t absolute_level,
 		RewardGuardFeasibilityResult4aa603 &result) {
 	result.footprint_member_scan_count_0x49a6f9 += 1;
-	if (!member.descriptor_body_offsets_0x49a6f9_known || member.descriptor_body_offsets_0x49a6f9.empty()) {
+	if (!member.source_record_copy_known_0x04) {
 		result.inputs_available = false;
-		result.blocked_reason = "0x4aa603_0x49a6f9_descriptor_body_offsets_missing";
+		result.blocked_reason = "0x4aa603_0x49a6f9_source_record_copy_missing";
 		return true;
 	}
-	for (const CoordinateCandidate4a17f5 &offset : member.descriptor_body_offsets_0x49a6f9) {
-		result.footprint_body_cell_scan_count_0x49a6f9 += 1;
-		const GeneratedCellRecord0x30 *record = generator_state_cell_0x4aa603(
-				state,
-				absolute_x + offset.x,
-				absolute_y + offset.y,
-				absolute_level + offset.level);
-		if (record == nullptr
-				|| !record->word_0x20_known
-				|| !record->word_0x24_known
-				|| !record->word_0x28_known
-				|| !record->word_0x2c_known) {
-			result.inputs_available = false;
-			result.footprint_reject_count_0x49a6f9 += 1;
-			result.blocked_reason = "0x4aa603_0x49a6f9_footprint_cell_missing";
-			return true;
-		}
-		const bool bit22 = (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
-		const bool bit27 = (record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
-		if (generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(relation.runtime_zone_index & 0xff)
-				|| !generated_cell_49a1d8_valid_record(*record)
-				|| bit22
-				|| bit27
-				|| (record->word_0x2c & 0x01U) != 0U) {
-			result.footprint_reject_count_0x49a6f9 += 1;
-			result.blocked_reason = "0x4aa603_0x49a6f9_footprint_rejected";
-			return true;
-		}
+	if (!state.generated_cell_buffer_owned
+			|| state.generated_cell_buffer.records.empty()
+			|| state.width <= 0
+			|| state.height <= 0
+			|| state.level_count <= 0) {
+		result.inputs_available = false;
+		result.blocked_reason = "0x4aa603_0x49a6f9_generated_cell_buffer_missing";
+		return true;
+	}
+	const SourceDescriptorFootprintResult49a6f9 footprint =
+			source_descriptor_footprint_rejects_0x49a6f9(
+					state.generated_cell_buffer,
+					member.source_record_copy,
+					absolute_x,
+					absolute_y,
+					absolute_level,
+					relation.runtime_zone_index,
+					true);
+	result.footprint_body_cell_scan_count_0x49a6f9 += footprint.scanned_cell_count;
+	if (!footprint.inputs_available) {
+		result.inputs_available = false;
+	}
+	if (footprint.rejected) {
+		result.footprint_reject_count_0x49a6f9 += 1;
+		result.blocked_reason = footprint.blocked_reason.empty()
+				? "0x4aa603_0x49a6f9_footprint_rejected"
+				: "0x4aa603_" + footprint.blocked_reason;
+		return true;
 	}
 	return false;
 }
@@ -5637,11 +6545,15 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 
 	const RewardGuardWrapperMember4aa3e9 &last_member = wrapper.selected_members_0x2c_0x30.back();
 	const bool terrain8_policy = relation.terrain_policy_0x0c == 8;
-	const int32_t direction_count = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1) ? 8 : 5;
-	for (int32_t direction_index = 0; direction_index < direction_count; ++direction_index) {
+	const bool full_direction_policy = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1);
+	const int32_t direction_start = full_direction_policy ? 0 : 1;
+	const int32_t direction_end = full_direction_policy ? 8 : 4;
+	const int32_t base_x = last_member.relative_x_0x08 - last_member.descriptor_offset_x_0x2c;
+	const int32_t base_y = last_member.relative_y_0x0c - last_member.descriptor_offset_y_0x30;
+	for (int32_t direction_index = direction_start; direction_index < direction_end; ++direction_index) {
 		result.direction_scan_count += 1;
-		const int32_t local_x = last_member.descriptor_offset_x_0x2c + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
-		const int32_t local_y = last_member.descriptor_offset_y_0x30 + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+		const int32_t local_x = base_x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+		const int32_t local_y = base_y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
 		const GeneratedCellRecord0x30 *wrapper_record = reward_guard_wrapper_cell_0x49d2e0(wrapper, local_x, local_y, candidate_level);
 		const GeneratedCellRecord0x30 *state_record = generator_state_cell_0x4aa603(
 				state,
@@ -5715,10 +6627,10 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				}
 				result.overlap_scan_count += 1;
 				const bool wrapper_bit27 = (wrapper_record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
-				const bool state_bit26 = (state_record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
-				if (!wrapper_bit27 && state_bit26) {
+				const bool state_bit22 = (state_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+				if (!wrapper_bit27 && state_bit22) {
 					result.overlap_bit26_reject_count += 1;
-					result.blocked_reason = "0x4aa603_overlap_existing_bit26_reject";
+					result.blocked_reason = "0x4aa603_overlap_existing_bit22_reject";
 					return result;
 				}
 			}
@@ -5886,20 +6798,22 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 
 	const int32_t wrapper_center_x = (wrapper.bound_left_0x18 + wrapper.bound_right_0x20) / 2;
 	const int32_t wrapper_center_y = (wrapper.bound_top_0x1c + wrapper.bound_bottom_0x24) / 2;
-	result.scan_min_x = std::max<int32_t>(0, relation.scan_bound_low_x_0x20 - wrapper.bound_left_0x18 + wrapper_center_x);
-	result.scan_min_y = std::max<int32_t>(0, relation.scan_bound_low_y_0x24 - wrapper.bound_top_0x1c + wrapper_center_y);
-	result.scan_max_x_exclusive = std::min<int32_t>(state.width, relation.scan_bound_high_x_0x28 + 1 - wrapper.bound_right_0x20 + wrapper_center_x);
-	result.scan_max_y_exclusive = std::min<int32_t>(state.height, relation.scan_bound_high_y_0x2c + 1 - wrapper.bound_bottom_0x24 + wrapper_center_y);
+	result.scan_min_x = relation.scan_bound_low_x_0x20 - wrapper.bound_left_0x18;
+	result.scan_min_y = relation.scan_bound_low_y_0x24 - wrapper.bound_top_0x1c;
+	result.scan_max_x_exclusive = relation.scan_bound_high_x_0x28 + 1 - wrapper.bound_right_0x20;
+	result.scan_max_y_exclusive = relation.scan_bound_high_y_0x2c + 1 - wrapper.bound_bottom_0x24;
 	result.scan_bounds_non_empty = result.scan_max_x_exclusive > result.scan_min_x && result.scan_max_y_exclusive > result.scan_min_y;
 	if (!result.scan_bounds_non_empty) {
 		return finish_blocked("0x4aa9b7_scan_bounds_empty_or_unordered");
 	}
 
 	int32_t current_threshold = minimum_low_word_score_0x10;
-	for (int32_t y = result.scan_min_y; y < result.scan_max_y_exclusive; ++y) {
-		for (int32_t x = result.scan_min_x; x < result.scan_max_x_exclusive; ++x) {
+	for (int32_t candidate_y = result.scan_min_y; candidate_y < result.scan_max_y_exclusive; ++candidate_y) {
+		for (int32_t candidate_x = result.scan_min_x; candidate_x < result.scan_max_x_exclusive; ++candidate_x) {
 			result.scanned_cell_count += 1;
-			const int64_t flat = cell_index(state.width, state.height, x, y, relation.coordinate_level_0x18);
+			const int32_t score_x = candidate_x + wrapper_center_x;
+			const int32_t score_y = candidate_y + wrapper_center_y;
+			const int64_t flat = cell_index(state.width, state.height, score_x, score_y, relation.coordinate_level_0x18);
 			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
 				result.out_of_bounds_cell_count += 1;
 				continue;
@@ -5923,8 +6837,8 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 							state,
 							wrapper,
 							relation,
-							x,
-							y,
+							candidate_x,
+							candidate_y,
 							relation.coordinate_level_0x18);
 			result.feasibility_results_0x4aa603.push_back(feasibility);
 			if (!feasibility.inputs_available) {
@@ -5942,8 +6856,8 @@ RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x
 				result.local_vector_clear_count_0x4ae52a += 1;
 			}
 			RewardGuardCandidate4aa9b7 candidate;
-			candidate.x = x;
-			candidate.y = y;
+			candidate.x = candidate_x;
+			candidate.y = candidate_y;
 			candidate.level = relation.coordinate_level_0x18;
 			candidate.low_word_score = low_word_score;
 			result.accepted_candidates_0x4ae1fd.push_back(candidate);
@@ -8832,6 +9746,8 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_pointer_source_index_0x00 = seed.source_index;
 	owner.source_pointer_type_0x04_known = seed.source_index >= 0;
 	owner.source_pointer_type_0x04 = seed.source_payload.source_type_code;
+	owner.source_pointer_value_0x90_known = seed.source_index >= 0;
+	owner.source_pointer_value_0x90 = seed.source_payload.monster_strength_mode;
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
@@ -9885,11 +10801,13 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 	return result;
 }
 
-GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const GeneratorSetupModeResult49ecf2 &setup_mode, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	GeneratorObjectPrivateState state;
 	state.width = width;
 	state.height = height;
 	state.level_count = level_count;
+	state.generator_value_band_0x10bc_known = setup_mode.generator_value_band_0x10bc_known;
+	state.generator_value_band_0x10bc = setup_mode.generator_value_band_0x10bc;
 	state.generated_cell_buffer = generated_cell_record_grid_reset_0x49a072(width, height, level_count);
 	state.generated_cell_buffer_owned = !state.generated_cell_buffer.records.empty();
 	if (coordinate_result.terrain_repaint_executed) {
@@ -10171,6 +11089,15 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 			state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7.blocked_reason =
 					state.reward_guard_source_stream_0x4aab7e.blocked_reason;
 		}
+		state.remaining_private_state_blockers = {
+			state.reward_guard_source_stream_0x4aab7e.blocked_reason,
+			"connection_road_river_0x4a79a3_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
+			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+			"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
+		};
+		return state;
 	}
 	const bool reward_guard_source_stream_executed_without_commit =
 			state.reward_guard_source_stream_0x4aab7e.invoked
@@ -10260,7 +11187,11 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		return result;
 	}
 
-	result.setup_mode_0x49ecf2 = generator_setup_mode_49ecf2(config.seed, config.setup_object_0x44);
+	result.setup_mode_0x49ecf2 = generator_setup_mode_49ecf2(
+			config.seed,
+			config.setup_object_0x44,
+			config.setup_object_0x48_known,
+			config.setup_object_0x48);
 	const int32_t score = size_score(
 			config.width,
 			config.height,
@@ -10332,6 +11263,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					config.size_class,
 					config.water_mode,
 					config.seed,
+					result.setup_mode_0x49ecf2,
 					result.template_selection_0x4ac552,
 					result.coordinate_owner_grid_0x4a218c);
 	if (!result.generator_object_private_state.generated_cell_buffer_owned) {
