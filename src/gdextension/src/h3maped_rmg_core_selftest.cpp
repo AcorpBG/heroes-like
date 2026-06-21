@@ -25,6 +25,8 @@ using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellRecordGrid0x30;
 using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
 using aurelion::h3maped_rmg_core::H3MapedRng;
+using aurelion::h3maped_rmg_core::H3MapedRmgWorkflowConfig;
+using aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult;
 using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
 using aurelion::h3maped_rmg_core::RewardGuardCoordinateScanResult4aa9b7;
@@ -3901,6 +3903,57 @@ int main() {
 	}
 	if (!require(composed_mode2.coordinate_seed.coordinate_prune_span_budget_4a218c == (minimum_source_base_size * 36) / 7, "0x4a218c mode 2 coordinate prune span budget mismatch")) {
 		return 1;
+	}
+	{
+		H3MapedRmgWorkflowConfig workflow_config;
+		workflow_config.size_class = "small";
+		workflow_config.water_mode = "land";
+		workflow_config.width = 36;
+		workflow_config.height = 36;
+		workflow_config.level_count = 1;
+		workflow_config.human_count = 1;
+		workflow_config.player_count = 3;
+		workflow_config.seed = 11U;
+		workflow_config.setup_object_0x44_known = true;
+		workflow_config.setup_object_0x44 = 0;
+		const H3MapedRmgWorkflowResult workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
+		if (!require(workflow.supported_scope
+						&& workflow.executed
+						&& workflow.status == "blocked"
+						&& workflow.current_phase_id == "reward_guard_materialization"
+						&& !workflow.final_payload_owned
+						&& !workflow.final_writeout_complete,
+					"entry-to-writeout workflow did not run through the owned phases before blocking at reward/guard materialization")) {
+			return 1;
+		}
+		if (!require(workflow.blocked_reason == "0x4ad947_projection_object_and_global_candidate_table_live_input_pending_before_selected_global_entry",
+					"entry-to-writeout workflow did not preserve the exact current reward/guard source-stream blocker")) {
+			return 1;
+		}
+		if (!require(workflow.phases.size() >= 8
+						&& workflow.phases[0].id == "entry_scope"
+						&& workflow.phases[1].id == "setup_template_selection"
+						&& workflow.phases[2].id == "coordinate_boundary_terrain"
+						&& workflow.phases[3].id == "generator_object_private_state"
+						&& workflow.phases[4].id == "relation_scan_consumers"
+						&& workflow.phases[5].id == "source_order_object_materialization"
+						&& workflow.phases[6].id == "relation_high_owner_propagation"
+						&& workflow.phases[7].id == "reward_guard_materialization"
+						&& workflow.phases[7].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order up to the current blocker")) {
+			return 1;
+		}
+		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
+						&& workflow.template_selection_0x4ac552.accepted_template_count > 0
+						&& !workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.empty()
+						&& workflow.coordinate_owner_grid_0x4a218c.owner_grid_executed
+						&& workflow.generator_object_private_state.generated_cell_buffer_owned
+						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
+						&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied,
+					"entry-to-writeout workflow did not carry setup/template/coordinate/object private state through the shared core runner")) {
+			return 1;
+		}
 	}
 
 	std::cout << "h3maped_rmg_core_selftest: ok\n";
