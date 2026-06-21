@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <deque>
 #include <limits>
 #include <queue>
 #include <set>
@@ -9446,6 +9447,444 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 	}
 }
 
+struct RoutePoint4a8260 {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
+struct RouteFreeCellPhaseResult4a8260 {
+	bool route_0x4a8260_ported = true;
+	bool input_known = false;
+	bool route_0x4a8260_applied = false;
+	bool candidate_boundary_0x4a4c8e_applied = false;
+	std::string blocked_reason;
+	uint32_t rng_state_before = 0U;
+	uint32_t rng_state_after = 0U;
+	int32_t route_scan_cell_count = 0;
+	int32_t route_scan_empty_object_vector_count = 0;
+	int32_t route_scan_nonempty_object_vector_count = 0;
+	int32_t route_stamp_call_count_0x49a85d = 0;
+	int32_t route_cut_call_count_0x4a80dc = 0;
+	int32_t final_sweep_call_count_0x49a962 = 0;
+	int32_t candidate_boundary_scan_count_0x4a4c8e = 0;
+	int32_t candidate_boundary_trigger_count_0x4a4c8e = 0;
+};
+
+static bool generated_cell_record_input_known_for_route_0x4a8260(const GeneratedCellRecord0x30 &record) {
+	return record.object_reference_vector_fields_0x04_0x08_present
+			&& record.object_reference_vector_contents_known
+			&& record.word_0x20_known
+			&& record.word_0x24_known
+			&& record.word_0x28_known
+			&& record.word_0x2c_known;
+}
+
+static bool generated_cell_record_object_vector_empty_0x4a8260(const GeneratedCellRecord0x30 &record) {
+	return record.object_reference_vector_contents_known && record.object_references_0x04_0x08.empty();
+}
+
+static bool route_point_in_bounds_0x4a8260(const GeneratedCellRecordGrid0x30 &grid, const RoutePoint4a8260 &point) {
+	return point.x >= 0 && point.y >= 0 && point.x < grid.width && point.y < grid.height;
+}
+
+static bool route_inner_point_in_bounds_0x4a80dc(const GeneratedCellRecordGrid0x30 &grid, const RoutePoint4a8260 &point) {
+	return point.x >= 1 && point.y >= 1 && point.x < grid.width - 1 && point.y < grid.height - 1;
+}
+
+static int32_t route_half_sum_0x4a8260(int32_t a, int32_t b) {
+	return (a + b + 1) / 2;
+}
+
+static int32_t route_distance_0x4cc5ad(int32_t dx, int32_t dy) {
+	const int64_t squared = int64_t(dx) * int64_t(dx) + int64_t(dy) * int64_t(dy);
+	return int32_t(std::sqrt(double(squared)));
+}
+
+static int32_t route_step_sign_0x4a80dc(int32_t delta) {
+	return delta <= 0 ? -1 : 1;
+}
+
+static GeneratedCell49a85dStampResult generated_cell_49a85d_stamp_record_grid(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level) {
+	GeneratedCell49a85dStampResult result;
+	const int64_t center_flat = cell_index(grid.width, grid.height, x, y, level);
+	if (center_flat < 0 || center_flat >= int64_t(grid.records.size())) {
+		return result;
+	}
+	result.center_in_bounds = true;
+	result.center_set = generated_cell_49a932(grid.records[size_t(center_flat)], true);
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(grid.width, x + 2);
+	const int32_t max_y = std::min<int32_t>(grid.height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			result.covered_cell_count += 1;
+			if (generated_cell_49a932(grid.records[size_t(flat)], true)) {
+				result.covered_set_count += 1;
+			}
+		}
+	}
+	return result;
+}
+
+static GeneratedCell49a962SweepResult generated_cell_49a962_record_grid(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level) {
+	GeneratedCell49a962SweepResult result;
+	const int64_t center_flat = cell_index(grid.width, grid.height, x, y, level);
+	if (center_flat < 0 || center_flat >= int64_t(grid.records.size())) {
+		return result;
+	}
+	result.center_in_bounds = true;
+	result.center_candidate_set = generated_cell_49aa63(grid.records[size_t(center_flat)], true);
+
+	const int32_t min_x = std::max<int32_t>(0, x - 1);
+	const int32_t min_y = std::max<int32_t>(0, y - 1);
+	const int32_t max_x = std::min<int32_t>(grid.width, x + 2);
+	const int32_t max_y = std::min<int32_t>(grid.height, y + 2);
+	for (int32_t local_y = min_y; local_y < max_y; ++local_y) {
+		for (int32_t local_x = min_x; local_x < max_x; ++local_x) {
+			const int64_t flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			result.neighbor_scan_count += 1;
+			if (!record.word_0x28_known || (record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+				result.neighbor_bit22_skip_count += 1;
+				continue;
+			}
+			if (!generated_cell_49a1d8_valid_record(record)) {
+				result.neighbor_invalid_skip_count += 1;
+				continue;
+			}
+			if ((record.word_0x24 & 0x3fU) == 8U) {
+				result.neighbor_terrain8_skip_count += 1;
+				continue;
+			}
+			if (generated_cell_49a932(record, false)) {
+				result.neighbor_clear_count += 1;
+			}
+		}
+	}
+	return result;
+}
+
+static RoutePoint4a8260 route_cut_0x4a80dc(const GeneratedCellRecordGrid0x30 &grid, const RoutePoint4a8260 &start, const RoutePoint4a8260 &target, int32_t level, bool &occupied_hit, bool &boundary_return) {
+	occupied_hit = false;
+	boundary_return = false;
+	const int32_t dx = target.x - start.x;
+	const int32_t dy = target.y - start.y;
+	const int32_t abs_dx = std::abs(dx);
+	const int32_t abs_dy = std::abs(dy);
+	RoutePoint4a8260 current = start;
+	RoutePoint4a8260 previous = start;
+	const int32_t guard_limit = std::max<int32_t>(8, (grid.width + grid.height) * 4);
+	int32_t step_count = 0;
+	auto occupied_neighborhood = [&](const RoutePoint4a8260 &point) {
+		for (int32_t y = point.y - 1; y <= point.y + 1; ++y) {
+			for (int32_t x = point.x - 1; x <= point.x + 1; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat >= 0
+						&& flat < int64_t(grid.records.size())
+						&& grid.records[size_t(flat)].word_0x28_known
+						&& (grid.records[size_t(flat)].word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+	if (abs_dx > abs_dy) {
+		const int32_t step_x = route_step_sign_0x4a80dc(dx);
+		const int32_t step_y = route_step_sign_0x4a80dc(dy);
+		int32_t error = abs_dx / 2;
+		while (step_count < guard_limit) {
+			previous = current;
+			error += abs_dy;
+			if (error >= abs_dx) {
+				error -= abs_dx;
+				current.y += step_y;
+			}
+			current.x += step_x;
+			step_count += 1;
+			if (!route_inner_point_in_bounds_0x4a80dc(grid, current)) {
+				boundary_return = true;
+				return previous;
+			}
+			if (step_count <= 2) {
+				continue;
+			}
+			if (occupied_neighborhood(current)) {
+				occupied_hit = true;
+				return previous;
+			}
+		}
+		boundary_return = true;
+		return previous;
+	}
+	const int32_t step_x = route_step_sign_0x4a80dc(dx);
+	const int32_t step_y = route_step_sign_0x4a80dc(dy);
+	int32_t error = abs_dy / 2;
+	while (step_count < guard_limit) {
+		previous = current;
+		error += abs_dx;
+		if (error >= abs_dy) {
+			error -= abs_dy;
+			current.x += step_x;
+		}
+		current.y += step_y;
+		step_count += 1;
+		if (!route_inner_point_in_bounds_0x4a80dc(grid, current)) {
+			boundary_return = true;
+			return previous;
+		}
+		if (step_count <= 2) {
+			continue;
+		}
+		if (occupied_neighborhood(current)) {
+			occupied_hit = true;
+			return previous;
+		}
+	}
+	boundary_return = true;
+	return previous;
+}
+
+static bool relation_lookup_wide_0x4a4c8e(const std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t owner_runtime_zone, int32_t neighbor_runtime_zone, bool &wide) {
+	wide = false;
+	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
+		if (owner.runtime_zone_index != owner_runtime_zone) {
+			continue;
+		}
+		for (const GeneratorRelationRecordState4a218c &record : owner.relation_records) {
+			if (record.target_runtime_zone_index == neighbor_runtime_zone) {
+				wide = record.wide;
+				return true;
+			}
+		}
+		return false;
+	}
+	return false;
+}
+
+static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, H3MapedRng &rng) {
+	RouteFreeCellPhaseResult4a8260 result;
+	result.rng_state_before = rng.state;
+	result.rng_state_after = rng.state;
+	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || expected_cell_count <= 0 || expected_cell_count != int64_t(grid.records.size())) {
+		result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_invalid_generated_cell_grid";
+		return result;
+	}
+	for (const GeneratedCellRecord0x30 &record : grid.records) {
+		if (!generated_cell_record_input_known_for_route_0x4a8260(record)) {
+			result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_generated_cell_record_input_unknown";
+			return result;
+		}
+	}
+	result.input_known = true;
+
+	for (GeneratedCellRecord0x30 &record : grid.records) {
+		result.route_scan_cell_count += 1;
+		if ((record.word_0x2c & 0x1U) != 0U) {
+			continue;
+		}
+		if (generated_cell_record_object_vector_empty_0x4a8260(record)) {
+			result.route_scan_empty_object_vector_count += 1;
+			generated_cell_49aa63(record, true);
+		} else {
+			result.route_scan_nonempty_object_vector_count += 1;
+			generated_cell_49a932(record, true);
+		}
+	}
+
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		const int32_t orientation = rng.next() % 4;
+		RoutePoint4a8260 start;
+		RoutePoint4a8260 end;
+		switch (orientation) {
+			case 0:
+				start = { 0, 0 };
+				end = { grid.width - 1, grid.height - 1 };
+				break;
+			case 1:
+				start = { grid.width / 2, 0 };
+				end = { grid.width / 2, grid.height - 1 };
+				break;
+			case 2:
+				start = { grid.width - 1, 0 };
+				end = { 0, grid.height - 1 };
+				break;
+			default:
+				start = { 0, grid.height / 2 };
+				end = { grid.width - 1, grid.height / 2 };
+				break;
+		}
+		std::vector<RoutePoint4a8260> pending;
+		std::deque<std::pair<RoutePoint4a8260, RoutePoint4a8260>> secondary;
+		pending.push_back(end);
+		pending.push_back(start);
+		const int32_t guard_limit = std::max<int32_t>(1024, int32_t(expected_cell_count) * 16);
+		int32_t guard_count = 0;
+		while (guard_count < guard_limit) {
+			while (pending.size() >= 2 && guard_count < guard_limit) {
+				guard_count += 1;
+				const RoutePoint4a8260 p1 = pending.back();
+				pending.pop_back();
+				const RoutePoint4a8260 p2 = pending.back();
+				pending.pop_back();
+				const RoutePoint4a8260 mid { route_half_sum_0x4a8260(p1.x, p2.x), route_half_sum_0x4a8260(p1.y, p2.y) };
+				if ((mid.x == p1.x && mid.y == p1.y) || (mid.x == p2.x && mid.y == p2.y)) {
+					if (route_point_in_bounds_0x4a8260(grid, p2)) {
+						result.route_stamp_call_count_0x49a85d += 1;
+						generated_cell_49a85d_stamp_record_grid(grid, p2.x, p2.y, level);
+					}
+					continue;
+				}
+				const int32_t dx_p2_to_p1 = p1.x - p2.x;
+				const int32_t dyneg_p2_to_p1 = p2.y - p1.y;
+				const int32_t distance = route_distance_0x4cc5ad(dx_p2_to_p1, dyneg_p2_to_p1);
+				RoutePoint4a8260 randomized_mid = mid;
+				if (distance > 1) {
+					const int32_t split_rng_value = rng.next();
+					const int32_t offset = (split_rng_value % distance) - (distance / 2);
+					randomized_mid.x += (offset * dyneg_p2_to_p1) / distance;
+					randomized_mid.y += (offset * dx_p2_to_p1) / distance;
+				}
+				pending.push_back(p1);
+				pending.push_back(randomized_mid);
+				pending.push_back(randomized_mid);
+				pending.push_back(p2);
+				if (distance >= 8 && route_point_in_bounds_0x4a8260(grid, randomized_mid)) {
+					const RoutePoint4a8260 target_a { randomized_mid.x + dyneg_p2_to_p1, randomized_mid.y + dx_p2_to_p1 };
+					const RoutePoint4a8260 target_b { randomized_mid.x - dyneg_p2_to_p1, randomized_mid.y - dx_p2_to_p1 };
+					secondary.push_back(std::make_pair(randomized_mid, target_a));
+					secondary.push_back(std::make_pair(randomized_mid, target_b));
+				}
+			}
+			if (!pending.empty()) {
+				result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_route_pending_guard_exhausted";
+				result.rng_state_after = rng.state;
+				return result;
+			}
+			if (secondary.empty()) {
+				break;
+			}
+			const auto pair = secondary.front();
+			secondary.pop_front();
+			bool occupied_hit = false;
+			bool boundary_return = false;
+			result.route_cut_call_count_0x4a80dc += 1;
+			const RoutePoint4a8260 returned = route_cut_0x4a80dc(grid, pair.first, pair.second, level, occupied_hit, boundary_return);
+			(void)occupied_hit;
+			(void)boundary_return;
+			const int32_t delta_x = returned.x - pair.first.x;
+			const int32_t delta_y = returned.y - pair.first.y;
+			if (delta_x * delta_x + delta_y * delta_y >= 25) {
+				pending.push_back(returned);
+				pending.push_back(pair.first);
+			}
+		}
+		if (guard_count >= guard_limit) {
+			result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_route_guard_exhausted";
+			result.rng_state_after = rng.state;
+			return result;
+		}
+	}
+
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
+				if (terrain_class == 8U || terrain_class == 9U) {
+					generated_cell_49a932(record, true);
+				}
+				if ((record.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
+					continue;
+				}
+				result.final_sweep_call_count_0x49a962 += 1;
+				generated_cell_49a962_record_grid(grid, x, y, level);
+			}
+		}
+	}
+	result.route_0x4a8260_applied = true;
+	result.rng_state_after = rng.state;
+
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				result.candidate_boundary_scan_count_0x4a4c8e += 1;
+				const int32_t owner_signed = int32_t(int8_t((record.word_0x20 >> 16U) & 0xffU));
+				if (owner_signed < 0 || (record.word_0x24 & 0x3fU) == 8U) {
+					continue;
+				}
+				bool triggered = false;
+				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
+						const int64_t neighbor_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size()) || neighbor_flat == flat) {
+							continue;
+						}
+						const GeneratedCellRecord0x30 &neighbor = grid.records[size_t(neighbor_flat)];
+						const int32_t neighbor_owner_signed = int32_t(int8_t((neighbor.word_0x20 >> 16U) & 0xffU));
+						if (neighbor_owner_signed < 0) {
+							if ((neighbor.word_0x24 & 0x3fU) == 8U) {
+								triggered = true;
+							}
+							continue;
+						}
+						if (neighbor_owner_signed == owner_signed) {
+							continue;
+						}
+						bool relation_wide = false;
+						const bool relation_found = relation_lookup_wide_0x4a4c8e(owners, owner_signed, neighbor_owner_signed, relation_wide);
+						if (!relation_found || level == 1 || !relation_wide) {
+							triggered = true;
+						}
+					}
+				}
+				if (!triggered) {
+					continue;
+				}
+				result.candidate_boundary_trigger_count_0x4a4c8e += 1;
+				generated_cell_49aa63(record, true);
+				if ((record.word_0x24 & 0x3fU) != 8U && generated_cell_record_object_vector_empty_0x4a8260(record)) {
+					generated_cell_49aa63(record, true);
+				}
+				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
+						const int64_t candidate_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+						if (candidate_flat < 0 || candidate_flat >= int64_t(grid.records.size())) {
+							continue;
+						}
+						GeneratedCellRecord0x30 &candidate = grid.records[size_t(candidate_flat)];
+						if (!generated_cell_record_object_vector_empty_0x4a8260(candidate)) {
+							continue;
+						}
+						generated_cell_49a932(candidate, false);
+					}
+				}
+			}
+		}
+	}
+	result.candidate_boundary_0x4a4c8e_applied = true;
+	return result;
+}
+
 GeneratorObjectPrivateState generator_object_private_state_from_recovered_partial_chain(int32_t width, int32_t height, int32_t level_count, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	GeneratorObjectPrivateState state;
 	state.width = width;
@@ -9592,32 +10031,45 @@ GeneratorObjectPrivateState generator_object_private_state_from_recovered_partia
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
 
-	state.route_container_free_cell_sweep_0x4a8260_ported = false;
-	state.route_container_free_cell_sweep_0x4a8260_input_known = false;
-	state.route_container_free_cell_sweep_0x4a8260_applied = false;
-	state.route_container_free_cell_sweep_0x4a8260_blocked_reason =
-			"route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e";
-	state.remaining_private_state_blockers = {
-		"route_container_free_cell_sweep_0x4a8260_center_feed_unported_before_0x4a4c8e",
-		"candidate_relation_phase_0x4a4c8e_unported_after_0x4a8260",
-		"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
-		"source_order_object_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
-		"reward_guard_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
-		"connection_road_river_0x4a79a3_not_executed_until_upstream_generated_cell_phase_is_owned",
-		"final_writeout_not_executed_until_source_order_payload_is_owned",
-	};
-	return state;
-
+	H3MapedRng route_free_cell_rng;
+	if (coordinate_result.terrain_repaint_executed) {
+		route_free_cell_rng.state = coordinate_result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
+	} else if (coordinate_result.terrain_selection_executed) {
+		route_free_cell_rng.state = coordinate_result.terrain_selection.rng_state_after;
+	} else {
+		route_free_cell_rng.state = coordinate_result.coordinate_seed.rng_state_after;
+	}
+	const RouteFreeCellPhaseResult4a8260 route_free_cell_phase =
+			route_free_cell_phase_0x4a8260_0x4a4c8e(
+					state.generated_cell_buffer,
+					state.relation_owner_vectors_10e4_10e8,
+					route_free_cell_rng);
+	state.route_container_free_cell_sweep_0x4a8260_ported = route_free_cell_phase.route_0x4a8260_ported;
+	state.route_container_free_cell_sweep_0x4a8260_input_known = route_free_cell_phase.input_known;
+	state.route_container_free_cell_sweep_0x4a8260_applied =
+			route_free_cell_phase.route_0x4a8260_applied
+			&& route_free_cell_phase.candidate_boundary_0x4a4c8e_applied;
+	state.route_container_free_cell_sweep_0x4a8260_blocked_reason = route_free_cell_phase.blocked_reason;
+	if (!state.route_container_free_cell_sweep_0x4a8260_applied
+			|| !state.route_container_free_cell_sweep_0x4a8260_blocked_reason.empty()) {
+		if (state.route_container_free_cell_sweep_0x4a8260_blocked_reason.empty()) {
+			state.route_container_free_cell_sweep_0x4a8260_blocked_reason =
+					"route_container_free_cell_sweep_0x4a8260_or_candidate_relation_0x4a4c8e_not_applied";
+		}
+		state.remaining_private_state_blockers = {
+			state.route_container_free_cell_sweep_0x4a8260_blocked_reason,
+			"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+			"source_order_object_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+			"reward_guard_materialization_not_executed_until_0x4a8260_0x4a4c8e_are_owned",
+			"connection_road_river_0x4a79a3_not_executed_until_upstream_generated_cell_phase_is_owned",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return state;
+	}
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
 	SourceObjectResolverState4af785 relation_scan_resolver_state;
 	H3MapedRng relation_scan_rng;
-	if (coordinate_result.terrain_repaint_executed) {
-		relation_scan_rng.state = coordinate_result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
-	} else if (coordinate_result.terrain_selection_executed) {
-		relation_scan_rng.state = coordinate_result.terrain_selection.rng_state_after;
-	} else {
-		relation_scan_rng.state = coordinate_result.coordinate_seed.rng_state_after;
-	}
+	relation_scan_rng.state = route_free_cell_rng.state;
 	const RelationScanConsumerResult4a5767 relation_scan_consumers =
 			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state, relation_scan_resolver_state, relation_scan_rng, state.relation_owner_vectors_10e4_10e8);
 	preserve_source_pair_vector_edc(state, relation_scan_resolver_state);
@@ -9923,7 +10375,9 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	if (!relation_scan_owned) {
 		result.current_phase_id = "relation_scan_consumers";
 		result.status = "blocked";
-		result.blocked_reason = "h3maped_workflow_relation_scan_0x4a1f3b_0x4a5767_not_owned";
+		result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
+				? object_state.remaining_private_state_blockers.front()
+				: "h3maped_workflow_relation_scan_0x4a1f3b_0x4a5767_not_owned";
 		add_phase("relation_scan_consumers", "0x4a1f3b_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "blocked", result.blocked_reason);
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
