@@ -39,8 +39,10 @@ using aurelion::h3maped_rmg_core::SourceObjectMaskLaneResult4af89f;
 using aurelion::h3maped_rmg_core::ObjectMaterializationPrep4a8db2_4a901a;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
 using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
+using aurelion::h3maped_rmg_core::SourceObjectResolverSourcePair4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
 using aurelion::h3maped_rmg_core::SourceObjectSelectorResult4a9e40;
+using aurelion::h3maped_rmg_core::SourceOrderSchedulerResult4a8db2;
 using aurelion::h3maped_rmg_core::SourceZonePayload4a218c;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucket0xe8;
 using aurelion::h3maped_rmg_core::SourceObjectWrapperBucketSummary0xe8;
@@ -2443,6 +2445,124 @@ int main() {
 				"0x4a8db2 weighted scheduler threshold did not fail closed on zero density")) {
 		return 1;
 	}
+	auto make_scheduler_pair = [&](const SourceObjectRecord0x4c &record) {
+		SourceObjectResolverSourcePair4af785 pair;
+		pair.copied_source_catalog_index = weighted_join.source_catalog_index_0x49da08;
+		pair.wrapper_index = 7;
+		pair.source_record_pointer_0x00_carried = true;
+		pair.source_record_copy = record;
+		pair.source_lane_0x1c = 0;
+		pair.context_pointer_0x04_carried = true;
+		pair.context_wrapper_index_0x04 = 7;
+		pair.context_wrapper_lane_0x04 = 0;
+		return pair;
+	};
+	SourceObjectRecord0x4c scheduler_direct_record = *dungeon_town;
+	scheduler_direct_record.raw_field_0x20_known = true;
+	scheduler_direct_record.raw_field_0x20 = 2;
+	scheduler_direct_record.raw_field_0x24_known = true;
+	scheduler_direct_record.raw_field_0x24 = 3;
+	scheduler_direct_record.raw_field_0x2c_known = true;
+	scheduler_direct_record.raw_field_0x2c = 0;
+	scheduler_direct_record.raw_field_0x28_known = true;
+	scheduler_direct_record.raw_field_0x28 = 0;
+	scheduler_direct_record.raw_field_0x38_known = true;
+	scheduler_direct_record.raw_field_0x38 = 0;
+	SourceObjectDescriptorJoinResult4903e8 scheduler_direct_join = weighted_join;
+	scheduler_direct_join.source_record_copy = scheduler_direct_record;
+	GeneratorObjectPrivateState scheduler_direct_state;
+	aurelion::h3maped_rmg_core::H3MapedRng scheduler_direct_rng;
+	scheduler_direct_rng.state = 10U;
+	const SourceOrderSchedulerResult4a8db2 scheduler_direct =
+			aurelion::h3maped_rmg_core::source_order_weighted_scheduler_0x4a8db2(
+					scheduler_direct_state,
+					scheduler_direct_join,
+					make_scheduler_pair(scheduler_direct_record),
+					0,
+					107,
+					6,
+					108,
+					7,
+					0,
+					12,
+					scheduler_direct_rng,
+					true,
+					2,
+					true,
+					2,
+					true,
+					0);
+	if (!require(scheduler_direct.replay_finished
+					&& scheduler_direct.blocked_reason == "0x4a8db2_weighted_scheduler_no_positive_density"
+					&& scheduler_direct.direct_prepass_call_count == 8
+					&& scheduler_direct.weighted_call_count == 0
+					&& scheduler_direct.calls.size() == size_t(8)
+					&& scheduler_direct.calls[0].callsite == 0x4a8df7U
+					&& scheduler_direct.calls[0].loop_index == 1
+					&& scheduler_direct.calls[1].callsite == 0x4a8df7U
+					&& scheduler_direct.calls[1].loop_index == 2
+					&& scheduler_direct.calls[2].callsite == 0x4a8e26U
+					&& scheduler_direct.calls[2].loop_index == 0
+					&& scheduler_direct.calls[4].callsite == 0x4a8e55U
+					&& scheduler_direct.calls[6].callsite == 0x4a8e83U
+					&& scheduler_direct_state.source_order_scheduler_replay_count_0x4a8db2 == 1
+					&& scheduler_direct_state.source_order_scheduler_direct_call_count_0x4a8db2 == 8
+					&& scheduler_direct_state.weighted_candidate_vector_count_0x4a901a == 8,
+				"0x4a8db2 scheduler did not replay recovered direct-prepass loop order into 0x4a901a")) {
+		return 1;
+	}
+	SourceObjectRecord0x4c scheduler_weighted_record = *dungeon_town;
+	scheduler_weighted_record.raw_field_0x20_known = true;
+	scheduler_weighted_record.raw_field_0x20 = 0;
+	scheduler_weighted_record.raw_field_0x24_known = true;
+	scheduler_weighted_record.raw_field_0x24 = 0;
+	scheduler_weighted_record.raw_field_0x2c_known = true;
+	scheduler_weighted_record.raw_field_0x2c = 1;
+	scheduler_weighted_record.raw_field_0x28_known = true;
+	scheduler_weighted_record.raw_field_0x28 = 1;
+	scheduler_weighted_record.raw_field_0x38_known = true;
+	scheduler_weighted_record.raw_field_0x38 = 1;
+	SourceObjectDescriptorJoinResult4903e8 scheduler_weighted_join = weighted_join;
+	scheduler_weighted_join.source_record_copy = scheduler_weighted_record;
+	GeneratorObjectPrivateState scheduler_weighted_state;
+	aurelion::h3maped_rmg_core::H3MapedRng scheduler_weighted_rng;
+	scheduler_weighted_rng.state = 10U;
+	const SourceOrderSchedulerResult4a8db2 scheduler_weighted =
+			aurelion::h3maped_rmg_core::source_order_weighted_scheduler_0x4a8db2(
+					scheduler_weighted_state,
+					scheduler_weighted_join,
+					make_scheduler_pair(scheduler_weighted_record),
+					0,
+					107,
+					6,
+					108,
+					7,
+					0,
+					12,
+					scheduler_weighted_rng,
+					true,
+					0,
+					true,
+					0,
+					true,
+					1);
+	if (!require(scheduler_weighted.replay_finished
+					&& scheduler_weighted.threshold_arg_0x18_known
+					&& scheduler_weighted.threshold_arg_0x18 == 144
+					&& scheduler_weighted.direct_prepass_call_count == 0
+					&& scheduler_weighted.weighted_call_count == 4
+					&& scheduler_weighted.disabled_lane_count == 4
+					&& scheduler_weighted.calls.size() == size_t(4)
+					&& scheduler_weighted.calls[0].callsite == 0x4a8ffdU
+					&& scheduler_weighted.calls[1].callsite == 0x4a8fd6U
+					&& scheduler_weighted.calls[2].callsite == 0x4a8fb4U
+					&& scheduler_weighted.calls[3].callsite == 0x4a8f96U
+					&& scheduler_weighted.calls[0].disabled_after_false
+					&& scheduler_weighted_state.source_order_scheduler_weighted_call_count_0x4a8db2 == 4
+					&& scheduler_weighted_state.object_record_allocation_count_0x4a93a2 == 0,
+				"0x4a8db2 scheduler did not preserve weighted lane tie order and disable-on-false behavior")) {
+		return 1;
+	}
 	GeneratorObjectPrivateState weighted_scan_state;
 	weighted_scan_state.width = 112;
 	weighted_scan_state.height = 112;
@@ -2512,6 +2632,85 @@ int main() {
 					&& weighted_scan_target.object_reference_count == 1
 					&& weighted_scan_target.object_references_0x04_0x08[0] == 0x036b6d40U,
 				"0x4a901a weighted candidate scan did not dispatch through 0x4a54a7 into object-vector/reference/counter state")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState scheduler_success_state = weighted_scan_state;
+	scheduler_success_state.object_records_0xec4_ecc.resize(4);
+	scheduler_success_state.object_record_sequence_allocator_0xf44 = 5;
+	scheduler_success_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	scheduler_success_state.object_record_allocation_count_0x4a93a2 = 0;
+	scheduler_success_state.weighted_candidate_vectors_0x4a901a.clear();
+	scheduler_success_state.weighted_candidate_vector_count_0x4a901a = 0;
+	scheduler_success_state.weighted_candidate_total_count_0x4a901a = 0;
+	scheduler_success_state.weighted_candidate_selected_count_0x4a901a = 0;
+	scheduler_success_state.weighted_candidate_commit_count_0x4a901a = 0;
+	scheduler_success_state.source_order_scheduler_replays_0x4a8db2.clear();
+	scheduler_success_state.source_order_scheduler_replay_count_0x4a8db2 = 0;
+	scheduler_success_state.source_order_scheduler_direct_call_count_0x4a8db2 = 0;
+	scheduler_success_state.source_order_scheduler_weighted_call_count_0x4a8db2 = 0;
+	scheduler_success_state.source_order_scheduler_commit_count_0x4a8db2 = 0;
+	scheduler_success_state.source_order_scheduler_blocked_count_0x4a8db2 = 0;
+	scheduler_success_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	for (GeneratedCellRecord0x30 &record : scheduler_success_state.generated_cell_buffer.records) {
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20 = 0xff000064U;
+		record.word_0x28 = 0x12005000U;
+	}
+	SourceObjectRecord0x4c scheduler_success_record = *dungeon_town;
+	scheduler_success_record.raw_field_0x20_known = true;
+	scheduler_success_record.raw_field_0x20 = 0;
+	scheduler_success_record.raw_field_0x24_known = true;
+	scheduler_success_record.raw_field_0x24 = 0;
+	scheduler_success_record.raw_field_0x2c_known = true;
+	scheduler_success_record.raw_field_0x2c = 9;
+	scheduler_success_record.raw_field_0x28_known = true;
+	scheduler_success_record.raw_field_0x28 = 0;
+	scheduler_success_record.raw_field_0x38_known = true;
+	scheduler_success_record.raw_field_0x38 = 0;
+	SourceObjectDescriptorJoinResult4903e8 scheduler_success_join = weighted_join;
+	scheduler_success_join.source_record_copy = scheduler_success_record;
+	aurelion::h3maped_rmg_core::H3MapedRng scheduler_success_rng;
+	scheduler_success_rng.state = 10U;
+	const SourceOrderSchedulerResult4a8db2 scheduler_success =
+			aurelion::h3maped_rmg_core::source_order_weighted_scheduler_0x4a8db2(
+					scheduler_success_state,
+					scheduler_success_join,
+					make_scheduler_pair(scheduler_success_record),
+					0,
+					107,
+					6,
+					108,
+					7,
+					0,
+					12,
+					scheduler_success_rng,
+					true,
+					0,
+					true,
+					0,
+					true,
+					0);
+	const int64_t scheduler_success_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const GeneratedCellRecord0x30 &scheduler_success_target = scheduler_success_state.generated_cell_buffer.records[size_t(scheduler_success_target_flat)];
+	if (!require(scheduler_success.replay_finished
+					&& scheduler_success.threshold_arg_0x18_known
+					&& scheduler_success.threshold_arg_0x18 == 96
+					&& scheduler_success.weighted_call_count == 2
+					&& scheduler_success.committed_call_count == 1
+					&& scheduler_success.calls.size() == size_t(2)
+					&& scheduler_success.calls[0].callsite == 0x4a8ffdU
+					&& scheduler_success.calls[0].committed
+					&& scheduler_success.calls[0].weighted_candidate_vector_index_0x4a901a == 0
+					&& scheduler_success.calls[1].disabled_after_false
+					&& scheduler_success_state.object_record_allocation_count_0x4a93a2 == 1
+					&& scheduler_success_state.weighted_candidate_commit_count_0x4a901a == 1
+					&& scheduler_success_state.source_order_scheduler_commit_count_0x4a8db2 == 1
+					&& scheduler_success_state.object_records_0xec4_ecc.size() == size_t(5)
+					&& scheduler_success_state.descriptor_counter_table_0x1110[size_t(98)] == 5U
+					&& scheduler_success_target.object_reference_count == 1
+					&& scheduler_success_target.object_references_0x04_0x08[0] == 0x036b6d40U,
+				"0x4a8db2 scheduler replay did not drive 0x4a901a through allocation and 0x4a54a7 state mutation")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState direct_placement_state;

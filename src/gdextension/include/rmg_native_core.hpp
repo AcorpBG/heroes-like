@@ -519,6 +519,79 @@ struct SharedWeightedSchedulerThreshold4a8db2 {
 	std::string blocked_reason;
 };
 
+struct SharedSourceOrderSchedulerLane4a8db2 {
+	int32_t lane_index = -1;
+	uint32_t direct_callsite = 0U;
+	uint32_t weighted_callsite = 0U;
+	int32_t count_field_offset = 0;
+	bool count_field_known = false;
+	int32_t count_field_value = 0;
+	int32_t density_field_offset = 0;
+	bool density_field_known = false;
+	int32_t density_field_value = 0;
+	bool use_lane_state_0xee4 = false;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	bool initially_disabled = true;
+	bool disabled_after_replay = true;
+	int64_t scheduler_increment = 0;
+	int64_t scheduler_score = 0;
+	int32_t direct_prepass_call_count = 0;
+	int32_t weighted_call_count = 0;
+	int32_t committed_call_count = 0;
+	std::string blocked_reason;
+};
+
+struct SharedSourceOrderSchedulerCall4a8db2 {
+	std::string phase;
+	uint32_t callsite = 0U;
+	int32_t lane_index = -1;
+	int32_t loop_index = -1;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	int32_t threshold_arg_0x18 = 0;
+	int64_t scheduler_score_before = 0;
+	int64_t scheduler_increment = 0;
+	int64_t scheduler_score_after = 0;
+	bool attempted_0x4a901a = false;
+	bool returned_nonzero = false;
+	bool committed = false;
+	bool disabled_after_false = false;
+	int32_t weighted_candidate_vector_index_0x4a901a = -1;
+	int32_t weighted_candidate_accepted_count_0x4a901a = 0;
+	std::string blocked_reason;
+};
+
+struct SharedSourceOrderSchedulerResult4a8db2 {
+	bool source_pair_pointer_carried = false;
+	int32_t source_pair_copied_source_catalog_index = -1;
+	bool context_pointer_carried = false;
+	int32_t context_wrapper_index_0x04 = -1;
+	int32_t lane_state_0xee4 = -1;
+	bool descriptor_source_bridge_known = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_empty = false;
+	bool relation_owner_byte_known = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t scan_bound_low_x = 0;
+	int32_t scan_bound_low_y = 0;
+	int32_t scan_bound_high_x = 0;
+	int32_t scan_bound_high_y = 0;
+	int32_t level = 0;
+	int32_t positive_density_sum = 0;
+	int64_t positive_density_product = 1;
+	bool threshold_arg_0x18_known = false;
+	int32_t threshold_arg_0x18 = 0;
+	int32_t direct_prepass_call_count = 0;
+	int32_t weighted_call_count = 0;
+	int32_t committed_call_count = 0;
+	int32_t disabled_lane_count = 0;
+	std::vector<SharedSourceOrderSchedulerLane4a8db2> lanes;
+	std::vector<SharedSourceOrderSchedulerCall4a8db2> calls;
+	bool replay_finished = false;
+	std::string blocked_reason;
+};
+
 struct SharedWeightedObjectCandidate4a901a {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -613,6 +686,13 @@ struct SharedGeneratorObjectPrivateState {
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<SharedWeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
+	bool source_order_scheduler_replay_0x4a8db2_known = false;
+	int32_t source_order_scheduler_replay_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_direct_call_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_weighted_call_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_commit_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_blocked_count_0x4a8db2 = 0;
+	std::vector<SharedSourceOrderSchedulerResult4a8db2> source_order_scheduler_replays_0x4a8db2;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
 	int32_t weighted_candidate_total_count_0x4a901a = 0;

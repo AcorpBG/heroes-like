@@ -426,6 +426,79 @@ struct WeightedSchedulerThreshold4a8db2 {
 	std::string blocked_reason;
 };
 
+struct SourceOrderSchedulerLane4a8db2 {
+	int32_t lane_index = -1;
+	uint32_t direct_callsite = 0U;
+	uint32_t weighted_callsite = 0U;
+	int32_t count_field_offset = 0;
+	bool count_field_known = false;
+	int32_t count_field_value = 0;
+	int32_t density_field_offset = 0;
+	bool density_field_known = false;
+	int32_t density_field_value = 0;
+	bool use_lane_state_0xee4 = false;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	bool initially_disabled = true;
+	bool disabled_after_replay = true;
+	int64_t scheduler_increment = 0;
+	int64_t scheduler_score = 0;
+	int32_t direct_prepass_call_count = 0;
+	int32_t weighted_call_count = 0;
+	int32_t committed_call_count = 0;
+	std::string blocked_reason;
+};
+
+struct SourceOrderSchedulerCall4a8db2 {
+	std::string phase;
+	uint32_t callsite = 0U;
+	int32_t lane_index = -1;
+	int32_t loop_index = -1;
+	int32_t selected_index_0x20 = -1;
+	bool enabled_low_byte_0x24 = false;
+	int32_t threshold_arg_0x18 = 0;
+	int64_t scheduler_score_before = 0;
+	int64_t scheduler_increment = 0;
+	int64_t scheduler_score_after = 0;
+	bool attempted_0x4a901a = false;
+	bool returned_nonzero = false;
+	bool committed = false;
+	bool disabled_after_false = false;
+	int32_t weighted_candidate_vector_index_0x4a901a = -1;
+	int32_t weighted_candidate_accepted_count_0x4a901a = 0;
+	std::string blocked_reason;
+};
+
+struct SourceOrderSchedulerResult4a8db2 {
+	bool source_pair_pointer_carried = false;
+	int32_t source_pair_copied_source_catalog_index = -1;
+	bool context_pointer_carried = false;
+	int32_t context_wrapper_index_0x04 = -1;
+	int32_t lane_state_0xee4 = -1;
+	bool descriptor_source_bridge_known = false;
+	bool scan_bounds_known = false;
+	bool scan_bounds_non_empty = false;
+	bool relation_owner_byte_known = false;
+	int32_t relation_owner_byte2 = -1;
+	int32_t scan_bound_low_x = 0;
+	int32_t scan_bound_low_y = 0;
+	int32_t scan_bound_high_x = 0;
+	int32_t scan_bound_high_y = 0;
+	int32_t level = 0;
+	int32_t positive_density_sum = 0;
+	int64_t positive_density_product = 1;
+	bool threshold_arg_0x18_known = false;
+	int32_t threshold_arg_0x18 = 0;
+	int32_t direct_prepass_call_count = 0;
+	int32_t weighted_call_count = 0;
+	int32_t committed_call_count = 0;
+	int32_t disabled_lane_count = 0;
+	std::vector<SourceOrderSchedulerLane4a8db2> lanes;
+	std::vector<SourceOrderSchedulerCall4a8db2> calls;
+	bool replay_finished = false;
+	std::string blocked_reason;
+};
+
 struct SourceBoundedCandidate4a7312 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1514,6 +1587,13 @@ struct GeneratorObjectPrivateState {
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<WeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
+	bool source_order_scheduler_replay_0x4a8db2_known = false;
+	int32_t source_order_scheduler_replay_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_direct_call_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_weighted_call_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_commit_count_0x4a8db2 = 0;
+	int32_t source_order_scheduler_blocked_count_0x4a8db2 = 0;
+	std::vector<SourceOrderSchedulerResult4a8db2> source_order_scheduler_replays_0x4a8db2;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
 	int32_t weighted_candidate_total_count_0x4a901a = 0;
@@ -1780,6 +1860,7 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false);
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x3c_known = false, int32_t source_field_0x3c = 0);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);
 bool span_cell_in_bounds_4a325d(int32_t width, int32_t height, int32_t level_count, const SpanRecord &span);
 bool generated_cell_owner_unassigned_4a325d(const std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
