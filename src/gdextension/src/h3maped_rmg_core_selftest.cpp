@@ -2475,6 +2475,11 @@ int main() {
 		record.word_0x28_known = true;
 		record.word_0x28 = 0x12005000U;
 	}
+	const std::vector<SourceObjectRecord0x4c> commit_type54_records =
+			aurelion::h3maped_rmg_core::source_object_records_by_type_subtype_0x49da08(54, 48);
+	if (!require(!commit_type54_records.empty(), "0x49da08 type-54 subtype-48 source record missing for 0x4a54a7 source-backed commit")) {
+		return 1;
+	}
 	const auto commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(
 			commit_state,
 			0x036260c0U,
@@ -2484,7 +2489,8 @@ int main() {
 			0,
 			true,
 			0,
-			0);
+			0,
+			&commit_type54_records[0]);
 	const GeneratedCellRecord0x30 &commit_target = commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0))];
 	if (!require(commit_result.object_vector_appended
 					&& commit_state.object_records_0xec4_ecc.size() == 1
@@ -2518,8 +2524,9 @@ int main() {
 	if (!require((commit_target.word_0x20 & 0xffffU) == 0U
 					&& (commit_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
 					&& (commit_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
-					&& commit_result.target_cell_word_mutation_count == 2,
-				"0x4a54a7 did not clear target low score word and set target action/occupied bits")) {
+					&& commit_result.generator_body_stamp_applied_0x49abd6
+					&& commit_result.target_cell_word_mutation_count == 1,
+				"0x4a54a7 did not route target action/occupied bits through 0x49abd6 before clearing the projection low score word")) {
 		return 1;
 	}
 	if (!require(commit_result.projection_enabled
@@ -2698,6 +2705,15 @@ int main() {
 					"0x4a7605 fallback materialization did not validate recovered descriptor-offset source-cell prestate before 0x4a5e03")) {
 			return 1;
 		}
+		if (!require(fallback_result.records[0].source_record_joined_0x49da08
+						&& fallback_result.records[0].source_record_row_0x49da08 == 995
+						&& fallback_result.records[0].source_record_def_name_0x49da08 == "AVWdemn0.def"
+						&& fallback_result.records[1].source_record_joined_0x49da08
+						&& fallback_result.records[1].source_record_row_0x49da08 == 966
+						&& fallback_result.records[1].source_record_def_name_0x49da08 == "AVWelfx0.def",
+					"0x4a7605 fallback materialization did not join recovered descriptor fields to the exact 0x49da08 source records before 0x4a54a7")) {
+			return 1;
+		}
 		const GeneratedCellRecord0x30 &fallback_first_after = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 59, 47, 0))];
 		const GeneratedCellRecord0x30 &fallback_second_after = fallback_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(72, 72, 39, 31, 0))];
 		if (!require(fallback_state.object_records_0xec4_ecc.size() == 2
@@ -2733,8 +2749,12 @@ int main() {
 						&& fallback_state.relation_owner_vectors_10e4_10e8[1].descriptor_type_counters_0x44[size_t(54)] == 2U
 						&& fallback_result.records[0].commit_0x4a54a7.relation_descriptor_counter_owner_runtime_zone_index == 1
 						&& fallback_result.records[1].commit_0x4a54a7.relation_descriptor_counter_owner_runtime_zone_index == 4
-						&& fallback_result.records[0].commit_0x4a54a7.projection_score_depletion_count > 0
-						&& fallback_result.records[1].commit_0x4a54a7.projection_score_depletion_count > 0,
+						&& fallback_result.records[0].commit_0x4a54a7.projection_enabled
+						&& fallback_result.records[0].commit_0x4a54a7.projection_anchor_in_bounds
+						&& fallback_result.records[0].commit_0x4a54a7.target_cell_word_mutation_count == 1
+						&& fallback_result.records[1].commit_0x4a54a7.projection_enabled
+						&& fallback_result.records[1].commit_0x4a54a7.projection_anchor_in_bounds
+						&& fallback_result.records[1].commit_0x4a54a7.target_cell_word_mutation_count == 1,
 					"fallback materialization did not route descriptor counters through recovered owner bytes and projection-enabled commits")) {
 			return 1;
 		}
@@ -2795,6 +2815,11 @@ int main() {
 		record.word_0x28_known = true;
 		record.word_0x28 = 0x12005000U;
 	}
+	const std::vector<SourceObjectRecord0x4c> commit_type98_records =
+			aurelion::h3maped_rmg_core::source_object_records_by_type_subtype_0x49da08(98, 0);
+	if (!require(!commit_type98_records.empty(), "0x49da08 type-98 source record missing for 0x4a54a7 offset source-backed commit")) {
+		return 1;
+	}
 	const auto offset_commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(
 			offset_commit_state,
 			0x0362fda0U,
@@ -2804,7 +2829,8 @@ int main() {
 			0,
 			true,
 			-1,
-			0);
+			0,
+			&commit_type98_records[0]);
 	const GeneratedCellRecord0x30 &offset_target = offset_commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 1, 2, 0))];
 	const GeneratedCellRecord0x30 &offset_source = offset_commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(5, 5, 2, 2, 0))];
 	if (!require(offset_commit_result.object_vector_appended

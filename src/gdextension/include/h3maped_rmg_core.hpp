@@ -2644,6 +2644,7 @@ struct EndpointMaterializationResult4a5e73 {
 struct ObjectFootprintCommitResult4a54a7 {
 	bool target_cell_in_bounds = false;
 	bool target_cell_words_known = false;
+	bool source_record_copy_present_0x04 = false;
 	bool object_vector_appended = false;
 	bool generated_cell_reference_appended = false;
 	bool generator_body_stamp_applied_0x49abd6 = false;
@@ -2905,6 +2906,10 @@ struct ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 {
 	bool source_cell_word_0x24_matched_0x4a7605 = false;
 	bool source_cell_word_0x28_matched_0x4a7605 = false;
 	bool descriptor_fields_recovered_0x4a7605 = false;
+	bool source_record_joined_0x49da08 = false;
+	int32_t source_catalog_index_0x49da08 = -1;
+	int32_t source_record_row_0x49da08 = -1;
+	std::string source_record_def_name_0x49da08;
 	bool target_cell_in_bounds = false;
 	bool target_object_reference_vector_known = false;
 	bool target_object_reference_vector_empty = false;
