@@ -3679,13 +3679,18 @@ static void generated_grid_stamp_object_footprint_0x49abd6(
 				stamped = generated_cell_49a932(cell, true)
 						|| before_byte_0x2a != cell.byte_0x2a
 						|| before_word_0x28 != cell.word_0x28;
+				if (generated_cell_append_object_reference_0x40bb26(cell, object_record_key)) {
+					state.generated_cell_object_reference_append_count_0x4a54a7 += 1;
+					result.generator_body_reference_append_count_0x49abd6 += 1;
+					stamped = true;
+				}
 			} else if (!source_object_descriptor_mask_bit_0x41e951(source, col, row)) {
 				stamped = generated_cell_49abd6_body_reject_stamp(cell);
-			}
-			if (generated_cell_append_object_reference_0x40bb26(cell, object_record_key)) {
-				state.generated_cell_object_reference_append_count_0x4a54a7 += 1;
-				result.generator_body_reference_append_count_0x49abd6 += 1;
-				stamped = true;
+				if (generated_cell_append_object_reference_0x40bb26(cell, object_record_key)) {
+					state.generated_cell_object_reference_append_count_0x4a54a7 += 1;
+					result.generator_body_reference_append_count_0x49abd6 += 1;
+					stamped = true;
+				}
 			}
 			if (stamped) {
 				result.generator_body_stamp_count_0x49abd6 += 1;
@@ -4933,17 +4938,16 @@ static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(const RewardGuardW
 	if (!record.object_reference_vector_contents_known || record.object_references_0x04_0x08.empty()) {
 		return -1;
 	}
-	for (const uint32_t object_record_key : record.object_references_0x04_0x08) {
-		const auto member = std::find_if(wrapper.selected_members_0x2c_0x30.begin(),
-				wrapper.selected_members_0x2c_0x30.end(),
-				[&](const RewardGuardWrapperMember4aa3e9 &selected_member) {
-					return selected_member.object_record_key_known
-							&& selected_member.object_record_key == object_record_key
-							&& selected_member.descriptor_type_0x1c >= 0;
-				});
-		if (member != wrapper.selected_members_0x2c_0x30.end()) {
-			return member->descriptor_type_0x1c;
-		}
+	const uint32_t object_record_key = record.object_references_0x04_0x08.front();
+	const auto member = std::find_if(wrapper.selected_members_0x2c_0x30.begin(),
+			wrapper.selected_members_0x2c_0x30.end(),
+			[&](const RewardGuardWrapperMember4aa3e9 &selected_member) {
+				return selected_member.object_record_key_known
+						&& selected_member.object_record_key == object_record_key
+						&& selected_member.descriptor_type_0x1c >= 0;
+			});
+	if (member != wrapper.selected_members_0x2c_0x30.end()) {
+		return member->descriptor_type_0x1c;
 	}
 	return -1;
 }
@@ -5860,17 +5864,17 @@ static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4a
 			}
 			GeneratedCellRecord0x30 &cell = wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
 			bool stamped = false;
-				if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
-					const uint8_t before_byte_0x2a = cell.byte_0x2a;
-					const uint32_t before_word_0x28 = cell.word_0x28;
-					cell.byte_0x2a_known = true;
-					cell.byte_0x2a_known_mask |= 0x40U;
-					cell.byte_0x2a |= 0x40U;
-					cell.word_0x28_known = true;
-					cell.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
-					const bool occupied_stamped = generated_cell_49a932(cell, true);
-					const bool reference_stamped = member.object_record_key_known
-							&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
+			if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+				const uint8_t before_byte_0x2a = cell.byte_0x2a;
+				const uint32_t before_word_0x28 = cell.word_0x28;
+				cell.byte_0x2a_known = true;
+				cell.byte_0x2a_known_mask |= 0x40U;
+				cell.byte_0x2a |= 0x40U;
+				cell.word_0x28_known = true;
+				cell.word_0x28 |= CELL_ACTION_CONTROL_BIT_22;
+				const bool occupied_stamped = generated_cell_49a932(cell, true);
+				const bool reference_stamped = member.object_record_key_known
+						&& generated_cell_append_object_reference_0x40bb26(cell, member.object_record_key);
 				stamped = occupied_stamped
 						|| reference_stamped
 						|| before_byte_0x2a != cell.byte_0x2a
@@ -6653,15 +6657,17 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 	if (!record.object_reference_vector_contents_known) {
 		return -1;
 	}
-	for (const uint32_t object_record_key : record.object_references_0x04_0x08) {
-		const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
-				state.object_records_0xec4_ecc.end(),
-				[&](const ObjectRecordReference4a54a7 &object_record) {
-					return object_record.object_record_key == object_record_key;
-				});
-		if (it != state.object_records_0xec4_ecc.end()) {
-			return it->descriptor_type_0x1c;
-		}
+	if (record.object_references_0x04_0x08.empty()) {
+		return -1;
+	}
+	const uint32_t object_record_key = record.object_references_0x04_0x08.front();
+	const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
+			state.object_records_0xec4_ecc.end(),
+			[&](const ObjectRecordReference4a54a7 &object_record) {
+				return object_record.object_record_key == object_record_key;
+			});
+	if (it != state.object_records_0xec4_ecc.end()) {
+		return it->descriptor_type_0x1c;
 	}
 	return -1;
 }
@@ -13232,8 +13238,8 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 		}
 		std::vector<RoutePoint4a8260> pending;
 		std::deque<std::pair<RoutePoint4a8260, RoutePoint4a8260>> secondary;
-		pending.push_back(end);
 		pending.push_back(start);
+		pending.push_back(end);
 		const int32_t guard_limit = std::max<int32_t>(1024, int32_t(expected_cell_count) * 16);
 		int32_t guard_count = 0;
 		while (guard_count < guard_limit) {
