@@ -12356,6 +12356,30 @@ struct Post4a4c8eCleanupResult4a8c15 {
 	int32_t neighbor_clear_count_0x49a962 = 0;
 };
 
+struct MaterializationBridgeRelationLoopResult4a4913 {
+	bool input_known = false;
+	bool applied = false;
+	std::string blocked_reason;
+	int32_t relation_count = 0;
+	int32_t call_count_0x4a4913 = 0;
+	int32_t non_type8_skip_count = 0;
+	int32_t reset_cell_count = 0;
+	int32_t foreign_seed_call_count_0x4a4694 = 0;
+	int32_t candidate_scan_count = 0;
+	int32_t candidate_append_count_0x4ae1fd = 0;
+	int32_t rng_call_count_0x4e7276 = 0;
+	int32_t brush_call_count_0x4a4522 = 0;
+	int32_t selected_seed_call_count_0x4a4694 = 0;
+	int32_t queue_relax_count_0x4a4694 = 0;
+	int32_t brush_bit26_set_count_0x4a4522 = 0;
+};
+
+struct Coord12Candidate4a4913 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
 static Post4a4c8eCleanupResult4a8c15 post_4a4c8e_cleanup_scan_0x4a8c15(GeneratedCellRecordGrid0x30 &grid) {
 	Post4a4c8eCleanupResult4a8c15 result;
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
@@ -12415,6 +12439,293 @@ static Post4a4c8eCleanupResult4a8c15 post_4a4c8e_cleanup_scan_0x4a8c15(Generated
 				result.call_count_0x49a962 += 1;
 				result.neighbor_clear_count_0x49a962 += sweep.neighbor_clear_count;
 			}
+		}
+	}
+	result.applied = true;
+	return result;
+}
+
+static bool generated_cell_grid_inputs_known_0x4a4913(const GeneratedCellRecordGrid0x30 &grid) {
+	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || expected_cell_count <= 0 || expected_cell_count != int64_t(grid.records.size())) {
+		return false;
+	}
+	for (const GeneratedCellRecord0x30 &record : grid.records) {
+		if (!record.word_0x1c_known
+				|| !record.word_0x20_known
+				|| !record.word_0x24_known
+				|| !record.word_0x28_known
+				|| !record.word_0x2c_known) {
+			return false;
+		}
+	}
+	return true;
+}
+
+static void reset_relation_region_cell_0x4a4913(GeneratedCellRecord0x30 &record) {
+	record.word_0x1c = (record.word_0x1c & 0x0000ffffU) | 0x7d000000U;
+	record.word_0x1c_known = true;
+	record.word_0x20 &= 0x00ffffffU;
+	record.word_0x20_known = true;
+	record.word_0x28 &= 0xffff8fffU;
+	record.word_0x28_known = true;
+	sync_generated_cell_byte_0x2b_from_word28(record);
+}
+
+static int32_t generated_cell_word1c_high_word_0x4a4913(const GeneratedCellRecord0x30 &record) {
+	return int32_t((record.word_0x1c >> 16U) & 0xffffU);
+}
+
+static uint32_t generated_cell_word1c_set_high_word_0x4a4913(uint32_t word_0x1c, int32_t high_word) {
+	return (word_0x1c & 0x0000ffffU) | ((uint32_t(high_word) & 0xffffU) << 16U);
+}
+
+static uint32_t generated_cell_word28_set_direction_0x4a4694(uint32_t word_0x28, int32_t direction_ordinal) {
+	return (word_0x28 & 0xffff8fffU) | ((uint32_t(direction_ordinal) & 0x7U) << 12U);
+}
+
+static int32_t relation_bridge_seed_propagation_0x4a4694(
+		GeneratedCellRecordGrid0x30 &grid,
+		int32_t seed_x,
+		int32_t seed_y,
+		int32_t seed_level,
+		int32_t relation_owner_byte2) {
+	if (relation_owner_byte2 < 0) {
+		return 0;
+	}
+	const int64_t seed_flat = cell_index(grid.width, grid.height, seed_x, seed_y, seed_level);
+	if (seed_flat < 0 || seed_flat >= int64_t(grid.records.size())) {
+		return 0;
+	}
+	GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+	seed_record.word_0x1c = generated_cell_word1c_set_high_word_0x4a4913(seed_record.word_0x1c, 0);
+	seed_record.word_0x1c_known = true;
+	seed_record.word_0x20 &= 0x00ffffffU;
+	seed_record.word_0x20_known = true;
+	seed_record.word_0x28 &= 0xffff8fffU;
+	seed_record.word_0x28_known = true;
+	sync_generated_cell_byte_0x2b_from_word28(seed_record);
+
+	struct QueueNode4a4694 {
+		int32_t x = 0;
+		int32_t y = 0;
+		int32_t level = 0;
+		int32_t score = 0;
+	};
+	std::vector<QueueNode4a4694> queue;
+	queue.push_back(QueueNode4a4694 { seed_x, seed_y, seed_level, 0 });
+	int32_t relax_count = 0;
+	while (!queue.empty()) {
+		int32_t best_index = 0;
+		for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
+			if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
+				best_index = index;
+			}
+		}
+		const QueueNode4a4694 node = queue[size_t(best_index)];
+		queue.erase(queue.begin() + best_index);
+		const int64_t node_flat = cell_index(grid.width, grid.height, node.x, node.y, node.level);
+		if (node_flat < 0 || node_flat >= int64_t(grid.records.size())) {
+			continue;
+		}
+		const GeneratedCellRecord0x30 &node_record = grid.records[size_t(node_flat)];
+		const int32_t node_score = generated_cell_word1c_high_word_0x4a4913(node_record);
+		for (int32_t direction = 0; direction < int32_t(DIRECTION_TABLE_0X5A2658.size()); ++direction) {
+			const int32_t next_x = node.x + DIRECTION_TABLE_0X5A2658[size_t(direction)][0];
+			const int32_t next_y = node.y + DIRECTION_TABLE_0X5A2658[size_t(direction)][1];
+			const int64_t next_flat = cell_index(grid.width, grid.height, next_x, next_y, node.level);
+			if (next_flat < 0 || next_flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			GeneratedCellRecord0x30 &next_record = grid.records[size_t(next_flat)];
+			if (generated_cell_word20_owner_byte2_signed(next_record.word_0x20) != int32_t(int8_t(relation_owner_byte2 & 0xff))) {
+				continue;
+			}
+			const int32_t next_score = node_score + ((direction & 1) != 0 ? 3 : 2);
+			if (next_score >= generated_cell_word1c_high_word_0x4a4913(next_record)) {
+				continue;
+			}
+			next_record.word_0x1c = generated_cell_word1c_set_high_word_0x4a4913(next_record.word_0x1c, next_score);
+			next_record.word_0x1c_known = true;
+			next_record.word_0x20 &= 0x00ffffffU;
+			next_record.word_0x20_known = true;
+			next_record.word_0x28 = generated_cell_word28_set_direction_0x4a4694(next_record.word_0x28, direction);
+			next_record.word_0x28_known = true;
+			sync_generated_cell_byte_0x2b_from_word28(next_record);
+			queue.push_back(QueueNode4a4694 { next_x, next_y, node.level, next_score });
+			relax_count += 1;
+		}
+	}
+	return relax_count;
+}
+
+static int32_t relation_bridge_brush_0x4a4522(
+		GeneratedCellRecordGrid0x30 &grid,
+		int32_t low_x,
+		int32_t low_y,
+		int32_t high_x,
+		int32_t high_y,
+		int32_t level,
+		H3MapedRng &rng,
+		MaterializationBridgeRelationLoopResult4a4913 &result) {
+	(void)(rng.next() % 6);
+	result.rng_call_count_0x4e7276 += 1;
+	int32_t set_count = 0;
+	for (int32_t y = low_y; y < high_y; ++y) {
+		for (int32_t x = low_x; x < high_x; ++x) {
+			const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			if ((record.word_0x24 & 0x3fU) == 8U || (record.word_0x2c & 0x1U) != 0U) {
+				continue;
+			}
+			const uint32_t previous = record.word_0x28;
+			record.word_0x28 = (record.word_0x28 & ~CELL_OCCUPIED_BLOCKED_BIT_27) | CELL_DECOR_CANDIDATE_BIT_26;
+			record.word_0x28_known = true;
+			sync_generated_cell_byte_0x2b_from_word28(record);
+			if (record.word_0x28 != previous) {
+				set_count += 1;
+			}
+		}
+	}
+	return set_count;
+}
+
+static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_relation_loop_0x4a4913(
+		GeneratorObjectPrivateState &state,
+		H3MapedRng &rng) {
+	MaterializationBridgeRelationLoopResult4a4913 result;
+	result.relation_count = int32_t(state.relation_owner_vectors_10e4_10e8.size());
+	if (!state.relation_owner_records_10e4_10e8_partial_known
+			|| !state.relation_vector_10e4_10e8.present
+			|| !state.relation_vector_10e4_10e8.contents_known
+			|| !state.relation_vector_10e4_10e8.count_known
+			|| state.relation_vector_10e4_10e8.count != result.relation_count) {
+		result.blocked_reason = "0x4a4913_relation_vector_10e4_10e8_not_owned";
+		return result;
+	}
+	if (!generated_cell_grid_inputs_known_0x4a4913(state.generated_cell_buffer)) {
+		result.blocked_reason = "0x4a4913_generated_cell_grid_input_unknown";
+		return result;
+	}
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (!owner.terrain_policy_0x0c_known
+				|| !owner.scan_bounds_0x20_0x2c_known
+				|| !owner.coordinate_triple_0x10_0x18_known
+				|| !owner.source_pointer_0x00_known
+				|| owner.source_pointer_source_index_0x00 < 0) {
+			result.blocked_reason = "0x4a4913_relation_record_input_unknown";
+			return result;
+		}
+	}
+	result.input_known = true;
+
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (owner.terrain_policy_0x0c != 8) {
+			result.non_type8_skip_count += 1;
+			continue;
+		}
+		result.call_count_0x4a4913 += 1;
+		const int32_t level = owner.coordinate_level_0x18;
+		const int32_t relation_owner_byte2 = owner.source_pointer_source_index_0x00;
+		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
+			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+				const int64_t flat = cell_index(state.width, state.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+					continue;
+				}
+				reset_relation_region_cell_0x4a4913(state.generated_cell_buffer.records[size_t(flat)]);
+				result.reset_cell_count += 1;
+			}
+		}
+
+		const int32_t expanded_low_x = std::max<int32_t>(0, owner.scan_bound_low_x_0x20 - 1);
+		const int32_t expanded_low_y = std::max<int32_t>(0, owner.scan_bound_low_y_0x24 - 1);
+		const int32_t expanded_high_x = std::min<int32_t>(state.width, owner.scan_bound_high_x_0x28 + 1);
+		const int32_t expanded_high_y = std::min<int32_t>(state.height, owner.scan_bound_high_y_0x2c + 1);
+		for (int32_t y = expanded_low_y; y < expanded_high_y; ++y) {
+			for (int32_t x = expanded_low_x; x < expanded_high_x; ++x) {
+				const int64_t flat = cell_index(state.width, state.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+					continue;
+				}
+				const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+				if (generated_cell_word20_owner_byte2_signed(record.word_0x20) == int32_t(int8_t(relation_owner_byte2 & 0xff))) {
+					continue;
+				}
+				result.queue_relax_count_0x4a4694 += relation_bridge_seed_propagation_0x4a4694(
+						state.generated_cell_buffer,
+						x,
+						y,
+						level,
+						relation_owner_byte2);
+				result.foreign_seed_call_count_0x4a4694 += 1;
+			}
+		}
+
+		const int32_t candidate_low_x = std::min<int32_t>(owner.scan_bound_low_x_0x20, 3);
+		const int32_t candidate_low_y = std::min<int32_t>(owner.scan_bound_low_y_0x24, 3);
+		const int32_t candidate_high_x = std::min<int32_t>(state.width - 4, owner.scan_bound_high_x_0x28);
+		const int32_t candidate_high_y = std::min<int32_t>(state.height - 4, owner.scan_bound_high_y_0x2c);
+		while (true) {
+			std::vector<Coord12Candidate4a4913> candidates;
+			for (int32_t y = candidate_low_y; y < candidate_high_y; ++y) {
+				for (int32_t x = candidate_low_x; x < candidate_high_x; ++x) {
+					const int64_t flat = cell_index(state.width, state.height, x, y, level);
+					if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+						continue;
+					}
+					const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+					result.candidate_scan_count += 1;
+					if ((record.word_0x1c & 0xffff0000U) < 0x00140000U) {
+						continue;
+					}
+					candidates.push_back(Coord12Candidate4a4913 { x, y, level });
+					result.candidate_append_count_0x4ae1fd += 1;
+				}
+			}
+			if (candidates.empty()) {
+				break;
+			}
+			const uint32_t selected_rng = rng.next();
+			result.rng_call_count_0x4e7276 += 1;
+			const Coord12Candidate4a4913 selected = candidates[size_t(selected_rng % uint32_t(candidates.size()))];
+			const int64_t selected_flat = cell_index(state.width, state.height, selected.x, selected.y, selected.level);
+			if (selected_flat < 0 || selected_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				continue;
+			}
+			const int32_t selected_high_word = generated_cell_word1c_high_word_0x4a4913(
+					state.generated_cell_buffer.records[size_t(selected_flat)]);
+			const int32_t radius_divisor = (selected_high_word / 3) - 5;
+			if (radius_divisor <= 0) {
+				break;
+			}
+			const uint32_t radius_rng = rng.next();
+			result.rng_call_count_0x4e7276 += 1;
+			const int32_t radius = std::min<int32_t>(6, int32_t(radius_rng % uint32_t(radius_divisor)) + 3);
+			const int32_t brush_low_x = std::max<int32_t>(0, selected.x - radius);
+			const int32_t brush_low_y = std::max<int32_t>(0, selected.y - radius);
+			const int32_t brush_high_x = std::min<int32_t>(state.width, selected.x + radius);
+			const int32_t brush_high_y = std::min<int32_t>(state.height, selected.y + radius);
+			result.brush_bit26_set_count_0x4a4522 += relation_bridge_brush_0x4a4522(
+					state.generated_cell_buffer,
+					brush_low_x,
+					brush_low_y,
+					brush_high_x,
+					brush_high_y,
+					level,
+					rng,
+					result);
+			result.brush_call_count_0x4a4522 += 1;
+			result.queue_relax_count_0x4a4694 += relation_bridge_seed_propagation_0x4a4694(
+					state.generated_cell_buffer,
+					selected.x,
+					selected.y,
+					selected.level,
+					relation_owner_byte2);
+			result.selected_seed_call_count_0x4a4694 += 1;
 		}
 	}
 	result.applied = true;
@@ -12675,16 +12986,50 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		};
 		return;
 	}
-	state.materialization_bridge_relation_loop_call_count_0x4a4913 = 0;
-	state.materialization_bridge_0x4a8c15_blocked_reason =
-			"0x4a8c15_relation_vector_loop_0x4a4913_unported_after_post_0x4a4c8e_cleanup_before_0x4a5767";
-	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
+	state.materialization_bridge_relation_loop_0x4a4913_ported = true;
+	const MaterializationBridgeRelationLoopResult4a4913 relation_loop =
+			materialization_bridge_relation_loop_0x4a4913(state, route_free_cell_rng);
+	state.materialization_bridge_relation_loop_0x4a4913_input_known = relation_loop.input_known;
+	state.materialization_bridge_relation_loop_0x4a4913_applied = relation_loop.applied;
+	state.materialization_bridge_relation_loop_relation_count_0x4a4913 = relation_loop.relation_count;
+	state.materialization_bridge_relation_loop_call_count_0x4a4913 = relation_loop.call_count_0x4a4913;
+	state.materialization_bridge_relation_loop_non_type8_skip_count_0x4a4913 = relation_loop.non_type8_skip_count;
+	state.materialization_bridge_relation_loop_reset_cell_count_0x4a4913 = relation_loop.reset_cell_count;
+	state.materialization_bridge_relation_loop_foreign_seed_call_count_0x4a4694 = relation_loop.foreign_seed_call_count_0x4a4694;
+	state.materialization_bridge_relation_loop_candidate_scan_count_0x4a4913 = relation_loop.candidate_scan_count;
+	state.materialization_bridge_relation_loop_candidate_append_count_0x4ae1fd = relation_loop.candidate_append_count_0x4ae1fd;
+	state.materialization_bridge_relation_loop_rng_call_count_0x4e7276 = relation_loop.rng_call_count_0x4e7276;
+	state.materialization_bridge_relation_loop_brush_call_count_0x4a4522 = relation_loop.brush_call_count_0x4a4522;
+	state.materialization_bridge_relation_loop_selected_seed_call_count_0x4a4694 = relation_loop.selected_seed_call_count_0x4a4694;
+	state.materialization_bridge_relation_loop_queue_relax_count_0x4a4694 = relation_loop.queue_relax_count_0x4a4694;
+	state.materialization_bridge_relation_loop_brush_bit26_set_count_0x4a4522 = relation_loop.brush_bit26_set_count_0x4a4522;
+	if (!relation_loop.applied || !relation_loop.blocked_reason.empty()) {
+		state.materialization_bridge_0x4a8c15_blocked_reason =
+				relation_loop.blocked_reason.empty()
+				? "0x4a4913_relation_loop_not_applied"
+				: relation_loop.blocked_reason;
 		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
 		state.remaining_private_state_blockers = {
 			materialization_bridge_blocker,
 			"bridge_relation_normalization_0x4a5767_not_executed_until_0x4a4913_is_owned",
 			"bridge_water_edge_writer_0x4a4fc5_not_executed_until_0x4a4913_is_owned",
 			"connection_tail_0x4a79a3_not_executed_until_0x4a4913_is_owned",
+			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
+			"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
+			"source_order_object_materialization_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
+			"reward_guard_materialization_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
+	}
+	state.materialization_bridge_0x4a8c15_blocked_reason =
+			"0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5";
+	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
+		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
+		state.remaining_private_state_blockers = {
+			materialization_bridge_blocker,
+			"bridge_water_edge_writer_0x4a4fc5_not_executed_until_0x4a5767_is_owned",
+			"connection_tail_0x4a79a3_not_executed_until_0x4a5767_is_owned",
 			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
 			"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
 			"source_order_object_materialization_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
