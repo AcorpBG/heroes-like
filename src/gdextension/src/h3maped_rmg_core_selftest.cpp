@@ -2513,6 +2513,10 @@ int main() {
 						&& fallback_records[0].source_height == 72
 						&& fallback_records[0].source_level_count == 1
 						&& fallback_records[0].source_seed == 10U
+						&& fallback_records[0].source_player_scope_known
+						&& fallback_records[0].source_human_count == 1
+						&& fallback_records[0].source_player_count == 2
+						&& !fallback_records[0].source_setup_object_0x44_known
 						&& fallback_records[0].descriptor_pointer == 0x018dca40U
 						&& fallback_records[0].descriptor_type_0x1c == 54
 						&& fallback_records[0].descriptor_fields_recovered_0x4a7605
@@ -2549,6 +2553,10 @@ int main() {
 						&& fallback_records[1].source_height == 72
 						&& fallback_records[1].source_level_count == 1
 						&& fallback_records[1].source_seed == 10U
+						&& fallback_records[1].source_player_scope_known
+						&& fallback_records[1].source_human_count == 1
+						&& fallback_records[1].source_player_count == 2
+						&& !fallback_records[1].source_setup_object_0x44_known
 						&& fallback_records[1].descriptor_pointer == 0x018dc1a4U
 						&& fallback_records[1].descriptor_type_0x1c == 54
 						&& fallback_records[1].descriptor_fields_recovered_0x4a7605
@@ -2581,11 +2589,15 @@ int main() {
 			return 1;
 		}
 		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_medium_records =
-				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("medium", "land", 72, 72, 1, 10U);
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("medium", "land", 72, 72, 1, 10U, 1, 2, true, 3);
+		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_medium_four_player_records =
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("medium", "land", 72, 72, 1, 10U, 1, 4, true, 3);
 		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_small_records =
-				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("small", "land", 36, 36, 1, 11U);
-		if (!require(scoped_medium_records.size() == 2 && scoped_small_records.empty(),
-					"0x4a7605 -> 0x4a5e03 fallback source records were not constrained to the recovered Medium seed-10 scope")) {
+				aurelion::h3maped_rmg_core::recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope("small", "land", 36, 36, 1, 11U, 1, 2, true, 3);
+		if (!require(scoped_medium_records.size() == 2
+						&& scoped_medium_four_player_records.empty()
+						&& scoped_small_records.empty(),
+					"0x4a7605 -> 0x4a5e03 fallback source records were not constrained to the recovered Medium seed-10 1-human/2-player scope")) {
 			return 1;
 		}
 		GeneratorObjectPrivateState fallback_state;
@@ -2881,7 +2893,7 @@ int main() {
 		record.object_reference_count = 0;
 		record.object_references_0x04_0x08.clear();
 		record.word_0x20_known = true;
-		record.word_0x20 = 0x00030008U;
+		record.word_0x20 = 0x03030008U;
 		record.word_0x24_known = true;
 		record.word_0x24 = 0x00000548U;
 		record.word_0x28_known = true;
@@ -2915,6 +2927,25 @@ int main() {
 					&& scanner_result.selected_candidate.y == 5
 					&& scanner_result.selected_candidate.level == 0,
 				"0x4a7312 source-bounded scanner did not select and commit the accepted source-owned candidate")) {
+		return 1;
+	}
+	GeneratorObjectPrivateState byte3_gate_state = scanner_state;
+	byte3_gate_state.object_records_0xec4_ecc.clear();
+	byte3_gate_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
+	for (GeneratedCellRecord0x30 &record : byte3_gate_state.generated_cell_buffer.records) {
+		record.word_0x20 = 0x00030008U;
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+	}
+	aurelion::h3maped_rmg_core::H3MapedRng byte3_gate_rng;
+	byte3_gate_rng.state = 10U;
+	const auto byte3_gate_result =
+			aurelion::h3maped_rmg_core::source_bounded_endpoint_candidate_picker_0x4a7312(byte3_gate_state, monster_join, 0x036260c4U, true, scanner_relation, byte3_gate_rng);
+	if (!require(!byte3_gate_result.committed_through_vtable_slot_0x04
+					&& byte3_gate_result.owner_byte_reject_count == 1
+					&& byte3_gate_result.accepted_candidate_count == 0
+					&& byte3_gate_result.blocked_reason == "0x4a7312_candidate_vector_empty_after_source_relation_and_0x49aa93_filters",
+				"0x4a7312 endpoint scanner did not reject byte2-only owner matches when byte3 relation/class mismatched")) {
 		return 1;
 	}
 	if (!require(scanner_result.commit_0x4a54a7.object_vector_appended

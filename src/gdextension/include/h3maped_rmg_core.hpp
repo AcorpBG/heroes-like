@@ -1742,6 +1742,11 @@ struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 	int32_t source_height = 0;
 	int32_t source_level_count = 0;
 	uint32_t source_seed = 0U;
+	bool source_player_scope_known = false;
+	int32_t source_human_count = 0;
+	int32_t source_player_count = 0;
+	bool source_setup_object_0x44_known = false;
+	int32_t source_setup_object_0x44 = 0;
 	int32_t descriptor_type_0x1c = -1;
 	bool descriptor_fields_recovered_0x4a7605 = false;
 	int32_t descriptor_source_key_0x00 = -1;
@@ -2328,6 +2333,10 @@ struct GeneratorObjectPrivateState {
 	int32_t connection_fallback_materialization_scope_height = 0;
 	int32_t connection_fallback_materialization_scope_level_count = 0;
 	uint32_t connection_fallback_materialization_scope_seed = 0U;
+	int32_t connection_fallback_materialization_scope_human_count = 0;
+	int32_t connection_fallback_materialization_scope_player_count = 0;
+	bool connection_fallback_materialization_scope_setup_object_0x44_known = false;
+	int32_t connection_fallback_materialization_scope_setup_object_0x44 = 0;
 	bool connection_fallback_materialization_records_available_for_scope = false;
 	int32_t connection_fallback_materialization_record_count = 0;
 	int32_t connection_fallback_materialization_commit_count = 0;
@@ -3029,7 +3038,7 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
 RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();
-std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed);
+std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44);
 ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materialization_4a7605_4a5e03(GeneratorObjectPrivateState &state, const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records);
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng);
 WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const SourceZonePayload4a218c &source_payload);

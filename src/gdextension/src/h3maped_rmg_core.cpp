@@ -3003,6 +3003,10 @@ static uint8_t generated_cell_word20_owner_byte2(uint32_t word_0x20) {
 	return uint8_t((word_0x20 >> 16U) & 0xffU);
 }
 
+static uint8_t generated_cell_word20_owner_byte3(uint32_t word_0x20) {
+	return uint8_t((word_0x20 >> 24U) & 0xffU);
+}
+
 static int32_t generated_cell_word20_owner_byte2_signed(uint32_t word_0x20) {
 	return int32_t(int8_t((word_0x20 >> 16U) & 0xffU));
 }
@@ -7380,6 +7384,10 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	first.source_height = 72;
 	first.source_level_count = 1;
 	first.source_seed = 10U;
+	first.source_player_scope_known = true;
+	first.source_human_count = 1;
+	first.source_player_count = 2;
+	first.source_setup_object_0x44_known = false;
 	first.descriptor_type_0x1c = 54;
 	first.descriptor_fields_recovered_0x4a7605 = true;
 	first.descriptor_source_key_0x00 = 973;
@@ -7428,6 +7436,10 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	second.source_height = 72;
 	second.source_level_count = 1;
 	second.source_seed = 10U;
+	second.source_player_scope_known = true;
+	second.source_human_count = 1;
+	second.source_player_count = 2;
+	second.source_setup_object_0x44_known = false;
 	second.descriptor_type_0x1c = 54;
 	second.descriptor_fields_recovered_0x4a7605 = true;
 	second.descriptor_source_key_0x00 = 944;
@@ -7467,20 +7479,29 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	return { first, second };
 }
 
-std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed) {
+std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44) {
 	std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> scoped_records;
 	for (const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record : recovered_supported_land_connection_fallback_records_4a7605_4a5e03()) {
 		if (!record.source_scope_known) {
 			continue;
 		}
-		if (record.source_size_class == size_class
-				&& record.source_water_mode == water_mode
-				&& record.source_width == width
-				&& record.source_height == height
-				&& record.source_level_count == level_count
-				&& record.source_seed == seed) {
-			scoped_records.push_back(record);
+		if (record.source_size_class != size_class
+				|| record.source_water_mode != water_mode
+				|| record.source_width != width
+				|| record.source_height != height
+				|| record.source_level_count != level_count
+				|| record.source_seed != seed) {
+			continue;
 		}
+		if (record.source_player_scope_known
+				&& (record.source_human_count != human_count || record.source_player_count != player_count)) {
+			continue;
+		}
+		if (record.source_setup_object_0x44_known
+				&& (!setup_object_0x44_known || record.source_setup_object_0x44 != setup_object_0x44)) {
+			continue;
+		}
+		scoped_records.push_back(record);
 	}
 	return scoped_records;
 }
@@ -7771,40 +7792,8 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		return result;
 	}
 
-	result.source_backed_frontier_known = true;
-	result.internal_growth_0x49b3fb_0x4a61bc_known = true;
-	result.internal_growth_candidate_pair_count = 8;
-	result.internal_growth_positive_append_count = 6;
-	result.internal_growth_initial_object_count = 7;
-	result.internal_growth_final_object_count = 13;
-	result.internal_growth_reallocation_observed = true;
-	result.internal_growth_appended_object_pointers = {
-		0x0361ea10U,
-		0x0361e990U,
-		0x0361e9d0U,
-		0x0361e8a0U,
-		0x0361e860U,
-		0x0361e7f0U,
-	};
-	result.payload_link_known = true;
-	result.payload_loop_non_null_record_count = 19;
-	result.selected_0x4a61bc_record_reaches_payload_loop = true;
-	result.controlled_0x4a696b_supported_land_negative_known = true;
-	result.controlled_0x4a696b_sampled_call_count = 30;
-	result.controlled_0x4a696b_source_relation_match_hits = 0;
-	result.controlled_0x4a696b_direct_mutation_hits = 0;
-	result.after_selected_0x4a7605_endpoint_path_known = true;
-	result.after_selected_0x4a7605_call_count = 3;
-	result.after_selected_direct_0x4a7312_commit_count = 6;
-	result.delegated_0x4a746b_call_count = 0;
-	result.endpoint_helper_0x4a5e73_count = 0;
-	result.endpoint_mutation_site_0x4a75f1_count = 0;
-	result.delegated_endpoint_gates_skipped_with_zero_control_bytes = true;
-	result.pair_bookkeeping_processed_marker_known = true;
-	result.pair_bookkeeping_control_word_before = 0x00000000U;
-	result.pair_bookkeeping_control_word_after = 0x00010000U;
-	result.generated_cell_direct_mutation_applied = false;
-	result.applied = true;
+	result.blocked_reason =
+			"0x4a79a3_live_pair_loop_0x49b3fb_0x4a61bc_unported_after_source_backed_fallback_materialization";
 	return result;
 }
 
@@ -7950,6 +7939,46 @@ static bool source_relation_object_coordinate_eligibility_0x49aa93(
 	return true;
 }
 
+static bool source_relation_endpoint_coordinate_eligibility_0x49aa93(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectDescriptorJoinResult4903e8 &join,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		int32_t relation_match_byte3) {
+	const std::vector<SourceObjectMaskPoint490f3f> body_points =
+			source_object_text_mask_points_0x490f3f(join.source_record_copy.passability_mask, false);
+	if (body_points.empty()) {
+		return false;
+	}
+	for (const SourceObjectMaskPoint490f3f &point : body_points) {
+		const int64_t flat = cell_index(state.width, state.height, x + point.dx, y + point.dy, level);
+		if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+			return false;
+		}
+		const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+		if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+			return false;
+		}
+		if (generated_cell_word20_owner_byte3(record.word_0x20) != uint8_t(relation_match_byte3 & 0xff)) {
+			return false;
+		}
+		if ((record.word_0x24 & 0x3fU) == 9U) {
+			return false;
+		}
+		if (!generated_cell_49a1d8_valid_record(record)) {
+			return false;
+		}
+		if ((record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+			return false;
+		}
+		if ((record.word_0x2c & 0x01U) != 0U) {
+			return false;
+		}
+	}
+	return true;
+}
+
 SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picker_0x4a7312(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, uint32_t object_record_key, bool object_record_key_known, const GeneratorRelationOwnerState4a218c &source_relation, H3MapedRng &rng) {
 	SourceBoundedCandidatePickerResult4a7312 result;
 	result.descriptor_joined = join.joined;
@@ -8017,11 +8046,11 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 				result.unknown_cell_word_count += 1;
 				continue;
 			}
-			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(result.relation_owner_byte2 & 0xff)) {
+			if (generated_cell_word20_owner_byte3(record.word_0x20) != uint8_t(result.relation_owner_byte2 & 0xff)) {
 				result.owner_byte_reject_count += 1;
 				continue;
 			}
-			if (!source_relation_object_coordinate_eligibility_0x49aa93(state, join, x, y, level, result.relation_owner_byte2)) {
+			if (!source_relation_endpoint_coordinate_eligibility_0x49aa93(state, join, x, y, level, result.relation_owner_byte2)) {
 				result.eligibility_reject_count_0x49aa93 += 1;
 				continue;
 			}
@@ -11289,7 +11318,7 @@ static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(Gener
 	}
 }
 
-static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed) {
+static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44) {
 	state.endpoint_projection_records_c8_cc.clear();
 	bool projection_vectors_known = state.relation_owner_records_10e4_10e8_partial_known
 			&& state.relation_record_missing_endpoint_count_10e4_10e8 == 0;
@@ -11378,6 +11407,10 @@ static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateStat
 	state.connection_fallback_materialization_scope_height = state.height;
 	state.connection_fallback_materialization_scope_level_count = state.level_count;
 	state.connection_fallback_materialization_scope_seed = seed;
+	state.connection_fallback_materialization_scope_human_count = human_count;
+	state.connection_fallback_materialization_scope_player_count = player_count;
+	state.connection_fallback_materialization_scope_setup_object_0x44_known = setup_object_0x44_known;
+	state.connection_fallback_materialization_scope_setup_object_0x44 = setup_object_0x44;
 	state.connection_fallback_materialization_records_0x4a7605_0x4a5e03 =
 			recovered_supported_land_connection_fallback_records_4a7605_4a5e03_for_scope(
 					size_class,
@@ -11385,7 +11418,11 @@ static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateStat
 					state.width,
 					state.height,
 					state.level_count,
-					seed);
+					seed,
+					human_count,
+					player_count,
+					setup_object_0x44_known,
+					setup_object_0x44);
 	state.connection_fallback_materialization_records_available_for_scope =
 			!state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.empty();
 	state.connection_fallback_materialization_0x4a7605_0x4a5e03_known = true;
@@ -13122,7 +13159,7 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
 }
 
-static void advance_generator_object_private_state_source_order_to_current_blocker(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+static void advance_generator_object_private_state_source_order_to_current_blocker(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	(void)template_selection;
 	H3MapedRng route_free_cell_rng;
 	if (coordinate_result.terrain_repaint_executed) {
@@ -13296,7 +13333,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	}
 	state.materialization_bridge_0x4a8c15_blocked_reason =
 			"";
-	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed);
+	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
 	const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> fallback_records =
 			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03;
 	if (!fallback_records.empty()) {
@@ -13589,6 +13626,10 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			config.size_class,
 			config.water_mode,
 			config.seed,
+			config.human_count,
+			config.player_count,
+			config.setup_object_0x44_known,
+			config.setup_object_0x44,
 			result.template_selection_0x4ac552,
 			result.coordinate_owner_grid_0x4a218c);
 
