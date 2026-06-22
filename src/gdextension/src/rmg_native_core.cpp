@@ -3484,8 +3484,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, and the source-backed 0x4a4913 relation-vector loop, then stops before the unported 0x4a5767 bridge, 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run\",\n";
-	out << "    \"required_refactor\": \"port the source-backed 0x4a8c15 bridge call to 0x4a5767, then 0x4a4fc5 and 0x4a79a3 before emitting native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, and the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, then stops before the unported 0x4a4fc5 bridge writer, 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout can run\",\n";
+	out << "    \"required_refactor\": \"port the source-backed 0x4a4fc5 bridge writer and 0x4a79a3 connection tail before emitting native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3504,7 +3504,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_0x4a8c15_bridge_0x4a5767_before_0x4a4fc5_0x4a79a3_0x4a9d6a\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

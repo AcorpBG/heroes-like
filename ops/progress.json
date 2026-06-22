@@ -16,76 +16,104 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-22T03:46:16Z",
-      "latestEvidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
-      "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-      "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-      "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+      "updatedAt": "2026-06-22T04:04:02Z",
+      "latestEvidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
+      "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+      "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+      "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
-        "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+        "id": "native-rmg-4a5767-bridge-boundary-20260622",
+        "evidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "timestamp": "2026-06-22T03:46:16Z",
+        "timestamp": "2026-06-22T04:04:02Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "0x4a4913 Relation Loop Boundary Implemented",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-        "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-        "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+        "title": "0x4a5767 Bridge Boundary Implemented",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+        "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+        "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a5767_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected at 0x4a5767 boundary; no Godot)",
-          "standalone no-Godot Small 3p seeds 0-30 and Medium 4p seeds 0-60 type-8 exercise probe (blocked as expected; no sampled type-8 relation records)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a4fc5_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected exit 2 blocked at 0x4a4fc5 boundary; no Godot)",
+          "jq empty .artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json .artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json (passed)"
         ],
         "artifacts": [
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
-        ]
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json"
+        ],
+        "metrics": {
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "godot_process_started": false,
+          "materialization_bridge_0x4a5767_bridge_owned": true,
+          "materialization_bridge_0x4a4fc5_current_blocker": true,
+          "small_relation_normalization_visited_count": 1296,
+          "small_relation_normalization_changed_count": 1296,
+          "small_relation_normalization_skipped_count": 0,
+          "medium_relation_normalization_visited_count": 5184,
+          "medium_relation_normalization_changed_count": 5184,
+          "medium_relation_normalization_skipped_count": 0,
+          "relation_scan_consumers_4a5767_live_in_workflow": true,
+          "relation_high_owner_49a318_live_in_workflow": true,
+          "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+          "reward_guard_materialization_executed_after_bridge": false,
+          "final_writeout_complete": false,
+          "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a"
+        }
       },
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-      "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-      "remainingGap": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+      "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+      "remainingGap": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
       "validation": {
-        "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
-        "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+        "id": "native-rmg-4a5767-bridge-boundary-20260622",
+        "evidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "timestamp": "2026-06-22T03:46:16Z",
+        "timestamp": "2026-06-22T04:04:02Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "0x4a4913 Relation Loop Boundary Implemented",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-        "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-        "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+        "title": "0x4a5767 Bridge Boundary Implemented",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+        "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+        "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a5767_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected at 0x4a5767 boundary; no Godot)",
-          "standalone no-Godot Small 3p seeds 0-30 and Medium 4p seeds 0-60 type-8 exercise probe (blocked as expected; no sampled type-8 relation records)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a4fc5_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected exit 2 blocked at 0x4a4fc5 boundary; no Godot)",
+          "jq empty .artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json .artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json (passed)"
         ],
         "artifacts": [
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
-        ]
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json"
+        ],
+        "metrics": {
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "godot_process_started": false,
+          "materialization_bridge_0x4a5767_bridge_owned": true,
+          "materialization_bridge_0x4a4fc5_current_blocker": true,
+          "small_relation_normalization_visited_count": 1296,
+          "small_relation_normalization_changed_count": 1296,
+          "small_relation_normalization_skipped_count": 0,
+          "medium_relation_normalization_visited_count": 5184,
+          "medium_relation_normalization_changed_count": 5184,
+          "medium_relation_normalization_skipped_count": 0,
+          "relation_scan_consumers_4a5767_live_in_workflow": true,
+          "relation_high_owner_49a318_live_in_workflow": true,
+          "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+          "reward_guard_materialization_executed_after_bridge": false,
+          "final_writeout_complete": false,
+          "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a"
+        }
       },
       "metrics": {
         "checkpoint2_complete": false,
@@ -100,24 +128,31 @@
         "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
         "phase_snapshot_only_status_blocked": true,
         "phase_snapshot_only_status_passed": false,
-        "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a5767_before_0x4a4fc5_0x4a79a3_0x4a9d6a",
+        "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a",
         "full_rmg_parity_complete": false,
         "final_payload_generation_complete": false,
         "windows_dll_build_deferred": true,
         "terrain_pressure_0x4aadd2_before_0x4a5767": false,
-        "relation_normalization_4a5767_full_grid_reset_live_in_workflow": false,
+        "relation_normalization_4a5767_full_grid_reset_live_in_workflow": true,
         "reward_guard_loop_0x4ac552_0x4aab7e_immediate_after_relation_scan": false,
         "generic_non_type98_replay_pending_after_reward_guard_blocker": false,
         "relation_high_owner_49a318_pending_after_reward_guard_blocker": false,
-        "small_relation_normalization_visited_count": 0,
-        "small_relation_normalization_changed_count": 0,
+        "small_relation_normalization_visited_count": 1296,
+        "small_relation_normalization_changed_count": 1296,
         "small_relation_normalization_skipped_count": 0,
-        "medium_relation_normalization_visited_count": 0,
-        "medium_relation_normalization_changed_count": 0,
+        "medium_relation_normalization_visited_count": 5184,
+        "medium_relation_normalization_changed_count": 5184,
         "medium_relation_normalization_skipped_count": 0,
         "reward_guard_successful_coordinate_scan_count": 0,
         "materialization_bridge_0x4a8c15_remainder_owned": false,
-        "materialization_bridge_0x4a8c15_current_blocker": true
+        "materialization_bridge_0x4a8c15_current_blocker": true,
+        "materialization_bridge_0x4a5767_bridge_owned": true,
+        "materialization_bridge_0x4a4fc5_current_blocker": true,
+        "relation_scan_consumers_4a5767_live_in_workflow": true,
+        "relation_high_owner_49a318_live_in_workflow": true,
+        "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+        "reward_guard_materialization_executed_after_bridge": false,
+        "final_writeout_complete": false
       },
       "latestEvidenceArtifacts": [
         ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
@@ -153,31 +188,45 @@
         ]
       },
       "validationResults": {
-        "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
-        "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+        "id": "native-rmg-4a5767-bridge-boundary-20260622",
+        "evidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "timestamp": "2026-06-22T03:46:16Z",
+        "timestamp": "2026-06-22T04:04:02Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "0x4a4913 Relation Loop Boundary Implemented",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-        "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-        "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+        "title": "0x4a5767 Bridge Boundary Implemented",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+        "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+        "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
           "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a5767_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected at 0x4a5767 boundary; no Godot)",
-          "standalone no-Godot Small 3p seeds 0-30 and Medium 4p seeds 0-60 type-8 exercise probe (blocked as expected; no sampled type-8 relation records)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a4fc5_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected exit 2 blocked at 0x4a4fc5 boundary; no Godot)",
+          "jq empty .artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json .artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json (passed)"
         ],
         "artifacts": [
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
-        ]
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json"
+        ],
+        "metrics": {
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "godot_process_started": false,
+          "materialization_bridge_0x4a5767_bridge_owned": true,
+          "materialization_bridge_0x4a4fc5_current_blocker": true,
+          "small_relation_normalization_visited_count": 1296,
+          "small_relation_normalization_changed_count": 1296,
+          "small_relation_normalization_skipped_count": 0,
+          "medium_relation_normalization_visited_count": 5184,
+          "medium_relation_normalization_changed_count": 5184,
+          "medium_relation_normalization_skipped_count": 0,
+          "relation_scan_consumers_4a5767_live_in_workflow": true,
+          "relation_high_owner_49a318_live_in_workflow": true,
+          "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+          "reward_guard_materialization_executed_after_bridge": false,
+          "final_writeout_complete": false,
+          "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a"
+        }
       }
     },
     {
@@ -13190,11 +13239,11 @@
       "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-22T03:46:16Z",
@@ -17436,7 +17485,7 @@
     ".artifacts/rmg_native_goal_4a5767_type8_probe",
     ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
   ],
-  "latestEvidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+  "latestEvidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -17829,7 +17878,7 @@
     "mine_resource_coordinate_builder_0x4a9641_ported": true,
     "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
     "mine_resource_density_followup_0x4a9c7c_ported": true,
-    "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a5767_before_0x4a4fc5_0x4a79a3_0x4a9d6a",
+    "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a",
     "relation_scan_consumers_0x4a5767_after_density_ported": true,
     "source_order_object_replay_after_relation_scan_applied": true,
     "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
@@ -17839,19 +17888,26 @@
     "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": true,
     "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
     "terrain_pressure_0x4aadd2_before_0x4a5767": false,
-    "relation_normalization_4a5767_full_grid_reset_live_in_workflow": false,
+    "relation_normalization_4a5767_full_grid_reset_live_in_workflow": true,
     "reward_guard_loop_0x4ac552_0x4aab7e_immediate_after_relation_scan": false,
     "generic_non_type98_replay_pending_after_reward_guard_blocker": false,
     "relation_high_owner_49a318_pending_after_reward_guard_blocker": false,
-    "small_relation_normalization_visited_count": 0,
-    "small_relation_normalization_changed_count": 0,
+    "small_relation_normalization_visited_count": 1296,
+    "small_relation_normalization_changed_count": 1296,
     "small_relation_normalization_skipped_count": 0,
-    "medium_relation_normalization_visited_count": 0,
-    "medium_relation_normalization_changed_count": 0,
+    "medium_relation_normalization_visited_count": 5184,
+    "medium_relation_normalization_changed_count": 5184,
     "medium_relation_normalization_skipped_count": 0,
     "reward_guard_successful_coordinate_scan_count": 0,
     "materialization_bridge_0x4a8c15_remainder_owned": false,
-    "materialization_bridge_0x4a8c15_current_blocker": true
+    "materialization_bridge_0x4a8c15_current_blocker": true,
+    "materialization_bridge_0x4a5767_bridge_owned": true,
+    "materialization_bridge_0x4a4fc5_current_blocker": true,
+    "relation_scan_consumers_4a5767_live_in_workflow": true,
+    "relation_high_owner_49a318_live_in_workflow": true,
+    "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+    "reward_guard_materialization_executed_after_bridge": false,
+    "final_writeout_complete": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
   "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
@@ -58445,8 +58501,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-  "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+  "remainingGap": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+  "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -58877,7 +58933,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
+  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -58978,7 +59034,7 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
   "taskId": "10184",
   "updatedAt": "2026-06-22T03:46:16Z",
   "validation": {
@@ -70473,33 +70529,47 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
-    "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+    "id": "native-rmg-4a5767-bridge-boundary-20260622",
+    "evidenceId": "native-rmg-4a5767-bridge-boundary-20260622",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-    "timestamp": "2026-06-22T03:46:16Z",
+    "timestamp": "2026-06-22T04:04:02Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "0x4a4913 Relation Loop Boundary Implemented",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-    "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-    "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-    "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+    "title": "0x4a5767 Bridge Boundary Implemented",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, and the 0x4a8c15 -> 0x4a5767 relation-normalization bridge. It now fails closed at unported 0x4a4fc5 before 0x4a79a3, 0x4a9d6a, reward/guard, connection/decorative/road-river, or final writeout. This is not parity and not final map output.",
+    "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+    "remainingWork": "Port source-backed 0x4a4fc5 after the recovered 0x4a5767 bridge, then 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+    "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
       "./bin/h3maped_rmg_core_selftest (passed)",
-      "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a5767_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected at 0x4a5767 boundary; no Godot)",
-      "standalone no-Godot Small 3p seeds 0-30 and Medium 4p seeds 0-60 type-8 exercise probe (blocked as expected; no sampled type-8 relation records)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
+      "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a4fc5_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected exit 2 blocked at 0x4a4fc5 boundary; no Godot)",
+      "jq empty .artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json .artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json (passed)"
     ],
     "artifacts": [
-      ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_goal_4a5767_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_goal_4a5767_type8_probe",
-      ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
-    ]
+      ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_goal_4a4fc5_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json"
+    ],
+    "metrics": {
+      "native_rmg_end_to_end_parity_complete": false,
+      "runtime_generation_allowed": false,
+      "godot_process_started": false,
+      "materialization_bridge_0x4a5767_bridge_owned": true,
+      "materialization_bridge_0x4a4fc5_current_blocker": true,
+      "small_relation_normalization_visited_count": 1296,
+      "small_relation_normalization_changed_count": 1296,
+      "small_relation_normalization_skipped_count": 0,
+      "medium_relation_normalization_visited_count": 5184,
+      "medium_relation_normalization_changed_count": 5184,
+      "medium_relation_normalization_skipped_count": 0,
+      "relation_scan_consumers_4a5767_live_in_workflow": true,
+      "relation_high_owner_49a318_live_in_workflow": true,
+      "mine_resource_materialization_0x4a9d6a_executed_after_bridge": false,
+      "reward_guard_materialization_executed_after_bridge": false,
+      "final_writeout_complete": false,
+      "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a"
+    }
   },
-  "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-  "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
-  "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a5767_before_0x4a4fc5_0x4a79a3_0x4a9d6a"
+  "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3. Both snapshots report materialization_bridge_relation_loop_0x4a4913_applied=true, relation_normalization_4a5767_full_grid_reset_applied=true, relation_scan_consumers_4a5767_applied=true, and relation_high_owner_propagation_49a318_applied=true. Small reset visited/changed/skipped=1296/1296/0; Medium=5184/5184/0. Downstream mine/resource, reward/guard, decorative, and final writeout remain uninvoked.",
+  "blocker": "The active shared workflow does not yet source-own 0x4a4fc5 after the recovered 0x4a5767 bridge, nor 0x4a79a3 after it. Continuing into later helpers before 0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
+  "native_cli_required_next_slice": "port_0x4a8c15_bridge_0x4a4fc5_before_0x4a79a3_0x4a9d6a"
 }
