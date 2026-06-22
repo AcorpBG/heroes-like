@@ -817,6 +817,20 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.fallback_materialization_known;
 	out.connection_tail_replay_fallback_materialization_applied_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.fallback_materialization_applied;
+	out.connection_tail_replay_source_backed_frontier_known_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_backed_frontier_known;
+	out.connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count;
+	out.connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_candidate_pair_count;
+	out.connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.relation_owner_level_byte2b_clear_pass_count;
+	out.connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.relation_owner_level_byte2b_clear_cell_count;
+	out.connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known;
+	out.connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.internal_growth_candidate_pair_count;
 	out.connection_tail_replay_blocked_reason_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.blocked_reason;
 	out.materialization_bridge_0x4a8c15_blocked_reason = input.materialization_bridge_0x4a8c15_blocked_reason;
@@ -2471,6 +2485,13 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_endpoint_caller_prep_known_0x4a79a3\":" << (state.connection_tail_replay_endpoint_caller_prep_known_0x4a79a3 ? "true" : "false") << ","
 			<< "\"connection_tail_replay_fallback_materialization_known_0x4a79a3\":" << (state.connection_tail_replay_fallback_materialization_known_0x4a79a3 ? "true" : "false") << ","
 			<< "\"connection_tail_replay_fallback_materialization_applied_0x4a79a3\":" << (state.connection_tail_replay_fallback_materialization_applied_0x4a79a3 ? "true" : "false") << ","
+			<< "\"connection_tail_replay_source_backed_frontier_known_0x4a79a3\":" << (state.connection_tail_replay_source_backed_frontier_known_0x4a79a3 ? "true" : "false") << ","
+			<< "\"connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3\":" << state.connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3\":" << state.connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc\":" << (state.connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc ? "true" : "false") << ","
+			<< "\"connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3\":" << state.connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_blocked_reason_0x4a79a3\":\"" << json_escape(state.connection_tail_replay_blocked_reason_0x4a79a3) << "\","
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
 			<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","
@@ -3558,7 +3579,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"recover_small_0x4a79a3_fallback_records_and_fix_medium_0x4a7605_source_cell_prestate\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_live_0x4a61bc_materialization_after_0x49b3fb_pair_lookup\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
