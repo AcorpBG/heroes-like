@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 		}
 		const std::string source_order_blocker =
-				"0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope";
+				"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2095,7 +2095,7 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
 					&& has_source_order_blocker,
-				"generator object private state did not replay the recovered 0x4ac552 relation-pointer source-record loop before the 0x4a8c15 materialization bridge blocker")) {
+				"generator object private state did not replay the recovered 0x4ac552 relation-pointer source-record loop before the 0x4a79a3 fallback blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
@@ -2112,15 +2112,20 @@ int main() {
 						&& generator_state.relation_high_owner_propagation_49a318_applied
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known
-						&& !generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
+						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
 						&& generator_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
 						&& generator_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 > 0
 						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
+						&& generator_state.connection_tail_replay_0x4a79a3_ported
+						&& generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& !generator_state.connection_tail_replay_0x4a79a3.applied
+						&& generator_state.connection_tail_replay_0x4a79a3.blocked_reason == source_order_blocker
+						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
 						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-						"generator object private state did not stop at the 0x4a4fc5 source-water blocker before downstream helpers")) {
+						"generator object private state did not execute 0x4a4fc5 and stop at the 0x4a79a3 fallback-record blocker before downstream helpers")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -2289,14 +2294,16 @@ int main() {
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
+	if (!require(generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
 					&& generator_state.endpoint_vector_c8_cc.present
-					&& !generator_state.endpoint_vector_c8_cc.contents_known
-					&& !generator_state.endpoint_vector_c8_cc.count_known
-					&& generator_state.endpoint_vector_c8_cc.element_size_bytes == 4
-					&& generator_state.endpoint_projection_vector_c8_cc_record_count == 0
-					&& generator_state.endpoint_projection_records_c8_cc.empty(),
-				"generator endpoint projection vector +0xc8/+0xcc was promoted before reward/guard source-order commits were owned")) {
+					&& generator_state.endpoint_vector_c8_cc.contents_known
+					&& generator_state.endpoint_vector_c8_cc.count_known
+					&& generator_state.endpoint_vector_c8_cc.element_size_bytes == 0x1c
+					&& generator_state.endpoint_projection_vector_c8_cc_record_count == summed_source_endpoint_record_count
+					&& int32_t(generator_state.endpoint_projection_records_c8_cc.size()) == summed_source_endpoint_record_count
+					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
+					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
+				"generator endpoint projection vector +0xc8/+0xcc was not carried by the single workflow before the 0x4a79a3 blocker, or downstream reward/decorative phases ran too early")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -2347,15 +2354,15 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_vector_d8_dc.present
-					&& !generator_state.endpoint_vector_d8_dc.count_known
-					&& generator_state.endpoint_vector_d8_dc.count == 0
+					&& generator_state.endpoint_vector_d8_dc.count_known
+					&& generator_state.endpoint_vector_d8_dc.count == 8
 					&& !generator_state.endpoint_vector_d8_dc.contents_known,
-				"generator endpoint vector +0xd8/+0xdc was promoted before reward/guard source-order commits were owned")) {
+				"generator endpoint vector +0xd8/+0xdc did not preserve the recovered supported-land key range exclusion")) {
 		return 1;
 	}
 	if (!require(!generator_state.endpoint_cursor_vector_d8_dc_source_owned
-					&& !generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
-				"generator endpoint vector +0xd8/+0xdc D-014 exclusion state ran before reward/guard source-order commits were owned")) {
+					&& generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
+				"generator endpoint vector +0xd8/+0xdc D-014 supported-land exclusion state was not carried by the single workflow")) {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.present
@@ -2363,10 +2370,10 @@ int main() {
 					&& generator_state.endpoint_byte_state_vector_1104_1108.count_source_vector_label == generator_state.endpoint_vector_d8_dc.label
 					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known
 					&& generator_state.endpoint_byte_state_vector_1104_1108.element_size_bytes == 1
-					&& !generator_state.endpoint_byte_state_vector_1104_1108.count_known
-					&& generator_state.endpoint_byte_state_vector_1104_1108.count == 0
-					&& !generator_state.endpoint_byte_state_vector_1104_1108.contents_known,
-				"generator endpoint byte-state vector +0x1104/+0x1108 was promoted before reward/guard source-order commits were owned")) {
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count_known
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count == 8
+					&& generator_state.endpoint_byte_state_vector_1104_1108.contents_known,
+				"generator endpoint byte-state vector +0x1104/+0x1108 did not use the recovered +0xd8/+0xdc count")) {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_0xf5c_present
@@ -2375,28 +2382,29 @@ int main() {
 				"generator object private state did not preserve recovered supported-land stale 0xf5c cursor seed")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 0
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
-					&& !generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
-					&& !generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
-					&& !generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
+	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 8
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == 0x7a1befdfU
+					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
+					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_success_path_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 0,
-				"D-014 endpoint cursor producer ran before reward/guard source-order commits were owned")) {
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 3,
+				"D-014 endpoint cursor producer did not preserve the recovered supported-land exclusion state")) {
 		return 1;
 	}
-	if (!require(!generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
-					&& !generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
-					&& !generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
-					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
-					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
-					&& !generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
+	if (!require(generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
 					&& !generator_state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed,
-				"D-014 connection materialization caller prep ran before reward/guard source-order commits were owned")) {
+				"D-014 connection materialization caller prep did not preserve the recovered supported-land fallback state")) {
 		return 1;
 	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {

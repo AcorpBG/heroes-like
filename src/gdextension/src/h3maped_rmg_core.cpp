@@ -12408,7 +12408,13 @@ struct MaterializationBridgeWaterEdgeWriterResult4a4fc5 {
 	std::string blocked_reason;
 	int32_t scan_count = 0;
 	int32_t owner_low_sentinel_skip_count = 0;
+	int32_t owner_high_sentinel_skip_count = 0;
 	int32_t source_water_cell_count = 0;
+	int32_t relation_lookup_skip_count = 0;
+	int32_t mutation_source_count = 0;
+	int32_t bit26_set_count = 0;
+	int32_t byte2b_clear_count = 0;
+	int32_t visual_repaint_pending_count = 0;
 	int32_t neighbor_bit25_probe_count = 0;
 	int32_t bit26_candidate_count = 0;
 };
@@ -12418,6 +12424,46 @@ struct Coord12Candidate4a4913 {
 	int32_t y = 0;
 	int32_t level = 0;
 };
+
+static bool source_endpoint_record_lookup_0x49b3fb(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t lookup_key) {
+	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
+		if (owner.runtime_zone_index != owner_runtime_zone) {
+			continue;
+		}
+		if (!owner.source_endpoint_vector_0xc8_0xcc_present
+				|| !owner.source_endpoint_vector_0xc8_0xcc_contents_known
+				|| !owner.source_endpoint_vector_0xc8_0xcc_count_known
+				|| owner.source_endpoint_vector_0xc8_0xcc_count != int32_t(owner.source_endpoint_records_0xc8_0xcc.size())) {
+			return false;
+		}
+		for (const GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
+			if (record.target_runtime_zone_index == lookup_key) {
+				return true;
+			}
+		}
+		return false;
+	}
+	return false;
+}
+
+static bool source_endpoint_records_known_for_lookup_0x49b3fb(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	if (owners.empty()) {
+		return false;
+	}
+	return std::all_of(
+			owners.begin(),
+			owners.end(),
+			[](const GeneratorRelationOwnerState4a218c &owner) {
+				return owner.source_endpoint_vector_0xc8_0xcc_present
+						&& owner.source_endpoint_vector_0xc8_0xcc_contents_known
+						&& owner.source_endpoint_vector_0xc8_0xcc_count_known
+						&& owner.source_endpoint_vector_0xc8_0xcc_count == int32_t(owner.source_endpoint_records_0xc8_0xcc.size());
+			});
+}
 
 static Post4a4c8eCleanupResult4a8c15 post_4a4c8e_cleanup_scan_0x4a8c15(GeneratedCellRecordGrid0x30 &grid) {
 	Post4a4c8eCleanupResult4a8c15 result;
@@ -12773,6 +12819,7 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 
 static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_water_edge_writer_0x4a4fc5(
 		GeneratedCellRecordGrid0x30 &grid,
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
 		const std::string &water_mode) {
 	MaterializationBridgeWaterEdgeWriterResult4a4fc5 result;
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
@@ -12781,10 +12828,19 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 		return result;
 	}
 	for (const GeneratedCellRecord0x30 &record : grid.records) {
-		if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+		if (!record.object_reference_vector_fields_0x04_0x08_present
+				|| !record.object_reference_vector_contents_known
+				|| !record.word_0x20_known
+				|| !record.word_0x24_known
+				|| !record.word_0x28_known
+				|| !record.word_0x2c_known) {
 			result.blocked_reason = "0x4a4fc5_generated_cell_record_input_unknown";
 			return result;
 		}
+	}
+	if (!source_endpoint_records_known_for_lookup_0x49b3fb(owners)) {
+		result.blocked_reason = "0x4a4fc5_source_endpoint_vector_0xc8_0xcc_input_unknown";
+		return result;
 	}
 	result.input_known = true;
 	if (water_mode != "land" || grid.level_count != 1) {
@@ -12809,23 +12865,89 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 				if ((record.word_0x24 & 0x3fU) != 8U) {
 					continue;
 				}
+				const int32_t source_owner_byte3 = generated_cell_word20_owner_byte3_signed(record.word_0x20);
+				if (source_owner_byte3 < 0) {
+					result.owner_high_sentinel_skip_count += 1;
+					continue;
+				}
 				result.source_water_cell_count += 1;
-				for (int32_t neighbor_y = std::max<int32_t>(0, y - 1); neighbor_y < std::min<int32_t>(grid.height, y + 2); ++neighbor_y) {
+				bool neighbor_source_found = false;
+				int32_t replacement_terrain_id = 0;
+				for (int32_t neighbor_y = std::max<int32_t>(0, y - 1); neighbor_y < std::min<int32_t>(grid.height, y + 2) && !neighbor_source_found; ++neighbor_y) {
 					for (int32_t neighbor_x = std::max<int32_t>(0, x - 1); neighbor_x < std::min<int32_t>(grid.width, x + 2); ++neighbor_x) {
 						const int64_t neighbor_flat = cell_index(grid.width, grid.height, neighbor_x, neighbor_y, level);
-						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size()) || neighbor_flat == flat) {
+						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size())) {
 							continue;
 						}
+						const GeneratedCellRecord0x30 &neighbor = grid.records[size_t(neighbor_flat)];
 						result.neighbor_bit25_probe_count += 1;
+						const uint32_t neighbor_terrain = neighbor.word_0x24 & 0x3fU;
+						if (neighbor_terrain == 8U || neighbor_terrain == 9U) {
+							continue;
+						}
+						if ((neighbor.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+							continue;
+						}
+						if ((neighbor.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
+							continue;
+						}
+						neighbor_source_found = true;
+						replacement_terrain_id = int32_t(int8_t(neighbor.word_0x24 & 0x3fU));
+						break;
+					}
+				}
+				if (!neighbor_source_found) {
+					continue;
+				}
+				const int32_t source_owner_byte2 = generated_cell_word20_owner_byte2_signed(record.word_0x20);
+				if (source_endpoint_record_lookup_0x49b3fb(owners, source_owner_byte2, source_owner_byte3)) {
+					result.relation_lookup_skip_count += 1;
+					continue;
+				}
+				result.mutation_source_count += 1;
+				for (int32_t mutation_y = std::max<int32_t>(0, y - 1); mutation_y < std::min<int32_t>(grid.height, y + 2); ++mutation_y) {
+					for (int32_t mutation_x = std::max<int32_t>(0, x - 1); mutation_x < std::min<int32_t>(grid.width, x + 2); ++mutation_x) {
+						const int64_t mutation_flat = cell_index(grid.width, grid.height, mutation_x, mutation_y, level);
+						if (mutation_flat < 0 || mutation_flat >= int64_t(grid.records.size())) {
+							continue;
+						}
+						GeneratedCellRecord0x30 &mutation_record = grid.records[size_t(mutation_flat)];
+						if ((mutation_record.word_0x2c & 0x01U) == 0U) {
+							const uint32_t previous = mutation_record.word_0x28;
+							mutation_record.word_0x28 = (mutation_record.word_0x28 & ~CELL_OCCUPIED_BLOCKED_BIT_27) | CELL_DECOR_CANDIDATE_BIT_26;
+							mutation_record.word_0x28_known = true;
+							sync_generated_cell_byte_0x2b_from_word28(mutation_record);
+							if (mutation_record.word_0x28 != previous) {
+								result.bit26_set_count += 1;
+							}
+						}
+						if ((mutation_record.word_0x24 & 0x3fU) == 8U) {
+							(void)replacement_terrain_id;
+							result.visual_repaint_pending_count += 1;
+						}
+					}
+				}
+				for (int32_t clear_y = std::max<int32_t>(0, y - 2); clear_y < std::min<int32_t>(grid.height, y + 3); ++clear_y) {
+					for (int32_t clear_x = std::max<int32_t>(0, x - 2); clear_x < std::min<int32_t>(grid.width, x + 3); ++clear_x) {
+						const int64_t clear_flat = cell_index(grid.width, grid.height, clear_x, clear_y, level);
+						if (clear_flat < 0 || clear_flat >= int64_t(grid.records.size())) {
+							continue;
+						}
+						GeneratedCellRecord0x30 &clear_record = grid.records[size_t(clear_flat)];
+						if (!clear_record.object_references_0x04_0x08.empty() || (clear_record.word_0x2c & 0x01U) != 0U) {
+							continue;
+						}
+						const uint32_t previous = clear_record.word_0x28;
+						clear_record.word_0x28 &= ~CELL_OCCUPIED_BLOCKED_BIT_27;
+						clear_record.word_0x28_known = true;
+						sync_generated_cell_byte_0x2b_from_word28(clear_record);
+						if (clear_record.word_0x28 != previous) {
+							result.byte2b_clear_count += 1;
+						}
 					}
 				}
 			}
 		}
-	}
-
-	if (result.source_water_cell_count > 0) {
-		result.blocked_reason = "0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope";
-		return result;
 	}
 	result.applied = true;
 	return result;
@@ -13124,7 +13246,10 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	apply_materialization_bridge_relation_normalization_0x4a5767(state, route_free_cell_rng);
 	state.materialization_bridge_water_edge_writer_0x4a4fc5_ported = true;
 	const MaterializationBridgeWaterEdgeWriterResult4a4fc5 water_edge_writer =
-			materialization_bridge_water_edge_writer_0x4a4fc5(state.generated_cell_buffer, water_mode);
+			materialization_bridge_water_edge_writer_0x4a4fc5(
+					state.generated_cell_buffer,
+					state.relation_owner_vectors_10e4_10e8,
+					water_mode);
 	state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known = water_edge_writer.input_known;
 	state.materialization_bridge_water_edge_writer_0x4a4fc5_applied = water_edge_writer.applied;
 	state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope =
@@ -13133,8 +13258,20 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			water_edge_writer.scan_count;
 	state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5 =
 			water_edge_writer.owner_low_sentinel_skip_count;
+	state.materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5 =
+			water_edge_writer.owner_high_sentinel_skip_count;
 	state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 =
 			water_edge_writer.source_water_cell_count;
+	state.materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5 =
+			water_edge_writer.relation_lookup_skip_count;
+	state.materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5 =
+			water_edge_writer.mutation_source_count;
+	state.materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5 =
+			water_edge_writer.bit26_set_count;
+	state.materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5 =
+			water_edge_writer.byte2b_clear_count;
+	state.materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5 =
+			water_edge_writer.visual_repaint_pending_count;
 	state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 =
 			water_edge_writer.neighbor_bit25_probe_count;
 	state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 =
@@ -13531,8 +13668,14 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		if (object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied) {
 			std::ostringstream water_edge_note;
 			water_edge_note << "scan=" << object_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5
-					<< ",sentinel_skips=" << object_state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5
+					<< ",owner_byte2_sentinel_skips=" << object_state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5
+					<< ",owner_byte3_sentinel_skips=" << object_state.materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5
 					<< ",source_water=" << object_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5
+					<< ",relation_lookup_skips=" << object_state.materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5
+					<< ",mutation_sources=" << object_state.materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5
+					<< ",bit26_writes=" << object_state.materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5
+					<< ",byte2b_clears=" << object_state.materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5
+					<< ",visual_repaint_pending=" << object_state.materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5
 					<< ",bit25_probes=" << object_state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5
 					<< ",bit26_candidates=" << object_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
 			add_phase("bridge_water_edge_writer", "0x4a4fc5", "complete_source_order_prefix", water_edge_note.str());
