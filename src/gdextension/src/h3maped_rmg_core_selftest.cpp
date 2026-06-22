@@ -3293,6 +3293,8 @@ int main() {
 	attach_member.object_record_key_known = true;
 	attach_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
 	attach_member.descriptor_type_0x1c = 54;
+	attach_member.descriptor_offset_x_0x2c = 1;
+	attach_member.descriptor_offset_y_0x30 = 0;
 	attach_member.source_record_copy_known_0x04 = true;
 	attach_member.source_record_copy.descriptor_width_0x34 = 1;
 	attach_member.source_record_copy.descriptor_height_0x38 = 1;
@@ -3328,25 +3330,40 @@ int main() {
 				"0x49cf34 did not refresh, filter, RNG-select, and append the recovered reward/guard attach candidate")) {
 		return 1;
 	}
-	if (!require(attach_wrapper.selected_members_0x2c_0x30[0].object_record_key == 0x036225e0U
-					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_x_0x08 == 8
-					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_y_0x0c == 11
-					&& attach_wrapper.selected_members_0x2c_0x30[0].relative_level_0x10 == 0
-					&& attach_wrapper.attached_flag_0x48_known
-					&& attach_wrapper.attached_flag_0x48
-					&& attach_wrapper.attached_relative_coordinate_0x4c_0x50_known
-					&& attach_wrapper.attached_relative_x_0x4c == 8
-					&& attach_wrapper.attached_relative_y_0x50 == 11
-					&& attach_result.stamped_member_0x49abd6
-					&& attach_result.body_stamp_count_0x49abd6 == 1
-					&& attach_result.primary_bit27_write_count_0x49d1ed == 7
-					&& attach_result.neighbor_bit27_write_count_0x49d270 == 0
-					&& attach_result.candidate_cleanup_count_0x4ae2d0 == 1
-					&& attach_result.bounds_refresh_0x49d6e0.applied
-					&& attach_result.candidate_rebuild_0x49d7c3.applied
-					&& attach_result.candidate_rebuild_0x49d7c3.seed_boundary_found
-					&& attach_rebuilt_candidate_count > 0
-					&& attach_rebuilt_candidate_count == attach_result.candidate_rebuild_0x49d7c3.contour_append_count,
+	const bool attach_wrapper_fields_ok =
+			attach_wrapper.selected_members_0x2c_0x30[0].object_record_key == 0x036225e0U
+			&& attach_wrapper.selected_members_0x2c_0x30[0].relative_x_0x08 == 8
+			&& attach_wrapper.selected_members_0x2c_0x30[0].relative_y_0x0c == 11
+			&& attach_wrapper.selected_members_0x2c_0x30[0].relative_level_0x10 == 0
+			&& attach_wrapper.attached_flag_0x48_known
+			&& attach_wrapper.attached_flag_0x48
+			&& attach_wrapper.attached_relative_coordinate_0x4c_0x50_known
+			&& attach_wrapper.attached_relative_x_0x4c == 7
+			&& attach_wrapper.attached_relative_y_0x50 == 11
+			&& attach_result.stamped_member_0x49abd6
+			&& attach_result.body_stamp_count_0x49abd6 == 1
+			&& attach_result.primary_bit27_write_count_0x49d1ed == 4
+			&& attach_result.neighbor_bit27_write_count_0x49d270 == 3
+			&& attach_result.candidate_cleanup_count_0x4ae2d0 == 1
+			&& attach_result.bounds_refresh_0x49d6e0.applied
+			&& attach_result.candidate_rebuild_0x49d7c3.applied
+			&& attach_result.candidate_rebuild_0x49d7c3.seed_boundary_found
+			&& attach_rebuilt_candidate_count > 0
+			&& attach_rebuilt_candidate_count == attach_result.candidate_rebuild_0x49d7c3.contour_append_count;
+	if (!attach_wrapper_fields_ok) {
+		std::cerr << "h3maped_rmg_core_selftest: 0x49cf34 state selected=("
+				  << attach_wrapper.selected_members_0x2c_0x30[0].relative_x_0x08 << ","
+				  << attach_wrapper.selected_members_0x2c_0x30[0].relative_y_0x0c << ") attached=("
+				  << attach_wrapper.attached_relative_x_0x4c << ","
+				  << attach_wrapper.attached_relative_y_0x50 << ") stamp="
+				  << attach_result.body_stamp_count_0x49abd6 << " primary="
+				  << attach_result.primary_bit27_write_count_0x49d1ed << " neighbor="
+				  << attach_result.neighbor_bit27_write_count_0x49d270 << " cleanup="
+				  << attach_result.candidate_cleanup_count_0x4ae2d0 << " rebuilt="
+				  << attach_rebuilt_candidate_count << "/"
+				  << attach_result.candidate_rebuild_0x49d7c3.contour_append_count << "\n";
+	}
+	if (!require(attach_wrapper_fields_ok,
 				"0x49cf34 did not stamp, block, set wrapper fields, cleanup, and rebuild recovered wrapper candidates")) {
 		return 1;
 	}

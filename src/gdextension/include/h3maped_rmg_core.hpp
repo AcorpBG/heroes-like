@@ -2833,7 +2833,7 @@ struct RewardGuardFeasibilityResult4aa603 {
 	int32_t contour_scan_count_0x49a09c = 0;
 	int32_t contour_reject_count_0x49a09c = 0;
 	int32_t overlap_scan_count = 0;
-	int32_t overlap_bit26_reject_count = 0;
+	int32_t overlap_bit22_reject_count = 0;
 	std::string blocked_reason;
 };
 
