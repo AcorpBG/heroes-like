@@ -12172,29 +12172,6 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 					continue;
 				}
 				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
-				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
-				if (terrain_class == 8U || terrain_class == 9U) {
-					generated_cell_49a932(record, true);
-				}
-				if ((record.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
-					continue;
-				}
-				result.final_sweep_call_count_0x49a962 += 1;
-				generated_cell_49a962_record_grid(grid, x, y, level);
-			}
-		}
-	}
-	result.route_0x4a8260_applied = true;
-	result.rng_state_after = rng.state;
-
-	for (int32_t level = 0; level < grid.level_count; ++level) {
-		for (int32_t y = 0; y < grid.height; ++y) {
-			for (int32_t x = 0; x < grid.width; ++x) {
-				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
-				if (flat < 0 || flat >= int64_t(grid.records.size())) {
-					continue;
-				}
-				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
 				result.candidate_boundary_scan_count_0x4a4c8e += 1;
 				const int32_t owner_signed = int32_t(int8_t((record.word_0x20 >> 16U) & 0xffU));
 				if (owner_signed < 0 || (record.word_0x24 & 0x3fU) == 8U) {
@@ -12250,6 +12227,28 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 		}
 	}
 	result.candidate_boundary_0x4a4c8e_applied = true;
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
+				if (terrain_class == 8U || terrain_class == 9U) {
+					generated_cell_49a932(record, true);
+				}
+				if ((record.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
+					continue;
+				}
+				result.final_sweep_call_count_0x49a962 += 1;
+				generated_cell_49a962_record_grid(grid, x, y, level);
+			}
+		}
+	}
+	result.route_0x4a8260_applied = true;
+	result.rng_state_after = rng.state;
 	return result;
 }
 
@@ -12478,6 +12477,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		};
 		return;
 	}
+	apply_relation_normalization_full_grid_reset_0x4a5767(state);
 	state.mine_resource_materialization_0x4a9d6a_ported = true;
 	state.mine_resource_materialization_0x4a9d6a = mine_resource_materialization_0x4a9d6a(state, route_free_cell_rng);
 	state.mine_resource_materialization_0x4a9d6a_input_known =
@@ -12804,7 +12804,27 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
 	}
-	add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "complete_source_order_prefix", "continues_into_mine_resource_materialization");
+	add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "complete_source_order_prefix", "continues_into_relation_normalization");
+
+	if (!object_state.relation_normalization_4a5767_full_grid_reset_applied) {
+		result.current_phase_id = "relation_normalization";
+		result.status = "blocked";
+		result.blocked_reason = "h3maped_workflow_relation_normalization_0x4a5767_full_grid_reset_not_applied";
+		add_phase("relation_normalization", "0x4a8c15_0x4a5767_0x4a59e2", "blocked", result.blocked_reason);
+		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_relation_normalization");
+		add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_mine_resource_materialization");
+		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	{
+		std::ostringstream relation_reset_note;
+		relation_reset_note << "visited=" << object_state.relation_normalization_4a5767_full_grid_reset_visited_count
+				<< ",changed=" << object_state.relation_normalization_4a5767_full_grid_reset_changed_count
+				<< ",skipped=" << object_state.relation_normalization_4a5767_full_grid_reset_skipped_count;
+		add_phase("relation_normalization", "0x4a8c15_0x4a5767_0x4a59e2", "complete_source_order_prefix", relation_reset_note.str());
+	}
 
 	const bool mine_resource_owned = object_state.mine_resource_materialization_0x4a9d6a_ported
 			&& object_state.mine_resource_materialization_0x4a9d6a_input_known

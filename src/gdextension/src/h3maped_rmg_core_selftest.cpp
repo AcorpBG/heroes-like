@@ -2284,16 +2284,16 @@ int main() {
 				"generator endpoint projection vector +0xc8/+0xcc was promoted before reward/guard source-order commits were owned")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state unexpectedly applied the separate 0x4a5767 full-grid reset in this partial workflow")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply the recovered 0x4a5767 full-grid reset after route/free-cell ownership")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == 0, "0x4a5767 full-grid reset visited generated-cell records in this partial workflow")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped records with known word inputs")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == 0, "0x4a5767 full-grid reset mutated generated-cell records in this partial workflow")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count > 0, "0x4a5767 full-grid reset did not mutate any generated-cell records")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_scan_consumers_4a5767_applied
@@ -4128,7 +4128,7 @@ int main() {
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 11
+		if (!require(workflow.phases.size() >= 12
 						&& workflow.phases[0].id == "entry_scope"
 						&& workflow.phases[1].id == "setup_template_selection"
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4137,16 +4137,18 @@ int main() {
 						&& workflow.phases[4].status == "complete_source_order_prefix"
 						&& workflow.phases[5].id == "route_free_cell_sweep"
 						&& workflow.phases[5].status == "complete_source_order_prefix"
-						&& workflow.phases[6].id == "mine_resource_materialization"
+						&& workflow.phases[6].id == "relation_normalization"
 						&& workflow.phases[6].status == "complete_source_order_prefix"
-						&& workflow.phases[7].id == "relation_scan_consumers"
+						&& workflow.phases[7].id == "mine_resource_materialization"
 						&& workflow.phases[7].status == "complete_source_order_prefix"
-						&& workflow.phases[8].id == "source_order_object_materialization"
+						&& workflow.phases[8].id == "relation_scan_consumers"
 						&& workflow.phases[8].status == "complete_source_order_prefix"
-						&& workflow.phases[9].id == "relation_high_owner_propagation"
+						&& workflow.phases[9].id == "source_order_object_materialization"
 						&& workflow.phases[9].status == "complete_source_order_prefix"
-						&& workflow.phases[10].id == "reward_guard_materialization"
-						&& workflow.phases[10].status == "blocked",
+						&& workflow.phases[10].id == "relation_high_owner_propagation"
+						&& workflow.phases[10].status == "complete_source_order_prefix"
+						&& workflow.phases[11].id == "reward_guard_materialization"
+						&& workflow.phases[11].status == "blocked",
 					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard blocker")) {
 			return 1;
 		}
@@ -4159,6 +4161,7 @@ int main() {
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
 						&& workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
 						&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
 						&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
