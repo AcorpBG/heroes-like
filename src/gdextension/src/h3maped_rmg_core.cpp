@@ -4965,7 +4965,14 @@ static GeneratedCellRecord0x30 *reward_guard_wrapper_cell_mutable_0x49cf34(Rewar
 	return &wrapper.generated_cell_grid_0x08_0x10.records[size_t(flat)];
 }
 
-static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(const RewardGuardWrapperState4aa3e9 &wrapper, const GeneratedCellRecord0x30 &record) {
+static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(
+		const RewardGuardWrapperState4aa3e9 &wrapper,
+		const GeneratedCellRecord0x30 &record,
+		const std::vector<ObjectRecordReference4a54a7> *object_records_0xec4_ecc) {
+	int32_t descriptor_type = -1;
+	if (generated_cell_descriptor_type_from_object_reference_49a318(record, object_records_0xec4_ecc, descriptor_type)) {
+		return descriptor_type;
+	}
 	if (!record.object_reference_vector_contents_known || record.object_references_0x04_0x08.empty()) {
 		return -1;
 	}
@@ -5104,7 +5111,11 @@ static bool reward_guard_footprint_rejects_0x49a6f9(const RewardGuardWrapperStat
 	return false;
 }
 
-static RewardGuardCandidateFilterResult49d2e0 reward_guard_candidate_filter_0x49d2e0(const RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, const CoordinateCandidate4a17f5 &candidate) {
+static RewardGuardCandidateFilterResult49d2e0 reward_guard_candidate_filter_0x49d2e0(
+		const RewardGuardWrapperState4aa3e9 &wrapper,
+		const RewardGuardWrapperMember4aa3e9 &member,
+		const CoordinateCandidate4a17f5 &candidate,
+		const std::vector<ObjectRecordReference4a54a7> *object_records_0xec4_ecc) {
 	RewardGuardCandidateFilterResult49d2e0 result;
 	result.descriptor_type_0x1c = member.descriptor_type_0x1c;
 	result.descriptor_relative_x = candidate.x - member.descriptor_offset_x_0x2c;
@@ -5152,7 +5163,7 @@ static RewardGuardCandidateFilterResult49d2e0 reward_guard_candidate_filter_0x49
 			continue;
 		}
 		result.neighbor_bit22_policy_check_count += 1;
-		const int32_t neighbor_descriptor_type = reward_guard_neighbor_descriptor_type_0x49d2e0(wrapper, *record);
+		const int32_t neighbor_descriptor_type = reward_guard_neighbor_descriptor_type_0x49d2e0(wrapper, *record, object_records_0xec4_ecc);
 		if (neighbor_descriptor_type < 0) {
 			result.inputs_available = false;
 			result.blocked_reason = "0x49d2e0_bit22_neighbor_descriptor_type_missing";
@@ -5481,7 +5492,7 @@ RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cell
 
 static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member);
 
-RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng) {
+RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWrapperState4aa3e9 &wrapper, const RewardGuardWrapperMember4aa3e9 &member, H3MapedRng &rng, const std::vector<ObjectRecordReference4a54a7> *object_records_0xec4_ecc) {
 	RewardGuardAttachResult49cf34 result;
 	auto finish_blocked = [&](const std::string &reason) {
 		result.blocked_reason = reason;
@@ -5573,7 +5584,7 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 			continue;
 		}
 		const RewardGuardCandidateFilterResult49d2e0 filter_result =
-				reward_guard_candidate_filter_0x49d2e0(wrapper, member, candidate);
+				reward_guard_candidate_filter_0x49d2e0(wrapper, member, candidate, object_records_0xec4_ecc);
 		result.filter_results_0x49d2e0.push_back(filter_result);
 		if (!filter_result.inputs_available) {
 			result.filter_missing_input_count_0x49d2e0 += 1;
@@ -5944,7 +5955,8 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 		RewardGuardWrapperState4aa3e9 &wrapper,
 		RewardGuardWrapperMember4aa3e9 member,
 		const SourceObjectRecord0x4c &selected_source,
-		H3MapedRng &rng) {
+		H3MapedRng &rng,
+		const std::vector<ObjectRecordReference4a54a7> *object_records_0xec4_ecc) {
 	RewardGuardSecondaryMemberResult49d471 result;
 	auto finish_blocked = [&](const std::string &reason) {
 		result.blocked_reason = reason;
@@ -5987,7 +5999,7 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 				continue;
 			}
 			const RewardGuardCandidateFilterResult49d2e0 filter_result =
-					reward_guard_candidate_filter_0x49d2e0(wrapper, member, candidate);
+					reward_guard_candidate_filter_0x49d2e0(wrapper, member, candidate, object_records_0xec4_ecc);
 			if (!filter_result.inputs_available) {
 				result.filter_missing_input_count += 1;
 				continue;
@@ -6217,7 +6229,8 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 							wrapper,
 							secondary_member_allocation.member,
 							secondary_selector.selected_source_record_copy,
-							rng);
+							rng,
+							&state.object_records_0xec4_ecc);
 			if (secondary_validation.applied) {
 				result.secondary_accepted_count_0x49d471 += 1;
 				current_value += secondary_selector.selected_score_value_0x04;
@@ -6359,7 +6372,7 @@ RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver
 			const RewardGuardWrapperMember4aa3e9 attach_member = attach_member_allocation.member;
 			result.selected_object_attach_invoked_0x49cf34 = true;
 			const RewardGuardAttachResult49cf34 selected_attach =
-					reward_guard_attach_member_0x49cf34(wrapper, attach_member, rng);
+					reward_guard_attach_member_0x49cf34(wrapper, attach_member, rng, &state.object_records_0xec4_ecc);
 			result.selected_object_attach_applied_0x49cf34 = selected_attach.applied;
 			result.selected_object_attach_initial_candidate_refresh_0x49d7c3_applied =
 					selected_attach.initial_candidate_refresh_0x49d7c3_applied;
