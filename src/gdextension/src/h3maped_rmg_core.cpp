@@ -13795,11 +13795,11 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 	result.input_known = true;
 
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		result.call_count_0x4a4913 += 1;
 		if (owner.terrain_policy_0x0c != 8) {
 			result.non_type8_skip_count += 1;
 			continue;
 		}
-		result.call_count_0x4a4913 += 1;
 		const int32_t level = owner.coordinate_level_0x18;
 		const int32_t relation_owner_byte2 = owner.source_pointer_source_index_0x00;
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
