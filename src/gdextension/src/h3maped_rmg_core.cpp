@@ -1480,6 +1480,8 @@ static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
+	// 0x41e951 reads the descriptor primary mask at +0x04/+0x08.
+	// The .msk fields copied into +0x34..+0x48 are a separate surface.
 	const size_t text_index = size_t(y * 8 + x);
 	if (record.action_mask.size() > text_index) {
 		return record.action_mask[text_index] == '1';
@@ -1495,6 +1497,8 @@ static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
+	// 0x4268eb reads the descriptor secondary mask at +0x0c/+0x10.
+	// Do not substitute .msk +0x44/+0x48 body fields when text masks are present.
 	const size_t text_index = size_t(y * 8 + x);
 	if (record.passability_mask.size() > text_index) {
 		return record.passability_mask[text_index] == '0';
@@ -5654,8 +5658,8 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	wrapper.attached_flag_0x48 = true;
 	result.attached_flag_set_0x48 = true;
 	wrapper.attached_relative_coordinate_0x4c_0x50_known = true;
-	wrapper.attached_relative_x_0x4c = result.selected_candidate.x;
-	wrapper.attached_relative_y_0x50 = result.selected_candidate.y;
+	wrapper.attached_relative_x_0x4c = descriptor_relative_x;
+	wrapper.attached_relative_y_0x50 = descriptor_relative_y;
 	result.attached_relative_coordinate_written_0x4c_0x50 = true;
 	result.candidate_cleanup_count_0x4ae2d0 = int32_t(wrapper.candidate_coordinates_0x3c_0x40.size());
 	wrapper.candidate_coordinates_0x3c_0x40.clear();
@@ -6997,7 +7001,7 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				const bool wrapper_bit27 = (wrapper_record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
 				const bool state_bit22 = (state_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
 				if (!wrapper_bit27 && state_bit22) {
-					result.overlap_bit26_reject_count += 1;
+					result.overlap_bit22_reject_count += 1;
 					result.blocked_reason = "0x4aa603_overlap_existing_bit22_reject";
 					return result;
 				}
