@@ -2759,6 +2759,14 @@ struct RewardGuardWrapperProjectionResult4aa3e9 {
 	bool wrapper_selected_members_known = false;
 	bool wrapper_generated_cell_grid_known = false;
 	int32_t selected_member_count = 0;
+	int32_t selected_member_slot8_dispatch_count_0x4aa5f6 = 0;
+	int32_t selected_member_slot8_ordinary_count_0x49baf5 = 0;
+	int32_t selected_member_slot8_projection_0x540b14_count = 0;
+	int32_t selected_member_slot8_projection_ordered_scan_count_0x4ad7f7 = 0;
+	int32_t selected_member_slot8_projection_success_count_0x4aa9b7 = 0;
+	int32_t selected_member_slot8_projection_reentry_suppressed_count = 0;
+	int32_t selected_member_slot8_projection_0x540b00_deferred_count = 0;
+	std::string selected_member_slot8_projection_blocked_reason;
 	int32_t selected_member_commit_count_0x4a54a7 = 0;
 	int32_t selected_member_commit_blocked_count = 0;
 	int32_t overlap_cell_count = 0;

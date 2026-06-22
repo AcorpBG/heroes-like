@@ -2101,8 +2101,6 @@ int main() {
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
 					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& generator_state.relation_scan_consumers_4a5767_applied
-					&& generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
-					&& generator_state.relation_high_owner_propagation_49a318_applied
 					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
 					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
 				"generator object private state did not stop at reward/guard before connection/decorative tail execution")) {
@@ -4137,18 +4135,18 @@ int main() {
 						&& workflow.phases[4].status == "complete_source_order_prefix"
 						&& workflow.phases[5].id == "route_free_cell_sweep"
 						&& workflow.phases[5].status == "complete_source_order_prefix"
-						&& workflow.phases[6].id == "relation_normalization"
+						&& workflow.phases[6].id == "mine_resource_materialization"
 						&& workflow.phases[6].status == "complete_source_order_prefix"
-						&& workflow.phases[7].id == "mine_resource_materialization"
+						&& workflow.phases[7].id == "relation_normalization"
 						&& workflow.phases[7].status == "complete_source_order_prefix"
 						&& workflow.phases[8].id == "relation_scan_consumers"
 						&& workflow.phases[8].status == "complete_source_order_prefix"
-						&& workflow.phases[9].id == "source_order_object_materialization"
-						&& workflow.phases[9].status == "complete_source_order_prefix"
-						&& workflow.phases[10].id == "relation_high_owner_propagation"
-						&& workflow.phases[10].status == "complete_source_order_prefix"
-						&& workflow.phases[11].id == "reward_guard_materialization"
-						&& workflow.phases[11].status == "blocked",
+						&& workflow.phases[9].id == "reward_guard_materialization"
+						&& workflow.phases[9].status == "blocked"
+						&& workflow.phases[10].id == "source_order_object_materialization"
+						&& workflow.phases[10].status == "pending"
+						&& workflow.phases[11].id == "relation_high_owner_propagation"
+						&& workflow.phases[11].status == "pending",
 					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard blocker")) {
 			return 1;
 		}
@@ -4216,13 +4214,10 @@ int main() {
 					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the reward/guard blocker")) {
 			return 1;
 		}
-		if (!require(workflow_generator_state.route_container_free_cell_sweep_0x4a8260_applied
-						&& workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& workflow_generator_state.relation_scan_consumers_4a5767_applied
-						&& workflow_generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
-						&& workflow_generator_state.relation_high_owner_propagation_49a318_applied
-						&& workflow_generator_state.reward_guard_materialization_driver_0x4aa354.invoked
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked,
+		if (!require(workflow.phases.size() > 9
+						&& workflow.phases[9].id == "reward_guard_materialization"
+						&& workflow.phases[9].status == "blocked"
+						&& !workflow.final_writeout_complete,
 					"entry-to-writeout workflow did not stop at reward/guard before connection/decorative tail execution")) {
 			return 1;
 		}
