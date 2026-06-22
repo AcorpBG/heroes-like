@@ -1513,8 +1513,8 @@ static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_prima
 	(void)source_cell_x_0x2c;
 	(void)source_cell_y_0x30;
 	std::vector<CoordinateCandidate4a17f5> offsets;
-	const int32_t descriptor_width = record.descriptor_width_0x34 > 0 ? record.descriptor_width_0x34 : 8;
-	const int32_t descriptor_height = record.descriptor_height_0x38 > 0 ? record.descriptor_height_0x38 : 6;
+	const int32_t descriptor_width = record.descriptor_width_0x34;
+	const int32_t descriptor_height = record.descriptor_height_0x38;
 	if (descriptor_width <= 0 || descriptor_height <= 0) {
 		return offsets;
 	}
@@ -3653,8 +3653,8 @@ static void generated_grid_stamp_object_footprint_0x49abd6(
 			|| state.generated_cell_buffer.records.empty()) {
 		return;
 	}
-	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
-	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
+	const int32_t descriptor_width = source.descriptor_width_0x34;
+	const int32_t descriptor_height = source.descriptor_height_0x38;
 	for (int32_t row = 0; row < descriptor_height; ++row) {
 		for (int32_t col = 0; col < descriptor_width; ++col) {
 			const int64_t flat = cell_index(
@@ -4978,8 +4978,8 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 		int32_t owner_byte2,
 		bool reject_existing_bit26) {
 	SourceDescriptorFootprintResult49a6f9 result;
-	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
-	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
+	const int32_t descriptor_width = source.descriptor_width_0x34;
+	const int32_t descriptor_height = source.descriptor_height_0x38;
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()) {
 		result.inputs_available = false;
 		result.rejected = true;
@@ -5848,8 +5848,8 @@ static int32_t reward_guard_stamp_member_body_0x49abd6(RewardGuardWrapperState4a
 		return 0;
 	}
 	const SourceObjectRecord0x4c &source = member.source_record_copy;
-	const int32_t descriptor_width = source.descriptor_width_0x34 > 0 ? source.descriptor_width_0x34 : 8;
-	const int32_t descriptor_height = source.descriptor_height_0x38 > 0 ? source.descriptor_height_0x38 : 6;
+	const int32_t descriptor_width = source.descriptor_width_0x34;
+	const int32_t descriptor_height = source.descriptor_height_0x38;
 	int32_t stamp_count = 0;
 	for (int32_t row = 0; row < descriptor_height; ++row) {
 		for (int32_t col = 0; col < descriptor_width; ++col) {
@@ -5929,8 +5929,8 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 		return finish_blocked("0x49d471_wrapper_generated_cell_grid_missing");
 	}
 
-	const int32_t descriptor_width = selected_source.descriptor_width_0x34 > 0 ? selected_source.descriptor_width_0x34 : 1;
-	const int32_t descriptor_height = selected_source.descriptor_height_0x38 > 0 ? selected_source.descriptor_height_0x38 : 1;
+	const int32_t descriptor_width = selected_source.descriptor_width_0x34;
+	const int32_t descriptor_height = selected_source.descriptor_height_0x38;
 	const int32_t min_x = descriptor_width + 2;
 	const int32_t min_y = descriptor_height + 2;
 	const int32_t max_x = wrapper.generated_cell_grid_0x08_0x10.width - 3;
@@ -6104,8 +6104,8 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 	result.selected_object_record_allocated_0x4a5c07 = true;
 
 	RewardGuardWrapperMember4aa3e9 member = initial_member_allocation.member;
-	const int32_t descriptor_width = selected_source.descriptor_width_0x34 > 0 ? selected_source.descriptor_width_0x34 : 1;
-	const int32_t descriptor_height = selected_source.descriptor_height_0x38 > 0 ? selected_source.descriptor_height_0x38 : 1;
+	const int32_t descriptor_width = selected_source.descriptor_width_0x34;
+	const int32_t descriptor_height = selected_source.descriptor_height_0x38;
 	member.relative_x_0x08 = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.width + descriptor_width) / 2);
 	member.relative_y_0x0c = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.height + descriptor_height) / 2);
 	member.relative_level_0x10 = 0;
@@ -6915,7 +6915,7 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				&& generated_cell_49a1d8_valid_record(*wrapper_record)
 				&& generated_cell_49a1d8_valid_record(*state_record)
 				&& !state_bit22
-				&& !state_bit27
+				&& state_bit27
 				&& ((generated_cell_terrain_code_0x24(*state_record) == 8) == terrain8_policy)
 				&& generated_cell_word20_owner_byte2(state_record->word_0x20) == uint8_t(relation_owner_byte2 & 0xff)) {
 			result.direction_accept_count += 1;
@@ -6968,10 +6968,10 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				}
 				result.overlap_scan_count += 1;
 				const bool wrapper_bit27 = (wrapper_record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
-				const bool state_bit26 = (state_record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
-				if (!wrapper_bit27 && state_bit26) {
+				const bool state_bit22 = (state_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
+				if (!wrapper_bit27 && state_bit22) {
 					result.overlap_bit26_reject_count += 1;
-					result.blocked_reason = "0x4aa603_overlap_existing_bit26_reject";
+					result.blocked_reason = "0x4aa603_overlap_existing_bit22_reject";
 					return result;
 				}
 			}
@@ -14420,7 +14420,6 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
 			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-			"generic_non_type98_source_order_replay_pending_after_reward_guard_source_stream_commits",
 		};
 		return;
 	}
@@ -14436,11 +14435,26 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
 			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-			"generic_non_type98_source_order_replay_pending_after_reward_guard_source_stream_commits",
 		};
 		return;
 	}
-	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(state, relation_scan_rng);
+	state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
+	state.decorative_flagged_cell_dispatch_0x49eb8d =
+			decorative_flagged_cell_dispatch_0x49eb8d(state);
+	if (!state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+			|| !state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason.empty()) {
+		const std::string decorative_blocker =
+				state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason.empty()
+				? "0x49eb8d_decorative_flagged_cell_dispatch_not_applied_after_reward_guard"
+				: state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason;
+		state.remaining_private_state_blockers = {
+			decorative_blocker,
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
+			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
+	}
 	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
 	state.connection_tail_replay_0x4a79a3_ported = true;
 	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, relation_scan_rng);
@@ -14452,7 +14466,6 @@ static void advance_generator_object_private_state_source_order_to_current_block
 				: state.connection_tail_replay_0x4a79a3.blocked_reason;
 		state.remaining_private_state_blockers = {
 			connection_blocker,
-			"decorative_dispatch_0x49eb8d_not_executed_until_connection_tail_is_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
 			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
 			"final_writeout_not_executed_until_source_order_payload_is_owned",
@@ -14805,7 +14818,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			result.blocked_reason = "reward_guard_materialization_0x4aab7e_source_stream_not_owned";
 		}
 		add_phase("reward_guard_materialization", "0x4ac552_0x4aab7e_0x4aa354_0x4aa9b7_0x4aa3e9", "blocked", result.blocked_reason);
-		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x49eb8d_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
@@ -14814,30 +14826,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	reward_guard_note << "source_stream_attempts=" << object_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count
 			<< ",successful_0x4aa9b7_commits=" << object_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count;
 	add_phase("reward_guard_materialization", "0x4ac552_0x4aab7e_0x4aa354_0x4aa9b7_0x4aa3e9", "complete_source_order_prefix", reward_guard_note.str());
-
-	const bool source_order_replay_owned = object_state.source_order_scheduler_replay_0x4a8db2_known
-			&& object_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2;
-	if (!source_order_replay_owned) {
-		result.current_phase_id = "source_order_object_materialization";
-		result.status = "blocked";
-		result.blocked_reason = "h3maped_workflow_source_order_object_materialization_not_owned";
-		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "blocked", result.blocked_reason);
-		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
-		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
-		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
-		return result;
-	}
-	std::ostringstream source_order_blocker;
-	source_order_blocker << "live_descriptor_producer_coverage_remaining";
-	if (object_state.generic_source_order_pair_descriptor_context_missing_count > 0
-			|| object_state.generic_source_order_pair_relation_context_missing_count > 0
-			|| object_state.generic_source_order_pair_source_fields_missing_count > 0) {
-		source_order_blocker
-				<< ":descriptor_context_missing=" << object_state.generic_source_order_pair_descriptor_context_missing_count
-				<< ",relation_context_missing=" << object_state.generic_source_order_pair_relation_context_missing_count
-				<< ",source_fields_missing=" << object_state.generic_source_order_pair_source_fields_missing_count;
-	}
-	add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "complete_source_order_prefix", source_order_blocker.str());
 
 	result.current_phase_id = "connection_road_river";
 	result.status = "blocked";
