@@ -13158,12 +13158,25 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		return;
 	}
 	state.materialization_bridge_0x4a8c15_blocked_reason =
-			"0x4a8c15_bridge_0x4a79a3_unported_after_0x4a4fc5";
-	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
-		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
+			"";
+	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed);
+	const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> fallback_records =
+			state.connection_fallback_materialization_records_0x4a7605_0x4a5e03;
+	if (!fallback_records.empty()) {
+		connection_fallback_materialization_4a7605_4a5e03(state, fallback_records);
+	}
+	state.connection_tail_replay_0x4a79a3_ported = true;
+	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state);
+	if (!state.connection_tail_replay_0x4a79a3.applied
+			|| !state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
+		const std::string materialization_bridge_blocker =
+				state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
+				? "0x4a79a3_connection_tail_replay_not_applied"
+				: state.connection_tail_replay_0x4a79a3.blocked_reason;
+		state.materialization_bridge_0x4a8c15_blocked_reason = materialization_bridge_blocker;
 		state.remaining_private_state_blockers = {
 			materialization_bridge_blocker,
-			"connection_tail_0x4a79a3_not_executed_until_source_order_bridge_tail_is_owned",
+			"connection_tail_0x4a79a3_not_applied_until_source_backed_fallback_records_are_owned",
 			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
 			"source_order_object_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
 			"reward_guard_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
@@ -13493,6 +13506,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					&& object_state.materialization_bridge_relation_loop_0x4a4913_ported)
 			|| (!object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
 					&& object_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported)
+			|| (object_state.connection_tail_replay_0x4a79a3_ported
+					&& !object_state.connection_tail_replay_0x4a79a3.applied)
 			|| (!object_state.remaining_private_state_blockers.empty()
 					&& object_state.remaining_private_state_blockers.front().rfind("0x4a8c15_", 0) == 0);
 	if (materialization_bridge_blocked) {

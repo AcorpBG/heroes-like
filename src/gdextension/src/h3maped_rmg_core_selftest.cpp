@@ -4132,7 +4132,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_source_order_blocker =
-					"0x4a8c15_bridge_0x4a79a3_unported_after_0x4a4fc5";
+					"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4205,7 +4205,7 @@ int main() {
 							&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 							&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
 							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-						"entry-to-writeout workflow did not execute the 0x4a4913 -> 0x4a4fc5 bridge or executed downstream helpers before 0x4a79a3 was owned")) {
+						"entry-to-writeout workflow did not execute the 0x4a4913 -> 0x4a79a3 bridge prefix or executed downstream helpers before the connection tail was owned")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -4259,7 +4259,7 @@ int main() {
 							&& workflow.phases[6].id == "materialization_bridge"
 							&& workflow.phases[6].status == "blocked"
 							&& !workflow.final_writeout_complete,
-						"entry-to-writeout workflow did not stop at the 0x4a8c15 materialization bridge before 0x4a79a3 ownership")) {
+						"entry-to-writeout workflow did not stop at the 0x4a8c15 materialization bridge while 0x4a79a3 remained blocked")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
@@ -4272,12 +4272,17 @@ int main() {
 		}
 		const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
 				workflow_generator_state.connection_tail_replay_0x4a79a3;
-		if (!require(!workflow_generator_state.connection_tail_replay_0x4a79a3_ported
-						&& !connection_tail.invoked
-					&& !connection_tail.applied
-					&& !workflow_generator_state.connection_fallback_materialization_scope_known
-					&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-				"entry-to-writeout workflow executed connection/fallback helpers before the 0x4a8c15 materialization bridge was owned")) {
+		if (!require(workflow_generator_state.connection_tail_replay_0x4a79a3_ported
+						&& connection_tail.invoked
+						&& !connection_tail.applied
+						&& connection_tail.generated_cell_grid_owned
+						&& connection_tail.endpoint_caller_prep_known
+						&& connection_tail.fallback_materialization_known
+						&& !connection_tail.fallback_materialization_applied
+						&& connection_tail.blocked_reason == workflow_source_order_blocker
+						&& workflow_generator_state.connection_fallback_materialization_scope_known
+						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
+				"entry-to-writeout workflow did not invoke 0x4a79a3 and expose its source-backed fallback-record blocker")) {
 			return 1;
 		}
 	}
