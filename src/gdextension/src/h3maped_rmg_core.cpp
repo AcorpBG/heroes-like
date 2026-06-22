@@ -14152,26 +14152,6 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	}
 	state.materialization_bridge_0x4a8c15_blocked_reason =
 			"";
-	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
-	state.connection_tail_replay_0x4a79a3_ported = true;
-	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, route_free_cell_rng);
-	if (!state.connection_tail_replay_0x4a79a3.applied
-			|| !state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
-		const std::string materialization_bridge_blocker =
-				state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
-				? "0x4a79a3_connection_tail_replay_not_applied"
-				: state.connection_tail_replay_0x4a79a3.blocked_reason;
-		state.materialization_bridge_0x4a8c15_blocked_reason = materialization_bridge_blocker;
-		state.remaining_private_state_blockers = {
-			materialization_bridge_blocker,
-			"connection_tail_0x4a79a3_not_applied_until_live_0x49b3fb_0x4a61bc_pair_loop_materialization_is_owned",
-			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
-			"source_order_object_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
-			"reward_guard_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
-			"final_writeout_not_executed_until_source_order_payload_is_owned",
-		};
-		return;
-	}
 	state.mine_resource_materialization_0x4a9d6a_ported = true;
 	state.mine_resource_materialization_0x4a9d6a = mine_resource_materialization_0x4a9d6a(state, route_free_cell_rng);
 	state.mine_resource_materialization_0x4a9d6a_input_known =
@@ -14292,6 +14272,24 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		return;
 	}
 	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(state, relation_scan_rng);
+	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
+	state.connection_tail_replay_0x4a79a3_ported = true;
+	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, relation_scan_rng);
+	if (!state.connection_tail_replay_0x4a79a3.applied
+			|| !state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
+		const std::string connection_blocker =
+				state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
+				? "0x4a79a3_connection_tail_replay_not_applied_after_reward_guard"
+				: state.connection_tail_replay_0x4a79a3.blocked_reason;
+		state.remaining_private_state_blockers = {
+			connection_blocker,
+			"decorative_dispatch_0x49eb8d_not_executed_until_connection_tail_is_owned",
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
+			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
+	}
 }
 
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
@@ -14498,8 +14496,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					&& object_state.materialization_bridge_relation_loop_0x4a4913_ported)
 			|| (!object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
 					&& object_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported)
-			|| (object_state.connection_tail_replay_0x4a79a3_ported
-					&& !object_state.connection_tail_replay_0x4a79a3.applied)
 			|| (!object_state.remaining_private_state_blockers.empty()
 					&& object_state.remaining_private_state_blockers.front().rfind("0x4a8c15_", 0) == 0);
 	if (materialization_bridge_blocked) {
@@ -14508,7 +14504,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
 				? object_state.remaining_private_state_blockers.front()
 				: "0x4a8c15_materialization_bridge_incomplete";
-		add_phase("materialization_bridge", "0x4a8c15_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3", "blocked", result.blocked_reason);
+		add_phase("materialization_bridge", "0x4a8c15_0x4a4913_0x4a5767_0x4a4fc5", "blocked", result.blocked_reason);
 		if (object_state.relation_normalization_4a5767_full_grid_reset_applied) {
 			std::ostringstream relation_reset_note;
 			relation_reset_note << "visited=" << object_state.relation_normalization_4a5767_full_grid_reset_visited_count
@@ -14534,13 +14530,13 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					<< ",bit25_probes=" << object_state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5
 					<< ",bit26_candidates=" << object_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
 			add_phase("bridge_water_edge_writer", "0x4a4fc5", "complete_source_order_prefix", water_edge_note.str());
-			add_phase("connection_tail", "0x4a79a3", "blocked", result.blocked_reason);
+			add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_reward_guard_materialization");
 		} else {
 			add_phase("bridge_water_edge_writer", "0x4a4fc5", "blocked", result.blocked_reason);
 			add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a4fc5");
 		}
 		const std::string downstream_bridge_blocker = object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
-				? "blocked_before_0x4a79a3_materialization_bridge"
+				? "blocked_before_reward_guard_materialization"
 				: "blocked_before_0x4a4fc5_0x4a79a3_materialization_bridge";
 		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", downstream_bridge_blocker);
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", downstream_bridge_blocker);
