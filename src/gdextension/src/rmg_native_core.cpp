@@ -796,7 +796,13 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope = input.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope;
 	out.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5;
+	out.materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5 = input.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5;
@@ -2448,7 +2454,13 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope\":" << (state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope ? "true" : "false") << ","
 			<< "\"materialization_bridge_water_edge_writer_scan_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_owner_high_sentinel_skip_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_relation_lookup_skip_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_mutation_source_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_bit26_set_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_byte2b_clear_count_0x4a4fc5 << ","
+			<< "\"materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_visual_repaint_pending_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5\":\"" << json_escape(state.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5) << "\","
@@ -2463,7 +2475,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
 			<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","
 			<< "\"materialization_bridge_relation_loop_0x4a4913_source\":\"0x4a4913_type8_relation_records_reset_relation_rect_propagate_0x4a4694_select_candidates_draw_0x4a4522_and_reseed_0x4a4694\","
-			<< "\"materialization_bridge_water_edge_writer_0x4a4fc5_source\":\"0x4a4fc5_one_level_land_scans_generated_cells_skips_constructor_sentinel_owner_byte2_and_confirms_zero_source_water_cells_before_0x4a79a3\","
+			<< "\"materialization_bridge_water_edge_writer_0x4a4fc5_source\":\"0x4a4fc5_one_level_land_scans_generated_cells_skips_constructor_sentinel_owner_byte2_then_source_relation_byte3_before_source_water_candidates\","
 			<< "\"weighted_candidate_vectors_0x4a901a_known\":" << (state.weighted_candidate_vectors_0x4a901a_known ? "true" : "false") << ","
 		<< "\"weighted_candidate_vector_count_0x4a901a\":" << state.weighted_candidate_vector_count_0x4a901a << ","
 		<< "\"weighted_candidate_total_count_0x4a901a\":" << state.weighted_candidate_total_count_0x4a901a << ","
@@ -3526,8 +3538,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan, and the zero-water 0x4a79a3 connection-tail invocation. Small zero-water cases now fail closed inside 0x4a79a3 because source-backed 0x4a7605/0x4a5e03 fallback records are missing for the current scope; Medium currently fails closed inside 0x4a4fc5 because the generated-cell terrain word surface still exposes source-water cells before the mutation semantics are owned\",\n";
-	out << "    \"required_refactor\": \"recover the Small zero-water 0x4a79a3 fallback record feed or resolve the Medium 0x4a4fc5 source-water input/mutation path before emitting native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the 0x4a79a3 connection-tail invocation. Small supported-land cases still fail closed inside 0x4a79a3 because source-backed 0x4a7605/0x4a5e03 fallback records are missing for those scopes; Medium seed 10 reaches the recovered fallback records and fails closed on the record-0 source-cell +0x20 prestate mismatch before 0x4a5e03\",\n";
+	out << "    \"required_refactor\": \"recover the missing Small 0x4a79a3 fallback record feed and fix the upstream Medium generated-cell mutation/order that leaves 0x4a7605 record-0 source-cell +0x20 different from the recovered H3MapEd prestate before emitting native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3546,7 +3558,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water\",\n";
+	out << "  \"next_required_native_core_slice\": \"recover_small_0x4a79a3_fallback_records_and_fix_medium_0x4a7605_source_cell_prestate\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
