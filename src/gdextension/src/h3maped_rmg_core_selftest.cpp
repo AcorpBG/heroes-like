@@ -3323,9 +3323,9 @@ int main() {
 					&& attach_result.filter_missing_input_count_0x49d2e0 == 0
 					&& attach_result.candidate_count_after_filter == 1
 					&& attach_result.filter_results_0x49d2e0.size() == 2
-					&& attach_result.filter_results_0x49d2e0[0].accepted
-					&& !attach_result.filter_results_0x49d2e0[1].accepted
-					&& attach_result.filter_results_0x49d2e0[1].footprint_reject_count_0x49a6f9 == 1
+					&& !attach_result.filter_results_0x49d2e0[0].accepted
+					&& attach_result.filter_results_0x49d2e0[0].footprint_reject_count_0x49a6f9 == 1
+					&& attach_result.filter_results_0x49d2e0[1].accepted
 					&& attach_result.selected_candidate_known
 					&& attach_result.selected_candidate.x == 8
 					&& attach_result.selected_candidate.y == 11
