@@ -2052,7 +2052,7 @@ int main() {
 	const H3MapedRmgWorkflowResult generator_state_workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	if (!require(generator_state_workflow.executed && generator_state_workflow.current_phase_id == "materialization_bridge", "workflow-owned generator state did not stop at the unported recovered 0x4a8c15 materialization bridge")) {
+	if (!require(generator_state_workflow.executed && generator_state_workflow.current_phase_id == "materialization_bridge", "workflow-owned generator state did not stop at the recovered 0x4a8c15 materialization bridge")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 	}
 	const std::string source_order_blocker =
-			"0x4a8c15_materialization_bridge_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3_unported_after_0x4a8260_0x4a4c8e_before_0x4a9d6a";
+			"0x4a8c15_relation_vector_loop_0x4a4913_unported_after_post_0x4a4c8e_cleanup_before_0x4a5767";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2099,6 +2099,11 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
+					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
+					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
+					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
+					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 == 36 * 36
+					&& generator_state.materialization_bridge_relation_loop_call_count_0x4a4913 == 0
 					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& !generator_state.relation_scan_consumers_4a5767_applied
 					&& !generator_state.relation_high_owner_propagation_49a318_applied
@@ -4112,7 +4117,7 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_source_order_blocker =
-				"0x4a8c15_materialization_bridge_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3_unported_after_0x4a8260_0x4a4c8e_before_0x4a9d6a";
+				"0x4a8c15_relation_vector_loop_0x4a4913_unported_after_post_0x4a4c8e_cleanup_before_0x4a5767";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4164,6 +4169,10 @@ int main() {
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
 						&& workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
+						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
+						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
+						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_call_count_0x4a4913 == 0
 						&& !workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
 						&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& !workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied

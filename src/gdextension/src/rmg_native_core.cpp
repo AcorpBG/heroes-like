@@ -770,6 +770,13 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.generic_source_order_pair_weighted_replay_count_0x4a8db2 = input.generic_source_order_pair_weighted_replay_count_0x4a8db2;
 	out.generic_source_order_pair_weighted_commit_count_0x4a8db2 = input.generic_source_order_pair_weighted_commit_count_0x4a8db2;
 	out.generic_source_order_pair_replay_blockers_0xedc = input.generic_source_order_pair_replay_blockers_0xedc;
+	out.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported = input.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported;
+	out.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known = input.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known;
+	out.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied = input.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied;
+	out.materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 = input.materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15;
+	out.materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962 = input.materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962;
+	out.materialization_bridge_relation_loop_call_count_0x4a4913 = input.materialization_bridge_relation_loop_call_count_0x4a4913;
+	out.materialization_bridge_0x4a8c15_blocked_reason = input.materialization_bridge_0x4a8c15_blocked_reason;
 	out.weighted_candidate_vectors_0x4a901a_known = input.weighted_candidate_vectors_0x4a901a_known;
 	out.weighted_candidate_vector_count_0x4a901a = input.weighted_candidate_vector_count_0x4a901a;
 	out.weighted_candidate_total_count_0x4a901a = input.weighted_candidate_total_count_0x4a901a;
@@ -2378,6 +2385,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"generic_source_order_pair_replay_blockers_0xedc\":";
 	append_json_string_array(out, state.generic_source_order_pair_replay_blockers_0xedc);
 	out << ","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported\":" << (state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported ? "true" : "false") << ","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known\":" << (state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known ? "true" : "false") << ","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied\":" << (state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied ? "true" : "false") << ","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15\":" << state.materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 << ","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962\":" << state.materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962 << ","
+		<< "\"materialization_bridge_relation_loop_call_count_0x4a4913\":" << state.materialization_bridge_relation_loop_call_count_0x4a4913 << ","
+		<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
+		<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","
 		<< "\"weighted_candidate_vectors_0x4a901a_known\":" << (state.weighted_candidate_vectors_0x4a901a_known ? "true" : "false") << ","
 		<< "\"weighted_candidate_vector_count_0x4a901a\":" << state.weighted_candidate_vector_count_0x4a901a << ","
 		<< "\"weighted_candidate_total_count_0x4a901a\":" << state.weighted_candidate_total_count_0x4a901a << ","
@@ -3440,8 +3455,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2 and route/free-cell 0x4a8260/0x4a4c8e, then stops at the unported remainder of the recovered 0x4a8c15 materialization bridge before 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run\",\n";
-	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, and the post-0x4a4c8e 0x4a8c15 cleanup scan, then stops before the unported relation-vector callee 0x4a4913 before 0x4a5767, 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run\",\n";
+	out << "    \"required_refactor\": \"port the source-backed 0x4a8c15 relation-vector loop through 0x4a4913, then bridge 0x4a5767, 0x4a4fc5, and 0x4a79a3 before emitting native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3451,13 +3466,16 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "    \"executed\": " << (workflow.executed ? "true" : "false") << ",\n";
 	out << "    \"final_payload_owned\": " << (workflow.final_payload_owned ? "true" : "false") << ",\n";
 	out << "    \"final_writeout_complete\": " << (workflow.final_writeout_complete ? "true" : "false") << ",\n";
+	out << "    \"generator_object_private_state\": ";
+	append_generator_object_private_state_json(out, workflow.payload.generator_object_private_state);
+	out << ",\n";
 	out << "    \"phases\": ";
 	append_native_workflow_phases_json(out, workflow.phases);
 	out << "\n";
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_0x4a8c15_materialization_bridge_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3_before_0x4a9d6a\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_0x4a8c15_relation_vector_loop_0x4a4913_before_0x4a5767_0x4a4fc5_0x4a79a3_0x4a9d6a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

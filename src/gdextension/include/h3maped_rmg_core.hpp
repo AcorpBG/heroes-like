@@ -2352,6 +2352,13 @@ struct GeneratorObjectPrivateState {
 	bool route_container_free_cell_sweep_0x4a8260_input_known = false;
 	bool route_container_free_cell_sweep_0x4a8260_applied = false;
 	std::string route_container_free_cell_sweep_0x4a8260_blocked_reason;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported = false;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known = false;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied = false;
+	int32_t materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 = 0;
+	int32_t materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962 = 0;
+	int32_t materialization_bridge_relation_loop_call_count_0x4a4913 = 0;
+	std::string materialization_bridge_0x4a8c15_blocked_reason;
 	bool mine_resource_materialization_0x4a9d6a_ported = false;
 	bool mine_resource_materialization_0x4a9d6a_input_known = false;
 	MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4a9d6a;

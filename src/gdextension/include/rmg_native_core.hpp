@@ -771,6 +771,13 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t generic_source_order_pair_weighted_replay_count_0x4a8db2 = 0;
 	int32_t generic_source_order_pair_weighted_commit_count_0x4a8db2 = 0;
 	std::vector<std::string> generic_source_order_pair_replay_blockers_0xedc;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported = false;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known = false;
+	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied = false;
+	int32_t materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 = 0;
+	int32_t materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962 = 0;
+	int32_t materialization_bridge_relation_loop_call_count_0x4a4913 = 0;
+	std::string materialization_bridge_0x4a8c15_blocked_reason;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
 	int32_t weighted_candidate_total_count_0x4a901a = 0;
