@@ -3029,6 +3029,7 @@ int main() {
 	GeneratedCellRecord0x30 &reward_guard_target =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	reward_guard_target.word_0x20 = 0x0002000aU;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, true);
 	GeneratedCellRecord0x30 &reward_guard_contour_cell =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
 	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_contour_cell, true);
@@ -4214,10 +4215,10 @@ int main() {
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 13
-						&& workflow.phases[0].id == "entry_scope"
-						&& workflow.phases[1].id == "setup_template_selection"
-						&& workflow.phases[2].id == "coordinate_boundary_terrain"
+			if (!require(workflow.phases.size() >= 12
+							&& workflow.phases[0].id == "entry_scope"
+							&& workflow.phases[1].id == "setup_template_selection"
+							&& workflow.phases[2].id == "coordinate_boundary_terrain"
 						&& workflow.phases[3].id == "generator_object_private_state"
 						&& workflow.phases[4].id == "source_order_object_materialization"
 						&& workflow.phases[4].status == "complete_source_order_prefix"
@@ -4229,17 +4230,15 @@ int main() {
 						&& workflow.phases[7].status == "complete_source_order_prefix"
 						&& workflow.phases[8].id == "relation_scan_consumers"
 						&& workflow.phases[8].status == "complete_source_order_prefix"
-						&& workflow.phases[9].id == "reward_guard_materialization"
-						&& workflow.phases[9].status == "blocked"
-						&& workflow.phases[10].id == "source_order_object_materialization"
-						&& workflow.phases[10].status == "pending"
-						&& workflow.phases[11].id == "connection_road_river"
-						&& workflow.phases[11].status == "pending"
-						&& workflow.phases[12].id == "final_writeout"
-						&& workflow.phases[12].status == "pending",
-					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard materialization blocker")) {
-			return 1;
-		}
+							&& workflow.phases[9].id == "reward_guard_materialization"
+							&& workflow.phases[9].status == "blocked"
+							&& workflow.phases[10].id == "connection_road_river"
+							&& workflow.phases[10].status == "pending"
+							&& workflow.phases[11].id == "final_writeout"
+							&& workflow.phases[11].status == "pending",
+						"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard materialization blocker")) {
+				return 1;
+			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
 						&& workflow.template_selection_0x4ac552.accepted_template_count > 0
 						&& !workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.empty()
@@ -4329,12 +4328,12 @@ int main() {
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
 				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
-		if (!require(!workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-					&& !decorative_dispatch.invoked
-					&& !decorative_dispatch.applied,
-				"entry-to-writeout workflow executed decorative dispatch before the 0x4a8c15 materialization bridge was owned")) {
-			return 1;
-		}
+			if (!require(!workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
+						&& !decorative_dispatch.invoked
+						&& !decorative_dispatch.applied,
+					"entry-to-writeout workflow executed decorative dispatch before reward/guard commits were source-owned")) {
+				return 1;
+			}
 		const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
 				workflow_generator_state.connection_tail_replay_0x4a79a3;
 		if (!require(!workflow_generator_state.connection_tail_replay_0x4a79a3_ported
