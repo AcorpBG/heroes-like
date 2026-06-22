@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 		}
 		const std::string source_order_blocker =
-				"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
+				"0x4a79a3_live_pair_loop_0x4a61bc_object_materialization_unported_after_0x49b3fb_pair_lookup";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2121,11 +2121,15 @@ int main() {
 						&& generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& !generator_state.connection_tail_replay_0x4a79a3.applied
 						&& generator_state.connection_tail_replay_0x4a79a3.blocked_reason == source_order_blocker
+						&& generator_state.connection_tail_replay_0x4a79a3.source_backed_frontier_known
+						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count == 36 * 36
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_candidate_pair_count > 0
 						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
 						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-						"generator object private state did not execute 0x4a4fc5 and stop at the 0x4a79a3 fallback-record blocker before downstream helpers")) {
+						"generator object private state did not execute 0x4a4fc5 and stop inside the live 0x4a79a3 pair loop before downstream helpers")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -4171,7 +4175,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_source_order_blocker =
-					"0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope";
+					"0x4a79a3_live_pair_loop_0x4a61bc_object_materialization_unported_after_0x49b3fb_pair_lookup";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4318,10 +4322,14 @@ int main() {
 						&& connection_tail.endpoint_caller_prep_known
 						&& connection_tail.fallback_materialization_known
 						&& !connection_tail.fallback_materialization_applied
+						&& connection_tail.source_backed_frontier_known
+						&& connection_tail.source_frontier_scan_cell_count == 36 * 36
+						&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
+						&& connection_tail.internal_growth_candidate_pair_count > 0
 						&& connection_tail.blocked_reason == workflow_source_order_blocker
 						&& workflow_generator_state.connection_fallback_materialization_scope_known
 						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-				"entry-to-writeout workflow did not invoke 0x4a79a3 and expose its source-backed fallback-record blocker")) {
+				"entry-to-writeout workflow did not invoke 0x4a79a3 and stop inside the live pair loop")) {
 			return 1;
 		}
 	}
