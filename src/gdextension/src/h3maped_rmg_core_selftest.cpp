@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 	}
 	const std::string source_order_blocker =
-			"0x4a8c15_relation_vector_loop_0x4a4913_unported_after_post_0x4a4c8e_cleanup_before_0x4a5767";
+			"0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2103,13 +2103,16 @@ int main() {
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 == 36 * 36
-					&& generator_state.materialization_bridge_relation_loop_call_count_0x4a4913 == 0
+					&& generator_state.materialization_bridge_relation_loop_0x4a4913_ported
+					&& generator_state.materialization_bridge_relation_loop_0x4a4913_input_known
+					&& generator_state.materialization_bridge_relation_loop_0x4a4913_applied
+					&& generator_state.materialization_bridge_relation_loop_relation_count_0x4a4913 == int32_t(generator_state.relation_owner_vectors_10e4_10e8.size())
 					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& !generator_state.relation_scan_consumers_4a5767_applied
 					&& !generator_state.relation_high_owner_propagation_49a318_applied
 					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
 					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-				"generator object private state executed downstream helpers before the 0x4a8c15 materialization bridge was owned")) {
+				"generator object private state did not execute 0x4a4913 or executed downstream helpers before the 0x4a5767 bridge was owned")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -4117,7 +4120,7 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_source_order_blocker =
-				"0x4a8c15_relation_vector_loop_0x4a4913_unported_after_post_0x4a4c8e_cleanup_before_0x4a5767";
+				"0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4172,14 +4175,16 @@ int main() {
 						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
 						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
 						&& workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
-						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_call_count_0x4a4913 == 0
+						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_ported
+						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_input_known
+						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_applied
 						&& !workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
 						&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& !workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
 						&& !workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied
 						&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
 						&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-					"entry-to-writeout workflow executed downstream helpers before the 0x4a8c15 materialization bridge was owned")) {
+					"entry-to-writeout workflow did not execute 0x4a4913 or executed downstream helpers before the 0x4a5767 bridge was owned")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
