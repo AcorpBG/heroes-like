@@ -3440,7 +3440,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell, mine/resource, relation scan, generic source-order replay, and 0x49a318, then stops at reward_guard_materialization because 0x4aab7e/0x4aa9b7 produces zero successful source-backed commits before the connection/decorative/road-river tail\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2 and route/free-cell 0x4a8260/0x4a4c8e, then stops at the unported remainder of the recovered 0x4a8c15 materialization bridge before 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3457,7 +3457,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_reward_guard_0x4aab7e_0x4aa9b7_successful_source_backed_commits_before_connection_tail\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_0x4a8c15_materialization_bridge_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3_before_0x4a9d6a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
