@@ -841,6 +841,22 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_frontier_candidate_count;
 	out.connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count =
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_selected_candidate_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_selected_loop_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_selected_loop_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_rng_selection_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_rng_selection_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_projection_chain_call_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_projection_chain_call_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_projection_occupied_stamp_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_projection_occupied_stamp_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_projection_cleanup_clear_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_projection_cleanup_clear_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_local_vector_append_count_0x404 =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_local_vector_append_count_0x404;
+	out.connection_tail_replay_internal_growth_0x4a61bc_guard_budget_positive_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_guard_budget_positive_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_projection_object_branch_blocked_count;
 	out.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count =
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_constructor_blocked_count;
 	out.connection_tail_replay_blocked_reason_0x4a79a3 =
@@ -2509,6 +2525,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_selected_loop_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_selected_loop_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_rng_selection_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_rng_selection_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_chain_call_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_chain_call_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_occupied_stamp_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_occupied_stamp_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_cleanup_clear_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_cleanup_clear_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_local_vector_append_count_0x404\":" << state.connection_tail_replay_internal_growth_0x4a61bc_local_vector_append_count_0x404 << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_guard_budget_positive_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_guard_budget_positive_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count << ","
 			<< "\"connection_tail_replay_blocked_reason_0x4a79a3\":\"" << json_escape(state.connection_tail_replay_blocked_reason_0x4a79a3) << "\","
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
@@ -3577,8 +3601,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the 0x4a79a3 connection-tail invocation. Small supported-land cases still fail closed inside 0x4a79a3 because source-backed 0x4a7605/0x4a5e03 fallback records are missing for those scopes; Medium seed 10 reaches the recovered fallback records and fails closed on the record-0 source-cell +0x20 prestate mismatch before 0x4a5e03\",\n";
-	out << "    \"required_refactor\": \"recover the missing Small 0x4a79a3 fallback record feed and fix the upstream Medium generated-cell mutation/order that leaves 0x4a7605 record-0 source-cell +0x20 different from the recovered H3MapEd prestate before emitting native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the 0x4a79a3 connection-tail invocation. Small seed 58 now executes the recovered 0x4a61bc selected-candidate loop with RNG selection, two 0x4a5a23 projection-chain calls per selected lane, and source/target owner +0x404 appends, then fails closed before the direct 0x4a5c07 static selector feeding 0x4a5e03. Small seed 10 and Medium seed 10 still have reciprocal pairs whose entry gates pass but no matching source-frontier candidate in the current controlled setup.\",\n";
+	out << "    \"required_refactor\": \"port the direct 0x4a5c07 static selector and 0x4a5e03/0x4a54a7 object construction/commit path after the recovered 0x4a61bc selected loop before emitting native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3597,7 +3621,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_live_0x4a61bc_materialization_after_0x49b3fb_pair_lookup\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_direct_0x4a5c07_static_selector_and_0x4a5e03_commit_after_0x4a61bc_selected_loop\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

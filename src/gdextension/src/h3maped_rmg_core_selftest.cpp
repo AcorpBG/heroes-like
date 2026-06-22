@@ -4182,7 +4182,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_source_order_blocker =
-					"0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
+					"0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4337,6 +4337,15 @@ int main() {
 						&& connection_tail.internal_growth_0x4a61bc_invocation_count == connection_tail.internal_growth_candidate_pair_count
 						&& connection_tail.internal_growth_0x4a61bc_entry_gate_pass_count > 0
 						&& connection_tail.internal_growth_0x4a61bc_selected_candidate_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_selected_loop_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_rng_selection_count
+								== connection_tail.internal_growth_0x4a61bc_selected_loop_count
+						&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count
+								== connection_tail.internal_growth_0x4a61bc_selected_loop_count * 2
+						&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404
+								== connection_tail.internal_growth_0x4a61bc_selected_loop_count * 2
+						&& connection_tail.internal_growth_0x4a61bc_guard_budget_positive_count > 0
 						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count > 0
 						&& connection_tail.blocked_reason == workflow_source_order_blocker
 						&& workflow_generator_state.connection_fallback_materialization_scope_known

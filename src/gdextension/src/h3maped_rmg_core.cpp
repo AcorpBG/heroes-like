@@ -7780,18 +7780,30 @@ struct ConnectionPairMaterializationPrefixResult4a61bc {
 	bool source_record_pair_known = false;
 	bool frontier_vector_known = false;
 	bool candidate_selected = false;
+	bool guard_budget_known = false;
+	bool guard_budget_positive = false;
 	bool constructor_blocked = false;
 	int32_t frontier_candidate_count = 0;
 	int32_t selected_candidate_count = 0;
+	int32_t selected_loop_count = 0;
+	int32_t rng_selection_count = 0;
+	int32_t projection_chain_call_count = 0;
+	int32_t projection_occupied_stamp_count = 0;
+	int32_t projection_cleanup_clear_count = 0;
+	int32_t local_vector_append_count_0x404 = 0;
+	int32_t guard_budget_0x4a65a5 = 0;
+	int32_t projection_object_branch_blocked_count = 0;
 	std::string blocked_reason;
 };
 
 static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materialization_prefix_0x4a61bc(
-		const GeneratorRelationOwnerState4a218c &source_owner,
-		const GeneratorRelationOwnerState4a218c &target_owner,
+		GeneratorObjectPrivateState &state,
+		GeneratorRelationOwnerState4a218c &source_owner,
+		GeneratorRelationOwnerState4a218c &target_owner,
 		const GeneratorSourceEndpointRecordState4a1f3b &source_endpoint,
 		const GeneratorSourceEndpointRecordState4a1f3b &reciprocal_endpoint,
-		const std::vector<ConnectionFrontierCandidate4a79a3> &frontier_candidates) {
+		const std::vector<ConnectionFrontierCandidate4a79a3> &frontier_candidates,
+		H3MapedRng &rng) {
 	ConnectionPairMaterializationPrefixResult4a61bc result;
 	result.invoked = true;
 	result.source_record_pair_known =
@@ -7820,6 +7832,7 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 	result.frontier_vector_known = true;
 
 	int32_t best_score = std::numeric_limits<int32_t>::max();
+	std::vector<ConnectionFrontierCandidate4a79a3> best_candidates;
 	for (const ConnectionFrontierCandidate4a79a3 &candidate : frontier_candidates) {
 		if (candidate.level != source_owner.coordinate_level_0x18) {
 			continue;
@@ -7834,21 +7847,102 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		}
 		if (candidate.score_word_0x1c_high < best_score) {
 			best_score = candidate.score_word_0x1c_high;
-			result.selected_candidate_count = 0;
+			best_candidates.clear();
 		}
-		result.selected_candidate_count += 1;
+		best_candidates.push_back(candidate);
 	}
+	result.selected_candidate_count = int32_t(best_candidates.size());
 	if (result.selected_candidate_count <= 0) {
 		result.blocked_reason = "0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
 		return result;
 	}
 	result.candidate_selected = true;
-	result.constructor_blocked = true;
-	result.blocked_reason = "0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
+
+	if (source_endpoint.wide) {
+		result.guard_budget_known = true;
+		result.guard_budget_0x4a65a5 = 0;
+	} else {
+		result.guard_budget_known = state.generator_value_band_0x10bc_known;
+		if (!result.guard_budget_known) {
+			result.blocked_reason = "0x4a61bc_0x4a65a5_generator_value_band_missing_before_0x4a5e03";
+			return result;
+		}
+		result.guard_budget_0x4a65a5 =
+				reward_guard_attach_value_from_band_0x4a65a5(source_endpoint.guard_value, state.generator_value_band_0x10bc);
+	}
+	result.guard_budget_positive = result.guard_budget_0x4a65a5 > 0;
+
+	if (best_score == 1 && result.guard_budget_0x4a65a5 <= 0 && !source_endpoint.border_guard) {
+		return result;
+	}
+
+	const int32_t selected_loop_limit =
+			std::min<int32_t>(int32_t(best_candidates.size()), (result.frontier_candidate_count + 39) / 40);
+	for (int32_t loop_index = 0; loop_index < selected_loop_limit; ++loop_index) {
+		if (best_candidates.empty()) {
+			break;
+		}
+		const int32_t rng_value = rng.next();
+		result.rng_selection_count += 1;
+		const int32_t selected_index = rng_value % int32_t(best_candidates.size());
+		const ConnectionFrontierCandidate4a79a3 selected = best_candidates[size_t(selected_index)];
+		best_candidates.erase(best_candidates.begin() + selected_index);
+		result.selected_loop_count += 1;
+
+		const ProjectedCellChainResult4a5a23 source_chain =
+				projected_cell_chain_no_object_4a5a23(
+						state.generated_cell_buffer,
+						selected.source_x,
+						selected.source_y,
+						selected.level,
+						source_endpoint.border_guard);
+		result.projection_chain_call_count += 1;
+		result.projection_occupied_stamp_count += source_chain.occupied_stamp_count;
+		result.projection_cleanup_clear_count += source_chain.cleanup_bit_0x04_clear_count;
+		if (source_chain.stopped_on_object_materialization_required) {
+			result.projection_object_branch_blocked_count += 1;
+			result.blocked_reason = "0x4a61bc_0x4a5a23_source_projection_object_branch_unowned_before_0x4a5e03";
+			return result;
+		}
+
+		source_owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
+		source_owner.owner_local_vector_0x404_count += 1;
+		result.local_vector_append_count_0x404 += 1;
+
+		const ProjectedCellChainResult4a5a23 target_chain =
+				projected_cell_chain_no_object_4a5a23(
+						state.generated_cell_buffer,
+						selected.neighbor_x,
+						selected.neighbor_y,
+						selected.level,
+						source_endpoint.border_guard);
+		result.projection_chain_call_count += 1;
+		result.projection_occupied_stamp_count += target_chain.occupied_stamp_count;
+		result.projection_cleanup_clear_count += target_chain.cleanup_bit_0x04_clear_count;
+		if (target_chain.stopped_on_object_materialization_required) {
+			result.projection_object_branch_blocked_count += 1;
+			result.blocked_reason = "0x4a61bc_0x4a5a23_target_projection_object_branch_unowned_before_0x4a5e03";
+			return result;
+		}
+
+		target_owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
+		target_owner.owner_local_vector_0x404_count += 1;
+		result.local_vector_append_count_0x404 += 1;
+	}
+
+	if (source_endpoint.border_guard) {
+		result.constructor_blocked = true;
+		result.blocked_reason = "0x4a61bc_border_guard_endpoint_helpers_0x4a5e73_0x4a606b_unowned_before_0x4a5e03";
+		return result;
+	}
+	if (result.guard_budget_0x4a65a5 > 0) {
+		result.constructor_blocked = true;
+		result.blocked_reason = "0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
+	}
 	return result;
 }
 
-static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(GeneratorObjectPrivateState &state) {
+static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	ConnectionTailReplayResult4a79a3 result;
 	result.invoked = true;
 	result.generated_cell_grid_owned = state.generated_cell_buffer_owned;
@@ -8006,11 +8100,13 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				result.internal_growth_candidate_pair_count += 1;
 				const ConnectionPairMaterializationPrefixResult4a61bc prefix =
 						connection_pair_materialization_prefix_0x4a61bc(
+								state,
 								owner,
 								*target_owner,
 								record,
 								*reciprocal_endpoint,
-								frontier_candidates);
+								frontier_candidates,
+								rng);
 				if (prefix.invoked) {
 					result.internal_growth_0x4a61bc_invocation_count += 1;
 				}
@@ -8021,8 +8117,30 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 						prefix.frontier_candidate_count;
 				result.internal_growth_0x4a61bc_selected_candidate_count +=
 						prefix.selected_candidate_count;
+				result.internal_growth_0x4a61bc_selected_loop_count +=
+						prefix.selected_loop_count;
+				result.internal_growth_0x4a61bc_rng_selection_count +=
+						prefix.rng_selection_count;
+				result.internal_growth_0x4a61bc_projection_chain_call_count +=
+						prefix.projection_chain_call_count;
+				result.internal_growth_0x4a61bc_projection_occupied_stamp_count +=
+						prefix.projection_occupied_stamp_count;
+				result.internal_growth_0x4a61bc_projection_cleanup_clear_count +=
+						prefix.projection_cleanup_clear_count;
+				result.internal_growth_0x4a61bc_local_vector_append_count_0x404 +=
+						prefix.local_vector_append_count_0x404;
+				if (prefix.guard_budget_positive) {
+					result.internal_growth_0x4a61bc_guard_budget_positive_count += 1;
+				}
+				result.internal_growth_0x4a61bc_projection_object_branch_blocked_count +=
+						prefix.projection_object_branch_blocked_count;
 				if (prefix.constructor_blocked) {
 					result.internal_growth_0x4a61bc_constructor_blocked_count += 1;
+				}
+				if (!prefix.blocked_reason.empty()
+						&& prefix.blocked_reason != "0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb"
+						&& result.blocked_reason.empty()) {
+					result.blocked_reason = prefix.blocked_reason;
 				}
 			}
 		}
@@ -8033,9 +8151,11 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			result.internal_growth_0x49b3fb_0x4a61bc_known
 			&& result.internal_growth_0x4a61bc_invocation_count == result.internal_growth_candidate_pair_count;
 	if (result.internal_growth_candidate_pair_count > 0) {
-		if (result.internal_growth_0x4a61bc_constructor_blocked_count > 0) {
+		if (!result.blocked_reason.empty()) {
+			// Keep the exact first source-backed blocker discovered inside 0x4a61bc.
+		} else if (result.internal_growth_0x4a61bc_constructor_blocked_count > 0) {
 			result.blocked_reason =
-					"0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
+					"0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
 		} else if (result.internal_growth_0x4a61bc_entry_gate_pass_count > 0) {
 			result.blocked_reason =
 					"0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
@@ -10537,6 +10657,10 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_pointer_type_0x04 = source_record.owner_or_type_0x04;
 	owner.source_pointer_value_0x90_known = source_record.source_id_0x00 >= 0;
 	owner.source_pointer_value_0x90 = seed.source_payload.monster_strength_mode;
+	owner.source_pointer_monster_match_to_town_0x94_known = source_record.source_id_0x00 >= 0;
+	owner.source_pointer_monster_match_to_town_0x94 = seed.source_payload.monster_match_to_town;
+	owner.source_pointer_allowed_monster_town_mask_0x95_known = source_record.source_id_0x00 >= 0;
+	owner.source_pointer_allowed_monster_town_mask_0x95 = seed.source_payload.allowed_monster_town_mask;
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
@@ -13626,7 +13750,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			"";
 	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
 	state.connection_tail_replay_0x4a79a3_ported = true;
-	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state);
+	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, route_free_cell_rng);
 	if (!state.connection_tail_replay_0x4a79a3.applied
 			|| !state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
 		const std::string materialization_bridge_blocker =

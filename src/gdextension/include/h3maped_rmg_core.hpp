@@ -1490,6 +1490,10 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t source_pointer_type_0x04 = 0;
 	bool source_pointer_value_0x90_known = false;
 	int32_t source_pointer_value_0x90 = 0;
+	bool source_pointer_monster_match_to_town_0x94_known = false;
+	bool source_pointer_monster_match_to_town_0x94 = false;
+	bool source_pointer_allowed_monster_town_mask_0x95_known = false;
+	uint16_t source_pointer_allowed_monster_town_mask_0x95 = 0U;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
@@ -2140,6 +2144,14 @@ struct ConnectionTailReplayResult4a79a3 {
 	int32_t internal_growth_0x4a61bc_entry_gate_pass_count = 0;
 	int32_t internal_growth_0x4a61bc_frontier_candidate_count = 0;
 	int32_t internal_growth_0x4a61bc_selected_candidate_count = 0;
+	int32_t internal_growth_0x4a61bc_selected_loop_count = 0;
+	int32_t internal_growth_0x4a61bc_rng_selection_count = 0;
+	int32_t internal_growth_0x4a61bc_projection_chain_call_count = 0;
+	int32_t internal_growth_0x4a61bc_projection_occupied_stamp_count = 0;
+	int32_t internal_growth_0x4a61bc_projection_cleanup_clear_count = 0;
+	int32_t internal_growth_0x4a61bc_local_vector_append_count_0x404 = 0;
+	int32_t internal_growth_0x4a61bc_guard_budget_positive_count = 0;
+	int32_t internal_growth_0x4a61bc_projection_object_branch_blocked_count = 0;
 	int32_t internal_growth_0x4a61bc_constructor_blocked_count = 0;
 	int32_t internal_growth_positive_append_count = 0;
 	int32_t internal_growth_initial_object_count = 0;
