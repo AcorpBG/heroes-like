@@ -409,6 +409,8 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.constructor_0x49b452_known = input.constructor_0x49b452_known;
 	out.source_pointer_0x00_known = input.source_pointer_0x00_known;
 	out.source_pointer_source_index_0x00 = input.source_pointer_source_index_0x00;
+	out.relation_owner_byte2_0x4aa9b7_known = input.relation_owner_byte2_0x4aa9b7_known;
+	out.relation_owner_byte2_0x4aa9b7 = input.relation_owner_byte2_0x4aa9b7;
 	out.source_pointer_type_0x04_known = input.source_pointer_type_0x04_known;
 	out.source_pointer_type_0x04 = input.source_pointer_type_0x04;
 	out.town_choice_0x04_known = input.town_choice_0x04_known;
@@ -2132,6 +2134,8 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"constructor_0x49b452_known\":" << (owner.constructor_0x49b452_known ? "true" : "false")
 			<< ",\"source_pointer_0x00_known\":" << (owner.source_pointer_0x00_known ? "true" : "false")
 			<< ",\"source_pointer_source_index_0x00\":" << owner.source_pointer_source_index_0x00
+			<< ",\"relation_owner_byte2_0x4aa9b7_known\":" << (owner.relation_owner_byte2_0x4aa9b7_known ? "true" : "false")
+			<< ",\"relation_owner_byte2_0x4aa9b7\":" << owner.relation_owner_byte2_0x4aa9b7
 			<< ",\"source_pointer_type_0x04_known\":" << (owner.source_pointer_type_0x04_known ? "true" : "false")
 			<< ",\"source_pointer_type_0x04\":" << owner.source_pointer_type_0x04
 			<< ",\"town_choice_0x04_known\":" << (owner.town_choice_0x04_known ? "true" : "false")

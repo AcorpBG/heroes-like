@@ -3236,7 +3236,7 @@ static RewardGuardProjectionChainResult49c0a6 reward_guard_projection_chain_0x49
 					state.relation_owner_vectors_10e4_10e8,
 					result.source_relation_0x4ad947.source_owner_vector_index,
 					rng,
-					false);
+					true);
 	state.reward_guard_relation_priority_0x4ad7f7 = result.relation_priority_0x4ad7f7;
 	if (!result.relation_priority_0x4ad7f7.ordered_vector_ready_for_0x4aa9b7) {
 		result.blocked_reason = result.relation_priority_0x4ad7f7.blocked_reason.empty()
@@ -6572,9 +6572,59 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 					continue;
 				}
 
-				attempt.coordinate_scan_invoked_0x4aa9b7 = true;
 				const bool policy_byte_0x13 =
 						((uint32_t(result.minimum_low_word_score_0x10) >> 24) & 0xffU) != 0U;
+				const bool wrapper_has_projection_member =
+						std::any_of(
+								wrapper.selected_members_0x2c_0x30.begin(),
+								wrapper.selected_members_0x2c_0x30.end(),
+								[](const RewardGuardWrapperMember4aa3e9 &member) {
+									return member.object_record_vtable_0x00 == PROJECTION_OBJECT_VTABLE_0X540B14;
+								});
+				if (wrapper_has_projection_member) {
+					attempt.projection_relation_order_invoked_0x4ad7f7 = true;
+					const RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 projection_scan =
+							reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
+									state,
+									wrapper,
+									*selector,
+									result.minimum_low_word_score_0x10,
+									policy_byte_0x13,
+									rng,
+									false);
+					attempt.projection_relation_order_ready_0x4ad7f7 =
+							projection_scan.relation_order_ready_0x4ad7f7;
+					attempt.projection_relation_order_candidate_relation_count_0x4ad7f7 =
+							projection_scan.candidate_relation_count_0x4ad7f7;
+					attempt.projection_relation_order_scan_attempt_count_0x4aa9b7 =
+							projection_scan.scan_attempt_count_0x4aa9b7;
+					attempt.projection_relation_order_success_owner_vector_index =
+							projection_scan.success_owner_vector_index;
+					attempt.projection_relation_order_blocked_reason_0x4ad7f7 =
+							projection_scan.blocked_reason;
+					if (projection_scan.coordinate_scan.committed
+							&& projection_scan.coordinate_scan.blocked_reason.empty()) {
+						attempt.coordinate_scan_applied_0x4aa9b7 = projection_scan.coordinate_scan.applied;
+						attempt.coordinate_scan_scanned_cell_count_0x4aa9b7 =
+								projection_scan.coordinate_scan.scanned_cell_count;
+						attempt.coordinate_scan_owner_byte_reject_count_0x4aa9b7 =
+								projection_scan.coordinate_scan.owner_byte_reject_count;
+						attempt.coordinate_scan_value_floor_reject_count_0x4aa9b7 =
+								projection_scan.coordinate_scan.value_floor_reject_count;
+						attempt.coordinate_scan_feasibility_reject_count_0x4aa603 =
+								projection_scan.coordinate_scan.feasibility_reject_count_0x4aa603;
+						attempt.coordinate_scan_feasibility_missing_input_count_0x4aa603 =
+								projection_scan.coordinate_scan.feasibility_missing_input_count_0x4aa603;
+						attempt.coordinate_scan_local_vector_append_count_0x4ae1fd =
+								projection_scan.coordinate_scan.local_vector_append_count_0x4ae1fd;
+						result.successful_coordinate_scan_count += 1;
+						lane_success = true;
+						result.attempts.push_back(attempt);
+						break;
+					}
+				}
+
+				attempt.coordinate_scan_invoked_0x4aa9b7 = true;
 				RewardGuardCoordinateScanResult4aa9b7 coordinate_scan =
 						reward_guard_coordinate_scan_and_commit_0x4aa9b7(
 								state,
@@ -6704,10 +6754,10 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 }
 
 static int32_t reward_guard_relation_owner_byte2_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
-	if (!relation.source_pointer_0x00_known || relation.source_pointer_source_index_0x00 < 0) {
+	if (!relation.relation_owner_byte2_0x4aa9b7_known || relation.relation_owner_byte2_0x4aa9b7 < 0) {
 		return -1;
 	}
-	return relation.source_pointer_source_index_0x00;
+	return relation.relation_owner_byte2_0x4aa9b7;
 }
 
 static bool reward_guard_generated_footprint_rejects_0x4aa603(
@@ -7389,7 +7439,7 @@ static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_proje
 					state.relation_owner_vectors_10e4_10e8,
 					source_relation.owner_vector_index,
 					rng,
-					false);
+					true);
 	state.reward_guard_relation_priority_0x4ad7f7 = relation_order;
 	result.relation_order_ready_0x4ad7f7 = relation_order.ordered_vector_ready_for_0x4aa9b7;
 	result.candidate_relation_count_0x4ad7f7 =
@@ -11176,6 +11226,8 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 			source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(source_record_seed);
 	owner.source_pointer_0x00_known = source_record.source_id_0x00 >= 0;
 	owner.source_pointer_source_index_0x00 = source_record.source_id_0x00;
+	owner.relation_owner_byte2_0x4aa9b7_known = seed.runtime_zone_index >= 0;
+	owner.relation_owner_byte2_0x4aa9b7 = seed.runtime_zone_index;
 	owner.source_pointer_type_0x04_known = source_record.owner_or_type_0x04 >= 0;
 	owner.source_pointer_type_0x04 = source_record.owner_or_type_0x04;
 	owner.source_pointer_value_0x90_known = source_record.source_id_0x00 >= 0;
@@ -13787,7 +13839,9 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 				|| !owner.scan_bounds_0x20_0x2c_known
 				|| !owner.coordinate_triple_0x10_0x18_known
 				|| !owner.source_pointer_0x00_known
-				|| owner.source_pointer_source_index_0x00 < 0) {
+				|| owner.source_pointer_source_index_0x00 < 0
+				|| !owner.relation_owner_byte2_0x4aa9b7_known
+				|| owner.relation_owner_byte2_0x4aa9b7 < 0) {
 			result.blocked_reason = "0x4a4913_relation_record_input_unknown";
 			return result;
 		}
@@ -13801,7 +13855,7 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 			continue;
 		}
 		const int32_t level = owner.coordinate_level_0x18;
-		const int32_t relation_owner_byte2 = owner.source_pointer_source_index_0x00;
+		const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7;
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
 				const int64_t flat = cell_index(state.width, state.height, x, y, level);
@@ -14412,29 +14466,10 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	state.reward_guard_terrain_pressure_0xf60_0xf64_known = true;
 	state.reward_guard_terrain_pressure_total_0xf60 = 0;
 	state.reward_guard_terrain_pressure_by_terrain_0xf64.fill(0);
-	apply_relation_normalization_full_grid_reset_0x4a5767(state);
-	SourceObjectResolverState4af785 relation_scan_resolver_state;
-	H3MapedRng relation_scan_rng;
-	relation_scan_rng.state = route_free_cell_rng.state;
-	const RelationScanConsumerResult4a5767 relation_scan_consumers =
-			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(state, relation_scan_resolver_state, relation_scan_rng, state.relation_owner_vectors_10e4_10e8);
-	preserve_source_pair_vector_edc(state, relation_scan_resolver_state);
-	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
-	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
-	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
-	state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 = relation_scan_consumers.owner_bounds_blocked_count;
-	state.relation_scan_consumer_scanned_cell_count_4a5767 = relation_scan_consumers.scanned_cell_count;
-	state.relation_scan_consumer_object_branch_blocked_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_blocked_count;
-	state.relation_scan_consumer_projected_chain_call_count_4a5767 = relation_scan_consumers.projected_chain_call_count;
-	state.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = relation_scan_consumers.projected_chain_occupied_stamp_count;
-	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
-	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
-	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
-	apply_relation_high_owner_propagation_49a318(state);
 	state.reward_guard_materialization_driver_0x4aa354_ported = true;
 	state.reward_guard_source_stream_0x4aab7e_ported = true;
 	state.reward_guard_source_stream_0x4aab7e =
-			reward_guard_source_order_loop_0x4ac552_0x4aab7e(state, relation_scan_rng);
+			reward_guard_source_order_loop_0x4ac552_0x4aab7e(state, route_free_cell_rng);
 	state.reward_guard_source_stream_0x4aab7e_input_known =
 			reward_guard_source_pointer_vector_0x10e4_0x10e8_known_for_0x4aab7e(state)
 			&& std::all_of(
@@ -14508,7 +14543,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	}
 	apply_endpoint_materialization_state_d014(state, size_class, water_mode, seed, human_count, player_count, setup_object_0x44_known, setup_object_0x44);
 	state.connection_tail_replay_0x4a79a3_ported = true;
-	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, relation_scan_rng);
+	state.connection_tail_replay_0x4a79a3 = connection_tail_replay_0x4a79a3(state, route_free_cell_rng);
 	if (!state.connection_tail_replay_0x4a79a3.applied
 			|| !state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
 		const std::string connection_blocker =
