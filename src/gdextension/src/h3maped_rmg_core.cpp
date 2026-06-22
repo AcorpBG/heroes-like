@@ -7793,8 +7793,378 @@ struct ConnectionPairMaterializationPrefixResult4a61bc {
 	int32_t local_vector_append_count_0x404 = 0;
 	int32_t guard_budget_0x4a65a5 = 0;
 	int32_t projection_object_branch_blocked_count = 0;
+	int32_t guard_target_rng_count = 0;
+	int32_t constructor_invocation_count_0x4a5e03 = 0;
+	int32_t selector_invocation_count_0x4a5c07 = 0;
+	int32_t selector_null_count_0x4a5c07 = 0;
+	int32_t constructor_commit_count_0x4a54a7 = 0;
 	std::string blocked_reason;
 };
+
+struct MonsterTableRow57cea0 {
+	int32_t creature_id = -1;
+	int32_t faction_index_0x00 = -2;
+	int32_t level_field_0x04 = -1;
+	int32_t ai_value_0x40 = 0;
+	int32_t adventure_low_0x6c = 0;
+	int32_t adventure_high_0x70 = 0;
+};
+
+struct ConnectionMonsterAllocationResult4a5c07 {
+	bool invoked = false;
+	bool applied = false;
+	bool null_selection = false;
+	int32_t accepted_row_count = 0;
+	int32_t selected_creature_id = -1;
+	int32_t selected_quantity_0x20 = 0;
+	int32_t selected_descriptor_vector_index_0x398 = -1;
+	uint32_t object_record_key = 0U;
+	bool object_record_key_known = false;
+	int32_t sequence_0x1c = -1;
+	SourceObjectRecord0x4c source_record_copy;
+	std::string blocked_reason;
+};
+
+struct ConnectionMonsterMaterializationResult4a5e03 {
+	bool invoked = false;
+	bool applied = false;
+	bool skipped_nonempty_target_refs = false;
+	bool committed = false;
+	ConnectionMonsterAllocationResult4a5c07 allocation_0x4a5c07;
+	ObjectFootprintCommitResult4a54a7 commit_0x4a54a7;
+	std::string blocked_reason;
+};
+
+static const std::vector<MonsterTableRow57cea0> &monster_table_rows_57cea0_4a5c07() {
+	static const std::vector<MonsterTableRow57cea0> rows = []() {
+		static constexpr int32_t MONSTER_FACTION_INDEX_0X57CEA0[] = {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
+			2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4,
+			4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5,
+			5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+			6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+			6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+			7, 7, 7, 7, 8, 8, 8, 8, -1, -1, 8, 8,
+			8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1
+		};
+		static constexpr int32_t MONSTER_LEVEL_FIELD_0X57CEA0[] = {
+			0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5,
+			6, 6, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4,
+			5, 5, 6, 6, 0, 0, 1, 1, 2, 2, 3, 3,
+			4, 4, 5, 5, 6, 6, 0, 0, 1, 1, 2, 2,
+			3, 3, 4, 4, 5, 5, 6, 6, 0, 0, 1, 1,
+			2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 0, 0,
+			1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
+			0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5,
+			6, 6, 0, 0, 1, 1, 4, 4, 2, 2, 3, 3,
+			5, 5, 6, 6, 1, 4, 3, 2, 4, 5, 0, 0,
+			5, 5, -1, 3, -1, 2, -1, 1, -1, 4, 6, 6,
+			6, 6, 6, 6, 5, 3, 0, 0, 1, 2, 2, 1,
+			4
+		};
+		static constexpr int32_t MONSTER_AI_VALUE_0X57CEA0[] = {
+			80, 115, 126, 184, 351, 448, 445, 588, 485, 750, 1946, 2100,
+			5019, 8776, 100, 138, 138, 209, 234, 331, 518, 532, 517, 803,
+			1806, 2030, 4872, 8613, 44, 66, 165, 201, 250, 412, 570, 680,
+			884, 942, 2016, 2840, 3718, 7500, 50, 60, 159, 240, 357, 392,
+			445, 480, 765, 1224, 1670, 1848, 5101, 7115, 60, 85, 98, 128,
+			252, 315, 555, 783, 848, 1079, 2087, 2382, 3388, 4696, 59, 84,
+			154, 238, 336, 367, 517, 577, 835, 1068, 1547, 1589, 4702, 8721,
+			60, 78, 130, 203, 192, 240, 416, 672, 1027, 1106, 1266, 1443,
+			3162, 6168, 56, 90, 126, 156, 890, 1028, 268, 312, 552, 714,
+			1350, 1518, 4120, 5931, 356, 330, 345, 315, 600, 775, 55, 95,
+			1669, 2012, 0, 380, 0, 490, 0, 486, 0, 470, 4547, 6721,
+			78845, 39338, 19580, 26433, 1210, 585, 75, 15, 145, 270, 345, 135,
+			1024
+		};
+		static constexpr int32_t MONSTER_ADV_LOW_0X57CEA0[] = {
+			20, 20, 16, 16, 12, 12, 10, 10, 8, 8, 5, 5,
+			4, 3, 20, 20, 16, 16, 12, 12, 10, 10, 8, 8,
+			5, 5, 4, 3, 20, 20, 16, 16, 12, 12, 10, 10,
+			8, 8, 5, 5, 4, 3, 20, 20, 16, 16, 12, 12,
+			10, 10, 8, 8, 5, 5, 4, 3, 20, 20, 16, 16,
+			12, 12, 10, 10, 8, 8, 5, 5, 4, 3, 20, 20,
+			16, 16, 12, 12, 10, 10, 8, 8, 5, 5, 4, 3,
+			20, 20, 16, 16, 12, 12, 10, 10, 8, 8, 5, 5,
+			4, 3, 20, 20, 16, 16, 12, 12, 10, 10, 8, 8,
+			5, 5, 4, 3, 8, 16, 16, 12, 10, 8, 20, 20,
+			8, 8, 0, 12, 0, 16, 0, 6, 0, 12, 4, 4,
+			1, 1, 1, 1, 5, 5, 20, 20, 16, 12, 12, 16,
+			8
+		};
+		static constexpr int32_t MONSTER_ADV_HIGH_0X57CEA0[] = {
+			50, 30, 30, 25, 25, 20, 20, 16, 16, 12, 12, 10,
+			10, 8, 50, 30, 30, 25, 25, 20, 20, 16, 16, 12,
+			12, 10, 10, 8, 50, 30, 30, 25, 25, 20, 20, 16,
+			16, 12, 12, 10, 10, 8, 50, 30, 30, 25, 25, 20,
+			20, 16, 16, 12, 12, 10, 10, 8, 50, 30, 30, 25,
+			25, 20, 20, 16, 16, 12, 12, 10, 10, 8, 50, 30,
+			30, 25, 25, 20, 20, 16, 16, 12, 12, 10, 10, 8,
+			50, 30, 30, 25, 25, 20, 20, 16, 16, 12, 12, 10,
+			10, 8, 50, 30, 30, 25, 25, 20, 20, 16, 16, 12,
+			12, 10, 10, 8, 12, 30, 25, 25, 16, 12, 50, 30,
+			16, 12, 0, 20, 0, 25, 0, 12, 0, 25, 10, 10,
+			3, 3, 3, 3, 12, 12, 50, 50, 30, 25, 25, 30,
+			12
+		};
+		static_assert(sizeof(MONSTER_FACTION_INDEX_0X57CEA0) == sizeof(MONSTER_LEVEL_FIELD_0X57CEA0), "monster 0x57cea0 faction and level tables must match");
+		static_assert(sizeof(MONSTER_AI_VALUE_0X57CEA0) == sizeof(MONSTER_LEVEL_FIELD_0X57CEA0), "monster 0x57cea0 value table must match");
+		static_assert(sizeof(MONSTER_ADV_LOW_0X57CEA0) == sizeof(MONSTER_LEVEL_FIELD_0X57CEA0), "monster 0x57cea0 low table must match");
+		static_assert(sizeof(MONSTER_ADV_HIGH_0X57CEA0) == sizeof(MONSTER_LEVEL_FIELD_0X57CEA0), "monster 0x57cea0 high table must match");
+		std::vector<MonsterTableRow57cea0> out;
+		out.reserve(sizeof(MONSTER_LEVEL_FIELD_0X57CEA0) / sizeof(MONSTER_LEVEL_FIELD_0X57CEA0[0]));
+		for (int32_t index = 0; index < int32_t(sizeof(MONSTER_LEVEL_FIELD_0X57CEA0) / sizeof(MONSTER_LEVEL_FIELD_0X57CEA0[0])); ++index) {
+			out.push_back(MonsterTableRow57cea0 {
+					index,
+					MONSTER_FACTION_INDEX_0X57CEA0[index],
+					MONSTER_LEVEL_FIELD_0X57CEA0[index],
+					MONSTER_AI_VALUE_0X57CEA0[index],
+					MONSTER_ADV_LOW_0X57CEA0[index],
+					MONSTER_ADV_HIGH_0X57CEA0[index] });
+		}
+		return out;
+	}();
+	return rows;
+}
+
+static int32_t monster_allowed_mask_index_4a5c07(int32_t faction_index_0x00) {
+	if (faction_index_0x00 < -1 || faction_index_0x00 > 8) {
+		return -1;
+	}
+	return faction_index_0x00 + 1;
+}
+
+static bool monster_allowed_mask_from_relation_4a5c07(
+		const GeneratorRelationOwnerState4a218c &relation,
+		std::array<bool, 10> &allowed_mask,
+		std::string &blocked_reason) {
+	allowed_mask.fill(false);
+	if (!relation.source_pointer_monster_match_to_town_0x94_known
+			|| !relation.source_pointer_allowed_monster_town_mask_0x95_known) {
+		blocked_reason = "0x4a5c07_relation_monster_mask_fields_0x94_0x95_missing";
+		return false;
+	}
+	if (relation.source_pointer_monster_match_to_town_0x94) {
+		if (!relation.town_choice_0x04_known) {
+			blocked_reason = "0x4a5c07_relation_town_choice_0x04_missing_for_match_to_town_mask";
+			return false;
+		}
+		if (relation.town_choice_0x04 != -1) {
+			const int32_t mask_index = relation.town_choice_0x04 + 1;
+			if (mask_index < 0 || mask_index >= int32_t(allowed_mask.size())) {
+				blocked_reason = "0x4a5c07_relation_town_choice_0x04_out_of_monster_mask_range";
+				return false;
+			}
+			allowed_mask[size_t(mask_index)] = true;
+			return true;
+		}
+	}
+	for (int32_t index = 0; index < int32_t(allowed_mask.size()); ++index) {
+		allowed_mask[size_t(index)] =
+				(relation.source_pointer_allowed_monster_town_mask_0x95 & (uint16_t(1U) << uint16_t(index))) != 0U;
+	}
+	return true;
+}
+
+static const GeneratorDescriptorVectorEntry0x398 *monster_descriptor_vector_entry_4a5c07(
+		const GeneratorObjectPrivateState &state,
+		int32_t creature_id) {
+	for (const GeneratorDescriptorVectorEntry0x398 &entry : state.descriptor_vector_entries_398_39c) {
+		if (entry.descriptor_type_0x1c == 54 && entry.descriptor_source_field_0x20 == creature_id) {
+			return &entry;
+		}
+	}
+	return nullptr;
+}
+
+static ConnectionMonsterAllocationResult4a5c07 connection_monster_allocate_0x4a5c07(
+		GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &relation,
+		int32_t value_arg_0x08,
+		H3MapedRng &rng) {
+	ConnectionMonsterAllocationResult4a5c07 result;
+	result.invoked = true;
+	if (value_arg_0x08 <= 0) {
+		result.null_selection = true;
+		result.applied = true;
+		return result;
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x4a5c07_object_record_key_allocator_missing";
+		return result;
+	}
+	if (!state.object_record_sequence_allocator_0xf44_known) {
+		result.blocked_reason = "0x4a5c07_object_sequence_allocator_0xf44_missing";
+		return result;
+	}
+	if (!state.descriptor_vector_398_39c_source_owned || state.descriptor_vector_entries_398_39c.empty()) {
+		result.blocked_reason = "0x4a5c07_generator_descriptor_vector_0x398_0x39c_missing";
+		return result;
+	}
+	std::array<bool, 10> allowed_mask {};
+	if (!monster_allowed_mask_from_relation_4a5c07(relation, allowed_mask, result.blocked_reason)) {
+		return result;
+	}
+
+	std::vector<const MonsterTableRow57cea0 *> accepted_rows;
+	const std::vector<MonsterTableRow57cea0> &rows = monster_table_rows_57cea0_4a5c07();
+	for (auto it = rows.rbegin(); it != rows.rend(); ++it) {
+		const MonsterTableRow57cea0 &row = *it;
+		if (row.level_field_0x04 < 0) {
+			continue;
+		}
+		const int32_t mask_index = monster_allowed_mask_index_4a5c07(row.faction_index_0x00);
+		if (mask_index < 0 || mask_index >= int32_t(allowed_mask.size()) || !allowed_mask[size_t(mask_index)]) {
+			continue;
+		}
+		if (row.ai_value_0x40 <= 0 || row.adventure_low_0x6c <= 0 || row.adventure_high_0x70 <= 0) {
+			result.blocked_reason = "0x4a5c07_creature_runtime_value_or_quantity_bounds_missing";
+			return result;
+		}
+		const int64_t average_stack = (int64_t(row.adventure_high_0x70) + int64_t(row.adventure_low_0x6c)) / 2;
+		const int64_t minimum_value = int64_t(row.ai_value_0x40) * average_stack;
+		const int64_t maximum_value = int64_t(row.ai_value_0x40) * 100;
+		if (minimum_value > int64_t(value_arg_0x08)) {
+			continue;
+		}
+		if (int64_t(value_arg_0x08) > maximum_value) {
+			continue;
+		}
+		accepted_rows.push_back(&row);
+	}
+	result.accepted_row_count = int32_t(accepted_rows.size());
+	if (accepted_rows.empty()) {
+		result.null_selection = true;
+		result.applied = true;
+		return result;
+	}
+
+	const int32_t selected_ordinal = rng.next() % int32_t(accepted_rows.size());
+	const MonsterTableRow57cea0 &selected = *accepted_rows[size_t(selected_ordinal)];
+	const GeneratorDescriptorVectorEntry0x398 *descriptor =
+			monster_descriptor_vector_entry_4a5c07(state, selected.creature_id);
+	if (descriptor == nullptr) {
+		result.blocked_reason = "0x4a5c07_selected_monster_descriptor_vector_entry_missing:creature_id="
+				+ std::to_string(selected.creature_id);
+		return result;
+	}
+	if (!descriptor->descriptor_source_cell_offsets_0x2c_0x30_known) {
+		result.blocked_reason = "0x4a5c07_selected_monster_descriptor_source_cell_offsets_0x2c_0x30_missing";
+		return result;
+	}
+
+	int32_t selected_quantity = (value_arg_0x08 + (selected.ai_value_0x40 / 2)) / selected.ai_value_0x40;
+	const int32_t spread = selected_quantity / 4 + 1;
+	if (spread > 1) {
+		selected_quantity += (rng.next() % spread) - (rng.next() % spread);
+	}
+	if (selected_quantity < 1) {
+		selected_quantity = 1;
+	}
+
+	result.selected_creature_id = selected.creature_id;
+	result.selected_quantity_0x20 = selected_quantity;
+	result.selected_descriptor_vector_index_0x398 = descriptor->vector_index;
+	result.source_record_copy = descriptor->source_record_copy;
+	result.object_record_key_known = true;
+	result.object_record_key = state.next_native_object_record_key_0x4a93a2;
+	state.next_native_object_record_key_0x4a93a2 += 1U;
+	state.object_record_allocation_count_0x4a93a2 += 1;
+	result.sequence_0x1c = state.object_record_sequence_allocator_0xf44;
+	state.object_record_sequence_allocator_0xf44 += 1;
+	result.applied = true;
+	return result;
+}
+
+static ConnectionMonsterMaterializationResult4a5e03 connection_monster_materialization_0x4a5e03(
+		GeneratorObjectPrivateState &state,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		int32_t value_arg_0x08,
+		H3MapedRng &rng) {
+	ConnectionMonsterMaterializationResult4a5e03 result;
+	result.invoked = true;
+	const int64_t target_flat = cell_index(state.width, state.height, x, y, level);
+	if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		result.blocked_reason = "0x4a5e03_target_cell_out_of_bounds";
+		return result;
+	}
+	GeneratedCellRecord0x30 &target = state.generated_cell_buffer.records[size_t(target_flat)];
+	if (!target.object_reference_vector_contents_known) {
+		result.blocked_reason = "0x4a5e03_target_object_reference_vector_unknown";
+		return result;
+	}
+	if (!target.object_references_0x04_0x08.empty()) {
+		result.skipped_nonempty_target_refs = true;
+		result.applied = true;
+		return result;
+	}
+	if (!target.word_0x20_known) {
+		result.blocked_reason = "0x4a5e03_target_owner_word_unknown";
+		return result;
+	}
+	const int32_t owner_byte2 = generated_cell_word20_owner_byte2_signed(target.word_0x20);
+	GeneratorRelationOwnerState4a218c *relation = relation_owner_for_runtime_zone_0x4a54a7(state, owner_byte2);
+	if (relation == nullptr) {
+		result.blocked_reason = "0x4a5e03_target_owner_relation_missing";
+		return result;
+	}
+	result.allocation_0x4a5c07 =
+			connection_monster_allocate_0x4a5c07(state, *relation, value_arg_0x08, rng);
+	if (!result.allocation_0x4a5c07.applied) {
+		result.blocked_reason = result.allocation_0x4a5c07.blocked_reason.empty()
+				? "0x4a5c07_monster_allocation_not_applied"
+				: result.allocation_0x4a5c07.blocked_reason;
+		return result;
+	}
+	if (result.allocation_0x4a5c07.null_selection) {
+		result.applied = true;
+		return result;
+	}
+	const SourceObjectRecord0x4c &source = result.allocation_0x4a5c07.source_record_copy;
+	const GeneratorDescriptorVectorEntry0x398 *descriptor =
+			monster_descriptor_vector_entry_4a5c07(state, result.allocation_0x4a5c07.selected_creature_id);
+	if (descriptor == nullptr) {
+		result.blocked_reason = "0x4a5e03_selected_monster_descriptor_lost_before_0x4a54a7";
+		return result;
+	}
+	result.commit_0x4a54a7 = object_footprint_commit_4a54a7(
+			state,
+			result.allocation_0x4a5c07.object_record_key,
+			descriptor->descriptor_type_0x1c,
+			x,
+			y,
+			level,
+			descriptor->descriptor_projection_enabled_0x29,
+			descriptor->descriptor_source_cell_x_0x2c,
+			descriptor->descriptor_source_cell_y_0x30,
+			&source);
+	result.committed = result.commit_0x4a54a7.object_vector_appended;
+	if (!result.committed) {
+		result.blocked_reason = "0x4a54a7_connection_monster_commit_did_not_append_object_vector";
+		return result;
+	}
+	if (!state.object_records_0xec4_ecc.empty()) {
+		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+		object_record.object_record_key_allocated_by_0x4a93a2 = true;
+		object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A88;
+		object_record.object_record_sequence_0x1c = result.allocation_0x4a5c07.sequence_0x1c;
+		object_record.object_record_selected_index_0x20 = result.allocation_0x4a5c07.selected_quantity_0x20;
+		object_record.object_record_enabled_word_0x24 = 3U;
+		object_record.object_record_enabled_low_byte_0x24 = true;
+		object_record.source_catalog_index_0x49da08 = descriptor->source_catalog_index_0x49da08;
+		object_record.copied_source_record_carried = true;
+		object_record.source_record_copy = source;
+	}
+	result.applied = true;
+	return result;
+}
 
 static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materialization_prefix_0x4a61bc(
 		GeneratorObjectPrivateState &state,
@@ -7928,6 +8298,39 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		target_owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
 		target_owner.owner_local_vector_0x404_count += 1;
 		result.local_vector_append_count_0x404 += 1;
+
+		if (result.guard_budget_0x4a65a5 > 0) {
+			const int32_t target_choice_rng = rng.next();
+			result.guard_target_rng_count += 1;
+			const bool use_source_cell = (target_choice_rng % 2) == 0;
+			const int32_t constructor_x = use_source_cell ? selected.source_x : selected.neighbor_x;
+			const int32_t constructor_y = use_source_cell ? selected.source_y : selected.neighbor_y;
+			result.constructor_invocation_count_0x4a5e03 += 1;
+			const ConnectionMonsterMaterializationResult4a5e03 constructor =
+					connection_monster_materialization_0x4a5e03(
+							state,
+							constructor_x,
+							constructor_y,
+							selected.level,
+							result.guard_budget_0x4a65a5,
+							rng);
+			if (constructor.allocation_0x4a5c07.invoked) {
+				result.selector_invocation_count_0x4a5c07 += 1;
+			}
+			if (constructor.allocation_0x4a5c07.null_selection) {
+				result.selector_null_count_0x4a5c07 += 1;
+			}
+			if (constructor.committed) {
+				result.constructor_commit_count_0x4a54a7 += 1;
+			}
+			if (!constructor.applied) {
+				result.constructor_blocked = true;
+				result.blocked_reason = constructor.blocked_reason.empty()
+						? "0x4a5e03_connection_monster_materialization_not_applied"
+						: constructor.blocked_reason;
+				return result;
+			}
+		}
 	}
 
 	if (source_endpoint.border_guard) {
@@ -7935,16 +8338,13 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		result.blocked_reason = "0x4a61bc_border_guard_endpoint_helpers_0x4a5e73_0x4a606b_unowned_before_0x4a5e03";
 		return result;
 	}
-	if (result.guard_budget_0x4a65a5 > 0) {
-		result.constructor_blocked = true;
-		result.blocked_reason = "0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
-	}
 	return result;
 }
 
 static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	ConnectionTailReplayResult4a79a3 result;
 	result.invoked = true;
+	result.internal_growth_initial_object_count = int32_t(state.object_records_0xec4_ecc.size());
 	result.generated_cell_grid_owned = state.generated_cell_buffer_owned;
 	result.endpoint_caller_prep_known =
 			state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
@@ -8150,18 +8550,22 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 	result.internal_growth_0x4a61bc_prefix_owned =
 			result.internal_growth_0x49b3fb_0x4a61bc_known
 			&& result.internal_growth_0x4a61bc_invocation_count == result.internal_growth_candidate_pair_count;
+	result.internal_growth_final_object_count = int32_t(state.object_records_0xec4_ecc.size());
+	result.internal_growth_positive_append_count =
+			result.internal_growth_final_object_count - result.internal_growth_initial_object_count;
 	if (result.internal_growth_candidate_pair_count > 0) {
 		if (!result.blocked_reason.empty()) {
 			// Keep the exact first source-backed blocker discovered inside 0x4a61bc.
 		} else if (result.internal_growth_0x4a61bc_constructor_blocked_count > 0) {
 			result.blocked_reason =
-					"0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
-		} else if (result.internal_growth_0x4a61bc_entry_gate_pass_count > 0) {
+					"0x4a61bc_live_direct_0x4a5c07_0x4a5e03_commit_blocked";
+		} else if (result.internal_growth_0x4a61bc_selected_candidate_count == 0
+				&& result.internal_growth_0x4a61bc_entry_gate_pass_count > 0) {
 			result.blocked_reason =
 					"0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
 		} else {
-			result.blocked_reason =
-					"0x4a61bc_live_prefix_entry_gate_not_taken_for_source_owned_pairs";
+			result.applied = true;
+			return result;
 		}
 		return result;
 	}

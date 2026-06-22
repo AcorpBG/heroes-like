@@ -4181,23 +4181,23 @@ int main() {
 			workflow_config.setup_object_0x44 = 3;
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-			const std::string workflow_source_order_blocker =
-					"0x4a61bc_live_0x4a5c07_static_selector_unported_before_0x4a5e03";
+			const std::string workflow_reward_guard_blocker =
+					"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "materialization_bridge"
+						&& workflow.current_phase_id == "reward_guard_materialization"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not stop at the recovered 0x4a8c15 materialization bridge blocker")) {
+					"entry-to-writeout workflow did not stop at the recovered reward/guard materialization blocker")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason.rfind(workflow_source_order_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed at the 0x4a8c15 materialization bridge blocker; actual=")
+		if (!require(workflow.blocked_reason.rfind(workflow_reward_guard_blocker, 0) == 0,
+					std::string("entry-to-writeout workflow did not fail closed at the reward/guard materialization blocker; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 15
+		if (!require(workflow.phases.size() >= 13
 						&& workflow.phases[0].id == "entry_scope"
 						&& workflow.phases[1].id == "setup_template_selection"
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4206,25 +4206,21 @@ int main() {
 						&& workflow.phases[4].status == "complete_source_order_prefix"
 						&& workflow.phases[5].id == "route_free_cell_sweep"
 						&& workflow.phases[5].status == "complete_source_order_prefix"
-						&& workflow.phases[6].id == "materialization_bridge"
-						&& workflow.phases[6].status == "blocked"
-						&& workflow.phases[7].id == "bridge_relation_normalization"
-							&& workflow.phases[7].status == "complete_source_order_prefix"
-							&& workflow.phases[8].id == "bridge_water_edge_writer"
-							&& workflow.phases[8].status == "complete_source_order_prefix"
-							&& workflow.phases[9].id == "connection_tail"
-							&& workflow.phases[9].status == "blocked"
-							&& workflow.phases[10].id == "mine_resource_materialization"
-							&& workflow.phases[10].status == "pending"
-						&& workflow.phases[11].id == "source_order_object_materialization"
+						&& workflow.phases[6].id == "mine_resource_materialization"
+						&& workflow.phases[6].status == "complete_source_order_prefix"
+						&& workflow.phases[7].id == "relation_normalization"
+						&& workflow.phases[7].status == "complete_source_order_prefix"
+						&& workflow.phases[8].id == "relation_scan_consumers"
+						&& workflow.phases[8].status == "complete_source_order_prefix"
+						&& workflow.phases[9].id == "reward_guard_materialization"
+						&& workflow.phases[9].status == "blocked"
+						&& workflow.phases[10].id == "source_order_object_materialization"
+						&& workflow.phases[10].status == "pending"
+						&& workflow.phases[11].id == "connection_road_river"
 						&& workflow.phases[11].status == "pending"
-						&& workflow.phases[12].id == "reward_guard_materialization"
-						&& workflow.phases[12].status == "pending"
-						&& workflow.phases[13].id == "connection_road_river"
-						&& workflow.phases[13].status == "pending"
-						&& workflow.phases[14].id == "final_writeout"
-						&& workflow.phases[14].status == "pending",
-					"entry-to-writeout workflow did not preserve recovered phase order through the 0x4a8c15 materialization bridge blocker")) {
+						&& workflow.phases[12].id == "final_writeout"
+						&& workflow.phases[12].status == "pending",
+					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard materialization blocker")) {
 			return 1;
 		}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4252,10 +4248,12 @@ int main() {
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 == 0
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
-							&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
-							&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
+							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.applied
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied
 							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-						"entry-to-writeout workflow did not execute the 0x4a4913 -> 0x4a79a3 bridge prefix or executed downstream helpers before the connection tail was owned")) {
+						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, and reward/guard prefixes in source order")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -4300,16 +4298,16 @@ int main() {
 								workflow_generator_state.remaining_private_state_blockers.begin(),
 								workflow_generator_state.remaining_private_state_blockers.end(),
 								[&](const std::string &blocker) {
-									return blocker.rfind(workflow_source_order_blocker, 0) == 0;
+									return blocker.rfind(workflow_reward_guard_blocker, 0) == 0;
 								}),
-					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the 0x4a8c15 materialization bridge blocker")) {
+					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the reward/guard materialization blocker")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() > 6
-							&& workflow.phases[6].id == "materialization_bridge"
-							&& workflow.phases[6].status == "blocked"
+			if (!require(workflow.phases.size() > 9
+							&& workflow.phases[9].id == "reward_guard_materialization"
+							&& workflow.phases[9].status == "blocked"
 							&& !workflow.final_writeout_complete,
-						"entry-to-writeout workflow did not stop at the 0x4a8c15 materialization bridge while 0x4a79a3 remained blocked")) {
+						"entry-to-writeout workflow did not stop at reward/guard materialization before final writeout")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
@@ -4324,7 +4322,7 @@ int main() {
 				workflow_generator_state.connection_tail_replay_0x4a79a3;
 		if (!require(workflow_generator_state.connection_tail_replay_0x4a79a3_ported
 						&& connection_tail.invoked
-						&& !connection_tail.applied
+						&& connection_tail.applied
 						&& connection_tail.generated_cell_grid_owned
 						&& connection_tail.endpoint_caller_prep_known
 						&& connection_tail.fallback_materialization_known
@@ -4346,11 +4344,19 @@ int main() {
 						&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404
 								== connection_tail.internal_growth_0x4a61bc_selected_loop_count * 2
 						&& connection_tail.internal_growth_0x4a61bc_guard_budget_positive_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count > 0
-						&& connection_tail.blocked_reason == workflow_source_order_blocker
+						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count == 0
+						&& connection_tail.blocked_reason.empty()
+						&& workflow_generator_state.object_records_0xec4_ecc.size() == size_t(28)
+						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == 28
 						&& workflow_generator_state.connection_fallback_materialization_scope_known
 						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-				"entry-to-writeout workflow did not invoke 0x4a79a3 and stop inside the live pair loop")) {
+				"entry-to-writeout workflow did not invoke 0x4a79a3 and commit direct 0x4a5c07/0x4a5e03 connection guards")) {
+			return 1;
+		}
+		if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 90
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.wrapper_cleanup_count_0x49cebd == 90,
+				"entry-to-writeout workflow did not fail at the expected reward/guard zero-commit blocker after direct connection guards")) {
 			return 1;
 		}
 	}
