@@ -6574,56 +6574,9 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 
 				const bool policy_byte_0x13 =
 						((uint32_t(result.minimum_low_word_score_0x10) >> 24) & 0xffU) != 0U;
-				const bool wrapper_has_projection_member =
-						std::any_of(
-								wrapper.selected_members_0x2c_0x30.begin(),
-								wrapper.selected_members_0x2c_0x30.end(),
-								[](const RewardGuardWrapperMember4aa3e9 &member) {
-									return member.object_record_vtable_0x00 == PROJECTION_OBJECT_VTABLE_0X540B14;
-								});
-				if (wrapper_has_projection_member) {
-					attempt.projection_relation_order_invoked_0x4ad7f7 = true;
-					const RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 projection_scan =
-							reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
-									state,
-									wrapper,
-									*selector,
-									result.minimum_low_word_score_0x10,
-									policy_byte_0x13,
-									rng,
-									false);
-					attempt.projection_relation_order_ready_0x4ad7f7 =
-							projection_scan.relation_order_ready_0x4ad7f7;
-					attempt.projection_relation_order_candidate_relation_count_0x4ad7f7 =
-							projection_scan.candidate_relation_count_0x4ad7f7;
-					attempt.projection_relation_order_scan_attempt_count_0x4aa9b7 =
-							projection_scan.scan_attempt_count_0x4aa9b7;
-					attempt.projection_relation_order_success_owner_vector_index =
-							projection_scan.success_owner_vector_index;
-					attempt.projection_relation_order_blocked_reason_0x4ad7f7 =
-							projection_scan.blocked_reason;
-					if (projection_scan.coordinate_scan.committed
-							&& projection_scan.coordinate_scan.blocked_reason.empty()) {
-						attempt.coordinate_scan_applied_0x4aa9b7 = projection_scan.coordinate_scan.applied;
-						attempt.coordinate_scan_scanned_cell_count_0x4aa9b7 =
-								projection_scan.coordinate_scan.scanned_cell_count;
-						attempt.coordinate_scan_owner_byte_reject_count_0x4aa9b7 =
-								projection_scan.coordinate_scan.owner_byte_reject_count;
-						attempt.coordinate_scan_value_floor_reject_count_0x4aa9b7 =
-								projection_scan.coordinate_scan.value_floor_reject_count;
-						attempt.coordinate_scan_feasibility_reject_count_0x4aa603 =
-								projection_scan.coordinate_scan.feasibility_reject_count_0x4aa603;
-						attempt.coordinate_scan_feasibility_missing_input_count_0x4aa603 =
-								projection_scan.coordinate_scan.feasibility_missing_input_count_0x4aa603;
-						attempt.coordinate_scan_local_vector_append_count_0x4ae1fd =
-								projection_scan.coordinate_scan.local_vector_append_count_0x4ae1fd;
-						result.successful_coordinate_scan_count += 1;
-						lane_success = true;
-						result.attempts.push_back(attempt);
-						break;
-					}
-				}
-
+				// Recovered 0x4aab7e dispatches directly from successful 0x4aa354
+				// materialization into 0x4aa9b7. Projection-ordered scans belong to
+				// their own caller path and must not preempt this source stream.
 				attempt.coordinate_scan_invoked_0x4aa9b7 = true;
 				RewardGuardCoordinateScanResult4aa9b7 coordinate_scan =
 						reward_guard_coordinate_scan_and_commit_0x4aa9b7(
@@ -6833,6 +6786,8 @@ static bool reward_guard_contour_passes_0x49a09c_for_0x4aa603(
 		result.blocked_reason = "0x4aa603_0x49a09c_candidate_offset_vector_empty";
 		return false;
 	}
+	bool previous_bad = true;
+	bool saw_good_to_bad_transition = false;
 	for (int32_t index = 0; index <= count; ++index) {
 		const CoordinateCandidate4a17f5 &offset = wrapper.candidate_coordinates_0x3c_0x40[size_t(index % count)];
 		result.contour_scan_count_0x49a09c += 1;
@@ -6845,9 +6800,17 @@ static bool reward_guard_contour_passes_0x49a09c_for_0x4aa603(
 				|| !record->word_0x20_known
 				|| !record->word_0x24_known
 				|| !record->word_0x28_known) {
-			result.contour_reject_count_0x49a09c += 1;
-			result.blocked_reason = "0x4aa603_0x49a09c_contour_cell_missing";
-			return false;
+			const bool current_bad = true;
+			if (current_bad && !previous_bad) {
+				if (saw_good_to_bad_transition) {
+					result.contour_reject_count_0x49a09c += 1;
+					result.blocked_reason = "0x4aa603_0x49a09c_fragmented_contour_rejected";
+					return false;
+				}
+				saw_good_to_bad_transition = true;
+			}
+			previous_bad = current_bad;
+			continue;
 		}
 		const bool bit22 = (record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
 		const bool bit27 = (record->word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
@@ -6856,15 +6819,26 @@ static bool reward_guard_contour_passes_0x49a09c_for_0x4aa603(
 			result.blocked_reason = "0x4aa603_0x49a09c_existing_bit22_reject";
 			return false;
 		}
-		if (!generated_cell_49a1d8_valid_record(*record)
-				|| (!allow_existing_bit22 && bit22)
+		const bool current_bad =
+				!generated_cell_49a1d8_valid_record(*record)
+				|| bit22
 				|| !bit27
 				|| ((generated_cell_terrain_code_0x24(*record) == 8) != terrain8_policy)
-				|| generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(reward_guard_relation_owner_byte2_0x4aa9b7(relation) & 0xff)) {
-			result.contour_reject_count_0x49a09c += 1;
-			result.blocked_reason = "0x4aa603_0x49a09c_contour_rejected";
-			return false;
+				|| generated_cell_word20_owner_byte2(record->word_0x20) != uint8_t(reward_guard_relation_owner_byte2_0x4aa9b7(relation) & 0xff);
+		if (current_bad && !previous_bad) {
+			if (saw_good_to_bad_transition) {
+				result.contour_reject_count_0x49a09c += 1;
+				result.blocked_reason = "0x4aa603_0x49a09c_fragmented_contour_rejected";
+				return false;
+			}
+			saw_good_to_bad_transition = true;
 		}
+		previous_bad = current_bad;
+	}
+	if (previous_bad && !saw_good_to_bad_transition) {
+		result.contour_reject_count_0x49a09c += 1;
+		result.blocked_reason = "0x4aa603_0x49a09c_all_bad_contour_rejected";
+		return false;
 	}
 	return true;
 }
