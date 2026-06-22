@@ -409,7 +409,7 @@ R2 closes the endpoint/cursor chain for supported one-level land:
 
 `0x4a7605` is the fallback endpoint writer path. It can call `0x4a5767`, derive a source cell, choose an endpoint from projection/local offsets or fallback, call `0x4a5e73`, and stamp endpoint offsets through `0x49aa63(true)` and `+0x2c` packing.
 
-`0x4a7312` policy recovery covers descriptor dimensions, source bounds/coordinate copies, owner-byte candidate filtering, `0x49aa93` eligibility calls, `0x4ae1fd` candidate appends, RNG `% candidate_count` selection, generator vtable slot `+0x04` commit, and candidate-vector destruction.
+`0x4a7312` policy recovery covers descriptor dimensions, source bounds/coordinate copies, `GeneratedCell+0x20` byte3 relation/class candidate filtering, `0x49aa93` eligibility calls, `0x4ae1fd` candidate appends, RNG `% candidate_count` selection, generator vtable slot `+0x04` commit, and candidate-vector destruction.
 
 ### Source-Handler Pending Entry Chain
 
