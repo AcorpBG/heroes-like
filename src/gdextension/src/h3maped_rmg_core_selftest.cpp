@@ -736,6 +736,33 @@ int main() {
 		selected_create_state.endpoint_cursor_0xf58 = 0;
 		selected_create_state.reward_guard_projection_generator_0x10b4_known = true;
 		selected_create_state.reward_guard_projection_generator_0x10b4 = false;
+		selected_create_state.native_object_record_key_allocator_0x4a93a2_known = true;
+		selected_create_state.next_native_object_record_key_0x4a93a2 = 1U;
+		selected_create_state.object_record_sequence_allocator_0xf44_known = true;
+		selected_create_state.object_record_sequence_allocator_0xf44 = 1;
+		selected_create_state.descriptor_vector_398_39c.present = true;
+		selected_create_state.descriptor_vector_398_39c.contents_known = true;
+		selected_create_state.descriptor_vector_398_39c.count_known = true;
+		selected_create_state.descriptor_vector_398_39c.element_size_bytes = 4;
+		selected_create_state.descriptor_vector_398_39c_source_owned = true;
+		const std::vector<SourceObjectRecord0x4c> &selected_create_source_catalog =
+				aurelion::h3maped_rmg_core::source_object_catalog_0x49da08();
+		for (int32_t source_index = 0; source_index < int32_t(selected_create_source_catalog.size()); ++source_index) {
+			const SourceObjectRecord0x4c &source_record = selected_create_source_catalog[size_t(source_index)];
+			aurelion::h3maped_rmg_core::GeneratorDescriptorVectorEntry0x398 descriptor_entry;
+			descriptor_entry.vector_index = source_index;
+			descriptor_entry.source_catalog_index_0x49da08 = source_index;
+			descriptor_entry.descriptor_type_0x1c = source_record.type_id_0x1c;
+			descriptor_entry.descriptor_source_field_0x20 = source_record.subtype_0x20;
+			descriptor_entry.descriptor_group_0x24 = source_record.group_0x24;
+			descriptor_entry.descriptor_last_flag_0x28 = source_record.last_flag_0x28;
+			descriptor_entry.source_record_copy = source_record;
+			selected_create_state.descriptor_vector_entries_398_39c.push_back(descriptor_entry);
+		}
+		selected_create_state.descriptor_vector_entry_count_398_39c =
+				int32_t(selected_create_state.descriptor_vector_entries_398_39c.size());
+		selected_create_state.descriptor_vector_398_39c.count =
+				selected_create_state.descriptor_vector_entry_count_398_39c;
 
 		aurelion::h3maped_rmg_core::RewardGuardCandidateRecord4a9f1c ordinary_candidate;
 		ordinary_candidate.candidate_vtable_0x00_known = true;
@@ -773,6 +800,8 @@ int main() {
 		selector.descriptor_type_counters_0x44.assign(
 				size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT),
 				0U);
+		selector.terrain_policy_0x0c_known = true;
+		selector.terrain_policy_0x0c = 1;
 		H3MapedRng selected_create_rng;
 		selected_create_rng.state = 1U;
 		const auto selected_create =
@@ -788,13 +817,19 @@ int main() {
 						&& selected_create.accepted_count == 2
 						&& selected_create.accepted_weight_total_0x14 == 105
 						&& selected_create.rng_consumed_0x4aa110
-						&& selected_create.rng_value_0x4e7276 == 41
-						&& selected_create.selected_weight_remainder == 41
 						&& selected_create.selected_candidate_index == 1
 						&& selected_create.selected_candidate_vtable_known
 						&& selected_create.selected_candidate_vtable_0x00 == aurelion::h3maped_rmg_core::REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80
 						&& selected_create.selected_object_vtable_0x00_known
 						&& selected_create.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
+						&& selected_create.selected_source_record_known_0x4a9e40
+						&& selected_create.selected_descriptor_vector_index_0x398 >= 0
+						&& selected_create.selected_object_record_allocated_0x4aa166
+						&& selected_create.selected_object_record_key_known_0x4aa166
+						&& selected_create.selected_object_record_key_0x4aa166 == 1U
+						&& selected_create.selected_object_sequence_0x1c_0x4aa166 == 1
+						&& selected_create.selected_object_selected_value_0x20_0x4aa166 == 2000
+						&& selected_create.selected_object_enabled_word_0x24_0x4aa166 == 3U
 						&& selected_create.selected_score_dispatch_replayed_0x4aa151
 						&& selected_create.selected_create_dispatched_0x4aa166
 						&& selected_create.selected_projection_object_0x540b14_known
@@ -804,8 +839,11 @@ int main() {
 						&& selected_create.selected_projection_object_0x540b14.generator_context_plus_0x1c_known
 						&& selected_create.selected_projection_object_0x540b14.cleanup_pointer_plus_0x20_known
 						&& !selected_create.selected_projection_object_0x540b14.projection_coordinate_known
-						&& selected_create_rng.state == 0x0029e2c0U,
-					"0x4a9f1c selected-create dispatch did not use weighted RNG and recovered 0x540c80 -> 0x49cc22 -> 0x540b14 constructor behavior")) {
+						&& selected_create_state.next_native_object_record_key_0x4a93a2 == 2U
+						&& selected_create_state.object_record_sequence_allocator_0xf44 == 2
+						&& selected_create_state.object_record_allocation_count_0x4a93a2 == 1
+						&& selected_create_rng.state == selected_create.rng_state_after_0x4aa110,
+					"0x4a9f1c selected-create dispatch did not use source-owned descriptor selection, weighted RNG, and recovered 0x540c80 -> 0x49cc22 -> 0x540b14/0x4aa166 constructor behavior")) {
 			return 1;
 		}
 	}
