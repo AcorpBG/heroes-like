@@ -5009,16 +5009,19 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 				result.blocked_reason = "0x49a6f9_footprint_cell_rejected";
 				return result;
 			}
-			if (!cell.word_0x20_known) {
+			const bool checks_owner_byte = primary_mask || !secondary_mask;
+			if (checks_owner_byte && !cell.word_0x20_known) {
 				result.inputs_available = false;
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_footprint_cell_owner_word_missing";
 				return result;
 			}
-			if (generated_cell_word20_owner_byte2_signed(cell.word_0x20) != int32_t(int8_t(owner_byte2 & 0xff))) {
-				result.rejected = true;
-				result.blocked_reason = "0x49a6f9_footprint_owner_byte_rejected";
-				return result;
+			if (checks_owner_byte) {
+				if (generated_cell_word20_owner_byte2_signed(cell.word_0x20) != int32_t(int8_t(owner_byte2 & 0xff))) {
+					result.rejected = true;
+					result.blocked_reason = "0x49a6f9_footprint_owner_byte_rejected";
+					return result;
+				}
 			}
 			if (primary_mask) {
 				if (reject_existing_bit26 && (cell.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
@@ -12968,6 +12971,7 @@ struct RouteFreeCellPhaseResult4a8260 {
 	int32_t route_stamp_call_count_0x49a85d = 0;
 	int32_t route_cut_call_count_0x4a80dc = 0;
 	int32_t final_sweep_call_count_0x49a962 = 0;
+	int32_t final_sweep_neighbor_clear_count_0x49a962 = 0;
 	int32_t candidate_boundary_scan_count_0x4a4c8e = 0;
 	int32_t candidate_boundary_trigger_count_0x4a4c8e = 0;
 };
@@ -13295,6 +13299,27 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 			result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_route_guard_exhausted";
 			result.rng_state_after = rng.state;
 			return result;
+		}
+	}
+
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
+				if ((terrain_class == 8U || terrain_class == 9U) && (record.word_0x2c & 0x1U) == 0U) {
+					generated_cell_49a932(record, true);
+				}
+				if ((record.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
+					const GeneratedCell49a962SweepResult sweep = generated_cell_49a962_record_grid(grid, x, y, level);
+					result.final_sweep_call_count_0x49a962 += 1;
+					result.final_sweep_neighbor_clear_count_0x49a962 += sweep.neighbor_clear_count;
+				}
+			}
 		}
 	}
 
@@ -13755,8 +13780,8 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 			}
 		}
 
-		const int32_t candidate_low_x = std::min<int32_t>(owner.scan_bound_low_x_0x20, 3);
-		const int32_t candidate_low_y = std::min<int32_t>(owner.scan_bound_low_y_0x24, 3);
+		const int32_t candidate_low_x = std::max<int32_t>(owner.scan_bound_low_x_0x20, 3);
+		const int32_t candidate_low_y = std::max<int32_t>(owner.scan_bound_low_y_0x24, 3);
 		const int32_t candidate_high_x = std::min<int32_t>(state.width - 4, owner.scan_bound_high_x_0x28);
 		const int32_t candidate_high_y = std::min<int32_t>(state.height - 4, owner.scan_bound_high_y_0x2c);
 		while (true) {
