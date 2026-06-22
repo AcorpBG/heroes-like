@@ -6924,7 +6924,9 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 	for (const RewardGuardWrapperMember4aa3e9 &member : wrapper.selected_members_0x2c_0x30) {
 		const int32_t absolute_x = candidate_x + member.relative_x_0x08;
 		const int32_t absolute_y = candidate_y + member.relative_y_0x0c;
-		const int32_t absolute_level = candidate_level + member.relative_level_0x10;
+		// Recovered 0x4aa603 loads member +0x10, then overwrites that local with
+		// the candidate level argument before dispatching 0x49a6f9.
+		const int32_t absolute_level = candidate_level;
 		if (reward_guard_generated_footprint_rejects_0x4aa603(state, member, relation, absolute_x, absolute_y, absolute_level, result)) {
 			return result;
 		}
