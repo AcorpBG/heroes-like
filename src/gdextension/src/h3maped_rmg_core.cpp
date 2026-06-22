@@ -11428,6 +11428,33 @@ static void apply_relation_high_owner_propagation_49a318(GeneratorObjectPrivateS
 	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 }
 
+static void apply_materialization_bridge_relation_normalization_0x4a5767(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
+	apply_relation_normalization_full_grid_reset_0x4a5767(state);
+	SourceObjectResolverState4af785 relation_scan_resolver_state;
+	H3MapedRng relation_scan_rng;
+	relation_scan_rng.state = rng.state;
+	const RelationScanConsumerResult4a5767 relation_scan_consumers =
+			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(
+					state,
+					relation_scan_resolver_state,
+					relation_scan_rng,
+					state.relation_owner_vectors_10e4_10e8);
+	preserve_source_pair_vector_edc(state, relation_scan_resolver_state);
+	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
+	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
+	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
+	state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 = relation_scan_consumers.owner_bounds_blocked_count;
+	state.relation_scan_consumer_scanned_cell_count_4a5767 = relation_scan_consumers.scanned_cell_count;
+	state.relation_scan_consumer_object_branch_blocked_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_blocked_count;
+	state.relation_scan_consumer_projected_chain_call_count_4a5767 = relation_scan_consumers.projected_chain_call_count;
+	state.relation_scan_consumer_projected_chain_occupied_stamp_count_4a5767 = relation_scan_consumers.projected_chain_occupied_stamp_count;
+	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
+	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
+	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
+	apply_relation_high_owner_propagation_49a318(state);
+	rng.state = relation_scan_rng.state;
+}
+
 static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &word_0x10, const std::vector<uint32_t> &word_0x1c, const std::vector<uint32_t> &word_0x20, const std::vector<uint32_t> &word_0x24, const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c) {
 	for (size_t index = 0; index < grid.records.size(); ++index) {
 		GeneratedCellRecord0x30 &record = grid.records[index];
@@ -13022,18 +13049,17 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		};
 		return;
 	}
+	apply_materialization_bridge_relation_normalization_0x4a5767(state, route_free_cell_rng);
 	state.materialization_bridge_0x4a8c15_blocked_reason =
-			"0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5";
+			"0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3";
 	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
 		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
 		state.remaining_private_state_blockers = {
 			materialization_bridge_blocker,
-			"bridge_water_edge_writer_0x4a4fc5_not_executed_until_0x4a5767_is_owned",
-			"connection_tail_0x4a79a3_not_executed_until_0x4a5767_is_owned",
-			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
-			"relation_scan_consumers_0x4a5767_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
-			"source_order_object_materialization_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
-			"reward_guard_materialization_not_executed_until_0x4a8c15_materialization_bridge_is_owned",
+			"connection_tail_0x4a79a3_not_executed_until_0x4a4fc5_is_owned",
+			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
+			"source_order_object_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
+			"reward_guard_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
 			"final_writeout_not_executed_until_source_order_payload_is_owned",
 		};
 		return;
@@ -13360,12 +13386,23 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.status = "blocked";
 		result.blocked_reason = object_state.remaining_private_state_blockers.front();
 		add_phase("materialization_bridge", "0x4a8c15_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3", "blocked", result.blocked_reason);
-		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_0x4a8c15_materialization_bridge");
-		add_phase("relation_normalization", "0x4aadd2_0x4a5767_0x4a59e2", "pending", "blocked_before_mine_resource_materialization");
-		add_phase("relation_scan_consumers", "0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_relation_normalization");
-		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
+		if (object_state.relation_normalization_4a5767_full_grid_reset_applied) {
+			std::ostringstream relation_reset_note;
+			relation_reset_note << "visited=" << object_state.relation_normalization_4a5767_full_grid_reset_visited_count
+					<< ",changed=" << object_state.relation_normalization_4a5767_full_grid_reset_changed_count
+					<< ",skipped=" << object_state.relation_normalization_4a5767_full_grid_reset_skipped_count
+					<< ",scan_applied=" << (object_state.relation_scan_consumers_4a5767_applied ? "true" : "false")
+					<< ",high_owner_applied=" << (object_state.relation_high_owner_propagation_49a318_applied ? "true" : "false");
+			add_phase("bridge_relation_normalization", "0x4a5767_0x4a5a23_0x49a318", "complete_source_order_prefix", relation_reset_note.str());
+		} else {
+			add_phase("bridge_relation_normalization", "0x4a5767_0x4a5a23_0x49a318", "pending", "blocked_before_0x4a5767");
+		}
+		add_phase("bridge_water_edge_writer", "0x4a4fc5", "blocked", result.blocked_reason);
+		add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a4fc5");
+		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_0x4a4fc5_0x4a79a3_materialization_bridge");
+		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_0x4a4fc5_materialization_bridge");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
-		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("connection_road_river", "0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_0x4a79a3_connection_tail");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
 	}
