@@ -16,13 +16,13 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now removes the misplaced reward/guard projection fallback from the direct 0x4aab7e source stream and uses relation-fed 0x4a5c07 monster allocation for positive 0x4aa354 attach values instead of reusing the selected reward descriptor. No-Godot Small seed 10, Small seed 58, and Medium seed 10 all still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. The remaining direct-stream blocker is 0x4aa603 feasibility against current generated-cell bit26/owner state, not projection-driver fallback noise. This is not parity and not final map output.",
+      "notes": "Shared h3maped_rmg_core source-order alignment: object footprint references now follow recovered 0x49abd6 primary/body-reject cells, route 0x4a8260 endpoint pending order follows recovered start/end push order, and reward/guard occupied-cell descriptor resolution now follows first object-reference semantics. No-Godot selftest passes; controlled Small/Medium batch remains blocked at reward_guard_materialization zero successful 0x4aa9b7 commits, so slice remains in progress.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-22T09:10:43Z",
+      "updatedAt": "2026-06-22T10:40:12Z",
       "latestEvidenceId": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
       "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
       "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show the direct 0x4aab7e source stream now stays direct: last_projection_order_invoked_0x4ad7f7=0 in all three cases. Relation-fed positive attach allocation reaches 0x49cf34 for Small seed 10 and Medium seed 10, and Small seed 58 blocks without attach. All three still have zero 0x4aa9b7 commits.",
@@ -13645,10 +13645,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
+  "currentSliceNotes": "Shared h3maped_rmg_core source-order alignment: object footprint references now follow recovered 0x49abd6 primary/body-reject cells, route 0x4a8260 endpoint pending order follows recovered start/end push order, and reward/guard occupied-cell descriptor resolution now follows first object-reference semantics. No-Godot selftest passes; controlled Small/Medium batch remains blocked at reward_guard_materialization zero successful 0x4aa9b7 commits, so slice remains in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-22T08:32:59Z",
+  "currentSliceUpdatedAt": "2026-06-22T10:40:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -59811,9 +59811,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core source-order alignment now keeps object footprint references on recovered 0x49abd6 primary/body-reject cells, uses recovered 0x4a8260 start/end pending order, and resolves reward/guard occupied-cell descriptor type from the first object-reference chain. No-Godot selftest passes; controlled Small seed 10, Small seed 58, and Medium seed 10 still fail closed at reward_guard_materialization zero successful 0x4aa9b7 commits, so this is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-22T08:32:59Z",
+  "updatedAt": "2026-06-22T10:40:12Z",
   "validation": {
     "id": "native-rmg-selected-candidate-relation-producer-20260622",
     "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
