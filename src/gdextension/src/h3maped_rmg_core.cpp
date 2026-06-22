@@ -12401,6 +12401,18 @@ struct MaterializationBridgeRelationLoopResult4a4913 {
 	int32_t brush_bit26_set_count_0x4a4522 = 0;
 };
 
+struct MaterializationBridgeWaterEdgeWriterResult4a4fc5 {
+	bool input_known = false;
+	bool applied = false;
+	bool source_backed_land_scope = false;
+	std::string blocked_reason;
+	int32_t scan_count = 0;
+	int32_t owner_low_sentinel_skip_count = 0;
+	int32_t source_water_cell_count = 0;
+	int32_t neighbor_bit25_probe_count = 0;
+	int32_t bit26_candidate_count = 0;
+};
+
 struct Coord12Candidate4a4913 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -12759,6 +12771,66 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 	return result;
 }
 
+static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_water_edge_writer_0x4a4fc5(
+		GeneratedCellRecordGrid0x30 &grid,
+		const std::string &water_mode) {
+	MaterializationBridgeWaterEdgeWriterResult4a4fc5 result;
+	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || expected_cell_count <= 0 || expected_cell_count != int64_t(grid.records.size())) {
+		result.blocked_reason = "0x4a4fc5_invalid_generated_cell_grid";
+		return result;
+	}
+	for (const GeneratedCellRecord0x30 &record : grid.records) {
+		if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+			result.blocked_reason = "0x4a4fc5_generated_cell_record_input_unknown";
+			return result;
+		}
+	}
+	result.input_known = true;
+	if (water_mode != "land" || grid.level_count != 1) {
+		result.blocked_reason = "0x4a4fc5_only_one_level_land_scope_is_source_backed";
+		return result;
+	}
+	result.source_backed_land_scope = true;
+
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				result.scan_count += 1;
+				if (generated_cell_word20_owner_byte2_signed(record.word_0x20) < 0) {
+					result.owner_low_sentinel_skip_count += 1;
+					continue;
+				}
+				if ((record.word_0x24 & 0x3fU) != 8U) {
+					continue;
+				}
+				result.source_water_cell_count += 1;
+				for (int32_t neighbor_y = std::max<int32_t>(0, y - 1); neighbor_y < std::min<int32_t>(grid.height, y + 2); ++neighbor_y) {
+					for (int32_t neighbor_x = std::max<int32_t>(0, x - 1); neighbor_x < std::min<int32_t>(grid.width, x + 2); ++neighbor_x) {
+						const int64_t neighbor_flat = cell_index(grid.width, grid.height, neighbor_x, neighbor_y, level);
+						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size()) || neighbor_flat == flat) {
+							continue;
+						}
+						result.neighbor_bit25_probe_count += 1;
+					}
+				}
+			}
+		}
+	}
+
+	if (result.source_water_cell_count > 0) {
+		result.blocked_reason = "0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope";
+		return result;
+	}
+	result.applied = true;
+	return result;
+}
+
 static void initialize_generator_object_private_state_from_workflow_entry_0x49ecf2_0x49f95a(GeneratorObjectPrivateState &state, int32_t width, int32_t height, int32_t level_count, const GeneratorSetupModeResult49ecf2 &setup_mode, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	state = GeneratorObjectPrivateState();
 	state.width = width;
@@ -13050,13 +13122,48 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		return;
 	}
 	apply_materialization_bridge_relation_normalization_0x4a5767(state, route_free_cell_rng);
-	state.materialization_bridge_0x4a8c15_blocked_reason =
-			"0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3";
-	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
+	state.materialization_bridge_water_edge_writer_0x4a4fc5_ported = true;
+	const MaterializationBridgeWaterEdgeWriterResult4a4fc5 water_edge_writer =
+			materialization_bridge_water_edge_writer_0x4a4fc5(state.generated_cell_buffer, water_mode);
+	state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known = water_edge_writer.input_known;
+	state.materialization_bridge_water_edge_writer_0x4a4fc5_applied = water_edge_writer.applied;
+	state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope =
+			water_edge_writer.source_backed_land_scope;
+	state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 =
+			water_edge_writer.scan_count;
+	state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5 =
+			water_edge_writer.owner_low_sentinel_skip_count;
+	state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 =
+			water_edge_writer.source_water_cell_count;
+	state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 =
+			water_edge_writer.neighbor_bit25_probe_count;
+	state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 =
+			water_edge_writer.bit26_candidate_count;
+	state.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5 =
+			water_edge_writer.blocked_reason;
+	if (!water_edge_writer.applied || !water_edge_writer.blocked_reason.empty()) {
+		state.materialization_bridge_0x4a8c15_blocked_reason =
+				water_edge_writer.blocked_reason.empty()
+				? "0x4a4fc5_bridge_water_edge_writer_not_applied"
+				: water_edge_writer.blocked_reason;
 		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
 		state.remaining_private_state_blockers = {
 			materialization_bridge_blocker,
 			"connection_tail_0x4a79a3_not_executed_until_0x4a4fc5_is_owned",
+			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
+			"source_order_object_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
+			"reward_guard_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
+	}
+	state.materialization_bridge_0x4a8c15_blocked_reason =
+			"0x4a8c15_bridge_0x4a79a3_unported_after_0x4a4fc5";
+	if (!state.materialization_bridge_0x4a8c15_blocked_reason.empty()) {
+		const std::string materialization_bridge_blocker = state.materialization_bridge_0x4a8c15_blocked_reason;
+		state.remaining_private_state_blockers = {
+			materialization_bridge_blocker,
+			"connection_tail_0x4a79a3_not_executed_until_source_order_bridge_tail_is_owned",
 			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
 			"source_order_object_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
 			"reward_guard_materialization_not_executed_until_0x4a8c15_0x4a4fc5_0x4a79a3_materialization_bridge_is_owned",
@@ -13379,12 +13486,21 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	}
 	add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "complete_source_order_prefix", "continues_into_mine_resource_materialization");
 
-	const std::string materialization_bridge_prefix = "0x4a8c15_";
-	if (!object_state.remaining_private_state_blockers.empty()
-			&& object_state.remaining_private_state_blockers.front().rfind(materialization_bridge_prefix, 0) == 0) {
+	const bool materialization_bridge_blocked =
+			(!object_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
+					&& object_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported)
+			|| (!object_state.materialization_bridge_relation_loop_0x4a4913_applied
+					&& object_state.materialization_bridge_relation_loop_0x4a4913_ported)
+			|| (!object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
+					&& object_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported)
+			|| (!object_state.remaining_private_state_blockers.empty()
+					&& object_state.remaining_private_state_blockers.front().rfind("0x4a8c15_", 0) == 0);
+	if (materialization_bridge_blocked) {
 		result.current_phase_id = "materialization_bridge";
 		result.status = "blocked";
-		result.blocked_reason = object_state.remaining_private_state_blockers.front();
+		result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
+				? object_state.remaining_private_state_blockers.front()
+				: "0x4a8c15_materialization_bridge_incomplete";
 		add_phase("materialization_bridge", "0x4a8c15_0x4a4913_0x4a5767_0x4a4fc5_0x4a79a3", "blocked", result.blocked_reason);
 		if (object_state.relation_normalization_4a5767_full_grid_reset_applied) {
 			std::ostringstream relation_reset_note;
@@ -13397,10 +13513,24 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		} else {
 			add_phase("bridge_relation_normalization", "0x4a5767_0x4a5a23_0x49a318", "pending", "blocked_before_0x4a5767");
 		}
-		add_phase("bridge_water_edge_writer", "0x4a4fc5", "blocked", result.blocked_reason);
-		add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a4fc5");
-		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_0x4a4fc5_0x4a79a3_materialization_bridge");
-		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_0x4a4fc5_materialization_bridge");
+		if (object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied) {
+			std::ostringstream water_edge_note;
+			water_edge_note << "scan=" << object_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5
+					<< ",sentinel_skips=" << object_state.materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5
+					<< ",source_water=" << object_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5
+					<< ",bit25_probes=" << object_state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5
+					<< ",bit26_candidates=" << object_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
+			add_phase("bridge_water_edge_writer", "0x4a4fc5", "complete_source_order_prefix", water_edge_note.str());
+			add_phase("connection_tail", "0x4a79a3", "blocked", result.blocked_reason);
+		} else {
+			add_phase("bridge_water_edge_writer", "0x4a4fc5", "blocked", result.blocked_reason);
+			add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a4fc5");
+		}
+		const std::string downstream_bridge_blocker = object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
+				? "blocked_before_0x4a79a3_materialization_bridge"
+				: "blocked_before_0x4a4fc5_0x4a79a3_materialization_bridge";
+		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", downstream_bridge_blocker);
+		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", downstream_bridge_blocker);
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_0x4a79a3_connection_tail");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");

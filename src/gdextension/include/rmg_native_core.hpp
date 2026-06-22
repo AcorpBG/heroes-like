@@ -791,6 +791,16 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t materialization_bridge_relation_loop_selected_seed_call_count_0x4a4694 = 0;
 	int32_t materialization_bridge_relation_loop_queue_relax_count_0x4a4694 = 0;
 	int32_t materialization_bridge_relation_loop_brush_bit26_set_count_0x4a4522 = 0;
+	bool materialization_bridge_water_edge_writer_0x4a4fc5_ported = false;
+	bool materialization_bridge_water_edge_writer_0x4a4fc5_input_known = false;
+	bool materialization_bridge_water_edge_writer_0x4a4fc5_applied = false;
+	bool materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope = false;
+	int32_t materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 = 0;
+	int32_t materialization_bridge_water_edge_writer_owner_low_sentinel_skip_count_0x4a4fc5 = 0;
+	int32_t materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 = 0;
+	int32_t materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 = 0;
+	int32_t materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 = 0;
+	std::string materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5;
 	std::string materialization_bridge_0x4a8c15_blocked_reason;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
