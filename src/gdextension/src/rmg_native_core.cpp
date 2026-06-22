@@ -3440,7 +3440,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now executes source-backed mine/resource materialization through 0x4a9d6a and recovered 0x4a9c7c density followup, then continues through relation scan consumers, source-order object replay, and 0x49a318 high-owner propagation before failing closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail; connection, decorative, road, river, and final writeout phases stay pending until reward/guard commits are source-owned\",\n";
+	out << "    \"current_blocker\": \"native workflow now stops at 0x4ac552 relation-pointer source-order materialization before 0x4a8c15 because the exact relation [0x00] source record and [0x04] context pointer bridge for 0x4a8d2c/0x4a8db2 is not owned; route/free-cell, mine/resource, relation scan, reward/guard, connection, decorative, road, river, and final writeout phases stay pending until that source-context bridge is implemented\",\n";
 	out << "    \"required_refactor\": \"port the remaining drift-audit phases D-001 through D-003 and D-005 onward from docs/native-rmg-core-h3maped-drift-audit.md before emitting a comparable pre-0x4a4c8e checkpoint or native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
@@ -3457,7 +3457,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

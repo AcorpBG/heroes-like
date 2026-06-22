@@ -16,72 +16,48 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "No-Godot shared workflow now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization. Removed the non-source-backed all-relation-owner reward/guard source-stream sweep; next implementation must own the recovered 0x4aab7e caller [EBP+0x8] source pointer and its +0xa0/+0xa4/+0xa8 triplet feed before 0x4aa354/0x4aa9b7 commits.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-22T00:18:09Z",
-      "latestEvidenceId": "native-rmg-4a9c7c-density-followup-20260621",
-      "remainingWork": "Own the recovered 0x4aab7e caller [EBP+0x8] source pointer and its +0xa0/+0xa4/+0xa8 triplet feed, then port source-order reward/guard commits through 0x4aa354 -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-      "latestFinding": "No-Godot Small and Medium controlled probes now stop at current_phase_id reward_guard_materialization with 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization. Connection/decorative/road-river phases and final writeout remain pending.",
-      "blocker": "Recovered 0x4aab7e requires one caller-owned [EBP+0x8] source pointer; native does not yet own that pointer feed, the [EDI]+0xa0/+0xa4/+0xa8 source triplets, or preserving the same pointer through 0x4aa354/0x4aa9b7. Final tile/object/header writeout remains unowned.",
+      "updatedAt": "2026-06-22T00:44:15Z",
+      "latestEvidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+      "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+      "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+      "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-4a9c7c-density-followup-20260621",
-        "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "timestamp": "2026-06-21T20:27:05Z",
+        "id": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "evidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+        "timestamp": "2026-06-22T00:44:15Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Mine Resource 0x4a9c7c Density Followup And Reward/Guard Blocker",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail after mine/resource density followup, relation scan, source-order object replay, and high-owner propagation. Connection/decorative/road-river phases and final writeout remain pending.",
-        "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-        "blocker": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-        "artifacts": [
+        "title": "0x4ac552 Relation Pointer Source-Order Blocker",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+        "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+        "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
+        "evidenceArtifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
           "PLAN.md",
-          "ops/progress.json",
-          ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
           "bin/h3maped_rmg_core_selftest",
-          "bin/rmg_native_batch_export_cli",
-          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+          "bin/rmg_native_batch_export_cli"
         ],
-        "checks": [
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-            "status": "passed_linux_debug_native_targets"
-          },
-          {
-            "command": "bin/h3maped_rmg_core_selftest",
-            "status": "passed"
-          },
-          {
-            "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-            "status": "passed_expected_blocked_exit_2_at_reward_guard_materialization"
-          },
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-            "status": "passed_linux_release_native_targets"
-          },
-          {
-            "command": "python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "command": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "command": "git diff --check",
-            "status": "passed"
-          }
+        "validation": [
+          "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "./bin/h3maped_rmg_core_selftest",
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_current_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected blocked exit 2)",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
         ],
         "metrics": {
           "checkpoint2_complete": false,
@@ -89,82 +65,54 @@
           "native_rmg_end_to_end_parity_complete": false,
           "runtime_generation_allowed": false,
           "godot_process_started": false,
-          "mine_resource_materialization_0x4a9d6a_ported": true,
-          "mine_resource_descriptor_selection_0x4a9911_ported": true,
-          "mine_resource_coordinate_builder_0x4a9641_ported": true,
-          "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
-          "mine_resource_density_followup_0x4a9c7c_ported": true,
-          "relation_scan_consumers_0x4a5767_after_density_ported": true,
-          "source_order_object_replay_after_relation_scan_applied": true,
-          "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
+          "source_order_relation_pointer_loop_0x4ac552_ported": true,
+          "source_order_relation_pointer_context_bridge_owned": false,
+          "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+          "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
           "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_only_status_passed": false,
-          "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+          "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
           "full_rmg_parity_complete": false,
           "final_payload_generation_complete": false,
           "windows_dll_build_deferred": true
         }
       },
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow executes setup/template/coordinate state through route/free-cell, mine/resource materialization, density followup, terrain-pressure zeroing, relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization after removing the non-source-backed all-relation-owner reward/guard source-stream sweep. This is not parity and not final map output.",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow executes setup/template/coordinate state through route/free-cell, mine/resource materialization, density followup, terrain-pressure zeroing, relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization after removing the non-source-backed all-relation-owner reward/guard source-stream sweep. This is not parity and not final map output.",
-      "currentSliceNotes": "No-Godot shared workflow now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization. Removed the non-source-backed all-relation-owner reward/guard source-stream sweep; next implementation must own the recovered 0x4aab7e caller [EBP+0x8] source pointer and its +0xa0/+0xa4/+0xa8 triplet feed before 0x4aa354/0x4aa9b7 commits.",
-      "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow executes setup/template/coordinate state through route/free-cell, mine/resource materialization, density followup, terrain-pressure zeroing, relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization after removing the non-source-backed all-relation-owner reward/guard source-stream sweep. This is not parity and not final map output.",
-      "remainingGap": "Recovered 0x4aab7e requires one caller-owned [EBP+0x8] source pointer; native does not yet own that pointer feed, the [EDI]+0xa0/+0xa4/+0xa8 source triplets, or preserving the same pointer through 0x4aa354/0x4aa9b7. Final tile/object/header writeout remains unowned.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+      "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+      "remainingGap": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
       "validation": {
-        "id": "native-rmg-4a9c7c-density-followup-20260621",
-        "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "timestamp": "2026-06-21T20:27:05Z",
+        "id": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "evidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+        "timestamp": "2026-06-22T00:44:15Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Mine Resource 0x4a9c7c Density Followup And Reward/Guard Blocker",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail after mine/resource density followup, relation scan, source-order object replay, and high-owner propagation. Connection/decorative/road-river phases and final writeout remain pending.",
-        "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-        "blocker": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-        "artifacts": [
+        "title": "0x4ac552 Relation Pointer Source-Order Blocker",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+        "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+        "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
+        "evidenceArtifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
           "PLAN.md",
-          "ops/progress.json",
-          ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
           "bin/h3maped_rmg_core_selftest",
-          "bin/rmg_native_batch_export_cli",
-          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+          "bin/rmg_native_batch_export_cli"
         ],
-        "checks": [
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-            "status": "passed_linux_debug_native_targets"
-          },
-          {
-            "command": "bin/h3maped_rmg_core_selftest",
-            "status": "passed"
-          },
-          {
-            "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-            "status": "passed_expected_blocked_exit_2_at_reward_guard_materialization"
-          },
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-            "status": "passed_linux_release_native_targets"
-          },
-          {
-            "command": "python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "command": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "command": "git diff --check",
-            "status": "passed"
-          }
+        "validation": [
+          "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "./bin/h3maped_rmg_core_selftest",
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_current_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected blocked exit 2)",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
         ],
         "metrics": {
           "checkpoint2_complete": false,
@@ -172,18 +120,14 @@
           "native_rmg_end_to_end_parity_complete": false,
           "runtime_generation_allowed": false,
           "godot_process_started": false,
-          "mine_resource_materialization_0x4a9d6a_ported": true,
-          "mine_resource_descriptor_selection_0x4a9911_ported": true,
-          "mine_resource_coordinate_builder_0x4a9641_ported": true,
-          "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
-          "mine_resource_density_followup_0x4a9c7c_ported": true,
-          "relation_scan_consumers_0x4a5767_after_density_ported": true,
-          "source_order_object_replay_after_relation_scan_applied": true,
-          "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
+          "source_order_relation_pointer_loop_0x4ac552_ported": true,
+          "source_order_relation_pointer_context_bridge_owned": false,
+          "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+          "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
           "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_only_status_passed": false,
-          "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+          "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
           "full_rmg_parity_complete": false,
           "final_payload_generation_complete": false,
           "windows_dll_build_deferred": true
@@ -195,21 +139,17 @@
         "native_rmg_end_to_end_parity_complete": false,
         "runtime_generation_allowed": false,
         "godot_process_started": false,
-        "mine_resource_materialization_0x4a9d6a_ported": true,
-        "mine_resource_descriptor_selection_0x4a9911_ported": true,
-        "mine_resource_coordinate_builder_0x4a9641_ported": true,
-        "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
-        "mine_resource_density_followup_0x4a9c7c_ported": true,
+        "source_order_relation_pointer_loop_0x4ac552_ported": true,
+        "source_order_relation_pointer_context_bridge_owned": false,
+        "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+        "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
+        "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
         "phase_snapshot_only_status_blocked": true,
         "phase_snapshot_only_status_passed": false,
-        "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+        "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
         "full_rmg_parity_complete": false,
         "final_payload_generation_complete": false,
-        "windows_dll_build_deferred": true,
-        "relation_scan_consumers_0x4a5767_after_density_ported": true,
-        "source_order_object_replay_after_relation_scan_applied": true,
-        "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
-        "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false
+        "windows_dll_build_deferred": true
       },
       "latestEvidenceArtifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -218,67 +158,41 @@
         "src/gdextension/src/rmg_native_batch_export_cli.cpp",
         "src/gdextension/src/rmg_native_core.cpp",
         "PLAN.md",
-        "ops/progress.json",
-        ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
         "bin/h3maped_rmg_core_selftest",
-        "bin/rmg_native_batch_export_cli",
-        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+        "bin/rmg_native_batch_export_cli"
       ],
       "lastValidation": {
-        "id": "native-rmg-4a9c7c-density-followup-20260621",
-        "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
-        "sliceId": "rmg-small-generalization-hardening-10184",
-        "timestamp": "2026-06-21T20:27:05Z",
+        "id": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "evidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+        "timestamp": "2026-06-22T00:44:15Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Mine Resource 0x4a9c7c Density Followup And Reward/Guard Blocker",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail after mine/resource density followup, relation scan, source-order object replay, and high-owner propagation. Connection/decorative/road-river phases and final writeout remain pending.",
-        "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-        "blocker": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-        "artifacts": [
+        "title": "0x4ac552 Relation Pointer Source-Order Blocker",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+        "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+        "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+        "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
+        "evidenceArtifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
           "PLAN.md",
-          "ops/progress.json",
-          ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
           "bin/h3maped_rmg_core_selftest",
-          "bin/rmg_native_batch_export_cli",
-          "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-          "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+          "bin/rmg_native_batch_export_cli"
         ],
-        "checks": [
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-            "status": "passed_linux_debug_native_targets"
-          },
-          {
-            "command": "bin/h3maped_rmg_core_selftest",
-            "status": "passed"
-          },
-          {
-            "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-            "status": "passed_expected_blocked_exit_2_at_reward_guard_materialization"
-          },
-          {
-            "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-            "status": "passed_linux_release_native_targets"
-          },
-          {
-            "command": "python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "command": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "command": "git diff --check",
-            "status": "passed"
-          }
+        "validation": [
+          "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+          "./bin/h3maped_rmg_core_selftest",
+          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_current_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected blocked exit 2)",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
         ],
         "metrics": {
           "checkpoint2_complete": false,
@@ -286,18 +200,14 @@
           "native_rmg_end_to_end_parity_complete": false,
           "runtime_generation_allowed": false,
           "godot_process_started": false,
-          "mine_resource_materialization_0x4a9d6a_ported": true,
-          "mine_resource_descriptor_selection_0x4a9911_ported": true,
-          "mine_resource_coordinate_builder_0x4a9641_ported": true,
-          "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
-          "mine_resource_density_followup_0x4a9c7c_ported": true,
-          "relation_scan_consumers_0x4a5767_after_density_ported": true,
-          "source_order_object_replay_after_relation_scan_applied": true,
-          "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
+          "source_order_relation_pointer_loop_0x4ac552_ported": true,
+          "source_order_relation_pointer_context_bridge_owned": false,
+          "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+          "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
           "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_only_status_passed": false,
-          "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+          "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
           "full_rmg_parity_complete": false,
           "final_payload_generation_complete": false,
           "windows_dll_build_deferred": true
@@ -764,23 +674,21 @@
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-          "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
-          "src/gdextension/include/rmg_native_core.hpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
-          "docs/native-rmg-generated-cell-mutation-chain.md",
-          "docs/native-rmg-core-h3maped-drift-audit.md",
           "PLAN.md",
-          "ops/progress.json",
+          ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli"
         ],
-        "latestEvidenceId": "native-rmg-generic-nontype98-source-pair-replay-20260621",
-        "latestFinding": "Native RMG checkpoint 2 remains pending. Shared h3maped_rmg_core now replays descriptor-joined generic non-type98 +0xedc source pairs into the recovered source-order object paths. When a preserved source pair carries 0x4903e8 descriptor context, relation/key/anchor context, relation scan bounds, and copied 0x4c source count/density fields, native reconstructs the descriptor join and calls recovered 0x4a8d2c direct dispatch plus 0x4a8db2 scheduler replay. Pairs missing descriptor, relation, scan-bound, or source-field context fail closed and are counted as blockers. This reduces the generic non-type98 materialization gap only for descriptor-joined pairs; complete live descriptor producers/raw source-field capture, reward/guard feed, fallback caller order, roads/rivers, and final payload generation remain unported.",
-        "remainingWork": "Port complete live descriptor producers/raw source-field capture for all generic non-type98 source pairs feeding the partial 0x4a8d2c/0x4a8db2 replay bridge; port exact 0x49a318 call-site order and same-run private-state comparison; port live reward/guard source-relation/wrapper caller feed into the implemented 0x49ce04/0x49cf34/0x49d2e0/0x49d7c3/0x4aa9b7/0x4aa603 -> 0x4aa3e9 helper chain; port generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond sampled exact-prestate records; then port downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
+        "latestEvidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+        "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+        "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
         "status": "in_progress",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "updatedAt": "2026-06-21T04:41:40Z",
+        "updatedAt": "2026-06-22T00:44:15Z",
         "blocker": "Generic non-type98 source-pair caller order, exact 0x49a318 call-site order/same-run comparison, live 0x4adb72/0x4ad7f7 reward/guard caller feed into the ported 0x49d2e0/0x4aa603 helpers, fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported.",
         "metrics": {
           "checkpoint2_complete": false,
@@ -1098,9 +1006,9 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-    "currentSliceUpdatedAt": "2026-06-21T11:58:40Z",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+    "currentSliceUpdatedAt": "2026-06-22T00:44:15Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
     "implementationTargets": [
@@ -1271,14 +1179,12 @@
       "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md",
-      "ops/progress.json",
-      ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
       "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli",
-      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+      "bin/rmg_native_batch_export_cli"
     ],
-    "latestEvidenceId": "native-rmg-4a9c7c-density-followup-20260621",
+    "latestEvidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -2065,9 +1971,9 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-    "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-    "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
+    "remainingGap": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+    "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+    "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -2075,7 +1981,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -2088,7 +1994,7 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-21T20:27:05Z",
+    "updatedAt": "2026-06-22T00:44:15Z",
     "validation": {
       "id": "native-rmg-4a9c7c-density-followup-20260621",
       "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
@@ -2203,7 +2109,7 @@
       ],
       "blocker": "Port the generic live source-order materialization producer and scanner order beyond carried explicit calls: 0x4a7312 candidate-vector construction with real 0x4a1f3b scan-bound consumers, 0x4a8d2c/0x4a8db2/0x4a93a2/0x4a901a object-record-key creation in active order, reward/guard 0x4aa9b7 -> 0x4aa3e9 materialization, the remaining 0x49a318 object-metadata branch, endpoint +0xd8/+0xdc contents and +0xf5c cursor seed or source-backed exclusion, downstream relation/object caller order, source-order descriptor counter increment/decrement replay beyond explicit prepared calls, same-run private-state comparison, and final payload generation before enabling comparable map output."
     },
-    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail after mine/resource density followup, relation scan, source-order object replay, and high-owner propagation. Connection/decorative/road-river phases and final writeout remain pending.",
+    "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
     "blocker": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned."
   },
   "completedImplementationEvidence": [
@@ -13469,14 +13375,14 @@
       "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "No-Godot shared workflow now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization. Removed the non-source-backed all-relation-owner reward/guard source-stream sweep; next implementation must own the recovered 0x4aab7e caller [EBP+0x8] source pointer and its +0xa0/+0xa4/+0xa8 triplet feed before 0x4aa354/0x4aa9b7 commits.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-22T00:18:09Z",
+  "currentSliceUpdatedAt": "2026-06-22T00:44:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17620,6 +17526,38 @@
         "final_payload_generation_complete": false,
         "windows_dll_build_deferred": true
       }
+    },
+    "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622": {
+      "id": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+      "date": "2026-06-22",
+      "timestamp": "2026-06-22T00:44:15Z",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "status": "passed_partial_implementation_not_parity",
+      "nativeBehaviorChanged": true,
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+      "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+      "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+      "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
+      "artifacts": [
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "PLAN.md",
+        ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli"
+      ],
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+        "./bin/h3maped_rmg_core_selftest",
+        "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_current_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected blocked exit 2)",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ]
     }
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
@@ -17702,59 +17640,35 @@
     }
   },
   "latestEvidence": {
-    "id": "native-rmg-4a9c7c-density-followup-20260621",
-    "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "timestamp": "2026-06-21T20:27:05Z",
+    "id": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+    "evidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
+    "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+    "timestamp": "2026-06-22T00:44:15Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "Mine Resource 0x4a9c7c Density Followup And Reward/Guard Blocker",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
-    "latestFinding": "No-Godot Small seed 11 now stops at current_phase_id reward_guard_materialization with reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail after mine/resource density followup, relation scan, source-order object replay, and high-owner propagation. Connection/decorative/road-river phases and final writeout remain pending.",
-    "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
-    "blocker": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-    "artifacts": [
+    "title": "0x4ac552 Relation Pointer Source-Order Blocker",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
+    "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+    "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+    "blocker": "Recovered 0x4ac552 calls 0x4a8d2c and 0x4a8db2 over relation-pointer entries before 0x4a8c15. Native relation-owner state preserves source summaries but not the exact relation [0x00] source record plus [0x04] context pointer required by those calls.",
+    "evidenceArtifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md",
-      "ops/progress.json",
-      ".artifacts/rmg_native_phase_snapshot_probe_current/small_3p_seed11_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
       "bin/h3maped_rmg_core_selftest",
-      "bin/rmg_native_batch_export_cli",
-      "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
-      "bin/libaurelion_map_persistence.linux.template_release.x86_64.so"
+      "bin/rmg_native_batch_export_cli"
     ],
-    "checks": [
-      {
-        "command": "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-        "status": "passed_linux_debug_native_targets"
-      },
-      {
-        "command": "bin/h3maped_rmg_core_selftest",
-        "status": "passed"
-      },
-      {
-        "command": "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_phase_snapshot_probe_current --controlled-case small_3p_seed11_setup0:small:3:11:land:1:1:2:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest",
-        "status": "passed_expected_blocked_exit_2_at_reward_guard_materialization"
-      },
-      {
-        "command": "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-        "status": "passed_linux_release_native_targets"
-      },
-      {
-        "command": "python3 tests/validate_repo.py",
-        "status": "passed"
-      },
-      {
-        "command": "jq empty ops/progress.json",
-        "status": "passed"
-      },
-      {
-        "command": "git diff --check",
-        "status": "passed"
-      }
+    "validation": [
+      "cmake --build .artifacts/map_persistence_native_build --parallel 2",
+      "./bin/h3maped_rmg_core_selftest",
+      "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_current_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (expected blocked exit 2)",
+      "python3 tests/validate_repo.py",
+      "jq empty ops/progress.json",
+      "git diff --check"
     ],
     "metrics": {
       "checkpoint2_complete": false,
@@ -17762,27 +17676,32 @@
       "native_rmg_end_to_end_parity_complete": false,
       "runtime_generation_allowed": false,
       "godot_process_started": false,
-      "mine_resource_materialization_0x4a9d6a_ported": true,
-      "mine_resource_descriptor_selection_0x4a9911_ported": true,
-      "mine_resource_coordinate_builder_0x4a9641_ported": true,
-      "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
-      "mine_resource_density_followup_0x4a9c7c_ported": true,
-      "relation_scan_consumers_0x4a5767_after_density_ported": true,
-      "source_order_object_replay_after_relation_scan_applied": true,
-      "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
+      "source_order_relation_pointer_loop_0x4ac552_ported": true,
+      "source_order_relation_pointer_context_bridge_owned": false,
+      "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+      "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false,
       "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
       "phase_snapshot_only_status_blocked": true,
       "phase_snapshot_only_status_passed": false,
-      "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+      "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
       "full_rmg_parity_complete": false,
       "final_payload_generation_complete": false,
       "windows_dll_build_deferred": true
     }
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/rmg_workflow_4a9911_probe/small_3p_seed_11_controlled.phase_snapshot.json"
+    "src/gdextension/include/h3maped_rmg_core.hpp",
+    "src/gdextension/src/h3maped_rmg_core.cpp",
+    "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+    "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+    "src/gdextension/src/rmg_native_core.cpp",
+    "PLAN.md",
+    ".artifacts/rmg_native_goal_current_probe/small_2p_seed58_setup3.phase_snapshot.json",
+    ".artifacts/rmg_native_goal_current_probe/medium_4p_seed10_setup3.phase_snapshot.json",
+    "bin/h3maped_rmg_core_selftest",
+    "bin/rmg_native_batch_export_cli"
   ],
-  "latestEvidenceId": "native-rmg-4a9c7c-density-followup-20260621",
+  "latestEvidenceId": "native-rmg-4ac552-relation-pointer-source-order-blocker-20260622",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -18175,14 +18094,18 @@
     "mine_resource_coordinate_builder_0x4a9641_ported": true,
     "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
     "mine_resource_density_followup_0x4a9c7c_ported": true,
-    "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+    "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15",
     "relation_scan_consumers_0x4a5767_after_density_ported": true,
     "source_order_object_replay_after_relation_scan_applied": true,
     "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
-    "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false
+    "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
+    "source_order_relation_pointer_loop_0x4ac552_ported": true,
+    "source_order_relation_pointer_context_bridge_owned": false,
+    "route_free_cell_sweep_0x4a8260_executed_after_source_order_loop": false,
+    "mine_resource_materialization_0x4a9d6a_executed_after_source_order_loop": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
+  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -58839,8 +58762,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Reward/guard source-stream attempts execute, but no source-owned 0x4aa9b7 -> 0x4aa3e9 coordinate/wrapper commits succeed before connection tail. Final tile/object/header writeout remains unowned.",
-  "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout.",
+  "remainingGap": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
+  "remainingWork": "Port the real 0x4ac552 relation-pointer source/context bridge so each relation entry supplies the exact [0x00] source record and [0x04] context pointer consumed by 0x4a8d2c and 0x4a8db2 before 0x4a8c15. Only after that bridge is source-owned should route/free-cell, mine/resource, relation scan, reward/guard, connection/decorative/road-river, and final writeout resume.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -59271,7 +59194,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now executes source-backed mine/resource materialization through 0x4a9d6a -> 0x4a9911 -> 0x4a9641 -> 0x4a960a/0x4a5e03 and the recovered 0x4a9c7c density followup, then continues through 0x4aadd2 terrain-pressure zeroing, 0x4a5767 relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. This is not parity and not final map output.",
+  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -59372,9 +59295,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow executes setup/template/coordinate state through route/free-cell, mine/resource materialization, density followup, terrain-pressure zeroing, relation scan consumers, descriptor-joined source-order object replay, and 0x49a318 high-owner propagation. It now fails closed at 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization after removing the non-source-backed all-relation-owner reward/guard source-stream sweep. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now stops at source_order_object_materialization before 0x4a8c15 because native does not yet own the exact 0x4ac552 relation-pointer [0x00] source record plus [0x04] context pointer bridge required by 0x4a8d2c and 0x4a8db2. Route/free-cell, mine/resource, relation scan, high-owner, reward/guard, connection/decorative/road-river, and final writeout remain pending until that source-context bridge is implemented. This is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-22T00:18:09Z",
+  "updatedAt": "2026-06-22T00:44:15Z",
   "validation": {
     "id": "native-rmg-4a9c7c-density-followup-20260621",
     "evidenceId": "native-rmg-4a9c7c-density-followup-20260621",
@@ -70872,6 +70795,7 @@
     "windows_dll_build_run": "deferred_until_linux_parity_final_boundary",
     "h3maped_rmg_core_selftest_release": "passed"
   },
-  "latestFinding": "No-Godot Small and Medium controlled probes now stop at current_phase_id reward_guard_materialization with 0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization. Connection/decorative/road-river phases and final writeout remain pending.",
-  "blocker": "Recovered 0x4aab7e requires one caller-owned [EBP+0x8] source pointer; native does not yet own that pointer feed, the [EDI]+0xa0/+0xa4/+0xa8 source triplets, or preserving the same pointer through 0x4aa354/0x4aa9b7. Final tile/object/header writeout remains unowned."
+  "latestFinding": "No-Godot Small/Medium controlled probes now stop at current_phase_id source_order_object_materialization with 0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15. Small seed 58 reports relations=5, source_pointer_known=4, context_pointer_known=0; Medium seed 10 reports relations=7, source_pointer_known=7, context_pointer_known=0. Downstream helper phases are not executed after this blocker.",
+  "blocker": "Recovered 0x4aab7e requires one caller-owned [EBP+0x8] source pointer; native does not yet own that pointer feed, the [EDI]+0xa0/+0xa4/+0xa8 source triplets, or preserving the same pointer through 0x4aa354/0x4aa9b7. Final tile/object/header writeout remains unowned.",
+  "native_cli_required_next_slice": "port_0x4ac552_relation_pointer_source_context_bridge_for_0x4a8d2c_0x4a8db2_before_0x4a8c15"
 }
