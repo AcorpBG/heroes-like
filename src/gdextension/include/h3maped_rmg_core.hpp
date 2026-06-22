@@ -1493,6 +1493,9 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t town_choice_0x04 = -1;
 	bool source_owner_slot_0x1c_known = false;
 	int32_t source_owner_slot_0x1c = -1;
+	bool source_order_source_record_0x00_known = false;
+	SourceOrderSchedulerSourceRecord4a8db2 source_order_source_record_0x00;
+	bool source_order_source_record_field_0x04_known = false;
 	bool coordinate_triple_0x10_0x18_known = false;
 	int32_t coordinate_x_0x10 = 0;
 	int32_t coordinate_y_0x14 = 0;
@@ -2062,6 +2065,12 @@ struct RewardGuardSourceStreamAttempt4aab7e {
 	int32_t coordinate_scan_feasibility_missing_input_count_0x4aa603 = 0;
 	int32_t coordinate_scan_local_vector_append_count_0x4ae1fd = 0;
 	std::string coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
+	bool projection_relation_order_invoked_0x4ad7f7 = false;
+	bool projection_relation_order_ready_0x4ad7f7 = false;
+	int32_t projection_relation_order_candidate_relation_count_0x4ad7f7 = 0;
+	int32_t projection_relation_order_scan_attempt_count_0x4aa9b7 = 0;
+	int32_t projection_relation_order_success_owner_vector_index = -1;
+	std::string projection_relation_order_blocked_reason_0x4ad7f7;
 	bool wrapper_cleanup_invoked_0x49cebd = false;
 	std::string blocked_reason;
 };
@@ -2351,13 +2360,17 @@ struct GeneratorObjectPrivateState {
 	bool source_order_relation_pointer_loop_0x4ac552_applied = false;
 	int32_t source_order_relation_pointer_loop_relation_count_0x10e4 = 0;
 	int32_t source_order_relation_pointer_loop_source_pointer_known_count = 0;
-	int32_t source_order_relation_pointer_loop_context_pointer_known_count = 0;
+	int32_t source_order_relation_pointer_loop_source_record_field_0x04_known_count = 0;
 	int32_t source_order_relation_pointer_loop_scan_bounds_known_count = 0;
 	int32_t source_order_relation_pointer_loop_missing_source_pointer_count = 0;
-	int32_t source_order_relation_pointer_loop_missing_context_pointer_count = 0;
+	int32_t source_order_relation_pointer_loop_missing_source_record_field_0x04_count = 0;
 	int32_t source_order_relation_pointer_loop_missing_scan_bounds_count = 0;
+	int32_t source_order_relation_pointer_loop_no_source_record_skip_count = 0;
 	int32_t source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c = 0;
 	int32_t source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 = 0;
+	int32_t source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c = 0;
+	int32_t source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 = 0;
+	int32_t source_order_relation_pointer_loop_missing_town_record_count = 0;
 	std::string source_order_relation_pointer_loop_0x4ac552_blocked_reason;
 	bool source_order_scheduler_replay_0x4a8db2_known = false;
 	int32_t source_order_scheduler_replay_count_0x4a8db2 = 0;
@@ -2550,6 +2563,7 @@ struct ObjectFootprintCommitResult4a54a7 {
 	bool target_cell_words_known = false;
 	bool object_vector_appended = false;
 	bool generated_cell_reference_appended = false;
+	bool generator_body_stamp_applied_0x49abd6 = false;
 	bool descriptor_counter_incremented = false;
 	bool relation_descriptor_counter_incremented = false;
 	bool projection_enabled = false;
@@ -2557,6 +2571,8 @@ struct ObjectFootprintCommitResult4a54a7 {
 	int32_t relation_descriptor_counter_owner_runtime_zone_index = -1;
 	int32_t object_vector_count_after = 0;
 	int32_t target_cell_reference_count_after = 0;
+	int32_t generator_body_stamp_count_0x49abd6 = 0;
+	int32_t generator_body_reference_append_count_0x49abd6 = 0;
 	int32_t descriptor_counter_after = 0;
 	int32_t relation_descriptor_counter_after = 0;
 	int32_t target_cell_word_mutation_count = 0;
@@ -2950,7 +2966,7 @@ GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30);
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);

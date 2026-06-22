@@ -2052,7 +2052,7 @@ int main() {
 	const H3MapedRmgWorkflowResult generator_state_workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	if (!require(generator_state_workflow.executed && generator_state_workflow.current_phase_id == "source_order_object_materialization", "workflow-owned generator state did not advance to the recovered 0x4ac552 source-order blocker")) {
+	if (!require(generator_state_workflow.executed && generator_state_workflow.current_phase_id == "reward_guard_materialization", "workflow-owned generator state did not advance through the recovered 0x4ac552 source-record loop to reward/guard materialization")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 	}
 	const std::string source_order_blocker =
-			"0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15";
+			"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2088,21 +2088,24 @@ int main() {
 				return blocker_prefix_matches(blocker, source_order_blocker);
 			});
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
-					&& !generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
-					&& !generator_state.source_order_relation_pointer_loop_0x4ac552_applied
+					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
+					&& generator_state.source_order_relation_pointer_loop_0x4ac552_applied
 					&& generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size())
-					&& generator_state.source_order_relation_pointer_loop_missing_context_pointer_count == generator_state.source_order_relation_pointer_loop_relation_count_0x10e4
+					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
+					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
+					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
 					&& has_source_order_blocker,
-				"generator object private state did not fail closed at the recovered 0x4ac552 relation-pointer source-order loop")) {
+				"generator object private state did not replay the recovered 0x4ac552 relation-pointer source-record loop before reward/guard blocking")) {
 		return 1;
 	}
-	if (!require(!generator_state.route_container_free_cell_sweep_0x4a8260_applied
-					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
-					&& !generator_state.relation_scan_consumers_4a5767_applied
-					&& !generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
-					&& !generator_state.relation_high_owner_propagation_49a318_applied
-					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked,
-				"generator object private state executed downstream helper phases after missing the 0x4ac552 relation-pointer source/context feed")) {
+	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
+					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
+					&& generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
+					&& generator_state.relation_high_owner_propagation_49a318_applied
+					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
+					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
+				"generator object private state did not stop at reward/guard before connection/decorative tail execution")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -2293,10 +2296,10 @@ int main() {
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == 0, "0x4a5767 full-grid reset mutated generated-cell records in this partial workflow")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_scan_consumers_4a5767_applied
-					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == 0
+	if (!require(generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 > 0
 					&& generator_state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 == 0,
-				"generator object private state ran relation scan-consumer pass before the 0x4ac552 relation-pointer source-order loop was owned")) {
+				"generator object private state did not run relation scan-consumer pass after the 0x4ac552 relation-pointer source-record loop was owned")) {
 		return 1;
 	}
 	if (!require(std::all_of(generator_state.generated_cell_buffer.records.begin(), generator_state.generated_cell_buffer.records.end(), [](const aurelion::h3maped_rmg_core::GeneratedCellRecord0x30 &record) {
@@ -2386,9 +2389,9 @@ int main() {
 	if (!require(generator_state.descriptor_counter_table_0x1110.size() == size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), "generator object private state descriptor counter table vector size mismatch")) {
 		return 1;
 	}
-	if (!require(generator_state.descriptor_counter_increment_count_0x4a54a7 == 0
-					&& std::all_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value == 0U; }),
-				"generator object private state mutated descriptor counter table before the 0x4ac552 relation-pointer source-order loop was owned")) {
+	if (!require(generator_state.descriptor_counter_increment_count_0x4a54a7 > 0
+					&& std::any_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value > 0U; }),
+				"generator object private state did not mutate descriptor counter table during owned source-order object materialization")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState commit_state;
@@ -4110,18 +4113,18 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_source_order_blocker =
-				"0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15";
+				"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "source_order_object_materialization"
+						&& workflow.current_phase_id == "reward_guard_materialization"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance to the recovered 0x4ac552 source-order blocker")) {
+					"entry-to-writeout workflow did not advance through source-order materialization to the reward/guard blocker")) {
 			return 1;
 		}
 		if (!require(workflow.blocked_reason.rfind(workflow_source_order_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed at the relation-pointer source-order blocker; actual=")
+					std::string("entry-to-writeout workflow did not fail closed at the reward/guard materialization blocker; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
@@ -4131,18 +4134,20 @@ int main() {
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
 						&& workflow.phases[3].id == "generator_object_private_state"
 						&& workflow.phases[4].id == "source_order_object_materialization"
-						&& workflow.phases[4].status == "blocked"
+						&& workflow.phases[4].status == "complete_source_order_prefix"
 						&& workflow.phases[5].id == "route_free_cell_sweep"
-						&& workflow.phases[5].status == "pending"
+						&& workflow.phases[5].status == "complete_source_order_prefix"
 						&& workflow.phases[6].id == "mine_resource_materialization"
-						&& workflow.phases[6].status == "pending"
+						&& workflow.phases[6].status == "complete_source_order_prefix"
 						&& workflow.phases[7].id == "relation_scan_consumers"
-						&& workflow.phases[7].status == "pending"
-						&& workflow.phases[8].id == "reward_guard_materialization"
-						&& workflow.phases[8].status == "pending"
-						&& workflow.phases[9].id == "connection_road_river"
-						&& workflow.phases[9].status == "pending",
-					"entry-to-writeout workflow did not preserve recovered phase order at the pre-route source-order blocker")) {
+						&& workflow.phases[7].status == "complete_source_order_prefix"
+						&& workflow.phases[8].id == "source_order_object_materialization"
+						&& workflow.phases[8].status == "complete_source_order_prefix"
+						&& workflow.phases[9].id == "relation_high_owner_propagation"
+						&& workflow.phases[9].status == "complete_source_order_prefix"
+						&& workflow.phases[10].id == "reward_guard_materialization"
+						&& workflow.phases[10].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard blocker")) {
 			return 1;
 		}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4151,12 +4156,13 @@ int main() {
 						&& workflow.coordinate_owner_grid_0x4a218c.owner_grid_executed
 						&& workflow.generator_object_private_state.generated_cell_buffer_owned
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_ported
-						&& !workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
-						&& !workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
-						&& !workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
-						&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& !workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
-						&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked,
+						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
+						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
+						&& workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
+						&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
 					"entry-to-writeout workflow did not carry setup/template/coordinate/object private state through the shared core runner")) {
 			return 1;
 		}
@@ -4195,26 +4201,26 @@ int main() {
 			return 1;
 		}
 		if (!require(workflow_generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 > 0
-						&& workflow_generator_state.source_order_relation_pointer_loop_missing_context_pointer_count == workflow_generator_state.source_order_relation_pointer_loop_relation_count_0x10e4
-						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c == 0
-						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 == 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
 						&& std::any_of(
 								workflow_generator_state.remaining_private_state_blockers.begin(),
 								workflow_generator_state.remaining_private_state_blockers.end(),
 								[&](const std::string &blocker) {
 									return blocker.rfind(workflow_source_order_blocker, 0) == 0;
 								}),
-					"entry-to-writeout workflow did not surface the 0x4ac552 relation-pointer source/context blocker")) {
+					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the reward/guard blocker")) {
 			return 1;
 		}
-		if (!require(!workflow_generator_state.route_container_free_cell_sweep_0x4a8260_applied
-						&& !workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& !workflow_generator_state.relation_scan_consumers_4a5767_applied
-						&& !workflow_generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
-						&& !workflow_generator_state.relation_high_owner_propagation_49a318_applied
-						&& !workflow_generator_state.reward_guard_materialization_driver_0x4aa354.invoked
-						&& !workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked,
-					"entry-to-writeout workflow executed downstream helper phases before the 0x4ac552 relation-pointer source-order loop was owned")) {
+		if (!require(workflow_generator_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& workflow_generator_state.relation_scan_consumers_4a5767_applied
+						&& workflow_generator_state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2
+						&& workflow_generator_state.relation_high_owner_propagation_49a318_applied
+						&& workflow_generator_state.reward_guard_materialization_driver_0x4aa354.invoked
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked,
+					"entry-to-writeout workflow did not stop at reward/guard before connection/decorative tail execution")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
