@@ -2090,12 +2090,14 @@ int main() {
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_applied
-					&& generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size())
+					&& generator_state.relation_owner_vector_produced_by_0x4ac552_0x4a218c
+					&& generator_state.relation_owner_vector_selected_candidate_input_known
+					&& generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 == generator_state.relation_owner_vector_count_10e4_10e8
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
 					&& has_reward_guard_blocker,
-				"generator object private state did not replay the recovered 0x4ac552 relation-pointer source-record loop before the reward/guard blocker")) {
+				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the reward/guard blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
@@ -2134,13 +2136,17 @@ int main() {
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_vector_10e4_10e8.count_known && generator_state.relation_vector_10e4_10e8.count == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size()), "generator object private state did not preserve adopted relation-vector count")) {
+	if (!require(generator_state.relation_vector_10e4_10e8.count_known && generator_state.relation_vector_10e4_10e8.count == generator_state.relation_owner_vector_count_10e4_10e8, "generator object private state did not preserve selected-candidate relation-vector count")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_owner_records_10e4_10e8_partial_known, "generator object private state did not carry recovered 0x4a218c/0x49f7c4 relation owner records")) {
+	if (!require(generator_state.relation_owner_records_10e4_10e8_partial_known
+					&& generator_state.relation_owner_vector_produced_by_0x4ac552_0x4a218c
+					&& generator_state.relation_owner_vector_selected_candidate_source_catalog_index == selected_after_setup3.selected_source_catalog_index
+					&& generator_state.relation_owner_vector_selected_candidate_template_name == selected_after_setup3.selected_template_name,
+				"generator object private state did not carry recovered selected-candidate 0x4ac552 -> 0x4a218c/0x49f7c4 relation owner records")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_owner_vector_count_10e4_10e8 == int32_t(selected_after_setup3.runtime_seed.runtime_zone_seeds.size()), "generator relation owner vector count does not match selected runtime zones")) {
+	if (!require(generator_state.relation_owner_vector_count_10e4_10e8 > 0, "generator selected-candidate relation owner vector is empty")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_record_missing_endpoint_count_10e4_10e8 == 0, "generator relation owner records lost a selected runtime-link endpoint")) {

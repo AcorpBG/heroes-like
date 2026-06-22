@@ -668,7 +668,32 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	}
 	out.pending_entry_vector_eec_ef0_ef4 = from_h3maped_generator_object_vector_state(input.pending_entry_vector_eec_ef0_ef4);
 	out.candidate_container_vector_10d4_10d8 = from_h3maped_generator_object_vector_state(input.candidate_container_vector_10d4_10d8);
+	out.candidate_container_records_10d4_10d8.reserve(input.candidate_container_records_10d4_10d8.size());
+	for (const h3maped_rmg_core::TemplateCandidateContainerRecord4ac552 &record : input.candidate_container_records_10d4_10d8) {
+		out.candidate_container_records_10d4_10d8.push_back(SharedTemplateCandidateContainerRecord {
+			record.vector_index,
+			record.source_catalog_index,
+			record.template_name,
+			record.zone_count,
+			record.link_count,
+		});
+	}
+	out.selected_candidate_container_0x4ac552_known = input.selected_candidate_container_0x4ac552_known;
+	out.selected_candidate_container_0x4ac552 = SharedTemplateCandidateContainerRecord {
+		input.selected_candidate_container_0x4ac552.vector_index,
+		input.selected_candidate_container_0x4ac552.source_catalog_index,
+		input.selected_candidate_container_0x4ac552.template_name,
+		input.selected_candidate_container_0x4ac552.zone_count,
+		input.selected_candidate_container_0x4ac552.link_count,
+	};
 	out.relation_vector_10e4_10e8 = from_h3maped_generator_object_vector_state(input.relation_vector_10e4_10e8);
+	out.relation_owner_vector_produced_by_0x4ac552_0x4a218c = input.relation_owner_vector_produced_by_0x4ac552_0x4a218c;
+	out.relation_owner_vector_selected_candidate_input_known = input.relation_owner_vector_selected_candidate_input_known;
+	out.relation_owner_vector_producer_blocked_reason = input.relation_owner_vector_producer_blocked_reason;
+	out.relation_owner_vector_selected_candidate_source_catalog_index = input.relation_owner_vector_selected_candidate_source_catalog_index;
+	out.relation_owner_vector_selected_candidate_template_name = input.relation_owner_vector_selected_candidate_template_name;
+	out.relation_owner_vector_selected_candidate_source_zone_count = input.relation_owner_vector_selected_candidate_source_zone_count;
+	out.relation_owner_vector_selected_candidate_source_link_count = input.relation_owner_vector_selected_candidate_source_link_count;
 	out.reward_guard_candidate_vector_10f4_10f8 = from_h3maped_generator_object_vector_state(input.reward_guard_candidate_vector_10f4_10f8);
 	out.endpoint_byte_state_vector_1104_1108 = from_h3maped_generator_object_vector_state(input.endpoint_byte_state_vector_1104_1108);
 	out.endpoint_cursor_0xf58_present = input.endpoint_cursor_0xf58_present;
@@ -2386,6 +2411,27 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	append_json_i32_array(out, state.raw_source_owner_slots_ee0);
 	out << ",\"mapped_source_owner_slots_ee4\":";
 	append_json_i32_array(out, state.mapped_source_owner_slots_ee4);
+	out << ",\"candidate_container_vector_10d4_10d8\":";
+	append_generator_object_vector_state_json(out, state.candidate_container_vector_10d4_10d8);
+	out << ",\"candidate_container_records_10d4_10d8\":";
+	append_template_candidate_container_records_json(out, state.candidate_container_records_10d4_10d8);
+	out << ",\"selected_candidate_container_0x4ac552_known\":" << (state.selected_candidate_container_0x4ac552_known ? "true" : "false")
+		<< ",\"selected_candidate_container_0x4ac552\":";
+	if (state.selected_candidate_container_0x4ac552_known) {
+		append_template_candidate_container_record_json(out, state.selected_candidate_container_0x4ac552);
+	} else {
+		out << "null";
+	}
+	out << ",\"relation_vector_10e4_10e8\":";
+	append_generator_object_vector_state_json(out, state.relation_vector_10e4_10e8);
+	out << ",\"relation_owner_vector_produced_by_0x4ac552_0x4a218c\":" << (state.relation_owner_vector_produced_by_0x4ac552_0x4a218c ? "true" : "false")
+		<< ",\"relation_owner_vector_selected_candidate_input_known\":" << (state.relation_owner_vector_selected_candidate_input_known ? "true" : "false")
+		<< ",\"relation_owner_vector_producer_blocked_reason\":\"" << json_escape(state.relation_owner_vector_producer_blocked_reason) << "\""
+		<< ",\"relation_owner_vector_selected_candidate_source_catalog_index\":" << state.relation_owner_vector_selected_candidate_source_catalog_index
+		<< ",\"relation_owner_vector_selected_candidate_template_name\":\"" << json_escape(state.relation_owner_vector_selected_candidate_template_name) << "\""
+		<< ",\"relation_owner_vector_selected_candidate_source_zone_count\":" << state.relation_owner_vector_selected_candidate_source_zone_count
+		<< ",\"relation_owner_vector_selected_candidate_source_link_count\":" << state.relation_owner_vector_selected_candidate_source_link_count
+		<< ",\"relation_owner_vector_producer_source\":\"0x4ac552_selected_candidate_container_feeds_0x4a218c_runtime_zone_link_relation_owner_vector_before_object_materialization\"";
 	out << ","
 		<< "\"endpoint_cursor_0xf58_present\":" << (state.endpoint_cursor_0xf58_present ? "true" : "false") << ","
 		<< "\"endpoint_cursor_0xf58_known\":" << (state.endpoint_cursor_0xf58_known ? "true" : "false") << ","

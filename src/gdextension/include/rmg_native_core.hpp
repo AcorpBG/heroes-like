@@ -710,7 +710,17 @@ struct SharedGeneratorObjectPrivateState {
 	std::vector<SharedSourceObjectResolverSourcePair4af785> source_pair_records_edc;
 	SharedGeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	SharedGeneratorObjectVectorState candidate_container_vector_10d4_10d8;
+	std::vector<SharedTemplateCandidateContainerRecord> candidate_container_records_10d4_10d8;
+	bool selected_candidate_container_0x4ac552_known = false;
+	SharedTemplateCandidateContainerRecord selected_candidate_container_0x4ac552;
 	SharedGeneratorObjectVectorState relation_vector_10e4_10e8;
+	bool relation_owner_vector_produced_by_0x4ac552_0x4a218c = false;
+	bool relation_owner_vector_selected_candidate_input_known = false;
+	std::string relation_owner_vector_producer_blocked_reason;
+	int32_t relation_owner_vector_selected_candidate_source_catalog_index = -1;
+	std::string relation_owner_vector_selected_candidate_template_name;
+	int32_t relation_owner_vector_selected_candidate_source_zone_count = 0;
+	int32_t relation_owner_vector_selected_candidate_source_link_count = 0;
 	SharedGeneratorObjectVectorState reward_guard_candidate_vector_10f4_10f8;
 	SharedGeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
 	bool endpoint_cursor_0xf58_present = false;

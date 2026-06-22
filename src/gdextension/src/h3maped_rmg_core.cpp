@@ -12130,6 +12130,96 @@ static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(Gener
 	}
 }
 
+static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a218c(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+	state.relation_owner_vector_produced_by_0x4ac552_0x4a218c = false;
+	state.relation_owner_vector_selected_candidate_input_known = false;
+	state.relation_owner_vector_producer_blocked_reason.clear();
+	state.relation_owner_vector_selected_candidate_source_catalog_index = -1;
+	state.relation_owner_vector_selected_candidate_template_name.clear();
+	state.relation_owner_vector_selected_candidate_source_zone_count = 0;
+	state.relation_owner_vector_selected_candidate_source_link_count = 0;
+	state.relation_owner_vectors_10e4_10e8.clear();
+	state.relation_owner_vector_count_10e4_10e8 = 0;
+	state.relation_record_count_10e4_10e8 = 0;
+	state.relation_record_missing_endpoint_count_10e4_10e8 = 0;
+	state.relation_owner_records_10e4_10e8_partial_known = false;
+	state.weighted_scheduler_thresholds_0x4a8db2_known = false;
+	state.weighted_scheduler_threshold_count_0x4a8db2 = 0;
+	state.weighted_scheduler_thresholds_0x4a8db2.clear();
+	state.relation_vector_10e4_10e8.contents_known = false;
+	state.relation_vector_10e4_10e8.count_known = false;
+	state.relation_vector_10e4_10e8.count = 0;
+	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = 0;
+
+	if (!state.candidate_container_vector_10d4_10d8.present
+			|| !state.candidate_container_vector_10d4_10d8.contents_known
+			|| !state.candidate_container_vector_10d4_10d8.count_known
+			|| state.candidate_container_vector_10d4_10d8.count != int32_t(state.candidate_container_records_10d4_10d8.size())) {
+		state.relation_owner_vector_producer_blocked_reason =
+				"0x4ac552_candidate_container_vector_0x10d4_0x10d8_not_owned_before_0x4a218c";
+		return false;
+	}
+	if (!state.selected_candidate_container_0x4ac552_known
+			|| template_selection.selected_vector_index < 0
+			|| template_selection.selected_vector_index >= int32_t(state.candidate_container_records_10d4_10d8.size())) {
+		state.relation_owner_vector_producer_blocked_reason =
+				"0x4ac552_selected_candidate_container_not_owned_before_0x4a218c";
+		return false;
+	}
+	const TemplateCandidateContainerRecord4ac552 &selected_candidate =
+			state.candidate_container_records_10d4_10d8[size_t(template_selection.selected_vector_index)];
+	if (selected_candidate.source_catalog_index != template_selection.selected_source_catalog_index
+			|| selected_candidate.template_name != template_selection.selected_template_name) {
+		state.relation_owner_vector_producer_blocked_reason =
+				"0x4ac552_selected_candidate_container_mismatch_before_0x4a218c";
+		return false;
+	}
+	if (template_selection.blocked || template_selection.runtime_seed.blocked) {
+		state.relation_owner_vector_producer_blocked_reason =
+				"0x4ac552_selected_candidate_runtime_seed_blocked_before_0x4a218c";
+		return false;
+	}
+	if (template_selection.runtime_seed.runtime_zone_seeds.empty()) {
+		state.relation_owner_vector_producer_blocked_reason =
+				"0x4ac552_selected_candidate_runtime_zone_vector_empty_before_0x4a218c";
+		return false;
+	}
+
+	state.relation_owner_vector_selected_candidate_input_known = true;
+	state.relation_owner_vector_selected_candidate_source_catalog_index = selected_candidate.source_catalog_index;
+	state.relation_owner_vector_selected_candidate_template_name = selected_candidate.template_name;
+	state.relation_owner_vector_selected_candidate_source_zone_count = selected_candidate.zone_count;
+	state.relation_owner_vector_selected_candidate_source_link_count = selected_candidate.link_count;
+
+	state.relation_owner_records_10e4_10e8_partial_known = true;
+	state.relation_owner_vectors_10e4_10e8 =
+			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(
+					template_selection.runtime_seed,
+					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
+					coordinate_result.coordinate_seed.boundary_inputs,
+					coordinate_result.coordinate_seed.placement_steps,
+					coordinate_result.terrain_selection_executed ? &coordinate_result.terrain_selection : nullptr,
+					state.relation_record_missing_endpoint_count_10e4_10e8);
+	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
+	}
+	state.relation_vector_10e4_10e8.present = true;
+	state.relation_vector_10e4_10e8.contents_known = true;
+	state.relation_vector_10e4_10e8.count_known = true;
+	state.relation_vector_10e4_10e8.count = state.relation_owner_vector_count_10e4_10e8;
+	state.weighted_scheduler_thresholds_0x4a8db2_known = true;
+	state.weighted_scheduler_thresholds_0x4a8db2.reserve(template_selection.runtime_seed.runtime_zone_seeds.size());
+	for (const RuntimeZoneSeedInput4a218c &runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
+		state.weighted_scheduler_thresholds_0x4a8db2.push_back(weighted_scheduler_threshold_0x4a8db2(runtime_zone.source_payload));
+	}
+	state.weighted_scheduler_threshold_count_0x4a8db2 = int32_t(state.weighted_scheduler_thresholds_0x4a8db2.size());
+	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
+	state.relation_owner_vector_produced_by_0x4ac552_0x4a218c = true;
+	return true;
+}
+
 static void apply_endpoint_materialization_state_d014(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44) {
 	state.endpoint_projection_records_c8_cc.clear();
 	bool projection_vectors_known = state.relation_owner_records_10e4_10e8_partial_known
@@ -13875,6 +13965,13 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.source_pair_vector_edc = generator_object_vector_state("source_pair_metadata_vector_0xedc", 0xedcU, 0U, 0U, true, false, false, 0, 8);
 	state.pending_entry_vector_eec_ef0_ef4 = generator_object_vector_state("source_handler_pending_entry_vector_0xeec_0xef0_0xef4_source_excluded_for_direct_mode", 0xeecU, 0xef0U, 0xef4U, true, false, true, 0, 8);
 	state.candidate_container_vector_10d4_10d8 = generator_object_vector_state("accepted_candidate_container_vector_0x10d4_0x10d8", 0x10d4U, 0x10d8U, 0U, template_selection.accepted_template_count > 0 || !template_selection.accepted_candidate_containers_10d4_10d8.empty(), true, true, int32_t(template_selection.accepted_candidate_containers_10d4_10d8.size()), 4);
+	state.candidate_container_records_10d4_10d8 = template_selection.accepted_candidate_containers_10d4_10d8;
+	if (template_selection.selected_vector_index >= 0
+			&& template_selection.selected_vector_index < int32_t(state.candidate_container_records_10d4_10d8.size())) {
+		state.selected_candidate_container_0x4ac552_known = true;
+		state.selected_candidate_container_0x4ac552 =
+				state.candidate_container_records_10d4_10d8[size_t(template_selection.selected_vector_index)];
+	}
 	state.relation_vector_10e4_10e8 = generator_object_vector_state(
 			"relation_vector_0x10e4_0x10e8",
 			0x10e4U,
@@ -13882,8 +13979,8 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 			0U,
 			!template_selection.blocked,
 			false,
-			!template_selection.blocked,
-			int32_t(template_selection.runtime_seed.runtime_zone_seeds.size()),
+			false,
+			0,
 			4);
 	state.reward_guard_candidate_vector_10f4_10f8 = generator_object_vector_state(
 			"reward_guard_candidate_bucket_vector_0x10f4_0x10f8",
@@ -13933,12 +14030,8 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.object_record_sequence_allocator_0xf44 = 1;
 	state.native_object_record_key_allocator_0x4a93a2_known = true;
 	state.next_native_object_record_key_0x4a93a2 = 1U;
-	state.weighted_scheduler_thresholds_0x4a8db2_known = !template_selection.blocked;
-	state.weighted_scheduler_thresholds_0x4a8db2.reserve(template_selection.runtime_seed.runtime_zone_seeds.size());
-	for (const RuntimeZoneSeedInput4a218c &runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
-		state.weighted_scheduler_thresholds_0x4a8db2.push_back(weighted_scheduler_threshold_0x4a8db2(runtime_zone.source_payload));
-	}
-	state.weighted_scheduler_threshold_count_0x4a8db2 = int32_t(state.weighted_scheduler_thresholds_0x4a8db2.size());
+	state.weighted_scheduler_thresholds_0x4a8db2_known = false;
+	state.weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	state.source_owner_player_slots_ed8_ee0_ee4_present = template_selection.player_assignment.complete;
 	state.selected_color_order_ed8_count = int32_t(template_selection.player_assignment.selected_color_order_ed8.size());
 	state.raw_source_owner_slots_ee0_count = int32_t(template_selection.player_assignment.raw_ee0_slots.size());
@@ -13946,23 +14039,10 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.selected_color_order_ed8 = template_selection.player_assignment.selected_color_order_ed8;
 	state.raw_source_owner_slots_ee0 = template_selection.player_assignment.raw_ee0_slots;
 	state.mapped_source_owner_slots_ee4 = template_selection.player_assignment.mapped_ee4_slots;
-	state.relation_owner_records_10e4_10e8_partial_known = !template_selection.blocked;
-	state.relation_owner_vectors_10e4_10e8 =
-			relation_owner_records_from_runtime_seed_0x4a218c_0x49f7c4(
-					template_selection.runtime_seed,
-					coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1,
-					coordinate_result.coordinate_seed.boundary_inputs,
-					coordinate_result.coordinate_seed.placement_steps,
-					coordinate_result.terrain_selection_executed ? &coordinate_result.terrain_selection : nullptr,
-					state.relation_record_missing_endpoint_count_10e4_10e8);
-	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
-	state.relation_vector_10e4_10e8.contents_known = state.relation_owner_records_10e4_10e8_partial_known;
-	state.relation_vector_10e4_10e8.count_known = state.relation_owner_records_10e4_10e8_partial_known;
-	state.relation_vector_10e4_10e8.count = state.relation_owner_vector_count_10e4_10e8;
-	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
-		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
-	}
-	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+	state.relation_owner_records_10e4_10e8_partial_known = false;
+	state.relation_owner_vector_count_10e4_10e8 = 0;
+	state.relation_record_count_10e4_10e8 = 0;
+	state.relation_record_missing_endpoint_count_10e4_10e8 = 0;
 	state.reward_guard_relation_priority_helper_0x4ad6a8_0x4ad7f7_ported = true;
 	state.reward_guard_relation_priority_live_replay_blocked = false;
 	state.reward_guard_projection_driver_selection_0x4ad947_ported = true;
@@ -13974,12 +14054,11 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.reward_guard_source_stream_0x4aab7e_ported = true;
 	state.reward_guard_source_stream_0x4aab7e_input_known = false;
 	state.reward_guard_source_stream_owner_kind_0x0c_known = false;
-	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
+	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = 0;
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
 }
 
 static void advance_generator_object_private_state_source_order_to_current_blocker(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
-	(void)template_selection;
 	H3MapedRng route_free_cell_rng;
 	if (coordinate_result.terrain_repaint_executed) {
 		route_free_cell_rng.state = coordinate_result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
@@ -13987,6 +14066,22 @@ static void advance_generator_object_private_state_source_order_to_current_block
 		route_free_cell_rng.state = coordinate_result.terrain_selection.rng_state_after;
 	} else {
 		route_free_cell_rng.state = coordinate_result.coordinate_seed.rng_state_after;
+	}
+	if (!produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a218c(state, template_selection, coordinate_result)) {
+		if (state.relation_owner_vector_producer_blocked_reason.empty()) {
+			state.relation_owner_vector_producer_blocked_reason =
+					"0x4ac552_0x4a218c_selected_candidate_relation_owner_vector_not_owned";
+		}
+		state.remaining_private_state_blockers = {
+			state.relation_owner_vector_producer_blocked_reason,
+			"source_order_relation_pointer_loop_0x4a8d2c_0x4a8db2_not_executed_until_0x10e4_relation_vector_is_owned",
+			"route_free_cell_sweep_0x4a8c15_0x4a8260_0x4a4c8e_not_executed_until_0x10e4_relation_vector_is_owned",
+			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x10e4_relation_vector_is_owned",
+			"reward_guard_materialization_not_executed_until_0x10e4_relation_vector_is_owned",
+			"connection_road_river_0x4a79a3_not_executed_until_source_order_payload_is_owned",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
 	}
 	const bool source_order_relation_pointer_loop_owned =
 			replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2(state, route_free_cell_rng);
