@@ -2168,6 +2168,9 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
+		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.runtime_zone_index, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
+			return 1;
+		}
 		if (!require(owner.scan_bounds_0x20_0x2c_known
 						&& owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
 						&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c,
@@ -2331,7 +2334,7 @@ int main() {
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == 36 * 36 * 2, "0x4a5767 full-grid reset did not visit both generated-cell planes")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record exactly once")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped known generated-cell records")) {
@@ -3105,6 +3108,8 @@ int main() {
 	reward_guard_relation.runtime_zone_index = 2;
 	reward_guard_relation.source_pointer_0x00_known = true;
 	reward_guard_relation.source_pointer_source_index_0x00 = 2;
+	reward_guard_relation.relation_owner_byte2_0x4aa9b7_known = true;
+	reward_guard_relation.relation_owner_byte2_0x4aa9b7 = 2;
 	reward_guard_relation.terrain_policy_0x0c_known = true;
 	reward_guard_relation.terrain_policy_0x0c = 0;
 	reward_guard_relation.coordinate_triple_0x10_0x18_known = true;
