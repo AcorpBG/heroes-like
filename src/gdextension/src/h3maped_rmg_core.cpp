@@ -9988,6 +9988,83 @@ static std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stre
 	return records;
 }
 
+static bool reward_guard_source_pointer_vector_0x10e4_0x10e8_known_for_0x4aab7e(const GeneratorObjectPrivateState &state) {
+	return state.relation_owner_records_10e4_10e8_partial_known
+			&& state.relation_vector_10e4_10e8.present
+			&& state.relation_vector_10e4_10e8.contents_known
+			&& state.relation_vector_10e4_10e8.count_known
+			&& state.relation_vector_10e4_10e8.count == int32_t(state.relation_owner_vectors_10e4_10e8.size());
+}
+
+static RewardGuardSourceStreamResult4aab7e reward_guard_source_order_loop_0x4ac552_0x4aab7e(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
+	RewardGuardSourceStreamResult4aab7e aggregate;
+	if (!reward_guard_source_pointer_vector_0x10e4_0x10e8_known_for_0x4aab7e(state)) {
+		aggregate.blocked_reason = "0x4ac552_relation_pointer_vector_0x10e4_0x10e8_not_owned_before_0x4aab7e";
+		return aggregate;
+	}
+	if (state.relation_owner_vectors_10e4_10e8.empty()) {
+		aggregate.applied = true;
+		return aggregate;
+	}
+
+	auto merge_reward_guard_source_stream = [](RewardGuardSourceStreamResult4aab7e &target, const RewardGuardSourceStreamResult4aab7e &stream) {
+		if (!target.invoked) {
+			target = stream;
+			return;
+		}
+		target.invoked = target.invoked || stream.invoked;
+		target.applied = target.applied && stream.applied;
+		target.wrapper_construct_invoked_0x49ce04 = target.wrapper_construct_invoked_0x49ce04 || stream.wrapper_construct_invoked_0x49ce04;
+		target.wrapper_construct_applied_0x49ce04 = target.wrapper_construct_applied_0x49ce04 || stream.wrapper_construct_applied_0x49ce04;
+		target.wrapper_construct_reset_cell_count_0x49ce64 += stream.wrapper_construct_reset_cell_count_0x49ce64;
+		target.source_triplet_known = target.source_triplet_known && stream.source_triplet_known;
+		target.source_object_kind_0x0c_known = target.source_object_kind_0x0c_known && stream.source_object_kind_0x0c_known;
+		target.source_record_count += stream.source_record_count;
+		target.active_lane_count += stream.active_lane_count;
+		target.total_source_count += stream.total_source_count;
+		target.source_count_product = stream.source_count_product;
+		target.score_base_divided_by_total_source_count_0x4aac0e = stream.score_base_divided_by_total_source_count_0x4aac0e;
+		target.minimum_low_word_score_0x10 = stream.minimum_low_word_score_0x10;
+		target.selected_lane_count += stream.selected_lane_count;
+		target.materialization_attempt_count += stream.materialization_attempt_count;
+		target.successful_coordinate_scan_count += stream.successful_coordinate_scan_count;
+		target.wrapper_cleanup_count_0x49cebd += stream.wrapper_cleanup_count_0x49cebd;
+		target.lanes.insert(target.lanes.end(), stream.lanes.begin(), stream.lanes.end());
+		target.attempts.insert(target.attempts.end(), stream.attempts.begin(), stream.attempts.end());
+		if (target.blocked_reason.empty() && !stream.blocked_reason.empty()) {
+			target.blocked_reason = stream.blocked_reason;
+		}
+	};
+
+	for (int32_t source_index_0x4ac552 = 0;
+			source_index_0x4ac552 < int32_t(state.relation_owner_vectors_10e4_10e8.size());
+			++source_index_0x4ac552) {
+		const GeneratorRelationOwnerState4a218c &owner =
+				state.relation_owner_vectors_10e4_10e8[size_t(source_index_0x4ac552)];
+		state.reward_guard_source_stream_records_0x4aab7e =
+				reward_guard_source_stream_records_from_relation_owner_0x4aab7e(owner);
+		state.reward_guard_source_stream_0x4aab7e_input_known =
+				owner.reward_guard_source_bands_0xa0_0xc0_known;
+		state.reward_guard_source_stream_owner_kind_0x0c_known =
+				owner.terrain_policy_0x0c_known;
+		state.reward_guard_source_stream_owner_kind_0x0c = owner.terrain_policy_0x0c;
+
+		const RewardGuardSourceStreamResult4aab7e stream =
+				reward_guard_source_stream_materialization_0x4aab7e(
+						state,
+						state.reward_guard_source_stream_records_0x4aab7e,
+						owner.terrain_policy_0x0c_known,
+						owner.terrain_policy_0x0c,
+						&owner,
+						rng);
+		merge_reward_guard_source_stream(aggregate, stream);
+		if (!stream.blocked_reason.empty()) {
+			return aggregate;
+		}
+	}
+	return aggregate;
+}
+
 static int32_t mine_resource_minimum_count_0x4c_0x4a9d6a(const SourceMineRules4a218c &rules, int32_t category_index) {
 	switch (category_index) {
 		case 0:
@@ -11116,6 +11193,84 @@ static void append_blocked_source_order_scheduler_replay_0x4a8db2(GeneratorObjec
 	state.source_order_scheduler_blocked_count_0x4a8db2 += 1;
 }
 
+static std::string source_order_relation_pointer_loop_blocker_detail_0x4ac552(const GeneratorObjectPrivateState &state) {
+	std::ostringstream detail;
+	detail << "0x4ac552_relation_pointer_0x10e4_0x10e8_source_context_not_owned_before_0x4a8c15"
+			<< ":relations=" << state.source_order_relation_pointer_loop_relation_count_0x10e4
+			<< ",source_pointer_known=" << state.source_order_relation_pointer_loop_source_pointer_known_count
+			<< ",context_pointer_known=" << state.source_order_relation_pointer_loop_context_pointer_known_count
+			<< ",scan_bounds_known=" << state.source_order_relation_pointer_loop_scan_bounds_known_count
+			<< ",missing_source_pointer=" << state.source_order_relation_pointer_loop_missing_source_pointer_count
+			<< ",missing_context_pointer=" << state.source_order_relation_pointer_loop_missing_context_pointer_count
+			<< ",missing_scan_bounds=" << state.source_order_relation_pointer_loop_missing_scan_bounds_count
+			<< ",direct_replays_0x4a8d2c=" << state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c
+			<< ",scheduler_replays_0x4a8db2=" << state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2;
+	return detail.str();
+}
+
+static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state) {
+	state.source_order_relation_pointer_loop_0x4ac552_ported = true;
+	state.source_order_relation_pointer_loop_relation_count_0x10e4 =
+			int32_t(state.relation_owner_vectors_10e4_10e8.size());
+	if (!state.relation_owner_records_10e4_10e8_partial_known
+			|| !state.relation_vector_10e4_10e8.present
+			|| !state.relation_vector_10e4_10e8.contents_known
+			|| !state.relation_vector_10e4_10e8.count_known
+			|| state.relation_vector_10e4_10e8.count != state.source_order_relation_pointer_loop_relation_count_0x10e4) {
+		state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
+				"0x4ac552_relation_pointer_vector_0x10e4_0x10e8_not_owned_before_0x4a8d2c";
+		return false;
+	}
+	if (state.relation_owner_vectors_10e4_10e8.empty()) {
+		state.source_order_relation_pointer_loop_0x4ac552_input_known = true;
+		state.source_order_relation_pointer_loop_0x4ac552_applied = true;
+		return true;
+	}
+
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		const bool source_pointer_known =
+				owner.source_pointer_0x00_known
+				&& owner.source_pointer_source_index_0x00 >= 0
+				&& owner.source_pointer_type_0x04_known
+				&& owner.source_owner_slot_0x1c_known;
+		if (source_pointer_known) {
+			state.source_order_relation_pointer_loop_source_pointer_known_count += 1;
+		} else {
+			state.source_order_relation_pointer_loop_missing_source_pointer_count += 1;
+		}
+		if (owner.scan_bounds_0x20_0x2c_known) {
+			state.source_order_relation_pointer_loop_scan_bounds_known_count += 1;
+		} else {
+			state.source_order_relation_pointer_loop_missing_scan_bounds_count += 1;
+		}
+
+		// H3MapEd's 0x4ac552 passes a relation-pointer entry whose [0x00] source record
+		// and [0x04] context pointer are consumed directly by both 0x4a8d2c and 0x4a8db2.
+		// The native relation owner currently preserves source summaries, but not that exact
+		// context pointer. Stop here instead of reconstructing the call from helper inputs.
+		const bool context_pointer_known = false;
+		if (context_pointer_known) {
+			state.source_order_relation_pointer_loop_context_pointer_known_count += 1;
+		} else {
+			state.source_order_relation_pointer_loop_missing_context_pointer_count += 1;
+		}
+	}
+
+	state.source_order_relation_pointer_loop_0x4ac552_input_known =
+			state.source_order_relation_pointer_loop_missing_source_pointer_count == 0
+			&& state.source_order_relation_pointer_loop_missing_context_pointer_count == 0
+			&& state.source_order_relation_pointer_loop_missing_scan_bounds_count == 0;
+	if (!state.source_order_relation_pointer_loop_0x4ac552_input_known) {
+		state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
+				source_order_relation_pointer_loop_blocker_detail_0x4ac552(state);
+		return false;
+	}
+
+	state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
+			"0x4ac552_relation_pointer_context_unexpectedly_known_but_replay_bridge_unimplemented";
+	return false;
+}
+
 static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result, H3MapedRng &rng) {
 	SourceObjectResolverState4af785 type98_descriptor_state;
 	const std::vector<RuntimeZoneSeedInput4a218c> &post_town_choice_zones =
@@ -11970,6 +12125,9 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 					coordinate_result.terrain_selection_executed ? &coordinate_result.terrain_selection : nullptr,
 					state.relation_record_missing_endpoint_count_10e4_10e8);
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
+	state.relation_vector_10e4_10e8.contents_known = state.relation_owner_records_10e4_10e8_partial_known;
+	state.relation_vector_10e4_10e8.count_known = state.relation_owner_records_10e4_10e8_partial_known;
+	state.relation_vector_10e4_10e8.count = state.relation_owner_vector_count_10e4_10e8;
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		state.relation_record_count_10e4_10e8 += owner.relation_record_count;
 	}
@@ -11990,6 +12148,7 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 }
 
 static void advance_generator_object_private_state_source_order_to_current_blocker(GeneratorObjectPrivateState &state, const std::string &size_class, const std::string &water_mode, uint32_t seed, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
+	(void)template_selection;
 	H3MapedRng route_free_cell_rng;
 	if (coordinate_result.terrain_repaint_executed) {
 		route_free_cell_rng.state = coordinate_result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
@@ -11998,8 +12157,24 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	} else {
 		route_free_cell_rng.state = coordinate_result.coordinate_seed.rng_state_after;
 	}
-	replay_live_type98_source_order_direct_0x4a8d2c(state, template_selection, coordinate_result, route_free_cell_rng);
-	replay_live_type98_source_order_scheduler_0x4a8db2(state, template_selection, coordinate_result, route_free_cell_rng);
+	const bool source_order_relation_pointer_loop_owned =
+			replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2(state);
+	if (!source_order_relation_pointer_loop_owned) {
+		if (state.source_order_relation_pointer_loop_0x4ac552_blocked_reason.empty()) {
+			state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
+					"0x4ac552_relation_pointer_source_order_loop_not_owned_before_0x4a8c15";
+		}
+		state.remaining_private_state_blockers = {
+			state.source_order_relation_pointer_loop_0x4ac552_blocked_reason,
+			"route_free_cell_sweep_0x4a8c15_0x4a8260_0x4a4c8e_not_executed_until_0x4ac552_relation_pointer_source_order_loop_is_owned",
+			"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4ac552_relation_pointer_source_order_loop_is_owned",
+			"relation_scan_consumers_0x4a5767_not_executed_until_0x4ac552_relation_pointer_source_order_loop_is_owned",
+			"reward_guard_materialization_not_executed_until_0x4ac552_relation_pointer_source_order_loop_is_owned",
+			"connection_road_river_0x4a79a3_not_executed_until_source_order_payload_is_owned",
+			"final_writeout_not_executed_until_source_order_payload_is_owned",
+		};
+		return;
+	}
 	const RouteFreeCellPhaseResult4a8260 route_free_cell_phase =
 			route_free_cell_phase_0x4a8260_0x4a4c8e(
 					state.generated_cell_buffer,
@@ -12103,26 +12278,64 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	}
 	state.reward_guard_materialization_driver_0x4aa354_ported = true;
 	state.reward_guard_source_stream_0x4aab7e_ported = true;
-	state.reward_guard_source_stream_0x4aab7e_input_known = false;
-	state.reward_guard_source_stream_owner_kind_0x0c_known = false;
-	state.reward_guard_source_stream_records_0x4aab7e.clear();
-	state.reward_guard_source_stream_0x4aab7e = RewardGuardSourceStreamResult4aab7e();
-	state.reward_guard_source_stream_0x4aab7e.blocked_reason =
-			"0x4aab7e_live_source_pointer_argument_ebp8_not_owned_before_reward_guard_materialization";
-	state.reward_guard_materialization_driver_input_known = false;
-	state.reward_guard_materialization_driver_0x4aa354.blocked_reason =
-			state.reward_guard_source_stream_0x4aab7e.blocked_reason;
-	state.remaining_private_state_blockers = {
-		state.reward_guard_source_stream_0x4aab7e.blocked_reason,
-		"0x4aab7e_single_source_triplet_plus_0xa0_0xa4_0xa8_feed_missing",
-		"0x4aa354_0x4aa9b7_source_pointer_argument_must_remain_same_as_0x4aab7e_ebp8",
-		"connection_road_river_0x4a79a3_not_executed_until_reward_guard_source_pointer_feed_is_owned",
-		"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_pointer_feed_is_owned",
-		"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
-		"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-		"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
-	};
-	return;
+	state.reward_guard_source_stream_0x4aab7e =
+			reward_guard_source_order_loop_0x4ac552_0x4aab7e(state, relation_scan_rng);
+	state.reward_guard_source_stream_0x4aab7e_input_known =
+			reward_guard_source_pointer_vector_0x10e4_0x10e8_known_for_0x4aab7e(state)
+			&& std::all_of(
+					state.relation_owner_vectors_10e4_10e8.begin(),
+					state.relation_owner_vectors_10e4_10e8.end(),
+					[](const GeneratorRelationOwnerState4a218c &owner) {
+						return owner.reward_guard_source_bands_0xa0_0xc0_known;
+					});
+	state.reward_guard_source_stream_owner_kind_0x0c_known =
+			!state.relation_owner_vectors_10e4_10e8.empty()
+			&& std::all_of(
+					state.relation_owner_vectors_10e4_10e8.begin(),
+					state.relation_owner_vectors_10e4_10e8.end(),
+					[](const GeneratorRelationOwnerState4a218c &owner) {
+						return owner.terrain_policy_0x0c_known;
+					});
+	state.reward_guard_materialization_driver_input_known =
+			state.reward_guard_source_stream_0x4aab7e_input_known
+			&& state.reward_guard_source_stream_owner_kind_0x0c_known
+			&& state.reward_guard_source_stream_0x4aab7e.invoked
+			&& state.reward_guard_source_stream_0x4aab7e.source_triplet_known
+			&& state.reward_guard_source_stream_0x4aab7e.source_object_kind_0x0c_known;
+	if (!state.reward_guard_source_stream_0x4aab7e.attempts.empty()) {
+		state.reward_guard_materialization_driver_0x4aa354 =
+				state.reward_guard_source_stream_0x4aab7e.attempts.back().materialization_0x4aa354;
+	} else {
+		state.reward_guard_materialization_driver_0x4aa354.blocked_reason =
+				state.reward_guard_source_stream_0x4aab7e.blocked_reason;
+	}
+	if (!state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()) {
+		state.remaining_private_state_blockers = {
+			state.reward_guard_source_stream_0x4aab7e.blocked_reason,
+			"connection_road_river_0x4a79a3_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
+			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+			"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
+		};
+		return;
+	}
+	if (state.reward_guard_source_stream_0x4aab7e.invoked
+			&& state.reward_guard_source_stream_0x4aab7e.applied
+			&& state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
+			&& state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0) {
+		const std::string reward_guard_zero_commit_blocker =
+				reward_guard_zero_commit_blocker_detail_0x4aab7e(state.reward_guard_source_stream_0x4aab7e);
+		state.remaining_private_state_blockers = {
+			reward_guard_zero_commit_blocker,
+			"connection_road_river_0x4a79a3_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
+			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+			"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
+		};
+		return;
+	}
 }
 
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
@@ -12275,6 +12488,28 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			result.coordinate_owner_grid_0x4a218c);
 
 	const GeneratorObjectPrivateState &object_state = result.generator_object_private_state;
+	const bool source_order_relation_pointer_loop_owned =
+			object_state.source_order_relation_pointer_loop_0x4ac552_ported
+			&& object_state.source_order_relation_pointer_loop_0x4ac552_input_known
+			&& object_state.source_order_relation_pointer_loop_0x4ac552_applied
+			&& object_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason.empty();
+	if (!source_order_relation_pointer_loop_owned) {
+		result.current_phase_id = "source_order_object_materialization";
+		result.status = "blocked";
+		result.blocked_reason = object_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason.empty()
+				? "0x4ac552_relation_pointer_source_order_loop_not_owned_before_0x4a8c15"
+				: object_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason;
+		add_phase("source_order_object_materialization", "0x4ac552_0x4a8d2c_0x4a8db2_0x4a93a2", "blocked", result.blocked_reason);
+		add_phase("route_free_cell_sweep", "0x4a8c15_0x4a8260_0x4a4c8e", "pending", "blocked_before_route_free_cell_sweep_by_source_order_object_materialization");
+		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_route_free_cell_sweep");
+		add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "pending", "blocked_before_route_free_cell_sweep");
+		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
+		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	add_phase("source_order_object_materialization", "0x4ac552_0x4a8d2c_0x4a8db2_0x4a93a2", "complete_source_order_prefix", "continues_into_route_free_cell_sweep");
+
 	const bool route_free_cell_sweep_owned = object_state.route_container_free_cell_sweep_0x4a8260_ported
 			&& object_state.route_container_free_cell_sweep_0x4a8260_input_known
 			&& object_state.route_container_free_cell_sweep_0x4a8260_applied
