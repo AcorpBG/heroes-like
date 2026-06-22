@@ -3601,8 +3601,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the 0x4a79a3 connection-tail invocation. Small seed 58 now executes the recovered 0x4a61bc selected-candidate loop with RNG selection, two 0x4a5a23 projection-chain calls per selected lane, and source/target owner +0x404 appends, then fails closed before the direct 0x4a5c07 static selector feeding 0x4a5e03. Small seed 10 and Medium seed 10 still have reciprocal pairs whose entry gates pass but no matching source-frontier candidate in the current controlled setup.\",\n";
-	out << "    \"required_refactor\": \"port the direct 0x4a5c07 static selector and 0x4a5e03/0x4a54a7 object construction/commit path after the recovered 0x4a61bc selected loop before emitting native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the live 0x4a79a3 connection-tail path. Small seed 58 now executes direct 0x4a5c07 monster selection and 0x4a5e03/0x4a54a7 commits from the recovered 0x4a61bc selected-candidate loop, appending 7 connection guard records before the workflow fails closed at reward_guard_materialization: 0x4aab7e makes 90 attempts with zero successful 0x4aa9b7 commits because 0x4aa603 rejects the footprint candidates. Small seed 10 and Medium seed 10 still have reciprocal pairs whose entry gates pass but no matching source-frontier candidate in the current controlled setup.\",\n";
+	out << "    \"required_refactor\": \"port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 reward/guard source stream inputs and 0x4aa603 footprint feasibility state after direct connection guards are committed, before emitting native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3621,7 +3621,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_direct_0x4a5c07_static_selector_and_0x4a5e03_commit_after_0x4a61bc_selected_loop\",\n";
+	out << "  \"next_required_native_core_slice\": \"fix_live_reward_guard_0x4aab7e_0x4aa9b7_0x4aa603_zero_commit_after_connection_guard_commits\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

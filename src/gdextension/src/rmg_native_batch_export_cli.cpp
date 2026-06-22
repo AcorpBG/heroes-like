@@ -455,7 +455,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"generation_core_stage\": \"native_h3maped_workflow_blocked_before_final_writeout\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_direct_0x4a5c07_static_selector_and_0x4a5e03_commit_after_0x4a61bc_selected_loop\",\n";
+	out << "  \"required_next_slice\": \"fix_live_reward_guard_0x4aab7e_0x4aa9b7_0x4aa603_zero_commit_after_connection_guard_commits\",\n";
 	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before final writeout.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
