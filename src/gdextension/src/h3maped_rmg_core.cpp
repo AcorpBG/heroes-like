@@ -1662,6 +1662,34 @@ int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &recor
 	return -1;
 }
 
+static const SourceObjectRecord0x4c *source_object_record_for_descriptor_fields_0x4a7605(
+		const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record,
+		int32_t &source_catalog_index_0x49da08,
+		bool &ambiguous) {
+	source_catalog_index_0x49da08 = -1;
+	ambiguous = false;
+	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
+	const SourceObjectRecord0x4c *match = nullptr;
+	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+		const SourceObjectRecord0x4c &candidate = records[size_t(index)];
+		if (candidate.type_id_0x1c != record.descriptor_type_0x1c
+				|| candidate.subtype_0x20 != record.descriptor_subtype_0x20
+				|| candidate.group_0x24 != record.descriptor_class_0x24
+				|| candidate.descriptor_width_0x34 != record.descriptor_mask_width_0x34
+				|| candidate.descriptor_height_0x38 != record.descriptor_mask_height_0x38) {
+			continue;
+		}
+		if (match != nullptr) {
+			ambiguous = true;
+			source_catalog_index_0x49da08 = -1;
+			return nullptr;
+		}
+		match = &candidate;
+		source_catalog_index_0x49da08 = index;
+	}
+	return match;
+}
+
 std::vector<SourceObjectMaskPoint490f3f> source_object_text_mask_points_0x490f3f(const std::string &mask_text, bool action_mask) {
 	std::vector<SourceObjectMaskPoint490f3f> points;
 	if (mask_text.size() < 48U) {
@@ -3627,13 +3655,6 @@ static bool generated_cell_append_object_reference_0x40bb26(GeneratedCellRecord0
 	if (!cell.object_reference_vector_contents_known) {
 		return false;
 	}
-	const auto existing = std::find(
-			cell.object_references_0x04_0x08.begin(),
-			cell.object_references_0x04_0x08.end(),
-			object_record_key);
-	if (existing != cell.object_references_0x04_0x08.end()) {
-		return false;
-	}
 	cell.object_references_0x04_0x08.push_back(object_record_key);
 	cell.object_reference_count = int32_t(cell.object_references_0x04_0x08.size());
 	return true;
@@ -3708,6 +3729,32 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	object_record.x = x;
 	object_record.y = y;
 	object_record.level = level;
+
+	const int64_t target_flat = cell_index(state.width, state.height, x, y, level);
+	GeneratedCellRecord0x30 *target_record = nullptr;
+	if (target_flat >= 0 && target_flat < int64_t(state.generated_cell_buffer.records.size())) {
+		result.target_cell_in_bounds = true;
+		target_record = &state.generated_cell_buffer.records[size_t(target_flat)];
+		result.target_cell_words_known = target_record->word_0x20_known && target_record->word_0x28_known;
+	}
+
+	result.source_record_copy_present_0x04 = source_record_copy_0x04 != nullptr;
+	if (source_record_copy_0x04 == nullptr) {
+		return result;
+	}
+	generated_grid_stamp_object_footprint_0x49abd6(
+			state,
+			result,
+			object_record_key,
+			x,
+			y,
+			level,
+			*source_record_copy_0x04);
+	if (target_record != nullptr) {
+		result.target_cell_reference_count_after = target_record->object_reference_count;
+		result.generated_cell_reference_appended = result.generator_body_reference_append_count_0x49abd6 > 0;
+	}
+
 	state.object_records_0xec4_ecc.push_back(object_record);
 	state.object_record_vector_append_count_0x4a54a7 += 1;
 	state.object_record_vector_ec4_ecc.present = true;
@@ -3729,41 +3776,6 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 		result.descriptor_counter_after = int32_t(counter);
 	}
 
-	const int64_t target_flat = cell_index(state.width, state.height, x, y, level);
-	if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
-		return result;
-	}
-	result.target_cell_in_bounds = true;
-	GeneratedCellRecord0x30 &target_record = state.generated_cell_buffer.records[size_t(target_flat)];
-	if (target_record.object_reference_vector_contents_known) {
-		target_record.object_references_0x04_0x08.push_back(object_record_key);
-		target_record.object_reference_count = int32_t(target_record.object_references_0x04_0x08.size());
-		state.generated_cell_object_reference_append_count_0x4a54a7 += 1;
-		result.generated_cell_reference_appended = true;
-		result.target_cell_reference_count_after = target_record.object_reference_count;
-	}
-	if (target_record.word_0x20_known && target_record.word_0x28_known) {
-		result.target_cell_words_known = true;
-		const uint32_t old_word_0x28 = target_record.word_0x28;
-		target_record.word_0x28 = generated_cell_4a54a7_endpoint_word28(target_record.word_0x28);
-		sync_generated_cell_byte_0x2b_from_word28(target_record);
-		if (target_record.word_0x28 != old_word_0x28) {
-			result.target_cell_word_mutation_count += 1;
-		}
-		state.target_cell_word_mutation_count_0x4a54a7 += result.target_cell_word_mutation_count;
-	}
-
-	if (source_record_copy_0x04 != nullptr) {
-		generated_grid_stamp_object_footprint_0x49abd6(
-				state,
-				result,
-				object_record_key,
-				x,
-				y,
-				level,
-				*source_record_copy_0x04);
-	}
-
 	result.projection_enabled = descriptor_projection_enabled_0x29;
 	if (!descriptor_projection_enabled_0x29) {
 		return result;
@@ -3777,7 +3789,17 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	}
 	result.projection_anchor_in_bounds = true;
 	increment_relation_descriptor_counter_0x4a54a7(state, result, projection_flat, descriptor_type_0x1c);
-	const uint32_t target_word_0x20_before_projection = target_record.word_0x20;
+	GeneratedCellRecord0x30 &projection_record = state.generated_cell_buffer.records[size_t(projection_flat)];
+	if (projection_record.word_0x20_known) {
+		const uint32_t old_word_0x20 = projection_record.word_0x20;
+		projection_record.word_0x20 &= 0xffff0000U;
+		if (projection_record.word_0x20 != old_word_0x20) {
+			result.target_cell_word_mutation_count += 1;
+			state.target_cell_word_mutation_count_0x4a54a7 += 1;
+		}
+	}
+	const uint32_t target_word_0x20_before_projection =
+			target_record != nullptr && target_record->word_0x20_known ? target_record->word_0x20 : 0U;
 	bool all_word20_known = false;
 	std::vector<uint32_t> word_0x20 = generated_cell_word20_vector_from_record_grid(state.generated_cell_buffer, all_word20_known);
 	if (!all_word20_known) {
@@ -3794,8 +3816,13 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	if (result.projection_score_depletion_count > 0) {
 		apply_generated_cell_word20_vector_to_record_grid(state.generated_cell_buffer, word_0x20);
 		state.projection_score_depletion_count_0x4a54a7 += result.projection_score_depletion_count;
-		const GeneratedCellRecord0x30 &updated_target_record = state.generated_cell_buffer.records[size_t(target_flat)];
-		if (updated_target_record.word_0x20 != target_word_0x20_before_projection) {
+		const GeneratedCellRecord0x30 *updated_target_record =
+				target_flat >= 0 && target_flat < int64_t(state.generated_cell_buffer.records.size())
+				? &state.generated_cell_buffer.records[size_t(target_flat)]
+				: nullptr;
+		if (updated_target_record != nullptr
+				&& updated_target_record->word_0x20_known
+				&& updated_target_record->word_0x20 != target_word_0x20_before_projection) {
 			result.target_cell_word_mutation_count += 1;
 			state.target_cell_word_mutation_count_0x4a54a7 += 1;
 		}
@@ -5945,7 +5972,7 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 		const int32_t base_x = existing_member.relative_x_0x08 - existing_member.descriptor_offset_x_0x2c;
 		const int32_t base_y = existing_member.relative_y_0x0c - existing_member.descriptor_offset_y_0x30;
 		const bool full_direction_policy = object_metadata_flag_0x598300(existing_member.descriptor_type_0x1c, 1);
-		const int32_t direction_count = full_direction_policy ? 8 : 5;
+		const int32_t direction_count = full_direction_policy ? 8 : 4;
 		for (int32_t direction_index = direction_count - 1; direction_index >= 0; --direction_index) {
 			result.coordinate_probe_count += 1;
 			CoordinateCandidate4a17f5 candidate;
@@ -7625,6 +7652,25 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 			block_record("0x4a7605_descriptor_fields_unrecovered_before_0x4a5e03");
 			continue;
 		}
+		int32_t source_catalog_index_0x49da08 = -1;
+		bool source_record_ambiguous_0x49da08 = false;
+		const SourceObjectRecord0x4c *source_record_copy_0x04 =
+				source_object_record_for_descriptor_fields_0x4a7605(
+						record,
+						source_catalog_index_0x49da08,
+						source_record_ambiguous_0x49da08);
+		if (source_record_ambiguous_0x49da08) {
+			block_record("0x4a7605_source_record_descriptor_join_ambiguous_before_0x4a54a7");
+			continue;
+		}
+		if (source_record_copy_0x04 == nullptr) {
+			block_record("0x4a7605_source_record_descriptor_join_missing_before_0x4a54a7");
+			continue;
+		}
+		record_result.source_record_joined_0x49da08 = true;
+		record_result.source_catalog_index_0x49da08 = source_catalog_index_0x49da08;
+		record_result.source_record_row_0x49da08 = source_record_copy_0x04->source_row;
+		record_result.source_record_def_name_0x49da08 = source_record_copy_0x04->def_name;
 		if (!record.source_cell_prestate_recovered_0x4a7605) {
 			block_record("0x4a7605_source_cell_prestate_unrecovered_before_0x4a5e03");
 			continue;
@@ -7803,7 +7849,8 @@ ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_fallback_materia
 				record.level,
 				record.descriptor_projection_enabled_0x29,
 				record.descriptor_offset_x_0x2c,
-				record.descriptor_offset_y_0x30);
+				record.descriptor_offset_y_0x30,
+				source_record_copy_0x04);
 		record_result.committed = record_result.commit_0x4a54a7.object_vector_appended;
 		if (!record_result.committed) {
 			record_result.blocked_reason = "0x4a54a7_fallback_record_commit_did_not_append_object_vector";
