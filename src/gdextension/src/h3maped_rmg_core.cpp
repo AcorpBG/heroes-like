@@ -11411,6 +11411,23 @@ static void apply_relation_normalization_full_grid_reset_0x4a5767(GeneratorObjec
 	}
 }
 
+static void apply_relation_high_owner_propagation_49a318(GeneratorObjectPrivateState &state) {
+	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
+			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
+	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
+	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
+	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
+	state.relation_high_owner_seed_attempt_count_49a318 = high_owner_propagation.seed_attempt_count;
+	state.relation_high_owner_seed_blocked_count_49a318 = high_owner_propagation.seed_blocked_count;
+	state.relation_high_owner_popped_cell_count_49a318 = high_owner_propagation.popped_cell_count;
+	state.relation_high_owner_same_owner_relax_count_49a318 = high_owner_propagation.same_owner_relax_count;
+	state.relation_high_owner_cross_owner_high_byte_write_count_49a318 = high_owner_propagation.cross_owner_high_byte_write_count;
+	state.relation_high_owner_max_queue_size_49a318 = high_owner_propagation.max_queue_size;
+	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
+	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
+	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
+}
+
 static void overlay_generated_cell_words(GeneratedCellRecordGrid0x30 &grid, const std::vector<uint32_t> &word_0x10, const std::vector<uint32_t> &word_0x1c, const std::vector<uint32_t> &word_0x20, const std::vector<uint32_t> &word_0x24, const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c) {
 	for (size_t index = 0; index < grid.records.size(); ++index) {
 		GeneratedCellRecord0x30 &record = grid.records[index];
@@ -12611,6 +12628,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
 	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
 	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
+	apply_relation_high_owner_propagation_49a318(state);
 	if (state.reward_guard_projection_object_0x540b14_input_known) {
 		state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7 =
 				reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7(
@@ -12667,7 +12685,7 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
 			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-			"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
+			"generic_non_type98_source_order_replay_pending_after_reward_guard_source_stream_commits",
 		};
 		return;
 	}
@@ -12683,25 +12701,11 @@ static void advance_generator_object_private_state_source_order_to_current_block
 			"decorative_dispatch_0x49eb8d_not_executed_until_reward_guard_source_stream_commits_are_owned",
 			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_order_connection_tail",
 			"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
-			"relation_high_owner_0x49a318_recovered_callsite_order_and_private_state_compare_pending",
+			"generic_non_type98_source_order_replay_pending_after_reward_guard_source_stream_commits",
 		};
 		return;
 	}
 	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(state, relation_scan_rng);
-	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
-			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
-	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
-	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
-	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
-	state.relation_high_owner_seed_attempt_count_49a318 = high_owner_propagation.seed_attempt_count;
-	state.relation_high_owner_seed_blocked_count_49a318 = high_owner_propagation.seed_blocked_count;
-	state.relation_high_owner_popped_cell_count_49a318 = high_owner_propagation.popped_cell_count;
-	state.relation_high_owner_same_owner_relax_count_49a318 = high_owner_propagation.same_owner_relax_count;
-	state.relation_high_owner_cross_owner_high_byte_write_count_49a318 = high_owner_propagation.cross_owner_high_byte_write_count;
-	state.relation_high_owner_max_queue_size_49a318 = high_owner_propagation.max_queue_size;
-	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
-	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
-	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
 }
 
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
@@ -12940,21 +12944,22 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	}
 
 	const bool relation_scan_owned = object_state.relation_owner_scan_bounds_0x4a1f3b_applied
-			&& object_state.relation_scan_consumers_4a5767_applied;
+			&& object_state.relation_scan_consumers_4a5767_applied
+			&& object_state.relation_high_owner_propagation_49a318_applied;
 	if (!relation_scan_owned) {
 		result.current_phase_id = "relation_scan_consumers";
 		result.status = "blocked";
 		result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
 				? object_state.remaining_private_state_blockers.front()
-				: "h3maped_workflow_relation_scan_0x4aadd2_0x4a5767_not_owned";
-		add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "blocked", result.blocked_reason);
+				: "h3maped_workflow_relation_scan_0x4aadd2_0x4a5767_0x49a318_not_owned";
+		add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x49a318_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "blocked", result.blocked_reason);
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_relation_scan_consumers");
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
 	}
-	add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "complete_source_order_prefix", "source_pair_preservation_continues_into_source_order_object_materialization");
+	add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x49a318_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "complete_source_order_prefix", "source_pair_preservation_continues_into_reward_guard_materialization");
 
 	const bool reward_guard_source_stream_owned = object_state.reward_guard_source_stream_0x4aab7e_ported
 			&& object_state.reward_guard_source_stream_0x4aab7e_input_known
@@ -12987,7 +12992,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		}
 		add_phase("reward_guard_materialization", "0x4ac552_0x4aab7e_0x4aa354_0x4aa9b7_0x4aa3e9", "blocked", result.blocked_reason);
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", "blocked_before_reward_guard_materialization");
-		add_phase("relation_high_owner_propagation", "0x49a318", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x49eb8d_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 		return result;
@@ -13020,18 +13024,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< ",source_fields_missing=" << object_state.generic_source_order_pair_source_fields_missing_count;
 	}
 	add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "complete_source_order_prefix", source_order_blocker.str());
-
-	if (!object_state.relation_high_owner_propagation_49a318_applied) {
-		result.current_phase_id = "relation_high_owner_propagation";
-		result.status = "blocked";
-		result.blocked_reason = "h3maped_workflow_relation_high_owner_0x49a318_not_owned";
-		add_phase("relation_high_owner_propagation", "0x49a318", "blocked", result.blocked_reason);
-		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_relation_high_owner_propagation");
-		add_phase("connection_road_river", "0x4a79a3_0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
-		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
-		return result;
-	}
-	add_phase("relation_high_owner_propagation", "0x49a318", "complete_source_order_prefix", "callsite_order_and_private_state_compare_still_pending");
 
 	result.current_phase_id = "connection_road_river";
 	result.status = "blocked";

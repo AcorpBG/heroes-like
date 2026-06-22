@@ -4126,7 +4126,7 @@ int main() {
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() >= 12
+		if (!require(workflow.phases.size() >= 11
 						&& workflow.phases[0].id == "entry_scope"
 						&& workflow.phases[1].id == "setup_template_selection"
 						&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4144,9 +4144,7 @@ int main() {
 						&& workflow.phases[9].id == "reward_guard_materialization"
 						&& workflow.phases[9].status == "blocked"
 						&& workflow.phases[10].id == "source_order_object_materialization"
-						&& workflow.phases[10].status == "pending"
-						&& workflow.phases[11].id == "relation_high_owner_propagation"
-						&& workflow.phases[11].status == "pending",
+						&& workflow.phases[10].status == "pending",
 					"entry-to-writeout workflow did not preserve recovered phase order through the reward/guard blocker")) {
 			return 1;
 		}
@@ -4162,6 +4160,7 @@ int main() {
 						&& workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
 						&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
+						&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied
 						&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
 						&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
 					"entry-to-writeout workflow did not carry setup/template/coordinate/object private state through the shared core runner")) {
