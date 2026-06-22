@@ -2135,6 +2135,12 @@ struct ConnectionTailReplayResult4a79a3 {
 	int32_t relation_owner_level_byte2b_clear_cell_count = 0;
 	bool internal_growth_0x49b3fb_0x4a61bc_known = false;
 	int32_t internal_growth_candidate_pair_count = 0;
+	bool internal_growth_0x4a61bc_prefix_owned = false;
+	int32_t internal_growth_0x4a61bc_invocation_count = 0;
+	int32_t internal_growth_0x4a61bc_entry_gate_pass_count = 0;
+	int32_t internal_growth_0x4a61bc_frontier_candidate_count = 0;
+	int32_t internal_growth_0x4a61bc_selected_candidate_count = 0;
+	int32_t internal_growth_0x4a61bc_constructor_blocked_count = 0;
 	int32_t internal_growth_positive_append_count = 0;
 	int32_t internal_growth_initial_object_count = 0;
 	int32_t internal_growth_final_object_count = 0;

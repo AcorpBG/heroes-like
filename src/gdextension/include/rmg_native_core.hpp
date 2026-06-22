@@ -821,6 +821,12 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 = 0;
 	bool connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc = false;
 	int32_t connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3 = 0;
+	bool connection_tail_replay_internal_growth_0x4a61bc_prefix_owned = false;
+	int32_t connection_tail_replay_internal_growth_0x4a61bc_invocation_count = 0;
+	int32_t connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count = 0;
+	int32_t connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count = 0;
+	int32_t connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count = 0;
+	int32_t connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count = 0;
 	std::string connection_tail_replay_blocked_reason_0x4a79a3;
 	std::string materialization_bridge_0x4a8c15_blocked_reason;
 	bool weighted_candidate_vectors_0x4a901a_known = false;

@@ -831,6 +831,18 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known;
 	out.connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.internal_growth_candidate_pair_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_prefix_owned =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_prefix_owned;
+	out.connection_tail_replay_internal_growth_0x4a61bc_invocation_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_invocation_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_entry_gate_pass_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_frontier_candidate_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_selected_candidate_count;
+	out.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count =
+			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_constructor_blocked_count;
 	out.connection_tail_replay_blocked_reason_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.blocked_reason;
 	out.materialization_bridge_0x4a8c15_blocked_reason = input.materialization_bridge_0x4a8c15_blocked_reason;
@@ -2492,6 +2504,12 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3\":" << state.connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc\":" << (state.connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc ? "true" : "false") << ","
 			<< "\"connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3\":" << state.connection_tail_replay_internal_growth_candidate_pair_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_prefix_owned\":" << (state.connection_tail_replay_internal_growth_0x4a61bc_prefix_owned ? "true" : "false") << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_invocation_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_invocation_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_entry_gate_pass_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_frontier_candidate_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_selected_candidate_count << ","
+			<< "\"connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count << ","
 			<< "\"connection_tail_replay_blocked_reason_0x4a79a3\":\"" << json_escape(state.connection_tail_replay_blocked_reason_0x4a79a3) << "\","
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
 			<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","

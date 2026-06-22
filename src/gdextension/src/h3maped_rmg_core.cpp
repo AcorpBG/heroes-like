@@ -7753,8 +7753,100 @@ static bool source_endpoint_record_lookup_0x49b3fb(
 		int32_t owner_runtime_zone,
 		int32_t lookup_key);
 
+static const GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_find_0x49b3fb(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t lookup_key);
+
 static bool source_endpoint_records_known_for_lookup_0x49b3fb(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners);
+
+struct ConnectionFrontierCandidate4a79a3 {
+	int32_t source_x = 0;
+	int32_t source_y = 0;
+	int32_t neighbor_x = 0;
+	int32_t neighbor_y = 0;
+	int32_t level = 0;
+	int32_t source_owner_byte2 = -1;
+	int32_t source_owner_byte3 = -1;
+	int32_t neighbor_owner_byte2 = -1;
+	int32_t direction = 0;
+	int32_t score_word_0x1c_high = 0;
+};
+
+struct ConnectionPairMaterializationPrefixResult4a61bc {
+	bool invoked = false;
+	bool entry_gate_passed = false;
+	bool source_record_pair_known = false;
+	bool frontier_vector_known = false;
+	bool candidate_selected = false;
+	bool constructor_blocked = false;
+	int32_t frontier_candidate_count = 0;
+	int32_t selected_candidate_count = 0;
+	std::string blocked_reason;
+};
+
+static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materialization_prefix_0x4a61bc(
+		const GeneratorRelationOwnerState4a218c &source_owner,
+		const GeneratorRelationOwnerState4a218c &target_owner,
+		const GeneratorSourceEndpointRecordState4a1f3b &source_endpoint,
+		const GeneratorSourceEndpointRecordState4a1f3b &reciprocal_endpoint,
+		const std::vector<ConnectionFrontierCandidate4a79a3> &frontier_candidates) {
+	ConnectionPairMaterializationPrefixResult4a61bc result;
+	result.invoked = true;
+	result.source_record_pair_known =
+			source_endpoint.target_runtime_zone_index == target_owner.runtime_zone_index
+			&& reciprocal_endpoint.target_runtime_zone_index == source_owner.runtime_zone_index;
+	if (!result.source_record_pair_known) {
+		result.blocked_reason = "0x4a61bc_source_endpoint_pair_not_reciprocal";
+		return result;
+	}
+	if (!source_owner.coordinate_triple_0x10_0x18_known
+			|| !target_owner.coordinate_triple_0x10_0x18_known
+			|| !source_owner.terrain_policy_0x0c_known
+			|| !target_owner.terrain_policy_0x0c_known) {
+		result.blocked_reason = "0x4a61bc_relation_owner_entry_fields_unknown";
+		return result;
+	}
+	if (source_owner.coordinate_level_0x18 != target_owner.coordinate_level_0x18) {
+		result.blocked_reason = "0x4a61bc_relation_owner_level_mismatch";
+		return result;
+	}
+	if (source_owner.terrain_policy_0x0c == 8 || target_owner.terrain_policy_0x0c == 8) {
+		result.blocked_reason = "0x4a61bc_relation_owner_terrain_policy_8_gate_returned_false";
+		return result;
+	}
+	result.entry_gate_passed = true;
+	result.frontier_vector_known = true;
+
+	int32_t best_score = std::numeric_limits<int32_t>::max();
+	for (const ConnectionFrontierCandidate4a79a3 &candidate : frontier_candidates) {
+		if (candidate.level != source_owner.coordinate_level_0x18) {
+			continue;
+		}
+		if (candidate.source_owner_byte2 != source_owner.runtime_zone_index
+				|| candidate.source_owner_byte3 != target_owner.runtime_zone_index) {
+			continue;
+		}
+		result.frontier_candidate_count += 1;
+		if (candidate.score_word_0x1c_high > best_score) {
+			continue;
+		}
+		if (candidate.score_word_0x1c_high < best_score) {
+			best_score = candidate.score_word_0x1c_high;
+			result.selected_candidate_count = 0;
+		}
+		result.selected_candidate_count += 1;
+	}
+	if (result.selected_candidate_count <= 0) {
+		result.blocked_reason = "0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
+		return result;
+	}
+	result.candidate_selected = true;
+	result.constructor_blocked = true;
+	result.blocked_reason = "0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
+	return result;
+}
 
 static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(GeneratorObjectPrivateState &state) {
 	ConnectionTailReplayResult4a79a3 result;
@@ -7813,6 +7905,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 	}
 
 	result.source_backed_frontier_known = true;
+	std::vector<ConnectionFrontierCandidate4a79a3> frontier_candidates;
 	for (int32_t level = 0; level < state.generated_cell_buffer.level_count; ++level) {
 		for (int32_t y = 0; y < state.generated_cell_buffer.height; ++y) {
 			for (int32_t x = 0; x < state.generated_cell_buffer.width; ++x) {
@@ -7850,6 +7943,18 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 					result.source_frontier_same_owner_skip_count += 1;
 					continue;
 				}
+				ConnectionFrontierCandidate4a79a3 candidate;
+				candidate.source_x = x;
+				candidate.source_y = y;
+				candidate.neighbor_x = neighbor_x;
+				candidate.neighbor_y = neighbor_y;
+				candidate.level = level;
+				candidate.source_owner_byte2 = generated_cell_word20_owner_byte2_signed(record.word_0x20);
+				candidate.source_owner_byte3 = generated_cell_word20_owner_byte3_signed(record.word_0x20);
+				candidate.neighbor_owner_byte2 = generated_cell_word20_owner_byte2_signed(neighbor.word_0x20);
+				candidate.direction = direction;
+				candidate.score_word_0x1c_high = int32_t((record.word_0x1c >> 16U) & 0xffffU);
+				frontier_candidates.push_back(candidate);
 				result.source_frontier_candidate_pair_count += 1;
 			}
 		}
@@ -7892,19 +7997,52 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			if (target_owner == nullptr) {
 				continue;
 			}
-			if (source_endpoint_record_lookup_0x49b3fb(
-						state.relation_owner_vectors_10e4_10e8,
-						target_owner->runtime_zone_index,
-						owner.runtime_zone_index)) {
+			const GeneratorSourceEndpointRecordState4a1f3b *reciprocal_endpoint =
+					source_endpoint_record_find_0x49b3fb(
+							state.relation_owner_vectors_10e4_10e8,
+							target_owner->runtime_zone_index,
+							owner.runtime_zone_index);
+			if (reciprocal_endpoint != nullptr) {
 				result.internal_growth_candidate_pair_count += 1;
+				const ConnectionPairMaterializationPrefixResult4a61bc prefix =
+						connection_pair_materialization_prefix_0x4a61bc(
+								owner,
+								*target_owner,
+								record,
+								*reciprocal_endpoint,
+								frontier_candidates);
+				if (prefix.invoked) {
+					result.internal_growth_0x4a61bc_invocation_count += 1;
+				}
+				if (prefix.entry_gate_passed) {
+					result.internal_growth_0x4a61bc_entry_gate_pass_count += 1;
+				}
+				result.internal_growth_0x4a61bc_frontier_candidate_count +=
+						prefix.frontier_candidate_count;
+				result.internal_growth_0x4a61bc_selected_candidate_count +=
+						prefix.selected_candidate_count;
+				if (prefix.constructor_blocked) {
+					result.internal_growth_0x4a61bc_constructor_blocked_count += 1;
+				}
 			}
 		}
 	}
 
 	result.internal_growth_0x49b3fb_0x4a61bc_known = result.internal_growth_candidate_pair_count > 0;
+	result.internal_growth_0x4a61bc_prefix_owned =
+			result.internal_growth_0x49b3fb_0x4a61bc_known
+			&& result.internal_growth_0x4a61bc_invocation_count == result.internal_growth_candidate_pair_count;
 	if (result.internal_growth_candidate_pair_count > 0) {
-		result.blocked_reason =
-				"0x4a79a3_live_pair_loop_0x4a61bc_object_materialization_unported_after_0x49b3fb_pair_lookup";
+		if (result.internal_growth_0x4a61bc_constructor_blocked_count > 0) {
+			result.blocked_reason =
+					"0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
+		} else if (result.internal_growth_0x4a61bc_entry_gate_pass_count > 0) {
+			result.blocked_reason =
+					"0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
+		} else {
+			result.blocked_reason =
+					"0x4a61bc_live_prefix_entry_gate_not_taken_for_source_owned_pairs";
+		}
 		return result;
 	}
 
@@ -12612,6 +12750,13 @@ static bool source_endpoint_record_lookup_0x49b3fb(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
 		int32_t owner_runtime_zone,
 		int32_t lookup_key) {
+	return source_endpoint_record_find_0x49b3fb(owners, owner_runtime_zone, lookup_key) != nullptr;
+}
+
+static const GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_find_0x49b3fb(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t lookup_key) {
 	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
 		if (owner.runtime_zone_index != owner_runtime_zone) {
 			continue;
@@ -12620,16 +12765,16 @@ static bool source_endpoint_record_lookup_0x49b3fb(
 				|| !owner.source_endpoint_vector_0xc8_0xcc_contents_known
 				|| !owner.source_endpoint_vector_0xc8_0xcc_count_known
 				|| owner.source_endpoint_vector_0xc8_0xcc_count != int32_t(owner.source_endpoint_records_0xc8_0xcc.size())) {
-			return false;
+			return nullptr;
 		}
 		for (const GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
 			if (record.target_runtime_zone_index == lookup_key) {
-				return true;
+				return &record;
 			}
 		}
-		return false;
+		return nullptr;
 	}
-	return false;
+	return nullptr;
 }
 
 static bool source_endpoint_records_known_for_lookup_0x49b3fb(

@@ -2077,7 +2077,7 @@ int main() {
 		return 1;
 		}
 		const std::string source_order_blocker =
-				"0x4a79a3_live_pair_loop_0x4a61bc_object_materialization_unported_after_0x49b3fb_pair_lookup";
+				"0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2123,8 +2123,15 @@ int main() {
 						&& generator_state.connection_tail_replay_0x4a79a3.blocked_reason == source_order_blocker
 						&& generator_state.connection_tail_replay_0x4a79a3.source_backed_frontier_known
 						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count == 36 * 36
+						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_candidate_pair_count == 0
 						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
 						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_candidate_pair_count > 0
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_prefix_owned
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_invocation_count
+								== generator_state.connection_tail_replay_0x4a79a3.internal_growth_candidate_pair_count
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_entry_gate_pass_count > 0
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_selected_candidate_count == 0
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_constructor_blocked_count == 0
 						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
@@ -4175,7 +4182,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_source_order_blocker =
-					"0x4a79a3_live_pair_loop_0x4a61bc_object_materialization_unported_after_0x49b3fb_pair_lookup";
+					"0x4a61bc_live_0x4a5e03_descriptor_payload_constructor_unowned_after_candidate_selection";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4326,6 +4333,11 @@ int main() {
 						&& connection_tail.source_frontier_scan_cell_count == 36 * 36
 						&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
 						&& connection_tail.internal_growth_candidate_pair_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_prefix_owned
+						&& connection_tail.internal_growth_0x4a61bc_invocation_count == connection_tail.internal_growth_candidate_pair_count
+						&& connection_tail.internal_growth_0x4a61bc_entry_gate_pass_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_selected_candidate_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count > 0
 						&& connection_tail.blocked_reason == workflow_source_order_blocker
 						&& workflow_generator_state.connection_fallback_materialization_scope_known
 						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
