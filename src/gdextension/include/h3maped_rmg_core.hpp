@@ -2016,6 +2016,7 @@ struct RewardGuardMaterializationDriverResult4aa354 {
 	int32_t ordinary_attach_record_sequence_0x1c_0x4a5c07 = -1;
 	int32_t ordinary_attach_record_value_0x20_0x4a5c07 = 0;
 	uint32_t ordinary_attach_record_enabled_word_0x24_0x4a5c07 = 0U;
+	bool ordinary_attach_null_selection_0x4a5c07 = false;
 	bool selected_object_attach_invoked_0x49cf34 = false;
 	bool selected_object_attach_applied_0x49cf34 = false;
 	bool selected_object_attach_initial_candidate_refresh_0x49d7c3_applied = false;
