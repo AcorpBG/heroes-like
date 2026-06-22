@@ -801,6 +801,14 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 = 0;
 	int32_t materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 = 0;
 	std::string materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5;
+	bool connection_tail_replay_0x4a79a3_ported = false;
+	bool connection_tail_replay_0x4a79a3_invoked = false;
+	bool connection_tail_replay_0x4a79a3_applied = false;
+	bool connection_tail_replay_generated_cell_grid_owned_0x4a79a3 = false;
+	bool connection_tail_replay_endpoint_caller_prep_known_0x4a79a3 = false;
+	bool connection_tail_replay_fallback_materialization_known_0x4a79a3 = false;
+	bool connection_tail_replay_fallback_materialization_applied_0x4a79a3 = false;
+	std::string connection_tail_replay_blocked_reason_0x4a79a3;
 	std::string materialization_bridge_0x4a8c15_blocked_reason;
 	bool weighted_candidate_vectors_0x4a901a_known = false;
 	int32_t weighted_candidate_vector_count_0x4a901a = 0;
