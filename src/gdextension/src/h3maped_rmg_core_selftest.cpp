@@ -2075,9 +2075,9 @@ int main() {
 					&& generator_state.mapped_source_owner_slots_ee4 == selected_after_setup3.player_assignment.mapped_ee4_slots,
 				"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
-	}
-	const std::string source_order_blocker =
-			"0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3";
+		}
+		const std::string source_order_blocker =
+				"0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2106,14 +2106,21 @@ int main() {
 					&& generator_state.materialization_bridge_relation_loop_0x4a4913_ported
 					&& generator_state.materialization_bridge_relation_loop_0x4a4913_input_known
 					&& generator_state.materialization_bridge_relation_loop_0x4a4913_applied
-					&& generator_state.materialization_bridge_relation_loop_relation_count_0x4a4913 == int32_t(generator_state.relation_owner_vectors_10e4_10e8.size())
-					&& generator_state.relation_normalization_4a5767_full_grid_reset_applied
-					&& generator_state.relation_scan_consumers_4a5767_applied
-					&& generator_state.relation_high_owner_propagation_49a318_applied
-					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
-					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
-					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-					"generator object private state did not execute the 0x4a4913 -> 0x4a5767 bridge or executed downstream helpers before 0x4a4fc5 was owned")) {
+						&& generator_state.materialization_bridge_relation_loop_relation_count_0x4a4913 == int32_t(generator_state.relation_owner_vectors_10e4_10e8.size())
+						&& generator_state.relation_normalization_4a5767_full_grid_reset_applied
+						&& generator_state.relation_scan_consumers_4a5767_applied
+						&& generator_state.relation_high_owner_propagation_49a318_applied
+						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported
+						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known
+						&& !generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
+						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
+						&& generator_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
+						&& generator_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 > 0
+						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
+						&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
+						"generator object private state did not stop at the 0x4a4fc5 source-water blocker before downstream helpers")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -4111,21 +4118,21 @@ int main() {
 		return 1;
 	}
 	{
-		H3MapedRmgWorkflowConfig workflow_config;
-		workflow_config.size_class = "small";
-		workflow_config.water_mode = "land";
-		workflow_config.width = 36;
-		workflow_config.height = 36;
-		workflow_config.level_count = 1;
-		workflow_config.human_count = 1;
-		workflow_config.player_count = 3;
-		workflow_config.seed = 11U;
-		workflow_config.setup_object_0x44_known = true;
-		workflow_config.setup_object_0x44 = 0;
-		const H3MapedRmgWorkflowResult workflow =
-				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-		const std::string workflow_source_order_blocker =
-				"0x4a8c15_bridge_0x4a4fc5_unported_after_0x4a5767_before_0x4a79a3";
+			H3MapedRmgWorkflowConfig workflow_config;
+			workflow_config.size_class = "small";
+			workflow_config.water_mode = "land";
+			workflow_config.width = 36;
+			workflow_config.height = 36;
+			workflow_config.level_count = 1;
+			workflow_config.human_count = 1;
+			workflow_config.player_count = 2;
+			workflow_config.seed = 58U;
+			workflow_config.setup_object_0x44_known = true;
+			workflow_config.setup_object_0x44 = 3;
+			const H3MapedRmgWorkflowResult workflow =
+					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
+			const std::string workflow_source_order_blocker =
+					"0x4a8c15_bridge_0x4a79a3_unported_after_0x4a4fc5";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4152,13 +4159,13 @@ int main() {
 						&& workflow.phases[6].id == "materialization_bridge"
 						&& workflow.phases[6].status == "blocked"
 						&& workflow.phases[7].id == "bridge_relation_normalization"
-						&& workflow.phases[7].status == "complete_source_order_prefix"
-						&& workflow.phases[8].id == "bridge_water_edge_writer"
-						&& workflow.phases[8].status == "blocked"
-						&& workflow.phases[9].id == "connection_tail"
-						&& workflow.phases[9].status == "pending"
-						&& workflow.phases[10].id == "mine_resource_materialization"
-						&& workflow.phases[10].status == "pending"
+							&& workflow.phases[7].status == "complete_source_order_prefix"
+							&& workflow.phases[8].id == "bridge_water_edge_writer"
+							&& workflow.phases[8].status == "complete_source_order_prefix"
+							&& workflow.phases[9].id == "connection_tail"
+							&& workflow.phases[9].status == "blocked"
+							&& workflow.phases[10].id == "mine_resource_materialization"
+							&& workflow.phases[10].status == "pending"
 						&& workflow.phases[11].id == "source_order_object_materialization"
 						&& workflow.phases[11].status == "pending"
 						&& workflow.phases[12].id == "reward_guard_materialization"
@@ -4185,13 +4192,20 @@ int main() {
 						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_ported
 						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_input_known
 						&& workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_applied
-						&& workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
-						&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
-						&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied
-						&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
-					"entry-to-writeout workflow did not execute the 0x4a4913 -> 0x4a5767 bridge or executed downstream helpers before 0x4a4fc5 was owned")) {
+							&& workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
+							&& workflow.generator_object_private_state.relation_scan_consumers_4a5767_applied
+							&& workflow.generator_object_private_state.relation_high_owner_propagation_49a318_applied
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_ported
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 == 0
+							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
+							&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
+							&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked,
+						"entry-to-writeout workflow did not execute the 0x4a4913 -> 0x4a4fc5 bridge or executed downstream helpers before 0x4a79a3 was owned")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -4241,11 +4255,11 @@ int main() {
 					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the 0x4a8c15 materialization bridge blocker")) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() > 6
-						&& workflow.phases[6].id == "materialization_bridge"
-						&& workflow.phases[6].status == "blocked"
-						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not stop at the 0x4a8c15 materialization bridge before downstream helper execution")) {
+			if (!require(workflow.phases.size() > 6
+							&& workflow.phases[6].id == "materialization_bridge"
+							&& workflow.phases[6].status == "blocked"
+							&& !workflow.final_writeout_complete,
+						"entry-to-writeout workflow did not stop at the 0x4a8c15 materialization bridge before 0x4a79a3 ownership")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =

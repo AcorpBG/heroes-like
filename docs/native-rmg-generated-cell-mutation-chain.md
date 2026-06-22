@@ -216,7 +216,7 @@ Implementation rule: TerrainPlacement output may be used as active support state
 
 ### 7. Relation/object candidate, occupied, action, and score mutations
 
-Status: the active shared native workflow now owns the source-order `0x4a8c15 -> 0x4a5767` bridge relation-normalization call after the recovered post-`0x4a4c8e` cleanup scan and `0x4a4913` relation-vector loop. Later `0x4a4fc5`, `0x4a79a3`, downstream object/reward/guard, road/river, and final-writeout caller order remain unowned.
+Status: the active shared native workflow now owns the source-order `0x4a8c15 -> 0x4a5767` bridge relation-normalization call after the recovered post-`0x4a4c8e` cleanup scan and `0x4a4913` relation-vector loop, plus the one-level-land `0x4a4fc5` water-edge scan. Small zero-source-water cases advance past `0x4a4fc5` and fail closed at the unported `0x4a79a3` tail. Medium currently fails closed inside `0x4a4fc5` when the generated-cell terrain word surface exposes source-water cells and the source-water mutation path is not owned. Downstream object/reward/guard, road/river, and final-writeout caller order remain unowned.
 
 Addresses:
 
@@ -236,6 +236,7 @@ Addresses:
 Native helpers:
 
 - `apply_materialization_bridge_relation_normalization_0x4a5767` in the single `h3maped_rmg_core` driver after `0x4a4913`.
+- `materialization_bridge_water_edge_writer_0x4a4fc5` in the single `h3maped_rmg_core` driver after `0x4a5767`.
 - `generated_cell_4a5767_reset_cell`
 - record-level `generated_cell_4a5767_reset_projection`
 - `generated_cell_49a318_clear_source_word_0x1c`
@@ -284,10 +285,10 @@ Mutation surface:
 Known blockers:
 
 - Exact caller sequence after the `0x4a5767` bridge is not fully owned as a single source-order native chain.
-- Native now carries recovered `0x49b452` relation-owner constructor/default fields plus concrete zeroed `+0x44` descriptor-counter tables, the recovered `0x4a1f3b/0x4a19ed` selected coordinate triple `+0x10..+0x18`, source-zone endpoint vector `+0xc8/+0xcc` contents/count, and `0x4a17f5/0x4a1ad8` coordinate candidate vectors from the source setup path. The active generator private-state builder now continues through source-order relation record replay, route/free-cell `0x4a8260 -> 0x4a4c8e`, the recovered post-`0x4a4c8e` `0x4a8c15 -> 0x49a962` cleanup scan, the recovered `0x4a4913` relation-vector loop, and the `0x4a8c15 -> 0x4a5767` full-grid reset / relation scan / `0x49a318` high-owner propagation bridge. It then fails closed at the unported `0x4a4fc5` bridge writer before `0x4a79a3`. It does not run `0x4a9d6a` mine/resource, reward/guard, connection/decorative, roads/rivers, or final writeout until `0x4a4fc5` and `0x4a79a3` are source-owned.
-- No-Godot Small seed 58 setup3 and Medium seed 10 setup3 snapshots show the active bridge reset visits and changes every generated-cell record (`1296/1296` and `5184/5184`), applies relation scan consumers for all relation owners, and applies `0x49a318` high-owner propagation. That is still a prefix, not parity.
+- Native now carries recovered `0x49b452` relation-owner constructor/default fields plus concrete zeroed `+0x44` descriptor-counter tables, the recovered `0x4a1f3b/0x4a19ed` selected coordinate triple `+0x10..+0x18`, source-zone endpoint vector `+0xc8/+0xcc` contents/count, and `0x4a17f5/0x4a1ad8` coordinate candidate vectors from the source setup path. The active generator private-state builder now continues through source-order relation record replay, route/free-cell `0x4a8260 -> 0x4a4c8e`, the recovered post-`0x4a4c8e` `0x4a8c15 -> 0x49a962` cleanup scan, the recovered `0x4a4913` relation-vector loop, the `0x4a8c15 -> 0x4a5767` full-grid reset / relation scan / `0x49a318` high-owner propagation bridge, and the one-level-land `0x4a4fc5` water-edge scan. Small zero-source-water cases now fail closed at the unported `0x4a79a3` tail. Medium fails closed inside `0x4a4fc5` when source-water cells are present until the source-water input/mutation path is owned. It does not run `0x4a9d6a` mine/resource, reward/guard, connection/decorative, roads/rivers, or final writeout until the bridge tail is source-owned.
+- No-Godot Small seed 58 setup3 and Medium seed 10 setup3 snapshots show the active bridge reset visits and changes every generated-cell record (`1296/1296` and `5184/5184`), applies relation scan consumers for all relation owners, and applies `0x49a318` high-owner propagation. Small seed 58 setup3 also applies the zero-source-water `0x4a4fc5` scan. Medium seed 10 setup3 reaches `0x4a4fc5` and blocks on source-water cells. That is still a prefix, not parity.
 - Recovered helper semantics still exist for `0x4a5a23`, `0x4a8db2`, `0x4a901a`, `0x4a8d2c -> 0x4a93a2`, `0x4a54a7`, reward/guard attachment, endpoint helpers, and fallback replay. They are not active workflow progress unless their source-order callers and inputs are owned.
-- Native still lacks source-order replay of the `0x4a4fc5` bridge writer and the `0x4a79a3` connection/materialization tail. Downstream `0x4a9d6a` mine/resource, reward/guard coordinate commits from `0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9`, downstream connection/decorative caller order, generic supported-land fallback payload feed/caller order after target-mode-excluded `0x4a606b` / `0x4a696b` paths, roads/rivers, and final writeout remain blocked behind that bridge. The implemented `0x4a5e73`, `0x4a606b`, `0x4a5a23`, `0x4903e8`, exact-input `0x4a8db2`, exact-input `0x4a901a`, exact-input direct `0x4a8d2c -> 0x4a93a2`, exact-prestate fallback replay, and explicit `0x4a54a7` prep helpers must not be wired to guessed endpoint/object state or run before their source-order owner phase is complete.
+- Native still lacks the `0x4a4fc5` source-water mutation path for Medium and the `0x4a79a3` connection/materialization tail for zero-water cases. Downstream `0x4a9d6a` mine/resource, reward/guard coordinate commits from `0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9`, downstream connection/decorative caller order, generic supported-land fallback payload feed/caller order after target-mode-excluded `0x4a606b` / `0x4a696b` paths, roads/rivers, and final writeout remain blocked behind that bridge. The implemented `0x4a5e73`, `0x4a606b`, `0x4a5a23`, `0x4903e8`, exact-input `0x4a8db2`, exact-input `0x4a901a`, exact-input direct `0x4a8d2c -> 0x4a93a2`, exact-prestate fallback replay, and explicit `0x4a54a7` prep helpers must not be wired to guessed endpoint/object state or run before their source-order owner phase is complete.
 - These helpers must not be called from synthetic native object placement or package adoption as compensation for missing H3MapEd phases.
 
 Implementation rule: keep helpers available, but do not use them to claim pre-object generated-cell parity until their source callers and inputs are ordered and same-run validated.
@@ -302,8 +303,8 @@ The only 100-percent-safe implementation change from this ledger is to fail clos
 
 ## Next Native Port Targets
 
-1. Port the source-order `0x4a4fc5` bridge writer after the recovered `0x4a8c15 -> 0x4a5767` bridge normalization.
-2. Continue `0x4a79a3` connection/materialization tail after `0x4a4fc5`.
+1. Resolve the Medium `0x4a4fc5` source-water input/mutation path or prove source-backed exclusion for supported one-level land.
+2. Continue `0x4a79a3` connection/materialization tail after the zero-water `0x4a4fc5` path.
 3. Resume `0x4a9d6a`, relation/object caller order, and reward/guard only after the `0x4a8c15` bridge private-state boundary through `0x4a79a3` is owned.
 4. Run same-run private-state comparison before allowing route/object/package consumers to use the generated-cell checkpoint.
 
