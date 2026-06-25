@@ -6903,7 +6903,7 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 				}
 				if ((flags & 0x2U) != 0U) {
 					result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-					result.blocked_reason = "0x49e1bf_object_reference_cache_0x49b89c_unowned";
+					result.blocked_reason = "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
 					return false;
 				}
 				if ((flags & 0x4U) != 0U) {
@@ -6928,7 +6928,7 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 		}
 		if (temp_ref.flag_0x18 || temp_ref.flag_0x16) {
 			result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-			result.blocked_reason = "0x49e1bf_object_record_0x10_descriptor_score_index_unowned";
+			result.blocked_reason = "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
 			return false;
 		}
 		if (temp_ref.flag_0x14 && temp_ref.flag_0x15) {
@@ -6943,7 +6943,17 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 	return true;
 }
 
-static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
+struct DecorativeWeightedCandidate49e700 {
+	SourceObjectRecord0x4c source_record;
+	int32_t source_catalog_index_0x49da08 = -1;
+	int32_t candidate_x = 0;
+	int32_t candidate_y = 0;
+	int32_t candidate_level = 0;
+	int32_t score = 0;
+	int32_t terrain_score = 0;
+};
+
+static bool decorative_dispatch_collect_record_candidates_0x49e700(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
 		const RandTrnObstacleScoreRecord49dc9e &score_record,
@@ -6951,21 +6961,22 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 		int32_t dispatch_y,
 		int32_t dispatch_level,
 		int32_t dispatch_terrain_code,
+		std::vector<DecorativeWeightedCandidate49e700> &accepted_candidates,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	if (dispatch_terrain_code < 0 || dispatch_terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
-		return false;
+		return true;
 	}
 	result.dispatch_probe_rand_trn_terrain_score_lookup_count_0x49e700 += 1;
 	const int32_t terrain_score = score_record.terrain_scores[size_t(dispatch_terrain_code)];
 	if (terrain_score <= RAND_TRN_HARD_REJECT_SCORE_0X49E700) {
 		result.dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 += 1;
-		return false;
+		return true;
 	}
 	if (!source_record.descriptor_mask_fields_0x34_0x48_known
 			|| source_record.descriptor_width_0x34 <= 0
 			|| source_record.descriptor_height_0x38 <= 0) {
 		result.dispatch_probe_descriptor_mask_missing_count_0x49e700 += 1;
-		return false;
+		return true;
 	}
 	for (int32_t local_y = 0; local_y < source_record.descriptor_height_0x38; ++local_y) {
 		for (int32_t local_x = 0; local_x < source_record.descriptor_width_0x34; ++local_x) {
@@ -7009,22 +7020,96 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 						dispatch_level,
 						final_score,
 						result)) {
-				result.scorer_input_0x49e1bf_unowned = !result.blocked_reason.empty();
-				return true;
+				if (!result.blocked_reason.empty()) {
+					result.scorer_input_0x49e1bf_unowned = true;
+					return false;
+				}
+				continue;
 			}
 			result.first_scorer_first_pass_score_0x49e1bf = final_score;
-			return true;
+			if (final_score <= 0) {
+				continue;
+			}
+			DecorativeWeightedCandidate49e700 candidate;
+			candidate.source_record = source_record;
+			candidate.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(source_record);
+			candidate.candidate_x = candidate_x;
+			candidate.candidate_y = candidate_y;
+			candidate.candidate_level = dispatch_level;
+			candidate.score = final_score;
+			candidate.terrain_score = terrain_score;
+			accepted_candidates.push_back(candidate);
+			result.dispatch_probe_candidate_append_count_0x49e904 += 1;
+			result.dispatch_probe_candidate_weight_append_count_0x49e91f += 1;
+			result.dispatch_probe_candidate_weight_total_0x49e700 += final_score;
 		}
 	}
-	return false;
+	return true;
+}
+
+static int32_t decorative_dispatch_selected_candidate_index_0x49e9ad(
+		const std::vector<DecorativeWeightedCandidate49e700> &accepted_candidates,
+		int32_t selected_weight_remainder) {
+	for (int32_t index = 0; index < int32_t(accepted_candidates.size()); ++index) {
+		const int32_t weight = accepted_candidates[size_t(index)].score;
+		if (selected_weight_remainder < weight) {
+			return index;
+		}
+		selected_weight_remainder -= weight;
+	}
+	return accepted_candidates.empty() ? -1 : int32_t(accepted_candidates.size()) - 1;
+}
+
+static bool decorative_dispatch_post_commit_clear_bit26_0x49e700(
+		GeneratorObjectPrivateState &state,
+		const DecorativeWeightedCandidate49e700 &candidate,
+		DecorativeFlaggedCellDispatchResult49eb8d &result) {
+	const SourceObjectRecord0x4c &source_record = candidate.source_record;
+	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
+		for (int32_t col = 0; col < source_record.descriptor_width_0x34; ++col) {
+			if (!source_object_descriptor_mask_bit_0x4268eb(source_record, col, row)
+					&& source_object_descriptor_mask_bit_0x41e951(source_record, col, row)) {
+				continue;
+			}
+			const int32_t cell_x = candidate.candidate_x - col;
+			const int32_t cell_y = candidate.candidate_y - row;
+			const int64_t flat = cell_index(state.width, state.height, cell_x, cell_y, candidate.candidate_level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				continue;
+			}
+			GeneratedCellRecord0x30 &cell = state.generated_cell_buffer.records[size_t(flat)];
+			if (!cell.word_0x24_known || !cell.word_0x28_known || !cell.word_0x2c_known) {
+				result.blocked_reason = "0x49e700_post_commit_generated_cell_words_unknown";
+				return false;
+			}
+			if ((cell.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) == 0U) {
+				continue;
+			}
+			if ((cell.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
+				continue;
+			}
+			if (generated_cell_terrain_code_0x24(cell) == 9) {
+				continue;
+			}
+			if ((cell.word_0x2c & 0x1U) != 0U) {
+				continue;
+			}
+			cell.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+			sync_generated_cell_byte_0x2b_from_word28(cell);
+			result.post_commit_bit26_clear_count_0x49eaf1 += 1;
+			result.post_commit_coordinate_append_count_0x49eb01 += 1;
+		}
+	}
+	return true;
 }
 
 static void decorative_dispatch_probe_valid_cell_0x49e700(
-		const GeneratorObjectPrivateState &state,
+		GeneratorObjectPrivateState &state,
 		const GeneratedCellRecord0x30 &record,
 		int32_t dispatch_x,
 		int32_t dispatch_y,
 		int32_t dispatch_level,
+		H3MapedRng &rng,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	result.dispatch_probe_0x49e700_invoked = true;
 	result.dispatch_probe_invocation_count_0x49e700 += 1;
@@ -7040,6 +7125,8 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 	}
 	const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
 
+	std::vector<DecorativeWeightedCandidate49e700> accepted_candidates;
+	int32_t accepted_weight_total = 0;
 	for (const int32_t type_id : DECORATIVE_TYPE_TABLE_0X54092C) {
 		if (!decorative_dispatch_type_allowed_0x49e700(state, type_id)) {
 			continue;
@@ -7054,7 +7141,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 			result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
 			for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
 				result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
-				if (decorative_dispatch_probe_record_reaches_scorer_0x49e700(
+				if (!decorative_dispatch_collect_record_candidates_0x49e700(
 							state,
 							source_record,
 							score_record,
@@ -7062,18 +7149,83 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 							dispatch_y,
 							dispatch_level,
 							terrain_code,
+							accepted_candidates,
 							result)) {
-					if (result.blocked_reason.empty()) {
-						result.blocked_reason = "0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned";
-					}
 					return;
 				}
 			}
 		}
 	}
+	for (const DecorativeWeightedCandidate49e700 &candidate : accepted_candidates) {
+		accepted_weight_total += candidate.score;
+	}
+	if (accepted_candidates.empty() || accepted_weight_total <= 0) {
+		return;
+	}
+	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+		result.blocked_reason = "0x49e700_selected_object_key_allocator_missing_before_0x5044b1";
+		return;
+	}
+	result.rng_selection_0x49e9ad_invoked = true;
+	result.rng_value_0x49e9ad = rng.next();
+	const int32_t selected_weight_remainder = result.rng_value_0x49e9ad % accepted_weight_total;
+	result.selected_candidate_index_0x49e9ad =
+			decorative_dispatch_selected_candidate_index_0x49e9ad(accepted_candidates, selected_weight_remainder);
+	if (result.selected_candidate_index_0x49e9ad < 0
+			|| result.selected_candidate_index_0x49e9ad >= int32_t(accepted_candidates.size())) {
+		result.blocked_reason = "0x49e700_weighted_selection_index_out_of_range";
+		return;
+	}
+	const DecorativeWeightedCandidate49e700 &selected =
+			accepted_candidates[size_t(result.selected_candidate_index_0x49e9ad)];
+	result.selected_candidate_score_0x49e9ad = selected.score;
+	result.selected_candidate_source_row_0x49e9ad = selected.source_record.source_row;
+	result.selected_candidate_def_name_0x49e9ad = selected.source_record.def_name;
+
+	int32_t descriptor_offset_x_0x2c = 0;
+	int32_t descriptor_offset_y_0x30 = 0;
+	if (!descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+				selected.source_record,
+				descriptor_offset_x_0x2c,
+				descriptor_offset_y_0x30)) {
+		result.blocked_reason = "0x49e700_selected_descriptor_source_cell_offsets_0x2c_0x30_missing";
+		return;
+	}
+	const uint32_t object_record_key = state.next_native_object_record_key_0x4a93a2++;
+	result.selected_object_allocated_0x5044b1_count += 1;
+	result.selected_object_initialized_0x49ba89_count += 1;
+	const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+			state,
+			object_record_key,
+			selected.source_record.type_id_0x1c,
+			selected.candidate_x,
+			selected.candidate_y,
+			selected.candidate_level,
+			selected.source_record.action_count > 0,
+			descriptor_offset_x_0x2c,
+			descriptor_offset_y_0x30,
+			&selected.source_record);
+	if (!commit.object_vector_appended) {
+		result.blocked_reason = "0x49e700_vtable_slot_0x04_commit_did_not_append";
+		return;
+	}
+	result.selected_object_commit_callback_count_0x49ea25 += 1;
+	if (!state.object_records_0xec4_ecc.empty()) {
+		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+		object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+		object_record.descriptor_source_key_0x00 = selected.source_record.source_row;
+		object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+		object_record.copied_source_record_carried = true;
+		object_record.source_record_copy = selected.source_record;
+	}
+	if (!decorative_dispatch_post_commit_clear_bit26_0x49e700(state, selected, result)) {
+		return;
+	}
+	result.coordinate_worklist_replay_pending_after_first_commit = true;
+	result.blocked_reason = "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
 }
 
-DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state) {
+DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	DecorativeFlaggedCellDispatchResult49eb8d result;
 	result.invoked = true;
 	if (!state.generated_cell_buffer_owned
@@ -7117,7 +7269,7 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 				}
 				if (generated_cell_49a1d8_valid_record(record)) {
 					result.valid_0x49e700_dispatch_candidate_count += 1;
-					decorative_dispatch_probe_valid_cell_0x49e700(state, record, x, y, level, result);
+					decorative_dispatch_probe_valid_cell_0x49e700(state, record, x, y, level, rng, result);
 					if (!result.blocked_reason.empty()) {
 						return result;
 					}
@@ -15174,7 +15326,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 		result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
 		result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d =
-				decorative_flagged_cell_dispatch_0x49eb8d(result.generator_object_private_state);
+				decorative_flagged_cell_dispatch_0x49eb8d(result.generator_object_private_state, route_free_cell_rng);
 		if (!result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
 				|| !result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason.empty()) {
 			const std::string decorative_blocker =
