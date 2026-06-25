@@ -2911,6 +2911,9 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	uint32_t object_record_vtable_0x00 = 0U;
 	bool serializer_slot_0x0c_known = false;
 	uint32_t serializer_slot_0x0c = 0U;
+	bool pass_split_metadata_byte_0x0c_known = false;
+	bool first_flagged_pass_0x4ad36f = false;
+	bool second_unflagged_pass_0x4ad3b1 = false;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
@@ -2932,8 +2935,13 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	int32_t serializer_slot_known_count = 0;
 	int32_t serializer_slot_unknown_count = 0;
 	bool pass_split_metadata_table_owned_0x57c648_plus_0x0c = false;
+	int32_t pass_split_first_flagged_count_0x4ad36f = 0;
+	int32_t pass_split_second_unflagged_count_0x4ad3b1 = 0;
+	int32_t pass_split_descriptor_type_unknown_count = 0;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> first_records;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> last_records;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> first_pass_records;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> second_pass_records;
 };
 
 struct H3MapedRmgWorkflowResult {

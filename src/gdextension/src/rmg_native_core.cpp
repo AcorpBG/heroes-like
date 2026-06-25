@@ -323,6 +323,9 @@ void append_final_object_record_samples_json(std::ostream &out, const std::vecto
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"serializer_slot_0x0c_known\":" << (record.serializer_slot_0x0c_known ? "true" : "false")
 			<< ",\"serializer_slot_0x0c\":" << record.serializer_slot_0x0c
+			<< ",\"pass_split_metadata_byte_0x0c_known\":" << (record.pass_split_metadata_byte_0x0c_known ? "true" : "false")
+			<< ",\"first_flagged_pass_0x4ad36f\":" << (record.first_flagged_pass_0x4ad36f ? "true" : "false")
+			<< ",\"second_unflagged_pass_0x4ad3b1\":" << (record.second_unflagged_pass_0x4ad3b1 ? "true" : "false")
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
@@ -348,11 +351,18 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"serializer_slot_known_count\":" << writeout.serializer_slot_known_count
 		<< ",\"serializer_slot_unknown_count\":" << writeout.serializer_slot_unknown_count
 		<< ",\"pass_split_metadata_table_owned_0x57c648_plus_0x0c\":" << (writeout.pass_split_metadata_table_owned_0x57c648_plus_0x0c ? "true" : "false")
-		<< ",\"source\":\"0x4ad309_0x4ad318_writes_generated_object_vector_count_before_0x4ad3eb_pass_split\""
+		<< ",\"pass_split_first_flagged_count_0x4ad36f\":" << writeout.pass_split_first_flagged_count_0x4ad36f
+		<< ",\"pass_split_second_unflagged_count_0x4ad3b1\":" << writeout.pass_split_second_unflagged_count_0x4ad3b1
+		<< ",\"pass_split_descriptor_type_unknown_count\":" << writeout.pass_split_descriptor_type_unknown_count
+		<< ",\"source\":\"0x4ad309_0x4ad318_object_count_then_0x4ad3eb_0x57c648_plus_0x0c_two_pass_order\""
 		<< ",\"first_records\":";
 	append_final_object_record_samples_json(out, writeout.first_records);
 	out << ",\"last_records\":";
 	append_final_object_record_samples_json(out, writeout.last_records);
+	out << ",\"first_pass_records\":";
+	append_final_object_record_samples_json(out, writeout.first_pass_records);
+	out << ",\"second_pass_records\":";
+	append_final_object_record_samples_json(out, writeout.second_pass_records);
 	out << "}";
 }
 
@@ -4089,7 +4099,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_final_object_pass_split_and_payload_writeout_0x4ad3eb_0x57c648_type_plus_0x0c_then_0x4ad3de_0x4ae09a\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_final_object_serializer_payload_bodies_0x4ad3eb_then_0x4ad3de_0x4ae09a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
