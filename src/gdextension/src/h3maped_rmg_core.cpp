@@ -1452,7 +1452,7 @@ static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
 		const SourceObjectRecord0x4c &record,
 		int32_t &source_cell_x_0x2c,
 		int32_t &source_cell_y_0x30) {
-	if (record.action_mask.size() < 48U) {
+	if (!record.descriptor_mask_fields_0x34_0x48_known) {
 		return false;
 	}
 	for (int32_t row = 0; row < 6; ++row) {
@@ -1473,27 +1473,16 @@ static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	// 0x41e951 reads descriptor +0x04/+0x08. The recovered catalog's text
-	// passability mask feeds that descriptor surface; .msk fields are the later
-	// +0x34..+0x48 descriptor payload and must not replace this lookup.
-	const size_t text_index = size_t(y * 8 + x);
-	if (record.passability_mask.size() > text_index) {
-		return record.passability_mask[text_index] == '1';
-	}
-	return false;
+	const int32_t bit_index = 47 - (8 * y) - x;
+	return (record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
 }
 
 static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	// 0x4268eb reads descriptor +0x0c/+0x10, which is represented by the
-	// source-backed action/control mask in the recovered object catalog.
-	const size_t text_index = size_t(y * 8 + x);
-	if (record.action_mask.size() > text_index) {
-		return record.action_mask[text_index] == '1';
-	}
-	return false;
+	const int32_t bit_index = 47 - (8 * y) - x;
+	return (record.descriptor_mask_b_0x44_0x48 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
 }
 
 static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_primary_mask_0x49a6f9(
@@ -11269,8 +11258,7 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_order_source_record_0x00_known = source_record.source_id_0x00 >= 0;
 	owner.source_order_source_record_0x00 = source_record;
 	owner.source_order_source_record_field_0x04_known =
-			owner.source_order_source_record_0x00_known
-			&& owner.source_order_source_record_0x00.owner_or_type_0x04 >= 0;
+			owner.source_order_source_record_0x00_known;
 	owner.reward_guard_source_bands_0xa0_0xc0_known = seed.source_index >= 0;
 	owner.reward_guard_source_bands_0xa0_0xc0 = {
 		seed.source_payload.treasure_band_0,
