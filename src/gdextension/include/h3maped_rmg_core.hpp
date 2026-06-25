@@ -2182,6 +2182,11 @@ struct ConnectionTailReplayResult4a79a3 {
 	bool fallback_materialization_applied = false;
 	bool source_backed_frontier_known = false;
 	int32_t source_frontier_scan_cell_count = 0;
+	int32_t source_frontier_high_owner_candidate_count = 0;
+	int32_t source_frontier_terrain8_skip_count = 0;
+	int32_t source_frontier_terrain9_skip_count = 0;
+	int32_t source_frontier_bit25_skip_count = 0;
+	int32_t source_frontier_neighbor_probe_count = 0;
 	int32_t source_frontier_candidate_pair_count = 0;
 	int32_t source_frontier_neighbor_terrain8_skip_count = 0;
 	int32_t source_frontier_same_owner_skip_count = 0;
@@ -3174,12 +3179,12 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
-BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles);
-BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
-BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level);
-BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count);
+BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles);
+BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
+BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level);
+BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count);
 void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count);
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t zone_id, const SpanRecord &seed);
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t zone_id, const SpanRecord &seed);
 
 int32_t deplete_generated_cell_scores_4a54a7(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level);
 

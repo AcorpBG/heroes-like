@@ -1239,7 +1239,7 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	}), candidates.end());
 }
 
-void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
+void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
 	if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
 		result.out_of_bounds_write_count += 1;
 		return;
@@ -1249,7 +1249,7 @@ void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int3
 	write.y = y;
 	write.level = level;
 	write.zone_id = zone_id & 0xff;
-	write.reserved = allow_reserved_flag && !(generator_mode_0x10b8 == 2 && level != 1);
+	write.reserved = allow_reserved_flag && !(water_mode_code == 2 && level != 1);
 	result.trace.push_back(write);
 	const int64_t key = generated_cell_flat_key_4a325d(width, height, x, y, level);
 	result.unique_cells[key] = true;
@@ -2276,6 +2276,10 @@ static uint32_t generated_cell_word28_set_direction_49a318(uint32_t word_0x28, i
 	return generated_cell_4a59e2_pack_word_0x28(word_0x28, uint32_t(direction_ordinal));
 }
 
+static int32_t reverse_direction_0x5a2658(int32_t direction_ordinal) {
+	return (direction_ordinal + 4) & 0x7;
+}
+
 static int32_t generated_cell_terrain_code_0x24(const GeneratedCellRecord0x30 &record) {
 	return record.word_0x24_known ? int32_t(record.word_0x24 & 0x3fU) : 9;
 }
@@ -2524,7 +2528,9 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 						next_record.word_0x1c_known = true;
 						next_record.word_0x20 = generated_cell_word20_set_owner_byte3_49a318(next_record.word_0x20, report.source_owner_byte);
 						next_record.word_0x20_known = true;
-						next_record.word_0x28 = generated_cell_word28_set_direction_49a318(next_record.word_0x28_known ? next_record.word_0x28 : 0U, direction);
+						next_record.word_0x28 = generated_cell_word28_set_direction_49a318(
+								next_record.word_0x28_known ? next_record.word_0x28 : 0U,
+								reverse_direction_0x5a2658(direction));
 						next_record.word_0x28_known = true;
 						sync_generated_cell_byte_0x2b_from_word28(next_record);
 						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
@@ -8697,11 +8703,18 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				if (generated_cell_word20_owner_byte3_signed(record.word_0x20) < 0) {
 					continue;
 				}
+				result.source_frontier_high_owner_candidate_count += 1;
 				const uint32_t terrain = record.word_0x24 & 0x3fU;
-				if (terrain == 8U || terrain == 9U) {
+				if (terrain == 8U) {
+					result.source_frontier_terrain8_skip_count += 1;
+					continue;
+				}
+				if (terrain == 9U) {
+					result.source_frontier_terrain9_skip_count += 1;
 					continue;
 				}
 				if ((record.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
+					result.source_frontier_bit25_skip_count += 1;
 					continue;
 				}
 				const int32_t direction = int32_t((record.word_0x28 >> 12U) & 0x7U);
@@ -8713,6 +8726,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 					continue;
 				}
 				const GeneratedCellRecord0x30 &neighbor = state.generated_cell_buffer.records[size_t(neighbor_flat)];
+				result.source_frontier_neighbor_probe_count += 1;
 				if ((neighbor.word_0x24 & 0x3fU) == 8U) {
 					result.source_frontier_neighbor_terrain8_skip_count += 1;
 					continue;
@@ -11154,7 +11168,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 		result.handoffs.push_back(std::move(handoff));
 	}
 
-	result.materialization = materialize_boundary_source_handoffs_4a2777_4a325d(width, height, level_count, generator_mode_0x10b8, rng_state, result.handoffs);
+	result.materialization = materialize_boundary_source_handoffs_4a2777_4a325d(width, height, level_count, water_mode_code, generator_mode_0x10b8, rng_state, result.handoffs);
 	result.materialization_executed = true;
 	int32_t same_level_runtime_zone_count = 0;
 	for (const RuntimeZoneBoundaryInput4a3a03 &runtime : runtime_zones) {
@@ -15102,7 +15116,7 @@ std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a277
 	return cycles;
 }
 
-BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level) {
+BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level) {
 	BoundaryLineWriteResult result;
 	if (x1 > x2) {
 		std::swap(x1, x2);
@@ -15132,7 +15146,7 @@ BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t heigh
 	int32_t x = x1;
 	int32_t y = y1;
 	while (x != x2 || y != y2) {
-		write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, x, y, zone_id, level);
+		write_line_cell_4a261a(result, width, height, level_count, water_mode_code, x, y, zone_id, level);
 		error += minor;
 		if (error < major) {
 			x += simple_step_x;
@@ -15143,11 +15157,11 @@ BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t heigh
 			y += diagonal_step_y;
 		}
 	}
-	write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, x, y, zone_id, level, false);
+	write_line_cell_4a261a(result, width, height, level_count, water_mode_code, x, y, zone_id, level, false);
 	return result;
 }
 
-BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
+BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
 	BoundaryLineWriteResult result;
 	std::vector<BoundaryPoint> pending;
 	pending.push_back(BoundaryPoint { x2, y2 });
@@ -15162,7 +15176,7 @@ BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, in
 		if ((midpoint_x == current_x && midpoint_y == current_y) || (midpoint_x == target.x && midpoint_y == target.y)) {
 			const int32_t clamped_x = std::min(std::max(current_x, 0), width - 1);
 			const int32_t clamped_y = std::min(std::max(current_y, 0), height - 1);
-			write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, clamped_x, clamped_y, zone_id, level);
+			write_line_cell_4a261a(result, width, height, level_count, water_mode_code, clamped_x, clamped_y, zone_id, level);
 			current_x = target.x;
 			current_y = target.y;
 			continue;
@@ -15206,7 +15220,7 @@ void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line,
 	}
 }
 
-BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles) {
+BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles) {
 	BoundaryMaterialization4a2777 result;
 	result.width = width;
 	result.height = height;
@@ -15247,7 +15261,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					width,
 					height,
 					level_count,
-					generator_mode_0x10b8,
+					water_mode_code,
 					x1,
 					y1,
 					x2,
@@ -15261,7 +15275,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					result.randomized_max_pending_point_count);
 			result.flagged_writer_segment_count += 1;
 		} else {
-			line = boundary_line_writer_4a261a(width, height, level_count, generator_mode_0x10b8, x1, y1, x2, y2, zone_word, level);
+			line = boundary_line_writer_4a261a(width, height, level_count, water_mode_code, x1, y1, x2, y2, zone_word, level);
 			result.deterministic_writer_segment_count += 1;
 		}
 		merge_boundary_line_4a2777(line, unique_cells, result);
@@ -15572,7 +15586,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				width,
 				height,
 				level_count,
-				generator_mode_0x10b8,
+				water_mode_code,
 				zone.zone_word,
 				seed);
 		for (const auto &item : fill.unique_cells) {
@@ -15598,9 +15612,9 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 	return result;
 }
 
-BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs) {
+BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs) {
 	std::vector<BoundaryCycleInput4a2777> cycles = boundary_cycles_from_source_handoffs_4a2777(handoffs);
-	BoundaryMaterialization4a2777 result = materialize_boundary_cycles_4a2777(width, height, level_count, generator_mode_0x10b8, rng_state, cycles);
+	BoundaryMaterialization4a2777 result = materialize_boundary_cycles_4a2777(width, height, level_count, water_mode_code, generator_mode_0x10b8, rng_state, cycles);
 		result.source_handoff_count = int32_t(handoffs.size());
 		for (const BoundarySourceCycleHandoff4a2777 &handoff : handoffs) {
 			result.source_handoff_point_count += int32_t(handoff.source_nodes.size());
@@ -15624,7 +15638,7 @@ BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d
 	return result;
 }
 
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t zone_id, const SpanRecord &seed) {
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t zone_id, const SpanRecord &seed) {
 	SpanFillResult result;
 	std::vector<SpanRecord> pending;
 	push_span_4a325d(pending, seed, result);
@@ -15654,7 +15668,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 				continue;
 			}
 			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, zone_id);
-			const bool reserved = !(generator_mode_0x10b8 == 2 && coord.level != 1);
+			const bool reserved = !(water_mode_code == 2 && coord.level != 1);
 			if (reserved) {
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 			}
