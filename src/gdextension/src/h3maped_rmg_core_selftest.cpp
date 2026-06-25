@@ -2160,11 +2160,22 @@ int main() {
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 	const std::string final_writeout_blocker =
-			"final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243";
+			"final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_writeout"
 					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned generator state did not advance through road toolkit materialization into the final-writeout boundary")) {
+				"workflow-owned generator state did not advance through 0x49b2b6 tile writeout into the object/header writeout boundary")) {
+		return 1;
+	}
+	if (!require(generator_state_workflow.final_tile_writeout_0x49b2b6.invoked
+					&& generator_state_workflow.final_tile_writeout_0x49b2b6.applied
+					&& generator_state_workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
+					&& generator_state_workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
+					&& generator_state_workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
+					&& generator_state_workflow.final_tile_writeout_0x49b2b6.tile_byte_array_count == 7
+					&& !generator_state_workflow.final_tile_writeout_0x49b2b6.first_cells.empty()
+					&& !generator_state_workflow.final_tile_writeout_0x49b2b6.last_cells.empty(),
+				"workflow-owned final 0x49b2b6 tile stream did not materialize the expected 7-byte cell payload")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -4471,22 +4482,32 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_final_writeout_blocker =
-					"final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243";
+					"final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
 						&& workflow.current_phase_id == "final_writeout"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance past road/river object adjacency to final writeout")) {
+					"entry-to-writeout workflow did not advance past 0x49b2b6 tile writeout to object/header writeout")) {
 			return 1;
 		}
 		if (!require(workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed at final writeout; actual=")
+					std::string("entry-to-writeout workflow did not fail closed after 0x49b2b6 tile writeout; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 13
+		if (!require(workflow.final_tile_writeout_0x49b2b6.invoked
+						&& workflow.final_tile_writeout_0x49b2b6.applied
+						&& workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
+						&& workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
+						&& workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
+						&& workflow.final_tile_writeout_0x49b2b6.road_type_nonzero_count > 0
+						&& workflow.final_tile_writeout_0x49b2b6.flag_nonzero_count > 0,
+					"entry-to-writeout workflow did not own the recovered 0x49b2b6 tile stream before the object/header blocker")) {
+			return 1;
+		}
+			if (!require(workflow.phases.size() >= 14
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4508,7 +4529,9 @@ int main() {
 							&& workflow.phases[11].id == "road_river_object_adjacency"
 							&& workflow.phases[11].status == "complete_source_order_prefix"
 							&& workflow.phases[12].id == "final_writeout"
-							&& workflow.phases[12].status == "pending",
+							&& workflow.phases[12].status == "complete_source_order_prefix"
+							&& workflow.phases[13].id == "final_object_header_writeout"
+							&& workflow.phases[13].status == "pending",
 						"entry-to-writeout workflow did not preserve recovered phase order through road/river object adjacency")) {
 				return 1;
 			}

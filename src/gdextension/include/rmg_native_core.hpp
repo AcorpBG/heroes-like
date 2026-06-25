@@ -1,5 +1,7 @@
 #pragma once
 
+#include "h3maped_rmg_core.hpp"
+
 #include <array>
 #include <cstdint>
 #include <filesystem>
@@ -330,6 +332,9 @@ struct CaseReport {
 	std::string shared_chain_input_status;
 	bool native_workflow_executed = false;
 	bool native_workflow_final_writeout_complete = false;
+	bool native_workflow_final_tile_writeout_applied = false;
+	int32_t native_workflow_final_tile_cell_count = 0;
+	int32_t native_workflow_final_tile_byte_count = 0;
 	std::string native_workflow_status;
 	std::string native_workflow_current_phase;
 	bool phase_snapshot_written = false;
@@ -1206,6 +1211,7 @@ struct NativeH3MapedWorkflowResult {
 	bool executed = false;
 	bool final_payload_owned = false;
 	bool final_writeout_complete = false;
+	aurelion::h3maped_rmg_core::FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
 	std::string status;
 	std::string blocked_reason;
 	std::string current_phase_id;
