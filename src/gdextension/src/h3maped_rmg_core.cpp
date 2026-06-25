@@ -1529,6 +1529,10 @@ static GeneratorDescriptorVectorEntry0x398 generator_descriptor_vector_entry_fro
 		int32_t source_catalog_index_0x49da08) {
 	GeneratorDescriptorVectorEntry0x398 entry;
 	entry.source_catalog_index_0x49da08 = source_catalog_index_0x49da08;
+	// Recovered selected descriptor samples for current one-level land scopes carry descriptor +0x0c as zero;
+	// keep it explicit because serializer 0x49baf8 writes this descriptor field into final object payloads.
+	entry.descriptor_raw_0x0c_known = true;
+	entry.descriptor_raw_0x0c = 0;
 	entry.descriptor_type_0x1c = record.type_id_0x1c;
 	entry.descriptor_source_field_0x20 = record.subtype_0x20;
 	entry.descriptor_group_0x24 = record.group_0x24;
@@ -1813,6 +1817,8 @@ static SourceObjectDescriptorJoinContext4903e8 descriptor_join_context_from_desc
 	SourceObjectDescriptorJoinContext4903e8 context;
 	context.target_context_0x4903e8 = descriptor.target_context_0x4903e8;
 	context.source_key_0x00 = descriptor.source_key_0x00;
+	context.descriptor_raw_0x0c_known = descriptor.descriptor_raw_0x0c_known;
+	context.descriptor_raw_0x0c = descriptor.descriptor_raw_0x0c;
 	context.descriptor_type_0x1c = descriptor.descriptor_type_0x1c;
 	context.subtype_0x20 = descriptor.subtype_0x20;
 	context.group_0x24 = descriptor.group_0x24;
@@ -3733,11 +3739,13 @@ static void generated_grid_stamp_object_footprint_0x49abd6(
 	result.generator_body_stamp_applied_0x49abd6 = result.generator_body_stamp_count_0x49abd6 > 0;
 }
 
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04) {
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04, bool descriptor_raw_0x0c_known, int32_t descriptor_raw_0x0c) {
 	ObjectFootprintCommitResult4a54a7 result;
 	ObjectRecordReference4a54a7 object_record;
 	object_record.object_record_key = object_record_key;
 	object_record.descriptor_type_0x1c = descriptor_type_0x1c;
+	object_record.descriptor_raw_0x0c_known = descriptor_raw_0x0c_known;
+	object_record.descriptor_raw_0x0c = descriptor_raw_0x0c;
 	object_record.x = x;
 	object_record.y = y;
 	object_record.level = level;
@@ -3861,12 +3869,16 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 			descriptor.projection_enabled_0x29,
 			descriptor.source_cell_x_0x2c,
 			descriptor.source_cell_y_0x30,
-			prep.copied_source_record_carried ? &prep.source_record_copy : nullptr);
+			prep.copied_source_record_carried ? &prep.source_record_copy : nullptr,
+			descriptor.descriptor_raw_0x0c_known,
+			descriptor.descriptor_raw_0x0c);
 	if (result.object_vector_appended && !state.object_records_0xec4_ecc.empty()) {
 		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc.back();
 		record.source_descriptor_join_0x4903e8_known = prep.descriptor_joined;
 		record.weighted_type98_descriptor_bridge_0x4a93a2_known = prep.weighted_type98_descriptor_bridge_0x4a93a2_known;
 		record.descriptor_source_key_0x00 = descriptor.source_key_0x00;
+		record.descriptor_raw_0x0c_known = descriptor.descriptor_raw_0x0c_known;
+		record.descriptor_raw_0x0c = descriptor.descriptor_raw_0x0c;
 		record.selected_wrapper_index_0x4af785 = prep.selected_wrapper_index_0x4af785;
 		record.source_catalog_index_0x49da08 = prep.source_catalog_index_0x49da08;
 		record.copied_source_record_carried = prep.copied_source_record_carried;
@@ -10035,6 +10047,8 @@ static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3e
 	sample.vector_index = vector_index;
 	sample.object_record_key = record.object_record_key;
 	sample.descriptor_type_0x1c = record.descriptor_type_0x1c;
+	sample.descriptor_raw_0x0c_known = record.descriptor_raw_0x0c_known;
+	sample.descriptor_raw_0x0c = record.descriptor_raw_0x0c;
 	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
 	sample.serializer_slot_0x0c_known = sample.serializer_slot_0x0c != 0U;
@@ -10055,6 +10069,183 @@ static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3e
 		sample.source_subtype_0x20 = record.source_record_copy.subtype_0x20;
 	}
 	return sample;
+}
+
+static void final_object_append_u8_0x4ad3eb(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+}
+
+static void final_object_append_le16_0x4ad3eb(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+	bytes.push_back(uint8_t((value >> 8U) & 0xffU));
+}
+
+static void final_object_append_le32_0x4ad3eb(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+	bytes.push_back(uint8_t((value >> 8U) & 0xffU));
+	bytes.push_back(uint8_t((value >> 16U) & 0xffU));
+	bytes.push_back(uint8_t((value >> 24U) & 0xffU));
+}
+
+static void final_object_append_zeroes_0x4ad3eb(std::vector<uint8_t> &bytes, int32_t count) {
+	for (int32_t index = 0; index < count; ++index) {
+		bytes.push_back(0U);
+	}
+}
+
+static std::string final_object_payload_field_blocker_0x4ad3eb(uint32_t serializer_slot_0x0c, const char *field_name) {
+	std::ostringstream reason;
+	reason << "final_object_payload_" << field_name << "_missing_for_serializer_slot_0x"
+			<< std::hex << std::setw(8) << std::setfill('0') << serializer_slot_0x0c;
+	return reason.str();
+}
+
+static bool final_object_require_sequence_0x1c_0x4ad3eb(const ObjectRecordReference4a54a7 &record, uint32_t serializer_slot_0x0c, std::string &blocked_reason) {
+	if (record.object_record_sequence_0x1c < 0) {
+		blocked_reason = final_object_payload_field_blocker_0x4ad3eb(serializer_slot_0x0c, "record_sequence_0x1c");
+		return false;
+	}
+	return true;
+}
+
+static bool final_object_append_base_payload_0x49baf8(
+		std::vector<uint8_t> &bytes,
+		const ObjectRecordReference4a54a7 &record,
+		std::string &blocked_reason) {
+	if (!record.descriptor_raw_0x0c_known) {
+		blocked_reason = "final_object_payload_descriptor_plus_0x0c_missing_for_base_serializer_0x49baf8";
+		return false;
+	}
+	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.x));
+	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.y));
+	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.level));
+	final_object_append_le32_0x4ad3eb(bytes, uint32_t(record.descriptor_raw_0x0c));
+	final_object_append_zeroes_0x4ad3eb(bytes, 5);
+	return true;
+}
+
+static bool final_object_append_payload_for_record_0x4ad3eb(
+		std::vector<uint8_t> &bytes,
+		const ObjectRecordReference4a54a7 &record,
+		uint32_t serializer_slot_0x0c,
+		int32_t pass_arg,
+		std::string &blocked_reason) {
+	if (!final_object_append_base_payload_0x49baf8(bytes, record, blocked_reason)) {
+		return false;
+	}
+
+	switch (serializer_slot_0x0c) {
+		case 0x0049baf8U:
+			return true;
+		case 0x0049bb92U:
+			if (!final_object_require_sequence_0x1c_0x4ad3eb(record, serializer_slot_0x0c, blocked_reason)) {
+				return false;
+			}
+			if (pass_arg >= 1) {
+				final_object_append_le32_0x4ad3eb(bytes, uint32_t(record.object_record_sequence_0x1c));
+			}
+			final_object_append_le16_0x4ad3eb(bytes, uint32_t(record.object_record_selected_index_0x20));
+			final_object_append_u8_0x4ad3eb(bytes, record.object_record_enabled_word_0x24);
+			final_object_append_zeroes_0x4ad3eb(bytes, 3);
+			final_object_append_le16_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049bc2fU:
+			if (!final_object_require_sequence_0x1c_0x4ad3eb(record, serializer_slot_0x0c, blocked_reason)) {
+				return false;
+			}
+			if (pass_arg >= 1) {
+				final_object_append_le32_0x4ad3eb(bytes, uint32_t(record.object_record_sequence_0x1c));
+			}
+			final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.object_record_selected_index_0x20));
+			final_object_append_zeroes_0x4ad3eb(bytes, 4);
+			final_object_append_u8_0x4ad3eb(bytes, record.object_record_enabled_word_0x24);
+			if (pass_arg >= 1) {
+				final_object_append_zeroes_0x4ad3eb(bytes, 9);
+			}
+			final_object_append_zeroes_0x4ad3eb(bytes, 9);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			if (pass_arg >= 2) {
+				final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			}
+			final_object_append_zeroes_0x4ad3eb(bytes, 3);
+			return true;
+		case 0x0049bd3eU:
+			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			final_object_append_zeroes_0x4ad3eb(bytes, 3);
+			return true;
+		case 0x0049bd81U:
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049bdb4U:
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049c44dU:
+			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			final_object_append_le16_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049c495U:
+			if (!final_object_require_sequence_0x1c_0x4ad3eb(record, serializer_slot_0x0c, blocked_reason)) {
+				return false;
+			}
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.object_record_sequence_0x1c));
+			final_object_append_le16_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049c4f4U:
+			if (pass_arg >= 1) {
+				final_object_append_le32_0x4ad3eb(bytes, 0xefdfU);
+			}
+			return true;
+		default: {
+			std::ostringstream reason;
+			reason << "final_object_payload_serializer_slot_0x"
+					<< std::hex << std::setw(8) << std::setfill('0') << serializer_slot_0x0c
+					<< "_unported_after_prefix";
+			blocked_reason = reason.str();
+			return false;
+		}
+	}
+}
+
+static bool final_object_serialize_payload_pass_0x4ad3eb(
+		FinalObjectWriteoutResult4ad1e3 &result,
+		const GeneratorObjectPrivateState &state,
+		bool first_flagged_pass,
+		int32_t pass_arg) {
+	for (int32_t index = 0; index < result.generated_object_count; ++index) {
+		const ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc[size_t(index)];
+		const bool record_first_pass = object_metadata_pass_split_flag_0x598300_plus_0x0c(record.descriptor_type_0x1c);
+		if (record_first_pass != first_flagged_pass) {
+			continue;
+		}
+		const uint32_t serializer_slot_0x0c =
+				final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
+		if (serializer_slot_0x0c == 0U) {
+			result.blocked_reason = "final_object_payload_serializer_slot_unknown_for_object_record_vtable";
+			result.object_payload_prefix_blocked_index = index;
+			result.object_payload_prefix_blocked_pass = pass_arg;
+			return false;
+		}
+		const size_t record_payload_start = result.object_payload_bytes.size();
+		if (!final_object_append_payload_for_record_0x4ad3eb(
+					result.object_payload_bytes,
+					record,
+					serializer_slot_0x0c,
+					pass_arg,
+					result.blocked_reason)) {
+			result.object_payload_bytes.resize(record_payload_start);
+			result.object_payload_prefix_blocked_index = index;
+			result.object_payload_prefix_blocked_serializer_slot = serializer_slot_0x0c;
+			result.object_payload_prefix_blocked_pass = pass_arg;
+			return false;
+		}
+		result.object_payload_serialized_object_count += 1;
+	}
+	return true;
 }
 
 static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4ad318(
@@ -10115,7 +10306,16 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		result.blocked_reason = "final_object_pass_split_descriptor_type_out_of_0x598300_table_range";
 		return result;
 	}
-	result.blocked_reason = "final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
+	result.object_payload_serialization_invoked = true;
+	if (!final_object_serialize_payload_pass_0x4ad3eb(result, state, true, 1)
+			|| !final_object_serialize_payload_pass_0x4ad3eb(result, state, false, 2)) {
+		result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
+		result.object_payload_prefix_applied = result.object_payload_serialized_object_count > 0;
+		return result;
+	}
+	result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
+	result.object_payload_prefix_applied = true;
+	result.blocked_reason = "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix";
 	return result;
 }
 
@@ -10835,7 +11035,9 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 			join.descriptor.projection_enabled_0x29,
 			join.descriptor.source_cell_x_0x2c,
 			join.descriptor.source_cell_y_0x30,
-			join.copied_source_record_is_identity_authority ? &join.source_record_copy : nullptr);
+			join.copied_source_record_is_identity_authority ? &join.source_record_copy : nullptr,
+			join.descriptor.descriptor_raw_0x0c_known,
+			join.descriptor.descriptor_raw_0x0c);
 	result.committed_through_vtable_slot_0x04 = result.commit_0x4a54a7.object_vector_appended;
 	if (!result.committed_through_vtable_slot_0x04) {
 		result.blocked_reason = "0x4a7312_vtable_slot_0x04_object_commit_did_not_append";
@@ -10845,6 +11047,8 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
 		object_record.source_descriptor_join_0x4903e8_known = true;
 		object_record.descriptor_source_key_0x00 = join.descriptor.source_key_0x00;
+		object_record.descriptor_raw_0x0c_known = join.descriptor.descriptor_raw_0x0c_known;
+		object_record.descriptor_raw_0x0c = join.descriptor.descriptor_raw_0x0c;
 		object_record.selected_wrapper_index_0x4af785 = join.resolver_0x4af785.selected_wrapper_index;
 		object_record.source_catalog_index_0x49da08 = join.source_catalog_index_0x49da08;
 		object_record.copied_source_record_carried = true;
@@ -14421,6 +14625,8 @@ static SourceObjectDescriptor4903e8 source_type98_town_descriptor_from_record_0x
 	SourceObjectDescriptor4903e8 descriptor;
 	descriptor.target_context_0x4903e8 = 98;
 	descriptor.source_key_0x00 = record.source_row;
+	descriptor.descriptor_raw_0x0c_known = true;
+	descriptor.descriptor_raw_0x0c = 0;
 	descriptor.descriptor_type_0x1c = record.type_id_0x1c;
 	descriptor.subtype_0x20 = record.subtype_0x20;
 	descriptor.group_0x24 = record.group_0x24;
@@ -14707,6 +14913,8 @@ static SourceObjectDescriptor4903e8 source_descriptor_from_preserved_pair_contex
 	SourceObjectDescriptor4903e8 descriptor;
 	descriptor.target_context_0x4903e8 = context.target_context_0x4903e8;
 	descriptor.source_key_0x00 = context.source_key_0x00;
+	descriptor.descriptor_raw_0x0c_known = context.descriptor_raw_0x0c_known;
+	descriptor.descriptor_raw_0x0c = context.descriptor_raw_0x0c;
 	descriptor.descriptor_type_0x1c = context.descriptor_type_0x1c;
 	descriptor.subtype_0x20 = context.subtype_0x20;
 	descriptor.group_0x24 = context.group_0x24;
