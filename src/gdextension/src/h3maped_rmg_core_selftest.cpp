@@ -846,6 +846,44 @@ int main() {
 					"0x4a9f1c selected-create dispatch did not use source-owned descriptor selection, weighted RNG, and recovered 0x540c80 -> 0x49cc22 -> 0x540b14/0x4aa166 constructor behavior")) {
 			return 1;
 		}
+
+		GeneratorObjectPrivateState selected_object_state = selected_create_state;
+		selected_object_state.next_native_object_record_key_0x4a93a2 = 1U;
+		selected_object_state.object_record_sequence_allocator_0xf44 = 1;
+		selected_object_state.object_record_allocation_count_0x4a93a2 = 0;
+		H3MapedRng selected_object_rng;
+		selected_object_rng.state = 1U;
+		auto selected_object_wrapper_construct =
+				aurelion::h3maped_rmg_core::reward_guard_wrapper_construct_0x49ce04();
+		if (!require(selected_object_wrapper_construct.applied,
+					"0x49ce04 wrapper construct failed before selected-object callsite replay")) {
+			return 1;
+		}
+		auto selected_object =
+				aurelion::h3maped_rmg_core::reward_guard_selected_object_create_shell_0x4aa1db(
+						selected_object_state,
+						selected_object_wrapper_construct.wrapper,
+						&selector,
+						0,
+						2000,
+						selected_object_rng);
+		const std::string selected_object_callsite_detail =
+				"applied=" + std::to_string(selected_object.applied ? 1 : 0)
+				+ " blocker=" + selected_object.blocked_reason
+				+ " policy20=" + std::to_string(int(selected_object.selector_0x4a9f1c.callsite_args.policy_extent_byte_0x20))
+				+ " gate=" + std::to_string(selected_object.selector_0x4a9f1c.policy_extent_gate_invoked_0x20 ? 1 : 0)
+				+ " accepted=" + std::to_string(selected_object.selector_0x4a9f1c.accepted_count)
+				+ " key_known=" + std::to_string(selected_object.selector_0x4a9f1c.selected_object_record_key_known_0x4aa166 ? 1 : 0)
+				+ " key=" + std::to_string(selected_object.selector_0x4a9f1c.selected_object_record_key_0x4aa166)
+				+ " stamp=" + std::to_string(selected_object.initial_body_stamp_count_0x49abd6);
+		if (!require(selected_object.selector_0x4a9f1c.callsite_args.policy_extent_byte_0x20 == uint8_t(2000 & 0xff)
+						&& selected_object.selector_0x4a9f1c.policy_extent_gate_invoked_0x20
+						&& selected_object.selector_0x4a9f1c.accepted_count == 1
+						&& selected_object.selector_0x4a9f1c.selected_object_record_key_known_0x4aa166
+						&& selected_object.selector_0x4a9f1c.selected_object_record_key_0x4aa166 == 1U,
+					"0x4aa1db selected-object helper did not pass selected-value low byte into 0x4a9f1c stack +0x20: " + selected_object_callsite_detail)) {
+			return 1;
+		}
 	}
 
 	{
