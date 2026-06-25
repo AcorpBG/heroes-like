@@ -16,17 +16,17 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Shared h3maped_rmg_core source-order alignment: object footprint references now follow recovered 0x49abd6 primary/body-reject cells, route 0x4a8260 endpoint pending order follows recovered start/end push order, and reward/guard occupied-cell descriptor resolution now follows first object-reference semantics. No-Godot selftest passes; controlled Small/Medium batch remains blocked at reward_guard_materialization zero successful 0x4aa9b7 commits, so slice remains in progress.",
+      "notes": "Shared h3maped_rmg_core source-order alignment: recovered 0x4ac552 continuation after reward/guard is now reflected in the active workflow. Zero successful direct 0x4aa9b7 reward/guard commits remain recorded as parity debt, but they no longer gate downstream replay. No-Godot selftest passes; controlled Small/Medium batch now blocks after reward/guard in connection/decorative replay.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-22T10:40:12Z",
+      "updatedAt": "2026-06-25T18:39:40Z",
       "latestEvidenceId": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
-      "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
-      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show the direct 0x4aab7e source stream now stays direct: last_projection_order_invoked_0x4ad7f7=0 in all three cases. Relation-fed positive attach allocation reaches 0x49cf34 for Small seed 10 and Medium seed 10, and Small seed 58 blocks without attach. All three still have zero 0x4aa9b7 commits.",
-      "blocker": "Reward/guard materialization still produces zero successful direct 0x4aa9b7 commits. Small seed 10 and Small seed 58 first reject at 0x4aa603_0x49a6f9_footprint_existing_bit26_rejected; Medium seed 10 first rejects at 0x4aa603_0x49a6f9_footprint_owner_byte_rejected. Continuing into connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before direct reward/guard commits are source-owned would recreate proxy-state drift.",
+      "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue road/river adjacency and final writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains parity debt.",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now advance past reward/guard materialization. Small seed 10 and Medium seed 10 block in connection_road_river at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; Small seed 58 blocks at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. All three still have zero direct 0x4aa9b7 reward/guard commits.",
+      "blocker": "Final writeout is blocked by downstream source-order replay: 0x4a61bc live source-frontier candidate production for Small seed 10/Medium seed 10 and 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
         "id": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
@@ -84,11 +84,11 @@
         },
         "result": "partial_source_order_implementation_not_parity"
       },
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now removes the misplaced reward/guard projection fallback from the direct 0x4aab7e source stream and uses relation-fed 0x4a5c07 monster allocation for positive 0x4aa354 attach values instead of reusing the selected reward descriptor. No-Godot Small seed 10, Small seed 58, and Medium seed 10 all still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now removes the misplaced reward/guard projection fallback from the direct 0x4aab7e source stream and uses relation-fed 0x4a5c07 monster allocation for positive 0x4aa354 attach values instead of reusing the selected reward descriptor. No-Godot Small seed 10, Small seed 58, and Medium seed 10 all still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now removes the misplaced reward/guard projection fallback from the direct 0x4aab7e source stream and uses relation-fed 0x4a5c07 monster allocation for positive 0x4aa354 attach values instead of reusing the selected reward descriptor. No-Godot Small seed 10, Small seed 58, and Medium seed 10 all still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Shared h3maped_rmg_core now follows recovered 0x4ac552 continuation semantics after reward/guard materialization; the no-Godot workflow advances into downstream connection/decorative replay. Small seed 10 and Medium seed 10 block at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; Small seed 58 blocks at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. This is not parity and not final map output.",
+      "currentNotes": "2026-06-25T18:39:40Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Reward/guard zero direct 0x4aa9b7 commits are recorded but no longer gate downstream replay. Current no-Godot blockers are 0x4a61bc for Small seed 10/Medium seed 10 and 0x49eb8d -> 0x49e700 for Small seed 58.",
+      "currentSliceNotes": "2026-06-25T18:39:40Z: Recovered 0x4ac552 caller order now advances past reward/guard zero direct commits into downstream replay. Focused no-Godot cases remain blocked before final writeout: small_2p_seed10_hc1_setup0 and medium_4p_seed10_hc3_setup0 at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; small_2p_seed58_hc1_setup0 at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells.",
       "result": "partial_source_order_implementation_not_parity",
-      "remainingGap": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
+      "remainingGap": "Port source-order connection/decorative replay after the reward/guard prefix: 0x4a61bc live source-frontier candidates for Small seed 10/Medium seed 10, 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then road/river adjacency and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
       "validation": {
         "id": "native-rmg-selected-candidate-relation-producer-20260622",
         "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
@@ -13633,22 +13633,22 @@
         "reward_guard_materialization_0x4aab7e_0x4aa9b7_ported": false,
         "phase_snapshot_only_status_blocked": true,
         "phase_snapshot_only_status_passed": false,
-        "native_cli_required_next_slice": "port_source_order_reward_guard_materialization_0x4aab7e_0x4aa9b7_0x4aa3e9_commits_before_connection_road_river_final_writeout",
+        "native_cli_required_next_slice": "port_source_order_connection_decorative_replay_0x4a61bc_0x49eb8d_after_reward_guard_prefix_before_final_writeout",
         "full_rmg_parity_complete": false,
         "final_payload_generation_complete": false,
         "windows_dll_build_deferred": true
       },
-      "remainingWork": "Port source-order reward/guard materialization commits through 0x4aab7e -> 0x4aa9b7 -> 0x4aa3e9 before resuming connection/decorative/road-river phases and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout."
+      "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue through road/river adjacency and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, but it is no longer a native-only phase gate."
     }
   ],
-  "currentNotes": "Implemented source-order reverse in-place candidate erase for reward/guard 0x49cf34 and updated the focused selftest. No-Godot controlled snapshots still fail closed before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail: small seed 10 remains blocked by 0x49d2e0_neighbor_policy_plus_2_zero_reject; small seed 58 by 0x4aa603_0x49a6f9_footprint_existing_bit26_rejected; medium seed 10 by 0x4aa603_0x49a6f9_secondary_mask_terrain_rejected. Next work is source-backed live reward/guard input/state parity, not final-map tuning.",
+  "currentNotes": "2026-06-25T18:39:40Z: Removed the native-only zero-successful-0x4aa9b7 reward/guard phase gate and updated h3maped_rmg_core_selftest for recovered 0x4ac552 continuation semantics. No-Godot controlled snapshots still block before final writeout, but now after reward/guard: small seed 10 and medium seed 10 stop in connection_road_river at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb, while small seed 58 stops at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, not a final-map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-25: Source-backed 0x49d2e0 wrapper-local descriptor lookup aligned and selftested, but no-Godot workflow still blocks before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. small_2p_seed_10 still empties 0x49cf34 candidates after bit26 and 0x49d2e0 filters; small_2p_seed_58 and medium_4p_seed_10 still empty 0x4aa9b7 candidates after score/0x4aa603 filters.",
+  "currentSliceNotes": "2026-06-25T18:39:40Z: Recovered caller order now advances past reward/guard zero direct commits into downstream replay. Focused no-Godot cases remain blocked before final writeout: small_2p_seed10_hc1_setup0 and medium_4p_seed10_hc3_setup0 at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; small_2p_seed58_hc1_setup0 at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard zero direct 0x4aa9b7 commits remains recorded diagnostic parity debt.",
   "currentSliceStatus": "blocked",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-25T05:44:12Z",
+  "currentSliceUpdatedAt": "2026-06-25T18:39:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -71556,7 +71556,7 @@
     },
     "result": "partial_source_order_implementation_not_parity"
   },
-  "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show relation_owner_vector_produced_by_0x4ac552_0x4a218c=true, selected candidate input known, and relation_vector_10e4_10e8 present/contents/count known. The workflow now gets past the selected-candidate relation-vector handoff and remains blocked at reward/guard materialization zero successful 0x4aa9b7 commits before connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout.",
-  "blocker": "Reward/guard materialization still produces zero successful 0x4aa9b7 commits in the recovered source order. Continuing into connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned would recreate proxy-state drift.",
-  "native_cli_required_next_slice": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned."
+  "latestFinding": "2026-06-25T18:39:40Z no-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now advance past reward/guard materialization into downstream replay. Small seed 10 and Medium seed 10 block in connection_road_river at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; Small seed 58 blocks at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard still records zero successful direct 0x4aa9b7 commits as parity debt, but it is no longer a native-only hard stop.",
+  "blocker": "Final writeout is still blocked by downstream source-order replay: 0x4a61bc live source-frontier candidate production for Small seed 10/Medium seed 10 and 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
+  "native_cli_required_next_slice": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue road/river adjacency and final writeout."
 }
