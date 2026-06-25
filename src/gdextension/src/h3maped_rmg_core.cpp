@@ -1447,6 +1447,7 @@ SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_
 
 static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
 static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
+static bool descriptor_terrain_bitset_index_test_0x42cc99(uint16_t mask_word_0x18, int32_t terrain_policy_index);
 
 static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
 		const SourceObjectRecord0x4c &record,
@@ -6719,16 +6720,82 @@ static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPriva
 	return true;
 }
 
-static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
+static bool decorative_dispatch_scorer_first_pass_0x49e1bf(
+		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
 		const RandTrnObstacleScoreRecord49dc9e &score_record,
-		int32_t terrain_code,
+		int32_t candidate_x,
+		int32_t candidate_y,
+		int32_t candidate_level,
+		int32_t &score,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
-	if (terrain_code < 0 || terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
+	result.scorer_first_pass_invocation_count_0x49e1bf += 1;
+	result.scorer_first_pass_candidate_anchor_count_0x49e1bf += 1;
+	score = 0;
+	bool scanned_footprint_cell = false;
+	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
+		for (int32_t col = 0; col < source_record.descriptor_width_0x34; ++col) {
+			if (source_object_descriptor_mask_bit_0x41e951(source_record, col, row)) {
+				continue;
+			}
+			result.scorer_first_pass_footprint_cell_scan_count_0x49e1bf += 1;
+			scanned_footprint_cell = true;
+			const int32_t cell_x = candidate_x - col;
+			const int32_t cell_y = candidate_y - row;
+			const int64_t flat = cell_index(state.width, state.height, cell_x, cell_y, candidate_level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				result.scorer_first_pass_bounds_reject_count_0x49e1bf += 1;
+				return false;
+			}
+			const GeneratedCellRecord0x30 &cell = state.generated_cell_buffer.records[size_t(flat)];
+			if (!cell.word_0x24_known || !cell.word_0x28_known) {
+				result.scorer_first_pass_missing_word_reject_count_0x49e1bf += 1;
+				return false;
+			}
+			const int32_t terrain_code = generated_cell_terrain_code_0x24(cell);
+			result.scorer_first_pass_terrain_test_count_0x42cc99 += 1;
+			if (!descriptor_terrain_bitset_index_test_0x42cc99(source_record.terrain_mask_a_0x14, terrain_code)) {
+				result.scorer_first_pass_terrain_reject_count_0x42cc99 += 1;
+				return false;
+			}
+			if ((cell.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
+				result.scorer_first_pass_bit27_hard_reject_count_0x49e1bf += 1;
+				score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
+				return false;
+			}
+			if (terrain_code < 0 || terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
+				result.scorer_first_pass_terrain_reject_count_0x42cc99 += 1;
+				return false;
+			}
+			score += score_record.terrain_scores[size_t(terrain_code)];
+		}
+	}
+	if (!scanned_footprint_cell) {
+		result.scorer_first_pass_low_score_reject_count_0x49e1bf += 1;
+		return false;
+	}
+	if (score < RAND_TRN_LOW_SCORE_REJECT_THRESHOLD_0X49E1BF) {
+		result.scorer_first_pass_low_score_reject_count_0x49e1bf += 1;
+		return false;
+	}
+	result.scorer_first_pass_positive_count_0x49e1bf += 1;
+	return true;
+}
+
+static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectRecord0x4c &source_record,
+		const RandTrnObstacleScoreRecord49dc9e &score_record,
+		int32_t dispatch_x,
+		int32_t dispatch_y,
+		int32_t dispatch_level,
+		int32_t dispatch_terrain_code,
+		DecorativeFlaggedCellDispatchResult49eb8d &result) {
+	if (dispatch_terrain_code < 0 || dispatch_terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
 		return false;
 	}
 	result.dispatch_probe_rand_trn_terrain_score_lookup_count_0x49e700 += 1;
-	const int32_t terrain_score = score_record.terrain_scores[size_t(terrain_code)];
+	const int32_t terrain_score = score_record.terrain_scores[size_t(dispatch_terrain_code)];
 	if (terrain_score <= RAND_TRN_HARD_REJECT_SCORE_0X49E700) {
 		result.dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 += 1;
 		return false;
@@ -6746,6 +6813,20 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 			}
 			result.dispatch_probe_descriptor_footprint_probe_count_0x49e700 += 1;
 			result.dispatch_probe_scorer_input_candidate_count_0x49e700 += 1;
+			const int32_t candidate_x = dispatch_x + local_x;
+			const int32_t candidate_y = dispatch_y + local_y;
+			int32_t first_pass_score = 0;
+			if (!decorative_dispatch_scorer_first_pass_0x49e1bf(
+						state,
+						source_record,
+						score_record,
+						candidate_x,
+						candidate_y,
+						dispatch_level,
+						first_pass_score,
+						result)) {
+				continue;
+			}
 			result.scorer_input_0x49e1bf_unowned = true;
 			if (result.first_scorer_source_row_0x49e700 < 0) {
 				result.first_scorer_source_row_0x49e700 = source_record.source_row;
@@ -6754,6 +6835,10 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 				result.first_scorer_rand_trn_obstacle_id_0x49e700 = score_record.obstacle_id;
 				result.first_scorer_rand_trn_obstacle_name_0x49e700 = score_record.name;
 				result.first_scorer_rand_trn_terrain_score_0x49e700 = terrain_score;
+				result.first_scorer_candidate_x_0x49e700 = candidate_x;
+				result.first_scorer_candidate_y_0x49e700 = candidate_y;
+				result.first_scorer_candidate_level_0x49e700 = dispatch_level;
+				result.first_scorer_first_pass_score_0x49e1bf = first_pass_score;
 			}
 			return true;
 		}
@@ -6764,6 +6849,9 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 static void decorative_dispatch_probe_valid_cell_0x49e700(
 		const GeneratorObjectPrivateState &state,
 		const GeneratedCellRecord0x30 &record,
+		int32_t dispatch_x,
+		int32_t dispatch_y,
+		int32_t dispatch_level,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	result.dispatch_probe_0x49e700_invoked = true;
 	result.dispatch_probe_invocation_count_0x49e700 += 1;
@@ -6793,8 +6881,16 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 			result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
 			for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
 				result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
-				if (decorative_dispatch_probe_record_reaches_scorer_0x49e700(source_record, score_record, terrain_code, result)) {
-					result.blocked_reason = "0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
+				if (decorative_dispatch_probe_record_reaches_scorer_0x49e700(
+							state,
+							source_record,
+							score_record,
+							dispatch_x,
+							dispatch_y,
+							dispatch_level,
+							terrain_code,
+							result)) {
+					result.blocked_reason = "0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned";
 					return;
 				}
 			}
@@ -6846,7 +6942,7 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 				}
 				if (generated_cell_49a1d8_valid_record(record)) {
 					result.valid_0x49e700_dispatch_candidate_count += 1;
-					decorative_dispatch_probe_valid_cell_0x49e700(state, record, result);
+					decorative_dispatch_probe_valid_cell_0x49e700(state, record, x, y, level, result);
 					if (!result.blocked_reason.empty()) {
 						return result;
 					}

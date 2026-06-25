@@ -850,6 +850,16 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700;
 	out.decorative_dispatch_probe_descriptor_footprint_probe_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_descriptor_footprint_probe_count_0x49e700;
 	out.decorative_dispatch_probe_scorer_input_candidate_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_scorer_input_candidate_count_0x49e700;
+	out.decorative_dispatch_scorer_first_pass_invocation_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_invocation_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_candidate_anchor_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_candidate_anchor_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_footprint_cell_scan_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_footprint_cell_scan_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_terrain_test_count_0x42cc99 = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_terrain_test_count_0x42cc99;
+	out.decorative_dispatch_scorer_first_pass_terrain_reject_count_0x42cc99 = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_terrain_reject_count_0x42cc99;
+	out.decorative_dispatch_scorer_first_pass_bit27_hard_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_bit27_hard_reject_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_bounds_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_bounds_reject_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_missing_word_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_missing_word_reject_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_low_score_reject_count_0x49e1bf;
+	out.decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_positive_count_0x49e1bf;
 	out.decorative_dispatch_scorer_input_0x49e1bf_unowned = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_input_0x49e1bf_unowned;
 	out.decorative_dispatch_first_scorer_source_row_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_source_row_0x49e700;
 	out.decorative_dispatch_first_scorer_source_type_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_source_type_0x49e700;
@@ -857,6 +867,10 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_first_scorer_rand_trn_obstacle_id_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_rand_trn_obstacle_id_0x49e700;
 	out.decorative_dispatch_first_scorer_rand_trn_obstacle_name_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_rand_trn_obstacle_name_0x49e700;
 	out.decorative_dispatch_first_scorer_rand_trn_terrain_score_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_rand_trn_terrain_score_0x49e700;
+	out.decorative_dispatch_first_scorer_candidate_x_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_candidate_x_0x49e700;
+	out.decorative_dispatch_first_scorer_candidate_y_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_candidate_y_0x49e700;
+	out.decorative_dispatch_first_scorer_candidate_level_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_candidate_level_0x49e700;
+	out.decorative_dispatch_first_scorer_first_pass_score_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_first_pass_score_0x49e1bf;
 	out.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d = input.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason;
 	out.connection_tail_replay_0x4a79a3_ported = input.connection_tail_replay_0x4a79a3_ported;
 	out.connection_tail_replay_0x4a79a3_invoked = input.connection_tail_replay_0x4a79a3.invoked;
@@ -2614,6 +2628,16 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700\":" << state.decorative_dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 << ","
 			<< "\"decorative_dispatch_probe_descriptor_footprint_probe_count_0x49e700\":" << state.decorative_dispatch_probe_descriptor_footprint_probe_count_0x49e700 << ","
 			<< "\"decorative_dispatch_probe_scorer_input_candidate_count_0x49e700\":" << state.decorative_dispatch_probe_scorer_input_candidate_count_0x49e700 << ","
+			<< "\"decorative_dispatch_scorer_first_pass_invocation_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_invocation_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_candidate_anchor_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_candidate_anchor_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_footprint_cell_scan_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_footprint_cell_scan_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_terrain_test_count_0x42cc99\":" << state.decorative_dispatch_scorer_first_pass_terrain_test_count_0x42cc99 << ","
+			<< "\"decorative_dispatch_scorer_first_pass_terrain_reject_count_0x42cc99\":" << state.decorative_dispatch_scorer_first_pass_terrain_reject_count_0x42cc99 << ","
+			<< "\"decorative_dispatch_scorer_first_pass_bit27_hard_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_bit27_hard_reject_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_bounds_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_bounds_reject_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_missing_word_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_missing_word_reject_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf << ","
 			<< "\"decorative_dispatch_scorer_input_0x49e1bf_unowned\":" << (state.decorative_dispatch_scorer_input_0x49e1bf_unowned ? "true" : "false") << ","
 			<< "\"decorative_dispatch_first_scorer_source_row_0x49e700\":" << state.decorative_dispatch_first_scorer_source_row_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_source_type_0x49e700\":" << state.decorative_dispatch_first_scorer_source_type_0x49e700 << ","
@@ -2621,8 +2645,12 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_first_scorer_rand_trn_obstacle_id_0x49e700\":" << state.decorative_dispatch_first_scorer_rand_trn_obstacle_id_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_rand_trn_obstacle_name_0x49e700\":\"" << json_escape(state.decorative_dispatch_first_scorer_rand_trn_obstacle_name_0x49e700) << "\","
 			<< "\"decorative_dispatch_first_scorer_rand_trn_terrain_score_0x49e700\":" << state.decorative_dispatch_first_scorer_rand_trn_terrain_score_0x49e700 << ","
+			<< "\"decorative_dispatch_first_scorer_candidate_x_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_x_0x49e700 << ","
+			<< "\"decorative_dispatch_first_scorer_candidate_y_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_y_0x49e700 << ","
+			<< "\"decorative_dispatch_first_scorer_candidate_level_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_level_0x49e700 << ","
+			<< "\"decorative_dispatch_first_scorer_first_pass_score_0x49e1bf\":" << state.decorative_dispatch_first_scorer_first_pass_score_0x49e1bf << ","
 			<< "\"decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d\":\"" << json_escape(state.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d) << "\","
-			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_stops_before_0x49e1bf_until_descriptor_plus_0x30_0x40_adjacency_overlap_replay_is_owned\","
+			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_replays_first_footprint_terrain_bit27_pass_before_stopping_at_neighbor_reference_descriptor_0x30_0x40_replay\","
 			<< "\"connection_tail_replay_0x4a79a3_ported\":" << (state.connection_tail_replay_0x4a79a3_ported ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_invoked\":" << (state.connection_tail_replay_0x4a79a3_invoked ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_applied\":" << (state.connection_tail_replay_0x4a79a3_applied ? "true" : "false") << ","

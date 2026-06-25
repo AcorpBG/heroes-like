@@ -2180,11 +2180,11 @@ int main() {
 	if (!require(generator_state.selected_color_order_ed8 == selected_after_setup3.player_assignment.selected_color_order_ed8
 					&& generator_state.raw_source_owner_slots_ee0 == selected_after_setup3.player_assignment.raw_ee0_slots
 					&& generator_state.mapped_source_owner_slots_ee4 == selected_after_setup3.player_assignment.mapped_ee4_slots,
-				"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
+					"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
-		}
-		const std::string downstream_blocker =
-				"0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
+	}
+	const std::string downstream_blocker =
+			"0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -4417,7 +4417,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_decorative_blocker =
-					"0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
+					"0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
