@@ -9621,6 +9621,219 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 	return result;
 }
 
+static bool road_generated_cell_grid_shape_valid_0x4ab52a(const GeneratedCellRecordGrid0x30 &grid) {
+	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
+	return grid.width > 0
+			&& grid.height > 0
+			&& grid.level_count > 0
+			&& expected_cell_count > 0
+			&& expected_cell_count == int64_t(grid.records.size());
+}
+
+static uint32_t generated_cell_word1c_set_low_word_0x4aae7b(uint32_t word_0x1c, int32_t low_word) {
+	return (word_0x1c & 0xffff0000U) | (uint32_t(low_word) & 0x0000ffffU);
+}
+
+static int32_t generated_cell_word1c_low_word_0x4aae7b(const GeneratedCellRecord0x30 &record) {
+	return int32_t(record.word_0x1c & 0x0000ffffU);
+}
+
+static int32_t road_path_state_reset_0x4aae2f(GeneratedCellRecordGrid0x30 &grid) {
+	int32_t changed_count = 0;
+	for (GeneratedCellRecord0x30 &record : grid.records) {
+		const uint32_t before_0x10 = record.word_0x10;
+		const uint32_t before_0x14 = record.word_0x14;
+		const uint32_t before_0x18 = record.word_0x18;
+		const uint32_t before_0x1c = record.word_0x1c;
+		record.word_0x10 = 0xffffffffU;
+		record.word_0x10_known = true;
+		record.word_0x14 = 0xffffffffU;
+		record.word_0x14_known = true;
+		record.word_0x18 = 0xffffffffU;
+		record.word_0x18_known = true;
+		record.word_0x1c = generated_cell_word1c_set_low_word_0x4aae7b(record.word_0x1c_known ? record.word_0x1c : 0U, 0x7d00);
+		record.word_0x1c_known = true;
+		if (before_0x10 != record.word_0x10
+				|| before_0x14 != record.word_0x14
+				|| before_0x18 != record.word_0x18
+				|| before_0x1c != record.word_0x1c) {
+			changed_count += 1;
+		}
+	}
+	return changed_count;
+}
+
+static RoadPathSeedResult4aae7b road_path_state_seed_0x4aae7b(GeneratedCellRecordGrid0x30 &grid, const RoadCoordinateRecord14b0 &seed) {
+	RoadPathSeedResult4aae7b result;
+	result.invoked = true;
+	result.generated_cell_grid_owned = road_generated_cell_grid_shape_valid_0x4ab52a(grid);
+	result.seed_x = seed.x;
+	result.seed_y = seed.y;
+	result.seed_level = seed.level;
+	if (!result.generated_cell_grid_owned) {
+		result.blocked_reason = "0x4aae7b_generated_cell_grid_shape_invalid";
+		return result;
+	}
+	const int64_t seed_flat = cell_index(grid.width, grid.height, seed.x, seed.y, seed.level);
+	if (seed_flat < 0 || seed_flat >= int64_t(grid.records.size())) {
+		result.blocked_reason = "0x4aae7b_seed_coordinate_out_of_bounds";
+		return result;
+	}
+	result.seed_in_bounds = true;
+
+	GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+	seed_record.word_0x10 = 0xffffffffU;
+	seed_record.word_0x10_known = true;
+	seed_record.word_0x14 = 0xffffffffU;
+	seed_record.word_0x14_known = true;
+	seed_record.word_0x18 = 0xffffffffU;
+	seed_record.word_0x18_known = true;
+	seed_record.word_0x1c = generated_cell_word1c_set_low_word_0x4aae7b(seed_record.word_0x1c_known ? seed_record.word_0x1c : 0U, 0);
+	seed_record.word_0x1c_known = true;
+
+	std::deque<RoadCoordinateRecord14b0> queue;
+	queue.push_back(seed);
+	std::vector<uint8_t> reached(grid.records.size(), 0U);
+	reached[size_t(seed_flat)] = 1U;
+	result.reached_cell_count = 1;
+	result.max_queue_size = 1;
+
+	while (!queue.empty()) {
+		const RoadCoordinateRecord14b0 current = queue.front();
+		queue.pop_front();
+		result.queue_pop_count_0x4ae23e += 1;
+		const int64_t current_flat = cell_index(grid.width, grid.height, current.x, current.y, current.level);
+		if (current_flat < 0 || current_flat >= int64_t(grid.records.size())) {
+			continue;
+		}
+		const GeneratedCellRecord0x30 &current_record = grid.records[size_t(current_flat)];
+		if (!current_record.word_0x1c_known) {
+			result.blocked_reason = "0x4aae7b_current_cell_word_0x1c_unknown";
+			return result;
+		}
+		const int32_t current_low_word = generated_cell_word1c_low_word_0x4aae7b(current_record);
+		for (int32_t direction_index = int32_t(DIRECTION_TABLE_0X5A2658.size()) - 1; direction_index >= 0; --direction_index) {
+			const int32_t next_x = current.x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
+			const int32_t next_y = current.y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
+			const int64_t next_flat = cell_index(grid.width, grid.height, next_x, next_y, current.level);
+			if (next_flat < 0 || next_flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			result.neighbor_probe_count += 1;
+			GeneratedCellRecord0x30 &next_record = grid.records[size_t(next_flat)];
+			if (!next_record.word_0x1c_known
+					|| !next_record.word_0x24_known
+					|| !next_record.word_0x28_known) {
+				result.blocked_reason = "0x4aae7b_neighbor_generated_cell_word_unknown";
+				return result;
+			}
+			const uint32_t terrain_class = next_record.word_0x24 & 0x3fU;
+			if (terrain_class == 8U || terrain_class == 9U) {
+				result.terrain8_or_9_skip_count += 1;
+				continue;
+			}
+			if ((next_record.word_0x28 & CELL_DECOR_READY_BIT_25) == 0U) {
+				result.bit25_skip_count += 1;
+				continue;
+			}
+			const int32_t step_cost = (direction_index & 1) != 0 ? 0x3c : 0x14;
+			const int32_t next_cost = current_low_word + step_cost;
+			if (next_cost >= generated_cell_word1c_low_word_0x4aae7b(next_record)) {
+				continue;
+			}
+			next_record.word_0x1c = generated_cell_word1c_set_low_word_0x4aae7b(next_record.word_0x1c, next_cost);
+			next_record.word_0x1c_known = true;
+			next_record.word_0x10 = uint32_t(current.x);
+			next_record.word_0x10_known = true;
+			next_record.word_0x14 = uint32_t(current.y);
+			next_record.word_0x14_known = true;
+			next_record.word_0x18 = uint32_t(current.level);
+			next_record.word_0x18_known = true;
+			result.low_word_relax_count += 1;
+			result.predecessor_write_count += 1;
+			if (reached[size_t(next_flat)] == 0U) {
+				reached[size_t(next_flat)] = 1U;
+				result.reached_cell_count += 1;
+			}
+			queue.push_back(RoadCoordinateRecord14b0 { next_x, next_y, current.level, 0x004aae7bU });
+			result.max_queue_size = std::max(result.max_queue_size, int32_t(queue.size()));
+		}
+	}
+	result.applied = true;
+	return result;
+}
+
+static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
+	RoadRiverObjectAdjacencyResult4ab52a result;
+	result.invoked = true;
+	result.generated_cell_grid_owned = road_generated_cell_grid_shape_valid_0x4ab52a(state.generated_cell_buffer);
+	result.coordinate_vector_owned =
+			state.road_coordinate_vector_0x14b0_present
+			&& state.road_coordinate_vector_0x14b0_contents_known;
+	result.coordinate_record_count_0x14b0 = int32_t(state.road_coordinate_records_0x14b0.size());
+	if (!result.generated_cell_grid_owned) {
+		result.blocked_reason = "0x4ab52a_generated_cell_grid_shape_invalid";
+		return result;
+	}
+	if (!result.coordinate_vector_owned) {
+		result.blocked_reason = "0x4ab52a_generator_0x14b0_coordinate_vector_not_owned";
+		return result;
+	}
+
+	result.rng_state_before_road_type_0x4e7276 = rng.state;
+	result.road_type_rng_value_0x4e7276 = rng.next();
+	result.rng_state_after_road_type_0x4e7276 = rng.state;
+	result.selected_road_type = (result.road_type_rng_value_0x4e7276 % 3) + 1;
+
+	const int32_t record_count = result.coordinate_record_count_0x14b0;
+	if (record_count <= 1) {
+		result.applied = true;
+		return result;
+	}
+
+	for (int32_t outer_index = 0; outer_index < record_count - 1; ++outer_index) {
+		const RoadCoordinateRecord14b0 &seed = state.road_coordinate_records_0x14b0[size_t(outer_index)];
+		road_path_state_reset_0x4aae2f(state.generated_cell_buffer);
+		result.path_reset_count_0x4aae2f += 1;
+		const RoadPathSeedResult4aae7b seed_result = road_path_state_seed_0x4aae7b(state.generated_cell_buffer, seed);
+		result.path_seed_count_0x4aae7b += 1;
+		result.path_seed_relaxed_edge_count += seed_result.low_word_relax_count;
+		result.path_seed_reached_cell_count += seed_result.reached_cell_count;
+		result.outer_seed_iteration_count += 1;
+		if (!seed_result.applied) {
+			result.blocked_reason = seed_result.blocked_reason.empty()
+					? "0x4aae7b_path_seed_replay_failed"
+					: seed_result.blocked_reason;
+			return result;
+		}
+		for (int32_t inner_index = outer_index + 1; inner_index < record_count; ++inner_index) {
+			const RoadCoordinateRecord14b0 &candidate = state.road_coordinate_records_0x14b0[size_t(inner_index)];
+			result.pair_candidate_iteration_count += 1;
+			const int64_t flat = cell_index(state.generated_cell_buffer.width, state.generated_cell_buffer.height, candidate.x, candidate.y, candidate.level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				continue;
+			}
+			const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+			if (!record.word_0x1c_known) {
+				result.blocked_reason = "0x4ab52a_candidate_word_0x1c_unknown_before_0x4ab37f";
+				return result;
+			}
+			result.candidate_low_word_check_count += 1;
+			if (generated_cell_word1c_low_word_0x4aae7b(record) > 0x7530) {
+				continue;
+			}
+			result.candidate_accept_count += 1;
+			result.road_adapter_attempt_count_0x4ab37f += 1;
+			result.blocked_reason = "0x4ab37f_0x4b4243_road_toolkit_unported_after_0x4ab52a_pair_prefix";
+			return result;
+		}
+		result.progress_callback_0xed4_skip_count += 1;
+	}
+
+	result.applied = true;
+	return result;
+}
+
 static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOwnerState4a218c &source_relation) {
 	return source_relation.scan_bounds_0x20_0x2c_known
 			&& source_relation.scan_bound_low_x_0x20 != RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
@@ -9950,6 +10163,18 @@ WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObj
 	return allocate_object_record_0x4a93a2(state, x, y, level, selected_index_0x20, enabled_word_0x24, enabled_low_byte_0x24);
 }
 
+static void append_road_coordinate_record_0x14b0_0x4ae1fd(GeneratorObjectPrivateState &state, int32_t x, int32_t y, int32_t level, uint32_t source_callsite) {
+	RoadCoordinateRecord14b0 record;
+	record.x = x;
+	record.y = y;
+	record.level = level;
+	record.source_callsite = source_callsite;
+	state.road_coordinate_vector_0x14b0_present = true;
+	state.road_coordinate_vector_0x14b0_contents_known = true;
+	state.road_coordinate_records_0x14b0.push_back(record);
+	state.road_coordinate_vector_append_count_0x4ae1fd = int32_t(state.road_coordinate_records_0x14b0.size());
+}
+
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
 	WeightedObjectMaterializationCommitResult4a93a2 result;
 	result.record_vtable_0x540a9c = record.object_record_vtable_0x00 == WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
@@ -10104,6 +10329,12 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	placement.allocated_record_0x4a93a2 = true;
 	placement.object_record_key_known = result.object_record_0x4a93a2.object_record_key_known;
 	placement.object_record_key = result.object_record_0x4a93a2.object_record_key;
+	append_road_coordinate_record_0x14b0_0x4ae1fd(
+			state,
+			result.object_record_0x4a93a2.x,
+			result.object_record_0x4a93a2.y,
+			result.object_record_0x4a93a2.level,
+			0x004a95afU);
 
 	result.commit_0x4a93a2_0x4a54a7 = object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(state, join, result.object_record_0x4a93a2);
 	result.committed = result.commit_0x4a93a2_0x4a54a7.committed;
@@ -10311,6 +10542,12 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.allocated_record_0x4a93a2 = true;
 	vector_state.object_record_key_known = result.weighted_record_0x4a93a2.object_record_key_known;
 	vector_state.object_record_key = result.weighted_record_0x4a93a2.object_record_key;
+	append_road_coordinate_record_0x14b0_0x4ae1fd(
+			state,
+			result.weighted_record_0x4a93a2.x,
+			result.weighted_record_0x4a93a2.y,
+			result.weighted_record_0x4a93a2.level,
+			0x004a9347U);
 
 	result.commit_0x4a93a2_0x4a901a_0x4a54a7 = object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(state, join, result.weighted_record_0x4a93a2);
 	result.committed = result.commit_0x4a93a2_0x4a901a_0x4a54a7.committed;
@@ -15791,8 +16028,40 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		add_phase("connection_road_river", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "complete_source_order_prefix", connection_note.str());
 	}
 	result.current_phase_id = "road_river_object_adjacency";
-	result.blocked_reason = "road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail";
-	add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae7b_0x4ab37f_0x4b4243", "blocked", result.blocked_reason);
+	result.generator_object_private_state.road_river_object_adjacency_0x4ab52a_ported = true;
+	result.generator_object_private_state.road_river_object_adjacency_0x4ab52a =
+			road_river_object_adjacency_0x4ab52a(result.generator_object_private_state, route_free_cell_rng);
+	const RoadRiverObjectAdjacencyResult4ab52a &road_adjacency =
+			result.generator_object_private_state.road_river_object_adjacency_0x4ab52a;
+	if (!road_adjacency.applied) {
+		result.blocked_reason = road_adjacency.blocked_reason.empty()
+				? "0x4ab52a_road_river_object_adjacency_replay_failed"
+				: road_adjacency.blocked_reason;
+		std::ostringstream road_note;
+		road_note << "records_0x14b0=" << road_adjacency.coordinate_record_count_0x14b0
+				<< ",outer_seeds=" << road_adjacency.outer_seed_iteration_count
+				<< ",pair_candidates=" << road_adjacency.pair_candidate_iteration_count
+				<< ",accepted_pairs=" << road_adjacency.candidate_accept_count
+				<< ",path_resets=" << road_adjacency.path_reset_count_0x4aae2f
+				<< ",path_seeds=" << road_adjacency.path_seed_count_0x4aae7b
+				<< ",relaxed_edges=" << road_adjacency.path_seed_relaxed_edge_count;
+		add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243", "blocked", road_note.str() + "," + result.blocked_reason);
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	{
+		std::ostringstream road_note;
+		road_note << "records_0x14b0=" << road_adjacency.coordinate_record_count_0x14b0
+				<< ",outer_seeds=" << road_adjacency.outer_seed_iteration_count
+				<< ",pair_candidates=" << road_adjacency.pair_candidate_iteration_count
+				<< ",accepted_pairs=" << road_adjacency.candidate_accept_count
+				<< ",path_resets=" << road_adjacency.path_reset_count_0x4aae2f
+				<< ",path_seeds=" << road_adjacency.path_seed_count_0x4aae7b
+				<< ",relaxed_edges=" << road_adjacency.path_seed_relaxed_edge_count;
+		add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243", "complete_source_order_prefix", road_note.str());
+	}
+	result.current_phase_id = "final_writeout";
+	result.blocked_reason = "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a";
 	add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 	return result;
 }

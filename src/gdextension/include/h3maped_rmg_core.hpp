@@ -467,6 +467,13 @@ struct WeightedObjectRecord4a93a2 {
 	bool enabled_low_byte_0x24 = false;
 };
 
+struct RoadCoordinateRecord14b0 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	uint32_t source_callsite = 0U;
+};
+
 struct SourceOrderObjectCandidate4a93a2 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -2327,6 +2334,48 @@ struct ConnectionTailReplayResult4a79a3 {
 	std::string blocked_reason;
 };
 
+struct RoadPathSeedResult4aae7b {
+	bool invoked = false;
+	bool applied = false;
+	bool generated_cell_grid_owned = false;
+	bool seed_in_bounds = false;
+	int32_t seed_x = 0;
+	int32_t seed_y = 0;
+	int32_t seed_level = 0;
+	int32_t queue_pop_count_0x4ae23e = 0;
+	int32_t neighbor_probe_count = 0;
+	int32_t terrain8_or_9_skip_count = 0;
+	int32_t bit25_skip_count = 0;
+	int32_t low_word_relax_count = 0;
+	int32_t predecessor_write_count = 0;
+	int32_t reached_cell_count = 0;
+	int32_t max_queue_size = 0;
+	std::string blocked_reason;
+};
+
+struct RoadRiverObjectAdjacencyResult4ab52a {
+	bool invoked = false;
+	bool applied = false;
+	bool generated_cell_grid_owned = false;
+	bool coordinate_vector_owned = false;
+	int32_t coordinate_record_count_0x14b0 = 0;
+	uint32_t rng_state_before_road_type_0x4e7276 = 0U;
+	uint32_t rng_state_after_road_type_0x4e7276 = 0U;
+	int32_t road_type_rng_value_0x4e7276 = -1;
+	int32_t selected_road_type = 0;
+	int32_t outer_seed_iteration_count = 0;
+	int32_t pair_candidate_iteration_count = 0;
+	int32_t path_reset_count_0x4aae2f = 0;
+	int32_t path_seed_count_0x4aae7b = 0;
+	int32_t path_seed_relaxed_edge_count = 0;
+	int32_t path_seed_reached_cell_count = 0;
+	int32_t candidate_low_word_check_count = 0;
+	int32_t candidate_accept_count = 0;
+	int32_t road_adapter_attempt_count_0x4ab37f = 0;
+	int32_t progress_callback_0xed4_skip_count = 0;
+	std::string blocked_reason;
+};
+
 struct MineResourceSelectedObjectCallbackResult4a9911 {
 	bool invoked = false;
 	bool applied = false;
@@ -2538,6 +2587,10 @@ struct GeneratorObjectPrivateState {
 	bool native_object_record_key_allocator_0x4a93a2_known = false;
 	uint32_t next_native_object_record_key_0x4a93a2 = 1U;
 	int32_t object_record_allocation_count_0x4a93a2 = 0;
+	bool road_coordinate_vector_0x14b0_present = true;
+	bool road_coordinate_vector_0x14b0_contents_known = true;
+	int32_t road_coordinate_vector_append_count_0x4ae1fd = 0;
+	std::vector<RoadCoordinateRecord14b0> road_coordinate_records_0x14b0;
 	bool weighted_scheduler_thresholds_0x4a8db2_known = false;
 	int32_t weighted_scheduler_threshold_count_0x4a8db2 = 0;
 	std::vector<WeightedSchedulerThreshold4a8db2> weighted_scheduler_thresholds_0x4a8db2;
@@ -2692,6 +2745,8 @@ struct GeneratorObjectPrivateState {
 	DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d;
 	bool connection_tail_replay_0x4a79a3_ported = false;
 	ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3;
+	bool road_river_object_adjacency_0x4ab52a_ported = false;
+	RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
