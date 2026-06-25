@@ -2308,35 +2308,48 @@ static bool int_table_contains_49a318(const int32_t *values, int32_t count, int3
 	return false;
 }
 
+static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FD78[] = {
+	3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 34, 36, 52, 54,
+	59, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75,
+	76, 79, 81, 82, 85, 86, 92, 93, 95, 101, 162, 163,
+	164, 214, 215
+};
+
+static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20[] = {
+	3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 33, 34, 36, 54,
+	59, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 162,
+	163, 164, 76, 79, 81, 82, 85, 86, 93, 101, 111, 212,
+	214, 215, 219
+};
+
+static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[] = {
+	5, 6, 9, 12, 26, 29, 34, 54, 59, 62, 65, 66, 67, 68,
+	69, 70, 71, 72, 73, 74, 75, 162, 163, 164, 76, 79, 81,
+	82, 86, 93, 101, 212, 214, 215
+};
+
+static bool object_metadata_pass_split_flag_0x598300_plus_0x0c(int32_t object_type_id) {
+	if (object_type_id < 0 || object_type_id >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+		return false;
+	}
+	return int_table_contains_49a318(
+			OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0,
+			int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0) / sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[0])),
+			object_type_id);
+}
+
 bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset) {
-	static constexpr int32_t METADATA_FIELD_PLUS_0_TYPES_0X52FD78[] = {
-		3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 34, 36, 52, 54,
-		59, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75,
-		76, 79, 81, 82, 85, 86, 92, 93, 95, 101, 162, 163,
-		164, 214, 215
-	};
-	static constexpr int32_t METADATA_FIELD_PLUS_1_TYPES_0X52FE20[] = {
-		3, 5, 6, 8, 9, 11, 12, 22, 26, 29, 33, 34, 36, 54,
-		59, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 162,
-		163, 164, 76, 79, 81, 82, 85, 86, 93, 101, 111, 212,
-		214, 215, 219
-	};
-	static constexpr int32_t METADATA_FIELD_PLUS_2_TYPES_0X52FCF0[] = {
-		5, 6, 9, 12, 26, 29, 34, 54, 59, 62, 65, 66, 67, 68,
-		69, 70, 71, 72, 73, 74, 75, 162, 163, 164, 76, 79, 81,
-		82, 86, 93, 101, 212, 214, 215
-	};
 	if (object_type_id < 0 || object_type_id >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
 		return false;
 	}
 	if (metadata_offset == 0) {
-		return int_table_contains_49a318(METADATA_FIELD_PLUS_0_TYPES_0X52FD78, int32_t(sizeof(METADATA_FIELD_PLUS_0_TYPES_0X52FD78) / sizeof(METADATA_FIELD_PLUS_0_TYPES_0X52FD78[0])), object_type_id);
+		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FD78, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FD78) / sizeof(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FD78[0])), object_type_id);
 	}
 	if (metadata_offset == 1) {
-		return int_table_contains_49a318(METADATA_FIELD_PLUS_1_TYPES_0X52FE20, int32_t(sizeof(METADATA_FIELD_PLUS_1_TYPES_0X52FE20) / sizeof(METADATA_FIELD_PLUS_1_TYPES_0X52FE20[0])), object_type_id);
+		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20) / sizeof(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20[0])), object_type_id);
 	}
 	if (metadata_offset == 2) {
-		return int_table_contains_49a318(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0, int32_t(sizeof(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0) / sizeof(METADATA_FIELD_PLUS_2_TYPES_0X52FCF0[0])), object_type_id);
+		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0) / sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[0])), object_type_id);
 	}
 	return false;
 }
@@ -10025,6 +10038,14 @@ static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3e
 	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
 	sample.serializer_slot_0x0c_known = sample.serializer_slot_0x0c != 0U;
+	sample.pass_split_metadata_byte_0x0c_known =
+			sample.descriptor_type_0x1c >= 0
+			&& sample.descriptor_type_0x1c < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8;
+	if (sample.pass_split_metadata_byte_0x0c_known) {
+		sample.first_flagged_pass_0x4ad36f =
+				object_metadata_pass_split_flag_0x598300_plus_0x0c(sample.descriptor_type_0x1c);
+		sample.second_unflagged_pass_0x4ad3b1 = !sample.first_flagged_pass_0x4ad36f;
+	}
 	sample.x = record.x;
 	sample.y = record.y;
 	sample.level = record.level;
@@ -10057,6 +10078,7 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 	result.object_count_payload_bytes[1] = uint8_t((count >> 8U) & 0xffU);
 	result.object_count_payload_bytes[2] = uint8_t((count >> 16U) & 0xffU);
 	result.object_count_payload_bytes[3] = uint8_t((count >> 24U) & 0xffU);
+	result.pass_split_metadata_table_owned_0x57c648_plus_0x0c = true;
 	const int32_t last_sample_start = std::max<int32_t>(0, result.generated_object_count - 8);
 	for (int32_t index = 0; index < result.generated_object_count; ++index) {
 		const FinalObjectWriteoutRecord4ad1e3 sample =
@@ -10066,6 +10088,21 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		} else {
 			result.serializer_slot_unknown_count += 1;
 		}
+		if (sample.pass_split_metadata_byte_0x0c_known) {
+			if (sample.first_flagged_pass_0x4ad36f) {
+				result.pass_split_first_flagged_count_0x4ad36f += 1;
+				if (result.first_pass_records.size() < 8U) {
+					result.first_pass_records.push_back(sample);
+				}
+			} else {
+				result.pass_split_second_unflagged_count_0x4ad3b1 += 1;
+				if (result.second_pass_records.size() < 8U) {
+					result.second_pass_records.push_back(sample);
+				}
+			}
+		} else {
+			result.pass_split_descriptor_type_unknown_count += 1;
+		}
 		if (index < 8) {
 			result.first_records.push_back(sample);
 		}
@@ -10074,7 +10111,11 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		}
 	}
 	result.object_count_header_written = true;
-	result.blocked_reason = "final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write";
+	if (result.pass_split_descriptor_type_unknown_count > 0) {
+		result.blocked_reason = "final_object_pass_split_descriptor_type_out_of_0x598300_table_range";
+		return result;
+	}
+	result.blocked_reason = "final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
 	return result;
 }
 
@@ -16783,11 +16824,27 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		final_object_note << "generated_object_count=" << result.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
 				<< ",count_payload_bytes=" << result.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
 				<< ",serializer_slots_known=" << result.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_known_count
-				<< ",serializer_slots_unknown=" << result.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_unknown_count;
+				<< ",serializer_slots_unknown=" << result.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_unknown_count
+				<< ",first_flagged_pass=" << result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
+				<< ",second_unflagged_pass=" << result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1;
 		add_phase("final_object_count_writeout", "0x4ad309_0x4ad318", "complete_source_order_prefix", final_object_note.str());
 	}
 	result.blocked_reason = result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason;
-	add_phase("final_object_pass_split_writeout", "0x4ad3eb_0x57c648_type_plus_0x0c", "blocked", result.blocked_reason);
+	if (result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count > 0) {
+		add_phase("final_object_pass_split_writeout", "0x4ad3eb_0x57c648_type_plus_0x0c", "blocked", result.blocked_reason);
+		return result;
+	}
+	{
+		std::ostringstream pass_split_note;
+		pass_split_note << "first_flagged_pass_0x4ad36f="
+				<< result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
+				<< ",second_unflagged_pass_0x4ad3b1="
+				<< result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
+				<< ",descriptor_type_unknown="
+				<< result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count;
+		add_phase("final_object_pass_split_writeout", "0x4ad3eb_0x57c648_type_plus_0x0c", "complete_source_order_prefix", pass_split_note.str());
+	}
+	add_phase("final_object_payload_writeout", "0x4ad3eb_serializer_slot_0x0c_payload_bodies", "blocked", result.blocked_reason);
 	return result;
 }
 

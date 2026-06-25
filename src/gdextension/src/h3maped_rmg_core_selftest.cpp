@@ -2160,7 +2160,7 @@ int main() {
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 	const std::string final_writeout_blocker =
-			"final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write";
+			"final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_object_writeout"
 					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
@@ -2182,10 +2182,15 @@ int main() {
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count == int32_t(generator_state.object_records_0xec4_ecc.size())
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count == 4
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_metadata_table_owned_0x57c648_plus_0x0c
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count == 0
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
+							+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
+							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned final object 0x4ad309 count header did not materialize before the 0x4ad3eb pass-split blocker")) {
+				"workflow-owned final object 0x4ad309 count header and 0x4ad3eb pass split did not materialize before the serializer-payload blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -4492,7 +4497,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_final_writeout_blocker =
-					"final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write";
+					"final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4522,11 +4527,16 @@ int main() {
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count > 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count == 4
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_known_count > 0
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_metadata_table_owned_0x57c648_plus_0x0c
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count == 0
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
+								+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
+								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
-					"entry-to-writeout workflow did not own the recovered 0x4ad309 generated-object count header before stopping at 0x4ad3eb")) {
+					"entry-to-writeout workflow did not own the recovered 0x4ad309 generated-object count header and 0x4ad3eb pass split before stopping at payload serialization")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 15
+			if (!require(workflow.phases.size() >= 16
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4552,7 +4562,9 @@ int main() {
 							&& workflow.phases[13].id == "final_object_count_writeout"
 							&& workflow.phases[13].status == "complete_source_order_prefix"
 							&& workflow.phases[14].id == "final_object_pass_split_writeout"
-							&& workflow.phases[14].status == "blocked",
+							&& workflow.phases[14].status == "complete_source_order_prefix"
+							&& workflow.phases[15].id == "final_object_payload_writeout"
+							&& workflow.phases[15].status == "blocked",
 						"entry-to-writeout workflow did not preserve recovered phase order through road/river object adjacency")) {
 				return 1;
 			}
