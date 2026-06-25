@@ -2869,6 +2869,41 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t setup_object_0x48 = 0;
 };
 
+struct FinalTileWriteoutCell49b2b6 {
+	int32_t flat_cell_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	std::array<uint8_t, 7> tile_bytes {};
+	uint32_t word_0x20 = 0U;
+	uint32_t word_0x24 = 0U;
+	uint32_t word_0x28 = 0U;
+	uint32_t word_0x2c = 0U;
+};
+
+struct FinalTileWriteoutResult49b2b6 {
+	bool invoked = false;
+	bool applied = false;
+	std::string blocked_reason;
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t cell_count = 0;
+	int32_t byte_count = 0;
+	int32_t tile_byte_array_count = 7;
+	int32_t terrain_art_nonzero_count = 0;
+	int32_t river_type_nonzero_count = 0;
+	int32_t river_art_nonzero_count = 0;
+	int32_t road_type_nonzero_count = 0;
+	int32_t road_art_nonzero_count = 0;
+	int32_t flag_nonzero_count = 0;
+	int32_t road_overlay_cell_count_0x4b4243 = 0;
+	bool road_overlay_private_state_owned_0x4b4243 = false;
+	std::vector<uint8_t> tile_payload_bytes;
+	std::vector<FinalTileWriteoutCell49b2b6> first_cells;
+	std::vector<FinalTileWriteoutCell49b2b6> last_cells;
+};
+
 struct H3MapedRmgWorkflowResult {
 	H3MapedRmgWorkflowConfig config;
 	bool supported_scope = false;
@@ -2883,6 +2918,7 @@ struct H3MapedRmgWorkflowResult {
 	TemplateSelectionRuntimeResult4ac552 template_selection_0x4ac552;
 	CoordinateOwnerGridResult4a218c coordinate_owner_grid_0x4a218c;
 	GeneratorObjectPrivateState generator_object_private_state;
+	FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
 	std::vector<H3MapedRmgWorkflowPhase> phases;
 };
 
