@@ -2238,6 +2238,21 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t first_scorer_candidate_y_0x49e700 = -1;
 	int32_t first_scorer_candidate_level_0x49e700 = -1;
 	int32_t first_scorer_first_pass_score_0x49e1bf = 0;
+	int32_t dispatch_probe_candidate_append_count_0x49e904 = 0;
+	int32_t dispatch_probe_candidate_weight_append_count_0x49e91f = 0;
+	int32_t dispatch_probe_candidate_weight_total_0x49e700 = 0;
+	bool rng_selection_0x49e9ad_invoked = false;
+	int32_t rng_value_0x49e9ad = -1;
+	int32_t selected_candidate_index_0x49e9ad = -1;
+	int32_t selected_candidate_score_0x49e9ad = 0;
+	int32_t selected_candidate_source_row_0x49e9ad = -1;
+	std::string selected_candidate_def_name_0x49e9ad;
+	int32_t selected_object_allocated_0x5044b1_count = 0;
+	int32_t selected_object_initialized_0x49ba89_count = 0;
+	int32_t selected_object_commit_callback_count_0x49ea25 = 0;
+	int32_t post_commit_coordinate_append_count_0x49eb01 = 0;
+	int32_t post_commit_bit26_clear_count_0x49eaf1 = 0;
+	bool coordinate_worklist_replay_pending_after_first_commit = false;
 	std::string blocked_reason;
 };
 
@@ -3206,7 +3221,7 @@ RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cell
 RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_0x4aa1db(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t selected_value_0x14, H3MapedRng &rng);
 RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t low_value_0x14, int32_t high_value_0x18, H3MapedRng &rng);
 RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0x4aab7e(GeneratorObjectPrivateState &state, const std::vector<RewardGuardSourceStreamRecord4aab7e> &source_records, bool source_object_kind_0x0c_known, int32_t source_object_kind_0x0c, const GeneratorRelationOwnerState4a218c *selector, H3MapedRng &rng);
-DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state);
+DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state, H3MapedRng &rng);
 RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit_0x4aa3e9(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, int32_t selected_x, int32_t selected_y, int32_t selected_level);
 RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_commit_0x4aa9b7(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c &relation, int32_t minimum_low_word_score_0x10, bool policy_byte_0x13, H3MapedRng &rng);
 std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_fallback_records_4a7605_4a5e03();

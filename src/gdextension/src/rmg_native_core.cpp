@@ -885,6 +885,21 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_first_scorer_candidate_y_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_candidate_y_0x49e700;
 	out.decorative_dispatch_first_scorer_candidate_level_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_candidate_level_0x49e700;
 	out.decorative_dispatch_first_scorer_first_pass_score_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_first_pass_score_0x49e1bf;
+	out.decorative_dispatch_candidate_append_count_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_append_count_0x49e904;
+	out.decorative_dispatch_candidate_weight_append_count_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_weight_append_count_0x49e91f;
+	out.decorative_dispatch_candidate_weight_total_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_weight_total_0x49e700;
+	out.decorative_dispatch_rng_selection_0x49e9ad_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.rng_selection_0x49e9ad_invoked;
+	out.decorative_dispatch_rng_value_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.rng_value_0x49e9ad;
+	out.decorative_dispatch_selected_candidate_index_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_candidate_index_0x49e9ad;
+	out.decorative_dispatch_selected_candidate_score_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_candidate_score_0x49e9ad;
+	out.decorative_dispatch_selected_candidate_source_row_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_candidate_source_row_0x49e9ad;
+	out.decorative_dispatch_selected_candidate_def_name_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_candidate_def_name_0x49e9ad;
+	out.decorative_dispatch_selected_object_allocated_0x5044b1_count = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_object_allocated_0x5044b1_count;
+	out.decorative_dispatch_selected_object_initialized_0x49ba89_count = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_object_initialized_0x49ba89_count;
+	out.decorative_dispatch_selected_object_commit_callback_count_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_object_commit_callback_count_0x49ea25;
+	out.decorative_dispatch_post_commit_coordinate_append_count_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.post_commit_coordinate_append_count_0x49eb01;
+	out.decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1 = input.decorative_flagged_cell_dispatch_0x49eb8d.post_commit_bit26_clear_count_0x49eaf1;
+	out.decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_replay_pending_after_first_commit;
 	out.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d = input.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason;
 	out.connection_tail_replay_0x4a79a3_ported = input.connection_tail_replay_0x4a79a3_ported;
 	out.connection_tail_replay_0x4a79a3_invoked = input.connection_tail_replay_0x4a79a3.invoked;
@@ -2677,8 +2692,23 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_first_scorer_candidate_y_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_y_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_candidate_level_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_level_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_first_pass_score_0x49e1bf\":" << state.decorative_dispatch_first_scorer_first_pass_score_0x49e1bf << ","
+			<< "\"decorative_dispatch_candidate_append_count_0x49e904\":" << state.decorative_dispatch_candidate_append_count_0x49e904 << ","
+			<< "\"decorative_dispatch_candidate_weight_append_count_0x49e91f\":" << state.decorative_dispatch_candidate_weight_append_count_0x49e91f << ","
+			<< "\"decorative_dispatch_candidate_weight_total_0x49e700\":" << state.decorative_dispatch_candidate_weight_total_0x49e700 << ","
+			<< "\"decorative_dispatch_rng_selection_0x49e9ad_invoked\":" << (state.decorative_dispatch_rng_selection_0x49e9ad_invoked ? "true" : "false") << ","
+			<< "\"decorative_dispatch_rng_value_0x49e9ad\":" << state.decorative_dispatch_rng_value_0x49e9ad << ","
+			<< "\"decorative_dispatch_selected_candidate_index_0x49e9ad\":" << state.decorative_dispatch_selected_candidate_index_0x49e9ad << ","
+			<< "\"decorative_dispatch_selected_candidate_score_0x49e9ad\":" << state.decorative_dispatch_selected_candidate_score_0x49e9ad << ","
+			<< "\"decorative_dispatch_selected_candidate_source_row_0x49e9ad\":" << state.decorative_dispatch_selected_candidate_source_row_0x49e9ad << ","
+			<< "\"decorative_dispatch_selected_candidate_def_name_0x49e9ad\":\"" << json_escape(state.decorative_dispatch_selected_candidate_def_name_0x49e9ad) << "\","
+			<< "\"decorative_dispatch_selected_object_allocated_0x5044b1_count\":" << state.decorative_dispatch_selected_object_allocated_0x5044b1_count << ","
+			<< "\"decorative_dispatch_selected_object_initialized_0x49ba89_count\":" << state.decorative_dispatch_selected_object_initialized_0x49ba89_count << ","
+			<< "\"decorative_dispatch_selected_object_commit_callback_count_0x49ea25\":" << state.decorative_dispatch_selected_object_commit_callback_count_0x49ea25 << ","
+			<< "\"decorative_dispatch_post_commit_coordinate_append_count_0x49eb01\":" << state.decorative_dispatch_post_commit_coordinate_append_count_0x49eb01 << ","
+			<< "\"decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1\":" << state.decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1 << ","
+			<< "\"decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit\":" << (state.decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d\":\"" << json_escape(state.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d) << "\","
-			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_replays_first_footprint_terrain_bit27_pass_and_neighbor_object_reference_scan_until_unowned_0x49b89c_descriptor_score_index_or_allocation_commit\","
+			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_scores_all_candidates_0x49e904_0x49e91f_weight_vector_selects_by_0x49e9ad_rng_allocates_0x5044b1_initializes_0x49ba89_commits_once_0x49ea25_and_blocks_on_0x49b89c_score_cache_or_coordinate_worklist_replay\","
 			<< "\"connection_tail_replay_0x4a79a3_ported\":" << (state.connection_tail_replay_0x4a79a3_ported ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_invoked\":" << (state.connection_tail_replay_0x4a79a3_invoked ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_applied\":" << (state.connection_tail_replay_0x4a79a3_applied ? "true" : "false") << ","

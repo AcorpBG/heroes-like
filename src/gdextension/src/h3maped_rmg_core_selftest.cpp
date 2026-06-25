@@ -2183,16 +2183,22 @@ int main() {
 					"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 	}
-	const std::string downstream_blocker =
-			"0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned";
+	const std::string decorative_score_cache_blocker =
+			"0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
+	const std::string decorative_coordinate_worklist_blocker =
+			"0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
+	};
+	const auto decorative_blocker_matches = [&](const std::string &value) {
+		return blocker_prefix_matches(value, decorative_score_cache_blocker)
+				|| blocker_prefix_matches(value, decorative_coordinate_worklist_blocker);
 	};
 	const bool has_downstream_blocker = std::any_of(
 			generator_state.remaining_private_state_blockers.begin(),
 			generator_state.remaining_private_state_blockers.end(),
 			[&](const std::string &blocker) {
-				return blocker_prefix_matches(blocker, downstream_blocker);
+				return decorative_blocker_matches(blocker);
 			});
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
@@ -2207,6 +2213,28 @@ int main() {
 				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the downstream decorative blocker")) {
 		return 1;
 	}
+	const auto &generator_decorative_dispatch =
+			generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
+	const bool generator_decorative_score_cache_blocked =
+			blocker_prefix_matches(generator_decorative_dispatch.blocked_reason, decorative_score_cache_blocker);
+	const bool generator_decorative_coordinate_blocked =
+			blocker_prefix_matches(generator_decorative_dispatch.blocked_reason, decorative_coordinate_worklist_blocker);
+	const bool generator_decorative_blocker_shape_valid =
+			(generator_decorative_score_cache_blocked
+					&& generator_decorative_dispatch.scorer_neighbor_pass_score_index_missing_count_0x49b89c > 0
+					&& generator_decorative_dispatch.scorer_input_0x49e1bf_unowned
+					&& !generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
+					&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == 0)
+			|| (generator_decorative_coordinate_blocked
+					&& generator_decorative_dispatch.dispatch_probe_candidate_append_count_0x49e904 > 0
+					&& generator_decorative_dispatch.dispatch_probe_candidate_weight_append_count_0x49e91f > 0
+					&& generator_decorative_dispatch.dispatch_probe_candidate_weight_total_0x49e700 > 0
+					&& generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
+					&& generator_decorative_dispatch.selected_candidate_index_0x49e9ad >= 0
+					&& generator_decorative_dispatch.selected_object_allocated_0x5044b1_count == 1
+					&& generator_decorative_dispatch.selected_object_initialized_0x49ba89_count == 1
+					&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == 1
+					&& generator_decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit);
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
@@ -2229,16 +2257,14 @@ int main() {
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason == downstream_blocker
+						&& generator_decorative_blocker_shape_valid
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_0x49e700_invoked
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count == 45
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_record_count_0x49e700 > 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_scorer_input_candidate_count_0x49e700 > 0
-						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_input_0x49e1bf_unowned
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_0x49e1bf_invoked
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_invocation_count_0x49e1bf > 0
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_positive_count_0x49e1bf > 0
 						&& !generator_state.connection_tail_replay_0x4a79a3_ported
 						&& !generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& generator_state.connection_fallback_materialization_record_count == 0
@@ -2440,7 +2466,7 @@ int main() {
 					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
 					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason == downstream_blocker,
+					&& decorative_blocker_matches(generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason),
 				"generator object private state did not stop at the 0x49eb8d decorative dispatch blocker after reward/guard")) {
 		return 1;
 	}
@@ -4420,7 +4446,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_decorative_blocker =
-					"0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned";
+					"0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
