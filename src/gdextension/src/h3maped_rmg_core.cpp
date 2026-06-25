@@ -4992,9 +4992,6 @@ static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(
 		const GeneratedCellRecord0x30 &record,
 		const std::vector<ObjectRecordReference4a54a7> *object_records_0xec4_ecc) {
 	int32_t descriptor_type = -1;
-	if (generated_cell_descriptor_type_from_object_reference_49a318(record, object_records_0xec4_ecc, descriptor_type)) {
-		return descriptor_type;
-	}
 	if (!record.object_reference_vector_contents_known || record.object_references_0x04_0x08.empty()) {
 		return -1;
 	}
@@ -5008,6 +5005,9 @@ static int32_t reward_guard_neighbor_descriptor_type_0x49d2e0(
 			});
 	if (member != wrapper.selected_members_0x2c_0x30.end()) {
 		return member->descriptor_type_0x1c;
+	}
+	if (generated_cell_descriptor_type_from_object_reference_49a318(record, object_records_0xec4_ecc, descriptor_type)) {
+		return descriptor_type;
 	}
 	return -1;
 }
