@@ -13645,10 +13645,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Implemented source-order reverse in-place candidate erase for reward/guard 0x49cf34 and updated the focused selftest. No-Godot controlled snapshots still fail closed before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail: small seed 10 remains blocked by 0x49d2e0_neighbor_policy_plus_2_zero_reject; small seed 58 by 0x4aa603_0x49a6f9_footprint_existing_bit26_rejected; medium seed 10 by 0x4aa603_0x49a6f9_secondary_mask_terrain_rejected. Next work is source-backed live reward/guard input/state parity, not final-map tuning.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "2026-06-25: Source-backed 0x49d2e0 wrapper-local descriptor lookup aligned and selftested, but no-Godot workflow still blocks before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. small_2p_seed_10 still empties 0x49cf34 candidates after bit26 and 0x49d2e0 filters; small_2p_seed_58 and medium_4p_seed_10 still empty 0x4aa9b7 candidates after score/0x4aa603 filters.",
+  "currentSliceStatus": "blocked",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-22T14:21:35Z",
+  "currentSliceUpdatedAt": "2026-06-25T05:44:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -52833,7 +52833,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Implemented source-order reverse in-place candidate erase for reward/guard 0x49cf34 and updated the focused selftest. No-Godot controlled snapshots still fail closed before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail: small seed 10 remains blocked by 0x49d2e0_neighbor_policy_plus_2_zero_reject; small seed 58 by 0x4aa603_0x49a6f9_footprint_existing_bit26_rejected; medium seed 10 by 0x4aa603_0x49a6f9_secondary_mask_terrain_rejected. Next work is source-backed live reward/guard input/state parity, not final-map tuning.",
+      "notes": "2026-06-25: Source-backed 0x49d2e0 wrapper-local descriptor lookup aligned and selftested, but no-Godot workflow still blocks before final writeout at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. small_2p_seed_10 still empties 0x49cf34 candidates after bit26 and 0x49d2e0 filters; small_2p_seed_58 and medium_4p_seed_10 still empty 0x4aa9b7 candidates after score/0x4aa603 filters.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -52846,10 +52846,10 @@
         "PLAN.md"
       ],
       "startedAt": "2026-06-03T10:59:11Z",
-      "status": "in_progress",
+      "status": "blocked",
       "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, the 0x4a8c15 -> 0x4a5767 relation-normalization bridge, the one-level-land 0x4a4fc5 water-edge scan, and the zero-source-water 0x4a79a3 connection-tail invocation. Small zero-source-water cases now fail closed inside 0x4a79a3 because the source-backed 0x4a7605/0x4a5e03 fallback record feed is missing for the current scope; Medium currently fails closed inside 0x4a4fc5. This is not parity and not final map output.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-22T15:14:44Z",
+      "updatedAt": "2026-06-25T05:44:12Z",
       "validation": {
         "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
         "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
@@ -59811,9 +59811,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now matches recovered 0x49cf34 candidate filtering by erasing wrapper +0x3c..+0x40 candidates in reverse in place; the focused no-Godot selftest covers the reverse 0x49d2e0 execution order and surviving original candidate order. Controlled Small seed 10, Small seed 58, and Medium seed 10 still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail, so this is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains blocked before final writeout. Shared h3maped_rmg_core now resolves 0x49d2e0 bit22 neighbor descriptor references through wrapper-local selected members before falling back to the global object record table, matching the recovered wrapper-local object-pointer shape; the focused no-Godot selftest covers a conflicting wrapper-local/global descriptor case. Controlled Small seed 10, Small seed 58, and Medium seed 10 still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail, so this is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-22T15:14:44Z",
+  "updatedAt": "2026-06-25T05:44:12Z",
   "validation": {
     "id": "native-rmg-selected-candidate-relation-producer-20260622",
     "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",

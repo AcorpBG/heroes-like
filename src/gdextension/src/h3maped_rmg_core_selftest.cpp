@@ -3424,6 +3424,77 @@ int main() {
 				"0x49cf34 selected wrapper cell did not receive the recovered 0x49abd6 object reference")) {
 		return 1;
 	}
+	RewardGuardWrapperState4aa3e9 local_lookup_wrapper = attach_construct.wrapper;
+	for (GeneratedCellRecord0x30 &record : local_lookup_wrapper.generated_cell_grid_0x08_0x10.records) {
+		record.word_0x20_known = true;
+		record.word_0x20 = 0x00ff0000U;
+		record.word_0x24_known = true;
+		record.word_0x24 = 0U;
+		record.word_0x28_known = true;
+		record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
+		record.word_0x2c_known = true;
+		record.word_0x2c = 0U;
+	}
+	auto local_lookup_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
+		return local_lookup_wrapper.generated_cell_grid_0x08_0x10.records[size_t(aurelion::h3maped_rmg_core::cell_index(16, 16, x, y, 0))];
+	};
+	for (int32_t y = 10; y <= 12; ++y) {
+		for (int32_t x = 6; x <= 9; ++x) {
+			aurelion::h3maped_rmg_core::generated_cell_49a932(local_lookup_cell(x, y), false);
+		}
+	}
+	aurelion::h3maped_rmg_core::generated_cell_49aa63(local_lookup_cell(8, 11), true);
+	GeneratedCellRecord0x30 &local_lookup_neighbor = local_lookup_cell(6, 11);
+	local_lookup_neighbor.word_0x28 |= aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22;
+	local_lookup_neighbor.object_reference_vector_contents_known = true;
+	local_lookup_neighbor.object_references_0x04_0x08 = { 0x03620054U };
+	local_lookup_neighbor.object_reference_count = 1;
+	RewardGuardWrapperMember4aa3e9 local_lookup_existing_member;
+	local_lookup_existing_member.object_record_key = 0x03620054U;
+	local_lookup_existing_member.object_record_key_known = true;
+	local_lookup_existing_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
+	local_lookup_existing_member.descriptor_type_0x1c = 54;
+	local_lookup_existing_member.relative_x_0x08 = 6;
+	local_lookup_existing_member.relative_y_0x0c = 11;
+	local_lookup_existing_member.relative_level_0x10 = 0;
+	local_lookup_existing_member.descriptor_offset_x_0x2c = 0;
+	local_lookup_existing_member.descriptor_offset_y_0x30 = 0;
+	local_lookup_wrapper.selected_members_0x2c_0x30.push_back(local_lookup_existing_member);
+	local_lookup_wrapper.candidate_coordinates_0x3c_0x40 = {
+		{ 8, 11, 0 },
+	};
+	RewardGuardWrapperMember4aa3e9 local_lookup_attach_member = attach_member;
+	local_lookup_attach_member.object_record_key = 0x03620055U;
+	local_lookup_attach_member.object_record_key_known = true;
+	local_lookup_attach_member.descriptor_type_0x1c = 54;
+	local_lookup_attach_member.descriptor_offset_x_0x2c = 1;
+	local_lookup_attach_member.descriptor_offset_y_0x30 = 0;
+	std::vector<ObjectRecordReference4a54a7> conflicting_global_records;
+	ObjectRecordReference4a54a7 conflicting_global_record;
+	conflicting_global_record.object_record_key = 0x03620054U;
+	conflicting_global_record.descriptor_type_0x1c = 0;
+	conflicting_global_records.push_back(conflicting_global_record);
+	H3MapedRng local_lookup_rng;
+	local_lookup_rng.state = 11U;
+	const RewardGuardAttachResult49cf34 local_lookup_result =
+			aurelion::h3maped_rmg_core::reward_guard_attach_member_0x49cf34(
+					local_lookup_wrapper,
+					local_lookup_attach_member,
+					local_lookup_rng,
+					&conflicting_global_records);
+	if (!require(local_lookup_result.applied
+					&& local_lookup_result.filter_results_0x49d2e0.size() == 1
+					&& local_lookup_result.filter_results_0x49d2e0[0].inputs_available
+					&& local_lookup_result.filter_results_0x49d2e0[0].accepted
+					&& local_lookup_result.filter_results_0x49d2e0[0].neighbor_bit22_policy_check_count == 1
+					&& local_lookup_result.filter_results_0x49d2e0[0].neighbor_policy_plus_2_reject_count == 0
+					&& local_lookup_result.filter_results_0x49d2e0[0].neighbor_policy_plus_1_reject_count == 0
+					&& local_lookup_result.selected_candidate_known
+					&& local_lookup_result.selected_candidate.x == 8
+					&& local_lookup_result.selected_candidate.y == 11,
+				"0x49d2e0 did not resolve bit22 neighbor descriptor through wrapper-local selected members before global object records")) {
+		return 1;
+	}
 	const RewardGuardWrapperFinalMarkResult49cefb final_mark_result =
 			aurelion::h3maped_rmg_core::reward_guard_wrapper_mark_candidate_cells_0x49cefb(attach_wrapper);
 	int32_t final_marked_grid_cell_count = 0;
