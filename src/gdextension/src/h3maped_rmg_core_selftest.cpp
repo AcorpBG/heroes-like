@@ -165,7 +165,7 @@ int main() {
 		if (!require(!type45_records.empty() && !type45_records[0].def_name.empty(), "0x49da08 type-45 source record lookup did not preserve DEF identity")) {
 			return 1;
 		}
-		if (!require(type45_records[0].metadata_bucket_index_0x08 == 0, "0x49da08 type-45 source record lost metadata +0x08 bucket lane")) {
+		if (!require(type45_records[0].metadata_bucket_index_0x08 == 45, "0x49da08 type-45 source record lost recovered identity-default metadata +0x08 bucket lane")) {
 			return 1;
 		}
 		const std::vector<SourceObjectRecord0x4c> type199_records =
@@ -189,7 +189,7 @@ int main() {
 		if (!require(wrapper_summary.initialized_bucket_count == 0xe8, "0x49db76 wrapper initialization did not initialize every metadata bucket")) {
 			return 1;
 		}
-		if (!require(wrapper_summary.non_empty_bucket_count == 8, "0x49db76 wrapper bucket table must use metadata +0x08 lanes, not raw type groups")) {
+		if (!require(wrapper_summary.non_empty_bucket_count == 160, "0x49db76 wrapper bucket table must use recovered metadata +0x08 identity defaults plus alias lanes")) {
 			return 1;
 		}
 		if (!require(wrapper_summary.total_source_record_references == source_object_summary.record_count, "0x49db76 wrapper bucket table did not account for every source record")) {
@@ -198,28 +198,28 @@ int main() {
 		if (!require(wrapper_summary.out_of_range_source_record_count == 0, "0x49db76 wrapper bucket table found out-of-range metadata buckets despite recovered 0xe8 bound")) {
 			return 1;
 		}
-		if (!require(wrapper_summary.max_bucket_index_0x08 == 0 && wrapper_summary.max_bucket_record_count == 1252, "0x49db76 wrapper max bucket drifted from recovered metadata bucket 0")) {
+		if (!require(wrapper_summary.max_bucket_index_0x08 == 54 && wrapper_summary.max_bucket_record_count == 141, "0x49db76 wrapper max bucket drifted from recovered metadata +0x08 identity-default table")) {
 			return 1;
 		}
 		SourceObjectWrapperBucket0xe8 default_bucket;
 		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_index_0x49db76(0, default_bucket), "0x49db76 wrapper lookup rejected metadata bucket 0")) {
 			return 1;
 		}
-		if (!require(default_bucket.initialized_by_0x49db76 && default_bucket.record_count == 1252 && default_bucket.source_record_indices.size() == 1252, "0x49db76 metadata bucket 0 lost source records")) {
+		if (!require(default_bucket.initialized_by_0x49db76 && default_bucket.record_count == 1 && default_bucket.source_record_indices.size() == 1 && default_bucket.first_type_id_0x1c == 0, "0x49db76 metadata bucket 0 should only keep the default source record after recovered identity-default routing")) {
 			return 1;
 		}
 		SourceObjectWrapperBucket0xe8 tree_bucket;
 		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_index_0x49db76(155, tree_bucket), "0x49db76 wrapper lookup rejected metadata bucket 155")) {
 			return 1;
 		}
-		if (!require(tree_bucket.initialized_by_0x49db76 && tree_bucket.record_count == 51 && tree_bucket.first_type_id_0x1c == 199, "0x49db76 metadata bucket 155 lost type-199 source records")) {
+		if (!require(tree_bucket.initialized_by_0x49db76 && tree_bucket.record_count == 76 && tree_bucket.first_type_id_0x1c == 155, "0x49db76 metadata bucket 155 lost identity/default plus type-199 alias source records")) {
 			return 1;
 		}
 		SourceObjectWrapperBucket0xe8 mine_bucket;
 		if (!require(aurelion::h3maped_rmg_core::source_object_wrapper_bucket_by_index_0x49db76(53, mine_bucket), "0x49db76 wrapper lookup rejected metadata bucket 53")) {
 			return 1;
 		}
-		if (!require(mine_bucket.initialized_by_0x49db76 && mine_bucket.record_count == 7 && mine_bucket.first_type_id_0x1c == 220, "0x49db76 metadata bucket 53 lost type-220 source records")) {
+		if (!require(mine_bucket.initialized_by_0x49db76 && mine_bucket.record_count == 53 && mine_bucket.first_type_id_0x1c == 53, "0x49db76 metadata bucket 53 lost identity/default plus type-220 alias source records")) {
 			return 1;
 		}
 		SourceObjectWrapperBucket0xe8 empty_bucket;
@@ -233,7 +233,7 @@ int main() {
 		}
 		const SourceObjectSelectorResult4a9e40 type199_selection =
 				aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, type199_lane.selected_lane, type199_records[0].metadata_bucket_index_0x08, type199_records[0].subtype_0x20);
-		if (!require(type199_selection.bucket_found && type199_selection.scanned_record_count == 51 && type199_selection.accepted_count > 0, "0x4a9e40 source wrapper selector did not scan metadata bucket 155 candidates")) {
+		if (!require(type199_selection.bucket_found && type199_selection.scanned_record_count == 76 && type199_selection.accepted_count > 0, "0x4a9e40 source wrapper selector did not scan metadata bucket 155 candidates")) {
 			return 1;
 		}
 		if (!require(type199_selection.selected && type199_selection.rng_consumed && type199_selection.rng_value == 71 && type199_selection.rng_state_after == 0x004746a5U, "0x4a9e40 source wrapper selector did not consume the recovered RNG path")) {
@@ -1341,7 +1341,11 @@ int main() {
 		int32_t object_branch_source_nibble = -1;
 		SourceObjectSelectorResult4a9e40 object_branch_selector;
 		for (int32_t source_nibble = 0; source_nibble < 16; ++source_nibble) {
-			object_branch_selector = aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(10U, 9, 0, source_nibble);
+			object_branch_selector = aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(
+					10U,
+					0,
+					9,
+					source_nibble);
 			if (object_branch_selector.selected) {
 				object_branch_source_nibble = source_nibble;
 				break;
@@ -3118,8 +3122,8 @@ int main() {
 	reward_guard_member.source_record_copy.type_id_0x1c = 45;
 	reward_guard_member.source_record_copy.descriptor_width_0x34 = 1;
 	reward_guard_member.source_record_copy.descriptor_height_0x38 = 1;
-	reward_guard_member.source_record_copy.passability_mask = "0";
-	reward_guard_member.source_record_copy.action_mask = "0";
+	reward_guard_member.source_record_copy.passability_mask = "1";
+	reward_guard_member.source_record_copy.action_mask = "1";
 	reward_guard_wrapper.selected_members_0x2c_0x30.push_back(reward_guard_member);
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10_known = true;
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);

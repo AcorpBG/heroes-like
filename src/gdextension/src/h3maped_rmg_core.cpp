@@ -1445,15 +1445,8 @@ SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_
 	return result;
 }
 
-static int32_t source_object_metadata_bucket_for_type_0x57c648_0x08(int32_t type_id_0x1c) {
-	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
-	for (const SourceObjectRecord0x4c &record : records) {
-		if (record.type_id_0x1c == type_id_0x1c) {
-			return record.metadata_bucket_index_0x08;
-		}
-	}
-	return -1;
-}
+static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
+static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
 
 static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
 		const SourceObjectRecord0x4c &record,
@@ -1464,7 +1457,7 @@ static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
 	}
 	for (int32_t row = 0; row < 6; ++row) {
 		for (int32_t col = 0; col < 8; ++col) {
-			if (record.action_mask[size_t(row * 8 + col)] == '1') {
+			if (source_object_descriptor_mask_bit_0x4268eb(record, col, row)) {
 				source_cell_x_0x2c = col;
 				source_cell_y_0x30 = row;
 				return true;
@@ -1480,15 +1473,12 @@ static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	// 0x41e951 reads the descriptor primary mask at +0x04/+0x08.
-	// The .msk fields copied into +0x34..+0x48 are a separate surface.
+	// 0x41e951 reads descriptor +0x04/+0x08. The recovered catalog's text
+	// passability mask feeds that descriptor surface; .msk fields are the later
+	// +0x34..+0x48 descriptor payload and must not replace this lookup.
 	const size_t text_index = size_t(y * 8 + x);
-	if (record.action_mask.size() > text_index) {
-		return record.action_mask[text_index] == '1';
-	}
-	if (record.descriptor_mask_fields_0x34_0x48_known) {
-		const int32_t bit_index = 47 - (8 * y) - x;
-		return (record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1U) << uint32_t(bit_index))) != 0U;
+	if (record.passability_mask.size() > text_index) {
+		return record.passability_mask[text_index] == '1';
 	}
 	return false;
 }
@@ -1497,15 +1487,11 @@ static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	// 0x4268eb reads the descriptor secondary mask at +0x0c/+0x10.
-	// Do not substitute .msk +0x44/+0x48 body fields when text masks are present.
+	// 0x4268eb reads descriptor +0x0c/+0x10, which is represented by the
+	// source-backed action/control mask in the recovered object catalog.
 	const size_t text_index = size_t(y * 8 + x);
-	if (record.passability_mask.size() > text_index) {
-		return record.passability_mask[text_index] == '0';
-	}
-	if (record.descriptor_mask_fields_0x34_0x48_known) {
-		const int32_t bit_index = 47 - (8 * y) - x;
-		return (record.descriptor_mask_b_0x44_0x48 & (uint64_t(1U) << uint32_t(bit_index))) != 0U;
+	if (record.action_mask.size() > text_index) {
+		return record.action_mask[text_index] == '1';
 	}
 	return false;
 }
@@ -1524,7 +1510,9 @@ static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_prima
 	}
 	for (int32_t row = 0; row < descriptor_height; ++row) {
 		for (int32_t col = 0; col < descriptor_width; ++col) {
-			if (!source_object_descriptor_mask_bit_0x4268eb(record, col, row)) {
+			const bool primary_mask_0x41e951 = source_object_descriptor_mask_bit_0x41e951(record, col, row);
+			const bool secondary_mask_0x4268eb = source_object_descriptor_mask_bit_0x4268eb(record, col, row);
+			if (primary_mask_0x41e951 && !secondary_mask_0x4268eb) {
 				continue;
 			}
 			offsets.push_back(CoordinateCandidate4a17f5 {
@@ -3449,7 +3437,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 			result.object_branch_attempt_count += 1;
 			const int32_t low_nibble_source = int32_t((record.word_0x2c >> 1U) & 0x0fU);
 			const SourceObjectSelectorResult4a9e40 selector =
-					source_object_wrapper_selector_0x4a9e40(rng.state, 9, 0, low_nibble_source);
+					source_object_wrapper_selector_0x4a9e40(rng.state, 0, 9, low_nibble_source);
 			if (!selector.selected || selector.selected_source_record_index < 0) {
 				result.object_branch_blocked_count += 1;
 				result.object_branch_blocked_reason = "0x4a5a23_object_branch_0x4a9e40_selector_unresolved";
@@ -4615,8 +4603,8 @@ static int32_t reward_guard_descriptor_mask_extent_count_0x4aa195(const SourceOb
 	int32_t count = 0;
 	for (int32_t col = 0; col < descriptor_width; ++col) {
 		for (int32_t row = 0; row < descriptor_height; ++row) {
-			const bool secondary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
-			if (!secondary_mask || source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+			const bool primary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
+			if (!primary_mask || source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
 				count += 1;
 			}
 		}
@@ -4760,21 +4748,11 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 				result.candidate_decisions.push_back(decision);
 				return result;
 			}
-			const int32_t metadata_bucket_0x08 =
-					source_object_metadata_bucket_for_type_0x57c648_0x08(candidate.descriptor_type_0x04);
-			if (metadata_bucket_0x08 < 0) {
-				decision.rejected_by_score_dispatch = true;
-				decision.blocked_reason = "0x4a9f1c_candidate_type_missing_metadata_bucket_0x57c648_0x08_before_0x4a9e40";
-				result.score_dispatch_missing_count += 1;
-				result.blocked_reason = decision.blocked_reason;
-				result.candidate_decisions.push_back(decision);
-				return result;
-			}
 			decision.descriptor_selector_invoked_0x4a9e40 = true;
 			decision.descriptor_selector_0x4a9e40 = source_object_wrapper_selector_0x4a9e40(
 					rng.state,
 					selector->terrain_policy_0x0c,
-					metadata_bucket_0x08,
+					candidate.descriptor_type_0x04,
 					candidate.cursor_source_0x08);
 			if (decision.descriptor_selector_0x4a9e40.rng_consumed) {
 				rng.state = decision.descriptor_selector_0x4a9e40.rng_state_after;
@@ -5054,9 +5032,9 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 
 	for (int32_t row = 0; row < descriptor_height; ++row) {
 		for (int32_t col = 0; col < descriptor_width; ++col) {
-			const bool primary_mask = source_object_descriptor_mask_bit_0x4268eb(source, col, row);
-			const bool secondary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
-			if (!primary_mask && secondary_mask) {
+			const bool secondary_mask = source_object_descriptor_mask_bit_0x4268eb(source, col, row);
+			const bool primary_mask = source_object_descriptor_mask_bit_0x41e951(source, col, row);
+			if (!secondary_mask && primary_mask) {
 				continue;
 			}
 			result.scanned_cell_count += 1;
@@ -5073,7 +5051,7 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 				result.blocked_reason = "0x49a6f9_footprint_cell_rejected";
 				return result;
 			}
-			const bool checks_owner_byte = primary_mask || !secondary_mask;
+			const bool checks_owner_byte = secondary_mask || !primary_mask;
 			if (checks_owner_byte && !cell.word_0x20_known) {
 				result.inputs_available = false;
 				result.rejected = true;
@@ -5087,14 +5065,14 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 					return result;
 				}
 			}
-			if (primary_mask) {
+			if (secondary_mask) {
 				if (reject_existing_bit26 && (cell.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
 					result.rejected = true;
 					result.blocked_reason = "0x49a6f9_footprint_existing_bit26_rejected";
 					return result;
 				}
 			}
-			if (!secondary_mask && source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
+			if (!primary_mask && source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_secondary_mask_terrain_rejected";
 				return result;
