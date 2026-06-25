@@ -2178,7 +2178,7 @@ int main() {
 		return 1;
 		}
 		const std::string downstream_blocker =
-				"0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells";
+				"0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -2224,6 +2224,12 @@ int main() {
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason == downstream_blocker
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_0x49e700_invoked
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count == 45
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_record_count_0x49e700 > 0
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_scorer_input_candidate_count_0x49e700 > 0
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_input_0x49e1bf_unowned
 						&& !generator_state.connection_tail_replay_0x4a79a3_ported
 						&& !generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& generator_state.connection_fallback_materialization_record_count == 0
@@ -4405,7 +4411,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_decorative_blocker =
-					"0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells";
+					"0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
