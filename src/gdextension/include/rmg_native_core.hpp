@@ -335,6 +335,8 @@ struct CaseReport {
 	bool native_workflow_final_tile_writeout_applied = false;
 	int32_t native_workflow_final_tile_cell_count = 0;
 	int32_t native_workflow_final_tile_byte_count = 0;
+	bool native_workflow_final_object_count_header_written = false;
+	int32_t native_workflow_final_object_count = 0;
 	std::string native_workflow_status;
 	std::string native_workflow_current_phase;
 	bool phase_snapshot_written = false;
@@ -1212,6 +1214,7 @@ struct NativeH3MapedWorkflowResult {
 	bool final_payload_owned = false;
 	bool final_writeout_complete = false;
 	aurelion::h3maped_rmg_core::FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
+	aurelion::h3maped_rmg_core::FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
 	std::string status;
 	std::string blocked_reason;
 	std::string current_phase_id;

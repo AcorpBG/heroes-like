@@ -250,6 +250,17 @@ void append_final_tile_bytes_json(std::ostream &out, const std::array<uint8_t, 7
 	out << "]";
 }
 
+void append_final_object_count_bytes_json(std::ostream &out, const std::array<uint8_t, 4> &bytes) {
+	out << "[";
+	for (size_t index = 0; index < bytes.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << int32_t(bytes[index]);
+	}
+	out << "]";
+}
+
 void append_final_tile_cell_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::FinalTileWriteoutCell49b2b6> &cells) {
 	out << "[";
 	for (size_t index = 0; index < cells.size(); ++index) {
@@ -296,6 +307,52 @@ void append_final_tile_writeout_json(std::ostream &out, const h3maped_rmg_core::
 	append_final_tile_cell_samples_json(out, writeout.first_cells);
 	out << ",\"last_cells\":";
 	append_final_tile_cell_samples_json(out, writeout.last_cells);
+	out << "}";
+}
+
+void append_final_object_record_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::FinalObjectWriteoutRecord4ad1e3> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const h3maped_rmg_core::FinalObjectWriteoutRecord4ad1e3 &record = records[index];
+		out << "{\"vector_index\":" << record.vector_index
+			<< ",\"object_record_key\":" << record.object_record_key
+			<< ",\"descriptor_type_0x1c\":" << record.descriptor_type_0x1c
+			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
+			<< ",\"serializer_slot_0x0c_known\":" << (record.serializer_slot_0x0c_known ? "true" : "false")
+			<< ",\"serializer_slot_0x0c\":" << record.serializer_slot_0x0c
+			<< ",\"x\":" << record.x
+			<< ",\"y\":" << record.y
+			<< ",\"level\":" << record.level
+			<< ",\"copied_source_record_carried\":" << (record.copied_source_record_carried ? "true" : "false")
+			<< ",\"source_type_id_0x1c\":" << record.source_type_id_0x1c
+			<< ",\"source_subtype_0x20\":" << record.source_subtype_0x20
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core::FinalObjectWriteoutResult4ad1e3 &writeout) {
+	out << "{\"invoked\":" << (writeout.invoked ? "true" : "false")
+		<< ",\"object_count_header_written\":" << (writeout.object_count_header_written ? "true" : "false")
+		<< ",\"applied\":" << (writeout.applied ? "true" : "false")
+		<< ",\"blocked_reason\":\"" << json_escape(writeout.blocked_reason) << "\""
+		<< ",\"generated_object_count\":" << writeout.generated_object_count
+		<< ",\"object_count_payload_byte_count\":" << writeout.object_count_payload_byte_count
+		<< ",\"object_count_payload_bytes\":";
+	append_final_object_count_bytes_json(out, writeout.object_count_payload_bytes);
+	out << ",\"object_record_vector_count_known_0xec8_0xecc\":" << (writeout.object_record_vector_count_known_0xec8_0xecc ? "true" : "false")
+		<< ",\"object_record_vector_count_0xec8_0xecc\":" << writeout.object_record_vector_count_0xec8_0xecc
+		<< ",\"serializer_slot_known_count\":" << writeout.serializer_slot_known_count
+		<< ",\"serializer_slot_unknown_count\":" << writeout.serializer_slot_unknown_count
+		<< ",\"pass_split_metadata_table_owned_0x57c648_plus_0x0c\":" << (writeout.pass_split_metadata_table_owned_0x57c648_plus_0x0c ? "true" : "false")
+		<< ",\"source\":\"0x4ad309_0x4ad318_writes_generated_object_vector_count_before_0x4ad3eb_pass_split\""
+		<< ",\"first_records\":";
+	append_final_object_record_samples_json(out, writeout.first_records);
+	out << ",\"last_records\":";
+	append_final_object_record_samples_json(out, writeout.last_records);
 	out << "}";
 }
 
@@ -3934,6 +3991,7 @@ NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &co
 	result.final_payload_owned = shared_workflow.final_payload_owned;
 	result.final_writeout_complete = shared_workflow.final_writeout_complete;
 	result.final_tile_writeout_0x49b2b6 = shared_workflow.final_tile_writeout_0x49b2b6;
+	result.final_object_writeout_0x4ad309_0x4ad3eb = shared_workflow.final_object_writeout_0x4ad309_0x4ad3eb;
 	result.status = shared_workflow.status;
 	result.blocked_reason = shared_workflow.blocked_reason;
 	result.current_phase_id = shared_workflow.current_phase_id;
@@ -4005,8 +4063,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ab37f -> 0x4b4243 road toolkit, and the recovered 0x49b2b6 tile-cell stream. The workflow intentionally fails closed before the unported final object/header/success writeout boundary 0x4ad309/0x4ad3eb/0x4ad3de/0x4ae09a.\",\n";
-	out << "    \"required_refactor\": \"port the recovered final object/header/success writeout stream so source object records, static object records, header/player/metadata, and final success are emitted through 0x4ad309, 0x4ad3eb, 0x4ad3de, and 0x4ae09a before allowing native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ab37f -> 0x4b4243 road toolkit, the recovered 0x49b2b6 tile-cell stream, and the recovered 0x4ad309/0x4ad318 generated-object count header write. The workflow intentionally fails closed before guessing the unported 0x57c648[type*16+0x0c] pass-split table used by 0x4ad3eb.\",\n";
+	out << "    \"required_refactor\": \"port the recovered 0x4ad3eb static/generated object serialization passes, including the 0x57c648[type*16+0x0c] pass split table, static object stream, header/player/metadata payload, 0x4ad3de final sentinel success, and 0x4ae09a return before allowing native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -4019,6 +4077,9 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "    \"final_tile_writeout_0x49b2b6\": ";
 	append_final_tile_writeout_json(out, workflow.final_tile_writeout_0x49b2b6);
 	out << ",\n";
+	out << "    \"final_object_writeout_0x4ad309_0x4ad3eb\": ";
+	append_final_object_writeout_json(out, workflow.final_object_writeout_0x4ad309_0x4ad3eb);
+	out << ",\n";
 	out << "    \"generator_object_private_state\": ";
 	append_generator_object_private_state_json(out, workflow.payload.generator_object_private_state);
 	out << ",\n";
@@ -4028,7 +4089,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_final_object_pass_split_and_payload_writeout_0x4ad3eb_0x57c648_type_plus_0x0c_then_0x4ad3de_0x4ae09a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

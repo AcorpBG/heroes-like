@@ -2904,6 +2904,38 @@ struct FinalTileWriteoutResult49b2b6 {
 	std::vector<FinalTileWriteoutCell49b2b6> last_cells;
 };
 
+struct FinalObjectWriteoutRecord4ad1e3 {
+	int32_t vector_index = -1;
+	uint32_t object_record_key = 0U;
+	int32_t descriptor_type_0x1c = -1;
+	uint32_t object_record_vtable_0x00 = 0U;
+	bool serializer_slot_0x0c_known = false;
+	uint32_t serializer_slot_0x0c = 0U;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	bool copied_source_record_carried = false;
+	int32_t source_type_id_0x1c = -1;
+	int32_t source_subtype_0x20 = -1;
+};
+
+struct FinalObjectWriteoutResult4ad1e3 {
+	bool invoked = false;
+	bool object_count_header_written = false;
+	bool applied = false;
+	std::string blocked_reason;
+	int32_t generated_object_count = 0;
+	int32_t object_count_payload_byte_count = 0;
+	std::array<uint8_t, 4> object_count_payload_bytes {};
+	bool object_record_vector_count_known_0xec8_0xecc = false;
+	int32_t object_record_vector_count_0xec8_0xecc = 0;
+	int32_t serializer_slot_known_count = 0;
+	int32_t serializer_slot_unknown_count = 0;
+	bool pass_split_metadata_table_owned_0x57c648_plus_0x0c = false;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> first_records;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> last_records;
+};
+
 struct H3MapedRmgWorkflowResult {
 	H3MapedRmgWorkflowConfig config;
 	bool supported_scope = false;
@@ -2919,6 +2951,7 @@ struct H3MapedRmgWorkflowResult {
 	CoordinateOwnerGridResult4a218c coordinate_owner_grid_0x4a218c;
 	GeneratorObjectPrivateState generator_object_private_state;
 	FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
+	FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
 	std::vector<H3MapedRmgWorkflowPhase> phases;
 };
 
