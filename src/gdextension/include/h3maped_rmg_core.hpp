@@ -2073,6 +2073,43 @@ struct RewardGuardSourceStreamLane4aab7e {
 	int64_t quota_increment = 0;
 };
 
+struct SourceDescriptorFootprintTrace49a6f9 {
+	bool known = false;
+	std::string reason;
+	int32_t anchor_x = 0;
+	int32_t anchor_y = 0;
+	int32_t anchor_level = 0;
+	int32_t owner_byte2 = 0;
+	bool reject_existing_bit26 = false;
+	int32_t mask_x = 0;
+	int32_t mask_y = 0;
+	bool secondary_mask = false;
+	bool primary_mask = false;
+	int32_t cell_x = 0;
+	int32_t cell_y = 0;
+	int32_t cell_level = 0;
+	bool cell_present = false;
+	bool cell_word_0x20_known = false;
+	uint32_t cell_word_0x20 = 0U;
+	bool cell_word_0x24_known = false;
+	uint32_t cell_word_0x24 = 0U;
+	bool cell_word_0x28_known = false;
+	uint32_t cell_word_0x28 = 0U;
+	int32_t cell_owner_byte2 = 0;
+	int32_t cell_terrain_code = 0;
+	bool cell_valid_0x49a1d8 = false;
+	int32_t source_row = -1;
+	int32_t source_type_0x1c = 0;
+	int32_t source_subtype_0x20 = 0;
+	int32_t source_group_0x24 = 0;
+	bool source_raw_field_0x24_known = false;
+	int32_t source_raw_field_0x24 = 0;
+	uint16_t source_terrain_mask_b_0x18 = 0U;
+	int32_t descriptor_width_0x34 = 0;
+	int32_t descriptor_height_0x38 = 0;
+	std::string source_def_name;
+};
+
 struct RewardGuardSourceStreamAttempt4aab7e {
 	int32_t lane_index = -1;
 	int32_t pass_policy_word_0x10 = 0;
@@ -2088,6 +2125,7 @@ struct RewardGuardSourceStreamAttempt4aab7e {
 	int32_t coordinate_scan_feasibility_missing_input_count_0x4aa603 = 0;
 	int32_t coordinate_scan_local_vector_append_count_0x4ae1fd = 0;
 	std::string coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
+	SourceDescriptorFootprintTrace49a6f9 coordinate_scan_first_footprint_trace_0x49a6f9;
 	bool projection_relation_order_invoked_0x4ad7f7 = false;
 	bool projection_relation_order_ready_0x4ad7f7 = false;
 	int32_t projection_relation_order_candidate_relation_count_0x4ad7f7 = 0;
@@ -2852,6 +2890,7 @@ struct RewardGuardFeasibilityResult4aa603 {
 	int32_t contour_reject_count_0x49a09c = 0;
 	int32_t overlap_scan_count = 0;
 	int32_t overlap_bit22_reject_count = 0;
+	SourceDescriptorFootprintTrace49a6f9 first_footprint_trace_0x49a6f9;
 	std::string blocked_reason;
 };
 

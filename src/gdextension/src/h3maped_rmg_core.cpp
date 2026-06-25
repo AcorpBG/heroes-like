@@ -4983,6 +4983,7 @@ struct SourceDescriptorFootprintResult49a6f9 {
 	bool inputs_available = true;
 	bool rejected = false;
 	int32_t scanned_cell_count = 0;
+	SourceDescriptorFootprintTrace49a6f9 trace;
 	std::string blocked_reason;
 };
 
@@ -5007,15 +5008,60 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 	SourceDescriptorFootprintResult49a6f9 result;
 	const int32_t descriptor_width = source.descriptor_width_0x34;
 	const int32_t descriptor_height = source.descriptor_height_0x38;
+	auto record_trace = [&](const std::string &reason, int32_t col, int32_t row, bool secondary_mask, bool primary_mask) {
+		SourceDescriptorFootprintTrace49a6f9 &trace = result.trace;
+		trace.known = true;
+		trace.reason = reason;
+		trace.anchor_x = anchor_x;
+		trace.anchor_y = anchor_y;
+		trace.anchor_level = anchor_level;
+		trace.owner_byte2 = owner_byte2;
+		trace.reject_existing_bit26 = reject_existing_bit26;
+		trace.mask_x = col;
+		trace.mask_y = row;
+		trace.secondary_mask = secondary_mask;
+		trace.primary_mask = primary_mask;
+		trace.cell_x = anchor_x - col;
+		trace.cell_y = anchor_y - row;
+		trace.cell_level = anchor_level;
+		trace.source_row = source.source_row;
+		trace.source_type_0x1c = source.type_id_0x1c;
+		trace.source_subtype_0x20 = source.subtype_0x20;
+		trace.source_group_0x24 = source.group_0x24;
+		trace.source_raw_field_0x24_known = source.raw_field_0x24_known;
+		trace.source_raw_field_0x24 = source.raw_field_0x24;
+		trace.source_terrain_mask_b_0x18 = source.terrain_mask_b_0x18;
+		trace.descriptor_width_0x34 = source.descriptor_width_0x34;
+		trace.descriptor_height_0x38 = source.descriptor_height_0x38;
+		trace.source_def_name = source.def_name;
+		const int64_t flat = cell_index(grid.width, grid.height, trace.cell_x, trace.cell_y, trace.cell_level);
+		if (flat < 0 || flat >= int64_t(grid.records.size())) {
+			trace.cell_present = false;
+			return;
+		}
+		const GeneratedCellRecord0x30 &cell = grid.records[size_t(flat)];
+		trace.cell_present = true;
+		trace.cell_word_0x20_known = cell.word_0x20_known;
+		trace.cell_word_0x20 = cell.word_0x20;
+		trace.cell_word_0x24_known = cell.word_0x24_known;
+		trace.cell_word_0x24 = cell.word_0x24;
+		trace.cell_word_0x28_known = cell.word_0x28_known;
+		trace.cell_word_0x28 = cell.word_0x28;
+		trace.cell_owner_byte2 = cell.word_0x20_known ? generated_cell_word20_owner_byte2_signed(cell.word_0x20) : 0;
+		trace.cell_terrain_code = cell.word_0x24_known ? generated_cell_terrain_code_0x24(cell) : 0;
+		trace.cell_valid_0x49a1d8 = generated_cell_49a1d8_valid_record(cell);
+	};
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()) {
 		result.inputs_available = false;
 		result.rejected = true;
 		result.blocked_reason = "0x49a6f9_generated_cell_grid_missing";
+		record_trace(result.blocked_reason, 0, 0, false, false);
 		return result;
 	}
 	if (anchor_x < descriptor_width - 1 || anchor_x >= grid.width || anchor_y < descriptor_height - 1 || anchor_y >= grid.height || anchor_level < 0 || anchor_level >= grid.level_count) {
 		result.rejected = true;
 		result.blocked_reason = "0x49a6f9_descriptor_anchor_outside_grid_bounds";
+		record_trace(result.blocked_reason, 0, 0, false, false);
 		return result;
 	}
 
@@ -5032,12 +5078,14 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 				result.inputs_available = false;
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_footprint_cell_missing";
+				record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 				return result;
 			}
 			const GeneratedCellRecord0x30 &cell = grid.records[size_t(flat)];
 			if (!cell.word_0x24_known || !cell.word_0x28_known || !generated_cell_49a1d8_valid_record(cell) || (cell.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_footprint_cell_rejected";
+				record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 				return result;
 			}
 			const bool checks_owner_byte = secondary_mask || !primary_mask;
@@ -5045,12 +5093,14 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 				result.inputs_available = false;
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_footprint_cell_owner_word_missing";
+				record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 				return result;
 			}
 			if (checks_owner_byte) {
 				if (generated_cell_word20_owner_byte2_signed(cell.word_0x20) != int32_t(int8_t(owner_byte2 & 0xff))) {
 					result.rejected = true;
 					result.blocked_reason = "0x49a6f9_footprint_owner_byte_rejected";
+					record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 					return result;
 				}
 			}
@@ -5058,12 +5108,14 @@ static SourceDescriptorFootprintResult49a6f9 source_descriptor_footprint_rejects
 				if (reject_existing_bit26 && (cell.word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U) {
 					result.rejected = true;
 					result.blocked_reason = "0x49a6f9_footprint_existing_bit26_rejected";
+					record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 					return result;
 				}
 			}
 			if (!primary_mask && source_object_secondary_mask_terrain_rejects_0x49a6f9(source, cell)) {
 				result.rejected = true;
 				result.blocked_reason = "0x49a6f9_secondary_mask_terrain_rejected";
+				record_trace(result.blocked_reason, col, row, secondary_mask, primary_mask);
 				return result;
 			}
 		}
@@ -6171,7 +6223,6 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 	result.current_value_after_initial_0x4aa1db = result.selector_0x4a9f1c.selected_score_value_0x04;
 	int32_t current_value = result.current_value_after_initial_0x4aa1db;
 
-	int32_t secondary_reject_count = 0;
 	while (current_value < selected_value_0x14) {
 		const int32_t remaining_value = selected_value_0x14 - current_value;
 		result.secondary_remaining_value_before_last_attempt_0x4aa1db = remaining_value;
@@ -6183,6 +6234,7 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 		}
 		result.secondary_lower_value_bound_0x4aa1db = remaining_value / 4;
 		result.secondary_upper_value_bound_0x4aa1db = (remaining_value * 5) / 4;
+		int32_t secondary_reject_count_this_budget = 0;
 		int32_t secondary_null_count_this_budget = 0;
 		bool accepted_secondary = false;
 		while (secondary_null_count_this_budget < result.selector_retry_limit) {
@@ -6241,8 +6293,8 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 			}
 			result.secondary_rejected_count_0x49d471 += 1;
 			result.secondary_destroyed_rejected_record_count += 1;
-			secondary_reject_count += 1;
-			if (secondary_reject_count >= result.selector_retry_limit) {
+			secondary_reject_count_this_budget += 1;
+			if (secondary_reject_count_this_budget >= result.selector_retry_limit) {
 				secondary_null_count_this_budget = result.selector_retry_limit;
 				break;
 			}
@@ -6611,6 +6663,10 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 				for (const RewardGuardFeasibilityResult4aa603 &feasibility : coordinate_scan.feasibility_results_0x4aa603) {
 					if (!feasibility.accepted && !feasibility.blocked_reason.empty()) {
 						attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603 = feasibility.blocked_reason;
+						if (feasibility.first_footprint_trace_0x49a6f9.known) {
+							attempt.coordinate_scan_first_footprint_trace_0x49a6f9 =
+									feasibility.first_footprint_trace_0x49a6f9;
+						}
 						break;
 					}
 				}
@@ -6775,6 +6831,9 @@ static bool reward_guard_generated_footprint_rejects_0x4aa603(
 	}
 	if (footprint.rejected) {
 		result.footprint_reject_count_0x49a6f9 += 1;
+		if (footprint.trace.known) {
+			result.first_footprint_trace_0x49a6f9 = footprint.trace;
+		}
 		result.blocked_reason = footprint.blocked_reason.empty()
 				? "0x4aa603_0x49a6f9_footprint_rejected"
 				: "0x4aa603_" + footprint.blocked_reason;
@@ -7502,6 +7561,41 @@ static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_proje
 	return result;
 }
 
+static std::string reward_guard_footprint_trace_detail_0x49a6f9(const SourceDescriptorFootprintTrace49a6f9 &trace) {
+	if (!trace.known) {
+		return "";
+	}
+	std::ostringstream detail;
+	detail << "reason=" << trace.reason
+			<< ",src_row=" << trace.source_row
+			<< ",src_type=" << trace.source_type_0x1c
+			<< ",src_subtype=" << trace.source_subtype_0x20
+			<< ",src_group=" << trace.source_group_0x24
+			<< ",src_raw24_known=" << (trace.source_raw_field_0x24_known ? 1 : 0)
+			<< ",src_raw24=" << trace.source_raw_field_0x24
+			<< ",src_terrain_b=" << trace.source_terrain_mask_b_0x18
+			<< ",def=" << trace.source_def_name
+			<< ",desc=" << trace.descriptor_width_0x34 << "x" << trace.descriptor_height_0x38
+			<< ",anchor=" << trace.anchor_x << "," << trace.anchor_y << "," << trace.anchor_level
+			<< ",owner=" << trace.owner_byte2
+			<< ",reject_bit26=" << (trace.reject_existing_bit26 ? 1 : 0)
+			<< ",mask=" << trace.mask_x << "," << trace.mask_y
+			<< ",secondary=" << (trace.secondary_mask ? 1 : 0)
+			<< ",primary=" << (trace.primary_mask ? 1 : 0)
+			<< ",cell=" << trace.cell_x << "," << trace.cell_y << "," << trace.cell_level
+			<< ",cell_present=" << (trace.cell_present ? 1 : 0)
+			<< ",cell_owner=" << trace.cell_owner_byte2
+			<< ",cell_terrain=" << trace.cell_terrain_code
+			<< ",cell_valid=" << (trace.cell_valid_0x49a1d8 ? 1 : 0)
+			<< ",w20_known=" << (trace.cell_word_0x20_known ? 1 : 0)
+			<< ",w20=" << hex_u32(trace.cell_word_0x20)
+			<< ",w24_known=" << (trace.cell_word_0x24_known ? 1 : 0)
+			<< ",w24=" << hex_u32(trace.cell_word_0x24)
+			<< ",w28_known=" << (trace.cell_word_0x28_known ? 1 : 0)
+			<< ",w28=" << hex_u32(trace.cell_word_0x28);
+	return detail.str();
+}
+
 static std::string reward_guard_zero_commit_blocker_detail_0x4aab7e(const RewardGuardSourceStreamResult4aab7e &source_stream) {
 	std::ostringstream detail;
 	detail << "reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail"
@@ -7542,6 +7636,10 @@ static std::string reward_guard_zero_commit_blocker_detail_0x4aab7e(const Reward
 		}
 		if (!attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603.empty()) {
 			detail << ";first_0x4aa603_reject=" << attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
+		}
+		if (attempt.coordinate_scan_first_footprint_trace_0x49a6f9.known) {
+			detail << ";first_0x49a6f9_trace="
+					<< reward_guard_footprint_trace_detail_0x49a6f9(attempt.coordinate_scan_first_footprint_trace_0x49a6f9);
 		}
 		if (!attempt.projection_relation_order_blocked_reason_0x4ad7f7.empty()) {
 			detail << ";projection_order_blocked=" << attempt.projection_relation_order_blocked_reason_0x4ad7f7;
