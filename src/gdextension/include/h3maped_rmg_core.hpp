@@ -2353,6 +2353,51 @@ struct RoadPathSeedResult4aae7b {
 	std::string blocked_reason;
 };
 
+struct RoadOverlayCell4b4243 {
+	int32_t flat_cell_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t road_type = 0;
+	int32_t road_art = 0;
+	int32_t flip_a = 0;
+	int32_t flip_b = 0;
+	int32_t art_class = 0;
+};
+
+struct RoadToolkitResult4ab37f4b4243 {
+	bool invoked = false;
+	bool applied = false;
+	bool predecessor_chain_reaches_seed = false;
+	bool predecessor_chain_broken = false;
+	int32_t selected_road_type = 0;
+	uint32_t rng_state_before_final_art_0x4e7276 = 0U;
+	uint32_t rng_state_after_final_art_0x4e7276 = 0U;
+	int32_t source_x = 0;
+	int32_t source_y = 0;
+	int32_t source_level = 0;
+	int32_t target_x = 0;
+	int32_t target_y = 0;
+	int32_t target_level = 0;
+	int32_t target_low_word = 0x7d00;
+	int32_t predecessor_chain_cell_count = 0;
+	int32_t line_visit_call_count_0x458e61 = 0;
+	int32_t line_visit_skip_same_type_count_0x458e61 = 0;
+	int32_t candidate_mark_count_0x49aec5 = 0;
+	int32_t final_road_cell_count = 0;
+	int32_t final_nonzero_art_cell_count = 0;
+	int32_t neighbor_retouch_call_count_0x458e61 = 0;
+	int32_t stable_readback_skip_count_0x458a2f = 0;
+	int32_t final_write_count_0x458a2f = 0;
+	int32_t final_write_unique_cell_count_0x458a2f = 0;
+	int32_t final_art_rng_call_count_0x4e7276 = 0;
+	int32_t invalid_flat_cell_count = 0;
+	std::vector<int32_t> predecessor_chain_flat_cells;
+	std::vector<int32_t> final_road_flat_cells;
+	std::vector<RoadOverlayCell4b4243> final_road_overlay_cells;
+	std::string blocked_reason;
+};
+
 struct RoadRiverObjectAdjacencyResult4ab52a {
 	bool invoked = false;
 	bool applied = false;
@@ -2372,6 +2417,22 @@ struct RoadRiverObjectAdjacencyResult4ab52a {
 	int32_t candidate_low_word_check_count = 0;
 	int32_t candidate_accept_count = 0;
 	int32_t road_adapter_attempt_count_0x4ab37f = 0;
+	int32_t road_toolkit_success_count_0x4b4243 = 0;
+	int32_t source_path_rerun_after_success_count_0x4aae2f_0x4aae7b = 0;
+	int32_t predecessor_chain_cell_count = 0;
+	int32_t line_visit_call_count_0x458e61 = 0;
+	int32_t line_visit_skip_same_type_count_0x458e61 = 0;
+	int32_t candidate_mark_count_0x49aec5 = 0;
+	int32_t final_road_cell_count = 0;
+	int32_t final_nonzero_art_cell_count = 0;
+	int32_t neighbor_retouch_call_count_0x458e61 = 0;
+	int32_t stable_readback_skip_count_0x458a2f = 0;
+	int32_t final_write_count_0x458a2f = 0;
+	int32_t final_write_unique_cell_count_0x458a2f = 0;
+	int32_t final_art_rng_call_count_0x4e7276 = 0;
+	uint32_t rng_state_after_final_art_0x4e7276 = 0U;
+	std::vector<int32_t> final_road_flat_cells;
+	std::vector<RoadOverlayCell4b4243> final_road_overlay_cells;
 	int32_t progress_callback_0xed4_skip_count = 0;
 	std::string blocked_reason;
 };
@@ -2747,6 +2808,12 @@ struct GeneratorObjectPrivateState {
 	ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3;
 	bool road_river_object_adjacency_0x4ab52a_ported = false;
 	RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a;
+	bool road_overlay_private_state_owned_0x4b4243 = false;
+	int32_t road_overlay_cell_count_0x4b4243 = 0;
+	std::vector<int32_t> road_overlay_flat_cells_0x4b4243;
+	std::vector<int32_t> road_overlay_type_u8_0x49b2b6;
+	std::vector<int32_t> road_overlay_art_u8_0x49b2b6;
+	std::vector<int32_t> road_overlay_flags_u8_0x49b2b6;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;

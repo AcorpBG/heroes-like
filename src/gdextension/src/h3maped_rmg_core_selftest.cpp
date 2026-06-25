@@ -2159,12 +2159,12 @@ int main() {
 	const H3MapedRmgWorkflowResult generator_state_workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	const std::string road_river_object_adjacency_blocker =
-			"0x4ab37f_0x4b4243_road_toolkit_unported_after_0x4ab52a_pair_prefix";
+	const std::string final_writeout_blocker =
+			"final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243";
 	if (!require(generator_state_workflow.executed
-					&& generator_state_workflow.current_phase_id == "road_river_object_adjacency"
-					&& generator_state_workflow.blocked_reason.rfind(road_river_object_adjacency_blocker, 0) == 0,
-				"workflow-owned generator state did not advance through 0x4ab52a into the road-toolkit boundary")) {
+					&& generator_state_workflow.current_phase_id == "final_writeout"
+					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
+				"workflow-owned generator state did not advance through road toolkit materialization into the final-writeout boundary")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2200,8 +2200,8 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, road_river_object_adjacency_blocker),
-				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the downstream road/river adjacency blocker")) {
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_writeout_blocker),
+				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the final writeout blocker")) {
 		return 1;
 	}
 	const auto &generator_decorative_dispatch =
@@ -2265,12 +2265,21 @@ int main() {
 						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
 						&& generator_state.road_river_object_adjacency_0x4ab52a_ported
 						&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
-						&& !generator_state.road_river_object_adjacency_0x4ab52a.applied
+						&& generator_state.road_river_object_adjacency_0x4ab52a.applied
 						&& generator_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
 						&& generator_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
 						&& generator_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
 						&& generator_state.road_river_object_adjacency_0x4ab52a.candidate_accept_count > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.blocked_reason == road_river_object_adjacency_blocker
+						&& generator_state.road_river_object_adjacency_0x4ab52a.road_toolkit_success_count_0x4b4243 > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.predecessor_chain_cell_count > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.line_visit_call_count_0x458e61 > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.candidate_mark_count_0x49aec5 > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.final_art_rng_call_count_0x4e7276 > 0
+						&& generator_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
+						&& generator_state.road_overlay_private_state_owned_0x4b4243
+						&& generator_state.road_overlay_cell_count_0x4b4243 == generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count
+						&& generator_state.road_overlay_flat_cells_0x4b4243.size() == size_t(generator_state.road_overlay_cell_count_0x4b4243)
 						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& generator_state.mine_resource_materialization_0x4a9d6a.applied
@@ -2477,8 +2486,10 @@ int main() {
 					&& generator_state.connection_tail_replay_0x4a79a3_ported
 					&& generator_state.connection_tail_replay_0x4a79a3.invoked
 					&& generator_state.connection_tail_replay_0x4a79a3.applied
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, road_river_object_adjacency_blocker),
-				"generator object private state did not stop at road/river adjacency after decorative and connection-tail replay")) {
+					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
+					&& generator_state.road_river_object_adjacency_0x4ab52a.applied
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_writeout_blocker),
+				"generator object private state did not stop at final writeout after decorative, connection-tail, and road-toolkit replay")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -4459,19 +4470,19 @@ int main() {
 			workflow_config.setup_object_0x44 = 3;
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-			const std::string workflow_road_river_object_adjacency_blocker =
-					"0x4ab37f_0x4b4243_road_toolkit_unported_after_0x4ab52a_pair_prefix";
+			const std::string workflow_final_writeout_blocker =
+					"final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "road_river_object_adjacency"
+						&& workflow.current_phase_id == "final_writeout"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance past connection-tail replay to road/river object adjacency")) {
+					"entry-to-writeout workflow did not advance past road/river object adjacency to final writeout")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason.rfind(workflow_road_river_object_adjacency_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed at road/river object adjacency; actual=")
+		if (!require(workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
+					std::string("entry-to-writeout workflow did not fail closed at final writeout; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
@@ -4495,7 +4506,7 @@ int main() {
 							&& workflow.phases[10].id == "connection_road_river"
 							&& workflow.phases[10].status == "complete_source_order_prefix"
 							&& workflow.phases[11].id == "road_river_object_adjacency"
-							&& workflow.phases[11].status == "blocked"
+							&& workflow.phases[11].status == "complete_source_order_prefix"
 							&& workflow.phases[12].id == "final_writeout"
 							&& workflow.phases[12].status == "pending",
 						"entry-to-writeout workflow did not preserve recovered phase order through road/river object adjacency")) {
@@ -4538,13 +4549,21 @@ int main() {
 							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a_ported
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked
-							&& !workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.applied
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.applied
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.candidate_accept_count > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.blocked_reason == workflow_road_river_object_adjacency_blocker,
-						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, decorative, connection-tail, and 0x4ab52a road-prefix phases in source order")) {
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.road_toolkit_success_count_0x4b4243 > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.predecessor_chain_cell_count > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.line_visit_call_count_0x458e61 > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.candidate_mark_count_0x49aec5 > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_art_rng_call_count_0x4e7276 > 0
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
+							&& workflow.generator_object_private_state.road_overlay_private_state_owned_0x4b4243
+							&& workflow.generator_object_private_state.road_overlay_cell_count_0x4b4243 == workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count,
+						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, decorative, connection-tail, road-prefix, and road-toolkit phases in source order")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -4585,8 +4604,8 @@ int main() {
 						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-						&& workflow.blocked_reason.rfind(workflow_road_river_object_adjacency_blocker, 0) == 0,
-					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the road/river adjacency blocker")) {
+						&& workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
+					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the final writeout blocker")) {
 			return 1;
 		}
 			if (!require(workflow.phases.size() > 9
@@ -4597,9 +4616,9 @@ int main() {
 							&& workflow.phases[10].status == "complete_source_order_prefix"
 							&& workflow.phases.size() > 11
 							&& workflow.phases[11].id == "road_river_object_adjacency"
-							&& workflow.phases[11].status == "blocked"
+							&& workflow.phases[11].status == "complete_source_order_prefix"
 							&& !workflow.final_writeout_complete,
-						"entry-to-writeout workflow did not stop at road/river object adjacency before final writeout")) {
+						"entry-to-writeout workflow did not complete road/river object adjacency before stopping at final writeout")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
