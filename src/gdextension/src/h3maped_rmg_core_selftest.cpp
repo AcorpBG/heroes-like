@@ -3122,8 +3122,9 @@ int main() {
 	reward_guard_member.source_record_copy.type_id_0x1c = 45;
 	reward_guard_member.source_record_copy.descriptor_width_0x34 = 1;
 	reward_guard_member.source_record_copy.descriptor_height_0x38 = 1;
-	reward_guard_member.source_record_copy.passability_mask = "1";
-	reward_guard_member.source_record_copy.action_mask = "1";
+	reward_guard_member.source_record_copy.descriptor_mask_fields_0x34_0x48_known = true;
+	reward_guard_member.source_record_copy.descriptor_mask_a_0x3c_0x40 = uint64_t(1) << 47U;
+	reward_guard_member.source_record_copy.descriptor_mask_b_0x44_0x48 = uint64_t(1) << 47U;
 	reward_guard_wrapper.selected_members_0x2c_0x30.push_back(reward_guard_member);
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10_known = true;
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
@@ -3345,8 +3346,9 @@ int main() {
 	attach_member.source_record_copy_known_0x04 = true;
 	attach_member.source_record_copy.descriptor_width_0x34 = 1;
 	attach_member.source_record_copy.descriptor_height_0x38 = 1;
-	attach_member.source_record_copy.passability_mask = "011111111111111111111111111111111111111111111111";
-	attach_member.source_record_copy.action_mask = "100000000000000000000000000000000000000000000000";
+	attach_member.source_record_copy.descriptor_mask_fields_0x34_0x48_known = true;
+	attach_member.source_record_copy.descriptor_mask_a_0x3c_0x40 = 0U;
+	attach_member.source_record_copy.descriptor_mask_b_0x44_0x48 = uint64_t(1) << 47U;
 	attach_member.descriptor_body_offsets_0x49a6f9_known = true;
 	attach_member.descriptor_body_offsets_0x49a6f9 = {
 		{ 0, 0, 0 },
