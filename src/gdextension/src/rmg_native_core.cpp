@@ -981,6 +981,63 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_constructor_blocked_count;
 	out.connection_tail_replay_blocked_reason_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.blocked_reason;
+	const h3maped_rmg_core::RoadRiverObjectAdjacencyResult4ab52a &road_adjacency =
+			input.road_river_object_adjacency_0x4ab52a;
+	out.road_river_object_adjacency_0x4ab52a_ported = input.road_river_object_adjacency_0x4ab52a_ported;
+	out.road_river_object_adjacency_0x4ab52a_invoked = road_adjacency.invoked;
+	out.road_river_object_adjacency_0x4ab52a_applied = road_adjacency.applied;
+	out.road_river_object_adjacency_generated_cell_grid_owned_0x4ab52a = road_adjacency.generated_cell_grid_owned;
+	out.road_river_object_adjacency_coordinate_vector_owned_0x14b0 = road_adjacency.coordinate_vector_owned;
+	out.road_river_object_adjacency_coordinate_record_count_0x14b0 = road_adjacency.coordinate_record_count_0x14b0;
+	out.road_river_object_adjacency_rng_state_before_road_type_0x4e7276 =
+			road_adjacency.rng_state_before_road_type_0x4e7276;
+	out.road_river_object_adjacency_rng_state_after_road_type_0x4e7276 =
+			road_adjacency.rng_state_after_road_type_0x4e7276;
+	out.road_river_object_adjacency_road_type_rng_value_0x4e7276 =
+			road_adjacency.road_type_rng_value_0x4e7276;
+	out.road_river_object_adjacency_selected_road_type = road_adjacency.selected_road_type;
+	out.road_river_object_adjacency_outer_seed_iteration_count = road_adjacency.outer_seed_iteration_count;
+	out.road_river_object_adjacency_pair_candidate_iteration_count = road_adjacency.pair_candidate_iteration_count;
+	out.road_river_object_adjacency_path_reset_count_0x4aae2f = road_adjacency.path_reset_count_0x4aae2f;
+	out.road_river_object_adjacency_path_seed_count_0x4aae7b = road_adjacency.path_seed_count_0x4aae7b;
+	out.road_river_object_adjacency_path_seed_relaxed_edge_count = road_adjacency.path_seed_relaxed_edge_count;
+	out.road_river_object_adjacency_path_seed_reached_cell_count = road_adjacency.path_seed_reached_cell_count;
+	out.road_river_object_adjacency_candidate_low_word_check_count = road_adjacency.candidate_low_word_check_count;
+	out.road_river_object_adjacency_candidate_accept_count = road_adjacency.candidate_accept_count;
+	out.road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f =
+			road_adjacency.road_adapter_attempt_count_0x4ab37f;
+	out.road_river_object_adjacency_road_toolkit_success_count_0x4b4243 =
+			road_adjacency.road_toolkit_success_count_0x4b4243;
+	out.road_river_object_adjacency_source_path_rerun_after_success_count_0x4aae2f_0x4aae7b =
+			road_adjacency.source_path_rerun_after_success_count_0x4aae2f_0x4aae7b;
+	out.road_river_object_adjacency_predecessor_chain_cell_count = road_adjacency.predecessor_chain_cell_count;
+	out.road_river_object_adjacency_line_visit_call_count_0x458e61 = road_adjacency.line_visit_call_count_0x458e61;
+	out.road_river_object_adjacency_line_visit_skip_same_type_count_0x458e61 =
+			road_adjacency.line_visit_skip_same_type_count_0x458e61;
+	out.road_river_object_adjacency_candidate_mark_count_0x49aec5 = road_adjacency.candidate_mark_count_0x49aec5;
+	out.road_river_object_adjacency_final_road_cell_count = road_adjacency.final_road_cell_count;
+	out.road_river_object_adjacency_final_nonzero_art_cell_count = road_adjacency.final_nonzero_art_cell_count;
+	out.road_river_object_adjacency_neighbor_retouch_call_count_0x458e61 =
+			road_adjacency.neighbor_retouch_call_count_0x458e61;
+	out.road_river_object_adjacency_stable_readback_skip_count_0x458a2f =
+			road_adjacency.stable_readback_skip_count_0x458a2f;
+	out.road_river_object_adjacency_final_write_count_0x458a2f = road_adjacency.final_write_count_0x458a2f;
+	out.road_river_object_adjacency_final_write_unique_cell_count_0x458a2f =
+			road_adjacency.final_write_unique_cell_count_0x458a2f;
+	out.road_river_object_adjacency_final_art_rng_call_count_0x4e7276 =
+			road_adjacency.final_art_rng_call_count_0x4e7276;
+	out.road_river_object_adjacency_rng_state_after_final_art_0x4e7276 =
+			road_adjacency.rng_state_after_final_art_0x4e7276;
+	out.road_river_object_adjacency_progress_callback_0xed4_skip_count =
+			road_adjacency.progress_callback_0xed4_skip_count;
+	out.road_river_object_adjacency_final_road_flat_cells = road_adjacency.final_road_flat_cells;
+	out.road_river_object_adjacency_blocked_reason_0x4ab52a = road_adjacency.blocked_reason;
+	out.road_overlay_private_state_owned_0x4b4243 = input.road_overlay_private_state_owned_0x4b4243;
+	out.road_overlay_cell_count_0x4b4243 = input.road_overlay_cell_count_0x4b4243;
+	out.road_overlay_flat_cells_0x4b4243 = input.road_overlay_flat_cells_0x4b4243;
+	out.road_overlay_type_u8_0x49b2b6 = input.road_overlay_type_u8_0x49b2b6;
+	out.road_overlay_art_u8_0x49b2b6 = input.road_overlay_art_u8_0x49b2b6;
+	out.road_overlay_flags_u8_0x49b2b6 = input.road_overlay_flags_u8_0x49b2b6;
 	out.materialization_bridge_0x4a8c15_blocked_reason = input.materialization_bridge_0x4a8c15_blocked_reason;
 	out.weighted_candidate_vectors_0x4a901a_known = input.weighted_candidate_vectors_0x4a901a_known;
 	out.weighted_candidate_vector_count_0x4a901a = input.weighted_candidate_vector_count_0x4a901a;
@@ -2772,6 +2829,55 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count << ","
 			<< "\"connection_tail_replay_blocked_reason_0x4a79a3\":\"" << json_escape(state.connection_tail_replay_blocked_reason_0x4a79a3) << "\","
+			<< "\"road_river_object_adjacency_0x4ab52a_ported\":" << (state.road_river_object_adjacency_0x4ab52a_ported ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_0x4ab52a_invoked\":" << (state.road_river_object_adjacency_0x4ab52a_invoked ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_0x4ab52a_applied\":" << (state.road_river_object_adjacency_0x4ab52a_applied ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_generated_cell_grid_owned_0x4ab52a\":" << (state.road_river_object_adjacency_generated_cell_grid_owned_0x4ab52a ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_coordinate_vector_owned_0x14b0\":" << (state.road_river_object_adjacency_coordinate_vector_owned_0x14b0 ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_coordinate_record_count_0x14b0\":" << state.road_river_object_adjacency_coordinate_record_count_0x14b0 << ","
+			<< "\"road_river_object_adjacency_rng_state_before_road_type_0x4e7276\":" << state.road_river_object_adjacency_rng_state_before_road_type_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_rng_state_after_road_type_0x4e7276\":" << state.road_river_object_adjacency_rng_state_after_road_type_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_road_type_rng_value_0x4e7276\":" << state.road_river_object_adjacency_road_type_rng_value_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_selected_road_type\":" << state.road_river_object_adjacency_selected_road_type << ","
+			<< "\"road_river_object_adjacency_outer_seed_iteration_count\":" << state.road_river_object_adjacency_outer_seed_iteration_count << ","
+			<< "\"road_river_object_adjacency_pair_candidate_iteration_count\":" << state.road_river_object_adjacency_pair_candidate_iteration_count << ","
+			<< "\"road_river_object_adjacency_path_reset_count_0x4aae2f\":" << state.road_river_object_adjacency_path_reset_count_0x4aae2f << ","
+			<< "\"road_river_object_adjacency_path_seed_count_0x4aae7b\":" << state.road_river_object_adjacency_path_seed_count_0x4aae7b << ","
+			<< "\"road_river_object_adjacency_path_seed_relaxed_edge_count\":" << state.road_river_object_adjacency_path_seed_relaxed_edge_count << ","
+			<< "\"road_river_object_adjacency_path_seed_reached_cell_count\":" << state.road_river_object_adjacency_path_seed_reached_cell_count << ","
+			<< "\"road_river_object_adjacency_candidate_low_word_check_count\":" << state.road_river_object_adjacency_candidate_low_word_check_count << ","
+			<< "\"road_river_object_adjacency_candidate_accept_count\":" << state.road_river_object_adjacency_candidate_accept_count << ","
+			<< "\"road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f\":" << state.road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f << ","
+			<< "\"road_river_object_adjacency_road_toolkit_success_count_0x4b4243\":" << state.road_river_object_adjacency_road_toolkit_success_count_0x4b4243 << ","
+			<< "\"road_river_object_adjacency_source_path_rerun_after_success_count_0x4aae2f_0x4aae7b\":" << state.road_river_object_adjacency_source_path_rerun_after_success_count_0x4aae2f_0x4aae7b << ","
+			<< "\"road_river_object_adjacency_predecessor_chain_cell_count\":" << state.road_river_object_adjacency_predecessor_chain_cell_count << ","
+			<< "\"road_river_object_adjacency_line_visit_call_count_0x458e61\":" << state.road_river_object_adjacency_line_visit_call_count_0x458e61 << ","
+			<< "\"road_river_object_adjacency_line_visit_skip_same_type_count_0x458e61\":" << state.road_river_object_adjacency_line_visit_skip_same_type_count_0x458e61 << ","
+			<< "\"road_river_object_adjacency_candidate_mark_count_0x49aec5\":" << state.road_river_object_adjacency_candidate_mark_count_0x49aec5 << ","
+			<< "\"road_river_object_adjacency_final_road_cell_count\":" << state.road_river_object_adjacency_final_road_cell_count << ","
+			<< "\"road_river_object_adjacency_final_nonzero_art_cell_count\":" << state.road_river_object_adjacency_final_nonzero_art_cell_count << ","
+			<< "\"road_river_object_adjacency_neighbor_retouch_call_count_0x458e61\":" << state.road_river_object_adjacency_neighbor_retouch_call_count_0x458e61 << ","
+			<< "\"road_river_object_adjacency_stable_readback_skip_count_0x458a2f\":" << state.road_river_object_adjacency_stable_readback_skip_count_0x458a2f << ","
+			<< "\"road_river_object_adjacency_final_write_count_0x458a2f\":" << state.road_river_object_adjacency_final_write_count_0x458a2f << ","
+			<< "\"road_river_object_adjacency_final_write_unique_cell_count_0x458a2f\":" << state.road_river_object_adjacency_final_write_unique_cell_count_0x458a2f << ","
+			<< "\"road_river_object_adjacency_final_art_rng_call_count_0x4e7276\":" << state.road_river_object_adjacency_final_art_rng_call_count_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_rng_state_after_final_art_0x4e7276\":" << state.road_river_object_adjacency_rng_state_after_final_art_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_progress_callback_0xed4_skip_count\":" << state.road_river_object_adjacency_progress_callback_0xed4_skip_count << ","
+			<< "\"road_river_object_adjacency_blocked_reason_0x4ab52a\":\"" << json_escape(state.road_river_object_adjacency_blocked_reason_0x4ab52a) << "\","
+			<< "\"road_overlay_private_state_owned_0x4b4243\":" << (state.road_overlay_private_state_owned_0x4b4243 ? "true" : "false") << ","
+			<< "\"road_overlay_cell_count_0x4b4243\":" << state.road_overlay_cell_count_0x4b4243 << ","
+			<< "\"road_river_object_adjacency_final_road_flat_cells\":";
+	append_json_i32_array(out, state.road_river_object_adjacency_final_road_flat_cells);
+	out << ",\"road_overlay_flat_cells_0x4b4243\":";
+	append_json_i32_array(out, state.road_overlay_flat_cells_0x4b4243);
+	out << ",\"road_overlay_type_u8_0x49b2b6\":";
+	append_json_i32_array(out, state.road_overlay_type_u8_0x49b2b6);
+	out << ",\"road_overlay_art_u8_0x49b2b6\":";
+	append_json_i32_array(out, state.road_overlay_art_u8_0x49b2b6);
+	out << ",\"road_overlay_flags_u8_0x49b2b6\":";
+	append_json_i32_array(out, state.road_overlay_flags_u8_0x49b2b6);
+	out << ","
+			<< "\"road_river_object_adjacency_0x4ab52a_source\":\"0x4ab52a_selects_road_type_0x4e7276_scans_generator_0x14b0_pairs_runs_0x4aae2f_0x4aae7b_then_0x4ab37f_0x4b4243_marks_road_type_with_0x49aec5_replays_0x458e61_neighbors_0x458893_shape_classification_0x458a2f_art_rng_and_stages_0x49b2b6_overlay\","
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
 			<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","
 			<< "\"materialization_bridge_relation_loop_0x4a4913_source\":\"0x4a4913_type8_relation_records_reset_relation_rect_propagate_0x4a4694_select_candidates_draw_0x4a4522_and_reseed_0x4a4694\","
@@ -3838,8 +3944,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the 0x4ac552 relation-pointer source records through 0x4a8d2c/0x4a8db2, route/free-cell 0x4a8260/0x4a4c8e, the post-0x4a4c8e 0x4a8c15 cleanup scan, the source-backed 0x4a4913 relation-vector loop, the 0x4a8c15 bridge relation normalization through 0x4a5767/0x49a318, the one-level-land 0x4a4fc5 water-edge scan including source-water candidates, and the live 0x4a79a3 connection-tail path. Small seed 58 now executes direct 0x4a5c07 monster selection and 0x4a5e03/0x4a54a7 commits from the recovered 0x4a61bc selected-candidate loop, appending 7 connection guard records before the workflow fails closed at reward_guard_materialization: 0x4aab7e makes 90 attempts with zero successful 0x4aa9b7 commits because 0x4aa603 rejects the footprint candidates. Small seed 10 and Medium seed 10 still have reciprocal pairs whose entry gates pass but no matching source-frontier candidate in the current controlled setup.\",\n";
-	out << "    \"required_refactor\": \"port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 reward/guard source stream inputs and 0x4aa603 footprint feasibility state after direct connection guards are committed, before emitting native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, and the recovered 0x4ab37f -> 0x4b4243 road toolkit. Road cells are now marked in generated-cell words and staged into the private 0x49b2b6 road-overlay arrays. The workflow intentionally fails closed at the unported final writeout boundary 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb/0x4ad3de/0x4ae09a.\",\n";
+	out << "    \"required_refactor\": \"port the recovered final writeout stream so generated-cell terrain/art/road overlay/object/header state is emitted through 0x4ad1e3, 0x49b2b6, 0x4ad309, 0x4ad3eb, 0x4ad3de, and 0x4ae09a before allowing native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -3858,7 +3964,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"fix_live_reward_guard_0x4aab7e_0x4aa9b7_0x4aa603_zero_commit_after_connection_guard_commits\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
