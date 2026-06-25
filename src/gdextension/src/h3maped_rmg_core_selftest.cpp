@@ -2159,7 +2159,12 @@ int main() {
 	const H3MapedRmgWorkflowResult generator_state_workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	if (!require(generator_state_workflow.executed && generator_state_workflow.current_phase_id == "connection_road_river", "workflow-owned generator state did not advance past reward/guard materialization into connection replay")) {
+	const std::string road_river_object_adjacency_blocker =
+			"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail";
+	if (!require(generator_state_workflow.executed
+					&& generator_state_workflow.current_phase_id == "road_river_object_adjacency"
+					&& generator_state_workflow.blocked_reason.rfind(road_river_object_adjacency_blocker, 0) == 0,
+				"workflow-owned generator state did not advance past connection-tail replay into road/river object adjacency")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2183,23 +2188,9 @@ int main() {
 					"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 	}
-	const std::string decorative_score_cache_blocker =
-			"0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
-	const std::string decorative_coordinate_worklist_blocker =
-			"0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
-	const auto decorative_blocker_matches = [&](const std::string &value) {
-		return blocker_prefix_matches(value, decorative_score_cache_blocker)
-				|| blocker_prefix_matches(value, decorative_coordinate_worklist_blocker);
-	};
-	const bool has_downstream_blocker = std::any_of(
-			generator_state.remaining_private_state_blockers.begin(),
-			generator_state.remaining_private_state_blockers.end(),
-			[&](const std::string &blocker) {
-				return decorative_blocker_matches(blocker);
-			});
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_applied
@@ -2209,32 +2200,32 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& has_downstream_blocker,
-				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the downstream decorative blocker")) {
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, road_river_object_adjacency_blocker),
+				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the downstream road/river adjacency blocker")) {
 		return 1;
 	}
 	const auto &generator_decorative_dispatch =
 			generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
-	const bool generator_decorative_score_cache_blocked =
-			blocker_prefix_matches(generator_decorative_dispatch.blocked_reason, decorative_score_cache_blocker);
-	const bool generator_decorative_coordinate_blocked =
-			blocker_prefix_matches(generator_decorative_dispatch.blocked_reason, decorative_coordinate_worklist_blocker);
-	const bool generator_decorative_blocker_shape_valid =
-			(generator_decorative_score_cache_blocked
-					&& generator_decorative_dispatch.scorer_neighbor_pass_score_index_missing_count_0x49b89c > 0
-					&& generator_decorative_dispatch.scorer_input_0x49e1bf_unowned
-					&& !generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
-					&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == 0)
-			|| (generator_decorative_coordinate_blocked
-					&& generator_decorative_dispatch.dispatch_probe_candidate_append_count_0x49e904 > 0
-					&& generator_decorative_dispatch.dispatch_probe_candidate_weight_append_count_0x49e91f > 0
-					&& generator_decorative_dispatch.dispatch_probe_candidate_weight_total_0x49e700 > 0
-					&& generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
-					&& generator_decorative_dispatch.selected_candidate_index_0x49e9ad >= 0
-					&& generator_decorative_dispatch.selected_object_allocated_0x5044b1_count == 1
-					&& generator_decorative_dispatch.selected_object_initialized_0x49ba89_count == 1
-					&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == 1
-					&& generator_decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit);
+	const bool generator_decorative_replay_shape_valid =
+			generator_decorative_dispatch.applied
+			&& generator_decorative_dispatch.blocked_reason.empty()
+			&& generator_decorative_dispatch.dispatch_probe_candidate_append_count_0x49e904 > 0
+			&& generator_decorative_dispatch.dispatch_probe_candidate_weight_append_count_0x49e91f > 0
+			&& generator_decorative_dispatch.dispatch_probe_candidate_weight_total_0x49e700 > 0
+			&& generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
+			&& generator_decorative_dispatch.selected_candidate_index_0x49e9ad >= 0
+			&& generator_decorative_dispatch.selected_object_allocated_0x5044b1_count > 1
+			&& generator_decorative_dispatch.selected_object_initialized_0x49ba89_count == generator_decorative_dispatch.selected_object_allocated_0x5044b1_count
+			&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == generator_decorative_dispatch.selected_object_allocated_0x5044b1_count
+			&& generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e > 0
+			&& generator_decorative_dispatch.coordinate_worklist_pop_count_0x4ae23e > generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e
+			&& generator_decorative_dispatch.coordinate_worklist_empty_return_count_0x49eb50 == generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e
+			&& generator_decorative_dispatch.coordinate_worklist_max_size_0x49e700 > 1
+			&& generator_decorative_dispatch.coordinate_worklist_replay_complete_0x49e700
+			&& !generator_decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit
+			&& generator_decorative_dispatch.post_commit_coordinate_append_count_0x49eb01 > 0
+			&& generator_decorative_dispatch.post_commit_bit26_clear_count_0x49eaf1 > 0
+			&& generator_decorative_dispatch.scanned_cell_count_pass3 == int32_t(generator_state.generated_cell_buffer.records.size());
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
@@ -2256,8 +2247,7 @@ int main() {
 						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-						&& generator_decorative_blocker_shape_valid
+						&& generator_decorative_replay_shape_valid
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_0x49e700_invoked
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count == 45
@@ -2265,8 +2255,14 @@ int main() {
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_scorer_input_candidate_count_0x49e700 > 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_0x49e1bf_invoked
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_invocation_count_0x49e1bf > 0
-						&& !generator_state.connection_tail_replay_0x4a79a3_ported
-						&& !generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& generator_state.connection_tail_replay_0x4a79a3_ported
+						&& generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& generator_state.connection_tail_replay_0x4a79a3.applied
+						&& generator_state.connection_tail_replay_0x4a79a3.generated_cell_grid_owned
+						&& generator_state.connection_tail_replay_0x4a79a3.endpoint_caller_prep_known
+						&& generator_state.connection_tail_replay_0x4a79a3.source_backed_frontier_known
+						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count == 36 * 36
+						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
 						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& generator_state.mine_resource_materialization_0x4a9d6a.applied
@@ -2274,10 +2270,10 @@ int main() {
 						&& generator_state.reward_guard_source_stream_0x4aab7e.applied
 						&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 144
 						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0,
-						"generator object private state did not execute reward/guard before reaching the 0x49eb8d decorative dispatch blocker")) {
+						"generator object private state did not execute decorative replay and connection-tail replay before reaching road/river adjacency")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
+	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.count_known && generator_state.relation_vector_10e4_10e8.count == generator_state.relation_owner_vector_count_10e4_10e8, "generator object private state did not preserve selected-candidate relation-vector count")) {
@@ -2302,6 +2298,7 @@ int main() {
 	}
 	int32_t summed_relation_record_count = 0;
 	int32_t summed_source_endpoint_record_count = 0;
+	int32_t summed_owner_local_vector_0x404_count = 0;
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
 	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
@@ -2337,10 +2334,11 @@ int main() {
 		if (!require(owner.owner_local_vectors_0x3e4_0x3f4_0x404_known
 						&& owner.owner_local_vector_0x3e4_count == 0
 						&& owner.owner_local_vector_0x3f4_count == 0
-						&& owner.owner_local_vector_0x404_count == 0,
-					"0x49b452 relation owner local vectors were not initialized empty")) {
+						&& owner.owner_local_vector_0x404_count >= 0,
+					"0x49b452 relation owner local vectors did not preserve connection-tail 0x404 growth state")) {
 			return 1;
 		}
+		summed_owner_local_vector_0x404_count += owner.owner_local_vector_0x404_count;
 		const auto boundary_input = std::find_if(selected_composed.coordinate_seed.boundary_inputs.begin(), selected_composed.coordinate_seed.boundary_inputs.end(), [&](const RuntimeZoneBoundaryInput4a3a03 &input) {
 			return input.footprint.runtime_zone_index == owner.runtime_zone_index;
 		});
@@ -2438,6 +2436,10 @@ int main() {
 	if (!require(relation_owner_source_slot_known_count > 0, "0x49b452 relation owner source +0x08 to owner +0x1c slot was not carried for any owner")) {
 		return 1;
 	}
+	if (!require(summed_owner_local_vector_0x404_count == generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_local_vector_append_count_0x404,
+				"connection-tail local vector append count did not match relation-owner 0x404 vectors")) {
+		return 1;
+	}
 	if (!require(relation_owner_town_choice_known_count > 0, "0x49b452 relation owner town choice +0x04 was not carried from post-0x49b3c1 seed state")) {
 		return 1;
 	}
@@ -2453,21 +2455,22 @@ int main() {
 	if (!require(summed_source_endpoint_record_count > 0, "generator relation owners did not preserve source endpoint records before reward/guard")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
-					&& !generator_state.endpoint_vector_c8_cc.contents_known
-					&& !generator_state.endpoint_vector_c8_cc.count_known
-					&& generator_state.endpoint_projection_vector_c8_cc_record_count == 0
-					&& generator_state.endpoint_projection_records_c8_cc.empty(),
-				"generator endpoint projection records must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
+	if (!require(generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
+					&& generator_state.endpoint_projection_vector_c8_cc_record_count == summed_source_endpoint_record_count
+					&& int32_t(generator_state.endpoint_projection_records_c8_cc.size()) == summed_source_endpoint_record_count,
+				"generator endpoint projection records were not materialized before road/river adjacency")) {
 		return 1;
 	}
 	if (!require(generator_state.reward_guard_source_stream_0x4aab7e.invoked
 					&& generator_state.reward_guard_source_stream_0x4aab7e.applied
 					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
 					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-					&& decorative_blocker_matches(generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason),
-				"generator object private state did not stop at the 0x49eb8d decorative dispatch blocker after reward/guard")) {
+					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+					&& generator_state.connection_tail_replay_0x4a79a3_ported
+					&& generator_state.connection_tail_replay_0x4a79a3.invoked
+					&& generator_state.connection_tail_replay_0x4a79a3.applied
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, road_river_object_adjacency_blocker),
+				"generator object private state did not stop at road/river adjacency after decorative and connection-tail replay")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -2517,18 +2520,20 @@ int main() {
 				"generator object private state did not preserve recovered 0x49ecf2 zeroed 0x90-byte reward/guard projection +0x1024 used-slot array")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_vector_d8_dc.count_known
+	if (!require(generator_state.endpoint_vector_d8_dc.count_known
 					&& !generator_state.endpoint_vector_d8_dc.contents_known
+					&& generator_state.endpoint_vector_d8_dc.count == 8
 					&& !generator_state.endpoint_cursor_vector_d8_dc_source_owned
-					&& !generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
-				"generator endpoint vector +0xd8/+0xdc must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
+					&& generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
+				"generator endpoint vector +0xd8/+0xdc did not preserve supported-land exclusion state before road/river adjacency")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_byte_state_vector_1104_1108.count_known
-					&& !generator_state.endpoint_byte_state_vector_1104_1108.contents_known
+	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.count_known
+					&& generator_state.endpoint_byte_state_vector_1104_1108.contents_known
 					&& generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count == generator_state.endpoint_vector_d8_dc.count
 					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known,
-				"generator endpoint byte-state vector +0x1104/+0x1108 did not preserve its setup source while remaining count-unowned before the 0x49eb8d blocker")) {
+				"generator endpoint byte-state vector +0x1104/+0x1108 did not preserve its supported-land zero initialization before road/river adjacency")) {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_0xf5c_present
@@ -2537,29 +2542,30 @@ int main() {
 				"generator object private state did not preserve recovered supported-land stale 0xf5c cursor seed")) {
 		return 1;
 	}
-	if (!require(!generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 0
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == 0
-					&& !generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
-					&& !generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
-					&& !generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
+	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count > 0
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == generator_state.endpoint_cursor_0xf5c
+					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
+					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_success_path_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 0,
-				"D-014 endpoint cursor producer must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count > 0
+					&& !generator_state.endpoint_cursor_producer_d014.missing_cursor_seed_source.empty(),
+				"D-014 endpoint cursor producer did not preserve the recovered supported-land exclusion before road/river adjacency")) {
 		return 1;
 	}
-	if (!require(!generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
-					&& !generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
-					&& !generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
-					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
-					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
-					&& !generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
+	if (!require(generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+					&& generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
+					&& generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
 					&& !generator_state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed,
-				"D-014 connection materialization caller prep must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
+				"D-014 connection materialization caller prep did not preserve the recovered exclusion before road/river adjacency")) {
 		return 1;
 	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {
@@ -4445,23 +4451,23 @@ int main() {
 			workflow_config.setup_object_0x44 = 3;
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-			const std::string workflow_decorative_blocker =
-					"0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
+			const std::string workflow_road_river_object_adjacency_blocker =
+					"road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "connection_road_river"
+						&& workflow.current_phase_id == "road_river_object_adjacency"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance past reward/guard materialization to the recovered decorative blocker")) {
+					"entry-to-writeout workflow did not advance past connection-tail replay to road/river object adjacency")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason.rfind(workflow_decorative_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed at the decorative dispatch blocker; actual=")
+		if (!require(workflow.blocked_reason.rfind(workflow_road_river_object_adjacency_blocker, 0) == 0,
+					std::string("entry-to-writeout workflow did not fail closed at road/river object adjacency; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 12
+			if (!require(workflow.phases.size() >= 13
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4479,10 +4485,12 @@ int main() {
 							&& workflow.phases[9].id == "reward_guard_materialization"
 							&& workflow.phases[9].status == "complete_source_order_prefix"
 							&& workflow.phases[10].id == "connection_road_river"
-							&& workflow.phases[10].status == "blocked"
-							&& workflow.phases[11].id == "final_writeout"
-							&& workflow.phases[11].status == "pending",
-						"entry-to-writeout workflow did not preserve recovered phase order through the decorative dispatch blocker")) {
+							&& workflow.phases[10].status == "complete_source_order_prefix"
+							&& workflow.phases[11].id == "road_river_object_adjacency"
+							&& workflow.phases[11].status == "blocked"
+							&& workflow.phases[12].id == "final_writeout"
+							&& workflow.phases[12].status == "pending",
+						"entry-to-writeout workflow did not preserve recovered phase order through road/river object adjacency")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4516,8 +4524,11 @@ int main() {
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied
 							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.applied,
-						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, and decorative prefixes in source order")) {
+							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3_ported
+							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
+							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.applied,
+						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, decorative, and connection-tail prefixes in source order")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -4558,13 +4569,8 @@ int main() {
 						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-						&& std::any_of(
-								workflow_generator_state.remaining_private_state_blockers.begin(),
-								workflow_generator_state.remaining_private_state_blockers.end(),
-								[&](const std::string &blocker) {
-									return blocker.rfind(workflow_decorative_blocker, 0) == 0;
-								}),
-					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the decorative dispatch blocker")) {
+						&& workflow.blocked_reason.rfind(workflow_road_river_object_adjacency_blocker, 0) == 0,
+					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the road/river adjacency blocker")) {
 			return 1;
 		}
 			if (!require(workflow.phases.size() > 9
@@ -4572,49 +4578,49 @@ int main() {
 							&& workflow.phases[9].status == "complete_source_order_prefix"
 							&& workflow.phases.size() > 10
 							&& workflow.phases[10].id == "connection_road_river"
-							&& workflow.phases[10].status == "blocked"
+							&& workflow.phases[10].status == "complete_source_order_prefix"
+							&& workflow.phases.size() > 11
+							&& workflow.phases[11].id == "road_river_object_adjacency"
+							&& workflow.phases[11].status == "blocked"
 							&& !workflow.final_writeout_complete,
-						"entry-to-writeout workflow did not stop at connection road/river before final writeout")) {
+						"entry-to-writeout workflow did not stop at road/river object adjacency before final writeout")) {
 			return 1;
 		}
 		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
 				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
 			if (!require(workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 						&& decorative_dispatch.invoked
-						&& !decorative_dispatch.applied,
-					"entry-to-writeout workflow did not execute decorative dispatch after reward/guard materialization")) {
+						&& decorative_dispatch.applied
+						&& decorative_dispatch.coordinate_worklist_replay_complete_0x49e700
+						&& !decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit,
+					"entry-to-writeout workflow did not complete decorative dispatch after reward/guard materialization")) {
 				return 1;
 			}
 		const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
 				workflow_generator_state.connection_tail_replay_0x4a79a3;
-		if (!require(!workflow_generator_state.connection_tail_replay_0x4a79a3_ported
-						&& !connection_tail.invoked
-						&& !connection_tail.applied
-						&& !connection_tail.generated_cell_grid_owned
-						&& !connection_tail.endpoint_caller_prep_known
-						&& !connection_tail.fallback_materialization_known
+		if (!require(workflow_generator_state.connection_tail_replay_0x4a79a3_ported
+						&& connection_tail.invoked
+						&& connection_tail.applied
+						&& connection_tail.generated_cell_grid_owned
+						&& connection_tail.endpoint_caller_prep_known
+						&& connection_tail.fallback_materialization_known
 						&& !connection_tail.fallback_materialization_applied
-						&& !connection_tail.source_backed_frontier_known
-						&& connection_tail.source_frontier_scan_cell_count == 0
-						&& !connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
-						&& connection_tail.internal_growth_candidate_pair_count == 0
-						&& !connection_tail.internal_growth_0x4a61bc_prefix_owned
-						&& connection_tail.internal_growth_0x4a61bc_invocation_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_entry_gate_pass_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_selected_candidate_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_selected_loop_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_rng_selection_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404 == 0
-						&& connection_tail.internal_growth_0x4a61bc_guard_budget_positive_count == 0
-						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count == 0
+						&& connection_tail.source_backed_frontier_known
+						&& connection_tail.source_frontier_scan_cell_count == 36 * 36
+						&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
+						&& connection_tail.internal_growth_candidate_pair_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_invocation_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_selected_candidate_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_rng_selection_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count > 0
+						&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404 > 0
 						&& connection_tail.blocked_reason.empty()
-						&& workflow_generator_state.object_records_0xec4_ecc.size() == size_t(23)
-						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == 23
-						&& !workflow_generator_state.connection_fallback_materialization_scope_known
+						&& workflow_generator_state.object_records_0xec4_ecc.size() > size_t(23)
+						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == int32_t(workflow_generator_state.object_records_0xec4_ecc.size())
+						&& workflow_generator_state.connection_fallback_materialization_scope_known
 						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-				"entry-to-writeout workflow invoked 0x4a79a3 before the decorative dispatch blocker was resolved")) {
+				"entry-to-writeout workflow did not apply 0x4a79a3 before road/river adjacency")) {
 			return 1;
 		}
 		if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 90
