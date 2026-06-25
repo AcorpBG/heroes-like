@@ -861,6 +861,20 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_low_score_reject_count_0x49e1bf;
 	out.decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_first_pass_positive_count_0x49e1bf;
 	out.decorative_dispatch_scorer_input_0x49e1bf_unowned = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_input_0x49e1bf_unowned;
+	out.decorative_dispatch_scorer_neighbor_pass_0x49e1bf_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_0x49e1bf_invoked;
+	out.decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_invocation_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_cell_scan_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_cell_scan_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_scratch_empty_skip_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_scratch_empty_skip_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_bounds_skip_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_bounds_skip_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_valid_terrain_skip_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_valid_terrain_skip_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_object_reference_vector_missing_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_object_reference_vector_missing_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_object_reference_scan_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_object_reference_scan_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_object_record_lookup_missing_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_object_record_lookup_missing_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_flagged_reference_append_count_0x40bb26 = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_flagged_reference_append_count_0x40bb26;
+	out.decorative_dispatch_scorer_neighbor_pass_score_index_missing_count_0x49b89c = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_score_index_missing_count_0x49b89c;
+	out.decorative_dispatch_scorer_neighbor_pass_hard_reject_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_hard_reject_count_0x49e1bf;
+	out.decorative_dispatch_scorer_neighbor_pass_positive_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_positive_count_0x49e1bf;
+	out.decorative_dispatch_first_scorer_neighbor_reference_key_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_neighbor_reference_key_0x49e1bf;
 	out.decorative_dispatch_first_scorer_source_row_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_source_row_0x49e700;
 	out.decorative_dispatch_first_scorer_source_type_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_source_type_0x49e700;
 	out.decorative_dispatch_first_scorer_source_def_name_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_scorer_source_def_name_0x49e700;
@@ -2639,6 +2653,20 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_low_score_reject_count_0x49e1bf << ","
 			<< "\"decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf\":" << state.decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf << ","
 			<< "\"decorative_dispatch_scorer_input_0x49e1bf_unowned\":" << (state.decorative_dispatch_scorer_input_0x49e1bf_unowned ? "true" : "false") << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_0x49e1bf_invoked\":" << (state.decorative_dispatch_scorer_neighbor_pass_0x49e1bf_invoked ? "true" : "false") << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_cell_scan_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_cell_scan_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_scratch_empty_skip_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_scratch_empty_skip_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_bounds_skip_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_bounds_skip_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_valid_terrain_skip_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_valid_terrain_skip_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_object_reference_vector_missing_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_object_reference_vector_missing_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_object_reference_scan_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_object_reference_scan_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_object_record_lookup_missing_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_object_record_lookup_missing_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_flagged_reference_append_count_0x40bb26\":" << state.decorative_dispatch_scorer_neighbor_pass_flagged_reference_append_count_0x40bb26 << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_score_index_missing_count_0x49b89c\":" << state.decorative_dispatch_scorer_neighbor_pass_score_index_missing_count_0x49b89c << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_hard_reject_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_hard_reject_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_scorer_neighbor_pass_positive_count_0x49e1bf\":" << state.decorative_dispatch_scorer_neighbor_pass_positive_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_first_scorer_neighbor_reference_key_0x49e1bf\":" << state.decorative_dispatch_first_scorer_neighbor_reference_key_0x49e1bf << ","
 			<< "\"decorative_dispatch_first_scorer_source_row_0x49e700\":" << state.decorative_dispatch_first_scorer_source_row_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_source_type_0x49e700\":" << state.decorative_dispatch_first_scorer_source_type_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_source_def_name_0x49e700\":\"" << json_escape(state.decorative_dispatch_first_scorer_source_def_name_0x49e700) << "\","
@@ -2650,7 +2678,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_first_scorer_candidate_level_0x49e700\":" << state.decorative_dispatch_first_scorer_candidate_level_0x49e700 << ","
 			<< "\"decorative_dispatch_first_scorer_first_pass_score_0x49e1bf\":" << state.decorative_dispatch_first_scorer_first_pass_score_0x49e1bf << ","
 			<< "\"decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d\":\"" << json_escape(state.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d) << "\","
-			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_replays_first_footprint_terrain_bit27_pass_before_stopping_at_neighbor_reference_descriptor_0x30_0x40_replay\","
+			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_replays_first_footprint_terrain_bit27_pass_and_neighbor_object_reference_scan_until_unowned_0x49b89c_descriptor_score_index_or_allocation_commit\","
 			<< "\"connection_tail_replay_0x4a79a3_ported\":" << (state.connection_tail_replay_0x4a79a3_ported ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_invoked\":" << (state.connection_tail_replay_0x4a79a3_invoked ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_applied\":" << (state.connection_tail_replay_0x4a79a3_applied ? "true" : "false") << ","
