@@ -22,11 +22,11 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-25T19:29:01Z",
+      "updatedAt": "2026-06-25T19:52:24Z",
       "latestEvidenceId": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
-      "remainingWork": "Port exact 0x49e1bf scoring data/replay for the 0x49e700 decorative dispatch: record +0x10 terrain-score table semantics, descriptor +0x30/+0x40 neighbor-score table semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains parity debt.",
-      "latestFinding": "2026-06-25T19:29:01Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now enter the source-backed 0x49eb8d -> 0x49e700 decorative prefix. All three count bit26 cells, scan the recovered 45-entry 0x54092c type table, reach rand_trn-backed source row 312/type 119/DEF AVLd1sn0.def, and fail closed at 0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned before final writeout. No Godot was started.",
-      "blocker": "Final writeout is blocked by exact 0x49e1bf scorer ownership under 0x49e700 decorative dispatch: record +0x10 terrain-score data, descriptor +0x30/+0x40 neighbor-score data, object-reference flag classes +0x14..+0x18, and ordered scorer replay are not native-owned. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
+      "remainingWork": "Port exact 0x49e1bf scoring data/replay for the 0x49e700 decorative dispatch: descriptor +0x30/+0x40 adjacency/overlap score semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains parity debt.",
+      "latestFinding": "2026-06-25T19:52:24Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now carry recovered rand_trn score data through 0x49e700: 109 obstacle score records, 2425 per-template variants, terrain-score lookup, and the -5000 hard reject. The focused cases still fail closed before final writeout at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned. No Godot was started.",
+      "blocker": "Final writeout is blocked by exact 0x49e1bf scorer ownership under 0x49e700 decorative dispatch: descriptor +0x30/+0x40 adjacency/overlap score semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay are not native-owned. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
         "id": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
@@ -84,11 +84,11 @@
         },
         "result": "partial_source_order_implementation_not_parity"
       },
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Shared h3maped_rmg_core now enters the recovered 0x49eb8d -> 0x49e700 decorative prefix for the focused Small/Medium one-level land cases and fails closed at the exact missing 0x49e1bf scorer data/replay boundary. This is not parity and not final map output.",
-      "currentNotes": "2026-06-25T19:29:01Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Focused no-Godot cases now enter 0x49e700 and stop at 0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned.",
-      "currentSliceNotes": "2026-06-25T19:29:01Z: Focused no-Godot cases small_2p_seed10_hc1_setup0, small_2p_seed58_hc1_setup0, and medium_4p_seed10_hc3_setup0 all enter the 0x49e700 type-table/rand_trn prefix and fail closed at missing 0x49e1bf scorer data for source row 312/type 119/DEF AVLd1sn0.def.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Shared h3maped_rmg_core now carries recovered rand_trn score rows through the 0x49eb8d -> 0x49e700 decorative prefix for the focused Small/Medium one-level land cases and fails closed at the exact missing 0x49e1bf descriptor adjacency/overlap scorer replay boundary. This is not parity and not final map output.",
+      "currentNotes": "2026-06-25T19:52:24Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Focused no-Godot cases now apply recovered rand_trn score-row terrain lookup and hard reject, then stop at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned.",
+      "currentSliceNotes": "2026-06-25T19:52:24Z: Focused no-Godot cases small_2p_seed10_hc1_setup0, small_2p_seed58_hc1_setup0, and medium_4p_seed10_hc3_setup0 all enter the 0x49e700 type-table/rand_trn prefix, load 2425 score variants, apply terrain hard rejects, and fail closed at missing 0x49e1bf descriptor adjacency/overlap scorer replay for source row 312/type 119/DEF AVLd1sn0.def.",
       "result": "partial_source_order_implementation_not_parity",
-      "remainingGap": "Port exact 0x49e1bf scorer data/replay under 0x49e700, then road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+      "remainingGap": "Port exact 0x49e1bf descriptor adjacency/overlap/object-reference scorer replay under 0x49e700, then road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
       "validation": {
         "id": "native-rmg-selected-candidate-relation-producer-20260622",
         "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
@@ -71556,7 +71556,7 @@
     },
     "result": "partial_source_order_implementation_not_parity"
   },
-  "latestFinding": "2026-06-25T19:29:01Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now enter the source-backed 0x49eb8d -> 0x49e700 decorative prefix. All three count bit26 cells, scan the recovered 45-entry 0x54092c type table, reach rand_trn-backed source row 312/type 119/DEF AVLd1sn0.def, and fail closed at 0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned before final writeout. No Godot was started.",
-  "blocker": "Final writeout is still blocked by exact 0x49e1bf scorer ownership under 0x49e700 decorative dispatch: record +0x10 terrain-score data, descriptor +0x30/+0x40 neighbor-score data, object-reference flag classes +0x14..+0x18, and ordered scorer replay are not native-owned. Road/river adjacency, descriptor counter replay after decorative dispatch, and final writeout remain unowned. This is not parity and not final map output.",
-  "native_cli_required_next_slice": "Port exact 0x49e1bf scorer data/replay for source-backed 0x49e700 decorative dispatch, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces."
+  "latestFinding": "2026-06-25T19:52:24Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now carry recovered rand_trn score data through 0x49e700: 109 obstacle score records, 2425 per-template variants, terrain-score lookup, and the -5000 hard reject. The focused cases still fail closed before final writeout at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned. No Godot was started.",
+  "blocker": "Final writeout is still blocked by exact 0x49e1bf scorer ownership under 0x49e700 decorative dispatch: descriptor +0x30/+0x40 adjacency/overlap score semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay are not native-owned. Road/river adjacency, descriptor counter replay after decorative dispatch, and final writeout remain unowned. This is not parity and not final map output.",
+  "native_cli_required_next_slice": "Port exact 0x49e1bf descriptor adjacency/overlap/object-reference scorer replay for source-backed 0x49e700 decorative dispatch, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces."
 }

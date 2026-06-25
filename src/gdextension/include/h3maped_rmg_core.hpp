@@ -30,6 +30,9 @@ constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X2C_CLEAR_MASK = ~uint32_t(0x01U
 constexpr int32_t GENERATED_CELL_RECORD_STRIDE_BYTES = 0x30;
 constexpr int32_t SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C = 0x4c;
 constexpr int32_t SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8 = 0xe8;
+constexpr int32_t RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E = 9;
+constexpr int32_t RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E = 109;
+constexpr int32_t RAND_TRN_HARD_REJECT_SCORE_0X49E700 = -5000;
 constexpr uint32_t RELATION_RESET_WORD_0X1C = 0x7d007d00U;
 constexpr uint32_t RELATION_RESET_COORD_MINUS_ONE = 0xffffffffU;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
@@ -149,6 +152,19 @@ struct GeneratedCellRecordGrid0x30 {
 	std::vector<GeneratedCellRecord0x30> records;
 };
 
+struct RandTrnObstacleScoreRecord49dc9e {
+	int32_t obstacle_id = -1;
+	std::string name;
+	int32_t type_id = 0;
+	std::string type_name;
+	int32_t subtype = 0;
+	int32_t terrain_id = 0;
+	std::string terrain_name;
+	std::array<int32_t, RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E> terrain_scores {};
+	std::array<int32_t, RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E> adjacent_scores {};
+	std::array<int32_t, RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E> overlap_scores {};
+};
+
 struct SourceObjectRecord0x4c {
 	int32_t source_row = -1;
 	std::string source;
@@ -190,6 +206,7 @@ struct SourceObjectRecord0x4c {
 	std::string terrain_a_names;
 	std::string terrain_b_names;
 	bool rand_trn_backed = false;
+	std::vector<RandTrnObstacleScoreRecord49dc9e> rand_trn_score_records_0x49dc9e;
 };
 
 struct SourceObjectMaskPoint490f3f {
@@ -202,6 +219,8 @@ struct SourceObjectCatalogSummary0x49da08 {
 	int32_t source_record_copy_size_bytes = SOURCE_OBJECT_RECORD_COPY_SIZE_BYTES_0X4C;
 	int32_t objects_txt_record_count = 0;
 	int32_t rand_trn_backed_record_count = 0;
+	int32_t rand_trn_score_record_count = 0;
+	int32_t rand_trn_score_variant_count = 0;
 	int32_t passability_mask_record_count = 0;
 	int32_t action_mask_record_count = 0;
 	int32_t descriptor_mask_field_record_count = 0;
@@ -2177,6 +2196,9 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t dispatch_probe_terrain9_reject_count_0x49e700 = 0;
 	int32_t dispatch_probe_source_record_scan_count_0x49e700 = 0;
 	int32_t dispatch_probe_rand_trn_record_count_0x49e700 = 0;
+	int32_t dispatch_probe_rand_trn_score_variant_count_0x49e700 = 0;
+	int32_t dispatch_probe_rand_trn_terrain_score_lookup_count_0x49e700 = 0;
+	int32_t dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 = 0;
 	int32_t dispatch_probe_descriptor_mask_missing_count_0x49e700 = 0;
 	int32_t dispatch_probe_descriptor_footprint_probe_count_0x49e700 = 0;
 	int32_t dispatch_probe_scorer_input_candidate_count_0x49e700 = 0;
@@ -2184,6 +2206,9 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t first_scorer_source_row_0x49e700 = -1;
 	int32_t first_scorer_source_type_0x49e700 = -1;
 	std::string first_scorer_source_def_name_0x49e700;
+	int32_t first_scorer_rand_trn_obstacle_id_0x49e700 = -1;
+	std::string first_scorer_rand_trn_obstacle_name_0x49e700;
+	int32_t first_scorer_rand_trn_terrain_score_0x49e700 = 0;
 	std::string blocked_reason;
 };
 

@@ -831,12 +831,18 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t decorative_dispatch_probe_invocation_count_0x49e700 = 0;
 	int32_t decorative_dispatch_probe_source_record_scan_count_0x49e700 = 0;
 	int32_t decorative_dispatch_probe_rand_trn_record_count_0x49e700 = 0;
+	int32_t decorative_dispatch_probe_rand_trn_score_variant_count_0x49e700 = 0;
+	int32_t decorative_dispatch_probe_rand_trn_terrain_score_lookup_count_0x49e700 = 0;
+	int32_t decorative_dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 = 0;
 	int32_t decorative_dispatch_probe_descriptor_footprint_probe_count_0x49e700 = 0;
 	int32_t decorative_dispatch_probe_scorer_input_candidate_count_0x49e700 = 0;
 	bool decorative_dispatch_scorer_input_0x49e1bf_unowned = false;
 	int32_t decorative_dispatch_first_scorer_source_row_0x49e700 = -1;
 	int32_t decorative_dispatch_first_scorer_source_type_0x49e700 = -1;
 	std::string decorative_dispatch_first_scorer_source_def_name_0x49e700;
+	int32_t decorative_dispatch_first_scorer_rand_trn_obstacle_id_0x49e700 = -1;
+	std::string decorative_dispatch_first_scorer_rand_trn_obstacle_name_0x49e700;
+	int32_t decorative_dispatch_first_scorer_rand_trn_terrain_score_0x49e700 = 0;
 	std::string decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d;
 	bool connection_tail_replay_0x4a79a3_ported = false;
 	bool connection_tail_replay_0x4a79a3_invoked = false;
