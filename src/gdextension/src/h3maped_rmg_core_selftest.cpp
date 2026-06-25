@@ -3188,7 +3188,7 @@ int main() {
 	GeneratorRelationOwnerState4a218c reward_guard_relation;
 	reward_guard_relation.runtime_zone_index = 2;
 	reward_guard_relation.source_pointer_0x00_known = true;
-	reward_guard_relation.source_pointer_source_index_0x00 = 2;
+	reward_guard_relation.source_pointer_source_index_0x00 = 5;
 	reward_guard_relation.relation_owner_byte2_0x4aa9b7_known = true;
 	reward_guard_relation.relation_owner_byte2_0x4aa9b7 = 2;
 	reward_guard_relation.terrain_policy_0x0c_known = true;
@@ -3217,6 +3217,7 @@ int main() {
 	const GeneratedCellRecord0x30 &reward_guard_wrapper_cell_after = reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0];
 	if (!require(reward_guard_result.applied
 					&& reward_guard_result.committed
+					&& reward_guard_result.relation_owner_byte2 == 2
 					&& reward_guard_result.scanned_cell_count == 1
 					&& reward_guard_result.accepted_candidate_count == 1
 					&& reward_guard_result.feasibility_results_0x4aa603.size() == 1
