@@ -33,6 +33,7 @@ constexpr int32_t SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8 = 0xe8;
 constexpr int32_t RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E = 9;
 constexpr int32_t RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E = 109;
 constexpr int32_t RAND_TRN_HARD_REJECT_SCORE_0X49E700 = -5000;
+constexpr int32_t RAND_TRN_LOW_SCORE_REJECT_THRESHOLD_0X49E1BF = -1000;
 constexpr uint32_t RELATION_RESET_WORD_0X1C = 0x7d007d00U;
 constexpr uint32_t RELATION_RESET_COORD_MINUS_ONE = 0xffffffffU;
 constexpr uint32_t RELATION_RESET_ARG_0X4A59E2_WORD_0X1C_HIGH = 0x7d00U;
@@ -2202,6 +2203,16 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t dispatch_probe_descriptor_mask_missing_count_0x49e700 = 0;
 	int32_t dispatch_probe_descriptor_footprint_probe_count_0x49e700 = 0;
 	int32_t dispatch_probe_scorer_input_candidate_count_0x49e700 = 0;
+	int32_t scorer_first_pass_invocation_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_candidate_anchor_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_footprint_cell_scan_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_terrain_test_count_0x42cc99 = 0;
+	int32_t scorer_first_pass_terrain_reject_count_0x42cc99 = 0;
+	int32_t scorer_first_pass_bit27_hard_reject_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_bounds_reject_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_missing_word_reject_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_low_score_reject_count_0x49e1bf = 0;
+	int32_t scorer_first_pass_positive_count_0x49e1bf = 0;
 	bool scorer_input_0x49e1bf_unowned = false;
 	int32_t first_scorer_source_row_0x49e700 = -1;
 	int32_t first_scorer_source_type_0x49e700 = -1;
@@ -2209,6 +2220,10 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t first_scorer_rand_trn_obstacle_id_0x49e700 = -1;
 	std::string first_scorer_rand_trn_obstacle_name_0x49e700;
 	int32_t first_scorer_rand_trn_terrain_score_0x49e700 = 0;
+	int32_t first_scorer_candidate_x_0x49e700 = -1;
+	int32_t first_scorer_candidate_y_0x49e700 = -1;
+	int32_t first_scorer_candidate_level_0x49e700 = -1;
+	int32_t first_scorer_first_pass_score_0x49e1bf = 0;
 	std::string blocked_reason;
 };
 
