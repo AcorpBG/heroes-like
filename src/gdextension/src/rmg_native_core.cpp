@@ -505,6 +505,8 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	if (input.copied_source_record_carried) {
 		out.source_record_copy = from_h3maped_source_object_record(input.source_record_copy);
 	}
+	out.object_score_cache_known_0x49b89c = input.object_score_cache_known_0x49b89c;
+	out.object_score_cache_0x49b89c = input.object_score_cache_0x49b89c;
 	return out;
 }
 
@@ -2100,6 +2102,16 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"selected_wrapper_index_0x4af785\":" << record.selected_wrapper_index_0x4af785
 			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08
 			<< ",\"copied_source_record_carried\":" << (record.copied_source_record_carried ? "true" : "false")
+			<< ",\"object_score_cache_known_0x49b89c\":" << (record.object_score_cache_known_0x49b89c ? "true" : "false")
+			<< ",\"object_score_cache_0x49b89c\":[";
+		for (size_t cache_index = 0; cache_index < record.object_score_cache_0x49b89c.size(); ++cache_index) {
+			if (cache_index != 0) {
+				out << ",";
+			}
+			out << record.object_score_cache_0x49b89c[cache_index];
+		}
+		out
+			<< "]"
 			<< ",\"source_record_copy\":";
 		if (record.copied_source_record_carried) {
 			append_source_object_record_sample_json(out, record.source_record_copy);

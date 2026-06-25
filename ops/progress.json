@@ -16,24 +16,24 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-25T20:33:34Z",
-      "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
-      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
-      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
-      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "latestEvidenceId": "native-rmg-49b89c-score-cache-20260625",
+      "remainingWork": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+      "blocker": "Final writeout is blocked by the unported source-order 0x49e700 decorative coordinate worklist/repeated-commit loop after the first selected decorative commit. Reward/guard zero successful direct 0x4aa9b7 commits, roads/rivers, descriptor counters, and final writeout remain parity blockers.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-        "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+        "id": "native-rmg-49b89c-score-cache-20260625",
+        "title": "Decorative 0x49b89c Score Cache Adoption",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T21:01:08Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+        "updatedAt": "2026-06-25T21:22:36Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -44,17 +44,49 @@
             "status": "passed"
           },
           {
-            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
             "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+          },
+          {
+            "cmd": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "cmd": "jq empty ops/progress.json",
+            "status": "passed"
+          },
+          {
+            "cmd": "git diff --check",
+            "status": "passed"
           }
         ],
         "blockers": [
-          "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
           "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+          "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "final_writeout_not_executed_until_source_order_payload_is_owned"
-        ]
+        ],
+        "metrics": {
+          "checkpoint2_complete": false,
+          "final_payload_generation_complete": false,
+          "godot_process_started": false,
+          "native_rmg_end_to_end_parity_complete": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "runtime_generation_allowed": false,
+          "same_run_private_state_compare_passed": false,
+          "score_cache_missing_count": 0,
+          "small_seed10_object_score_cache_known": "37/37",
+          "small_seed58_object_score_cache_known": "23/23",
+          "medium_seed10_object_score_cache_known": "60/60",
+          "small_seed10_decorative_candidate_append_count": 335,
+          "small_seed10_decorative_weight_total": 8995,
+          "small_seed58_decorative_candidate_append_count": 242,
+          "small_seed58_decorative_weight_total": 4475,
+          "medium_seed10_decorative_candidate_append_count": 155,
+          "medium_seed10_decorative_weight_total": 6450
+        }
       },
       "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
       "currentNotes": "2026-06-25T19:52:24Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Focused no-Godot cases now apply recovered rand_trn score-row terrain lookup and hard reject, then stop at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned.",
@@ -62,11 +94,11 @@
       "result": "partial_source_order_implementation_not_parity",
       "remainingGap": "Port exact 0x49e1bf descriptor adjacency/overlap/object-reference scorer replay under 0x49e700, then road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
       "validation": {
-        "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-        "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+        "id": "native-rmg-49b89c-score-cache-20260625",
+        "title": "Decorative 0x49b89c Score Cache Adoption",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T21:01:08Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+        "updatedAt": "2026-06-25T21:22:36Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -77,17 +109,49 @@
             "status": "passed"
           },
           {
-            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
             "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+          },
+          {
+            "cmd": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "cmd": "jq empty ops/progress.json",
+            "status": "passed"
+          },
+          {
+            "cmd": "git diff --check",
+            "status": "passed"
           }
         ],
         "blockers": [
-          "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
           "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+          "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "final_writeout_not_executed_until_source_order_payload_is_owned"
-        ]
+        ],
+        "metrics": {
+          "checkpoint2_complete": false,
+          "final_payload_generation_complete": false,
+          "godot_process_started": false,
+          "native_rmg_end_to_end_parity_complete": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "runtime_generation_allowed": false,
+          "same_run_private_state_compare_passed": false,
+          "score_cache_missing_count": 0,
+          "small_seed10_object_score_cache_known": "37/37",
+          "small_seed58_object_score_cache_known": "23/23",
+          "medium_seed10_object_score_cache_known": "60/60",
+          "small_seed10_decorative_candidate_append_count": 335,
+          "small_seed10_decorative_weight_total": 8995,
+          "small_seed58_decorative_candidate_append_count": 242,
+          "small_seed58_decorative_weight_total": 4475,
+          "medium_seed10_decorative_candidate_append_count": 155,
+          "medium_seed10_decorative_weight_total": 6450
+        }
       },
       "metrics": {
         "checkpoint2_complete": false,
@@ -192,11 +256,11 @@
         "PLAN.md"
       ],
       "lastValidation": {
-        "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-        "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+        "id": "native-rmg-49b89c-score-cache-20260625",
+        "title": "Decorative 0x49b89c Score Cache Adoption",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T21:01:08Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+        "updatedAt": "2026-06-25T21:22:36Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -207,24 +271,56 @@
             "status": "passed"
           },
           {
-            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
             "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+          },
+          {
+            "cmd": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "cmd": "jq empty ops/progress.json",
+            "status": "passed"
+          },
+          {
+            "cmd": "git diff --check",
+            "status": "passed"
           }
         ],
         "blockers": [
-          "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
           "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+          "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "final_writeout_not_executed_until_source_order_payload_is_owned"
-        ]
+        ],
+        "metrics": {
+          "checkpoint2_complete": false,
+          "final_payload_generation_complete": false,
+          "godot_process_started": false,
+          "native_rmg_end_to_end_parity_complete": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "runtime_generation_allowed": false,
+          "same_run_private_state_compare_passed": false,
+          "score_cache_missing_count": 0,
+          "small_seed10_object_score_cache_known": "37/37",
+          "small_seed58_object_score_cache_known": "23/23",
+          "medium_seed10_object_score_cache_known": "60/60",
+          "small_seed10_decorative_candidate_append_count": 335,
+          "small_seed10_decorative_weight_total": 8995,
+          "small_seed58_decorative_candidate_append_count": 242,
+          "small_seed58_decorative_weight_total": 4475,
+          "medium_seed10_decorative_candidate_append_count": 155,
+          "medium_seed10_decorative_weight_total": 6450
+        }
       },
       "validationResults": {
-        "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-        "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+        "id": "native-rmg-49b89c-score-cache-20260625",
+        "title": "Decorative 0x49b89c Score Cache Adoption",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T21:01:08Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+        "updatedAt": "2026-06-25T21:22:36Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -235,17 +331,49 @@
             "status": "passed"
           },
           {
-            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+            "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
             "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+          },
+          {
+            "cmd": "python3 tests/validate_repo.py",
+            "status": "passed"
+          },
+          {
+            "cmd": "jq empty ops/progress.json",
+            "status": "passed"
+          },
+          {
+            "cmd": "git diff --check",
+            "status": "passed"
           }
         ],
         "blockers": [
-          "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
           "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+          "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "final_writeout_not_executed_until_source_order_payload_is_owned"
-        ]
+        ],
+        "metrics": {
+          "checkpoint2_complete": false,
+          "final_payload_generation_complete": false,
+          "godot_process_started": false,
+          "native_rmg_end_to_end_parity_complete": false,
+          "phase_snapshot_only_status_blocked": true,
+          "phase_snapshot_only_status_passed": false,
+          "runtime_generation_allowed": false,
+          "same_run_private_state_compare_passed": false,
+          "score_cache_missing_count": 0,
+          "small_seed10_object_score_cache_known": "37/37",
+          "small_seed58_object_score_cache_known": "23/23",
+          "medium_seed10_object_score_cache_known": "60/60",
+          "small_seed10_decorative_candidate_append_count": 335,
+          "small_seed10_decorative_weight_total": 8995,
+          "small_seed58_decorative_candidate_append_count": 242,
+          "small_seed58_decorative_weight_total": 4475,
+          "medium_seed10_decorative_candidate_append_count": 155,
+          "medium_seed10_decorative_weight_total": 6450
+        }
       },
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water"
     },
@@ -706,24 +834,24 @@
         "closureCriteria": "Focused Python compare reports zero unexplained pre-0x4a4c8e generated-cell word drift for the selected references before route/object adoption is treated as valid.",
         "id": "native-rmg-private-generated-cell-grid-alignment-10184",
         "latestEvidenceArtifacts": [
-          ".artifacts/rmg_native_goal_4a79a3_bridge_probe/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a79a3_bridge_probe/medium_4p_seed10_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed58.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/medium_seed10.phase_snapshot.json",
+          "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/include/rmg_native_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
-          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
-          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-          "PLAN.md",
-          "docs/native-rmg-generated-cell-mutation-chain.md"
+          "docs/native-rmg-generated-cell-mutation-chain.md",
+          "PLAN.md"
         ],
-        "latestEvidenceId": "native-rmg-4a79a3-tail-invocation-20260622",
-        "latestFinding": "No-Godot Small seed 58 setup3 stops at current_phase_id materialization_bridge with blocker 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope after applying the 0x4a4fc5 scan (scan=1296, source_water=0, bit26_candidates=0), invoking 0x4a79a3, and confirming fallback record count 0. Medium seed 10 setup3 reaches 0x4a4fc5 and stops at 0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope (scan=5184, source_water=5128, bit26_candidates=0) before invoking 0x4a79a3. Downstream mine/resource, reward/guard, decorative, roads/rivers, and final writeout remain uninvoked.",
-        "remainingWork": "Recover/provide the source-backed Small zero-water 0x4a79a3 fallback record feed for 0x4a7605/0x4a5e03, or resolve the Medium 0x4a4fc5 source-water input/mutation path. Only after that bridge tail is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+        "latestEvidenceId": "native-rmg-49b89c-score-cache-20260625",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+        "remainingWork": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
         "status": "in_progress",
         "summary": "Make pre-0x4a4c8e native generated-cell words match recovered private state before route/object consumers run.",
         "title": "Private generated-cell grid alignment",
-        "updatedAt": "2026-06-22T04:45:13Z",
-        "blocker": "The active shared workflow still does not source-own the Small 0x4a79a3 fallback record feed for 0x4a7605/0x4a5e03 or the Medium 0x4a4fc5 source-water mutation semantics. Continuing into later helpers before this bridge tail is owned would recreate proxy-state drift.",
+        "updatedAt": "2026-06-25T21:20:49Z",
+        "blocker": "Final writeout is blocked by the unported source-order 0x49e700 decorative coordinate worklist/repeated-commit loop after the first selected decorative commit. Reward/guard zero successful direct 0x4aa9b7 commits, roads/rivers, descriptor counters, and final writeout remain parity blockers.",
         "metrics": {
           "checkpoint2_complete": false,
           "godot_process_started": false,
@@ -852,7 +980,17 @@
           "materialization_bridge_0x4a79a3_small_blocker": "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope",
           "materialization_bridge_0x4a79a3_small_fallback_record_count": 0,
           "materialization_bridge_0x4a79a3_invoked_medium": false,
-          "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true
+          "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true,
+          "score_cache_missing_count": 0,
+          "small_seed10_object_score_cache_known": "37/37",
+          "small_seed58_object_score_cache_known": "23/23",
+          "medium_seed10_object_score_cache_known": "60/60",
+          "small_seed10_decorative_candidate_append_count": 335,
+          "small_seed10_decorative_weight_total": 8995,
+          "small_seed58_decorative_candidate_append_count": 242,
+          "small_seed58_decorative_weight_total": 4475,
+          "medium_seed10_decorative_candidate_append_count": 155,
+          "medium_seed10_decorative_weight_total": 6450
         },
         "remainingGap": "Port the remaining source-order object-bearing materialization path: generic non-type98 source-pair caller order into the implemented 0x4a8d2c/0x4a8db2 paths, exact 0x49a318 call-site order and same-run private-state comparison, generic live 0x4a7605 -> 0x4a5e03 fallback payload feed/caller order beyond the exact-prestate sampled records, reward/guard materialization including 0x4aa9b7 -> 0x4aa3e9, downstream relation/object caller order, roads/rivers, and final payload generation before enabling comparable map output.",
         "latestEvidence": {
@@ -1072,7 +1210,23 @@
             "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
             "final_writeout_not_executed_until_source_order_payload_is_owned"
           ]
-        }
+        },
+        "latestEvidenceId": "native-rmg-49b89c-score-cache-20260625",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+        "remainingWork": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
+        "blocker": "Final writeout is blocked by the unported source-order 0x49e700 decorative coordinate worklist/repeated-commit loop after the first selected decorative commit. Reward/guard zero successful direct 0x4aa9b7 commits, roads/rivers, descriptor counters, and final writeout remain parity blockers.",
+        "updatedAt": "2026-06-25T21:20:49Z",
+        "latestEvidenceArtifacts": [
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed58.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/medium_seed10.phase_snapshot.json",
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/include/rmg_native_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "docs/native-rmg-generated-cell-mutation-chain.md",
+          "PLAN.md"
+        ]
       }
     ],
     "baselineChecks": [
@@ -1082,8 +1236,8 @@
     ],
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered first pass of 0x49e1bf: descriptor footprint candidate anchors, descriptor terrain mask +0x14 through 0x42cc99, generated-cell bit27 hard reject, and the recovered low-score threshold. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each reach one positive first-pass candidate and now fail closed at the next unreplayed 0x49e1bf neighbor/object-reference descriptor +0x30/+0x40 score-table pass. This is not parity and not final map output.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered first pass of 0x49e1bf: descriptor footprint candidate anchors, descriptor terrain mask +0x14 through 0x42cc99, generated-cell bit27 hard reject, and the recovered low-score threshold. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each reach one positive first-pass candidate and now fail closed at the next unreplayed 0x49e1bf neighbor/object-reference descriptor +0x30/+0x40 score-table pass. This is not parity and not final map output.",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "currentSliceUpdatedAt": "2026-06-25T20:09:31Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
@@ -1093,11 +1247,11 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-      "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+      "id": "native-rmg-49b89c-score-cache-20260625",
+      "title": "Decorative 0x49b89c Score Cache Adoption",
       "status": "passed_partial_implementation_not_parity",
-      "updatedAt": "2026-06-25T21:01:08Z",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
       "commands": [
         {
           "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -1108,24 +1262,56 @@
           "status": "passed"
         },
         {
-          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
           "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+        },
+        {
+          "cmd": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "cmd": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "cmd": "git diff --check",
+          "status": "passed"
         }
       ],
       "blockers": [
-        "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
         "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
         "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
         "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
         "final_writeout_not_executed_until_source_order_payload_is_owned"
-      ]
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "score_cache_missing_count": 0,
+        "small_seed10_object_score_cache_known": "37/37",
+        "small_seed58_object_score_cache_known": "23/23",
+        "medium_seed10_object_score_cache_known": "60/60",
+        "small_seed10_decorative_candidate_append_count": 335,
+        "small_seed10_decorative_weight_total": 8995,
+        "small_seed58_decorative_candidate_append_count": 242,
+        "small_seed58_decorative_weight_total": 4475,
+        "medium_seed10_decorative_candidate_append_count": 155,
+        "medium_seed10_decorative_weight_total": 6450
+      }
     },
     "latestEvidence": {
-      "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-      "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+      "id": "native-rmg-49b89c-score-cache-20260625",
+      "title": "Decorative 0x49b89c Score Cache Adoption",
       "status": "passed_partial_implementation_not_parity",
-      "updatedAt": "2026-06-25T21:01:08Z",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
       "commands": [
         {
           "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -1136,17 +1322,49 @@
           "status": "passed"
         },
         {
-          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
           "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+        },
+        {
+          "cmd": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "cmd": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "cmd": "git diff --check",
+          "status": "passed"
         }
       ],
       "blockers": [
-        "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
         "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
         "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
         "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
         "final_writeout_not_executed_until_source_order_payload_is_owned"
-      ]
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "score_cache_missing_count": 0,
+        "small_seed10_object_score_cache_known": "37/37",
+        "small_seed58_object_score_cache_known": "23/23",
+        "medium_seed10_object_score_cache_known": "60/60",
+        "small_seed10_decorative_candidate_append_count": 335,
+        "small_seed10_decorative_weight_total": 8995,
+        "small_seed58_decorative_candidate_append_count": 242,
+        "small_seed58_decorative_weight_total": 4475,
+        "medium_seed10_decorative_candidate_append_count": 155,
+        "medium_seed10_decorative_weight_total": 6450
+      }
     },
     "latestEvidenceArtifacts": [
       ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
@@ -1160,7 +1378,7 @@
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md"
     ],
-    "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
+    "latestEvidenceId": "native-rmg-49b89c-score-cache-20260625",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -2008,20 +2226,30 @@
       "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
       "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
       "decorative_0x49e1bf_neighbor_scan_replayed": true,
-      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false,
+      "score_cache_missing_count": 0,
+      "small_seed10_object_score_cache_known": "37/37",
+      "small_seed58_object_score_cache_known": "23/23",
+      "medium_seed10_object_score_cache_known": "60/60",
+      "small_seed10_decorative_candidate_append_count": 335,
+      "small_seed10_decorative_weight_total": 8995,
+      "small_seed58_decorative_candidate_append_count": 242,
+      "small_seed58_decorative_weight_total": 4475,
+      "medium_seed10_decorative_candidate_append_count": 155,
+      "medium_seed10_decorative_weight_total": 6450
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
-    "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
-    "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now carries source-record replay, route/free-cell, relation normalization/scan, mine/resource materialization, and the live 0x4a79a3 connection-tail path. Small seed 10 and Medium seed 10 still stop at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb. Small seed 58 now executes the recovered 0x4a61bc selected-candidate loop through direct 0x4a5c07 monster selection and 0x4a5e03/0x4a54a7 commits, appending 7 connection guard records and leaving 28 object records before stopping at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. The reward/guard blocker shows 90 source-stream attempts, zero successful 0x4aa9b7 commits, and first 0x4aa603 rejection at 0x49a6f9 footprint filtering. Next required implementation is the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state. This is not parity and not final map output.",
+    "remainingGap": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
+    "remainingWork": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
+    "result": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
       "project.md",
@@ -2029,7 +2257,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -2042,13 +2270,13 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-25T21:01:08Z",
+    "updatedAt": "2026-06-25T21:22:36Z",
     "validation": {
-      "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-      "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+      "id": "native-rmg-49b89c-score-cache-20260625",
+      "title": "Decorative 0x49b89c Score Cache Adoption",
       "status": "passed_partial_implementation_not_parity",
-      "updatedAt": "2026-06-25T21:01:08Z",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
       "commands": [
         {
           "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -2059,24 +2287,56 @@
           "status": "passed"
         },
         {
-          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
           "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+        },
+        {
+          "cmd": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "cmd": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "cmd": "git diff --check",
+          "status": "passed"
         }
       ],
       "blockers": [
-        "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
         "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
         "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
         "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
         "final_writeout_not_executed_until_source_order_payload_is_owned"
-      ]
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "score_cache_missing_count": 0,
+        "small_seed10_object_score_cache_known": "37/37",
+        "small_seed58_object_score_cache_known": "23/23",
+        "medium_seed10_object_score_cache_known": "60/60",
+        "small_seed10_decorative_candidate_append_count": 335,
+        "small_seed10_decorative_weight_total": 8995,
+        "small_seed58_decorative_candidate_append_count": 242,
+        "small_seed58_decorative_weight_total": 4475,
+        "medium_seed10_decorative_candidate_append_count": 155,
+        "medium_seed10_decorative_weight_total": 6450
+      }
     },
     "validationResults": {
-      "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-      "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+      "id": "native-rmg-49b89c-score-cache-20260625",
+      "title": "Decorative 0x49b89c Score Cache Adoption",
       "status": "passed_partial_implementation_not_parity",
-      "updatedAt": "2026-06-25T21:01:08Z",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
       "commands": [
         {
           "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -2087,20 +2347,52 @@
           "status": "passed"
         },
         {
-          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
           "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+        },
+        {
+          "cmd": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "cmd": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "cmd": "git diff --check",
+          "status": "passed"
         }
       ],
       "blockers": [
-        "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
         "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
         "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
         "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
         "final_writeout_not_executed_until_source_order_payload_is_owned"
-      ]
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "score_cache_missing_count": 0,
+        "small_seed10_object_score_cache_known": "37/37",
+        "small_seed58_object_score_cache_known": "23/23",
+        "medium_seed10_object_score_cache_known": "60/60",
+        "small_seed10_decorative_candidate_append_count": 335,
+        "small_seed10_decorative_weight_total": 8995,
+        "small_seed58_decorative_candidate_append_count": 242,
+        "small_seed58_decorative_weight_total": 4475,
+        "medium_seed10_decorative_candidate_append_count": 155,
+        "medium_seed10_decorative_weight_total": 6450
+      }
     },
-    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
-    "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+    "blocker": "Final writeout is blocked by the unported source-order 0x49e700 decorative coordinate worklist/repeated-commit loop after the first selected decorative commit. Reward/guard zero successful direct 0x4aa9b7 commits, roads/rivers, descriptor counters, and final writeout remain parity blockers.",
     "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water"
   },
   "completedImplementationEvidence": [
@@ -13596,14 +13888,14 @@
       "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue through road/river adjacency and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, but it is no longer a native-only phase gate."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-25T21:01:08Z",
+  "currentSliceUpdatedAt": "2026-06-25T21:22:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -18010,11 +18302,11 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-    "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+    "id": "native-rmg-49b89c-score-cache-20260625",
+    "title": "Decorative 0x49b89c Score Cache Adoption",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T21:01:08Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T21:22:36Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18025,24 +18317,56 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
         "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+      },
+      {
+        "cmd": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "cmd": "jq empty ops/progress.json",
+        "status": "passed"
+      },
+      {
+        "cmd": "git diff --check",
+        "status": "passed"
       }
     ],
     "blockers": [
-      "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
       "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+      "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "final_writeout_not_executed_until_source_order_payload_is_owned"
-    ]
+    ],
+    "metrics": {
+      "checkpoint2_complete": false,
+      "final_payload_generation_complete": false,
+      "godot_process_started": false,
+      "native_rmg_end_to_end_parity_complete": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "runtime_generation_allowed": false,
+      "same_run_private_state_compare_passed": false,
+      "score_cache_missing_count": 0,
+      "small_seed10_object_score_cache_known": "37/37",
+      "small_seed58_object_score_cache_known": "23/23",
+      "medium_seed10_object_score_cache_known": "60/60",
+      "small_seed10_decorative_candidate_append_count": 335,
+      "small_seed10_decorative_weight_total": 8995,
+      "small_seed58_decorative_candidate_append_count": 242,
+      "small_seed58_decorative_weight_total": 4475,
+      "medium_seed10_decorative_candidate_append_count": 155,
+      "medium_seed10_decorative_weight_total": 6450
+    }
   },
   "latestEvidence": {
-    "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-    "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+    "id": "native-rmg-49b89c-score-cache-20260625",
+    "title": "Decorative 0x49b89c Score Cache Adoption",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T21:01:08Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T21:22:36Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18053,31 +18377,62 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
         "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+      },
+      {
+        "cmd": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "cmd": "jq empty ops/progress.json",
+        "status": "passed"
+      },
+      {
+        "cmd": "git diff --check",
+        "status": "passed"
       }
     ],
     "blockers": [
-      "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
       "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+      "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "final_writeout_not_executed_until_source_order_payload_is_owned"
-    ]
+    ],
+    "metrics": {
+      "checkpoint2_complete": false,
+      "final_payload_generation_complete": false,
+      "godot_process_started": false,
+      "native_rmg_end_to_end_parity_complete": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "runtime_generation_allowed": false,
+      "same_run_private_state_compare_passed": false,
+      "score_cache_missing_count": 0,
+      "small_seed10_object_score_cache_known": "37/37",
+      "small_seed58_object_score_cache_known": "23/23",
+      "medium_seed10_object_score_cache_known": "60/60",
+      "small_seed10_decorative_candidate_append_count": 335,
+      "small_seed10_decorative_weight_total": 8995,
+      "small_seed58_decorative_candidate_append_count": 242,
+      "small_seed58_decorative_weight_total": 4475,
+      "medium_seed10_decorative_candidate_append_count": 155,
+      "medium_seed10_decorative_weight_total": 6450
+    }
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
-    ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
-    ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
-    ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
+    ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed10.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/small_seed58.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_score_cache_summary_20260625/medium_seed10.phase_snapshot.json",
     "src/gdextension/include/h3maped_rmg_core.hpp",
-    "src/gdextension/src/h3maped_rmg_core.cpp",
-    "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
     "src/gdextension/include/rmg_native_core.hpp",
+    "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/rmg_native_core.cpp",
+    "docs/native-rmg-generated-cell-mutation-chain.md",
     "PLAN.md"
   ],
-  "latestEvidenceId": "native-rmg-49e700-decorative-candidate-selection-20260625",
+  "latestEvidenceId": "native-rmg-49b89c-score-cache-20260625",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -18565,7 +18920,7 @@
     "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -59230,8 +59585,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
-  "remainingWork": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+  "remainingGap": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+  "remainingWork": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -59662,7 +60017,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
+  "result": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -59763,15 +60118,15 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
   "taskId": "10184",
-  "updatedAt": "2026-06-25T21:01:08Z",
+  "updatedAt": "2026-06-25T21:22:36Z",
   "validation": {
-    "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-    "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+    "id": "native-rmg-49b89c-score-cache-20260625",
+    "title": "Decorative 0x49b89c Score Cache Adoption",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T21:01:08Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T21:22:36Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -59782,17 +60137,49 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
         "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+      },
+      {
+        "cmd": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "cmd": "jq empty ops/progress.json",
+        "status": "passed"
+      },
+      {
+        "cmd": "git diff --check",
+        "status": "passed"
       }
     ],
     "blockers": [
-      "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
       "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+      "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "final_writeout_not_executed_until_source_order_payload_is_owned"
-    ]
+    ],
+    "metrics": {
+      "checkpoint2_complete": false,
+      "final_payload_generation_complete": false,
+      "godot_process_started": false,
+      "native_rmg_end_to_end_parity_complete": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "runtime_generation_allowed": false,
+      "same_run_private_state_compare_passed": false,
+      "score_cache_missing_count": 0,
+      "small_seed10_object_score_cache_known": "37/37",
+      "small_seed58_object_score_cache_known": "23/23",
+      "medium_seed10_object_score_cache_known": "60/60",
+      "small_seed10_decorative_candidate_append_count": 335,
+      "small_seed10_decorative_weight_total": 8995,
+      "small_seed58_decorative_candidate_append_count": 242,
+      "small_seed58_decorative_weight_total": 4475,
+      "medium_seed10_decorative_candidate_append_count": 155,
+      "medium_seed10_decorative_weight_total": 6450
+    }
   },
   "validationHistory": [
     {
@@ -71502,14 +71889,74 @@
         "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
         "final_writeout_not_executed_until_source_order_payload_is_owned"
       ]
+    },
+    {
+      "id": "native-rmg-49b89c-score-cache-20260625",
+      "title": "Decorative 0x49b89c Score Cache Adoption",
+      "status": "passed_partial_implementation_not_parity",
+      "updatedAt": "2026-06-25T21:22:36Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+      "commands": [
+        {
+          "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed"
+        },
+        {
+          "cmd": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
+          "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+        },
+        {
+          "cmd": "python3 tests/validate_repo.py",
+          "status": "passed"
+        },
+        {
+          "cmd": "jq empty ops/progress.json",
+          "status": "passed"
+        },
+        {
+          "cmd": "git diff --check",
+          "status": "passed"
+        }
+      ],
+      "blockers": [
+        "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
+        "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
+        "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+        "final_writeout_not_executed_until_source_order_payload_is_owned"
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_only_status_passed": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "score_cache_missing_count": 0,
+        "small_seed10_object_score_cache_known": "37/37",
+        "small_seed58_object_score_cache_known": "23/23",
+        "medium_seed10_object_score_cache_known": "60/60",
+        "small_seed10_decorative_candidate_append_count": 335,
+        "small_seed10_decorative_weight_total": 8995,
+        "small_seed58_decorative_candidate_append_count": 242,
+        "small_seed58_decorative_weight_total": 4475,
+        "medium_seed10_decorative_candidate_append_count": 155,
+        "medium_seed10_decorative_weight_total": 6450
+      }
     }
   ],
   "validationResults": {
-    "id": "native-rmg-49e700-decorative-candidate-selection-20260625",
-    "title": "Decorative 0x49e700 Candidate Selection And First Commit Owned",
+    "id": "native-rmg-49b89c-score-cache-20260625",
+    "title": "Decorative 0x49b89c Score Cache Adoption",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T21:01:08Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T21:22:36Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -71520,19 +71967,51 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_decorative_candidate_summary_20260625",
+        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_score_cache_summary_20260625",
         "status": "expected_blocked_no_godot_three_snapshots_failed_0"
+      },
+      {
+        "cmd": "python3 tests/validate_repo.py",
+        "status": "passed"
+      },
+      {
+        "cmd": "jq empty ops/progress.json",
+        "status": "passed"
+      },
+      {
+        "cmd": "git diff --check",
+        "status": "passed"
       }
     ],
     "blockers": [
-      "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
       "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported",
+      "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "road_river_object_adjacency_0x4ab52a_replay_unported_after_0x49eb8d",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "final_writeout_not_executed_until_source_order_payload_is_owned"
-    ]
+    ],
+    "metrics": {
+      "checkpoint2_complete": false,
+      "final_payload_generation_complete": false,
+      "godot_process_started": false,
+      "native_rmg_end_to_end_parity_complete": false,
+      "phase_snapshot_only_status_blocked": true,
+      "phase_snapshot_only_status_passed": false,
+      "runtime_generation_allowed": false,
+      "same_run_private_state_compare_passed": false,
+      "score_cache_missing_count": 0,
+      "small_seed10_object_score_cache_known": "37/37",
+      "small_seed58_object_score_cache_known": "23/23",
+      "medium_seed10_object_score_cache_known": "60/60",
+      "small_seed10_decorative_candidate_append_count": 335,
+      "small_seed10_decorative_weight_total": 8995,
+      "small_seed58_decorative_candidate_append_count": 242,
+      "small_seed58_decorative_weight_total": 4475,
+      "medium_seed10_decorative_candidate_append_count": 155,
+      "medium_seed10_decorative_weight_total": 6450
+    }
   },
-  "latestFinding": "2026-06-25T19:52:24Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now carry recovered rand_trn score data through 0x49e700: 109 obstacle score records, 2425 per-template variants, terrain-score lookup, and the -5000 hard reject. The focused cases still fail closed before final writeout at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned. No Godot was started.",
-  "blocker": "Native RMG parity remains blocked by 0x49b89c descriptor +0x3c/0x41e915 score-cache data for ref-bearing decorative candidates and by the unported 0x49e700 coordinate worklist/repeated-commit loop after the first decorative commit.",
-  "native_cli_required_next_slice": "Port exact 0x49e1bf descriptor adjacency/overlap/object-reference scorer replay for source-backed 0x49e700 decorative dispatch, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces."
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+  "blocker": "Final writeout is blocked by the unported source-order 0x49e700 decorative coordinate worklist/repeated-commit loop after the first selected decorative commit. Reward/guard zero successful direct 0x4aa9b7 commits, roads/rivers, descriptor counters, and final writeout remain parity blockers.",
+  "native_cli_required_next_slice": "Port the exact source-order 0x49e700 decorative local coordinate worklist/repeated-commit loop after the first selected decorative commit, then fix the live reward/guard 0x4aa9b7 source stream and continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces."
 }

@@ -4446,7 +4446,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_decorative_blocker =
-					"0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
+					"0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4610,8 +4610,8 @@ int main() {
 						&& connection_tail.internal_growth_0x4a61bc_guard_budget_positive_count == 0
 						&& connection_tail.internal_growth_0x4a61bc_constructor_blocked_count == 0
 						&& connection_tail.blocked_reason.empty()
-						&& workflow_generator_state.object_records_0xec4_ecc.size() == size_t(22)
-						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == 22
+						&& workflow_generator_state.object_records_0xec4_ecc.size() == size_t(23)
+						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == 23
 						&& !workflow_generator_state.connection_fallback_materialization_scope_known
 						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
 				"entry-to-writeout workflow invoked 0x4a79a3 before the decorative dispatch blocker was resolved")) {

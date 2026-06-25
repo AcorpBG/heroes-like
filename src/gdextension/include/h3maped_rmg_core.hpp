@@ -1841,6 +1841,8 @@ struct ObjectRecordReference4a54a7 {
 	int32_t source_catalog_index_0x49da08 = -1;
 	bool copied_source_record_carried = false;
 	SourceObjectRecord0x4c source_record_copy;
+	bool object_score_cache_known_0x49b89c = false;
+	std::array<int32_t, 48> object_score_cache_0x49b89c {};
 };
 
 struct RewardGuardCandidateRecord4a9f1c {

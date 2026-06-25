@@ -1447,7 +1447,9 @@ SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_
 
 static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
 static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
+static bool source_object_descriptor_body_mask_bit_0x41e915_native(const SourceObjectRecord0x4c &record, int32_t x, int32_t y);
 static bool descriptor_terrain_bitset_index_test_0x42cc99(uint16_t mask_word_0x18, int32_t terrain_policy_index);
+static bool build_object_record_score_cache_0x49b89c(ObjectRecordReference4a54a7 &object_record);
 
 static bool descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
 		const SourceObjectRecord0x4c &record,
@@ -1484,6 +1486,14 @@ static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0
 	}
 	const int32_t bit_index = 47 - (8 * y) - x;
 	return (record.descriptor_mask_b_0x44_0x48 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
+}
+
+static bool source_object_descriptor_body_mask_bit_0x41e915_native(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
+		return false;
+	}
+	return !source_object_descriptor_mask_bit_0x41e951(record, x, y)
+			|| source_object_descriptor_mask_bit_0x4268eb(record, x, y);
 }
 
 static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_primary_mask_0x49a6f9(
@@ -3520,6 +3530,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 				object_record.source_catalog_index_0x49da08 = selector.selected_source_record_index;
 				object_record.copied_source_record_carried = true;
 				object_record.source_record_copy = selected_record;
+				build_object_record_score_cache_0x49b89c(object_record);
 			}
 		} else {
 			const uint32_t before_word_0x28 = record.word_0x28;
@@ -3730,6 +3741,10 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	if (source_record_copy_0x04 == nullptr) {
 		return result;
 	}
+	object_record.copied_source_record_carried = true;
+	object_record.source_record_copy = *source_record_copy_0x04;
+	object_record.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(*source_record_copy_0x04);
+	build_object_record_score_cache_0x49b89c(object_record);
 	generated_grid_stamp_object_footprint_0x49abd6(
 			state,
 			result,
@@ -3843,6 +3858,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 		record.source_catalog_index_0x49da08 = prep.source_catalog_index_0x49da08;
 		record.copied_source_record_carried = prep.copied_source_record_carried;
 		record.source_record_copy = prep.source_record_copy;
+		build_object_record_score_cache_0x49b89c(record);
 	}
 	return result;
 }
@@ -6735,6 +6751,9 @@ struct DecorativeObjectRefTemp49e1bf {
 	bool flag_0x17 = false;
 	bool flag_0x18 = false;
 	bool appended = false;
+	bool score_cache_coordinate_known_0x49b89c = false;
+	int32_t score_cache_local_x_0x49b89c = 0;
+	int32_t score_cache_local_y_0x49b89c = 0;
 };
 
 static int32_t decorative_scorer_scratch_index_0x49e1bf(int32_t local_x, int32_t local_y) {
@@ -6769,6 +6788,77 @@ static DecorativeObjectRefTemp49e1bf &decorative_temp_object_ref_0x49e1bf(
 	refs.push_back(DecorativeObjectRefTemp49e1bf {});
 	refs.back().object_record_key = object_record_key;
 	return refs.back();
+}
+
+static int32_t object_record_score_cache_offset_0x49b89c(int32_t local_x, int32_t local_y) {
+	if (local_x < 0 || local_x >= 8 || local_y < 0 || local_y >= 6) {
+		return -1;
+	}
+	return local_x * 6 + local_y;
+}
+
+static bool build_object_record_score_cache_0x49b89c(ObjectRecordReference4a54a7 &object_record) {
+	object_record.object_score_cache_0x49b89c.fill(-1);
+	object_record.object_score_cache_known_0x49b89c = false;
+	if (!object_record.copied_source_record_carried
+			|| !object_record.source_record_copy.descriptor_mask_fields_0x34_0x48_known) {
+		return false;
+	}
+	const SourceObjectRecord0x4c &source = object_record.source_record_copy;
+	const int32_t width = std::min(source.descriptor_width_0x34, 8);
+	const int32_t height = std::min(source.descriptor_height_0x38, 6);
+	if (width <= 0 || height <= 0) {
+		return false;
+	}
+
+	for (int32_t col = 0; col < width; ++col) {
+		int32_t score_index = source.last_flag_0x28 == 0 ? 1 : 0;
+		for (int32_t row = 0; row < height; ++row) {
+			const int32_t cache_offset = object_record_score_cache_offset_0x49b89c(col, row);
+			if (cache_offset < 0) {
+				continue;
+			}
+			if (source_object_descriptor_body_mask_bit_0x41e915_native(source, col, row)) {
+				object_record.object_score_cache_0x49b89c[size_t(cache_offset)] = score_index;
+				continue;
+			}
+			if (source.last_flag_0x28 != 0) {
+				continue;
+			}
+			if (source_object_descriptor_mask_bit_0x41e951(source, col, row)) {
+				if (col == 0 || source_object_descriptor_mask_bit_0x41e951(source, col - 1, row)) {
+					score_index += 1;
+				} else {
+					const int32_t left_offset = object_record_score_cache_offset_0x49b89c(col - 1, row);
+					if (left_offset >= 0) {
+						score_index = object_record.object_score_cache_0x49b89c[size_t(left_offset)];
+					}
+				}
+			} else if (source_object_descriptor_mask_bit_0x41e951(source, col, row - 1)) {
+				score_index = 1;
+			} else {
+				score_index += 1;
+			}
+		}
+	}
+	object_record.object_score_cache_known_0x49b89c = true;
+	return true;
+}
+
+static bool object_record_score_index_0x49b89c(
+		const ObjectRecordReference4a54a7 &object_record,
+		int32_t local_x,
+		int32_t local_y,
+		int32_t &score_index) {
+	if (!object_record.object_score_cache_known_0x49b89c) {
+		return false;
+	}
+	const int32_t cache_offset = object_record_score_cache_offset_0x49b89c(local_x, local_y);
+	if (cache_offset < 0) {
+		return false;
+	}
+	score_index = object_record.object_score_cache_0x49b89c[size_t(cache_offset)];
+	return score_index >= 0 && score_index < RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E;
 }
 
 static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e1bf(
@@ -6841,6 +6931,7 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
+		const RandTrnObstacleScoreRecord49dc9e &score_record,
 		const DecorativeScorerScratch49e1bf &scratch,
 		int32_t candidate_x,
 		int32_t candidate_y,
@@ -6897,14 +6988,17 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 					return false;
 				}
 				DecorativeObjectRefTemp49e1bf &temp_ref = decorative_temp_object_ref_0x49e1bf(temp_refs, object_record_key);
+				if (!temp_ref.score_cache_coordinate_known_0x49b89c) {
+					temp_ref.score_cache_local_x_0x49b89c = object_record->x - neighbor_x;
+					temp_ref.score_cache_local_y_0x49b89c = object_record->y - neighbor_y;
+					temp_ref.score_cache_coordinate_known_0x49b89c = true;
+				}
 				const bool had_score_flags = temp_ref.flag_0x16 || temp_ref.flag_0x17 || temp_ref.flag_0x18;
 				if ((flags & 0x1U) != 0U) {
 					temp_ref.flag_0x16 = true;
 				}
 				if ((flags & 0x2U) != 0U) {
-					result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-					result.blocked_reason = "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
-					return false;
+					temp_ref.flag_0x17 = true;
 				}
 				if ((flags & 0x4U) != 0U) {
 					temp_ref.flag_0x18 = true;
@@ -6927,9 +7021,25 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 			continue;
 		}
 		if (temp_ref.flag_0x18 || temp_ref.flag_0x16) {
-			result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-			result.blocked_reason = "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned";
-			return false;
+			const ObjectRecordReference4a54a7 *object_record = object_record_by_key_0xec4_ecc(state, temp_ref.object_record_key);
+			int32_t score_index = -1;
+			if (object_record == nullptr
+					|| !temp_ref.score_cache_coordinate_known_0x49b89c
+					|| !object_record_score_index_0x49b89c(
+							*object_record,
+							temp_ref.score_cache_local_x_0x49b89c,
+							temp_ref.score_cache_local_y_0x49b89c,
+							score_index)) {
+				result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+				result.blocked_reason = "0x49b89c_object_record_score_cache_missing_or_out_of_bounds";
+				return false;
+			}
+			if (temp_ref.flag_0x16) {
+				score += score_record.overlap_scores[size_t(score_index)];
+			}
+			if (temp_ref.flag_0x18) {
+				score += score_record.adjacent_scores[size_t(score_index)];
+			}
 		}
 		if (temp_ref.flag_0x14 && temp_ref.flag_0x15) {
 			result.scorer_neighbor_pass_hard_reject_count_0x49e1bf += 1;
@@ -7014,6 +7124,7 @@ static bool decorative_dispatch_collect_record_candidates_0x49e700(
 			if (!decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 						state,
 						source_record,
+						score_record,
 						scratch,
 						candidate_x,
 						candidate_y,
@@ -7217,6 +7328,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
 		object_record.copied_source_record_carried = true;
 		object_record.source_record_copy = selected.source_record;
+		build_object_record_score_cache_0x49b89c(object_record);
 	}
 	if (!decorative_dispatch_post_commit_clear_bit26_0x49e700(state, selected, result)) {
 		return;
@@ -7787,6 +7899,7 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 				if (member.source_record_copy_known_0x04) {
 					object_record.copied_source_record_carried = true;
 					object_record.source_record_copy = member.source_record_copy;
+					build_object_record_score_cache_0x49b89c(object_record);
 				}
 			}
 		} else {
@@ -8987,6 +9100,7 @@ static ConnectionMonsterMaterializationResult4a5e03 connection_monster_materiali
 		object_record.source_catalog_index_0x49da08 = descriptor->source_catalog_index_0x49da08;
 		object_record.copied_source_record_carried = true;
 		object_record.source_record_copy = source;
+		build_object_record_score_cache_0x49b89c(object_record);
 	}
 	result.applied = true;
 	return result;
@@ -9733,6 +9847,7 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 		object_record.source_catalog_index_0x49da08 = join.source_catalog_index_0x49da08;
 		object_record.copied_source_record_carried = true;
 		object_record.source_record_copy = join.source_record_copy;
+		build_object_record_score_cache_0x49b89c(object_record);
 	}
 	return result;
 }
@@ -12522,6 +12637,7 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 		object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
 		object_record.copied_source_record_carried = true;
 		object_record.source_record_copy = selected.source_record_copy;
+		build_object_record_score_cache_0x49b89c(object_record);
 	}
 	result.selected_object_allocated_0x5044b1 = true;
 	result.selected_object_initialized_0x49ba89 = true;
