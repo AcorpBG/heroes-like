@@ -107,6 +107,8 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"native_workflow_final_tile_writeout_applied\":" << (report.native_workflow_final_tile_writeout_applied ? "true" : "false") << ",";
 		out << "\"native_workflow_final_tile_cell_count\":" << report.native_workflow_final_tile_cell_count << ",";
 		out << "\"native_workflow_final_tile_byte_count\":" << report.native_workflow_final_tile_byte_count << ",";
+		out << "\"native_workflow_final_object_count_header_written\":" << (report.native_workflow_final_object_count_header_written ? "true" : "false") << ",";
+		out << "\"native_workflow_final_object_count\":" << report.native_workflow_final_object_count << ",";
 		out << "\"native_workflow_status\":\"" << json_escape(report.native_workflow_status) << "\",";
 		out << "\"native_workflow_current_phase\":\"" << json_escape(report.native_workflow_current_phase) << "\",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
@@ -335,6 +337,8 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		report.native_workflow_final_tile_writeout_applied = workflow.final_tile_writeout_0x49b2b6.applied;
 		report.native_workflow_final_tile_cell_count = workflow.final_tile_writeout_0x49b2b6.cell_count;
 		report.native_workflow_final_tile_byte_count = workflow.final_tile_writeout_0x49b2b6.byte_count;
+		report.native_workflow_final_object_count_header_written = workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written;
+		report.native_workflow_final_object_count = workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count;
 		report.native_workflow_status = workflow.status;
 		report.native_workflow_current_phase = workflow.current_phase_id;
 		report.status = workflow.status;
@@ -367,6 +371,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int native_workflow_executed_count = 0;
 	int native_workflow_final_writeout_complete_count = 0;
 	int native_workflow_final_tile_writeout_applied_count = 0;
+	int native_workflow_final_object_count_header_written_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -397,6 +402,9 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		if (report.native_workflow_final_tile_writeout_applied) {
 			++native_workflow_final_tile_writeout_applied_count;
 		}
+		if (report.native_workflow_final_object_count_header_written) {
+			++native_workflow_final_object_count_header_written_count;
+		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
 	const std::string status = native_workflow_final_writeout_complete_count == int(case_reports.size()) && !case_reports.empty()
@@ -404,7 +412,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			: "blocked";
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: "native_h3maped_workflow_stops_before_final_object_header_writeout_for_at_least_one_case";
+			: "native_h3maped_workflow_stops_before_final_object_pass_split_0x57c648_type_plus_0x0c_for_at_least_one_case";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -449,6 +457,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"shared_coordinate_owner_grid_chain_executed_count\": " << shared_chain_executed_count << ",\n";
 	out << "  \"native_h3maped_workflow_executed_count\": " << native_workflow_executed_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_tile_writeout_applied_count\": " << native_workflow_final_tile_writeout_applied_count << ",\n";
+	out << "  \"native_h3maped_workflow_final_object_count_header_written_count\": " << native_workflow_final_object_count_header_written_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_writeout_complete_count\": " << native_workflow_final_writeout_complete_count << ",\n";
 	out << "  \"case_count\": " << case_reports.size() << ",\n";
 	out << "  \"blocked_count\": " << blocked_count << ",\n";
@@ -463,10 +472,10 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_0x49b2b6_tile_stream_owned_blocked_before_object_header_writeout\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_0x49b2b6_tile_stream_and_0x4ad309_object_count_owned_blocked_before_0x4ad3eb_pass_split\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a\",\n";
+	out << "  \"required_next_slice\": \"port_final_object_pass_split_and_payload_writeout_0x4ad3eb_0x57c648_type_plus_0x0c_then_0x4ad3de_0x4ae09a\",\n";
 	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before full final writeout.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
@@ -533,6 +542,6 @@ int main(int argc, char **argv) {
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
-			  << " reason=native_h3maped_workflow_0x49b2b6_tile_stream_owned_blocked_before_object_header_writeout\n";
+			  << " reason=native_h3maped_workflow_0x49b2b6_tile_stream_and_0x4ad309_object_count_owned_blocked_before_0x4ad3eb_pass_split\n";
 	return failed_count > 0 ? 1 : 2;
 }

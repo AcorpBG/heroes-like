@@ -14007,14 +14007,14 @@
       "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue through road/river adjacency and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, but it is no longer a native-only phase gate."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-25T22:28:50Z",
+  "currentSliceUpdatedAt": "2026-06-25T23:18:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -18421,11 +18421,11 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-4ab37f-road-toolkit-20260625",
-    "title": "Road Toolkit Overlay Replay",
+    "id": "native-rmg-4ad309-object-count-writeout-20260625",
+    "title": "Final 0x4ad309 Object-Count Header Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T22:28:50Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T23:18:00Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18436,11 +18436,11 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_road_toolkit_summary_20260625",
-        "status": "blocked_expected_failed_0_native_maps_3_snapshots"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_summary_20260625",
+        "status": "blocked_expected_failed_0_snapshots_3_final_tile_applied_3_object_count_headers_3"
       },
       {
-        "cmd": "python3 tests/validate_repo.py",
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
         "status": "passed"
       },
       {
@@ -18453,9 +18453,12 @@
       }
     ],
     "blockers": [
-      "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243",
+      "final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write",
+      "final_object_payload_serializers_0x4ad3eb_unowned_after_pass_split",
+      "header_player_metadata_payload_writeout_unowned",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+      "full_final_payload_generation_unowned",
       "same_run_private_state_and_final_payload_comparison_unowned"
     ],
     "metrics": {
@@ -18467,38 +18470,39 @@
       "phase_snapshot_only_status_passed": false,
       "runtime_generation_allowed": false,
       "same_run_private_state_compare_complete": false,
-      "road_coordinate_vector_0x14b0_ported_for_0x4a901a_0x4a93a2": true,
-      "road_river_object_adjacency_0x4ab52a_ported": true,
-      "road_toolkit_0x4ab37f_0x4b4243_ported": true,
-      "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_ported": false,
-      "focused_small_seed10_road_records_0x14b0": 4,
-      "focused_small_seed10_road_accepted_pairs": 6,
-      "focused_small_seed10_road_toolkit_successes": 6,
-      "focused_small_seed10_road_overlay_cells": 91,
-      "focused_small_seed10_final_art_rng_calls": 201,
-      "focused_small_seed58_road_records_0x14b0": 4,
-      "focused_small_seed58_road_accepted_pairs": 6,
-      "focused_small_seed58_road_toolkit_successes": 6,
-      "focused_small_seed58_road_overlay_cells": 115,
-      "focused_small_seed58_final_art_rng_calls": 235,
-      "focused_medium_seed10_road_records_0x14b0": 7,
-      "focused_medium_seed10_road_accepted_pairs": 21,
-      "focused_medium_seed10_road_toolkit_successes": 21,
-      "focused_medium_seed10_road_overlay_cells": 418,
-      "focused_medium_seed10_final_art_rng_calls": 947
+      "final_tile_writeout_0x49b2b6_applied": true,
+      "final_object_count_writeout_0x4ad309_0x4ad318_ported": true,
+      "final_object_pass_split_0x57c648_type_plus_0x0c_ported": false,
+      "focused_case_count": 3,
+      "focused_final_tile_writeout_applied_count": 3,
+      "focused_final_object_count_header_written_count": 3,
+      "focused_final_writeout_complete_count": 0,
+      "focused_small_seed10_tile_cells": 1296,
+      "focused_small_seed10_tile_bytes": 9072,
+      "focused_small_seed10_road_cells": 91,
+      "focused_small_seed10_final_object_count_header": 231,
+      "focused_small_seed58_tile_cells": 1296,
+      "focused_small_seed58_tile_bytes": 9072,
+      "focused_small_seed58_road_cells": 115,
+      "focused_small_seed58_final_object_count_header": 220,
+      "focused_medium_seed10_tile_cells": 5184,
+      "focused_medium_seed10_tile_bytes": 36288,
+      "focused_medium_seed10_road_cells": 418,
+      "focused_medium_seed10_final_object_count_header": 844
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/medium_seed10.phase_snapshot.json"
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/manifest.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/medium_seed10.phase_snapshot.json"
     ]
   },
   "latestEvidence": {
-    "id": "native-rmg-4ab37f-road-toolkit-20260625",
-    "title": "Road Toolkit Overlay Replay",
+    "id": "native-rmg-4ad309-object-count-writeout-20260625",
+    "title": "Final 0x4ad309 Object-Count Header Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T22:28:50Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T23:18:00Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18509,11 +18513,11 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_road_toolkit_summary_20260625",
-        "status": "blocked_expected_failed_0_native_maps_3_snapshots"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_summary_20260625",
+        "status": "blocked_expected_failed_0_snapshots_3_final_tile_applied_3_object_count_headers_3"
       },
       {
-        "cmd": "python3 tests/validate_repo.py",
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
         "status": "passed"
       },
       {
@@ -18526,9 +18530,12 @@
       }
     ],
     "blockers": [
-      "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x4ab52a_0x4ab37f_0x4b4243",
+      "final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write",
+      "final_object_payload_serializers_0x4ad3eb_unowned_after_pass_split",
+      "header_player_metadata_payload_writeout_unowned",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+      "full_final_payload_generation_unowned",
       "same_run_private_state_and_final_payload_comparison_unowned"
     ],
     "metrics": {
@@ -18540,38 +18547,40 @@
       "phase_snapshot_only_status_passed": false,
       "runtime_generation_allowed": false,
       "same_run_private_state_compare_complete": false,
-      "road_coordinate_vector_0x14b0_ported_for_0x4a901a_0x4a93a2": true,
-      "road_river_object_adjacency_0x4ab52a_ported": true,
-      "road_toolkit_0x4ab37f_0x4b4243_ported": true,
-      "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_ported": false,
-      "focused_small_seed10_road_records_0x14b0": 4,
-      "focused_small_seed10_road_accepted_pairs": 6,
-      "focused_small_seed10_road_toolkit_successes": 6,
-      "focused_small_seed10_road_overlay_cells": 91,
-      "focused_small_seed10_final_art_rng_calls": 201,
-      "focused_small_seed58_road_records_0x14b0": 4,
-      "focused_small_seed58_road_accepted_pairs": 6,
-      "focused_small_seed58_road_toolkit_successes": 6,
-      "focused_small_seed58_road_overlay_cells": 115,
-      "focused_small_seed58_final_art_rng_calls": 235,
-      "focused_medium_seed10_road_records_0x14b0": 7,
-      "focused_medium_seed10_road_accepted_pairs": 21,
-      "focused_medium_seed10_road_toolkit_successes": 21,
-      "focused_medium_seed10_road_overlay_cells": 418,
-      "focused_medium_seed10_final_art_rng_calls": 947
+      "final_tile_writeout_0x49b2b6_applied": true,
+      "final_object_count_writeout_0x4ad309_0x4ad318_ported": true,
+      "final_object_pass_split_0x57c648_type_plus_0x0c_ported": false,
+      "focused_case_count": 3,
+      "focused_final_tile_writeout_applied_count": 3,
+      "focused_final_object_count_header_written_count": 3,
+      "focused_final_writeout_complete_count": 0,
+      "focused_small_seed10_tile_cells": 1296,
+      "focused_small_seed10_tile_bytes": 9072,
+      "focused_small_seed10_road_cells": 91,
+      "focused_small_seed10_final_object_count_header": 231,
+      "focused_small_seed58_tile_cells": 1296,
+      "focused_small_seed58_tile_bytes": 9072,
+      "focused_small_seed58_road_cells": 115,
+      "focused_small_seed58_final_object_count_header": 220,
+      "focused_medium_seed10_tile_cells": 5184,
+      "focused_medium_seed10_tile_bytes": 36288,
+      "focused_medium_seed10_road_cells": 418,
+      "focused_medium_seed10_final_object_count_header": 844
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/medium_seed10.phase_snapshot.json"
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/manifest.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/medium_seed10.phase_snapshot.json"
     ]
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed10.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/small_seed58.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_road_toolkit_summary_20260625/medium_seed10.phase_snapshot.json"
+    ".artifacts/rmg_native_batch_export_final_object_summary_20260625/manifest.json",
+    ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed10.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed58.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_final_object_summary_20260625/medium_seed10.phase_snapshot.json"
   ],
-  "latestEvidenceId": "native-rmg-4ab37f-road-toolkit-20260625",
+  "latestEvidenceId": "native-rmg-4ad309-object-count-writeout-20260625",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -19091,10 +19100,30 @@
     "focused_medium_seed10_road_accepted_pairs": 21,
     "focused_medium_seed10_road_toolkit_successes": 21,
     "focused_medium_seed10_road_overlay_cells": 418,
-    "focused_medium_seed10_final_art_rng_calls": 947
+    "focused_medium_seed10_final_art_rng_calls": 947,
+    "final_tile_writeout_0x49b2b6_applied": true,
+    "final_object_count_writeout_0x4ad309_0x4ad318_ported": true,
+    "final_object_pass_split_0x57c648_type_plus_0x0c_ported": false,
+    "focused_case_count": 3,
+    "focused_final_tile_writeout_applied_count": 3,
+    "focused_final_object_count_header_written_count": 3,
+    "focused_final_writeout_complete_count": 0,
+    "focused_small_seed10_tile_cells": 1296,
+    "focused_small_seed10_tile_bytes": 9072,
+    "focused_small_seed10_road_cells": 91,
+    "focused_small_seed10_final_object_count_header": 231,
+    "focused_small_seed58_tile_cells": 1296,
+    "focused_small_seed58_tile_bytes": 9072,
+    "focused_small_seed58_road_cells": 115,
+    "focused_small_seed58_final_object_count_header": 220,
+    "focused_medium_seed10_tile_cells": 5184,
+    "focused_medium_seed10_tile_bytes": 36288,
+    "focused_medium_seed10_road_cells": 418,
+    "focused_medium_seed10_final_object_count_header": 844,
+    "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad318_count_header_ported": true
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -59931,8 +59960,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port the source-backed road toolkit 0x4ab37f -> 0x4b4243 after the now-applied 0x4ab52a road/river object-adjacency prefix. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, continue descriptor counter replay, final writeout, and same-run private-state/final-payload comparison.",
-  "remainingWork": "Port final writeout 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb -> 0x4ad3de -> 0x4ae09a, then run same-run private-state/final-payload comparison before enabling native map output.",
+  "remainingGap": "Port final object pass split and payload writeout 0x4ad3eb, starting with the exact 0x57c648[type*16+0x0c] pass table, then continue static/generated object payload serialization, header/player/metadata writeout, 0x4ad3de final sentinel success, and 0x4ae09a return before enabling native map output or claiming parity.",
+  "remainingWork": "Port final object pass split and payload writeout 0x4ad3eb, starting with the exact 0x57c648[type*16+0x0c] pass table, then continue static/generated object payload serialization, header/player/metadata writeout, 0x4ad3de final sentinel success, and 0x4ae09a return before enabling native map output or claiming parity.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -60363,7 +60392,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "Complete the source-backed 0x49e700 local coordinate worklist/repeated-commit loop after the first selected decorative object commit. Then fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream so focused Small/Medium one-level land cases produce source-owned reward/guard commits instead of carrying zero-commit parity debt. After that, resume road/river adjacency, descriptor counter replay, final writeout, and same-run private-state comparison.",
+  "result": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -60464,7 +60493,7 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries recovered generator +0x14b0 road-coordinate records, replays 0x4ab52a road/river object-adjacency, and executes the recovered 0x4ab37f -> 0x4b4243 road toolkit after source-backed 0x4a79a3 connection-tail replay. The toolkit marks road cells through 0x49aec5, replays 0x458e61 line/neighbor visits, classifies road shape through 0x458893, chooses final road art through 0x458a2f/0x4e7276, and stages the private 0x49b2b6 road-overlay arrays. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all now stop at final writeout instead of the former road-toolkit blocker. Metrics: Small seed 10 has 4 road records, 6 accepted pairs, 6 toolkit successes, 91 overlay road cells, and 201 final-art RNG calls; Small seed 58 has 4, 6, 6, 115, and 235; Medium seed 10 has 7, 21, 21, 418, and 947. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
   "taskId": "10184",
   "updatedAt": "2026-06-25T22:47:34Z",
   "validation": {
@@ -72308,11 +72337,11 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-49b2b6-final-tile-writeout-20260625",
-    "title": "Final 0x49b2b6 Tile-Cell Writeout",
+    "id": "native-rmg-4ad309-object-count-writeout-20260625",
+    "title": "Final 0x4ad309 Object-Count Header Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T22:47:34Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream after the source-backed 0x4ab52a road/river adjacency and 0x4ab37f -> 0x4b4243 road toolkit. The tile stream writes seven bytes per generated cell from generated-cell word_0x24 and word_0x28. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6 and then fail closed at final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream. Metrics: Small seed 10 emits 1296 cells / 9072 bytes / 91 road cells; Small seed 58 emits 1296 / 9072 / 115; Medium seed 10 emits 5184 / 36288 / 418. This is not parity and not final map output.",
+    "updatedAt": "2026-06-25T23:18:00Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -72323,11 +72352,11 @@
         "status": "passed"
       },
       {
-        "cmd": "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_tile_summary_20260625",
-        "status": "blocked_expected_failed_0_snapshots_3_final_tile_applied_3"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_summary_20260625",
+        "status": "blocked_expected_failed_0_snapshots_3_final_tile_applied_3_object_count_headers_3"
       },
       {
-        "cmd": "python3 tests/validate_repo.py",
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
         "status": "passed"
       },
       {
@@ -72340,7 +72369,9 @@
       }
     ],
     "blockers": [
-      "final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream",
+      "final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write",
+      "final_object_payload_serializers_0x4ad3eb_unowned_after_pass_split",
+      "header_player_metadata_payload_writeout_unowned",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "full_final_payload_generation_unowned",
@@ -72356,27 +72387,33 @@
       "runtime_generation_allowed": false,
       "same_run_private_state_compare_complete": false,
       "final_tile_writeout_0x49b2b6_applied": true,
+      "final_object_count_writeout_0x4ad309_0x4ad318_ported": true,
+      "final_object_pass_split_0x57c648_type_plus_0x0c_ported": false,
       "focused_case_count": 3,
       "focused_final_tile_writeout_applied_count": 3,
+      "focused_final_object_count_header_written_count": 3,
       "focused_final_writeout_complete_count": 0,
       "focused_small_seed10_tile_cells": 1296,
       "focused_small_seed10_tile_bytes": 9072,
       "focused_small_seed10_road_cells": 91,
+      "focused_small_seed10_final_object_count_header": 231,
       "focused_small_seed58_tile_cells": 1296,
       "focused_small_seed58_tile_bytes": 9072,
       "focused_small_seed58_road_cells": 115,
+      "focused_small_seed58_final_object_count_header": 220,
       "focused_medium_seed10_tile_cells": 5184,
       "focused_medium_seed10_tile_bytes": 36288,
-      "focused_medium_seed10_road_cells": 418
+      "focused_medium_seed10_road_cells": 418,
+      "focused_medium_seed10_final_object_count_header": 844
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_final_tile_summary_20260625/manifest.json",
-      ".artifacts/rmg_native_batch_export_final_tile_summary_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_final_tile_summary_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_final_tile_summary_20260625/medium_seed10.phase_snapshot.json"
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/manifest.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_final_object_summary_20260625/medium_seed10.phase_snapshot.json"
     ]
   },
-  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream after the source-backed 0x4ab52a road/river adjacency and 0x4ab37f -> 0x4b4243 road toolkit. The tile stream writes seven bytes per generated cell from generated-cell word_0x24 and word_0x28. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6 and then fail closed at final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream. Metrics: Small seed 10 emits 1296 cells / 9072 bytes / 91 road cells; Small seed 58 emits 1296 / 9072 / 115; Medium seed 10 emits 5184 / 36288 / 418. This is not parity and not final map output.",
-  "blocker": "Final tile writeout 0x49b2b6 is source-owned for focused Small/Medium one-level land cases, but full final output remains blocked at unported object/header/success writeout 0x4ad309/0x4ad3eb/0x4ad3de/0x4ae09a. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
-  "native_cli_required_next_slice": "port_final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a"
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream and the recovered 0x4ad309/0x4ad318 generated-object count header write after source-backed road replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply 0x49b2b6, write the object-count header, and then fail closed at final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 object-count header; Small seed 58 emits 1296 / 9072 / 115 / 220; Medium seed 10 emits 5184 / 36288 / 418 / 844. This is source-order workflow progress, not parity completion or final map output.",
+  "blocker": "Final tile writeout 0x49b2b6 and generated-object count header 0x4ad309/0x4ad318 are source-owned for focused Small/Medium one-level land cases, but full final output remains blocked at unported 0x4ad3eb generated-object pass splitting because the exact 0x57c648[type*16+0x0c] table is not yet ported. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
+  "native_cli_required_next_slice": "port_final_object_pass_split_and_payload_writeout_0x4ad3eb_0x57c648_type_plus_0x0c_then_0x4ad3de_0x4ae09a"
 }

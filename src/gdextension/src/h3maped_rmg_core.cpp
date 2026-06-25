@@ -9982,6 +9982,102 @@ static FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6(const Generato
 	return result;
 }
 
+static uint32_t final_object_serializer_slot_0x0c_4ad3eb(uint32_t object_record_vtable_0x00) {
+	switch (object_record_vtable_0x00) {
+		case OBJECT_RECORD_VTABLE_0X540A74:
+			return 0x0049baf8U;
+		case OBJECT_RECORD_VTABLE_0X540A88:
+			return 0x0049bb92U;
+		case WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C:
+			return 0x0049bc2fU;
+		case OBJECT_RECORD_VTABLE_0X540AB0:
+			return 0x0049bd3eU;
+		case OBJECT_RECORD_VTABLE_0X540AC4:
+			return 0x0049bd81U;
+		case OBJECT_RECORD_VTABLE_0X540AD8:
+			return 0x0049bdb4U;
+		case OBJECT_RECORD_VTABLE_0X540AEC:
+			return 0x0049be93U;
+		case PROJECTION_OBJECT_VTABLE_0X540B14:
+			return 0x0049bd81U;
+		case 0x00540b28U:
+			return 0x0049c105U;
+		case OBJECT_RECORD_VTABLE_0X540B3C:
+			return 0x0049c273U;
+		case OBJECT_RECORD_VTABLE_0X540B64:
+			return 0x0049c44dU;
+		case OBJECT_RECORD_VTABLE_0X540B78:
+			return 0x0049c495U;
+		case OBJECT_RECORD_VTABLE_0X540B8C:
+			return 0x0049c4f4U;
+		default:
+			return 0U;
+	}
+}
+
+static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3eb(
+		const ObjectRecordReference4a54a7 &record,
+		int32_t vector_index) {
+	FinalObjectWriteoutRecord4ad1e3 sample;
+	sample.vector_index = vector_index;
+	sample.object_record_key = record.object_record_key;
+	sample.descriptor_type_0x1c = record.descriptor_type_0x1c;
+	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
+	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
+	sample.serializer_slot_0x0c_known = sample.serializer_slot_0x0c != 0U;
+	sample.x = record.x;
+	sample.y = record.y;
+	sample.level = record.level;
+	sample.copied_source_record_carried = record.copied_source_record_carried;
+	if (record.copied_source_record_carried) {
+		sample.source_type_id_0x1c = record.source_record_copy.type_id_0x1c;
+		sample.source_subtype_0x20 = record.source_record_copy.subtype_0x20;
+	}
+	return sample;
+}
+
+static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4ad318(
+		const GeneratorObjectPrivateState &state) {
+	FinalObjectWriteoutResult4ad1e3 result;
+	result.invoked = true;
+	result.object_record_vector_count_known_0xec8_0xecc =
+			state.object_record_vector_ec4_ecc.count_known
+			&& state.object_record_vector_ec4_ecc.contents_known
+			&& state.object_record_vector_ec4_ecc.element_size_bytes == 4;
+	result.object_record_vector_count_0xec8_0xecc = state.object_record_vector_ec4_ecc.count;
+	if (!result.object_record_vector_count_known_0xec8_0xecc
+			|| state.object_record_vector_ec4_ecc.count != int32_t(state.object_records_0xec4_ecc.size())) {
+		result.blocked_reason = "final_object_count_writeout_0x4ad309_object_vector_0xec8_0xecc_not_owned";
+		return result;
+	}
+	result.generated_object_count = int32_t(state.object_records_0xec4_ecc.size());
+	result.object_count_payload_byte_count = 4;
+	const uint32_t count = uint32_t(result.generated_object_count);
+	result.object_count_payload_bytes[0] = uint8_t(count & 0xffU);
+	result.object_count_payload_bytes[1] = uint8_t((count >> 8U) & 0xffU);
+	result.object_count_payload_bytes[2] = uint8_t((count >> 16U) & 0xffU);
+	result.object_count_payload_bytes[3] = uint8_t((count >> 24U) & 0xffU);
+	const int32_t last_sample_start = std::max<int32_t>(0, result.generated_object_count - 8);
+	for (int32_t index = 0; index < result.generated_object_count; ++index) {
+		const FinalObjectWriteoutRecord4ad1e3 sample =
+				final_object_writeout_record_sample_4ad3eb(state.object_records_0xec4_ecc[size_t(index)], index);
+		if (sample.serializer_slot_0x0c_known) {
+			result.serializer_slot_known_count += 1;
+		} else {
+			result.serializer_slot_unknown_count += 1;
+		}
+		if (index < 8) {
+			result.first_records.push_back(sample);
+		}
+		if (index >= last_sample_start) {
+			result.last_records.push_back(sample);
+		}
+	}
+	result.object_count_header_written = true;
+	result.blocked_reason = "final_object_pass_split_metadata_table_0x57c648_type_plus_0x0c_unported_after_0x4ad309_object_count_write";
+	return result;
+}
+
 static bool road_generated_cell_grid_shape_valid_0x4ab52a(const GeneratedCellRecordGrid0x30 &grid) {
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
 	return grid.width > 0
@@ -16672,8 +16768,26 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< ",flags=" << result.final_tile_writeout_0x49b2b6.flag_nonzero_count;
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6", "complete_source_order_prefix", final_tile_note.str());
 	}
-	result.blocked_reason = "final_object_header_writeout_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a_unported_after_0x49b2b6_tile_stream";
-	add_phase("final_object_header_writeout", "0x4ad309_0x4ad318_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_after_0x49b2b6_tile_stream");
+	result.current_phase_id = "final_object_writeout";
+	result.final_object_writeout_0x4ad309_0x4ad3eb =
+			final_object_count_writeout_0x4ad309_0x4ad318(result.generator_object_private_state);
+	if (!result.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written) {
+		result.blocked_reason = result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.empty()
+				? "final_object_count_writeout_0x4ad309_not_applied"
+				: result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason;
+		add_phase("final_object_count_writeout", "0x4ad309_0x4ad318", "blocked", result.blocked_reason);
+		return result;
+	}
+	{
+		std::ostringstream final_object_note;
+		final_object_note << "generated_object_count=" << result.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
+				<< ",count_payload_bytes=" << result.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
+				<< ",serializer_slots_known=" << result.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_known_count
+				<< ",serializer_slots_unknown=" << result.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_unknown_count;
+		add_phase("final_object_count_writeout", "0x4ad309_0x4ad318", "complete_source_order_prefix", final_object_note.str());
+	}
+	result.blocked_reason = result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason;
+	add_phase("final_object_pass_split_writeout", "0x4ad3eb_0x57c648_type_plus_0x0c", "blocked", result.blocked_reason);
 	return result;
 }
 
