@@ -1016,8 +1016,8 @@ int main() {
 			return 1;
 		}
 		if (!require(((high_owner_grid.records[0].word_0x1c >> 16U) & 0xffffU) == 10U
-					&& ((high_owner_grid.records[0].word_0x28 >> 12U) & 0x7U) == 4U,
-					"0x49a318 high-owner propagation did not write cross-owner score and direction fields")) {
+					&& ((high_owner_grid.records[0].word_0x28 >> 12U) & 0x7U) == 0U,
+					"0x49a318 high-owner propagation did not write cross-owner score and reverse direction fields")) {
 			return 1;
 		}
 		if (!require(((high_owner_grid.records[0].word_0x20 >> 24U) & 0xffU) == 0U
@@ -1638,6 +1638,7 @@ int main() {
 			8,
 			8,
 			1,
+			1,
 			0,
 			1234U,
 			{ square_handoff(false) });
@@ -1645,9 +1646,18 @@ int main() {
 			8,
 			8,
 			1,
+			1,
 			0,
 			1234U,
 			{ square_handoff(true) });
+	const BoundaryMaterialization4a2777 land_setup_mode_two = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			8,
+			8,
+			1,
+			1,
+			2,
+			1234U,
+			{ square_handoff(false) });
 
 	if (!require(ungated.owner_gate_skipped_segment_count == 0, "ungated handoff unexpectedly skipped owner-gated segments")) {
 		return 1;
@@ -1673,11 +1683,21 @@ int main() {
 	if (!require(gated.span_fill_zone_count == 1, "gated handoff should still execute span fill from source-record +0x10 seed")) {
 		return 1;
 	}
+	int32_t land_setup_mode_two_member_flags = 0;
+	for (const uint8_t flags : land_setup_mode_two.cell_flags) {
+		if ((flags & 0x10U) != 0U) {
+			land_setup_mode_two_member_flags += 1;
+		}
+	}
+	if (!require(land_setup_mode_two_member_flags > 0, "one-level land water mode must keep 0x4a325d member flags even when setup mode is 2")) {
+		return 1;
+	}
 	BoundarySourceCycleHandoff4a2777 missing_seed = square_handoff(false);
 	missing_seed.has_source_record_seed_0x10 = false;
 	const BoundaryMaterialization4a2777 missing_seed_result = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
 			8,
 			8,
+			1,
 			1,
 			0,
 			1234U,
@@ -1727,6 +1747,7 @@ int main() {
 	const BoundaryMaterialization4a2777 produced = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
 			36,
 			36,
+			1,
 			1,
 			0,
 			1234U,
@@ -2156,16 +2177,16 @@ int main() {
 				"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 		}
-		const std::string connection_tail_blocker =
-				"0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb";
+		const std::string downstream_blocker =
+				"0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
-	const bool has_connection_tail_blocker = std::any_of(
+	const bool has_downstream_blocker = std::any_of(
 			generator_state.remaining_private_state_blockers.begin(),
 			generator_state.remaining_private_state_blockers.end(),
 			[&](const std::string &blocker) {
-				return blocker_prefix_matches(blocker, connection_tail_blocker);
+				return blocker_prefix_matches(blocker, downstream_blocker);
 			});
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
 					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
@@ -2176,8 +2197,8 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& has_connection_tail_blocker,
-				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the connection-tail blocker")) {
+					&& has_downstream_blocker,
+				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the downstream decorative blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
@@ -2201,12 +2222,10 @@ int main() {
 						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason.empty()
-						&& generator_state.connection_tail_replay_0x4a79a3_ported
-						&& generator_state.connection_tail_replay_0x4a79a3.invoked
-						&& !generator_state.connection_tail_replay_0x4a79a3.applied
-						&& generator_state.connection_tail_replay_0x4a79a3.blocked_reason == connection_tail_blocker
+						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason == downstream_blocker
+						&& !generator_state.connection_tail_replay_0x4a79a3_ported
+						&& !generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& generator_state.connection_fallback_materialization_record_count == 0
 						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& generator_state.mine_resource_materialization_0x4a9d6a.applied
@@ -2214,7 +2233,7 @@ int main() {
 						&& generator_state.reward_guard_source_stream_0x4aab7e.applied
 						&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 144
 						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0,
-						"generator object private state did not execute reward/guard and decorative dispatch before reaching the 0x4a79a3 connection tail")) {
+						"generator object private state did not execute reward/guard before reaching the 0x49eb8d decorative dispatch blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known && !generator_state.remaining_private_state_blockers.empty(), "generator object private state must keep relation/object blockers explicit")) {
@@ -2393,29 +2412,21 @@ int main() {
 	if (!require(summed_source_endpoint_record_count > 0, "generator relation owners did not preserve source endpoint records before reward/guard")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b, "generator endpoint projection source-owned flag was not set by the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_vector_c8_cc.contents_known, "generator endpoint projection vector contents were not known during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_vector_c8_cc.count_known, "generator endpoint projection vector count was not known during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_projection_vector_c8_cc_record_count > 0, "generator endpoint projection record count stayed zero during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(!generator_state.endpoint_projection_records_c8_cc.empty()
-					&& generator_state.endpoint_vector_c8_cc.count == generator_state.endpoint_projection_vector_c8_cc_record_count,
-				"generator endpoint projection records were not materialized during the source-order connection phase")) {
+	if (!require(!generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
+					&& !generator_state.endpoint_vector_c8_cc.contents_known
+					&& !generator_state.endpoint_vector_c8_cc.count_known
+					&& generator_state.endpoint_projection_vector_c8_cc_record_count == 0
+					&& generator_state.endpoint_projection_records_c8_cc.empty(),
+				"generator endpoint projection records must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
 		return 1;
 	}
 	if (!require(generator_state.reward_guard_source_stream_0x4aab7e.invoked
 					&& generator_state.reward_guard_source_stream_0x4aab7e.applied
 					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
 					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied,
-				"generator object private state did not run reward/guard and decorative phases before connection replay")) {
+					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason == downstream_blocker,
+				"generator object private state did not stop at the 0x49eb8d decorative dispatch blocker after reward/guard")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -2465,33 +2476,18 @@ int main() {
 				"generator object private state did not preserve recovered 0x49ecf2 zeroed 0x90-byte reward/guard projection +0x1024 used-slot array")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_vector_d8_dc.count_known, "generator endpoint vector +0xd8/+0xdc count was not known during the source-order connection phase")) {
+	if (!require(!generator_state.endpoint_vector_d8_dc.count_known
+					&& !generator_state.endpoint_vector_d8_dc.contents_known
+					&& !generator_state.endpoint_cursor_vector_d8_dc_source_owned
+					&& !generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
+				"generator endpoint vector +0xd8/+0xdc must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_vector_d8_dc.count == 8, "generator endpoint vector +0xd8/+0xdc count did not preserve the supported-land key count during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(!generator_state.endpoint_vector_d8_dc.contents_known, "generator endpoint vector +0xd8/+0xdc contents should remain excluded for supported one-level land during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(!generator_state.endpoint_cursor_vector_d8_dc_source_owned
-					&& generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
-				"generator endpoint vector +0xd8/+0xdc D-014 supported-land exclusion state was not owned during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector, "generator endpoint byte-state vector +0x1104/+0x1108 did not preserve its setup-level count source")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known, "generator endpoint byte-state vector +0x1104/+0x1108 did not preserve setup-level zero-init contents")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.count_known, "generator endpoint byte-state vector +0x1104/+0x1108 count was not known during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.count == 8, "generator endpoint byte-state vector +0x1104/+0x1108 count did not follow the d8 key count during the source-order connection phase")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.contents_known, "generator endpoint byte-state vector +0x1104/+0x1108 contents were not known during the source-order connection phase")) {
+	if (!require(!generator_state.endpoint_byte_state_vector_1104_1108.count_known
+					&& !generator_state.endpoint_byte_state_vector_1104_1108.contents_known
+					&& generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
+					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known,
+				"generator endpoint byte-state vector +0x1104/+0x1108 did not preserve its setup source while remaining count-unowned before the 0x49eb8d blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.endpoint_cursor_0xf5c_present
@@ -2500,29 +2496,29 @@ int main() {
 				"generator object private state did not preserve recovered supported-land stale 0xf5c cursor seed")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 8
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == int32_t(0x7a1befdfU)
-					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
-					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
+	if (!require(!generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
+					&& !generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count == 0
+					&& !generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
+					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == 0
+					&& !generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
+					&& !generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
+					&& !generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_success_path_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached
 					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 3,
-				"D-014 endpoint cursor producer did not preserve supported-land exclusion state during connection replay")) {
+					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count == 0,
+				"D-014 endpoint cursor producer must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
 		return 1;
 	}
-	if (!require(generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
-					&& generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
-					&& generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
-					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
-					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
-					&& generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
+	if (!require(!generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+					&& !generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+					&& !generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
+					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+					&& !generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
+					&& !generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
 					&& !generator_state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed,
-				"D-014 connection materialization caller prep did not preserve recovered supported-land fallback state during connection replay")) {
+				"D-014 connection materialization caller prep must remain unowned before the 0x49eb8d decorative dispatch blocker is solved")) {
 		return 1;
 	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {

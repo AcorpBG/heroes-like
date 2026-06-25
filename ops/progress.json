@@ -13645,10 +13645,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-25T18:39:40Z: Recovered caller order now advances past reward/guard zero direct commits into downstream replay. Focused no-Godot cases remain blocked before final writeout: small_2p_seed10_hc1_setup0 and medium_4p_seed10_hc3_setup0 at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; small_2p_seed58_hc1_setup0 at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard zero direct 0x4aa9b7 commits remains recorded diagnostic parity debt.",
-  "currentSliceStatus": "blocked",
+  "currentSliceNotes": "2026-06-25T19:11:39Z: Fixed the source-backed 0x4a2777/0x4a325d water-mode/member-flag split. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 now have nonzero 0x4a3f27 terrain repaint writes and all fail closed at 0x49eb8d_0x49e700 decorative dispatch before final writeout; the old Small seed10/Medium seed10 0x4a61bc source-frontier blocker is gone.",
+  "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-25T18:39:40Z",
+  "currentSliceUpdatedAt": "2026-06-25T19:11:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -59278,8 +59278,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
-  "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
+  "remainingGap": "Final writeout is still blocked by downstream source-order replay at 0x49eb8d -> 0x49e700 decorative dispatch for the focused Small/Medium one-level land cases. Road/river adjacency, descriptor counter replay after decorative dispatch, and final writeout remain unowned. This is not parity and not final map output.",
+  "remainingWork": "Port source-order 0x49eb8d -> 0x49e700 decorative dispatch against the recovered generated-cell/object-reference state, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -59811,9 +59811,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains blocked before final writeout. Shared h3maped_rmg_core now resolves 0x49d2e0 bit22 neighbor descriptor references through wrapper-local selected members before falling back to the global object record table, matching the recovered wrapper-local object-pointer shape; the focused no-Godot selftest covers a conflicting wrapper-local/global descriptor case. Controlled Small seed 10, Small seed 58, and Medium seed 10 still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail, so this is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains blocked before final writeout. Shared h3maped_rmg_core now carries recovered water_mode_code separately from setup/generator mode through 0x4a2777/0x4a325d, preserving one-level land member/repaint flags even when setup mode is 2. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 now terrain-repaint non-water cells and all stop at 0x49eb8d_0x49e700 decorative dispatch. This is not parity and not final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-25T05:44:12Z",
+  "updatedAt": "2026-06-25T19:11:39Z",
   "validation": {
     "id": "native-rmg-selected-candidate-relation-producer-20260622",
     "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
@@ -71556,7 +71556,7 @@
     },
     "result": "partial_source_order_implementation_not_parity"
   },
-  "latestFinding": "2026-06-25T18:39:40Z no-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now advance past reward/guard materialization into downstream replay. Small seed 10 and Medium seed 10 block in connection_road_river at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb; Small seed 58 blocks at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard still records zero successful direct 0x4aa9b7 commits as parity debt, but it is no longer a native-only hard stop.",
-  "blocker": "Final writeout is still blocked by downstream source-order replay: 0x4a61bc live source-frontier candidate production for Small seed 10/Medium seed 10 and 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
-  "native_cli_required_next_slice": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue road/river adjacency and final writeout."
+  "latestFinding": "2026-06-25T19:11:39Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now preserve one-level land 0x4a325d member/repaint flags even when setup mode is 2. Terrain repaint writes are nonzero (Small seed10=1216, Small seed58=1213, Medium seed10=5127). The old Small seed10/Medium seed10 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb blocker is gone; all three focused cases now fail closed in connection_road_river at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells before final writeout. No Godot was started.",
+  "blocker": "Final writeout is still blocked by downstream source-order replay at 0x49eb8d -> 0x49e700 decorative dispatch for the focused Small/Medium one-level land cases. Road/river adjacency, descriptor counter replay after decorative dispatch, and final writeout remain unowned. This is not parity and not final map output.",
+  "native_cli_required_next_slice": "Port source-order 0x49eb8d -> 0x49e700 decorative dispatch against the recovered generated-cell/object-reference state, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces."
 }

@@ -828,7 +828,15 @@ struct SharedGeneratorObjectPrivateState {
 	bool connection_tail_replay_fallback_materialization_applied_0x4a79a3 = false;
 	bool connection_tail_replay_source_backed_frontier_known_0x4a79a3 = false;
 	int32_t connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_high_owner_candidate_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_terrain8_skip_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_terrain9_skip_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_bit25_skip_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_neighbor_probe_count_0x4a79a3 = 0;
 	int32_t connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_neighbor_terrain8_skip_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_same_owner_skip_count_0x4a79a3 = 0;
+	int32_t connection_tail_replay_source_frontier_out_of_bounds_skip_count_0x4a79a3 = 0;
 	int32_t connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3 = 0;
 	int32_t connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 = 0;
 	bool connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc = false;

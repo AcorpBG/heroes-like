@@ -848,8 +848,24 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.source_backed_frontier_known;
 	out.connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count;
+	out.connection_tail_replay_source_frontier_high_owner_candidate_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_high_owner_candidate_count;
+	out.connection_tail_replay_source_frontier_terrain8_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_terrain8_skip_count;
+	out.connection_tail_replay_source_frontier_terrain9_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_terrain9_skip_count;
+	out.connection_tail_replay_source_frontier_bit25_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_bit25_skip_count;
+	out.connection_tail_replay_source_frontier_neighbor_probe_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_neighbor_probe_count;
 	out.connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.source_frontier_candidate_pair_count;
+	out.connection_tail_replay_source_frontier_neighbor_terrain8_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_neighbor_terrain8_skip_count;
+	out.connection_tail_replay_source_frontier_same_owner_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_same_owner_skip_count;
+	out.connection_tail_replay_source_frontier_out_of_bounds_skip_count_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.source_frontier_out_of_bounds_skip_count;
 	out.connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.relation_owner_level_byte2b_clear_pass_count;
 	out.connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 =
@@ -2565,7 +2581,15 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_fallback_materialization_applied_0x4a79a3\":" << (state.connection_tail_replay_fallback_materialization_applied_0x4a79a3 ? "true" : "false") << ","
 			<< "\"connection_tail_replay_source_backed_frontier_known_0x4a79a3\":" << (state.connection_tail_replay_source_backed_frontier_known_0x4a79a3 ? "true" : "false") << ","
 			<< "\"connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_scan_cell_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_high_owner_candidate_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_high_owner_candidate_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_terrain8_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_terrain8_skip_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_terrain9_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_terrain9_skip_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_bit25_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_bit25_skip_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_neighbor_probe_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_neighbor_probe_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_candidate_pair_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_neighbor_terrain8_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_neighbor_terrain8_skip_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_same_owner_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_same_owner_skip_count_0x4a79a3 << ","
+			<< "\"connection_tail_replay_source_frontier_out_of_bounds_skip_count_0x4a79a3\":" << state.connection_tail_replay_source_frontier_out_of_bounds_skip_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3\":" << state.connection_tail_replay_relation_owner_level_byte2b_clear_pass_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3\":" << state.connection_tail_replay_relation_owner_level_byte2b_clear_cell_count_0x4a79a3 << ","
 			<< "\"connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc\":" << (state.connection_tail_replay_internal_growth_known_0x49b3fb_0x4a61bc ? "true" : "false") << ","
