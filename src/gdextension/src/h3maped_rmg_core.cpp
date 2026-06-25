@@ -6720,18 +6720,68 @@ static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPriva
 	return true;
 }
 
-static bool decorative_dispatch_scorer_first_pass_0x49e1bf(
+struct DecorativeScorerScratch49e1bf {
+	std::array<uint32_t, 80> flags {};
+	std::array<bool, RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E> terrain_hits {};
+	int32_t score = 0;
+	bool accepted = false;
+};
+
+struct DecorativeObjectRefTemp49e1bf {
+	uint32_t object_record_key = 0U;
+	bool flag_0x14 = false;
+	bool flag_0x15 = false;
+	bool flag_0x16 = false;
+	bool flag_0x17 = false;
+	bool flag_0x18 = false;
+	bool appended = false;
+};
+
+static int32_t decorative_scorer_scratch_index_0x49e1bf(int32_t local_x, int32_t local_y) {
+	if (local_x < 0 || local_x >= 10 || local_y < 0 || local_y >= 8) {
+		return -1;
+	}
+	return local_y + (local_x * 8);
+}
+
+static const ObjectRecordReference4a54a7 *object_record_by_key_0xec4_ecc(
+		const GeneratorObjectPrivateState &state,
+		uint32_t object_record_key) {
+	const auto it = std::find_if(state.object_records_0xec4_ecc.begin(),
+			state.object_records_0xec4_ecc.end(),
+			[&](const ObjectRecordReference4a54a7 &object_record) {
+				return object_record.object_record_key == object_record_key;
+			});
+	if (it == state.object_records_0xec4_ecc.end()) {
+		return nullptr;
+	}
+	return &(*it);
+}
+
+static DecorativeObjectRefTemp49e1bf &decorative_temp_object_ref_0x49e1bf(
+		std::vector<DecorativeObjectRefTemp49e1bf> &refs,
+		uint32_t object_record_key) {
+	for (DecorativeObjectRefTemp49e1bf &ref : refs) {
+		if (ref.object_record_key == object_record_key) {
+			return ref;
+		}
+	}
+	refs.push_back(DecorativeObjectRefTemp49e1bf {});
+	refs.back().object_record_key = object_record_key;
+	return refs.back();
+}
+
+static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e1bf(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
 		const RandTrnObstacleScoreRecord49dc9e &score_record,
 		int32_t candidate_x,
 		int32_t candidate_y,
 		int32_t candidate_level,
-		int32_t &score,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	result.scorer_first_pass_invocation_count_0x49e1bf += 1;
 	result.scorer_first_pass_candidate_anchor_count_0x49e1bf += 1;
-	score = 0;
+	DecorativeScorerScratch49e1bf scratch;
 	bool scanned_footprint_cell = false;
 	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
 		for (int32_t col = 0; col < source_record.descriptor_width_0x34; ++col) {
@@ -6745,40 +6795,151 @@ static bool decorative_dispatch_scorer_first_pass_0x49e1bf(
 			const int64_t flat = cell_index(state.width, state.height, cell_x, cell_y, candidate_level);
 			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
 				result.scorer_first_pass_bounds_reject_count_0x49e1bf += 1;
-				return false;
+				return scratch;
 			}
 			const GeneratedCellRecord0x30 &cell = state.generated_cell_buffer.records[size_t(flat)];
 			if (!cell.word_0x24_known || !cell.word_0x28_known) {
 				result.scorer_first_pass_missing_word_reject_count_0x49e1bf += 1;
-				return false;
+				return scratch;
 			}
 			const int32_t terrain_code = generated_cell_terrain_code_0x24(cell);
 			result.scorer_first_pass_terrain_test_count_0x42cc99 += 1;
 			if (!descriptor_terrain_bitset_index_test_0x42cc99(source_record.terrain_mask_a_0x14, terrain_code)) {
 				result.scorer_first_pass_terrain_reject_count_0x42cc99 += 1;
-				return false;
+				return scratch;
 			}
 			if ((cell.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U) {
 				result.scorer_first_pass_bit27_hard_reject_count_0x49e1bf += 1;
-				score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
-				return false;
+				scratch.score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
+				return scratch;
 			}
 			if (terrain_code < 0 || terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
 				result.scorer_first_pass_terrain_reject_count_0x42cc99 += 1;
-				return false;
+				return scratch;
 			}
-			score += score_record.terrain_scores[size_t(terrain_code)];
+			scratch.terrain_hits[size_t(terrain_code)] = true;
+			scratch.score += score_record.terrain_scores[size_t(terrain_code)];
+			const int32_t scratch_index = decorative_scorer_scratch_index_0x49e1bf(col + 1, row + 1);
+			if (scratch_index >= 0) {
+				scratch.flags[size_t(scratch_index)] |= 0x1U;
+			}
 		}
 	}
 	if (!scanned_footprint_cell) {
 		result.scorer_first_pass_low_score_reject_count_0x49e1bf += 1;
-		return false;
+		return scratch;
 	}
-	if (score < RAND_TRN_LOW_SCORE_REJECT_THRESHOLD_0X49E1BF) {
+	if (scratch.score < RAND_TRN_LOW_SCORE_REJECT_THRESHOLD_0X49E1BF) {
 		result.scorer_first_pass_low_score_reject_count_0x49e1bf += 1;
-		return false;
+		return scratch;
 	}
 	result.scorer_first_pass_positive_count_0x49e1bf += 1;
+	scratch.accepted = true;
+	return scratch;
+}
+
+static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectRecord0x4c &source_record,
+		const DecorativeScorerScratch49e1bf &scratch,
+		int32_t candidate_x,
+		int32_t candidate_y,
+		int32_t candidate_level,
+		int32_t &score,
+		DecorativeFlaggedCellDispatchResult49eb8d &result) {
+	result.scorer_neighbor_pass_0x49e1bf_invoked = true;
+	result.scorer_neighbor_pass_invocation_count_0x49e1bf += 1;
+	std::vector<DecorativeObjectRefTemp49e1bf> temp_refs;
+
+	const int32_t scan_width = source_record.descriptor_width_0x34 + 2;
+	const int32_t scan_height = source_record.descriptor_height_0x38 + 2;
+	for (int32_t local_y = 0; local_y < scan_height; ++local_y) {
+		const int32_t neighbor_y = candidate_y + 1 - local_y;
+		for (int32_t local_x = 0; local_x < scan_width; ++local_x) {
+			result.scorer_neighbor_pass_cell_scan_count_0x49e1bf += 1;
+			const int32_t scratch_index = decorative_scorer_scratch_index_0x49e1bf(local_x, local_y);
+			const uint32_t flags = scratch_index >= 0 ? scratch.flags[size_t(scratch_index)] : 0U;
+			if (flags == 0U) {
+				result.scorer_neighbor_pass_scratch_empty_skip_count_0x49e1bf += 1;
+				continue;
+			}
+			const int32_t neighbor_x = candidate_x + 1 - local_x;
+			const int64_t flat = cell_index(state.width, state.height, neighbor_x, neighbor_y, candidate_level);
+			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+				result.scorer_neighbor_pass_bounds_skip_count_0x49e1bf += 1;
+				continue;
+			}
+			const GeneratedCellRecord0x30 *cell = &state.generated_cell_buffer.records[size_t(flat)];
+			if (!cell->word_0x24_known || !cell->word_0x28_known) {
+				result.scorer_first_pass_missing_word_reject_count_0x49e1bf += 1;
+				result.blocked_reason = "0x49e1bf_neighbor_generated_cell_word_unknown";
+				return false;
+			}
+			const bool byte_0x2b_bit1 = cell->byte_0x2b_known && (cell->byte_0x2b & 0x02U) != 0U;
+			if (byte_0x2b_bit1 && generated_cell_terrain_code_0x24(*cell) != 9) {
+				result.scorer_neighbor_pass_valid_terrain_skip_count_0x49e1bf += 1;
+				continue;
+			}
+			if (!cell->object_reference_vector_contents_known) {
+				result.scorer_neighbor_pass_object_reference_vector_missing_count_0x49e1bf += 1;
+				result.blocked_reason = "0x49e1bf_generated_cell_object_reference_vector_unowned";
+				return false;
+			}
+			for (const uint32_t object_record_key : cell->object_references_0x04_0x08) {
+				result.scorer_neighbor_pass_object_reference_scan_count_0x49e1bf += 1;
+				if (result.first_scorer_neighbor_reference_key_0x49e1bf < 0) {
+					result.first_scorer_neighbor_reference_key_0x49e1bf = int32_t(object_record_key);
+				}
+				const ObjectRecordReference4a54a7 *object_record = object_record_by_key_0xec4_ecc(state, object_record_key);
+				if (object_record == nullptr) {
+					result.scorer_neighbor_pass_object_record_lookup_missing_count_0x49e1bf += 1;
+					result.blocked_reason = "0x49e1bf_object_reference_record_lookup_missing";
+					return false;
+				}
+				DecorativeObjectRefTemp49e1bf &temp_ref = decorative_temp_object_ref_0x49e1bf(temp_refs, object_record_key);
+				const bool had_score_flags = temp_ref.flag_0x16 || temp_ref.flag_0x17 || temp_ref.flag_0x18;
+				if ((flags & 0x1U) != 0U) {
+					temp_ref.flag_0x16 = true;
+				}
+				if ((flags & 0x2U) != 0U) {
+					result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+					result.blocked_reason = "0x49e1bf_object_reference_cache_0x49b89c_unowned";
+					return false;
+				}
+				if ((flags & 0x4U) != 0U) {
+					temp_ref.flag_0x18 = true;
+				}
+				if ((had_score_flags || temp_ref.flag_0x16 || temp_ref.flag_0x17 || temp_ref.flag_0x18) && !temp_ref.appended) {
+					temp_ref.appended = true;
+					result.scorer_neighbor_pass_flagged_reference_append_count_0x40bb26 += 1;
+				}
+				if (temp_ref.flag_0x14 && temp_ref.flag_0x15) {
+					result.scorer_neighbor_pass_hard_reject_count_0x49e1bf += 1;
+					score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
+					return false;
+				}
+			}
+		}
+	}
+
+	for (const DecorativeObjectRefTemp49e1bf &temp_ref : temp_refs) {
+		if (!temp_ref.appended) {
+			continue;
+		}
+		if (temp_ref.flag_0x18 || temp_ref.flag_0x16) {
+			result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+			result.blocked_reason = "0x49e1bf_object_record_0x10_descriptor_score_index_unowned";
+			return false;
+		}
+		if (temp_ref.flag_0x14 && temp_ref.flag_0x15) {
+			result.scorer_neighbor_pass_hard_reject_count_0x49e1bf += 1;
+			score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
+			return false;
+		}
+	}
+
+	result.scorer_neighbor_pass_positive_count_0x49e1bf += 1;
+	score = scratch.score;
 	return true;
 }
 
@@ -6815,19 +6976,17 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 			result.dispatch_probe_scorer_input_candidate_count_0x49e700 += 1;
 			const int32_t candidate_x = dispatch_x + local_x;
 			const int32_t candidate_y = dispatch_y + local_y;
-			int32_t first_pass_score = 0;
-			if (!decorative_dispatch_scorer_first_pass_0x49e1bf(
+			const DecorativeScorerScratch49e1bf scratch = decorative_dispatch_scorer_first_pass_0x49e1bf(
 						state,
 						source_record,
 						score_record,
 						candidate_x,
 						candidate_y,
 						dispatch_level,
-						first_pass_score,
-						result)) {
+						result);
+			if (!scratch.accepted) {
 				continue;
 			}
-			result.scorer_input_0x49e1bf_unowned = true;
 			if (result.first_scorer_source_row_0x49e700 < 0) {
 				result.first_scorer_source_row_0x49e700 = source_record.source_row;
 				result.first_scorer_source_type_0x49e700 = source_record.type_id_0x1c;
@@ -6838,8 +6997,22 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 				result.first_scorer_candidate_x_0x49e700 = candidate_x;
 				result.first_scorer_candidate_y_0x49e700 = candidate_y;
 				result.first_scorer_candidate_level_0x49e700 = dispatch_level;
-				result.first_scorer_first_pass_score_0x49e1bf = first_pass_score;
+				result.first_scorer_first_pass_score_0x49e1bf = scratch.score;
 			}
+			int32_t final_score = scratch.score;
+			if (!decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
+						state,
+						source_record,
+						scratch,
+						candidate_x,
+						candidate_y,
+						dispatch_level,
+						final_score,
+						result)) {
+				result.scorer_input_0x49e1bf_unowned = !result.blocked_reason.empty();
+				return true;
+			}
+			result.first_scorer_first_pass_score_0x49e1bf = final_score;
 			return true;
 		}
 	}
@@ -6890,7 +7063,9 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 							dispatch_level,
 							terrain_code,
 							result)) {
-					result.blocked_reason = "0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned";
+					if (result.blocked_reason.empty()) {
+						result.blocked_reason = "0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned";
+					}
 					return;
 				}
 			}

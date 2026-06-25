@@ -22,11 +22,11 @@
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-25T19:52:24Z",
-      "latestEvidenceId": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
-      "remainingWork": "Port exact 0x49e1bf scoring data/replay for the 0x49e700 decorative dispatch: descriptor +0x30/+0x40 adjacency/overlap score semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains parity debt.",
-      "latestFinding": "2026-06-25T19:52:24Z no-Godot phase snapshots for Small seed 10, Small seed 58, and Medium seed 10 now carry recovered rand_trn score data through 0x49e700: 109 obstacle score records, 2425 per-template variants, terrain-score lookup, and the -5000 hard reject. The focused cases still fail closed before final writeout at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned. No Godot was started.",
-      "blocker": "Final writeout is blocked by exact 0x49e1bf scorer ownership under 0x49e700 decorative dispatch: descriptor +0x30/+0x40 adjacency/overlap score semantics, object-reference flag classes +0x14..+0x18, and ordered scorer replay are not native-owned. Reward/guard zero direct 0x4aa9b7 commits remains a mismatch to fix, but recovered 0x4ac552 caller order continues after 0x4aab7e.",
+      "updatedAt": "2026-06-25T20:33:34Z",
+      "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
         "id": "native-rmg-reward-guard-direct-stream-owner-cleanup-20260622",
@@ -84,34 +84,27 @@
         },
         "result": "partial_source_order_implementation_not_parity"
       },
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Shared h3maped_rmg_core now carries recovered rand_trn score rows through the 0x49eb8d -> 0x49e700 decorative prefix for the focused Small/Medium one-level land cases and fails closed at the exact missing 0x49e1bf descriptor adjacency/overlap scorer replay boundary. This is not parity and not final map output.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
       "currentNotes": "2026-06-25T19:52:24Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Focused no-Godot cases now apply recovered rand_trn score-row terrain lookup and hard reject, then stop at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned.",
       "currentSliceNotes": "2026-06-25T19:52:24Z: Focused no-Godot cases small_2p_seed10_hc1_setup0, small_2p_seed58_hc1_setup0, and medium_4p_seed10_hc3_setup0 all enter the 0x49e700 type-table/rand_trn prefix, load 2425 score variants, apply terrain hard rejects, and fail closed at missing 0x49e1bf descriptor adjacency/overlap scorer replay for source row 312/type 119/DEF AVLd1sn0.def.",
       "result": "partial_source_order_implementation_not_parity",
       "remainingGap": "Port exact 0x49e1bf descriptor adjacency/overlap/object-reference scorer replay under 0x49e700, then road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
       "validation": {
-        "id": "native-rmg-selected-candidate-relation-producer-20260622",
-        "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
+        "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+        "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "timestamp": "2026-06-22T08:32:59Z",
+        "timestamp": "2026-06-25T20:33:34Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "Selected Candidate Relation Producer Owned",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
-        "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show relation_owner_vector_produced_by_0x4ac552_0x4a218c=true, selected candidate input known, and relation_vector_10e4_10e8 present/contents/count known. The workflow now gets past the selected-candidate relation-vector handoff and remains blocked at reward/guard materialization zero successful 0x4aa9b7 commits before connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout.",
-        "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
-        "blocker": "Reward/guard materialization still produces zero successful 0x4aa9b7 commits after the selected-candidate relation-vector producer succeeds. Continuing into connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned would recreate proxy-state drift.",
-        "commands": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-          "./bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer --phase-snapshot-only --controlled-case small_2p_seed_10_setup3:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed_58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed_10_setup3:medium:4:10:land:1:1:3:3 --print-manifest (expected exit 1 wrapper blocked; failed_count=0; no Godot)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
-        ],
+        "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+        "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+        "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+        "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
         "artifacts": [
-          ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -119,27 +112,28 @@
           "src/gdextension/src/rmg_native_core.cpp",
           "PLAN.md"
         ],
+        "checks": [
+          "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
+          "bin/h3maped_rmg_core_selftest (passed)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
+        ],
         "metrics": {
-          "checkpoint2_complete": false,
-          "runtime_generation_allowed": false,
+          "decorative_0x49e700_rand_trn_score_rows_carried": true,
+          "decorative_0x49e1bf_first_pass_replayed": true,
+          "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+          "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+          "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+          "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+          "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+          "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+          "no_godot_batch_phase_snapshot_written_count": 3,
+          "no_godot_batch_failed_count": 0,
           "godot_process_started": false,
-          "same_run_private_state_compare_passed": false,
-          "final_payload_generation_complete": false,
           "native_rmg_end_to_end_parity_complete": false,
-          "source_order_relation_pointer_context_bridge_owned": true,
-          "selected_candidate_relation_vector_producer_0x4ac552_0x4a218c_owned": true,
-          "small_seed10_candidate_container_count_0x10d4": 21,
-          "small_seed58_candidate_container_count_0x10d4": 21,
-          "medium_seed10_candidate_container_count_0x10d4": 25,
-          "small_seed10_relation_vector_count_0x10e4": 8,
-          "small_seed58_relation_vector_count_0x10e4": 5,
-          "medium_seed10_relation_vector_count_0x10e4": 7,
-          "small_seed10_reward_guard_attempts": 144,
-          "small_seed58_reward_guard_attempts": 90,
-          "medium_seed10_reward_guard_attempts": 126,
-          "reward_guard_successful_0x4aa9b7_commits": 0
-        },
-        "result": "partial_source_order_implementation_not_parity"
+          "windows_dll_build_deferred": true,
+          "decorative_0x49e1bf_neighbor_scan_replayed": true,
+          "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+        }
       },
       "metrics": {
         "checkpoint2_complete": false,
@@ -217,12 +211,25 @@
         "small_seed10_reward_guard_attempts": 144,
         "small_seed58_reward_guard_attempts": 90,
         "medium_seed10_reward_guard_attempts": 126,
-        "reward_guard_successful_0x4aa9b7_commits": 0
+        "reward_guard_successful_0x4aa9b7_commits": 0,
+        "decorative_0x49e700_rand_trn_score_rows_carried": true,
+        "decorative_0x49e1bf_first_pass_replayed": true,
+        "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+        "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+        "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+        "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+        "no_godot_batch_phase_snapshot_written_count": 3,
+        "no_godot_batch_failed_count": 0,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "latestEvidenceArtifacts": [
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -346,7 +353,9 @@
           "mine_resource_materialization_0x4a9d6a_invoked": false,
           "reward_guard_materialization_invoked": false,
           "final_writeout_complete": false,
-          "windows_dll_build_deferred": true
+          "windows_dll_build_deferred": true,
+          "decorative_0x49e1bf_neighbor_scan_replayed": true,
+          "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
         },
         "result": "partial_source_order_implementation_not_parity"
       },
@@ -1256,10 +1265,10 @@
       }
     },
     "latestEvidenceArtifacts": [
-      ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
-      ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
-      ".artifacts/rmg_native_49e1bf_first_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
-      ".artifacts/rmg_native_49e1bf_first_pass/rmg_native_batch_export.log",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -1267,7 +1276,7 @@
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md"
     ],
-    "latestEvidenceId": "native-rmg-49e1bf-first-pass-20260625",
+    "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -2108,7 +2117,14 @@
       "decorative_first_pass_controlled_case_count": 3,
       "decorative_first_pass_positive_controlled_case_count": 3,
       "no_godot_batch_phase_snapshot_written_count": 3,
-      "no_godot_batch_failed_count": 0
+      "no_godot_batch_failed_count": 0,
+      "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+      "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+      "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+      "decorative_0x49e1bf_neighbor_scan_replayed": true,
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
     },
     "nonGoals": [
       "campaign production unless explicitly selected",
@@ -2119,8 +2135,8 @@
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
-    "remainingGap": "Implement the remaining source-backed 0x49e1bf neighbor/object-reference pass: scan descriptor footprint plus one-cell border, gate against the scratch rectangle from the first pass, scan GeneratedCell +0x04/+0x08 object references, replay 0x49b89c preparation, set and clear temporary object-reference flags +0x14..+0x18, append flagged references through 0x40bb26, and apply descriptor +0x30/+0x40 score-table adjustments before allowing decorative placement to proceed.",
-    "remainingWork": "Implement the remaining source-backed 0x49e1bf neighbor/object-reference pass: scan descriptor footprint plus one-cell border, gate against the scratch rectangle from the first pass, scan GeneratedCell +0x04/+0x08 object references, replay 0x49b89c preparation, set and clear temporary object-reference flags +0x14..+0x18, append flagged references through 0x40bb26, and apply descriptor +0x30/+0x40 score-table adjustments before allowing decorative placement to proceed.",
+    "remainingGap": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+    "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
     "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now carries source-record replay, route/free-cell, relation normalization/scan, mine/resource materialization, and the live 0x4a79a3 connection-tail path. Small seed 10 and Medium seed 10 still stop at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb. Small seed 58 now executes the recovered 0x4a61bc selected-candidate loop through direct 0x4a5c07 monster selection and 0x4a5e03/0x4a54a7 commits, appending 7 connection guard records and leaving 28 object records before stopping at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail. The reward/guard blocker shows 90 source-stream attempts, zero successful 0x4aa9b7 commits, and first 0x4aa603 rejection at 0x49a6f9 footprint filtering. Next required implementation is the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state. This is not parity and not final map output.",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -2129,7 +2145,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered first pass of 0x49e1bf: descriptor footprint candidate anchors, descriptor terrain mask +0x14 through 0x42cc99, generated-cell bit27 hard reject, and the recovered low-score threshold. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each reach one positive first-pass candidate and now fail closed at the next unreplayed 0x49e1bf neighbor/object-reference descriptor +0x30/+0x40 score-table pass. This is not parity and not final map output.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -2142,23 +2158,23 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-25T20:09:31Z",
+    "updatedAt": "2026-06-25T20:33:34Z",
     "validation": {
-      "id": "native-rmg-49e1bf-first-pass-20260625",
-      "evidenceId": "native-rmg-49e1bf-first-pass-20260625",
+      "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
       "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-      "timestamp": "2026-06-25T20:09:31Z",
+      "timestamp": "2026-06-25T20:33:34Z",
       "status": "passed_partial_implementation_not_parity",
-      "title": "Decorative 0x49e1bf First Pass Replay Owned",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered first pass of 0x49e1bf: descriptor footprint candidate anchors, descriptor terrain mask +0x14 through 0x42cc99, generated-cell bit27 hard reject, and the recovered low-score threshold. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each reach one positive first-pass candidate and now fail closed at the next unreplayed 0x49e1bf neighbor/object-reference descriptor +0x30/+0x40 score-table pass. This is not parity and not final map output.",
-      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative first-pass 0x49e1bf execution after 0x49e700 score-row filtering. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false, and each snapshot reports decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf=1 with blocked_reason=0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned.",
-      "remainingWork": "Implement the remaining source-backed 0x49e1bf neighbor/object-reference pass: scan descriptor footprint plus one-cell border, gate against the scratch rectangle from the first pass, scan GeneratedCell +0x04/+0x08 object references, replay 0x49b89c preparation, set and clear temporary object-reference flags +0x14..+0x18, append flagged references through 0x40bb26, and apply descriptor +0x30/+0x40 score-table adjustments before allowing decorative placement to proceed.",
-      "blocker": "0x49e1bf first-pass footprint/terrain/bit27 scoring is now implemented, but the neighbor/object-reference flagging plus descriptor +0x30/+0x40 score adjustment pass is still unreplayed. Continuing into road/river or final writeout before this pass is source-owned would recreate proxy-state drift.",
+      "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
       "artifacts": [
-        ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/rmg_native_batch_export.log",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -2169,40 +2185,42 @@
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
         "bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_first_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)",
-        "jq empty ops/progress.json (passed before tracker update)",
-        "git diff --check (passed before tracker update)",
-        "python3 tests/validate_repo.py (passed)"
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
       ],
       "metrics": {
         "decorative_0x49e700_rand_trn_score_rows_carried": true,
         "decorative_0x49e1bf_first_pass_replayed": true,
         "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
-        "decorative_first_pass_controlled_case_count": 3,
-        "decorative_first_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+        "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+        "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
         "no_godot_batch_phase_snapshot_written_count": 3,
         "no_godot_batch_failed_count": 0,
         "godot_process_started": false,
         "native_rmg_end_to_end_parity_complete": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       }
     },
     "validationResults": {
-      "id": "native-rmg-49e1bf-first-pass-20260625",
-      "evidenceId": "native-rmg-49e1bf-first-pass-20260625",
+      "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
       "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-      "timestamp": "2026-06-25T20:09:31Z",
+      "timestamp": "2026-06-25T20:33:34Z",
       "status": "passed_partial_implementation_not_parity",
-      "title": "Decorative 0x49e1bf First Pass Replay Owned",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered first pass of 0x49e1bf: descriptor footprint candidate anchors, descriptor terrain mask +0x14 through 0x42cc99, generated-cell bit27 hard reject, and the recovered low-score threshold. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each reach one positive first-pass candidate and now fail closed at the next unreplayed 0x49e1bf neighbor/object-reference descriptor +0x30/+0x40 score-table pass. This is not parity and not final map output.",
-      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative first-pass 0x49e1bf execution after 0x49e700 score-row filtering. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false, and each snapshot reports decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf=1 with blocked_reason=0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned.",
-      "remainingWork": "Implement the remaining source-backed 0x49e1bf neighbor/object-reference pass: scan descriptor footprint plus one-cell border, gate against the scratch rectangle from the first pass, scan GeneratedCell +0x04/+0x08 object references, replay 0x49b89c preparation, set and clear temporary object-reference flags +0x14..+0x18, append flagged references through 0x40bb26, and apply descriptor +0x30/+0x40 score-table adjustments before allowing decorative placement to proceed.",
-      "blocker": "0x49e1bf first-pass footprint/terrain/bit27 scoring is now implemented, but the neighbor/object-reference flagging plus descriptor +0x30/+0x40 score adjustment pass is still unreplayed. Continuing into road/river or final writeout before this pass is source-owned would recreate proxy-state drift.",
+      "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
       "artifacts": [
-        ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
-        ".artifacts/rmg_native_49e1bf_first_pass/rmg_native_batch_export.log",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -2213,29 +2231,77 @@
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
         "bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_first_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)",
-        "jq empty ops/progress.json (passed before tracker update)",
-        "git diff --check (passed before tracker update)",
-        "python3 tests/validate_repo.py (passed)"
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
       ],
       "metrics": {
         "decorative_0x49e700_rand_trn_score_rows_carried": true,
         "decorative_0x49e1bf_first_pass_replayed": true,
         "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
-        "decorative_first_pass_controlled_case_count": 3,
-        "decorative_first_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+        "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+        "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
         "no_godot_batch_phase_snapshot_written_count": 3,
         "no_godot_batch_failed_count": 0,
         "godot_process_started": false,
         "native_rmg_end_to_end_parity_complete": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       }
     },
-    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative first-pass 0x49e1bf execution after 0x49e700 score-row filtering. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false, and each snapshot reports decorative_dispatch_scorer_first_pass_positive_count_0x49e1bf=1 with blocked_reason=0x49e700_0x49e1bf_neighbor_object_reference_descriptor_0x30_0x40_replay_unowned.",
-    "blocker": "0x49e1bf first-pass footprint/terrain/bit27 scoring is now implemented, but the neighbor/object-reference flagging plus descriptor +0x30/+0x40 score adjustment pass is still unreplayed. Continuing into road/river or final writeout before this pass is source-owned would recreate proxy-state drift.",
+    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+    "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
     "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water"
   },
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "timestamp": "2026-06-25T20:33:34Z",
+      "status": "passed_partial_implementation_not_parity",
+      "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
+      "artifacts": [
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "PLAN.md"
+      ],
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
+        "bin/h3maped_rmg_core_selftest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
+      ],
+      "metrics": {
+        "decorative_0x49e700_rand_trn_score_rows_carried": true,
+        "decorative_0x49e1bf_first_pass_replayed": true,
+        "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+        "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+        "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+        "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+        "no_godot_batch_phase_snapshot_written_count": 3,
+        "no_godot_batch_failed_count": 0,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+      }
+    },
     {
       "id": "native-rmg-4a79a3-tail-invocation-20260622",
       "evidenceId": "native-rmg-4a79a3-tail-invocation-20260622",
@@ -2287,7 +2353,9 @@
         "materialization_bridge_0x4a79a3_small_blocker": "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope",
         "materialization_bridge_0x4a79a3_small_fallback_record_count": 0,
         "materialization_bridge_0x4a79a3_invoked_medium": false,
-        "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true
+        "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       }
     },
     {
@@ -2325,7 +2393,9 @@
         "checkpoint2_complete": false,
         "native_rmg_end_to_end_parity_complete": false,
         "godot_process_started": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "checks": [
         {
@@ -2394,7 +2464,9 @@
         "checkpoint2_complete": false,
         "native_rmg_end_to_end_parity_complete": false,
         "godot_process_started": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "checks": [
         {
@@ -2452,7 +2524,9 @@
         "checkpoint2_complete": false,
         "native_rmg_end_to_end_parity_complete": false,
         "godot_process_started": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       }
     },
     {
@@ -11161,7 +11235,9 @@
         "runtime_5e73_entry_count": 50,
         "runtime_5e73_success_path_event_count": 0,
         "static_4a5e73_callsite_count": 6,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The current named blockers are a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path, or broader Ghidra/static-data/Wine proof that no supported one-level land source can seed generator+0xf5c for a recovered caller gate; source-backed exclusion or positive sample for 0x4a696b direct mutation remains needed outside the sampled owner/relation pair-gate negative evidence; descriptor+0x00 producer semantics for mixed row-like/class-word lanes plus broader descriptor labels and cleanup/uncommit mutation state remain unrecovered if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11198,7 +11274,9 @@
         "overall_goal_complete": false,
         "scanned_cell_total": 5752,
         "used_objdump": false,
-        "zero_owner_relation_pair_match_scan_count": 6
+        "zero_owner_relation_pair_match_scan_count": 6,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The current named blockers are a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; descriptor+0x00 producer semantics for mixed row-like/class-word lanes plus broader descriptor labels; and cleanup/uncommit mutation state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11227,7 +11305,9 @@
         "source_record_identity_marker_count": 12,
         "source_record_identity_present_marker_count": 12,
         "source_record_identity_sample_count": 10,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover the exact source catalog/template producer that populates the nested payload returned by 0x42a83a from objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11255,7 +11335,9 @@
         "source_payload_producer_generic_dynamic_lookup_reference_count": 239,
         "source_payload_producer_marker_count": 27,
         "source_payload_producer_present_marker_count": 27,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: recover exact 0x43b0ff/0x433d7d input parse semantics; recover the variant/filter builders called from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073; recover final mapping from populated 0x4c records and nested payload variants to objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover a natural selected-create run selecting the 0x540ca0/0x49cd97 generator+0xf5c-gated candidate or source-backed proof that supported one-level land cannot select it before endpoint stamping; recover a natural 0x4a696b source/relation-match sample or broader static/data proof for where that direct-mutation block can execute; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion for supported one-level land; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11284,7 +11366,9 @@
         "source_input_layout_marker_count": 52,
         "source_input_layout_parser_reference_count": 1,
         "source_input_layout_present_marker_count": 52,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; recover exact stream helper semantics for 0x40763d, 0x407675, 0x402461, 0x4190cb, 0x43acf0, 0x43ad49, 0x43aec6, 0x43bb1b, 0x43bb58, 0x43bb95, 0x43bbe1, 0x43bc24, and 0x43bc67; recover final mapping from parsed fields into populated 0x4c source records and objects.txt/objtmplt.txt rows; recover variant/filter builders called later from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11314,7 +11398,9 @@
         "source_input_stream_helper_present_marker_count": 62,
         "source_input_stream_helper_primitive_guard_count": 3,
         "source_input_stream_helper_structured_helper_count": 10,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; recover nested helper/container semantics below 0x4190cb and the 0x43bb* bitset/range populators; recover exact 0x43ad49 tag table meanings for values 0..10; recover final mapping from parsed payloads into populated 0x4c source records and objects.txt/objtmplt.txt rows; recover variant/filter builders called later from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11334,7 +11420,9 @@
         "source_input_nested_container_guarded_read_count": 6,
         "source_input_nested_container_marker_count": 75,
         "source_input_nested_container_present_marker_count": 75,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; recover exact 0x43ad49 tag table meanings; recover capacity-helper internals below 0x416bac, 0x42f6f4, 0x430070, and 0x43bf35 only where needed for source semantics; recover final mapping from parsed fields into populated 0x4c source records and objects.txt/objtmplt.txt rows; recover variant/filter builders called later from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "status": "completed_recovery_checkpoint",
@@ -11351,7 +11439,9 @@
         "source_input_tag_table_marker_count": 44,
         "source_input_tag_table_payload_shape_count": 11,
         "source_input_tag_table_present_marker_count": 44,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; recover final mapping from parsed fields into populated 0x4c source records and objects.txt/objtmplt.txt rows; recover variant/filter builders called later from 0x41f350 such as 0x422868, 0x428d45, 0x420e6b, and 0x434073; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "status": "completed_recovery_checkpoint",
@@ -11376,7 +11466,9 @@
         "source_variant_builder_helper_count": 4,
         "source_variant_builder_marker_count": 51,
         "source_variant_builder_present_marker_count": 51,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover final mapping from parsed source-input fields and populated 0x4c source records into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11405,7 +11497,9 @@
         "source_payload_materializer_function_count": 8,
         "source_payload_materializer_marker_count": 40,
         "source_payload_materializer_present_marker_count": 40,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current named blockers are: assign human semantic labels to the 0x43b0ff parser-output and nested-record fields; assign human meanings to 0x43ad49 tag values and payload fields; assign human field names to the 0x4c025c-populated source-record offsets +0x10, +0x20..+0x38, +0x3c, +0x40, +0x41, +0x44, and +0x48; assign human category/lane names and provider-slot meanings for the recovered 0x41f350 variant builder surface; recover the final producer/mapping from parsed source-input fields, populated 0x4c source records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover dynamic lookup internals below 0x4e6da2/0x4c242d only where needed for final source-catalog identity; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11433,7 +11527,9 @@
         "native_behavior_changed": false,
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 164,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. Current percentage-moving blockers are: recover final source catalog/object-template identity from parsed source-input fields, populated 0x4c records, and nested payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover source-backed selected descriptor/source evidence for mixed type 45/53/54/79 lanes; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11463,7 +11559,9 @@
         "objnames_bound": 232,
         "objtmplt_txt_row_count": 2,
         "overall_goal_complete": false,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The base objects.txt catalog loader is now recovered, including 0x49da08 row stride, type/subtype consumers, wrapper initialization, and bucket mapping. Current percentage-moving blockers are: recover source-backed selected wrapper/source identity for mixed descriptor lanes 45/53/54/79; recover nested source-handler payload variants that choose among object catalog rows after the base table load; prove or find a natural 0x4a696b source/relation-match sample; prove or find a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path for supported one-level land; and globally source-exclude or reach the 0x540ca0 / 0x49cd97 candidate family outside the sampled Medium profile only if that family remains relevant. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11491,7 +11589,9 @@
         "native_behavior_changed": false,
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 170,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The descriptor +0x00 assignment path below 0x4903e8 is now recovered as source-key registry entry +0x1c, so the old generic descriptor +0x00 meaning blocker is narrowed: it is a registry entry field that can coincide with row ids but is not a universal objects.txt row pointer. Current named blockers are: capture same-run selected descriptor pointer linkage from mixed type 45/53/54/79 samples back to exact 0x4903e8 build events; recover the human domain label/source-catalog crosswalk for registry entry +0x1c; assign exact domain names to the compact policy/container fields mapped to descriptor +0x14/+0x18; recover the consumer and human domain label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11527,7 +11627,9 @@
         "native_behavior_changed": false,
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 170,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker for mixed type 45/53/54/79 lanes is now recovered: selected descriptors consumed at 0x4a54a7 are the exact descriptors populated through 0x4903e8/0x49041f in the same H3MapEd run, and descriptor +0x00 follows the recovered 0x491eed source-key registry assignment. Current named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to the compact policy/container fields mapped to descriptor +0x14/+0x18; recover the consumer and human domain label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; recover selected-create 0x540ca0/0x49cd97 generator+0xf5c candidate selection or source-backed exclusion; recover a natural 0x4a696b source/relation-match sample or static/data proof; recover a natural successful 0x4a5e73 -> 0x4a606b endpoint-stamping path or source-backed exclusion; and recover cleanup/uncommit state only if future evidence reaches those paths. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11562,7 +11664,9 @@
         "native_behavior_changed": false,
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 170,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered, and the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are now resolved as supported one-level land target-mode exclusions. Remaining named blockers are: recover the human domain/source-catalog label for registry entry +0x1c; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; recover final source catalog/object-template mapping from parsed source-input fields, populated 0x4c records, and nested source payload holders into objects.txt/objtmplt.txt type/subtype/DEF rows; and revisit these excluded endpoint/candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11592,7 +11696,9 @@
         "source_key_registry_target_mixed_joined_descriptor_count": 87,
         "source_key_registry_target_mixed_missing_join_count": 0,
         "source_key_registry_target_mixed_selected_descriptor_count": 87,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; the current endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and registry entry +0x1c is now labeled as the descriptor source selector key, not final object identity. Remaining named blockers are: recover the source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11625,7 +11731,9 @@
         "native_behavior_changed": false,
         "overall_goal_complete": false,
         "recovery_manifest_function_count": 178,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Full end-to-end native RMG recovery remains incomplete. The same-run selected descriptor pointer linkage blocker is recovered; registry entry +0x1c is labeled as the descriptor source selector key; endpoint/candidate blockers 0x540ca0/0x49cd97, 0x4a696b, and 0x4a5e73 -> 0x4a606b are resolved as supported one-level land target-mode exclusions; and the 0x5857d4/0x5857d8/0x5857dc global-table branch is now source-backed as hero-domain runtime catalogs, not generic object-template identity. Remaining named blockers are: recover the non-hero source catalog/template producer that maps parsed source-input fields, populated 0x4c source records, and nested payload holders into exact objects.txt/objtmplt.txt type/subtype/DEF rows; assign exact domain names to descriptor +0x14/+0x18 policy/container fields; recover the consumer and human label for the auxiliary 16-byte stream record read by 0x490a11 through 0x438937; and revisit excluded endpoint or candidate paths only for future non-one-level-land modes or unsupported source states that reach them. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11662,7 +11770,9 @@
         "source_catalog_template_producer_marker_count": 25,
         "source_catalog_template_producer_present_marker_count": 25,
         "source_record_copy_size_bytes": 76,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingGap": "No current source-catalog/template producer blocker remains; broader native RMG parity is not claimed by this recovery checkpoint.",
       "remainingWork": "The named source_catalog_template_producer_mapping blocker is recovered for type/subtype/DEF row preservation. Full native RMG parity is still not broadly claimed here: any next work must be selected phase/private-state parity or a newly named unrecovered function/data structure, not density tuning, final-map delta patching, brute-force retries, or descriptor +0x00 row-id assumptions. If final per-instance placement audits are needed, collect live selected wrapper/source traces; do not reopen this producer mapping without contradictory source evidence.",
@@ -11721,7 +11831,9 @@
         "overall_goal_complete": false,
         "r3_complete": true,
         "remaining_fixed_budget_after": 11,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "R3 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R4 from docs/h3maped-rmg-full-recovery-blockers.md: descriptor/source identity crosswalk for mixed lanes such as 45, 53, 54, and 79, source records, and template/catalog identity. Do not row-id guess, port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11779,7 +11891,9 @@
         "source_record_copy_size_bytes": 76,
         "target_mixed_joined_descriptor_count": 87,
         "target_mixed_selected_descriptor_count": 87,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "R4 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R5 from docs/h3maped-rmg-full-recovery-blockers.md: recover or source-exclude the source-handler pending-entry chain 0x53eafc / 0x484d9f -> 0x4afa99. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11829,7 +11943,9 @@
         "overall_goal_complete": false,
         "r5_complete": true,
         "remaining_fixed_budget_after": 6,
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "R5 is closed, but full end-to-end H3MapEd RMG recovery is not complete. Continue with R6 from docs/h3maped-rmg-full-recovery-blockers.md: relation/scoring semantic replay for 0x49e1bf, 0x4a5767/0x49a318, and 0x4a54a7 relation/control linkage. Do not port, compensate, density-scale, brute-force, or tune native RMG behavior from final-map deltas.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11896,7 +12012,9 @@
         "remaining_fixed_budget_after": 0,
         "tile_payload_byte_count": 36288,
         "tile_payload_sha256": "cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65",
-        "used_objdump": false
+        "used_objdump": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "The fixed recovery ledger is closed, but native true end-to-end RMG parity remains incomplete. Remaining work is source-backed native replay adoption and Python-owned native-vs-H3MapEd comparison for supported Small/Medium one-level land maps.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -11969,7 +12087,9 @@
         "word_0x20_high_word_mismatch": 475,
         "word_0x20_low_word_mismatch": 4587,
         "word_0x24_mismatch": 4768,
-        "word_0x28_mismatch": 3241
+        "word_0x28_mismatch": 3241,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-15T23:31:41Z",
       "remainingWork": "Implement source-backed 0x4a5767/0x49a318 runtime replay over the post-object-vector grid. Keep runtime_ordered_replay_materialized=false until word 0x20 low-word propagation, word 0x1c projection/local gate state, projection triples, object-reference filters, descriptor-policy-table effects, and the same-run post-replay private-state compare are source-matched. Current blocker metrics: word_0x20_low_word_mismatch=4587, word_0x20_high_word_mismatch=475, owner_byte2_signed_mismatch=475, word_0x24_mismatch=4768, word_0x28_mismatch=3241; native bit26/bit27=2264/1384 vs H3MapEd 2478/1311.",
@@ -12038,7 +12158,9 @@
         "shared_h3maped_core_scope_owner": true,
         "shared_h3maped_core_size_score_owner": true,
         "span_fill_exact_seed_descriptor_handoff_materialized": false,
-        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true
+        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T17:24:18Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts, not h3maped_small_rmg.cpp proxy code: materialize the exact 0x4a2777 generator+0x3f4 boundary-vector state using the shared recovered helpers, port recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then make final payload ownership pass the same-run private-state compare. Keep terrain/relation/object/route/package consumers blocked until that compare passes. Do not substitute SourceWalkPlain reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12095,7 +12217,9 @@
         "shared_h3maped_core_scope_owner": true,
         "shared_h3maped_core_size_score_owner": true,
         "span_fill_exact_seed_descriptor_handoff_materialized": false,
-        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true
+        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts, not h3maped_small_rmg.cpp proxy code: materialize the exact 0x4a2777 generator+0x3f4 boundary-vector state using the shared recovered helpers, port recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then make final payload ownership pass the same-run private-state compare. Keep terrain/relation/object/route/package consumers blocked until that compare passes. Do not substitute SourceWalkPlain reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -12166,7 +12290,9 @@
         "shared_h3maped_core_size_score_owner": true,
         "span_fill_exact_seed_descriptor_handoff_materialized": false,
         "validator_package_draft_proxy_live_entrypoint_removed": true,
-        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true
+        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T17:36:59Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts, not h3maped_small_rmg.cpp proxy code: materialize the exact 0x4a2777 generator+0x3f4 boundary-vector state using the shared recovered helpers, port recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then make final payload ownership pass the same-run private-state compare. Keep terrain/relation/object/route/package consumers blocked until that compare passes. Do not substitute SourceWalkPlain reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12240,7 +12366,9 @@
         "shared_h3maped_core_size_score_owner": true,
         "span_fill_exact_seed_descriptor_handoff_materialized": false,
         "validator_package_draft_proxy_live_entrypoint_removed": true,
-        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true
+        "zone_exact_seed_descriptor_handoff_overclaim_downgraded": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T17:41:29Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts, not h3maped_small_rmg.cpp proxy code: materialize the exact 0x4a2777 generator+0x3f4 boundary-vector state using the shared recovered helpers, port recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then make final payload ownership pass the same-run private-state compare. Keep terrain/relation/object/route/package consumers blocked until that compare passes. Do not substitute SourceWalkPlain reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12302,7 +12430,9 @@
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
         "shared_h3maped_core_scope_owner": true,
-        "span_fill_exact_seed_descriptor_handoff_materialized": false
+        "span_fill_exact_seed_descriptor_handoff_materialized": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T17:52:20Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts, not h3maped_small_rmg.cpp proxy code: materialize exact 0x4a2777 generator+0x3f4 boundary-vector state and recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then pass same-run private-state compare before enabling terrain/relation/object/route/package consumers. Do not substitute SourceWalkPlain reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12362,7 +12492,9 @@
         "plain_cpp_reconstruction_authority": false,
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
-        "span_fill_exact_seed_descriptor_handoff_materialized": false
+        "span_fill_exact_seed_descriptor_handoff_materialized": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T17:59:40Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts: materialize exact 0x4a2777 generator+0x3f4 boundary-vector state and recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then pass same-run private-state compare before enabling terrain/relation/object/route/package consumers. Do not substitute SourceWalkPlain reconstruction, h3maped_small_rmg.cpp proxy selection, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12423,7 +12555,9 @@
         "plain_cpp_reconstruction_authority": false,
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
-        "span_fill_exact_seed_descriptor_handoff_materialized": false
+        "span_fill_exact_seed_descriptor_handoff_materialized": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T18:06:20Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts: materialize exact 0x4a2777 generator+0x3f4 boundary-vector state and recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then pass same-run private-state compare before enabling terrain/relation/object/route/package consumers. Do not substitute duplicate native reconstruction, legacy h3maped_small_rmg.cpp selection/adoption, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12487,7 +12621,9 @@
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
         "span_fill_exact_seed_descriptor_handoff_materialized": false,
-        "validator_package_draft_proxy_live_entrypoint_removed": true
+        "validator_package_draft_proxy_live_entrypoint_removed": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T18:29:29Z",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts: materialize exact 0x4a2777 generator+0x3f4 boundary-vector state and recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then pass same-run private-state compare before enabling terrain/relation/object/route/package consumers. Do not substitute h3maped_small_rmg.cpp inspection/proxy payloads, duplicate native reconstruction, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12526,7 +12662,9 @@
         "native_rmg_end_to_end_parity_complete": false,
         "old_h3maped_small_rmg_port_capability_advertised": false,
         "phase_snapshot_written_count": 1,
-        "runtime_generation_allowed": false
+        "runtime_generation_allowed": false,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "phase": "phase-5-playable-alpha-baseline",
       "remainingWork": "Continue porting from recovered H3MapEd authority artifacts in h3maped_rmg_core/rmg_native_core: materialize exact 0x4a2777 generator+0x3f4 boundary-vector state and recovered descriptor-buffer ownership for the 0x4a3a03 -> 0x4cca55 -> 0x4a325d handoff, then pass same-run private-state compare before enabling terrain/relation/object/route/package consumers. Do not substitute h3maped_small_rmg.cpp, embedded proxy catalogs, validator-gated package drafts, duplicate native reconstruction, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12583,7 +12721,9 @@
         "native_rmg_end_to_end_parity_complete": false,
         "package_session_bridge_reads_native_proxy_fields": false,
         "runtime_generation_allowed": false,
-        "validator_rejects_bridge_native_proxy_tokens": true
+        "validator_rejects_bridge_native_proxy_tokens": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "nativeBehaviorChanged": true,
       "phase": "phase-5-playable-alpha-baseline",
@@ -12648,7 +12788,9 @@
         "phase_snapshot_written_count": 1,
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "phase": "Phase 5 - Playable Alpha Baseline",
       "recordedAt": "2026-06-18T19:58:08Z",
@@ -12704,7 +12846,9 @@
         "shared_core_owner_gate_selftest_passed": true,
         "shared_core_source_node_payload_fields_preserved": true,
         "shared_h3maped_core_payload_owner": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "phase": "Phase 5 - Playable Alpha Baseline",
       "recordedAt": "2026-06-18T20:08:15Z",
@@ -12758,7 +12902,9 @@
         "phase_snapshot_written_count": 1,
         "runtime_generation_allowed": false,
         "shared_h3maped_core_payload_owner": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "phase": "Phase 5 - Playable Alpha Baseline",
       "recordedAt": "2026-06-18T20:43:22Z",
@@ -12815,7 +12961,9 @@
         "shared_core_coordinate_seed_to_owner_grid_entrypoint": true,
         "shared_core_owner_grid_consumes_coordinate_rng_state": true,
         "shared_core_source_handoffs_consumed_from_coordinate_seed": true,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "nativeBehaviorChanged": true,
       "phase": "Phase 5 - Playable Alpha Baseline",
@@ -12868,7 +13016,9 @@
         "shared_runtime_input_snapshot_is_diagnostic_only": true,
         "snapshot_boundary_input_count": 10,
         "snapshot_generated_owner_word_count": 5184,
-        "snapshot_source_handoff_count": 10
+        "snapshot_source_handoff_count": 10,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "recordedAt": "2026-06-18T21:55:00Z",
       "remainingWork": "Implement the exact same-run H3MapEd runtime-zone seed/link producer so the shared coordinate-to-owner-grid chain becomes the native live owner-grid payload, then pass same-run pre-0x4a4c8e generated-cell private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12920,7 +13070,9 @@
         "setup0_coordinate_prune_span_budget_4a218c": 79,
         "setup3_coordinate_prune_divisor_4a218c": 7,
         "setup3_coordinate_prune_span_budget_4a218c": 56,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
       "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
@@ -12972,7 +13124,9 @@
         "snapshot_materialization_missing_source_record_seed_count": 0,
         "snapshot_materialization_span_fill_zone_count": 5,
         "windows_dll_build_deferred": true,
-        "shared_core_reconstructed_seed_handoff_removed_from_active_source": true
+        "shared_core_reconstructed_seed_handoff_removed_from_active_source": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "same-run pre-0x4a4c8e generated-cell private-state comparison and live owner-grid payload adoption are still missing",
       "remainingWork": "Pass same-run pre-0x4a4c8e generated-cell private-state comparison for the shared owner-grid chain and make that matched owner grid the native live payload before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, prior phase snapshots, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, reconstructed runtime-zone seed fallbacks, or Windows DLL churn.",
@@ -13064,7 +13218,9 @@
         "wrapper_selector_0x4af785_live_chain_ported": false,
         "descriptor_join_0x4903e8_ported": false,
         "object_materialization_ported": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "live 0x4af785 wrapper reuse/copy/create, 0x4903e8 descriptor/source joins, selected copied source records, object vectors, materialization, relation/object caller order, and same-run private-state comparison remain unported"
     },
@@ -13136,7 +13292,9 @@
         "object_reference_vector_contents_ported": false,
         "descriptor_join_0x4903e8_ported": false,
         "object_materialization_ported": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "endpoint pointer vector +0xd8/+0xdc contents/count for concrete +0x1104/+0x1108 byte-state contents, 0x4a1f3b scan-bounds updates/source-order consumers, 0xf5c cursor seed or source-backed exclusion, ordered relation/object replay, descriptor/source joins, object materialization with descriptor counter mutations, same-run private-state comparison, and final payload generation remain unported"
     },
@@ -13228,7 +13386,9 @@
         "live_0x4a8d2c_dispatcher_feed_ported": false,
         "source_order_object_materialization_callers_ported": false,
         "object_materialization_parity_complete": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "Live source-pair producer/feed for generic direct/weighted object placement, true source-record +0x30/+0x34 fields, 0x49a318 object-metadata branch, town/reward/guard/fallback payload materialization, downstream caller order, same-run comparison, roads/rivers, and final payload generation remain unported."
     },
@@ -13319,7 +13479,9 @@
         "full_rmg_parity_complete": false,
         "runtime_generation_allowed": false,
         "godot_process_started": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "Live source-pair producer/caller order, true live source-record +0x30/+0x34/+0x3c fields, exact 0x49a318 call-site order/same-run comparison, town/reward/guard/fallback payload materialization, downstream caller order, roads/rivers, and final payload generation remain unported."
     },
@@ -13400,7 +13562,9 @@
         "object_materialization_parity_complete": false,
         "full_rmg_parity_complete": false,
         "godot_process_started": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "Live source-relation/wrapper caller feed and true runtime 0x4aa603 inputs are still not wired into the now-ported explicit 0x4aa9b7 -> 0x4aa3e9 reward/guard helper."
     },
@@ -13485,7 +13649,9 @@
         "full_rmg_parity_complete": false,
         "godot_process_started": false,
         "windows_dll_build_deferred": true,
-        "linux_release_native_build_passed": true
+        "linux_release_native_build_passed": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "blocker": "The shared workflow owns 0x4a9d6a leading-descriptor counts and 0x4a9911 source-backed descriptor selection, but 0x4a9641 coordinate building and 0x4a9c7c density followup are still unported. Final tile/object/header writeout remains unowned."
     },
@@ -13547,16 +13713,18 @@
         "native_cli_required_next_slice": "port_source_order_connection_decorative_replay_0x4a61bc_0x49eb8d_after_reward_guard_prefix_before_final_writeout",
         "full_rmg_parity_complete": false,
         "final_payload_generation_complete": false,
-        "windows_dll_build_deferred": true
+        "windows_dll_build_deferred": true,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue through road/river adjacency and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, but it is no longer a native-only phase gate."
     }
   ],
-  "currentNotes": "2026-06-25T18:39:40Z: Removed the native-only zero-successful-0x4aa9b7 reward/guard phase gate and updated h3maped_rmg_core_selftest for recovered 0x4ac552 continuation semantics. No-Godot controlled snapshots still block before final writeout, but now after reward/guard: small seed 10 and medium seed 10 stop in connection_road_river at 0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb, while small seed 58 stops at 0x49eb8d_0x49e700_decorative_dispatch_unported_for_valid_bit26_cells. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, not a final-map output.",
+  "currentNotes": "2026-06-25T20:33:34Z: Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "2026-06-25T19:11:39Z: Fixed the source-backed 0x4a2777/0x4a325d water-mode/member-flag split. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 now have nonzero 0x4a3f27 terrain repaint writes and all fail closed at 0x49eb8d_0x49e700 decorative dispatch before final writeout; the old Small seed10/Medium seed10 0x4a61bc source-frontier blocker is gone.",
+  "currentSliceNotes": "2026-06-25T20:33:34Z: No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
   "currentSliceUpdatedAt": "2026-06-25T19:11:39Z",
@@ -17966,28 +18134,21 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-selected-candidate-relation-producer-20260622",
-    "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
+    "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+    "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-    "timestamp": "2026-06-22T08:32:59Z",
+    "timestamp": "2026-06-25T20:33:34Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "Selected Candidate Relation Producer Owned",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
-    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show relation_owner_vector_produced_by_0x4ac552_0x4a218c=true, selected candidate input known, and relation_vector_10e4_10e8 present/contents/count known. The workflow now gets past the selected-candidate relation-vector handoff and remains blocked at reward/guard materialization zero successful 0x4aa9b7 commits before connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout.",
-    "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
-    "blocker": "Reward/guard materialization still produces zero successful 0x4aa9b7 commits after the selected-candidate relation-vector producer succeeds. Continuing into connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned would recreate proxy-state drift.",
-    "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-      "./bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer --phase-snapshot-only --controlled-case small_2p_seed_10_setup3:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed_58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed_10_setup3:medium:4:10:land:1:1:3:3 --print-manifest (expected exit 1 wrapper blocked; failed_count=0; no Godot)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
-    ],
+    "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+    "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+    "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -17995,51 +18156,45 @@
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md"
     ],
+    "checks": [
+      "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
+      "bin/h3maped_rmg_core_selftest (passed)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
+    ],
     "metrics": {
-      "checkpoint2_complete": false,
-      "runtime_generation_allowed": false,
+      "decorative_0x49e700_rand_trn_score_rows_carried": true,
+      "decorative_0x49e1bf_first_pass_replayed": true,
+      "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+      "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+      "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+      "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+      "no_godot_batch_phase_snapshot_written_count": 3,
+      "no_godot_batch_failed_count": 0,
       "godot_process_started": false,
-      "same_run_private_state_compare_passed": false,
-      "final_payload_generation_complete": false,
       "native_rmg_end_to_end_parity_complete": false,
-      "source_order_relation_pointer_context_bridge_owned": true,
-      "selected_candidate_relation_vector_producer_0x4ac552_0x4a218c_owned": true,
-      "small_seed10_candidate_container_count_0x10d4": 21,
-      "small_seed58_candidate_container_count_0x10d4": 21,
-      "medium_seed10_candidate_container_count_0x10d4": 25,
-      "small_seed10_relation_vector_count_0x10e4": 8,
-      "small_seed58_relation_vector_count_0x10e4": 5,
-      "medium_seed10_relation_vector_count_0x10e4": 7,
-      "small_seed10_reward_guard_attempts": 144,
-      "small_seed58_reward_guard_attempts": 90,
-      "medium_seed10_reward_guard_attempts": 126,
-      "reward_guard_successful_0x4aa9b7_commits": 0
-    },
-    "result": "partial_source_order_implementation_not_parity"
+      "windows_dll_build_deferred": true,
+      "decorative_0x49e1bf_neighbor_scan_replayed": true,
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+    }
   },
   "latestEvidence": {
-    "id": "native-rmg-selected-candidate-relation-producer-20260622",
-    "evidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
+    "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+    "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-    "timestamp": "2026-06-22T08:32:59Z",
+    "timestamp": "2026-06-25T20:33:34Z",
     "status": "passed_partial_implementation_not_parity",
-    "title": "Selected Candidate Relation Producer Owned",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
-    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 show relation_owner_vector_produced_by_0x4ac552_0x4a218c=true, selected candidate input known, and relation_vector_10e4_10e8 present/contents/count known. The workflow now gets past the selected-candidate relation-vector handoff and remains blocked at reward/guard materialization zero successful 0x4aa9b7 commits before connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout.",
-    "remainingWork": "Port/fix the live 0x4aab7e -> 0x4aa354 -> 0x4aa9b7 -> 0x4aa603/0x4aa3e9 reward/guard source stream and footprint feasibility state in recovered source order. Do not execute connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned.",
-    "blocker": "Reward/guard materialization still produces zero successful 0x4aa9b7 commits after the selected-candidate relation-vector producer succeeds. Continuing into connection-tail, D-014 endpoint prep, decorative, road/river, or final writeout before reward/guard commits are source-owned would recreate proxy-state drift.",
-    "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-      "./bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer --phase-snapshot-only --controlled-case small_2p_seed_10_setup3:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed_58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed_10_setup3:medium:4:10:land:1:1:3:3 --print-manifest (expected exit 1 wrapper blocked; failed_count=0; no Godot)",
-      "python3 tests/validate_repo.py (passed)",
-      "jq empty ops/progress.json (passed)",
-      "git diff --check (passed)"
-    ],
+    "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+    "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+    "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+    "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+      ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -18047,32 +18202,34 @@
       "src/gdextension/src/rmg_native_core.cpp",
       "PLAN.md"
     ],
+    "checks": [
+      "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
+      "bin/h3maped_rmg_core_selftest (passed)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
+    ],
     "metrics": {
-      "checkpoint2_complete": false,
-      "runtime_generation_allowed": false,
+      "decorative_0x49e700_rand_trn_score_rows_carried": true,
+      "decorative_0x49e1bf_first_pass_replayed": true,
+      "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+      "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+      "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+      "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+      "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+      "no_godot_batch_phase_snapshot_written_count": 3,
+      "no_godot_batch_failed_count": 0,
       "godot_process_started": false,
-      "same_run_private_state_compare_passed": false,
-      "final_payload_generation_complete": false,
       "native_rmg_end_to_end_parity_complete": false,
-      "source_order_relation_pointer_context_bridge_owned": true,
-      "selected_candidate_relation_vector_producer_0x4ac552_0x4a218c_owned": true,
-      "small_seed10_candidate_container_count_0x10d4": 21,
-      "small_seed58_candidate_container_count_0x10d4": 21,
-      "medium_seed10_candidate_container_count_0x10d4": 25,
-      "small_seed10_relation_vector_count_0x10e4": 8,
-      "small_seed58_relation_vector_count_0x10e4": 5,
-      "medium_seed10_relation_vector_count_0x10e4": 7,
-      "small_seed10_reward_guard_attempts": 144,
-      "small_seed58_reward_guard_attempts": 90,
-      "medium_seed10_reward_guard_attempts": 126,
-      "reward_guard_successful_0x4aa9b7_commits": 0
-    },
-    "result": "partial_source_order_implementation_not_parity"
+      "windows_dll_build_deferred": true,
+      "decorative_0x49e1bf_neighbor_scan_replayed": true,
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+    }
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+    ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+    ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+    ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+    ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
     "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -18080,7 +18237,7 @@
     "src/gdextension/src/rmg_native_core.cpp",
     "PLAN.md"
   ],
-  "latestEvidenceId": "native-rmg-selected-candidate-relation-producer-20260622",
+  "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -18553,7 +18710,19 @@
     "small_seed10_reward_guard_attempts": 144,
     "small_seed58_reward_guard_attempts": 90,
     "medium_seed10_reward_guard_attempts": 126,
-    "reward_guard_successful_0x4aa9b7_commits": 0
+    "reward_guard_successful_0x4aa9b7_commits": 0,
+    "decorative_0x49e700_rand_trn_score_rows_carried": true,
+    "decorative_0x49e1bf_first_pass_replayed": true,
+    "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+    "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+    "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+    "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+    "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+    "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+    "no_godot_batch_phase_snapshot_written_count": 3,
+    "no_godot_batch_failed_count": 0,
+    "decorative_0x49e1bf_neighbor_scan_replayed": true,
+    "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
   "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. The shared h3maped_rmg_core workflow now preserves the generator+0x10d4 accepted-candidate vector during setup and produces the generator+0x10e4 relation-owner vector from the selected 0x4ac552 candidate at the recovered 0x4ac552 -> 0x4a218c handoff instead of prebuilding it from flat runtime seeds. No-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots expose producer=true with relation counts 8, 5, and 7. All three still fail closed at reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail with attempts 144, 90, and 126 and zero successful 0x4aa9b7 commits. This is not parity and not final map output.",
@@ -52179,18 +52348,19 @@
         ]
       },
       "latestEvidenceArtifacts": [
-        ".artifacts/rmg_native_goal_4a79a3_bridge_probe/small_2p_seed58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_goal_4a79a3_bridge_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-        "src/gdextension/include/rmg_native_core.hpp",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+        ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/include/rmg_native_core.hpp",
         "src/gdextension/src/rmg_native_core.cpp",
-        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
-        "PLAN.md",
-        "docs/native-rmg-generated-cell-mutation-chain.md"
+        "PLAN.md"
       ],
-      "latestEvidenceId": "native-rmg-4a79a3-tail-invocation-20260622",
-      "latestFinding": "No-Godot Small seed 58 setup3 stops at current_phase_id materialization_bridge with blocker 0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope after applying the 0x4a4fc5 scan (scan=1296, source_water=0, bit26_candidates=0), invoking 0x4a79a3, and confirming fallback record count 0. Medium seed 10 setup3 reaches 0x4a4fc5 and stops at 0x4a4fc5_source_water_mutation_path_unowned_for_current_land_scope (scan=5184, source_water=5128, bit26_candidates=0) before invoking 0x4a79a3. Downstream mine/resource, reward/guard, decorative, roads/rivers, and final writeout remain uninvoked.",
+      "latestEvidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
+      "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -52737,7 +52907,19 @@
         "materialization_bridge_0x4a79a3_small_blocker": "0x4a79a3_fallback_materialization_0x4a7605_0x4a5e03_source_records_missing_for_current_scope",
         "materialization_bridge_0x4a79a3_small_fallback_record_count": 0,
         "materialization_bridge_0x4a79a3_invoked_medium": false,
-        "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true
+        "materialization_bridge_0x4a79a3_medium_blocked_before_tail": true,
+        "decorative_0x49e700_rand_trn_score_rows_carried": true,
+        "decorative_0x49e1bf_first_pass_replayed": true,
+        "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+        "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+        "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+        "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+        "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+        "no_godot_batch_phase_snapshot_written_count": 3,
+        "no_godot_batch_failed_count": 0,
+        "decorative_0x49e1bf_neighbor_scan_replayed": true,
+        "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "nonGoals": [
         "campaign production unless explicitly selected",
@@ -52749,7 +52931,7 @@
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-      "remainingWork": "Recover/provide the source-backed Small zero-water 0x4a79a3 fallback record feed for 0x4a7605/0x4a5e03, or resolve the Medium 0x4a4fc5 source-water input/mutation path. Only after that bridge tail is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
+      "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
       "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -52757,36 +52939,55 @@
         "PLAN.md"
       ],
       "startedAt": "2026-06-03T10:59:11Z",
-      "status": "blocked",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, post-0x4a4c8e cleanup, the 0x4a4913 relation loop, the 0x4a8c15 -> 0x4a5767 relation-normalization bridge, the one-level-land 0x4a4fc5 water-edge scan, and the zero-source-water 0x4a79a3 connection-tail invocation. Small zero-source-water cases now fail closed inside 0x4a79a3 because the source-backed 0x4a7605/0x4a5e03 fallback record feed is missing for the current scope; Medium currently fails closed inside 0x4a4fc5. This is not parity and not final map output.",
+      "status": "in_progress",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-25T05:44:12Z",
+      "updatedAt": "2026-06-25T20:33:34Z",
       "validation": {
-        "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
-        "evidenceId": "native-rmg-4a4913-relation-loop-boundary-20260622",
+        "id": "native-rmg-49e1bf-neighbor-pass-20260625",
+        "evidenceId": "native-rmg-49e1bf-neighbor-pass-20260625",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "timestamp": "2026-06-22T03:46:16Z",
+        "timestamp": "2026-06-25T20:33:34Z",
         "status": "passed_partial_implementation_not_parity",
-        "title": "0x4a4913 Relation Loop Boundary Implemented",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
-        "latestFinding": "No-Godot Small seed 58 setup3 and Medium seed 10 setup3 phase snapshots now both stop at current_phase_id materialization_bridge with blocker 0x4a8c15_bridge_0x4a5767_unported_after_relation_loop_0x4a4913_before_0x4a4fc5. Both snapshots report materialization_bridge_relation_loop_0x4a4913_ported/input_known/applied=true. Sampled one-level land probes found no type-8 relation records, so the reset/brush body of 0x4a4913 remains naturally unexercised by those sampled land cases.",
-        "remainingWork": "Port the source-backed 0x4a8c15 bridge call to 0x4a5767 after the recovered post-0x4a4c8e cleanup scan and recovered 0x4a4913 relation-vector loop, then continue 0x4a4fc5 and 0x4a79a3. Only after that bridge boundary is owned should native resume 0x4a9d6a, relation/object caller order, reward/guard, connection/road/river, and final writeout.",
-        "blocker": "The active shared workflow does not yet source-own the recovered 0x4a8c15 materialization bridge call to 0x4a5767 after 0x4a4913. Continuing into later helpers before 0x4a5767/0x4a4fc5/0x4a79a3 are ported would recreate proxy-state drift.",
-        "commands": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
-          "./bin/h3maped_rmg_core_selftest (passed)",
-          "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_goal_4a5767_boundary_probe --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_setup3:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected at 0x4a5767 boundary; no Godot)",
-          "standalone no-Godot Small 3p seeds 0-30 and Medium 4p seeds 0-60 type-8 exercise probe (blocked as expected; no sampled type-8 relation records)",
-          "python3 tests/validate_repo.py (passed)",
-          "jq empty ops/progress.json (passed)",
-          "git diff --check (passed)"
-        ],
+        "title": "Decorative 0x49e1bf Neighbor Pass Replay Owned",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
+        "latestFinding": "No-Godot phase snapshots for Small seed 10/58 setup3 and Medium 4-player seed 10 setup3 now show decorative 0x49e1bf neighbor-pass execution after the first-pass terrain/bit27 scorer. The Python wrapper reports failed_count=0, phase_snapshot_written_count=3, godot_process_started=false; each snapshot reports decorative_dispatch_scorer_neighbor_pass_invocation_count_0x49e1bf=1, cell_scan_count=20, scratch_empty_skip_count=18, object_reference_scan_count=0, positive_count=1, and blocked_reason=0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned.",
+        "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+        "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
         "artifacts": [
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/small_2p_seed58_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_boundary_probe/medium_4p_seed10_setup3.phase_snapshot.json",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe",
-          ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
-        ]
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed10_hc1_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/small_2p_seed58_hc1_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/medium_4p_seed10_hc3_setup0.phase_snapshot.json",
+          ".artifacts/rmg_native_49e1bf_neighbor_pass/rmg_native_batch_export.log",
+          "src/gdextension/include/h3maped_rmg_core.hpp",
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/include/rmg_native_core.hpp",
+          "src/gdextension/src/rmg_native_core.cpp",
+          "PLAN.md"
+        ],
+        "checks": [
+          "cmake --build .artifacts/map_persistence_native_build --target rmg_native_batch_export_cli h3maped_rmg_core_selftest --parallel 2 (passed)",
+          "bin/h3maped_rmg_core_selftest (passed)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_49e1bf_neighbor_pass --controlled-case small_2p_seed10_hc1_setup0:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed58_hc1_setup0:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed10_hc3_setup0:medium:4:10:land:1:1:3:3 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; phase_snapshot_written_count=3, failed_count=0, godot_process_started=false)"
+        ],
+        "metrics": {
+          "decorative_0x49e700_rand_trn_score_rows_carried": true,
+          "decorative_0x49e1bf_first_pass_replayed": true,
+          "decorative_0x49e1bf_neighbor_reference_pass_replayed": false,
+          "decorative_0x49e1bf_neighbor_object_reference_scan_count": 0,
+          "decorative_0x49e1bf_neighbor_pass_controlled_case_count": 3,
+          "decorative_0x49e1bf_neighbor_pass_positive_controlled_case_count": 3,
+          "decorative_0x49e1bf_neighbor_pass_cell_scan_count_per_case": 20,
+          "decorative_0x49e1bf_neighbor_pass_scratch_empty_skip_count_per_case": 18,
+          "no_godot_batch_phase_snapshot_written_count": 3,
+          "no_godot_batch_failed_count": 0,
+          "godot_process_started": false,
+          "native_rmg_end_to_end_parity_complete": false,
+          "windows_dll_build_deferred": true,
+          "decorative_0x49e1bf_neighbor_scan_replayed": true,
+          "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
+        }
       },
       "validationResults": {
         "id": "native-rmg-4a4913-relation-loop-boundary-20260622",
@@ -52815,7 +53016,7 @@
           ".artifacts/rmg_native_goal_4a5767_type8_probe_medium"
         ]
       },
-      "blocker": "The active shared workflow still does not source-own the Small 0x4a79a3 fallback record feed for 0x4a7605/0x4a5e03 or the Medium 0x4a4fc5 source-water mutation semantics. Continuing into later helpers before this bridge tail is owned would recreate proxy-state drift.",
+      "blocker": "Final writeout is blocked by source-order 0x49e700 decorative allocation after the now-owned 0x49e1bf first-pass and initial neighbor scan. Exact object-reference score-index/cache replay remains unowned for ref-bearing candidates and must fail closed instead of being guessed.",
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water"
     },
     {
@@ -59189,8 +59390,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Final writeout is still blocked by downstream source-order replay at 0x49eb8d -> 0x49e700 decorative dispatch for the focused Small/Medium one-level land cases. Road/river adjacency, descriptor counter replay after decorative dispatch, and final writeout remain unowned. This is not parity and not final map output.",
-  "remainingWork": "Port source-order 0x49eb8d -> 0x49e700 decorative dispatch against the recovered generated-cell/object-reference state, then continue road/river adjacency, descriptor counter replay, and final writeout. Do not use density tuning, final-map deltas, Godot generation, or proxy surfaces.",
+  "remainingGap": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
+  "remainingWork": "Port the source-backed decorative allocation commit after accepted 0x49e1bf candidates, and keep the exact 0x49b89c object-reference cache/descriptor +0x30/+0x40 score-index replay as the fail-closed requirement for any ref-bearing candidate. Then continue road/river adjacency, descriptor counter replay, and final writeout. Reward/guard zero direct 0x4aa9b7 commits remains parity debt.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -59722,7 +59923,7 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains blocked before final writeout. Shared h3maped_rmg_core now carries recovered water_mode_code separately from setup/generator mode through 0x4a2777/0x4a325d, preserving one-level land member/repaint flags even when setup mode is 2. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 now terrain-repaint non-water cells and all stop at 0x49eb8d_0x49e700 decorative dispatch. This is not parity and not final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries rand_trn.txt decorative score rows through 0x49e700 and replays the recovered 0x49e1bf first pass plus the initial neighbor scan: scratch footprint, descriptor-border scan, byte_0x2b terrain skip, and generated-cell object-reference key walk when present. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots each invoke the neighbor pass once, scan 20 cells, skip 18 empty scratch cells, encounter no object refs for the first accepted candidate, and fail closed at 0x49e700_weighted_decorative_object_allocation_after_0x49e1bf_unowned. This is not parity and not final map output.",
   "taskId": "10184",
   "updatedAt": "2026-06-25T19:11:39Z",
   "validation": {
@@ -59773,7 +59974,9 @@
       "small_seed10_reward_guard_attempts": 144,
       "small_seed58_reward_guard_attempts": 90,
       "medium_seed10_reward_guard_attempts": 126,
-      "reward_guard_successful_0x4aa9b7_commits": 0
+      "reward_guard_successful_0x4aa9b7_commits": 0,
+      "decorative_0x49e1bf_neighbor_scan_replayed": true,
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
     },
     "result": "partial_source_order_implementation_not_parity"
   },
@@ -71507,7 +71710,9 @@
       "small_seed10_reward_guard_attempts": 144,
       "small_seed58_reward_guard_attempts": 90,
       "medium_seed10_reward_guard_attempts": 126,
-      "reward_guard_successful_0x4aa9b7_commits": 0
+      "reward_guard_successful_0x4aa9b7_commits": 0,
+      "decorative_0x49e1bf_neighbor_scan_replayed": true,
+      "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
     },
     "result": "partial_source_order_implementation_not_parity"
   },
