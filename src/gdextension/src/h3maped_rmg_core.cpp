@@ -6721,7 +6721,18 @@ static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPriva
 
 static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 		const SourceObjectRecord0x4c &source_record,
+		const RandTrnObstacleScoreRecord49dc9e &score_record,
+		int32_t terrain_code,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
+	if (terrain_code < 0 || terrain_code >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
+		return false;
+	}
+	result.dispatch_probe_rand_trn_terrain_score_lookup_count_0x49e700 += 1;
+	const int32_t terrain_score = score_record.terrain_scores[size_t(terrain_code)];
+	if (terrain_score <= RAND_TRN_HARD_REJECT_SCORE_0X49E700) {
+		result.dispatch_probe_rand_trn_terrain_hard_reject_count_0x49e700 += 1;
+		return false;
+	}
 	if (!source_record.descriptor_mask_fields_0x34_0x48_known
 			|| source_record.descriptor_width_0x34 <= 0
 			|| source_record.descriptor_height_0x38 <= 0) {
@@ -6740,6 +6751,9 @@ static bool decorative_dispatch_probe_record_reaches_scorer_0x49e700(
 				result.first_scorer_source_row_0x49e700 = source_record.source_row;
 				result.first_scorer_source_type_0x49e700 = source_record.type_id_0x1c;
 				result.first_scorer_source_def_name_0x49e700 = source_record.def_name;
+				result.first_scorer_rand_trn_obstacle_id_0x49e700 = score_record.obstacle_id;
+				result.first_scorer_rand_trn_obstacle_name_0x49e700 = score_record.name;
+				result.first_scorer_rand_trn_terrain_score_0x49e700 = terrain_score;
 			}
 			return true;
 		}
@@ -6763,6 +6777,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		result.dispatch_probe_terrain9_reject_count_0x49e700 += 1;
 		return;
 	}
+	const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
 
 	for (const int32_t type_id : DECORATIVE_TYPE_TABLE_0X54092C) {
 		if (!decorative_dispatch_type_allowed_0x49e700(state, type_id)) {
@@ -6776,9 +6791,12 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 				continue;
 			}
 			result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
-			if (decorative_dispatch_probe_record_reaches_scorer_0x49e700(source_record, result)) {
-				result.blocked_reason = "0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned";
-				return;
+			for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
+				result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
+				if (decorative_dispatch_probe_record_reaches_scorer_0x49e700(source_record, score_record, terrain_code, result)) {
+					result.blocked_reason = "0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
+					return;
+				}
 			}
 		}
 	}

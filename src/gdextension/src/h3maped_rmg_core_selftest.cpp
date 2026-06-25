@@ -134,6 +134,12 @@ int main() {
 		if (!require(source_object_summary.rand_trn_backed_record_count == 543, "0x49da08 source object catalog lost rand_trn-backed identity")) {
 			return 1;
 		}
+		if (!require(source_object_summary.rand_trn_score_record_count == 109, "0x49dc9e rand_trn score record table lost recovered row count")) {
+			return 1;
+		}
+		if (!require(source_object_summary.rand_trn_score_variant_count == 2425, "0x49dc9e rand_trn score variants no longer match recovered object-template cross-reference")) {
+			return 1;
+		}
 		if (!require(source_object_summary.passability_mask_record_count == source_object_summary.record_count,
 					"0x49da08 source object catalog did not preserve recovered passability mask coverage")) {
 			return 1;
@@ -2178,7 +2184,7 @@ int main() {
 		return 1;
 		}
 		const std::string downstream_blocker =
-				"0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned";
+				"0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
 	const auto blocker_prefix_matches = [](const std::string &value, const std::string &prefix) {
 		return value.rfind(prefix, 0) == 0;
 	};
@@ -4411,7 +4417,7 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_decorative_blocker =
-					"0x49e700_0x49e1bf_record_0x10_descriptor_0x30_0x40_scoring_replay_unowned";
+					"0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
