@@ -7063,6 +7063,27 @@ struct DecorativeWeightedCandidate49e700 {
 	int32_t terrain_score = 0;
 };
 
+struct DecorativeCoordinateWorklistEntry49e700 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+static void decorative_dispatch_append_coordinate_0x49eb01(
+		std::vector<DecorativeCoordinateWorklistEntry49e700> &worklist,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		DecorativeFlaggedCellDispatchResult49eb8d &result) {
+	DecorativeCoordinateWorklistEntry49e700 entry;
+	entry.x = x;
+	entry.y = y;
+	entry.level = level;
+	worklist.push_back(entry);
+	result.coordinate_worklist_max_size_0x49e700 =
+			std::max<int32_t>(result.coordinate_worklist_max_size_0x49e700, int32_t(worklist.size()));
+}
+
 static bool decorative_dispatch_collect_record_candidates_0x49e700(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectRecord0x4c &source_record,
@@ -7174,16 +7195,21 @@ static int32_t decorative_dispatch_selected_candidate_index_0x49e9ad(
 static bool decorative_dispatch_post_commit_clear_bit26_0x49e700(
 		GeneratorObjectPrivateState &state,
 		const DecorativeWeightedCandidate49e700 &candidate,
+		std::vector<DecorativeCoordinateWorklistEntry49e700> &worklist,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	const SourceObjectRecord0x4c &source_record = candidate.source_record;
-	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
-		for (int32_t col = 0; col < source_record.descriptor_width_0x34; ++col) {
-			if (!source_object_descriptor_mask_bit_0x4268eb(source_record, col, row)
-					&& source_object_descriptor_mask_bit_0x41e951(source_record, col, row)) {
-				continue;
-			}
-			const int32_t cell_x = candidate.candidate_x - col;
-			const int32_t cell_y = candidate.candidate_y - row;
+	if (!source_record.descriptor_mask_fields_0x34_0x48_known
+			|| source_record.descriptor_width_0x34 <= 0
+			|| source_record.descriptor_height_0x38 <= 0) {
+		result.blocked_reason = "0x49e700_post_commit_descriptor_bounds_unknown";
+		return false;
+	}
+	const int32_t start_x = std::max<int32_t>(candidate.candidate_x - source_record.descriptor_width_0x34, 0);
+	const int32_t start_y = std::max<int32_t>(candidate.candidate_y - source_record.descriptor_height_0x38, 0);
+	const int32_t end_x = std::min<int32_t>(state.width, candidate.candidate_x + 2);
+	const int32_t end_y = std::min<int32_t>(state.height, candidate.candidate_y + 2);
+	for (int32_t cell_y = start_y; cell_y < end_y; ++cell_y) {
+		for (int32_t cell_x = start_x; cell_x < end_x; ++cell_x) {
 			const int64_t flat = cell_index(state.width, state.height, cell_x, cell_y, candidate.candidate_level);
 			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
 				continue;
@@ -7202,12 +7228,12 @@ static bool decorative_dispatch_post_commit_clear_bit26_0x49e700(
 			if (generated_cell_terrain_code_0x24(cell) == 9) {
 				continue;
 			}
-			if ((cell.word_0x2c & 0x1U) != 0U) {
-				continue;
+			if ((cell.word_0x2c & 0x1U) == 0U) {
+				cell.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+				sync_generated_cell_byte_0x2b_from_word28(cell);
+				result.post_commit_bit26_clear_count_0x49eaf1 += 1;
 			}
-			cell.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
-			sync_generated_cell_byte_0x2b_from_word28(cell);
-			result.post_commit_bit26_clear_count_0x49eaf1 += 1;
+			decorative_dispatch_append_coordinate_0x49eb01(worklist, cell_x, cell_y, candidate.candidate_level, result);
 			result.post_commit_coordinate_append_count_0x49eb01 += 1;
 		}
 	}
@@ -7216,7 +7242,6 @@ static bool decorative_dispatch_post_commit_clear_bit26_0x49e700(
 
 static void decorative_dispatch_probe_valid_cell_0x49e700(
 		GeneratorObjectPrivateState &state,
-		const GeneratedCellRecord0x30 &record,
 		int32_t dispatch_x,
 		int32_t dispatch_y,
 		int32_t dispatch_level,
@@ -7226,115 +7251,135 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 	result.dispatch_probe_invocation_count_0x49e700 += 1;
 	result.type_table_0x54092c_known = true;
 	result.type_table_0x54092c_count = int32_t(sizeof(DECORATIVE_TYPE_TABLE_0X54092C) / sizeof(DECORATIVE_TYPE_TABLE_0X54092C[0]));
-	if (!record.word_0x24_known) {
-		result.blocked_reason = "0x49e700_generated_cell_word_0x24_unknown";
-		return;
-	}
-	if (generated_cell_terrain_code_0x24(record) == 9) {
-		result.dispatch_probe_terrain9_reject_count_0x49e700 += 1;
-		return;
-	}
-	const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
 
-	std::vector<DecorativeWeightedCandidate49e700> accepted_candidates;
-	int32_t accepted_weight_total = 0;
-	for (const int32_t type_id : DECORATIVE_TYPE_TABLE_0X54092C) {
-		if (!decorative_dispatch_type_allowed_0x49e700(state, type_id)) {
+	std::vector<DecorativeCoordinateWorklistEntry49e700> worklist;
+	decorative_dispatch_append_coordinate_0x49eb01(worklist, dispatch_x, dispatch_y, dispatch_level, result);
+	result.coordinate_worklist_initial_append_count_0x4ae20e += 1;
+
+	while (!worklist.empty()) {
+		const DecorativeCoordinateWorklistEntry49e700 current = worklist.back();
+		worklist.pop_back();
+		result.coordinate_worklist_pop_count_0x4ae23e += 1;
+
+		const int64_t dispatch_flat = cell_index(state.width, state.height, current.x, current.y, current.level);
+		if (dispatch_flat < 0 || dispatch_flat >= int64_t(state.generated_cell_buffer.records.size())) {
 			continue;
 		}
-		const std::vector<SourceObjectRecord0x4c> source_records =
-				source_object_records_by_type_0x49da08(type_id);
-		for (const SourceObjectRecord0x4c &source_record : source_records) {
-			result.dispatch_probe_source_record_scan_count_0x49e700 += 1;
-			if (!source_record.rand_trn_backed) {
+		const GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(dispatch_flat)];
+		if (!record.word_0x24_known || !record.word_0x28_known) {
+			result.blocked_reason = "0x49e700_generated_cell_word_0x24_or_0x28_unknown";
+			return;
+		}
+		const uint8_t byte_0x2b = record.byte_0x2b_known ? record.byte_0x2b : generated_cell_byte_0x2b_from_word28(record.word_0x28);
+		if ((byte_0x2b & 0x02U) == 0U) {
+			continue;
+		}
+		if (generated_cell_terrain_code_0x24(record) == 9) {
+			result.dispatch_probe_terrain9_reject_count_0x49e700 += 1;
+			continue;
+		}
+		const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
+
+		std::vector<DecorativeWeightedCandidate49e700> accepted_candidates;
+		int32_t accepted_weight_total = 0;
+		for (const int32_t type_id : DECORATIVE_TYPE_TABLE_0X54092C) {
+			if (!decorative_dispatch_type_allowed_0x49e700(state, type_id)) {
 				continue;
 			}
-			result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
-			for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
-				result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
-				if (!decorative_dispatch_collect_record_candidates_0x49e700(
-							state,
-							source_record,
-							score_record,
-							dispatch_x,
-							dispatch_y,
-							dispatch_level,
-							terrain_code,
-							accepted_candidates,
-							result)) {
-					return;
+			const std::vector<SourceObjectRecord0x4c> source_records =
+					source_object_records_by_type_0x49da08(type_id);
+			for (const SourceObjectRecord0x4c &source_record : source_records) {
+				result.dispatch_probe_source_record_scan_count_0x49e700 += 1;
+				if (!source_record.rand_trn_backed) {
+					continue;
+				}
+				result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
+				for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
+					result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
+					if (!decorative_dispatch_collect_record_candidates_0x49e700(
+								state,
+								source_record,
+								score_record,
+								current.x,
+								current.y,
+								current.level,
+								terrain_code,
+								accepted_candidates,
+								result)) {
+						return;
+					}
 				}
 			}
 		}
-	}
-	for (const DecorativeWeightedCandidate49e700 &candidate : accepted_candidates) {
-		accepted_weight_total += candidate.score;
-	}
-	if (accepted_candidates.empty() || accepted_weight_total <= 0) {
-		return;
-	}
-	if (!state.native_object_record_key_allocator_0x4a93a2_known) {
-		result.blocked_reason = "0x49e700_selected_object_key_allocator_missing_before_0x5044b1";
-		return;
-	}
-	result.rng_selection_0x49e9ad_invoked = true;
-	result.rng_value_0x49e9ad = rng.next();
-	const int32_t selected_weight_remainder = result.rng_value_0x49e9ad % accepted_weight_total;
-	result.selected_candidate_index_0x49e9ad =
-			decorative_dispatch_selected_candidate_index_0x49e9ad(accepted_candidates, selected_weight_remainder);
-	if (result.selected_candidate_index_0x49e9ad < 0
-			|| result.selected_candidate_index_0x49e9ad >= int32_t(accepted_candidates.size())) {
-		result.blocked_reason = "0x49e700_weighted_selection_index_out_of_range";
-		return;
-	}
-	const DecorativeWeightedCandidate49e700 &selected =
-			accepted_candidates[size_t(result.selected_candidate_index_0x49e9ad)];
-	result.selected_candidate_score_0x49e9ad = selected.score;
-	result.selected_candidate_source_row_0x49e9ad = selected.source_record.source_row;
-	result.selected_candidate_def_name_0x49e9ad = selected.source_record.def_name;
+		for (const DecorativeWeightedCandidate49e700 &candidate : accepted_candidates) {
+			accepted_weight_total += candidate.score;
+		}
+		if (accepted_candidates.empty() || accepted_weight_total <= 0) {
+			continue;
+		}
+		if (!state.native_object_record_key_allocator_0x4a93a2_known) {
+			result.blocked_reason = "0x49e700_selected_object_key_allocator_missing_before_0x5044b1";
+			return;
+		}
+		result.rng_selection_0x49e9ad_invoked = true;
+		result.rng_value_0x49e9ad = rng.next();
+		const int32_t selected_weight_remainder = result.rng_value_0x49e9ad % accepted_weight_total;
+		result.selected_candidate_index_0x49e9ad =
+				decorative_dispatch_selected_candidate_index_0x49e9ad(accepted_candidates, selected_weight_remainder);
+		if (result.selected_candidate_index_0x49e9ad < 0
+				|| result.selected_candidate_index_0x49e9ad >= int32_t(accepted_candidates.size())) {
+			result.blocked_reason = "0x49e700_weighted_selection_index_out_of_range";
+			return;
+		}
+		const DecorativeWeightedCandidate49e700 &selected =
+				accepted_candidates[size_t(result.selected_candidate_index_0x49e9ad)];
+		result.selected_candidate_score_0x49e9ad = selected.score;
+		result.selected_candidate_source_row_0x49e9ad = selected.source_record.source_row;
+		result.selected_candidate_def_name_0x49e9ad = selected.source_record.def_name;
 
-	int32_t descriptor_offset_x_0x2c = 0;
-	int32_t descriptor_offset_y_0x30 = 0;
-	if (!descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
-				selected.source_record,
+		int32_t descriptor_offset_x_0x2c = 0;
+		int32_t descriptor_offset_y_0x30 = 0;
+		if (!descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+					selected.source_record,
+					descriptor_offset_x_0x2c,
+					descriptor_offset_y_0x30)) {
+			result.blocked_reason = "0x49e700_selected_descriptor_source_cell_offsets_0x2c_0x30_missing";
+			return;
+		}
+		const uint32_t object_record_key = state.next_native_object_record_key_0x4a93a2++;
+		result.selected_object_allocated_0x5044b1_count += 1;
+		result.selected_object_initialized_0x49ba89_count += 1;
+		const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
+				state,
+				object_record_key,
+				selected.source_record.type_id_0x1c,
+				selected.candidate_x,
+				selected.candidate_y,
+				selected.candidate_level,
+				selected.source_record.action_count > 0,
 				descriptor_offset_x_0x2c,
-				descriptor_offset_y_0x30)) {
-		result.blocked_reason = "0x49e700_selected_descriptor_source_cell_offsets_0x2c_0x30_missing";
-		return;
+				descriptor_offset_y_0x30,
+				&selected.source_record);
+		if (!commit.object_vector_appended) {
+			result.blocked_reason = "0x49e700_vtable_slot_0x04_commit_did_not_append";
+			return;
+		}
+		result.selected_object_commit_callback_count_0x49ea25 += 1;
+		if (!state.object_records_0xec4_ecc.empty()) {
+			ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
+			object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+			object_record.descriptor_source_key_0x00 = selected.source_record.source_row;
+			object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+			object_record.copied_source_record_carried = true;
+			object_record.source_record_copy = selected.source_record;
+			build_object_record_score_cache_0x49b89c(object_record);
+		}
+		if (!decorative_dispatch_post_commit_clear_bit26_0x49e700(state, selected, worklist, result)) {
+			return;
+		}
 	}
-	const uint32_t object_record_key = state.next_native_object_record_key_0x4a93a2++;
-	result.selected_object_allocated_0x5044b1_count += 1;
-	result.selected_object_initialized_0x49ba89_count += 1;
-	const ObjectFootprintCommitResult4a54a7 commit = object_footprint_commit_4a54a7(
-			state,
-			object_record_key,
-			selected.source_record.type_id_0x1c,
-			selected.candidate_x,
-			selected.candidate_y,
-			selected.candidate_level,
-			selected.source_record.action_count > 0,
-			descriptor_offset_x_0x2c,
-			descriptor_offset_y_0x30,
-			&selected.source_record);
-	if (!commit.object_vector_appended) {
-		result.blocked_reason = "0x49e700_vtable_slot_0x04_commit_did_not_append";
-		return;
-	}
-	result.selected_object_commit_callback_count_0x49ea25 += 1;
-	if (!state.object_records_0xec4_ecc.empty()) {
-		ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc.back();
-		object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
-		object_record.descriptor_source_key_0x00 = selected.source_record.source_row;
-		object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
-		object_record.copied_source_record_carried = true;
-		object_record.source_record_copy = selected.source_record;
-		build_object_record_score_cache_0x49b89c(object_record);
-	}
-	if (!decorative_dispatch_post_commit_clear_bit26_0x49e700(state, selected, result)) {
-		return;
-	}
-	result.coordinate_worklist_replay_pending_after_first_commit = true;
-	result.blocked_reason = "0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported";
+	result.coordinate_worklist_empty_return_count_0x49eb50 += 1;
+	result.coordinate_worklist_replay_complete_0x49e700 = true;
 }
 
 DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
@@ -7381,7 +7426,7 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 				}
 				if (generated_cell_49a1d8_valid_record(record)) {
 					result.valid_0x49e700_dispatch_candidate_count += 1;
-					decorative_dispatch_probe_valid_cell_0x49e700(state, record, x, y, level, rng, result);
+					decorative_dispatch_probe_valid_cell_0x49e700(state, x, y, level, rng, result);
 					if (!result.blocked_reason.empty()) {
 						return result;
 					}
@@ -7392,7 +7437,30 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 		}
 	}
 
-	result.blocked_reason = "0x49eb8d_optional_invalid_cell_handler_unported_for_bit26_cells";
+	for (int32_t level = 0; level < state.level_count; ++level) {
+		for (int32_t y = 0; y < state.height; ++y) {
+			for (int32_t x = 0; x < state.width; ++x) {
+				const int64_t flat = cell_index(state.width, state.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+					result.blocked_reason = "0x49eb8d_pass3_generated_cell_grid_index_out_of_range";
+					return result;
+				}
+				GeneratedCellRecord0x30 &record = state.generated_cell_buffer.records[size_t(flat)];
+				result.scanned_cell_count_pass3 += 1;
+				if (!record.word_0x24_known || !record.word_0x28_known || !record.word_0x2c_known) {
+					result.blocked_reason = "0x49eb8d_pass3_generated_cell_words_unknown";
+					return result;
+				}
+				if ((record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) == 0U
+						&& generated_cell_49a1d8_valid_record(record)
+						&& generated_cell_49a932(record, true)) {
+					result.pass3_occupied_stamp_count_0x49a932 += 1;
+				}
+			}
+		}
+	}
+
+	result.applied = true;
 	return result;
 }
 

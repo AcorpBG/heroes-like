@@ -2254,7 +2254,14 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t selected_object_commit_callback_count_0x49ea25 = 0;
 	int32_t post_commit_coordinate_append_count_0x49eb01 = 0;
 	int32_t post_commit_bit26_clear_count_0x49eaf1 = 0;
+	int32_t coordinate_worklist_initial_append_count_0x4ae20e = 0;
+	int32_t coordinate_worklist_pop_count_0x4ae23e = 0;
+	int32_t coordinate_worklist_empty_return_count_0x49eb50 = 0;
+	int32_t coordinate_worklist_max_size_0x49e700 = 0;
+	bool coordinate_worklist_replay_complete_0x49e700 = false;
 	bool coordinate_worklist_replay_pending_after_first_commit = false;
+	int32_t scanned_cell_count_pass3 = 0;
+	int32_t pass3_occupied_stamp_count_0x49a932 = 0;
 	std::string blocked_reason;
 };
 

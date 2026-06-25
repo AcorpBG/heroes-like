@@ -887,7 +887,14 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t decorative_dispatch_selected_object_commit_callback_count_0x49ea25 = 0;
 	int32_t decorative_dispatch_post_commit_coordinate_append_count_0x49eb01 = 0;
 	int32_t decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1 = 0;
+	int32_t decorative_dispatch_coordinate_worklist_initial_append_count_0x4ae20e = 0;
+	int32_t decorative_dispatch_coordinate_worklist_pop_count_0x4ae23e = 0;
+	int32_t decorative_dispatch_coordinate_worklist_empty_return_count_0x49eb50 = 0;
+	int32_t decorative_dispatch_coordinate_worklist_max_size_0x49e700 = 0;
+	bool decorative_dispatch_coordinate_worklist_replay_complete_0x49e700 = false;
 	bool decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit = false;
+	int32_t decorative_dispatch_scanned_cell_count_pass3 = 0;
+	int32_t decorative_dispatch_pass3_occupied_stamp_count_0x49a932 = 0;
 	std::string decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d;
 	bool connection_tail_replay_0x4a79a3_ported = false;
 	bool connection_tail_replay_0x4a79a3_invoked = false;

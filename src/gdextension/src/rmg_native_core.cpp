@@ -901,7 +901,14 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_selected_object_commit_callback_count_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_object_commit_callback_count_0x49ea25;
 	out.decorative_dispatch_post_commit_coordinate_append_count_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.post_commit_coordinate_append_count_0x49eb01;
 	out.decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1 = input.decorative_flagged_cell_dispatch_0x49eb8d.post_commit_bit26_clear_count_0x49eaf1;
+	out.decorative_dispatch_coordinate_worklist_initial_append_count_0x4ae20e = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_initial_append_count_0x4ae20e;
+	out.decorative_dispatch_coordinate_worklist_pop_count_0x4ae23e = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_pop_count_0x4ae23e;
+	out.decorative_dispatch_coordinate_worklist_empty_return_count_0x49eb50 = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_empty_return_count_0x49eb50;
+	out.decorative_dispatch_coordinate_worklist_max_size_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_max_size_0x49e700;
+	out.decorative_dispatch_coordinate_worklist_replay_complete_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_replay_complete_0x49e700;
 	out.decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit = input.decorative_flagged_cell_dispatch_0x49eb8d.coordinate_worklist_replay_pending_after_first_commit;
+	out.decorative_dispatch_scanned_cell_count_pass3 = input.decorative_flagged_cell_dispatch_0x49eb8d.scanned_cell_count_pass3;
+	out.decorative_dispatch_pass3_occupied_stamp_count_0x49a932 = input.decorative_flagged_cell_dispatch_0x49eb8d.pass3_occupied_stamp_count_0x49a932;
 	out.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d = input.decorative_flagged_cell_dispatch_0x49eb8d.blocked_reason;
 	out.connection_tail_replay_0x4a79a3_ported = input.connection_tail_replay_0x4a79a3_ported;
 	out.connection_tail_replay_0x4a79a3_invoked = input.connection_tail_replay_0x4a79a3.invoked;
@@ -2718,9 +2725,16 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_selected_object_commit_callback_count_0x49ea25\":" << state.decorative_dispatch_selected_object_commit_callback_count_0x49ea25 << ","
 			<< "\"decorative_dispatch_post_commit_coordinate_append_count_0x49eb01\":" << state.decorative_dispatch_post_commit_coordinate_append_count_0x49eb01 << ","
 			<< "\"decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1\":" << state.decorative_dispatch_post_commit_bit26_clear_count_0x49eaf1 << ","
+			<< "\"decorative_dispatch_coordinate_worklist_initial_append_count_0x4ae20e\":" << state.decorative_dispatch_coordinate_worklist_initial_append_count_0x4ae20e << ","
+			<< "\"decorative_dispatch_coordinate_worklist_pop_count_0x4ae23e\":" << state.decorative_dispatch_coordinate_worklist_pop_count_0x4ae23e << ","
+			<< "\"decorative_dispatch_coordinate_worklist_empty_return_count_0x49eb50\":" << state.decorative_dispatch_coordinate_worklist_empty_return_count_0x49eb50 << ","
+			<< "\"decorative_dispatch_coordinate_worklist_max_size_0x49e700\":" << state.decorative_dispatch_coordinate_worklist_max_size_0x49e700 << ","
+			<< "\"decorative_dispatch_coordinate_worklist_replay_complete_0x49e700\":" << (state.decorative_dispatch_coordinate_worklist_replay_complete_0x49e700 ? "true" : "false") << ","
 			<< "\"decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit\":" << (state.decorative_dispatch_coordinate_worklist_replay_pending_after_first_commit ? "true" : "false") << ","
+			<< "\"decorative_dispatch_scanned_cell_count_pass3\":" << state.decorative_dispatch_scanned_cell_count_pass3 << ","
+			<< "\"decorative_dispatch_pass3_occupied_stamp_count_0x49a932\":" << state.decorative_dispatch_pass3_occupied_stamp_count_0x49a932 << ","
 			<< "\"decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d\":\"" << json_escape(state.decorative_flagged_cell_dispatch_blocked_reason_0x49eb8d) << "\","
-			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_scans_recovered_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_scores_all_candidates_0x49e904_0x49e91f_weight_vector_selects_by_0x49e9ad_rng_allocates_0x5044b1_initializes_0x49ba89_commits_once_0x49ea25_and_blocks_on_0x49b89c_score_cache_or_coordinate_worklist_replay\","
+			<< "\"decorative_dispatch_0x49e700_source\":\"0x49eb8d_counts_bit26_then_0x49e700_replays_recovered_0x4ae20e_0x4ae23e_coordinate_worklist_scans_0x54092c_type_table_and_0x49dc9e_rand_trn_score_records_then_0x49e1bf_scores_candidates_0x49e904_0x49e91f_weight_vector_selects_by_0x49e9ad_rng_allocates_0x5044b1_initializes_0x49ba89_commits_0x49ea25_then_0x49eaf1_0x49eb01_appends_post_commit_rectangle_until_0x49eb50_and_0x49eb8d_pass3_stamps_0x49a932\","
 			<< "\"connection_tail_replay_0x4a79a3_ported\":" << (state.connection_tail_replay_0x4a79a3_ported ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_invoked\":" << (state.connection_tail_replay_0x4a79a3_invoked ? "true" : "false") << ","
 			<< "\"connection_tail_replay_0x4a79a3_applied\":" << (state.connection_tail_replay_0x4a79a3_applied ? "true" : "false") << ","
