@@ -2170,6 +2170,20 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t budget_0x4374c_div_bit26 = 0;
 	int32_t valid_0x49e700_dispatch_candidate_count = 0;
 	int32_t invalid_optional_handler_candidate_count = 0;
+	bool dispatch_probe_0x49e700_invoked = false;
+	bool type_table_0x54092c_known = false;
+	int32_t type_table_0x54092c_count = 0;
+	int32_t dispatch_probe_invocation_count_0x49e700 = 0;
+	int32_t dispatch_probe_terrain9_reject_count_0x49e700 = 0;
+	int32_t dispatch_probe_source_record_scan_count_0x49e700 = 0;
+	int32_t dispatch_probe_rand_trn_record_count_0x49e700 = 0;
+	int32_t dispatch_probe_descriptor_mask_missing_count_0x49e700 = 0;
+	int32_t dispatch_probe_descriptor_footprint_probe_count_0x49e700 = 0;
+	int32_t dispatch_probe_scorer_input_candidate_count_0x49e700 = 0;
+	bool scorer_input_0x49e1bf_unowned = false;
+	int32_t first_scorer_source_row_0x49e700 = -1;
+	int32_t first_scorer_source_type_0x49e700 = -1;
+	std::string first_scorer_source_def_name_0x49e700;
 	std::string blocked_reason;
 };
 
