@@ -2160,11 +2160,11 @@ int main() {
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 	const std::string final_writeout_blocker =
-			"final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
+			"final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_object_writeout"
 					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned generator state did not advance through 0x4ad309 object-count writeout into the pass-split boundary")) {
+				"workflow-owned generator state did not advance through 0x4ad3eb object payload prefix into the header/sentinel boundary")) {
 		return 1;
 	}
 	if (!require(generator_state_workflow.final_tile_writeout_0x49b2b6.invoked
@@ -2187,10 +2187,16 @@ int main() {
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
 							+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
 							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialization_invoked
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_applied
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialized_object_count
+							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned final object 0x4ad309 count header and 0x4ad3eb pass split did not materialize before the serializer-payload blocker")) {
+				"workflow-owned final object 0x4ad309 count header, 0x4ad3eb pass split, and object payload prefix did not materialize before the header/sentinel blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -4497,18 +4503,18 @@ int main() {
 			const H3MapedRmgWorkflowResult workflow =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 			const std::string workflow_final_writeout_blocker =
-					"final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split";
+					"final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
 						&& workflow.current_phase_id == "final_object_writeout"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance past 0x4ad309 object-count writeout to the pass-split blocker")) {
+					"entry-to-writeout workflow did not advance past 0x4ad3eb object payload prefix to the header/sentinel blocker")) {
 			return 1;
 		}
 		if (!require(workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed after 0x4ad309 object-count writeout; actual=")
+					std::string("entry-to-writeout workflow did not fail closed after 0x4ad3eb object payload prefix; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
@@ -4532,8 +4538,14 @@ int main() {
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
 								+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
 								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialization_invoked
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_applied
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialized_object_count
+								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
-					"entry-to-writeout workflow did not own the recovered 0x4ad309 generated-object count header and 0x4ad3eb pass split before stopping at payload serialization")) {
+					"entry-to-writeout workflow did not own the recovered 0x4ad309 generated-object count header, 0x4ad3eb pass split, and object payload prefix before stopping at header/sentinel serialization")) {
 			return 1;
 		}
 			if (!require(workflow.phases.size() >= 16

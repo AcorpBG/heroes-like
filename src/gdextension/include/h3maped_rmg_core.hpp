@@ -235,6 +235,8 @@ struct SourceObjectCatalogSummary0x49da08 {
 struct GeneratorDescriptorVectorEntry0x398 {
 	int32_t vector_index = -1;
 	int32_t source_catalog_index_0x49da08 = -1;
+	bool descriptor_raw_0x0c_known = true;
+	int32_t descriptor_raw_0x0c = 0;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t descriptor_source_field_0x20 = 0;
 	int32_t descriptor_group_0x24 = 0;
@@ -319,6 +321,8 @@ struct SourceObjectResolvedWrapper4af785 {
 struct SourceObjectDescriptorJoinContext4903e8 {
 	int32_t target_context_0x4903e8 = -1;
 	int32_t source_key_0x00 = -1;
+	bool descriptor_raw_0x0c_known = true;
+	int32_t descriptor_raw_0x0c = 0;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t subtype_0x20 = 0;
 	int32_t group_0x24 = 0;
@@ -399,6 +403,8 @@ struct SourceObjectResolverResult4af785 {
 struct SourceObjectDescriptor4903e8 {
 	int32_t target_context_0x4903e8 = -1;
 	int32_t source_key_0x00 = -1;
+	bool descriptor_raw_0x0c_known = true;
+	int32_t descriptor_raw_0x0c = 0;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t subtype_0x20 = 0;
 	int32_t group_0x24 = 0;
@@ -1821,6 +1827,8 @@ struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 struct ObjectRecordReference4a54a7 {
 	uint32_t object_record_key = 0U;
 	int32_t descriptor_type_0x1c = -1;
+	bool descriptor_raw_0x0c_known = true;
+	int32_t descriptor_raw_0x0c = 0;
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
@@ -2908,6 +2916,8 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	int32_t vector_index = -1;
 	uint32_t object_record_key = 0U;
 	int32_t descriptor_type_0x1c = -1;
+	bool descriptor_raw_0x0c_known = false;
+	int32_t descriptor_raw_0x0c = 0;
 	uint32_t object_record_vtable_0x00 = 0U;
 	bool serializer_slot_0x0c_known = false;
 	uint32_t serializer_slot_0x0c = 0U;
@@ -2930,6 +2940,14 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	int32_t generated_object_count = 0;
 	int32_t object_count_payload_byte_count = 0;
 	std::array<uint8_t, 4> object_count_payload_bytes {};
+	bool object_payload_serialization_invoked = false;
+	bool object_payload_prefix_applied = false;
+	int32_t object_payload_serialized_object_count = 0;
+	int32_t object_payload_byte_count = 0;
+	int32_t object_payload_prefix_blocked_index = -1;
+	uint32_t object_payload_prefix_blocked_serializer_slot = 0U;
+	int32_t object_payload_prefix_blocked_pass = 0;
+	std::vector<uint8_t> object_payload_bytes;
 	bool object_record_vector_count_known_0xec8_0xecc = false;
 	int32_t object_record_vector_count_0xec8_0xecc = 0;
 	int32_t serializer_slot_known_count = 0;
@@ -3415,7 +3433,7 @@ GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr);
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr, bool descriptor_raw_0x0c_known = true, int32_t descriptor_raw_0x0c = 0);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);

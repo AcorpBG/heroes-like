@@ -320,6 +320,8 @@ void append_final_object_record_samples_json(std::ostream &out, const std::vecto
 		out << "{\"vector_index\":" << record.vector_index
 			<< ",\"object_record_key\":" << record.object_record_key
 			<< ",\"descriptor_type_0x1c\":" << record.descriptor_type_0x1c
+			<< ",\"descriptor_raw_0x0c_known\":" << (record.descriptor_raw_0x0c_known ? "true" : "false")
+			<< ",\"descriptor_raw_0x0c\":" << record.descriptor_raw_0x0c
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"serializer_slot_0x0c_known\":" << (record.serializer_slot_0x0c_known ? "true" : "false")
 			<< ",\"serializer_slot_0x0c\":" << record.serializer_slot_0x0c
@@ -346,7 +348,14 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"object_count_payload_byte_count\":" << writeout.object_count_payload_byte_count
 		<< ",\"object_count_payload_bytes\":";
 	append_final_object_count_bytes_json(out, writeout.object_count_payload_bytes);
-	out << ",\"object_record_vector_count_known_0xec8_0xecc\":" << (writeout.object_record_vector_count_known_0xec8_0xecc ? "true" : "false")
+	out << ",\"object_payload_serialization_invoked\":" << (writeout.object_payload_serialization_invoked ? "true" : "false")
+		<< ",\"object_payload_prefix_applied\":" << (writeout.object_payload_prefix_applied ? "true" : "false")
+		<< ",\"object_payload_serialized_object_count\":" << writeout.object_payload_serialized_object_count
+		<< ",\"object_payload_byte_count\":" << writeout.object_payload_byte_count
+		<< ",\"object_payload_prefix_blocked_index\":" << writeout.object_payload_prefix_blocked_index
+		<< ",\"object_payload_prefix_blocked_serializer_slot\":" << writeout.object_payload_prefix_blocked_serializer_slot
+		<< ",\"object_payload_prefix_blocked_pass\":" << writeout.object_payload_prefix_blocked_pass
+		<< ",\"object_record_vector_count_known_0xec8_0xecc\":" << (writeout.object_record_vector_count_known_0xec8_0xecc ? "true" : "false")
 		<< ",\"object_record_vector_count_0xec8_0xecc\":" << writeout.object_record_vector_count_0xec8_0xecc
 		<< ",\"serializer_slot_known_count\":" << writeout.serializer_slot_known_count
 		<< ",\"serializer_slot_unknown_count\":" << writeout.serializer_slot_unknown_count
@@ -4073,8 +4082,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ab37f -> 0x4b4243 road toolkit, the recovered 0x49b2b6 tile-cell stream, and the recovered 0x4ad309/0x4ad318 generated-object count header write. The workflow intentionally fails closed before guessing the unported 0x57c648[type*16+0x0c] pass-split table used by 0x4ad3eb.\",\n";
-	out << "    \"required_refactor\": \"port the recovered 0x4ad3eb static/generated object serialization passes, including the 0x57c648[type*16+0x0c] pass split table, static object stream, header/player/metadata payload, 0x4ad3de final sentinel success, and 0x4ae09a return before allowing native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ab37f -> 0x4b4243 road toolkit, the recovered 0x49b2b6 tile-cell stream, the recovered 0x4ad309/0x4ad318 generated-object count header write, the 0x57c648[type*16+0x0c] 0x4ad3eb pass split, and the owned prefix of field-backed object serializer bodies. The workflow intentionally fails closed on the next unported serializer/body, header/player/metadata payload, 0x4ad3de final sentinel success, or 0x4ae09a return before allowing native map output.\",\n";
+	out << "    \"required_refactor\": \"port the remaining recovered 0x4ad3eb static/generated object serialization bodies plus static object stream, header/player/metadata payload, 0x4ad3de final sentinel success, and 0x4ae09a return before allowing native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
