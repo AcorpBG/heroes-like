@@ -55,12 +55,23 @@ def terrain_mask(value: Any) -> int:
     mask = 0
     for index, ch in enumerate(text):
         if ch == "1":
-            mask |= 1 << index
+            # 0x491136 consumes nine row characters while walking the target
+            # slot from 8 down to 0, so the leftmost text character is bit 8.
+            mask |= 1 << (len(text) - 1 - index)
     return mask
 
 
 def row_has_rand_trn(row: dict[str, str]) -> bool:
     return bool(row.get("rand_trn_obstacles", "").strip() or row.get("rand_trn_terrain_matches", "").strip())
+
+
+def source_metadata_bucket_0x08(type_id: int, metadata_bucket_by_type: dict[int, int]) -> int:
+    # H3MapEd 0x401d5d..0x401d83 seeds metadata +0x08 to the type id
+    # before the static alias table patches the non-identity buckets.
+    if type_id <= 0:
+        return metadata_bucket_by_type.get(type_id, 0)
+    override = metadata_bucket_by_type.get(type_id, 0)
+    return override if override != 0 else type_id
 
 
 def source_record_key(row: dict[str, Any]) -> tuple[str, int, str, int, int]:
@@ -145,7 +156,7 @@ def render(catalog_path: Path, catalog_json_path: Path, metadata_path: Path, msk
     msk_default_count = 0
     for row in rows:
         type_id = i32(row.get("type_id"))
-        metadata_bucket = metadata_bucket_by_type.get(type_id, 0)
+        metadata_bucket = source_metadata_bucket_0x08(type_id, metadata_bucket_by_type)
         subtype = i32(row.get("subtype"))
         text_mask = text_masks.get(source_record_key(row), {})
         pass_mask = text_mask.get("pass_mask", "")
