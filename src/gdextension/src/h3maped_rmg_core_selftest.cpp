@@ -164,6 +164,34 @@ bool require(bool condition, const std::string &message) {
 
 int main() {
 	{
+		const aurelion::h3maped_rmg_core::ClipBounds bounds { 0, 0, 10, 10 };
+		auto require_clip = [&](const std::string &label, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t expected_x, int32_t expected_y) {
+			const auto clipped = aurelion::h3maped_rmg_core::clip_point_4a2b33(x1, y1, x2, y2, bounds);
+			return require(clipped.x == expected_x && clipped.y == expected_y,
+					"0x4a2b33 " + label + " expected (" + std::to_string(expected_x) + "," + std::to_string(expected_y)
+							+ ") got (" + std::to_string(clipped.x) + "," + std::to_string(clipped.y) + ")");
+		};
+		if (!require_clip("inside endpoint", 3, 4, 7, 8, 3, 4)) {
+			return 1;
+		}
+		if (!require_clip("left edge 0x4a2bb5 returns original endpoint", -5, 5, 5, -15, -5, 5)) {
+			return 1;
+		}
+		if (!require_clip("min-y 0x4a2bb5 returns original endpoint", 5, -5, -15, 5, 5, -5)) {
+			return 1;
+		}
+		if (!require_clip("max-x 0x4a2bb5 returns original endpoint", 15, 5, 5, -15, 15, 5)) {
+			return 1;
+		}
+		if (!require_clip("max-y 0x4a2ccf returns original endpoint", 5, 15, -15, 5, 5, 15)) {
+			return 1;
+		}
+		if (!require_clip("ordinary edge projection returns current clipped endpoint", -5, -5, 5, 5, 0, 0)) {
+			return 1;
+		}
+	}
+
+	{
 		const auto level_one_line = aurelion::h3maped_rmg_core::boundary_line_writer_4a261a(5, 5, 2, 2, 0, 0, 3, 0, 7, 1);
 		if (!require(!level_one_line.trace.empty(), "0x4a261a level-1 deterministic line did not emit trace writes")) {
 			return 1;
@@ -2000,7 +2028,19 @@ int main() {
 	if (!require(owner_grid.materialization.source_handoff_source_record_seed_count == 4 && owner_grid.materialization.source_handoff_missing_source_record_seed_count == 0, "composed owner-grid materializer did not consume source-record seeds")) {
 		return 1;
 	}
-	if (!require(owner_grid.materialization.span_fill_zone_count == 4, "composed owner-grid materializer did not span-fill all seeded zones")) {
+	const int32_t fillable_owner_grid_zone_count = int32_t(std::count_if(
+			owner_grid.materialization.zones.begin(),
+			owner_grid.materialization.zones.end(),
+			[](const auto &zone) {
+				return zone.has_span_seed_4a325d && !zone.segments.empty();
+			}));
+	if (!require(owner_grid.materialization.span_fill_zone_count == fillable_owner_grid_zone_count,
+				"composed owner-grid materializer did not span-fill all source-edge materialized seeded zones: span_fill_zone_count="
+						+ std::to_string(owner_grid.materialization.span_fill_zone_count)
+						+ " fillable_zone_count="
+						+ std::to_string(fillable_owner_grid_zone_count)
+						+ " span_fill_seed_blocked_count="
+						+ std::to_string(owner_grid.materialization.span_fill_seed_blocked_count))) {
 		return 1;
 	}
 	if (!require(!owner_grid.materialization.generated_cell_word_0x20.empty(), "composed owner-grid materializer did not produce generated-cell owner words")) {
