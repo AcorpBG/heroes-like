@@ -14098,23 +14098,22 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height,
 				}
 				result.zone_repaint_candidate_count_0x4a4082 += 1;
 				result.zone_repaint_write_count_0x4a4163 += 1;
-				if (set_terrain_at_grid_index_4bb74b(result.terrain_code, width, height, level_tile_count, scan_level, x, y, terrain_id)) {
-					record_changed = true;
-					if (write_live_visual_cell(scan_level, x, y, terrain_id)) {
-						result.terrain_visual_repaint_write_count_0x4a4082 += 1;
-					}
-					set_b.erase(terrain_grid_key_4bb74b(scan_level, x, y));
-					if (candidate_gate_4bc988(result.terrain_code, width, height, level_tile_count, scan_level, x, y)) {
-						append_set_a(scan_level, x, y);
-					} else {
-						seed_4bba59(scan_level, x, y, terrain_id);
-					}
-					if (!toolkit_byte5_allows_same_class_gate_4bb74b(terrain_id)) {
-						process_set_a_neighbor(scan_level, x, y - 1, terrain_id, true);
-						process_set_a_neighbor(scan_level, x, y + 1, terrain_id, true);
-						process_set_a_neighbor(scan_level, x - 1, y, terrain_id, false);
-						process_set_a_neighbor(scan_level, x + 1, y, terrain_id, false);
-					}
+				result.terrain_code[size_t(flat)] = terrain_id;
+				record_changed = true;
+				if (write_live_visual_cell(scan_level, x, y, terrain_id)) {
+					result.terrain_visual_repaint_write_count_0x4a4082 += 1;
+				}
+				set_b.erase(terrain_grid_key_4bb74b(scan_level, x, y));
+				if (candidate_gate_4bc988(result.terrain_code, width, height, level_tile_count, scan_level, x, y)) {
+					append_set_a(scan_level, x, y);
+				} else {
+					seed_4bba59(scan_level, x, y, terrain_id);
+				}
+				if (!toolkit_byte5_allows_same_class_gate_4bb74b(terrain_id)) {
+					process_set_a_neighbor(scan_level, x, y - 1, terrain_id, true);
+					process_set_a_neighbor(scan_level, x, y + 1, terrain_id, true);
+					process_set_a_neighbor(scan_level, x - 1, y, terrain_id, false);
+					process_set_a_neighbor(scan_level, x + 1, y, terrain_id, false);
 				}
 			}
 		}
