@@ -3561,7 +3561,7 @@ struct WeightedObjectCandidateScanResult4a901a {
 int64_t cell_index(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 int64_t generated_cell_flat_key_4a325d(int32_t width, int32_t height, int32_t x, int32_t y, int32_t level);
 uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id);
-void generated_cell_apply_owner_word_4a2777(std::vector<uint32_t> &private_zone_words, std::vector<uint32_t> &generated_cell_word_0x20, int64_t key, int32_t zone_id);
+void generated_cell_apply_owner_word_4a2777(std::vector<uint32_t> &private_zone_words, std::vector<uint32_t> &generated_cell_word_0x20, int64_t key, int32_t private_zone_id, int32_t generated_cell_owner_byte2);
 
 uint32_t generated_cell_word20_set_low_word(uint32_t word_0x20, uint32_t low_word);
 uint32_t generated_cell_4a54a7_endpoint_word28(uint32_t word_0x28);
@@ -3667,8 +3667,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
 BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level);
 BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count);
-void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count);
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t zone_id, const SpanRecord &seed);
+void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generated_cell_owner_byte2);
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed);
 
 int32_t deplete_generated_cell_scores_4a54a7(std::vector<uint32_t> &generated_cell_word_0x20, int32_t width, int32_t height, int32_t level_count, int32_t anchor_x, int32_t anchor_y, int32_t anchor_level);
 
