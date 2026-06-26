@@ -104,6 +104,9 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"shared_chain_executed\":" << (report.shared_chain_executed ? "true" : "false") << ",";
 		out << "\"native_workflow_executed\":" << (report.native_workflow_executed ? "true" : "false") << ",";
 		out << "\"native_workflow_final_writeout_complete\":" << (report.native_workflow_final_writeout_complete ? "true" : "false") << ",";
+		out << "\"native_workflow_final_header_writeout_applied\":" << (report.native_workflow_final_header_writeout_applied ? "true" : "false") << ",";
+		out << "\"native_workflow_final_header_byte_count\":" << report.native_workflow_final_header_byte_count << ",";
+		out << "\"native_workflow_post_header_initial_zero_written\":" << (report.native_workflow_post_header_initial_zero_written ? "true" : "false") << ",";
 		out << "\"native_workflow_final_tile_writeout_applied\":" << (report.native_workflow_final_tile_writeout_applied ? "true" : "false") << ",";
 		out << "\"native_workflow_final_tile_cell_count\":" << report.native_workflow_final_tile_cell_count << ",";
 		out << "\"native_workflow_final_tile_byte_count\":" << report.native_workflow_final_tile_byte_count << ",";
@@ -334,6 +337,9 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		report.shared_chain_executed = workflow.executed;
 		report.native_workflow_executed = workflow.executed;
 		report.native_workflow_final_writeout_complete = workflow.final_writeout_complete;
+		report.native_workflow_final_header_writeout_applied = workflow.final_header_writeout_0x4ac857_0x4ad206.applied;
+		report.native_workflow_final_header_byte_count = workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count;
+		report.native_workflow_post_header_initial_zero_written = workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_written_0x4ad206;
 		report.native_workflow_final_tile_writeout_applied = workflow.final_tile_writeout_0x49b2b6.applied;
 		report.native_workflow_final_tile_cell_count = workflow.final_tile_writeout_0x49b2b6.cell_count;
 		report.native_workflow_final_tile_byte_count = workflow.final_tile_writeout_0x49b2b6.byte_count;
@@ -370,6 +376,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int shared_chain_executed_count = 0;
 	int native_workflow_executed_count = 0;
 	int native_workflow_final_writeout_complete_count = 0;
+	int native_workflow_final_header_writeout_applied_count = 0;
+	int native_workflow_post_header_initial_zero_written_count = 0;
 	int native_workflow_final_tile_writeout_applied_count = 0;
 	int native_workflow_final_object_count_header_written_count = 0;
 	for (const CaseReport &report : case_reports) {
@@ -399,6 +407,12 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		if (report.native_workflow_final_writeout_complete) {
 			++native_workflow_final_writeout_complete_count;
 		}
+		if (report.native_workflow_final_header_writeout_applied) {
+			++native_workflow_final_header_writeout_applied_count;
+		}
+		if (report.native_workflow_post_header_initial_zero_written) {
+			++native_workflow_post_header_initial_zero_written_count;
+		}
 		if (report.native_workflow_final_tile_writeout_applied) {
 			++native_workflow_final_tile_writeout_applied_count;
 		}
@@ -412,7 +426,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			: "blocked";
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: "native_h3maped_workflow_stops_before_final_header_player_metadata_0x4ac857_and_post_header_initial_zero_0x4ad206_for_at_least_one_case";
+			: "native_h3maped_workflow_stops_before_full_final_payload_same_run_compare_for_at_least_one_case";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -456,6 +470,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"shared_generator_mode_0x10b8_known\": " << (options.shared_runtime_chain_input.generator_mode_0x10b8_known ? "true" : "false") << ",\n";
 	out << "  \"shared_coordinate_owner_grid_chain_executed_count\": " << shared_chain_executed_count << ",\n";
 	out << "  \"native_h3maped_workflow_executed_count\": " << native_workflow_executed_count << ",\n";
+	out << "  \"native_h3maped_workflow_final_header_writeout_applied_count\": " << native_workflow_final_header_writeout_applied_count << ",\n";
+	out << "  \"native_h3maped_workflow_post_header_initial_zero_written_count\": " << native_workflow_post_header_initial_zero_written_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_tile_writeout_applied_count\": " << native_workflow_final_tile_writeout_applied_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_object_count_header_written_count\": " << native_workflow_final_object_count_header_written_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_writeout_complete_count\": " << native_workflow_final_writeout_complete_count << ",\n";
@@ -472,10 +488,10 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_static_definition_vectors_0x4a8_0x7f8_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_header_metadata_0x4ac857\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_full_payload_compare\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206\",\n";
+	out << "  \"required_next_slice\": \"assemble_ordered_full_final_payload_and_same_run_compare_descriptor_wrapper_bucket_0x08_0x0c\",\n";
 	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before full final writeout.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
@@ -542,6 +558,6 @@ int main(int argc, char **argv) {
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
-			  << " reason=native_h3maped_workflow_static_definition_vectors_0x4a8_0x7f8_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_header_metadata_0x4ac857\n";
+			  << " reason=native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_full_payload_compare\n";
 	return failed_count > 0 ? 1 : 2;
 }

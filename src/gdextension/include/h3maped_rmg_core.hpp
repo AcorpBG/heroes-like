@@ -2912,6 +2912,46 @@ struct FinalTileWriteoutResult49b2b6 {
 	std::vector<FinalTileWriteoutCell49b2b6> last_cells;
 };
 
+struct FinalHeaderPlayerSlot4ac857 {
+	int32_t color = -1;
+	bool active = false;
+	bool human = false;
+	bool computer = false;
+	int32_t behavior = 0;
+	uint16_t allowed_faction_mask = 0U;
+	bool has_main_town = false;
+	int32_t town_x = -1;
+	int32_t town_y = -1;
+	int32_t town_level = -1;
+	int32_t source_owner_index = -1;
+	int32_t town_choice_0x49b3c1 = -1;
+};
+
+struct FinalHeaderWriteoutResult4ac857 {
+	bool invoked = false;
+	bool applied = false;
+	std::string blocked_reason;
+	int32_t h3m_version = 0;
+	int32_t map_size = 0;
+	int32_t level_count = 0;
+	int32_t human_count = 0;
+	int32_t computer_count = 0;
+	uint32_t seed = 0;
+	std::string template_name;
+	int32_t generator_mode_0x10b8 = 0;
+	int32_t monster_strength_0x10bc = 0;
+	int32_t map_name_byte_count = 0;
+	int32_t description_byte_count = 0;
+	int32_t header_payload_byte_count = 0;
+	std::vector<uint8_t> header_payload_bytes;
+	bool post_header_initial_zero_written_0x4ad206 = false;
+	int32_t post_header_initial_zero_payload_byte_count = 0;
+	std::array<uint8_t, 4> post_header_initial_zero_payload_bytes {};
+	int32_t player_slot_count = 0;
+	int32_t active_player_slot_count = 0;
+	std::vector<FinalHeaderPlayerSlot4ac857> player_slots;
+};
+
 struct FinalObjectWriteoutRecord4ad1e3 {
 	int32_t vector_index = -1;
 	uint32_t object_record_key = 0U;
@@ -3012,6 +3052,7 @@ struct H3MapedRmgWorkflowResult {
 	TemplateSelectionRuntimeResult4ac552 template_selection_0x4ac552;
 	CoordinateOwnerGridResult4a218c coordinate_owner_grid_0x4a218c;
 	GeneratorObjectPrivateState generator_object_private_state;
+	FinalHeaderWriteoutResult4ac857 final_header_writeout_0x4ac857_0x4ad206;
 	FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
 	FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
 	std::vector<H3MapedRmgWorkflowPhase> phases;
