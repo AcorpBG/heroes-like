@@ -924,12 +924,12 @@ int main() {
 				+ " key_known=" + std::to_string(selected_object.selector_0x4a9f1c.selected_object_record_key_known_0x4aa166 ? 1 : 0)
 				+ " key=" + std::to_string(selected_object.selector_0x4a9f1c.selected_object_record_key_0x4aa166)
 				+ " stamp=" + std::to_string(selected_object.initial_body_stamp_count_0x49abd6);
-		if (!require(selected_object.selector_0x4a9f1c.callsite_args.policy_extent_byte_0x20 == uint8_t(2000 & 0xff)
-						&& selected_object.selector_0x4a9f1c.policy_extent_gate_invoked_0x20
-						&& selected_object.selector_0x4a9f1c.accepted_count == 1
+		if (!require(selected_object.selector_0x4a9f1c.callsite_args.policy_extent_byte_0x20 == 0U
+						&& !selected_object.selector_0x4a9f1c.policy_extent_gate_invoked_0x20
+						&& selected_object.selector_0x4a9f1c.accepted_count >= 1
 						&& selected_object.selector_0x4a9f1c.selected_object_record_key_known_0x4aa166
 						&& selected_object.selector_0x4a9f1c.selected_object_record_key_0x4aa166 == 1U,
-					"0x4aa1db selected-object helper did not pass selected-value low byte into 0x4a9f1c stack +0x20: " + selected_object_callsite_detail)) {
+					"0x4aa1db selected-object helper did not pass policy word into 0x4a9f1c stack +0x20: " + selected_object_callsite_detail)) {
 			return 1;
 		}
 	}

@@ -6244,7 +6244,7 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 	RewardGuardSelectorCallsiteArgs4a9f1c initial_selector_callsite;
 	initial_selector_callsite.metadata_gate_byte_0x18 = 1U;
 	initial_selector_callsite.precheck_byte_0x1c = 1U;
-	initial_selector_callsite.policy_extent_byte_0x20 = uint8_t(selected_value_0x14 & 0xff);
+	initial_selector_callsite.policy_extent_byte_0x20 = uint8_t(policy_word_0x10 & 0xff);
 	initial_selector_callsite.coordinate_tuple_0x24_known = true;
 	initial_selector_callsite.coordinate_tuple_0x24 = CoordinateCandidate4a17f5 { -1, -1, -1 };
 	for (int32_t attempt = 0; attempt < result.selector_retry_limit; ++attempt) {
@@ -6359,8 +6359,7 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 			RewardGuardSelectorCallsiteArgs4a9f1c secondary_selector_callsite;
 			secondary_selector_callsite.metadata_gate_byte_0x18 = 0U;
 			secondary_selector_callsite.precheck_byte_0x1c = 1U;
-			secondary_selector_callsite.policy_extent_byte_0x20 =
-					uint8_t(result.secondary_upper_value_bound_0x4aa1db & 0xff);
+			secondary_selector_callsite.policy_extent_byte_0x20 = uint8_t(policy_word_0x10 & 0xff);
 			secondary_selector_callsite.coordinate_tuple_0x24_known = true;
 			secondary_selector_callsite.coordinate_tuple_0x24 = CoordinateCandidate4a17f5 { -1, -1, -1 };
 			RewardGuardSelectorResult4a9f1c secondary_selector =
