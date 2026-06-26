@@ -10006,6 +10006,280 @@ static FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6(const Generato
 	return result;
 }
 
+static void final_header_append_u8_0x4ac857(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+}
+
+static void final_header_append_le16_0x4ac857(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+	bytes.push_back(uint8_t((value >> 8U) & 0xffU));
+}
+
+static void final_header_append_le32_0x4ac857(std::vector<uint8_t> &bytes, uint32_t value) {
+	bytes.push_back(uint8_t(value & 0xffU));
+	bytes.push_back(uint8_t((value >> 8U) & 0xffU));
+	bytes.push_back(uint8_t((value >> 16U) & 0xffU));
+	bytes.push_back(uint8_t((value >> 24U) & 0xffU));
+}
+
+static void final_header_append_bytes_0x4ac857(std::vector<uint8_t> &bytes, const std::string &value) {
+	for (const char ch : value) {
+		bytes.push_back(uint8_t(ch));
+	}
+}
+
+static void final_header_append_zeroes_0x4ac857(std::vector<uint8_t> &bytes, int32_t count) {
+	for (int32_t index = 0; index < count; ++index) {
+		bytes.push_back(0U);
+	}
+}
+
+static std::string final_header_water_label_0x4ac857(const H3MapedRmgWorkflowConfig &config) {
+	if (config.water_mode == "land") {
+		return "None";
+	}
+	return "";
+}
+
+static uint16_t final_header_faction_mask_for_town_choice_0x4ac857(int32_t town_choice) {
+	const int32_t shift = town_choice + 2;
+	if (town_choice < 0 || shift < 0 || shift >= 16) {
+		return 0U;
+	}
+	return uint16_t(1U << uint32_t(shift));
+}
+
+struct FinalHeaderTownLookup4ac857 {
+	bool found = false;
+	int32_t object_vector_index = -1;
+	int32_t x = -1;
+	int32_t y = -1;
+	int32_t level = -1;
+};
+
+static FinalHeaderTownLookup4ac857 final_header_find_player_town_0x4ac857(
+		const GeneratorObjectPrivateState &state,
+		const GeneratorRelationOwnerState4a218c &owner) {
+	FinalHeaderTownLookup4ac857 lookup;
+	if (!owner.town_choice_0x04_known || !owner.coordinate_triple_0x10_0x18_known) {
+		return lookup;
+	}
+	int64_t best_distance = std::numeric_limits<int64_t>::max();
+	for (int32_t index = 0; index < int32_t(state.object_records_0xec4_ecc.size()); ++index) {
+		const ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc[size_t(index)];
+		const bool is_source_town =
+				record.copied_source_record_carried
+				&& record.source_record_copy.type_id_0x1c == 98
+				&& record.source_record_copy.group_0x24 == 1
+				&& record.source_record_copy.subtype_0x20 == owner.town_choice_0x04;
+		if (!is_source_town) {
+			continue;
+		}
+		const int64_t dx = int64_t(record.x) - int64_t(owner.coordinate_x_0x10);
+		const int64_t dy = int64_t(record.y) - int64_t(owner.coordinate_y_0x14);
+		const int64_t dz = int64_t(record.level) - int64_t(owner.coordinate_level_0x18);
+		const int64_t distance = dx * dx + dy * dy + dz * dz * int64_t(state.width) * int64_t(state.width);
+		if (!lookup.found || distance < best_distance) {
+			lookup.found = true;
+			lookup.object_vector_index = index;
+			lookup.x = record.x;
+			lookup.y = record.y;
+			lookup.level = record.level;
+			best_distance = distance;
+		}
+	}
+	return lookup;
+}
+
+static const GeneratorRelationOwnerState4a218c *final_header_relation_owner_for_player_0x4ac857(
+		const GeneratorObjectPrivateState &state,
+		const PlayerSlotAssignmentRecord4ac62a &assignment) {
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (owner.source_owner_slot_0x1c_known && owner.source_owner_slot_0x1c == assignment.source_owner_index) {
+			return &owner;
+		}
+	}
+	return nullptr;
+}
+
+static const PlayerSlotAssignmentRecord4ac62a *final_header_player_assignment_for_color_0x4ac857(
+		const PlayerSlotAssignmentResult4ac62a &assignment,
+		int32_t color) {
+	for (const PlayerSlotAssignmentRecord4ac62a &record : assignment.assignments) {
+		if (record.actual_player_color == color) {
+			return &record;
+		}
+	}
+	return nullptr;
+}
+
+static std::string final_header_description_0x4ac857(
+		const H3MapedRmgWorkflowConfig &config,
+		const TemplateSelectionRuntimeResult4ac552 &template_selection,
+		const GeneratorSetupModeResult49ecf2 &setup_mode) {
+	std::ostringstream description;
+	description << "Map created by the Random Map Generator.  Template was "
+			<< template_selection.selected_template_name
+			<< ", Random seed was " << config.seed
+			<< ", size " << config.width
+			<< ", levels " << config.level_count
+			<< ", humans " << config.human_count
+			<< ", computers " << (config.player_count - config.human_count)
+			<< ", water " << final_header_water_label_0x4ac857(config)
+			<< ", monsters " << setup_mode.generator_value_band_0x10bc
+			<< ", second expansion map";
+	return description.str();
+}
+
+static FinalHeaderWriteoutResult4ac857 final_header_player_metadata_writeout_0x4ac857_0x4ad206(
+		const H3MapedRmgWorkflowConfig &config,
+		const TemplateSelectionRuntimeResult4ac552 &template_selection,
+		const GeneratorSetupModeResult49ecf2 &setup_mode,
+		const GeneratorObjectPrivateState &state) {
+	FinalHeaderWriteoutResult4ac857 result;
+	result.invoked = true;
+	result.h3m_version = 0x1c;
+	result.map_size = config.width;
+	result.level_count = config.level_count;
+	result.human_count = config.human_count;
+	result.computer_count = config.player_count - config.human_count;
+	result.seed = config.seed;
+	result.template_name = template_selection.selected_template_name;
+	result.generator_mode_0x10b8 = setup_mode.generator_mode_0x10b8;
+	result.monster_strength_0x10bc = setup_mode.generator_value_band_0x10bc;
+	result.player_slot_count = 8;
+	if (config.width <= 0 || config.height != config.width || config.level_count != 1 || config.water_mode != "land") {
+		result.blocked_reason = "0x4ac857_header_writeout_scope_not_one_level_land";
+		return result;
+	}
+	if (config.player_count < 1 || config.player_count > 8 || config.human_count < 0 || config.human_count > config.player_count) {
+		result.blocked_reason = "0x4ac857_player_count_out_of_supported_slot_range";
+		return result;
+	}
+	if (template_selection.selected_template_name.empty() || !template_selection.player_assignment.complete) {
+		result.blocked_reason = "0x4ac857_template_or_player_assignment_missing";
+		return result;
+	}
+	if (!setup_mode.generator_value_band_0x10bc_known) {
+		result.blocked_reason = "0x4ac857_generator_monster_band_0x10bc_missing";
+		return result;
+	}
+	if (!state.relation_vector_10e4_10e8.contents_known
+			|| !state.relation_vector_10e4_10e8.count_known
+			|| state.relation_vector_10e4_10e8.count != int32_t(state.relation_owner_vectors_10e4_10e8.size())) {
+		result.blocked_reason = "0x4ac857_relation_owner_vector_0x10e4_0x10e8_missing";
+		return result;
+	}
+
+	const std::string map_name = "Random Map";
+	const std::string description = final_header_description_0x4ac857(config, template_selection, setup_mode);
+	result.map_name_byte_count = int32_t(map_name.size());
+	result.description_byte_count = int32_t(description.size());
+	final_header_append_le32_0x4ac857(result.header_payload_bytes, uint32_t(result.h3m_version));
+	final_header_append_u8_0x4ac857(result.header_payload_bytes, 1U);
+	final_header_append_le32_0x4ac857(result.header_payload_bytes, uint32_t(config.width));
+	final_header_append_u8_0x4ac857(result.header_payload_bytes, config.level_count > 1 ? 1U : 0U);
+	final_header_append_le32_0x4ac857(result.header_payload_bytes, uint32_t(map_name.size()));
+	final_header_append_bytes_0x4ac857(result.header_payload_bytes, map_name);
+	final_header_append_le32_0x4ac857(result.header_payload_bytes, uint32_t(description.size()));
+	final_header_append_bytes_0x4ac857(result.header_payload_bytes, description);
+	final_header_append_u8_0x4ac857(result.header_payload_bytes, 1U);
+	final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+
+	result.player_slots.reserve(8U);
+	for (int32_t color = 0; color < 8; ++color) {
+		FinalHeaderPlayerSlot4ac857 slot;
+		slot.color = color;
+		const PlayerSlotAssignmentRecord4ac62a *assignment =
+				final_header_player_assignment_for_color_0x4ac857(template_selection.player_assignment, color);
+		if (assignment == nullptr) {
+			result.player_slots.push_back(slot);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_le16_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0xffU);
+			final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+			final_header_append_zeroes_0x4ac857(result.header_payload_bytes, 4);
+			continue;
+		}
+
+		const GeneratorRelationOwnerState4a218c *owner =
+				final_header_relation_owner_for_player_0x4ac857(state, *assignment);
+		if (owner == nullptr || !owner->town_choice_0x04_known) {
+			result.blocked_reason = "0x4ac857_player_source_owner_relation_record_missing";
+			return result;
+		}
+		const FinalHeaderTownLookup4ac857 town_lookup =
+				final_header_find_player_town_0x4ac857(state, *owner);
+		if (!town_lookup.found) {
+			result.blocked_reason = "0x4ac857_player_main_town_type98_object_record_missing";
+			return result;
+		}
+		const uint16_t faction_mask =
+				final_header_faction_mask_for_town_choice_0x4ac857(owner->town_choice_0x04);
+		if (faction_mask == 0U) {
+			result.blocked_reason = "0x4ac857_player_town_choice_mask_out_of_supported_range";
+			return result;
+		}
+
+		slot.active = true;
+		slot.human = assignment->human;
+		slot.computer = !assignment->human;
+		slot.allowed_faction_mask = faction_mask;
+		slot.has_main_town = true;
+		slot.town_x = town_lookup.x;
+		slot.town_y = town_lookup.y;
+		slot.town_level = town_lookup.level;
+		slot.source_owner_index = assignment->source_owner_index;
+		slot.town_choice_0x49b3c1 = owner->town_choice_0x04;
+		result.active_player_slot_count += 1;
+		result.player_slots.push_back(slot);
+
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, assignment->human ? 1U : 0U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 1U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, uint32_t(slot.behavior));
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+		final_header_append_le16_0x4ac857(result.header_payload_bytes, faction_mask);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 1U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 1U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0xffU);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, uint32_t(town_lookup.x));
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, uint32_t(town_lookup.y));
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, uint32_t(town_lookup.level));
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0xffU);
+		final_header_append_u8_0x4ac857(result.header_payload_bytes, 0U);
+		final_header_append_zeroes_0x4ac857(result.header_payload_bytes, 4);
+	}
+	if (result.active_player_slot_count != config.player_count) {
+		result.blocked_reason = "0x4ac857_active_player_slot_count_mismatch";
+		return result;
+	}
+	static constexpr std::array<uint8_t, 39> STATIC_NO_TEAMS_NO_SPECIAL_METADATA_0X4AC857 = {{
+			0xffU, 0xffU, 0x00U, 0xefU, 0xffU, 0xffU, 0xffU, 0xffU,
+			0xffU, 0xffU, 0xdfU, 0xffU, 0xffU, 0xffU, 0xffU, 0xffU,
+			0xffU, 0xffU, 0xffU, 0xffU, 0xffU, 0x01U, 0x00U, 0x00U,
+			0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+			0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+	}};
+	for (const uint8_t byte : STATIC_NO_TEAMS_NO_SPECIAL_METADATA_0X4AC857) {
+		result.header_payload_bytes.push_back(byte);
+	}
+	final_header_append_zeroes_0x4ac857(result.header_payload_bytes, 156);
+	result.header_payload_byte_count = int32_t(result.header_payload_bytes.size());
+	result.post_header_initial_zero_written_0x4ad206 = true;
+	result.post_header_initial_zero_payload_byte_count = 4;
+	result.post_header_initial_zero_payload_bytes = { 0U, 0U, 0U, 0U };
+	result.applied = true;
+	return result;
+}
+
 static uint32_t final_object_serializer_slot_0x0c_4ad3eb(uint32_t object_record_vtable_0x00) {
 	switch (object_record_vtable_0x00) {
 		case OBJECT_RECORD_VTABLE_0X540A74:
@@ -10567,7 +10841,8 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		result.final_success_test_eax_0x4ad3de = result.final_zero_sentinel_payload_byte_count;
 		result.final_success_test_0x4ad3de_passed = result.final_success_test_eax_0x4ad3de == 4;
 		result.final_return_0x4ae09a_success = result.final_success_test_0x4ad3de_passed;
-		result.blocked_reason = "final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload";
+		result.applied = result.final_return_0x4ae09a_success;
+		result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
 		return result;
 	}
 
@@ -17252,6 +17527,28 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243_0x458e61_0x458a2f_0x458893", "complete_source_order_prefix", road_note.str());
 	}
 	result.current_phase_id = "final_writeout";
+	result.final_header_writeout_0x4ac857_0x4ad206 =
+			final_header_player_metadata_writeout_0x4ac857_0x4ad206(
+					config,
+					result.template_selection_0x4ac552,
+					result.setup_mode_0x49ecf2,
+					result.generator_object_private_state);
+	if (!result.final_header_writeout_0x4ac857_0x4ad206.applied) {
+		result.blocked_reason = result.final_header_writeout_0x4ac857_0x4ad206.blocked_reason.empty()
+				? "final_header_player_metadata_writeout_0x4ac857_0x4ad206_not_applied"
+				: result.final_header_writeout_0x4ac857_0x4ad206.blocked_reason;
+		add_phase("final_header_player_metadata_writeout", "0x4ac857_0x4ad206", "blocked", result.blocked_reason);
+		return result;
+	}
+	{
+		std::ostringstream header_note;
+		header_note << "header_bytes=" << result.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count
+				<< ",post_header_zero_bytes="
+				<< result.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count
+				<< ",active_players=" << result.final_header_writeout_0x4ac857_0x4ad206.active_player_slot_count
+				<< ",description_bytes=" << result.final_header_writeout_0x4ac857_0x4ad206.description_byte_count;
+		add_phase("final_header_player_metadata_writeout", "0x4ac857_0x4ad206", "complete_source_order_prefix", header_note.str());
+	}
 	result.final_tile_writeout_0x49b2b6 = final_tile_writeout_0x49b2b6(result.generator_object_private_state);
 	if (!result.final_tile_writeout_0x49b2b6.applied) {
 		result.blocked_reason = result.final_tile_writeout_0x49b2b6.blocked_reason.empty()
@@ -17327,7 +17624,12 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< result.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_eax_0x4ad3de;
 		add_phase("final_zero_sentinel_success_test", "0x4ad3db_0x4ad3de_0x4ae09a", "complete_source_order_prefix", sentinel_note.str());
 	}
-	add_phase("final_header_player_metadata_writeout", "0x4ac857_0x4ad206", "blocked", result.blocked_reason);
+	result.current_phase_id = "final_payload_compare";
+	result.status = "blocked";
+	result.blocked_reason = result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.empty()
+			? "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix"
+			: result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason;
+	add_phase("full_final_payload_same_run_compare", "0x4ad1e3_ordered_payload_and_same_run_h3maped_stream", "blocked", result.blocked_reason);
 	return result;
 }
 
