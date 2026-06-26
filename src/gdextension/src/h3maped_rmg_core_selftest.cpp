@@ -2542,7 +2542,7 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_index, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
+		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_zone_id, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
 			return 1;
 		}
 		if (!require(owner.scan_bounds_0x20_0x2c_known

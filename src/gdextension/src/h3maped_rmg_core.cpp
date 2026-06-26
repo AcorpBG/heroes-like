@@ -446,11 +446,11 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 	if (zone.h3maped_zone_word_id >= 0) {
 		return zone.h3maped_zone_word_id;
 	}
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
 	if (zone.source_index >= 0) {
 		return zone.source_index;
-	}
-	if (zone.source_zone_id > 0) {
-		return zone.source_zone_id - 1;
 	}
 	return fallback;
 }
@@ -464,11 +464,11 @@ int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a2
 	if (seed.h3maped_zone_word_id >= 0) {
 		return seed.h3maped_zone_word_id;
 	}
+	if (seed.source_zone_id > 0) {
+		return seed.source_zone_id;
+	}
 	if (seed.source_index >= 0) {
 		return seed.source_index;
-	}
-	if (seed.source_zone_id > 0) {
-		return seed.source_zone_id - 1;
 	}
 	return seed.runtime_zone_index;
 }
@@ -1141,23 +1141,55 @@ int32_t relation_owner_source_pointer_index_0x00(const GeneratorRelationOwnerSta
 	return zone.source_index >= 0 ? zone.source_index : zone.source_zone_id;
 }
 
+CoordinateZone4a218c coordinate_zone_from_relation_owner_0x10(const GeneratorRelationOwnerState4a218c &owner, const std::vector<CoordinateZone4a218c> &zones) {
+	const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
+	CoordinateZone4a218c zone;
+	if (zone_position >= 0 && zone_position < int32_t(zones.size())) {
+		zone = zones[size_t(zone_position)];
+	} else {
+		zone.runtime_zone_index = owner.runtime_zone_index;
+		zone.source_zone_id = owner.source_zone_id;
+		zone.source_index = owner.source_index;
+	}
+	if (owner.source_pointer_0x00_known) {
+		zone.source_index = owner.source_pointer_source_index_0x00;
+	}
+	if (owner.coordinate_triple_0x10_0x18_known) {
+		zone.x = owner.coordinate_x_0x10;
+		zone.y = owner.coordinate_y_0x14;
+		zone.level = owner.coordinate_level_0x18;
+	}
+	return zone;
+}
+
+CoordinateZone4a218c coordinate_zone_with_candidate_0x4a1701(const CoordinateZone4a218c &current, const GeneratorRelationOwnerState4a218c &current_owner, const CoordinateCandidate4a17f5 &candidate) {
+	CoordinateZone4a218c zone = current;
+	if (current_owner.source_pointer_0x00_known) {
+		zone.source_index = current_owner.source_pointer_source_index_0x00;
+	}
+	zone.x = candidate.x;
+	zone.y = candidate.y;
+	zone.level = candidate.level;
+	return zone;
+}
+
 bool coordinate_candidate_valid_4a1701(const CoordinateZone4a218c &current, const GeneratorRelationOwnerState4a218c &current_owner, const CoordinateCandidate4a17f5 &candidate, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
 	if ((current.source_bucket == 0 || current.source_bucket == 1) && candidate.level == 1
 			&& current_owner.town_choice_0x04 != 3 && current_owner.town_choice_0x04 != 4 && current_owner.town_choice_0x04 != 5) {
 		return false;
 	}
-	const int32_t current_source_pointer = relation_owner_source_pointer_index_0x00(current_owner, current);
+	const CoordinateZone4a218c current_candidate = coordinate_zone_with_candidate_0x4a1701(current, current_owner, candidate);
+	const int32_t current_source_pointer = relation_owner_source_pointer_index_0x00(current_owner, current_candidate);
 	for (const GeneratorRelationOwnerState4a218c &other_owner : relation_owners) {
-		const int32_t other_position = coordinate_zone_position_for_runtime_index(zones, other_owner.runtime_zone_index);
-		if (other_position < 0 || other_position >= int32_t(zones.size())) {
+		CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(other_owner, zones);
+		if (other.source_base_size <= 0 && other.source_index < 0 && other.source_zone_id < 0) {
 			continue;
 		}
-		const CoordinateZone4a218c &other = zones[size_t(other_position)];
 		const int32_t other_source_pointer = relation_owner_source_pointer_index_0x00(other_owner, other);
 		if (other_source_pointer == current_source_pointer || other.level != candidate.level) {
 			continue;
 		}
-		const int32_t distance = distance_truncate(candidate.x, candidate.y, other.x, other.y);
+		const int32_t distance = distance_truncate(current_candidate.x, current_candidate.y, other.x, other.y);
 		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
 		if (distance * 10 < minimum_tenths) {
 			return false;
@@ -1178,19 +1210,22 @@ bool coordinate_zones_connectable_49b6e2(const CoordinateZone4a218c &first, cons
 	return size_sum * 11 >= distance * 10;
 }
 
-int32_t coordinate_link_acceptance_count_4a1967(const GeneratorRelationOwnerState4a218c &current_owner, const CoordinateZone4a218c &current, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
+int32_t coordinate_link_acceptance_count_4a1967(const GeneratorRelationOwnerState4a218c &current_owner, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
+	if (!current_owner.source_endpoint_vector_0xc8_0xcc_present
+			|| !current_owner.source_endpoint_vector_0xc8_0xcc_contents_known
+			|| current_owner.source_endpoint_records_0xc8_0xcc.empty()) {
+		return 0;
+	}
 	int32_t accepted = 0;
+	const CoordinateZone4a218c current = coordinate_zone_from_relation_owner_0x10(current_owner, zones);
 	for (const GeneratorSourceEndpointRecordState4a1f3b &endpoint : current_owner.source_endpoint_records_0xc8_0xcc) {
 		const GeneratorRelationOwnerState4a218c *other_owner =
 				relation_owner_for_endpoint_record_4a1f3b(relation_owners, endpoint);
 		if (other_owner == nullptr) {
 			continue;
 		}
-		const int32_t other_position = coordinate_zone_position_for_runtime_index(zones, other_owner->runtime_zone_index);
-		if (other_position < 0) {
-			continue;
-		}
-		if (coordinate_zones_connectable_49b6e2(zones[size_t(other_position)], current)) {
+		const CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(*other_owner, zones);
+		if (coordinate_zones_connectable_49b6e2(other, current)) {
 			accepted += 1;
 		}
 	}
@@ -1244,20 +1279,22 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	if (candidates.empty()) {
 		return;
 	}
+	auto owner_with_candidate = [&](const CoordinateCandidate4a17f5 &candidate) {
+		GeneratorRelationOwnerState4a218c candidate_owner = current_owner;
+		candidate_owner.coordinate_triple_0x10_0x18_known = true;
+		candidate_owner.coordinate_x_0x10 = candidate.x;
+		candidate_owner.coordinate_y_0x14 = candidate.y;
+		candidate_owner.coordinate_level_0x18 = candidate.level;
+		return candidate_owner;
+	};
 	int32_t best_link_count = 0;
 	for (const CoordinateCandidate4a17f5 &candidate : candidates) {
-		CoordinateZone4a218c candidate_zone = current_template;
-		candidate_zone.x = candidate.x;
-		candidate_zone.y = candidate.y;
-		candidate_zone.level = candidate.level;
-		best_link_count = std::max(best_link_count, coordinate_link_acceptance_count_4a1967(current_owner, candidate_zone, zones, relation_owners));
+		const GeneratorRelationOwnerState4a218c candidate_owner = owner_with_candidate(candidate);
+		best_link_count = std::max(best_link_count, coordinate_link_acceptance_count_4a1967(candidate_owner, zones, relation_owners));
 	}
 	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordinateCandidate4a17f5 &candidate) {
-		CoordinateZone4a218c candidate_zone = current_template;
-		candidate_zone.x = candidate.x;
-		candidate_zone.y = candidate.y;
-		candidate_zone.level = candidate.level;
-		return coordinate_link_acceptance_count_4a1967(current_owner, candidate_zone, zones, relation_owners) < best_link_count;
+		const GeneratorRelationOwnerState4a218c candidate_owner = owner_with_candidate(candidate);
+		return coordinate_link_acceptance_count_4a1967(candidate_owner, zones, relation_owners) < best_link_count;
 	}), candidates.end());
 	if (candidates.empty()) {
 		return;
@@ -1268,11 +1305,10 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	int32_t max_y = 0;
 	int32_t max_x = 0;
 	for (const GeneratorRelationOwnerState4a218c &other_owner : relation_owners) {
-		const int32_t other_position = coordinate_zone_position_for_runtime_index(zones, other_owner.runtime_zone_index);
-		if (other_position < 0 || other_position >= int32_t(zones.size()) || other_owner.runtime_zone_index == current_owner.runtime_zone_index) {
+		if (other_owner.runtime_zone_index == current_owner.runtime_zone_index) {
 			continue;
 		}
-		const CoordinateZone4a218c &other = zones[size_t(other_position)];
+		const CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(other_owner, zones);
 		min_y = std::min(other.y - other.source_base_size, min_y);
 		min_x = std::min(other.x - other.source_base_size, min_x);
 		max_y = std::max(other.y + other.source_base_size + 1, max_y);
@@ -13002,7 +13038,7 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 		seed.source_index = zone.source_index >= 0 ? zone.source_index : (zone.source_zone_id > 0 ? zone.source_zone_id - 1 : source_position);
 		seed.h3maped_zone_word_id = zone.h3maped_zone_word_id >= 0
 				? zone.h3maped_zone_word_id
-				: seed.source_index;
+				: (zone.source_zone_id > 0 ? zone.source_zone_id : seed.source_index);
 		seed.source_bucket = zone.source_bucket;
 		seed.source_owner_index = zone.source_owner_index;
 		if (zone.source_owner_index >= 0 && zone.source_owner_index < int32_t(assignment.mapped_ee4_slots.size())) {

@@ -212,7 +212,7 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
             zone_rows.append(
                 "\t{ "
                 "{ "
-                f"{source_zone_id}, {source_index}, {source_index}, {i32(zone.get('bucket'), -1)}, "
+                f"{source_zone_id}, {source_index}, {source_zone_id}, {i32(zone.get('bucket'), -1)}, "
                 f"{source_owner}, {i32(zone.get('base_size'))}, "
                 f"{player_filter['min_human']}, {player_filter['max_human']}, "
                 f"{player_filter['min_total']}, {player_filter['max_total']}, "
