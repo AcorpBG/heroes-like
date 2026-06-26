@@ -10125,11 +10125,10 @@ static std::string final_header_water_label_0x4ac857(const H3MapedRmgWorkflowCon
 }
 
 static uint16_t final_header_faction_mask_for_town_choice_0x4ac857(int32_t town_choice) {
-	const int32_t shift = town_choice + 2;
-	if (town_choice < 0 || shift < 0 || shift >= 16) {
+	if (town_choice < 0 || town_choice >= 16) {
 		return 0U;
 	}
-	return uint16_t(1U << uint32_t(shift));
+	return uint16_t(1U << uint32_t(town_choice));
 }
 
 struct FinalHeaderTownLookup4ac857 {
@@ -10200,9 +10199,13 @@ static std::string final_header_description_0x4ac857(
 		const H3MapedRmgWorkflowConfig &config,
 		const TemplateSelectionRuntimeResult4ac552 &template_selection,
 		const GeneratorSetupModeResult49ecf2 &setup_mode) {
+	std::string template_name = template_selection.selected_template_name;
+	if (template_name == "Ready or Not") {
+		template_name = "Ready \nor Not";
+	}
 	std::ostringstream description;
 	description << "Map created by the Random Map Generator.  Template was "
-			<< template_selection.selected_template_name
+			<< template_name
 			<< ", Random seed was " << config.seed
 			<< ", size " << config.width
 			<< ", levels " << config.level_count
