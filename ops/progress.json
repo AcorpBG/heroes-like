@@ -16,24 +16,24 @@
         "src/gdextension/src/archived_h3maped_small_rmg_embedded_data_legacy_proxy_20260618.cpp",
         "tests/validate_repo.py"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now replays the recovered 0x49e700 decorative coordinate worklist instead of stopping after one selected decorative commit: it drains the 0x4ae20e/0x4ae23e worklist, runs repeated 0x49ea25 object commits, applies the recovered 0x49eaf1 bit26 clear plus 0x49eb01 coordinate append rectangle scan, and runs 0x49eb8d pass3 0x49a932(true) stamping before continuing into source-backed 0x4a79a3 connection-tail replay. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported stop, apply connection-tail replay, and fail closed at road_river_object_adjacency_0x4ab52a_replay_unported_after_source_backed_0x4a79a3_connection_tail. Focused metrics: Small seed 10 has 195 decorative commits, 436 worklist pops, 66 pass3 stamps, and 22 connection-tail growth pairs; Small seed 58 has 198, 473, 67, and 16; Medium seed 10 has 785, 1790, 381, and 16. This is not parity and not final map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "in_progress",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-25T23:51:11Z",
-      "latestEvidenceId": "native-rmg-final-object-payload-prefix-20260625",
-      "remainingWork": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-      "blocker": "Final writeout is blocked by unported final header/player/metadata writeout and 0x4ad3de -> 0x4ae09a success sentinel after the object-payload prefix. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
+      "updatedAt": "2026-06-26T00:46:31Z",
+      "latestEvidenceId": "native-rmg-final-static-vectors-sentinel-20260626",
+      "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+      "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
       "startedAt": "2026-06-21T05:16:18Z",
       "latestEvidence": {
-        "id": "native-rmg-final-object-payload-prefix-20260625",
-        "title": "Final 0x4ad3eb Object Payload Prefix Writeout",
+        "id": "native-rmg-final-static-vectors-sentinel-20260626",
+        "title": "Final Static Object Definitions and Sentinel Writeout",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T23:51:11Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+        "updatedAt": "2026-06-26T00:46:31Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -44,25 +44,14 @@
             "status": "passed"
           },
           {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625",
-            "status": "blocked_expected_failed_0_snapshots_3_object_payload_prefixes_3"
-          },
-          {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "cmd": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "cmd": "git diff --check",
-            "status": "passed"
+            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+            "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
           }
         ],
         "blockers": [
-          "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix",
-          "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+          "final_header_player_metadata_payload_0x4ac857_unported",
+          "post_header_initial_zero_0x4ad206_unported",
+          "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
           "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "full_final_payload_generation_unowned",
@@ -75,66 +64,86 @@
           "native_rmg_end_to_end_parity_complete": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_outputs": 3,
+          "object_definition_table_invoked": true,
+          "object_definition_table_applied_cases": 3,
+          "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_missing_source_record_cases": 0,
+          "object_definition_template_index_missing_cases": 0,
           "object_payload_serialization_invoked": true,
           "object_payload_prefix_applied_cases": 3,
           "object_payload_prefix_blocked_cases": 0,
+          "final_zero_sentinel_written_0x4ad3db_cases": 3,
+          "final_success_test_0x4ad3de_passed_cases": 3,
+          "final_return_0x4ae09a_success_cases": 3,
+          "final_header_player_metadata_0x4ac857_ported": false,
+          "post_header_initial_zero_0x4ad206_ported": false,
           "small_seed10": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 91,
             "object_count": 231,
-            "first_pass_objects": 12,
-            "second_pass_objects": 219,
+            "object_definition_count": 114,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 6603,
             "serialized_object_payloads": 231,
-            "object_payload_bytes": 3140
+            "object_payload_bytes": 3140,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "small_seed58": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 115,
             "object_count": 220,
-            "first_pass_objects": 5,
-            "second_pass_objects": 215,
+            "object_definition_count": 121,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 7009,
             "serialized_object_payloads": 220,
-            "object_payload_bytes": 2896
+            "object_payload_bytes": 2896,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "medium_seed10": {
             "cells": 5184,
             "tile_bytes": 36288,
             "road_cells": 418,
-            "object_count": 844,
-            "first_pass_objects": 13,
-            "second_pass_objects": 831,
-            "serialized_object_payloads": 844,
-            "object_payload_bytes": 10692
+            "object_count": 756,
+            "object_definition_count": 167,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 9675,
+            "serialized_object_payloads": 756,
+            "object_payload_bytes": 9428,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           }
         },
         "artifacts": [
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed10.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed58.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/medium_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
-          "docs/native-rmg-generated-cell-mutation-chain.md",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md"
         ],
-        "remainingWork": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout and 0x4ad3de -> 0x4ae09a success sentinel after the object-payload prefix. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+        "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
       },
       "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now advances decorative 0x49eb8d -> 0x49e700 beyond the old allocation placeholder: it builds the recovered 0x49e904/0x49e91f weighted candidate vectors after rand_trn and 0x49e1bf scoring, selects by 0x49e9ad RNG, allocates/initializes the selected decorative object through 0x5044b1/0x49ba89, and executes one 0x4a54a7 footprint commit for the no-reference path. No-Godot Small seed 10 now reaches 335 candidate appends, weight total 8995, one RNG selection, and one commit before blocking at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Small seed 58 and Medium seed 10 expose the separate ref-bearing blocker before RNG: 0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned. This is not parity and not final map output.",
       "currentNotes": "2026-06-25T19:52:24Z: Native RMG source-order alignment remains in progress and parity remains blocked before final writeout. Focused no-Godot cases now apply recovered rand_trn score-row terrain lookup and hard reject, then stop at 0x49e700_0x49e1bf_descriptor_0x30_0x40_adjacency_overlap_scoring_replay_unowned.",
-      "currentSliceNotes": "2026-06-25T19:52:24Z: Focused no-Godot cases small_2p_seed10_hc1_setup0, small_2p_seed58_hc1_setup0, and medium_4p_seed10_hc3_setup0 all enter the 0x49e700 type-table/rand_trn prefix, load 2425 score variants, apply terrain hard rejects, and fail closed at missing 0x49e1bf descriptor adjacency/overlap scorer replay for source row 312/type 119/DEF AVLd1sn0.def.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
       "result": "partial_source_order_implementation_not_parity",
       "remainingGap": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
       "validation": {
-        "id": "native-rmg-49b89c-score-cache-20260625",
+        "id": "native-rmg-final-static-vectors-sentinel-20260626",
         "title": "Decorative 0x49b89c Score Cache Adoption",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T21:22:36Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries 0x49b89c object-record local score-cache storage for source-carried object records and applies cache-indexed rand_trn overlap/adjacent score adjustments in the recovered 0x49e1bf decorative neighbor scorer. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all proceed past the former 0x49b89c ref-bearing decorative blocker and fail closed later at 0x49e700_coordinate_worklist_replay_after_first_decorative_commit_unported. Score-cache misses are 0 and cache-known counts match object-record counts for the current focused snapshots: Small seed 10 is 37/37, Small seed 58 is 23/23, and Medium seed 10 is 60/60. This is not parity and not final map output; native still derives the score-cache body mask from the existing catalog .msk footprint fields until later same-run/final-payload parity proves whether independent descriptor +0x3c separation matters.",
+        "updatedAt": "2026-06-26T00:46:31Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -303,31 +312,51 @@
           "tile_bytes": 9072,
           "road_cells": 91,
           "object_count": 231,
-          "first_pass_objects": 12,
-          "second_pass_objects": 219,
+          "object_definition_count": 114,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 6603,
           "serialized_object_payloads": 231,
-          "object_payload_bytes": 3140
+          "object_payload_bytes": 3140,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
         },
         "small_seed58": {
           "cells": 1296,
           "tile_bytes": 9072,
           "road_cells": 115,
           "object_count": 220,
-          "first_pass_objects": 5,
-          "second_pass_objects": 215,
+          "object_definition_count": 121,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 7009,
           "serialized_object_payloads": 220,
-          "object_payload_bytes": 2896
+          "object_payload_bytes": 2896,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
         },
         "medium_seed10": {
           "cells": 5184,
           "tile_bytes": 36288,
           "road_cells": 418,
-          "object_count": 844,
-          "first_pass_objects": 13,
-          "second_pass_objects": 831,
-          "serialized_object_payloads": 844,
-          "object_payload_bytes": 10692
-        }
+          "object_count": 756,
+          "object_definition_count": 167,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 9675,
+          "serialized_object_payloads": 756,
+          "object_payload_bytes": 9428,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        },
+        "object_definition_table_invoked": true,
+        "object_definition_table_applied_cases": 3,
+        "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_missing_source_record_cases": 0,
+        "object_definition_template_index_missing_cases": 0,
+        "final_zero_sentinel_written_0x4ad3db_cases": 3,
+        "final_success_test_0x4ad3de_passed_cases": 3,
+        "final_return_0x4ae09a_success_cases": 3,
+        "final_header_player_metadata_0x4ac857_ported": false,
+        "post_header_initial_zero_0x4ad206_ported": false
       },
       "latestEvidenceArtifacts": [
         ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed10.phase_snapshot.json",
@@ -341,11 +370,11 @@
         "PLAN.md"
       ],
       "lastValidation": {
-        "id": "native-rmg-final-object-payload-prefix-20260625",
-        "title": "Final 0x4ad3eb Object Payload Prefix Writeout",
+        "id": "native-rmg-final-static-vectors-sentinel-20260626",
+        "title": "Final Static Object Definitions and Sentinel Writeout",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T23:51:11Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+        "updatedAt": "2026-06-26T00:46:31Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -356,25 +385,14 @@
             "status": "passed"
           },
           {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625",
-            "status": "blocked_expected_failed_0_snapshots_3_object_payload_prefixes_3"
-          },
-          {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "cmd": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "cmd": "git diff --check",
-            "status": "passed"
+            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+            "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
           }
         ],
         "blockers": [
-          "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix",
-          "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+          "final_header_player_metadata_payload_0x4ac857_unported",
+          "post_header_initial_zero_0x4ad206_unported",
+          "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
           "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "full_final_payload_generation_unowned",
@@ -387,61 +405,81 @@
           "native_rmg_end_to_end_parity_complete": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_outputs": 3,
+          "object_definition_table_invoked": true,
+          "object_definition_table_applied_cases": 3,
+          "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_missing_source_record_cases": 0,
+          "object_definition_template_index_missing_cases": 0,
           "object_payload_serialization_invoked": true,
           "object_payload_prefix_applied_cases": 3,
           "object_payload_prefix_blocked_cases": 0,
+          "final_zero_sentinel_written_0x4ad3db_cases": 3,
+          "final_success_test_0x4ad3de_passed_cases": 3,
+          "final_return_0x4ae09a_success_cases": 3,
+          "final_header_player_metadata_0x4ac857_ported": false,
+          "post_header_initial_zero_0x4ad206_ported": false,
           "small_seed10": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 91,
             "object_count": 231,
-            "first_pass_objects": 12,
-            "second_pass_objects": 219,
+            "object_definition_count": 114,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 6603,
             "serialized_object_payloads": 231,
-            "object_payload_bytes": 3140
+            "object_payload_bytes": 3140,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "small_seed58": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 115,
             "object_count": 220,
-            "first_pass_objects": 5,
-            "second_pass_objects": 215,
+            "object_definition_count": 121,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 7009,
             "serialized_object_payloads": 220,
-            "object_payload_bytes": 2896
+            "object_payload_bytes": 2896,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "medium_seed10": {
             "cells": 5184,
             "tile_bytes": 36288,
             "road_cells": 418,
-            "object_count": 844,
-            "first_pass_objects": 13,
-            "second_pass_objects": 831,
-            "serialized_object_payloads": 844,
-            "object_payload_bytes": 10692
+            "object_count": 756,
+            "object_definition_count": 167,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 9675,
+            "serialized_object_payloads": 756,
+            "object_payload_bytes": 9428,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           }
         },
         "artifacts": [
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed10.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed58.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/medium_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
-          "docs/native-rmg-generated-cell-mutation-chain.md",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md"
         ],
-        "remainingWork": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout and 0x4ad3de -> 0x4ae09a success sentinel after the object-payload prefix. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+        "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
       },
       "validationResults": {
-        "id": "native-rmg-final-object-payload-prefix-20260625",
-        "title": "Final 0x4ad3eb Object Payload Prefix Writeout",
+        "id": "native-rmg-final-static-vectors-sentinel-20260626",
+        "title": "Final Static Object Definitions and Sentinel Writeout",
         "status": "passed_partial_implementation_not_parity",
-        "updatedAt": "2026-06-25T23:51:11Z",
-        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+        "updatedAt": "2026-06-26T00:46:31Z",
+        "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
         "commands": [
           {
             "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -452,25 +490,14 @@
             "status": "passed"
           },
           {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625",
-            "status": "blocked_expected_failed_0_snapshots_3_object_payload_prefixes_3"
-          },
-          {
-            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-            "status": "passed"
-          },
-          {
-            "cmd": "jq empty ops/progress.json",
-            "status": "passed"
-          },
-          {
-            "cmd": "git diff --check",
-            "status": "passed"
+            "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+            "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
           }
         ],
         "blockers": [
-          "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix",
-          "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+          "final_header_player_metadata_payload_0x4ac857_unported",
+          "post_header_initial_zero_0x4ad206_unported",
+          "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
           "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
           "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
           "full_final_payload_generation_unowned",
@@ -483,54 +510,74 @@
           "native_rmg_end_to_end_parity_complete": false,
           "phase_snapshot_only_status_blocked": true,
           "phase_snapshot_outputs": 3,
+          "object_definition_table_invoked": true,
+          "object_definition_table_applied_cases": 3,
+          "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_missing_source_record_cases": 0,
+          "object_definition_template_index_missing_cases": 0,
           "object_payload_serialization_invoked": true,
           "object_payload_prefix_applied_cases": 3,
           "object_payload_prefix_blocked_cases": 0,
+          "final_zero_sentinel_written_0x4ad3db_cases": 3,
+          "final_success_test_0x4ad3de_passed_cases": 3,
+          "final_return_0x4ae09a_success_cases": 3,
+          "final_header_player_metadata_0x4ac857_ported": false,
+          "post_header_initial_zero_0x4ad206_ported": false,
           "small_seed10": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 91,
             "object_count": 231,
-            "first_pass_objects": 12,
-            "second_pass_objects": 219,
+            "object_definition_count": 114,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 6603,
             "serialized_object_payloads": 231,
-            "object_payload_bytes": 3140
+            "object_payload_bytes": 3140,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "small_seed58": {
             "cells": 1296,
             "tile_bytes": 9072,
             "road_cells": 115,
             "object_count": 220,
-            "first_pass_objects": 5,
-            "second_pass_objects": 215,
+            "object_definition_count": 121,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 7009,
             "serialized_object_payloads": 220,
-            "object_payload_bytes": 2896
+            "object_payload_bytes": 2896,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           },
           "medium_seed10": {
             "cells": 5184,
             "tile_bytes": 36288,
             "road_cells": 418,
-            "object_count": 844,
-            "first_pass_objects": 13,
-            "second_pass_objects": 831,
-            "serialized_object_payloads": 844,
-            "object_payload_bytes": 10692
+            "object_count": 756,
+            "object_definition_count": 167,
+            "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+            "object_definition_bytes": 9675,
+            "serialized_object_payloads": 756,
+            "object_payload_bytes": 9428,
+            "final_zero_sentinel_written_0x4ad3db": true,
+            "final_success_test_0x4ad3de_passed": true
           }
         },
         "artifacts": [
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed10.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed58.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/medium_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+          ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
-          "docs/native-rmg-generated-cell-mutation-chain.md",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "PLAN.md"
         ],
-        "remainingWork": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout and 0x4ad3de -> 0x4ae09a success sentinel after the object-payload prefix. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+        "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+        "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
       },
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water"
     },
@@ -14342,16 +14389,121 @@
         "decorative_0x49e1bf_ref_bearing_score_index_replayed": false
       },
       "remainingWork": "Port source-order connection/decorative replay after the reward/guard prefix: fix 0x4a61bc live source-frontier candidates for Small seed 10 and Medium seed 10, port 0x49eb8d -> 0x49e700 decorative dispatch for Small seed 58, then continue through road/river adjacency and final 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb writeout. Reward/guard still records zero direct 0x4aa9b7 commits and remains a parity mismatch, but it is no longer a native-only phase gate."
+    },
+    {
+      "id": "native-rmg-final-static-vectors-sentinel-20260626",
+      "title": "Final Static Object Definitions and Sentinel Writeout",
+      "status": "passed_partial_implementation_not_parity",
+      "updatedAt": "2026-06-26T00:46:31Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+      "commands": [
+        {
+          "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed"
+        },
+        {
+          "cmd": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+          "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
+        }
+      ],
+      "blockers": [
+        "final_header_player_metadata_payload_0x4ac857_unported",
+        "post_header_initial_zero_0x4ad206_unported",
+        "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
+        "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+        "full_final_payload_generation_unowned",
+        "same_run_private_state_and_final_payload_comparison_unowned"
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_outputs": 3,
+        "object_definition_table_invoked": true,
+        "object_definition_table_applied_cases": 3,
+        "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_missing_source_record_cases": 0,
+        "object_definition_template_index_missing_cases": 0,
+        "object_payload_serialization_invoked": true,
+        "object_payload_prefix_applied_cases": 3,
+        "object_payload_prefix_blocked_cases": 0,
+        "final_zero_sentinel_written_0x4ad3db_cases": 3,
+        "final_success_test_0x4ad3de_passed_cases": 3,
+        "final_return_0x4ae09a_success_cases": 3,
+        "final_header_player_metadata_0x4ac857_ported": false,
+        "post_header_initial_zero_0x4ad206_ported": false,
+        "small_seed10": {
+          "cells": 1296,
+          "tile_bytes": 9072,
+          "road_cells": 91,
+          "object_count": 231,
+          "object_definition_count": 114,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 6603,
+          "serialized_object_payloads": 231,
+          "object_payload_bytes": 3140,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        },
+        "small_seed58": {
+          "cells": 1296,
+          "tile_bytes": 9072,
+          "road_cells": 115,
+          "object_count": 220,
+          "object_definition_count": 121,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 7009,
+          "serialized_object_payloads": 220,
+          "object_payload_bytes": 2896,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        },
+        "medium_seed10": {
+          "cells": 5184,
+          "tile_bytes": 36288,
+          "road_cells": 418,
+          "object_count": 756,
+          "object_definition_count": 167,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 9675,
+          "serialized_object_payloads": 756,
+          "object_payload_bytes": 9428,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        }
+      },
+      "artifacts": [
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "PLAN.md"
+      ],
+      "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+      "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "rmg-small-generalization-hardening-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream, the recovered 0x4ad309/0x4ad318 generated-object count header write, and the recovered 0x4ad3eb two-pass generated-object order through the runtime-initialized 0x57c648 -> 0x598300 metadata byte at type*16+0x0c. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply the tile stream, write the object-count header, split first/second object serializer passes, and then fail closed at final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831. This is source-order workflow progress, not parity completion or final map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "RMG Small Generalization Hardening",
-  "currentSliceUpdatedAt": "2026-06-26T00:12:07Z",
+  "currentSliceUpdatedAt": "2026-06-26T00:46:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -18758,11 +18910,11 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-final-object-definition-indexed-payload-20260625",
-    "title": "Final Object Definition Indexed Payload Writeout",
+    "id": "native-rmg-final-static-vectors-sentinel-20260626",
+    "title": "Final Static Object Definitions and Sentinel Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-26T00:12:07Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+    "updatedAt": "2026-06-26T00:46:31Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18773,27 +18925,14 @@
         "status": "passed"
       },
       {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_definition_indexed_payload_20260625",
-        "status": "blocked_expected_failed_0_snapshots_3_definition_indexed_payloads_3"
-      },
-      {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-        "status": "passed"
-      },
-      {
-        "cmd": "jq empty ops/progress.json",
-        "status": "passed"
-      },
-      {
-        "cmd": "git diff --check",
-        "status": "passed"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+        "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
       }
     ],
     "blockers": [
-      "final_object_static_definition_vectors_0x4a8_0x7f8_unported",
-      "final_header_player_metadata_payload_unported",
-      "0x4ad3de_to_0x4ae09a_success_sentinel_unported",
-      "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+      "final_header_player_metadata_payload_0x4ac857_unported",
+      "post_header_initial_zero_0x4ad206_unported",
+      "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "full_final_payload_generation_unowned",
@@ -18808,76 +18947,79 @@
       "phase_snapshot_outputs": 3,
       "object_definition_table_invoked": true,
       "object_definition_table_applied_cases": 3,
-      "object_definition_static_vectors_0x4a8_0x7f8_included": false,
+      "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+      "object_definition_static_vector_count_0x4a8_0x7f8": 2,
       "object_definition_missing_source_record_cases": 0,
       "object_definition_template_index_missing_cases": 0,
       "object_payload_serialization_invoked": true,
       "object_payload_prefix_applied_cases": 3,
       "object_payload_prefix_blocked_cases": 0,
+      "final_zero_sentinel_written_0x4ad3db_cases": 3,
+      "final_success_test_0x4ad3de_passed_cases": 3,
+      "final_return_0x4ae09a_success_cases": 3,
+      "final_header_player_metadata_0x4ac857_ported": false,
+      "post_header_initial_zero_0x4ad206_ported": false,
       "small_seed10": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 91,
         "object_count": 231,
-        "object_definition_count": 112,
-        "object_definition_bytes": 6487,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 12,
-        "second_pass_objects": 219,
+        "object_definition_count": 114,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 6603,
         "serialized_object_payloads": 231,
-        "object_payload_bytes": 3140
+        "object_payload_bytes": 3140,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "small_seed58": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 115,
         "object_count": 220,
-        "object_definition_count": 119,
-        "object_definition_bytes": 6893,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 5,
-        "second_pass_objects": 215,
+        "object_definition_count": 121,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 7009,
         "serialized_object_payloads": 220,
-        "object_payload_bytes": 2896
+        "object_payload_bytes": 2896,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "medium_seed10": {
         "cells": 5184,
         "tile_bytes": 36288,
         "road_cells": 418,
-        "object_count": 844,
-        "object_definition_count": 173,
-        "object_definition_bytes": 10023,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 13,
-        "second_pass_objects": 831,
-        "serialized_object_payloads": 844,
-        "object_payload_bytes": 10692
+        "object_count": 756,
+        "object_definition_count": 167,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 9675,
+        "serialized_object_payloads": 756,
+        "object_payload_bytes": 9428,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       }
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/medium_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md"
     ],
-    "remainingWork": "Port the static object definition vectors at generator +0x4a8/+0x7f8, final header/player/metadata writeout, and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned generated-definition-indexed 0x4ad3eb object payload. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-    "blocker": "Final writeout is blocked by unported static object definition vectors +0x4a8/+0x7f8, final header/player/metadata writeout, and 0x4ad3de -> 0x4ae09a success sentinel after generated-definition-indexed object payloads. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+    "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+    "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
   },
   "latestEvidence": {
-    "id": "native-rmg-final-object-definition-indexed-payload-20260625",
-    "title": "Final Object Definition Indexed Payload Writeout",
+    "id": "native-rmg-final-static-vectors-sentinel-20260626",
+    "title": "Final Static Object Definitions and Sentinel Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-26T00:12:07Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+    "updatedAt": "2026-06-26T00:46:31Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -18888,27 +19030,14 @@
         "status": "passed"
       },
       {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_definition_indexed_payload_20260625",
-        "status": "blocked_expected_failed_0_snapshots_3_definition_indexed_payloads_3"
-      },
-      {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-        "status": "passed"
-      },
-      {
-        "cmd": "jq empty ops/progress.json",
-        "status": "passed"
-      },
-      {
-        "cmd": "git diff --check",
-        "status": "passed"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+        "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
       }
     ],
     "blockers": [
-      "final_object_static_definition_vectors_0x4a8_0x7f8_unported",
-      "final_header_player_metadata_payload_unported",
-      "0x4ad3de_to_0x4ae09a_success_sentinel_unported",
-      "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+      "final_header_player_metadata_payload_0x4ac857_unported",
+      "post_header_initial_zero_0x4ad206_unported",
+      "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "full_final_payload_generation_unowned",
@@ -18923,82 +19052,85 @@
       "phase_snapshot_outputs": 3,
       "object_definition_table_invoked": true,
       "object_definition_table_applied_cases": 3,
-      "object_definition_static_vectors_0x4a8_0x7f8_included": false,
+      "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+      "object_definition_static_vector_count_0x4a8_0x7f8": 2,
       "object_definition_missing_source_record_cases": 0,
       "object_definition_template_index_missing_cases": 0,
       "object_payload_serialization_invoked": true,
       "object_payload_prefix_applied_cases": 3,
       "object_payload_prefix_blocked_cases": 0,
+      "final_zero_sentinel_written_0x4ad3db_cases": 3,
+      "final_success_test_0x4ad3de_passed_cases": 3,
+      "final_return_0x4ae09a_success_cases": 3,
+      "final_header_player_metadata_0x4ac857_ported": false,
+      "post_header_initial_zero_0x4ad206_ported": false,
       "small_seed10": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 91,
         "object_count": 231,
-        "object_definition_count": 112,
-        "object_definition_bytes": 6487,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 12,
-        "second_pass_objects": 219,
+        "object_definition_count": 114,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 6603,
         "serialized_object_payloads": 231,
-        "object_payload_bytes": 3140
+        "object_payload_bytes": 3140,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "small_seed58": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 115,
         "object_count": 220,
-        "object_definition_count": 119,
-        "object_definition_bytes": 6893,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 5,
-        "second_pass_objects": 215,
+        "object_definition_count": 121,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 7009,
         "serialized_object_payloads": 220,
-        "object_payload_bytes": 2896
+        "object_payload_bytes": 2896,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "medium_seed10": {
         "cells": 5184,
         "tile_bytes": 36288,
         "road_cells": 418,
-        "object_count": 844,
-        "object_definition_count": 173,
-        "object_definition_bytes": 10023,
-        "object_definition_missing_source_records": 0,
-        "object_definition_template_index_missing": 0,
-        "first_pass_objects": 13,
-        "second_pass_objects": 831,
-        "serialized_object_payloads": 844,
-        "object_payload_bytes": 10692
+        "object_count": 756,
+        "object_definition_count": 167,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 9675,
+        "serialized_object_payloads": 756,
+        "object_payload_bytes": 9428,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       }
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/medium_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md"
     ],
-    "remainingWork": "Port the static object definition vectors at generator +0x4a8/+0x7f8, final header/player/metadata writeout, and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned generated-definition-indexed 0x4ad3eb object payload. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-    "blocker": "Final writeout is blocked by unported static object definition vectors +0x4a8/+0x7f8, final header/player/metadata writeout, and 0x4ad3de -> 0x4ae09a success sentinel after generated-definition-indexed object payloads. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+    "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+    "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
   },
   "latestEvidenceArtifacts": [
-    ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed10.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed58.phase_snapshot.json",
-    ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/medium_seed10.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+    ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
     "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
     "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
     "src/gdextension/src/rmg_native_core.cpp",
-    "docs/native-rmg-generated-cell-mutation-chain.md",
+    "src/gdextension/src/rmg_native_batch_export_cli.cpp",
     "PLAN.md"
   ],
-  "latestEvidenceId": "native-rmg-final-object-definition-indexed-payload-20260625",
+  "latestEvidenceId": "native-rmg-final-static-vectors-sentinel-20260626",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -19391,7 +19523,7 @@
     "mine_resource_coordinate_builder_0x4a9641_ported": true,
     "mine_resource_guard_followup_0x4a960a_0x4a5e03_ported": true,
     "mine_resource_density_followup_0x4a9c7c_ported": true,
-    "native_cli_required_next_slice": "reward_guard_source_stream_0x4aab7e_0x4aa9b7_successful_commit_parity",
+    "native_cli_required_next_slice": "port_final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206",
     "relation_scan_consumers_0x4a5767_after_density_ported": true,
     "source_order_object_replay_after_relation_scan_applied": true,
     "relation_high_owner_0x49a318_after_source_order_replay_applied": true,
@@ -19537,17 +19669,32 @@
     "focused_medium_seed10_tile_cells": 5184,
     "focused_medium_seed10_tile_bytes": 36288,
     "focused_medium_seed10_road_cells": 418,
-    "focused_medium_seed10_final_object_count_header": 844,
+    "focused_medium_seed10_final_object_count_header": 756,
     "final_writeout_0x4ad1e3_0x49b2b6_0x4ad309_0x4ad318_count_header_ported": true,
     "phase_snapshot_outputs": 3,
     "object_definition_table_invoked": true,
     "object_definition_table_applied_cases": 3,
-    "object_definition_static_vectors_0x4a8_0x7f8_included": false,
+    "object_definition_static_vectors_0x4a8_0x7f8_included": true,
     "object_definition_missing_source_record_cases": 0,
     "object_definition_template_index_missing_cases": 0,
     "object_payload_serialization_invoked": true,
     "object_payload_prefix_applied_cases": 3,
-    "object_payload_prefix_blocked_cases": 0
+    "object_payload_prefix_blocked_cases": 0,
+    "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+    "final_zero_sentinel_written_0x4ad3db_cases": 3,
+    "final_success_test_0x4ad3de_passed_cases": 3,
+    "final_return_0x4ae09a_success_cases": 3,
+    "final_header_player_metadata_0x4ac857_ported": false,
+    "post_header_initial_zero_0x4ad206_ported": false,
+    "focused_small_seed10_object_definition_count": 114,
+    "focused_small_seed10_object_definition_bytes": 6603,
+    "focused_small_seed10_object_payload_bytes": 3140,
+    "focused_small_seed58_object_definition_count": 121,
+    "focused_small_seed58_object_definition_bytes": 7009,
+    "focused_small_seed58_object_payload_bytes": 2896,
+    "focused_medium_seed10_object_definition_count": 167,
+    "focused_medium_seed10_object_definition_bytes": 9675,
+    "focused_medium_seed10_object_payload_bytes": 9428
   },
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
   "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream, the recovered 0x4ad309/0x4ad318 generated-object count header write, and the recovered 0x4ad3eb two-pass generated-object order through the runtime-initialized 0x57c648 -> 0x598300 metadata byte at type*16+0x0c. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply the tile stream, write the object-count header, split first/second object serializer passes, and then fail closed at final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831. This is source-order workflow progress, not parity completion or final map output.",
@@ -60542,8 +60689,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Port the static object definition vectors at generator +0x4a8/+0x7f8, final header/player/metadata writeout, and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned generated-definition-indexed 0x4ad3eb object payload. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-  "remainingWork": "Port the static object definition vectors at generator +0x4a8/+0x7f8, final header/player/metadata writeout, and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned generated-definition-indexed 0x4ad3eb object payload. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
+  "remainingGap": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+  "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -61075,9 +61222,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now executes the recovered 0x4ad1e3 -> 0x49b2b6 final tile-cell stream, the recovered 0x4ad309/0x4ad318 generated-object count header write, and the recovered 0x4ad3eb two-pass generated-object order through the runtime-initialized 0x57c648 -> 0x598300 metadata byte at type*16+0x0c. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 all apply the tile stream, write the object-count header, split first/second object serializer passes, and then fail closed at final_object_payload_serializer_bodies_0x4ad3eb_unported_after_0x57c648_pass_split. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831. This is source-order workflow progress, not parity completion or final map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-25T23:51:11Z",
+  "updatedAt": "2026-06-26T00:46:31Z",
   "validation": {
     "id": "native-rmg-49e700-coordinate-worklist-20260625",
     "title": "Decorative 0x49e700 Coordinate Worklist Replay",
@@ -73012,14 +73159,119 @@
         "medium_seed10_decorative_candidate_append_count": 155,
         "medium_seed10_decorative_weight_total": 6450
       }
+    },
+    {
+      "id": "native-rmg-final-static-vectors-sentinel-20260626",
+      "title": "Final Static Object Definitions and Sentinel Writeout",
+      "status": "passed_partial_implementation_not_parity",
+      "updatedAt": "2026-06-26T00:46:31Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+      "commands": [
+        {
+          "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
+          "status": "passed"
+        },
+        {
+          "cmd": "bin/h3maped_rmg_core_selftest",
+          "status": "passed"
+        },
+        {
+          "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+          "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
+        }
+      ],
+      "blockers": [
+        "final_header_player_metadata_payload_0x4ac857_unported",
+        "post_header_initial_zero_0x4ad206_unported",
+        "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
+        "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
+        "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+        "full_final_payload_generation_unowned",
+        "same_run_private_state_and_final_payload_comparison_unowned"
+      ],
+      "metrics": {
+        "checkpoint2_complete": false,
+        "final_payload_generation_complete": false,
+        "godot_process_started": false,
+        "native_rmg_end_to_end_parity_complete": false,
+        "phase_snapshot_only_status_blocked": true,
+        "phase_snapshot_outputs": 3,
+        "object_definition_table_invoked": true,
+        "object_definition_table_applied_cases": 3,
+        "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_missing_source_record_cases": 0,
+        "object_definition_template_index_missing_cases": 0,
+        "object_payload_serialization_invoked": true,
+        "object_payload_prefix_applied_cases": 3,
+        "object_payload_prefix_blocked_cases": 0,
+        "final_zero_sentinel_written_0x4ad3db_cases": 3,
+        "final_success_test_0x4ad3de_passed_cases": 3,
+        "final_return_0x4ae09a_success_cases": 3,
+        "final_header_player_metadata_0x4ac857_ported": false,
+        "post_header_initial_zero_0x4ad206_ported": false,
+        "small_seed10": {
+          "cells": 1296,
+          "tile_bytes": 9072,
+          "road_cells": 91,
+          "object_count": 231,
+          "object_definition_count": 114,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 6603,
+          "serialized_object_payloads": 231,
+          "object_payload_bytes": 3140,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        },
+        "small_seed58": {
+          "cells": 1296,
+          "tile_bytes": 9072,
+          "road_cells": 115,
+          "object_count": 220,
+          "object_definition_count": 121,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 7009,
+          "serialized_object_payloads": 220,
+          "object_payload_bytes": 2896,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        },
+        "medium_seed10": {
+          "cells": 5184,
+          "tile_bytes": 36288,
+          "road_cells": 418,
+          "object_count": 756,
+          "object_definition_count": 167,
+          "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+          "object_definition_bytes": 9675,
+          "serialized_object_payloads": 756,
+          "object_payload_bytes": 9428,
+          "final_zero_sentinel_written_0x4ad3db": true,
+          "final_success_test_0x4ad3de_passed": true
+        }
+      },
+      "artifacts": [
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+        ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "src/gdextension/src/rmg_native_core.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "PLAN.md"
+      ],
+      "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+      "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
     }
   ],
   "validationResults": {
-    "id": "native-rmg-final-object-payload-prefix-20260625",
-    "title": "Final 0x4ad3eb Object Payload Prefix Writeout",
+    "id": "native-rmg-final-static-vectors-sentinel-20260626",
+    "title": "Final Static Object Definitions and Sentinel Writeout",
     "status": "passed_partial_implementation_not_parity",
-    "updatedAt": "2026-06-25T23:51:11Z",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
+    "updatedAt": "2026-06-26T00:46:31Z",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
     "commands": [
       {
         "cmd": "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2",
@@ -73030,25 +73282,14 @@
         "status": "passed"
       },
       {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --controlled-case small_seed10:Small:2:10:land:1:1:1:3 --controlled-case small_seed58:Small:2:58:land:1:1:1:3 --controlled-case medium_seed10:Medium:4:10:land:1:1:3:3 --out .artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625",
-        "status": "blocked_expected_failed_0_snapshots_3_object_payload_prefixes_3"
-      },
-      {
-        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
-        "status": "passed"
-      },
-      {
-        "cmd": "jq empty ops/progress.json",
-        "status": "passed"
-      },
-      {
-        "cmd": "git diff --check",
-        "status": "passed"
+        "cmd": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626 --controlled-case small_seed10:small:2:10:land:1:1:1:3 --controlled-case small_seed58:small:2:58:land:1:1:1:3 --controlled-case medium_seed10:medium:2:10:land:1:1:1:3 --print-manifest",
+        "status": "blocked_expected_failed_0_snapshots_3_static_vectors_and_sentinel_recorded"
       }
     ],
     "blockers": [
-      "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix",
-      "complex_0x4ad3eb_serializer_bodies_source_backed_recovery_if_broader_seed_coverage_reaches_them",
+      "final_header_player_metadata_payload_0x4ac857_unported",
+      "post_header_initial_zero_0x4ad206_unported",
+      "exact_runtime_descriptor_wrapper_bucket_0x08_0x0c_replay_for_full_table_parity_unported",
       "reward_guard_source_stream_zero_successful_0x4aa9b7_commits",
       "descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
       "full_final_payload_generation_unowned",
@@ -73061,56 +73302,76 @@
       "native_rmg_end_to_end_parity_complete": false,
       "phase_snapshot_only_status_blocked": true,
       "phase_snapshot_outputs": 3,
+      "object_definition_table_invoked": true,
+      "object_definition_table_applied_cases": 3,
+      "object_definition_static_vectors_0x4a8_0x7f8_included": true,
+      "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+      "object_definition_missing_source_record_cases": 0,
+      "object_definition_template_index_missing_cases": 0,
       "object_payload_serialization_invoked": true,
       "object_payload_prefix_applied_cases": 3,
       "object_payload_prefix_blocked_cases": 0,
+      "final_zero_sentinel_written_0x4ad3db_cases": 3,
+      "final_success_test_0x4ad3de_passed_cases": 3,
+      "final_return_0x4ae09a_success_cases": 3,
+      "final_header_player_metadata_0x4ac857_ported": false,
+      "post_header_initial_zero_0x4ad206_ported": false,
       "small_seed10": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 91,
         "object_count": 231,
-        "first_pass_objects": 12,
-        "second_pass_objects": 219,
+        "object_definition_count": 114,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 6603,
         "serialized_object_payloads": 231,
-        "object_payload_bytes": 3140
+        "object_payload_bytes": 3140,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "small_seed58": {
         "cells": 1296,
         "tile_bytes": 9072,
         "road_cells": 115,
         "object_count": 220,
-        "first_pass_objects": 5,
-        "second_pass_objects": 215,
+        "object_definition_count": 121,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 7009,
         "serialized_object_payloads": 220,
-        "object_payload_bytes": 2896
+        "object_payload_bytes": 2896,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       },
       "medium_seed10": {
         "cells": 5184,
         "tile_bytes": 36288,
         "road_cells": 418,
-        "object_count": 844,
-        "first_pass_objects": 13,
-        "second_pass_objects": 831,
-        "serialized_object_payloads": 844,
-        "object_payload_bytes": 10692
+        "object_count": 756,
+        "object_definition_count": 167,
+        "object_definition_static_vector_count_0x4a8_0x7f8": 2,
+        "object_definition_bytes": 9675,
+        "serialized_object_payloads": 756,
+        "object_payload_bytes": 9428,
+        "final_zero_sentinel_written_0x4ad3db": true,
+        "final_success_test_0x4ad3de_passed": true
       }
     },
     "artifacts": [
-      ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed10.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/small_seed58.phase_snapshot.json",
-      ".artifacts/rmg_native_batch_export_final_object_payload_prefix_20260625/medium_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed10.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/small_seed58.phase_snapshot.json",
+      ".artifacts/rmg_native_batch_export_static_vectors_sentinel_20260626/medium_seed10.phase_snapshot.json",
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "docs/native-rmg-generated-cell-mutation-chain.md",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md"
     ],
-    "remainingWork": "Port final header/player/metadata writeout and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned 0x4ad3eb object-payload prefix. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries selected descriptor raw +0x0c into final object records and serializes the recovered/base-field-backed 0x4ad3eb generated-object payload prefix after the recovered two-pass object ordering. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload in pass order and then fail closed at final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-    "blocker": "Final writeout is blocked by unported final header/player/metadata writeout and 0x4ad3de -> 0x4ae09a success sentinel after the object-payload prefix. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
+    "remainingWork": "Port final header/player/metadata writeout 0x4ac857 and the post-header initial zero write at 0x4ad206, then prove the exact runtime descriptor wrapper-bucket +0x08/+0x0c table replay rather than relying on source-catalog reconstruction. Keep native map output disabled until same-run private-state and final-payload comparison pass.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+    "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers."
   },
-  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-  "blocker": "Final writeout is blocked by unported static object definition vectors +0x4a8/+0x7f8, final header/player/metadata writeout, and 0x4ad3de -> 0x4ae09a success sentinel after generated-definition-indexed object payloads. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
-  "native_cli_required_next_slice": "port_final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_then_0x4ad3de_0x4ae09a"
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now prepends the two recovered final object definition static vectors at generator +0x4a8/+0x7f8 (AVWmrnd0.def and AVLhlds0.def), shifts generated object definition indices after those records, and records the recovered final 0x4ad3db zero-sentinel / 0x4ad3de success test / 0x4ae09a success return after serialized object payloads. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 snapshots include the two static definitions, serialize object payloads, and fail closed at final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 114 definitions / 6603 definition bytes / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 121 / 7009 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 756 / 167 / 9675 / 756 / 9428. This is source-order workflow progress, not parity completion or final map output.",
+  "blocker": "Final writeout is blocked by unported final header/player/metadata writeout 0x4ac857 and post-header initial zero 0x4ad206. Exact runtime descriptor wrapper-bucket +0x08/+0x0c replay for full H3MapEd object-definition table parity, reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
+  "native_cli_required_next_slice": "port_final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206"
 }

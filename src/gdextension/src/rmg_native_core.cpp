@@ -384,6 +384,7 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"object_definition_table_invoked\":" << (writeout.object_definition_table_invoked ? "true" : "false")
 		<< ",\"object_definition_table_applied\":" << (writeout.object_definition_table_applied ? "true" : "false")
 		<< ",\"object_definition_table_static_vectors_0x4a8_0x7f8_included\":" << (writeout.object_definition_table_static_vectors_0x4a8_0x7f8_included ? "true" : "false")
+		<< ",\"object_definition_static_vector_count_0x4a8_0x7f8\":" << writeout.object_definition_static_vector_count_0x4a8_0x7f8
 		<< ",\"object_definition_count\":" << writeout.object_definition_count
 		<< ",\"object_definition_payload_byte_count\":" << writeout.object_definition_payload_byte_count
 		<< ",\"object_definition_payload_byte_vector_size\":" << writeout.object_definition_payload_bytes.size()
@@ -404,6 +405,11 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"object_payload_prefix_blocked_index\":" << writeout.object_payload_prefix_blocked_index
 		<< ",\"object_payload_prefix_blocked_serializer_slot\":" << writeout.object_payload_prefix_blocked_serializer_slot
 		<< ",\"object_payload_prefix_blocked_pass\":" << writeout.object_payload_prefix_blocked_pass
+		<< ",\"final_zero_sentinel_written_0x4ad3db\":" << (writeout.final_zero_sentinel_written_0x4ad3db ? "true" : "false")
+		<< ",\"final_zero_sentinel_payload_byte_count\":" << writeout.final_zero_sentinel_payload_byte_count
+		<< ",\"final_success_test_0x4ad3de_passed\":" << (writeout.final_success_test_0x4ad3de_passed ? "true" : "false")
+		<< ",\"final_success_test_eax_0x4ad3de\":" << writeout.final_success_test_eax_0x4ad3de
+		<< ",\"final_return_0x4ae09a_success\":" << (writeout.final_return_0x4ae09a_success ? "true" : "false")
 		<< ",\"object_record_vector_count_known_0xec8_0xecc\":" << (writeout.object_record_vector_count_known_0xec8_0xecc ? "true" : "false")
 		<< ",\"object_record_vector_count_0xec8_0xecc\":" << writeout.object_record_vector_count_0xec8_0xecc
 		<< ",\"serializer_slot_known_count\":" << writeout.serializer_slot_known_count
