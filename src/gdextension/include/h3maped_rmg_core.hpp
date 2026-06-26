@@ -855,8 +855,10 @@ struct BoundaryCyclePoint4a2777 {
 	bool finalized = true;
 	bool has_payload = false;
 	int32_t payload = 0;
+	int32_t payload_random_span_limit_0x1c = 1;
 	bool next_pair_has_payload = false;
 	int32_t next_pair_payload = 0;
+	int32_t next_pair_payload_random_span_limit_0x1c = 1;
 };
 
 struct SourceNodeCyclePoint4a2777 {
@@ -872,14 +874,18 @@ struct SourceNodeCyclePoint4a2777 {
 	bool finalized = true;
 	bool has_payload = false;
 	int32_t payload = 0;
+	int32_t payload_random_span_limit_0x1c = 1;
 	bool next_pair_has_payload = false;
 	int32_t next_pair_payload = 0;
+	int32_t next_pair_payload_random_span_limit_0x1c = 1;
 };
 
 struct BoundarySourceCycleHandoff4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
+	int32_t generated_cell_owner_byte2 = -1;
 	int32_t level = 0;
+	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	bool has_source_record_seed_0x10 = false;
@@ -893,11 +899,15 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	int32_t x_after_bbox_rescale = 0;
 	int32_t y_after_bbox_rescale = 0;
 	int32_t level = 0;
+	int32_t source_payload_0x08 = -1;
+	int32_t source_payload_random_span_limit_0x1c = 1;
 };
 
 struct RuntimeZoneBoundaryInput4a3a03 {
 	RuntimeZoneFootprintInput4a3a03 footprint;
 	int32_t zone_word = 0;
+	int32_t generated_cell_owner_byte2 = -1;
+	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	bool has_source_record_seed_0x10 = false;
@@ -1318,7 +1328,9 @@ struct SourceNodeFootprintResult4a3a03 {
 struct BoundaryCycleInput4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
+	int32_t generated_cell_owner_byte2 = -1;
 	int32_t level = 0;
+	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	bool has_span_seed_4a325d = false;
@@ -1355,6 +1367,7 @@ struct BoundarySegment4a2777 {
 struct BoundaryZoneMaterialization4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
+	int32_t generated_cell_owner_byte2 = -1;
 	int32_t level = 0;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	int32_t selected_segment_index = -1;

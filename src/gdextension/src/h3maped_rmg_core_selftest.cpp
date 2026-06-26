@@ -446,7 +446,7 @@ int main() {
 			record.word_0x20_known = true;
 			record.word_0x20 = 0xff000064U;
 			record.word_0x24_known = true;
-			record.word_0x24 = 0x00000548U;
+			record.word_0x24 = 0x00000540U;
 			record.word_0x28_known = true;
 			record.word_0x28 = aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
 			record.word_0x2c_known = true;
@@ -464,6 +464,8 @@ int main() {
 		generic_owner.scan_bound_low_y_0x24 = 6;
 		generic_owner.scan_bound_high_x_0x28 = 7;
 		generic_owner.scan_bound_high_y_0x2c = 7;
+		generic_owner.terrain_policy_0x0c_known = true;
+		generic_owner.terrain_policy_0x0c = 0;
 		generic_owner.descriptor_type_counter_table_0x44_known = true;
 		generic_owner.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
 		generic_owner.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
@@ -1814,10 +1816,10 @@ int main() {
 	}
 
 	const std::vector<RuntimeZoneBoundaryInput4a3a03> boundary_inputs = {
-		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[0], 0, 1, 0, true, SpanRecord { 8, 8, 0 } },
-		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[1], 1, 1, 1, true, SpanRecord { 20, 8, 0 } },
-		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[2], 2, 1, 2, true, SpanRecord { 20, 20, 0 } },
-		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[3], 3, 1, 3, true, SpanRecord { 8, 20, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[0], 0, 0, 0, 1, 0, true, SpanRecord { 8, 8, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[1], 1, 1, 0, 1, 1, true, SpanRecord { 20, 8, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[2], 2, 2, 0, 1, 2, true, SpanRecord { 20, 20, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[3], 3, 3, 0, 1, 3, true, SpanRecord { 8, 20, 0 } },
 	};
 	const BoundaryOwnerGridResult4a3a03 owner_grid = aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(
 			36,
@@ -4194,6 +4196,18 @@ int main() {
 	weighted_scan_state.object_record_sequence_allocator_0xf44 = 5;
 	weighted_scan_state.native_object_record_key_allocator_0x4a93a2_known = true;
 	weighted_scan_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	GeneratorRelationOwnerState4a218c weighted_owner;
+	weighted_owner.runtime_zone_index = 0;
+	weighted_owner.owner_vector_index = 0;
+	weighted_owner.relation_owner_byte2_0x4aa9b7_known = true;
+	weighted_owner.relation_owner_byte2_0x4aa9b7 = 0;
+	weighted_owner.terrain_policy_0x0c_known = true;
+	weighted_owner.terrain_policy_0x0c = 0;
+	weighted_owner.descriptor_type_counter_table_0x44_known = true;
+	weighted_owner.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	weighted_owner.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+	weighted_scan_state.relation_owner_vectors_10e4_10e8.push_back(weighted_owner);
+	weighted_scan_state.relation_owner_vector_count_10e4_10e8 = 1;
 	for (GeneratedCellRecord0x30 &record : weighted_scan_state.generated_cell_buffer.records) {
 		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
@@ -4201,7 +4215,7 @@ int main() {
 		record.word_0x20_known = true;
 		record.word_0x20 = 0xff000064U;
 		record.word_0x24_known = true;
-		record.word_0x24 = 0x00000548U;
+		record.word_0x24 = 0x00000540U;
 		record.word_0x28_known = true;
 		record.word_0x28 = 0x12005000U;
 		record.word_0x2c_known = true;
@@ -4344,6 +4358,18 @@ int main() {
 	direct_placement_state.object_record_sequence_allocator_0xf44 = 9;
 	direct_placement_state.native_object_record_key_allocator_0x4a93a2_known = true;
 	direct_placement_state.next_native_object_record_key_0x4a93a2 = 0x036b6d50U;
+	GeneratorRelationOwnerState4a218c direct_owner;
+	direct_owner.runtime_zone_index = 0;
+	direct_owner.owner_vector_index = 0;
+	direct_owner.relation_owner_byte2_0x4aa9b7_known = true;
+	direct_owner.relation_owner_byte2_0x4aa9b7 = 0;
+	direct_owner.terrain_policy_0x0c_known = true;
+	direct_owner.terrain_policy_0x0c = 0;
+	direct_owner.descriptor_type_counter_table_0x44_known = true;
+	direct_owner.descriptor_type_counter_table_0x44_zero_count = aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	direct_owner.descriptor_type_counters_0x44.assign(size_t(aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+	direct_placement_state.relation_owner_vectors_10e4_10e8.push_back(direct_owner);
+	direct_placement_state.relation_owner_vector_count_10e4_10e8 = 1;
 	for (GeneratedCellRecord0x30 &record : direct_placement_state.generated_cell_buffer.records) {
 		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
@@ -4351,7 +4377,7 @@ int main() {
 		record.word_0x20_known = true;
 		record.word_0x20 = 0xff000064U;
 		record.word_0x24_known = true;
-		record.word_0x24 = 0x00000548U;
+		record.word_0x24 = 0x00000540U;
 		record.word_0x28_known = true;
 		record.word_0x28 = 0x12005000U;
 		record.word_0x2c_known = true;
