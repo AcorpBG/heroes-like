@@ -10706,6 +10706,39 @@ static const std::array<FinalObjectStaticDefinitionSource4ad1e3, 2> &final_objec
 	return sources;
 }
 
+static const std::array<int32_t, 426> &final_object_recovered_definition_source_rows_0x4ad3eb() {
+	static const std::array<int32_t, 426> rows = {{
+			1088, 381, 915, 21, 47, 56, 80, 90, 93, 99, 137, 1150, 1126, 1127, 1128, 1114,
+			1115, 1116, 1117, 1119, 1120, 163, 169, 209, 232, 926, 932, 1138, 925, 1167, 929, 1319,
+			1320, 927, 866, 867, 868, 873, 877, 878, 879, 881, 885, 888, 892, 895, 896, 899,
+			900, 902, 903, 906, 907, 908, 909, 955, 961, 963, 964, 972, 984, 985, 987, 989,
+			990, 991, 997, 1000, 1004, 1006, 1015, 1016, 1025, 1027, 1040, 1042, 1044, 1045, 1046, 1047,
+			1053, 1055, 1063, 1074, 1069, 1070, 1083, 1085, 1086, 941, 1175, 1176, 1180, 1299, 1300, 916,
+			1297, 141, 142, 143, 144, 946, 241, 937, 938, 939, 940, 942, 943, 945, 1303, 1304,
+			1305, 1306, 1136, 1141, 1142, 1143, 2, 1315, 149, 151, 155, 156, 923, 936, 1317, 933,
+			1316, 913, 914, 910, 934, 251, 252, 255, 272, 275, 276, 277, 280, 283, 294, 296,
+			302, 313, 315, 317, 325, 328, 329, 330, 332, 333, 334, 335, 336, 338, 339, 340,
+			686, 345, 346, 348, 349, 351, 352, 354, 355, 356, 357, 358, 360, 363, 400, 401,
+			403, 404, 405, 406, 407, 408, 409, 685, 392, 393, 394, 395, 396, 397, 398, 399,
+			415, 416, 418, 419, 421, 422, 423, 424, 425, 428, 429, 430, 431, 391, 337, 435,
+			436, 438, 447, 448, 449, 450, 451, 452, 453, 454, 455, 462, 463, 464, 465, 466,
+			467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 482, 483, 486,
+			487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 242, 243, 244, 245, 246,
+			247, 248, 249, 661, 662, 663, 664, 665, 666, 668, 669, 508, 509, 510, 511, 512,
+			513, 514, 515, 528, 529, 530, 531, 532, 533, 534, 535, 652, 653, 654, 655, 656,
+			659, 250, 536, 537, 538, 540, 541, 542, 543, 544, 546, 548, 550, 552, 554, 555,
+			557, 559, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 579, 582, 586,
+			612, 613, 615, 616, 617, 620, 621, 624, 628, 629, 631, 632, 633, 635, 640, 643,
+			644, 646, 650, 681, 682, 651, 670, 525, 526, 527, 610, 611, 673, 674, 675, 676,
+			677, 678, 679, 680, 688, 689, 690, 691, 692, 694, 695, 696, 698, 699, 700, 704,
+			709, 713, 714, 715, 716, 769, 771, 772, 773, 775, 776, 777, 778, 781, 782, 783,
+			784, 785, 786, 818, 819, 821, 823, 813, 814, 815, 816, 817, 733, 734, 735, 736,
+			737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 752, 754, 762, 791, 793,
+			798, 799, 802, 804, 806, 807, 808, 809, 810, 812,
+	}};
+	return rows;
+}
+
 static int32_t final_object_find_static_source_catalog_index_0x4ad1e3(
 		const std::vector<SourceObjectRecord0x4c> &catalog,
 		const FinalObjectStaticDefinitionSource4ad1e3 &source) {
@@ -10721,6 +10754,18 @@ static int32_t final_object_find_static_source_catalog_index_0x4ad1e3(
 				&& record.last_flag_0x28 == source.last_flag_0x28
 				&& record.terrain_mask_a_0x14 == source.terrain_mask_a_0x14
 				&& record.terrain_mask_b_0x18 == source.terrain_mask_b_0x18) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+static int32_t final_object_find_source_catalog_row_0x4ad3eb(
+		const std::vector<SourceObjectRecord0x4c> &catalog,
+		int32_t source_row) {
+	for (int32_t index = 0; index < int32_t(catalog.size()); ++index) {
+		const SourceObjectRecord0x4c &record = catalog[size_t(index)];
+		if (record.source == "objects.txt" && record.source_row == source_row) {
 			return index;
 		}
 	}
@@ -10772,6 +10817,20 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 	}
 	result.object_definition_table_static_vectors_0x4a8_0x7f8_included =
 			result.object_definition_static_vector_count_0x4a8_0x7f8 == int32_t(final_object_static_definition_sources_0x4a8_0x7f8().size());
+	for (const int32_t source_row : final_object_recovered_definition_source_rows_0x4ad3eb()) {
+		const int32_t source_catalog_index = final_object_find_source_catalog_row_0x4ad3eb(catalog, source_row);
+		if (source_catalog_index < 0) {
+			result.object_definition_missing_source_record_count += 1;
+			std::ostringstream reason;
+			reason << "final_object_recovered_definition_source_row_" << source_row << "_missing";
+			result.blocked_reason = reason.str();
+			return build;
+		}
+		if (!emitted_source_catalog_indices.insert(source_catalog_index).second) {
+			continue;
+		}
+		ordered_source_catalog_indices.push_back(source_catalog_index);
+	}
 	for (const SourceObjectWrapperBucket0xe8 &bucket : buckets) {
 		for (const int32_t source_catalog_index : bucket.source_record_indices) {
 			if (used_source_catalog_indices.find(source_catalog_index) == used_source_catalog_indices.end()) {
