@@ -855,9 +855,11 @@ struct BoundaryCyclePoint4a2777 {
 	bool finalized = true;
 	bool has_payload = false;
 	int32_t payload = 0;
+	int32_t payload_owner_word_0x00 = 0;
 	int32_t payload_random_span_limit_0x1c = 1;
 	bool next_pair_has_payload = false;
 	int32_t next_pair_payload = 0;
+	int32_t next_pair_payload_owner_word_0x00 = 0;
 	int32_t next_pair_payload_random_span_limit_0x1c = 1;
 };
 
@@ -874,9 +876,11 @@ struct SourceNodeCyclePoint4a2777 {
 	bool finalized = true;
 	bool has_payload = false;
 	int32_t payload = 0;
+	int32_t payload_owner_word_0x00 = 0;
 	int32_t payload_random_span_limit_0x1c = 1;
 	bool next_pair_has_payload = false;
 	int32_t next_pair_payload = 0;
+	int32_t next_pair_payload_owner_word_0x00 = 0;
 	int32_t next_pair_payload_random_span_limit_0x1c = 1;
 };
 
@@ -900,6 +904,7 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	int32_t y_after_bbox_rescale = 0;
 	int32_t level = 0;
 	int32_t source_payload_0x08 = -1;
+	int32_t source_payload_owner_word_0x00 = 0;
 	int32_t source_payload_random_span_limit_0x1c = 1;
 };
 
@@ -1281,6 +1286,7 @@ struct SourceDescriptorNode4cca55 {
 	int32_t y = 0;
 	bool has_payload = false;
 	int32_t payload = 0;
+	int32_t payload_owner_word_0x00 = 0;
 	int32_t pair_index = -1;
 	int32_t next_index = -1;
 	int32_t previous_index = -1;
