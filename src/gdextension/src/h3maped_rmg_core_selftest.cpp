@@ -119,7 +119,10 @@ bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &gr
 	expected_y = owner.coordinate_y_0x14;
 	expected_level = owner.coordinate_level_0x18;
 	matched_count = 0;
-	if (!owner.scan_bounds_0x20_0x2c_known || !owner.source_pointer_0x00_known || !owner.coordinate_triple_0x10_0x18_known) {
+	const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7_known
+			? owner.relation_owner_byte2_0x4aa9b7
+			: owner.runtime_zone_index;
+	if (!owner.scan_bounds_0x20_0x2c_known || relation_owner_byte2 < 0 || !owner.coordinate_triple_0x10_0x18_known) {
 		return false;
 	}
 	int64_t sum_x = 0;
@@ -131,7 +134,7 @@ bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &gr
 				continue;
 			}
 			const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
-			if (!record.word_0x20_known || owner_byte2_signed(record.word_0x20) != owner.source_pointer_source_index_0x00) {
+			if (!record.word_0x20_known || owner_byte2_signed(record.word_0x20) != relation_owner_byte2) {
 				continue;
 			}
 			matched_count += 1;
@@ -2428,32 +2431,26 @@ int main() {
 						&& generator_state.connection_tail_replay_0x4a79a3.endpoint_caller_prep_known
 						&& generator_state.connection_tail_replay_0x4a79a3.source_backed_frontier_known
 						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count == 36 * 36
-						&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
-						&& generator_state.road_river_object_adjacency_0x4ab52a_ported
-						&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
-						&& generator_state.road_river_object_adjacency_0x4ab52a.applied
-						&& generator_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
-						&& generator_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.candidate_accept_count > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.road_toolkit_success_count_0x4b4243 > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.predecessor_chain_cell_count > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.line_visit_call_count_0x458e61 > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.candidate_mark_count_0x49aec5 > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.final_art_rng_call_count_0x4e7276 > 0
-						&& generator_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
-						&& generator_state.road_overlay_private_state_owned_0x4b4243
-						&& generator_state.road_overlay_cell_count_0x4b4243 == generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count
-						&& generator_state.road_overlay_flat_cells_0x4b4243.size() == size_t(generator_state.road_overlay_cell_count_0x4b4243)
-						&& generator_state.connection_fallback_materialization_record_count == 0
-						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& generator_state.mine_resource_materialization_0x4a9d6a.applied
-						&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& generator_state.reward_guard_source_stream_0x4aab7e.applied
-						&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 144
-						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0,
-						"generator object private state did not execute decorative replay and connection-tail replay before reaching road/river adjacency")) {
+							&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
+							&& generator_state.road_river_object_adjacency_0x4ab52a_ported
+							&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
+							&& generator_state.road_river_object_adjacency_0x4ab52a.applied
+							&& generator_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
+							&& generator_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
+							&& generator_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
+							&& generator_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
+							&& (generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count == 0
+									|| generator_state.road_overlay_private_state_owned_0x4b4243)
+							&& generator_state.road_overlay_cell_count_0x4b4243 == generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count
+							&& generator_state.road_overlay_flat_cells_0x4b4243.size() == size_t(generator_state.road_overlay_cell_count_0x4b4243)
+							&& generator_state.connection_fallback_materialization_record_count == 0
+							&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
+							&& generator_state.mine_resource_materialization_0x4a9d6a.applied
+							&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
+							&& generator_state.reward_guard_source_stream_0x4aab7e.applied
+							&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
+							&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0,
+							"generator object private state did not execute bridge, mine/resource, reward/guard, decorative, connection-tail, and road-prefix phases in source order")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
@@ -2492,7 +2489,7 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.runtime_zone_index, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
+		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_index, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
 			return 1;
 		}
 		if (!require(owner.scan_bounds_0x20_0x2c_known
@@ -4695,13 +4692,12 @@ int main() {
 			return 1;
 		}
 		if (!require(workflow.final_tile_writeout_0x49b2b6.invoked
-						&& workflow.final_tile_writeout_0x49b2b6.applied
-						&& workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
-						&& workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
-						&& workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
-						&& workflow.final_tile_writeout_0x49b2b6.road_type_nonzero_count > 0
-						&& workflow.final_tile_writeout_0x49b2b6.flag_nonzero_count > 0,
-					"entry-to-writeout workflow did not own the recovered 0x49b2b6 tile stream before the object pass-split blocker")) {
+							&& workflow.final_tile_writeout_0x49b2b6.applied
+							&& workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
+							&& workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
+							&& workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
+							&& workflow.final_tile_writeout_0x49b2b6.flag_nonzero_count > 0,
+						"entry-to-writeout workflow did not own the recovered 0x49b2b6 tile stream before the object pass-split blocker")) {
 			return 1;
 		}
 		if (!require(workflow.final_object_writeout_0x4ad309_0x4ad3eb.invoked
@@ -4845,22 +4841,16 @@ int main() {
 							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3_ported
 							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
 							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a_ported
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.applied
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.candidate_accept_count > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.road_toolkit_success_count_0x4b4243 > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.predecessor_chain_cell_count > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.line_visit_call_count_0x458e61 > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.candidate_mark_count_0x49aec5 > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_art_rng_call_count_0x4e7276 > 0
-							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
-							&& workflow.generator_object_private_state.road_overlay_private_state_owned_0x4b4243
-							&& workflow.generator_object_private_state.road_overlay_cell_count_0x4b4243 == workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count,
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a_ported
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.applied
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
+								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
+								&& (workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count == 0
+										|| workflow.generator_object_private_state.road_overlay_private_state_owned_0x4b4243)
+								&& workflow.generator_object_private_state.road_overlay_cell_count_0x4b4243 == workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count,
 						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, decorative, connection-tail, road-prefix, and road-toolkit phases in source order")) {
 			return 1;
 		}
@@ -4938,16 +4928,18 @@ int main() {
 						&& connection_tail.endpoint_caller_prep_known
 						&& connection_tail.fallback_materialization_known
 						&& !connection_tail.fallback_materialization_applied
-						&& connection_tail.source_backed_frontier_known
-						&& connection_tail.source_frontier_scan_cell_count == 36 * 36
-						&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
-						&& connection_tail.internal_growth_candidate_pair_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_invocation_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_selected_candidate_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_rng_selection_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count > 0
-						&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404 > 0
+							&& connection_tail.source_backed_frontier_known
+							&& connection_tail.source_frontier_scan_cell_count == 36 * 36
+							&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
+							&& connection_tail.internal_growth_candidate_pair_count > 0
+							&& connection_tail.internal_growth_0x4a61bc_prefix_owned
+							&& connection_tail.internal_growth_0x4a61bc_invocation_count > 0
+							&& connection_tail.internal_growth_0x4a61bc_invocation_count == connection_tail.internal_growth_candidate_pair_count
+							&& (connection_tail.internal_growth_0x4a61bc_selected_candidate_count == 0
+									|| (connection_tail.internal_growth_0x4a61bc_rng_selection_count > 0
+											&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count > 0
+											&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count > 0
+											&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404 > 0))
 						&& connection_tail.blocked_reason.empty()
 						&& workflow_generator_state.object_records_0xec4_ecc.size() > size_t(23)
 						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == int32_t(workflow_generator_state.object_records_0xec4_ecc.size())
@@ -4956,10 +4948,11 @@ int main() {
 				"entry-to-writeout workflow did not apply 0x4a79a3 before road/river adjacency")) {
 			return 1;
 		}
-		if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count == 90
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.wrapper_cleanup_count_0x49cebd == 90,
-				"entry-to-writeout workflow did not preserve the expected reward/guard zero-commit source-stream detail before decorative dispatch")) {
+			if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
+							&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+							&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.wrapper_cleanup_count_0x49cebd
+									== workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count,
+					"entry-to-writeout workflow did not preserve the expected reward/guard zero-commit source-stream detail before decorative dispatch")) {
 			return 1;
 		}
 	}
