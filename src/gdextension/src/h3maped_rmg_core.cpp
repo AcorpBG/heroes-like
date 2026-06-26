@@ -7722,8 +7722,8 @@ static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelati
 }
 
 static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelationOwnerState4a218c &relation) {
-	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
-		return relation.relation_owner_byte2_0x4aa9b7;
+	if (relation.owner_vector_index >= 0) {
+		return relation.owner_vector_index;
 	}
 	return relation.runtime_zone_index;
 }
@@ -13667,7 +13667,7 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 	return result;
 }
 
-TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection) {
+TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners) {
 	TerrainRepaintResult4a3f27 result;
 	result.status = "blocked_invalid_dimensions";
 	if (width <= 0 || height <= 0 || level_count <= 0) {
@@ -13947,50 +13947,123 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height,
 		set_b.clear();
 	};
 
-	for (const RuntimeTerrainSelectionRecord49b53d &record : terrain_selection.records) {
-		if (record.selected_terrain_id_0x49b53d == 8) {
-			result.water_zone_skip_count += 1;
-			continue;
+	auto owner_gate_bounds = [&](int32_t level, int32_t owner_gate_byte2, int32_t &low_x, int32_t &low_y, int32_t &high_x, int32_t &high_y) -> bool {
+		if (level < 0 || level >= level_count || owner_gate_byte2 < 0) {
+			return false;
 		}
-		const int32_t owner_gate_byte2 = record.zone_word_0x4a2777 >= 0 ? record.zone_word_0x4a2777 : record.runtime_zone_index;
+		low_x = width;
+		low_y = height;
+		high_x = -1;
+		high_y = -1;
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				const int32_t flat = level * level_tile_count + y * width + x;
+				if (flat < 0 || flat >= cell_count) {
+					continue;
+				}
+				const int32_t owner_byte = generated_cell_owner_byte2_signed_4a4142(result.generated_cell_word_0x20[size_t(flat)]);
+				if (owner_byte != owner_gate_byte2) {
+					continue;
+				}
+				low_x = std::min(low_x, x);
+				low_y = std::min(low_y, y);
+				high_x = std::max(high_x, x + 1);
+				high_y = std::max(high_y, y + 1);
+			}
+		}
+		return high_x > low_x && high_y > low_y;
+	};
+
+	auto repaint_record = [&](int32_t terrain_id, int32_t owner_gate_byte2, int32_t scan_level, int32_t low_x, int32_t low_y, int32_t high_x, int32_t high_y) {
+		if (terrain_id == 8) {
+			result.water_zone_skip_count += 1;
+			return;
+		}
+		if (owner_gate_byte2 < 0) {
+			return;
+		}
+		if (scan_level < 0 || scan_level >= level_count) {
+			return;
+		}
+		low_x = std::clamp(low_x, 0, width);
+		high_x = std::clamp(high_x, 0, width);
+		low_y = std::clamp(low_y, 0, height);
+		high_y = std::clamp(high_y, 0, height);
+		if (low_x >= high_x || low_y >= high_y) {
+			return;
+		}
 		bool record_changed = false;
-		for (int32_t flat = 0; flat < cell_count; ++flat) {
-			const int32_t owner_byte = generated_cell_owner_byte2_signed_4a4142(result.generated_cell_word_0x20[size_t(flat)]);
-			if (owner_byte != owner_gate_byte2) {
-				result.owner_gate_skip_count_0x4a4142 += 1;
-				continue;
-			}
-			if (((result.generated_cell_word_0x28[size_t(flat)] >> 28U) & 0x01U) == 0U) {
-				result.member_gate_skip_count_0x4a4150 += 1;
-				continue;
-			}
-			result.zone_repaint_candidate_count_0x4a4082 += 1;
-			result.zone_repaint_write_count_0x4a4163 += 1;
-			const int32_t level = flat / level_tile_count;
-			const int32_t level_offset = flat - level * level_tile_count;
-			const int32_t y = level_offset / width;
-			const int32_t x = level_offset - y * width;
-			if (set_terrain_at_grid_index_4bb74b(result.terrain_code, width, height, level_tile_count, level, x, y, record.selected_terrain_id_0x49b53d)) {
-				record_changed = true;
-				if (write_live_visual_cell(level, x, y, record.selected_terrain_id_0x49b53d)) {
-					result.terrain_visual_repaint_write_count_0x4a4082 += 1;
+		for (int32_t y = low_y; y < high_y; ++y) {
+			for (int32_t x = low_x; x < high_x; ++x) {
+				const int32_t flat = scan_level * level_tile_count + y * width + x;
+				if (flat < 0 || flat >= cell_count) {
+					continue;
 				}
-				set_b.erase(terrain_grid_key_4bb74b(level, x, y));
-				if (candidate_gate_4bc988(result.terrain_code, width, height, level_tile_count, level, x, y)) {
-					append_set_a(level, x, y);
-				} else {
-					seed_4bba59(level, x, y, record.selected_terrain_id_0x49b53d);
+				const int32_t owner_byte = generated_cell_owner_byte2_signed_4a4142(result.generated_cell_word_0x20[size_t(flat)]);
+				if (owner_byte != owner_gate_byte2) {
+					result.owner_gate_skip_count_0x4a4142 += 1;
+					continue;
 				}
-				if (!toolkit_byte5_allows_same_class_gate_4bb74b(record.selected_terrain_id_0x49b53d)) {
-					process_set_a_neighbor(level, x, y - 1, record.selected_terrain_id_0x49b53d, true);
-					process_set_a_neighbor(level, x, y + 1, record.selected_terrain_id_0x49b53d, true);
-					process_set_a_neighbor(level, x - 1, y, record.selected_terrain_id_0x49b53d, false);
-					process_set_a_neighbor(level, x + 1, y, record.selected_terrain_id_0x49b53d, false);
+				if (((result.generated_cell_word_0x28[size_t(flat)] >> 28U) & 0x01U) == 0U) {
+					result.member_gate_skip_count_0x4a4150 += 1;
+					continue;
+				}
+				result.zone_repaint_candidate_count_0x4a4082 += 1;
+				result.zone_repaint_write_count_0x4a4163 += 1;
+				if (set_terrain_at_grid_index_4bb74b(result.terrain_code, width, height, level_tile_count, scan_level, x, y, terrain_id)) {
+					record_changed = true;
+					if (write_live_visual_cell(scan_level, x, y, terrain_id)) {
+						result.terrain_visual_repaint_write_count_0x4a4082 += 1;
+					}
+					set_b.erase(terrain_grid_key_4bb74b(scan_level, x, y));
+					if (candidate_gate_4bc988(result.terrain_code, width, height, level_tile_count, scan_level, x, y)) {
+						append_set_a(scan_level, x, y);
+					} else {
+						seed_4bba59(scan_level, x, y, terrain_id);
+					}
+					if (!toolkit_byte5_allows_same_class_gate_4bb74b(terrain_id)) {
+						process_set_a_neighbor(scan_level, x, y - 1, terrain_id, true);
+						process_set_a_neighbor(scan_level, x, y + 1, terrain_id, true);
+						process_set_a_neighbor(scan_level, x - 1, y, terrain_id, false);
+						process_set_a_neighbor(scan_level, x + 1, y, terrain_id, false);
+					}
 				}
 			}
 		}
 		if (record_changed) {
-			drain_queue_for_active_terrain(record.selected_terrain_id_0x49b53d);
+			drain_queue_for_active_terrain(terrain_id);
+		}
+	};
+
+	if (relation_owners != nullptr && !relation_owners->empty()) {
+		for (int32_t owner_index = 0; owner_index < int32_t(relation_owners->size()); ++owner_index) {
+			const GeneratorRelationOwnerState4a218c &owner = (*relation_owners)[size_t(owner_index)];
+			const RuntimeTerrainSelectionRecord49b53d *record =
+					runtime_terrain_selection_for_runtime_zone_0x49b53d(&terrain_selection, owner.runtime_zone_index);
+			if (!owner.terrain_policy_0x0c_known && record == nullptr) {
+				continue;
+			}
+			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
+			const int32_t owner_gate_byte2 = owner.owner_vector_index >= 0 ? owner.owner_vector_index : owner_index;
+			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
+			int32_t low_x = 0;
+			int32_t low_y = 0;
+			int32_t high_x = width;
+			int32_t high_y = height;
+			if (owner.scan_bounds_0x20_0x2c_known) {
+				low_x = owner.scan_bound_low_x_0x20;
+				low_y = owner.scan_bound_low_y_0x24;
+				high_x = owner.scan_bound_high_x_0x28;
+				high_y = owner.scan_bound_high_y_0x2c;
+			} else {
+				(void)owner_gate_bounds(scan_level, owner_gate_byte2, low_x, low_y, high_x, high_y);
+			}
+			repaint_record(terrain_id, owner_gate_byte2, scan_level, low_x, low_y, high_x, high_y);
+		}
+	} else {
+		for (const RuntimeTerrainSelectionRecord49b53d &record : terrain_selection.records) {
+			const int32_t owner_gate_byte2 = record.zone_word_0x4a2777 >= 0 ? record.zone_word_0x4a2777 : record.runtime_zone_index;
+			repaint_record(record.selected_terrain_id_0x49b53d, owner_gate_byte2, record.level, 0, 0, width, height);
 		}
 	}
 
@@ -14399,6 +14472,20 @@ static int32_t relation_owner_payload_surrogate_4a3a03(const GeneratorRelationOw
 	return fallback + 1;
 }
 
+static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
+	const int32_t source_owner = reward_guard_relation_source_owner_0x4aa9b7(owner);
+	if (source_owner >= 0) {
+		return source_owner;
+	}
+	if (owner.source_zone_id >= 0) {
+		return owner.source_zone_id;
+	}
+	if (owner.source_index >= 0) {
+		return owner.source_index;
+	}
+	return fallback;
+}
+
 static int32_t relation_owner_span_limit_4a3a03(const GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneBoundaryInput4a3a03 *matched_input) {
 	if (owner.boundary_payload_span_limit_0x1c_known && owner.boundary_payload_span_limit_0x1c > 0) {
 		return owner.boundary_payload_span_limit_0x1c;
@@ -14435,7 +14522,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t runtime_zone_index = owner.runtime_zone_index >= 0
 				? owner.runtime_zone_index
 				: (matched_input != nullptr ? matched_input->footprint.runtime_zone_index : owner_index);
-		const int32_t payload_owner_word_0x00 = relation_owner_byte2_for_generated_cell_gate(owner);
+		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(owner, owner_index);
 		RuntimeZoneFootprintInput4a3a03 footprint;
 		footprint.runtime_zone_index = runtime_zone_index;
 		footprint.source_zone_id = owner.source_zone_id >= 0
@@ -14475,11 +14562,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 			continue;
 		}
 
+		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
+				*owner,
+				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
 		const int32_t owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
-		handoff.zone_word = owner_byte2 >= 0
-				? owner_byte2
+		handoff.zone_word = payload_owner_word_0x00 >= 0
+				? payload_owner_word_0x00
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
 		handoff.generated_cell_owner_byte2 = owner_byte2 >= 0
 				? owner_byte2
@@ -14549,7 +14639,8 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 				height,
 				level_count,
 				result.owner_grid.materialization,
-				result.terrain_selection);
+				result.terrain_selection,
+				&result.coordinate_seed.relation_owner_vectors_10e4_10e8);
 		result.terrain_repaint_executed = result.terrain_repaint.executed;
 	}
 	return result;
@@ -19379,7 +19470,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.status = "0x4a2777_real_source_cycle_consumed";
 		zone.selected_segment_index = selected_segment_index;
 		append_vertex(zone, clipped_current.x, clipped_current.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-		const int32_t current_owner_word_0x00 = cycle.generated_cell_owner_byte2 >= 0 ? cycle.generated_cell_owner_byte2 : cycle.zone_word;
+			const int32_t current_owner_word_0x00 = cycle.zone_word;
 		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], current_owner_word_0x00)) {
 			append_segment(
 					zone,
