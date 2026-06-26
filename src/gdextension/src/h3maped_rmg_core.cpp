@@ -8,6 +8,7 @@
 #include <deque>
 #include <iomanip>
 #include <limits>
+#include <map>
 #include <queue>
 #include <set>
 #include <sstream>
@@ -1529,10 +1530,8 @@ static GeneratorDescriptorVectorEntry0x398 generator_descriptor_vector_entry_fro
 		int32_t source_catalog_index_0x49da08) {
 	GeneratorDescriptorVectorEntry0x398 entry;
 	entry.source_catalog_index_0x49da08 = source_catalog_index_0x49da08;
-	// Recovered selected descriptor samples for current one-level land scopes carry descriptor +0x0c as zero;
-	// keep it explicit because serializer 0x49baf8 writes this descriptor field into final object payloads.
-	entry.descriptor_raw_0x0c_known = true;
-	entry.descriptor_raw_0x0c = 0;
+	entry.descriptor_raw_0x0c_known = false;
+	entry.descriptor_raw_0x0c = -1;
 	entry.descriptor_type_0x1c = record.type_id_0x1c;
 	entry.descriptor_source_field_0x20 = record.subtype_0x20;
 	entry.descriptor_group_0x24 = record.group_0x24;
@@ -10042,13 +10041,23 @@ static uint32_t final_object_serializer_slot_0x0c_4ad3eb(uint32_t object_record_
 
 static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3eb(
 		const ObjectRecordReference4a54a7 &record,
-		int32_t vector_index) {
+		int32_t vector_index,
+		const std::map<int32_t, int32_t> &source_catalog_to_definition_index) {
 	FinalObjectWriteoutRecord4ad1e3 sample;
 	sample.vector_index = vector_index;
 	sample.object_record_key = record.object_record_key;
 	sample.descriptor_type_0x1c = record.descriptor_type_0x1c;
 	sample.descriptor_raw_0x0c_known = record.descriptor_raw_0x0c_known;
 	sample.descriptor_raw_0x0c = record.descriptor_raw_0x0c;
+	sample.source_catalog_index_0x49da08 = record.source_catalog_index_0x49da08;
+	if (sample.source_catalog_index_0x49da08 < 0 && record.copied_source_record_carried) {
+		sample.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(record.source_record_copy);
+	}
+	const auto definition_it = source_catalog_to_definition_index.find(sample.source_catalog_index_0x49da08);
+	if (definition_it != source_catalog_to_definition_index.end()) {
+		sample.object_definition_index_known = true;
+		sample.object_definition_index = definition_it->second;
+	}
 	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
 	sample.serializer_slot_0x0c_known = sample.serializer_slot_0x0c != 0U;
@@ -10093,6 +10102,160 @@ static void final_object_append_zeroes_0x4ad3eb(std::vector<uint8_t> &bytes, int
 	}
 }
 
+static std::array<uint8_t, 6> final_object_mask_text_to_h3m_bytes_0x4ad3eb(const std::string &mask_text) {
+	std::array<uint8_t, 6> bytes {};
+	if (mask_text.size() < 48U) {
+		return bytes;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t text_col = 0; text_col < 8; ++text_col) {
+			if (mask_text[size_t(row * 8 + text_col)] != '1') {
+				continue;
+			}
+			const int32_t byte_index = 5 - row;
+			const int32_t bit_index = 7 - text_col;
+			bytes[size_t(byte_index)] |= uint8_t(1U << uint32_t(bit_index));
+		}
+	}
+	return bytes;
+}
+
+static void final_object_append_bytes_0x4ad3eb(std::vector<uint8_t> &bytes, const std::array<uint8_t, 6> &source) {
+	for (const uint8_t byte : source) {
+		bytes.push_back(byte);
+	}
+}
+
+static int32_t final_object_source_catalog_index_0x4ad3eb(const ObjectRecordReference4a54a7 &record) {
+	if (record.source_catalog_index_0x49da08 >= 0) {
+		return record.source_catalog_index_0x49da08;
+	}
+	if (record.copied_source_record_carried) {
+		return source_object_catalog_index_0x49da08(record.source_record_copy);
+	}
+	return -1;
+}
+
+static FinalObjectDefinitionRecord4ad3eb final_object_definition_record_from_source_0x4ad3eb(
+		const SourceObjectRecord0x4c &source_record,
+		int32_t source_catalog_index,
+		int32_t definition_index) {
+	FinalObjectDefinitionRecord4ad3eb definition;
+	definition.definition_index = definition_index;
+	definition.source_catalog_index_0x49da08 = source_catalog_index;
+	definition.def_name = source_record.def_name;
+	definition.type_id_0x1c = source_record.type_id_0x1c;
+	definition.subtype_0x20 = source_record.subtype_0x20;
+	definition.group_0x24 = source_record.group_0x24;
+	definition.last_flag_0x28 = source_record.last_flag_0x28;
+	definition.terrain_mask_a_0x14 = source_record.terrain_mask_a_0x14;
+	definition.terrain_mask_b_0x18 = source_record.terrain_mask_b_0x18;
+	definition.passability_mask_bytes = final_object_mask_text_to_h3m_bytes_0x4ad3eb(source_record.passability_mask);
+	definition.action_mask_bytes = final_object_mask_text_to_h3m_bytes_0x4ad3eb(source_record.action_mask);
+	definition.payload_byte_count = 4 + int32_t(definition.def_name.size()) + 42;
+	return definition;
+}
+
+static void final_object_append_definition_payload_0x4ad3eb(
+		std::vector<uint8_t> &bytes,
+		const FinalObjectDefinitionRecord4ad3eb &definition) {
+	final_object_append_le32_0x4ad3eb(bytes, uint32_t(definition.def_name.size()));
+	for (const char ch : definition.def_name) {
+		final_object_append_u8_0x4ad3eb(bytes, uint32_t(uint8_t(ch)));
+	}
+	final_object_append_bytes_0x4ad3eb(bytes, definition.passability_mask_bytes);
+	final_object_append_bytes_0x4ad3eb(bytes, definition.action_mask_bytes);
+	final_object_append_le16_0x4ad3eb(bytes, definition.terrain_mask_a_0x14);
+	final_object_append_le16_0x4ad3eb(bytes, definition.terrain_mask_b_0x18);
+	final_object_append_le32_0x4ad3eb(bytes, uint32_t(definition.type_id_0x1c));
+	final_object_append_le32_0x4ad3eb(bytes, uint32_t(definition.subtype_0x20));
+	final_object_append_u8_0x4ad3eb(bytes, uint32_t(definition.group_0x24));
+	final_object_append_u8_0x4ad3eb(bytes, uint32_t(definition.last_flag_0x28));
+	final_object_append_zeroes_0x4ad3eb(bytes, 16);
+}
+
+struct FinalObjectDefinitionTableBuild4ad3eb {
+	std::map<int32_t, int32_t> source_catalog_to_definition_index;
+};
+
+static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_definition_table_0x4ad1e3_0x4ad3eb(
+		const GeneratorObjectPrivateState &state,
+		FinalObjectWriteoutResult4ad1e3 &result) {
+	FinalObjectDefinitionTableBuild4ad3eb build;
+	result.object_definition_table_invoked = true;
+	std::set<int32_t> used_source_catalog_indices;
+	for (const ObjectRecordReference4a54a7 &record : state.object_records_0xec4_ecc) {
+		const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
+		if (source_catalog_index < 0) {
+			result.object_definition_missing_source_record_count += 1;
+			continue;
+		}
+		if (!used_source_catalog_indices.insert(source_catalog_index).second) {
+			result.object_definition_duplicate_source_record_count += 1;
+		}
+	}
+	if (result.object_definition_missing_source_record_count > 0) {
+		result.blocked_reason = "final_object_definition_table_source_record_missing_for_generated_object";
+		return build;
+	}
+
+	const std::vector<SourceObjectRecord0x4c> &catalog = source_object_catalog_0x49da08();
+	const std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
+	std::vector<int32_t> ordered_source_catalog_indices;
+	ordered_source_catalog_indices.reserve(used_source_catalog_indices.size());
+	std::set<int32_t> emitted_source_catalog_indices;
+	for (const SourceObjectWrapperBucket0xe8 &bucket : buckets) {
+		for (const int32_t source_catalog_index : bucket.source_record_indices) {
+			if (used_source_catalog_indices.find(source_catalog_index) == used_source_catalog_indices.end()) {
+				continue;
+			}
+			if (source_catalog_index < 0 || source_catalog_index >= int32_t(catalog.size())) {
+				result.object_definition_missing_source_record_count += 1;
+				continue;
+			}
+			if (!emitted_source_catalog_indices.insert(source_catalog_index).second) {
+				continue;
+			}
+			ordered_source_catalog_indices.push_back(source_catalog_index);
+		}
+	}
+	for (const int32_t source_catalog_index : used_source_catalog_indices) {
+		if (emitted_source_catalog_indices.find(source_catalog_index) != emitted_source_catalog_indices.end()) {
+			continue;
+		}
+		if (source_catalog_index < 0 || source_catalog_index >= int32_t(catalog.size())) {
+			result.object_definition_missing_source_record_count += 1;
+			continue;
+		}
+		ordered_source_catalog_indices.push_back(source_catalog_index);
+	}
+	if (result.object_definition_missing_source_record_count > 0) {
+		result.blocked_reason = "final_object_definition_table_source_catalog_index_out_of_range";
+		return build;
+	}
+
+	const int32_t last_sample_start = std::max<int32_t>(0, int32_t(ordered_source_catalog_indices.size()) - 8);
+	for (int32_t definition_index = 0; definition_index < int32_t(ordered_source_catalog_indices.size()); ++definition_index) {
+		const int32_t source_catalog_index = ordered_source_catalog_indices[size_t(definition_index)];
+		const SourceObjectRecord0x4c &source_record = catalog[size_t(source_catalog_index)];
+		const FinalObjectDefinitionRecord4ad3eb definition =
+				final_object_definition_record_from_source_0x4ad3eb(source_record, source_catalog_index, definition_index);
+		build.source_catalog_to_definition_index[source_catalog_index] = definition_index;
+		final_object_append_definition_payload_0x4ad3eb(result.object_definition_payload_bytes, definition);
+		result.object_definition_payload_byte_count += definition.payload_byte_count;
+		if (definition_index < 8) {
+			result.first_object_definitions.push_back(definition);
+		}
+		if (definition_index >= last_sample_start) {
+			result.last_object_definitions.push_back(definition);
+		}
+	}
+	result.object_definition_count = int32_t(ordered_source_catalog_indices.size());
+	result.object_definition_table_applied = result.object_definition_count == int32_t(build.source_catalog_to_definition_index.size());
+	result.object_definition_table_static_vectors_0x4a8_0x7f8_included = false;
+	return build;
+}
+
 static std::string final_object_payload_field_blocker_0x4ad3eb(uint32_t serializer_slot_0x0c, const char *field_name) {
 	std::ostringstream reason;
 	reason << "final_object_payload_" << field_name << "_missing_for_serializer_slot_0x"
@@ -10111,15 +10274,16 @@ static bool final_object_require_sequence_0x1c_0x4ad3eb(const ObjectRecordRefere
 static bool final_object_append_base_payload_0x49baf8(
 		std::vector<uint8_t> &bytes,
 		const ObjectRecordReference4a54a7 &record,
+		int32_t object_definition_index,
 		std::string &blocked_reason) {
-	if (!record.descriptor_raw_0x0c_known) {
-		blocked_reason = "final_object_payload_descriptor_plus_0x0c_missing_for_base_serializer_0x49baf8";
+	if (object_definition_index < 0) {
+		blocked_reason = "final_object_payload_template_definition_index_missing_for_base_serializer_0x49baf8";
 		return false;
 	}
 	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.x));
 	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.y));
 	final_object_append_u8_0x4ad3eb(bytes, uint32_t(record.level));
-	final_object_append_le32_0x4ad3eb(bytes, uint32_t(record.descriptor_raw_0x0c));
+	final_object_append_le32_0x4ad3eb(bytes, uint32_t(object_definition_index));
 	final_object_append_zeroes_0x4ad3eb(bytes, 5);
 	return true;
 }
@@ -10127,10 +10291,11 @@ static bool final_object_append_base_payload_0x49baf8(
 static bool final_object_append_payload_for_record_0x4ad3eb(
 		std::vector<uint8_t> &bytes,
 		const ObjectRecordReference4a54a7 &record,
+		int32_t object_definition_index,
 		uint32_t serializer_slot_0x0c,
 		int32_t pass_arg,
 		std::string &blocked_reason) {
-	if (!final_object_append_base_payload_0x49baf8(bytes, record, blocked_reason)) {
+	if (!final_object_append_base_payload_0x49baf8(bytes, record, object_definition_index, blocked_reason)) {
 		return false;
 	}
 
@@ -10214,6 +10379,7 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 static bool final_object_serialize_payload_pass_0x4ad3eb(
 		FinalObjectWriteoutResult4ad1e3 &result,
 		const GeneratorObjectPrivateState &state,
+		const std::map<int32_t, int32_t> &source_catalog_to_definition_index,
 		bool first_flagged_pass,
 		int32_t pass_arg) {
 	for (int32_t index = 0; index < result.generated_object_count; ++index) {
@@ -10230,10 +10396,21 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 			result.object_payload_prefix_blocked_pass = pass_arg;
 			return false;
 		}
+		const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
+		const auto definition_it = source_catalog_to_definition_index.find(source_catalog_index);
+		if (definition_it == source_catalog_to_definition_index.end()) {
+			result.object_definition_template_index_missing_count += 1;
+			result.blocked_reason = "final_object_payload_template_index_missing_for_source_record";
+			result.object_payload_prefix_blocked_index = index;
+			result.object_payload_prefix_blocked_serializer_slot = serializer_slot_0x0c;
+			result.object_payload_prefix_blocked_pass = pass_arg;
+			return false;
+		}
 		const size_t record_payload_start = result.object_payload_bytes.size();
 		if (!final_object_append_payload_for_record_0x4ad3eb(
 					result.object_payload_bytes,
 					record,
+					definition_it->second,
 					serializer_slot_0x0c,
 					pass_arg,
 					result.blocked_reason)) {
@@ -10261,19 +10438,30 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 			|| state.object_record_vector_ec4_ecc.count != int32_t(state.object_records_0xec4_ecc.size())) {
 		result.blocked_reason = "final_object_count_writeout_0x4ad309_object_vector_0xec8_0xecc_not_owned";
 		return result;
-	}
-	result.generated_object_count = int32_t(state.object_records_0xec4_ecc.size());
-	result.object_count_payload_byte_count = 4;
-	const uint32_t count = uint32_t(result.generated_object_count);
-	result.object_count_payload_bytes[0] = uint8_t(count & 0xffU);
+		}
+		result.generated_object_count = int32_t(state.object_records_0xec4_ecc.size());
+		const FinalObjectDefinitionTableBuild4ad3eb definition_table =
+				final_object_build_generated_definition_table_0x4ad1e3_0x4ad3eb(state, result);
+		if (!result.object_definition_table_applied) {
+			if (result.blocked_reason.empty()) {
+				result.blocked_reason = "final_object_definition_table_0x4ad1e3_not_applied";
+			}
+			return result;
+		}
+		result.object_count_payload_byte_count = 4;
+		const uint32_t count = uint32_t(result.generated_object_count);
+		result.object_count_payload_bytes[0] = uint8_t(count & 0xffU);
 	result.object_count_payload_bytes[1] = uint8_t((count >> 8U) & 0xffU);
 	result.object_count_payload_bytes[2] = uint8_t((count >> 16U) & 0xffU);
 	result.object_count_payload_bytes[3] = uint8_t((count >> 24U) & 0xffU);
 	result.pass_split_metadata_table_owned_0x57c648_plus_0x0c = true;
-	const int32_t last_sample_start = std::max<int32_t>(0, result.generated_object_count - 8);
-	for (int32_t index = 0; index < result.generated_object_count; ++index) {
-		const FinalObjectWriteoutRecord4ad1e3 sample =
-				final_object_writeout_record_sample_4ad3eb(state.object_records_0xec4_ecc[size_t(index)], index);
+		const int32_t last_sample_start = std::max<int32_t>(0, result.generated_object_count - 8);
+		for (int32_t index = 0; index < result.generated_object_count; ++index) {
+			const FinalObjectWriteoutRecord4ad1e3 sample =
+					final_object_writeout_record_sample_4ad3eb(
+							state.object_records_0xec4_ecc[size_t(index)],
+							index,
+							definition_table.source_catalog_to_definition_index);
 		if (sample.serializer_slot_0x0c_known) {
 			result.serializer_slot_known_count += 1;
 		} else {
@@ -10305,19 +10493,19 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 	if (result.pass_split_descriptor_type_unknown_count > 0) {
 		result.blocked_reason = "final_object_pass_split_descriptor_type_out_of_0x598300_table_range";
 		return result;
-	}
-	result.object_payload_serialization_invoked = true;
-	if (!final_object_serialize_payload_pass_0x4ad3eb(result, state, true, 1)
-			|| !final_object_serialize_payload_pass_0x4ad3eb(result, state, false, 2)) {
+		}
+		result.object_payload_serialization_invoked = true;
+		if (!final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table.source_catalog_to_definition_index, true, 1)
+				|| !final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table.source_catalog_to_definition_index, false, 2)) {
+			result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
+			result.object_payload_prefix_applied = result.object_payload_serialized_object_count > 0;
+			return result;
+		}
 		result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
-		result.object_payload_prefix_applied = result.object_payload_serialized_object_count > 0;
+		result.object_payload_prefix_applied = true;
+		result.blocked_reason = "final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload";
 		return result;
 	}
-	result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
-	result.object_payload_prefix_applied = true;
-	result.blocked_reason = "final_object_header_player_metadata_and_0x4ad3de_success_sentinel_unported_after_object_payload_prefix";
-	return result;
-}
 
 static bool road_generated_cell_grid_shape_valid_0x4ab52a(const GeneratedCellRecordGrid0x30 &grid) {
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
@@ -17052,7 +17240,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< result.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count;
 		add_phase("final_object_pass_split_writeout", "0x4ad3eb_0x57c648_type_plus_0x0c", "complete_source_order_prefix", pass_split_note.str());
 	}
-	add_phase("final_object_payload_writeout", "0x4ad3eb_serializer_slot_0x0c_payload_bodies", "blocked", result.blocked_reason);
+	add_phase("final_object_payload_writeout", "0x4ad1e3_generated_object_definition_table_0x4ad309_0x4ad3eb_indexed_payload", "blocked", result.blocked_reason);
 	return result;
 }
 
