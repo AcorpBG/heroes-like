@@ -1398,7 +1398,11 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	}), candidates.end());
 }
 
-void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
+bool boundary_cell_reserved_flag_4a261a_4a325d(int32_t generator_mode_0x10b8, int32_t level) {
+	return !(generator_mode_0x10b8 == 2 && level == 1);
+}
+
+void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
 	if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
 		result.out_of_bounds_write_count += 1;
 		return;
@@ -1408,7 +1412,7 @@ void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int3
 	write.y = y;
 	write.level = level;
 	write.zone_id = zone_id & 0xff;
-	write.reserved = allow_reserved_flag && !(water_mode_code == 2 && level != 1);
+	write.reserved = allow_reserved_flag && boundary_cell_reserved_flag_4a261a_4a325d(generator_mode_0x10b8, level);
 	result.trace.push_back(write);
 	const int64_t key = generated_cell_flat_key_4a325d(width, height, x, y, level);
 	result.unique_cells[key] = true;
@@ -19111,7 +19115,7 @@ std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a277
 	return cycles;
 }
 
-BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level) {
+BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level) {
 	BoundaryLineWriteResult result;
 	if (x1 > x2) {
 		std::swap(x1, x2);
@@ -19141,7 +19145,7 @@ BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t heigh
 	int32_t x = x1;
 	int32_t y = y1;
 	while (x != x2 || y != y2) {
-		write_line_cell_4a261a(result, width, height, level_count, water_mode_code, x, y, zone_id, level);
+		write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, x, y, zone_id, level);
 		error += minor;
 		if (error < major) {
 			x += simple_step_x;
@@ -19152,11 +19156,11 @@ BoundaryLineWriteResult boundary_line_writer_4a261a(int32_t width, int32_t heigh
 			y += diagonal_step_y;
 		}
 	}
-	write_line_cell_4a261a(result, width, height, level_count, water_mode_code, x, y, zone_id, level, false);
+	write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, x, y, zone_id, level, false);
 	return result;
 }
 
-BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
+BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t zone_id, int32_t level, int32_t random_span_limit, H3MapedRng &rng, int32_t &rng_call_count, int32_t &inserted_midpoint_count, int32_t &max_pending_point_count) {
 	BoundaryLineWriteResult result;
 	std::vector<BoundaryPoint> pending;
 	pending.push_back(BoundaryPoint { x2, y2 });
@@ -19171,7 +19175,7 @@ BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, in
 		if ((midpoint_x == current_x && midpoint_y == current_y) || (midpoint_x == target.x && midpoint_y == target.y)) {
 			const int32_t clamped_x = std::min(std::max(current_x, 0), width - 1);
 			const int32_t clamped_y = std::min(std::max(current_y, 0), height - 1);
-			write_line_cell_4a261a(result, width, height, level_count, water_mode_code, clamped_x, clamped_y, zone_id, level);
+			write_line_cell_4a261a(result, width, height, level_count, generator_mode_0x10b8, clamped_x, clamped_y, zone_id, level);
 			current_x = target.x;
 			current_y = target.y;
 			continue;
@@ -19257,7 +19261,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					width,
 					height,
 					level_count,
-					water_mode_code,
+					generator_mode_0x10b8,
 					x1,
 					y1,
 					x2,
@@ -19271,7 +19275,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					result.randomized_max_pending_point_count);
 			result.flagged_writer_segment_count += 1;
 		} else {
-			line = boundary_line_writer_4a261a(width, height, level_count, water_mode_code, x1, y1, x2, y2, zone_word, level);
+			line = boundary_line_writer_4a261a(width, height, level_count, generator_mode_0x10b8, x1, y1, x2, y2, zone_word, level);
 			result.deterministic_writer_segment_count += 1;
 		}
 		merge_boundary_line_4a2777(line, unique_cells, result);
@@ -19599,7 +19603,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				width,
 				height,
 				level_count,
-				water_mode_code,
+				generator_mode_0x10b8,
 				zone.zone_word,
 				zone.generated_cell_owner_byte2 >= 0 ? zone.generated_cell_owner_byte2 : zone.zone_word,
 				seed);
@@ -19652,7 +19656,7 @@ BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d
 	return result;
 }
 
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
 	SpanFillResult result;
 	std::vector<SpanRecord> pending;
 	push_span_4a325d(pending, seed, result);
@@ -19682,7 +19686,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 				continue;
 			}
 			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, private_zone_id, generated_cell_owner_byte2);
-			const bool reserved = !(water_mode_code == 2 && coord.level != 1);
+			const bool reserved = boundary_cell_reserved_flag_4a261a_4a325d(generator_mode_0x10b8, coord.level);
 			if (reserved) {
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 			}

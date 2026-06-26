@@ -164,6 +164,65 @@ bool require(bool condition, const std::string &message) {
 
 int main() {
 	{
+		const auto level_one_line = aurelion::h3maped_rmg_core::boundary_line_writer_4a261a(5, 5, 2, 2, 0, 0, 3, 0, 7, 1);
+		if (!require(!level_one_line.trace.empty(), "0x4a261a level-1 deterministic line did not emit trace writes")) {
+			return 1;
+		}
+		if (!require(std::none_of(level_one_line.trace.begin(), level_one_line.trace.end(), [](const auto &write) {
+					return write.reserved;
+				}),
+					"0x4a261a must suppress reserved flags for generator mode 2 level 1")) {
+			return 1;
+		}
+
+		const auto level_zero_line = aurelion::h3maped_rmg_core::boundary_line_writer_4a261a(5, 5, 2, 2, 0, 0, 3, 0, 7, 0);
+		if (!require(level_zero_line.trace.size() >= 2, "0x4a261a level-0 deterministic line emitted too few writes")) {
+			return 1;
+		}
+		if (!require(std::all_of(level_zero_line.trace.begin(), level_zero_line.trace.end() - 1, [](const auto &write) {
+					return write.reserved;
+				}) && !level_zero_line.trace.back().reserved,
+					"0x4a261a must reserve generator mode 2 level 0 writes except the terminal endpoint")) {
+			return 1;
+		}
+
+		const int32_t width = 5;
+		const int32_t height = 5;
+		const int32_t level_count = 2;
+		const int32_t cell_count = width * height * level_count;
+		{
+			std::vector<uint32_t> zone_words(size_t(cell_count), aurelion::h3maped_rmg_core::UNASSIGNED_ZONE_WORD);
+			std::vector<uint32_t> generated_words(size_t(cell_count), aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
+			std::vector<uint8_t> cell_flags(size_t(cell_count), 0U);
+			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 1 });
+			if (!require(!fill.trace.empty(), "0x4a325d level-1 span fill did not emit trace writes")) {
+				return 1;
+			}
+			if (!require(std::none_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
+						return write.reserved;
+					}),
+						"0x4a325d must suppress reserved flags for generator mode 2 level 1")) {
+				return 1;
+			}
+		}
+		{
+			std::vector<uint32_t> zone_words(size_t(cell_count), aurelion::h3maped_rmg_core::UNASSIGNED_ZONE_WORD);
+			std::vector<uint32_t> generated_words(size_t(cell_count), aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
+			std::vector<uint8_t> cell_flags(size_t(cell_count), 0U);
+			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 0 });
+			if (!require(!fill.trace.empty(), "0x4a325d level-0 span fill did not emit trace writes")) {
+				return 1;
+			}
+			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
+						return write.reserved;
+					}),
+						"0x4a325d must reserve generator mode 2 level 0 writes")) {
+				return 1;
+			}
+		}
+	}
+
+	{
 		const SourceObjectCatalogSummary0x49da08 source_object_summary =
 				aurelion::h3maped_rmg_core::source_object_catalog_summary_0x49da08();
 		if (!require(source_object_summary.record_count == 1328, "0x49da08 source object catalog did not preserve recovered row count")) {
