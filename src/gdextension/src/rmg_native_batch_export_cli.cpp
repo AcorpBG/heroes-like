@@ -412,7 +412,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			: "blocked";
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: "native_h3maped_workflow_stops_before_final_object_payload_serializer_bodies_0x4ad3eb_for_at_least_one_case";
+			: "native_h3maped_workflow_stops_before_final_header_player_metadata_0x4ac857_and_post_header_initial_zero_0x4ad206_for_at_least_one_case";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -472,10 +472,10 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_0x49b2b6_tile_stream_0x4ad309_object_count_and_0x4ad3eb_pass_split_owned_blocked_before_serializer_payloads\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_static_definition_vectors_0x4a8_0x7f8_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_header_metadata_0x4ac857\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_final_object_serializer_payload_bodies_0x4ad3eb_then_0x4ad3de_0x4ae09a\",\n";
+	out << "  \"required_next_slice\": \"port_final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206\",\n";
 	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before full final writeout.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
@@ -542,6 +542,6 @@ int main(int argc, char **argv) {
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
-			  << " reason=native_h3maped_workflow_0x49b2b6_tile_stream_0x4ad309_object_count_and_0x4ad3eb_pass_split_owned_blocked_before_serializer_payloads\n";
+			  << " reason=native_h3maped_workflow_static_definition_vectors_0x4a8_0x7f8_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_header_metadata_0x4ac857\n";
 	return failed_count > 0 ? 1 : 2;
 }

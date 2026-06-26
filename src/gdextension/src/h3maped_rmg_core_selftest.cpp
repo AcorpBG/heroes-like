@@ -2160,7 +2160,7 @@ int main() {
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 	const std::string final_writeout_blocker =
-			"final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload";
+			"final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_object_writeout"
 					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
@@ -2181,6 +2181,8 @@ int main() {
 	if (!require(generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.invoked
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_invoked
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_applied
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_bytes.size()
@@ -2201,11 +2203,17 @@ int main() {
 							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions.size() >= 2U
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[0].def_name == "AVWmrnd0.def"
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[1].def_name == "AVLhlds0.def"
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_written_0x4ad3db
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_0x4ad3de_passed
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_return_0x4ae09a_success
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned final object definition table, 0x4ad309 count header, 0x4ad3eb pass split, and indexed object payload did not materialize before the header/sentinel blocker")) {
+				"workflow-owned final object definition table, static vectors, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel did not materialize before the header metadata blocker")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -4498,21 +4506,21 @@ int main() {
 		return 1;
 	}
 	{
-			H3MapedRmgWorkflowConfig workflow_config;
-			workflow_config.size_class = "small";
-			workflow_config.water_mode = "land";
-			workflow_config.width = 36;
-			workflow_config.height = 36;
-			workflow_config.level_count = 1;
-			workflow_config.human_count = 1;
-			workflow_config.player_count = 2;
-			workflow_config.seed = 58U;
-			workflow_config.setup_object_0x44_known = true;
-			workflow_config.setup_object_0x44 = 3;
-			const H3MapedRmgWorkflowResult workflow =
-					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-			const std::string workflow_final_writeout_blocker =
-					"final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload";
+		H3MapedRmgWorkflowConfig workflow_config;
+		workflow_config.size_class = "small";
+		workflow_config.water_mode = "land";
+		workflow_config.width = 36;
+		workflow_config.height = 36;
+		workflow_config.level_count = 1;
+		workflow_config.human_count = 1;
+		workflow_config.player_count = 2;
+		workflow_config.seed = 58U;
+		workflow_config.setup_object_0x44_known = true;
+		workflow_config.setup_object_0x44 = 3;
+		const H3MapedRmgWorkflowResult workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
+		const std::string workflow_final_writeout_blocker =
+				"final_header_player_metadata_writeout_0x4ac857_and_post_header_initial_zero_0x4ad206_unported_before_full_final_payload";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4540,6 +4548,8 @@ int main() {
 		if (!require(workflow.final_object_writeout_0x4ad309_0x4ad3eb.invoked
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_invoked
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_applied
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_missing_source_record_count == 0
@@ -4559,25 +4569,31 @@ int main() {
 								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions.size() >= 2U
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[0].def_name == "AVWmrnd0.def"
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[1].def_name == "AVLhlds0.def"
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_written_0x4ad3db
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_0x4ad3de_passed
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_return_0x4ae09a_success
 						&& !workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
-					"entry-to-writeout workflow did not own the generated object definition table, 0x4ad309 count header, 0x4ad3eb pass split, and indexed object payload before stopping at header/sentinel serialization")) {
+					"entry-to-writeout workflow did not own the static definition vectors, generated object definition table, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel before stopping at header metadata serialization")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 16
+			if (!require(workflow.phases.size() >= 18
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
-						&& workflow.phases[3].id == "generator_object_private_state"
-						&& workflow.phases[4].id == "source_order_object_materialization"
-						&& workflow.phases[4].status == "complete_source_order_prefix"
-						&& workflow.phases[5].id == "route_free_cell_sweep"
-						&& workflow.phases[5].status == "complete_source_order_prefix"
-						&& workflow.phases[6].id == "mine_resource_materialization"
-						&& workflow.phases[6].status == "complete_source_order_prefix"
-						&& workflow.phases[7].id == "relation_normalization"
-						&& workflow.phases[7].status == "complete_source_order_prefix"
+							&& workflow.phases[3].id == "generator_object_private_state"
+							&& workflow.phases[4].id == "source_order_object_materialization"
+							&& workflow.phases[4].status == "complete_source_order_prefix"
+							&& workflow.phases[5].id == "route_free_cell_sweep"
+							&& workflow.phases[5].status == "complete_source_order_prefix"
+							&& workflow.phases[6].id == "mine_resource_materialization"
+							&& workflow.phases[6].status == "complete_source_order_prefix"
+							&& workflow.phases[7].id == "relation_normalization"
+							&& workflow.phases[7].status == "complete_source_order_prefix"
 							&& workflow.phases[8].id == "relation_scan_consumers"
 							&& workflow.phases[8].status == "complete_source_order_prefix"
 							&& workflow.phases[9].id == "reward_guard_materialization"
@@ -4593,8 +4609,12 @@ int main() {
 							&& workflow.phases[14].id == "final_object_pass_split_writeout"
 							&& workflow.phases[14].status == "complete_source_order_prefix"
 							&& workflow.phases[15].id == "final_object_payload_writeout"
-							&& workflow.phases[15].status == "blocked",
-						"entry-to-writeout workflow did not preserve recovered phase order through road/river object adjacency")) {
+							&& workflow.phases[15].status == "complete_source_order_prefix"
+							&& workflow.phases[16].id == "final_zero_sentinel_success_test"
+							&& workflow.phases[16].status == "complete_source_order_prefix"
+							&& workflow.phases[17].id == "final_header_player_metadata_writeout"
+							&& workflow.phases[17].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order through final object payload and sentinel before the header metadata blocker")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0

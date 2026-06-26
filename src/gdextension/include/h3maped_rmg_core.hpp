@@ -2955,6 +2955,7 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	bool object_definition_table_invoked = false;
 	bool object_definition_table_applied = false;
 	bool object_definition_table_static_vectors_0x4a8_0x7f8_included = false;
+	int32_t object_definition_static_vector_count_0x4a8_0x7f8 = 0;
 	int32_t object_definition_count = 0;
 	int32_t object_definition_payload_byte_count = 0;
 	int32_t object_definition_missing_source_record_count = 0;
@@ -2975,6 +2976,12 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	uint32_t object_payload_prefix_blocked_serializer_slot = 0U;
 	int32_t object_payload_prefix_blocked_pass = 0;
 	std::vector<uint8_t> object_payload_bytes;
+	bool final_zero_sentinel_written_0x4ad3db = false;
+	int32_t final_zero_sentinel_payload_byte_count = 0;
+	std::array<uint8_t, 4> final_zero_sentinel_payload_bytes {};
+	bool final_success_test_0x4ad3de_passed = false;
+	bool final_return_0x4ae09a_success = false;
+	int32_t final_success_test_eax_0x4ad3de = 0;
 	bool object_record_vector_count_known_0xec8_0xecc = false;
 	int32_t object_record_vector_count_0xec8_0xecc = 0;
 	int32_t serializer_slot_known_count = 0;
