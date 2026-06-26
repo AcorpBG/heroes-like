@@ -19725,15 +19725,44 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.zones.push_back(std::move(zone));
 			continue;
 		}
+		const int32_t node_count = int32_t(zone.finalized_points.size());
+		std::map<int32_t, int32_t> source_position_by_model_node;
+		for (int32_t position = 0; position < node_count; ++position) {
+			const int32_t model_node_index = zone.finalized_points[size_t(position)].model_node_index;
+			if (model_node_index >= 0) {
+				source_position_by_model_node[model_node_index] = position;
+			}
+		}
+		auto source_position_for_model_node = [&](int32_t model_node_index) {
+			const auto found = source_position_by_model_node.find(model_node_index);
+			if (found == source_position_by_model_node.end()) {
+				return -1;
+			}
+			return found->second;
+		};
+		auto next_source_position_4a2777 = [&](int32_t position) {
+			if (position < 0 || position >= node_count) {
+				return -1;
+			}
+			const int32_t linked_position = source_position_for_model_node(zone.finalized_points[size_t(position)].next_index);
+			if (linked_position >= 0 && linked_position != position) {
+				return linked_position;
+			}
+			return (position + 1) % node_count;
+		};
 
 		const bool randomized_writer_branch_0x4a3a03 = generator_mode_0x10b8 != 2 || cycle.boundary_pass_index_0x0c == 1;
 		const int32_t random_span_limit = std::max<int32_t>(1, cycle.random_span_limit);
 		int32_t selected_segment_index = -1;
 		ClipResult clipped_current;
 		ClipResult clipped_target;
-		for (int32_t index = 0; index < int32_t(zone.finalized_points.size()); ++index) {
+		for (int32_t index = 0; index < node_count; ++index) {
+			const int32_t to_index = next_source_position_4a2777(index);
+			if (to_index < 0 || to_index >= node_count || to_index == index) {
+				continue;
+			}
 			const BoundaryCyclePoint4a2777 &from = zone.finalized_points[size_t(index)];
-			const BoundaryCyclePoint4a2777 &to = zone.finalized_points[size_t((index + 1) % int32_t(zone.finalized_points.size()))];
+			const BoundaryCyclePoint4a2777 &to = zone.finalized_points[size_t(to_index)];
 			if (!from.finalized || !to.finalized) {
 				result.skipped_unfinalized_node_count += 1;
 				continue;
@@ -19812,9 +19841,17 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 
 		int32_t current_x = clipped_target.x;
 		int32_t current_y = clipped_target.y;
-		int32_t source_index = (selected_segment_index + 1) % int32_t(zone.finalized_points.size());
-		for (int32_t guard = 0; guard < int32_t(zone.finalized_points.size()) + 4; ++guard) {
-			const int32_t next_source_index = (source_index + 1) % int32_t(zone.finalized_points.size());
+		int32_t source_index = next_source_position_4a2777(selected_segment_index);
+		for (int32_t guard = 0; guard < node_count + 4; ++guard) {
+			if (source_index < 0 || source_index >= node_count) {
+				result.loop_guard_exhausted = true;
+				break;
+			}
+			const int32_t next_source_index = next_source_position_4a2777(source_index);
+			if (next_source_index < 0 || next_source_index >= node_count || next_source_index == source_index) {
+				result.loop_guard_exhausted = true;
+				break;
+			}
 			if (source_index == selected_segment_index) {
 				break;
 			}
@@ -19885,10 +19922,27 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			int32_t best_clearance = -1;
 			const int32_t node_count = int32_t(zone.finalized_points.size());
 			if (zone.selected_segment_index >= 0 && zone.selected_segment_index < node_count) {
+				std::map<int32_t, int32_t> source_position_by_model_node;
+				for (int32_t position = 0; position < node_count; ++position) {
+					const int32_t model_node_index = zone.finalized_points[size_t(position)].model_node_index;
+					if (model_node_index >= 0) {
+						source_position_by_model_node[model_node_index] = position;
+					}
+				}
+				auto source_position_for_model_node = [&](int32_t model_node_index) {
+					const auto found = source_position_by_model_node.find(model_node_index);
+					if (found == source_position_by_model_node.end()) {
+						return -1;
+					}
+					return found->second;
+				};
 				auto next_source_node_index_4a325d = [&](int32_t index) {
-					const int32_t next_index = zone.finalized_points[size_t(index)].next_index;
-					if (next_index >= 0 && next_index < node_count) {
-						return next_index;
+					if (index < 0 || index >= node_count) {
+						return -1;
+					}
+					const int32_t linked_position = source_position_for_model_node(zone.finalized_points[size_t(index)].next_index);
+					if (linked_position >= 0 && linked_position != index) {
+						return linked_position;
 					}
 					return (index + 1) % node_count;
 				};
@@ -19896,9 +19950,9 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				int32_t cursor_index = next_source_node_index_4a325d(start_index);
 				for (int32_t guard = 0; guard < node_count && cursor_index >= 0 && cursor_index < node_count; ++guard) {
 					const BoundaryCyclePoint4a2777 &cursor = zone.finalized_points[size_t(cursor_index)];
-					const int32_t pair_index = cursor.pair_index;
-					if (pair_index >= 0 && pair_index < node_count) {
-						const BoundaryCyclePoint4a2777 &pair = zone.finalized_points[size_t(pair_index)];
+					const int32_t pair_position = source_position_for_model_node(cursor.pair_index);
+					if (pair_position >= 0 && pair_position < node_count) {
+						const BoundaryCyclePoint4a2777 &pair = zone.finalized_points[size_t(pair_position)];
 						const int32_t pair_x = pair.raw_x_0x00;
 						const int32_t pair_y = pair.raw_y_0x04;
 						const bool interior = pair_x >= 1 && pair_x < width - 1 && pair_y >= 1 && pair_y < height - 1;

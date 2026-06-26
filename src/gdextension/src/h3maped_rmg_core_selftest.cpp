@@ -88,6 +88,15 @@ SourceNodeCyclePoint4a2777 source_node(int32_t x, int32_t y, int32_t model_node_
 	return node;
 }
 
+SourceNodeCyclePoint4a2777 descriptor_source_node(int32_t x, int32_t y, int32_t model_node_index, int32_t pair_index, int32_t next_index, int32_t previous_index, int32_t next_pair_index) {
+	SourceNodeCyclePoint4a2777 node = source_node(x, y, model_node_index);
+	node.pair_index = pair_index;
+	node.next_index = next_index;
+	node.previous_index = previous_index;
+	node.next_pair_index = next_pair_index;
+	return node;
+}
+
 BoundarySourceCycleHandoff4a2777 square_handoff(bool gate_first_edge) {
 	BoundarySourceCycleHandoff4a2777 handoff;
 	handoff.runtime_zone_index = 0;
@@ -1836,6 +1845,30 @@ int main() {
 		}
 	}
 	if (!require(land_setup_mode_two_member_flags > 0, "one-level land water mode must keep 0x4a325d member flags even when setup mode is 2")) {
+		return 1;
+	}
+	BoundarySourceCycleHandoff4a2777 descriptor_link_handoff = square_handoff(false);
+	descriptor_link_handoff.source_nodes = {
+		descriptor_source_node(1, 1, 10, 30, 20, 40, 40),
+		descriptor_source_node(6, 6, 30, 10, 40, 20, 20),
+		descriptor_source_node(6, 1, 20, 40, 30, 10, 10),
+		descriptor_source_node(1, 6, 40, 20, 10, 30, 30),
+	};
+	const BoundaryMaterialization4a2777 descriptor_linked = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			8,
+			8,
+			1,
+			1,
+			2,
+			1234U,
+			{ descriptor_link_handoff });
+	if (!require(!descriptor_linked.zones.empty() && !descriptor_linked.zones[0].segments.empty(), "descriptor-linked handoff did not materialize a boundary segment")) {
+		return 1;
+	}
+	const auto &descriptor_first_segment = descriptor_linked.zones[0].segments[0];
+	if (!require(descriptor_first_segment.from_x == 1 && descriptor_first_segment.from_y == 1
+				&& descriptor_first_segment.to_x == 6 && descriptor_first_segment.to_y == 1,
+			"0x4a2777 boundary traversal must follow descriptor next links, not vector position order")) {
 		return 1;
 	}
 	BoundarySourceCycleHandoff4a2777 missing_seed = square_handoff(false);
