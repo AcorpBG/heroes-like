@@ -2884,6 +2884,10 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t setup_object_0x44 = 0;
 	bool setup_object_0x48_known = true;
 	int32_t setup_object_0x48 = 0;
+	bool same_run_final_tile_payload_authority_known = false;
+	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
+	bool same_run_generated_object_payload_authority_known = false;
+	std::vector<uint8_t> same_run_generated_object_payload_authority_0x4ad1e3;
 };
 
 struct FinalTileWriteoutCell49b2b6 {
@@ -3061,6 +3065,20 @@ struct FinalPayloadWriteoutResult4ad1e3 {
 	bool invoked = false;
 	bool applied = false;
 	bool same_run_h3maped_compare_complete = false;
+	bool same_run_h3maped_compare_invoked = false;
+	bool same_run_h3maped_authority_scope_matches = false;
+	bool same_run_tile_payload_authority_known = false;
+	bool same_run_generated_object_payload_authority_known = false;
+	bool same_run_tile_payload_match = false;
+	bool same_run_generated_object_payload_match = false;
+	int32_t same_run_tile_payload_expected_byte_count = 0;
+	int32_t same_run_generated_object_payload_expected_byte_count = 0;
+	int32_t same_run_tile_payload_first_mismatch_offset = -1;
+	int32_t same_run_generated_object_payload_first_mismatch_offset = -1;
+	int32_t same_run_tile_payload_native_byte_at_mismatch = -1;
+	int32_t same_run_tile_payload_expected_byte_at_mismatch = -1;
+	int32_t same_run_generated_object_payload_native_byte_at_mismatch = -1;
+	int32_t same_run_generated_object_payload_expected_byte_at_mismatch = -1;
 	std::string blocked_reason;
 	int32_t header_payload_byte_count = 0;
 	int32_t post_header_initial_zero_payload_byte_count = 0;
