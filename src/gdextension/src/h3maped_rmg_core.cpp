@@ -13509,9 +13509,34 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		}
 	}
 
+	for (int32_t owner_position = 0; owner_position < int32_t(relation_owners.size()); ++owner_position) {
+		GeneratorRelationOwnerState4a218c &owner = relation_owners[size_t(owner_position)];
+		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
+		if (zone_position >= 0) {
+			const CoordinateZone4a218c &zone = zones[size_t(zone_position)];
+			owner.coordinate_triple_0x10_0x18_known = true;
+			owner.coordinate_x_0x10 = zone.x;
+			owner.coordinate_y_0x14 = zone.y;
+			owner.coordinate_level_0x18 = zone.level;
+			owner.boundary_payload_span_limit_0x1c_known = true;
+			owner.boundary_payload_span_limit_0x1c = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
+		}
+	}
+
+	auto relation_owner_for_boundary_input = [&](const CoordinateZone4a218c &zone, int32_t zone_position) -> const GeneratorRelationOwnerState4a218c * {
+		const int32_t runtime_zone_index = runtime_index_for_coordinate_zone(zone, zone_position);
+		for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+			if (owner.runtime_zone_index == runtime_zone_index) {
+				return &owner;
+			}
+		}
+		return nullptr;
+	};
+
 	result.boundary_inputs.reserve(zones.size());
 	for (int32_t zone_position = 0; zone_position < int32_t(zones.size()); ++zone_position) {
 		CoordinateZone4a218c &zone = zones[size_t(zone_position)];
+		const GeneratorRelationOwnerState4a218c *owner = relation_owner_for_boundary_input(zone, zone_position);
 		RuntimeZoneBoundaryInput4a3a03 input;
 		input.footprint.runtime_zone_index = runtime_index_for_coordinate_zone(zone, zone_position);
 		input.footprint.source_zone_id = zone.source_zone_id;
@@ -13526,8 +13551,10 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		input.random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
 		input.footprint.source_payload_random_span_limit_0x1c = input.random_span_limit;
 		input.source_record_vector_index_4a3e9c = zone.source_index >= 0 ? zone.source_index : zone_position;
-		input.has_source_record_seed_0x10 = true;
-		input.source_record_seed_0x10 = SpanRecord { zone.x, zone.y, zone.level };
+		input.has_source_record_seed_0x10 = owner != nullptr && owner->coordinate_triple_0x10_0x18_known;
+		input.source_record_seed_0x10 = input.has_source_record_seed_0x10
+				? SpanRecord { owner->coordinate_x_0x10, owner->coordinate_y_0x14, owner->coordinate_level_0x18 }
+				: SpanRecord {};
 		input.allowed_town_mask_0x41_0x49 = zone.allowed_town_mask_0x41_0x49;
 		input.selected_town_choice_index_0x49b3c1 = zone.selected_town_choice_index_0x49b3c1;
 		input.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
@@ -13535,19 +13562,6 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		input.fixed_player_town_choice_index_0xf24 = zone.fixed_player_town_choice_index_0xf24;
 		result.boundary_inputs.push_back(input);
 		result.runtime_zone_records_after_0x49b3c1.push_back(runtime_seed_from_coordinate_zone_after_49b3c1(zone, zone_position));
-	}
-	for (int32_t owner_position = 0; owner_position < int32_t(relation_owners.size()); ++owner_position) {
-		GeneratorRelationOwnerState4a218c &owner = relation_owners[size_t(owner_position)];
-		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
-		if (zone_position >= 0) {
-			const CoordinateZone4a218c &zone = zones[size_t(zone_position)];
-			owner.coordinate_triple_0x10_0x18_known = true;
-			owner.coordinate_x_0x10 = zone.x;
-			owner.coordinate_y_0x14 = zone.y;
-			owner.coordinate_level_0x18 = zone.level;
-			owner.boundary_payload_span_limit_0x1c_known = true;
-			owner.boundary_payload_span_limit_0x1c = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
-		}
 	}
 	auto owner_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
 		for (size_t index = 0; index < relation_owners.size(); ++index) {
@@ -14772,15 +14786,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				&& (generator_mode_0x10b8 != 2 || caller_level_argument_0x0c == 1);
 		handoff.boundary_pass_index_0x0c = source_order_boundary_flag_4a3e80 ? 1 : 0;
 		handoff.random_span_limit = relation_owner_span_limit_4a3a03(*owner, matched_input);
-		handoff.source_record_vector_index_4a3e9c = owner->owner_vector_index >= 0
-				? owner->owner_vector_index
-				: (matched_input != nullptr ? matched_input->source_record_vector_index_4a3e9c : -1);
-		handoff.has_source_record_seed_0x10 = true;
-		handoff.source_record_seed_0x10 = SpanRecord {
-			owner->coordinate_x_0x10,
-			owner->coordinate_y_0x14,
-			owner->coordinate_level_0x18,
-		};
+		handoff.source_record_vector_index_4a3e9c = matched_input != nullptr
+				? matched_input->source_record_vector_index_4a3e9c
+				: -1;
+		handoff.has_source_record_seed_0x10 =
+				matched_input != nullptr && matched_input->has_source_record_seed_0x10;
+		handoff.source_record_seed_0x10 = handoff.has_source_record_seed_0x10
+				? matched_input->source_record_seed_0x10
+				: SpanRecord {};
 		handoff.source_nodes = walk.source_nodes;
 		result.handoffs.push_back(std::move(handoff));
 		source_vector_handoff_index += 1;
