@@ -906,6 +906,7 @@ struct RuntimeZoneBoundaryInput4a3a03 {
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
 	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	int32_t fixed_player_town_choice_index_0xf24 = -1;
 };
 
 struct SourceTownRules4a218c {
@@ -967,6 +968,7 @@ struct RuntimeZoneSeedInput4a218c {
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
 	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	int32_t fixed_player_town_choice_index_0xf24 = -1;
 	SourceZonePayload4a218c source_payload;
 };
 
