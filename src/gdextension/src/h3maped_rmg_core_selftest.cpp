@@ -2159,6 +2159,14 @@ int main() {
 					"0x4a3f27 relation-owner repaint did not gate by recovered relation owner byte")) {
 			return 1;
 		}
+		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
+						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 2
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
+						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
+					"0x4a3f27 did not carry relation-owner scan/recenter state for the generator handoff")) {
+			return 1;
+		}
 	}
 
 	const auto player_assignment = aurelion::h3maped_rmg_core::player_slot_assignment_4ac62a_4ac6ec(
@@ -2467,6 +2475,12 @@ int main() {
 		return 1;
 	}
 	if (!require(composed.terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "composed chain did not apply terrain full-map repaint")) {
+		return 1;
+	}
+	if (!require(composed.terrain_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
+					&& composed.terrain_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
+					&& composed.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == seed_inputs.size(),
+				"composed chain did not expose source-order relation-owner state after 0x4a3f27")) {
 		return 1;
 	}
 	const CoordinateOwnerGridResult4a218c selected_composed = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(

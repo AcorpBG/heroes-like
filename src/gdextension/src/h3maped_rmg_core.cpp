@@ -13815,6 +13815,8 @@ static GeneratedCellRecordGrid0x30 generated_cell_record_grid_from_terrain_words
 	return grid;
 }
 
+static bool apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner);
+
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners) {
 	TerrainRepaintResult4a3f27 result;
 	result.status = "blocked_invalid_dimensions";
@@ -13861,9 +13863,37 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height,
 						result.generated_cell_word_0x24,
 						result.generated_cell_word_0x28,
 						result.generated_cell_word_0x2c);
+		result.relation_owner_scan_bounds_0x4a1f3b_applied = true;
+		result.relation_owner_coordinate_recenter_0x4a2ffa_applied = true;
 		for (GeneratorRelationOwnerState4a218c &owner : prepared_relation_owners) {
-			(void)relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(terrain_prepaint_grid, owner);
+			if (!owner.scan_bounds_0x20_0x2c_known) {
+				(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(terrain_prepaint_grid, owner);
+			}
+			if (owner.scan_bounds_0x20_0x2c_known) {
+				result.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
+			} else {
+				result.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
+			}
+			int32_t scanned_count = 0;
+			int32_t matched_count = 0;
+			bool coordinate_changed = false;
+			if (relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(
+						terrain_prepaint_grid,
+						owner,
+						&scanned_count,
+						&matched_count,
+						&coordinate_changed)) {
+				result.relation_owner_coordinate_recenter_known_count_0x4a2ffa += 1;
+				if (coordinate_changed) {
+					result.relation_owner_coordinate_recenter_changed_count_0x4a2ffa += 1;
+				}
+			} else {
+				result.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa += 1;
+			}
+			result.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa += scanned_count;
+			result.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa += matched_count;
 		}
+		result.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa = prepared_relation_owners;
 		active_relation_owners = &prepared_relation_owners;
 	}
 
@@ -16405,6 +16435,9 @@ static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a2
 	state.relation_vector_10e4_10e8.count_known = false;
 	state.relation_vector_10e4_10e8.count = 0;
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = 0;
+	state.relation_owner_scan_bounds_0x4a1f3b_applied = false;
+	state.relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
+	state.relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
 	state.relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
 	state.relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
 	state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
@@ -16457,9 +16490,15 @@ static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a2
 				"0x4a218c_coordinate_phase_relation_owner_vector_not_available_for_generator_state_handoff";
 		return false;
 	}
+	const bool terrain_phase_relation_owners_available =
+			coordinate_result.terrain_repaint_executed
+			&& !coordinate_result.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.empty();
+	const std::vector<GeneratorRelationOwnerState4a218c> &relation_owner_handoff =
+			terrain_phase_relation_owners_available
+			? coordinate_result.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa
+			: coordinate_result.coordinate_seed.relation_owner_vectors_10e4_10e8;
 	state.relation_owner_records_10e4_10e8_partial_known = true;
-	state.relation_owner_vectors_10e4_10e8 =
-			coordinate_result.coordinate_seed.relation_owner_vectors_10e4_10e8;
+	state.relation_owner_vectors_10e4_10e8 = relation_owner_handoff;
 	state.relation_record_missing_endpoint_count_10e4_10e8 =
 			coordinate_result.coordinate_seed.relation_record_missing_endpoint_count_10e4_10e8;
 	state.relation_owner_vector_count_10e4_10e8 = int32_t(state.relation_owner_vectors_10e4_10e8.size());
@@ -16476,8 +16515,29 @@ static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a2
 		state.weighted_scheduler_thresholds_0x4a8db2.push_back(weighted_scheduler_threshold_0x4a8db2(runtime_zone.source_payload));
 	}
 	state.weighted_scheduler_threshold_count_0x4a8db2 = int32_t(state.weighted_scheduler_thresholds_0x4a8db2.size());
-	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
-	apply_relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(state);
+	if (terrain_phase_relation_owners_available) {
+		state.relation_owner_scan_bounds_0x4a1f3b_applied =
+				coordinate_result.terrain_repaint.relation_owner_scan_bounds_0x4a1f3b_applied;
+		state.relation_owner_scan_bounds_known_count_0x4a1f3b =
+				coordinate_result.terrain_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b;
+		state.relation_owner_scan_bounds_blocked_count_0x4a1f3b =
+				coordinate_result.terrain_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b;
+		state.relation_owner_coordinate_recenter_0x4a2ffa_applied =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied;
+		state.relation_owner_coordinate_recenter_known_count_0x4a2ffa =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa;
+		state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa;
+		state.relation_owner_coordinate_recenter_changed_count_0x4a2ffa =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_changed_count_0x4a2ffa;
+		state.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa;
+		state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa =
+				coordinate_result.terrain_repaint.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa;
+	} else {
+		apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+		apply_relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(state);
+	}
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	state.relation_owner_vector_produced_by_0x4ac552_0x4a218c = true;
 	return true;
