@@ -16696,7 +16696,7 @@ static RoutePoint4a8260 route_cut_0x4a80dc(const GeneratedCellRecordGrid0x30 &gr
 			step_count += 1;
 			if (!route_inner_point_in_bounds_0x4a80dc(grid, current)) {
 				boundary_return = true;
-				return previous;
+				return current;
 			}
 			if (step_count <= 2) {
 				continue;
@@ -16723,7 +16723,7 @@ static RoutePoint4a8260 route_cut_0x4a80dc(const GeneratedCellRecordGrid0x30 &gr
 		step_count += 1;
 		if (!route_inner_point_in_bounds_0x4a80dc(grid, current)) {
 			boundary_return = true;
-			return previous;
+			return current;
 		}
 		if (step_count <= 2) {
 			continue;
