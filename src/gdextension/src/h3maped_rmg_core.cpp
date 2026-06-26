@@ -7786,7 +7786,7 @@ static bool reward_guard_generated_footprint_rejects_0x4aa603(
 					absolute_y,
 					absolute_level,
 					relation_source_owner,
-					true);
+					false);
 	result.footprint_body_cell_scan_count_0x49a6f9 += footprint.scanned_cell_count;
 	if (!footprint.inputs_available) {
 		result.inputs_available = false;
@@ -8019,7 +8019,7 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				&& generated_cell_49a1d8_valid_record(*wrapper_record)
 				&& generated_cell_49a1d8_valid_record(*state_record)
 				&& !state_bit22
-				&& state_bit27
+				&& !state_bit27
 				&& ((generated_cell_terrain_code_0x24(*state_record) == 8) == terrain8_policy)) {
 			result.direction_accept_count += 1;
 			break;
@@ -8071,10 +8071,10 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				}
 				result.overlap_scan_count += 1;
 				const bool wrapper_bit27 = (wrapper_record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
-				const bool state_bit22 = (state_record->word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U;
-				if (!wrapper_bit27 && state_bit22) {
-					result.overlap_bit22_reject_count += 1;
-					result.blocked_reason = "0x4aa603_overlap_existing_bit22_reject";
+				const bool state_bit26 = (state_record->word_0x28 & CELL_DECOR_CANDIDATE_BIT_26) != 0U;
+				if (!wrapper_bit27 && state_bit26) {
+					result.overlap_bit26_reject_count += 1;
+					result.blocked_reason = "0x4aa603_overlap_existing_bit26_reject";
 					return result;
 				}
 			}
