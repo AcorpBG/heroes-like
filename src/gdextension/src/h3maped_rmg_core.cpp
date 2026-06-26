@@ -59,6 +59,7 @@ struct SourcePolygonNode4ccb64 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t payload = 0;
+	int32_t payload_owner_word_0x00 = 0;
 	int32_t payload_random_span_limit_0x1c = 1;
 	bool has_payload = false;
 	int32_t pair = -1;
@@ -75,13 +76,26 @@ struct SourcePolygonModel4ccb64 {
 	std::vector<int32_t> active_order_0x04;
 	int32_t root = -1;
 
-	int32_t add_pair(int32_t from_x, int32_t from_y, int32_t from_payload, int32_t to_x, int32_t to_y, int32_t to_payload, bool from_has_payload = false, bool to_has_payload = false, int32_t from_payload_random_span_limit_0x1c = 1, int32_t to_payload_random_span_limit_0x1c = 1) {
+	int32_t add_pair(
+			int32_t from_x,
+			int32_t from_y,
+			int32_t from_payload,
+			int32_t to_x,
+			int32_t to_y,
+			int32_t to_payload,
+			bool from_has_payload = false,
+			bool to_has_payload = false,
+			int32_t from_payload_random_span_limit_0x1c = 1,
+			int32_t to_payload_random_span_limit_0x1c = 1,
+			int32_t from_payload_owner_word_0x00 = 0,
+			int32_t to_payload_owner_word_0x00 = 0) {
 		const int32_t primary_index = int32_t(nodes.size());
 		const int32_t paired_index = primary_index + 1;
 		SourcePolygonNode4ccb64 primary;
 		primary.x = from_x;
 		primary.y = from_y;
 		primary.payload = from_payload;
+		primary.payload_owner_word_0x00 = from_payload_owner_word_0x00;
 		primary.payload_random_span_limit_0x1c = std::max<int32_t>(1, from_payload_random_span_limit_0x1c);
 		primary.has_payload = from_has_payload;
 		primary.pair = paired_index;
@@ -91,6 +105,7 @@ struct SourcePolygonModel4ccb64 {
 		paired.x = to_x;
 		paired.y = to_y;
 		paired.payload = to_payload;
+		paired.payload_owner_word_0x00 = to_payload_owner_word_0x00;
 		paired.payload_random_span_limit_0x1c = std::max<int32_t>(1, to_payload_random_span_limit_0x1c);
 		paired.has_payload = to_has_payload;
 		paired.pair = primary_index;
@@ -124,12 +139,14 @@ struct SourcePolygonModel4ccb64 {
 		edge_swap_4cc670(node_index);
 		const int32_t previous_pair = nodes[size_t(previous)].pair;
 		nodes[size_t(node_index)].payload = nodes[size_t(previous_pair)].payload;
+		nodes[size_t(node_index)].payload_owner_word_0x00 = nodes[size_t(previous_pair)].payload_owner_word_0x00;
 		nodes[size_t(node_index)].payload_random_span_limit_0x1c = nodes[size_t(previous_pair)].payload_random_span_limit_0x1c;
 		nodes[size_t(node_index)].has_payload = nodes[size_t(previous_pair)].has_payload;
 		nodes[size_t(node_index)].x = nodes[size_t(previous_pair)].x;
 		nodes[size_t(node_index)].y = nodes[size_t(previous_pair)].y;
 		const int32_t paired_previous_pair = nodes[size_t(paired_previous)].pair;
 		nodes[size_t(paired)].payload = nodes[size_t(paired_previous_pair)].payload;
+		nodes[size_t(paired)].payload_owner_word_0x00 = nodes[size_t(paired_previous_pair)].payload_owner_word_0x00;
 		nodes[size_t(paired)].payload_random_span_limit_0x1c = nodes[size_t(paired_previous_pair)].payload_random_span_limit_0x1c;
 		nodes[size_t(paired)].has_payload = nodes[size_t(paired_previous_pair)].has_payload;
 		nodes[size_t(paired)].x = nodes[size_t(paired_previous_pair)].x;
@@ -178,7 +195,9 @@ struct SourcePolygonModel4ccb64 {
 				old_pair.has_payload,
 				target.has_payload,
 				old_pair.payload_random_span_limit_0x1c,
-				target.payload_random_span_limit_0x1c);
+				target.payload_random_span_limit_0x1c,
+				old_pair.payload_owner_word_0x00,
+				target.payload_owner_word_0x00);
 		relink_4cc643(bridge_primary, nodes[size_t(nodes[size_t(old_node)].pair)].previous);
 		relink_4cc643(nodes[size_t(bridge_primary)].pair, target_node);
 		return bridge_primary;
@@ -491,8 +510,12 @@ int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218
 }
 
 int32_t source_node_payload_surrogate_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
-	const int32_t source_order = zone_word_for_coordinate_zone(zone, fallback);
+	const int32_t source_order = zone.source_index >= 0 ? zone.source_index + 1 : fallback + 1;
 	return source_order > 0 ? source_order : fallback + 1;
+}
+
+int32_t source_node_payload_owner_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
+	return zone_word_for_coordinate_zone(zone, fallback);
 }
 
 int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
@@ -13462,6 +13485,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		input.footprint.runtime_zone_index = runtime_index_for_coordinate_zone(zone, zone_position);
 		input.footprint.source_zone_id = zone.source_zone_id;
 		input.footprint.source_payload_0x08 = source_node_payload_surrogate_for_coordinate_zone(zone, zone_position);
+		input.footprint.source_payload_owner_word_0x00 = source_node_payload_owner_word_for_coordinate_zone(zone, zone_position);
 			input.footprint.x_after_bbox_rescale = zone.x;
 			input.footprint.y_after_bbox_rescale = zone.y;
 			input.footprint.level = zone.level;
@@ -14028,6 +14052,9 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		const int32_t source_payload = runtime.source_payload_0x08 > 0
 				? runtime.source_payload_0x08
 				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id + 1 : zone_index + 1);
+		const int32_t source_payload_owner_word_0x00 = runtime.source_payload_owner_word_0x00 > 0
+				? runtime.source_payload_owner_word_0x00
+				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id : zone_index);
 		const int32_t x = runtime.x_after_bbox_rescale;
 		const int32_t y = runtime.y_after_bbox_rescale;
 		SourceSplitStep4ccb64 step;
@@ -14066,7 +14093,9 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 					located_node.has_payload,
 					source_payload != 0,
 					located_node.payload_random_span_limit_0x1c,
-					runtime.source_payload_random_span_limit_0x1c);
+					runtime.source_payload_random_span_limit_0x1c,
+					located_node.payload_owner_word_0x00,
+					source_payload_owner_word_0x00);
 		model.relink_4cc643(split_primary, located);
 		model.root = split_primary;
 		result.inserted_node_pair_count += 1;
@@ -14157,6 +14186,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		descriptor.y = node.y;
 		descriptor.has_payload = node.has_payload;
 		descriptor.payload = node.payload;
+		descriptor.payload_owner_word_0x00 = node.payload_owner_word_0x00;
 		descriptor.pair_index = node.pair;
 		descriptor.next_index = node.next;
 		descriptor.previous_index = node.previous;
@@ -14210,9 +14240,11 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				source_node.finalized = node.finalized;
 				source_node.has_payload = node.has_payload;
 				source_node.payload = node.payload;
+				source_node.payload_owner_word_0x00 = node.payload_owner_word_0x00;
 				source_node.payload_random_span_limit_0x1c = node.payload_random_span_limit_0x1c;
 				source_node.next_pair_has_payload = next_pair_node != nullptr && next_pair_node->has_payload;
 				source_node.next_pair_payload = next_pair_node != nullptr ? next_pair_node->payload : 0;
+				source_node.next_pair_payload_owner_word_0x00 = next_pair_node != nullptr ? next_pair_node->payload_owner_word_0x00 : 0;
 				source_node.next_pair_payload_random_span_limit_0x1c = next_pair_node != nullptr ? next_pair_node->payload_random_span_limit_0x1c : 1;
 				walk.source_nodes.push_back(source_node);
 				current = node.next;
@@ -18826,9 +18858,11 @@ std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a277
 			point.finalized = source_node.finalized;
 			point.has_payload = source_node.has_payload;
 			point.payload = source_node.payload;
+			point.payload_owner_word_0x00 = source_node.payload_owner_word_0x00;
 			point.payload_random_span_limit_0x1c = source_node.payload_random_span_limit_0x1c;
 			point.next_pair_has_payload = source_node.next_pair_has_payload;
 			point.next_pair_payload = source_node.next_pair_payload;
+			point.next_pair_payload_owner_word_0x00 = source_node.next_pair_payload_owner_word_0x00;
 			point.next_pair_payload_random_span_limit_0x1c = source_node.next_pair_payload_random_span_limit_0x1c;
 			cycle.cycle_nodes.push_back(point);
 		}
@@ -19020,8 +19054,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
 	};
 
-		auto source_edge_writer_allowed = [](const BoundaryCyclePoint4a2777 &from_node, int32_t zone_word) {
-			return !(from_node.next_pair_has_payload && from_node.next_pair_payload <= zone_word);
+		auto source_edge_writer_allowed = [](const BoundaryCyclePoint4a2777 &from_node, int32_t owner_word_0x00) {
+			return !(from_node.next_pair_has_payload && from_node.next_pair_payload_owner_word_0x00 <= owner_word_0x00);
 		};
 
 		auto source_edge_random_span_limit_0x4a29a5 = [](const BoundaryCyclePoint4a2777 &from_node, int32_t current_owner_span_limit_0x1c) {
@@ -19196,7 +19230,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.status = "0x4a2777_real_source_cycle_consumed";
 		zone.selected_segment_index = selected_segment_index;
 		append_vertex(zone, clipped_current.x, clipped_current.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], cycle.zone_word)) {
+		const int32_t current_owner_word_0x00 = cycle.generated_cell_owner_byte2 >= 0 ? cycle.generated_cell_owner_byte2 : cycle.zone_word;
+		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], current_owner_word_0x00)) {
 			append_segment(
 					zone,
 					"connector",
@@ -19244,7 +19279,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				break;
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
-				if (!source_edge_writer_allowed(from, cycle.zone_word)) {
+				if (!source_edge_writer_allowed(from, current_owner_word_0x00)) {
 					result.owner_gate_skipped_segment_count += 1;
 					continue;
 				}

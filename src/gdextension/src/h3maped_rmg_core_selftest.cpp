@@ -105,6 +105,7 @@ BoundarySourceCycleHandoff4a2777 square_handoff(bool gate_first_edge) {
 	if (gate_first_edge) {
 		handoff.source_nodes[0].next_pair_has_payload = true;
 		handoff.source_nodes[0].next_pair_payload = 1;
+		handoff.source_nodes[0].next_pair_payload_owner_word_0x00 = 1;
 	}
 	return handoff;
 }
@@ -1653,6 +1654,9 @@ int main() {
 			return 1;
 		}
 		if (!require(cycles[0].cycle_nodes[0].next_pair_payload == 1, "source next-pair payload value was not preserved")) {
+			return 1;
+		}
+		if (!require(cycles[0].cycle_nodes[0].next_pair_payload_owner_word_0x00 == 1, "source next-pair owner word was not preserved")) {
 			return 1;
 		}
 		if (!require(cycles[0].cycle_nodes[0].model_node_index == handoffs[0].source_nodes[0].model_node_index, "source descriptor model index was not preserved")) {
