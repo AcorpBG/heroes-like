@@ -2918,6 +2918,9 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	int32_t descriptor_type_0x1c = -1;
 	bool descriptor_raw_0x0c_known = false;
 	int32_t descriptor_raw_0x0c = 0;
+	bool object_definition_index_known = false;
+	int32_t object_definition_index = -1;
+	int32_t source_catalog_index_0x49da08 = -1;
 	uint32_t object_record_vtable_0x00 = 0U;
 	bool serializer_slot_0x0c_known = false;
 	uint32_t serializer_slot_0x0c = 0U;
@@ -2932,8 +2935,32 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	int32_t source_subtype_0x20 = -1;
 };
 
+struct FinalObjectDefinitionRecord4ad3eb {
+	int32_t definition_index = -1;
+	int32_t source_catalog_index_0x49da08 = -1;
+	std::string def_name;
+	int32_t type_id_0x1c = -1;
+	int32_t subtype_0x20 = -1;
+	int32_t group_0x24 = 0;
+	int32_t last_flag_0x28 = 0;
+	uint16_t terrain_mask_a_0x14 = 0U;
+	uint16_t terrain_mask_b_0x18 = 0U;
+	std::array<uint8_t, 6> passability_mask_bytes {};
+	std::array<uint8_t, 6> action_mask_bytes {};
+	int32_t payload_byte_count = 0;
+};
+
 struct FinalObjectWriteoutResult4ad1e3 {
 	bool invoked = false;
+	bool object_definition_table_invoked = false;
+	bool object_definition_table_applied = false;
+	bool object_definition_table_static_vectors_0x4a8_0x7f8_included = false;
+	int32_t object_definition_count = 0;
+	int32_t object_definition_payload_byte_count = 0;
+	int32_t object_definition_missing_source_record_count = 0;
+	int32_t object_definition_duplicate_source_record_count = 0;
+	int32_t object_definition_template_index_missing_count = 0;
+	std::vector<uint8_t> object_definition_payload_bytes;
 	bool object_count_header_written = false;
 	bool applied = false;
 	std::string blocked_reason;
@@ -2956,6 +2983,8 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	int32_t pass_split_first_flagged_count_0x4ad36f = 0;
 	int32_t pass_split_second_unflagged_count_0x4ad3b1 = 0;
 	int32_t pass_split_descriptor_type_unknown_count = 0;
+	std::vector<FinalObjectDefinitionRecord4ad3eb> first_object_definitions;
+	std::vector<FinalObjectDefinitionRecord4ad3eb> last_object_definitions;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> first_records;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> last_records;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> first_pass_records;

@@ -261,6 +261,17 @@ void append_final_object_count_bytes_json(std::ostream &out, const std::array<ui
 	out << "]";
 }
 
+void append_final_object_template_mask_bytes_json(std::ostream &out, const std::array<uint8_t, 6> &bytes) {
+	out << "[";
+	for (size_t index = 0; index < bytes.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << int32_t(bytes[index]);
+	}
+	out << "]";
+}
+
 void append_final_tile_cell_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::FinalTileWriteoutCell49b2b6> &cells) {
 	out << "[";
 	for (size_t index = 0; index < cells.size(); ++index) {
@@ -322,6 +333,9 @@ void append_final_object_record_samples_json(std::ostream &out, const std::vecto
 			<< ",\"descriptor_type_0x1c\":" << record.descriptor_type_0x1c
 			<< ",\"descriptor_raw_0x0c_known\":" << (record.descriptor_raw_0x0c_known ? "true" : "false")
 			<< ",\"descriptor_raw_0x0c\":" << record.descriptor_raw_0x0c
+			<< ",\"object_definition_index_known\":" << (record.object_definition_index_known ? "true" : "false")
+			<< ",\"object_definition_index\":" << record.object_definition_index
+			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"serializer_slot_0x0c_known\":" << (record.serializer_slot_0x0c_known ? "true" : "false")
 			<< ",\"serializer_slot_0x0c\":" << record.serializer_slot_0x0c
@@ -339,8 +353,43 @@ void append_final_object_record_samples_json(std::ostream &out, const std::vecto
 	out << "]";
 }
 
+void append_final_object_definition_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::FinalObjectDefinitionRecord4ad3eb> &records) {
+	out << "[";
+	for (size_t index = 0; index < records.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const h3maped_rmg_core::FinalObjectDefinitionRecord4ad3eb &record = records[index];
+		out << "{\"definition_index\":" << record.definition_index
+			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08
+			<< ",\"def_name\":\"" << json_escape(record.def_name) << "\""
+			<< ",\"type_id_0x1c\":" << record.type_id_0x1c
+			<< ",\"subtype_0x20\":" << record.subtype_0x20
+			<< ",\"group_0x24\":" << record.group_0x24
+			<< ",\"last_flag_0x28\":" << record.last_flag_0x28
+			<< ",\"terrain_mask_a_0x14\":" << record.terrain_mask_a_0x14
+			<< ",\"terrain_mask_b_0x18\":" << record.terrain_mask_b_0x18
+			<< ",\"passability_mask_bytes\":";
+		append_final_object_template_mask_bytes_json(out, record.passability_mask_bytes);
+		out << ",\"action_mask_bytes\":";
+		append_final_object_template_mask_bytes_json(out, record.action_mask_bytes);
+		out << ",\"payload_byte_count\":" << record.payload_byte_count
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core::FinalObjectWriteoutResult4ad1e3 &writeout) {
 	out << "{\"invoked\":" << (writeout.invoked ? "true" : "false")
+		<< ",\"object_definition_table_invoked\":" << (writeout.object_definition_table_invoked ? "true" : "false")
+		<< ",\"object_definition_table_applied\":" << (writeout.object_definition_table_applied ? "true" : "false")
+		<< ",\"object_definition_table_static_vectors_0x4a8_0x7f8_included\":" << (writeout.object_definition_table_static_vectors_0x4a8_0x7f8_included ? "true" : "false")
+		<< ",\"object_definition_count\":" << writeout.object_definition_count
+		<< ",\"object_definition_payload_byte_count\":" << writeout.object_definition_payload_byte_count
+		<< ",\"object_definition_payload_byte_vector_size\":" << writeout.object_definition_payload_bytes.size()
+		<< ",\"object_definition_missing_source_record_count\":" << writeout.object_definition_missing_source_record_count
+		<< ",\"object_definition_duplicate_source_record_count\":" << writeout.object_definition_duplicate_source_record_count
+		<< ",\"object_definition_template_index_missing_count\":" << writeout.object_definition_template_index_missing_count
 		<< ",\"object_count_header_written\":" << (writeout.object_count_header_written ? "true" : "false")
 		<< ",\"applied\":" << (writeout.applied ? "true" : "false")
 		<< ",\"blocked_reason\":\"" << json_escape(writeout.blocked_reason) << "\""
@@ -363,8 +412,12 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"pass_split_first_flagged_count_0x4ad36f\":" << writeout.pass_split_first_flagged_count_0x4ad36f
 		<< ",\"pass_split_second_unflagged_count_0x4ad3b1\":" << writeout.pass_split_second_unflagged_count_0x4ad3b1
 		<< ",\"pass_split_descriptor_type_unknown_count\":" << writeout.pass_split_descriptor_type_unknown_count
-		<< ",\"source\":\"0x4ad309_0x4ad318_object_count_then_0x4ad3eb_0x57c648_plus_0x0c_two_pass_order\""
-		<< ",\"first_records\":";
+		<< ",\"source\":\"0x4ad1e3_generated_object_definition_table_then_0x4ad309_0x4ad318_object_count_then_0x4ad3eb_0x57c648_plus_0x0c_two_pass_order\""
+		<< ",\"first_object_definitions\":";
+	append_final_object_definition_samples_json(out, writeout.first_object_definitions);
+	out << ",\"last_object_definitions\":";
+	append_final_object_definition_samples_json(out, writeout.last_object_definitions);
+	out << ",\"first_records\":";
 	append_final_object_record_samples_json(out, writeout.first_records);
 	out << ",\"last_records\":";
 	append_final_object_record_samples_json(out, writeout.last_records);
@@ -4108,7 +4161,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_final_object_serializer_payload_bodies_0x4ad3eb_then_0x4ad3de_0x4ae09a\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_then_0x4ad3de_0x4ae09a\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();
