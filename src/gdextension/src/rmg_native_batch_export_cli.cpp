@@ -87,6 +87,44 @@ void append_json_string_array(std::ostream &out, const std::vector<std::string> 
 	out << "]";
 }
 
+bool write_binary_file(const std::filesystem::path &path, const std::vector<uint8_t> &bytes) {
+	std::ofstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+	if (!bytes.empty()) {
+		file.write(reinterpret_cast<const char *>(bytes.data()), std::streamsize(bytes.size()));
+	}
+	return bool(file);
+}
+
+bool write_final_payload_sections_json(
+		const std::filesystem::path &path,
+		const std::vector<aurelion::h3maped_rmg_core::FinalPayloadWriteoutSection4ad1e3> &sections) {
+	std::ofstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+	file << "{\n";
+	file << "  \"schema_id\": \"rmg_native_final_payload_sections_v1\",\n";
+	file << "  \"section_count\": " << sections.size() << ",\n";
+	file << "  \"sections\": [";
+	for (size_t index = 0; index < sections.size(); ++index) {
+		if (index != 0) {
+			file << ", ";
+		}
+		const aurelion::h3maped_rmg_core::FinalPayloadWriteoutSection4ad1e3 &section = sections[index];
+		file << "{\"section_id\":\"" << json_escape(section.section_id) << "\""
+			 << ",\"h3maped_anchor\":\"" << json_escape(section.h3maped_anchor) << "\""
+			 << ",\"offset\":" << section.offset
+			 << ",\"byte_count\":" << section.byte_count
+			 << "}";
+	}
+	file << "]\n";
+	file << "}\n";
+	return bool(file);
+}
+
 void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &reports) {
 	out << "[";
 	for (size_t index = 0; index < reports.size(); ++index) {
@@ -118,6 +156,10 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"native_workflow_current_phase\":\"" << json_escape(report.native_workflow_current_phase) << "\",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
 		out << "\"phase_snapshot_path\":\"" << json_escape(report.phase_snapshot_path.string()) << "\",";
+		out << "\"final_payload_binary_written\":" << (report.final_payload_binary_written ? "true" : "false") << ",";
+		out << "\"final_payload_binary_path\":\"" << json_escape(report.final_payload_binary_path.string()) << "\",";
+		out << "\"final_payload_sections_written\":" << (report.final_payload_sections_written ? "true" : "false") << ",";
+		out << "\"final_payload_sections_path\":\"" << json_escape(report.final_payload_sections_path.string()) << "\",";
 		out << "\"native_map_json_written\":" << (report.native_map_json_written ? "true" : "false") << ",";
 		out << "\"native_map_json_path\":\"" << json_escape(report.native_map_json_path.string()) << "\"";
 		out << "}";
@@ -354,12 +396,25 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		report.status = workflow.status;
 		report.blocked_reason = workflow.blocked_reason;
 		if (options.emit_phase_snapshot) {
-			const std::filesystem::path snapshot_path = absolute_output_dir / (aurelion::rmg_native_core::safe_case_filename(controlled_case.id) + ".phase_snapshot.json");
+			const std::string safe_case_id = aurelion::rmg_native_core::safe_case_filename(controlled_case.id);
+			const std::filesystem::path snapshot_path = absolute_output_dir / (safe_case_id + ".phase_snapshot.json");
 			std::ofstream snapshot(snapshot_path, std::ios::binary);
 			if (snapshot) {
 				snapshot << aurelion::rmg_native_core::case_native_h3maped_workflow_json(controlled_case, report.status, report.blocked_reason, options.shared_runtime_chain_input);
 				report.phase_snapshot_written = true;
 				report.phase_snapshot_path = snapshot_path;
+			}
+			if (workflow.final_payload_writeout_0x4ad1e3.applied) {
+				const std::filesystem::path payload_path = absolute_output_dir / (safe_case_id + ".final_payload.bin");
+				if (write_binary_file(payload_path, workflow.final_payload_writeout_0x4ad1e3.payload_bytes)) {
+					report.final_payload_binary_written = true;
+					report.final_payload_binary_path = payload_path;
+				}
+				const std::filesystem::path sections_path = absolute_output_dir / (safe_case_id + ".final_payload_sections.json");
+				if (write_final_payload_sections_json(sections_path, workflow.final_payload_writeout_0x4ad1e3.sections)) {
+					report.final_payload_sections_written = true;
+					report.final_payload_sections_path = sections_path;
+				}
 			}
 		}
 		reports.push_back(report);
@@ -385,6 +440,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int native_workflow_final_tile_writeout_applied_count = 0;
 	int native_workflow_final_object_count_header_written_count = 0;
 	int native_workflow_final_payload_assembly_applied_count = 0;
+	int final_payload_binary_written_count = 0;
+	int final_payload_sections_written_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -426,6 +483,12 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		}
 		if (report.native_workflow_final_payload_assembly_applied) {
 			++native_workflow_final_payload_assembly_applied_count;
+		}
+		if (report.final_payload_binary_written) {
+			++final_payload_binary_written_count;
+		}
+		if (report.final_payload_sections_written) {
+			++final_payload_sections_written_count;
 		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
@@ -496,6 +559,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_exported_count\": 0,\n";
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
+	out << "  \"final_payload_binary_written_count\": " << final_payload_binary_written_count << ",\n";
+	out << "  \"final_payload_sections_written_count\": " << final_payload_sections_written_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
 	out << "  \"generation_core_stage\": \"native_h3maped_workflow_ordered_final_payload_assembled_blocked_before_same_run_full_payload_compare\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
@@ -543,6 +608,7 @@ int main(int argc, char **argv) {
 	int native_map_json_failed_count = 0;
 	int phase_snapshot_written_count = 0;
 	int phase_snapshot_failed_count = 0;
+	int final_payload_binary_written_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -563,10 +629,14 @@ int main(int argc, char **argv) {
 				++phase_snapshot_failed_count;
 			}
 		}
+		if (report.final_payload_binary_written) {
+			++final_payload_binary_written_count;
+		}
 	}
 	std::cout << "RMG_NATIVE_BATCH_EXPORT_CLI status=blocked output_dir=" << absolute_output_dir.string()
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
+			  << " final_payload_binaries_written=" << final_payload_binary_written_count
 			  << " reason=native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_full_payload_compare\n";
 	return failed_count > 0 ? 1 : 2;
 }

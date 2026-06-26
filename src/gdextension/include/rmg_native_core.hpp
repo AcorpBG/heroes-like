@@ -346,6 +346,10 @@ struct CaseReport {
 	std::string native_workflow_current_phase;
 	bool phase_snapshot_written = false;
 	std::filesystem::path phase_snapshot_path;
+	bool final_payload_binary_written = false;
+	std::filesystem::path final_payload_binary_path;
+	bool final_payload_sections_written = false;
+	std::filesystem::path final_payload_sections_path;
 	bool native_map_json_written = false;
 	std::filesystem::path native_map_json_path;
 };

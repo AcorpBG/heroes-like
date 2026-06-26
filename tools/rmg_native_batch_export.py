@@ -262,6 +262,8 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
         "phase_snapshot_exported_count": manifest.get("phase_snapshot_exported_count", 0),
         "phase_snapshot_written_count": manifest.get("phase_snapshot_written_count", 0),
         "phase_snapshot_failed_count": manifest.get("phase_snapshot_failed_count", 0),
+        "final_payload_binary_written_count": manifest.get("final_payload_binary_written_count", 0),
+        "final_payload_sections_written_count": manifest.get("final_payload_sections_written_count", 0),
         "shared_input_source": manifest.get("shared_input_source", ""),
         "shared_runtime_zone_seed_count": manifest.get("shared_runtime_zone_seed_count", 0),
         "shared_runtime_link_count": manifest.get("shared_runtime_link_count", 0),
@@ -286,7 +288,7 @@ def run_native_cli_export(args: argparse.Namespace) -> int:
     print(
         "RMG_NATIVE_BATCH_EXPORT_PY status={status} output_dir={output_dir} "
         "exported={exported_count} native_map_json={native_map_json_exported_count} phase_snapshots={phase_snapshot_exported_count} "
-        "phase_snapshots_written={phase_snapshot_written_count} "
+        "phase_snapshots_written={phase_snapshot_written_count} final_payload_binaries={final_payload_binary_written_count} "
         "failed={failed_count} log={log_path}".format(**wrapper)
     )
     if args.print_manifest:

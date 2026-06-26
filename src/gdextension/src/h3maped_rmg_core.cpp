@@ -9366,9 +9366,18 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 	}
 
 	if (source_endpoint.border_guard) {
-		result.constructor_blocked = true;
-		result.blocked_reason = "0x4a61bc_border_guard_endpoint_helpers_0x4a5e73_0x4a606b_unowned_before_0x4a5e03";
-		return result;
+		const bool supported_land_endpoint_exclusion_known =
+				state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
+				&& state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
+				&& state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
+				&& !state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed
+				&& state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
+				&& state.connection_fallback_materialization_records_available_for_scope;
+		if (!supported_land_endpoint_exclusion_known) {
+			result.constructor_blocked = true;
+			result.blocked_reason = "0x4a61bc_border_guard_endpoint_helpers_0x4a5e73_0x4a606b_unowned_before_0x4a5e03";
+			return result;
+		}
 	}
 	return result;
 }
