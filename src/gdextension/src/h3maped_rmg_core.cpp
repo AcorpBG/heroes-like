@@ -1305,25 +1305,26 @@ int32_t coordinate_prune_divisor_from_generator_mode_4a218c(int32_t generator_mo
 }
 
 void append_angle_candidates_4a17f5(const CoordinateZone4a218c &base, const CoordinateZone4a218c &current, const GeneratorRelationOwnerState4a218c &current_owner, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, std::vector<CoordinateCandidate4a17f5> &candidates) {
+	// H3MapEd uses rounded double lookup tables at 0x58dd28/0x58dc28, not ideal trig constants.
 	static constexpr double X_TABLE[32] = {
-		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
-		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
-		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
-		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
-		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
-		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
-		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
-		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
+		1.0, 0.9807, 0.9239, 0.8315,
+		0.7071, 0.5556, 0.3827, 0.1951,
+		0.0, -0.1951, -0.3827, -0.5556,
+		-0.7071, -0.8315, -0.9239, -0.9807,
+		-1.0, -0.9807, -0.9239, -0.8315,
+		-0.7071, -0.5556, -0.3827, -0.1951,
 	};
 	static constexpr double Y_TABLE[32] = {
-		0.0, 0.19509032201612833, 0.38268343236508984, 0.5555702330196023,
-		0.7071067811865476, 0.8314696123025452, 0.9238795325112867, 0.9807852804032304,
-		1.0, 0.9807852804032304, 0.9238795325112867, 0.8314696123025452,
-		0.7071067811865476, 0.5555702330196023, 0.38268343236508984, 0.19509032201612833,
-		0.0, -0.19509032201612833, -0.38268343236508984, -0.5555702330196023,
-		-0.7071067811865476, -0.8314696123025452, -0.9238795325112867, -0.9807852804032304,
-		-1.0, -0.9807852804032304, -0.9238795325112867, -0.8314696123025452,
-		-0.7071067811865476, -0.5555702330196023, -0.38268343236508984, -0.19509032201612833,
+		1.0, 0.9807, 0.9239, 0.8315,
+		0.7071, 0.5556, 0.3827, 0.1951,
+		0.0, -0.1951, -0.3827, -0.5556,
+		-0.7071, -0.8315, -0.9239, -0.9807,
+		-1.0, -0.9807, -0.9239, -0.8315,
+		-0.7071, -0.5556, -0.3827, -0.1951,
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
 	};
 	const int32_t combined_size = base.source_base_size + current.source_base_size;
 	for (int32_t direction = 0; direction < 32; ++direction) {
@@ -19882,18 +19883,40 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			int32_t best_x = -1;
 			int32_t best_y = -1;
 			int32_t best_clearance = -1;
-			for (const BoundaryCyclePoint4a2777 &point : zone.finalized_points) {
-				const bool interior = point.x >= 1 && point.x < width - 1 && point.y >= 1 && point.y < height - 1;
-				if (!interior) {
-					continue;
-				}
-				const int32_t clearance = std::min<int32_t>(
-						std::min<int32_t>(point.x, width - point.x - 1),
-						std::min<int32_t>(point.y, height - point.y - 1));
-				if (clearance > best_clearance) {
-					best_clearance = clearance;
-					best_x = point.x;
-					best_y = point.y;
+			const int32_t node_count = int32_t(zone.finalized_points.size());
+			if (zone.selected_segment_index >= 0 && zone.selected_segment_index < node_count) {
+				auto next_source_node_index_4a325d = [&](int32_t index) {
+					const int32_t next_index = zone.finalized_points[size_t(index)].next_index;
+					if (next_index >= 0 && next_index < node_count) {
+						return next_index;
+					}
+					return (index + 1) % node_count;
+				};
+				const int32_t start_index = zone.selected_segment_index;
+				int32_t cursor_index = next_source_node_index_4a325d(start_index);
+				for (int32_t guard = 0; guard < node_count && cursor_index >= 0 && cursor_index < node_count; ++guard) {
+					const BoundaryCyclePoint4a2777 &cursor = zone.finalized_points[size_t(cursor_index)];
+					const int32_t pair_index = cursor.pair_index;
+					if (pair_index >= 0 && pair_index < node_count) {
+						const BoundaryCyclePoint4a2777 &pair = zone.finalized_points[size_t(pair_index)];
+						const int32_t pair_x = pair.raw_x_0x00;
+						const int32_t pair_y = pair.raw_y_0x04;
+						const bool interior = pair_x >= 1 && pair_x < width - 1 && pair_y >= 1 && pair_y < height - 1;
+						if (interior) {
+							const int32_t x_clearance = std::min<int32_t>(pair_x, width - pair_x - 1);
+							const int32_t y_clearance = std::min<int32_t>(pair_y, height - pair_y - 1);
+							const int32_t clearance = std::min<int32_t>(x_clearance, y_clearance);
+							if (clearance > best_clearance) {
+								best_clearance = clearance;
+								best_x = pair_x;
+								best_y = pair_y;
+							}
+						}
+					}
+					cursor_index = next_source_node_index_4a325d(cursor_index);
+					if (cursor_index == start_index) {
+						break;
+					}
 				}
 			}
 			if (best_x >= 0 && best_y >= 0) {
@@ -19901,10 +19924,10 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				seed.x = clipped.x;
 				seed.y = clipped.y;
 				zone.span_seed_relocated_4a325d = true;
-				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_relocated_with_0x4a2b33";
+				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_relocated_from_source_pair_with_0x4a2b33";
 				result.span_fill_seed_relocated_count += 1;
 			} else {
-				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_no_relocation_candidate";
+				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_no_source_pair_relocation_candidate";
 			}
 		}
 		zone.effective_span_seed_4a325d = seed;
