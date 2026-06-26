@@ -1078,6 +1078,12 @@ struct SharedGeneratorObjectPrivateState {
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
+	bool relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
+	int32_t relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_changed_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa = 0;
 	bool relation_normalization_4a5767_full_grid_reset_applied = false;
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
