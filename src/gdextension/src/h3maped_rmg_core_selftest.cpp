@@ -205,10 +205,10 @@ int main() {
 		if (!require(!level_one_line.trace.empty(), "0x4a261a level-1 deterministic line did not emit trace writes")) {
 			return 1;
 		}
-		if (!require(std::none_of(level_one_line.trace.begin(), level_one_line.trace.end(), [](const auto &write) {
+		if (!require(std::all_of(level_one_line.trace.begin(), level_one_line.trace.end() - 1, [](const auto &write) {
 					return write.reserved;
-				}),
-					"0x4a261a must suppress reserved flags for generator mode 2 level 1")) {
+				}) && !level_one_line.trace.back().reserved,
+					"0x4a261a must reserve generator mode 2 level 1 writes except the terminal endpoint")) {
 			return 1;
 		}
 
@@ -216,10 +216,10 @@ int main() {
 		if (!require(level_zero_line.trace.size() >= 2, "0x4a261a level-0 deterministic line emitted too few writes")) {
 			return 1;
 		}
-		if (!require(std::all_of(level_zero_line.trace.begin(), level_zero_line.trace.end() - 1, [](const auto &write) {
+		if (!require(std::none_of(level_zero_line.trace.begin(), level_zero_line.trace.end(), [](const auto &write) {
 					return write.reserved;
-				}) && !level_zero_line.trace.back().reserved,
-					"0x4a261a must reserve generator mode 2 level 0 writes except the terminal endpoint")) {
+				}),
+					"0x4a261a must suppress reserved flags for generator mode 2 level 0")) {
 			return 1;
 		}
 
@@ -235,10 +235,10 @@ int main() {
 			if (!require(!fill.trace.empty(), "0x4a325d level-1 span fill did not emit trace writes")) {
 				return 1;
 			}
-			if (!require(std::none_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
+			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
 						return write.reserved;
 					}),
-						"0x4a325d must suppress reserved flags for generator mode 2 level 1")) {
+						"0x4a325d must reserve generator mode 2 level 1 writes")) {
 				return 1;
 			}
 		}
@@ -250,10 +250,10 @@ int main() {
 			if (!require(!fill.trace.empty(), "0x4a325d level-0 span fill did not emit trace writes")) {
 				return 1;
 			}
-			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
+			if (!require(std::none_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
 						return write.reserved;
 					}),
-						"0x4a325d must reserve generator mode 2 level 0 writes")) {
+						"0x4a325d must suppress reserved flags for generator mode 2 level 0")) {
 				return 1;
 			}
 		}
@@ -1844,7 +1844,7 @@ int main() {
 			land_setup_mode_two_member_flags += 1;
 		}
 	}
-	if (!require(land_setup_mode_two_member_flags > 0, "one-level land water mode must keep 0x4a325d member flags even when setup mode is 2")) {
+	if (!require(land_setup_mode_two_member_flags == 0, "one-level land water mode must suppress level-0 0x4a325d member flags when setup mode is 2")) {
 		return 1;
 	}
 	BoundarySourceCycleHandoff4a2777 descriptor_link_handoff = square_handoff(false);
@@ -2390,6 +2390,13 @@ int main() {
 	if (!require(selected_after_setup3.rng_value == 16899, "template selection must consume RNG after setup sentinel randomization")) {
 		return 1;
 	}
+	const GeneratorSetupModeResult49ecf2 setup3_seed58 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(58U, 3);
+	const TemplateSelectionRuntimeResult4ac552 selected_after_setup3_seed58 =
+			aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
+					setup3_seed58.rng_state_before_template_selection,
+					1,
+					2,
+					2);
 
 	const int32_t medium_size_score = aurelion::h3maped_rmg_core::size_score(72, 72, 1, aurelion::h3maped_rmg_core::water_mode_code("land"));
 	const TemplateSelectionRuntimeResult4ac552 medium_selection = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
@@ -2583,6 +2590,18 @@ int main() {
 	if (!require(!selected_composed.coordinate_seed_blocked, "selected-template coordinate chain blocked before generator private-state handoff")) {
 		return 1;
 	}
+	const CoordinateOwnerGridResult4a218c selected_composed_seed58 = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			36,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			setup3_seed58.generator_mode_0x10b8,
+			selected_after_setup3_seed58.rng_state_after_template_selection,
+			selected_after_setup3_seed58.runtime_seed.runtime_zone_seeds,
+			selected_after_setup3_seed58.runtime_seed.runtime_links);
+	if (!require(!selected_composed_seed58.coordinate_seed_blocked, "seed-58 selected-template coordinate chain blocked before generator private-state handoff")) {
+		return 1;
+	}
 	H3MapedRmgWorkflowConfig generator_state_workflow_config;
 	generator_state_workflow_config.size_class = "small";
 	generator_state_workflow_config.water_mode = "land";
@@ -2591,7 +2610,7 @@ int main() {
 	generator_state_workflow_config.level_count = 1;
 	generator_state_workflow_config.human_count = 1;
 	generator_state_workflow_config.player_count = 2;
-	generator_state_workflow_config.seed = 10U;
+	generator_state_workflow_config.seed = 58U;
 	generator_state_workflow_config.setup_object_0x44_known = true;
 	generator_state_workflow_config.setup_object_0x44 = 3;
 	const H3MapedRmgWorkflowResult generator_state_workflow =
@@ -2704,18 +2723,18 @@ int main() {
 	if (!require(generator_state.width == 36 && generator_state.height == 36 && generator_state.level_count == 1, "generator object private state did not preserve +0x18/+0x1c/+0x20 dimensions")) {
 		return 1;
 	}
-	if (!require(generator_state.generator_value_band_0x10bc_known && generator_state.generator_value_band_0x10bc == setup3.generator_value_band_0x10bc, "generator object private state did not preserve setup-derived generator +0x10bc value band")) {
+	if (!require(generator_state.generator_value_band_0x10bc_known && generator_state.generator_value_band_0x10bc == setup3_seed58.generator_value_band_0x10bc, "generator object private state did not preserve setup-derived generator +0x10bc value band")) {
 		return 1;
 	}
-	if (!require(generator_state.candidate_container_vector_10d4_10d8.count_known && generator_state.candidate_container_vector_10d4_10d8.count == selected_after_setup3.accepted_template_count, "generator object private state did not preserve accepted candidate vector count")) {
+	if (!require(generator_state.candidate_container_vector_10d4_10d8.count_known && generator_state.candidate_container_vector_10d4_10d8.count == selected_after_setup3_seed58.accepted_template_count, "generator object private state did not preserve accepted candidate vector count")) {
 		return 1;
 	}
-	if (!require(generator_state.source_owner_player_slots_ed8_ee0_ee4_present && generator_state.selected_color_order_ed8_count == int32_t(selected_after_setup3.player_assignment.selected_color_order_ed8.size()), "generator object private state did not preserve source-owner/player-slot buffers")) {
+	if (!require(generator_state.source_owner_player_slots_ed8_ee0_ee4_present && generator_state.selected_color_order_ed8_count == int32_t(selected_after_setup3_seed58.player_assignment.selected_color_order_ed8.size()), "generator object private state did not preserve source-owner/player-slot buffers")) {
 		return 1;
 	}
-	if (!require(generator_state.selected_color_order_ed8 == selected_after_setup3.player_assignment.selected_color_order_ed8
-					&& generator_state.raw_source_owner_slots_ee0 == selected_after_setup3.player_assignment.raw_ee0_slots
-					&& generator_state.mapped_source_owner_slots_ee4 == selected_after_setup3.player_assignment.mapped_ee4_slots,
+	if (!require(generator_state.selected_color_order_ed8 == selected_after_setup3_seed58.player_assignment.selected_color_order_ed8
+					&& generator_state.raw_source_owner_slots_ee0 == selected_after_setup3_seed58.player_assignment.raw_ee0_slots
+					&& generator_state.mapped_source_owner_slots_ee4 == selected_after_setup3_seed58.player_assignment.mapped_ee4_slots,
 					"generator object private state preserved source-owner/player-slot counts without preserving the actual ed8/ee0/ee4 lane contents")) {
 		return 1;
 	}
@@ -2822,8 +2841,8 @@ int main() {
 	}
 	if (!require(generator_state.relation_owner_records_10e4_10e8_partial_known
 					&& generator_state.relation_owner_vector_produced_by_0x4ac552_0x4a218c
-					&& generator_state.relation_owner_vector_selected_candidate_source_catalog_index == selected_after_setup3.selected_source_catalog_index
-					&& generator_state.relation_owner_vector_selected_candidate_template_name == selected_after_setup3.selected_template_name,
+					&& generator_state.relation_owner_vector_selected_candidate_source_catalog_index == selected_after_setup3_seed58.selected_source_catalog_index
+					&& generator_state.relation_owner_vector_selected_candidate_template_name == selected_after_setup3_seed58.selected_template_name,
 				"generator object private state did not carry recovered selected-candidate 0x4ac552 -> 0x4a218c/0x49f7c4 relation owner records")) {
 		return 1;
 	}
@@ -2833,7 +2852,7 @@ int main() {
 	if (!require(generator_state.relation_record_missing_endpoint_count_10e4_10e8 == 0, "generator relation owner records lost a selected runtime-link endpoint")) {
 		return 1;
 	}
-	const int32_t expected_relation_record_count = int32_t(selected_after_setup3.runtime_seed.runtime_links.size()) * 2;
+	const int32_t expected_relation_record_count = int32_t(selected_after_setup3_seed58.runtime_seed.runtime_links.size()) * 2;
 	if (!require(generator_state.relation_record_count_10e4_10e8 == expected_relation_record_count, "generator relation records did not mirror 0x49f7c4 reciprocal link append count")) {
 		return 1;
 	}
@@ -2911,7 +2930,7 @@ int main() {
 			return 1;
 		}
 		int32_t expected_source_endpoint_count = 0;
-		for (const RuntimeLinkSeedInput4a218c &link : selected_after_setup3.runtime_seed.runtime_links) {
+		for (const RuntimeLinkSeedInput4a218c &link : selected_after_setup3_seed58.runtime_seed.runtime_links) {
 			if (link.from_index == owner.runtime_zone_index || link.to_index == owner.runtime_zone_index) {
 				expected_source_endpoint_count += 1;
 			}
@@ -2930,11 +2949,11 @@ int main() {
 			if (!require(endpoint_record.owner_runtime_zone_index == owner.runtime_zone_index
 							&& endpoint_record.owner_source_zone_id == owner.source_zone_id
 							&& endpoint_record.source_link_index >= 0
-							&& endpoint_record.source_link_index < int32_t(selected_after_setup3.runtime_seed.runtime_links.size()),
+							&& endpoint_record.source_link_index < int32_t(selected_after_setup3_seed58.runtime_seed.runtime_links.size()),
 						"0x4a1f3b source endpoint record did not preserve owner/link identity")) {
 				return 1;
 			}
-			const RuntimeLinkSeedInput4a218c &runtime_link = selected_after_setup3.runtime_seed.runtime_links[size_t(endpoint_record.source_link_index)];
+			const RuntimeLinkSeedInput4a218c &runtime_link = selected_after_setup3_seed58.runtime_seed.runtime_links[size_t(endpoint_record.source_link_index)];
 			const int32_t expected_target_runtime_zone = runtime_link.from_index == owner.runtime_zone_index ? runtime_link.to_index : runtime_link.from_index;
 			const int32_t expected_target_owner_vector_index = relation_owner_vector_index_for_runtime_zone(expected_target_runtime_zone);
 			if (!require(expected_target_owner_vector_index >= 0
@@ -2952,7 +2971,7 @@ int main() {
 		}
 		int32_t expected_candidate_vector_step_count = 0;
 		int32_t expected_candidate_after_prune_total_count = 0;
-		for (const auto &step : selected_composed.coordinate_seed.placement_steps) {
+		for (const auto &step : selected_composed_seed58.coordinate_seed.placement_steps) {
 			if (step.runtime_zone_index != owner.runtime_zone_index) {
 				continue;
 			}

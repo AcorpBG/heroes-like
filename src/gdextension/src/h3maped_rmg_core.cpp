@@ -1399,7 +1399,7 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 }
 
 bool boundary_cell_reserved_flag_4a261a_4a325d(int32_t generator_mode_0x10b8, int32_t level) {
-	return !(generator_mode_0x10b8 == 2 && level == 1);
+	return level == 1 || generator_mode_0x10b8 != 2;
 }
 
 void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
