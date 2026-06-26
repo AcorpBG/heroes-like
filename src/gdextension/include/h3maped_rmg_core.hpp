@@ -1104,6 +1104,118 @@ struct CoordinatePlacementStep4a1f3b {
 	std::vector<CoordinateCandidate4a17f5> candidates_after_prune_4a1ad8;
 };
 
+struct GeneratorRelationRecordState4a218c {
+	int32_t source_link_index = -1;
+	int32_t owner_runtime_zone_index = -1;
+	int32_t owner_source_zone_id = -1;
+	int32_t target_runtime_zone_index = -1;
+	int32_t target_source_zone_id = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+	bool reciprocal = false;
+	uint32_t control_dword_0x08 = 0U;
+};
+
+struct GeneratorSourceEndpointRecordState4a1f3b {
+	int32_t source_link_index = -1;
+	int32_t owner_runtime_zone_index = -1;
+	int32_t owner_source_zone_id = -1;
+	int32_t target_runtime_zone_index = -1;
+	int32_t target_source_zone_id = -1;
+	int32_t source_endpoint = -1;
+	int32_t target_source_endpoint = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+	bool reciprocal = false;
+};
+
+struct GeneratorCoordinateCandidateVectorState4a1f3b {
+	int32_t runtime_zone_index = -1;
+	std::string pass_id;
+	std::string candidate_source;
+	int32_t candidate_count_before_prune = 0;
+	int32_t candidate_count_after_prune = 0;
+	int32_t explicit_link_base_count = 0;
+	int32_t selected_candidate_index = -1;
+	int32_t rng_value = -1;
+	bool blocked = false;
+	bool selected_candidate_known = false;
+	CoordinateCandidate4a17f5 selected_candidate;
+	std::vector<CoordinateCandidate4a17f5> candidates_before_prune_4a17f5;
+	std::vector<CoordinateCandidate4a17f5> candidates_after_prune_4a1ad8;
+};
+
+struct GeneratorRelationOwnerState4a218c {
+	int32_t owner_vector_index = -1;
+	int32_t runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t source_index = -1;
+	bool constructor_0x49b452_known = false;
+	bool source_pointer_0x00_known = false;
+	int32_t source_pointer_source_index_0x00 = -1;
+	bool relation_owner_byte2_0x4aa9b7_known = false;
+	int32_t relation_owner_byte2_0x4aa9b7 = -1;
+	bool source_pointer_type_0x04_known = false;
+	int32_t source_pointer_type_0x04 = 0;
+	bool source_pointer_value_0x90_known = false;
+	int32_t source_pointer_value_0x90 = 0;
+	bool source_pointer_monster_match_to_town_0x94_known = false;
+	bool source_pointer_monster_match_to_town_0x94 = false;
+	bool source_pointer_allowed_monster_town_mask_0x95_known = false;
+	uint16_t source_pointer_allowed_monster_town_mask_0x95 = 0U;
+	bool town_choice_0x04_known = false;
+	int32_t town_choice_0x04 = -1;
+	bool source_owner_slot_0x1c_known = false;
+	int32_t source_owner_slot_0x1c = -1;
+	bool source_order_source_record_0x00_known = false;
+	SourceOrderSchedulerSourceRecord4a8db2 source_order_source_record_0x00;
+	bool source_order_source_record_field_0x04_known = false;
+	bool coordinate_triple_0x10_0x18_known = false;
+	int32_t coordinate_x_0x10 = 0;
+	int32_t coordinate_y_0x14 = 0;
+	int32_t coordinate_level_0x18 = 0;
+	bool terrain_policy_0x0c_known = false;
+	int32_t terrain_policy_0x0c = 0;
+	bool reward_guard_source_bands_0xa0_0xc0_known = false;
+	std::array<SourceTreasureBand4a218c, 3> reward_guard_source_bands_0xa0_0xc0;
+	bool mine_resource_rules_0x4c_0x84_known = false;
+	SourceMineRules4a218c mine_resource_rules_0x4c_0x84;
+	bool source_endpoint_vector_0xc8_0xcc_present = false;
+	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
+	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
+	int32_t source_endpoint_vector_0xc8_0xcc_count = 0;
+	int32_t source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
+	bool scan_bounds_0x20_0x2c_known = false;
+	int32_t scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	int32_t scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	int32_t scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	int32_t scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	bool byte_0x3c_known = false;
+	uint8_t byte_0x3c = 0U;
+	bool reward_guard_priority_0x40_known = false;
+	int32_t reward_guard_priority_0x40 = 0;
+	int32_t reward_guard_priority_before_randomization_0x4ad7f7 = 0;
+	int32_t reward_guard_priority_rng_value_0x4e7276 = -1;
+	bool reward_guard_priority_source_relation_0x4ad6a8 = false;
+	bool descriptor_type_counter_table_0x44_known = false;
+	int32_t descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
+	int32_t descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	std::vector<uint32_t> descriptor_type_counters_0x44;
+	bool owner_local_vectors_0x3e4_0x3f4_0x404_known = false;
+	int32_t owner_local_vector_0x3e4_count = 0;
+	int32_t owner_local_vector_0x3f4_count = 0;
+	int32_t owner_local_vector_0x404_count = 0;
+	bool coordinate_candidate_vectors_0x4a1f3b_known = false;
+	int32_t coordinate_candidate_vector_step_count = 0;
+	int32_t coordinate_candidate_after_prune_total_count = 0;
+	int32_t relation_record_count = 0;
+	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
+	std::vector<GeneratorCoordinateCandidateVectorState4a1f3b> coordinate_candidate_vectors_0x4a1f3b;
+	std::vector<GeneratorRelationRecordState4a218c> relation_records;
+};
+
 struct CoordinateSeedResult4a218c {
 	bool blocked = false;
 	uint32_t rng_state_before = 0;
@@ -1128,6 +1240,8 @@ struct CoordinateSeedResult4a218c {
 	std::vector<CoordinatePlacementStep4a1f3b> placement_steps;
 	std::vector<RuntimeZoneBoundaryInput4a3a03> boundary_inputs;
 	std::vector<RuntimeZoneSeedInput4a218c> runtime_zone_records_after_0x49b3c1;
+	int32_t relation_record_missing_endpoint_count_10e4_10e8 = 0;
+	std::vector<GeneratorRelationOwnerState4a218c> relation_owner_vectors_10e4_10e8;
 };
 
 struct SourceSplitStep4ccb64 {
@@ -1441,33 +1555,6 @@ struct GeneratorObjectVectorState {
 	int32_t element_size_bytes = 0;
 };
 
-struct GeneratorRelationRecordState4a218c {
-	int32_t source_link_index = -1;
-	int32_t owner_runtime_zone_index = -1;
-	int32_t owner_source_zone_id = -1;
-	int32_t target_runtime_zone_index = -1;
-	int32_t target_source_zone_id = -1;
-	int32_t guard_value = 0;
-	bool wide = false;
-	bool border_guard = false;
-	bool reciprocal = false;
-	uint32_t control_dword_0x08 = 0U;
-};
-
-struct GeneratorSourceEndpointRecordState4a1f3b {
-	int32_t source_link_index = -1;
-	int32_t owner_runtime_zone_index = -1;
-	int32_t owner_source_zone_id = -1;
-	int32_t target_runtime_zone_index = -1;
-	int32_t target_source_zone_id = -1;
-	int32_t source_endpoint = -1;
-	int32_t target_source_endpoint = -1;
-	int32_t guard_value = 0;
-	bool wide = false;
-	bool border_guard = false;
-	bool reciprocal = false;
-};
-
 struct GeneratorEndpointCursorProducerStateD014 {
 	bool recovered_supported_land_exclusion_known = false;
 	bool supported_land_endpoint_cursor_key_range_known = false;
@@ -1496,91 +1583,6 @@ struct ConnectionMaterializationCallerPrepD014 {
 	bool fallback_0x4a7605_to_0x4a5e03_source_backed = false;
 	bool live_endpoint_materialization_allowed = false;
 	std::string remaining_live_materialization_blocker;
-};
-
-struct GeneratorCoordinateCandidateVectorState4a1f3b {
-	int32_t runtime_zone_index = -1;
-	std::string pass_id;
-	std::string candidate_source;
-	int32_t candidate_count_before_prune = 0;
-	int32_t candidate_count_after_prune = 0;
-	int32_t explicit_link_base_count = 0;
-	int32_t selected_candidate_index = -1;
-	int32_t rng_value = -1;
-	bool blocked = false;
-	bool selected_candidate_known = false;
-	CoordinateCandidate4a17f5 selected_candidate;
-	std::vector<CoordinateCandidate4a17f5> candidates_before_prune_4a17f5;
-	std::vector<CoordinateCandidate4a17f5> candidates_after_prune_4a1ad8;
-};
-
-struct GeneratorRelationOwnerState4a218c {
-	int32_t owner_vector_index = -1;
-	int32_t runtime_zone_index = -1;
-	int32_t source_zone_id = -1;
-	int32_t source_index = -1;
-	bool constructor_0x49b452_known = false;
-	bool source_pointer_0x00_known = false;
-	int32_t source_pointer_source_index_0x00 = -1;
-	bool relation_owner_byte2_0x4aa9b7_known = false;
-	int32_t relation_owner_byte2_0x4aa9b7 = -1;
-	bool source_pointer_type_0x04_known = false;
-	int32_t source_pointer_type_0x04 = 0;
-	bool source_pointer_value_0x90_known = false;
-	int32_t source_pointer_value_0x90 = 0;
-	bool source_pointer_monster_match_to_town_0x94_known = false;
-	bool source_pointer_monster_match_to_town_0x94 = false;
-	bool source_pointer_allowed_monster_town_mask_0x95_known = false;
-	uint16_t source_pointer_allowed_monster_town_mask_0x95 = 0U;
-	bool town_choice_0x04_known = false;
-	int32_t town_choice_0x04 = -1;
-	bool source_owner_slot_0x1c_known = false;
-	int32_t source_owner_slot_0x1c = -1;
-	bool source_order_source_record_0x00_known = false;
-	SourceOrderSchedulerSourceRecord4a8db2 source_order_source_record_0x00;
-	bool source_order_source_record_field_0x04_known = false;
-	bool coordinate_triple_0x10_0x18_known = false;
-	int32_t coordinate_x_0x10 = 0;
-	int32_t coordinate_y_0x14 = 0;
-	int32_t coordinate_level_0x18 = 0;
-	bool terrain_policy_0x0c_known = false;
-	int32_t terrain_policy_0x0c = 0;
-	bool reward_guard_source_bands_0xa0_0xc0_known = false;
-	std::array<SourceTreasureBand4a218c, 3> reward_guard_source_bands_0xa0_0xc0;
-	bool mine_resource_rules_0x4c_0x84_known = false;
-	SourceMineRules4a218c mine_resource_rules_0x4c_0x84;
-	bool source_endpoint_vector_0xc8_0xcc_present = false;
-	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
-	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
-	int32_t source_endpoint_vector_0xc8_0xcc_count = 0;
-	int32_t source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
-	bool scan_bounds_0x20_0x2c_known = false;
-	int32_t scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
-	int32_t scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
-	int32_t scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
-	int32_t scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
-	bool byte_0x3c_known = false;
-	uint8_t byte_0x3c = 0U;
-	bool reward_guard_priority_0x40_known = false;
-	int32_t reward_guard_priority_0x40 = 0;
-	int32_t reward_guard_priority_before_randomization_0x4ad7f7 = 0;
-	int32_t reward_guard_priority_rng_value_0x4e7276 = -1;
-	bool reward_guard_priority_source_relation_0x4ad6a8 = false;
-	bool descriptor_type_counter_table_0x44_known = false;
-	int32_t descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
-	int32_t descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
-	std::vector<uint32_t> descriptor_type_counters_0x44;
-	bool owner_local_vectors_0x3e4_0x3f4_0x404_known = false;
-	int32_t owner_local_vector_0x3e4_count = 0;
-	int32_t owner_local_vector_0x3f4_count = 0;
-	int32_t owner_local_vector_0x404_count = 0;
-	bool coordinate_candidate_vectors_0x4a1f3b_known = false;
-	int32_t coordinate_candidate_vector_step_count = 0;
-	int32_t coordinate_candidate_after_prune_total_count = 0;
-	int32_t relation_record_count = 0;
-	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
-	std::vector<GeneratorCoordinateCandidateVectorState4a1f3b> coordinate_candidate_vectors_0x4a1f3b;
-	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 
 struct RewardGuardRelationPriorityEntry4ad7f7 {
