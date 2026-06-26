@@ -14820,21 +14820,21 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	if (result.coordinate_seed_blocked) {
 		return result;
 	}
-	result.terrain_selection = runtime_terrain_selection_49b53d(
-			result.coordinate_seed.rng_state_after,
-			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
-	result.terrain_selection_executed = true;
 	result.owner_grid = materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
 			width,
 			height,
 			level_count,
 			water_mode_code,
 			generator_mode_0x10b8,
-			result.terrain_selection.rng_state_after,
+			result.coordinate_seed.rng_state_after,
 			result.coordinate_seed.boundary_inputs,
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
 	result.owner_grid_executed = result.owner_grid.materialization_executed;
 	if (result.owner_grid_executed) {
+		result.terrain_selection = runtime_terrain_selection_49b53d(
+				result.owner_grid.materialization.rng_state_after,
+				result.coordinate_seed.relation_owner_vectors_10e4_10e8);
+		result.terrain_selection_executed = true;
 		result.terrain_repaint = terrain_repaint_4a3f27(
 				width,
 				height,
