@@ -1848,6 +1848,53 @@ int main() {
 				"one-level mode-0 0x4a3710 finalizer incorrectly entered the recovered synthetic append branch")) {
 		return 1;
 	}
+	std::vector<GeneratorRelationOwnerState4a218c> relation_owner_inputs(4);
+	for (int32_t index = 0; index < 4; ++index) {
+		GeneratorRelationOwnerState4a218c &owner = relation_owner_inputs[size_t(index)];
+		owner.owner_vector_index = index;
+		owner.runtime_zone_index = index;
+		owner.source_zone_id = runtime_zones[size_t(index)].source_zone_id;
+		owner.source_index = index;
+		owner.source_pointer_0x00_known = true;
+		owner.source_pointer_source_index_0x00 = index;
+		owner.relation_owner_byte2_0x4aa9b7_known = true;
+		owner.relation_owner_byte2_0x4aa9b7 = index;
+		owner.coordinate_triple_0x10_0x18_known = true;
+		owner.coordinate_x_0x10 = runtime_zones[size_t(index)].x_after_bbox_rescale;
+		owner.coordinate_y_0x14 = runtime_zones[size_t(index)].y_after_bbox_rescale;
+		owner.coordinate_level_0x18 = runtime_zones[size_t(index)].level;
+		owner.boundary_payload_span_limit_0x1c_known = true;
+		owner.boundary_payload_span_limit_0x1c = 7 + index;
+	}
+	const BoundaryOwnerGridResult4a3a03 owner_grid_from_relation_owners =
+			aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
+					36,
+					36,
+					1,
+					aurelion::h3maped_rmg_core::water_mode_code("land"),
+					0,
+					1234U,
+					boundary_inputs,
+					relation_owner_inputs);
+	if (!require(owner_grid_from_relation_owners.materialization_executed, "relation-owner vector owner-grid chain did not execute boundary materialization")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.handoffs.size() == relation_owner_inputs.size(), "relation-owner vector owner-grid chain did not emit one handoff per owner")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].random_span_limit == relation_owner_inputs[0].boundary_payload_span_limit_0x1c,
+				"relation-owner vector owner-grid chain did not preserve payload +0x1c span")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_vector_index_4a3e9c == relation_owner_inputs[0].owner_vector_index,
+				"relation-owner vector owner-grid chain did not pass the owner vector index into the handoff")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == relation_owner_inputs[0].coordinate_x_0x10
+					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == relation_owner_inputs[0].coordinate_y_0x14,
+				"relation-owner vector owner-grid chain did not use the owner coordinate triple as the span seed")) {
+		return 1;
+	}
 	const FootprintFinalizerResult4a3710 synthetic_mode_finalizer =
 			aurelion::h3maped_rmg_core::footprint_finalizer_4a3710(
 					1,
