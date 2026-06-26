@@ -10951,7 +10951,105 @@ static void final_payload_append_array4_section_0x4ad1e3(
 	final_payload_append_section_0x4ad1e3(result, section_id, h3maped_anchor, bytes.data(), size_t(byte_count));
 }
 
+static int32_t final_payload_first_mismatch_offset_0x4ad1e3(
+		const std::vector<uint8_t> &native_bytes,
+		const std::vector<uint8_t> &h3maped_bytes) {
+	const size_t common_size = std::min(native_bytes.size(), h3maped_bytes.size());
+	for (size_t index = 0; index < common_size; ++index) {
+		if (native_bytes[index] != h3maped_bytes[index]) {
+			return int32_t(index);
+		}
+	}
+	if (native_bytes.size() != h3maped_bytes.size()) {
+		return int32_t(common_size);
+	}
+	return -1;
+}
+
+static bool final_payload_same_run_authority_scope_matches_0x4ad1e3(
+		const H3MapedRmgWorkflowConfig &config) {
+	return config.size_class == "medium"
+			&& config.water_mode == "land"
+			&& config.width == 72
+			&& config.height == 72
+			&& config.level_count == 1
+			&& config.human_count == 1
+			&& config.player_count == 2
+			&& config.seed == 10U
+			&& config.setup_object_0x44_known
+			&& config.setup_object_0x44 == 0;
+}
+
+static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
+		FinalPayloadWriteoutResult4ad1e3 &result,
+		const H3MapedRmgWorkflowConfig &config,
+		const FinalTileWriteoutResult49b2b6 &tile,
+		const FinalObjectWriteoutResult4ad1e3 &objects) {
+	result.same_run_tile_payload_authority_known = config.same_run_final_tile_payload_authority_known;
+	result.same_run_generated_object_payload_authority_known =
+			config.same_run_generated_object_payload_authority_known;
+	result.same_run_h3maped_authority_scope_matches =
+			final_payload_same_run_authority_scope_matches_0x4ad1e3(config);
+	if (!result.same_run_tile_payload_authority_known
+			|| !result.same_run_generated_object_payload_authority_known
+			|| !result.same_run_h3maped_authority_scope_matches) {
+		return;
+	}
+	result.same_run_h3maped_compare_invoked = true;
+	result.same_run_tile_payload_expected_byte_count =
+			int32_t(config.same_run_final_tile_payload_authority_0x49b2b6.size());
+	result.same_run_generated_object_payload_expected_byte_count =
+			int32_t(config.same_run_generated_object_payload_authority_0x4ad1e3.size());
+
+	result.same_run_tile_payload_first_mismatch_offset =
+			final_payload_first_mismatch_offset_0x4ad1e3(
+					tile.tile_payload_bytes,
+					config.same_run_final_tile_payload_authority_0x49b2b6);
+	result.same_run_tile_payload_match =
+			result.same_run_tile_payload_first_mismatch_offset < 0;
+	if (!result.same_run_tile_payload_match) {
+		const int32_t offset = result.same_run_tile_payload_first_mismatch_offset;
+		if (offset >= 0 && offset < int32_t(tile.tile_payload_bytes.size())) {
+			result.same_run_tile_payload_native_byte_at_mismatch =
+					int32_t(tile.tile_payload_bytes[size_t(offset)]);
+		}
+		if (offset >= 0 && offset < int32_t(config.same_run_final_tile_payload_authority_0x49b2b6.size())) {
+			result.same_run_tile_payload_expected_byte_at_mismatch =
+					int32_t(config.same_run_final_tile_payload_authority_0x49b2b6[size_t(offset)]);
+		}
+	}
+
+	result.same_run_generated_object_payload_first_mismatch_offset =
+			final_payload_first_mismatch_offset_0x4ad1e3(
+					objects.object_payload_bytes,
+					config.same_run_generated_object_payload_authority_0x4ad1e3);
+	result.same_run_generated_object_payload_match =
+			result.same_run_generated_object_payload_first_mismatch_offset < 0;
+	if (!result.same_run_generated_object_payload_match) {
+		const int32_t offset = result.same_run_generated_object_payload_first_mismatch_offset;
+		if (offset >= 0 && offset < int32_t(objects.object_payload_bytes.size())) {
+			result.same_run_generated_object_payload_native_byte_at_mismatch =
+					int32_t(objects.object_payload_bytes[size_t(offset)]);
+		}
+		if (offset >= 0 && offset < int32_t(config.same_run_generated_object_payload_authority_0x4ad1e3.size())) {
+			result.same_run_generated_object_payload_expected_byte_at_mismatch =
+					int32_t(config.same_run_generated_object_payload_authority_0x4ad1e3[size_t(offset)]);
+		}
+	}
+	if (!result.same_run_tile_payload_match) {
+		result.blocked_reason = "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload";
+		return;
+	}
+	if (!result.same_run_generated_object_payload_match) {
+		result.blocked_reason = "native_generated_object_payload_mismatch_against_same_run_0x4ad1e3_payload";
+		return;
+	}
+	result.same_run_h3maped_compare_complete = true;
+	result.blocked_reason.clear();
+}
+
 static FinalPayloadWriteoutResult4ad1e3 final_payload_assemble_ordered_0x4ad1e3(
+		const H3MapedRmgWorkflowConfig &config,
 		const FinalHeaderWriteoutResult4ac857 &header,
 		const FinalTileWriteoutResult49b2b6 &tile,
 		const FinalObjectWriteoutResult4ad1e3 &objects) {
@@ -11020,6 +11118,13 @@ static FinalPayloadWriteoutResult4ad1e3 final_payload_assemble_ordered_0x4ad1e3(
 	result.applied = result.total_payload_byte_count == expected_total;
 	if (!result.applied) {
 		result.blocked_reason = "0x4ad1e3_ordered_payload_byte_count_mismatch";
+		return result;
+	}
+	final_payload_compare_recovered_same_run_authority_0x4ad1e3(result, config, tile, objects);
+	if (result.same_run_h3maped_compare_invoked && !result.same_run_h3maped_compare_complete) {
+		return result;
+	}
+	if (result.same_run_h3maped_compare_complete) {
 		return result;
 	}
 	result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
@@ -18211,6 +18316,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	result.current_phase_id = "final_payload_assembly";
 	result.final_payload_writeout_0x4ad1e3 =
 			final_payload_assemble_ordered_0x4ad1e3(
+					config,
 					result.final_header_writeout_0x4ac857_0x4ad206,
 					result.final_tile_writeout_0x49b2b6,
 					result.final_object_writeout_0x4ad309_0x4ad3eb);

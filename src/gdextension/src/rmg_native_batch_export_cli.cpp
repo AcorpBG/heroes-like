@@ -11,6 +11,7 @@
 #include <limits>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -23,6 +24,10 @@ using aurelion::rmg_native_core::SharedRuntimeZoneSeedInput;
 
 struct Options {
 	std::filesystem::path output_dir = ".artifacts/rmg_native_batch_export_cli";
+	std::filesystem::path same_run_tile_payload_authority_path =
+			".artifacts/rmg_recovery/same_run_final_tile_payload_bytes_20260610.bin";
+	std::filesystem::path same_run_object_payload_authority_path =
+			".artifacts/rmg_recovery/same_run_final_object_payload_replay_bytes_20260610.bin";
 	std::vector<std::string> controlled_cases;
 	std::string case_filter;
 	SharedRuntimeChainInput shared_runtime_chain_input;
@@ -96,6 +101,28 @@ bool write_binary_file(const std::filesystem::path &path, const std::vector<uint
 		file.write(reinterpret_cast<const char *>(bytes.data()), std::streamsize(bytes.size()));
 	}
 	return bool(file);
+}
+
+bool read_binary_file(const std::filesystem::path &path, std::vector<uint8_t> &bytes) {
+	std::ifstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+	file.seekg(0, std::ios::end);
+	const std::streamoff size = file.tellg();
+	if (size < 0) {
+		return false;
+	}
+	file.seekg(0, std::ios::beg);
+	std::vector<uint8_t> loaded(static_cast<size_t>(size));
+	if (!loaded.empty()) {
+		file.read(reinterpret_cast<char *>(loaded.data()), std::streamsize(loaded.size()));
+		if (!file) {
+			return false;
+		}
+	}
+	bytes = std::move(loaded);
+	return true;
 }
 
 bool write_final_payload_sections_json(
@@ -248,6 +275,18 @@ Options parse_options(int argc, char **argv) {
 			if (!raw.empty()) {
 				options.output_dir = raw;
 			}
+		} else if (arg == "--same-run-tile-payload-authority") {
+			std::string raw;
+			take_value(raw);
+			if (!raw.empty()) {
+				options.same_run_tile_payload_authority_path = raw;
+			}
+		} else if (arg == "--same-run-object-payload-authority") {
+			std::string raw;
+			take_value(raw);
+			if (!raw.empty()) {
+				options.same_run_object_payload_authority_path = raw;
+			}
 		} else if (arg == "--controlled-case") {
 			std::string raw;
 			take_value(raw);
@@ -348,6 +387,21 @@ Options parse_options(int argc, char **argv) {
 		}
 	}
 	return options;
+}
+
+void hydrate_same_run_authority_payloads(Options &options) {
+	std::vector<uint8_t> tile_payload;
+	if (read_binary_file(options.same_run_tile_payload_authority_path, tile_payload)) {
+		options.shared_runtime_chain_input.same_run_final_tile_payload_authority_known = true;
+		options.shared_runtime_chain_input.same_run_final_tile_payload_authority_0x49b2b6 =
+				std::move(tile_payload);
+	}
+	std::vector<uint8_t> object_payload;
+	if (read_binary_file(options.same_run_object_payload_authority_path, object_payload)) {
+		options.shared_runtime_chain_input.same_run_generated_object_payload_authority_known = true;
+		options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3 =
+				std::move(object_payload);
+	}
 }
 
 bool supported_case_scope(const ControlledCase &controlled_case) {
@@ -497,7 +551,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			: "blocked";
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: "native_h3maped_workflow_stops_before_full_final_payload_same_run_compare_for_at_least_one_case";
+			: "native_h3maped_workflow_stops_before_or_at_full_final_payload_same_run_compare_for_at_least_one_case";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -520,6 +574,12 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	append_json_string_array(out, options.controlled_cases);
 	out << ",\n";
 	out << "  \"shared_input_source\": \"" << json_escape(options.shared_runtime_chain_input.input_source.empty() ? "explicit_cli_runtime_inputs" : options.shared_runtime_chain_input.input_source) << "\",\n";
+	out << "  \"same_run_tile_payload_authority_path\": \"" << json_escape(options.same_run_tile_payload_authority_path.string()) << "\",\n";
+	out << "  \"same_run_tile_payload_authority_known\": " << (options.shared_runtime_chain_input.same_run_final_tile_payload_authority_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_tile_payload_authority_byte_count\": " << options.shared_runtime_chain_input.same_run_final_tile_payload_authority_0x49b2b6.size() << ",\n";
+	out << "  \"same_run_object_payload_authority_path\": \"" << json_escape(options.same_run_object_payload_authority_path.string()) << "\",\n";
+	out << "  \"same_run_object_payload_authority_known\": " << (options.shared_runtime_chain_input.same_run_generated_object_payload_authority_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_object_payload_authority_byte_count\": " << options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3.size() << ",\n";
 	out << "  \"shared_runtime_zone_seed_count\": " << options.shared_runtime_chain_input.runtime_zone_seeds.size() << ",\n";
 	int64_t shared_runtime_link_guard_value_sum = 0;
 	int32_t shared_runtime_link_wide_count = 0;
@@ -562,11 +622,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"final_payload_binary_written_count\": " << final_payload_binary_written_count << ",\n";
 	out << "  \"final_payload_sections_written_count\": " << final_payload_sections_written_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_ordered_final_payload_assembled_blocked_before_same_run_full_payload_compare\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_ordered_final_payload_assembled_with_scoped_same_run_authority_compare_when_available\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"same_run_compare_ordered_full_final_payload_and_descriptor_wrapper_bucket_0x08_0x0c\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked before native map output until the assembled final payload is same-run compared.\",\n";
+	out << "  \"required_next_slice\": \"fix_native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload_then_generated_object_payload_mismatch\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases, applies the recovered same-run Medium seed-10 final-payload authority comparison when the case matches that scope, and exits blocked before native map output until the compared payloads match.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
@@ -577,7 +637,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 } // namespace
 
 int main(int argc, char **argv) {
-	const Options options = parse_options(argc, argv);
+	Options options = parse_options(argc, argv);
+	hydrate_same_run_authority_payloads(options);
 	const std::filesystem::path absolute_output_dir = std::filesystem::absolute(options.output_dir);
 	std::error_code error;
 	std::filesystem::create_directories(absolute_output_dir, error);
@@ -637,6 +698,6 @@ int main(int argc, char **argv) {
 			  << " cases=" << case_reports.size()
 			  << " phase_snapshots_written=" << phase_snapshot_written_count
 			  << " final_payload_binaries_written=" << final_payload_binary_written_count
-			  << " reason=native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_full_payload_compare\n";
+			  << " reason=native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_or_at_full_payload_compare\n";
 	return failed_count > 0 ? 1 : 2;
 }

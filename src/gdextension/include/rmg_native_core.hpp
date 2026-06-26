@@ -321,6 +321,10 @@ struct SharedRuntimeChainInput {
 	int32_t generator_mode_0x10b8 = 0;
 	std::vector<SharedRuntimeZoneSeedInput> runtime_zone_seeds;
 	std::vector<SharedRuntimeLinkInput> runtime_links;
+	bool same_run_final_tile_payload_authority_known = false;
+	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
+	bool same_run_generated_object_payload_authority_known = false;
+	std::vector<uint8_t> same_run_generated_object_payload_authority_0x4ad1e3;
 };
 
 struct CaseReport {
