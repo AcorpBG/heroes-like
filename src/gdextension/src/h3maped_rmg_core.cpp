@@ -2765,6 +2765,21 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 	return result;
 }
 
+static void record_relation_high_owner_propagation_49a318(GeneratorObjectPrivateState &state, const RelationHighOwnerPropagationResult49a318 &high_owner_propagation) {
+	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
+	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
+	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
+	state.relation_high_owner_seed_attempt_count_49a318 = high_owner_propagation.seed_attempt_count;
+	state.relation_high_owner_seed_blocked_count_49a318 = high_owner_propagation.seed_blocked_count;
+	state.relation_high_owner_popped_cell_count_49a318 = high_owner_propagation.popped_cell_count;
+	state.relation_high_owner_same_owner_relax_count_49a318 = high_owner_propagation.same_owner_relax_count;
+	state.relation_high_owner_cross_owner_high_byte_write_count_49a318 = high_owner_propagation.cross_owner_high_byte_write_count;
+	state.relation_high_owner_max_queue_size_49a318 = high_owner_propagation.max_queue_size;
+	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
+	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
+	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
+}
+
 RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known) {
 	RewardGuardRelationPriorityResult4ad7f7 result;
 	result.relation_owner_count = int32_t(owners.size());
@@ -11746,7 +11761,19 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 		return result;
 	}
 	result.grid_available = true;
+	auto run_high_owner_propagation = [&]() {
+		const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
+				relation_high_owner_propagation_49a318(
+						grid,
+						owners,
+						state != nullptr ? &state->object_records_0xec4_ecc : nullptr);
+		if (state != nullptr) {
+			record_relation_high_owner_propagation_49a318(*state, high_owner_propagation);
+		}
+	};
 
+	std::vector<int32_t> report_relation_owner_byte2;
+	report_relation_owner_byte2.reserve(owners.size());
 	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
 		RelationScanConsumerOwnerReport4a5767 report;
 		report.owner_vector_index = owner.owner_vector_index;
@@ -11758,6 +11785,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 		if (!report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known || relation_owner_byte2 < 0) {
 			result.owner_bounds_blocked_count += 1;
 			result.owner_reports.push_back(report);
+			report_relation_owner_byte2.push_back(-1);
 			continue;
 		}
 
@@ -11803,6 +11831,23 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				}
 			}
 		}
+		result.owner_reports.push_back(report);
+		report_relation_owner_byte2.push_back(relation_owner_byte2);
+	}
+
+	run_high_owner_propagation();
+
+	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
+		if (owner_index >= int32_t(result.owner_reports.size()) || owner_index >= int32_t(report_relation_owner_byte2.size())) {
+			break;
+		}
+		RelationScanConsumerOwnerReport4a5767 &report = result.owner_reports[size_t(owner_index)];
+		const int32_t relation_owner_byte2 = report_relation_owner_byte2[size_t(owner_index)];
+		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_index)];
+		if (relation_owner_byte2 < 0 || !report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known) {
+			continue;
+		}
+		const int32_t level = owner.coordinate_level_0x18;
 
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
@@ -11861,9 +11906,9 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				}
 			}
 		}
-		result.owner_reports.push_back(report);
 	}
 
+	run_high_owner_propagation();
 	result.no_object_projection_chain_complete = result.projected_chain_object_branch_blocked_count == 0;
 	return result;
 }
@@ -16725,18 +16770,7 @@ static void apply_relation_normalization_full_grid_reset_0x4a5767(GeneratorObjec
 static void apply_relation_high_owner_propagation_49a318(GeneratorObjectPrivateState &state) {
 	const RelationHighOwnerPropagationResult49a318 high_owner_propagation =
 			relation_high_owner_propagation_49a318(state.generated_cell_buffer, state.relation_owner_vectors_10e4_10e8, &state.object_records_0xec4_ecc);
-	state.relation_high_owner_propagation_49a318_applied = high_owner_propagation.applied;
-	state.relation_high_owner_propagation_49a318_grid_available = high_owner_propagation.grid_available;
-	state.relation_high_owner_propagation_49a318_object_metadata_gate_complete = high_owner_propagation.object_metadata_gate_complete;
-	state.relation_high_owner_seed_attempt_count_49a318 = high_owner_propagation.seed_attempt_count;
-	state.relation_high_owner_seed_blocked_count_49a318 = high_owner_propagation.seed_blocked_count;
-	state.relation_high_owner_popped_cell_count_49a318 = high_owner_propagation.popped_cell_count;
-	state.relation_high_owner_same_owner_relax_count_49a318 = high_owner_propagation.same_owner_relax_count;
-	state.relation_high_owner_cross_owner_high_byte_write_count_49a318 = high_owner_propagation.cross_owner_high_byte_write_count;
-	state.relation_high_owner_max_queue_size_49a318 = high_owner_propagation.max_queue_size;
-	state.relation_high_owner_materialized_count_49a318 = high_owner_propagation.owner_high_byte_materialized_count;
-	state.relation_high_owner_sentinel_count_49a318 = high_owner_propagation.owner_high_byte_sentinel_count;
-	state.relation_high_owner_seed_reports_49a318 = high_owner_propagation.seed_reports;
+	record_relation_high_owner_propagation_49a318(state, high_owner_propagation);
 }
 
 static void apply_materialization_bridge_relation_normalization_0x4a5767(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
@@ -16762,7 +16796,6 @@ static void apply_materialization_bridge_relation_normalization_0x4a5767(Generat
 	state.relation_scan_consumer_projected_chain_cleanup_clear_count_4a5767 = relation_scan_consumers.projected_chain_cleanup_clear_count;
 	state.relation_scan_consumer_object_branch_attempt_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_attempt_count;
 	state.relation_scan_consumer_object_branch_commit_count_4a5767 = relation_scan_consumers.projected_chain_object_branch_commit_count;
-	apply_relation_high_owner_propagation_49a318(state);
 	rng.state = relation_scan_rng.state;
 }
 

@@ -1331,7 +1331,7 @@ int main() {
 						&& scan_consumer_result.grid_available
 						&& scan_consumer_result.owner_scan_count == 1
 						&& scan_consumer_result.scanned_cell_count == 2
-						&& scan_consumer_result.projected_chain_call_count == 2
+						&& scan_consumer_result.projected_chain_call_count == 1
 						&& scan_consumer_result.projected_chain_occupied_stamp_count == 0
 						&& scan_consumer_result.projected_chain_object_branch_blocked_count == 1
 						&& !scan_consumer_result.no_object_projection_chain_complete,
@@ -1605,10 +1605,10 @@ int main() {
 			return 1;
 		}
 		GeneratorObjectPrivateState scan_object_state;
-		scan_object_state.width = 1;
+		scan_object_state.width = 3;
 		scan_object_state.height = 1;
 		scan_object_state.level_count = 1;
-		scan_object_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(1, 1, 1);
+		scan_object_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
 		scan_object_state.generated_cell_buffer_owned = true;
 		scan_object_state.descriptor_counter_table_0x1110_present = true;
 		scan_object_state.descriptor_counter_table_0x1110_contents_known = true;
@@ -1616,33 +1616,37 @@ int main() {
 		scan_object_state.descriptor_counter_table_0x1110.assign(size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), 0U);
 		scan_object_state.native_object_record_key_allocator_0x4a93a2_known = true;
 		scan_object_state.next_native_object_record_key_0x4a93a2 = 0x03626000U;
-		GeneratedCellRecord0x30 &scan_object_cell = scan_object_state.generated_cell_buffer.records[0];
-		scan_object_cell.object_reference_vector_contents_known = true;
-		scan_object_cell.object_reference_count = 0;
-		scan_object_cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(scan_object_cell.word_0x20, 0);
-		scan_object_cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(scan_object_cell.word_0x24, 0, 0);
-		scan_object_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
-		if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(scan_object_cell), "test setup 0x4a5767 reset failed before live object-branch scan-consumer pass")) {
-			return 1;
+		for (int32_t x = 0; x < 3; ++x) {
+			GeneratedCellRecord0x30 &scan_object_cell = scan_object_state.generated_cell_buffer.records[size_t(x)];
+			scan_object_cell.object_reference_vector_contents_known = true;
+			scan_object_cell.object_reference_count = 0;
+			scan_object_cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(scan_object_cell.word_0x20, 0);
+			scan_object_cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(scan_object_cell.word_0x24, 0, 0);
+			scan_object_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+			if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(scan_object_cell), "test setup 0x4a5767 reset failed before live object-branch scan-consumer pass")) {
+				return 1;
+			}
+			scan_object_cell.word_0x1c = 0x00000002U;
+			scan_object_cell.word_0x10_known = true;
+			scan_object_cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
+			scan_object_cell.word_0x14_known = true;
+			scan_object_cell.word_0x14 = 0U;
+			scan_object_cell.word_0x18_known = true;
+			scan_object_cell.word_0x18 = 0U;
+			aurelion::h3maped_rmg_core::generated_cell_49a932(scan_object_cell, true);
 		}
-		scan_object_cell.word_0x1c = 0x00000002U;
-		scan_object_cell.word_0x10_known = true;
-		scan_object_cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
-		scan_object_cell.word_0x14_known = true;
-		scan_object_cell.word_0x14 = 0U;
-		scan_object_cell.word_0x18_known = true;
-		scan_object_cell.word_0x18 = 0U;
-		aurelion::h3maped_rmg_core::generated_cell_49a932(scan_object_cell, true);
-		scan_object_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
+		scan_object_state.generated_cell_buffer.records[1].word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
 		GeneratorRelationOwnerState4a218c scan_object_owner;
 		scan_object_owner.owner_vector_index = 0;
 		scan_object_owner.runtime_zone_index = 0;
 		scan_object_owner.coordinate_triple_0x10_0x18_known = true;
+		scan_object_owner.coordinate_x_0x10 = 0;
+		scan_object_owner.coordinate_y_0x14 = 0;
 		scan_object_owner.coordinate_level_0x18 = 0;
 		scan_object_owner.scan_bounds_0x20_0x2c_known = true;
 		scan_object_owner.scan_bound_low_x_0x20 = 0;
 		scan_object_owner.scan_bound_low_y_0x24 = 0;
-		scan_object_owner.scan_bound_high_x_0x28 = 1;
+		scan_object_owner.scan_bound_high_x_0x28 = 2;
 		scan_object_owner.scan_bound_high_y_0x2c = 1;
 		SourceObjectResolverState4af785 scan_object_resolver;
 		aurelion::h3maped_rmg_core::H3MapedRng scan_object_rng;
