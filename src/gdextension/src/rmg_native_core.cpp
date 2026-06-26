@@ -1330,6 +1330,8 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.road_river_object_adjacency_path_seed_count_0x4aae7b = road_adjacency.path_seed_count_0x4aae7b;
 	out.road_river_object_adjacency_path_seed_relaxed_edge_count = road_adjacency.path_seed_relaxed_edge_count;
 	out.road_river_object_adjacency_path_seed_reached_cell_count = road_adjacency.path_seed_reached_cell_count;
+	out.road_river_object_adjacency_path_seed_overlay_low_cost_step_count =
+			road_adjacency.path_seed_overlay_low_cost_step_count;
 	out.road_river_object_adjacency_candidate_low_word_check_count = road_adjacency.candidate_low_word_check_count;
 	out.road_river_object_adjacency_candidate_accept_count = road_adjacency.candidate_accept_count;
 	out.road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f =
@@ -3192,6 +3194,7 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"road_river_object_adjacency_path_seed_count_0x4aae7b\":" << state.road_river_object_adjacency_path_seed_count_0x4aae7b << ","
 			<< "\"road_river_object_adjacency_path_seed_relaxed_edge_count\":" << state.road_river_object_adjacency_path_seed_relaxed_edge_count << ","
 			<< "\"road_river_object_adjacency_path_seed_reached_cell_count\":" << state.road_river_object_adjacency_path_seed_reached_cell_count << ","
+			<< "\"road_river_object_adjacency_path_seed_overlay_low_cost_step_count\":" << state.road_river_object_adjacency_path_seed_overlay_low_cost_step_count << ","
 			<< "\"road_river_object_adjacency_candidate_low_word_check_count\":" << state.road_river_object_adjacency_candidate_low_word_check_count << ","
 			<< "\"road_river_object_adjacency_candidate_accept_count\":" << state.road_river_object_adjacency_candidate_accept_count << ","
 			<< "\"road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f\":" << state.road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f << ","

@@ -2412,6 +2412,7 @@ struct RoadPathSeedResult4aae7b {
 	int32_t neighbor_probe_count = 0;
 	int32_t terrain8_or_9_skip_count = 0;
 	int32_t bit25_skip_count = 0;
+	int32_t overlay_low_cost_step_count = 0;
 	int32_t low_word_relax_count = 0;
 	int32_t predecessor_write_count = 0;
 	int32_t reached_cell_count = 0;
@@ -2480,6 +2481,7 @@ struct RoadRiverObjectAdjacencyResult4ab52a {
 	int32_t path_seed_count_0x4aae7b = 0;
 	int32_t path_seed_relaxed_edge_count = 0;
 	int32_t path_seed_reached_cell_count = 0;
+	int32_t path_seed_overlay_low_cost_step_count = 0;
 	int32_t candidate_low_word_check_count = 0;
 	int32_t candidate_accept_count = 0;
 	int32_t road_adapter_attempt_count_0x4ab37f = 0;

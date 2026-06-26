@@ -977,6 +977,7 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t road_river_object_adjacency_path_seed_count_0x4aae7b = 0;
 	int32_t road_river_object_adjacency_path_seed_relaxed_edge_count = 0;
 	int32_t road_river_object_adjacency_path_seed_reached_cell_count = 0;
+	int32_t road_river_object_adjacency_path_seed_overlay_low_cost_step_count = 0;
 	int32_t road_river_object_adjacency_candidate_low_word_check_count = 0;
 	int32_t road_river_object_adjacency_candidate_accept_count = 0;
 	int32_t road_river_object_adjacency_road_adapter_attempt_count_0x4ab37f = 0;
