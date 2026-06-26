@@ -1301,6 +1301,7 @@ struct BoundaryMaterialization4a2777 {
 
 struct RuntimeTerrainSelectionRecord49b53d {
 	int32_t runtime_zone_index = -1;
+	int32_t zone_word_0x4a2777 = -1;
 	int32_t level = 0;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
