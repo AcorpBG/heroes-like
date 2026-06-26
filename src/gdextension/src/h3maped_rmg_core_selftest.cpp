@@ -2454,7 +2454,13 @@ int main() {
 	if (!require(composed.owner_grid.handoffs.size() == seed_inputs.size(), "coordinate-to-owner-grid chain did not materialize one source handoff per zone")) {
 		return 1;
 	}
-	if (!require(composed.owner_grid.materialization.rng_state_before == composed.coordinate_seed.rng_state_after, "owner-grid phase did not consume coordinate seed output RNG state")) {
+	if (!require(composed.terrain_selection_executed, "coordinate-to-owner-grid chain did not execute 0x49b53d before owner-grid materialization")) {
+		return 1;
+	}
+	if (!require(composed.terrain_selection.rng_state_before == composed.coordinate_seed.rng_state_after, "0x49b53d did not consume coordinate seed output RNG state")) {
+		return 1;
+	}
+	if (!require(composed.owner_grid.materialization.rng_state_before == composed.terrain_selection.rng_state_after, "owner-grid phase did not consume post-0x49b53d RNG state")) {
 		return 1;
 	}
 	if (!require(composed.terrain_selection_executed && composed.terrain_repaint_executed, "composed chain did not execute 0x49b53d terrain selection and 0x4a3f27 terrain repaint")) {
