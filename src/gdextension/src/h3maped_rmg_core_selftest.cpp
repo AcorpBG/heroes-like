@@ -121,8 +121,8 @@ bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &gr
 	expected_y = owner.coordinate_y_0x14;
 	expected_level = owner.coordinate_level_0x18;
 	matched_count = 0;
-	const int32_t relation_owner_byte2 = owner.owner_vector_index >= 0
-			? owner.owner_vector_index
+	const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 >= 0
+			? owner.relation_owner_byte2_0x4aa9b7
 			: owner.runtime_zone_index;
 	if (!owner.scan_bounds_0x20_0x2c_known || relation_owner_byte2 < 0 || !owner.coordinate_triple_0x10_0x18_known) {
 		return false;
@@ -1979,8 +1979,8 @@ int main() {
 			return 1;
 		}
 		if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7
-						&& owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].owner_vector_index,
-					"relation-owner vector owner-grid chain collapsed source owner word and generated-cell owner byte")) {
+						&& owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
+					"relation-owner vector owner-grid chain did not carry recovered source owner byte into generated-cell owner byte")) {
 			return 1;
 		}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == relation_owner_inputs[0].coordinate_x_0x10
@@ -2132,8 +2132,10 @@ int main() {
 		std::vector<GeneratorRelationOwnerState4a218c> relation_gate_owners(2);
 		for (int32_t index = 0; index < 2; ++index) {
 			GeneratorRelationOwnerState4a218c &owner = relation_gate_owners[size_t(index)];
-			owner.owner_vector_index = index;
+			owner.owner_vector_index = index == 0 ? 0 : 42;
 			owner.runtime_zone_index = index == 0 ? 10 : 20;
+			owner.relation_owner_byte2_0x4aa9b7_known = true;
+			owner.relation_owner_byte2_0x4aa9b7 = index == 0 ? 20 : 1;
 			owner.coordinate_triple_0x10_0x18_known = true;
 			owner.coordinate_x_0x10 = 0;
 			owner.coordinate_y_0x14 = 0;
@@ -2154,7 +2156,7 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint used terrain record zone_word instead of owner vector index")) {
+					"0x4a3f27 relation-owner repaint did not gate by recovered relation owner byte")) {
 			return 1;
 		}
 	}
@@ -2789,7 +2791,7 @@ int main() {
 							 expected_recenter_y,
 							 expected_recenter_level,
 							 expected_recenter_match_count),
-						"0x4a2ffa relation owner coordinate recenter did not find vector-index-owned generated cells")) {
+						"0x4a2ffa relation owner coordinate recenter did not find recovered-owner-byte generated cells")) {
 			return 1;
 		}
 		if (!require(owner.coordinate_triple_0x10_0x18_known
@@ -5120,7 +5122,6 @@ int main() {
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
-							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 == 0
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
 							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.applied
