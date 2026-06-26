@@ -1118,6 +1118,7 @@ struct GeneratorRelationRecordState4a218c {
 };
 
 struct GeneratorSourceEndpointRecordState4a1f3b {
+	int32_t target_relation_owner_vector_index_0x00 = -1;
 	int32_t source_link_index = -1;
 	int32_t owner_runtime_zone_index = -1;
 	int32_t owner_source_zone_id = -1;
