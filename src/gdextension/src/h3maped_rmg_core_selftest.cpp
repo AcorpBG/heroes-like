@@ -1871,6 +1871,33 @@ int main() {
 			"0x4a2777 boundary traversal must follow descriptor next links, not vector position order")) {
 		return 1;
 	}
+	BoundarySourceCycleHandoff4a2777 relocated_seed_handoff = square_handoff(false);
+	relocated_seed_handoff.source_record_seed_0x10 = SpanRecord { 20, 20, 0 };
+	relocated_seed_handoff.source_nodes = {
+		descriptor_source_node(5, 2, 10, 40, 20, 40, 40),
+		descriptor_source_node(8, 5, 20, 10, 30, 10, 10),
+		descriptor_source_node(5, 8, 30, 20, 40, 20, 20),
+		descriptor_source_node(2, 5, 40, 30, 10, 30, 30),
+	};
+	for (SourceNodeCyclePoint4a2777 &node : relocated_seed_handoff.source_nodes) {
+		node.raw_x_0x00 = 1;
+		node.raw_y_0x04 = 1;
+	}
+	const BoundaryMaterialization4a2777 relocated_seed = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+			10,
+			10,
+			1,
+			1,
+			2,
+			1234U,
+			{ relocated_seed_handoff });
+	if (!require(!relocated_seed.zones.empty()
+					&& relocated_seed.zones[0].span_seed_relocated_4a325d
+					&& relocated_seed.zones[0].effective_span_seed_4a325d.x == 9
+					&& relocated_seed.zones[0].effective_span_seed_4a325d.y < 9,
+				"0x4a325d out-of-bounds seed relocation must scan appended 0x4a2777 boundary vector points, not source-pair raw coordinates")) {
+		return 1;
+	}
 	BoundarySourceCycleHandoff4a2777 missing_seed = square_handoff(false);
 	missing_seed.has_source_record_seed_0x10 = false;
 	const BoundaryMaterialization4a2777 missing_seed_result = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(

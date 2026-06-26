@@ -19920,57 +19920,19 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			int32_t best_x = -1;
 			int32_t best_y = -1;
 			int32_t best_clearance = -1;
-			const int32_t node_count = int32_t(zone.finalized_points.size());
-			if (zone.selected_segment_index >= 0 && zone.selected_segment_index < node_count) {
-				std::map<int32_t, int32_t> source_position_by_model_node;
-				for (int32_t position = 0; position < node_count; ++position) {
-					const int32_t model_node_index = zone.finalized_points[size_t(position)].model_node_index;
-					if (model_node_index >= 0) {
-						source_position_by_model_node[model_node_index] = position;
-					}
+			for (const BoundaryVectorRecord4a2777 &vertex : zone.appended_vertices) {
+				const int32_t x = vertex.x;
+				const int32_t y = vertex.y;
+				if (x < 1 || x >= width - 1 || y < 1 || y >= height - 1) {
+					continue;
 				}
-				auto source_position_for_model_node = [&](int32_t model_node_index) {
-					const auto found = source_position_by_model_node.find(model_node_index);
-					if (found == source_position_by_model_node.end()) {
-						return -1;
-					}
-					return found->second;
-				};
-				auto next_source_node_index_4a325d = [&](int32_t index) {
-					if (index < 0 || index >= node_count) {
-						return -1;
-					}
-					const int32_t linked_position = source_position_for_model_node(zone.finalized_points[size_t(index)].next_index);
-					if (linked_position >= 0 && linked_position != index) {
-						return linked_position;
-					}
-					return (index + 1) % node_count;
-				};
-				const int32_t start_index = zone.selected_segment_index;
-				int32_t cursor_index = next_source_node_index_4a325d(start_index);
-				for (int32_t guard = 0; guard < node_count && cursor_index >= 0 && cursor_index < node_count; ++guard) {
-					const BoundaryCyclePoint4a2777 &cursor = zone.finalized_points[size_t(cursor_index)];
-					const int32_t pair_position = source_position_for_model_node(cursor.pair_index);
-					if (pair_position >= 0 && pair_position < node_count) {
-						const BoundaryCyclePoint4a2777 &pair = zone.finalized_points[size_t(pair_position)];
-						const int32_t pair_x = pair.raw_x_0x00;
-						const int32_t pair_y = pair.raw_y_0x04;
-						const bool interior = pair_x >= 1 && pair_x < width - 1 && pair_y >= 1 && pair_y < height - 1;
-						if (interior) {
-							const int32_t x_clearance = std::min<int32_t>(pair_x, width - pair_x - 1);
-							const int32_t y_clearance = std::min<int32_t>(pair_y, height - pair_y - 1);
-							const int32_t clearance = std::min<int32_t>(x_clearance, y_clearance);
-							if (clearance > best_clearance) {
-								best_clearance = clearance;
-								best_x = pair_x;
-								best_y = pair_y;
-							}
-						}
-					}
-					cursor_index = next_source_node_index_4a325d(cursor_index);
-					if (cursor_index == start_index) {
-						break;
-					}
+				const int32_t x_clearance = std::min<int32_t>(x, width - x - 1);
+				const int32_t y_clearance = std::min<int32_t>(y, height - y - 1);
+				const int32_t clearance = std::min<int32_t>(x_clearance, y_clearance);
+				if (clearance > best_clearance) {
+					best_clearance = clearance;
+					best_x = x;
+					best_y = y;
 				}
 			}
 			if (best_x >= 0 && best_y >= 0) {
