@@ -1167,6 +1167,12 @@ struct GeneratorRelationOwnerState4a218c {
 	uint16_t source_pointer_allowed_monster_town_mask_0x95 = 0U;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
+	bool monster_town_choice_0x08_known = false;
+	int32_t monster_town_choice_0x08 = -1;
+	bool monster_town_choice_rng_0x49b4e1_known = false;
+	int32_t monster_town_choice_rng_value_0x49b4e1 = -1;
+	int32_t monster_town_choice_rng_modulus_0x49b4e1 = 0;
+	int32_t monster_town_choice_selected_ordinal_0x49b4e1 = -1;
 	bool source_owner_slot_0x1c_known = false;
 	int32_t source_owner_slot_0x1c = -1;
 	bool source_order_source_record_0x00_known = false;
@@ -1426,6 +1432,12 @@ struct RuntimeTerrainSelectionRecord49b53d {
 	int32_t rng_modulus = 0;
 	int32_t selected_allowed_ordinal = -1;
 	bool forced_subterranean_0x49b5c3 = false;
+	bool monster_town_choice_0x08_known = false;
+	int32_t monster_town_choice_0x08 = -1;
+	int32_t monster_town_choice_rng_value_0x49b4e1 = -1;
+	int32_t monster_town_choice_rng_modulus_0x49b4e1 = 0;
+	int32_t monster_town_choice_selected_ordinal_0x49b4e1 = -1;
+	std::string monster_town_choice_source_0x49b4e1;
 };
 
 struct RuntimeTerrainSelectionResult49b53d {
@@ -1436,6 +1448,8 @@ struct RuntimeTerrainSelectionResult49b53d {
 	int32_t allowed_flag_choice_count = 0;
 	int32_t no_eligible_default_zero_count = 0;
 	int32_t forced_subterranean_count = 0;
+	int32_t monster_town_rng_call_count_0x49b4e1 = 0;
+	int32_t total_rng_call_count_0x49b53d_0x49b4e1 = 0;
 	std::vector<RuntimeTerrainSelectionRecord49b53d> records;
 };
 

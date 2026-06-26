@@ -480,6 +480,12 @@ struct SharedGeneratorRelationOwnerState {
 	int32_t source_pointer_type_0x04 = 0;
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
+	bool monster_town_choice_0x08_known = false;
+	int32_t monster_town_choice_0x08 = -1;
+	bool monster_town_choice_rng_0x49b4e1_known = false;
+	int32_t monster_town_choice_rng_value_0x49b4e1 = -1;
+	int32_t monster_town_choice_rng_modulus_0x49b4e1 = 0;
+	int32_t monster_town_choice_selected_ordinal_0x49b4e1 = -1;
 	bool source_owner_slot_0x1c_known = false;
 	int32_t source_owner_slot_0x1c = -1;
 	bool coordinate_triple_0x10_0x18_known = false;
@@ -1141,6 +1147,8 @@ struct RecoveredOwnerGridPayload {
 	int32_t coordinate_prune_span_budget_4a218c = 0;
 	int32_t town_choice_rng_call_count_0x49b3c1 = 0;
 	int32_t terrain_selection_rng_call_count_0x49b53d = 0;
+	int32_t terrain_selection_monster_town_rng_call_count_0x49b4e1 = 0;
+	int32_t terrain_selection_total_rng_call_count_0x49b53d_0x49b4e1 = 0;
 	int32_t terrain_selection_match_to_town_count = 0;
 	int32_t terrain_selection_allowed_flag_choice_count = 0;
 	int32_t terrain_selection_no_eligible_default_zero_count = 0;
