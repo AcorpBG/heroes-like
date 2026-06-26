@@ -315,7 +315,7 @@ Options parse_options(int argc, char **argv) {
 			std::string raw;
 			take_value(raw);
 			std::vector<int32_t> fields;
-			if (parse_i32_csv(raw, 12, fields) || parse_i32_csv(raw, 11, fields) || parse_i32_csv(raw, 8, fields) || parse_i32_csv(raw, 7, fields)) {
+			if (parse_i32_csv(raw, 13, fields) || parse_i32_csv(raw, 12, fields) || parse_i32_csv(raw, 11, fields) || parse_i32_csv(raw, 8, fields) || parse_i32_csv(raw, 7, fields)) {
 				SharedRuntimeZoneSeedInput input;
 				input.runtime_zone_index = fields[0];
 				input.source_zone_id = fields[1];
@@ -335,6 +335,9 @@ Options parse_options(int argc, char **argv) {
 				}
 				if (fields.size() >= 12) {
 					input.source_owner_index = fields[11];
+				}
+				if (fields.size() >= 13) {
+					input.fixed_player_town_choice_index_0xf24 = fields[12];
 				}
 				options.shared_runtime_chain_input.runtime_zone_seeds.push_back(input);
 			}

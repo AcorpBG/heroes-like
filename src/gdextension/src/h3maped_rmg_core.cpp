@@ -299,6 +299,7 @@ struct CoordinateZone4a218c {
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
 	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	int32_t fixed_player_town_choice_index_0xf24 = -1;
 	SourceZonePayload4a218c source_payload;
 	int32_t x = 0;
 	int32_t y = 0;
@@ -1093,6 +1094,7 @@ RuntimeZoneSeedInput4a218c runtime_seed_from_coordinate_zone_after_49b3c1(const 
 	seed.selected_town_choice_index_0x49b3c1 = zone.selected_town_choice_index_0x49b3c1;
 	seed.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
 	seed.allowed_terrain_mask_0x85_0x8c = zone.allowed_terrain_mask_0x85_0x8c;
+	seed.fixed_player_town_choice_index_0xf24 = zone.fixed_player_town_choice_index_0xf24;
 	seed.source_payload = zone.source_payload;
 	return seed;
 }
@@ -13013,6 +13015,7 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 		seed.selected_town_choice_index_0x49b3c1 = -1;
 		seed.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
 		seed.allowed_terrain_mask_0x85_0x8c = zone.allowed_terrain_mask_0x85_0x8c;
+		seed.fixed_player_town_choice_index_0xf24 = -1;
 		seed.source_payload = zone.source_payload;
 		runtime_index_by_source_zone.push_back(SourceRuntimeIndex { zone.source_zone_id, seed.runtime_zone_index });
 		result.runtime_zone_seeds.push_back(seed);
@@ -13096,6 +13099,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
 		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
 		zone.allowed_terrain_mask_0x85_0x8c = input.allowed_terrain_mask_0x85_0x8c;
+		zone.fixed_player_town_choice_index_0xf24 = input.fixed_player_town_choice_index_0xf24;
 		zone.source_payload = input.source_payload;
 		zone.scaled_size = input.source_base_size;
 		zones.push_back(zone);
@@ -13149,6 +13153,16 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		owner.source_zone_id = zone.source_zone_id;
 		owner.source_index = zone.source_index;
 		apply_relation_owner_constructor_0x49b452(owner, seed_before_town_choice, &seed_after_town_choice);
+		const int32_t required_player_town_count =
+				zone.source_payload.player_towns.min_towns
+				+ zone.source_payload.player_towns.min_castles;
+		if (required_player_town_count > 0
+				&& zone.source_owner_index >= 0
+				&& zone.actual_player_color >= 0
+				&& zone.fixed_player_town_choice_index_0xf24 != -1) {
+			owner.town_choice_0x04_known = true;
+			owner.town_choice_0x04 = zone.fixed_player_town_choice_index_0xf24;
+		}
 		append_source_endpoint_records_for_owner(owner);
 		return owner;
 	};
@@ -13332,6 +13346,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 			input.selected_town_choice_index_0x49b3c1 = zone.selected_town_choice_index_0x49b3c1;
 			input.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
 			input.allowed_terrain_mask_0x85_0x8c = zone.allowed_terrain_mask_0x85_0x8c;
+			input.fixed_player_town_choice_index_0xf24 = zone.fixed_player_town_choice_index_0xf24;
 			result.boundary_inputs.push_back(input);
 			result.runtime_zone_records_after_0x49b3c1.push_back(runtime_seed_from_coordinate_zone_after_49b3c1(zone, zone_position));
 		}

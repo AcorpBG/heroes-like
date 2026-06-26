@@ -251,6 +251,7 @@ struct SharedRuntimeZoneSeedInput {
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
 	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	int32_t fixed_player_town_choice_index_0xf24 = -1;
 	SharedSourceZonePayload source_payload;
 };
 
