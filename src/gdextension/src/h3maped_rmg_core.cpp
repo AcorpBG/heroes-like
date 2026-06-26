@@ -13450,22 +13450,34 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		}
 	}
 
+	auto source_base_size_for_relation_owner = [&](const GeneratorRelationOwnerState4a218c &owner) {
+		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
+		if (zone_position >= 0) {
+			return zones[size_t(zone_position)].source_base_size;
+		}
+		return 0;
+	};
+
 	int32_t min_y = 0;
 	int32_t min_x = 0;
 	int32_t max_y = 0;
 	int32_t max_x = 0;
-	for (const CoordinateZone4a218c &zone : zones) {
-		min_y = std::min(zone.y - zone.source_base_size, min_y);
-		min_x = std::min(zone.x - zone.source_base_size, min_x);
-		max_y = std::max(zone.y + zone.source_base_size + 1, max_y);
-		max_x = std::max(zone.x + zone.source_base_size + 1, max_x);
+	for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+		if (!owner.coordinate_triple_0x10_0x18_known) {
+			continue;
+		}
+		const int32_t source_base_size = source_base_size_for_relation_owner(owner);
+		min_y = std::min(wrap_i32(int64_t(owner.coordinate_y_0x14) - int64_t(source_base_size)), min_y);
+		min_x = std::min(wrap_i32(int64_t(owner.coordinate_x_0x10) - int64_t(source_base_size)), min_x);
+		max_y = std::max(wrap_i32(int64_t(owner.coordinate_y_0x14) + int64_t(source_base_size) + 1), max_y);
+		max_x = std::max(wrap_i32(int64_t(owner.coordinate_x_0x10) + int64_t(source_base_size) + 1), max_x);
 	}
-	const int32_t bbox_height = max_y - min_y;
-	const int32_t bbox_width = max_x - min_x;
+	const int32_t bbox_height = wrap_i32(int64_t(max_y) - int64_t(min_y));
+	const int32_t bbox_width = wrap_i32(int64_t(max_x) - int64_t(min_x));
 	const int32_t bbox_span = std::max(bbox_height, bbox_width);
 	const int32_t map_span = std::max(width, height);
-	const int32_t offset_y = (min_y - bbox_span + max_y) / 2;
-	const int32_t offset_x = (min_x - bbox_span + max_x) / 2;
+	const int32_t offset_y = signed_half_round_4a2413(wrap_i32(int64_t(min_y) - int64_t(bbox_span) + int64_t(max_y)));
+	const int32_t offset_x = signed_half_round_4a2413(wrap_i32(int64_t(min_x) - int64_t(bbox_span) + int64_t(max_x)));
 	result.min_y_before_rescale = min_y;
 	result.min_x_before_rescale = min_x;
 	result.max_y_before_rescale = max_y;
@@ -13475,40 +13487,51 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 	result.offset_y = offset_y;
 	result.offset_x = offset_x;
 
-		result.boundary_inputs.reserve(zones.size());
-		for (int32_t zone_position = 0; zone_position < int32_t(zones.size()); ++zone_position) {
-			CoordinateZone4a218c &zone = zones[size_t(zone_position)];
-		if (bbox_span > 0) {
-			zone.x = ((zone.x - offset_x) * map_span) / bbox_span;
-			zone.y = ((zone.y - offset_y) * map_span) / bbox_span;
-			zone.scaled_size = (zone.source_base_size * map_span) / bbox_span;
-		} else {
-			zone.scaled_size = zone.source_base_size;
+	for (GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
+		if (zone_position < 0) {
+			continue;
 		}
+		CoordinateZone4a218c &zone = zones[size_t(zone_position)];
+		const int32_t source_base_size = source_base_size_for_relation_owner(owner);
+		if (bbox_span > 0) {
+			zone.x = idiv_i32(imul_low_i32(wrap_i32(int64_t(owner.coordinate_x_0x10) - int64_t(offset_x)), map_span), bbox_span);
+			zone.y = idiv_i32(imul_low_i32(wrap_i32(int64_t(owner.coordinate_y_0x14) - int64_t(offset_y)), map_span), bbox_span);
+			zone.scaled_size = idiv_i32(imul_low_i32(source_base_size, map_span), bbox_span);
+		} else {
+			zone.x = owner.coordinate_x_0x10;
+			zone.y = owner.coordinate_y_0x14;
+			zone.scaled_size = source_base_size;
+		}
+	}
+
+	result.boundary_inputs.reserve(zones.size());
+	for (int32_t zone_position = 0; zone_position < int32_t(zones.size()); ++zone_position) {
+		CoordinateZone4a218c &zone = zones[size_t(zone_position)];
 		RuntimeZoneBoundaryInput4a3a03 input;
 		input.footprint.runtime_zone_index = runtime_index_for_coordinate_zone(zone, zone_position);
 		input.footprint.source_zone_id = zone.source_zone_id;
 		input.footprint.source_payload_0x08 = source_node_payload_surrogate_for_coordinate_zone(zone, zone_position);
 		input.footprint.source_payload_owner_word_0x00 = source_node_payload_owner_word_for_coordinate_zone(zone, zone_position);
-			input.footprint.x_after_bbox_rescale = zone.x;
-			input.footprint.y_after_bbox_rescale = zone.y;
-			input.footprint.level = zone.level;
-			input.zone_word = zone_word_for_coordinate_zone(zone, zone_position);
-			input.generated_cell_owner_byte2 = generated_cell_owner_byte2_for_coordinate_zone(zone, zone_position);
-			input.boundary_pass_index_0x0c = 0;
-			input.random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
-			input.footprint.source_payload_random_span_limit_0x1c = input.random_span_limit;
-			input.source_record_vector_index_4a3e9c = zone.source_index >= 0 ? zone.source_index : zone_position;
-			input.has_source_record_seed_0x10 = true;
-			input.source_record_seed_0x10 = SpanRecord { zone.x, zone.y, zone.level };
-			input.allowed_town_mask_0x41_0x49 = zone.allowed_town_mask_0x41_0x49;
-			input.selected_town_choice_index_0x49b3c1 = zone.selected_town_choice_index_0x49b3c1;
-			input.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
-			input.allowed_terrain_mask_0x85_0x8c = zone.allowed_terrain_mask_0x85_0x8c;
-			input.fixed_player_town_choice_index_0xf24 = zone.fixed_player_town_choice_index_0xf24;
-			result.boundary_inputs.push_back(input);
-			result.runtime_zone_records_after_0x49b3c1.push_back(runtime_seed_from_coordinate_zone_after_49b3c1(zone, zone_position));
-		}
+		input.footprint.x_after_bbox_rescale = zone.x;
+		input.footprint.y_after_bbox_rescale = zone.y;
+		input.footprint.level = zone.level;
+		input.zone_word = zone_word_for_coordinate_zone(zone, zone_position);
+		input.generated_cell_owner_byte2 = generated_cell_owner_byte2_for_coordinate_zone(zone, zone_position);
+		input.boundary_pass_index_0x0c = 0;
+		input.random_span_limit = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
+		input.footprint.source_payload_random_span_limit_0x1c = input.random_span_limit;
+		input.source_record_vector_index_4a3e9c = zone.source_index >= 0 ? zone.source_index : zone_position;
+		input.has_source_record_seed_0x10 = true;
+		input.source_record_seed_0x10 = SpanRecord { zone.x, zone.y, zone.level };
+		input.allowed_town_mask_0x41_0x49 = zone.allowed_town_mask_0x41_0x49;
+		input.selected_town_choice_index_0x49b3c1 = zone.selected_town_choice_index_0x49b3c1;
+		input.terrain_match_to_town_0x84 = zone.terrain_match_to_town_0x84;
+		input.allowed_terrain_mask_0x85_0x8c = zone.allowed_terrain_mask_0x85_0x8c;
+		input.fixed_player_town_choice_index_0xf24 = zone.fixed_player_town_choice_index_0xf24;
+		result.boundary_inputs.push_back(input);
+		result.runtime_zone_records_after_0x49b3c1.push_back(runtime_seed_from_coordinate_zone_after_49b3c1(zone, zone_position));
+	}
 	for (int32_t owner_position = 0; owner_position < int32_t(relation_owners.size()); ++owner_position) {
 		GeneratorRelationOwnerState4a218c &owner = relation_owners[size_t(owner_position)];
 		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
