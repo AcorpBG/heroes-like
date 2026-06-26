@@ -45,6 +45,7 @@ using aurelion::h3maped_rmg_core::RewardGuardProjectionChainResult49c0a6;
 using aurelion::h3maped_rmg_core::RuntimeZoneBoundaryInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeZoneFootprintInput4a3a03;
 using aurelion::h3maped_rmg_core::RuntimeLinkSeedInput4a218c;
+using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionRecord49b53d;
 using aurelion::h3maped_rmg_core::RuntimeTerrainSelectionResult49b53d;
 using aurelion::h3maped_rmg_core::RuntimeZoneSeedInput4a218c;
 using aurelion::h3maped_rmg_core::RuntimeSeedBuildResult4a218c;
@@ -120,8 +121,8 @@ bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &gr
 	expected_y = owner.coordinate_y_0x14;
 	expected_level = owner.coordinate_level_0x18;
 	matched_count = 0;
-	const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7_known
-			? owner.relation_owner_byte2_0x4aa9b7
+	const int32_t relation_owner_byte2 = owner.owner_vector_index >= 0
+			? owner.owner_vector_index
 			: owner.runtime_zone_index;
 	if (!owner.scan_bounds_0x20_0x2c_known || relation_owner_byte2 < 0 || !owner.coordinate_triple_0x10_0x18_known) {
 		return false;
@@ -1855,10 +1856,10 @@ int main() {
 		owner.runtime_zone_index = index;
 		owner.source_zone_id = runtime_zones[size_t(index)].source_zone_id;
 		owner.source_index = index;
-		owner.source_pointer_0x00_known = true;
-		owner.source_pointer_source_index_0x00 = index;
-		owner.relation_owner_byte2_0x4aa9b7_known = true;
-		owner.relation_owner_byte2_0x4aa9b7 = index;
+			owner.source_pointer_0x00_known = true;
+			owner.source_pointer_source_index_0x00 = index;
+			owner.relation_owner_byte2_0x4aa9b7_known = true;
+			owner.relation_owner_byte2_0x4aa9b7 = index + 20;
 		owner.coordinate_triple_0x10_0x18_known = true;
 		owner.coordinate_x_0x10 = runtime_zones[size_t(index)].x_after_bbox_rescale;
 		owner.coordinate_y_0x14 = runtime_zones[size_t(index)].y_after_bbox_rescale;
@@ -1886,10 +1887,15 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve payload +0x1c span")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_vector_index_4a3e9c == relation_owner_inputs[0].owner_vector_index,
-				"relation-owner vector owner-grid chain did not pass the owner vector index into the handoff")) {
-		return 1;
-	}
+		if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_vector_index_4a3e9c == relation_owner_inputs[0].owner_vector_index,
+					"relation-owner vector owner-grid chain did not pass the owner vector index into the handoff")) {
+			return 1;
+		}
+		if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7
+						&& owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].owner_vector_index,
+					"relation-owner vector owner-grid chain collapsed source owner word and generated-cell owner byte")) {
+			return 1;
+		}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == relation_owner_inputs[0].coordinate_x_0x10
 					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == relation_owner_inputs[0].coordinate_y_0x14,
 				"relation-owner vector owner-grid chain did not use the owner coordinate triple as the span seed")) {
@@ -2004,6 +2010,54 @@ int main() {
 	}
 	if (!require(terrain_repaint.terrain_visual_rng_state_after_0x4bb74b != terrain_repaint.terrain_visual_rng_state_before_0x4bb74b, "TerrainPlacement visual selector did not consume RNG")) {
 		return 1;
+	}
+	{
+		BoundaryMaterialization4a2777 relation_gate_materialization;
+		relation_gate_materialization.generated_cell_word_0x20.assign(4, 0U);
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
+		relation_gate_materialization.cell_flags.assign(4, 0U);
+		relation_gate_materialization.cell_flags[0] = 0x10U;
+		RuntimeTerrainSelectionResult49b53d relation_gate_selection;
+		relation_gate_selection.rng_state_after = 1234U;
+		RuntimeTerrainSelectionRecord49b53d stale_zone_word_record;
+		stale_zone_word_record.runtime_zone_index = 10;
+		stale_zone_word_record.zone_word_0x4a2777 = 1;
+		stale_zone_word_record.level = 0;
+		stale_zone_word_record.selected_terrain_id_0x49b53d = 4;
+		RuntimeTerrainSelectionRecord49b53d owner_index_record;
+		owner_index_record.runtime_zone_index = 20;
+		owner_index_record.zone_word_0x4a2777 = 99;
+		owner_index_record.level = 0;
+		owner_index_record.selected_terrain_id_0x49b53d = 2;
+		relation_gate_selection.records = { stale_zone_word_record, owner_index_record };
+		std::vector<GeneratorRelationOwnerState4a218c> relation_gate_owners(2);
+		for (int32_t index = 0; index < 2; ++index) {
+			GeneratorRelationOwnerState4a218c &owner = relation_gate_owners[size_t(index)];
+			owner.owner_vector_index = index;
+			owner.runtime_zone_index = index == 0 ? 10 : 20;
+			owner.coordinate_triple_0x10_0x18_known = true;
+			owner.coordinate_x_0x10 = 0;
+			owner.coordinate_y_0x14 = 0;
+			owner.coordinate_level_0x18 = 0;
+			owner.terrain_policy_0x0c_known = true;
+			owner.terrain_policy_0x0c = index == 0 ? 4 : 2;
+		}
+		const TerrainRepaintResult4a3f27 relation_gate_repaint =
+				aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
+						2,
+						2,
+						1,
+						relation_gate_materialization,
+						relation_gate_selection,
+						&relation_gate_owners);
+		if (!require(relation_gate_repaint.executed && !relation_gate_repaint.terrain_code.empty(),
+					"relation-owner terrain repaint gate did not execute")) {
+			return 1;
+		}
+		if (!require(relation_gate_repaint.terrain_code[0] == 2,
+					"0x4a3f27 relation-owner repaint used terrain record zone_word instead of owner vector index")) {
+			return 1;
+		}
 	}
 
 	const auto player_assignment = aurelion::h3maped_rmg_core::player_slot_assignment_4ac62a_4ac6ec(
@@ -2636,7 +2690,7 @@ int main() {
 							 expected_recenter_y,
 							 expected_recenter_level,
 							 expected_recenter_match_count),
-					"0x4a2ffa relation owner coordinate recenter did not find source-owned generated cells")) {
+						"0x4a2ffa relation owner coordinate recenter did not find vector-index-owned generated cells")) {
 			return 1;
 		}
 		if (!require(owner.coordinate_triple_0x10_0x18_known
