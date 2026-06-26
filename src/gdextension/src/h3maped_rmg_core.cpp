@@ -2331,13 +2331,13 @@ uint32_t generated_cell_zone_word_4a325d(uint32_t existing_word, int32_t zone_id
 	return (existing_word & 0xff00ffffU) | (uint32_t(zone_id & 0xff) << 16U);
 }
 
-void generated_cell_apply_owner_word_4a2777(std::vector<uint32_t> &private_zone_words, std::vector<uint32_t> &generated_cell_word_0x20, int64_t key, int32_t zone_id) {
+void generated_cell_apply_owner_word_4a2777(std::vector<uint32_t> &private_zone_words, std::vector<uint32_t> &generated_cell_word_0x20, int64_t key, int32_t private_zone_id, int32_t generated_cell_owner_byte2) {
 	if (key < 0 || key >= int64_t(private_zone_words.size())) {
 		return;
 	}
-	private_zone_words[size_t(key)] = generated_cell_zone_word_4a325d(private_zone_words[size_t(key)], zone_id);
+	private_zone_words[size_t(key)] = generated_cell_zone_word_4a325d(private_zone_words[size_t(key)], private_zone_id);
 	if (key < int64_t(generated_cell_word_0x20.size())) {
-		generated_cell_word_0x20[size_t(key)] = generated_cell_zone_word_4a325d(generated_cell_word_0x20[size_t(key)], zone_id);
+		generated_cell_word_0x20[size_t(key)] = generated_cell_zone_word_4a325d(generated_cell_word_0x20[size_t(key)], generated_cell_owner_byte2);
 	}
 }
 
@@ -19199,7 +19199,7 @@ BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, in
 	return result;
 }
 
-void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count) {
+void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generated_cell_owner_byte2) {
 	for (const BoundaryLineCellWrite &write : line.trace) {
 		if (write.x < 0 || write.y < 0 || write.level < 0 || write.x >= width || write.y >= height || write.level >= level_count) {
 			continue;
@@ -19208,7 +19208,7 @@ void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line,
 		if (key < 0 || key >= int64_t(zone_words.size()) || key >= int64_t(cell_flags.size())) {
 			continue;
 		}
-		generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, write.zone_id);
+		generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, write.zone_id, generated_cell_owner_byte2);
 		if (write.reserved) {
 			cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 		}
@@ -19262,7 +19262,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					y1,
 					x2,
 					y2,
-					generated_cell_owner_byte2,
+					zone_word,
 					level,
 					std::max<int32_t>(1, random_span_limit),
 					rng,
@@ -19271,11 +19271,11 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					result.randomized_max_pending_point_count);
 			result.flagged_writer_segment_count += 1;
 		} else {
-			line = boundary_line_writer_4a261a(width, height, level_count, water_mode_code, x1, y1, x2, y2, generated_cell_owner_byte2, level);
+			line = boundary_line_writer_4a261a(width, height, level_count, water_mode_code, x1, y1, x2, y2, zone_word, level);
 			result.deterministic_writer_segment_count += 1;
 		}
 		merge_boundary_line_4a2777(line, unique_cells, result);
-		apply_line_trace_to_zone_buffer_4a2777(line, result.private_zone_words, result.generated_cell_word_0x20, result.cell_flags, width, height, level_count);
+		apply_line_trace_to_zone_buffer_4a2777(line, result.private_zone_words, result.generated_cell_word_0x20, result.cell_flags, width, height, level_count, generated_cell_owner_byte2);
 
 		BoundarySegment4a2777 segment;
 		segment.id = id;
@@ -19589,7 +19589,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.span_fill_seed_blocked_count += 1;
 			continue;
 		}
-		if (!generated_cell_owner_unassigned_4a325d(result.generated_cell_word_0x20, width, height, seed.x, seed.y, seed.level)) {
+		if (!private_zone_word_unassigned_4a325d(result.private_zone_words, width, height, seed.x, seed.y, seed.level)) {
 			result.span_fill_seed_blocked_count += 1;
 		}
 		SpanFillResult fill = span_fill_4a325d(
@@ -19600,6 +19600,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				height,
 				level_count,
 				water_mode_code,
+				zone.zone_word,
 				zone.generated_cell_owner_byte2 >= 0 ? zone.generated_cell_owner_byte2 : zone.zone_word,
 				seed);
 		for (const auto &item : fill.unique_cells) {
@@ -19651,7 +19652,7 @@ BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d
 	return result;
 }
 
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t zone_id, const SpanRecord &seed) {
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
 	SpanFillResult result;
 	std::vector<SpanRecord> pending;
 	push_span_4a325d(pending, seed, result);
@@ -19664,7 +19665,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 			continue;
 		}
 		int32_t x = coord.x;
-		while (x > 0 && generated_cell_owner_unassigned_4a325d(generated_cell_word_0x20, width, height, x - 1, coord.y, coord.level)) {
+		while (x > 0 && private_zone_word_unassigned_4a325d(zone_words, width, height, x - 1, coord.y, coord.level)) {
 			x -= 1;
 		}
 		bool wrote_row = false;
@@ -19673,14 +19674,14 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 		SpanRecord above_seed;
 		SpanRecord below_seed;
 		for (; x < width; ++x) {
-			if (!generated_cell_owner_unassigned_4a325d(generated_cell_word_0x20, width, height, x, coord.y, coord.level)) {
+			if (!private_zone_word_unassigned_4a325d(zone_words, width, height, x, coord.y, coord.level)) {
 				break;
 			}
 			const int64_t key = generated_cell_flat_key_4a325d(width, height, x, coord.y, coord.level);
 			if (key < 0 || key >= int64_t(zone_words.size()) || key >= int64_t(cell_flags.size())) {
 				continue;
 			}
-			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, zone_id);
+			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, private_zone_id, generated_cell_owner_byte2);
 			const bool reserved = !(water_mode_code == 2 && coord.level != 1);
 			if (reserved) {
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
@@ -19689,12 +19690,12 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 			write.x = x;
 			write.y = coord.y;
 			write.level = coord.level;
-			write.zone_id = zone_id;
+			write.zone_id = private_zone_id;
 			write.reserved = reserved;
 			result.trace.push_back(write);
 			result.unique_cells[key] = true;
 			wrote_row = true;
-			if (coord.y > 0 && generated_cell_owner_unassigned_4a325d(generated_cell_word_0x20, width, height, x, coord.y - 1, coord.level)) {
+			if (coord.y > 0 && private_zone_word_unassigned_4a325d(zone_words, width, height, x, coord.y - 1, coord.level)) {
 				if (!above_run_open) {
 					above_seed = SpanRecord { x, coord.y - 1, coord.level };
 					above_run_open = true;
@@ -19703,7 +19704,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 				push_span_4a325d(pending, above_seed, result);
 				above_run_open = false;
 			}
-			if (coord.y < height - 1 && generated_cell_owner_unassigned_4a325d(generated_cell_word_0x20, width, height, x, coord.y + 1, coord.level)) {
+			if (coord.y < height - 1 && private_zone_word_unassigned_4a325d(zone_words, width, height, x, coord.y + 1, coord.level)) {
 				if (!below_run_open) {
 					below_seed = SpanRecord { x, coord.y + 1, coord.level };
 					below_run_open = true;
