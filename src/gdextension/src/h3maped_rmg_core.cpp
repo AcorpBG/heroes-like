@@ -509,9 +509,8 @@ int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218
 	return zone_word_for_coordinate_zone(zone, fallback);
 }
 
-int32_t source_node_payload_surrogate_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
-	const int32_t source_order = zone.source_index >= 0 ? zone.source_index + 1 : fallback + 1;
-	return source_order > 0 ? source_order : fallback + 1;
+int32_t source_node_payload_for_coordinate_zone(const CoordinateZone4a218c &zone) {
+	return zone.source_index >= 0 ? zone.source_index + 1 : -1;
 }
 
 int32_t source_node_payload_owner_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
@@ -13513,7 +13512,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		RuntimeZoneBoundaryInput4a3a03 input;
 		input.footprint.runtime_zone_index = runtime_index_for_coordinate_zone(zone, zone_position);
 		input.footprint.source_zone_id = zone.source_zone_id;
-		input.footprint.source_payload_0x08 = source_node_payload_surrogate_for_coordinate_zone(zone, zone_position);
+		input.footprint.source_payload_0x08 = source_node_payload_for_coordinate_zone(zone);
 		input.footprint.source_payload_owner_word_0x00 = source_node_payload_owner_word_for_coordinate_zone(zone, zone_position);
 		input.footprint.x_after_bbox_rescale = zone.x;
 		input.footprint.y_after_bbox_rescale = zone.y;
@@ -14213,9 +14212,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 			continue;
 		}
 		const int32_t zone_index = runtime.runtime_zone_index >= 0 ? runtime.runtime_zone_index : runtime_index;
-		const int32_t source_payload = runtime.source_payload_0x08 > 0
-				? runtime.source_payload_0x08
-				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id + 1 : zone_index + 1);
+		const int32_t source_payload = runtime.source_payload_0x08 > 0 ? runtime.source_payload_0x08 : 0;
 		const int32_t source_payload_owner_word_0x00 = runtime.source_payload_owner_word_0x00 > 0
 				? runtime.source_payload_owner_word_0x00
 				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id : zone_index);
@@ -14548,17 +14545,14 @@ static const GeneratorRelationOwnerState4a218c *relation_owner_for_source_walk_4
 	return nullptr;
 }
 
-static int32_t relation_owner_payload_surrogate_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
+static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a218c &owner) {
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
 		return owner.source_pointer_source_index_0x00 + 1;
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index + 1;
 	}
-	if (owner.owner_vector_index >= 0) {
-		return owner.owner_vector_index + 1;
-	}
-	return fallback + 1;
+	return -1;
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
@@ -14620,7 +14614,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		footprint.x_after_bbox_rescale = owner.coordinate_x_0x10;
 		footprint.y_after_bbox_rescale = owner.coordinate_y_0x14;
 		footprint.level = owner.coordinate_level_0x18;
-		footprint.source_payload_0x08 = relation_owner_payload_surrogate_4a3a03(owner, owner_index);
+		footprint.source_payload_0x08 = relation_owner_payload_4a3a03(owner);
 		footprint.source_payload_owner_word_0x00 = payload_owner_word_0x00 >= 0
 				? payload_owner_word_0x00
 				: (matched_input != nullptr ? matched_input->footprint.source_payload_owner_word_0x00 : owner_index);
