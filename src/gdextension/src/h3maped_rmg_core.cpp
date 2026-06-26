@@ -1648,12 +1648,11 @@ static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0
 	const int32_t bit_index = 47 - (8 * y) - x;
 	const bool def_msk_primary_bit =
 			(record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
+	if (record.descriptor_mask_fields_0x34_0x48_known) {
+		return def_msk_primary_bit;
+	}
 	if (record.passability_mask.size() >= 48U) {
-		const bool parsed_text_primary_bit = source_object_text_mask_bit_0x490f3f(record.passability_mask, x, y);
-		if (record.descriptor_mask_fields_0x34_0x48_known) {
-			return parsed_text_primary_bit || !def_msk_primary_bit;
-		}
-		return parsed_text_primary_bit;
+		return source_object_text_mask_bit_0x490f3f(record.passability_mask, x, y);
 	}
 	return def_msk_primary_bit;
 }
@@ -1662,11 +1661,16 @@ static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
+	const int32_t bit_index = 47 - (8 * y) - x;
+	const bool descriptor_secondary_bit =
+			(record.descriptor_mask_b_0x44_0x48 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
+	if (record.descriptor_mask_fields_0x34_0x48_known) {
+		return descriptor_secondary_bit;
+	}
 	if (record.action_mask.size() >= 48U) {
 		return source_object_text_mask_bit_0x490f3f(record.action_mask, x, y);
 	}
-	const int32_t bit_index = 47 - (8 * y) - x;
-	return (record.descriptor_mask_b_0x44_0x48 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
+	return descriptor_secondary_bit;
 }
 
 static bool source_object_descriptor_body_mask_bit_0x41e915_native(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
@@ -11399,6 +11403,9 @@ static RoadPathSeedResult4aae7b road_path_state_seed_0x4aae7b(GeneratedCellRecor
 			return result;
 		}
 		const int32_t current_low_word = generated_cell_word1c_low_word_0x4aae7b(current_record);
+		const bool current_overlay_low_cost =
+				current_record.word_0x24_known
+				&& (current_record.word_0x24 & 0x3c000000U) != 0U;
 		for (int32_t direction_index = int32_t(DIRECTION_TABLE_0X5A2658.size()) - 1; direction_index >= 0; --direction_index) {
 			const int32_t next_x = current.x + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][0];
 			const int32_t next_y = current.y + DIRECTION_TABLE_0X5A2658[size_t(direction_index)][1];
@@ -11423,7 +11430,12 @@ static RoadPathSeedResult4aae7b road_path_state_seed_0x4aae7b(GeneratedCellRecor
 				result.bit25_skip_count += 1;
 				continue;
 			}
-			const int32_t step_cost = (direction_index & 1) != 0 ? 0x3c : 0x14;
+			const bool next_overlay_low_cost = (next_record.word_0x24 & 0x3c000000U) != 0U;
+			const int32_t base_step_cost = current_overlay_low_cost && next_overlay_low_cost ? 0x02 : 0x14;
+			if (base_step_cost == 0x02) {
+				result.overlay_low_cost_step_count += 1;
+			}
+			const int32_t step_cost = (direction_index & 1) != 0 ? base_step_cost * 3 : base_step_cost;
 			const int32_t next_cost = current_low_word + step_cost;
 			if (next_cost >= generated_cell_word1c_low_word_0x4aae7b(next_record)) {
 				continue;
@@ -11673,6 +11685,7 @@ static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a
 		result.path_seed_count_0x4aae7b += 1;
 		result.path_seed_relaxed_edge_count += seed_result.low_word_relax_count;
 		result.path_seed_reached_cell_count += seed_result.reached_cell_count;
+		result.path_seed_overlay_low_cost_step_count += seed_result.overlay_low_cost_step_count;
 		result.outer_seed_iteration_count += 1;
 		if (!seed_result.applied) {
 			result.blocked_reason = seed_result.blocked_reason.empty()
@@ -11729,6 +11742,7 @@ static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a
 				result.path_seed_count_0x4aae7b += 1;
 				result.path_seed_relaxed_edge_count += seed_result.low_word_relax_count;
 				result.path_seed_reached_cell_count += seed_result.reached_cell_count;
+				result.path_seed_overlay_low_cost_step_count += seed_result.overlay_low_cost_step_count;
 				if (!seed_result.applied) {
 					result.blocked_reason = seed_result.blocked_reason.empty()
 							? "0x4aae7b_path_seed_rerun_after_road_success_failed"
@@ -19208,6 +19222,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< ",path_resets=" << road_adjacency.path_reset_count_0x4aae2f
 				<< ",path_seeds=" << road_adjacency.path_seed_count_0x4aae7b
 				<< ",relaxed_edges=" << road_adjacency.path_seed_relaxed_edge_count
+				<< ",overlay_low_cost_steps=" << road_adjacency.path_seed_overlay_low_cost_step_count
 				<< ",road_cells=" << road_adjacency.final_road_cell_count
 				<< ",final_art_writes=" << road_adjacency.final_write_count_0x458a2f;
 		add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243", "blocked", road_note.str() + "," + result.blocked_reason);
@@ -19224,6 +19239,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< ",path_resets=" << road_adjacency.path_reset_count_0x4aae2f
 				<< ",path_seeds=" << road_adjacency.path_seed_count_0x4aae7b
 				<< ",relaxed_edges=" << road_adjacency.path_seed_relaxed_edge_count
+				<< ",overlay_low_cost_steps=" << road_adjacency.path_seed_overlay_low_cost_step_count
 				<< ",predecessor_chain_cells=" << road_adjacency.predecessor_chain_cell_count
 				<< ",line_visits=" << road_adjacency.line_visit_call_count_0x458e61
 				<< ",candidate_marks=" << road_adjacency.candidate_mark_count_0x49aec5
