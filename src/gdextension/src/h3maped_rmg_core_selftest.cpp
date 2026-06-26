@@ -1908,7 +1908,7 @@ int main() {
 	}
 
 	const std::vector<RuntimeZoneBoundaryInput4a3a03> boundary_inputs = {
-		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[0], 0, 0, 0, 1, 0, true, SpanRecord { 8, 8, 0 } },
+		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[0], 0, 0, 0, 1, 30, true, SpanRecord { 9, 9, 0 } },
 		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[1], 1, 1, 0, 1, 1, true, SpanRecord { 20, 8, 0 } },
 		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[2], 2, 2, 0, 1, 2, true, SpanRecord { 20, 20, 0 } },
 		RuntimeZoneBoundaryInput4a3a03 { runtime_zones[3], 3, 3, 0, 1, 3, true, SpanRecord { 8, 20, 0 } },
@@ -1974,18 +1974,18 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve payload +0x1c span")) {
 		return 1;
 	}
-		if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_vector_index_4a3e9c == relation_owner_inputs[0].owner_vector_index,
-					"relation-owner vector owner-grid chain did not pass the owner vector index into the handoff")) {
-			return 1;
-		}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_vector_index_4a3e9c == boundary_inputs[0].source_record_vector_index_4a3e9c,
+				"relation-owner vector owner-grid chain did not preserve the selected source-record vector index into the handoff")) {
+		return 1;
+	}
 		if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7
 						&& owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
 					"relation-owner vector owner-grid chain did not carry recovered source owner byte into generated-cell owner byte")) {
 			return 1;
 		}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == relation_owner_inputs[0].coordinate_x_0x10
-					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == relation_owner_inputs[0].coordinate_y_0x14,
-				"relation-owner vector owner-grid chain did not use the owner coordinate triple as the span seed")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
+					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == boundary_inputs[0].source_record_seed_0x10.y,
+				"relation-owner vector owner-grid chain did not use the selected source-record seed as the span seed")) {
 		return 1;
 	}
 	const FootprintFinalizerResult4a3710 synthetic_mode_finalizer =
@@ -2403,6 +2403,27 @@ int main() {
 	}
 	if (!require(composed.coordinate_seed.boundary_inputs.size() == seed_inputs.size(), "coordinate seed did not emit one boundary input per runtime-zone seed")) {
 		return 1;
+	}
+	for (const RuntimeZoneBoundaryInput4a3a03 &boundary_input : composed.coordinate_seed.boundary_inputs) {
+		const auto owner_it = std::find_if(
+				composed.coordinate_seed.relation_owner_vectors_10e4_10e8.begin(),
+				composed.coordinate_seed.relation_owner_vectors_10e4_10e8.end(),
+				[&](const GeneratorRelationOwnerState4a218c &owner) {
+					return owner.runtime_zone_index == boundary_input.footprint.runtime_zone_index;
+				});
+		if (!require(owner_it != composed.coordinate_seed.relation_owner_vectors_10e4_10e8.end(), "coordinate seed boundary input lost its generator+0x10e4 relation owner")) {
+			return 1;
+		}
+		if (!require(boundary_input.has_source_record_seed_0x10 && owner_it->coordinate_triple_0x10_0x18_known,
+					"coordinate seed did not expose selected relation-owner +0x10 source-record seed")) {
+			return 1;
+		}
+		if (!require(boundary_input.source_record_seed_0x10.x == owner_it->coordinate_x_0x10
+						&& boundary_input.source_record_seed_0x10.y == owner_it->coordinate_y_0x14
+						&& boundary_input.source_record_seed_0x10.level == owner_it->coordinate_level_0x18,
+					"coordinate seed boundary input used synthetic coordinates instead of relation-owner +0x10 seed")) {
+			return 1;
+		}
 	}
 	{
 		std::vector<RuntimeZoneSeedInput4a218c> fixed_town_zones(1);
