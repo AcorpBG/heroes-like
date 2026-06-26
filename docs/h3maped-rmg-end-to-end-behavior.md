@@ -80,10 +80,10 @@ The recovered high-level ordered spine is:
 3. `0x49ecf2`: setup-mode/candidate-container producer surface.
 4. `0x49f0cd`: candidate-container fill.
 5. `0x4ac552`: selected candidate/template phase completion.
-6. `0x4a218c / 0x4a1f3b / 0x4a19ed`: runtime-zone/link/coordinate placement chain.
+6. `0x4a218c / 0x4a1f3b / 0x4a19ed / 0x49b53d / 0x49b4e1`: runtime-zone/link/coordinate placement chain, including per-runtime-zone terrain policy and monster-town policy.
 7. `0x4a3a03 / 0x4ccb64 / 0x4cca55`: source-node footprint and descriptor-cycle production.
 8. `0x4a2777 / 0x4a325d / 0x4a3710`: boundary traversal, span fill, and one-level land finalizer.
-9. `0x49b53d / 0x4a3f27`: runtime terrain selection and terrain repaint.
+9. `0x4a3f27`: terrain repaint after the per-level owner-grid materialization.
 10. `0x4bcff5` family: TerrainPlacement visual/art/flag selection.
 11. `0x4a5767 / 0x49a318 / 0x49e700 / 0x4a54a7`: relation-local generated-cell normalization, placement scoring, and relation/control linkage.
 12. `0x4a8d2c / 0x4a8db2 / 0x4a93a2`: town/castle and weighted materialization surfaces.
@@ -294,12 +294,14 @@ This initializer intentionally sets bit25 and bit27. Later mutation phases reduc
 
 `0x4a3710` is the one-level land footprint/order finalizer. For the recovered one-level land no-appended-zone path, it does not append synthetic runtime zones; it resets/rebuilds ordering required by later relation consumers.
 
-`0x49b53d` selects runtime terrain:
+Inside `0x4a218c`, `0x49b53d` selects runtime terrain before the caller returns to `0x4ac552` for per-level `0x4a3a03` owner-grid materialization:
 
 - if source zone `+0x84` match-to-town is true, terrain comes from table `0x540908 = {2, 2, 3, 7, 0, 0, 5, 4, 2}`;
 - otherwise one RNG call selects among source zone `+0x85..+0x8c` terrain flags;
 - terrain id `6` is eligible only on level `1`;
 - on level `1`, any selected terrain except lava `7` is forced to cave `6`.
+
+`0x49b4e1` immediately follows `0x49b53d` inside the same `0x4a218c` owner-vector loop and writes monster-town policy from owner `+0x04` or table `0x58db78`.
 
 `0x4a3f27` runs terrain repaint:
 
@@ -308,6 +310,7 @@ This initializer intentionally sets bit25 and bit27. Later mutation phases reduc
 - owner gate reads generated-cell `+0x20` byte2 at `0x4a4142`;
 - member/repaint gate reads `+0x28 >> 28 & 1` at `0x4a4150`;
 - passing cells write terrain id through `0x49acf6`.
+- TerrainPlacement visual RNG starts from the post-`0x4a3a03 / 0x4a2777 / 0x4a325d / 0x4a3710` owner-grid RNG state, because `0x4ac552` calls `0x4a3f27` after the per-level owner-grid loop.
 
 ### TerrainPlacement
 
