@@ -109,6 +109,44 @@ BoundarySourceCycleHandoff4a2777 square_handoff(bool gate_first_edge) {
 	return handoff;
 }
 
+int32_t owner_byte2_signed(uint32_t word_0x20) {
+	const uint32_t value = (word_0x20 >> 16U) & 0xffU;
+	return value >= 0x80U ? int32_t(value) - 0x100 : int32_t(value);
+}
+
+bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &grid, const GeneratorRelationOwnerState4a218c &owner, int32_t &expected_x, int32_t &expected_y, int32_t &expected_level, int32_t &matched_count) {
+	expected_x = owner.coordinate_x_0x10;
+	expected_y = owner.coordinate_y_0x14;
+	expected_level = owner.coordinate_level_0x18;
+	matched_count = 0;
+	if (!owner.scan_bounds_0x20_0x2c_known || !owner.source_pointer_0x00_known || !owner.coordinate_triple_0x10_0x18_known) {
+		return false;
+	}
+	int64_t sum_x = 0;
+	int64_t sum_y = 0;
+	for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
+		for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+			const int64_t flat = aurelion::h3maped_rmg_core::cell_index(grid.width, grid.height, x, y, owner.coordinate_level_0x18);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			if (!record.word_0x20_known || owner_byte2_signed(record.word_0x20) != owner.source_pointer_source_index_0x00) {
+				continue;
+			}
+			matched_count += 1;
+			sum_x += x;
+			sum_y += y;
+		}
+	}
+	if (matched_count == 0) {
+		return false;
+	}
+	expected_x = int32_t(sum_x / matched_count);
+	expected_y = int32_t(sum_y / matched_count);
+	return true;
+}
+
 bool require(bool condition, const std::string &message) {
 	if (!condition) {
 		std::cerr << "h3maped_rmg_core_selftest: " << message << "\n";
@@ -2484,17 +2522,26 @@ int main() {
 			return 1;
 		}
 		summed_owner_local_vector_0x404_count += owner.owner_local_vector_0x404_count;
-		const auto boundary_input = std::find_if(selected_composed.coordinate_seed.boundary_inputs.begin(), selected_composed.coordinate_seed.boundary_inputs.end(), [&](const RuntimeZoneBoundaryInput4a3a03 &input) {
-			return input.footprint.runtime_zone_index == owner.runtime_zone_index;
-		});
-		if (!require(boundary_input != selected_composed.coordinate_seed.boundary_inputs.end(), "0x4a1f3b/0x4a19ed relation owner coordinate source was not found")) {
+		int32_t expected_recenter_x = 0;
+		int32_t expected_recenter_y = 0;
+		int32_t expected_recenter_level = 0;
+		int32_t expected_recenter_match_count = 0;
+		if (!require(expected_recenter_coordinate_0x4a2ffa(
+							 generator_state.generated_cell_buffer,
+							 owner,
+							 expected_recenter_x,
+							 expected_recenter_y,
+							 expected_recenter_level,
+							 expected_recenter_match_count),
+					"0x4a2ffa relation owner coordinate recenter did not find source-owned generated cells")) {
 			return 1;
 		}
 		if (!require(owner.coordinate_triple_0x10_0x18_known
-						&& owner.coordinate_x_0x10 == boundary_input->footprint.x_after_bbox_rescale
-						&& owner.coordinate_y_0x14 == boundary_input->footprint.y_after_bbox_rescale
-						&& owner.coordinate_level_0x18 == boundary_input->footprint.level,
-					"0x4a1f3b/0x4a19ed relation owner coordinate triple +0x10..+0x18 was not preserved")) {
+						&& owner.coordinate_x_0x10 == expected_recenter_x
+						&& owner.coordinate_y_0x14 == expected_recenter_y
+						&& owner.coordinate_level_0x18 == expected_recenter_level
+						&& expected_recenter_match_count > 0,
+					"0x4a2ffa relation owner coordinate triple +0x10..+0x18 was not recentered from generated-cell owner bytes")) {
 			return 1;
 		}
 		int32_t expected_source_endpoint_count = 0;
@@ -2592,6 +2639,13 @@ int main() {
 					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b == generator_state.relation_owner_vector_count_10e4_10e8
 					&& generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b == 0,
 				"0x4a1f3b relation-owner scan-bound pass did not run before relation scan consumers")) {
+		return 1;
+	}
+	if (!require(generator_state.relation_owner_coordinate_recenter_0x4a2ffa_applied
+					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa == generator_state.relation_owner_vector_count_10e4_10e8
+					&& generator_state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 0
+					&& generator_state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa > 0,
+				"0x4a2ffa relation-owner coordinate recenter pass did not run before route/object consumers")) {
 		return 1;
 	}
 	if (!require(summed_relation_record_count == generator_state.relation_record_count_10e4_10e8, "generator relation record total does not equal sum of owner vectors")) {

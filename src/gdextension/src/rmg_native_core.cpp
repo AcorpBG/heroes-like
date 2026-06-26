@@ -1424,6 +1424,12 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.relation_owner_scan_bounds_0x4a1f3b_applied = input.relation_owner_scan_bounds_0x4a1f3b_applied;
 	out.relation_owner_scan_bounds_known_count_0x4a1f3b = input.relation_owner_scan_bounds_known_count_0x4a1f3b;
 	out.relation_owner_scan_bounds_blocked_count_0x4a1f3b = input.relation_owner_scan_bounds_blocked_count_0x4a1f3b;
+	out.relation_owner_coordinate_recenter_0x4a2ffa_applied = input.relation_owner_coordinate_recenter_0x4a2ffa_applied;
+	out.relation_owner_coordinate_recenter_known_count_0x4a2ffa = input.relation_owner_coordinate_recenter_known_count_0x4a2ffa;
+	out.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = input.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa;
+	out.relation_owner_coordinate_recenter_changed_count_0x4a2ffa = input.relation_owner_coordinate_recenter_changed_count_0x4a2ffa;
+	out.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa = input.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa;
+	out.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa = input.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa;
 	out.relation_normalization_4a5767_full_grid_reset_applied = input.relation_normalization_4a5767_full_grid_reset_applied;
 	out.relation_normalization_4a5767_full_grid_reset_visited_count = input.relation_normalization_4a5767_full_grid_reset_visited_count;
 	out.relation_normalization_4a5767_full_grid_reset_changed_count = input.relation_normalization_4a5767_full_grid_reset_changed_count;
@@ -3287,6 +3293,13 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"relation_owner_scan_bounds_known_count_0x4a1f3b\":" << state.relation_owner_scan_bounds_known_count_0x4a1f3b << ","
 		<< "\"relation_owner_scan_bounds_blocked_count_0x4a1f3b\":" << state.relation_owner_scan_bounds_blocked_count_0x4a1f3b << ","
 		<< "\"relation_owner_scan_bounds_source\":\"0x4a1f3b_relation_owner_scan_bounds_from_generated_cell_owner_byte_rectangles_after_0x4a2777_0x4a325d_owner_grid_and_0x4a5767_reset\","
+		<< "\"relation_owner_coordinate_recenter_0x4a2ffa_applied\":" << (state.relation_owner_coordinate_recenter_0x4a2ffa_applied ? "true" : "false") << ","
+		<< "\"relation_owner_coordinate_recenter_known_count_0x4a2ffa\":" << state.relation_owner_coordinate_recenter_known_count_0x4a2ffa << ","
+		<< "\"relation_owner_coordinate_recenter_blocked_count_0x4a2ffa\":" << state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa << ","
+		<< "\"relation_owner_coordinate_recenter_changed_count_0x4a2ffa\":" << state.relation_owner_coordinate_recenter_changed_count_0x4a2ffa << ","
+		<< "\"relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa\":" << state.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa << ","
+		<< "\"relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa\":" << state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa << ","
+		<< "\"relation_owner_coordinate_recenter_source\":\"0x4a3f27_relation_owner_loop_calls_0x4a2ffa_before_route_and_object_consumers\","
 		<< "\"relation_normalization_4a5767_full_grid_reset_applied\":" << (state.relation_normalization_4a5767_full_grid_reset_applied ? "true" : "false") << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_visited_count\":" << state.relation_normalization_4a5767_full_grid_reset_visited_count << ","
 		<< "\"relation_normalization_4a5767_full_grid_reset_changed_count\":" << state.relation_normalization_4a5767_full_grid_reset_changed_count << ","

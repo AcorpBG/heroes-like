@@ -15020,6 +15020,100 @@ static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(Gener
 	}
 }
 
+bool relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner, int32_t *scanned_cell_count, int32_t *matched_cell_count, bool *coordinate_changed) {
+	if (scanned_cell_count != nullptr) {
+		*scanned_cell_count = 0;
+	}
+	if (matched_cell_count != nullptr) {
+		*matched_cell_count = 0;
+	}
+	if (coordinate_changed != nullptr) {
+		*coordinate_changed = false;
+	}
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty()
+			|| !owner.coordinate_triple_0x10_0x18_known
+			|| !owner.scan_bounds_0x20_0x2c_known
+			|| !owner.source_pointer_0x00_known) {
+		return false;
+	}
+	const int32_t level = owner.coordinate_level_0x18;
+	if (level < 0 || level >= grid.level_count
+			|| owner.scan_bound_low_x_0x20 >= owner.scan_bound_high_x_0x28
+			|| owner.scan_bound_low_y_0x24 >= owner.scan_bound_high_y_0x2c) {
+		return false;
+	}
+
+	int32_t match_count = 0;
+	int64_t sum_x = 0;
+	int64_t sum_y = 0;
+	int32_t scanned_count = 0;
+	for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
+		for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+			const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+			if (flat < 0 || flat >= int64_t(grid.records.size())) {
+				continue;
+			}
+			scanned_count += 1;
+			const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+			if (!record.word_0x20_known
+					|| generated_cell_owner_byte2_signed_4a4142(record.word_0x20) != owner.source_pointer_source_index_0x00) {
+				continue;
+			}
+			match_count += 1;
+			sum_x += x;
+			sum_y += y;
+		}
+	}
+	if (scanned_cell_count != nullptr) {
+		*scanned_cell_count = scanned_count;
+	}
+	if (matched_cell_count != nullptr) {
+		*matched_cell_count = match_count;
+	}
+	if (match_count == 0) {
+		return false;
+	}
+	const int32_t average_x = int32_t(sum_x / match_count);
+	const int32_t average_y = int32_t(sum_y / match_count);
+	const bool changed = owner.coordinate_x_0x10 != average_x || owner.coordinate_y_0x14 != average_y;
+	owner.coordinate_x_0x10 = average_x;
+	owner.coordinate_y_0x14 = average_y;
+	owner.coordinate_level_0x18 = level;
+	if (coordinate_changed != nullptr) {
+		*coordinate_changed = changed;
+	}
+	return true;
+}
+
+static void apply_relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(GeneratorObjectPrivateState &state) {
+	state.relation_owner_coordinate_recenter_0x4a2ffa_applied = true;
+	state.relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_changed_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa = 0;
+	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		int32_t scanned_count = 0;
+		int32_t matched_count = 0;
+		bool changed = false;
+		if (relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(
+					state.generated_cell_buffer,
+					owner,
+					&scanned_count,
+					&matched_count,
+					&changed)) {
+			state.relation_owner_coordinate_recenter_known_count_0x4a2ffa += 1;
+			if (changed) {
+				state.relation_owner_coordinate_recenter_changed_count_0x4a2ffa += 1;
+			}
+		} else {
+			state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa += 1;
+		}
+		state.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa += scanned_count;
+		state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa += matched_count;
+	}
+}
+
 static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a218c(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result) {
 	state.relation_owner_vector_produced_by_0x4ac552_0x4a218c = false;
 	state.relation_owner_vector_selected_candidate_input_known = false;
@@ -15040,6 +15134,12 @@ static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a2
 	state.relation_vector_10e4_10e8.count_known = false;
 	state.relation_vector_10e4_10e8.count = 0;
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = 0;
+	state.relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
+	state.relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_changed_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa = 0;
+	state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa = 0;
 
 	if (!state.candidate_container_vector_10d4_10d8.present
 			|| !state.candidate_container_vector_10d4_10d8.contents_known
@@ -15105,6 +15205,7 @@ static bool produce_relation_owner_vector_from_selected_candidate_0x4ac552_0x4a2
 	}
 	state.weighted_scheduler_threshold_count_0x4a8db2 = int32_t(state.weighted_scheduler_thresholds_0x4a8db2.size());
 	apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state);
+	apply_relation_owner_coordinate_recenter_from_generated_cells_0x4a2ffa(state);
 	state.reward_guard_relation_priority_0x4ad7f7.relation_owner_count = state.relation_owner_vector_count_10e4_10e8;
 	state.relation_owner_vector_produced_by_0x4ac552_0x4a218c = true;
 	return true;
