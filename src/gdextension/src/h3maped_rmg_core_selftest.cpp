@@ -2159,12 +2159,14 @@ int main() {
 	const H3MapedRmgWorkflowResult generator_state_workflow =
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	const std::string final_writeout_blocker =
+	const std::string final_object_writeout_blocker =
 			"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
+	const std::string final_payload_compare_blocker =
+			"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_payload_compare"
-					&& generator_state_workflow.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
-				"workflow-owned generator state did not advance through header, generated object definition-indexed payload, and sentinel into the full payload compare boundary")) {
+					&& generator_state_workflow.blocked_reason.rfind(final_payload_compare_blocker, 0) == 0,
+				"workflow-owned generator state did not advance through header, generated object definition-indexed payload, sentinel, and ordered payload assembly into the full payload compare boundary")) {
 		return 1;
 	}
 	if (!require(generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.invoked
@@ -2196,6 +2198,8 @@ int main() {
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_header_written_0x4ad29f
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count == 4
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_bytes.size()
 							== size_t(generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count)
@@ -2224,8 +2228,36 @@ int main() {
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_writeout_blocker, 0) == 0,
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_object_writeout_blocker, 0) == 0,
 				"workflow-owned final object definition table, static vectors, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel did not materialize before the full payload compare blocker")) {
+		return 1;
+	}
+	const int32_t generator_state_expected_final_payload_bytes =
+			generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count
+			+ generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count
+			+ generator_state_workflow.final_tile_writeout_0x49b2b6.byte_count
+			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count
+			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count
+			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
+			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count
+			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_payload_byte_count;
+	if (!require(generator_state_workflow.final_payload_writeout_0x4ad1e3.invoked
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
+					&& !generator_state_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count == generator_state_expected_final_payload_bytes
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.payload_bytes.size()
+							== size_t(generator_state_expected_final_payload_bytes)
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections.size() == 8U
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[0].section_id == "header_player_metadata"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[1].section_id == "post_header_initial_zero"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[2].section_id == "tile_stream"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[3].section_id == "object_definition_count"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[4].section_id == "object_definition_table"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[5].section_id == "generated_object_count"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[6].section_id == "generated_object_payload"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[7].section_id == "final_zero_sentinel"
+					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.blocked_reason.rfind(final_payload_compare_blocker, 0) == 0,
+				"workflow-owned final 0x4ad1e3 ordered payload assembly did not stitch header, tile, object-definition count/table, object count/payload, and sentinel in recovered order")) {
 		return 1;
 	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -2261,7 +2293,7 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_writeout_blocker),
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_payload_compare_blocker),
 				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the final writeout blocker")) {
 		return 1;
 	}
@@ -2549,7 +2581,7 @@ int main() {
 					&& generator_state.connection_tail_replay_0x4a79a3.applied
 					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
 					&& generator_state.road_river_object_adjacency_0x4ab52a.applied
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_writeout_blocker),
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_payload_compare_blocker),
 				"generator object private state did not stop at final writeout after decorative, connection-tail, and road-toolkit replay")) {
 		return 1;
 	}
@@ -4531,8 +4563,10 @@ int main() {
 		workflow_config.setup_object_0x44 = 3;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-		const std::string workflow_final_writeout_blocker =
+		const std::string workflow_final_object_writeout_blocker =
 				"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
+		const std::string workflow_final_payload_compare_blocker =
+				"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
@@ -4542,7 +4576,7 @@ int main() {
 					"entry-to-writeout workflow did not advance past header, generated object definition-indexed payload, and sentinel to the full payload compare blocker")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
+		if (!require(workflow.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
 					std::string("entry-to-writeout workflow did not fail closed after generated object definition-indexed payload; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
@@ -4574,6 +4608,8 @@ int main() {
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_header_written_0x4ad29f
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count == 4
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_missing_source_record_count == 0
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_template_index_missing_count == 0
@@ -4600,11 +4636,39 @@ int main() {
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_return_0x4ae09a_success
 						&& !workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
 						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
+						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_object_writeout_blocker, 0) == 0,
 					"entry-to-writeout workflow did not own the static definition vectors, generated object definition table, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel before stopping at full payload compare")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 19
+		const int32_t workflow_expected_final_payload_bytes =
+				workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count
+				+ workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count
+				+ workflow.final_tile_writeout_0x49b2b6.byte_count
+				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count
+				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count
+				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
+				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count
+				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_payload_byte_count;
+		if (!require(workflow.final_payload_writeout_0x4ad1e3.invoked
+						&& workflow.final_payload_writeout_0x4ad1e3.applied
+						&& !workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete
+						&& workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count == workflow_expected_final_payload_bytes
+						&& workflow.final_payload_writeout_0x4ad1e3.payload_bytes.size()
+								== size_t(workflow_expected_final_payload_bytes)
+						&& workflow.final_payload_writeout_0x4ad1e3.sections.size() == 8U
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[0].section_id == "header_player_metadata"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[1].section_id == "post_header_initial_zero"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[2].section_id == "tile_stream"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[3].section_id == "object_definition_count"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[4].section_id == "object_definition_table"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[5].section_id == "generated_object_count"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[6].section_id == "generated_object_payload"
+						&& workflow.final_payload_writeout_0x4ad1e3.sections[7].section_id == "final_zero_sentinel"
+						&& workflow.final_payload_writeout_0x4ad1e3.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
+					"entry-to-writeout workflow did not assemble the recovered full final payload before stopping at same-run compare")) {
+			return 1;
+		}
+			if (!require(workflow.phases.size() >= 20
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -4637,9 +4701,11 @@ int main() {
 							&& workflow.phases[16].status == "complete_source_order_prefix"
 							&& workflow.phases[17].id == "final_zero_sentinel_success_test"
 							&& workflow.phases[17].status == "complete_source_order_prefix"
-							&& workflow.phases[18].id == "full_final_payload_same_run_compare"
-							&& workflow.phases[18].status == "blocked",
-					"entry-to-writeout workflow did not preserve recovered phase order through header, tile/object payload, sentinel, and final compare blocker")) {
+							&& workflow.phases[18].id == "full_final_payload_assembly"
+							&& workflow.phases[18].status == "complete_source_order_prefix"
+							&& workflow.phases[19].id == "full_final_payload_same_run_compare"
+							&& workflow.phases[19].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order through header, tile/object payload, sentinel, ordered payload assembly, and final compare blocker")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -4734,7 +4800,7 @@ int main() {
 						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-						&& workflow.blocked_reason.rfind(workflow_final_writeout_blocker, 0) == 0,
+						&& workflow.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
 					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the final writeout blocker")) {
 			return 1;
 		}

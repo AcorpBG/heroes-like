@@ -439,6 +439,11 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"object_definition_table_static_vectors_0x4a8_0x7f8_included\":" << (writeout.object_definition_table_static_vectors_0x4a8_0x7f8_included ? "true" : "false")
 		<< ",\"object_definition_static_vector_count_0x4a8_0x7f8\":" << writeout.object_definition_static_vector_count_0x4a8_0x7f8
 		<< ",\"object_definition_count\":" << writeout.object_definition_count
+		<< ",\"object_definition_count_header_written_0x4ad29f\":" << (writeout.object_definition_count_header_written_0x4ad29f ? "true" : "false")
+		<< ",\"object_definition_count_payload_byte_count\":" << writeout.object_definition_count_payload_byte_count
+		<< ",\"object_definition_count_payload_bytes\":";
+	append_final_object_count_bytes_json(out, writeout.object_definition_count_payload_bytes);
+	out
 		<< ",\"object_definition_payload_byte_count\":" << writeout.object_definition_payload_byte_count
 		<< ",\"object_definition_payload_byte_vector_size\":" << writeout.object_definition_payload_bytes.size()
 		<< ",\"object_definition_missing_source_record_count\":" << writeout.object_definition_missing_source_record_count
@@ -484,6 +489,43 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 	append_final_object_record_samples_json(out, writeout.first_pass_records);
 	out << ",\"second_pass_records\":";
 	append_final_object_record_samples_json(out, writeout.second_pass_records);
+	out << "}";
+}
+
+void append_final_payload_sections_json(std::ostream &out, const std::vector<h3maped_rmg_core::FinalPayloadWriteoutSection4ad1e3> &sections) {
+	out << "[";
+	for (size_t index = 0; index < sections.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const h3maped_rmg_core::FinalPayloadWriteoutSection4ad1e3 &section = sections[index];
+		out << "{\"section_id\":\"" << json_escape(section.section_id) << "\""
+			<< ",\"h3maped_anchor\":\"" << json_escape(section.h3maped_anchor) << "\""
+			<< ",\"offset\":" << section.offset
+			<< ",\"byte_count\":" << section.byte_count
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_final_payload_writeout_json(std::ostream &out, const h3maped_rmg_core::FinalPayloadWriteoutResult4ad1e3 &writeout) {
+	out << "{\"invoked\":" << (writeout.invoked ? "true" : "false")
+		<< ",\"applied\":" << (writeout.applied ? "true" : "false")
+		<< ",\"same_run_h3maped_compare_complete\":" << (writeout.same_run_h3maped_compare_complete ? "true" : "false")
+		<< ",\"blocked_reason\":\"" << json_escape(writeout.blocked_reason) << "\""
+		<< ",\"header_payload_byte_count\":" << writeout.header_payload_byte_count
+		<< ",\"post_header_initial_zero_payload_byte_count\":" << writeout.post_header_initial_zero_payload_byte_count
+		<< ",\"tile_payload_byte_count\":" << writeout.tile_payload_byte_count
+		<< ",\"object_definition_count_payload_byte_count\":" << writeout.object_definition_count_payload_byte_count
+		<< ",\"object_definition_payload_byte_count\":" << writeout.object_definition_payload_byte_count
+		<< ",\"generated_object_count_payload_byte_count\":" << writeout.generated_object_count_payload_byte_count
+		<< ",\"object_payload_byte_count\":" << writeout.object_payload_byte_count
+		<< ",\"final_zero_sentinel_payload_byte_count\":" << writeout.final_zero_sentinel_payload_byte_count
+		<< ",\"total_payload_byte_count\":" << writeout.total_payload_byte_count
+		<< ",\"payload_byte_vector_size\":" << writeout.payload_bytes.size()
+		<< ",\"source\":\"0x4ad1e3_ordered_stream_sections_from_header_post_zero_tile_object_definitions_counts_payload_and_sentinel\""
+		<< ",\"sections\":";
+	append_final_payload_sections_json(out, writeout.sections);
 	out << "}";
 }
 
@@ -4124,6 +4166,7 @@ NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &co
 	result.final_header_writeout_0x4ac857_0x4ad206 = shared_workflow.final_header_writeout_0x4ac857_0x4ad206;
 	result.final_tile_writeout_0x49b2b6 = shared_workflow.final_tile_writeout_0x49b2b6;
 	result.final_object_writeout_0x4ad309_0x4ad3eb = shared_workflow.final_object_writeout_0x4ad309_0x4ad3eb;
+	result.final_payload_writeout_0x4ad1e3 = shared_workflow.final_payload_writeout_0x4ad1e3;
 	result.status = shared_workflow.status;
 	result.blocked_reason = shared_workflow.blocked_reason;
 	result.current_phase_id = shared_workflow.current_phase_id;
@@ -4195,8 +4238,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ac857 header/player metadata write, 0x4ad206 post-header zero, 0x49b2b6 tile-cell stream, 0x4ad309/0x4ad318 generated-object count header write, the 0x57c648[type*16+0x0c] 0x4ad3eb pass split, field-backed object serializer bodies, and the 0x4ad3db/0x4ad3de/0x4ae09a zero-sentinel success path. The workflow intentionally fails closed before native map output until full final payload assembly and same-run comparison are owned.\",\n";
-	out << "    \"required_refactor\": \"assemble the ordered 0x4ac857/0x4ad206/0x49b2b6/0x4ad309/0x4ad3eb/0x4ad3db payload and prove same-run comparison plus descriptor wrapper bucket 0x08/0x0c replay before allowing native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ac857 header/player metadata write, 0x4ad206 post-header zero, 0x49b2b6 tile-cell stream, 0x4ad29f object-definition count, source-backed object-definition table, 0x4ad309/0x4ad318 generated-object count header write, the 0x57c648[type*16+0x0c] 0x4ad3eb pass split, field-backed object serializer bodies, and the 0x4ad3db/0x4ad3de/0x4ae09a zero-sentinel success path. The workflow assembles the ordered final payload but intentionally fails closed before native map output until same-run comparison and descriptor wrapper bucket 0x08/0x0c replay are owned.\",\n";
+	out << "    \"required_refactor\": \"prove same-run comparison plus descriptor wrapper bucket 0x08/0x0c replay against the assembled 0x4ad1e3 payload before allowing native map output\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -4215,6 +4258,9 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "    \"final_object_writeout_0x4ad309_0x4ad3eb\": ";
 	append_final_object_writeout_json(out, workflow.final_object_writeout_0x4ad309_0x4ad3eb);
 	out << ",\n";
+	out << "    \"final_payload_writeout_0x4ad1e3\": ";
+	append_final_payload_writeout_json(out, workflow.final_payload_writeout_0x4ad1e3);
+	out << ",\n";
 	out << "    \"generator_object_private_state\": ";
 	append_generator_object_private_state_json(out, workflow.payload.generator_object_private_state);
 	out << ",\n";
@@ -4224,7 +4270,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"assemble_ordered_full_final_payload_and_same_run_compare_descriptor_wrapper_bucket_0x08_0x0c\",\n";
+	out << "  \"next_required_native_core_slice\": \"same_run_compare_ordered_full_final_payload_and_descriptor_wrapper_bucket_0x08_0x0c\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

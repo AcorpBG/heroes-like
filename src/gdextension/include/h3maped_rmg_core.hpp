@@ -2997,6 +2997,9 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	bool object_definition_table_static_vectors_0x4a8_0x7f8_included = false;
 	int32_t object_definition_static_vector_count_0x4a8_0x7f8 = 0;
 	int32_t object_definition_count = 0;
+	bool object_definition_count_header_written_0x4ad29f = false;
+	int32_t object_definition_count_payload_byte_count = 0;
+	std::array<uint8_t, 4> object_definition_count_payload_bytes {};
 	int32_t object_definition_payload_byte_count = 0;
 	int32_t object_definition_missing_source_record_count = 0;
 	int32_t object_definition_duplicate_source_record_count = 0;
@@ -3038,6 +3041,31 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	std::vector<FinalObjectWriteoutRecord4ad1e3> second_pass_records;
 };
 
+struct FinalPayloadWriteoutSection4ad1e3 {
+	std::string section_id;
+	std::string h3maped_anchor;
+	int32_t offset = 0;
+	int32_t byte_count = 0;
+};
+
+struct FinalPayloadWriteoutResult4ad1e3 {
+	bool invoked = false;
+	bool applied = false;
+	bool same_run_h3maped_compare_complete = false;
+	std::string blocked_reason;
+	int32_t header_payload_byte_count = 0;
+	int32_t post_header_initial_zero_payload_byte_count = 0;
+	int32_t tile_payload_byte_count = 0;
+	int32_t object_definition_count_payload_byte_count = 0;
+	int32_t object_definition_payload_byte_count = 0;
+	int32_t generated_object_count_payload_byte_count = 0;
+	int32_t object_payload_byte_count = 0;
+	int32_t final_zero_sentinel_payload_byte_count = 0;
+	int32_t total_payload_byte_count = 0;
+	std::vector<uint8_t> payload_bytes;
+	std::vector<FinalPayloadWriteoutSection4ad1e3> sections;
+};
+
 struct H3MapedRmgWorkflowResult {
 	H3MapedRmgWorkflowConfig config;
 	bool supported_scope = false;
@@ -3055,6 +3083,7 @@ struct H3MapedRmgWorkflowResult {
 	FinalHeaderWriteoutResult4ac857 final_header_writeout_0x4ac857_0x4ad206;
 	FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
 	FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
+	FinalPayloadWriteoutResult4ad1e3 final_payload_writeout_0x4ad1e3;
 	std::vector<H3MapedRmgWorkflowPhase> phases;
 };
 

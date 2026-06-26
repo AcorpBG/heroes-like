@@ -112,6 +112,8 @@ void append_case_report_array(std::ostream &out, const std::vector<CaseReport> &
 		out << "\"native_workflow_final_tile_byte_count\":" << report.native_workflow_final_tile_byte_count << ",";
 		out << "\"native_workflow_final_object_count_header_written\":" << (report.native_workflow_final_object_count_header_written ? "true" : "false") << ",";
 		out << "\"native_workflow_final_object_count\":" << report.native_workflow_final_object_count << ",";
+		out << "\"native_workflow_final_payload_assembly_applied\":" << (report.native_workflow_final_payload_assembly_applied ? "true" : "false") << ",";
+		out << "\"native_workflow_final_payload_byte_count\":" << report.native_workflow_final_payload_byte_count << ",";
 		out << "\"native_workflow_status\":\"" << json_escape(report.native_workflow_status) << "\",";
 		out << "\"native_workflow_current_phase\":\"" << json_escape(report.native_workflow_current_phase) << "\",";
 		out << "\"phase_snapshot_written\":" << (report.phase_snapshot_written ? "true" : "false") << ",";
@@ -345,6 +347,8 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 		report.native_workflow_final_tile_byte_count = workflow.final_tile_writeout_0x49b2b6.byte_count;
 		report.native_workflow_final_object_count_header_written = workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written;
 		report.native_workflow_final_object_count = workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count;
+		report.native_workflow_final_payload_assembly_applied = workflow.final_payload_writeout_0x4ad1e3.applied;
+		report.native_workflow_final_payload_byte_count = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
 		report.native_workflow_status = workflow.status;
 		report.native_workflow_current_phase = workflow.current_phase_id;
 		report.status = workflow.status;
@@ -380,6 +384,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int native_workflow_post_header_initial_zero_written_count = 0;
 	int native_workflow_final_tile_writeout_applied_count = 0;
 	int native_workflow_final_object_count_header_written_count = 0;
+	int native_workflow_final_payload_assembly_applied_count = 0;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -418,6 +423,9 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		}
 		if (report.native_workflow_final_object_count_header_written) {
 			++native_workflow_final_object_count_header_written_count;
+		}
+		if (report.native_workflow_final_payload_assembly_applied) {
+			++native_workflow_final_payload_assembly_applied_count;
 		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
@@ -474,6 +482,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"native_h3maped_workflow_post_header_initial_zero_written_count\": " << native_workflow_post_header_initial_zero_written_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_tile_writeout_applied_count\": " << native_workflow_final_tile_writeout_applied_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_object_count_header_written_count\": " << native_workflow_final_object_count_header_written_count << ",\n";
+	out << "  \"native_h3maped_workflow_final_payload_assembly_applied_count\": " << native_workflow_final_payload_assembly_applied_count << ",\n";
 	out << "  \"native_h3maped_workflow_final_writeout_complete_count\": " << native_workflow_final_writeout_complete_count << ",\n";
 	out << "  \"case_count\": " << case_reports.size() << ",\n";
 	out << "  \"blocked_count\": " << blocked_count << ",\n";
@@ -488,11 +497,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"phase_snapshot_written_count\": " << phase_snapshot_written_count << ",\n";
 	out << "  \"phase_snapshot_failed_count\": " << phase_snapshot_failed_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_header_0x4ac857_post_zero_0x4ad206_tile_object_payloads_and_0x4ad3db_sentinel_owned_blocked_before_full_payload_compare\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_ordered_final_payload_assembled_blocked_before_same_run_full_payload_compare\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"assemble_ordered_full_final_payload_and_same_run_compare_descriptor_wrapper_bucket_0x08_0x0c\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked at the first unowned generation phase before full final writeout.\",\n";
+	out << "  \"required_next_slice\": \"same_run_compare_ordered_full_final_payload_and_descriptor_wrapper_bucket_0x08_0x0c\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases and exits blocked before native map output until the assembled final payload is same-run compared.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
