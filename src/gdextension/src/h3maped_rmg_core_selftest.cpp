@@ -16,6 +16,7 @@ using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
 using aurelion::h3maped_rmg_core::EndpointMaterializationResult4a5e73;
 using aurelion::h3maped_rmg_core::EndpointMaterializationState4a5e73;
 using aurelion::h3maped_rmg_core::EndpointPointerRecord4a5e73;
+using aurelion::h3maped_rmg_core::FootprintFinalizerResult4a3710;
 using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c;
@@ -1179,7 +1180,7 @@ int main() {
 			cell.word_0x10 = aurelion::h3maped_rmg_core::RELATION_RESET_COORD_MINUS_ONE;
 			cell.word_0x14 = 0U;
 			cell.word_0x18 = 0U;
-			aurelion::h3maped_rmg_core::generated_cell_49aa63(cell, true);
+			aurelion::h3maped_rmg_core::generated_cell_49a932(cell, true);
 		}
 		scan_consumer_grid.records[1].word_0x2c |= 0x01U;
 		GeneratorRelationOwnerState4a218c scan_consumer_owner;
@@ -1199,7 +1200,7 @@ int main() {
 						&& scan_consumer_result.owner_scan_count == 1
 						&& scan_consumer_result.scanned_cell_count == 2
 						&& scan_consumer_result.projected_chain_call_count == 2
-						&& scan_consumer_result.projected_chain_occupied_stamp_count == 1
+						&& scan_consumer_result.projected_chain_occupied_stamp_count == 0
 						&& scan_consumer_result.projected_chain_object_branch_blocked_count == 1
 						&& !scan_consumer_result.no_object_projection_chain_complete,
 					"relation scan consumer did not apply recovered no-object projection chain while blocking object materialization branch")) {
@@ -1499,7 +1500,7 @@ int main() {
 		scan_object_cell.word_0x14 = 0U;
 		scan_object_cell.word_0x18_known = true;
 		scan_object_cell.word_0x18 = 0U;
-		aurelion::h3maped_rmg_core::generated_cell_49aa63(scan_object_cell, true);
+		aurelion::h3maped_rmg_core::generated_cell_49a932(scan_object_cell, true);
 		scan_object_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
 		GeneratorRelationOwnerState4a218c scan_object_owner;
 		scan_object_owner.owner_vector_index = 0;
@@ -1792,6 +1793,40 @@ int main() {
 		return 1;
 	}
 	if (!require(owner_grid.footprint_finalizer_executed && !owner_grid.footprint_finalizer.blocked, "composed owner-grid chain did not execute the one-level land 0x4a3710 finalizer")) {
+		return 1;
+	}
+	if (!require(owner_grid.footprint_finalizer.generator_mode_0x10b8 == 0
+					&& owner_grid.footprint_finalizer.caller_level_argument_0x0c == 0
+					&& !owner_grid.footprint_finalizer.synthetic_branch_allowed_by_0x4a3a9d,
+				"one-level mode-0 0x4a3710 finalizer incorrectly entered the recovered synthetic append branch")) {
+		return 1;
+	}
+	const FootprintFinalizerResult4a3710 synthetic_mode_finalizer =
+			aurelion::h3maped_rmg_core::footprint_finalizer_4a3710(
+					1,
+					aurelion::h3maped_rmg_core::water_mode_code("land"),
+					2,
+					0,
+					4,
+					4);
+	if (!require(synthetic_mode_finalizer.blocked
+					&& synthetic_mode_finalizer.synthetic_branch_allowed_by_0x4a3a9d
+					&& synthetic_mode_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
+				"0x4a3710 did not fail closed for generator+0x10b8 synthetic append branch")) {
+		return 1;
+	}
+	const FootprintFinalizerResult4a3710 synthetic_level_finalizer =
+			aurelion::h3maped_rmg_core::footprint_finalizer_4a3710(
+					2,
+					aurelion::h3maped_rmg_core::water_mode_code("land"),
+					0,
+					1,
+					4,
+					4);
+	if (!require(synthetic_level_finalizer.blocked
+					&& synthetic_level_finalizer.synthetic_branch_allowed_by_0x4a3a9d
+					&& synthetic_level_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
+				"0x4a3710 did not fail closed for caller [EBP+0x0c] == 1 synthetic append branch")) {
 		return 1;
 	}
 	if (!require(owner_grid.handoffs.size() == 4, "composed owner-grid chain did not build one handoff per source walk")) {
@@ -4519,6 +4554,12 @@ int main() {
 	if (!require(composed.owner_grid.footprint_finalizer.appended_runtime_zone_count == 0, "one-level land 0x4a3710 finalizer should have no appended runtime zones")) {
 		return 1;
 	}
+	if (!require(composed.owner_grid.footprint_finalizer.generator_mode_0x10b8 == 0
+					&& composed.owner_grid.footprint_finalizer.caller_level_argument_0x0c == 0
+					&& !composed.owner_grid.footprint_finalizer.synthetic_branch_allowed_by_0x4a3a9d,
+				"mode-0 coordinate-to-owner-grid chain should not enter the recovered 0x4a3a9d synthetic append branch")) {
+		return 1;
+	}
 	if (!require(composed.owner_grid.footprint_finalizer.zone_order_reset_call_count == int32_t(seed_inputs.size()), "0x4a3710 finalizer did not reset one ordering vector per runtime zone")) {
 		return 1;
 	}
@@ -4547,6 +4588,13 @@ int main() {
 		return 1;
 	}
 	if (!require(composed_mode2.coordinate_seed.coordinate_prune_span_budget_4a218c == (minimum_source_base_size * 36) / 7, "0x4a218c mode 2 coordinate prune span budget mismatch")) {
+		return 1;
+	}
+	if (!require(composed_mode2.owner_grid.footprint_finalizer_executed
+					&& composed_mode2.owner_grid.footprint_finalizer.blocked
+					&& composed_mode2.owner_grid.footprint_finalizer.synthetic_branch_allowed_by_0x4a3a9d
+					&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
+				"mode-2 coordinate-to-owner-grid chain should fail closed at the recovered 0x4a3a9d synthetic append branch")) {
 		return 1;
 	}
 	{

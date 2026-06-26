@@ -1387,6 +1387,8 @@ struct FootprintFinalizerResult4a3710 {
 	std::string status;
 	int32_t level_count = 0;
 	int32_t water_mode_code = 0;
+	int32_t generator_mode_0x10b8 = 0;
+	int32_t caller_level_argument_0x0c = 0;
 	bool synthetic_branch_allowed_by_0x4a3a9d = false;
 	int32_t original_same_level_runtime_zone_count = 0;
 	int32_t final_runtime_zone_count = 0;
@@ -3590,7 +3592,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection);
 SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones);
-FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count);
+FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count);
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);

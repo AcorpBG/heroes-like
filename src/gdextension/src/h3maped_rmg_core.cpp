@@ -11450,6 +11450,48 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 		}
 
 		const int32_t level = owner.coordinate_level_0x18;
+		bool seed_cell_found = false;
+		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c && !seed_cell_found; ++y) {
+			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known) {
+					continue;
+				}
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(owner.runtime_zone_index & 0xff)) {
+					continue;
+				}
+				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
+				if (terrain_class == 8U && owner.terrain_policy_0x0c != 8) {
+					continue;
+				}
+				if (record.object_reference_vector_contents_known && !record.object_references_0x04_0x08.empty()) {
+					continue;
+				}
+				if ((record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) == 0U) {
+					continue;
+				}
+				if (!generated_cell_49a1d8_valid_record(record)) {
+					continue;
+				}
+				seed_cell_found = true;
+				break;
+			}
+		}
+		if (!seed_cell_found) {
+			const int64_t seed_flat = cell_index(grid.width, grid.height, owner.coordinate_x_0x10, owner.coordinate_y_0x14, level);
+			if (seed_flat >= 0 && seed_flat < int64_t(grid.records.size())) {
+				GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
+				if (generated_cell_49a932(seed_record, true)) {
+					report.projected_chain_occupied_stamp_count += 1;
+					result.projected_chain_occupied_stamp_count += 1;
+				}
+			}
+		}
+
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
 				report.scanned_cell_count += 1;
@@ -11469,9 +11511,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 					result.owner_byte_reject_count += 1;
 					continue;
 				}
-				if ((record.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
-					report.object_metadata_branch_blocked_count += 1;
-					result.object_metadata_branch_blocked_count += 1;
+				if ((record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) == 0U) {
 					continue;
 				}
 				if (!generated_cell_49a1d8_valid_record(record)) {
@@ -11480,7 +11520,11 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 					continue;
 				}
 				const uint32_t low_word = record.word_0x1c & 0x0000ffffU;
-				if (low_word == 0U || low_word >= 0x7530U) {
+				if (low_word == 0U) {
+					report.low_word_gate_skip_count += 1;
+					continue;
+				}
+				if ((record.word_0x24 & 0x3fU) == 8U) {
 					report.low_word_gate_skip_count += 1;
 					continue;
 				}
@@ -13633,12 +13677,14 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 	return result;
 }
 
-FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count) {
+FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count) {
 	FootprintFinalizerResult4a3710 result;
 	result.executed = true;
 	result.level_count = level_count;
 	result.water_mode_code = water_mode_code;
-	result.synthetic_branch_allowed_by_0x4a3a9d = level_count > 1 || water_mode_code != 0;
+	result.generator_mode_0x10b8 = generator_mode_0x10b8;
+	result.caller_level_argument_0x0c = caller_level_argument_0x0c;
+	result.synthetic_branch_allowed_by_0x4a3a9d = caller_level_argument_0x0c == 1 || generator_mode_0x10b8 != 0;
 	result.original_same_level_runtime_zone_count = std::max(0, original_same_level_runtime_zone_count);
 	result.final_runtime_zone_count = std::max(0, final_runtime_zone_count);
 	result.appended_runtime_zone_count = std::max(0, result.final_runtime_zone_count - result.original_same_level_runtime_zone_count);
@@ -13652,7 +13698,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 
 	if (result.synthetic_branch_allowed_by_0x4a3a9d) {
 		result.blocked = true;
-		result.status = "0x4a3710_non_land_or_multilevel_synthetic_adjacency_branch_not_materialized";
+		result.status = "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported";
 		return result;
 	}
 	if (result.appended_runtime_zone_count > 0) {
@@ -13660,7 +13706,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 		result.status = "0x4a3710_appended_zone_adjacency_schema_pending";
 		return result;
 	}
-	result.status = "0x4a3710_one_level_land_no_appended_zone_finalizer_executed";
+	result.status = "0x4a3710_source_backed_no_synthetic_runtime_zone_append_executed";
 	return result;
 }
 
@@ -13719,7 +13765,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 			same_level_runtime_zone_count += 1;
 		}
 	}
-	result.footprint_finalizer = footprint_finalizer_4a3710(level_count, water_mode_code, same_level_runtime_zone_count, same_level_runtime_zone_count);
+	result.footprint_finalizer = footprint_finalizer_4a3710(level_count, water_mode_code, generator_mode_0x10b8, 0, same_level_runtime_zone_count, same_level_runtime_zone_count);
 	result.footprint_finalizer_executed = result.footprint_finalizer.executed;
 	return result;
 }
