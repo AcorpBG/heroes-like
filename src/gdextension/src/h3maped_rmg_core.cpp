@@ -13287,9 +13287,11 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		for (size_t link_index = 0; link_index < links.size(); ++link_index) {
 			const RuntimeLinkSeedInput4a218c &link = links[link_index];
 			if (link.from_index == owner.runtime_zone_index) {
-				append_source_endpoint_record_0x4a1f3b(owner, link.to_index, int32_t(link_index), link.to_index, link.source_zone_b, link, false);
+				const int32_t target_owner_index = coordinate_zone_position_for_runtime_index(zones, link.to_index);
+				append_source_endpoint_record_0x4a1f3b(owner, target_owner_index, int32_t(link_index), link.to_index, link.source_zone_b, link, false);
 			} else if (link.to_index == owner.runtime_zone_index) {
-				append_source_endpoint_record_0x4a1f3b(owner, link.from_index, int32_t(link_index), link.from_index, link.source_zone_a, link, true);
+				const int32_t target_owner_index = coordinate_zone_position_for_runtime_index(zones, link.from_index);
+				append_source_endpoint_record_0x4a1f3b(owner, target_owner_index, int32_t(link_index), link.from_index, link.source_zone_a, link, true);
 			}
 		}
 		owner.source_endpoint_vector_0xc8_0xcc_count = int32_t(owner.source_endpoint_records_0xc8_0xcc.size());
