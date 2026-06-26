@@ -339,6 +339,18 @@ constexpr std::array<std::array<int32_t, 2>, 8> DIRECTION_TABLE_0X5A2658 = { {
 
 constexpr std::array<int32_t, 9> H3_TOWN_TO_TERRAIN_TABLE_540908 = { 2, 2, 3, 7, 0, 0, 5, 4, 2 };
 
+constexpr std::array<std::array<int32_t, 4>, 9> H3_TERRAIN_TO_MONSTER_TOWN_TABLE_58DB78 = { {
+	{ 0, 1, 4, -1 },
+	{ 6, -1, 0, 0 },
+	{ 0, 1, -1, 0 },
+	{ 2, -1, 0, 0 },
+	{ 7, 4, -1, 0 },
+	{ 6, 8, -1, 0 },
+	{ 5, 3, 4, -1 },
+	{ 3, -1, 0, 0 },
+	{ -1, 0, 0, 0 },
+} };
+
 constexpr std::array<TerrainVisualRow, 79> H3_TERRAIN_VISUAL_NORMAL_ROWS = { {
 	{ 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 0 }, { 2, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 }, { 3, 0, 0 },
 	{ 4, 0, 0 }, { 4, 0, 0 }, { 4, 0, 0 }, { 4, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 }, { 5, 0, 0 },
@@ -13337,6 +13349,55 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 	return result;
 }
 
+static void replay_monster_town_choice_0x49b4e1(
+		RuntimeTerrainSelectionRecord49b53d &record,
+		bool generator_field_0x08_non_negative,
+		H3MapedRng &rng,
+		int32_t &rng_call_count) {
+	record.monster_town_choice_0x08_known = false;
+	record.monster_town_choice_0x08 = -1;
+	record.monster_town_choice_rng_value_0x49b4e1 = -1;
+	record.monster_town_choice_rng_modulus_0x49b4e1 = 0;
+	record.monster_town_choice_selected_ordinal_0x49b4e1 = -1;
+	record.monster_town_choice_source_0x49b4e1.clear();
+
+	if (record.selected_town_choice_index_0x49b3c1 != -1) {
+		record.monster_town_choice_0x08_known = true;
+		record.monster_town_choice_0x08 = record.selected_town_choice_index_0x49b3c1;
+		record.monster_town_choice_source_0x49b4e1 = "0x49b4e1_fixed_owner_plus_0x04";
+		return;
+	}
+	if (record.selected_terrain_id_0x49b53d < 0
+			|| record.selected_terrain_id_0x49b53d >= int32_t(H3_TERRAIN_TO_MONSTER_TOWN_TABLE_58DB78.size())) {
+		record.monster_town_choice_source_0x49b4e1 = "0x49b4e1_terrain_policy_0x0c_out_of_table_range";
+		return;
+	}
+
+	const std::array<int32_t, 4> &table_row =
+			H3_TERRAIN_TO_MONSTER_TOWN_TABLE_58DB78[size_t(record.selected_terrain_id_0x49b53d)];
+	int32_t candidate_count = 0;
+	for (const int32_t candidate : table_row) {
+		if (candidate != -1 || generator_field_0x08_non_negative || candidate != 8) {
+			candidate_count += 1;
+		}
+	}
+	if (candidate_count <= 0) {
+		record.monster_town_choice_0x08_known = true;
+		record.monster_town_choice_0x08 = -1;
+		record.monster_town_choice_source_0x49b4e1 = "0x49b4e1_no_candidates_sets_owner_plus_0x08_minus_one";
+		return;
+	}
+
+	const int32_t rng_value = rng.next();
+	rng_call_count += 1;
+	record.monster_town_choice_rng_value_0x49b4e1 = rng_value;
+	record.monster_town_choice_rng_modulus_0x49b4e1 = candidate_count;
+	record.monster_town_choice_selected_ordinal_0x49b4e1 = rng_value % candidate_count;
+	record.monster_town_choice_0x08_known = true;
+	record.monster_town_choice_0x08 = table_row[size_t(record.monster_town_choice_selected_ordinal_0x49b4e1)];
+	record.monster_town_choice_source_0x49b4e1 = "0x49b4e1_0x58db78_rng_choice";
+}
+
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones) {
 	RuntimeTerrainSelectionResult49b53d result;
 	result.rng_state_before = rng_state_after_coordinate_replay;
@@ -13393,8 +13454,15 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 			record.forced_subterranean_0x49b5c3 = true;
 			result.forced_subterranean_count += 1;
 		}
+		replay_monster_town_choice_0x49b4e1(
+				record,
+				true,
+				rng,
+				result.monster_town_rng_call_count_0x49b4e1);
 		result.records.push_back(record);
 	}
+	result.total_rng_call_count_0x49b53d_0x49b4e1 =
+			result.rng_call_count + result.monster_town_rng_call_count_0x49b4e1;
 	result.rng_state_after = rng.state;
 	return result;
 }
@@ -14299,10 +14367,26 @@ static void apply_relation_owner_terrain_policy_0x49b53d(GeneratorRelationOwnerS
 	if (terrain_record == nullptr) {
 		owner.terrain_policy_0x0c_known = false;
 		owner.terrain_policy_0x0c = 0;
+		owner.monster_town_choice_0x08_known = false;
+		owner.monster_town_choice_0x08 = -1;
+		owner.monster_town_choice_rng_0x49b4e1_known = false;
+		owner.monster_town_choice_rng_value_0x49b4e1 = -1;
+		owner.monster_town_choice_rng_modulus_0x49b4e1 = 0;
+		owner.monster_town_choice_selected_ordinal_0x49b4e1 = -1;
 		return;
 	}
 	owner.terrain_policy_0x0c_known = true;
 	owner.terrain_policy_0x0c = terrain_record->selected_terrain_id_0x49b53d;
+	owner.monster_town_choice_0x08_known = terrain_record->monster_town_choice_0x08_known;
+	owner.monster_town_choice_0x08 = terrain_record->monster_town_choice_0x08;
+	owner.monster_town_choice_rng_0x49b4e1_known =
+			terrain_record->monster_town_choice_rng_value_0x49b4e1 >= 0;
+	owner.monster_town_choice_rng_value_0x49b4e1 =
+			terrain_record->monster_town_choice_rng_value_0x49b4e1;
+	owner.monster_town_choice_rng_modulus_0x49b4e1 =
+			terrain_record->monster_town_choice_rng_modulus_0x49b4e1;
+	owner.monster_town_choice_selected_ordinal_0x49b4e1 =
+			terrain_record->monster_town_choice_selected_ordinal_0x49b4e1;
 }
 
 static std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stream_records_from_relation_owner_0x4aab7e(const GeneratorRelationOwnerState4a218c &owner) {

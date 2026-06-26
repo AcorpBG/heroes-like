@@ -734,6 +734,12 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	out.source_pointer_type_0x04 = input.source_pointer_type_0x04;
 	out.town_choice_0x04_known = input.town_choice_0x04_known;
 	out.town_choice_0x04 = input.town_choice_0x04;
+	out.monster_town_choice_0x08_known = input.monster_town_choice_0x08_known;
+	out.monster_town_choice_0x08 = input.monster_town_choice_0x08;
+	out.monster_town_choice_rng_0x49b4e1_known = input.monster_town_choice_rng_0x49b4e1_known;
+	out.monster_town_choice_rng_value_0x49b4e1 = input.monster_town_choice_rng_value_0x49b4e1;
+	out.monster_town_choice_rng_modulus_0x49b4e1 = input.monster_town_choice_rng_modulus_0x49b4e1;
+	out.monster_town_choice_selected_ordinal_0x49b4e1 = input.monster_town_choice_selected_ordinal_0x49b4e1;
 	out.source_owner_slot_0x1c_known = input.source_owner_slot_0x1c_known;
 	out.source_owner_slot_0x1c = input.source_owner_slot_0x1c;
 	out.coordinate_triple_0x10_0x18_known = input.coordinate_triple_0x10_0x18_known;
@@ -2625,6 +2631,12 @@ void append_generator_relation_owner_vectors_json(std::ostream &out, const std::
 			<< ",\"source_pointer_type_0x04\":" << owner.source_pointer_type_0x04
 			<< ",\"town_choice_0x04_known\":" << (owner.town_choice_0x04_known ? "true" : "false")
 			<< ",\"town_choice_0x04\":" << owner.town_choice_0x04
+			<< ",\"monster_town_choice_0x08_known\":" << (owner.monster_town_choice_0x08_known ? "true" : "false")
+			<< ",\"monster_town_choice_0x08\":" << owner.monster_town_choice_0x08
+			<< ",\"monster_town_choice_rng_0x49b4e1_known\":" << (owner.monster_town_choice_rng_0x49b4e1_known ? "true" : "false")
+			<< ",\"monster_town_choice_rng_value_0x49b4e1\":" << owner.monster_town_choice_rng_value_0x49b4e1
+			<< ",\"monster_town_choice_rng_modulus_0x49b4e1\":" << owner.monster_town_choice_rng_modulus_0x49b4e1
+			<< ",\"monster_town_choice_selected_ordinal_0x49b4e1\":" << owner.monster_town_choice_selected_ordinal_0x49b4e1
 			<< ",\"source_owner_slot_0x1c_known\":" << (owner.source_owner_slot_0x1c_known ? "true" : "false")
 			<< ",\"source_owner_slot_0x1c\":" << owner.source_owner_slot_0x1c
 			<< ",\"coordinate_triple_0x10_0x18_known\":" << (owner.coordinate_triple_0x10_0x18_known ? "true" : "false")
@@ -3744,6 +3756,8 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"materialization_generated_cell_word_0x20_count\": " << payload.generated_cell_word_0x20.size() << ",\n";
 		out << "    \"town_choice_rng_call_count_0x49b3c1\": " << payload.town_choice_rng_call_count_0x49b3c1 << ",\n";
 		out << "    \"terrain_selection_rng_call_count_0x49b53d\": " << payload.terrain_selection_rng_call_count_0x49b53d << ",\n";
+		out << "    \"terrain_selection_monster_town_rng_call_count_0x49b4e1\": " << payload.terrain_selection_monster_town_rng_call_count_0x49b4e1 << ",\n";
+		out << "    \"terrain_selection_total_rng_call_count_0x49b53d_0x49b4e1\": " << payload.terrain_selection_total_rng_call_count_0x49b53d_0x49b4e1 << ",\n";
 		out << "    \"terrain_selection_match_to_town_count\": " << payload.terrain_selection_match_to_town_count << ",\n";
 		out << "    \"terrain_selection_allowed_flag_choice_count\": " << payload.terrain_selection_allowed_flag_choice_count << ",\n";
 		out << "    \"terrain_selection_no_eligible_default_zero_count\": " << payload.terrain_selection_no_eligible_default_zero_count << ",\n";
@@ -4100,6 +4114,10 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 		payload.coordinate_placement_step_count = int32_t(result.coordinate_seed.placement_steps.size());
 	payload.coordinate_boundary_input_count = int32_t(result.coordinate_seed.boundary_inputs.size());
 	payload.terrain_selection_rng_call_count_0x49b53d = result.terrain_selection.rng_call_count;
+	payload.terrain_selection_monster_town_rng_call_count_0x49b4e1 =
+			result.terrain_selection.monster_town_rng_call_count_0x49b4e1;
+	payload.terrain_selection_total_rng_call_count_0x49b53d_0x49b4e1 =
+			result.terrain_selection.total_rng_call_count_0x49b53d_0x49b4e1;
 	payload.terrain_selection_match_to_town_count = result.terrain_selection.match_to_town_count;
 	payload.terrain_selection_allowed_flag_choice_count = result.terrain_selection.allowed_flag_choice_count;
 	payload.terrain_selection_no_eligible_default_zero_count = result.terrain_selection.no_eligible_default_zero_count;
