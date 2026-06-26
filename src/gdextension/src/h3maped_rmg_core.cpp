@@ -10588,6 +10588,13 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 	return build;
 }
 
+static void final_object_set_le32_payload_0x4ad1e3(std::array<uint8_t, 4> &bytes, uint32_t value) {
+	bytes[0] = uint8_t(value & 0xffU);
+	bytes[1] = uint8_t((value >> 8U) & 0xffU);
+	bytes[2] = uint8_t((value >> 16U) & 0xffU);
+	bytes[3] = uint8_t((value >> 24U) & 0xffU);
+}
+
 static std::string final_object_payload_field_blocker_0x4ad3eb(uint32_t serializer_slot_0x0c, const char *field_name) {
 	std::ostringstream reason;
 	reason << "final_object_payload_" << field_name << "_missing_for_serializer_slot_0x"
@@ -10780,12 +10787,15 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 			}
 			return result;
 		}
+		result.object_definition_count_payload_byte_count = 4;
+		final_object_set_le32_payload_0x4ad1e3(
+				result.object_definition_count_payload_bytes,
+				uint32_t(result.object_definition_count));
+		result.object_definition_count_header_written_0x4ad29f = true;
 		result.object_count_payload_byte_count = 4;
-		const uint32_t count = uint32_t(result.generated_object_count);
-		result.object_count_payload_bytes[0] = uint8_t(count & 0xffU);
-	result.object_count_payload_bytes[1] = uint8_t((count >> 8U) & 0xffU);
-	result.object_count_payload_bytes[2] = uint8_t((count >> 16U) & 0xffU);
-	result.object_count_payload_bytes[3] = uint8_t((count >> 24U) & 0xffU);
+		final_object_set_le32_payload_0x4ad1e3(
+				result.object_count_payload_bytes,
+				uint32_t(result.generated_object_count));
 	result.pass_split_metadata_table_owned_0x57c648_plus_0x0c = true;
 		const int32_t last_sample_start = std::max<int32_t>(0, result.generated_object_count - 8);
 		for (int32_t index = 0; index < result.generated_object_count; ++index) {
@@ -10845,6 +10855,123 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
 		return result;
 	}
+
+static void final_payload_append_section_0x4ad1e3(
+		FinalPayloadWriteoutResult4ad1e3 &result,
+		const char *section_id,
+		const char *h3maped_anchor,
+		const uint8_t *bytes,
+		size_t byte_count) {
+	FinalPayloadWriteoutSection4ad1e3 section;
+	section.section_id = section_id;
+	section.h3maped_anchor = h3maped_anchor;
+	section.offset = int32_t(result.payload_bytes.size());
+	section.byte_count = int32_t(byte_count);
+	result.sections.push_back(section);
+	if (byte_count > 0U && bytes != nullptr) {
+		result.payload_bytes.insert(result.payload_bytes.end(), bytes, bytes + byte_count);
+	}
+}
+
+static void final_payload_append_vector_section_0x4ad1e3(
+		FinalPayloadWriteoutResult4ad1e3 &result,
+		const char *section_id,
+		const char *h3maped_anchor,
+		const std::vector<uint8_t> &bytes) {
+	if (bytes.empty()) {
+		final_payload_append_section_0x4ad1e3(result, section_id, h3maped_anchor, nullptr, 0U);
+		return;
+	}
+	final_payload_append_section_0x4ad1e3(result, section_id, h3maped_anchor, bytes.data(), bytes.size());
+}
+
+static void final_payload_append_array4_section_0x4ad1e3(
+		FinalPayloadWriteoutResult4ad1e3 &result,
+		const char *section_id,
+		const char *h3maped_anchor,
+		const std::array<uint8_t, 4> &bytes,
+		int32_t byte_count) {
+	if (byte_count <= 0) {
+		final_payload_append_section_0x4ad1e3(result, section_id, h3maped_anchor, nullptr, 0U);
+		return;
+	}
+	final_payload_append_section_0x4ad1e3(result, section_id, h3maped_anchor, bytes.data(), size_t(byte_count));
+}
+
+static FinalPayloadWriteoutResult4ad1e3 final_payload_assemble_ordered_0x4ad1e3(
+		const FinalHeaderWriteoutResult4ac857 &header,
+		const FinalTileWriteoutResult49b2b6 &tile,
+		const FinalObjectWriteoutResult4ad1e3 &objects) {
+	FinalPayloadWriteoutResult4ad1e3 result;
+	result.invoked = true;
+	if (!header.applied
+			|| header.header_payload_byte_count != int32_t(header.header_payload_bytes.size())
+			|| !header.post_header_initial_zero_written_0x4ad206
+			|| header.post_header_initial_zero_payload_byte_count != 4) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_header_or_0x4ad206_zero_missing";
+		return result;
+	}
+	if (!tile.applied
+			|| tile.byte_count != int32_t(tile.tile_payload_bytes.size())) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_0x49b2b6_tile_stream_missing";
+		return result;
+	}
+	if (!objects.object_definition_table_applied
+			|| !objects.object_definition_count_header_written_0x4ad29f
+			|| objects.object_definition_count_payload_byte_count != 4
+			|| objects.object_definition_payload_byte_count != int32_t(objects.object_definition_payload_bytes.size())) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_object_definition_table_or_count_missing";
+		return result;
+	}
+	if (!objects.object_count_header_written
+			|| objects.object_count_payload_byte_count != 4
+			|| !objects.object_payload_prefix_applied
+			|| objects.object_payload_byte_count != int32_t(objects.object_payload_bytes.size())) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_generated_object_count_or_payload_missing";
+		return result;
+	}
+	if (!objects.final_zero_sentinel_written_0x4ad3db
+			|| objects.final_zero_sentinel_payload_byte_count != 4
+			|| !objects.final_success_test_0x4ad3de_passed) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_final_zero_sentinel_missing";
+		return result;
+	}
+
+	result.header_payload_byte_count = header.header_payload_byte_count;
+	result.post_header_initial_zero_payload_byte_count = header.post_header_initial_zero_payload_byte_count;
+	result.tile_payload_byte_count = tile.byte_count;
+	result.object_definition_count_payload_byte_count = objects.object_definition_count_payload_byte_count;
+	result.object_definition_payload_byte_count = objects.object_definition_payload_byte_count;
+	result.generated_object_count_payload_byte_count = objects.object_count_payload_byte_count;
+	result.object_payload_byte_count = objects.object_payload_byte_count;
+	result.final_zero_sentinel_payload_byte_count = objects.final_zero_sentinel_payload_byte_count;
+	const int32_t expected_total =
+			result.header_payload_byte_count
+			+ result.post_header_initial_zero_payload_byte_count
+			+ result.tile_payload_byte_count
+			+ result.object_definition_count_payload_byte_count
+			+ result.object_definition_payload_byte_count
+			+ result.generated_object_count_payload_byte_count
+			+ result.object_payload_byte_count
+			+ result.final_zero_sentinel_payload_byte_count;
+	result.payload_bytes.reserve(size_t(std::max<int32_t>(0, expected_total)));
+	final_payload_append_vector_section_0x4ad1e3(result, "header_player_metadata", "0x4ac857", header.header_payload_bytes);
+	final_payload_append_array4_section_0x4ad1e3(result, "post_header_initial_zero", "0x4ad206", header.post_header_initial_zero_payload_bytes, header.post_header_initial_zero_payload_byte_count);
+	final_payload_append_vector_section_0x4ad1e3(result, "tile_stream", "0x49b2b6", tile.tile_payload_bytes);
+	final_payload_append_array4_section_0x4ad1e3(result, "object_definition_count", "0x4ad29f", objects.object_definition_count_payload_bytes, objects.object_definition_count_payload_byte_count);
+	final_payload_append_vector_section_0x4ad1e3(result, "object_definition_table", "0x4ad3eb_static_vectors_0x4a8_0x7f8_and_wrapper_bucket_order", objects.object_definition_payload_bytes);
+	final_payload_append_array4_section_0x4ad1e3(result, "generated_object_count", "0x4ad330", objects.object_count_payload_bytes, objects.object_count_payload_byte_count);
+	final_payload_append_vector_section_0x4ad1e3(result, "generated_object_payload", "0x4ad36f_0x4ad3b1_0x4ad3eb_two_pass", objects.object_payload_bytes);
+	final_payload_append_array4_section_0x4ad1e3(result, "final_zero_sentinel", "0x4ad3db_0x4ad3de", objects.final_zero_sentinel_payload_bytes, objects.final_zero_sentinel_payload_byte_count);
+	result.total_payload_byte_count = int32_t(result.payload_bytes.size());
+	result.applied = result.total_payload_byte_count == expected_total;
+	if (!result.applied) {
+		result.blocked_reason = "0x4ad1e3_ordered_payload_byte_count_mismatch";
+		return result;
+	}
+	result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
+	return result;
+}
 
 static bool road_generated_cell_grid_shape_valid_0x4ab52a(const GeneratedCellRecordGrid0x30 &grid) {
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
@@ -17624,11 +17751,42 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< result.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_eax_0x4ad3de;
 		add_phase("final_zero_sentinel_success_test", "0x4ad3db_0x4ad3de_0x4ae09a", "complete_source_order_prefix", sentinel_note.str());
 	}
+	result.current_phase_id = "final_payload_assembly";
+	result.final_payload_writeout_0x4ad1e3 =
+			final_payload_assemble_ordered_0x4ad1e3(
+					result.final_header_writeout_0x4ac857_0x4ad206,
+					result.final_tile_writeout_0x49b2b6,
+					result.final_object_writeout_0x4ad309_0x4ad3eb);
+	if (!result.final_payload_writeout_0x4ad1e3.applied) {
+		result.blocked_reason = result.final_payload_writeout_0x4ad1e3.blocked_reason.empty()
+				? "0x4ad1e3_ordered_full_final_payload_assembly_not_applied"
+				: result.final_payload_writeout_0x4ad1e3.blocked_reason;
+		add_phase("full_final_payload_assembly", "0x4ad1e3_ordered_stream_sections", "blocked", result.blocked_reason);
+		return result;
+	}
+	{
+		std::ostringstream assembly_note;
+		assembly_note << "total_payload_bytes=" << result.final_payload_writeout_0x4ad1e3.total_payload_byte_count
+				<< ",sections=" << result.final_payload_writeout_0x4ad1e3.sections.size()
+				<< ",header_bytes=" << result.final_payload_writeout_0x4ad1e3.header_payload_byte_count
+				<< ",tile_bytes=" << result.final_payload_writeout_0x4ad1e3.tile_payload_byte_count
+				<< ",object_definition_count_bytes="
+				<< result.final_payload_writeout_0x4ad1e3.object_definition_count_payload_byte_count
+				<< ",object_definition_bytes="
+				<< result.final_payload_writeout_0x4ad1e3.object_definition_payload_byte_count
+				<< ",generated_object_count_bytes="
+				<< result.final_payload_writeout_0x4ad1e3.generated_object_count_payload_byte_count
+				<< ",object_payload_bytes="
+				<< result.final_payload_writeout_0x4ad1e3.object_payload_byte_count
+				<< ",sentinel_bytes="
+				<< result.final_payload_writeout_0x4ad1e3.final_zero_sentinel_payload_byte_count;
+		add_phase("full_final_payload_assembly", "0x4ad1e3_ordered_0x4ac857_0x4ad206_0x49b2b6_0x4ad29f_0x4ad3eb_0x4ad330_0x4ad3db", "complete_source_order_prefix", assembly_note.str());
+	}
 	result.current_phase_id = "final_payload_compare";
 	result.status = "blocked";
-	result.blocked_reason = result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.empty()
-			? "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix"
-			: result.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason;
+	result.blocked_reason = result.final_payload_writeout_0x4ad1e3.blocked_reason.empty()
+			? "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly"
+			: result.final_payload_writeout_0x4ad1e3.blocked_reason;
 	add_phase("full_final_payload_same_run_compare", "0x4ad1e3_ordered_payload_and_same_run_h3maped_stream", "blocked", result.blocked_reason);
 	return result;
 }
