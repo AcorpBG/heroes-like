@@ -2188,6 +2188,21 @@ int main() {
 	if (!require(composed.coordinate_seed.boundary_inputs.size() == seed_inputs.size(), "coordinate seed did not emit one boundary input per runtime-zone seed")) {
 		return 1;
 	}
+	const CoordinateOwnerGridResult4a218c rectangular_composed = aurelion::h3maped_rmg_core::coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(
+			72,
+			36,
+			1,
+			aurelion::h3maped_rmg_core::water_mode_code("land"),
+			0,
+			1234U,
+			seed_inputs,
+			links);
+	if (!require(!rectangular_composed.coordinate_seed_blocked, "rectangular coordinate seed blocked before 0x4a19ed map-span check")) {
+		return 1;
+	}
+	if (!require(rectangular_composed.coordinate_seed.map_span == 72, "0x4a19ed rescale must use the larger map dimension")) {
+		return 1;
+	}
 	if (!require(composed.coordinate_seed.boundary_inputs[3].source_record_vector_index_4a3e9c == seed_inputs[3].source_index, "coordinate seed rewrote source-record vector index to compacted runtime position")) {
 		return 1;
 	}

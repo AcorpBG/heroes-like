@@ -13269,7 +13269,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 	const int32_t bbox_height = max_y - min_y;
 	const int32_t bbox_width = max_x - min_x;
 	const int32_t bbox_span = std::max(bbox_height, bbox_width);
-	const int32_t map_span = std::min(width, height);
+	const int32_t map_span = std::max(width, height);
 	const int32_t offset_y = (min_y - bbox_span + max_y) / 2;
 	const int32_t offset_x = (min_x - bbox_span + max_x) / 2;
 	result.min_y_before_rescale = min_y;
