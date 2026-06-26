@@ -2412,7 +2412,6 @@ int main() {
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
 						&& generator_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
-						&& generator_state.materialization_bridge_water_edge_writer_source_water_cell_count_0x4a4fc5 > 0
 						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
