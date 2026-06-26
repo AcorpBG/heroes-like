@@ -2495,6 +2495,14 @@ int main() {
 	int32_t summed_owner_local_vector_0x404_count = 0;
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
+	auto relation_owner_vector_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
+		for (int32_t index = 0; index < int32_t(generator_state.relation_owner_vectors_10e4_10e8.size()); ++index) {
+			if (generator_state.relation_owner_vectors_10e4_10e8[size_t(index)].runtime_zone_index == runtime_zone_index) {
+				return index;
+			}
+		}
+		return -1;
+	};
 	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
 		summed_relation_record_count += owner.relation_record_count;
 		if (!require(owner.constructor_0x49b452_known, "generator relation owner did not carry recovered 0x49b452 constructor state")) {
@@ -2580,6 +2588,14 @@ int main() {
 				return 1;
 			}
 			const RuntimeLinkSeedInput4a218c &runtime_link = selected_after_setup3.runtime_seed.runtime_links[size_t(endpoint_record.source_link_index)];
+			const int32_t expected_target_runtime_zone = runtime_link.from_index == owner.runtime_zone_index ? runtime_link.to_index : runtime_link.from_index;
+			const int32_t expected_target_owner_vector_index = relation_owner_vector_index_for_runtime_zone(expected_target_runtime_zone);
+			if (!require(expected_target_owner_vector_index >= 0
+							&& endpoint_record.target_relation_owner_vector_index_0x00 == expected_target_owner_vector_index
+							&& endpoint_record.target_runtime_zone_index == expected_target_runtime_zone,
+						"0x4a1f3b source endpoint record first dword did not preserve target relation-owner vector index")) {
+				return 1;
+			}
 			if (!require(endpoint_record.guard_value == runtime_link.guard_value
 							&& endpoint_record.wide == runtime_link.wide
 							&& endpoint_record.border_guard == runtime_link.border_guard,

@@ -670,6 +670,7 @@ SharedGeneratorRelationRecordState from_h3maped_generator_relation_record_state(
 
 SharedGeneratorSourceEndpointRecordState from_h3maped_generator_source_endpoint_record_state(const h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b &input) {
 	SharedGeneratorSourceEndpointRecordState out;
+	out.target_relation_owner_vector_index_0x00 = input.target_relation_owner_vector_index_0x00;
 	out.source_link_index = input.source_link_index;
 	out.owner_runtime_zone_index = input.owner_runtime_zone_index;
 	out.owner_source_zone_id = input.owner_source_zone_id;
@@ -2547,7 +2548,8 @@ void append_generator_source_endpoint_records_json(std::ostream &out, const std:
 			out << ",";
 		}
 		const SharedGeneratorSourceEndpointRecordState &record = records[index];
-		out << "{\"source_link_index\":" << record.source_link_index
+		out << "{\"target_relation_owner_vector_index_0x00\":" << record.target_relation_owner_vector_index_0x00
+			<< ",\"source_link_index\":" << record.source_link_index
 			<< ",\"owner_runtime_zone_index\":" << record.owner_runtime_zone_index
 			<< ",\"owner_source_zone_id\":" << record.owner_source_zone_id
 			<< ",\"target_runtime_zone_index\":" << record.target_runtime_zone_index
