@@ -196,13 +196,15 @@ std::vector<NativeH3MapedWorkflowPhase> from_h3maped_workflow_phases(const std::
 	return phases;
 }
 
-std::vector<std::string> generated_cell_mutation_phase_blockers() {
-	return {
-		"0x4a1f3b_relation_scan_bound_producer_or_scan_consumer_order_unported",
-		"0x49a318_recovered_callsite_order_private_state_compare_pending_after_bit22_policy_port",
-		"0x49aa63_0x49a932_0x49abd6_0x49a85d_0x49a962_candidate_occupied_action_caller_order",
-		"0x49cf34_0x4aa3e9_relation_reward_attachment_caller_order"
-	};
+std::vector<std::string> generated_cell_mutation_phase_blockers(bool relation_scan_bound_order_owned = false) {
+	std::vector<std::string> blockers;
+	if (!relation_scan_bound_order_owned) {
+		blockers.push_back("0x4a1f3b_relation_scan_bound_producer_or_scan_consumer_order_unported");
+	}
+	blockers.push_back("0x49a318_recovered_callsite_order_private_state_compare_pending_after_bit22_policy_port");
+	blockers.push_back("0x49aa63_0x49a932_0x49abd6_0x49a85d_0x49a962_candidate_occupied_action_caller_order");
+	blockers.push_back("0x49cf34_0x4aa3e9_relation_reward_attachment_caller_order");
+	return blockers;
 }
 
 std::vector<std::string> terrain_selection_parity_blockers() {
@@ -4111,6 +4113,12 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	const h3maped_rmg_core::CoordinateOwnerGridResult4a218c &result = workflow.coordinate_owner_grid_0x4a218c;
 	const h3maped_rmg_core::GeneratorObjectPrivateState &generator_private_state = workflow.generator_object_private_state;
 	payload.generator_object_private_state = from_h3maped_generator_object_private_state(generator_private_state);
+	const bool relation_scan_bound_order_owned =
+			generator_private_state.relation_owner_scan_bounds_0x4a1f3b_applied
+			&& generator_private_state.relation_owner_coordinate_recenter_0x4a2ffa_applied
+			&& generator_private_state.relation_scan_consumers_4a5767_applied;
+	payload.missing_generated_cell_mutation_phases =
+			generated_cell_mutation_phase_blockers(relation_scan_bound_order_owned);
 
 	payload.coordinate_seed_blocked = result.coordinate_seed_blocked;
 	payload.coordinate_generator_mode_0x10b8 = result.coordinate_seed.generator_mode_0x10b8;

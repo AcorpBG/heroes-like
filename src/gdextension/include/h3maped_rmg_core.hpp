@@ -1527,6 +1527,16 @@ struct TerrainRepaintResult4a3f27 {
 	int32_t terrain_visual_final_sweep_class_correction_count_0x4bbfcc = 0;
 	int32_t terrain_visual_preserved_current_record_count_0x4bc5a3 = 0;
 	bool terrain_visual_queue_drain_complete_0x4bc5f0 = false;
+	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
+	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
+	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
+	bool relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
+	int32_t relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_changed_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa = 0;
+	int32_t relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa = 0;
+	std::vector<GeneratorRelationOwnerState4a218c> relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa;
 	std::vector<uint32_t> generated_cell_word_0x10;
 	std::vector<uint32_t> generated_cell_word_0x1c;
 	std::vector<uint32_t> generated_cell_word_0x20;
