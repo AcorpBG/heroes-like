@@ -1852,10 +1852,10 @@ int main() {
 	}
 
 	const std::vector<RuntimeZoneFootprintInput4a3a03> runtime_zones = {
-		RuntimeZoneFootprintInput4a3a03 { 0, 1, 8, 8, 0 },
-		RuntimeZoneFootprintInput4a3a03 { 1, 2, 20, 8, 0 },
-		RuntimeZoneFootprintInput4a3a03 { 2, 3, 20, 20, 0 },
-		RuntimeZoneFootprintInput4a3a03 { 3, 4, 8, 20, 0 },
+		RuntimeZoneFootprintInput4a3a03 { 0, 1, 8, 8, 0, 1, 0, 1 },
+		RuntimeZoneFootprintInput4a3a03 { 1, 2, 20, 8, 0, 2, 1, 1 },
+		RuntimeZoneFootprintInput4a3a03 { 2, 3, 20, 20, 0, 3, 2, 1 },
+		RuntimeZoneFootprintInput4a3a03 { 3, 4, 8, 20, 0, 4, 3, 1 },
 	};
 	const SourceNodeFootprintResult4a3a03 footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(runtime_zones);
 	if (!require(!footprint.blocked, "source-node footprint producer unexpectedly blocked")) {
