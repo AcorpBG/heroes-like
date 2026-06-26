@@ -13647,6 +13647,7 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 	RuntimeTerrainSelectionResult49b53d result;
 	result.rng_state_before = rng_state_after_coordinate_replay;
 	result.rng_state_after = rng_state_after_coordinate_replay;
+	result.rng_state_after_monster_town_0x49b4e1 = rng_state_after_coordinate_replay;
 
 	H3MapedRng rng;
 	rng.state = rng_state_after_coordinate_replay;
@@ -13699,16 +13700,11 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 			record.forced_subterranean_0x49b5c3 = true;
 			result.forced_subterranean_count += 1;
 		}
-		replay_monster_town_choice_0x49b4e1(
-				record,
-				true,
-				rng,
-				result.monster_town_rng_call_count_0x49b4e1);
 		result.records.push_back(record);
 	}
-	result.total_rng_call_count_0x49b53d_0x49b4e1 =
-			result.rng_call_count + result.monster_town_rng_call_count_0x49b4e1;
 	result.rng_state_after = rng.state;
+	result.rng_state_after_monster_town_0x49b4e1 = result.rng_state_after;
+	result.total_rng_call_count_0x49b53d_0x49b4e1 = result.rng_call_count;
 	return result;
 }
 
@@ -13716,6 +13712,7 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 	RuntimeTerrainSelectionResult49b53d result;
 	result.rng_state_before = rng_state_after_coordinate_replay;
 	result.rng_state_after = rng_state_after_coordinate_replay;
+	result.rng_state_after_monster_town_0x49b4e1 = rng_state_after_coordinate_replay;
 
 	H3MapedRng rng;
 	rng.state = rng_state_after_coordinate_replay;
@@ -13776,18 +13773,41 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 			record.forced_subterranean_0x49b5c3 = true;
 			result.forced_subterranean_count += 1;
 		}
-		replay_monster_town_choice_0x49b4e1(
-				record,
-				true,
-				rng,
-				result.monster_town_rng_call_count_0x49b4e1);
 		apply_relation_owner_terrain_policy_0x49b53d(owner, &record);
 		result.records.push_back(record);
 	}
-	result.total_rng_call_count_0x49b53d_0x49b4e1 =
-			result.rng_call_count + result.monster_town_rng_call_count_0x49b4e1;
 	result.rng_state_after = rng.state;
+	result.rng_state_after_monster_town_0x49b4e1 = result.rng_state_after;
+	result.total_rng_call_count_0x49b53d_0x49b4e1 = result.rng_call_count;
 	return result;
+}
+
+static void replay_runtime_monster_town_choices_0x49b4e1(
+		RuntimeTerrainSelectionResult49b53d &terrain_selection,
+		std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
+		bool generator_field_0x08_non_negative) {
+	H3MapedRng rng;
+	rng.state = terrain_selection.rng_state_after;
+	terrain_selection.monster_town_rng_call_count_0x49b4e1 = 0;
+	for (RuntimeTerrainSelectionRecord49b53d &record : terrain_selection.records) {
+		replay_monster_town_choice_0x49b4e1(
+				record,
+				generator_field_0x08_non_negative,
+				rng,
+				terrain_selection.monster_town_rng_call_count_0x49b4e1);
+		for (GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+			const int32_t owner_runtime_zone_index = owner.runtime_zone_index >= 0
+					? owner.runtime_zone_index
+					: owner.owner_vector_index;
+			if (owner_runtime_zone_index == record.runtime_zone_index) {
+				apply_relation_owner_terrain_policy_0x49b53d(owner, &record);
+				break;
+			}
+		}
+	}
+	terrain_selection.rng_state_after_monster_town_0x49b4e1 = rng.state;
+	terrain_selection.total_rng_call_count_0x49b53d_0x49b4e1 =
+			terrain_selection.rng_call_count + terrain_selection.monster_town_rng_call_count_0x49b4e1;
 }
 
 static GeneratedCellRecordGrid0x30 generated_cell_record_grid_from_terrain_words_4a3f27(
@@ -13831,7 +13851,15 @@ static GeneratedCellRecordGrid0x30 generated_cell_record_grid_from_terrain_words
 
 static bool apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner);
 
-TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners) {
+TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		const BoundaryMaterialization4a2777 &owner_materialization,
+		const RuntimeTerrainSelectionResult49b53d &terrain_selection,
+		const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners,
+		bool visual_rng_state_override_known_0x4a3f27,
+		uint32_t visual_rng_state_override_0x4a3f27) {
 	TerrainRepaintResult4a3f27 result;
 	result.status = "blocked_invalid_dimensions";
 	if (width <= 0 || height <= 0 || level_count <= 0) {
@@ -13914,7 +13942,9 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height,
 	const int32_t level_tile_count = width * height;
 	const TerrainVisualGridTables visual_tables = load_terrain_visual_grid_tables_4bcff5();
 	H3MapedRng live_visual_rng;
-	live_visual_rng.state = terrain_selection.rng_state_after;
+	live_visual_rng.state = visual_rng_state_override_known_0x4a3f27
+			? visual_rng_state_override_0x4a3f27
+			: terrain_selection.rng_state_after;
 	result.terrain_visual_rng_state_before_0x4bb74b = live_visual_rng.state;
 
 	auto live_accept_neighbor = [&](int32_t neighbor_index, int32_t terrain_id) -> bool {
@@ -14820,28 +14850,34 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	if (result.coordinate_seed_blocked) {
 		return result;
 	}
+	result.terrain_selection = runtime_terrain_selection_49b53d(
+			result.coordinate_seed.rng_state_after,
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
+	replay_runtime_monster_town_choices_0x49b4e1(
+			result.terrain_selection,
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
+			true);
+	result.terrain_selection_executed = true;
 	result.owner_grid = materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
 			width,
 			height,
 			level_count,
 			water_mode_code,
 			generator_mode_0x10b8,
-			result.coordinate_seed.rng_state_after,
+			result.terrain_selection.rng_state_after_monster_town_0x49b4e1,
 			result.coordinate_seed.boundary_inputs,
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
 	result.owner_grid_executed = result.owner_grid.materialization_executed;
 	if (result.owner_grid_executed) {
-		result.terrain_selection = runtime_terrain_selection_49b53d(
-				result.owner_grid.materialization.rng_state_after,
-				result.coordinate_seed.relation_owner_vectors_10e4_10e8);
-		result.terrain_selection_executed = true;
 		result.terrain_repaint = terrain_repaint_4a3f27(
 				width,
 				height,
 				level_count,
 				result.owner_grid.materialization,
 				result.terrain_selection,
-				&result.coordinate_seed.relation_owner_vectors_10e4_10e8);
+				&result.coordinate_seed.relation_owner_vectors_10e4_10e8,
+				true,
+				result.owner_grid.materialization.rng_state_after);
 		result.terrain_repaint_executed = result.terrain_repaint.executed;
 	}
 	return result;
