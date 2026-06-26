@@ -19608,8 +19608,11 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				break;
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
+				append_vertex(zone, from_clip.x, from_clip.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
 				if (!source_edge_writer_allowed(from, current_owner_word_0x00)) {
 					result.owner_gate_skipped_segment_count += 1;
+					current_x = to_clip.x;
+					current_y = to_clip.y;
 					continue;
 				}
 					append_segment(
