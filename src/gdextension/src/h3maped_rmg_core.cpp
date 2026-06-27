@@ -18514,6 +18514,10 @@ static bool relation_lookup_wide_0x4a4c8e(const std::vector<GeneratorRelationOwn
 	return false;
 }
 
+bool relation_boundary_triggers_candidate_0x4a4c8e(bool relation_found, int32_t level, bool relation_wide) {
+	return !relation_found || level != 1 || !relation_wide;
+}
+
 static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, H3MapedRng &rng) {
 	RouteFreeCellPhaseResult4a8260 result;
 	result.rng_state_before = rng.state;
@@ -18693,7 +18697,7 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 						}
 						bool relation_wide = false;
 						const bool relation_found = relation_lookup_wide_0x4a4c8e(owners, owner_signed, neighbor_owner_signed, relation_wide);
-						if (!relation_found || level == 1 || !relation_wide) {
+						if (relation_boundary_triggers_candidate_0x4a4c8e(relation_found, level, relation_wide)) {
 							triggered = true;
 						}
 					}
@@ -20963,7 +20967,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				level_count,
 				generator_mode_0x10b8,
 				zone.span_fill_owner_word_0x4a325d,
-				zone.span_fill_owner_word_0x4a325d,
+				zone.generated_cell_owner_byte2 >= 0 ? zone.generated_cell_owner_byte2 : zone.span_fill_owner_word_0x4a325d,
 				seed);
 		for (const auto &item : fill.unique_cells) {
 			unique_cells[item.first] = true;
