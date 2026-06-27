@@ -1399,10 +1399,11 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 			continue;
 		}
 		const CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(other_owner, zones);
-		min_y = std::min(other.y - other.source_base_size, min_y);
-		min_x = std::min(other.x - other.source_base_size, min_x);
-		max_y = std::max(other.y + other.source_base_size + 1, max_y);
-		max_x = std::max(other.x + other.source_base_size + 1, max_x);
+		const int32_t other_source_span = relation_owner_source_span_0x08(other_owner, other);
+		min_y = std::min(other.y - other_source_span, min_y);
+		min_x = std::min(other.x - other_source_span, min_x);
+		max_y = std::max(other.y + other_source_span + 1, max_y);
+		max_x = std::max(other.x + other_source_span + 1, max_x);
 	}
 
 	auto candidate_span_metric = [&](const CoordinateCandidate4a17f5 &candidate) {
