@@ -33,7 +33,10 @@ The active shared native core now executes these recovered TerrainPlacement piec
 5. `0x4bb74b/0x4bc5f0` live feedback:
    - one-level maps skip the terrain-9 full-map visual prefill through the recovered `0x4a3f27` `level_count <= 1` branch, then run the terrain-8 water visual prefill;
    - two-level terrain-9 prefill remains future-scoped; do not treat the current one-level implementation as underground parity;
-   - owner/member-gated terrain repaint writes visual rows and flags;
+   - `0x4bb681` reads the current effective terrain through `0x4bb71b` before writing a visual cell;
+   - `0x4bb681` calls `0x4bb74b` live feedback only when that effective terrain differs from the active terrain;
+   - `0x4bb681` same-terrain cells skip `0x4bb74b` feedback and route through direct `0x4bcfc3 + 0x4bad0f` visual/scratch rewrite;
+   - owner/member-gated terrain repaint writes visual rows and flags through the same `0x4bb681` topology path instead of pre-setting terrain and posting feedback unconditionally;
    - set-A/set-B feedback drains by recovered ordered-tree first-node order, with key comparison by `(y, x)` for the supported one-level land path;
    - `0x4bc5f0` drains all set-A entries first, then drains set-B until set-B is empty, then returns to set-A if set-B processing repopulated it;
    - `0x4bbd01` retouch and `0x4bc988` candidate gates now read the active scratch terrain state, not only the base terrain array;
@@ -66,6 +69,7 @@ The focused native selftest exercises the TerrainPlacement implementation broadl
 - generated-cell terrain ids match the live terrain code;
 - visual/art rows are nonzero for at least some cells;
 - visual selection consumes RNG.
+- a focused same-terrain water-scope regression writes direct `0x4bd099` visual cells while keeping `0x4bb74b` feedback count at zero;
 - recovered set-A/set-B feedback behavior remains ordered-tree first-node ordered;
 - `0x4bbd01` / `0x4bc988` scratch-terrain retouch paths stay wired to the active scratch words;
 - `0x4bb74b` byte5-zero live feedback keeps absent non-candidates out of set-A and only seeds removed existing set-A members;
@@ -75,9 +79,9 @@ The exact `0x4ba91d` flag-A neighbor probe is an internal helper inside the shar
 
 ## Remaining Checkpoint-2 Blocker
 
-The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable, and now uses recovered `0x4ba91d` flag-A semantics for complex same-terrain continuity. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B ordered-tree first-node drain behavior, byte5-zero same-class retouch routing, and the `0x4bb74b` byte5-zero live-feedback branch. This is still not a TerrainPlacement parity claim.
+The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable, and now uses recovered `0x4ba91d` flag-A semantics for complex same-terrain continuity. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B ordered-tree first-node drain behavior, byte5-zero same-class retouch routing, the `0x4bb74b` byte5-zero live-feedback branch, and the recovered `0x4bb681` same-terrain direct rewrite vs changed-terrain feedback split. This is still not a TerrainPlacement parity claim.
 
-The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=57`, `h3maped=54`). The generated-object payload remains short (`8212` native bytes vs `17057` H3MapEd bytes). The flag-A fix changes the native tile-stream hash to `3123f1bf830e6cc6fbda007cd23e2f86d4f5e05a03cc519d416fc7a5a9d6fb12`, proving the native path moved, but it does not close TerrainPlacement or final-payload parity. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=57`, `h3maped=54`). The generated-object payload remains short (`8212` native bytes vs `17057` H3MapEd bytes). The current native tile-stream hash remains `3123f1bf830e6cc6fbda007cd23e2f86d4f5e05a03cc519d416fc7a5a9d6fb12`; the `0x4bb681` branch fix closes source-order drift but does not move that final-payload boundary. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
 The `0x4bbd01` zero-run retouch direction table is source-backed by the older road/neighbor recovery ledger: `0x5a5028..0x5a5068` holds eight `(dx, dy)` records initialized by `0x4bf38b..0x4bf3f3`, with direction order `{N, NE, E, SE, S, SW, W, NW}`. The static data dump of `0x5a5028` returned zero dwords because this table is runtime-initialized, not because the direction order is unknown. Native already uses that recovered order.
 
@@ -95,6 +99,7 @@ Source evidence for this update:
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc74c_FUN_004bc74c.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt`
+- `.artifacts/rmg_recovery/ghidra_visual_selector_dump_20260615/caller_004bb681_FUN_004bb681.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt`
 - `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp` (`h3maped_road_line_visit_458e61_report`, recovered `0x5a5028..0x5a5068` records and `0x4bf38b..0x4bf3f3` initializer)
 

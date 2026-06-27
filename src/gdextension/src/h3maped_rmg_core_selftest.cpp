@@ -2503,6 +2503,29 @@ int main() {
 		return 1;
 	}
 	{
+		BoundaryMaterialization4a2777 same_terrain_materialization;
+		RuntimeTerrainSelectionResult49b53d same_terrain_selection;
+		same_terrain_selection.rng_state_after = 1234U;
+		const TerrainRepaintResult4a3f27 same_terrain_repaint =
+				aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
+						2,
+						2,
+						1,
+						same_terrain_materialization,
+						same_terrain_selection,
+						nullptr);
+		if (!require(same_terrain_repaint.executed
+						&& same_terrain_repaint.full_map_water_repaint_count_0x4a4025 == 4
+						&& same_terrain_repaint.terrain_visual_initial_water_write_count_0x4a4025 == 4,
+					"0x4bd099 same-terrain water scope did not write the expected direct visual cells")) {
+			return 1;
+		}
+		if (!require(same_terrain_repaint.terrain_visual_queue_write_count_0x4bb74b == 0,
+					"0x4bb681 same-terrain branch must not enter 0x4bb74b feedback")) {
+			return 1;
+		}
+	}
+	{
 		BoundaryMaterialization4a2777 relation_gate_materialization;
 		relation_gate_materialization.generator_mode_0x10b8 = 2;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
