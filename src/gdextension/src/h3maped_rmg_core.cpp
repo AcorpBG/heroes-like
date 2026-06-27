@@ -1305,26 +1305,26 @@ int32_t coordinate_prune_divisor_from_generator_mode_4a218c(int32_t generator_mo
 }
 
 void append_angle_candidates_4a17f5(const CoordinateZone4a218c &base, const CoordinateZone4a218c &current, const GeneratorRelationOwnerState4a218c &current_owner, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, std::vector<CoordinateCandidate4a17f5> &candidates) {
-	// H3MapEd uses rounded double lookup tables at 0x58dd28/0x58dc28, not ideal trig constants.
+	// H3MapEd stores rounded double lookup tables at 0x58dc28 (X) and 0x58dd28 (Y).
 	static constexpr double X_TABLE[32] = {
-		0.0, 0.1951, 0.3827, 0.5556,
-		0.7071, 0.8315, 0.9239, 0.9807,
 		1.0, 0.9807, 0.9239, 0.8315,
 		0.7071, 0.5556, 0.3827, 0.1951,
 		0.0, -0.1951, -0.3827, -0.5556,
 		-0.7071, -0.8315, -0.9239, -0.9807,
 		-1.0, -0.9807, -0.9239, -0.8315,
 		-0.7071, -0.5556, -0.3827, -0.1951,
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
 	};
 	static constexpr double Y_TABLE[32] = {
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
 		1.0, 0.9807, 0.9239, 0.8315,
 		0.7071, 0.5556, 0.3827, 0.1951,
 		0.0, -0.1951, -0.3827, -0.5556,
 		-0.7071, -0.8315, -0.9239, -0.9807,
 		-1.0, -0.9807, -0.9239, -0.8315,
 		-0.7071, -0.5556, -0.3827, -0.1951,
-		0.0, 0.1951, 0.3827, 0.5556,
-		0.7071, 0.8315, 0.9239, 0.9807,
 	};
 	const int32_t combined_size = base.source_base_size + current.source_base_size;
 	for (int32_t direction = 0; direction < 32; ++direction) {
@@ -1342,6 +1342,10 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	if (candidates.empty()) {
 		return;
 	}
+	const CoordinateZone4a218c current_source_zone = coordinate_zone_from_relation_owner_0x10(current_owner, zones);
+	const int32_t current_source_base_size = current_source_zone.source_base_size > 0
+			? current_source_zone.source_base_size
+			: current_template.source_base_size;
 	auto owner_with_candidate = [&](const CoordinateCandidate4a17f5 &candidate) {
 		GeneratorRelationOwnerState4a218c candidate_owner = current_owner;
 		candidate_owner.coordinate_triple_0x10_0x18_known = true;
@@ -1355,10 +1359,13 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 		const GeneratorRelationOwnerState4a218c candidate_owner = owner_with_candidate(candidate);
 		best_link_count = std::max(best_link_count, coordinate_link_acceptance_count_4a1967(candidate_owner, zones, relation_owners));
 	}
-	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordinateCandidate4a17f5 &candidate) {
+	for (int32_t index = int32_t(candidates.size()) - 1; index >= 0; --index) {
+		const CoordinateCandidate4a17f5 &candidate = candidates[size_t(index)];
 		const GeneratorRelationOwnerState4a218c candidate_owner = owner_with_candidate(candidate);
-		return coordinate_link_acceptance_count_4a1967(candidate_owner, zones, relation_owners) < best_link_count;
-	}), candidates.end());
+		if (coordinate_link_acceptance_count_4a1967(candidate_owner, zones, relation_owners) < best_link_count) {
+			candidates.erase(candidates.begin() + index);
+		}
+	}
 	if (candidates.empty()) {
 		return;
 	}
@@ -1379,10 +1386,10 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	}
 
 	auto candidate_span_metric = [&](const CoordinateCandidate4a17f5 &candidate) {
-		const int32_t candidate_min_y = std::min(candidate.y - current_template.source_base_size, min_y);
-		const int32_t candidate_min_x = std::min(candidate.x - current_template.source_base_size, min_x);
-		const int32_t candidate_max_y = std::max(candidate.y + current_template.source_base_size + 1, max_y);
-		const int32_t candidate_max_x = std::max(candidate.x + current_template.source_base_size + 1, max_x);
+		const int32_t candidate_min_y = std::min(candidate.y - current_source_base_size, min_y);
+		const int32_t candidate_min_x = std::min(candidate.x - current_source_base_size, min_x);
+		const int32_t candidate_max_y = std::max(candidate.y + current_source_base_size + 1, max_y);
+		const int32_t candidate_max_x = std::max(candidate.x + current_source_base_size + 1, max_x);
 		const int32_t height = candidate_max_y - candidate_min_y;
 		const int32_t width = candidate_max_x - candidate_min_x;
 		return std::max(coordinate_prune_span_budget, std::max(height, width));
@@ -1392,10 +1399,13 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	for (const CoordinateCandidate4a17f5 &candidate : candidates) {
 		best_metric = std::min(best_metric, candidate_span_metric(candidate));
 	}
-	candidates.erase(std::remove_if(candidates.begin(), candidates.end(), [&](const CoordinateCandidate4a17f5 &candidate) {
+	for (int32_t index = int32_t(candidates.size()) - 1; index >= 0; --index) {
+		const CoordinateCandidate4a17f5 &candidate = candidates[size_t(index)];
 		const int32_t metric = candidate_span_metric(candidate);
-		return best_metric < metric;
-	}), candidates.end());
+		if (best_metric < metric) {
+			candidates.erase(candidates.begin() + index);
+		}
+	}
 }
 
 bool boundary_cell_reserved_flag_4a261a_4a325d(int32_t generator_mode_0x10b8, int32_t level) {
@@ -19186,6 +19196,23 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		return result;
 	}
 	add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x49a318_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "complete_source_order_prefix", "source_pair_preservation_continues_into_reward_guard_materialization");
+
+	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(
+			result.generator_object_private_state,
+			route_free_cell_rng);
+	{
+		const GeneratorObjectPrivateState &generic_state = result.generator_object_private_state;
+		std::ostringstream generic_note;
+		generic_note << "edc_pairs=" << generic_state.generic_source_order_pair_scan_count_0xedc
+				<< ",direct_dispatches=" << generic_state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c
+				<< ",direct_commits=" << generic_state.generic_source_order_pair_direct_commit_count_0x4a8d2c
+				<< ",weighted_replays=" << generic_state.generic_source_order_pair_weighted_replay_count_0x4a8db2
+				<< ",weighted_commits=" << generic_state.generic_source_order_pair_weighted_commit_count_0x4a8db2;
+		if (!generic_state.generic_source_order_pair_replay_blockers_0xedc.empty()) {
+			generic_note << ",blocked_pairs=" << generic_state.generic_source_order_pair_replay_blockers_0xedc.size();
+		}
+		add_phase("generic_non_type98_source_order_pairs", "0xedc_0x4a8d2c_0x4a8db2", "complete_source_order_prefix", generic_note.str());
+	}
 
 	const bool reward_guard_source_stream_owned = object_state.reward_guard_source_stream_0x4aab7e_ported
 			&& object_state.reward_guard_source_stream_0x4aab7e_input_known

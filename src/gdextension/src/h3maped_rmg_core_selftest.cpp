@@ -5186,7 +5186,7 @@ int main() {
 					"entry-to-writeout workflow did not assemble the recovered full final payload before stopping at same-run compare")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 20
+			if (!require(workflow.phases.size() >= 21
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -5201,28 +5201,30 @@ int main() {
 							&& workflow.phases[7].status == "complete_source_order_prefix"
 							&& workflow.phases[8].id == "relation_scan_consumers"
 							&& workflow.phases[8].status == "complete_source_order_prefix"
-							&& workflow.phases[9].id == "reward_guard_materialization"
+							&& workflow.phases[9].id == "generic_non_type98_source_order_pairs"
 							&& workflow.phases[9].status == "complete_source_order_prefix"
-							&& workflow.phases[10].id == "connection_road_river"
+							&& workflow.phases[10].id == "reward_guard_materialization"
 							&& workflow.phases[10].status == "complete_source_order_prefix"
-							&& workflow.phases[11].id == "road_river_object_adjacency"
+							&& workflow.phases[11].id == "connection_road_river"
 							&& workflow.phases[11].status == "complete_source_order_prefix"
-							&& workflow.phases[12].id == "final_header_player_metadata_writeout"
+							&& workflow.phases[12].id == "road_river_object_adjacency"
 							&& workflow.phases[12].status == "complete_source_order_prefix"
-							&& workflow.phases[13].id == "final_writeout"
+							&& workflow.phases[13].id == "final_header_player_metadata_writeout"
 							&& workflow.phases[13].status == "complete_source_order_prefix"
-							&& workflow.phases[14].id == "final_object_count_writeout"
+							&& workflow.phases[14].id == "final_writeout"
 							&& workflow.phases[14].status == "complete_source_order_prefix"
-							&& workflow.phases[15].id == "final_object_pass_split_writeout"
+							&& workflow.phases[15].id == "final_object_count_writeout"
 							&& workflow.phases[15].status == "complete_source_order_prefix"
-							&& workflow.phases[16].id == "final_object_payload_writeout"
+							&& workflow.phases[16].id == "final_object_pass_split_writeout"
 							&& workflow.phases[16].status == "complete_source_order_prefix"
-							&& workflow.phases[17].id == "final_zero_sentinel_success_test"
+							&& workflow.phases[17].id == "final_object_payload_writeout"
 							&& workflow.phases[17].status == "complete_source_order_prefix"
-							&& workflow.phases[18].id == "full_final_payload_assembly"
+							&& workflow.phases[18].id == "final_zero_sentinel_success_test"
 							&& workflow.phases[18].status == "complete_source_order_prefix"
-							&& workflow.phases[19].id == "full_final_payload_same_run_compare"
-							&& workflow.phases[19].status == "blocked",
+							&& workflow.phases[19].id == "full_final_payload_assembly"
+							&& workflow.phases[19].status == "complete_source_order_prefix"
+							&& workflow.phases[20].id == "full_final_payload_same_run_compare"
+							&& workflow.phases[20].status == "blocked",
 					"entry-to-writeout workflow did not preserve recovered phase order through header, tile/object payload, sentinel, ordered payload assembly, and final compare blocker")) {
 				return 1;
 			}
@@ -5315,15 +5317,15 @@ int main() {
 					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the final writeout blocker")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() > 9
-							&& workflow.phases[9].id == "reward_guard_materialization"
-							&& workflow.phases[9].status == "complete_source_order_prefix"
-							&& workflow.phases.size() > 10
-							&& workflow.phases[10].id == "connection_road_river"
+			if (!require(workflow.phases.size() > 10
+							&& workflow.phases[10].id == "reward_guard_materialization"
 							&& workflow.phases[10].status == "complete_source_order_prefix"
 							&& workflow.phases.size() > 11
-							&& workflow.phases[11].id == "road_river_object_adjacency"
+							&& workflow.phases[11].id == "connection_road_river"
 							&& workflow.phases[11].status == "complete_source_order_prefix"
+							&& workflow.phases.size() > 12
+							&& workflow.phases[12].id == "road_river_object_adjacency"
+							&& workflow.phases[12].status == "complete_source_order_prefix"
 							&& !workflow.final_writeout_complete,
 						"entry-to-writeout workflow did not complete road/river object adjacency before stopping at final writeout")) {
 			return 1;
