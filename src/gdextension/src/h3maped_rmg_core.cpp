@@ -1275,14 +1275,14 @@ bool coordinate_candidate_valid_4a1701(const CoordinateZone4a218c &current, cons
 	return true;
 }
 
-bool coordinate_zones_connectable_49b6e2(const CoordinateZone4a218c &first, const CoordinateZone4a218c &second) {
+bool coordinate_zones_connectable_49b6e2(const CoordinateZone4a218c &first, int32_t first_source_span, const CoordinateZone4a218c &second, int32_t second_source_span) {
 	const int32_t distance = distance_truncate(first.x, first.y, second.x, second.y);
-	const int32_t size_sum = first.source_base_size + second.source_base_size;
+	const int32_t size_sum = first_source_span + second_source_span;
 	if (first.level != second.level) {
 		if (size_sum < distance) {
 			return false;
 		}
-		return (size_sum - distance) > (std::min(first.source_base_size, second.source_base_size) / 2);
+		return (size_sum - distance) > (std::min(first_source_span, second_source_span) / 2);
 	}
 	return size_sum * 11 >= distance * 10;
 }
@@ -1295,6 +1295,7 @@ int32_t coordinate_link_acceptance_count_4a1967(const GeneratorRelationOwnerStat
 	}
 	int32_t accepted = 0;
 	const CoordinateZone4a218c current = coordinate_zone_from_relation_owner_0x10(current_owner, zones);
+	const int32_t current_source_span = relation_owner_source_span_0x08(current_owner, current);
 	for (const GeneratorSourceEndpointRecordState4a1f3b &endpoint : current_owner.source_endpoint_records_0xc8_0xcc) {
 		const GeneratorRelationOwnerState4a218c *other_owner =
 				relation_owner_for_endpoint_record_4a1f3b(relation_owners, endpoint);
@@ -1302,7 +1303,8 @@ int32_t coordinate_link_acceptance_count_4a1967(const GeneratorRelationOwnerStat
 			continue;
 		}
 		const CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(*other_owner, zones);
-		if (coordinate_zones_connectable_49b6e2(other, current)) {
+		const int32_t other_source_span = relation_owner_source_span_0x08(*other_owner, other);
+		if (coordinate_zones_connectable_49b6e2(other, other_source_span, current, current_source_span)) {
 			accepted += 1;
 		}
 	}
