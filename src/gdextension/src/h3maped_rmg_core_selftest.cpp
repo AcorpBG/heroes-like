@@ -4416,6 +4416,18 @@ int main() {
 				"0x4a8db2 runtime-zone scheduler source record did not map recovered source town/castle fields")) {
 		return 1;
 	}
+	RuntimeZoneSeedInput4a218c neutral_scheduler_source_zone;
+	neutral_scheduler_source_zone.source_index = 2;
+	neutral_scheduler_source_zone.source_owner_index = 2;
+	neutral_scheduler_source_zone.actual_player_color = -1;
+	const SourceOrderSchedulerSourceRecord4a8db2 neutral_scheduler_source_record =
+			aurelion::h3maped_rmg_core::source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(neutral_scheduler_source_zone);
+	if (!require(neutral_scheduler_source_record.source_id_0x00 == 2
+					&& neutral_scheduler_source_record.owner_or_type_0x04 == 2
+					&& neutral_scheduler_source_record.relation_selector_0x1c == -1,
+				"0x4a8db2 unassigned source owner did not map to recovered neutral source record")) {
+		return 1;
+	}
 	auto make_scheduler_pair = [&](const SourceObjectRecord0x4c &record) {
 		SourceObjectResolverSourcePair4af785 pair;
 		pair.copied_source_catalog_index = weighted_join.source_catalog_index_0x49da08;

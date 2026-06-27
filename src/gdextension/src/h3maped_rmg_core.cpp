@@ -2225,9 +2225,18 @@ WeightedSchedulerThreshold4a8db2 weighted_scheduler_threshold_0x4a8db2(const Sou
 SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(const RuntimeZoneSeedInput4a218c &runtime_zone) {
 	SourceOrderSchedulerSourceRecord4a8db2 record;
 	const SourceZonePayload4a218c &payload = runtime_zone.source_payload;
+	const bool explicit_non_neutral_source = payload.source_ownership >= 0 && payload.source_ownership != 2;
+	const bool assigned_player_source =
+			runtime_zone.source_owner_index >= 0
+			&& runtime_zone.actual_player_color >= 0;
 	record.source_id_0x00 = runtime_zone.source_index >= 0 ? runtime_zone.source_index : payload.source_row;
-	record.owner_or_type_0x04 = payload.source_ownership;
-	record.relation_selector_0x1c = runtime_zone.source_owner_index;
+	record.owner_or_type_0x04 = payload.source_ownership >= 0
+			? payload.source_ownership
+			: (assigned_player_source ? 0 : 2);
+	record.relation_selector_0x1c =
+			(runtime_zone.source_owner_index >= 0 && (explicit_non_neutral_source || assigned_player_source))
+			? runtime_zone.source_owner_index
+			: -1;
 	record.field_0x20_known = true;
 	record.field_0x20 = payload.player_towns.min_towns;
 	record.field_0x24_known = true;
@@ -12005,7 +12014,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				}
 
 				const ProjectedCellChainResult4a5a23 chain =
-						state != nullptr && resolver_state != nullptr && rng != nullptr && (record.word_0x2c & 0x01U) != 0U
+						state != nullptr && resolver_state != nullptr && rng != nullptr
 						? projected_cell_chain_with_object_branch_4a5a23(*state, *resolver_state, *rng, x, y, level, false)
 						: projected_cell_chain_no_object_4a5a23(grid, x, y, level, false);
 				report.projected_chain_call_count += 1;
@@ -12517,16 +12526,16 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	return result;
 }
 
-SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34) {
+SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x20_known, int32_t source_field_0x20, bool source_field_0x24_known, int32_t source_field_0x24) {
 	SourceOrderObjectDispatcherResult4a8d2c result;
-	result.source_field_0x20_known = join.source_record_copy.raw_field_0x20_known;
-	result.source_field_0x20 = join.source_record_copy.raw_field_0x20;
-	result.source_field_0x24_known = join.source_record_copy.raw_field_0x24_known;
-	result.source_field_0x24 = join.source_record_copy.raw_field_0x24;
-	result.source_field_0x30_known = join.source_record_copy.raw_field_0x30_known || source_field_0x30_known;
-	result.source_field_0x30 = join.source_record_copy.raw_field_0x30_known ? join.source_record_copy.raw_field_0x30 : source_field_0x30;
-	result.source_field_0x34_known = join.source_record_copy.raw_field_0x34_known || source_field_0x34_known;
-	result.source_field_0x34 = join.source_record_copy.raw_field_0x34_known ? join.source_record_copy.raw_field_0x34 : source_field_0x34;
+	result.source_field_0x20_known = source_field_0x20_known || join.source_record_copy.raw_field_0x20_known;
+	result.source_field_0x20 = source_field_0x20_known ? source_field_0x20 : join.source_record_copy.raw_field_0x20;
+	result.source_field_0x24_known = source_field_0x24_known || join.source_record_copy.raw_field_0x24_known;
+	result.source_field_0x24 = source_field_0x24_known ? source_field_0x24 : join.source_record_copy.raw_field_0x24;
+	result.source_field_0x30_known = source_field_0x30_known || join.source_record_copy.raw_field_0x30_known;
+	result.source_field_0x30 = source_field_0x30_known ? source_field_0x30 : join.source_record_copy.raw_field_0x30;
+	result.source_field_0x34_known = source_field_0x34_known || join.source_record_copy.raw_field_0x34_known;
+	result.source_field_0x34 = source_field_0x34_known ? source_field_0x34 : join.source_record_copy.raw_field_0x34;
 	result.lane_index_0x1c = lane_index_0x1c;
 	result.source_pair_key_0x0c = source_pair_key_0x0c;
 
@@ -15176,8 +15185,8 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
-	owner.source_owner_slot_0x1c_known = seed.source_owner_index >= 0;
-	owner.source_owner_slot_0x1c = seed.source_owner_index;
+	owner.source_owner_slot_0x1c_known = source_record.source_id_0x00 >= 0;
+	owner.source_owner_slot_0x1c = source_record.relation_selector_0x1c;
 	owner.source_order_source_record_0x00_known = source_record.source_id_0x00 >= 0;
 	owner.source_order_source_record_0x00 = source_record;
 	owner.source_order_source_record_field_0x04_known =
@@ -16979,6 +16988,34 @@ static void append_blocked_source_order_scheduler_replay_0x4a8db2(GeneratorObjec
 	state.source_order_scheduler_blocked_count_0x4a8db2 += 1;
 }
 
+static int32_t source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(const GeneratorObjectPrivateState &state, int32_t source_selector) {
+	if (source_selector >= 0 && source_selector < int32_t(state.mapped_source_owner_slots_ee4.size())) {
+		return state.mapped_source_owner_slots_ee4[size_t(source_selector)];
+	}
+	if (source_selector == -1 && !state.raw_source_owner_slots_ee0.empty()) {
+		return state.raw_source_owner_slots_ee0.front();
+	}
+	return -1;
+}
+
+static bool source_order_record_has_positive_town_work_0x4a8d2c_0x4a8db2(const SourceOrderSchedulerSourceRecord4a8db2 &source_record) {
+	return (source_record.field_0x20_known && source_record.field_0x20 > 0)
+			|| (source_record.field_0x24_known && source_record.field_0x24 > 0)
+			|| (source_record.field_0x28_known && source_record.field_0x28 > 0)
+			|| (source_record.field_0x2c_known && source_record.field_0x2c > 0)
+			|| (source_record.field_0x30_known && source_record.field_0x30 > 0)
+			|| (source_record.field_0x34_known && source_record.field_0x34 > 0)
+			|| (source_record.field_0x38_known && source_record.field_0x38 > 0)
+			|| (source_record.field_0x3c_known && source_record.field_0x3c > 0);
+}
+
+static bool source_order_record_has_positive_town_count_work_0x4a8d2c(const SourceOrderSchedulerSourceRecord4a8db2 &source_record) {
+	return (source_record.field_0x20_known && source_record.field_0x20 > 0)
+			|| (source_record.field_0x24_known && source_record.field_0x24 > 0)
+			|| (source_record.field_0x30_known && source_record.field_0x30 > 0)
+			|| (source_record.field_0x34_known && source_record.field_0x34 > 0);
+}
+
 static std::string source_order_relation_pointer_loop_blocker_detail_0x4ac552(const GeneratorObjectPrivateState &state) {
 	std::ostringstream detail;
 	detail << "0x4ac552_relation_pointer_0x10e4_0x10e8_source_record_not_owned_before_0x4a8c15"
@@ -17020,9 +17057,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 		const bool source_pointer_known =
 				owner.source_pointer_0x00_known
 				&& owner.source_pointer_source_index_0x00 >= 0
-				&& owner.source_order_source_record_0x00_known
-				&& owner.source_pointer_type_0x04_known
-				&& owner.source_owner_slot_0x1c_known;
+				&& owner.source_order_source_record_0x00_known;
 		if (source_pointer_known) {
 			state.source_order_relation_pointer_loop_source_pointer_known_count += 1;
 		} else {
@@ -17047,20 +17082,28 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 			continue;
 		}
 
-		const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(owner.town_choice_0x04);
-		if (town_record == nullptr) {
-			state.source_order_relation_pointer_loop_missing_town_record_count += 1;
-			continue;
+		const bool positive_town_work =
+				source_order_record_has_positive_town_work_0x4a8d2c_0x4a8db2(owner.source_order_source_record_0x00);
+		const bool positive_town_count_work =
+				source_order_record_has_positive_town_count_work_0x4a8d2c(owner.source_order_source_record_0x00);
+		const bool descriptor_required =
+				positive_town_count_work
+				|| (positive_town_work && owner.town_choice_0x04 >= 0);
+		SourceObjectDescriptorJoinResult4903e8 join;
+		if (descriptor_required) {
+			const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(owner.town_choice_0x04);
+			if (town_record == nullptr) {
+				state.source_order_relation_pointer_loop_missing_town_record_count += 1;
+				continue;
+			}
+			const SourceObjectDescriptor4903e8 descriptor =
+					source_type98_town_descriptor_from_record_0x4a8db2(*town_record);
+			join = source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
 		}
-		const SourceObjectDescriptor4903e8 descriptor =
-				source_type98_town_descriptor_from_record_0x4a8db2(*town_record);
-		const SourceObjectDescriptorJoinResult4903e8 join =
-				source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
 		const int32_t lane_state_0xee4 =
-				owner.source_order_source_record_0x00.relation_selector_0x1c >= 0
-						&& owner.source_order_source_record_0x00.relation_selector_0x1c < int32_t(state.mapped_source_owner_slots_ee4.size())
-				? state.mapped_source_owner_slots_ee4[size_t(owner.source_order_source_record_0x00.relation_selector_0x1c)]
-				: -1;
+				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(
+						state,
+						owner.source_order_source_record_0x00.relation_selector_0x1c);
 		const int32_t source_pair_key_0x0c = owner.source_order_source_record_0x00.source_id_0x00 >= 0
 				? owner.source_order_source_record_0x00.source_id_0x00
 				: owner.runtime_zone_index;
@@ -17083,7 +17126,11 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						owner.source_order_source_record_0x00.field_0x30_known,
 						owner.source_order_source_record_0x00.field_0x30,
 						owner.source_order_source_record_0x00.field_0x34_known,
-						owner.source_order_source_record_0x00.field_0x34);
+						owner.source_order_source_record_0x00.field_0x34,
+						owner.source_order_source_record_0x00.field_0x20_known,
+						owner.source_order_source_record_0x00.field_0x20,
+						owner.source_order_source_record_0x00.field_0x24_known,
+						owner.source_order_source_record_0x00.field_0x24);
 		state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c += 1;
 		if (direct.committed) {
 			state.source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c += 1;
@@ -17160,9 +17207,7 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
 		const int32_t source_selector = source_record.relation_selector_0x1c;
 		const int32_t lane_state_0xee4 =
-				source_selector >= 0 && source_selector < int32_t(state.mapped_source_owner_slots_ee4.size())
-				? state.mapped_source_owner_slots_ee4[size_t(source_selector)]
-				: -1;
+				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
 		source_order_weighted_scheduler_from_source_record_0x4a8db2(
 				state,
 				join,
@@ -17207,9 +17252,7 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 				source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
 		const int32_t source_selector = source_record.relation_selector_0x1c;
 		const int32_t lane_state_0xee4 =
-				source_selector >= 0 && source_selector < int32_t(state.mapped_source_owner_slots_ee4.size())
-				? state.mapped_source_owner_slots_ee4[size_t(source_selector)]
-				: -1;
+				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
 		const int32_t source_pair_key_0x0c = source_record.source_id_0x00 >= 0
 				? source_record.source_id_0x00
 				: runtime_zone.runtime_zone_index;
@@ -17226,7 +17269,15 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 				owner->scan_bound_high_y_0x2c,
 				source_pair_key_0x0c,
 				lane_state_0xee4,
-				rng);
+				rng,
+				source_record.field_0x30_known,
+				source_record.field_0x30,
+				source_record.field_0x34_known,
+				source_record.field_0x34,
+				source_record.field_0x20_known,
+				source_record.field_0x20,
+				source_record.field_0x24_known,
+				source_record.field_0x24);
 	}
 }
 
