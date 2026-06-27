@@ -1443,6 +1443,13 @@ int main() {
 		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U, "record 0x49a932(true) did not set bit27 and clear bit26")) {
 			return 1;
 		}
+		if (!require(aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 0, true)
+						&& !aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 1, true)
+						&& aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 1, false)
+						&& aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(false, 1, true),
+					"0x4a4c8e relation boundary trigger must follow recovered level-not-one branch")) {
+			return 1;
+		}
 		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(mutable_record), "record 0x49abd6 action stamp did not mutate bit22/bit27")) {
 			return 1;
 		}
@@ -1940,14 +1947,18 @@ int main() {
 	const int64_t boundary_key = aurelion::h3maped_rmg_core::cell_index(8, 8, 1, 1, 0);
 	if (!require(span_fill_center_key >= 0
 					&& span_fill_center_key < int64_t(relation_owner_split.generated_cell_word_0x20.size())
-					&& owner_byte2_signed(relation_owner_split.generated_cell_word_0x20[size_t(span_fill_center_key)]) == relation_owner_split_handoff.zone_word,
-				"0x4a325d span fill must write generated-cell owner byte from the source-record owner word, not the relation-owner gate byte")) {
+					&& owner_byte2_signed(relation_owner_split.generated_cell_word_0x20[size_t(span_fill_center_key)]) == relation_owner_split_handoff.generated_cell_owner_byte2,
+				"0x4a325d span fill must write the recovered generated-cell owner byte separately from the private span owner word")) {
+		return 1;
+	}
+	if (!require(relation_owner_split.private_zone_words[size_t(span_fill_center_key)] == (uint32_t(relation_owner_split_handoff.zone_word) << 16U),
+				"0x4a325d span fill must preserve the private source-record owner word separately from generated-cell byte2")) {
 		return 1;
 	}
 	if (!require(boundary_key >= 0
 					&& boundary_key < int64_t(relation_owner_split.generated_cell_word_0x20.size())
 					&& owner_byte2_signed(relation_owner_split.generated_cell_word_0x20[size_t(boundary_key)]) == relation_owner_split_handoff.generated_cell_owner_byte2,
-				"0x4a2777 boundary line writes should keep the relation-owner generated-cell gate byte separate from 0x4a325d span fill")) {
+				"0x4a2777 boundary line writes should keep using the recovered generated-cell owner byte")) {
 		return 1;
 	}
 	int32_t land_setup_mode_two_member_flags = 0;

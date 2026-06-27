@@ -3662,6 +3662,7 @@ bool generated_cell_49aa63(GeneratedCellRecord0x30 &record, bool set_candidate);
 bool generated_cell_49aa63(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_candidate);
 bool generated_cell_49a932(GeneratedCellRecord0x30 &record, bool set_occupied);
 bool generated_cell_49a932(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat, bool set_occupied);
+bool relation_boundary_triggers_candidate_0x4a4c8e(bool relation_found, int32_t level, bool relation_wide);
 bool generated_cell_49abd6_action_stamp(GeneratedCellRecord0x30 &record);
 bool generated_cell_49abd6_action_stamp(std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x2c, int64_t flat);
 bool generated_cell_49abd6_body_reject_stamp(GeneratedCellRecord0x30 &record);
