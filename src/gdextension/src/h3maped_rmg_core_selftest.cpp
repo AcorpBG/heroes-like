@@ -410,6 +410,24 @@ int main() {
 		if (!require(resolver_state.wrappers.size() == 1 && resolver_state.source_pairs_0xedc.size() == 1, "0x4af785 resolver state did not record first wrapper/source pair")) {
 			return 1;
 		}
+		if (!require(resolver_state.wrapper_bucket_indices_0xe8[size_t(type199_records[0].metadata_bucket_index_0x08)].size() == 1
+						&& resolver_state.wrapper_bucket_indices_0xe8[size_t(type199_records[0].metadata_bucket_index_0x08)][0] == 0,
+					"0x4af785 did not append the created wrapper into the runtime 0xe8 metadata bucket")) {
+			return 1;
+		}
+		const SourceObjectSelectorResult4a9e40 resolver_bucket_selection =
+				aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(resolver_state, 10U, type199_lane.selected_lane, type199_records[0].metadata_bucket_index_0x08, type199_records[0].subtype_0x20);
+		if (!require(resolver_bucket_selection.bucket_found
+						&& resolver_bucket_selection.scanned_record_count == 1
+						&& resolver_bucket_selection.accepted_count == 1
+						&& resolver_bucket_selection.selected
+						&& resolver_bucket_selection.selected_from_resolver_state
+						&& resolver_bucket_selection.selected_wrapper_index == first_resolve.selected_wrapper_index
+						&& resolver_bucket_selection.selected_source_record_copy_known
+						&& aurelion::h3maped_rmg_core::same_source_object_record_0x4c(resolver_bucket_selection.selected_source_record_copy, type199_records[0]),
+					"0x4a9e40 resolver-backed selector did not consume the runtime wrapper bucket populated by 0x4af785")) {
+			return 1;
+		}
 		const auto &first_source_pair = resolver_state.source_pairs_0xedc[0];
 		if (!require(first_source_pair.source_record_pointer_0x00_carried
 						&& first_source_pair.context_pointer_0x04_carried
@@ -949,6 +967,9 @@ int main() {
 		selected_create_state.reward_guard_candidate_record_count_10f4_10f8 = 2;
 		selected_create_state.reward_guard_candidate_vector_10f4_10f8.count_known = true;
 		selected_create_state.reward_guard_candidate_vector_10f4_10f8.count = 2;
+		selected_create_state.source_object_resolver_state_4af785 =
+				aurelion::h3maped_rmg_core::source_object_resolver_state_from_catalog_0x49db76();
+		selected_create_state.source_object_resolver_state_4af785_known = true;
 
 		GeneratorRelationOwnerState4a218c selector;
 		selector.descriptor_type_counter_table_0x44_known = true;
@@ -965,7 +986,9 @@ int main() {
 						&selector,
 						0,
 						aurelion::h3maped_rmg_core::REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00,
-						selected_create_rng);
+						selected_create_rng,
+						aurelion::h3maped_rmg_core::RewardGuardSelectorCallsiteArgs4a9f1c(),
+						&selected_create_state.source_object_resolver_state_4af785);
 		if (!require(selected_create.applied
 						&& selected_create.blocked_reason.empty()
 						&& selected_create.candidate_scan_count == 2
@@ -978,6 +1001,8 @@ int main() {
 						&& selected_create.selected_object_vtable_0x00_known
 						&& selected_create.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
 						&& selected_create.selected_source_record_known_0x4a9e40
+						&& selected_create.candidate_decisions.size() > 1
+						&& selected_create.candidate_decisions[1].descriptor_selector_0x4a9e40.selected_from_resolver_state
 						&& selected_create.selected_descriptor_vector_index_0x398 >= 0
 						&& selected_create.selected_object_record_allocated_0x4aa166
 						&& selected_create.selected_object_record_key_known_0x4aa166
@@ -1575,6 +1600,7 @@ int main() {
 		}
 		int32_t object_branch_source_nibble = -1;
 		SourceObjectSelectorResult4a9e40 object_branch_selector;
+		const std::vector<SourceObjectRecord0x4c> &source_catalog = aurelion::h3maped_rmg_core::source_object_catalog_0x49da08();
 		for (int32_t source_nibble = 0; source_nibble < 16; ++source_nibble) {
 			object_branch_selector = aurelion::h3maped_rmg_core::source_object_wrapper_selector_0x4a9e40(
 					10U,
@@ -1589,6 +1615,12 @@ int main() {
 		if (!require(object_branch_source_nibble >= 0, "test setup could not find recovered 0x4a9e40 selector input for 0x4a5a23 object branch")) {
 			return 1;
 		}
+		if (!require(object_branch_selector.selected_source_record_index >= 0
+						&& object_branch_selector.selected_source_record_index < int32_t(source_catalog.size()),
+					"0x4a5a23 object branch selected source record index outside recovered source catalog")) {
+			return 1;
+		}
+		const SourceObjectRecord0x4c &object_branch_selected_record = source_catalog[size_t(object_branch_selector.selected_source_record_index)];
 		GeneratorObjectPrivateState chain_object_state;
 		chain_object_state.width = 2;
 		chain_object_state.height = 2;
@@ -1615,6 +1647,11 @@ int main() {
 		chain_materialize_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
 		chain_materialize_cell.word_0x2c = (uint32_t(object_branch_source_nibble) << 1U) | 0x01U;
 		SourceObjectResolverState4af785 chain_object_resolver;
+		const SourceObjectResolverResult4af785 chain_object_seed_resolve =
+				aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(chain_object_resolver, object_branch_selected_record);
+		if (!require(chain_object_seed_resolve.created_new_wrapper && chain_object_seed_resolve.appended_wrapper_to_bucket, "0x4a5a23 object branch fixture did not seed resolver runtime bucket through 0x4af785")) {
+			return 1;
+		}
 		aurelion::h3maped_rmg_core::H3MapedRng chain_object_rng;
 		chain_object_rng.state = 10U;
 		const auto chain_materialize_result =
@@ -1646,13 +1683,6 @@ int main() {
 		if (!require(chain_object_state.source_pair_vector_edc.contents_known && chain_object_state.source_pair_vector_edc.count == 1, "0x4a5a23 object branch did not materialize generator +0xedc source-pair vector count")) {
 			return 1;
 		}
-		const std::vector<SourceObjectRecord0x4c> &source_catalog = aurelion::h3maped_rmg_core::source_object_catalog_0x49da08();
-		if (!require(object_branch_selector.selected_source_record_index >= 0
-						&& object_branch_selector.selected_source_record_index < int32_t(source_catalog.size()),
-					"0x4a5a23 object branch selected source record index outside recovered source catalog")) {
-			return 1;
-		}
-		const SourceObjectRecord0x4c &object_branch_selected_record = source_catalog[size_t(object_branch_selector.selected_source_record_index)];
 		if (!require(chain_object_state.source_pair_records_edc.size() == 1
 						&& chain_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
 						&& chain_object_state.source_pair_records_edc[0].context_pointer_0x04_carried
@@ -1707,6 +1737,11 @@ int main() {
 		scan_object_owner.scan_bound_high_x_0x28 = 2;
 		scan_object_owner.scan_bound_high_y_0x2c = 1;
 		SourceObjectResolverState4af785 scan_object_resolver;
+		const SourceObjectResolverResult4af785 scan_object_seed_resolve =
+				aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(scan_object_resolver, object_branch_selected_record);
+		if (!require(scan_object_seed_resolve.created_new_wrapper && scan_object_seed_resolve.appended_wrapper_to_bucket, "relation scan object-branch fixture did not seed resolver runtime bucket through 0x4af785")) {
+			return 1;
+		}
 		aurelion::h3maped_rmg_core::H3MapedRng scan_object_rng;
 		scan_object_rng.state = 10U;
 		const auto scan_object_result = aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(scan_object_state, scan_object_resolver, scan_object_rng, { scan_object_owner });
