@@ -13808,9 +13808,11 @@ static void replay_monster_town_choice_0x49b4e1(
 
 	const std::array<int32_t, 4> &table_row =
 			H3_TERRAIN_TO_MONSTER_TOWN_TABLE_58DB78[size_t(record.selected_terrain_id_0x49b53d)];
+	std::array<int32_t, 4> candidates = { -1, -1, -1, -1 };
 	int32_t candidate_count = 0;
 	for (const int32_t candidate : table_row) {
-		if (candidate != -1 || generator_field_0x08_non_negative || candidate != 8) {
+		if (candidate != -1 && (generator_field_0x08_non_negative || candidate != 8)) {
+			candidates[size_t(candidate_count)] = candidate;
 			candidate_count += 1;
 		}
 	}
@@ -13827,7 +13829,7 @@ static void replay_monster_town_choice_0x49b4e1(
 	record.monster_town_choice_rng_modulus_0x49b4e1 = candidate_count;
 	record.monster_town_choice_selected_ordinal_0x49b4e1 = rng_value % candidate_count;
 	record.monster_town_choice_0x08_known = true;
-	record.monster_town_choice_0x08 = table_row[size_t(record.monster_town_choice_selected_ordinal_0x49b4e1)];
+	record.monster_town_choice_0x08 = candidates[size_t(record.monster_town_choice_selected_ordinal_0x49b4e1)];
 	record.monster_town_choice_source_0x49b4e1 = "0x49b4e1_0x58db78_rng_choice";
 }
 
@@ -17392,6 +17394,16 @@ static bool source_order_record_has_positive_town_count_work_0x4a8d2c(const Sour
 			|| (source_record.field_0x34_known && source_record.field_0x34 > 0);
 }
 
+static int32_t source_order_town_choice_from_relation_owner_0x4a8d2c_0x4a8db2(const GeneratorRelationOwnerState4a218c &owner) {
+	if (owner.town_choice_0x04_known && owner.town_choice_0x04 >= 0) {
+		return owner.town_choice_0x04;
+	}
+	if (owner.monster_town_choice_0x08_known && owner.monster_town_choice_0x08 >= 0) {
+		return owner.monster_town_choice_0x08;
+	}
+	return -1;
+}
+
 static std::string source_order_relation_pointer_loop_blocker_detail_0x4ac552(const GeneratorObjectPrivateState &state) {
 	std::ostringstream detail;
 	detail << "0x4ac552_relation_pointer_0x10e4_0x10e8_source_record_not_owned_before_0x4a8c15"
@@ -17462,12 +17474,14 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				source_order_record_has_positive_town_work_0x4a8d2c_0x4a8db2(owner.source_order_source_record_0x00);
 		const bool positive_town_count_work =
 				source_order_record_has_positive_town_count_work_0x4a8d2c(owner.source_order_source_record_0x00);
+		const int32_t source_order_town_choice =
+				source_order_town_choice_from_relation_owner_0x4a8d2c_0x4a8db2(owner);
 		const bool descriptor_required =
 				positive_town_count_work
-				|| (positive_town_work && owner.town_choice_0x04 >= 0);
+				|| (positive_town_work && source_order_town_choice >= 0);
 		SourceObjectDescriptorJoinResult4903e8 join;
 		if (descriptor_required) {
-			const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(owner.town_choice_0x04);
+			const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(source_order_town_choice);
 			if (town_record == nullptr) {
 				state.source_order_relation_pointer_loop_missing_town_record_count += 1;
 				continue;
@@ -17567,7 +17581,7 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 					"0x4a8db2_relation_owner_record_missing_for_runtime_zone");
 			continue;
 		}
-		const int32_t town_choice = runtime_zone.selected_town_choice_index_0x49b3c1;
+		const int32_t town_choice = source_order_town_choice_from_relation_owner_0x4a8d2c_0x4a8db2(*owner);
 		const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(town_choice);
 		if (town_record == nullptr) {
 			append_blocked_source_order_scheduler_replay_0x4a8db2(
@@ -17617,7 +17631,7 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 		if (owner == nullptr || !owner->scan_bounds_0x20_0x2c_known) {
 			continue;
 		}
-		const int32_t town_choice = runtime_zone.selected_town_choice_index_0x49b3c1;
+		const int32_t town_choice = source_order_town_choice_from_relation_owner_0x4a8d2c_0x4a8db2(*owner);
 		const SourceObjectRecord0x4c *town_record = source_type98_town_record_for_choice_0x49b3c1(town_choice);
 		if (town_record == nullptr) {
 			continue;
