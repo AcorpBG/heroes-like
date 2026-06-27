@@ -2610,6 +2610,14 @@ static uint32_t generated_cell_word1c_set_high_word_49a318(uint32_t word_0x1c, i
 	return (word_0x1c & 0x0000ffffU) | ((uint32_t(high_word) & 0x0000ffffU) << 16U);
 }
 
+static int32_t generated_cell_word1c_low_word_49a318(const GeneratedCellRecord0x30 &record) {
+	return record.word_0x1c_known ? int32_t(record.word_0x1c & 0x0000ffffU) : RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+}
+
+static int32_t generated_cell_word1c_high_word_49a318(const GeneratedCellRecord0x30 &record) {
+	return record.word_0x1c_known ? int32_t((record.word_0x1c >> 16U) & 0x0000ffffU) : RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+}
+
 static uint32_t generated_cell_word28_set_direction_49a318(uint32_t word_0x28, int32_t direction_ordinal) {
 	return generated_cell_4a59e2_pack_word_0x28(word_0x28, uint32_t(direction_ordinal));
 }
@@ -2763,8 +2771,6 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 	};
 	static constexpr int32_t DX[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
 	static constexpr int32_t DY[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
-	std::vector<int32_t> path_low_word(size_t(tile_count), RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452);
-	std::vector<int32_t> path_high_word(size_t(tile_count), RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452);
 
 	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
 		RelationHighOwnerPropagationSeedReport49a318 report;
@@ -2798,7 +2804,6 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 		generated_cell_49a318_clear_source_projection(seed_record);
 
 		std::vector<HighOwnerQueueNode> queue;
-		path_low_word[size_t(seed_flat)] = 0;
 		queue.push_back(HighOwnerQueueNode { report.seed_x, report.seed_y, report.seed_level, 0 });
 		result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(queue.size()));
 
@@ -2820,8 +2825,11 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 			const GeneratedCellRecord0x30 &node_record = grid.records[size_t(node_flat)];
 			const int32_t node_owner = node_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(node_record.word_0x20) : -1;
 			const int32_t base_score = node_owner == report.source_owner_byte
-					? path_low_word[size_t(node_flat)]
-					: path_high_word[size_t(node_flat)];
+					? generated_cell_word1c_low_word_49a318(node_record)
+					: generated_cell_word1c_high_word_49a318(node_record);
+			if (base_score >= RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452) {
+				continue;
+			}
 			const int32_t direction_count = relation_high_owner_direction_count_49a318(node_record, object_records, result, report);
 			if (direction_count <= 0) {
 				continue;
@@ -2856,8 +2864,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 				if (next_owner == report.source_owner_byte) {
 					const int32_t step = terrain == 8 ? 10 : 1;
 					const int32_t next_score = base_score + step;
-					if (next_score < path_low_word[size_t(next_flat)]) {
-						path_low_word[size_t(next_flat)] = next_score;
+					if (next_score < generated_cell_word1c_low_word_49a318(next_record)) {
 						next_record.word_0x1c = generated_cell_word1c_set_low_word_49a318(next_record.word_0x1c_known ? next_record.word_0x1c : 0U, next_score);
 						next_record.word_0x1c_known = true;
 						next_record.word_0x10 = uint32_t(node.x);
@@ -2872,8 +2879,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 					}
 				} else {
 					const int32_t next_score = base_score + 10;
-					if (next_score < path_high_word[size_t(next_flat)]) {
-						path_high_word[size_t(next_flat)] = next_score;
+					if (next_score < generated_cell_word1c_high_word_49a318(next_record)) {
 						result.owner_high_byte_grid[size_t(next_flat)] = report.source_owner_byte;
 						next_record.word_0x1c = generated_cell_word1c_set_high_word_49a318(next_record.word_0x1c_known ? next_record.word_0x1c : 0U, next_score);
 						next_record.word_0x1c_known = true;
