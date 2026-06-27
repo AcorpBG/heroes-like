@@ -33,7 +33,11 @@ The active shared native core now executes these recovered TerrainPlacement piec
 5. `0x4bb74b/0x4bc5f0` live feedback:
    - full-map water visual prefill runs first;
    - owner/member-gated terrain repaint writes visual rows and flags;
-   - set-A/set-B queue feedback, `0x4bbd01` retouch, `0x4bc988` candidate gates, and `0x4bba59` neighbor seeding run inside the active native core;
+   - set-A/set-B feedback drains in recovered insertion/head order instead of sorted key order;
+   - `0x4bbd01` retouch and `0x4bc988` candidate gates now read the active scratch terrain state, not only the base terrain array;
+   - `0x4bc928` same-class region gating is recovered and checked against the native helper;
+   - the same-class/region candidate branch is gated by recovered toolkit byte5-zero terrain behavior;
+   - `0x4bba59` diagonal neighbor seeding only accepts the recovered byte5-zero neighbor branch;
    - `0x4bbfcc` final whole-map sweep revisits the full grid and applies recovered class corrections only through the source-backed `0x4bcb91` and `0x4bcd43` probe predicates;
    - class-0 final-sweep cells route through the recovered `0x4ba938` current-row/base selector path instead of the classified `+0x14` bucket selector;
    - final sweep preserves the current scratch visual record through the recovered `0x4bc5a3` path when a corrected class has no direct visual bucket.
@@ -59,10 +63,28 @@ The focused native selftest now fails if TerrainPlacement regresses to the previ
 - generated-cell terrain ids match the live terrain code;
 - visual/art rows are nonzero for at least some cells;
 - visual selection consumes RNG.
+- recovered set-A/set-B feedback queue behavior remains insertion/head ordered;
+- `0x4bbd01` / `0x4bc988` scratch-terrain retouch paths stay wired to the active scratch words;
+- same-class retouch branches remain limited to the recovered byte5-zero terrain path.
 
 ## Remaining Checkpoint-2 Blocker
 
-The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. This is still not a TerrainPlacement parity claim. The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, tile 0 matches, and the first mismatch is offset 8 (`native=51`, `h3maped=60`). Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B insertion/head drain behavior and byte5-zero same-class retouch routing. This is still not a TerrainPlacement parity claim.
+
+The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=69`, `h3maped=54`) and the current mismatch count is 11202. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+
+The exact source of the `0x4bbd01` zero-run retouch direction table remains a named blocker. A static dump of `0x5a5028` returned zero dwords, so the table is likely runtime-initialized or reached through another source-backed initializer. Native must not patch that direction order from final-map deltas.
+
+Source evidence for this update:
+
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bb74b_FUN_004bb74b.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba59_FUN_004bba59.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc74c_FUN_004bc74c.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt`
 
 Checkpoint 2 is still not complete because later relation/object generated-cell mutation caller order is not yet source-owned:
 
