@@ -2353,7 +2353,7 @@ int main() {
 			owner.owner_vector_index = index == 0 ? 0 : 42;
 			owner.runtime_zone_index = index == 0 ? 10 : 20;
 			owner.relation_owner_byte2_0x4aa9b7_known = true;
-			owner.relation_owner_byte2_0x4aa9b7 = index == 0 ? 20 : 1;
+			owner.relation_owner_byte2_0x4aa9b7 = index == 0 ? 20 : 30;
 			owner.coordinate_triple_0x10_0x18_known = true;
 			owner.coordinate_x_0x10 = 0;
 			owner.coordinate_y_0x14 = 0;
@@ -2374,22 +2374,22 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint did not gate by recovered relation owner byte")) {
+					"0x4a3f27 relation-owner repaint must gate by owner-vector index, not source-pointer byte")) {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
 						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 2
 						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 0
 						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
 					"0x4a3f27 did not carry relation-owner scan/recenter state for the generator handoff: scan_known="
-							+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
-							+ " scan_blocked="
-							+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b)
-							+ " recenter_known="
-							+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa)
-							+ " recenter_blocked="
-							+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa))) {
+						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
+						+ " scan_blocked="
+						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b)
+						+ " recenter_known="
+						+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa)
+						+ " recenter_blocked="
+						+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa))) {
 			return 1;
 		}
 	}

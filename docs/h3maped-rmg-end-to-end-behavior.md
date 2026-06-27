@@ -307,7 +307,9 @@ Inside `0x4a218c`, `0x49b53d` selects runtime terrain before the caller returns 
 
 - full-map water repaint first;
 - per-zone repaint skips water zones;
-- owner gate reads generated-cell `+0x20` byte2 at `0x4a4142`;
+- `0x4a2105` prepares relation-owner scan bounds by indexing the relation-owner vector from generated-cell `+0x20` byte2;
+- `0x4a2ffa` recenters relation-owner coordinates by comparing generated-cell `+0x20` byte2 to the relation/source pointer owner byte;
+- repaint owner gate reads generated-cell `+0x20` byte2 at `0x4a4142` and compares it to the current relation-owner loop index;
 - member/repaint gate reads `+0x28 >> 28 & 1` at `0x4a4150`;
 - passing cells write terrain id through `0x49acf6`.
 - TerrainPlacement visual RNG starts from the post-`0x4a3a03 / 0x4a2777 / 0x4a325d / 0x4a3710` owner-grid RNG state, because `0x4ac552` calls `0x4a3f27` after the per-level owner-grid loop.

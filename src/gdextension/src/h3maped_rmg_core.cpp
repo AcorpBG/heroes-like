@@ -14669,7 +14669,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+			const int32_t owner_gate_byte2 = owner_index;
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			int32_t low_x = 0;
 			int32_t low_y = 0;
