@@ -21114,8 +21114,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 							to_clip.y,
 							edge_owner_word_0x00,
 							cycle.level,
-							false,
-							random_span_limit);
+							randomized_writer_branch_0x4a3a03,
+							source_edge_random_span_limit_0x4a29a5(from, random_span_limit));
 				result.connector_segment_count += 1;
 				current_x = to_clip.x;
 				current_y = to_clip.y;
