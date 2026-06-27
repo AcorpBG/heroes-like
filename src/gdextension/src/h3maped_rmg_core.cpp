@@ -14729,7 +14729,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	return result;
 }
 
-SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width, int32_t height) {
+SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width, int32_t height, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c) {
 	SourceNodeFootprintResult4a3a03 result;
 	SourcePolygonModel4ccb64 model;
 	const int32_t p0 = model.add_pair(-200, -200, 0, 400, -200, 0);
@@ -14889,7 +14889,9 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		}
 	}
 
-	if (!result.blocked) {
+	const bool synthetic_source_scan_allowed_0x4a3a9d =
+			caller_level_argument_0x0c == 1 || generator_mode_0x10b8 != 0;
+	if (!result.blocked && synthetic_source_scan_allowed_0x4a3a9d) {
 		static constexpr double X_TABLE_0X58DC28[32] = {
 			1.0, 0.9807, 0.9239, 0.8315,
 			0.7071, 0.5556, 0.3827, 0.1951,
@@ -14931,7 +14933,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				generated.x_after_bbox_rescale = x;
 				generated.y_after_bbox_rescale = y;
 				generated.source_payload_0x08 = origin.source_payload_0x08;
-				generated.source_payload_owner_word_0x00 = origin.source_payload_owner_word_0x00;
+				generated.source_payload_owner_word_0x00 = generated.runtime_zone_index;
 				generated.source_payload_random_span_limit_0x1c = span;
 				source_records.push_back(generated);
 				result.synthetic_source_record_count_0x4a3dbc += 1;
@@ -15391,7 +15393,12 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 	for (const RuntimeZoneBoundaryInput4a3a03 &runtime : runtime_zones) {
 		footprint_inputs.push_back(runtime.footprint);
 	}
-	result.source_footprints = build_source_node_footprints_4a3a03_4ccb64_4cca55(footprint_inputs, width, height);
+	result.source_footprints = build_source_node_footprints_4a3a03_4ccb64_4cca55(
+			footprint_inputs,
+			width,
+			height,
+			generator_mode_0x10b8,
+			caller_level_argument_0x0c);
 	result.source_blocked = result.source_footprints.blocked;
 	if (result.source_blocked) {
 		return result;
@@ -15595,7 +15602,12 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		footprint_inputs.push_back(footprint);
 	}
 
-	result.source_footprints = build_source_node_footprints_4a3a03_4ccb64_4cca55(footprint_inputs, width, height);
+	result.source_footprints = build_source_node_footprints_4a3a03_4ccb64_4cca55(
+			footprint_inputs,
+			width,
+			height,
+			generator_mode_0x10b8,
+			caller_level_argument_0x0c);
 	result.source_blocked = result.source_footprints.blocked;
 	if (result.source_blocked) {
 		return result;

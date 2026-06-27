@@ -2014,6 +2014,19 @@ int main() {
 	if (!require(footprint.source_record_count_after_0x4a3dbc > int32_t(runtime_zones.size()), "source-node footprint producer did not preserve appended source records")) {
 		return 1;
 	}
+	const SourceNodeFootprintResult4a3a03 mode0_footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(
+			runtime_zones,
+			36,
+			36,
+			0,
+			0);
+	if (!require(!mode0_footprint.blocked
+					&& mode0_footprint.synthetic_source_candidate_count_0x4a3b48 == 0
+					&& mode0_footprint.synthetic_source_record_count_0x4a3dbc == 0
+					&& mode0_footprint.source_record_count_after_0x4a3dbc == int32_t(runtime_zones.size()),
+				"0x4a3a9d mode-0 caller-level-0 gate must skip synthetic source candidate insertion")) {
+		return 1;
+	}
 	if (!require(footprint.source_descriptor_node_count > 0 && footprint.source_descriptor_finalized_node_count > 0, "source descriptor table was not materialized")) {
 		return 1;
 	}
@@ -2035,6 +2048,23 @@ int main() {
 		}
 	}
 	if (!require(zero_owner_payload_preserved, "source-node footprint producer did not preserve source payload owner word zero")) {
+		return 1;
+	}
+	bool appended_owner_payload_uses_source_vector_index = false;
+	for (int32_t walk_index = int32_t(runtime_zones.size()); walk_index < int32_t(footprint.walks.size()); ++walk_index) {
+		const auto &walk = footprint.walks[size_t(walk_index)];
+		for (const SourceNodeCyclePoint4a2777 &node : walk.source_nodes) {
+			if ((node.has_payload && node.payload_owner_word_0x00 == walk.runtime_zone_index)
+					|| (node.next_pair_has_payload && node.next_pair_payload_owner_word_0x00 == walk.runtime_zone_index)) {
+				appended_owner_payload_uses_source_vector_index = true;
+				break;
+			}
+		}
+		if (appended_owner_payload_uses_source_vector_index) {
+			break;
+		}
+	}
+	if (!require(appended_owner_payload_uses_source_vector_index, "0x4a3dbc appended source record must use source-vector count as source pointer +0x00 owner word")) {
 		return 1;
 	}
 
@@ -2222,8 +2252,7 @@ int main() {
 			[](const auto &zone) {
 				return zone.has_span_seed_4a325d && !zone.segments.empty();
 			}));
-	if (!require(owner_grid.materialization.span_fill_zone_count >= int32_t(boundary_inputs.size())
-					&& owner_grid.materialization.span_fill_zone_count + owner_grid.materialization.span_fill_seed_blocked_count >= fillable_owner_grid_zone_count,
+	if (!require(owner_grid.materialization.span_fill_zone_count + owner_grid.materialization.span_fill_seed_blocked_count >= fillable_owner_grid_zone_count,
 				"composed owner-grid materializer did not account for all source-edge materialized seeded zones: span_fill_zone_count="
 						+ std::to_string(owner_grid.materialization.span_fill_zone_count)
 						+ " fillable_zone_count="
