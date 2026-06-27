@@ -2062,6 +2062,26 @@ int main() {
 				"0x4a3a9d mode-0 caller-level-0 gate must skip synthetic source candidate insertion")) {
 		return 1;
 	}
+	const std::vector<RuntimeZoneFootprintInput4a3a03> mixed_level_runtime_zones = {
+		RuntimeZoneFootprintInput4a3a03 { 0, 101, 8, 8, 0, 1, 0, 1 },
+		RuntimeZoneFootprintInput4a3a03 { 1, 201, 20, 8, 1, 2, 1, 1 },
+		RuntimeZoneFootprintInput4a3a03 { 2, 202, 20, 20, 1, 3, 2, 1 },
+	};
+	const SourceNodeFootprintResult4a3a03 level_one_footprint =
+			aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(
+					mixed_level_runtime_zones,
+					36,
+					36,
+					0,
+					1);
+	if (!require(!level_one_footprint.blocked
+					&& level_one_footprint.executed_split_count >= 2
+					&& level_one_footprint.source_record_count_after_0x4a3dbc >= 2
+					&& !level_one_footprint.walks.empty()
+					&& level_one_footprint.walks[0].source_zone_id != 101,
+				"0x4a3a03 explicit caller level must consume same-level source records instead of hardcoded level 0")) {
+		return 1;
+	}
 	if (!require(footprint.source_descriptor_node_count > 0 && footprint.source_descriptor_finalized_node_count > 0, "source descriptor table was not materialized")) {
 		return 1;
 	}
