@@ -506,11 +506,11 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
-	if (zone.source_zone_id > 0) {
-		return zone.source_zone_id;
-	}
 	if (zone.source_index >= 0) {
-		return zone.source_index + 1;
+		return zone.source_index;
+	}
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id - 1;
 	}
 	return zone_word_for_coordinate_zone(zone, fallback);
 }
@@ -529,11 +529,11 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
-	if (seed.source_zone_id > 0) {
-		return seed.source_zone_id;
-	}
 	if (seed.source_index >= 0) {
-		return seed.source_index + 1;
+		return seed.source_index;
+	}
+	if (seed.source_zone_id > 0) {
+		return seed.source_zone_id - 1;
 	}
 	if (seed.h3maped_zone_word_id >= 0) {
 		return seed.h3maped_zone_word_id;
@@ -7770,13 +7770,14 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
 	// Recovered 0x4aa9b7 and 0x4aa603 both load the owner gate through
 	// [[relation_pointer]], i.e. relation +0x00 followed by source +0x00.
-	// Native relation source records keep the zero-based template source index
-	// separately; generated-cell owner byte2 uses the H3MapEd source-zone id.
-	if (relation.source_zone_id > 0) {
-		return relation.source_zone_id;
-	}
 	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00 + 1;
+		return relation.source_pointer_source_index_0x00;
+	}
+	if (relation.source_index >= 0) {
+		return relation.source_index;
+	}
+	if (relation.source_zone_id > 0) {
+		return relation.source_zone_id - 1;
 	}
 	return -1;
 }
@@ -7785,8 +7786,14 @@ static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelat
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
+	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
+		return relation.source_pointer_source_index_0x00;
+	}
+	if (relation.source_index >= 0) {
+		return relation.source_index;
+	}
 	if (relation.source_zone_id > 0) {
-		return relation.source_zone_id;
+		return relation.source_zone_id - 1;
 	}
 	return relation.runtime_zone_index;
 }
@@ -13976,7 +13983,10 @@ static GeneratedCellRecordGrid0x30 generated_cell_record_grid_from_terrain_words
 	return grid;
 }
 
-static bool apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner);
+static bool relation_owner_scan_bounds_non_empty_0x49b66d(const GeneratorRelationOwnerState4a218c &owner);
+static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
+		const GeneratedCellRecordGrid0x30 &grid,
+		std::vector<GeneratorRelationOwnerState4a218c> &owners);
 
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		int32_t width,
@@ -14034,10 +14044,10 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 						result.generated_cell_word_0x2c);
 		result.relation_owner_scan_bounds_0x4a1f3b_applied = true;
 		result.relation_owner_coordinate_recenter_0x4a2ffa_applied = true;
+		(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
+				terrain_prepaint_grid,
+				prepared_relation_owners);
 		for (GeneratorRelationOwnerState4a218c &owner : prepared_relation_owners) {
-			if (!owner.scan_bounds_0x20_0x2c_known) {
-				(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(terrain_prepaint_grid, owner);
-			}
 			if (owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
 			} else {
@@ -14841,7 +14851,7 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 		return owner.source_pointer_source_index_0x00;
 	}
 	if (owner.source_zone_id >= 0) {
-		return owner.source_zone_id;
+		return owner.source_zone_id > 0 ? owner.source_zone_id - 1 : owner.source_zone_id;
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index;
@@ -16436,60 +16446,63 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 	return owners;
 }
 
-static bool apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(const GeneratedCellRecordGrid0x30 &grid, GeneratorRelationOwnerState4a218c &owner) {
-	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty() || !owner.coordinate_triple_0x10_0x18_known) {
-		return false;
-	}
-	const int64_t seed_flat = cell_index(grid.width, grid.height, owner.coordinate_x_0x10, owner.coordinate_y_0x14, owner.coordinate_level_0x18);
-	if (seed_flat < 0 || seed_flat >= int64_t(grid.records.size())) {
-		return false;
-	}
-	const GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
-	if (!seed_record.word_0x20_known) {
-		return false;
-	}
-	const int32_t owner_byte2 = generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20);
-	if (owner_byte2 < 0) {
-		return false;
-	}
+static bool relation_owner_scan_bounds_non_empty_0x49b66d(const GeneratorRelationOwnerState4a218c &owner) {
+	return owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
+			&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c
+			&& owner.scan_bound_low_x_0x20 != RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
+			&& owner.scan_bound_low_y_0x24 != RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452
+			&& owner.scan_bound_high_x_0x28 != RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452
+			&& owner.scan_bound_high_y_0x2c != RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+}
 
-	int32_t low_x = grid.width;
-	int32_t low_y = grid.height;
-	int32_t high_x = -1;
-	int32_t high_y = -1;
-	for (int32_t y = 0; y < grid.height; ++y) {
-		for (int32_t x = 0; x < grid.width; ++x) {
-			const int64_t flat = cell_index(grid.width, grid.height, x, y, owner.coordinate_level_0x18);
-			if (flat < 0 || flat >= int64_t(grid.records.size())) {
-				continue;
+static void update_relation_owner_scan_bounds_0x49b66d(GeneratorRelationOwnerState4a218c &owner, int32_t x, int32_t y) {
+	owner.scan_bound_low_x_0x20 = std::min(owner.scan_bound_low_x_0x20, x);
+	owner.scan_bound_low_y_0x24 = std::min(owner.scan_bound_low_y_0x24, y);
+	owner.scan_bound_high_x_0x28 = std::max(owner.scan_bound_high_x_0x28, x + 1);
+	owner.scan_bound_high_y_0x2c = std::max(owner.scan_bound_high_y_0x2c, y + 1);
+	owner.scan_bounds_0x20_0x2c_known = relation_owner_scan_bounds_non_empty_0x49b66d(owner);
+}
+
+static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
+		const GeneratedCellRecordGrid0x30 &grid,
+		std::vector<GeneratorRelationOwnerState4a218c> &owners) {
+	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty() || owners.empty()) {
+		return 0;
+	}
+	int32_t update_count = 0;
+	for (int32_t level = 0; level < grid.level_count; ++level) {
+		for (int32_t y = 0; y < grid.height; ++y) {
+			for (int32_t x = 0; x < grid.width; ++x) {
+				const int64_t flat = cell_index(grid.width, grid.height, x, y, level);
+				if (flat < 0 || flat >= int64_t(grid.records.size())) {
+					continue;
+				}
+				const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+				if (!record.word_0x20_known) {
+					continue;
+				}
+				const int32_t owner_index = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
+				if (owner_index < 0 || owner_index >= int32_t(owners.size())) {
+					continue;
+				}
+				update_relation_owner_scan_bounds_0x49b66d(owners[size_t(owner_index)], x, y);
+				update_count += 1;
 			}
-			const GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
-			if (!record.word_0x20_known || generated_cell_owner_byte2_signed_4a4142(record.word_0x20) != owner_byte2) {
-				continue;
-			}
-			low_x = std::min(low_x, x);
-			low_y = std::min(low_y, y);
-			high_x = std::max(high_x, x + 1);
-			high_y = std::max(high_y, y + 1);
 		}
 	}
-	if (high_x <= low_x || high_y <= low_y) {
-		return false;
-	}
-	owner.scan_bounds_0x20_0x2c_known = true;
-	owner.scan_bound_low_x_0x20 = low_x;
-	owner.scan_bound_low_y_0x24 = low_y;
-	owner.scan_bound_high_x_0x28 = high_x;
-	owner.scan_bound_high_y_0x2c = high_y;
-	return true;
+	return update_count;
 }
 
 static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(GeneratorObjectPrivateState &state) {
 	state.relation_owner_scan_bounds_0x4a1f3b_applied = true;
 	state.relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	state.relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
+	(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
+			state.generated_cell_buffer,
+			state.relation_owner_vectors_10e4_10e8);
 	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
-		if (apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(state.generated_cell_buffer, owner)) {
+		owner.scan_bounds_0x20_0x2c_known = relation_owner_scan_bounds_non_empty_0x49b66d(owner);
+		if (owner.scan_bounds_0x20_0x2c_known) {
 			state.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
 		} else {
 			state.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
