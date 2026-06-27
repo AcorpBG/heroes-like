@@ -14823,10 +14823,14 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 	model.bridge_4ccb1f(p3, p2);
 	model.root = p0;
 
+	const int32_t active_caller_level_0x0c = caller_level_argument_0x0c >= 0
+			? caller_level_argument_0x0c
+			: 0;
+
 	std::vector<RuntimeZoneFootprintInput4a3a03> source_records;
 	source_records.reserve(runtime_zones.size() * 9U);
 	for (int32_t runtime_index = 0; runtime_index < int32_t(runtime_zones.size()); ++runtime_index) {
-		if (runtime_zones[size_t(runtime_index)].level == 0) {
+		if (runtime_zones[size_t(runtime_index)].level == active_caller_level_0x0c) {
 			source_records.push_back(runtime_zones[size_t(runtime_index)]);
 		}
 	}
@@ -14970,7 +14974,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 	}
 
 	const bool synthetic_source_scan_allowed_0x4a3a9d =
-			caller_level_argument_0x0c == 1 || generator_mode_0x10b8 != 0;
+			active_caller_level_0x0c == 1 || generator_mode_0x10b8 != 0;
 	if (!result.blocked && synthetic_source_scan_allowed_0x4a3a9d) {
 		static constexpr double X_TABLE_0X58DC28[32] = {
 			1.0, 0.9807, 0.9239, 0.8315,
