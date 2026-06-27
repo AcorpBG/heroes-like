@@ -14709,17 +14709,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		return true;
 	};
 
-	for (int32_t level = 0; level < level_count; ++level) {
-		for (int32_t y = 0; y < height; ++y) {
-			for (int32_t x = 0; x < width; ++x) {
-				result.full_map_water_repaint_count_0x4a4025 += 1;
-				if (write_live_visual_cell(level, x, y, 8)) {
-					result.terrain_visual_initial_water_write_count_0x4a4025 += 1;
-				}
-			}
-		}
-	}
-
 	std::set<int64_t> set_a;
 	std::set<int64_t> set_b;
 
@@ -14727,7 +14716,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
 			return;
 		}
-			const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, current_terrain);
+		const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, current_terrain);
 		if (neighbor == current_terrain) {
 			return;
 		}
@@ -14745,7 +14734,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		for (const auto &delta : DIAGONALS) {
 			const int32_t nx = x + delta[0];
 			const int32_t ny = y + delta[1];
-				const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, nx, ny, current_terrain);
+			const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, nx, ny, current_terrain);
 			if (!toolkit_byte5_nonzero_4bb74b(neighbor)) {
 				append_set_b(level, nx, ny, current_terrain);
 			}
@@ -14769,10 +14758,10 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		if (found == set_a.end()) {
 			return;
 		}
-			const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, current_terrain);
-			const bool gate = horizontal_pair_wrapper
-					? horizontal_pair_gate_4bc674(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, neighbor)
-					: vertical_pair_gate_4bc6e0(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, neighbor);
+		const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, current_terrain);
+		const bool gate = horizontal_pair_wrapper
+				? horizontal_pair_gate_4bc674(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, neighbor)
+				: vertical_pair_gate_4bc6e0(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, neighbor);
 		if (!gate) {
 			set_a.erase(found);
 			seed_4bba59(level, x, y, current_terrain);
@@ -14793,16 +14782,18 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 	};
 	auto process_topology = [&](int32_t level, int32_t x, int32_t y, int32_t active_terrain) -> bool {
-			if (active_terrain < 0 || x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
-				return false;
-			}
+		if (active_terrain < 0 || x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
+			return false;
+		}
 		set_terrain_at_grid_index_4bb74b(result.terrain_code, width, height, level_tile_count, level, x, y, active_terrain);
+		bool wrote = false;
 		if (write_live_visual_cell(level, x, y, active_terrain)) {
 			result.terrain_visual_queue_write_count_0x4bb74b += 1;
+			wrote = true;
 		}
 		post_live_visual_write_feedback_4bb74b(level, x, y, active_terrain);
-			return true;
-		};
+		return wrote;
+	};
 
 	int64_t drain_guard_count = 0;
 	const int64_t drain_guard_limit = std::max<int64_t>(32768, int64_t(cell_count) * 128);
@@ -14825,21 +14816,21 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				}
 				int32_t level = 0;
 				int32_t x = 0;
-					int32_t y = 0;
-					terrain_decode_grid_key_4bb74b(key, level, x, y);
-					result.terrain_visual_set_a_drain_count += 1;
-					result.terrain_visual_retouch_write_count_0x4bbd01 += frontier_retouch_4bbd01(
-							result.terrain_scratch_word_0x4bad0f,
-							result.terrain_code,
-							width,
-							height,
-							level_tile_count,
-							level,
-							x,
-							y,
-							[&](int32_t target_x, int32_t target_y) {
-								return process_topology(level, target_x, target_y, active_terrain);
-							});
+				int32_t y = 0;
+				terrain_decode_grid_key_4bb74b(key, level, x, y);
+				result.terrain_visual_set_a_drain_count += 1;
+				result.terrain_visual_retouch_write_count_0x4bbd01 += frontier_retouch_4bbd01(
+						result.terrain_scratch_word_0x4bad0f,
+						result.terrain_code,
+						width,
+						height,
+						level_tile_count,
+						level,
+						x,
+						y,
+						[&](int32_t target_x, int32_t target_y) {
+							return process_topology(level, target_x, target_y, active_terrain);
+						});
 			}
 			while (!set_b.empty() && drain_guard_count < drain_guard_limit) {
 				drain_guard_count += 1;
@@ -14852,15 +14843,62 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				int32_t y = 0;
 				terrain_decode_grid_key_4bb74b(key, level, x, y);
 				result.terrain_visual_set_b_drain_count += 1;
-					if (candidate_gate_4bc988(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y)) {
-						result.terrain_visual_set_b_candidate_true_count += 1;
-						process_topology(level, x, y, active_terrain);
-					}
+				if (candidate_gate_4bc988(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y)) {
+					result.terrain_visual_set_b_candidate_true_count += 1;
+					process_topology(level, x, y, active_terrain);
+				}
 			}
 		}
 		set_a.clear();
 		set_b.clear();
 	};
+
+	auto run_final_sweep_4bbfcc = [&]() {
+		for (int32_t level = 0; level < level_count; ++level) {
+			const int32_t level_base = level * level_tile_count;
+			const std::vector<uint8_t> final_sweep_boundary_counts =
+					final_sweep_boundary_counts_4bbfcc(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level);
+			for (int32_t y = 0; y < height; ++y) {
+				for (int32_t x = 0; x < width; ++x) {
+					const int32_t index = level_base + y * width + x;
+					if (index < 0 || index >= cell_count) {
+						continue;
+					}
+					const int32_t fallback_terrain_id = result.terrain_code[size_t(index)];
+					const int32_t terrain_id =
+							scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, fallback_terrain_id);
+					const bool classified_cell = final_sweep_boundary_counts[size_t(y * width + x)] > 0U;
+					if (write_live_visual_cell(level, x, y, terrain_id, true, classified_cell)) {
+						result.terrain_visual_final_sweep_cell_count_0x4bbfcc += 1;
+					}
+				}
+			}
+		}
+	};
+
+	auto cleanup_scope_4bd077 = [&](int32_t active_terrain) {
+		drain_queue_for_active_terrain(active_terrain);
+		run_final_sweep_4bbfcc();
+	};
+
+	auto run_full_map_terrain_scope_4bd099 = [&](int32_t terrain_id, bool water_scope) {
+		for (int32_t level = 0; level < level_count; ++level) {
+			for (int32_t y = 0; y < height; ++y) {
+				for (int32_t x = 0; x < width; ++x) {
+					if (water_scope) {
+						result.full_map_water_repaint_count_0x4a4025 += 1;
+					}
+					if (process_topology(level, x, y, terrain_id) && water_scope) {
+						result.terrain_visual_initial_water_write_count_0x4a4025 += 1;
+					}
+				}
+			}
+		}
+		cleanup_scope_4bd077(terrain_id);
+	};
+
+	run_full_map_terrain_scope_4bd099(9, false);
+	run_full_map_terrain_scope_4bd099(8, true);
 
 	auto owner_gate_bounds = [&](int32_t level, int32_t owner_gate_byte2, int32_t &low_x, int32_t &low_y, int32_t &high_x, int32_t &high_y) -> bool {
 		if (level < 0 || level >= level_count || owner_gate_byte2 < 0) {
@@ -14934,7 +14972,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			}
 		}
 		if (record_changed) {
-			drain_queue_for_active_terrain(terrain_id);
+			cleanup_scope_4bd077(terrain_id);
 		}
 	};
 
@@ -14967,27 +15005,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		for (const RuntimeTerrainSelectionRecord49b53d &record : terrain_selection.records) {
 			const int32_t owner_gate_byte2 = record.zone_word_0x4a2777 >= 0 ? record.zone_word_0x4a2777 : record.runtime_zone_index;
 			repaint_record(record.selected_terrain_id_0x49b53d, owner_gate_byte2, record.level, 0, 0, width, height);
-		}
-	}
-
-	for (int32_t level = 0; level < level_count; ++level) {
-		const int32_t level_base = level * level_tile_count;
-		const std::vector<uint8_t> final_sweep_boundary_counts =
-				final_sweep_boundary_counts_4bbfcc(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level);
-		for (int32_t y = 0; y < height; ++y) {
-			for (int32_t x = 0; x < width; ++x) {
-				const int32_t index = level_base + y * width + x;
-				if (index < 0 || index >= cell_count) {
-					continue;
-				}
-				const int32_t fallback_terrain_id = result.terrain_code[size_t(index)];
-				const int32_t terrain_id =
-						scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, fallback_terrain_id);
-				const bool classified_cell = final_sweep_boundary_counts[size_t(y * width + x)] > 0U;
-				if (write_live_visual_cell(level, x, y, terrain_id, true, classified_cell)) {
-					result.terrain_visual_final_sweep_cell_count_0x4bbfcc += 1;
-				}
-			}
 		}
 	}
 
