@@ -14785,6 +14785,28 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			seed_4bba59(level, x, y, current_terrain);
 		}
 	};
+	auto process_same_terrain_set_a_neighbor_4bb920 = [&](int32_t level, int32_t x, int32_t y, int32_t active_terrain) {
+		if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
+			return;
+		}
+		const int32_t neighbor = scratch_terrain_at_grid_index_4bb71b(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y, active_terrain);
+		if (neighbor != active_terrain) {
+			return;
+		}
+		const int64_t key = terrain_grid_key_4bb74b(level, x, y);
+		const auto found = set_a.find(key);
+		const bool gate = candidate_gate_4bc988(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y);
+		if (found != set_a.end()) {
+			if (!gate) {
+				set_a.erase(found);
+				seed_4bba59(level, x, y, active_terrain);
+			}
+			return;
+		}
+		if (gate) {
+			append_set_a(level, x, y);
+		}
+	};
 	auto post_live_visual_write_feedback_4bb74b = [&](int32_t level, int32_t x, int32_t y, int32_t active_terrain) {
 		set_b.erase(terrain_grid_key_4bb74b(level, x, y));
 		if (toolkit_byte5_nonzero_4bb74b(active_terrain)) {
@@ -14792,6 +14814,25 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			process_set_a_neighbor(level, x, y + 1, active_terrain, true);
 			process_set_a_neighbor(level, x - 1, y, active_terrain, false);
 			process_set_a_neighbor(level, x + 1, y, active_terrain, false);
+		} else {
+			static constexpr std::array<std::array<int32_t, 2>, 8> TERRAIN_DIRECTION_TABLE_0X5A5028 = { {
+				{ 0, -1 },
+				{ 1, -1 },
+				{ 1, 0 },
+				{ 1, 1 },
+				{ 0, 1 },
+				{ -1, 1 },
+				{ -1, 0 },
+				{ -1, -1 },
+			} };
+			for (const auto &delta : TERRAIN_DIRECTION_TABLE_0X5A5028) {
+				const int32_t nx = x + delta[0];
+				const int32_t ny = y + delta[1];
+				if (nx < 0 || ny < 0 || nx >= width || ny >= height) {
+					continue;
+				}
+				process_same_terrain_set_a_neighbor_4bb920(level, nx, ny, active_terrain);
+			}
 		}
 		if (candidate_gate_4bc988(result.terrain_scratch_word_0x4bad0f, result.terrain_code, width, height, level_tile_count, level, x, y)) {
 			append_set_a(level, x, y);
