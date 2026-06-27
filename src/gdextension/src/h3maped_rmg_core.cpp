@@ -1445,8 +1445,10 @@ void append_angle_candidates_4a17f5(const GeneratorRelationOwnerState4a218c &bas
 	const int32_t combined_size = base_source_span + current_source_span;
 	for (int32_t direction = 0; direction < 32; ++direction) {
 		CoordinateCandidate4a17f5 candidate;
-		candidate.x = int32_t(std::trunc(double(combined_size) * X_TABLE[direction] + double(base.x)));
-		candidate.y = int32_t(std::trunc(double(combined_size) * Y_TABLE[direction] + double(base.y)));
+		// H3MapEd 0x4a17f5 writes current-owner +0x10 from source +0x14/table 0x58dd28
+		// and +0x14 from source +0x10/table 0x58dc28 before appending the 12-byte tuple.
+		candidate.x = int32_t(std::trunc(double(combined_size) * Y_TABLE[direction] + double(base.y)));
+		candidate.y = int32_t(std::trunc(double(combined_size) * X_TABLE[direction] + double(base.x)));
 		candidate.level = base.level;
 		if (coordinate_candidate_valid_4a1701(current, current_owner, candidate, zones, relation_owners)) {
 			candidates.push_back(candidate);
