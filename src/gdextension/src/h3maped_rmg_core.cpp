@@ -529,6 +529,9 @@ int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218
 	if (zone.source_zone_id > 0) {
 		return zone.source_zone_id - 1;
 	}
+	if (zone.h3maped_zone_word_id >= 0) {
+		return zone.h3maped_zone_word_id;
+	}
 	return zone_word_for_coordinate_zone(zone, fallback);
 }
 
@@ -8236,6 +8239,9 @@ static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelati
 	if (relation.source_index >= 0) {
 		return relation.source_index;
 	}
+	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
+		return relation.relation_owner_byte2_0x4aa9b7;
+	}
 	if (relation.source_zone_id > 0) {
 		return relation.source_zone_id - 1;
 	}
@@ -9867,7 +9873,7 @@ static ConnectionMonsterMaterializationResult4a5e03 connection_monster_materiali
 		return result;
 	}
 	const int32_t owner_byte2 = generated_cell_word20_owner_byte2_signed(target.word_0x20);
-	GeneratorRelationOwnerState4a218c *relation = relation_owner_for_runtime_zone_0x4a54a7(state, owner_byte2);
+	GeneratorRelationOwnerState4a218c *relation = relation_owner_for_owner_byte2_0x4a54a7(state, owner_byte2);
 	if (relation == nullptr) {
 		result.blocked_reason = "0x4a5e03_target_owner_relation_missing";
 		return result;
@@ -9961,12 +9967,14 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 
 	int32_t best_score = std::numeric_limits<int32_t>::max();
 	std::vector<ConnectionFrontierCandidate4a79a3> best_candidates;
+	const int32_t source_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(source_owner);
+	const int32_t target_owner_byte3 = relation_owner_byte2_for_generated_cell_gate(target_owner);
 	for (const ConnectionFrontierCandidate4a79a3 &candidate : frontier_candidates) {
 		if (candidate.level != source_owner.coordinate_level_0x18) {
 			continue;
 		}
-		if (candidate.source_owner_byte2 != source_owner.runtime_zone_index
-				|| candidate.source_owner_byte3 != target_owner.runtime_zone_index) {
+		if (candidate.source_owner_byte2 != source_owner_byte2
+				|| candidate.source_owner_byte3 != target_owner_byte3) {
 			continue;
 		}
 		result.frontier_candidate_count += 1;
@@ -14985,7 +14993,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = owner_index;
+			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			int32_t low_x = 0;
 			int32_t low_y = 0;
@@ -17517,6 +17525,14 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty() || owners.empty()) {
 		return 0;
 	}
+	auto owner_index_for_byte2 = [&](int32_t owner_byte2) -> int32_t {
+		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+			if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(index)]) == owner_byte2) {
+				return index;
+			}
+		}
+		return -1;
+	};
 	int32_t update_count = 0;
 	for (int32_t level = 0; level < grid.level_count; ++level) {
 		for (int32_t y = 0; y < grid.height; ++y) {
@@ -17529,7 +17545,8 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 				if (!record.word_0x20_known) {
 					continue;
 				}
-				const int32_t owner_index = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
+				const int32_t owner_index = owner_index_for_byte2(
+						generated_cell_owner_byte2_signed_4a4142(record.word_0x20));
 				if (owner_index < 0 || owner_index >= int32_t(owners.size())) {
 					continue;
 				}
@@ -17570,6 +17587,11 @@ static int32_t apply_relation_owner_eligibility_marker_0x4a2ec3(
 	int32_t set_count = 0;
 	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
 		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_index)];
+		const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+		if (owner_gate_byte2 < 0) {
+			bounds_skip_count += 1;
+			continue;
+		}
 		const RuntimeTerrainSelectionRecord49b53d *record =
 				runtime_terrain_selection_for_runtime_zone_0x49b53d(&terrain_selection, owner.runtime_zone_index);
 		const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : (record != nullptr ? record->selected_terrain_id_0x49b53d : -1);
@@ -17600,7 +17622,7 @@ static int32_t apply_relation_owner_eligibility_marker_0x4a2ec3(
 				if (flat < 0 || flat >= cell_count) {
 					continue;
 				}
-				if (generated_cell_owner_byte2_signed_4a4142(generated_cell_word_0x20[size_t(flat)]) != owner_index) {
+				if (generated_cell_owner_byte2_signed_4a4142(generated_cell_word_0x20[size_t(flat)]) != owner_gate_byte2) {
 					continue;
 				}
 				uint32_t &word_0x28 = generated_cell_word_0x28[size_t(flat)];

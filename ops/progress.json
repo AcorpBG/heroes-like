@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered 0x4bc5f0 TerrainPlacement live-feedback drain: set-A/set-B drain by ordered-tree first-node order, set-A drains fully first, set-B drains fully next, and the loop returns to set-A only after set-B is empty if B processing repopulated A. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=50 expected=54; lane mismatches remain terrain/art dominated (terrain=4166, art=5049, flags=1150, road_type=386, road_art=371, river_type=34, river_art=28); generated-object payload is 8596 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered 0x4bc5f0 TerrainPlacement live-feedback drain: set-A/set-B drain by ordered-tree first-node order, set-A drains fully first, set-B drains fully next, and the loop returns to set-A only after set-B is empty if B processing repopulated A. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=50 expected=54; lane mismatches remain terrain/art dominated (terrain=4166, art=5049, flags=1150, road_type=386, road_art=371, river_type=34, river_art=28); generated-object payload is 8596 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now separates recovered relation-owner source ids from owner-vector positions in generated-cell consumers: 0x4a3f27 terrain repaint, 0x4a2105/0x49b66d scan-bound recovery, 0x4a2ec3 eligibility marking, 0x4a2ffa recentering, and 0x4a5e03 connection-monster target-owner lookup resolve generated-cell +0x20 byte2 through the recovered relation-owner byte/source id instead of treating it as a direct owner-vector index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=52 expected=54; generated-object payload is 9580 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell owner-gate behavior progress, not parity completion or runtime map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now separates recovered relation-owner source ids from owner-vector positions in generated-cell consumers: 0x4a3f27 terrain repaint, 0x4a2105/0x49b66d scan-bound recovery, 0x4a2ec3 eligibility marking, 0x4a2ffa recentering, and 0x4a5e03 connection-monster target-owner lookup resolve generated-cell +0x20 byte2 through the recovered relation-owner byte/source id instead of treating it as a direct owner-vector index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=52 expected=54; generated-object payload is 9580 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell owner-gate behavior progress, not parity completion or runtime map output.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,69 +21,50 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-terrain-direction-table-source-backed-20260627",
-        "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+        "id": "native-rmg-relation-owner-byte-gate-20260627",
+        "title": "Generated-Cell Relation Owner Byte Gate Alignment",
         "status": "passed_source_backed_blocker_resolution_not_parity",
-        "validatedAt": "2026-06-27T16:43:39Z",
-        "updatedAt": "2026-06-27T17:17:28Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered 0x4bc5f0 TerrainPlacement live-feedback drain: set-A/set-B drain by ordered-tree first-node order, set-A drains fully first, set-B drains fully next, and the loop returns to set-A only after set-B is empty if B processing repopulated A. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=50 expected=54; lane mismatches remain terrain/art dominated (terrain=4166, art=5049, flags=1150, road_type=386, road_art=371, river_type=34, river_art=28); generated-object payload is 8596 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+        "validatedAt": "2026-06-27T18:29:54Z",
+        "updatedAt": "2026-06-27T18:29:54Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now separates recovered relation-owner source ids from owner-vector positions in generated-cell consumers: 0x4a3f27 terrain repaint, 0x4a2105/0x49b66d scan-bound recovery, 0x4a2ec3 eligibility marking, 0x4a2ffa recentering, and 0x4a5e03 connection-monster target-owner lookup resolve generated-cell +0x20 byte2 through the recovered relation-owner byte/source id instead of treating it as a direct owner-vector index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=52 expected=54; generated-object payload is 9580 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell owner-gate behavior progress, not parity completion or runtime map output.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
-          "docs/native-rmg-terrain-placement-chain.md",
-          "docs/h3maped-rmg-end-to-end-behavior.md",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "PLAN.md",
           "ops/progress.json",
-          "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bb74b_FUN_004bb74b.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba59_FUN_004bba59.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc74c_FUN_004bc74c.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
-          ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json",
-          ".artifacts/rmg_terrain_ordered_set_drain/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/rmg_terrain_ordered_set_drain/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/rmg_terrain_ordered_set_drain/medium_seed10_setup0_2p.final_payload_sections.json",
-          ".artifacts/rmg_terrain_ordered_set_drain/medium_seed10_setup0_2p.final_payload_compare.json"
+          ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload.bin",
+          ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_sections.json",
+          ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_compare.json"
         ],
         "checks": [
-          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
-          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
+          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
+          "bin/h3maped_rmg_core_selftest (passed)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_owner_byte_source_relation_4a3f27 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (blocked as expected; phase_snapshot_written_count=1, final_payload_binary_written_count=1, godot_process_started=false)",
+          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_owner_byte_source_relation_4a3f27 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (blocked as expected)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)",
+          "python3 tests/validate_repo.py (passed)"
         ],
-        "commands": [
-          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
-          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
-        ],
-        "nativeTilePayloadByteCount": 36288,
-        "h3mapedTilePayloadByteCount": 36288,
-        "tileFirstMismatchOffset": 1,
-        "tileFirstMismatchCell": 0,
-        "tileFirstMismatchByteInCell": 1,
-        "nativeTileByteAtMismatch": 50,
-        "h3mapedTileByteAtMismatch": 54,
-        "tileMismatchCount": 11202,
-        "nativeGeneratedObjectPayloadByteCount": 8596,
-        "h3mapedGeneratedObjectPayloadByteCount": 17057,
-        "generatedObjectPayloadFirstMismatchOffset": 0,
-        "nativeGeneratedObjectByteAtMismatch": 21,
-        "h3mapedGeneratedObjectByteAtMismatch": 2,
-        "godotProcessStarted": false,
-        "native_rmg_end_to_end_parity_complete": false,
-        "runtime_map_output_enabled": false,
-        "sourceBackedBehaviorProgress": true,
-        "parityCompletionClaimed": false,
-        "resolvedBlockers": [
-          "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
-        ],
-        "namedBlockers": [
-          "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-          "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
-        ]
+        "metrics": {
+          "native_rmg_end_to_end_parity_complete": false,
+          "generated_cell_owner_gate_uses_relation_owner_byte": true,
+          "medium_seed10_tile_native_bytes": 36288,
+          "medium_seed10_tile_expected_bytes": 36288,
+          "medium_seed10_tile_first_mismatch_offset": 1,
+          "medium_seed10_tile_first_mismatch_native": 52,
+          "medium_seed10_tile_first_mismatch_expected": 54,
+          "medium_seed10_object_native_bytes": 9580,
+          "medium_seed10_object_expected_bytes": 17057,
+          "medium_seed10_object_first_mismatch_offset": 0,
+          "medium_seed10_object_first_mismatch_native": 35,
+          "medium_seed10_object_first_mismatch_expected": 2,
+          "godot_process_started": false,
+          "windows_dll_build_deferred": true
+        }
       },
       "latestEvidence": {
         "id": "native-rmg-terrain-repaint-owner-index-20260627",
@@ -2605,6 +2586,55 @@
   },
   "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
   "completedImplementationEvidence": [
+    {
+      "id": "native-rmg-relation-owner-byte-gate-20260627",
+      "evidenceId": "native-rmg-relation-owner-byte-gate-20260627",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "title": "Generated-Cell Relation Owner Byte Gate Alignment",
+      "timestamp": "2026-06-27T18:29:54Z",
+      "status": "passed_partial_implementation_not_parity",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now separates recovered relation-owner source ids from owner-vector positions in generated-cell consumers: 0x4a3f27 terrain repaint, 0x4a2105/0x49b66d scan-bound recovery, 0x4a2ec3 eligibility marking, 0x4a2ffa recentering, and 0x4a5e03 connection-monster target-owner lookup resolve generated-cell +0x20 byte2 through the recovered relation-owner byte/source id instead of treating it as a direct owner-vector index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=52 expected=54; generated-object payload is 9580 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell owner-gate behavior progress, not parity completion or runtime map output.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now separates recovered relation-owner source ids from owner-vector positions in generated-cell consumers: 0x4a3f27 terrain repaint, 0x4a2105/0x49b66d scan-bound recovery, 0x4a2ec3 eligibility marking, 0x4a2ffa recentering, and 0x4a5e03 connection-monster target-owner lookup resolve generated-cell +0x20 byte2 through the recovered relation-owner byte/source id instead of treating it as a direct owner-vector index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=52 expected=54; generated-object payload is 9580 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell owner-gate behavior progress, not parity completion or runtime map output.",
+      "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+      "remainingWork": "Continue source-order generated-cell private-state parity before 0x49b2b6; the current focused Medium same-run comparison still mismatches at tile byte offset 1 and generated-object payload offset 0. Do not tune final-map deltas or emit runtime map output.",
+      "artifacts": [
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload.bin",
+        ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_sections.json",
+        ".artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_compare.json"
+      ],
+      "checks": [
+        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
+        "bin/h3maped_rmg_core_selftest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_owner_byte_source_relation_4a3f27 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (blocked as expected; phase_snapshot_written_count=1, final_payload_binary_written_count=1, godot_process_started=false)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_owner_byte_source_relation_4a3f27 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_owner_byte_source_relation_4a3f27/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (blocked as expected)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)",
+        "python3 tests/validate_repo.py (passed)"
+      ],
+      "metrics": {
+        "native_rmg_end_to_end_parity_complete": false,
+        "generated_cell_owner_gate_uses_relation_owner_byte": true,
+        "medium_seed10_tile_native_bytes": 36288,
+        "medium_seed10_tile_expected_bytes": 36288,
+        "medium_seed10_tile_first_mismatch_offset": 1,
+        "medium_seed10_tile_first_mismatch_native": 52,
+        "medium_seed10_tile_first_mismatch_expected": 54,
+        "medium_seed10_object_native_bytes": 9580,
+        "medium_seed10_object_expected_bytes": 17057,
+        "medium_seed10_object_first_mismatch_offset": 0,
+        "medium_seed10_object_first_mismatch_native": 35,
+        "medium_seed10_object_first_mismatch_expected": 2,
+        "godot_process_started": false,
+        "windows_dll_build_deferred": true
+      }
+    },
     {
       "blockers": [
         "0x49b89c_object_record_score_cache_descriptor_0x3c_mask_unowned",
