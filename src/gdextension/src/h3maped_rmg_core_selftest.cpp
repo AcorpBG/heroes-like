@@ -2877,7 +2877,7 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == owner.source_index, "0x49b452 relation owner source pointer/source index was not preserved")) {
 			return 1;
 		}
-		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_index, "0x49b452 relation owner byte for reward/guard and bridge scans was not preserved")) {
+		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_zone_id, "0x49b452 relation owner byte for reward/guard and bridge scans did not use the recovered source-zone owner id")) {
 			return 1;
 		}
 		if (!require(owner.scan_bounds_0x20_0x2c_known
@@ -3770,7 +3770,7 @@ int main() {
 		record.object_reference_count = 0;
 		record.object_references_0x04_0x08.clear();
 		record.word_0x20_known = true;
-		record.word_0x20 = 0x00020004U;
+		record.word_0x20 = 0x00050004U;
 		record.word_0x24_known = true;
 		record.word_0x24 = 0U;
 		record.word_0x28_known = true;
@@ -3781,7 +3781,7 @@ int main() {
 	}
 	GeneratedCellRecord0x30 &reward_guard_target =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
-	reward_guard_target.word_0x20 = 0x0002000aU;
+	reward_guard_target.word_0x20 = 0x0005000aU;
 	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, false);
 	GeneratedCellRecord0x30 &reward_guard_contour_cell =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
@@ -3812,7 +3812,7 @@ int main() {
 	reward_guard_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
 	for (GeneratedCellRecord0x30 &wrapper_cell : reward_guard_wrapper.generated_cell_grid_0x08_0x10.records) {
 		wrapper_cell.word_0x20_known = true;
-		wrapper_cell.word_0x20 = 0x0002000aU;
+		wrapper_cell.word_0x20 = 0x0005000aU;
 		wrapper_cell.word_0x24_known = true;
 		wrapper_cell.word_0x24 = 0U;
 		wrapper_cell.word_0x28_known = true;
@@ -3831,8 +3831,9 @@ int main() {
 	reward_guard_wrapper.candidate_coordinates_0x3c_0x40.push_back({ 1, 0, 0 });
 	GeneratorRelationOwnerState4a218c reward_guard_relation;
 	reward_guard_relation.runtime_zone_index = 2;
+	reward_guard_relation.source_zone_id = 5;
 	reward_guard_relation.source_pointer_0x00_known = true;
-	reward_guard_relation.source_pointer_source_index_0x00 = 5;
+	reward_guard_relation.source_pointer_source_index_0x00 = 4;
 	reward_guard_relation.relation_owner_byte2_0x4aa9b7_known = true;
 	reward_guard_relation.relation_owner_byte2_0x4aa9b7 = 2;
 	reward_guard_relation.terrain_policy_0x0c_known = true;
@@ -3861,7 +3862,7 @@ int main() {
 	const GeneratedCellRecord0x30 &reward_guard_wrapper_cell_after = reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0];
 	if (!require(reward_guard_result.applied
 					&& reward_guard_result.committed
-					&& reward_guard_result.relation_owner_byte2 == 2
+					&& reward_guard_result.relation_owner_byte2 == 5
 					&& reward_guard_result.scanned_cell_count == 1
 					&& reward_guard_result.accepted_candidate_count == 1
 					&& reward_guard_result.feasibility_results_0x4aa603.size() == 1

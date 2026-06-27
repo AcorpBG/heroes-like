@@ -506,6 +506,12 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
+	if (zone.source_index >= 0) {
+		return zone.source_index + 1;
+	}
 	return zone_word_for_coordinate_zone(zone, fallback);
 }
 
@@ -523,14 +529,14 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
-	if (seed.h3maped_zone_word_id >= 0) {
-		return seed.h3maped_zone_word_id;
-	}
 	if (seed.source_zone_id > 0) {
 		return seed.source_zone_id;
 	}
 	if (seed.source_index >= 0) {
-		return seed.source_index;
+		return seed.source_index + 1;
+	}
+	if (seed.h3maped_zone_word_id >= 0) {
+		return seed.h3maped_zone_word_id;
 	}
 	return seed.runtime_zone_index;
 }
@@ -1203,6 +1209,13 @@ int32_t relation_owner_source_pointer_index_0x00(const GeneratorRelationOwnerSta
 	return zone.source_index >= 0 ? zone.source_index : zone.source_zone_id;
 }
 
+int32_t relation_owner_source_span_0x08(const GeneratorRelationOwnerState4a218c &owner, const CoordinateZone4a218c &zone) {
+	if (owner.source_pointer_source_span_0x08_known && owner.source_pointer_source_span_0x08 > 0) {
+		return owner.source_pointer_source_span_0x08;
+	}
+	return zone.source_base_size;
+}
+
 CoordinateZone4a218c coordinate_zone_from_relation_owner_0x10(const GeneratorRelationOwnerState4a218c &owner, const std::vector<CoordinateZone4a218c> &zones) {
 	const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
 	CoordinateZone4a218c zone;
@@ -1242,6 +1255,7 @@ bool coordinate_candidate_valid_4a1701(const CoordinateZone4a218c &current, cons
 	}
 	const CoordinateZone4a218c current_candidate = coordinate_zone_with_candidate_0x4a1701(current, current_owner, candidate);
 	const int32_t current_source_pointer = relation_owner_source_pointer_index_0x00(current_owner, current_candidate);
+	const int32_t current_source_span = relation_owner_source_span_0x08(current_owner, current);
 	for (const GeneratorRelationOwnerState4a218c &other_owner : relation_owners) {
 		CoordinateZone4a218c other = coordinate_zone_from_relation_owner_0x10(other_owner, zones);
 		if (other.source_base_size <= 0 && other.source_index < 0 && other.source_zone_id < 0) {
@@ -1252,7 +1266,8 @@ bool coordinate_candidate_valid_4a1701(const CoordinateZone4a218c &current, cons
 			continue;
 		}
 		const int32_t distance = distance_truncate(current_candidate.x, current_candidate.y, other.x, other.y);
-		const int32_t minimum_tenths = (other.source_base_size + current.source_base_size) * 8;
+		const int32_t other_source_span = relation_owner_source_span_0x08(other_owner, other);
+		const int32_t minimum_tenths = (other_source_span + current_source_span) * 8;
 		if (distance * 10 < minimum_tenths) {
 			return false;
 		}
@@ -1326,7 +1341,16 @@ void append_angle_candidates_4a17f5(const CoordinateZone4a218c &base, const Coor
 		-1.0, -0.9807, -0.9239, -0.8315,
 		-0.7071, -0.5556, -0.3827, -0.1951,
 	};
-	const int32_t combined_size = base.source_base_size + current.source_base_size;
+	int32_t base_source_span = base.source_base_size;
+	const int32_t base_runtime_index = runtime_index_for_coordinate_zone(base, -1);
+	for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+		if (owner.runtime_zone_index == base_runtime_index) {
+			base_source_span = relation_owner_source_span_0x08(owner, base);
+			break;
+		}
+	}
+	const int32_t current_source_span = relation_owner_source_span_0x08(current_owner, current);
+	const int32_t combined_size = base_source_span + current_source_span;
 	for (int32_t direction = 0; direction < 32; ++direction) {
 		CoordinateCandidate4a17f5 candidate;
 		candidate.x = int32_t(std::trunc(double(combined_size) * X_TABLE[direction] + double(base.x)));
@@ -7745,11 +7769,15 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 }
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
-	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
-		return relation.relation_owner_byte2_0x4aa9b7;
+	// Recovered 0x4aa9b7 and 0x4aa603 both load the owner gate through
+	// [[relation_pointer]], i.e. relation +0x00 followed by source +0x00.
+	// Native relation source records keep the zero-based template source index
+	// separately; generated-cell owner byte2 uses the H3MapEd source-zone id.
+	if (relation.source_zone_id > 0) {
+		return relation.source_zone_id;
 	}
 	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00;
+		return relation.source_pointer_source_index_0x00 + 1;
 	}
 	return -1;
 }
@@ -13584,6 +13612,9 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 	}
 
 	auto source_base_size_for_relation_owner = [&](const GeneratorRelationOwnerState4a218c &owner) {
+		if (owner.source_pointer_source_span_0x08_known && owner.source_pointer_source_span_0x08 > 0) {
+			return owner.source_pointer_source_span_0x08;
+		}
 		const int32_t zone_position = coordinate_zone_position_for_runtime_index(zones, owner.runtime_zone_index);
 		if (zone_position >= 0) {
 			return zones[size_t(zone_position)].source_base_size;
@@ -14839,9 +14870,8 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
-	const int32_t source_owner = reward_guard_relation_source_owner_0x4aa9b7(owner);
-	if (source_owner >= 0) {
-		return source_owner;
+	if (owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 >= 0) {
+		return owner.relation_owner_byte2_0x4aa9b7;
 	}
 	if (owner.source_zone_id >= 0) {
 		return owner.source_zone_id;
@@ -15150,6 +15180,8 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	const int32_t relation_owner_byte2 = h3maped_owner_byte2_from_runtime_zone_seed(seed);
 	owner.source_pointer_0x00_known = source_record.source_id_0x00 >= 0;
 	owner.source_pointer_source_index_0x00 = source_record.source_id_0x00;
+	owner.source_pointer_source_span_0x08_known = seed.source_base_size > 0;
+	owner.source_pointer_source_span_0x08 = seed.source_base_size;
 	owner.relation_owner_byte2_0x4aa9b7_known = relation_owner_byte2 >= 0;
 	owner.relation_owner_byte2_0x4aa9b7 = relation_owner_byte2;
 	owner.source_pointer_type_0x04_known = source_record.owner_or_type_0x04 >= 0;
