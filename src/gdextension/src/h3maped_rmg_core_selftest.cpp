@@ -2074,10 +2074,11 @@ int main() {
 					0,
 					4,
 					4);
-	if (!require(synthetic_mode_finalizer.blocked
+	if (!require(!synthetic_mode_finalizer.blocked
 					&& synthetic_mode_finalizer.synthetic_branch_allowed_by_0x4a3a9d
-					&& synthetic_mode_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
-				"0x4a3710 did not fail closed for generator+0x10b8 synthetic append branch")) {
+					&& synthetic_mode_finalizer.appended_runtime_zone_count == 0
+					&& synthetic_mode_finalizer.status == "0x4a3710_synthetic_runtime_zone_scan_executed_without_append",
+				"0x4a3710 should not claim the synthetic append branch is unported when no owner was appended")) {
 		return 1;
 	}
 	const FootprintFinalizerResult4a3710 synthetic_level_finalizer =
@@ -2088,10 +2089,26 @@ int main() {
 					1,
 					4,
 					4);
-	if (!require(synthetic_level_finalizer.blocked
+	if (!require(!synthetic_level_finalizer.blocked
 					&& synthetic_level_finalizer.synthetic_branch_allowed_by_0x4a3a9d
-					&& synthetic_level_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
-				"0x4a3710 did not fail closed for caller [EBP+0x0c] == 1 synthetic append branch")) {
+					&& synthetic_level_finalizer.appended_runtime_zone_count == 0
+					&& synthetic_level_finalizer.status == "0x4a3710_synthetic_runtime_zone_scan_executed_without_append",
+				"0x4a3710 should not claim caller [EBP+0x0c] == 1 synthetic append branch is unported when no owner was appended")) {
+		return 1;
+	}
+	const FootprintFinalizerResult4a3710 synthetic_appended_finalizer =
+			aurelion::h3maped_rmg_core::footprint_finalizer_4a3710(
+					1,
+					aurelion::h3maped_rmg_core::water_mode_code("land"),
+					2,
+					0,
+					4,
+					5);
+	if (!require(synthetic_appended_finalizer.blocked
+					&& synthetic_appended_finalizer.synthetic_branch_allowed_by_0x4a3a9d
+					&& synthetic_appended_finalizer.appended_runtime_zone_count == 1
+					&& synthetic_appended_finalizer.status == "0x4a3710_appended_zone_adjacency_schema_pending",
+				"0x4a3710 appended synthetic owners must now block only on adjacency/order schema replay")) {
 		return 1;
 	}
 	if (!require(owner_grid.handoffs.size() == 4, "composed owner-grid chain did not build one handoff per source walk")) {
@@ -5096,10 +5113,19 @@ int main() {
 		return 1;
 	}
 	if (!require(composed_mode2.owner_grid.footprint_finalizer_executed
-					&& composed_mode2.owner_grid.footprint_finalizer.blocked
-					&& composed_mode2.owner_grid.footprint_finalizer.synthetic_branch_allowed_by_0x4a3a9d
-					&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported",
-				"mode-2 coordinate-to-owner-grid chain should fail closed at the recovered 0x4a3a9d synthetic append branch")) {
+					&& composed_mode2.owner_grid.footprint_finalizer.synthetic_branch_allowed_by_0x4a3a9d,
+				"mode-2 coordinate-to-owner-grid chain did not execute the recovered 0x4a3a9d synthetic branch gate")) {
+		return 1;
+	}
+	if (composed_mode2.owner_grid.footprint_finalizer.appended_runtime_zone_count > 0) {
+		if (!require(composed_mode2.owner_grid.footprint_finalizer.blocked
+						&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_appended_zone_adjacency_schema_pending",
+					"mode-2 appended synthetic owners must block only at recovered 0x4a3710 adjacency/order replay")) {
+			return 1;
+		}
+	} else if (!require(!composed_mode2.owner_grid.footprint_finalizer.blocked
+					&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_scan_executed_without_append",
+				"mode-2 synthetic branch with no appended owner should not report an unported append path")) {
 		return 1;
 	}
 	{
