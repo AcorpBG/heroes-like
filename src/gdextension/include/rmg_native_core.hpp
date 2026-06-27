@@ -476,6 +476,8 @@ struct SharedGeneratorRelationOwnerState {
 	bool constructor_0x49b452_known = false;
 	bool source_pointer_0x00_known = false;
 	int32_t source_pointer_source_index_0x00 = -1;
+	bool source_pointer_source_span_0x08_known = false;
+	int32_t source_pointer_source_span_0x08 = 0;
 	bool relation_owner_byte2_0x4aa9b7_known = false;
 	int32_t relation_owner_byte2_0x4aa9b7 = -1;
 	bool source_pointer_type_0x04_known = false;
