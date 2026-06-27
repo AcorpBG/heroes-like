@@ -14446,6 +14446,17 @@ static bool relation_owner_scan_bounds_non_empty_0x49b66d(const GeneratorRelatio
 static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
 		const GeneratedCellRecordGrid0x30 &grid,
 		std::vector<GeneratorRelationOwnerState4a218c> &owners);
+static int32_t apply_relation_owner_eligibility_marker_0x4a2ec3(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		const RuntimeTerrainSelectionResult49b53d &terrain_selection,
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		const std::vector<uint32_t> &generated_cell_word_0x20,
+		std::vector<uint32_t> &generated_cell_word_0x28,
+		int32_t &existing_count,
+		int32_t &water_skip_count,
+		int32_t &bounds_skip_count);
 
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		int32_t width,
@@ -14478,14 +14489,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	result.terrain_code.assign(size_t(cell_count), 8);
 	result.terrain_scratch_word_0x4bad0f.assign(size_t(cell_count), 0U);
 
-	if (owner_materialization.cell_flags.size() == size_t(cell_count)) {
-		for (int32_t flat = 0; flat < cell_count; ++flat) {
-			if ((owner_materialization.cell_flags[size_t(flat)] & 0x10U) != 0U) {
-				result.generated_cell_word_0x28[size_t(flat)] |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
-			}
-		}
-	}
-
 	std::vector<GeneratorRelationOwnerState4a218c> prepared_relation_owners;
 	const std::vector<GeneratorRelationOwnerState4a218c> *active_relation_owners = relation_owners;
 	if (relation_owners != nullptr && !relation_owners->empty()) {
@@ -14506,6 +14509,19 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
 				terrain_prepaint_grid,
 				prepared_relation_owners);
+		result.relation_owner_eligibility_marker_0x4a2ec3_applied = true;
+		result.relation_owner_eligibility_marker_set_count_0x4a2ec3 =
+				apply_relation_owner_eligibility_marker_0x4a2ec3(
+						width,
+						height,
+						level_count,
+						terrain_selection,
+						prepared_relation_owners,
+						result.generated_cell_word_0x20,
+						result.generated_cell_word_0x28,
+						result.relation_owner_eligibility_marker_existing_count_0x4a2ec3,
+						result.relation_owner_eligibility_marker_water_skip_count_0x4a2ec3,
+						result.relation_owner_eligibility_marker_bounds_skip_count_0x4a2ec3);
 		for (GeneratorRelationOwnerState4a218c &owner : prepared_relation_owners) {
 			if (owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
@@ -17506,6 +17522,81 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 		}
 	}
 	return update_count;
+}
+
+static int32_t apply_relation_owner_eligibility_marker_0x4a2ec3(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		const RuntimeTerrainSelectionResult49b53d &terrain_selection,
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		const std::vector<uint32_t> &generated_cell_word_0x20,
+		std::vector<uint32_t> &generated_cell_word_0x28,
+		int32_t &existing_count,
+		int32_t &water_skip_count,
+		int32_t &bounds_skip_count) {
+	existing_count = 0;
+	water_skip_count = 0;
+	bounds_skip_count = 0;
+	if (width <= 0 || height <= 0 || level_count <= 0 || owners.empty()) {
+		return 0;
+	}
+	const int64_t cell_count_64 = int64_t(width) * int64_t(height) * int64_t(level_count);
+	if (cell_count_64 <= 0
+			|| cell_count_64 > std::numeric_limits<int32_t>::max()
+			|| generated_cell_word_0x20.size() != size_t(cell_count_64)
+			|| generated_cell_word_0x28.size() != size_t(cell_count_64)) {
+		return 0;
+	}
+	const int32_t cell_count = int32_t(cell_count_64);
+	const int32_t level_tile_count = width * height;
+	int32_t set_count = 0;
+	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
+		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_index)];
+		const RuntimeTerrainSelectionRecord49b53d *record =
+				runtime_terrain_selection_for_runtime_zone_0x49b53d(&terrain_selection, owner.runtime_zone_index);
+		const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : (record != nullptr ? record->selected_terrain_id_0x49b53d : -1);
+		if (terrain_id == 8) {
+			water_skip_count += 1;
+			continue;
+		}
+		if (!owner.scan_bounds_0x20_0x2c_known) {
+			bounds_skip_count += 1;
+			continue;
+		}
+		const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
+		if (scan_level < 0 || scan_level >= level_count) {
+			bounds_skip_count += 1;
+			continue;
+		}
+		const int32_t low_x = std::clamp(owner.scan_bound_low_x_0x20, 0, width);
+		const int32_t low_y = std::clamp(owner.scan_bound_low_y_0x24, 0, height);
+		const int32_t high_x = std::clamp(owner.scan_bound_high_x_0x28, 0, width);
+		const int32_t high_y = std::clamp(owner.scan_bound_high_y_0x2c, 0, height);
+		if (low_x >= high_x || low_y >= high_y) {
+			bounds_skip_count += 1;
+			continue;
+		}
+		for (int32_t y = low_y; y < high_y; ++y) {
+			for (int32_t x = low_x; x < high_x; ++x) {
+				const int32_t flat = scan_level * level_tile_count + y * width + x;
+				if (flat < 0 || flat >= cell_count) {
+					continue;
+				}
+				if (generated_cell_owner_byte2_signed_4a4142(generated_cell_word_0x20[size_t(flat)]) != owner_index) {
+					continue;
+				}
+				uint32_t &word_0x28 = generated_cell_word_0x28[size_t(flat)];
+				if ((word_0x28 & CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U) {
+					existing_count += 1;
+					continue;
+				}
+				word_0x28 |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
+				set_count += 1;
+			}
+		}
+	}
+	return set_count;
 }
 
 static void apply_relation_owner_scan_bounds_from_generated_cells_0x4a1f3b(GeneratorObjectPrivateState &state) {

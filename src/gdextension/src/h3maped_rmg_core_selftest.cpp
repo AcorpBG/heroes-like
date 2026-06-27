@@ -2453,7 +2453,8 @@ int main() {
 			36,
 			1,
 			owner_grid.materialization,
-			terrain_selection);
+			terrain_selection,
+			&relation_owner_inputs);
 	if (!require(terrain_repaint.executed, "0x4a3f27 terrain repaint did not execute")) {
 		return 1;
 	}
@@ -2489,10 +2490,11 @@ int main() {
 	}
 	{
 		BoundaryMaterialization4a2777 relation_gate_materialization;
-		relation_gate_materialization.generated_cell_word_0x20.assign(4, 0U);
+		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
 		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = 0U;
 		relation_gate_materialization.cell_flags.assign(4, 0U);
-		relation_gate_materialization.cell_flags[0] = 0x10U;
+		relation_gate_materialization.cell_flags[3] = 0x10U;
 		RuntimeTerrainSelectionResult49b53d relation_gate_selection;
 		relation_gate_selection.rng_state_after = 1234U;
 		RuntimeTerrainSelectionRecord49b53d stale_zone_word_record;
@@ -2534,6 +2536,16 @@ int main() {
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
 					"0x4a3f27 relation-owner repaint must gate by owner-vector index, not source-pointer byte")) {
+			return 1;
+		}
+		if (!require((relation_gate_repaint.generated_cell_word_0x28[0] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
+						&& (relation_gate_repaint.generated_cell_word_0x28[3] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) == 0U,
+					"0x4a2ec3 must materialize the repaint marker from relation scan bounds, not raw boundary/span cell_flags")) {
+			return 1;
+		}
+		if (!require(relation_gate_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied
+						&& relation_gate_repaint.relation_owner_eligibility_marker_set_count_0x4a2ec3 == 2,
+					"0x4a2ec3 relation-owner eligibility marker did not set exactly the owner-matched cells")) {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
