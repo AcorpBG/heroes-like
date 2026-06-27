@@ -292,9 +292,14 @@ struct SourceObjectSelectorResult4a9e40 {
 	int32_t mask_reject_count = 0;
 	int32_t accepted_count = 0;
 	std::vector<int32_t> accepted_source_record_indices;
+	std::vector<int32_t> accepted_wrapper_indices;
 	bool selected = false;
 	int32_t selected_candidate_index = -1;
 	int32_t selected_source_record_index = -1;
+	bool selected_source_record_copy_known = false;
+	SourceObjectRecord0x4c selected_source_record_copy;
+	bool selected_from_resolver_state = false;
+	int32_t selected_wrapper_index = -1;
 	int32_t selected_type_id_0x1c = -1;
 	int32_t selected_subtype_0x20 = 0;
 	int32_t selected_group_0x24 = 0;
@@ -371,6 +376,7 @@ struct SourceObjectResolverSourcePair4af785 {
 struct SourceObjectResolverState4af785 {
 	std::vector<SourceObjectResolvedWrapper4af785> wrappers;
 	std::vector<SourceObjectResolverSourcePair4af785> source_pairs_0xedc;
+	std::array<std::vector<int32_t>, SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8> wrapper_bucket_indices_0xe8;
 	int32_t next_wrapper_index = 0;
 };
 
@@ -710,6 +716,8 @@ SourceObjectWrapperBucketSummary0xe8 source_object_wrapper_bucket_summary_0x49db
 bool source_object_wrapper_bucket_by_index_0x49db76(int32_t bucket_index, SourceObjectWrapperBucket0xe8 &out_bucket);
 SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const SourceObjectRecord0x4c &record);
 SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20);
+SourceObjectSelectorResult4a9e40 source_object_wrapper_selector_0x4a9e40(const SourceObjectResolverState4af785 &state, uint32_t rng_state, int32_t requested_lane, int32_t bucket_index_0x08, int32_t requested_source_field_0x20);
+SourceObjectResolverState4af785 source_object_resolver_state_from_catalog_0x49db76();
 bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const SourceObjectRecord0x4c &right);
 int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &record);
 std::vector<SourceObjectMaskPoint490f3f> source_object_text_mask_points_0x490f3f(const std::string &mask_text, bool action_mask);
@@ -2697,6 +2705,8 @@ struct GeneratorObjectPrivateState {
 	GeneratorObjectVectorState object_record_vector_ec4_ecc;
 	GeneratorObjectVectorState source_pair_vector_edc;
 	std::vector<SourceObjectResolverSourcePair4af785> source_pair_records_edc;
+	bool source_object_resolver_state_4af785_known = false;
+	SourceObjectResolverState4af785 source_object_resolver_state_4af785;
 	GeneratorObjectVectorState pending_entry_vector_eec_ef0_ef4;
 	GeneratorObjectVectorState candidate_container_vector_10d4_10d8;
 	std::vector<TemplateCandidateContainerRecord4ac552> candidate_container_records_10d4_10d8;
@@ -3668,7 +3678,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);
 RewardGuardSelectorResult4a9f1c reward_guard_value_bounded_selector_counter_pass_0x4a9f1c(const GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound);
-RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args = RewardGuardSelectorCallsiteArgs4a9f1c());
+RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args = RewardGuardSelectorCallsiteArgs4a9f1c(), SourceObjectResolverState4af785 *resolver_state = nullptr);
 RewardGuardWrapperConstructResult49ce04 reward_guard_wrapper_construct_0x49ce04();
 RewardGuardWrapperRefreshResult49d6e0 reward_guard_wrapper_refresh_bounds_0x49d6e0(RewardGuardWrapperState4aa3e9 &wrapper);
 RewardGuardWrapperCandidateRebuildResult49d7c3 reward_guard_wrapper_rebuild_candidates_0x49d7c3(RewardGuardWrapperState4aa3e9 &wrapper);
