@@ -232,30 +232,44 @@ int main() {
 		{
 			std::vector<uint32_t> zone_words(size_t(cell_count), aurelion::h3maped_rmg_core::UNASSIGNED_ZONE_WORD);
 			std::vector<uint32_t> generated_words(size_t(cell_count), aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
+			std::vector<uint32_t> generated_word_0x28(size_t(cell_count), 0U);
 			std::vector<uint8_t> cell_flags(size_t(cell_count), 0U);
-			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 1 });
+			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, generated_word_0x28, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 1 });
 			if (!require(!fill.trace.empty(), "0x4a325d level-1 span fill did not emit trace writes")) {
 				return 1;
 			}
 			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
 						return write.reserved;
 					}),
-						"0x4a325d must reserve generator mode 2 level 1 writes")) {
+					"0x4a325d must reserve generator mode 2 level 1 writes")) {
+				return 1;
+			}
+			if (!require(std::any_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
+					}),
+					"0x4a325d reserved writes must set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
 		}
 		{
 			std::vector<uint32_t> zone_words(size_t(cell_count), aurelion::h3maped_rmg_core::UNASSIGNED_ZONE_WORD);
 			std::vector<uint32_t> generated_words(size_t(cell_count), aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
+			std::vector<uint32_t> generated_word_0x28(size_t(cell_count), 0U);
 			std::vector<uint8_t> cell_flags(size_t(cell_count), 0U);
-			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 0 });
+			const auto fill = aurelion::h3maped_rmg_core::span_fill_4a325d(zone_words, generated_words, generated_word_0x28, cell_flags, width, height, level_count, 2, 3, 3, SpanRecord { 1, 1, 0 });
 			if (!require(!fill.trace.empty(), "0x4a325d level-0 span fill did not emit trace writes")) {
 				return 1;
 			}
 			if (!require(std::none_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
 						return write.reserved;
 					}),
-						"0x4a325d must suppress reserved flags for generator mode 2 level 0")) {
+					"0x4a325d must suppress reserved flags for generator mode 2 level 0")) {
+				return 1;
+			}
+			if (!require(std::none_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
+					}),
+					"0x4a325d unreserved writes must not set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
 		}
@@ -2490,9 +2504,11 @@ int main() {
 	}
 	{
 		BoundaryMaterialization4a2777 relation_gate_materialization;
+		relation_gate_materialization.generator_mode_0x10b8 = 2;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
 		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(30U << 16U);
 		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(30U << 16U);
+		relation_gate_materialization.generated_cell_word_0x28.assign(4, 0U);
 		relation_gate_materialization.cell_flags.assign(4, 0U);
 		relation_gate_materialization.cell_flags[3] = 0x10U;
 		RuntimeTerrainSelectionResult49b53d relation_gate_selection;
@@ -2561,6 +2577,28 @@ int main() {
 						+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa)
 						+ " recenter_blocked="
 						+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa))) {
+			return 1;
+		}
+		BoundaryMaterialization4a2777 mode_zero_repaint_materialization = relation_gate_materialization;
+		mode_zero_repaint_materialization.generator_mode_0x10b8 = 0;
+		mode_zero_repaint_materialization.generated_cell_word_0x28.assign(4, 0U);
+		mode_zero_repaint_materialization.generated_cell_word_0x28[0] = aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
+		const TerrainRepaintResult4a3f27 mode_zero_repaint =
+				aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
+						2,
+						2,
+						1,
+						mode_zero_repaint_materialization,
+						relation_gate_selection,
+						&relation_gate_owners);
+		if (!require(mode_zero_repaint.executed && !mode_zero_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied,
+					"0x4a3f27 mode-0 repaint must not enter the recovered mode-2-only 0x4a30c2/0x4a2ec3 marker path")) {
+			return 1;
+		}
+		if (!require(mode_zero_repaint.zone_repaint_write_count_0x4a4163 == 1
+						&& mode_zero_repaint.member_gate_skip_count_0x4a4150 >= 1
+						&& (mode_zero_repaint.generated_cell_word_0x28[3] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) == 0U,
+					"0x4a3f27 mode-0 repaint must consume carried generated-cell +0x28 bit 28 and ignore raw cell_flags")) {
 			return 1;
 		}
 	}

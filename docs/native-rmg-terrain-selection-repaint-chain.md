@@ -27,8 +27,9 @@ Native now executes this source-backed order:
    - per-zone repaint skips water zones;
    - `0x4a2105` scan-bound preparation indexes relation owners from generated-cell `+0x20` byte 2;
    - `0x4a2ffa` coordinate recenter gates by the relation/source pointer owner byte;
-   - `0x4a2ec3` materializes generated-cell `+0x28` bit 28 by scanning relation-owner `+0x20/+0x24/+0x28/+0x2c` rectangles and matching generated-cell owner byte2 to the current relation-owner vector index;
-   - the `+0x28` member marker is not derived from boundary/span-fill `cell_flags`, which are local owner-grid write state rather than TerrainPlacement repaint authority;
+   - `0x4a2777/0x4a325d` carry the recovered reserved-write marker into generated-cell `+0x28` bit 28 through the `0x4a2e91` `OR byte ptr [cell+0x2b], 0x10` mutation;
+   - `0x4a2ec3` additionally materializes generated-cell `+0x28` bit 28 by scanning relation-owner `+0x20/+0x24/+0x28/+0x2c` rectangles only through the recovered mode-2 level-0 `0x4a30c2` branch;
+   - native `cell_flags` remain a local support mirror and are not repaint authority; repaint consumes carried generated-cell `+0x28`;
    - repaint owner gate reads generated-cell `+0x20` byte 2 at `0x4a4142` and compares it to the current relation-owner vector loop index, not to the relation/source pointer owner byte;
    - member gate reads generated-cell `+0x28 >> 28 & 1`, matching `0x4a4150`;
    - passing cells write terrain id through the recovered `0x49acf6` generated-cell writer.
