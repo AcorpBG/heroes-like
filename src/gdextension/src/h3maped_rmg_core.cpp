@@ -783,18 +783,10 @@ int32_t scratch_art_id_4bad0f(uint32_t scratch_word) {
 }
 
 int32_t terrain_trait_flag4_4bb039(int32_t terrain_id) {
-	switch (terrain_id) {
-		case 0:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-			return 1;
-		default:
-			return 0;
-	}
+	// H3MapEd 0x4bb039 tests byte [terrain_descriptor_table[terrain] + 4].
+	// The recovered 0x5436b8 descriptor table has a nonzero byte at +4 for
+	// every valid land/water terrain id 0..9.
+	return terrain_id >= 0 && terrain_id <= 9 ? 1 : 0;
 }
 
 int32_t terrain_relation_4bb039(int32_t center_terrain_id, int32_t neighbor_terrain_id) {
