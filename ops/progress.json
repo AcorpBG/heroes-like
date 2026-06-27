@@ -897,7 +897,7 @@
   "active_slice": {
     "alignmentCheckpoints": [
       {
-        "blocker": "Final writeout is blocked by unported static object definition vectors +0x4a8/+0x7f8, final header/player/metadata writeout, and 0x4ad3de -> 0x4ae09a success sentinel after generated-definition-indexed object payloads. Reward/guard zero successful direct 0x4aa9b7 commits, descriptor counter replay, full final payload ownership, and same-run parity comparison remain blockers.",
+        "blocker": "Same-run final payload comparison still blocks first at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload after source-backed final object definition wrapper order was corrected.",
         "closureCriteria": "Native final tile/object payload comparison is sourced from the recovered final writeout stream and passes for the selected Small/Medium one-level land references, or remaining mismatches point to a still-pending earlier checkpoint.",
         "completedAt": "2026-06-13T14:56:57Z",
         "evidenceArtifacts": [
@@ -909,19 +909,22 @@
         "evidenceId": "native-rmg-final-writeout-authority-20260613",
         "id": "native-rmg-final-writeout-authority-alignment-10184",
         "latestEvidenceArtifacts": [
-          ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed10.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/small_seed58.phase_snapshot.json",
-          ".artifacts/rmg_native_batch_export_definition_indexed_payload_20260625/medium_seed10.phase_snapshot.json",
-          "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
-          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-          "src/gdextension/src/rmg_native_core.cpp",
           "docs/native-rmg-generated-cell-mutation-chain.md",
-          "PLAN.md"
+          "PLAN.md",
+          "ops/progress.json",
+          "bin/h3maped_rmg_core_selftest",
+          "bin/rmg_native_batch_export_cli",
+          ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload.bin",
+          ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
+          ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
+          ".artifacts/rmg_recovery/ghidra_writeout_spine_dump_20260610/target_004ad1e3_FUN_004ad1e3.txt",
+          ".artifacts/rmg_recovery/ghidra_descriptor_source_resolver_dump_20260610/target_0049db76_FUN_0049db76.txt"
         ],
-        "latestEvidenceId": "native-rmg-final-object-definition-indexed-payload-20260625",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now builds a generated-object definition table from carried 0x49da08 source records in 0x49db76 wrapper-bucket order, serializes the table metadata bytes, and writes generated object instance payloads with source-backed object-definition indices instead of the previous placeholder descriptor +0x0c zero. Focused no-Godot Small seed 10, Small seed 58, and Medium seed 10 serialize every generated-object payload with zero missing source records and zero missing template-index assignments, then fail closed at final_header_player_metadata_static_definition_vectors_0x4a8_0x7f8_and_0x4ad3de_success_sentinel_unported_after_generated_definition_indexed_payload. Metrics: Small seed 10 emits 1296 cells / 9072 tile bytes / 91 road cells / 231 objects / 112 definitions / 6487 definition bytes / 12 first-pass / 219 second-pass / 231 serialized object payloads / 3140 object-payload bytes; Small seed 58 emits 1296 / 9072 / 115 / 220 / 119 / 6893 / 5 / 215 / 220 / 2896; Medium seed 10 emits 5184 / 36288 / 418 / 844 / 173 / 10023 / 13 / 831 / 844 / 10692. This is source-order workflow progress, not parity completion or final map output.",
-        "remainingWork": "Port the static object definition vectors at generator +0x4a8/+0x7f8, final header/player/metadata writeout, and the 0x4ad3de -> 0x4ae09a success sentinel/return path after the now-owned generated-definition-indexed 0x4ad3eb object payload. If broader seed coverage reaches an unported complex serializer body, recover and port that exact body instead of guessing. Then run same-run private-state/final-payload comparison before enabling native map output.",
+        "latestEvidenceId": "native-rmg-final-definition-wrapper-order-20260627",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
+        "remainingWork": "Fix the same-run 0x49b2b6 tile stream mismatch from earlier generated-cell/private-state drift, then address generated-object payload mismatch. Runtime map output remains disabled.",
         "result": "Final writeout authority now uses recovered H3MapEd 0x49b2b6 tile bytes plus recovered final object payload summary. Current mismatches are explicitly attributed to pending earlier checkpoints rather than package-draft parity.",
         "status": "completed",
         "summary": "Replace package-draft parity claims with recovered 0x4ad1e3 -> 0x49b2b6 -> 0x4ad309/0x4ad3eb tile/object stream evidence.",
@@ -1552,24 +1555,21 @@
       ]
     },
     "latestEvidenceArtifacts": [
-      "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
-      "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "docs/native-rmg-generated-cell-mutation-chain.md",
-      "docs/native-rmg-terrain-selection-repaint-chain.md",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
-      ".artifacts/rmg_recovery/ghidra_phase_frontier_20260611/range_004a2777_004a33ff.txt",
-      ".artifacts/rmg_recovery/ghidra_phase_frontier_decompile_20260611/target_004a3f27_FUN_004a3f27.txt"
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/rmg_recovery/ghidra_writeout_spine_dump_20260610/target_004ad1e3_FUN_004ad1e3.txt",
+      ".artifacts/rmg_recovery/ghidra_descriptor_source_resolver_dump_20260610/target_0049db76_FUN_0049db76.txt"
     ],
-    "latestEvidenceId": "native-rmg-terrain-owner-index-gate-20260627",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now applies recovered TerrainPlacement selector/gate semantics for the supported one-level land chain: 0x4bce6d tests the terrain visual row shape_class field read by the recovered toolkit vfunc instead of flag_a; owner-grid handoff writes the compact relation-owner vector index into generated-cell +0x20 byte2; 0x4a2105/0x49b66d indexes relation owners directly from that byte; and 0x4a3f27 compares generated-cell byte2 to the current relation-owner loop index. Reward/guard/object identity helpers were not widened by this slice. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
+    "latestEvidenceId": "native-rmg-final-definition-wrapper-order-20260627",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -2549,7 +2549,7 @@
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
     "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after carrying generated-cell +0x28 bit 28 through owner-grid reserved writes and gating the mode-2-only marker path.",
-    "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and object payload shortfall before route/object/package adoption can be considered parity.",
+    "remainingWork": "Fix the same-run 0x49b2b6 tile stream mismatch from earlier generated-cell/private-state drift, then address the generated-object payload mismatch. Do not enable native map output until the recovered same-run final payload comparison passes.",
     "result": "passed_partial_implementation_not_parity",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -14408,16 +14408,44 @@
         ".artifacts/rmg_recovery/ghidra_terrain_member_marker_49b66d_dump_20260626/target_004a2ec3_FUN_004a2ec3.txt",
         ".artifacts/rmg_terrain_relation_marker_4a2ec3/medium_seed10_setup0_2p.phase_snapshot.json"
       ]
+    },
+    {
+      "id": "native-rmg-final-definition-wrapper-order-20260627",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "status": "passed_source_backed_behavior_progress_not_parity",
+      "updatedAt": "2026-06-27T23:24:00Z",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
+      "artifacts": [
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "docs/native-rmg-generated-cell-mutation-chain.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload.bin",
+        ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
+        ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
+        ".artifacts/rmg_recovery/ghidra_writeout_spine_dump_20260610/target_004ad1e3_FUN_004ad1e3.txt",
+        ".artifacts/rmg_recovery/ghidra_descriptor_source_resolver_dump_20260610/target_0049db76_FUN_0049db76.txt"
+      ],
+      "commands": [
+        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2",
+        "bin/h3maped_rmg_core_selftest",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_wrapper_definition_order_20260627 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; phase snapshot and final payload written)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_wrapper_definition_order_20260627 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch"
+      ],
+      "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now applies recovered TerrainPlacement selector/gate semantics for the supported one-level land chain: 0x4bce6d tests the terrain visual row shape_class field read by the recovered toolkit vfunc instead of flag_a; owner-grid handoff writes the compact relation-owner vector index into generated-cell +0x20 byte2; 0x4a2105/0x49b66d indexes relation owners directly from that byte; and 0x4a3f27 compares generated-cell byte2 to the current relation-owner loop index. Reward/guard/object identity helpers were not widened by this slice. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered 0x4bb74b toolkit-byte5-zero live-feedback branch for TerrainPlacement: after removing the current coordinate from set-B, byte5-zero terrains walk the runtime-initialized 0x5a5028..0x5a5068 direction order (N, NE, E, SE, S, SW, W, NW), filter neighbors through active scratch terrain, remove and seed existing set-A members that fail 0x4bc988, and insert absent same-terrain neighbors only when 0x4bc988 accepts them. The byte5-nonzero cardinal set-A cleanup remains separate. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-27T19:54:00Z",
+  "currentSliceUpdatedAt": "2026-06-27T23:24:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -18925,68 +18953,56 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-word28-member-bit-carry-20260627",
-    "title": "Recovered Generated-Cell 0x28 Member Bit Carry",
+    "id": "native-rmg-final-definition-wrapper-order-20260627",
+    "title": "Recovered Final Object Definition Wrapper Order",
     "status": "passed_source_backed_behavior_progress_not_parity",
-    "validatedAt": "2026-06-27T19:04:18Z",
-    "updatedAt": "2026-06-27T19:04:18Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries the recovered owner-grid repaint/member marker through generated-cell word +0x28: 0x4a261a/0x4a325d reserved writes set bit 28 through the recovered 0x4a2e91 OR byte ptr [cell+0x2b], 0x10 mutation, 0x4a3f27 consumes carried +0x28 instead of resetting it, and the 0x4a30c2 -> 0x4a2ec3 relation marker path is gated to the recovered generator-mode-2 level-0 branch. Native cell_flags remain a support mirror, not repaint authority. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell implementation progress, not parity completion or runtime map output.",
+    "validatedAt": "2026-06-27T23:24:00Z",
+    "updatedAt": "2026-06-27T23:24:00Z",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
-      "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
-      "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "docs/native-rmg-generated-cell-mutation-chain.md",
-      "docs/native-rmg-terrain-selection-repaint-chain.md",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
-      ".artifacts/rmg_recovery/ghidra_phase_frontier_20260611/range_004a2777_004a33ff.txt",
-      ".artifacts/rmg_recovery/ghidra_phase_frontier_decompile_20260611/target_004a3f27_FUN_004a3f27.txt"
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/rmg_recovery/ghidra_writeout_spine_dump_20260610/target_004ad1e3_FUN_004ad1e3.txt",
+      ".artifacts/rmg_recovery/ghidra_descriptor_source_resolver_dump_20260610/target_0049db76_FUN_0049db76.txt"
     ],
     "checks": [
-      "Recovered source check: 0x4a2e91 OR byte ptr [cell+0x2b], 0x10 sets generated-cell +0x28 bit 28 during reserved owner-grid writes.",
-      "Recovered source check: 0x4a3f27 calls 0x4a30c2/0x4a2ec3 only through the generator-mode-2 level-0 owner branch.",
-      "Native selftest: 0x4a325d reserved writes set +0x28 bit 28, unreserved writes do not, mode-2 marker still works, and mode-0 repaint consumes carried +0x28 instead of raw cell_flags.",
+      "Recovered source check: 0x4ad1e3 starts object-definition indexing at 2, serializes generator +0x4a8/+0x7f8 first, then walks generator +0x38 0xe8 wrapper buckets and includes wrappers with +0x08 > 0.",
+      "Recovered source check: 0x49db76 zeroes wrapper +0x08/+0x0c, and object record initialization through 0x49ba89 increments descriptor wrapper +0x08.",
+      "Native implementation: final object definition writeout removed the 426-row source-list proxy and derives active definitions from object-record descriptor wrapper references in preserved bucket order.",
       "No-Godot compare: Medium seed10 setup0 still fails closed at same-run final tile stream mismatch; runtime map output remains disabled."
     ],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2",
       "bin/h3maped_rmg_core_selftest",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_word28_carry_20260627 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; phase snapshot and final payload written)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_word28_carry_20260627 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch"
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_wrapper_definition_order_20260627 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; phase snapshot and final payload written)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_wrapper_definition_order_20260627 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch"
     ],
+    "nativeObjectDefinitionCount": 169,
+    "nativeStaticObjectDefinitionCount": 2,
+    "nativeObjectDefinitionPayloadByteCount": 9792,
+    "nativeGeneratedObjectCount": 640,
+    "nativeGeneratedObjectPayloadByteCount": 8212,
+    "h3mapedGeneratedObjectPayloadByteCount": 17057,
     "nativeTilePayloadByteCount": 36288,
     "h3mapedTilePayloadByteCount": 36288,
     "tileFirstMismatchOffset": 1,
     "nativeTileByteAtMismatch": 57,
     "h3mapedTileByteAtMismatch": 54,
-    "nativeGeneratedObjectPayloadByteCount": 8212,
-    "h3mapedGeneratedObjectPayloadByteCount": 17057,
     "generatedObjectPayloadFirstMismatchOffset": 0,
     "nativeGeneratedObjectByteAtMismatch": 35,
     "h3mapedGeneratedObjectByteAtMismatch": 2,
-    "godotProcessStarted": false,
-    "native_rmg_end_to_end_parity_complete": false,
-    "runtime_map_output_enabled": false,
-    "sourceBackedBehaviorProgress": true,
-    "parityCompletionClaimed": false,
-    "resolvedBlockers": [
-      "owner_grid_reserved_member_marker_lived_only_in_native_cell_flags_instead_of_generated_cell_word_0x28",
-      "terrain_repaint_reset_generated_cell_word_0x28_before_member_gate",
-      "mode0_terrain_repaint_entered_mode2_only_0x4a30c2_0x4a2ec3_marker_path"
-    ],
-    "namedBlockers": [
-      "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "generated_object_payload_short_against_same_run_0x4ad36f_0x4ad3b1_0x4ad3eb_payload"
-    ],
-    "sliceId": "rmg-small-generalization-hardening-10184",
-    "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184"
+    "runtimeMapOutputEnabled": false,
+    "godotUsed": false,
+    "wineUsed": false
   },
   "latestEvidence": {
     "id": "native-rmg-word28-member-bit-carry-20260627",
@@ -19053,24 +19069,21 @@
     "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184"
   },
   "latestEvidenceArtifacts": [
-    "src/gdextension/include/h3maped_rmg_core.hpp",
     "src/gdextension/src/h3maped_rmg_core.cpp",
-    "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
     "docs/native-rmg-generated-cell-mutation-chain.md",
-    "docs/native-rmg-terrain-selection-repaint-chain.md",
     "PLAN.md",
     "ops/progress.json",
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli",
-    ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
-    ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload.bin",
-    ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
-    ".artifacts/rmg_word28_carry_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
-    ".artifacts/rmg_recovery/ghidra_phase_frontier_20260611/range_004a2777_004a33ff.txt",
-    ".artifacts/rmg_recovery/ghidra_phase_frontier_decompile_20260611/target_004a3f27_FUN_004a3f27.txt"
+    ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.phase_snapshot.json",
+    ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload.bin",
+    ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_sections.json",
+    ".artifacts/native_rmg_wrapper_definition_order_20260627/medium_seed10_setup0_2p.final_payload_compare.json",
+    ".artifacts/rmg_recovery/ghidra_writeout_spine_dump_20260610/target_004ad1e3_FUN_004ad1e3.txt",
+    ".artifacts/rmg_recovery/ghidra_descriptor_source_resolver_dump_20260610/target_0049db76_FUN_0049db76.txt"
   ],
-  "latestEvidenceId": "native-rmg-terrain-owner-index-gate-20260627",
-  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered 0x4bb74b toolkit-byte5-zero live-feedback branch for TerrainPlacement: after removing the current coordinate from set-B, byte5-zero terrains walk the runtime-initialized 0x5a5028..0x5a5068 direction order (N, NE, E, SE, S, SW, W, NW), filter neighbors through active scratch terrain, remove and seed existing set-A members that fail 0x4bc988, and insert absent same-terrain neighbors only when 0x4bc988 accepts them. The byte5-nonzero cardinal set-A cleanup remains separate. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
+  "latestEvidenceId": "native-rmg-final-definition-wrapper-order-20260627",
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -19710,7 +19723,7 @@
   },
   "native_cli_required_next_slice": "fix_native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload_then_generated_object_payload_mismatch",
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now carries the recovered owner-grid repaint/member marker through generated-cell word +0x28: 0x4a261a/0x4a325d reserved writes set bit 28 through the recovered 0x4a2e91 OR byte ptr [cell+0x2b], 0x10 mutation, 0x4a3f27 consumes carried +0x28 instead of resetting it, and the 0x4a30c2 -> 0x4a2ec3 relation marker path is gated to the recovered generator-mode-2 level-0 branch. Native cell_flags remain a support mirror, not repaint authority. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed generated-cell implementation progress, not parity completion or runtime map output.",
+  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core no longer injects the old recovered 426-row source-list proxy into 0x4ad1e3 generated-object definition writeout. The native definition table now follows the recovered spine: two static definitions from generator +0x4a8/+0x7f8, then only active descriptor wrappers whose recovered +0x08 reference count is positive, emitted through the preserved 0xe8 wrapper-bucket order and indexed from 2 onward. Object payload serialization resolves definition indexes through selected wrapper identity first, with unique source-record fallback only when selected wrapper identity was not carried. Focused Medium seed10 setup0 no-Godot evidence writes 169 definitions (2 static + 167 active wrappers), 9792 definition bytes, and serializes all 640 generated objects / 8212 object-payload bytes, then still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. This is source-backed final-writeout implementation progress, not parity completion or runtime map output.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -60620,7 +60633,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed one-level 0x4a3f27 terrain prefill branch correction.",
+  "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after source-backed final object definition writeout was corrected to static definitions plus active descriptor wrapper bucket order.",
   "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
   "reportOnlyEvidence": [
     {
