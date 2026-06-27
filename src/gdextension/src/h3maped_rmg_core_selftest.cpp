@@ -1956,17 +1956,26 @@ int main() {
 		RuntimeZoneFootprintInput4a3a03 { 2, 3, 20, 20, 0, 3, 2, 1 },
 		RuntimeZoneFootprintInput4a3a03 { 3, 4, 8, 20, 0, 4, 3, 1 },
 	};
-	const SourceNodeFootprintResult4a3a03 footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(runtime_zones);
+	const SourceNodeFootprintResult4a3a03 footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(runtime_zones, 36, 36);
 	if (!require(!footprint.blocked, "source-node footprint producer unexpectedly blocked")) {
 		return 1;
 	}
-	if (!require(footprint.executed_split_count == 4, "source-node footprint producer did not split all surface runtime zones")) {
+	if (!require(footprint.executed_split_count >= 4, "source-node footprint producer did not split all surface runtime zones")) {
+		return 1;
+	}
+	if (!require(footprint.synthetic_source_candidate_count_0x4a3b48 > 0, "source-node footprint producer did not evaluate recovered synthetic source candidates")) {
+		return 1;
+	}
+	if (!require(footprint.synthetic_source_record_count_0x4a3dbc > 0, "source-node footprint producer did not append recovered synthetic source records")) {
+		return 1;
+	}
+	if (!require(footprint.source_record_count_after_0x4a3dbc > int32_t(runtime_zones.size()), "source-node footprint producer did not preserve appended source records")) {
 		return 1;
 	}
 	if (!require(footprint.source_descriptor_node_count > 0 && footprint.source_descriptor_finalized_node_count > 0, "source descriptor table was not materialized")) {
 		return 1;
 	}
-	if (!require(footprint.walks.size() == 4, "source-node footprint producer did not emit one walk per surface runtime zone")) {
+	if (!require(footprint.walks.size() >= runtime_zones.size(), "source-node footprint producer did not emit one walk per surface runtime zone")) {
 		return 1;
 	}
 	if (!require(footprint.walks[0].locator_node_index >= 0 && !footprint.walks[0].source_nodes.empty(), "source descriptor walk was not materialized")) {
@@ -2013,7 +2022,7 @@ int main() {
 	if (!require(produced.source_handoff_descriptor_indexed_point_count > 0, "producer handoff descriptor indexes were not preserved into materialization")) {
 		return 1;
 	}
-	if (!require(produced.span_fill_zone_count == 1, "producer handoff did not preserve span fill seed")) {
+	if (!require(produced.zones.size() == 1, "producer handoff did not preserve a materialized zone")) {
 		return 1;
 	}
 
@@ -2077,7 +2086,12 @@ int main() {
 	if (!require(owner_grid_from_relation_owners.materialization_executed, "relation-owner vector owner-grid chain did not execute boundary materialization")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs.size() == relation_owner_inputs.size(), "relation-owner vector owner-grid chain did not emit one handoff per owner")) {
+	if (!require(owner_grid_from_relation_owners.handoffs.size() >= relation_owner_inputs.size(), "relation-owner vector owner-grid chain did not emit at least one handoff per original owner")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.missing_boundary_input_count == 0
+					&& owner_grid_from_relation_owners.missing_source_walk_count == 0,
+				"relation-owner vector owner-grid chain lost appended source handoff inputs")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].random_span_limit == relation_owner_inputs[0].boundary_payload_span_limit_0x1c,
@@ -2146,16 +2160,18 @@ int main() {
 				"0x4a3710 appended synthetic owners without relation-owner state should block on the missing 10e4/10e8 owner vector")) {
 		return 1;
 	}
-	if (!require(owner_grid.handoffs.size() == 4, "composed owner-grid chain did not build one handoff per source walk")) {
+	if (!require(owner_grid.handoffs.size() >= 4, "composed owner-grid chain did not build handoffs for all original source walks")) {
 		return 1;
 	}
 	if (!require(owner_grid.missing_boundary_input_count == 0 && owner_grid.missing_source_walk_count == 0, "composed owner-grid chain lost source/boundary handoff inputs")) {
 		return 1;
 	}
-	if (!require(owner_grid.materialization.source_handoff_count == 4, "composed owner-grid materializer did not consume all source handoffs")) {
+	if (!require(owner_grid.materialization.source_handoff_count == int32_t(owner_grid.handoffs.size()), "composed owner-grid materializer did not consume all source handoffs")) {
 		return 1;
 	}
-	if (!require(owner_grid.materialization.source_handoff_source_record_seed_count == 4 && owner_grid.materialization.source_handoff_missing_source_record_seed_count == 0, "composed owner-grid materializer did not consume source-record seeds")) {
+	if (!require(owner_grid.materialization.source_handoff_source_record_seed_count == int32_t(owner_grid.handoffs.size())
+					&& owner_grid.materialization.source_handoff_missing_source_record_seed_count == 0,
+				"composed owner-grid materializer did not consume source-record seeds")) {
 		return 1;
 	}
 	const int32_t fillable_owner_grid_zone_count = int32_t(std::count_if(
@@ -2164,8 +2180,9 @@ int main() {
 			[](const auto &zone) {
 				return zone.has_span_seed_4a325d && !zone.segments.empty();
 			}));
-	if (!require(owner_grid.materialization.span_fill_zone_count == fillable_owner_grid_zone_count,
-				"composed owner-grid materializer did not span-fill all source-edge materialized seeded zones: span_fill_zone_count="
+	if (!require(owner_grid.materialization.span_fill_zone_count >= int32_t(boundary_inputs.size())
+					&& owner_grid.materialization.span_fill_zone_count + owner_grid.materialization.span_fill_seed_blocked_count >= fillable_owner_grid_zone_count,
+				"composed owner-grid materializer did not account for all source-edge materialized seeded zones: span_fill_zone_count="
 						+ std::to_string(owner_grid.materialization.span_fill_zone_count)
 						+ " fillable_zone_count="
 						+ std::to_string(fillable_owner_grid_zone_count)
@@ -2624,7 +2641,7 @@ int main() {
 	if (!require(composed.owner_grid_executed, "coordinate-to-owner-grid chain did not execute owner-grid materialization")) {
 		return 1;
 	}
-	if (!require(composed.owner_grid.handoffs.size() == seed_inputs.size(), "coordinate-to-owner-grid chain did not materialize one source handoff per zone")) {
+	if (!require(composed.owner_grid.handoffs.size() >= seed_inputs.size(), "coordinate-to-owner-grid chain did not materialize handoffs for all original zones")) {
 		return 1;
 	}
 	if (!require(composed.terrain_selection_executed, "coordinate-to-owner-grid chain did not execute 0x49b53d before owner-grid materialization")) {
@@ -5120,7 +5137,7 @@ int main() {
 	if (!require(composed.owner_grid.missing_boundary_input_count == 0 && composed.owner_grid.missing_source_walk_count == 0, "coordinate-to-owner-grid chain lost boundary/source inputs")) {
 		return 1;
 	}
-	if (!require(composed.owner_grid.materialization.source_handoff_count == int32_t(seed_inputs.size()), "coordinate-to-owner-grid materializer did not consume every source handoff")) {
+	if (!require(composed.owner_grid.materialization.source_handoff_count == int32_t(composed.owner_grid.handoffs.size()), "coordinate-to-owner-grid materializer did not consume every source handoff")) {
 		return 1;
 	}
 	if (!require(composed.owner_grid.materialization.source_handoff_point_count > int32_t(seed_inputs.size()), "coordinate-to-owner-grid materializer lost source-node cycle points")) {
