@@ -1940,6 +1940,17 @@ int main() {
 	if (!require(footprint.walks[0].source_nodes[0].model_node_index >= 0 && footprint.walks[0].source_nodes[0].next_pair_index >= 0, "source walk lost descriptor link indexes")) {
 		return 1;
 	}
+	bool zero_owner_payload_preserved = false;
+	for (const SourceNodeCyclePoint4a2777 &node : footprint.walks[0].source_nodes) {
+		if ((node.has_payload && node.payload_owner_word_0x00 == 0)
+				|| (node.next_pair_has_payload && node.next_pair_payload_owner_word_0x00 == 0)) {
+			zero_owner_payload_preserved = true;
+			break;
+		}
+	}
+	if (!require(zero_owner_payload_preserved, "source-node footprint producer did not preserve source payload owner word zero")) {
+		return 1;
+	}
 
 	BoundarySourceCycleHandoff4a2777 produced_handoff;
 	produced_handoff.runtime_zone_index = footprint.walks[0].runtime_zone_index;

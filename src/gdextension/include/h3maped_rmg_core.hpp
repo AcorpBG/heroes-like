@@ -904,7 +904,7 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	int32_t y_after_bbox_rescale = 0;
 	int32_t level = 0;
 	int32_t source_payload_0x08 = -1;
-	int32_t source_payload_owner_word_0x00 = 0;
+	int32_t source_payload_owner_word_0x00 = -1;
 	int32_t source_payload_random_span_limit_0x1c = 1;
 };
 
