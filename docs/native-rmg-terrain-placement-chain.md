@@ -18,6 +18,7 @@ The active shared native core now executes these recovered TerrainPlacement piec
    - applies the recovered `0x4ba91d` neighbor probe for complex terrain, where same-terrain neighbors only reduce the mask when the neighbor art row has flag A set;
    - applies the recovered `0x4baa81` simple/rock neighbor probe, which rejects same-terrain continuity for that vtable;
    - applies the recovered `0x4ba938` base-row probability path for full/native cells before the later final-sweep classifier path;
+   - preserves the current art row through the recovered `0x4ba938` path when the current row is valid and class `0`;
    - consumes `0x4e7276` RNG from the post-`0x49b53d` state.
 3. `0x4bad0f` scratch packing:
    - bit `0`: dirty marker;
@@ -33,7 +34,8 @@ The active shared native core now executes these recovered TerrainPlacement piec
    - full-map water visual prefill runs first;
    - owner/member-gated terrain repaint writes visual rows and flags;
    - set-A/set-B queue feedback, `0x4bbd01` retouch, `0x4bc988` candidate gates, and `0x4bba59` neighbor seeding run inside the active native core;
-   - `0x4bbfcc` final whole-map sweep revisits the full grid and applies the recovered class corrections;
+   - `0x4bbfcc` final whole-map sweep revisits the full grid and applies recovered class corrections only through the source-backed `0x4bcb91` and `0x4bcd43` probe predicates;
+   - class-0 final-sweep cells route through the recovered `0x4ba938` current-row/base selector path instead of the classified `+0x14` bucket selector;
    - final sweep preserves the current scratch visual record through the recovered `0x4bc5a3` path when a corrected class has no direct visual bucket.
 
 ## Native Implementation
@@ -60,7 +62,7 @@ The focused native selftest now fails if TerrainPlacement regresses to the previ
 
 ## Remaining Checkpoint-2 Blocker
 
-The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. This is still not a TerrainPlacement parity claim. The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`, so any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. This is still not a TerrainPlacement parity claim. The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, tile 0 matches, and the first mismatch is offset 8 (`native=51`, `h3maped=60`). Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
 Checkpoint 2 is still not complete because later relation/object generated-cell mutation caller order is not yet source-owned:
 
