@@ -14746,17 +14746,14 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 	result.relation_order_vectors_materialized = false;
 	result.downstream_relation_order_blocker = "runtime_zone+0xc4 adjacency and runtime_zone+0x3e8 ordering vectors are not represented in the checkpoint-2 generated-cell payload";
 
-	if (result.synthetic_branch_allowed_by_0x4a3a9d) {
-		result.blocked = true;
-		result.status = "0x4a3710_synthetic_runtime_zone_append_branch_0x49b452_unported";
-		return result;
-	}
 	if (result.appended_runtime_zone_count > 0) {
 		result.blocked = true;
 		result.status = "0x4a3710_appended_zone_adjacency_schema_pending";
 		return result;
 	}
-	result.status = "0x4a3710_source_backed_no_synthetic_runtime_zone_append_executed";
+	result.status = result.synthetic_branch_allowed_by_0x4a3a9d
+			? "0x4a3710_synthetic_runtime_zone_scan_executed_without_append"
+			: "0x4a3710_source_backed_no_synthetic_runtime_zone_append_executed";
 	return result;
 }
 
@@ -14878,7 +14875,177 @@ static int32_t relation_owner_span_limit_4a3a03(const GeneratorRelationOwnerStat
 	return 1;
 }
 
-BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
+static CoordinateZone4a218c coordinate_zone_from_relation_owner_for_synthetic_4a3a03(const GeneratorRelationOwnerState4a218c &owner) {
+	CoordinateZone4a218c zone;
+	zone.runtime_zone_index = owner.runtime_zone_index;
+	zone.source_zone_id = owner.source_zone_id;
+	zone.source_index = owner.source_index;
+	if (owner.source_pointer_source_span_0x08_known && owner.source_pointer_source_span_0x08 > 0) {
+		zone.source_base_size = owner.source_pointer_source_span_0x08;
+	} else if (owner.boundary_payload_span_limit_0x1c_known && owner.boundary_payload_span_limit_0x1c > 0) {
+		zone.source_base_size = owner.boundary_payload_span_limit_0x1c;
+	}
+	if (owner.coordinate_triple_0x10_0x18_known) {
+		zone.x = owner.coordinate_x_0x10;
+		zone.y = owner.coordinate_y_0x14;
+		zone.level = owner.coordinate_level_0x18;
+	}
+	return zone;
+}
+
+static bool synthetic_candidate_within_partial_bounds_4a3a03(
+		const CoordinateCandidate4a17f5 &candidate,
+		int32_t width,
+		int32_t height,
+		double x_component,
+		double y_component) {
+	if (candidate.x < 0 && double(candidate.x) < x_component) {
+		return false;
+	}
+	if (candidate.x >= width && double(candidate.x) > double(width) + x_component) {
+		return false;
+	}
+	if (candidate.y < 0 && double(candidate.y) < y_component) {
+		return false;
+	}
+	if (candidate.y >= height && double(candidate.y) > double(height) + y_component) {
+		return false;
+	}
+	return true;
+}
+
+static GeneratorRelationOwnerState4a218c initialize_synthetic_relation_owner_4a3a03(
+		const GeneratorRelationOwnerState4a218c &base_owner,
+		const CoordinateCandidate4a17f5 &candidate,
+		int32_t owner_vector_index,
+		int32_t source_span) {
+	GeneratorRelationOwnerState4a218c owner;
+	owner.owner_vector_index = owner_vector_index;
+	owner.runtime_zone_index = owner_vector_index;
+	owner.source_zone_id = base_owner.source_zone_id;
+	owner.source_index = -1;
+	owner.constructor_0x49b452_known = true;
+	owner.source_pointer_0x00_known = false;
+	owner.source_pointer_source_index_0x00 = -1;
+	owner.source_pointer_source_span_0x08_known = source_span > 0;
+	owner.source_pointer_source_span_0x08 = source_span;
+	owner.relation_owner_byte2_0x4aa9b7_known = true;
+	owner.relation_owner_byte2_0x4aa9b7 = owner_vector_index;
+	owner.source_pointer_type_0x04_known = true;
+	owner.source_pointer_type_0x04 = 3;
+	owner.source_owner_slot_0x1c_known = source_span > 0;
+	owner.source_owner_slot_0x1c = source_span;
+	owner.boundary_payload_span_limit_0x1c_known = source_span > 0;
+	owner.boundary_payload_span_limit_0x1c = source_span > 0 ? source_span : 1;
+	owner.coordinate_triple_0x10_0x18_known = true;
+	owner.coordinate_x_0x10 = candidate.x;
+	owner.coordinate_y_0x14 = candidate.y;
+	owner.coordinate_level_0x18 = candidate.level;
+	owner.scan_bounds_0x20_0x2c_known = false;
+	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.byte_0x3c_known = true;
+	owner.byte_0x3c = 0U;
+	owner.descriptor_type_counter_table_0x44_known = true;
+	owner.descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
+	owner.descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
+	owner.descriptor_type_counters_0x44.assign(size_t(RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+	owner.source_endpoint_vector_0xc8_0xcc_present = true;
+	owner.source_endpoint_vector_0xc8_0xcc_contents_known = true;
+	owner.source_endpoint_vector_0xc8_0xcc_count_known = true;
+	owner.source_endpoint_vector_0xc8_0xcc_count = 0;
+	owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
+	owner.owner_local_vector_0x3e4_count = 0;
+	owner.owner_local_vector_0x3f4_count = 0;
+	owner.owner_local_vector_0x404_count = 0;
+	return owner;
+}
+
+static int32_t append_synthetic_runtime_zone_owners_4a3a03(
+		int32_t width,
+		int32_t height,
+		int32_t caller_level_argument_0x0c,
+		int32_t generator_mode_0x10b8,
+		std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
+		int32_t original_same_level_runtime_zone_count) {
+	if (caller_level_argument_0x0c != 1 && generator_mode_0x10b8 == 0) {
+		return 0;
+	}
+	if (original_same_level_runtime_zone_count <= 0) {
+		return 0;
+	}
+
+	std::vector<CoordinateZone4a218c> zones;
+	zones.reserve(relation_owners.size() + size_t(original_same_level_runtime_zone_count));
+	for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+		zones.push_back(coordinate_zone_from_relation_owner_for_synthetic_4a3a03(owner));
+	}
+
+	static constexpr int32_t DIRECTION_TABLE_INDICES[8] = {0, 4, 8, 12, 16, 20, 24, 28};
+	static constexpr double X_TABLE[32] = {
+		1.0, 0.9807, 0.9239, 0.8315,
+		0.7071, 0.5556, 0.3827, 0.1951,
+		0.0, -0.1951, -0.3827, -0.5556,
+		-0.7071, -0.8315, -0.9239, -0.9807,
+		-1.0, -0.9807, -0.9239, -0.8315,
+		-0.7071, -0.5556, -0.3827, -0.1951,
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
+	};
+	static constexpr double Y_TABLE[32] = {
+		0.0, 0.1951, 0.3827, 0.5556,
+		0.7071, 0.8315, 0.9239, 0.9807,
+		1.0, 0.9807, 0.9239, 0.8315,
+		0.7071, 0.5556, 0.3827, 0.1951,
+		0.0, -0.1951, -0.3827, -0.5556,
+		-0.7071, -0.8315, -0.9239, -0.9807,
+		-1.0, -0.9807, -0.9239, -0.8315,
+		-0.7071, -0.5556, -0.3827, -0.1951,
+	};
+
+	const int32_t base_limit = std::min<int32_t>(original_same_level_runtime_zone_count, int32_t(relation_owners.size()));
+	int32_t appended_count = 0;
+	for (int32_t base_index = 0; base_index < base_limit; ++base_index) {
+		const GeneratorRelationOwnerState4a218c base_owner = relation_owners[size_t(base_index)];
+		if (!base_owner.coordinate_triple_0x10_0x18_known || base_owner.coordinate_level_0x18 != caller_level_argument_0x0c) {
+			continue;
+		}
+		const CoordinateZone4a218c base_zone = coordinate_zone_from_relation_owner_for_synthetic_4a3a03(base_owner);
+		const int32_t source_span = relation_owner_source_span_0x08(base_owner, base_zone);
+		if (source_span <= 0) {
+			continue;
+		}
+		const double synthetic_span = double(source_span * 2);
+		for (int32_t direction_index : DIRECTION_TABLE_INDICES) {
+			const double x_component = synthetic_span * X_TABLE[direction_index];
+			const double y_component = synthetic_span * Y_TABLE[direction_index];
+			CoordinateCandidate4a17f5 candidate;
+			candidate.x = int32_t(std::trunc(double(base_zone.x) + x_component));
+			candidate.y = int32_t(std::trunc(double(base_zone.y) + y_component));
+			candidate.level = base_zone.level;
+			if (!synthetic_candidate_within_partial_bounds_4a3a03(candidate, width, height, x_component, y_component)) {
+				continue;
+			}
+			const int32_t owner_vector_index = int32_t(relation_owners.size());
+			GeneratorRelationOwnerState4a218c synthetic_owner =
+					initialize_synthetic_relation_owner_4a3a03(base_owner, candidate, owner_vector_index, source_span);
+			const CoordinateZone4a218c synthetic_zone =
+					coordinate_zone_from_relation_owner_for_synthetic_4a3a03(synthetic_owner);
+			if (!coordinate_candidate_valid_4a1701(synthetic_zone, synthetic_owner, candidate, zones, relation_owners)) {
+				continue;
+			}
+			relation_owners.push_back(synthetic_owner);
+			zones.push_back(synthetic_zone);
+			appended_count += 1;
+			break;
+		}
+	}
+	return appended_count;
+}
+
+BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t original_same_level_runtime_zone_count_override) {
 	if (relation_owners.empty()) {
 		return materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(
 				width,
@@ -14928,7 +15095,9 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		return result;
 	}
 
-	const int32_t original_same_level_runtime_zone_count = int32_t(footprint_inputs.size());
+	const int32_t original_same_level_runtime_zone_count = original_same_level_runtime_zone_count_override >= 0
+			? std::min<int32_t>(original_same_level_runtime_zone_count_override, int32_t(footprint_inputs.size()))
+			: int32_t(footprint_inputs.size());
 	int32_t source_vector_handoff_index = 0;
 	for (const SourceWalk4cca55 &walk : result.source_footprints.walks) {
 		const GeneratorRelationOwnerState4a218c *owner =
@@ -14976,7 +15145,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 
 	result.materialization = materialize_boundary_source_handoffs_4a2777_4a325d(width, height, level_count, water_mode_code, generator_mode_0x10b8, rng_state, result.handoffs);
 	result.materialization_executed = true;
-	result.footprint_finalizer = footprint_finalizer_4a3710(level_count, water_mode_code, generator_mode_0x10b8, caller_level_argument_0x0c, original_same_level_runtime_zone_count, original_same_level_runtime_zone_count);
+	result.footprint_finalizer = footprint_finalizer_4a3710(level_count, water_mode_code, generator_mode_0x10b8, caller_level_argument_0x0c, original_same_level_runtime_zone_count, int32_t(footprint_inputs.size()));
 	result.footprint_finalizer_executed = result.footprint_finalizer.executed;
 	return result;
 }
@@ -15003,6 +15172,19 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
 			true);
 	result.terrain_selection_executed = true;
+	int32_t original_same_level_runtime_zone_count = 0;
+	for (const GeneratorRelationOwnerState4a218c &owner : result.coordinate_seed.relation_owner_vectors_10e4_10e8) {
+		if (owner.coordinate_triple_0x10_0x18_known && owner.coordinate_level_0x18 == 0) {
+			original_same_level_runtime_zone_count += 1;
+		}
+	}
+	append_synthetic_runtime_zone_owners_4a3a03(
+			width,
+			height,
+			0,
+			generator_mode_0x10b8,
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
+			original_same_level_runtime_zone_count);
 	result.owner_grid = materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
 			width,
 			height,
@@ -15011,7 +15193,8 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 			generator_mode_0x10b8,
 			result.terrain_selection.rng_state_after_monster_town_0x49b4e1,
 			result.coordinate_seed.boundary_inputs,
-			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
+			original_same_level_runtime_zone_count);
 	result.owner_grid_executed = result.owner_grid.materialization_executed;
 	if (result.owner_grid_executed) {
 		result.terrain_repaint = terrain_repaint_4a3f27(
@@ -20012,7 +20195,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			}
 			const ClipResult from_clip = clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
 			const ClipResult to_clip = clip_point_4a2b33(to.x, to.y, from.x, from.y, bounds);
-			if (!point_inside_bounds_4a2777(from_clip, bounds)) {
+			if (!point_inside_bounds_4a2777(from_clip, bounds) || !point_inside_bounds_4a2777(to_clip, bounds)) {
 				result.skipped_out_of_bounds_clip_count += 1;
 				continue;
 			}
@@ -20039,8 +20222,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 							to_clip.y,
 							cycle.zone_word,
 							cycle.level,
-							randomized_writer_branch_0x4a3a03,
-							source_edge_random_span_limit_0x4a29a5(from, random_span_limit));
+							false,
+							random_span_limit);
 				result.connector_segment_count += 1;
 				current_x = to_clip.x;
 				current_y = to_clip.y;
