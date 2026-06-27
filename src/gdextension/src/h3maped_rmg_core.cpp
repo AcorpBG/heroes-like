@@ -1419,7 +1419,7 @@ int32_t coordinate_prune_divisor_from_generator_mode_4a218c(int32_t generator_mo
 void append_angle_candidates_4a17f5(const GeneratorRelationOwnerState4a218c &base_owner, const GeneratorRelationOwnerState4a218c &current_owner, const std::vector<CoordinateZone4a218c> &zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, std::vector<CoordinateCandidate4a17f5> &candidates) {
 	const CoordinateZone4a218c base = coordinate_zone_from_relation_owner_0x10(base_owner, zones);
 	const CoordinateZone4a218c current = coordinate_zone_from_relation_owner_0x10(current_owner, zones);
-	// H3MapEd stores rounded double lookup tables at 0x58dc28 (X) and 0x58dd28 (Y).
+	// 0x4a17f5 advances byte offsets by 8 through 0x100 over these 32-entry double tables.
 	static constexpr double X_TABLE[32] = {
 		1.0, 0.9807, 0.9239, 0.8315,
 		0.7071, 0.5556, 0.3827, 0.1951,
@@ -14145,41 +14145,19 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 			record.forced_subterranean_0x49b5c3 = true;
 			result.forced_subterranean_count += 1;
 		}
+		replay_monster_town_choice_0x49b4e1(
+				record,
+				true,
+				rng,
+				result.monster_town_rng_call_count_0x49b4e1);
 		apply_relation_owner_terrain_policy_0x49b53d(owner, &record);
 		result.records.push_back(record);
 	}
 	result.rng_state_after = rng.state;
-	result.rng_state_after_monster_town_0x49b4e1 = result.rng_state_after;
-	result.total_rng_call_count_0x49b53d_0x49b4e1 = result.rng_call_count;
+	result.rng_state_after_monster_town_0x49b4e1 = rng.state;
+	result.total_rng_call_count_0x49b53d_0x49b4e1 =
+			result.rng_call_count + result.monster_town_rng_call_count_0x49b4e1;
 	return result;
-}
-
-static void replay_runtime_monster_town_choices_0x49b4e1(
-		RuntimeTerrainSelectionResult49b53d &terrain_selection,
-		std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
-		bool generator_field_0x08_non_negative) {
-	H3MapedRng rng;
-	rng.state = terrain_selection.rng_state_after;
-	terrain_selection.monster_town_rng_call_count_0x49b4e1 = 0;
-	for (RuntimeTerrainSelectionRecord49b53d &record : terrain_selection.records) {
-		replay_monster_town_choice_0x49b4e1(
-				record,
-				generator_field_0x08_non_negative,
-				rng,
-				terrain_selection.monster_town_rng_call_count_0x49b4e1);
-		for (GeneratorRelationOwnerState4a218c &owner : relation_owners) {
-			const int32_t owner_runtime_zone_index = owner.runtime_zone_index >= 0
-					? owner.runtime_zone_index
-					: owner.owner_vector_index;
-			if (owner_runtime_zone_index == record.runtime_zone_index) {
-				apply_relation_owner_terrain_policy_0x49b53d(owner, &record);
-				break;
-			}
-		}
-	}
-	terrain_selection.rng_state_after_monster_town_0x49b4e1 = rng.state;
-	terrain_selection.total_rng_call_count_0x49b53d_0x49b4e1 =
-			terrain_selection.rng_call_count + terrain_selection.monster_town_rng_call_count_0x49b4e1;
 }
 
 static GeneratedCellRecordGrid0x30 generated_cell_record_grid_from_terrain_words_4a3f27(
@@ -15711,10 +15689,6 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	result.terrain_selection = runtime_terrain_selection_49b53d(
 			result.coordinate_seed.rng_state_after,
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
-	replay_runtime_monster_town_choices_0x49b4e1(
-			result.terrain_selection,
-			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
-			true);
 	result.terrain_selection_executed = true;
 	int32_t original_same_level_runtime_zone_count = 0;
 	for (const GeneratorRelationOwnerState4a218c &owner : result.coordinate_seed.relation_owner_vectors_10e4_10e8) {
