@@ -13287,7 +13287,7 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 		seed.source_index = zone.source_index >= 0 ? zone.source_index : (zone.source_zone_id > 0 ? zone.source_zone_id - 1 : source_position);
 		seed.h3maped_zone_word_id = zone.h3maped_zone_word_id >= 0
 				? zone.h3maped_zone_word_id
-				: zone.source_zone_id;
+				: seed.source_index;
 		seed.source_bucket = zone.source_bucket;
 		seed.source_owner_index = zone.source_owner_index;
 		if (zone.source_owner_index >= 0 && zone.source_owner_index < int32_t(assignment.mapped_ee4_slots.size())) {
