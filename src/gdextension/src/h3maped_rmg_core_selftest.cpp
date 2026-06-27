@@ -1932,6 +1932,22 @@ int main() {
 	if (!require(gated.span_fill_zone_count == 1, "gated handoff should still execute span fill from source-record +0x10 seed")) {
 		return 1;
 	}
+	int32_t ungated_connector_count = 0;
+	int32_t ungated_randomized_connector_count = 0;
+	for (const auto &segment : ungated.zones[0].segments) {
+		if (segment.id != "connector") {
+			continue;
+		}
+		ungated_connector_count += 1;
+		if (segment.randomized && segment.writer == "0x4a2413") {
+			ungated_randomized_connector_count += 1;
+		}
+	}
+	if (!require(ungated_connector_count > 1
+					&& ungated_randomized_connector_count == ungated_connector_count,
+				"0x4a2777 source-cycle connectors must all use the recovered 0x4a29c4 randomized branch when active")) {
+		return 1;
+	}
 	BoundarySourceCycleHandoff4a2777 relation_owner_split_handoff = square_handoff(false);
 	relation_owner_split_handoff.generated_cell_owner_byte2 = 7;
 	const BoundaryMaterialization4a2777 relation_owner_split =
