@@ -1202,11 +1202,11 @@ int main() {
 					"0x49a318 high-owner propagation did not clear the source projection fields")) {
 			return 1;
 		}
-		if (!require((high_owner_grid.records[4].word_0x1c & 0x0000ffffU) == 1U
+		if (!require((high_owner_grid.records[4].word_0x1c & 0x0000ffffU) == 0U
 					&& high_owner_grid.records[4].word_0x10 == 1U
 					&& high_owner_grid.records[4].word_0x14 == 0U
 					&& high_owner_grid.records[4].word_0x18 == 0U,
-					"0x49a318 high-owner propagation did not write same-owner projection fields")) {
+					"0x49a318 high-owner propagation did not apply recovered same-owner zero-score projection fields")) {
 			return 1;
 		}
 		if (!require(((high_owner_grid.records[0].word_0x1c >> 16U) & 0xffffU) == 10U
@@ -1425,14 +1425,14 @@ int main() {
 		const auto scan_consumer_result =
 				aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(scan_consumer_grid, { scan_consumer_owner });
 		if (!require(scan_consumer_result.applied
-						&& scan_consumer_result.grid_available
-						&& scan_consumer_result.owner_scan_count == 1
-						&& scan_consumer_result.scanned_cell_count == 2
-						&& scan_consumer_result.projected_chain_call_count == 1
-						&& scan_consumer_result.projected_chain_occupied_stamp_count == 0
-						&& scan_consumer_result.projected_chain_object_branch_blocked_count == 1
-						&& !scan_consumer_result.no_object_projection_chain_complete,
-					"relation scan consumer did not apply recovered no-object projection chain while blocking object materialization branch")) {
+					&& scan_consumer_result.grid_available
+					&& scan_consumer_result.owner_scan_count == 1
+					&& scan_consumer_result.scanned_cell_count == 2
+					&& scan_consumer_result.projected_chain_call_count == 0
+					&& scan_consumer_result.projected_chain_occupied_stamp_count == 0
+					&& scan_consumer_result.projected_chain_object_branch_blocked_count == 0
+					&& scan_consumer_result.no_object_projection_chain_complete,
+				"relation scan consumer did not apply recovered 0x49a318 zero-score low-word skip before projection chain")) {
 			return 1;
 		}
 		if (!require((scan_consumer_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
@@ -1767,21 +1767,17 @@ int main() {
 		scan_object_rng.state = 10U;
 		const auto scan_object_result = aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(scan_object_state, scan_object_resolver, scan_object_rng, { scan_object_owner });
 		if (!require(scan_object_result.applied
-						&& scan_object_result.projected_chain_call_count == 1
-						&& scan_object_result.projected_chain_object_branch_attempt_count == 1
-						&& scan_object_result.projected_chain_object_branch_commit_count == 1
+						&& scan_object_result.projected_chain_call_count == 0
+						&& scan_object_result.projected_chain_object_branch_attempt_count == 0
+						&& scan_object_result.projected_chain_object_branch_commit_count == 0
 						&& scan_object_result.projected_chain_object_branch_blocked_count == 0
-						&& scan_object_state.object_record_vector_append_count_0x4a54a7 == 1
-						&& scan_object_state.source_pair_vector_edc.contents_known
-						&& scan_object_state.source_pair_vector_edc.count == 1,
-					"relation scan consumer live-state overload did not materialize the recovered 0x4a5a23 object branch")) {
+						&& scan_object_state.object_record_vector_append_count_0x4a54a7 == 0
+						&& scan_object_state.source_pair_records_edc.empty(),
+					"relation scan consumer live-state overload did not apply recovered 0x49a318 zero-score skip before object branch")) {
 			return 1;
 		}
-		if (!require(scan_object_state.source_pair_records_edc.size() == 1
-						&& scan_object_state.source_pair_records_edc[0].source_record_pointer_0x00_carried
-						&& scan_object_state.source_pair_records_edc[0].context_pointer_0x04_carried
-						&& !scan_object_state.source_pair_records_edc[0].descriptor_join_0x4903e8_known,
-					"relation scan consumer live-state overload did not preserve generator +0xedc source-pair payload")) {
+		if (!require(scan_object_state.source_pair_vector_edc.count == 0,
+					"relation scan consumer live-state overload unexpectedly materialized generator +0xedc source-pair payload")) {
 			return 1;
 		}
 
