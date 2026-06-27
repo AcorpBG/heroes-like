@@ -1134,6 +1134,27 @@ struct GeneratorRelationRecordState4a218c {
 	uint32_t control_dword_0x08 = 0U;
 };
 
+struct GeneratorRelationOwnerAdjacencyRecord4a3710 {
+	int32_t source_owner_vector_index = -1;
+	int32_t source_runtime_zone_index = -1;
+	int32_t source_zone_id = -1;
+	int32_t target_owner_vector_index = -1;
+	int32_t target_runtime_zone_index = -1;
+	int32_t target_source_zone_id = -1;
+	int32_t source_link_index = -1;
+	int32_t guard_value = 0;
+	bool wide = false;
+	bool border_guard = false;
+	bool reciprocal = false;
+	bool relation_record_source_0x49f7c4 = false;
+	bool footprint_intersection_insert_0x4a3710 = false;
+	bool relation_order_gap_insert_0x4a3710 = false;
+	uint32_t control_dword_0x08 = 0U;
+	uint8_t flag_byte_0x68 = 0U;
+	uint8_t flag_byte_0x67 = 0U;
+	uint8_t flag_byte_0x66 = 0U;
+};
+
 struct GeneratorSourceEndpointRecordState4a1f3b {
 	int32_t target_relation_owner_vector_index_0x00 = -1;
 	int32_t source_link_index = -1;
@@ -1241,12 +1262,17 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_local_vector_0x404_count = 0;
 	bool relation_order_words_0x3e8_known = false;
 	std::vector<int16_t> relation_order_words_0x3e8;
+	bool adjacency_vector_0xc4_present = false;
+	bool adjacency_vector_0xc4_contents_known = false;
+	bool adjacency_vector_0xc4_count_known = false;
+	int32_t adjacency_record_count_0xc4 = 0;
 	bool coordinate_candidate_vectors_0x4a1f3b_known = false;
 	int32_t coordinate_candidate_vector_step_count = 0;
 	int32_t coordinate_candidate_after_prune_total_count = 0;
 	int32_t relation_record_count = 0;
 	std::vector<GeneratorSourceEndpointRecordState4a1f3b> source_endpoint_records_0xc8_0xcc;
 	std::vector<GeneratorCoordinateCandidateVectorState4a1f3b> coordinate_candidate_vectors_0x4a1f3b;
+	std::vector<GeneratorRelationOwnerAdjacencyRecord4a3710> adjacency_records_0xc4;
 	std::vector<GeneratorRelationRecordState4a218c> relation_records;
 };
 
