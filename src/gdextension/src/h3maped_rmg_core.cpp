@@ -649,18 +649,16 @@ TerrainVisualToolkit4ba868 build_terrain_visual_toolkit_4ba868(const std::vector
 		}
 		range.count += 1;
 	}
-	if (simple_vtable) {
-		for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
-			const int32_t slot = terrain_visual_simple_range_slot_4ba9c8(rows[size_t(row_index)]);
-			if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
-				continue;
-			}
-			TerrainVisualRange4ba868 &range = toolkit.simple_ranges_0x5a4318[size_t(slot)];
-			if (range.count == 0) {
-				range.start = row_index;
-			}
-			range.count += 1;
+	for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
+		const int32_t slot = terrain_visual_simple_range_slot_4ba9c8(rows[size_t(row_index)]);
+		if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
+			continue;
 		}
+		TerrainVisualRange4ba868 &range = toolkit.simple_ranges_0x5a4318[size_t(slot)];
+		if (range.count == 0) {
+			range.start = row_index;
+		}
+		range.count += 1;
 	}
 	return toolkit;
 }
@@ -1378,17 +1376,25 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 		out_flag_b = 0;
 		return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
 	}
-	if (current_row >= 0 && current_row < int32_t(rows.size())
-			&& rows[size_t(current_row)].shape_class == classified.shape_class) {
-		selected_row = current_row;
-		return true;
+	if (current_row >= 0 && current_row < int32_t(rows.size())) {
+		const TerrainVisualRow &current = rows[size_t(current_row)];
+		if (current.shape_class == classified.shape_class
+				&& current.flag_a == classified.flag_a
+				&& current.flag_b == classified.flag_b) {
+			selected_row = current_row;
+			out_flag_a = 0;
+			out_flag_b = 0;
+			return true;
+		}
 	}
-	const int32_t slot = classified.shape_class * 2;
-	if (slot < 0 || slot >= int32_t(toolkit.ranges_0x14.size())) {
+	const int32_t slot = classified.flag_b + (classified.flag_a + classified.shape_class * 2) * 2;
+	if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
 		selected_row = -1;
 		return false;
 	}
-	return select_visual_row_from_range_4ba938(toolkit.ranges_0x14[size_t(slot)], rng, selected_row);
+	out_flag_a = 0;
+	out_flag_b = 0;
+	return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
 }
 
 int32_t runtime_town_choice_49b3c1(uint16_t allowed_town_mask_0x41_0x49, H3MapedRng &rng, int32_t &rng_call_count) {
