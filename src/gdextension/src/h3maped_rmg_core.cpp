@@ -14886,6 +14886,20 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		if (active_terrain < 0 || x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
 			return false;
 		}
+		const int32_t previous_terrain = scratch_terrain_at_grid_index_4bb71b(
+				result.terrain_scratch_word_0x4bad0f,
+				result.terrain_code,
+				width,
+				height,
+				level_tile_count,
+				level,
+				x,
+				y,
+				active_terrain);
+		const bool terrain_changed_0x4bb681 = previous_terrain != active_terrain;
+		if (!terrain_changed_0x4bb681) {
+			return write_live_visual_cell(level, x, y, active_terrain);
+		}
 		set_terrain_at_grid_index_4bb74b(result.terrain_code, width, height, level_tile_count, level, x, y, active_terrain);
 		bool wrote = false;
 		if (write_live_visual_cell(level, x, y, active_terrain)) {
@@ -15066,12 +15080,10 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				}
 				result.zone_repaint_candidate_count_0x4a4082 += 1;
 				result.zone_repaint_write_count_0x4a4163 += 1;
-				result.terrain_code[size_t(flat)] = terrain_id;
 				record_changed = true;
-				if (write_live_visual_cell(scan_level, x, y, terrain_id)) {
+				if (process_topology(scan_level, x, y, terrain_id)) {
 					result.terrain_visual_repaint_write_count_0x4a4082 += 1;
 				}
-				post_live_visual_write_feedback_4bb74b(scan_level, x, y, terrain_id);
 			}
 		}
 		if (record_changed) {
