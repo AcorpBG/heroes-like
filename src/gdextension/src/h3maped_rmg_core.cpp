@@ -631,6 +631,28 @@ int32_t terrain_visual_simple_range_slot_4ba9c8(const TerrainVisualRow &row) {
 	return row.flag_b + (row.flag_a + row.shape_class * 2) * 2;
 }
 
+template <size_t N, typename SlotFn>
+void build_terrain_visual_run_ranges_4ba868(const std::vector<TerrainVisualRow> &rows, std::array<TerrainVisualRange4ba868, N> &ranges, SlotFn slot_fn) {
+	int32_t previous_slot = -1;
+	bool have_previous_slot = false;
+	for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
+		const int32_t slot = slot_fn(rows[size_t(row_index)]);
+		if (slot < 0 || slot >= int32_t(ranges.size())) {
+			have_previous_slot = false;
+			previous_slot = -1;
+			continue;
+		}
+		TerrainVisualRange4ba868 &range = ranges[size_t(slot)];
+		if (!have_previous_slot || slot != previous_slot) {
+			// Recovered 0x4ba868/0x4ba9c8 keeps total bucket counts but rewrites start at each source-row run boundary.
+			range.start = row_index;
+		}
+		range.count += 1;
+		have_previous_slot = true;
+		previous_slot = slot;
+	}
+}
+
 TerrainVisualToolkit4ba868 build_terrain_visual_toolkit_4ba868(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, bool simple_vtable, bool byte4_nonzero_0x04, bool byte5_nonzero_0x05) {
 	TerrainVisualToolkit4ba868 toolkit;
 	toolkit.terrain_id = terrain_id;
@@ -638,28 +660,8 @@ TerrainVisualToolkit4ba868 build_terrain_visual_toolkit_4ba868(const std::vector
 	toolkit.byte5_nonzero_0x05 = byte5_nonzero_0x05;
 	toolkit.range_probability_0x08 = constructor_probability_for_terrain_id_4bcff5(terrain_id);
 	toolkit.simple_vtable_4baa66 = simple_vtable;
-	for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
-		const int32_t slot = terrain_visual_range_slot_4ba868(rows[size_t(row_index)]);
-		if (slot < 0 || slot >= int32_t(toolkit.ranges_0x14.size())) {
-			continue;
-		}
-		TerrainVisualRange4ba868 &range = toolkit.ranges_0x14[size_t(slot)];
-		if (range.count == 0) {
-			range.start = row_index;
-		}
-		range.count += 1;
-	}
-	for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
-		const int32_t slot = terrain_visual_simple_range_slot_4ba9c8(rows[size_t(row_index)]);
-		if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
-			continue;
-		}
-		TerrainVisualRange4ba868 &range = toolkit.simple_ranges_0x5a4318[size_t(slot)];
-		if (range.count == 0) {
-			range.start = row_index;
-		}
-		range.count += 1;
-	}
+	build_terrain_visual_run_ranges_4ba868(rows, toolkit.ranges_0x14, terrain_visual_range_slot_4ba868);
+	build_terrain_visual_run_ranges_4ba868(rows, toolkit.simple_ranges_0x5a4318, terrain_visual_simple_range_slot_4ba9c8);
 	return toolkit;
 }
 
