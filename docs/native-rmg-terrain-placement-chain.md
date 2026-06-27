@@ -55,7 +55,7 @@ The active shared native core now executes these recovered TerrainPlacement piec
 
 ## Validation Contract
 
-The focused native selftest now fails if TerrainPlacement regresses to the previous art-row-zero/flag-zero behavior. It checks:
+The focused native selftest exercises the TerrainPlacement implementation broadly. It checks:
 
 - one-level full-map water visual rows are written after skipping the recovered two-level-only terrain-9 prefill;
 - post-water TerrainPlacement feedback writes additional visual rows;
@@ -71,11 +71,13 @@ The focused native selftest now fails if TerrainPlacement regresses to the previ
 - `0x4bb74b` byte5-zero live feedback keeps absent non-candidates out of set-A and only seeds removed existing set-A members;
 - same-class retouch branches remain limited to the recovered byte5-zero terrain path.
 
+The exact `0x4ba91d` flag-A neighbor probe is an internal helper inside the shared native core. The current validation for that specific recovered behavior is source-backed implementation plus focused no-Godot payload comparison; the helper is not exposed as public API just to satisfy a narrow unit assertion.
+
 ## Remaining Checkpoint-2 Blocker
 
-The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B ordered-tree first-node drain behavior, byte5-zero same-class retouch routing, and the `0x4bb74b` byte5-zero live-feedback branch. This is still not a TerrainPlacement parity claim.
+The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable, and now uses recovered `0x4ba91d` flag-A semantics for complex same-terrain continuity. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B ordered-tree first-node drain behavior, byte5-zero same-class retouch routing, and the `0x4bb74b` byte5-zero live-feedback branch. This is still not a TerrainPlacement parity claim.
 
-The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=57`, `h3maped=54`). The generated-object payload remains short (`8212` native bytes vs `17057` H3MapEd bytes). This source-backed feedback fix removes a recovered native divergence, but it does not close TerrainPlacement or final-payload parity. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=57`, `h3maped=54`). The generated-object payload remains short (`8212` native bytes vs `17057` H3MapEd bytes). The flag-A fix changes the native tile-stream hash to `3123f1bf830e6cc6fbda007cd23e2f86d4f5e05a03cc519d416fc7a5a9d6fb12`, proving the native path moved, but it does not close TerrainPlacement or final-payload parity. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
 The `0x4bbd01` zero-run retouch direction table is source-backed by the older road/neighbor recovery ledger: `0x5a5028..0x5a5068` holds eight `(dx, dy)` records initialized by `0x4bf38b..0x4bf3f3`, with direction order `{N, NE, E, SE, S, SW, W, NW}`. The static data dump of `0x5a5028` returned zero dwords because this table is runtime-initialized, not because the direction order is unknown. Native already uses that recovered order.
 
@@ -83,6 +85,10 @@ Source evidence for this update:
 
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt`
 - `.artifacts/rmg_recovery/ghidra_phase_frontier_decompile_20260611/target_004a3f27_FUN_004a3f27.txt`
+- `.artifacts/rmg_recovery/ghidra_visual_selector_dump_20260615/target_004bce6d_FUN_004bce6d.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_toolkit_vfuncs_range_20260627/range_004ba868_004bab24.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_toolkit_vfuncs_dump_20260627/target_004ba91d_references.txt`
+- `.artifacts/rmg_recovery/ghidra_terrain_toolkit_vfuncs_dump_20260627/target_004baa81_references.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bb74b_FUN_004bb74b.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba59_FUN_004bba59.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt`
