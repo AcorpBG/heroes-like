@@ -12877,6 +12877,30 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 	if (!result.context_pointer_carried) {
 		return finish("0x4a8db2_source_pair_plus_0x04_context_missing", false);
 	}
+
+	bool has_positive_count_work = false;
+	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+		if (!lane.count_field_known) {
+			return finish(std::string("0x4a8db2_source_count_field_") + field_offset_label(lane.count_field_offset) + "_unknown", false);
+		}
+		if (lane.count_field_value > 0) {
+			has_positive_count_work = true;
+		}
+	}
+
+	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
+		if (!lane.density_field_known) {
+			return finish(std::string("0x4a8db2_source_density_field_") + field_offset_label(lane.density_field_offset) + "_unknown", false);
+		}
+		if (lane.density_field_value > 0) {
+			result.positive_density_sum += lane.density_field_value;
+			result.positive_density_product *= int64_t(lane.density_field_value);
+		}
+	}
+	if (!has_positive_count_work && result.positive_density_sum <= 0) {
+		return finish("0x4a8db2_weighted_scheduler_no_positive_density", true);
+	}
+
 	if (!result.descriptor_source_bridge_known) {
 		return finish(join.blocked_reason.empty() ? "0x4a8db2_descriptor_source_bridge_unresolved" : join.blocked_reason, false);
 	}
@@ -12885,12 +12909,6 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 	}
 	if (!result.relation_owner_byte_known) {
 		return finish("0x4a8db2_relation_owner_byte2_missing", false);
-	}
-
-	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
-		if (!lane.count_field_known) {
-			return finish(std::string("0x4a8db2_source_count_field_") + field_offset_label(lane.count_field_offset) + "_unknown", false);
-		}
 	}
 
 	auto run_scan_call = [&](SourceOrderSchedulerLane4a8db2 &lane,
@@ -12953,15 +12971,6 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		first_count_branch = false;
 	}
 
-	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
-		if (!lane.density_field_known) {
-			return finish(std::string("0x4a8db2_source_density_field_") + field_offset_label(lane.density_field_offset) + "_unknown", false);
-		}
-		if (lane.density_field_value > 0) {
-			result.positive_density_sum += lane.density_field_value;
-			result.positive_density_product *= int64_t(lane.density_field_value);
-		}
-	}
 	if (result.positive_density_sum <= 0) {
 		return finish("0x4a8db2_weighted_scheduler_no_positive_density", true);
 	}
