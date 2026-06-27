@@ -888,6 +888,7 @@ struct BoundarySourceCycleHandoff4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
 	int32_t generated_cell_owner_byte2 = -1;
+	int32_t span_fill_owner_word_0x4a325d = -1;
 	int32_t level = 0;
 	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
@@ -1371,6 +1372,7 @@ struct BoundaryCycleInput4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
 	int32_t generated_cell_owner_byte2 = -1;
+	int32_t span_fill_owner_word_0x4a325d = -1;
 	int32_t level = 0;
 	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
@@ -1410,6 +1412,7 @@ struct BoundaryZoneMaterialization4a2777 {
 	int32_t runtime_zone_index = -1;
 	int32_t zone_word = 0;
 	int32_t generated_cell_owner_byte2 = -1;
+	int32_t span_fill_owner_word_0x4a325d = -1;
 	int32_t level = 0;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	int32_t selected_segment_index = -1;
