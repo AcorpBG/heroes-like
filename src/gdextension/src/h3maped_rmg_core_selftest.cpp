@@ -1208,6 +1208,48 @@ int main() {
 			return record;
 		};
 		{
+			GeneratedCellRecordGrid0x30 repeated_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 1, 1);
+			if (!require(prepare_high_owner_cell(repeated_grid, 0, 0, 0, 0)
+						&& prepare_high_owner_cell(repeated_grid, 1, 0, 1, 0)
+						&& prepare_high_owner_cell(repeated_grid, 2, 0, 2, 0),
+						"test setup for repeated 0x49a318 persisted-score case failed")) {
+				return 1;
+			}
+			GeneratorRelationOwnerState4a218c first_seed;
+			first_seed.owner_vector_index = 0;
+			first_seed.runtime_zone_index = 0;
+			first_seed.coordinate_triple_0x10_0x18_known = true;
+			first_seed.coordinate_x_0x10 = 0;
+			first_seed.coordinate_y_0x14 = 0;
+			first_seed.coordinate_level_0x18 = 0;
+			const RelationHighOwnerPropagationResult49a318 first_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(repeated_grid, { first_seed });
+			if (!require(first_result.cross_owner_high_byte_write_count >= 1
+						&& ((repeated_grid.records[1].word_0x20 >> 24U) & 0xffU) == 0U
+						&& ((repeated_grid.records[1].word_0x1c >> 16U) & 0xffffU) == 10U,
+						"0x49a318 first repeated-score setup did not write the expected high-owner score")) {
+				return 1;
+			}
+			GeneratorRelationOwnerState4a218c second_seed;
+			second_seed.owner_vector_index = 2;
+			second_seed.runtime_zone_index = 2;
+			second_seed.coordinate_triple_0x10_0x18_known = true;
+			second_seed.coordinate_x_0x10 = 2;
+			second_seed.coordinate_y_0x14 = 0;
+			second_seed.coordinate_level_0x18 = 0;
+			const RelationHighOwnerPropagationResult49a318 second_result =
+					aurelion::h3maped_rmg_core::relation_high_owner_propagation_49a318(repeated_grid, { second_seed });
+			if (!require(second_result.seed_attempt_count == 1 && second_result.seed_blocked_count == 0,
+						"0x49a318 repeated-score second source seed was not accepted")) {
+				return 1;
+			}
+			if (!require(((repeated_grid.records[1].word_0x20 >> 24U) & 0xffU) == 0U
+						&& ((repeated_grid.records[1].word_0x1c >> 16U) & 0xffffU) == 10U,
+						"0x49a318 must compare against persisted +0x1c high score and not overwrite an equal prior high-owner projection")) {
+				return 1;
+			}
+		}
+		{
 			GeneratedCellRecordGrid0x30 metadata_grid = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
 			if (!require(prepare_high_owner_cell(metadata_grid, 0, 1, 0, 0)
 						&& prepare_high_owner_cell(metadata_grid, 1, 0, 1, 0)
