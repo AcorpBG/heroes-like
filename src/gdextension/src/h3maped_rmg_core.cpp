@@ -389,6 +389,7 @@ struct TerrainVisualToolkit4ba868 {
 	int32_t range_probability_0x08 = 0;
 	bool simple_vtable_4baa66 = false;
 	std::array<TerrainVisualRange4ba868, 0x3a> ranges_0x14 = {};
+	std::array<TerrainVisualRange4ba868, 0x74> simple_ranges_0x5a4318 = {};
 };
 
 struct TerrainVisualToolkitTables4bcff5 {
@@ -626,6 +627,10 @@ int32_t terrain_visual_range_slot_4ba868(const TerrainVisualRow &row) {
 	return row.flag_a + row.shape_class * 2;
 }
 
+int32_t terrain_visual_simple_range_slot_4ba9c8(const TerrainVisualRow &row) {
+	return row.flag_b + (row.flag_a + row.shape_class * 2) * 2;
+}
+
 TerrainVisualToolkit4ba868 build_terrain_visual_toolkit_4ba868(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, bool simple_vtable, bool byte4_nonzero_0x04, bool byte5_nonzero_0x05) {
 	TerrainVisualToolkit4ba868 toolkit;
 	toolkit.terrain_id = terrain_id;
@@ -643,6 +648,19 @@ TerrainVisualToolkit4ba868 build_terrain_visual_toolkit_4ba868(const std::vector
 			range.start = row_index;
 		}
 		range.count += 1;
+	}
+	if (simple_vtable) {
+		for (int32_t row_index = 0; row_index < int32_t(rows.size()); ++row_index) {
+			const int32_t slot = terrain_visual_simple_range_slot_4ba9c8(rows[size_t(row_index)]);
+			if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
+				continue;
+			}
+			TerrainVisualRange4ba868 &range = toolkit.simple_ranges_0x5a4318[size_t(slot)];
+			if (range.count == 0) {
+				range.start = row_index;
+			}
+			range.count += 1;
+		}
 	}
 	return toolkit;
 }
@@ -728,12 +746,19 @@ bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, 
 bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t neighbor_mask, int32_t current_row, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	out_flag_a = 0;
 	out_flag_b = 0;
+	if (toolkit.simple_vtable_4baa66) {
+		if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class != 0) {
+			selected_row = current_row;
+			return true;
+		}
+		return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[0], rng, selected_row);
+	}
 	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 		selected_row = current_row;
 		return true;
 	}
 	const TerrainVisualRange4ba868 *range = &toolkit.ranges_0x14[0];
-	if (!toolkit.simple_vtable_4baa66 && toolkit.ranges_0x14[1].count > 0) {
+	if (toolkit.ranges_0x14[1].count > 0) {
 		const int32_t probability_rng_value = rng.next();
 		const int32_t probability_threshold = (toolkit.range_probability_0x08 * std::max(0, neighbor_mask)) >> 3;
 		range = (probability_rng_value % 100) < probability_threshold ? &toolkit.ranges_0x14[1] : &toolkit.ranges_0x14[0];
@@ -1339,17 +1364,19 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 					&& current.flag_a == classified.flag_a
 					&& current.flag_b == classified.flag_b) {
 				selected_row = current_row;
+				out_flag_a = 0;
+				out_flag_b = 0;
 				return true;
 			}
 		}
-		const std::vector<int32_t> bucket = row_indices_for_class_flags_4bcfc3(rows, classified.shape_class, classified.flag_a, classified.flag_b);
-		if (bucket.empty()) {
+		const int32_t slot = classified.flag_b + (classified.flag_a + classified.shape_class * 2) * 2;
+		if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
 			selected_row = -1;
 			return false;
 		}
-		const int32_t art_rng_value = rng.next();
-		selected_row = bucket[size_t(art_rng_value % int32_t(bucket.size()))];
-		return true;
+		out_flag_a = 0;
+		out_flag_b = 0;
+		return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
 	}
 	if (current_row >= 0 && current_row < int32_t(rows.size())
 			&& rows[size_t(current_row)].shape_class == classified.shape_class) {
@@ -14602,6 +14629,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 
 	const int32_t level_tile_count = width * height;
 	const TerrainVisualToolkitTables4bcff5 visual_tables = load_terrain_visual_toolkit_tables_4bcff5();
+	const int32_t terrainplacement_selector_base_mask_0x08 = 4;
 	H3MapedRng live_visual_rng;
 	live_visual_rng.state = visual_rng_state_override_known_0x4a3f27
 			? visual_rng_state_override_0x4a3f27
@@ -14622,7 +14650,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 		const uint32_t word_0x24 = result.generated_cell_word_0x24[size_t(index)];
 		const uint32_t word_0x28 = result.generated_cell_word_0x28[size_t(index)];
-		const int32_t terrain_id = result.terrain_code[size_t(index)] & 0x0f;
+		const int32_t terrain_id = int32_t(word_0x24 & 0x0fU);
 		const int32_t selected_row = int32_t((word_0x24 >> 6U) & 0x7fU);
 		const int32_t flag_a = int32_t((word_0x28 >> CELL_TERRAIN_FLAG_SHIFT_0X49ACF6) & 0x01U);
 		const int32_t flag_b = int32_t((word_0x28 >> (CELL_TERRAIN_FLAG_SHIFT_0X49ACF6 + 1U)) & 0x01U);
@@ -14673,7 +14701,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	};
 	auto live_neighbor_mask_for_cell = [&](int32_t level, int32_t x, int32_t y, int32_t terrain_id) -> int32_t {
 		const int32_t index = level * level_tile_count + y * width + x;
-		int32_t mask = 4;
+		int32_t mask = terrainplacement_selector_base_mask_0x08;
 		if (x > 0 && live_accept_neighbor(level, index - 1, terrain_id)) {
 			mask >>= 1;
 		}
