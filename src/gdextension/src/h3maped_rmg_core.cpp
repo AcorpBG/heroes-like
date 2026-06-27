@@ -11060,10 +11060,15 @@ static uint32_t final_object_serializer_slot_0x0c_4ad3eb(uint32_t object_record_
 	}
 }
 
+struct FinalObjectDefinitionTableBuild4ad3eb;
+static int32_t final_object_definition_index_for_record_0x4ad1e3(
+		const ObjectRecordReference4a54a7 &record,
+		const FinalObjectDefinitionTableBuild4ad3eb &definition_table);
+
 static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3eb(
 		const ObjectRecordReference4a54a7 &record,
 		int32_t vector_index,
-		const std::map<int32_t, int32_t> &source_catalog_to_definition_index) {
+		const FinalObjectDefinitionTableBuild4ad3eb &definition_table) {
 	FinalObjectWriteoutRecord4ad1e3 sample;
 	sample.vector_index = vector_index;
 	sample.object_record_key = record.object_record_key;
@@ -11074,10 +11079,11 @@ static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3e
 	if (sample.source_catalog_index_0x49da08 < 0 && record.copied_source_record_carried) {
 		sample.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(record.source_record_copy);
 	}
-	const auto definition_it = source_catalog_to_definition_index.find(sample.source_catalog_index_0x49da08);
-	if (definition_it != source_catalog_to_definition_index.end()) {
+	const int32_t definition_index =
+			final_object_definition_index_for_record_0x4ad1e3(record, definition_table);
+	if (definition_index >= 0) {
 		sample.object_definition_index_known = true;
-		sample.object_definition_index = definition_it->second;
+		sample.object_definition_index = definition_index;
 	}
 	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
@@ -11197,6 +11203,8 @@ static void final_object_append_definition_payload_0x4ad3eb(
 
 struct FinalObjectDefinitionTableBuild4ad3eb {
 	std::map<int32_t, int32_t> source_catalog_to_definition_index;
+	std::map<int32_t, int32_t> wrapper_vector_to_definition_index;
+	std::map<int32_t, int32_t> wrapper_index_to_definition_index;
 };
 
 struct FinalObjectStaticDefinitionSource4ad1e3 {
@@ -11216,39 +11224,6 @@ static const std::array<FinalObjectStaticDefinitionSource4ad1e3, 2> &final_objec
 			{ "0x7f8", "AVLhlds0.def", 124, 0, 0, 1, uint16_t(511), uint16_t(2) },
 	}};
 	return sources;
-}
-
-static const std::array<int32_t, 426> &final_object_recovered_definition_source_rows_0x4ad3eb() {
-	static const std::array<int32_t, 426> rows = {{
-			1088, 381, 915, 21, 47, 56, 80, 90, 93, 99, 137, 1150, 1126, 1127, 1128, 1114,
-			1115, 1116, 1117, 1119, 1120, 163, 169, 209, 232, 926, 932, 1138, 925, 1167, 929, 1319,
-			1320, 927, 866, 867, 868, 873, 877, 878, 879, 881, 885, 888, 892, 895, 896, 899,
-			900, 902, 903, 906, 907, 908, 909, 955, 961, 963, 964, 972, 984, 985, 987, 989,
-			990, 991, 997, 1000, 1004, 1006, 1015, 1016, 1025, 1027, 1040, 1042, 1044, 1045, 1046, 1047,
-			1053, 1055, 1063, 1074, 1069, 1070, 1083, 1085, 1086, 941, 1175, 1176, 1180, 1299, 1300, 916,
-			1297, 141, 142, 143, 144, 946, 241, 937, 938, 939, 940, 942, 943, 945, 1303, 1304,
-			1305, 1306, 1136, 1141, 1142, 1143, 2, 1315, 149, 151, 155, 156, 923, 936, 1317, 933,
-			1316, 913, 914, 910, 934, 251, 252, 255, 272, 275, 276, 277, 280, 283, 294, 296,
-			302, 313, 315, 317, 325, 328, 329, 330, 332, 333, 334, 335, 336, 338, 339, 340,
-			686, 345, 346, 348, 349, 351, 352, 354, 355, 356, 357, 358, 360, 363, 400, 401,
-			403, 404, 405, 406, 407, 408, 409, 685, 392, 393, 394, 395, 396, 397, 398, 399,
-			415, 416, 418, 419, 421, 422, 423, 424, 425, 428, 429, 430, 431, 391, 337, 435,
-			436, 438, 447, 448, 449, 450, 451, 452, 453, 454, 455, 462, 463, 464, 465, 466,
-			467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 482, 483, 486,
-			487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 242, 243, 244, 245, 246,
-			247, 248, 249, 661, 662, 663, 664, 665, 666, 668, 669, 508, 509, 510, 511, 512,
-			513, 514, 515, 528, 529, 530, 531, 532, 533, 534, 535, 652, 653, 654, 655, 656,
-			659, 250, 536, 537, 538, 540, 541, 542, 543, 544, 546, 548, 550, 552, 554, 555,
-			557, 559, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 579, 582, 586,
-			612, 613, 615, 616, 617, 620, 621, 624, 628, 629, 631, 632, 633, 635, 640, 643,
-			644, 646, 650, 681, 682, 651, 670, 525, 526, 527, 610, 611, 673, 674, 675, 676,
-			677, 678, 679, 680, 688, 689, 690, 691, 692, 694, 695, 696, 698, 699, 700, 704,
-			709, 713, 714, 715, 716, 769, 771, 772, 773, 775, 776, 777, 778, 781, 782, 783,
-			784, 785, 786, 818, 819, 821, 823, 813, 814, 815, 816, 817, 733, 734, 735, 736,
-			737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 752, 754, 762, 791, 793,
-			798, 799, 802, 804, 806, 807, 808, 809, 810, 812,
-	}};
-	return rows;
 }
 
 static int32_t final_object_find_static_source_catalog_index_0x4ad1e3(
@@ -11272,14 +11247,20 @@ static int32_t final_object_find_static_source_catalog_index_0x4ad1e3(
 	return -1;
 }
 
-static int32_t final_object_find_source_catalog_row_0x4ad3eb(
-		const std::vector<SourceObjectRecord0x4c> &catalog,
-		int32_t source_row) {
-	for (int32_t index = 0; index < int32_t(catalog.size()); ++index) {
-		const SourceObjectRecord0x4c &record = catalog[size_t(index)];
-		if (record.source == "objects.txt" && record.source_row == source_row) {
-			return index;
+static int32_t final_object_definition_index_for_record_0x4ad1e3(
+		const ObjectRecordReference4a54a7 &record,
+		const FinalObjectDefinitionTableBuild4ad3eb &definition_table) {
+	if (record.selected_wrapper_index_0x4af785 >= 0) {
+		const auto wrapper_it =
+				definition_table.wrapper_index_to_definition_index.find(record.selected_wrapper_index_0x4af785);
+		if (wrapper_it != definition_table.wrapper_index_to_definition_index.end()) {
+			return wrapper_it->second;
 		}
+	}
+	const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
+	const auto source_it = definition_table.source_catalog_to_definition_index.find(source_catalog_index);
+	if (source_it != definition_table.source_catalog_to_definition_index.end()) {
+		return source_it->second;
 	}
 	return -1;
 }
@@ -11289,15 +11270,14 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 		FinalObjectWriteoutResult4ad1e3 &result) {
 	FinalObjectDefinitionTableBuild4ad3eb build;
 	result.object_definition_table_invoked = true;
-	std::set<int32_t> used_source_catalog_indices;
+	if (!state.source_object_resolver_state_4af785_known) {
+		result.blocked_reason = "final_object_definition_table_0x38_wrapper_buckets_missing_from_private_state";
+		return build;
+	}
 	for (const ObjectRecordReference4a54a7 &record : state.object_records_0xec4_ecc) {
 		const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
 		if (source_catalog_index < 0) {
 			result.object_definition_missing_source_record_count += 1;
-			continue;
-		}
-		if (!used_source_catalog_indices.insert(source_catalog_index).second) {
-			result.object_definition_duplicate_source_record_count += 1;
 		}
 	}
 	if (result.object_definition_missing_source_record_count > 0) {
@@ -11306,10 +11286,75 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 	}
 
 	const std::vector<SourceObjectRecord0x4c> &catalog = source_object_catalog_0x49da08();
-	const std::vector<SourceObjectWrapperBucket0xe8> &buckets = source_object_wrapper_buckets_0x49db76();
-	std::vector<int32_t> ordered_source_catalog_indices;
-	ordered_source_catalog_indices.reserve(used_source_catalog_indices.size() + final_object_static_definition_sources_0x4a8_0x7f8().size());
-	std::set<int32_t> emitted_source_catalog_indices;
+	const SourceObjectResolverState4af785 &resolver_state = state.source_object_resolver_state_4af785;
+	std::map<int32_t, int32_t> wrapper_index_to_vector_index;
+	std::map<int32_t, int32_t> source_catalog_to_unique_wrapper_vector_index;
+	std::set<int32_t> ambiguous_source_catalog_indices;
+	for (int32_t wrapper_vector_index = 0; wrapper_vector_index < int32_t(resolver_state.wrappers.size()); ++wrapper_vector_index) {
+		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+		if (wrapper.wrapper_index >= 0) {
+			wrapper_index_to_vector_index[wrapper.wrapper_index] = wrapper_vector_index;
+		}
+		if (wrapper.source_catalog_index < 0) {
+			continue;
+		}
+		const auto existing = source_catalog_to_unique_wrapper_vector_index.find(wrapper.source_catalog_index);
+		if (existing == source_catalog_to_unique_wrapper_vector_index.end()) {
+			source_catalog_to_unique_wrapper_vector_index[wrapper.source_catalog_index] = wrapper_vector_index;
+		} else if (existing->second != wrapper_vector_index) {
+			ambiguous_source_catalog_indices.insert(wrapper.source_catalog_index);
+		}
+	}
+
+	std::set<int32_t> active_wrapper_vector_indices;
+	for (const ObjectRecordReference4a54a7 &record : state.object_records_0xec4_ecc) {
+		int32_t wrapper_vector_index = -1;
+		if (record.selected_wrapper_index_0x4af785 >= 0) {
+			const auto wrapper_it = wrapper_index_to_vector_index.find(record.selected_wrapper_index_0x4af785);
+			if (wrapper_it != wrapper_index_to_vector_index.end()) {
+				wrapper_vector_index = wrapper_it->second;
+			}
+		}
+		if (wrapper_vector_index < 0) {
+			const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
+			if (ambiguous_source_catalog_indices.find(source_catalog_index) != ambiguous_source_catalog_indices.end()) {
+				result.object_definition_duplicate_source_record_count += 1;
+				result.blocked_reason = "final_object_definition_table_selected_wrapper_ambiguous_for_generated_object_source";
+				return build;
+			}
+			const auto source_it = source_catalog_to_unique_wrapper_vector_index.find(source_catalog_index);
+			if (source_it != source_catalog_to_unique_wrapper_vector_index.end()) {
+				wrapper_vector_index = source_it->second;
+			}
+		}
+		if (wrapper_vector_index < 0 || wrapper_vector_index >= int32_t(resolver_state.wrappers.size())) {
+			result.object_definition_missing_source_record_count += 1;
+			result.blocked_reason = "final_object_definition_table_selected_wrapper_missing_for_generated_object";
+			return build;
+		}
+		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+		if (wrapper.source_catalog_index < 0 || wrapper.source_catalog_index >= int32_t(catalog.size())) {
+			result.object_definition_missing_source_record_count += 1;
+			result.blocked_reason = "final_object_definition_table_selected_wrapper_source_catalog_index_out_of_range";
+			return build;
+		}
+		active_wrapper_vector_indices.insert(wrapper_vector_index);
+	}
+	std::map<int32_t, int32_t> active_source_catalog_wrapper_counts;
+	for (const int32_t wrapper_vector_index : active_wrapper_vector_indices) {
+		if (wrapper_vector_index < 0 || wrapper_vector_index >= int32_t(resolver_state.wrappers.size())) {
+			continue;
+		}
+		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+		active_source_catalog_wrapper_counts[wrapper.source_catalog_index] += 1;
+	}
+
+	struct OrderedDefinition4ad1e3 {
+		int32_t source_catalog_index = -1;
+		int32_t wrapper_vector_index = -1;
+	};
+	std::vector<OrderedDefinition4ad1e3> ordered_definitions;
+	ordered_definitions.reserve(final_object_static_definition_sources_0x4a8_0x7f8().size() + active_wrapper_vector_indices.size());
 	for (const FinalObjectStaticDefinitionSource4ad1e3 &static_source : final_object_static_definition_sources_0x4a8_0x7f8()) {
 		const int32_t source_catalog_index = final_object_find_static_source_catalog_index_0x4ad1e3(catalog, static_source);
 		if (source_catalog_index < 0) {
@@ -11319,67 +11364,62 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 			result.blocked_reason = reason.str();
 			return build;
 		}
-		if (!emitted_source_catalog_indices.insert(source_catalog_index).second) {
-			result.object_definition_duplicate_source_record_count += 1;
-			result.blocked_reason = "final_object_static_definition_vectors_0x4a8_0x7f8_duplicate_source_record";
-			return build;
-		}
-		ordered_source_catalog_indices.push_back(source_catalog_index);
+		ordered_definitions.push_back(OrderedDefinition4ad1e3 { source_catalog_index, -1 });
 		result.object_definition_static_vector_count_0x4a8_0x7f8 += 1;
 	}
 	result.object_definition_table_static_vectors_0x4a8_0x7f8_included =
 			result.object_definition_static_vector_count_0x4a8_0x7f8 == int32_t(final_object_static_definition_sources_0x4a8_0x7f8().size());
-	for (const int32_t source_row : final_object_recovered_definition_source_rows_0x4ad3eb()) {
-		const int32_t source_catalog_index = final_object_find_source_catalog_row_0x4ad3eb(catalog, source_row);
-		if (source_catalog_index < 0) {
-			result.object_definition_missing_source_record_count += 1;
-			std::ostringstream reason;
-			reason << "final_object_recovered_definition_source_row_" << source_row << "_missing";
-			result.blocked_reason = reason.str();
-			return build;
-		}
-		if (!emitted_source_catalog_indices.insert(source_catalog_index).second) {
-			continue;
-		}
-		ordered_source_catalog_indices.push_back(source_catalog_index);
-	}
-	for (const SourceObjectWrapperBucket0xe8 &bucket : buckets) {
-		for (const int32_t source_catalog_index : bucket.source_record_indices) {
-			if (used_source_catalog_indices.find(source_catalog_index) == used_source_catalog_indices.end()) {
+
+	std::set<int32_t> emitted_active_wrapper_vector_indices;
+	for (int32_t bucket_index = 0; bucket_index < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8; ++bucket_index) {
+		const std::vector<int32_t> &bucket = resolver_state.wrapper_bucket_indices_0xe8[size_t(bucket_index)];
+		for (const int32_t wrapper_vector_index : bucket) {
+			if (active_wrapper_vector_indices.find(wrapper_vector_index) == active_wrapper_vector_indices.end()) {
 				continue;
 			}
-			if (source_catalog_index < 0 || source_catalog_index >= int32_t(catalog.size())) {
+			if (wrapper_vector_index < 0 || wrapper_vector_index >= int32_t(resolver_state.wrappers.size())) {
 				result.object_definition_missing_source_record_count += 1;
-				continue;
+				result.blocked_reason = "final_object_definition_table_wrapper_bucket_index_out_of_range";
+				return build;
 			}
-			if (!emitted_source_catalog_indices.insert(source_catalog_index).second) {
-				continue;
+			if (!emitted_active_wrapper_vector_indices.insert(wrapper_vector_index).second) {
+				result.object_definition_duplicate_source_record_count += 1;
+				result.blocked_reason = "final_object_definition_table_wrapper_bucket_duplicate_active_wrapper";
+				return build;
 			}
-			ordered_source_catalog_indices.push_back(source_catalog_index);
+			const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+			ordered_definitions.push_back(OrderedDefinition4ad1e3 { wrapper.source_catalog_index, wrapper_vector_index });
 		}
 	}
-	for (const int32_t source_catalog_index : used_source_catalog_indices) {
-		if (emitted_source_catalog_indices.find(source_catalog_index) != emitted_source_catalog_indices.end()) {
-			continue;
-		}
-		if (source_catalog_index < 0 || source_catalog_index >= int32_t(catalog.size())) {
-			result.object_definition_missing_source_record_count += 1;
-			continue;
-		}
-		ordered_source_catalog_indices.push_back(source_catalog_index);
-	}
-	if (result.object_definition_missing_source_record_count > 0) {
-		result.blocked_reason = "final_object_definition_table_source_catalog_index_out_of_range";
+	if (emitted_active_wrapper_vector_indices.size() != active_wrapper_vector_indices.size()) {
+		result.blocked_reason = "final_object_definition_table_active_wrapper_missing_from_0xe8_bucket_order";
 		return build;
 	}
 
-	const int32_t last_sample_start = std::max<int32_t>(0, int32_t(ordered_source_catalog_indices.size()) - 8);
-	for (int32_t definition_index = 0; definition_index < int32_t(ordered_source_catalog_indices.size()); ++definition_index) {
-		const int32_t source_catalog_index = ordered_source_catalog_indices[size_t(definition_index)];
+	const int32_t last_sample_start = std::max<int32_t>(0, int32_t(ordered_definitions.size()) - 8);
+	for (int32_t definition_index = 0; definition_index < int32_t(ordered_definitions.size()); ++definition_index) {
+		const OrderedDefinition4ad1e3 &ordered_definition = ordered_definitions[size_t(definition_index)];
+		const int32_t source_catalog_index = ordered_definition.source_catalog_index;
+		if (source_catalog_index < 0 || source_catalog_index >= int32_t(catalog.size())) {
+			result.object_definition_missing_source_record_count += 1;
+			result.blocked_reason = "final_object_definition_table_ordered_source_catalog_index_out_of_range";
+			return build;
+		}
 		const SourceObjectRecord0x4c &source_record = catalog[size_t(source_catalog_index)];
 		const FinalObjectDefinitionRecord4ad3eb definition =
 				final_object_definition_record_from_source_0x4ad3eb(source_record, source_catalog_index, definition_index);
-		build.source_catalog_to_definition_index[source_catalog_index] = definition_index;
+		if (ordered_definition.wrapper_vector_index >= 0) {
+			const SourceObjectResolvedWrapper4af785 &wrapper =
+					resolver_state.wrappers[size_t(ordered_definition.wrapper_vector_index)];
+			build.wrapper_vector_to_definition_index[ordered_definition.wrapper_vector_index] = definition_index;
+			if (wrapper.wrapper_index >= 0) {
+				build.wrapper_index_to_definition_index[wrapper.wrapper_index] = definition_index;
+			}
+			const auto active_count_it = active_source_catalog_wrapper_counts.find(source_catalog_index);
+			if (active_count_it != active_source_catalog_wrapper_counts.end() && active_count_it->second == 1) {
+				build.source_catalog_to_definition_index[source_catalog_index] = definition_index;
+			}
+		}
 		final_object_append_definition_payload_0x4ad3eb(result.object_definition_payload_bytes, definition);
 		result.object_definition_payload_byte_count += definition.payload_byte_count;
 		if (definition_index < 8) {
@@ -11389,8 +11429,10 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 			result.last_object_definitions.push_back(definition);
 		}
 	}
-	result.object_definition_count = int32_t(ordered_source_catalog_indices.size());
-	result.object_definition_table_applied = result.object_definition_count == int32_t(build.source_catalog_to_definition_index.size());
+	result.object_definition_count = int32_t(ordered_definitions.size());
+	result.object_definition_table_applied =
+			result.object_definition_count == int32_t(ordered_definitions.size())
+			&& emitted_active_wrapper_vector_indices.size() == active_wrapper_vector_indices.size();
 	return build;
 }
 
@@ -11524,7 +11566,7 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 static bool final_object_serialize_payload_pass_0x4ad3eb(
 		FinalObjectWriteoutResult4ad1e3 &result,
 		const GeneratorObjectPrivateState &state,
-		const std::map<int32_t, int32_t> &source_catalog_to_definition_index,
+		const FinalObjectDefinitionTableBuild4ad3eb &definition_table,
 		bool first_flagged_pass,
 		int32_t pass_arg) {
 	for (int32_t index = 0; index < result.generated_object_count; ++index) {
@@ -11541,9 +11583,9 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 			result.object_payload_prefix_blocked_pass = pass_arg;
 			return false;
 		}
-		const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
-		const auto definition_it = source_catalog_to_definition_index.find(source_catalog_index);
-		if (definition_it == source_catalog_to_definition_index.end()) {
+		const int32_t object_definition_index =
+				final_object_definition_index_for_record_0x4ad1e3(record, definition_table);
+		if (object_definition_index < 0) {
 			result.object_definition_template_index_missing_count += 1;
 			result.blocked_reason = "final_object_payload_template_index_missing_for_source_record";
 			result.object_payload_prefix_blocked_index = index;
@@ -11555,7 +11597,7 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 		if (!final_object_append_payload_for_record_0x4ad3eb(
 					result.object_payload_bytes,
 					record,
-					definition_it->second,
+					object_definition_index,
 					serializer_slot_0x0c,
 					pass_arg,
 					result.blocked_reason)) {
@@ -11609,7 +11651,7 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 					final_object_writeout_record_sample_4ad3eb(
 							state.object_records_0xec4_ecc[size_t(index)],
 							index,
-							definition_table.source_catalog_to_definition_index);
+							definition_table);
 		if (sample.serializer_slot_0x0c_known) {
 			result.serializer_slot_known_count += 1;
 		} else {
@@ -11643,8 +11685,8 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		return result;
 		}
 		result.object_payload_serialization_invoked = true;
-		if (!final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table.source_catalog_to_definition_index, true, 1)
-				|| !final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table.source_catalog_to_definition_index, false, 2)) {
+		if (!final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table, true, 1)
+				|| !final_object_serialize_payload_pass_0x4ad3eb(result, state, definition_table, false, 2)) {
 			result.object_payload_byte_count = int32_t(result.object_payload_bytes.size());
 			result.object_payload_prefix_applied = result.object_payload_serialized_object_count > 0;
 			return result;
