@@ -2113,8 +2113,8 @@ int main() {
 	if (!require(synthetic_appended_finalizer.blocked
 					&& synthetic_appended_finalizer.synthetic_branch_allowed_by_0x4a3a9d
 					&& synthetic_appended_finalizer.appended_runtime_zone_count == 1
-					&& synthetic_appended_finalizer.status == "0x4a3710_appended_zone_adjacency_schema_pending",
-				"0x4a3710 appended synthetic owners must now block only on adjacency/order schema replay")) {
+					&& synthetic_appended_finalizer.status == "0x4a3710_appended_zone_adjacency_requires_relation_owner_vector_10e4_10e8",
+				"0x4a3710 appended synthetic owners without relation-owner state should block on the missing 10e4/10e8 owner vector")) {
 		return 1;
 	}
 	if (!require(owner_grid.handoffs.size() == 4, "composed owner-grid chain did not build one handoff per source walk")) {
@@ -3075,6 +3075,17 @@ int main() {
 			relation_owner_town_choice_known_count += 1;
 		}
 		if (!require(owner.relation_record_count == int32_t(owner.relation_records.size()), "generator relation owner record count does not match owned record vector")) {
+			return 1;
+		}
+		if (!require(owner.adjacency_vector_0xc4_present
+						&& owner.adjacency_vector_0xc4_contents_known
+						&& owner.adjacency_vector_0xc4_count_known
+						&& owner.adjacency_record_count_0xc4 == int32_t(owner.adjacency_records_0xc4.size()),
+					"generator relation owner +0xc4 adjacency vector was not materialized with a trusted count")) {
+			return 1;
+		}
+		if (!require(owner.adjacency_record_count_0xc4 >= owner.relation_record_count,
+					"generator relation owner +0xc4 adjacency vector lost source-backed 0x49f7c4 relation records")) {
 			return 1;
 		}
 	}
@@ -5140,9 +5151,9 @@ int main() {
 		return 1;
 	}
 	if (composed_mode2.owner_grid.footprint_finalizer.appended_runtime_zone_count > 0) {
-		if (!require(composed_mode2.owner_grid.footprint_finalizer.blocked
-						&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_appended_zone_adjacency_schema_pending",
-					"mode-2 appended synthetic owners must block only at recovered 0x4a3710 adjacency/order replay")) {
+		if (!require(!composed_mode2.owner_grid.footprint_finalizer.blocked
+						&& composed_mode2.owner_grid.footprint_finalizer.relation_order_vectors_materialized,
+					"mode-2 appended synthetic owners should materialize recovered 0x4a3710 adjacency/order when relation-owner state is available")) {
 			return 1;
 		}
 	} else if (!require(!composed_mode2.owner_grid.footprint_finalizer.blocked

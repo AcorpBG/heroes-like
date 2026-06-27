@@ -2865,6 +2865,23 @@ RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_
 		}
 		return -1;
 	};
+	auto owner_index_by_adjacency_record = [&](const GeneratorRelationOwnerAdjacencyRecord4a3710 &record) -> int32_t {
+		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+			if (owners[size_t(index)].owner_vector_index == record.target_owner_vector_index) {
+				return index;
+			}
+		}
+		const int32_t by_runtime_zone = owner_index_by_runtime_zone(record.target_runtime_zone_index);
+		if (by_runtime_zone >= 0) {
+			return by_runtime_zone;
+		}
+		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+			if (owners[size_t(index)].source_zone_id == record.target_source_zone_id) {
+				return index;
+			}
+		}
+		return -1;
+	};
 	auto insert_by_priority_0x4ccecb = [&](std::vector<int32_t> &indices, int32_t owner_index) {
 		const int32_t priority = owners[size_t(owner_index)].reward_guard_priority_0x40;
 		auto it = indices.begin();
@@ -2875,6 +2892,19 @@ RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_
 			}
 		}
 		indices.insert(it, owner_index);
+	};
+	auto relax_priority_target = [&](std::vector<int32_t> &work, int32_t target_index, int32_t next_priority) {
+		if (target_index < 0) {
+			result.distance_prepass_missing_target_count += 1;
+			return;
+		}
+		GeneratorRelationOwnerState4a218c &target = owners[size_t(target_index)];
+		if (!target.reward_guard_priority_0x40_known || target.reward_guard_priority_0x40 > next_priority) {
+			target.reward_guard_priority_0x40_known = true;
+			target.reward_guard_priority_0x40 = next_priority;
+			result.distance_prepass_relax_count += 1;
+			insert_by_priority_0x4ccecb(work, target_index);
+		}
 	};
 
 	const int32_t source_index = owner_index_by_vector_index(source_owner_vector_index);
@@ -2902,18 +2932,14 @@ RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_
 		const int32_t current_index = work.back();
 		work.pop_back();
 		const int32_t next_priority = owners[size_t(current_index)].reward_guard_priority_0x40 + 1;
-		for (const GeneratorRelationRecordState4a218c &edge : owners[size_t(current_index)].relation_records) {
-			const int32_t target_index = owner_index_by_relation_record(edge);
-			if (target_index < 0) {
-				result.distance_prepass_missing_target_count += 1;
-				continue;
+		const GeneratorRelationOwnerState4a218c &current_owner = owners[size_t(current_index)];
+		if (current_owner.adjacency_vector_0xc4_contents_known) {
+			for (const GeneratorRelationOwnerAdjacencyRecord4a3710 &edge : current_owner.adjacency_records_0xc4) {
+				relax_priority_target(work, owner_index_by_adjacency_record(edge), next_priority);
 			}
-			GeneratorRelationOwnerState4a218c &target = owners[size_t(target_index)];
-			if (!target.reward_guard_priority_0x40_known || target.reward_guard_priority_0x40 > next_priority) {
-				target.reward_guard_priority_0x40_known = true;
-				target.reward_guard_priority_0x40 = next_priority;
-				result.distance_prepass_relax_count += 1;
-				insert_by_priority_0x4ccecb(work, target_index);
+		} else {
+			for (const GeneratorRelationRecordState4a218c &edge : current_owner.relation_records) {
+				relax_priority_target(work, owner_index_by_relation_record(edge), next_priority);
 			}
 		}
 	}
@@ -14755,6 +14781,117 @@ static int32_t relation_owner_index_for_0x4a3710_relation_record(
 	return -1;
 }
 
+static int32_t relation_owner_index_for_0x4a3710_adjacency_record(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		const GeneratorRelationOwnerAdjacencyRecord4a3710 &record) {
+	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+		if (owners[size_t(index)].owner_vector_index == record.target_owner_vector_index) {
+			return index;
+		}
+	}
+	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+		if (owners[size_t(index)].runtime_zone_index == record.target_runtime_zone_index) {
+			return index;
+		}
+	}
+	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+		if (owners[size_t(index)].source_zone_id == record.target_source_zone_id) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+static GeneratorRelationOwnerAdjacencyRecord4a3710 relation_owner_adjacency_from_relation_record_0x49f7c4(
+		const GeneratorRelationOwnerState4a218c &owner,
+		const GeneratorRelationRecordState4a218c &record) {
+	GeneratorRelationOwnerAdjacencyRecord4a3710 adjacency;
+	adjacency.source_owner_vector_index = owner.owner_vector_index;
+	adjacency.source_runtime_zone_index = owner.runtime_zone_index;
+	adjacency.source_zone_id = owner.source_zone_id;
+	adjacency.target_runtime_zone_index = record.target_runtime_zone_index;
+	adjacency.target_source_zone_id = record.target_source_zone_id;
+	adjacency.source_link_index = record.source_link_index;
+	adjacency.guard_value = record.guard_value;
+	adjacency.wide = record.wide;
+	adjacency.border_guard = record.border_guard;
+	adjacency.reciprocal = record.reciprocal;
+	adjacency.relation_record_source_0x49f7c4 = true;
+	adjacency.control_dword_0x08 = record.control_dword_0x08;
+	adjacency.flag_byte_0x68 = 1U;
+	adjacency.flag_byte_0x67 = 0U;
+	adjacency.flag_byte_0x66 = 1U;
+	return adjacency;
+}
+
+static void append_relation_owner_adjacency_0x4ae166(
+		GeneratorRelationOwnerState4a218c &owner,
+		const GeneratorRelationOwnerAdjacencyRecord4a3710 &record) {
+	owner.adjacency_vector_0xc4_present = true;
+	owner.adjacency_vector_0xc4_contents_known = true;
+	owner.adjacency_vector_0xc4_count_known = true;
+	owner.adjacency_records_0xc4.push_back(record);
+	owner.adjacency_record_count_0xc4 = int32_t(owner.adjacency_records_0xc4.size());
+}
+
+static bool relation_owner_has_adjacency_target_0xc4(
+		const GeneratorRelationOwnerState4a218c &owner,
+		int32_t target_owner_vector_index,
+		int32_t target_runtime_zone_index,
+		int32_t target_source_zone_id) {
+	for (const GeneratorRelationOwnerAdjacencyRecord4a3710 &record : owner.adjacency_records_0xc4) {
+		if (target_owner_vector_index >= 0 && record.target_owner_vector_index == target_owner_vector_index) {
+			return true;
+		}
+		if (target_runtime_zone_index >= 0 && record.target_runtime_zone_index == target_runtime_zone_index) {
+			return true;
+		}
+		if (target_source_zone_id >= 0 && record.target_source_zone_id == target_source_zone_id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+static bool append_relation_owner_adjacency_pair_0x4ae166(
+		std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t source_index,
+		int32_t target_index,
+		bool footprint_intersection_insert,
+		bool relation_order_gap_insert,
+		bool set_flag_0x66) {
+	if (source_index < 0 || target_index < 0
+			|| source_index >= int32_t(owners.size())
+			|| target_index >= int32_t(owners.size())
+			|| source_index == target_index) {
+		return false;
+	}
+	GeneratorRelationOwnerState4a218c &source = owners[size_t(source_index)];
+	const GeneratorRelationOwnerState4a218c &target = owners[size_t(target_index)];
+	if (relation_owner_has_adjacency_target_0xc4(
+				source,
+				target.owner_vector_index,
+				target.runtime_zone_index,
+				target.source_zone_id)) {
+		return false;
+	}
+
+	GeneratorRelationOwnerAdjacencyRecord4a3710 record;
+	record.source_owner_vector_index = source.owner_vector_index;
+	record.source_runtime_zone_index = source.runtime_zone_index;
+	record.source_zone_id = source.source_zone_id;
+	record.target_owner_vector_index = target.owner_vector_index;
+	record.target_runtime_zone_index = target.runtime_zone_index;
+	record.target_source_zone_id = target.source_zone_id;
+	record.footprint_intersection_insert_0x4a3710 = footprint_intersection_insert;
+	record.relation_order_gap_insert_0x4a3710 = relation_order_gap_insert;
+	record.flag_byte_0x68 = 1U;
+	record.flag_byte_0x67 = 0U;
+	record.flag_byte_0x66 = set_flag_0x66 ? 1U : 0U;
+	append_relation_owner_adjacency_0x4ae166(source, record);
+	return true;
+}
+
 static int32_t relation_owner_source_slot_0x49b61b(const GeneratorRelationOwnerState4a218c &owner) {
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
 		return owner.source_pointer_source_index_0x00;
@@ -14815,6 +14952,26 @@ static int32_t relation_order_vector_propagate_0x4a3554(
 				continue;
 			}
 			const int16_t next_distance = int16_t(current_distance + 1);
+			if (current.adjacency_vector_0xc4_contents_known) {
+				for (const GeneratorRelationOwnerAdjacencyRecord4a3710 &record : current.adjacency_records_0xc4) {
+					const int32_t target_index = relation_owner_index_for_0x4a3710_adjacency_record(owners, record);
+					if (target_index < 0 || target_index >= int32_t(owners.size())) {
+						continue;
+					}
+					GeneratorRelationOwnerState4a218c &target = owners[size_t(target_index)];
+					if (!target.relation_order_words_0x3e8_known
+							|| target.relation_order_words_0x3e8.size() <= size_t(slot)) {
+						continue;
+					}
+					if (target.relation_order_words_0x3e8[size_t(slot)] <= next_distance) {
+						continue;
+					}
+					target.relation_order_words_0x3e8[size_t(slot)] = next_distance;
+					relax_count += 1;
+					queue.push(target_index);
+				}
+				continue;
+			}
 			for (const GeneratorRelationRecordState4a218c &record : current.relation_records) {
 				const int32_t target_index = relation_owner_index_for_0x4a3710_relation_record(owners, record);
 				if (target_index < 0 || target_index >= int32_t(owners.size())) {
@@ -14856,18 +15013,77 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 	result.relation_order_vectors_materialized = false;
 	result.downstream_relation_order_blocker = "runtime_zone+0xc4 adjacency and runtime_zone+0x3e8 ordering vectors are not represented in the checkpoint-2 generated-cell payload";
 
-	if (result.appended_runtime_zone_count > 0) {
+	if (result.appended_runtime_zone_count > 0 && relation_owners == nullptr) {
 		result.blocked = true;
-		result.status = "0x4a3710_appended_zone_adjacency_schema_pending";
+		result.status = "0x4a3710_appended_zone_adjacency_requires_relation_owner_vector_10e4_10e8";
 		return result;
 	}
 	if (relation_owners != nullptr) {
 		const int32_t source_count = result.original_same_level_runtime_zone_count;
 		const int32_t reset_limit = std::min<int32_t>(result.final_runtime_zone_count, int32_t(relation_owners->size()));
 		for (int32_t owner_index = 0; owner_index < reset_limit; ++owner_index) {
+			GeneratorRelationOwnerState4a218c &owner = (*relation_owners)[size_t(owner_index)];
+			if (!owner.adjacency_vector_0xc4_present) {
+				owner.adjacency_vector_0xc4_present = true;
+				owner.adjacency_vector_0xc4_contents_known = true;
+				owner.adjacency_vector_0xc4_count_known = true;
+				owner.adjacency_record_count_0xc4 = int32_t(owner.adjacency_records_0xc4.size());
+			}
 			relation_order_vector_reset_0x49b61b((*relation_owners)[size_t(owner_index)], source_count);
 		}
+		for (int32_t owner_index = source_count; owner_index < reset_limit; ++owner_index) {
+			for (const GeneratorRelationRecordState4a218c &record : (*relation_owners)[size_t(owner_index)].relation_records) {
+				const int32_t target_index = relation_owner_index_for_0x4a3710_relation_record(*relation_owners, record);
+				if (target_index <= owner_index || target_index >= reset_limit) {
+					continue;
+				}
+				if (append_relation_owner_adjacency_pair_0x4ae166(*relation_owners, owner_index, target_index, true, false, true)) {
+					result.adjacency_insert_count += 1;
+				}
+				if (append_relation_owner_adjacency_pair_0x4ae166(*relation_owners, target_index, owner_index, true, false, true)) {
+					result.adjacency_insert_count += 1;
+				}
+			}
+		}
 		(void)relation_order_vector_propagate_0x4a3554(*relation_owners, source_count);
+		for (int32_t owner_index = source_count; owner_index < reset_limit; ++owner_index) {
+			GeneratorRelationOwnerState4a218c &owner = (*relation_owners)[size_t(owner_index)];
+			for (int32_t target_index = 0; target_index < source_count && target_index < reset_limit; ++target_index) {
+				const GeneratorRelationOwnerState4a218c &target = (*relation_owners)[size_t(target_index)];
+				bool insert_pair = true;
+				for (int32_t slot = 0; slot < source_count; ++slot) {
+					if (!owner.relation_order_words_0x3e8_known
+							|| !target.relation_order_words_0x3e8_known
+							|| owner.relation_order_words_0x3e8.size() <= size_t(slot)
+							|| target.relation_order_words_0x3e8.size() <= size_t(slot)) {
+						insert_pair = false;
+						break;
+					}
+					const int16_t owner_distance = owner.relation_order_words_0x3e8[size_t(slot)];
+					const int16_t target_distance = target.relation_order_words_0x3e8[size_t(slot)];
+					if (owner_distance < 0 || owner_distance >= RELATION_ORDER_SENTINEL_0X7D00
+							|| target_distance <= owner_distance + 1) {
+						insert_pair = false;
+						break;
+					}
+				}
+				if (!insert_pair) {
+					continue;
+				}
+				bool inserted = false;
+				if (append_relation_owner_adjacency_pair_0x4ae166(*relation_owners, owner_index, target_index, false, true, false)) {
+					result.adjacency_insert_count += 1;
+					inserted = true;
+				}
+				if (append_relation_owner_adjacency_pair_0x4ae166(*relation_owners, target_index, owner_index, false, true, false)) {
+					result.adjacency_insert_count += 1;
+					inserted = true;
+				}
+				if (inserted) {
+					(void)relation_order_vector_propagate_0x4a3554(*relation_owners, source_count);
+				}
+			}
+		}
 		result.zone_order_reset_call_count = reset_limit;
 		result.per_zone_order_helper_call_count = std::min<int32_t>(source_count, int32_t(relation_owners->size()));
 		result.relation_order_vectors_materialized = reset_limit == int32_t(relation_owners->size())
@@ -15228,6 +15444,9 @@ static void append_relation_record_0x49f7c4(GeneratorRelationOwnerState4a218c &o
 	record.control_dword_0x08 = relation_record_control_dword_0x49f7c4(link.wide, link.border_guard);
 	owner.relation_records.push_back(record);
 	owner.relation_record_count = int32_t(owner.relation_records.size());
+	append_relation_owner_adjacency_0x4ae166(
+			owner,
+			relation_owner_adjacency_from_relation_record_0x49f7c4(owner, record));
 }
 
 static void append_source_endpoint_record_0x4a1f3b(GeneratorRelationOwnerState4a218c &owner, int32_t target_relation_owner_vector_index_0x00, int32_t source_link_index, int32_t target_runtime_zone_index, int32_t target_source_zone_id, const RuntimeLinkSeedInput4a218c &link, bool reciprocal) {
@@ -15354,6 +15573,10 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.descriptor_type_counter_table_0x44_byte_size = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE;
 	owner.descriptor_type_counter_table_0x44_zero_count = RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT;
 	owner.descriptor_type_counters_0x44.assign(size_t(RELATION_OWNER_DESCRIPTOR_TABLE_0X44_DWORD_COUNT), 0U);
+	owner.adjacency_vector_0xc4_present = true;
+	owner.adjacency_vector_0xc4_contents_known = true;
+	owner.adjacency_vector_0xc4_count_known = true;
+	owner.adjacency_record_count_0xc4 = int32_t(owner.adjacency_records_0xc4.size());
 	owner.owner_local_vectors_0x3e4_0x3f4_0x404_known = true;
 	owner.owner_local_vector_0x3e4_count = 0;
 	owner.owner_local_vector_0x3f4_count = 0;
@@ -17804,6 +18027,15 @@ static bool relation_lookup_wide_0x4a4c8e(const std::vector<GeneratorRelationOwn
 	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
 		if (owner.runtime_zone_index != owner_runtime_zone) {
 			continue;
+		}
+		if (owner.adjacency_vector_0xc4_contents_known) {
+			for (const GeneratorRelationOwnerAdjacencyRecord4a3710 &record : owner.adjacency_records_0xc4) {
+				if (record.target_runtime_zone_index == neighbor_runtime_zone) {
+					wide = record.wide;
+					return true;
+				}
+			}
+			return false;
 		}
 		for (const GeneratorRelationRecordState4a218c &record : owner.relation_records) {
 			if (record.target_runtime_zone_index == neighbor_runtime_zone) {
