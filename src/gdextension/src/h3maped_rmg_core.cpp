@@ -4752,6 +4752,14 @@ static RewardGuardAttachValueGateResult4a960a reward_guard_attach_value_gate_0x4
 	}
 	result.selector_source_value_0x90_known = true;
 	result.selector_source_value_0x90 = selector->source_pointer_value_0x90;
+	if (selector->source_pointer_value_0x90 == 0) {
+		// 0x4a960a tests [[selector]+0x90] before the band clamp; zero returns
+		// directly and must not be converted into a low clamped band.
+		result.effective_value_band_0x4a960a = 0;
+		result.scaled_attach_value_0x4a65a5 = 0;
+		result.applied = true;
+		return result;
+	}
 	result.effective_value_band_0x4a960a =
 			std::min<int32_t>(5, std::max<int32_t>(0, selector->source_pointer_value_0x90 + state.generator_value_band_0x10bc - 3));
 	result.scaled_attach_value_0x4a65a5 =
