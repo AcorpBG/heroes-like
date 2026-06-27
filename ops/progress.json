@@ -303,18 +303,18 @@
         "windows_dll_build_deferred": true
       },
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water",
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now applies the recovered 0x4a3f27 repaint owner gate exactly for the relation-owner path: 0x4a2105 scan-bound prep indexes relation owners from generated-cell +0x20 byte2, 0x4a2ffa recenter still compares against the relation/source pointer owner byte, and the 0x4a4142 repaint gate compares generated-cell +0x20 byte2 to the current relation-owner vector loop index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 0 native=4 expected=2; generated-object payload is 7936 vs 17057 bytes with first mismatch offset 0 native=51 expected=2. This is source-backed generated-cell implementation progress, not parity completion or runtime map output.",
+      "notes": "Implemented recovered TerrainPlacement final-sweep selector split in h3maped_rmg_core: 0x4bbfcc class upgrades now require 0x4bcb91/0x4bcd43 probes and class-0 final sweep uses 0x4ba938 current-row/base selection. Standalone no-Godot Medium seed-10 setup-0 still fail-closes at tile stream offset 8 native=51 vs h3maped=60; payload parity and runtime output remain blocked.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
-      "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed 0x4a3f27 repaint owner-gate correction.",
+      "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed TerrainPlacement final-sweep selector correction.",
       "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the earlier recovered mutating phase still causing tile-stream byte 0 and generated-object payload drift; remaining TerrainPlacement queue/final-sweep order drift is not ruled out until phase/private-state comparison proves it.",
       "result": "passed_partial_implementation_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "startedAt": "2026-06-21T05:16:18Z",
       "status": "in_progress",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. The recovered Medium seed-10 header-compatible path is setup object +0x44 = 0 and template Ready or Not; setup 3 selects 3SB0b and is not the same-run authority for that recovered header. Shared h3maped_rmg_core now follows the recovered supported-land 0x4a61bc border-guard endpoint evidence by source-excluding the live 0x4a5e73/0x4a606b path only when the D-014 exclusion and scoped 0x4a7605 -> 0x4a5e03 fallback records are present. Medium seed10 setup0 now proceeds past the former 0x4a61bc_border_guard_endpoint_helpers blocker to final_payload_compare and writes one final payload binary/section manifest with no Godot process. The exact same-run compare now blocks first at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile stream length matches at 36288 bytes, but SHA differs (native b76c6056b66450b743b8ac0edfd36fa4eb5ffed32f96e74829c69d6bbddce44a vs H3MapEd cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65) and first mismatch is offset 0 native=7 expected=2. Generated-object payload also mismatches and is short by 8349 bytes (native 8708 vs H3MapEd 17057). This is source-backed behavior progress plus blocker identification, not parity completion or runtime map output.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now uses the recovered TerrainPlacement final-sweep selector split: 0x4bbfcc class upgrades require 0x4bcb91/0x4bcd43 probe predicates, and class-0 final-sweep cells use the recovered 0x4ba938 current-row/base selector path. The exact same-run Medium seed-10 setup-0 no-Godot compare still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile stream length matches at 36288 bytes, tile 0 matches, and first mismatch is offset 8 native=51 expected=60. Generated-object payload also mismatches. This is source-backed behavior progress plus blocker identification, not parity completion or runtime map output.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-27T11:41:09Z",
+      "updatedAt": "2026-06-27T15:26:30Z",
       "validation": {
         "artifacts": [
           ".artifacts/rmg_native_batch_export_medium_setup0_after_endpoint_fallback_20260626/manifest.json",
@@ -14163,10 +14163,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now applies the recovered 0x4a3f27 repaint owner gate exactly for the relation-owner path: 0x4a2105 scan-bound prep indexes relation owners from generated-cell +0x20 byte2, 0x4a2ffa recenter still compares against the relation/source pointer owner byte, and the 0x4a4142 repaint gate compares generated-cell +0x20 byte2 to the current relation-owner vector loop index. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 0 native=4 expected=2; generated-object payload is 7936 vs 17057 bytes with first mismatch offset 0 native=51 expected=2. This is source-backed generated-cell implementation progress, not parity completion or runtime map output.",
+  "currentSliceNotes": "Implemented recovered TerrainPlacement final-sweep selector split in h3maped_rmg_core: 0x4bbfcc class upgrades now require 0x4bcb91/0x4bcd43 probes and class-0 final sweep uses 0x4ba938 current-row/base selection. Standalone no-Godot Medium seed-10 setup-0 still fail-closes at tile stream offset 8 native=51 vs h3maped=60; payload parity and runtime output remain blocked.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-27T11:41:09Z",
+  "currentSliceUpdatedAt": "2026-06-27T15:26:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -60826,9 +60826,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now ports the recovered TerrainPlacement toolkit vfunc behavior for the active one-level-land path: 0x4ba868 range slots are built from row shape/flag data, 0x4bce6d same-terrain neighbor reduction now uses the complex toolkit 0x4ba91d row-flag probe, rock/simple terrain uses the recovered 0x4baa81 rejection path, and non-final visual writes use the recovered 0x4ba938 base-row probability selector. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 0 native=4 expected=2; generated-object payload is 6736 vs 17057 bytes. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now uses the recovered TerrainPlacement final-sweep selector split: 0x4bbfcc class upgrades require 0x4bcb91/0x4bcd43 probe predicates, and class-0 final-sweep cells use the recovered 0x4ba938 current-row/base selector path. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288, tile 0 matches, and first mismatch is offset 8 native=51 expected=60. Generated-object payload still mismatches. This is source-backed TerrainPlacement implementation progress, not parity completion or runtime map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-27T09:15:31Z",
+  "updatedAt": "2026-06-27T15:26:30Z",
   "validation": {
     "id": "native-rmg-terrain-toolkit-vfunc-alignment-20260627",
     "title": "TerrainPlacement Toolkit Vfunc Alignment",

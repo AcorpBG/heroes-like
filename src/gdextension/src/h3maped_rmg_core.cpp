@@ -714,9 +714,13 @@ bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, 
 	return true;
 }
 
-bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t neighbor_mask, int32_t current_row, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	out_flag_a = 0;
 	out_flag_b = 0;
+	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
+		selected_row = current_row;
+		return true;
+	}
 	const TerrainVisualRange4ba868 *range = &toolkit.ranges_0x14[0];
 	if (!toolkit.simple_vtable_4baa66 && toolkit.ranges_0x14[1].count > 0) {
 		const int32_t probability_rng_value = rng.next();
@@ -1201,36 +1205,86 @@ TerrainClassResult classify_grid_cell_4bb075(const std::vector<int32_t> &terrain
 	return classify_terrain_relations_4bb075(relations);
 }
 
-bool select_classified_visual_row_for_grid_cell_4bbfcc(const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
-	std::vector<int32_t> bucket;
-	if (terrain_id == 9) {
-		bucket = row_indices_for_class_flags_4bcfc3(rows, classified.shape_class, classified.flag_a, classified.flag_b);
-		out_flag_a = 0;
-		out_flag_b = 0;
-	} else if (classified.shape_class == 0) {
-		const std::vector<int32_t> ordinary = row_indices_for_class_group_4bcfc3(rows, 0, 0);
-		const std::vector<int32_t> special = row_indices_for_class_group_4bcfc3(rows, 0, 1);
-		if (!special.empty()) {
-			const int32_t probability_rng_value = rng.next();
-			const int32_t probability_threshold = (constructor_probability_for_terrain_id_4bcff5(terrain_id) * std::max(0, neighbor_mask)) / 8;
-			bucket = (probability_rng_value % 100) < probability_threshold ? special : ordinary;
-		} else {
-			bucket = ordinary;
-		}
-		out_flag_a = 0;
-		out_flag_b = 0;
-	} else {
-		bucket = row_indices_for_class_4bcfc3(rows, classified.shape_class);
-		out_flag_a = classified.flag_a;
-		out_flag_b = classified.flag_b;
+int32_t terrain_at_clamped_coord_4bb71b(const std::vector<int32_t> &terrain_codes, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, int32_t fallback_terrain_id) {
+	if (width <= 0 || height <= 0) {
+		return fallback_terrain_id;
 	}
-	if (bucket.empty()) {
+	const int32_t clamped_x = std::clamp(x, 0, width - 1);
+	const int32_t clamped_y = std::clamp(y, 0, height - 1);
+	return terrain_at_grid_index_4bb74b(terrain_codes, width, height, level_tile_count, level, clamped_x, clamped_y, fallback_terrain_id);
+}
+
+int32_t final_sweep_flag_index_4bbfcc(const TerrainClassResult &classified) {
+	return std::clamp(classified.flag_a + classified.flag_b * 2, 0, 3);
+}
+
+bool final_sweep_class_2_8_upgrade_probe_4bcb91(const std::vector<int32_t> &terrain_codes, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, const TerrainClassResult &classified, int32_t center_terrain_id) {
+	static constexpr std::array<std::array<int32_t, 4>, 4> OFFSETS = { {
+		{ -1, 1, 1, -1 },
+		{ 1, 1, -1, -1 },
+		{ -1, -1, 1, 1 },
+		{ 1, -1, -1, 1 },
+	} };
+	const std::array<int32_t, 4> &offsets = OFFSETS[size_t(final_sweep_flag_index_4bbfcc(classified))];
+	const int32_t center = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x, y, center_terrain_id);
+	const int32_t first_probe = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x + offsets[0], y + offsets[1], center_terrain_id);
+	if (first_probe == center) {
+		return true;
+	}
+	const int32_t second_probe = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x + offsets[2], y + offsets[3], center_terrain_id);
+	return second_probe == center;
+}
+
+bool final_sweep_class_5_11_upgrade_probe_4bcd43(const std::vector<int32_t> &terrain_codes, int32_t width, int32_t height, int32_t level_tile_count, int32_t level, int32_t x, int32_t y, const TerrainClassResult &classified, int32_t center_terrain_id) {
+	static constexpr std::array<std::array<int32_t, 2>, 4> OFFSETS = { {
+		{ 2, 2 },
+		{ -2, 2 },
+		{ 2, -2 },
+		{ -2, -2 },
+	} };
+	const std::array<int32_t, 2> &offsets = OFFSETS[size_t(final_sweep_flag_index_4bbfcc(classified))];
+	const int32_t center = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x, y, center_terrain_id);
+	const int32_t horizontal_probe = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x + offsets[0], y, center_terrain_id);
+	if (horizontal_probe != center) {
+		return true;
+	}
+	const int32_t vertical_probe = terrain_at_clamped_coord_4bb71b(terrain_codes, width, height, level_tile_count, level, x, y + offsets[1], center_terrain_id);
+	return vertical_probe != center;
+}
+
+bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t terrain_id, const TerrainClassResult &classified, int32_t current_row, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+	out_flag_a = classified.flag_a;
+	out_flag_b = classified.flag_b;
+	if (terrain_id == 9 || toolkit.simple_vtable_4baa66) {
+		if (current_row >= 0 && current_row < int32_t(rows.size())) {
+			const TerrainVisualRow &current = rows[size_t(current_row)];
+			if (current.shape_class == classified.shape_class
+					&& current.flag_a == classified.flag_a
+					&& current.flag_b == classified.flag_b) {
+				selected_row = current_row;
+				return true;
+			}
+		}
+		const std::vector<int32_t> bucket = row_indices_for_class_flags_4bcfc3(rows, classified.shape_class, classified.flag_a, classified.flag_b);
+		if (bucket.empty()) {
+			selected_row = -1;
+			return false;
+		}
+		const int32_t art_rng_value = rng.next();
+		selected_row = bucket[size_t(art_rng_value % int32_t(bucket.size()))];
+		return true;
+	}
+	if (current_row >= 0 && current_row < int32_t(rows.size())
+			&& rows[size_t(current_row)].shape_class == classified.shape_class) {
+		selected_row = current_row;
+		return true;
+	}
+	const int32_t slot = classified.shape_class * 2;
+	if (slot < 0 || slot >= int32_t(toolkit.ranges_0x14.size())) {
 		selected_row = -1;
 		return false;
 	}
-	const int32_t art_rng_value = rng.next();
-	selected_row = bucket[size_t(art_rng_value % int32_t(bucket.size()))];
-	return true;
+	return select_visual_row_from_range_4ba938(toolkit.ranges_0x14[size_t(slot)], rng, selected_row);
 }
 
 int32_t runtime_town_choice_49b3c1(uint16_t allowed_town_mask_0x41_0x49, H3MapedRng &rng, int32_t &rng_call_count) {
@@ -14433,23 +14487,31 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 		return mask;
 	};
-	auto apply_final_sweep_class_correction_4bbfcc = [&](TerrainClassResult classified, bool apply_correction) -> TerrainClassResult {
+	auto apply_final_sweep_class_correction_4bbfcc = [&](TerrainClassResult classified, bool apply_correction, int32_t level, int32_t x, int32_t y, int32_t terrain_id) -> TerrainClassResult {
 		if (!apply_correction) {
 			return classified;
 		}
 		int32_t corrected_class = classified.shape_class;
 		switch (classified.shape_class) {
 			case 2:
-				corrected_class = 6;
+				if (final_sweep_class_2_8_upgrade_probe_4bcb91(result.terrain_code, width, height, level_tile_count, level, x, y, classified, terrain_id)) {
+					corrected_class = 6;
+				}
 				break;
 			case 8:
-				corrected_class = 12;
+				if (final_sweep_class_2_8_upgrade_probe_4bcb91(result.terrain_code, width, height, level_tile_count, level, x, y, classified, terrain_id)) {
+					corrected_class = 12;
+				}
 				break;
 			case 5:
-				corrected_class = 7;
+				if (final_sweep_class_5_11_upgrade_probe_4bcd43(result.terrain_code, width, height, level_tile_count, level, x, y, classified, terrain_id)) {
+					corrected_class = 7;
+				}
 				break;
 			case 11:
-				corrected_class = 13;
+				if (final_sweep_class_5_11_upgrade_probe_4bcd43(result.terrain_code, width, height, level_tile_count, level, x, y, classified, terrain_id)) {
+					corrected_class = 13;
+				}
 				break;
 			default:
 				break;
@@ -14471,23 +14533,34 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		result.terrain_visual_attempt_count_0x4bb74b += 1;
 		const TerrainClassResult classified = apply_final_sweep_class_correction_4bbfcc(
 				classify_grid_cell_4bb075(result.terrain_code, width, height, level_tile_count, level, x, y, terrain_id),
-				apply_final_sweep_class_correction);
+				apply_final_sweep_class_correction,
+				level,
+				x,
+				y,
+				terrain_id);
 		const int32_t neighbor_mask = live_neighbor_mask_for_cell(level, x, y, terrain_id);
 		int32_t selected_row = -1;
 		int32_t out_flag_a = 0;
 		int32_t out_flag_b = 0;
 		const std::vector<TerrainVisualRow> &rows = visual_rows_for_terrain_id_4bcff5(visual_tables.row_tables, terrain_id);
 		const TerrainVisualToolkit4ba868 &toolkit = visual_toolkit_for_terrain_id_4bcff5(visual_tables, terrain_id);
-		bool selected = apply_final_sweep_class_correction
-				? select_classified_visual_row_for_grid_cell_4bbfcc(rows, terrain_id, classified, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b)
-				: select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+		const uint32_t current_record = result.terrain_scratch_word_0x4bad0f[size_t(index)];
+		const bool current_record_matches_terrain = (current_record & 0x01U) != 0U && scratch_terrain_id_4bad0f(current_record) == terrain_id;
+		const int32_t current_art_row = current_record_matches_terrain ? scratch_art_id_4bad0f(current_record) : -1;
+		const int32_t current_flag_a = current_record_matches_terrain ? int32_t((current_record >> 12U) & 0x01U) : 0;
+		const int32_t current_flag_b = current_record_matches_terrain ? int32_t((current_record >> 13U) & 0x01U) : 0;
+		bool selected = false;
+		if (apply_final_sweep_class_correction && classified.shape_class != 0) {
+			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+		} else {
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, rows, neighbor_mask, apply_final_sweep_class_correction ? current_art_row : -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+		}
 		if (!selected) {
 			if (apply_final_sweep_class_correction) {
-				const uint32_t current_record = result.terrain_scratch_word_0x4bad0f[size_t(index)];
-				if ((current_record & 0x01U) != 0U && scratch_terrain_id_4bad0f(current_record) == terrain_id) {
-					selected_row = scratch_art_id_4bad0f(current_record);
-					out_flag_a = int32_t((current_record >> 12U) & 0x01U);
-					out_flag_b = int32_t((current_record >> 13U) & 0x01U);
+				if (current_record_matches_terrain) {
+					selected_row = current_art_row;
+					out_flag_a = current_flag_a;
+					out_flag_b = current_flag_b;
 					result.terrain_visual_preserved_current_record_count_0x4bc5a3 += 1;
 					selected = true;
 				}
@@ -14510,6 +14583,14 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				}
 				return false;
 			}
+		}
+		if (apply_final_sweep_class_correction
+				&& current_record_matches_terrain
+				&& selected_row == current_art_row
+				&& out_flag_a == current_flag_a
+				&& out_flag_b == current_flag_b) {
+			result.terrain_visual_preserved_current_record_count_0x4bc5a3 += 1;
+			return true;
 		}
 		result.terrain_scratch_word_0x4bad0f[size_t(index)] = terrain_scratch_word_4bad0f(terrain_id, selected_row, out_flag_a, out_flag_b);
 		result.generated_cell_word_0x24[size_t(index)] = generated_cell_49acf6_word24(result.generated_cell_word_0x24[size_t(index)], terrain_id, selected_row);
