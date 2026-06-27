@@ -14492,7 +14492,9 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			? owner_materialization.generated_cell_word_0x20
 			: reset_grid.word_0x20;
 	result.generated_cell_word_0x24 = reset_grid.word_0x24;
-	result.generated_cell_word_0x28 = reset_grid.word_0x28;
+	result.generated_cell_word_0x28 = owner_materialization.generated_cell_word_0x28.size() == size_t(cell_count)
+			? owner_materialization.generated_cell_word_0x28
+			: reset_grid.word_0x28;
 	result.generated_cell_word_0x2c = reset_grid.word_0x2c;
 	result.terrain_code.assign(size_t(cell_count), 8);
 	result.terrain_scratch_word_0x4bad0f.assign(size_t(cell_count), 0U);
@@ -14517,19 +14519,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		(void)apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
 				terrain_prepaint_grid,
 				prepared_relation_owners);
-		result.relation_owner_eligibility_marker_0x4a2ec3_applied = true;
-		result.relation_owner_eligibility_marker_set_count_0x4a2ec3 =
-				apply_relation_owner_eligibility_marker_0x4a2ec3(
-						width,
-						height,
-						level_count,
-						terrain_selection,
-						prepared_relation_owners,
-						result.generated_cell_word_0x20,
-						result.generated_cell_word_0x28,
-						result.relation_owner_eligibility_marker_existing_count_0x4a2ec3,
-						result.relation_owner_eligibility_marker_water_skip_count_0x4a2ec3,
-						result.relation_owner_eligibility_marker_bounds_skip_count_0x4a2ec3);
+		std::vector<GeneratorRelationOwnerState4a218c> marker_owners_0x4a30c2;
 		for (GeneratorRelationOwnerState4a218c &owner : prepared_relation_owners) {
 			if (owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_known_count_0x4a1f3b += 1;
@@ -14554,6 +14544,26 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			}
 			result.relation_owner_coordinate_recenter_scanned_cell_count_0x4a2ffa += scanned_count;
 			result.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa += matched_count;
+			if (owner_materialization.generator_mode_0x10b8 == 2
+					&& owner.coordinate_triple_0x10_0x18_known
+					&& owner.coordinate_level_0x18 == 0) {
+				marker_owners_0x4a30c2.push_back(owner);
+			}
+		}
+		if (!marker_owners_0x4a30c2.empty()) {
+			result.relation_owner_eligibility_marker_0x4a2ec3_applied = true;
+			result.relation_owner_eligibility_marker_set_count_0x4a2ec3 =
+					apply_relation_owner_eligibility_marker_0x4a2ec3(
+							width,
+							height,
+							level_count,
+							terrain_selection,
+							marker_owners_0x4a30c2,
+							result.generated_cell_word_0x20,
+							result.generated_cell_word_0x28,
+							result.relation_owner_eligibility_marker_existing_count_0x4a2ec3,
+							result.relation_owner_eligibility_marker_water_skip_count_0x4a2ec3,
+							result.relation_owner_eligibility_marker_bounds_skip_count_0x4a2ec3);
 		}
 		result.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa = prepared_relation_owners;
 		active_relation_owners = &prepared_relation_owners;
@@ -20840,17 +20850,21 @@ BoundaryLineWriteResult boundary_randomized_line_writer_4a2413(int32_t width, in
 	return result;
 }
 
-void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generated_cell_owner_byte2) {
+void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line, std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint32_t> &generated_cell_word_0x28, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generated_cell_owner_byte2) {
 	for (const BoundaryLineCellWrite &write : line.trace) {
 		if (write.x < 0 || write.y < 0 || write.level < 0 || write.x >= width || write.y >= height || write.level >= level_count) {
 			continue;
 		}
 		const int64_t key = generated_cell_flat_key_4a325d(width, height, write.x, write.y, write.level);
-		if (key < 0 || key >= int64_t(zone_words.size()) || key >= int64_t(cell_flags.size())) {
+		if (key < 0
+				|| key >= int64_t(zone_words.size())
+				|| key >= int64_t(generated_cell_word_0x28.size())
+				|| key >= int64_t(cell_flags.size())) {
 			continue;
 		}
 		generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, write.zone_id, generated_cell_owner_byte2);
 		if (write.reserved) {
+			generated_cell_word_0x28[size_t(key)] |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 			cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 		}
 	}
@@ -20875,6 +20889,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 	result.private_zone_words.assign(size_t(cell_count), UNASSIGNED_ZONE_WORD);
 	const GeneratedCellWordGrid generated = generated_cell_grid_reset_0x49a072(width, height, level_count);
 	result.generated_cell_word_0x20 = generated.word_0x20;
+	result.generated_cell_word_0x28 = generated.word_0x28;
 	result.cell_flags.assign(size_t(cell_count), 0U);
 
 	H3MapedRng rng;
@@ -20916,7 +20931,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.deterministic_writer_segment_count += 1;
 		}
 		merge_boundary_line_4a2777(line, unique_cells, result);
-		apply_line_trace_to_zone_buffer_4a2777(line, result.private_zone_words, result.generated_cell_word_0x20, result.cell_flags, width, height, level_count, generated_cell_owner_byte2);
+		apply_line_trace_to_zone_buffer_4a2777(line, result.private_zone_words, result.generated_cell_word_0x20, result.generated_cell_word_0x28, result.cell_flags, width, height, level_count, generated_cell_owner_byte2);
 
 		BoundarySegment4a2777 segment;
 		segment.id = id;
@@ -21288,6 +21303,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		SpanFillResult fill = span_fill_4a325d(
 				result.private_zone_words,
 				result.generated_cell_word_0x20,
+				result.generated_cell_word_0x28,
 				result.cell_flags,
 				width,
 				height,
@@ -21345,7 +21361,7 @@ BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d
 	return result;
 }
 
-SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
+SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint32_t> &generated_cell_word_0x28, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
 	SpanFillResult result;
 	std::vector<SpanRecord> pending;
 	push_span_4a325d(pending, seed, result);
@@ -21371,12 +21387,16 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 				break;
 			}
 			const int64_t key = generated_cell_flat_key_4a325d(width, height, x, coord.y, coord.level);
-			if (key < 0 || key >= int64_t(zone_words.size()) || key >= int64_t(cell_flags.size())) {
+			if (key < 0
+					|| key >= int64_t(zone_words.size())
+					|| key >= int64_t(generated_cell_word_0x28.size())
+					|| key >= int64_t(cell_flags.size())) {
 				continue;
 			}
 			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, private_zone_id, generated_cell_owner_byte2);
 			const bool reserved = boundary_cell_reserved_flag_4a261a_4a325d(generator_mode_0x10b8, coord.level);
 			if (reserved) {
+				generated_cell_word_0x28[size_t(key)] |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 			}
 			SpanFillCellWrite write;

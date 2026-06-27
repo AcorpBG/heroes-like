@@ -93,7 +93,8 @@ Mutation surface:
 
 - Writes zone ownership into private zone words.
 - Writes zone ownership into `GeneratedCell+0x20`.
-- Tracks repaint/member flags in the local `cell_flags` buffer.
+- Writes the recovered repaint/member marker into `GeneratedCell+0x28` bit 28 when `0x4a261a/0x4a325d` executes the `0x4a2e91` `OR byte ptr [cell+0x2b], 0x10` path.
+- Tracks the same reserved-write condition in the local `cell_flags` buffer only as a native support mirror; repaint consumes generated-cell `+0x28`, not the mirror.
 
 Known blocker:
 
