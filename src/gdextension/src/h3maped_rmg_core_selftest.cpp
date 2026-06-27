@@ -2452,7 +2452,7 @@ int main() {
 			36,
 			36,
 			1,
-			owner_grid.materialization,
+			owner_grid_from_relation_owners.materialization,
 			terrain_selection,
 			&relation_owner_inputs);
 	if (!require(terrain_repaint.executed, "0x4a3f27 terrain repaint did not execute")) {
@@ -2491,8 +2491,8 @@ int main() {
 	{
 		BoundaryMaterialization4a2777 relation_gate_materialization;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
-		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
-		relation_gate_materialization.generated_cell_word_0x20[1] = 0U;
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(30U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(30U << 16U);
 		relation_gate_materialization.cell_flags.assign(4, 0U);
 		relation_gate_materialization.cell_flags[3] = 0x10U;
 		RuntimeTerrainSelectionResult49b53d relation_gate_selection;
@@ -2535,7 +2535,7 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint must gate by owner-vector index, not source-pointer byte")) {
+					"0x4a3f27 relation-owner repaint must gate by recovered generated-cell owner byte, not owner-vector index")) {
 			return 1;
 		}
 		if (!require((relation_gate_repaint.generated_cell_word_0x28[0] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
@@ -2549,9 +2549,9 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
-						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 2
+						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 1
 						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 0
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
 						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
 					"0x4a3f27 did not carry relation-owner scan/recenter state for the generator handoff: scan_known="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
