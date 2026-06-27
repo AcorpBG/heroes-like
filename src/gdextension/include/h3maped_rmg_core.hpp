@@ -1577,6 +1577,11 @@ struct TerrainRepaintResult4a3f27 {
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
 	int32_t relation_owner_scan_bounds_blocked_count_0x4a1f3b = 0;
+	bool relation_owner_eligibility_marker_0x4a2ec3_applied = false;
+	int32_t relation_owner_eligibility_marker_set_count_0x4a2ec3 = 0;
+	int32_t relation_owner_eligibility_marker_existing_count_0x4a2ec3 = 0;
+	int32_t relation_owner_eligibility_marker_water_skip_count_0x4a2ec3 = 0;
+	int32_t relation_owner_eligibility_marker_bounds_skip_count_0x4a2ec3 = 0;
 	bool relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
 	int32_t relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
 	int32_t relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
