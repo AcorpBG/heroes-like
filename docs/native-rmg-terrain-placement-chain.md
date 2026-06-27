@@ -73,7 +73,7 @@ The known terrain toolkit vfunc drift is fixed in the active shared core: native
 
 The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=69`, `h3maped=54`) and the current mismatch count is 11202. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
-The exact source of the `0x4bbd01` zero-run retouch direction table remains a named blocker. A static dump of `0x5a5028` returned zero dwords, so the table is likely runtime-initialized or reached through another source-backed initializer. Native must not patch that direction order from final-map deltas.
+The `0x4bbd01` zero-run retouch direction table is source-backed by the older road/neighbor recovery ledger: `0x5a5028..0x5a5068` holds eight `(dx, dy)` records initialized by `0x4bf38b..0x4bf3f3`, with direction order `{N, NE, E, SE, S, SW, W, NW}`. The static data dump of `0x5a5028` returned zero dwords because this table is runtime-initialized, not because the direction order is unknown. Native already uses that recovered order.
 
 Source evidence for this update:
 
@@ -85,6 +85,7 @@ Source evidence for this update:
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt`
+- `src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp` (`h3maped_road_line_visit_458e61_report`, recovered `0x5a5028..0x5a5068` records and `0x4bf38b..0x4bf3f3` initializer)
 
 Checkpoint 2 is still not complete because later relation/object generated-cell mutation caller order is not yet source-owned:
 

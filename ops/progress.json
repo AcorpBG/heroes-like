@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,12 +21,12 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-        "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-        "status": "passed_partial_implementation_not_parity",
-        "validatedAt": "2026-06-27T16:39:22Z",
-        "updatedAt": "2026-06-27T16:39:22Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+        "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+        "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+        "status": "passed_source_backed_blocker_resolution_not_parity",
+        "validatedAt": "2026-06-27T16:43:39Z",
+        "updatedAt": "2026-06-27T16:43:39Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -34,6 +34,7 @@
           "docs/h3maped-rmg-end-to-end-behavior.md",
           "PLAN.md",
           "ops/progress.json",
+          "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -44,22 +45,15 @@
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
           ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
         ],
         "checks": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
         ],
         "commands": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
         ],
         "nativeTilePayloadByteCount": 36288,
         "h3mapedTilePayloadByteCount": 36288,
@@ -79,9 +73,11 @@
         "runtime_map_output_enabled": false,
         "sourceBackedBehaviorProgress": true,
         "parityCompletionClaimed": false,
+        "resolvedBlockers": [
+          "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+        ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-          "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
           "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
         ]
       },
@@ -140,7 +136,7 @@
         ".artifacts/rmg_goal_terrain_repaint_owner_index_debug_20260627/medium_seed10_setup0_2p.final_payload_sections.json"
       ],
       "latestEvidenceId": "native-rmg-terrain-repaint-owner-index-20260627",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "metrics": {
         "checkpoint2_complete": false,
         "checkpoint2_status": "pending",
@@ -326,18 +322,18 @@
         "windows_dll_build_deferred": true
       },
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water",
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed TerrainPlacement final-sweep selector correction.",
-      "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must resolve or source-exclude the exact 0x4bbd01 retouch direction table initialization behind 0x5a5028 and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
+      "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
       "result": "passed_partial_implementation_not_parity",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "startedAt": "2026-06-21T05:16:18Z",
       "status": "in_progress",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-27T16:39:22Z",
+      "updatedAt": "2026-06-27T16:43:39Z",
       "validation": {
         "artifacts": [
           ".artifacts/rmg_native_batch_export_medium_setup0_after_endpoint_fallback_20260626/manifest.json",
@@ -1370,8 +1366,8 @@
     "classification": "implementation_slice",
     "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
     "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
-    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "currentSliceUpdatedAt": "2026-06-27T11:41:09Z",
     "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Defer Windows .dll builds until Linux parity reaches the final boundary.",
     "id": "rmg-small-generalization-hardening-10184",
@@ -1381,12 +1377,12 @@
       "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
     ],
     "lastValidation": {
-      "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-      "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-      "status": "passed_partial_implementation_not_parity",
-      "validatedAt": "2026-06-27T16:39:22Z",
-      "updatedAt": "2026-06-27T16:39:22Z",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+      "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+      "status": "passed_source_backed_blocker_resolution_not_parity",
+      "validatedAt": "2026-06-27T16:43:39Z",
+      "updatedAt": "2026-06-27T16:43:39Z",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "artifacts": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -1394,6 +1390,7 @@
         "docs/h3maped-rmg-end-to-end-behavior.md",
         "PLAN.md",
         "ops/progress.json",
+        "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
         "bin/h3maped_rmg_core_selftest",
         "bin/rmg_native_batch_export_cli",
         ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -1404,22 +1401,15 @@
         ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
         ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
         ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-        ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-        ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-        ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
         ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
       ],
       "checks": [
-        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-        "bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+        "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+        "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
       ],
       "commands": [
-        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-        "bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+        "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+        "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
       ],
       "nativeTilePayloadByteCount": 36288,
       "h3mapedTilePayloadByteCount": 36288,
@@ -1439,9 +1429,11 @@
       "runtime_map_output_enabled": false,
       "sourceBackedBehaviorProgress": true,
       "parityCompletionClaimed": false,
+      "resolvedBlockers": [
+        "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+      ],
       "namedBlockers": [
         "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-        "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
         "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
       ]
     },
@@ -1500,7 +1492,7 @@
       ".artifacts/rmg_goal_terrain_repaint_owner_index_debug_20260627/medium_seed10_setup0_2p.final_payload_sections.json"
     ],
     "latestEvidenceId": "native-rmg-terrain-repaint-owner-index-20260627",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "metrics": {
       "4a9641_4a98f0_sampled_projection_write_count": 319,
       "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -2475,12 +2467,12 @@
       "new gates without player-facing value",
       "broad release/parity claims"
     ],
-    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "phase": "phase-5-playable-alpha-baseline",
     "planRef": "PLAN.md Selectable Near-Term Work",
     "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
     "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed 0x4a3f27 repaint owner-gate correction.",
-    "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must resolve or source-exclude the exact 0x4bbd01 retouch direction table initialization behind 0x5a5028 and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
+    "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
     "result": "passed_partial_implementation_not_parity",
     "source": "PLAN.md Selectable Near-Term Work",
     "sourceDocs": [
@@ -2489,7 +2481,7 @@
     ],
     "startedAt": "2026-06-03T10:59:11Z",
     "status": "in_progress",
-    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "title": "Native RMG source-order H3MapEd alignment",
     "toolingBlockers": [
       {
@@ -2502,7 +2494,7 @@
         "summary": "Standalone no-Godot phase snapshots are working. Full .amap export is still blocked before spawn because package generation remains coupled to Godot APIs; the block smoke verifies godot_process_started=false."
       }
     ],
-    "updatedAt": "2026-06-27T16:39:22Z",
+    "updatedAt": "2026-06-27T16:43:39Z",
     "validation": {
       "artifacts": [
         ".artifacts/rmg_native_batch_export_medium_setup0_after_endpoint_fallback_20260626/manifest.json",
@@ -14205,11 +14197,11 @@
       "updatedAt": "2026-06-26T00:46:31Z"
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-27T15:26:30Z",
@@ -18712,12 +18704,12 @@
   },
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
-    "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-    "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-    "status": "passed_partial_implementation_not_parity",
-    "validatedAt": "2026-06-27T16:39:22Z",
-    "updatedAt": "2026-06-27T16:39:22Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+    "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+    "status": "passed_source_backed_blocker_resolution_not_parity",
+    "validatedAt": "2026-06-27T16:43:39Z",
+    "updatedAt": "2026-06-27T16:43:39Z",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -18725,6 +18717,7 @@
       "docs/h3maped-rmg-end-to-end-behavior.md",
       "PLAN.md",
       "ops/progress.json",
+      "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -18735,22 +18728,15 @@
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
       ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
     ],
     "checks": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "nativeTilePayloadByteCount": 36288,
     "h3mapedTilePayloadByteCount": 36288,
@@ -18770,19 +18756,21 @@
     "runtime_map_output_enabled": false,
     "sourceBackedBehaviorProgress": true,
     "parityCompletionClaimed": false,
+    "resolvedBlockers": [
+      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+    ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
       "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
     ]
   },
   "latestEvidence": {
-    "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-    "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-    "status": "passed_partial_implementation_not_parity",
-    "validatedAt": "2026-06-27T16:39:22Z",
-    "updatedAt": "2026-06-27T16:39:22Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+    "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+    "status": "passed_source_backed_blocker_resolution_not_parity",
+    "validatedAt": "2026-06-27T16:43:39Z",
+    "updatedAt": "2026-06-27T16:43:39Z",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -18790,6 +18778,7 @@
       "docs/h3maped-rmg-end-to-end-behavior.md",
       "PLAN.md",
       "ops/progress.json",
+      "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -18800,22 +18789,15 @@
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
       ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
     ],
     "checks": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "nativeTilePayloadByteCount": 36288,
     "h3mapedTilePayloadByteCount": 36288,
@@ -18835,9 +18817,11 @@
     "runtime_map_output_enabled": false,
     "sourceBackedBehaviorProgress": true,
     "parityCompletionClaimed": false,
+    "resolvedBlockers": [
+      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+    ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
       "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
     ]
   },
@@ -18847,6 +18831,7 @@
     "docs/h3maped-rmg-end-to-end-behavior.md",
     "PLAN.md",
     "ops/progress.json",
+    "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli",
     ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -18857,13 +18842,10 @@
     ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
     ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
     ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-    ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-    ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-    ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
     ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
   ],
-  "latestEvidenceId": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+  "latestEvidenceId": "native-rmg-terrain-direction-table-source-backed-20260627",
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -19503,7 +19485,7 @@
   },
   "native_cli_required_next_slice": "fix_native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload_then_generated_object_payload_mismatch",
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+  "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -53166,8 +53148,8 @@
       "classification": "implementation_slice",
       "completionCriteria": "All eight native alignment checkpoints close with Python-owned private-state or final-payload comparison evidence for supported one-level land Small/Medium maps; no broad production or parity claims beyond that scope.",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "currentSliceUpdatedAt": "2026-06-27T11:41:09Z",
       "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation. Do not reopen reverse engineering unless Python/Ghidra evidence contradicts the authority artifacts, and do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary.",
       "id": "rmg-small-generalization-hardening-10184",
@@ -53177,12 +53159,12 @@
         "PLAN.md and ops/progress.json status discipline for the eight checkpoint sequence"
       ],
       "lastValidation": {
-        "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-        "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-        "status": "passed_partial_implementation_not_parity",
-        "validatedAt": "2026-06-27T16:39:22Z",
-        "updatedAt": "2026-06-27T16:39:22Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+        "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+        "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+        "status": "passed_source_backed_blocker_resolution_not_parity",
+        "validatedAt": "2026-06-27T16:43:39Z",
+        "updatedAt": "2026-06-27T16:43:39Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -53190,6 +53172,7 @@
           "docs/h3maped-rmg-end-to-end-behavior.md",
           "PLAN.md",
           "ops/progress.json",
+          "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -53200,22 +53183,15 @@
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
           ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
         ],
         "checks": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
         ],
         "commands": [
-          "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+          "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+          "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
         ],
         "nativeTilePayloadByteCount": 36288,
         "h3mapedTilePayloadByteCount": 36288,
@@ -53235,9 +53211,11 @@
         "runtime_map_output_enabled": false,
         "sourceBackedBehaviorProgress": true,
         "parityCompletionClaimed": false,
+        "resolvedBlockers": [
+          "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+        ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-          "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
           "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
         ]
       },
@@ -53296,7 +53274,7 @@
         ".artifacts/rmg_goal_terrain_repaint_owner_index_debug_20260627/medium_seed10_setup0_2p.final_payload_sections.json"
       ],
       "latestEvidenceId": "native-rmg-terrain-repaint-owner-index-20260627",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -53932,12 +53910,12 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
       "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed 0x4a3f27 repaint owner-gate correction.",
-      "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must resolve or source-exclude the exact 0x4bbd01 retouch direction table initialization behind 0x5a5028 and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
+      "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
       "result": "Native RMG source-order alignment remains in progress and parity remains blocked. The single h3maped_rmg_core workflow now follows recovered 0x4ac552 order through source-record replay, route/free-cell 0x4a8260/0x4a4c8e, the recovered post-0x4a4c8e cleanup scan, and the source-backed 0x4a4913 relation-vector loop. It now fails closed at the unported 0x4a8c15 bridge call to 0x4a5767 before 0x4a4fc5, 0x4a79a3, 0x4a9d6a, relation scan, reward/guard, connection/decorative/road-river, or final writeout can run. This is not parity and not final map output.",
       "source": "PLAN.md Selectable Near-Term Work",
       "sourceDocs": [
@@ -53946,9 +53924,9 @@
       ],
       "startedAt": "2026-06-03T10:59:11Z",
       "status": "in_progress",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
       "title": "RMG Small Generalization Hardening",
-      "updatedAt": "2026-06-27T16:39:22Z",
+      "updatedAt": "2026-06-27T16:43:39Z",
       "validation": {
         "artifacts": [
           ".artifacts/rmg_native_batch_export_final_payload_compare_20260626/manifest.json",
@@ -60418,7 +60396,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Native final tile stream still mismatches the recovered same-run H3MapEd 0x49b2b6 tile payload after the source-backed 0x4a3f27 repaint owner-gate correction.",
-  "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must resolve or source-exclude the exact 0x4bbd01 retouch direction table initialization behind 0x5a5028 and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
+  "remainingWork": "Continue source-order implementation from the remaining generated-cell/tile payload mismatch. Do not tune final-map deltas. The next implementation step must identify the remaining recovered mutating phase causing tile-stream byte 1 drift and continue phase/private-state comparison before route/object/package adoption can be considered parity.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -60950,16 +60928,16 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+  "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-27T16:39:22Z",
+  "updatedAt": "2026-06-27T16:43:39Z",
   "validation": {
-    "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-    "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-    "status": "passed_partial_implementation_not_parity",
-    "validatedAt": "2026-06-27T16:39:22Z",
-    "updatedAt": "2026-06-27T16:39:22Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+    "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+    "status": "passed_source_backed_blocker_resolution_not_parity",
+    "validatedAt": "2026-06-27T16:43:39Z",
+    "updatedAt": "2026-06-27T16:43:39Z",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -60967,6 +60945,7 @@
       "docs/h3maped-rmg-end-to-end-behavior.md",
       "PLAN.md",
       "ops/progress.json",
+      "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -60977,22 +60956,15 @@
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
       ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
     ],
     "checks": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "nativeTilePayloadByteCount": 36288,
     "h3mapedTilePayloadByteCount": 36288,
@@ -61012,9 +60984,11 @@
     "runtime_map_output_enabled": false,
     "sourceBackedBehaviorProgress": true,
     "parityCompletionClaimed": false,
+    "resolvedBlockers": [
+      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+    ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
       "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
     ]
   },
@@ -73306,15 +73280,78 @@
       ],
       "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
       "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output."
+    },
+    {
+      "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+      "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+      "status": "passed_source_backed_blocker_resolution_not_parity",
+      "validatedAt": "2026-06-27T16:43:39Z",
+      "updatedAt": "2026-06-27T16:43:39Z",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+      "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+      "artifacts": [
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "docs/native-rmg-terrain-placement-chain.md",
+        "docs/h3maped-rmg-end-to-end-behavior.md",
+        "PLAN.md",
+        "ops/progress.json",
+        "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bb74b_FUN_004bb74b.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba59_FUN_004bba59.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc74c_FUN_004bc74c.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
+        ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
+        ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
+      ],
+      "checks": [
+        "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+        "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
+      ],
+      "commands": [
+        "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+        "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
+      ],
+      "nativeTilePayloadByteCount": 36288,
+      "h3mapedTilePayloadByteCount": 36288,
+      "tileFirstMismatchOffset": 1,
+      "tileFirstMismatchCell": 0,
+      "tileFirstMismatchByteInCell": 1,
+      "nativeTileByteAtMismatch": 69,
+      "h3mapedTileByteAtMismatch": 54,
+      "tileMismatchCount": 11202,
+      "nativeGeneratedObjectPayloadByteCount": 7288,
+      "h3mapedGeneratedObjectPayloadByteCount": 17057,
+      "generatedObjectPayloadFirstMismatchOffset": 0,
+      "nativeGeneratedObjectByteAtMismatch": 34,
+      "h3mapedGeneratedObjectByteAtMismatch": 2,
+      "godotProcessStarted": false,
+      "native_rmg_end_to_end_parity_complete": false,
+      "runtime_map_output_enabled": false,
+      "sourceBackedBehaviorProgress": true,
+      "parityCompletionClaimed": false,
+      "resolvedBlockers": [
+        "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+      ],
+      "namedBlockers": [
+        "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+        "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
+      ],
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output."
     }
   ],
   "validationResults": {
-    "id": "native-rmg-terrain-feedback-byte5-alignment-20260627",
-    "title": "Recovered TerrainPlacement Queue Retouch Byte5 Alignment",
-    "status": "passed_partial_implementation_not_parity",
-    "validatedAt": "2026-06-27T16:39:22Z",
-    "updatedAt": "2026-06-27T16:39:22Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. Static dump of 0x5a5028 returned zero dwords, so exact runtime/source initialization of the 0x4bbd01 retouch direction table remains a named blocker. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
+    "id": "native-rmg-terrain-direction-table-source-backed-20260627",
+    "title": "TerrainPlacement Retouch Direction Table Source Resolution",
+    "status": "passed_source_backed_blocker_resolution_not_parity",
+    "validatedAt": "2026-06-27T16:43:39Z",
+    "updatedAt": "2026-06-27T16:43:39Z",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns more of recovered TerrainPlacement feedback: set-A/set-B queues drain by insertion/head order, retouch/candidate probes read active scratch terrain words, 0x4bba59 diagonal seeding uses the recovered byte5-zero neighbor rule, 0x4bc988 and 0x4bbd01 same-class/region branches run only for toolkit byte5-zero terrain, 0x4bc928 was recovered/checked, 0x4bbd01 zero-run retouch uses the recovered runtime-initialized 0x5a5028..0x5a5068 neighbor direction order, and 0x4bbfcc still uses source-backed 0x4bcb91/0x4bcd43 correction predicates plus 0x4ba938 class-0 current-row preservation. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 (cell 0 byte 1) native=69 expected=54 and mismatch_count=11202; generated-object payload is 7288 vs 17057 bytes with first mismatch offset 0 native=34 expected=2. The earlier 0x5a5028 uncertainty is resolved by source evidence from the road/neighbor recovery ledger: the table is runtime-initialized at 0x4bf38b..0x4bf3f3, so the active blocker is still the tile-stream/generated-object payload drift, not the direction table. This is source-backed TerrainPlacement behavior progress, not parity completion or runtime map output.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -73322,6 +73359,7 @@
       "docs/h3maped-rmg-end-to-end-behavior.md",
       "PLAN.md",
       "ops/progress.json",
+      "src/gdextension/src/legacy_h3maped_small_rmg_inspection_ledger.cpp",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt",
@@ -73332,22 +73370,15 @@
       ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_4bc928_dump_20260627/target_004bc928_FUN_004bc928.txt",
       ".artifacts/rmg_recovery/ghidra_terrain_direction_table_5a5028_20260627/table_005a5028.txt",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_sections.json",
       ".artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json"
     ],
     "checks": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "commands": [
-      "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0 --print-manifest (expected blocked; no Godot; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_final_sweep_buffer_20260627_frontier_byte5/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocked at tile stream mismatch)"
+      "source evidence check: legacy_h3maped_small_rmg_inspection_ledger.cpp h3maped_road_line_visit_458e61_report records 0x5a5028..0x5a5068 as eight direction pairs initialized by 0x4bf38b..0x4bf3f3",
+      "native code check: frontier_retouch_4bbd01 DX/DY order matches recovered 0x5a5028 order N,NE,E,SE,S,SW,W,NW"
     ],
     "nativeTilePayloadByteCount": 36288,
     "h3mapedTilePayloadByteCount": 36288,
@@ -73367,9 +73398,11 @@
     "runtime_map_output_enabled": false,
     "sourceBackedBehaviorProgress": true,
     "parityCompletionClaimed": false,
+    "resolvedBlockers": [
+      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown"
+    ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "0x4bbd01_retouched_zero_run_direction_table_0x5a5028_runtime_or_source_initializer_unknown",
       "later_relation_object_generated_cell_mutation_caller_order_not_source_owned"
     ]
   }

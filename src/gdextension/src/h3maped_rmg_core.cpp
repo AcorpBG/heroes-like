@@ -1190,6 +1190,7 @@ int32_t frontier_retouch_4bbd01(const std::vector<uint32_t> &scratch_words, cons
 					best = &run;
 				}
 			}
+			// H3MapEd initializes 0x5a5028..0x5a5068 at 0x4bf38b..0x4bf3f3 as eight (dx, dy) pairs.
 			static constexpr int32_t DX[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
 			static constexpr int32_t DY[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
 			int32_t slot = best->start;
