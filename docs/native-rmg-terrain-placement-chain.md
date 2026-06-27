@@ -14,8 +14,10 @@ The active shared native core now executes these recovered TerrainPlacement piec
    - keeps terrain-specific constructor probability behavior for dirt, sand, normal land, water, and rock paths.
 2. `0x4bce6d` / `0x4bcfc3` visual row selection:
    - classifies neighboring terrain through the recovered relation/classifier path;
-   - uses recovered class, flag, and full/native bucket selection;
-   - applies the recovered neighbor-mask probability path for full/native cells;
+   - builds the recovered `0x4ba868` toolkit range slots from row `shape_class` and row flag A;
+   - applies the recovered `0x4ba91d` neighbor probe for complex terrain, where same-terrain neighbors only reduce the mask when the neighbor art row has flag A set;
+   - applies the recovered `0x4baa81` simple/rock neighbor probe, which rejects same-terrain continuity for that vtable;
+   - applies the recovered `0x4ba938` base-row probability path for full/native cells before the later final-sweep classifier path;
    - consumes `0x4e7276` RNG from the post-`0x49b53d` state.
 3. `0x4bad0f` scratch packing:
    - bit `0`: dirty marker;
@@ -58,7 +60,7 @@ The focused native selftest now fails if TerrainPlacement regresses to the previ
 
 ## Remaining Checkpoint-2 Blocker
 
-TerrainPlacement visual row and terrain flag selection is no longer the named blocker for the active Small/Medium one-level land chain.
+The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. This is still not a TerrainPlacement parity claim. The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`, so any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
 Checkpoint 2 is still not complete because later relation/object generated-cell mutation caller order is not yet source-owned:
 
