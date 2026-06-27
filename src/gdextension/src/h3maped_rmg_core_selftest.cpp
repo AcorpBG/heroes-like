@@ -20,6 +20,7 @@ using aurelion::h3maped_rmg_core::FootprintFinalizerResult4a3710;
 using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
 using aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c;
+using aurelion::h3maped_rmg_core::GeneratorRelationRecordState4a218c;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2;
 using aurelion::h3maped_rmg_core::GeneratedCellRecord0x30;
@@ -654,12 +655,14 @@ int main() {
 			owners[size_t(index)].owner_vector_index = index;
 			owners[size_t(index)].runtime_zone_index = index;
 		}
-		GeneratorSourceEndpointRecordState4a1f3b edge_0_to_1;
+		GeneratorRelationRecordState4a218c edge_0_to_1;
 		edge_0_to_1.target_runtime_zone_index = 1;
-		owners[0].source_endpoint_records_0xc8_0xcc.push_back(edge_0_to_1);
-		GeneratorSourceEndpointRecordState4a1f3b edge_1_to_2;
+		owners[0].relation_records.push_back(edge_0_to_1);
+		owners[0].relation_record_count = int32_t(owners[0].relation_records.size());
+		GeneratorRelationRecordState4a218c edge_1_to_2;
 		edge_1_to_2.target_runtime_zone_index = 2;
-		owners[1].source_endpoint_records_0xc8_0xcc.push_back(edge_1_to_2);
+		owners[1].relation_records.push_back(edge_1_to_2);
+		owners[1].relation_record_count = int32_t(owners[1].relation_records.size());
 		H3MapedRng priority_rng;
 		priority_rng.state = 1U;
 		const RewardGuardRelationPriorityResult4ad7f7 priority_result =
@@ -714,15 +717,18 @@ int main() {
 			owners[size_t(index)].terrain_policy_0x0c_known = true;
 			owners[size_t(index)].terrain_policy_0x0c = 0;
 		}
-		GeneratorSourceEndpointRecordState4a1f3b edge_0_to_1;
+		GeneratorRelationRecordState4a218c edge_0_to_1;
 		edge_0_to_1.target_runtime_zone_index = 1;
-		owners[0].source_endpoint_records_0xc8_0xcc.push_back(edge_0_to_1);
-		GeneratorSourceEndpointRecordState4a1f3b edge_1_to_2;
+		owners[0].relation_records.push_back(edge_0_to_1);
+		owners[0].relation_record_count = int32_t(owners[0].relation_records.size());
+		GeneratorRelationRecordState4a218c edge_1_to_2;
 		edge_1_to_2.target_runtime_zone_index = 2;
-		owners[1].source_endpoint_records_0xc8_0xcc.push_back(edge_1_to_2);
-		GeneratorSourceEndpointRecordState4a1f3b edge_2_to_3;
+		owners[1].relation_records.push_back(edge_1_to_2);
+		owners[1].relation_record_count = int32_t(owners[1].relation_records.size());
+		GeneratorRelationRecordState4a218c edge_2_to_3;
 		edge_2_to_3.target_runtime_zone_index = 3;
-		owners[2].source_endpoint_records_0xc8_0xcc.push_back(edge_2_to_3);
+		owners[2].relation_records.push_back(edge_2_to_3);
+		owners[2].relation_record_count = int32_t(owners[2].relation_records.size());
 		owners[1].source_pointer_type_0x04 = 3;
 		owners[2].terrain_policy_0x0c = 8;
 		H3MapedRng priority_rng;
@@ -2899,6 +2905,8 @@ int main() {
 	int32_t summed_owner_local_vector_0x404_count = 0;
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
+	const int32_t expected_relation_order_word_count_0x49b61b =
+			generator_state.relation_owner_vector_count_10e4_10e8;
 	auto relation_owner_vector_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
 		for (int32_t index = 0; index < int32_t(generator_state.relation_owner_vectors_10e4_10e8.size()); ++index) {
 			if (generator_state.relation_owner_vectors_10e4_10e8[size_t(index)].runtime_zone_index == runtime_zone_index) {
@@ -2938,10 +2946,24 @@ int main() {
 			return 1;
 		}
 		if (!require(owner.owner_local_vectors_0x3e4_0x3f4_0x404_known
-						&& owner.owner_local_vector_0x3e4_count == 0
+						&& owner.owner_local_vector_0x3e4_count == expected_relation_order_word_count_0x49b61b
 						&& owner.owner_local_vector_0x3f4_count == 0
 						&& owner.owner_local_vector_0x404_count >= 0,
-					"0x49b452 relation owner local vectors did not preserve connection-tail 0x404 growth state")) {
+					"0x49b452/0x49b61b relation owner local vectors did not preserve order-vector and connection-tail state")) {
+			return 1;
+		}
+		if (!require(owner.relation_order_words_0x3e8_known
+						&& int32_t(owner.relation_order_words_0x3e8.size()) == expected_relation_order_word_count_0x49b61b,
+					"0x49b61b relation order word vector +0x3e8 was not materialized per source relation owner")) {
+			return 1;
+		}
+		const int32_t source_order_slot_0x49b61b = owner.source_pointer_0x00_known
+				? owner.source_pointer_source_index_0x00
+				: owner.source_index;
+		if (!require(source_order_slot_0x49b61b >= 0
+						&& source_order_slot_0x49b61b < expected_relation_order_word_count_0x49b61b
+						&& owner.relation_order_words_0x3e8[size_t(source_order_slot_0x49b61b)] == 0,
+					"0x49b61b relation order vector did not zero the owner source slot")) {
 			return 1;
 		}
 		summed_owner_local_vector_0x404_count += owner.owner_local_vector_0x404_count;
