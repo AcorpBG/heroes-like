@@ -31,7 +31,8 @@ The active shared native core now executes these recovered TerrainPlacement piec
    - `GeneratedCell+0x24` bits `6..13`: selected visual/art row;
    - `GeneratedCell+0x28` bits `15..16`: terrain flags.
 5. `0x4bb74b/0x4bc5f0` live feedback:
-   - full-map water visual prefill runs first;
+   - one-level maps skip the terrain-9 full-map visual prefill through the recovered `0x4a3f27` `level_count <= 1` branch, then run the terrain-8 water visual prefill;
+   - two-level terrain-9 prefill remains future-scoped; do not treat the current one-level implementation as underground parity;
    - owner/member-gated terrain repaint writes visual rows and flags;
    - set-A/set-B feedback drains by recovered ordered-tree first-node order, with key comparison by `(y, x)` for the supported one-level land path;
    - `0x4bc5f0` drains all set-A entries first, then drains set-B until set-B is empty, then returns to set-A if set-B processing repopulated it;
@@ -55,7 +56,7 @@ The active shared native core now executes these recovered TerrainPlacement piec
 
 The focused native selftest now fails if TerrainPlacement regresses to the previous art-row-zero/flag-zero behavior. It checks:
 
-- full-map water visual rows are written;
+- one-level full-map water visual rows are written after skipping the recovered two-level-only terrain-9 prefill;
 - post-water TerrainPlacement feedback writes additional visual rows;
 - final sweep covers the full grid;
 - no visual row bucket is missing;
@@ -72,13 +73,14 @@ The focused native selftest now fails if TerrainPlacement regresses to the previ
 
 The known terrain toolkit vfunc drift is fixed in the active shared core: native no longer treats every nonzero same-terrain neighbor art row as connectable. The final-sweep selector now uses the recovered `0x4bcb91`/`0x4bcd43` correction predicates and the recovered `0x4ba938` class-0 current-row/base selector path. The active core also ports the recovered set-A/set-B ordered-tree first-node drain behavior and byte5-zero same-class retouch routing. This is still not a TerrainPlacement parity claim.
 
-The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=50`, `h3maped=54`). Current lane mismatches are still dominated by terrain/art (`terrain=4166`, `art=5049`, `flags=1150`, `road_type=386`, `road_art=371`, `river_type=34`, `river_art=28`), and generated-object payload remains short (`8596` native bytes vs `17057` H3MapEd bytes). Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
+The focused same-run Medium comparison continues to block at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`: the 36288-byte tile stream length matches, but the first mismatch is offset 1 (`cell=0`, `byte_in_cell=1`, `native=57`, `h3maped=54`). The generated-object payload remains short (`7984` native bytes vs `17057` H3MapEd bytes). This one-level scope fix removes a recovered unconditional native divergence, but it does not close TerrainPlacement or final-payload parity. Any remaining TerrainPlacement queue/final-sweep order drift must be treated as live until phase/private-state comparison proves otherwise.
 
 The `0x4bbd01` zero-run retouch direction table is source-backed by the older road/neighbor recovery ledger: `0x5a5028..0x5a5068` holds eight `(dx, dy)` records initialized by `0x4bf38b..0x4bf3f3`, with direction order `{N, NE, E, SE, S, SW, W, NW}`. The static data dump of `0x5a5028` returned zero dwords because this table is runtime-initialized, not because the direction order is unknown. Native already uses that recovered order.
 
 Source evidence for this update:
 
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bc5f0_FUN_004bc5f0.txt`
+- `.artifacts/rmg_recovery/ghidra_phase_frontier_decompile_20260611/target_004a3f27_FUN_004a3f27.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bb74b_FUN_004bb74b.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba59_FUN_004bba59.txt`
 - `.artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt`

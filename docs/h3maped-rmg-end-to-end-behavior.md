@@ -305,7 +305,7 @@ Inside `0x4a218c`, `0x49b53d` selects runtime terrain before the caller returns 
 
 `0x4a3f27` runs terrain repaint:
 
-- full-map water repaint first;
+- if the recovered generator level count at `+0x20` is greater than one, terrain-9 full-map repaint runs before water; supported one-level land maps skip that branch and begin with terrain-8 water repaint;
 - per-zone repaint skips water zones;
 - `0x4a2105` prepares relation-owner scan bounds by indexing the relation-owner vector from generated-cell `+0x20` byte2;
 - `0x4a2ffa` recenters relation-owner coordinates by comparing generated-cell `+0x20` byte2 to the relation/source pointer owner byte;

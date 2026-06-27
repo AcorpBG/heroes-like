@@ -2473,7 +2473,7 @@ int main() {
 	if (!require(terrain_repaint.terrain_visual_write_count_0x4bb74b > terrain_repaint.full_map_water_repaint_count_0x4a4025, "TerrainPlacement did not write post-water visual feedback")) {
 		return 1;
 	}
-	if (!require(terrain_repaint.terrain_visual_final_sweep_cell_count_0x4bbfcc >= 36 * 36 * 2, "TerrainPlacement scope cleanup did not revisit the full grid after full-map scopes")) {
+	if (!require(terrain_repaint.terrain_visual_final_sweep_cell_count_0x4bbfcc >= 36 * 36, "TerrainPlacement scope cleanup did not revisit the full grid after the one-level full-map scope")) {
 		return 1;
 	}
 	if (!require(terrain_repaint.terrain_visual_missing_bucket_count_0x4bcfc3 == 0, "TerrainPlacement visual selector hit a missing recovered row bucket")) {
