@@ -2007,10 +2007,10 @@ int main() {
 		owner.runtime_zone_index = index;
 		owner.source_zone_id = runtime_zones[size_t(index)].source_zone_id;
 		owner.source_index = index;
-			owner.source_pointer_0x00_known = true;
-			owner.source_pointer_source_index_0x00 = index;
-			owner.relation_owner_byte2_0x4aa9b7_known = true;
-			owner.relation_owner_byte2_0x4aa9b7 = index + 20;
+		owner.source_pointer_0x00_known = true;
+		owner.source_pointer_source_index_0x00 = index;
+		owner.relation_owner_byte2_0x4aa9b7_known = true;
+		owner.relation_owner_byte2_0x4aa9b7 = index + 20;
 		owner.coordinate_triple_0x10_0x18_known = true;
 		owner.coordinate_x_0x10 = runtime_zones[size_t(index)].x_after_bbox_rescale;
 		owner.coordinate_y_0x14 = runtime_zones[size_t(index)].y_after_bbox_rescale;
@@ -2042,11 +2042,14 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve the selected source-record vector index into the handoff")) {
 		return 1;
 	}
-		if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7
-						&& owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-					"relation-owner vector owner-grid chain did not carry recovered source owner byte into generated-cell owner byte")) {
-			return 1;
-		}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
+		return 1;
+	}
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
+				"relation-owner vector owner-grid chain did not carry recovered relation-owner byte into generated-cell owner byte")) {
+		return 1;
+	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
 					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == boundary_inputs[0].source_record_seed_0x10.y,
 				"relation-owner vector owner-grid chain did not use the selected source-record seed as the span seed")) {
