@@ -2261,7 +2261,7 @@ int main() {
 		owner.source_pointer_0x00_known = true;
 		owner.source_pointer_source_index_0x00 = index;
 		owner.relation_owner_byte2_0x4aa9b7_known = true;
-		owner.relation_owner_byte2_0x4aa9b7 = index + 20;
+		owner.relation_owner_byte2_0x4aa9b7 = index;
 		owner.coordinate_triple_0x10_0x18_known = true;
 		owner.coordinate_x_0x10 = runtime_zones[size_t(index)].x_after_bbox_rescale;
 		owner.coordinate_y_0x14 = runtime_zones[size_t(index)].y_after_bbox_rescale;
@@ -2302,8 +2302,8 @@ int main() {
 				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not carry recovered relation-owner byte into generated-cell owner byte")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].owner_vector_index,
+				"relation-owner vector owner-grid chain did not carry recovered relation-owner vector index into generated-cell owner byte")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
@@ -2506,8 +2506,8 @@ int main() {
 		BoundaryMaterialization4a2777 relation_gate_materialization;
 		relation_gate_materialization.generator_mode_0x10b8 = 2;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
-		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(30U << 16U);
-		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(30U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(1U << 16U);
 		relation_gate_materialization.generated_cell_word_0x28.assign(4, 0U);
 		relation_gate_materialization.cell_flags.assign(4, 0U);
 		relation_gate_materialization.cell_flags[3] = 0x10U;
@@ -2529,8 +2529,10 @@ int main() {
 			GeneratorRelationOwnerState4a218c &owner = relation_gate_owners[size_t(index)];
 			owner.owner_vector_index = index == 0 ? 0 : 42;
 			owner.runtime_zone_index = index == 0 ? 10 : 20;
+			owner.source_pointer_0x00_known = true;
+			owner.source_pointer_source_index_0x00 = index;
 			owner.relation_owner_byte2_0x4aa9b7_known = true;
-			owner.relation_owner_byte2_0x4aa9b7 = index == 0 ? 20 : 30;
+			owner.relation_owner_byte2_0x4aa9b7 = index;
 			owner.coordinate_triple_0x10_0x18_known = true;
 			owner.coordinate_x_0x10 = 0;
 			owner.coordinate_y_0x14 = 0;
@@ -2551,7 +2553,7 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint must gate by recovered generated-cell owner byte, not owner-vector index")) {
+					"0x4a3f27 relation-owner repaint must gate by recovered relation-owner loop index, not stale terrain zone words or owner_vector_index field")) {
 			return 1;
 		}
 		if (!require((relation_gate_repaint.generated_cell_word_0x28[0] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
