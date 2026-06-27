@@ -20724,11 +20724,14 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.zones.push_back(std::move(zone));
 			continue;
 		}
-		const int32_t current_owner_word_0x00 = zone.finalized_points.front().has_payload
-				&& zone.finalized_points.front().payload_owner_word_0x00 >= 0
-				? zone.finalized_points.front().payload_owner_word_0x00
-				: cycle.zone_word;
-		zone.zone_word = current_owner_word_0x00;
+		auto source_node_owner_word_0x00 = [&](const BoundaryCyclePoint4a2777 &node, int32_t fallback) {
+			return node.has_payload && node.payload_owner_word_0x00 >= 0
+					? node.payload_owner_word_0x00
+					: fallback;
+		};
+		const int32_t initial_owner_word_0x00 =
+				source_node_owner_word_0x00(zone.finalized_points.front(), cycle.zone_word);
+		zone.zone_word = initial_owner_word_0x00;
 		const int32_t node_count = int32_t(zone.finalized_points.size());
 		std::map<int32_t, int32_t> source_position_by_model_node;
 		for (int32_t position = 0; position < node_count; ++position) {
@@ -20810,7 +20813,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					{ "rectangle_bottom", min_x, max_y, max_x, max_y },
 			} };
 			for (const RectangleEdge &edge : edges) {
-				append_segment(zone, edge.id, "0x4a2847_rectangle_fallback", edge.x1, edge.y1, edge.x2, edge.y2, current_owner_word_0x00, cycle.level, false, random_span_limit);
+				append_segment(zone, edge.id, "0x4a2847_rectangle_fallback", edge.x1, edge.y1, edge.x2, edge.y2, initial_owner_word_0x00, cycle.level, false, random_span_limit);
 				result.rectangle_edge_segment_count += 1;
 			}
 			append_vertex(zone, max_x, max_y, BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_0);
@@ -20824,7 +20827,9 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.status = "0x4a2777_real_source_cycle_consumed";
 		zone.selected_segment_index = selected_segment_index;
 		append_vertex(zone, clipped_current.x, clipped_current.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], current_owner_word_0x00)) {
+		const int32_t selected_owner_word_0x00 =
+				source_node_owner_word_0x00(zone.finalized_points[size_t(selected_segment_index)], initial_owner_word_0x00);
+		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], selected_owner_word_0x00)) {
 			append_segment(
 					zone,
 					"connector",
@@ -20833,7 +20838,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					clipped_current.y,
 					clipped_target.x,
 					clipped_target.y,
-						current_owner_word_0x00,
+						selected_owner_word_0x00,
 						cycle.level,
 						randomized_writer_branch_0x4a3a03,
 						source_edge_random_span_limit_0x4a29a5(zone.finalized_points[size_t(selected_segment_index)], random_span_limit));
@@ -20875,13 +20880,15 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				continue;
 			}
 
-			append_border_connection(zone, current_x, current_y, from_clip.x, from_clip.y, current_owner_word_0x00, cycle.level, random_span_limit);
+			const int32_t edge_owner_word_0x00 =
+					source_node_owner_word_0x00(from, initial_owner_word_0x00);
+			append_border_connection(zone, current_x, current_y, from_clip.x, from_clip.y, edge_owner_word_0x00, cycle.level, random_span_limit);
 			if (result.loop_guard_exhausted) {
 				break;
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
 				append_vertex(zone, from_clip.x, from_clip.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-				if (!source_edge_writer_allowed(from, current_owner_word_0x00)) {
+				if (!source_edge_writer_allowed(from, edge_owner_word_0x00)) {
 					result.owner_gate_skipped_segment_count += 1;
 					current_x = to_clip.x;
 					current_y = to_clip.y;
@@ -20895,7 +20902,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 							from_clip.y,
 							to_clip.x,
 							to_clip.y,
-							current_owner_word_0x00,
+							edge_owner_word_0x00,
 							cycle.level,
 							false,
 							random_span_limit);
