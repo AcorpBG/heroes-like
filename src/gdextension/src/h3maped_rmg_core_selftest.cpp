@@ -1970,6 +1970,34 @@ int main() {
 	if (!require(land_setup_mode_two_member_flags == 0, "one-level land water mode must suppress level-0 0x4a325d member flags when setup mode is 2")) {
 		return 1;
 	}
+	BoundarySourceCycleHandoff4a2777 per_source_owner_handoff = square_handoff(false);
+	per_source_owner_handoff.source_nodes[0].has_payload = true;
+	per_source_owner_handoff.source_nodes[0].payload_owner_word_0x00 = 2;
+	per_source_owner_handoff.source_nodes[0].finalized = false;
+	per_source_owner_handoff.source_nodes[1].has_payload = true;
+	per_source_owner_handoff.source_nodes[1].payload_owner_word_0x00 = 6;
+	per_source_owner_handoff.source_nodes[2].has_payload = true;
+	per_source_owner_handoff.source_nodes[2].payload_owner_word_0x00 = 7;
+	per_source_owner_handoff.source_nodes[3].has_payload = true;
+	per_source_owner_handoff.source_nodes[3].payload_owner_word_0x00 = 8;
+	const BoundaryMaterialization4a2777 per_source_owner =
+			aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+					8,
+					8,
+					1,
+					1,
+					2,
+					1234U,
+					{ per_source_owner_handoff });
+	const int64_t per_source_owner_key = aurelion::h3maped_rmg_core::cell_index(8, 8, 6, 1, 0);
+	if (!require(!per_source_owner.zones.empty()
+					&& per_source_owner.zones[0].selected_segment_index == 1
+					&& per_source_owner_key >= 0
+					&& per_source_owner_key < int64_t(per_source_owner.private_zone_words.size())
+					&& owner_byte2_signed(per_source_owner.private_zone_words[size_t(per_source_owner_key)]) == 6,
+				"0x4a2777 must write the current selected source-node owner word, not the first cycle node owner")) {
+		return 1;
+	}
 	BoundarySourceCycleHandoff4a2777 descriptor_link_handoff = square_handoff(false);
 	descriptor_link_handoff.source_nodes = {
 		descriptor_source_node(1, 1, 10, 30, 20, 40, 40),
