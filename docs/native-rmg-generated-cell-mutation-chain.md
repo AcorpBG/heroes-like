@@ -195,6 +195,7 @@ Native implementation:
 
 - embedded recovered visual rows for tables `0x543108`, `0x543380`, `0x5434f0`, `0x5435b0`, and `0x542f88`;
 - recovered terrain relation/classifier and row bucket selection;
+- recovered `0x4ba868` toolkit range slots, `0x4ba91d` complex neighbor probe, `0x4baa81` simple/rock neighbor rejection, and `0x4ba938` base-row probability selection;
 - recovered scratch packing for `0x4bad0f`;
 - recovered generated-cell writeback through `0x49acf6`;
 - recovered live feedback queue and final sweep surface for `0x4bb74b/0x4bc5f0/0x4bbfcc`;
@@ -209,7 +210,8 @@ Mutation surface:
 
 Known blockers:
 
-- No TerrainPlacement-specific blocker remains for the active one-level land Small/Medium path.
+- No known row-table/toolkit-vfunc blocker remains for the active one-level land Small/Medium path.
+- The focused same-run Medium payload still blocks at `native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload`; remaining TerrainPlacement queue/final-sweep order drift is not ruled out until phase/private-state comparison proves it.
 - Full checkpoint parity is still blocked by later relation/object generated-cell mutation caller order in phase 7.
 
 Implementation rule: TerrainPlacement output may be used as active support state, but it still must not be called a comparable pre-`0x4a4c8e` checkpoint until the later relation/object caller order is source-owned and same-run validated.
