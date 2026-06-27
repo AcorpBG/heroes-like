@@ -14706,10 +14706,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 
 	std::set<int64_t> set_a;
 	std::set<int64_t> set_b;
-	std::vector<int64_t> queue_a;
-	std::vector<int64_t> queue_b;
-	size_t queue_a_head = 0;
-	size_t queue_b_head = 0;
 
 	auto append_set_b = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain) {
 		if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
@@ -14721,7 +14717,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 		const int64_t key = terrain_grid_key_4bb74b(level, x, y);
 		if (set_b.insert(key).second) {
-			queue_b.push_back(key);
 			result.terrain_visual_set_b_insert_count += 1;
 		}
 	};
@@ -14746,7 +14741,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 		const int64_t key = terrain_grid_key_4bb74b(level, x, y);
 		if (set_a.insert(key).second) {
-			queue_a.push_back(key);
 			result.terrain_visual_set_a_insert_count += 1;
 		}
 	};
@@ -14796,33 +14790,21 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 
 	int64_t drain_guard_count = 0;
 	const int64_t drain_guard_limit = std::max<int64_t>(32768, int64_t(cell_count) * 128);
-	auto queue_has_live_key = [](const std::vector<int64_t> &queue, size_t &head, const std::set<int64_t> &members) -> bool {
-		while (head < queue.size() && members.find(queue[head]) == members.end()) {
-			head += 1;
+	auto pop_ordered_set_key_4bc5f0 = [](std::set<int64_t> &members, int64_t &out_key) -> bool {
+		if (members.empty()) {
+			return false;
 		}
-		return head < queue.size();
-	};
-	auto pop_queue_key = [](const std::vector<int64_t> &queue, size_t &head, std::set<int64_t> &members, int64_t &out_key) -> bool {
-		while (head < queue.size()) {
-			const int64_t key = queue[head];
-			head += 1;
-			const auto found = members.find(key);
-			if (found == members.end()) {
-				continue;
-			}
-			members.erase(found);
-			out_key = key;
-			return true;
-		}
-		return false;
+		const auto first = members.begin();
+		out_key = *first;
+		members.erase(first);
+		return true;
 	};
 	auto drain_queue_for_active_terrain = [&](int32_t active_terrain) {
-		while ((queue_has_live_key(queue_a, queue_a_head, set_a) || queue_has_live_key(queue_b, queue_b_head, set_b)) && drain_guard_count < drain_guard_limit) {
-			drain_guard_count += 1;
-			while (queue_has_live_key(queue_a, queue_a_head, set_a) && drain_guard_count < drain_guard_limit) {
+		while ((!set_a.empty() || !set_b.empty()) && drain_guard_count < drain_guard_limit) {
+			while (!set_a.empty() && drain_guard_count < drain_guard_limit) {
 				drain_guard_count += 1;
 				int64_t key = 0;
-				if (!pop_queue_key(queue_a, queue_a_head, set_a, key)) {
+				if (!pop_ordered_set_key_4bc5f0(set_a, key)) {
 					break;
 				}
 				int32_t level = 0;
@@ -14843,10 +14825,10 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 								return process_topology(level, target_x, target_y, active_terrain);
 							});
 			}
-			while (!queue_has_live_key(queue_a, queue_a_head, set_a) && queue_has_live_key(queue_b, queue_b_head, set_b) && drain_guard_count < drain_guard_limit) {
+			while (!set_b.empty() && drain_guard_count < drain_guard_limit) {
 				drain_guard_count += 1;
 				int64_t key = 0;
-				if (!pop_queue_key(queue_b, queue_b_head, set_b, key)) {
+				if (!pop_ordered_set_key_4bc5f0(set_b, key)) {
 					break;
 				}
 				int32_t level = 0;
@@ -14862,10 +14844,6 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 		set_a.clear();
 		set_b.clear();
-		queue_a.clear();
-		queue_b.clear();
-		queue_a_head = 0;
-		queue_b_head = 0;
 	};
 
 	auto owner_gate_bounds = [&](int32_t level, int32_t owner_gate_byte2, int32_t &low_x, int32_t &low_y, int32_t &high_x, int32_t &high_y) -> bool {
