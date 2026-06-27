@@ -14905,7 +14905,9 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		cleanup_scope_4bd077(terrain_id);
 	};
 
-	run_full_map_terrain_scope_4bd099(9, false);
+	if (level_count > 1) {
+		run_full_map_terrain_scope_4bd099(9, false);
+	}
 	run_full_map_terrain_scope_4bd099(8, true);
 
 	auto owner_gate_bounds = [&](int32_t level, int32_t owner_gate_byte2, int32_t &low_x, int32_t &low_y, int32_t &high_x, int32_t &high_y) -> bool {
