@@ -1376,25 +1376,21 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 		out_flag_b = 0;
 		return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
 	}
+	// Normal toolkit vfunc 0x4ba989 checks only the shape class and selects from
+	// toolkit-local ranges_0x14; flags are returned through the caller's out word.
 	if (current_row >= 0 && current_row < int32_t(rows.size())) {
 		const TerrainVisualRow &current = rows[size_t(current_row)];
-		if (current.shape_class == classified.shape_class
-				&& current.flag_a == classified.flag_a
-				&& current.flag_b == classified.flag_b) {
+		if (current.shape_class == classified.shape_class) {
 			selected_row = current_row;
-			out_flag_a = 0;
-			out_flag_b = 0;
 			return true;
 		}
 	}
-	const int32_t slot = classified.flag_b + (classified.flag_a + classified.shape_class * 2) * 2;
-	if (slot < 0 || slot >= int32_t(toolkit.simple_ranges_0x5a4318.size())) {
+	const int32_t slot = classified.shape_class * 2;
+	if (slot < 0 || slot >= int32_t(toolkit.ranges_0x14.size())) {
 		selected_row = -1;
 		return false;
 	}
-	out_flag_a = 0;
-	out_flag_b = 0;
-	return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
+	return select_visual_row_from_range_4ba938(toolkit.ranges_0x14[size_t(slot)], rng, selected_row);
 }
 
 int32_t runtime_town_choice_49b3c1(uint16_t allowed_town_mask_0x41_0x49, H3MapedRng &rng, int32_t &rng_call_count) {
