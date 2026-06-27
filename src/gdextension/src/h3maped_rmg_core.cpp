@@ -704,7 +704,7 @@ bool terrain_toolkit_neighbor_probe_4bce6d(const TerrainVisualToolkit4ba868 &too
 	if (toolkit.simple_vtable_4baa66) {
 		return false;
 	}
-	return rows[size_t(selected_row)].flag_a != 0;
+	return rows[size_t(selected_row)].shape_class != 0;
 }
 
 bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, H3MapedRng &rng, int32_t &selected_row) {
@@ -15005,7 +15005,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+			const int32_t owner_gate_byte2 = owner_index;
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			int32_t low_x = 0;
 			int32_t low_y = 0;
@@ -15984,7 +15984,9 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
-		const int32_t owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
+		const int32_t owner_byte2 = owner->owner_vector_index >= 0
+				? owner->owner_vector_index
+				: source_vector_handoff_index;
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = payload_owner_word_0x00 >= 0
@@ -17537,14 +17539,6 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || grid.records.empty() || owners.empty()) {
 		return 0;
 	}
-	auto owner_index_for_byte2 = [&](int32_t owner_byte2) -> int32_t {
-		for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
-			if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(index)]) == owner_byte2) {
-				return index;
-			}
-		}
-		return -1;
-	};
 	int32_t update_count = 0;
 	for (int32_t level = 0; level < grid.level_count; ++level) {
 		for (int32_t y = 0; y < grid.height; ++y) {
@@ -17557,8 +17551,7 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 				if (!record.word_0x20_known) {
 					continue;
 				}
-				const int32_t owner_index = owner_index_for_byte2(
-						generated_cell_owner_byte2_signed_4a4142(record.word_0x20));
+				const int32_t owner_index = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
 				if (owner_index < 0 || owner_index >= int32_t(owners.size())) {
 					continue;
 				}
