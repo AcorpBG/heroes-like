@@ -25,7 +25,9 @@ Native now executes this source-backed order:
 6. `0x4a3f27` terrain repaint runs after owner-grid materialization:
    - full-map water repaint writes terrain id `8`;
    - per-zone repaint skips water zones;
-   - owner gate reads generated-cell `+0x20` byte 2, matching `0x4a4142`;
+   - `0x4a2105` scan-bound preparation indexes relation owners from generated-cell `+0x20` byte 2;
+   - `0x4a2ffa` coordinate recenter gates by the relation/source pointer owner byte;
+   - repaint owner gate reads generated-cell `+0x20` byte 2 at `0x4a4142` and compares it to the current relation-owner vector loop index, not to the relation/source pointer owner byte;
    - member gate reads generated-cell `+0x28 >> 28 & 1`, matching `0x4a4150`;
    - passing cells write terrain id through the recovered `0x49acf6` generated-cell writer.
 7. TerrainPlacement visual feedback now runs in the same active core:
