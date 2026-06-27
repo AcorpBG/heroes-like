@@ -704,7 +704,7 @@ bool terrain_toolkit_neighbor_probe_4bce6d(const TerrainVisualToolkit4ba868 &too
 	if (toolkit.simple_vtable_4baa66) {
 		return false;
 	}
-	return rows[size_t(selected_row)].shape_class != 0;
+	return rows[size_t(selected_row)].flag_a != 0;
 }
 
 bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, H3MapedRng &rng, int32_t &selected_row) {
