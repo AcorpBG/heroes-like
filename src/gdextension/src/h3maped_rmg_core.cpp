@@ -14833,8 +14833,8 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
-	if (owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 >= 0) {
-		return owner.relation_owner_byte2_0x4aa9b7;
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00;
 	}
 	if (owner.source_zone_id >= 0) {
 		return owner.source_zone_id;
@@ -19692,10 +19692,6 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.segments.push_back(std::move(segment));
 	};
 
-	auto point_on_clip_border = [&](int32_t x, int32_t y) {
-		return x == bounds.min_x || x == bounds.max_x - 1 || y == bounds.min_y || y == bounds.max_y - 1;
-	};
-
 		auto source_edge_writer_allowed = [](const BoundaryCyclePoint4a2777 &from_node, int32_t owner_word_0x00) {
 			return !(from_node.next_pair_has_payload && from_node.next_pair_payload_owner_word_0x00 <= owner_word_0x00);
 		};
@@ -19715,7 +19711,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			const int32_t right_x = std::max<int32_t>(bounds.min_x, bounds.max_x - 1);
 			const int32_t bottom_y = std::max<int32_t>(bounds.min_y, bounds.max_y - 1);
 			int32_t wrap_guard = 0;
-			while (current_x != target_x && current_y != target_y && point_on_clip_border(current_x, current_y) && point_on_clip_border(target_x, target_y) && wrap_guard < 8) {
+			while (current_x != target_x && current_y != target_y && wrap_guard < 8) {
 				int32_t border_x = current_x;
 				int32_t border_y = current_y;
 				std::string branch = "0x4a2aa7_bottom_edge_to_min_x";
