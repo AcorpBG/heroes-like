@@ -2289,6 +2289,55 @@ int main() {
 	if (!require(terrain_selection.match_to_town_count == 1 && terrain_selection.allowed_flag_choice_count == 1 && terrain_selection.rng_call_count == 1, "0x49b53d terrain source/RNG counters mismatch")) {
 		return 1;
 	}
+	{
+		std::vector<GeneratorRelationOwnerState4a218c> interleaved_owners(2);
+		for (int32_t index = 0; index < 2; ++index) {
+			GeneratorRelationOwnerState4a218c &owner = interleaved_owners[size_t(index)];
+			owner.runtime_zone_index = index;
+			owner.owner_vector_index = index;
+			owner.relation_owner_byte2_0x4aa9b7_known = true;
+			owner.relation_owner_byte2_0x4aa9b7 = index;
+			owner.coordinate_triple_0x10_0x18_known = true;
+			owner.coordinate_x_0x10 = index;
+			owner.coordinate_y_0x14 = index;
+			owner.coordinate_level_0x18 = 0;
+			owner.source_pointer_terrain_match_to_town_0x84_known = true;
+			owner.source_pointer_terrain_match_to_town_0x84 = false;
+			owner.source_pointer_allowed_terrain_mask_0x85_0x8c_known = true;
+		}
+		interleaved_owners[0].source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 0U);
+		interleaved_owners[1].source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t((1U << 0U) | (1U << 1U));
+		H3MapedRng expected_rng;
+		expected_rng.state = 1234U;
+		const int32_t owner0_terrain_rng = expected_rng.next();
+		const int32_t owner0_monster_rng = expected_rng.next();
+		const int32_t owner1_terrain_rng = expected_rng.next();
+		const int32_t owner1_monster_rng = expected_rng.next();
+		RuntimeTerrainSelectionResult49b53d interleaved_selection =
+				aurelion::h3maped_rmg_core::runtime_terrain_selection_49b53d(1234U, interleaved_owners);
+		if (!require(interleaved_selection.records.size() == 2, "interleaved 0x49b53d/0x49b4e1 test did not emit two terrain records")) {
+			return 1;
+		}
+		if (!require(interleaved_selection.records[0].rng_value == owner0_terrain_rng
+						&& interleaved_selection.records[0].monster_town_choice_rng_value_0x49b4e1 == owner0_monster_rng,
+					"0x49b4e1 must immediately consume RNG after owner 0 terrain selection")) {
+			return 1;
+		}
+		if (!require(interleaved_selection.records[1].rng_value == owner1_terrain_rng
+						&& interleaved_selection.records[1].monster_town_choice_rng_value_0x49b4e1 == owner1_monster_rng,
+					"0x49b53d/0x49b4e1 RNG calls must interleave per relation owner")) {
+			return 1;
+		}
+		if (!require(interleaved_selection.records[1].selected_terrain_id_0x49b53d == (owner1_terrain_rng % 2),
+					"owner 1 terrain selection did not use the RNG state after owner 0 monster-town replay")) {
+			return 1;
+		}
+		if (!require(interleaved_owners[0].monster_town_choice_rng_0x49b4e1_known
+						&& interleaved_owners[1].monster_town_choice_rng_0x49b4e1_known,
+					"interleaved 0x49b4e1 result was not applied back to relation owners")) {
+			return 1;
+		}
+	}
 	TerrainRepaintResult4a3f27 terrain_repaint = aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
 			36,
 			36,
