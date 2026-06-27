@@ -1362,8 +1362,9 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 		return;
 	}
 	const CoordinateZone4a218c current_source_zone = coordinate_zone_from_relation_owner_0x10(current_owner, zones);
-	const int32_t current_source_base_size = current_source_zone.source_base_size > 0
-			? current_source_zone.source_base_size
+	const int32_t current_owner_source_span = relation_owner_source_span_0x08(current_owner, current_source_zone);
+	const int32_t current_source_base_size = current_owner_source_span > 0
+			? current_owner_source_span
 			: current_template.source_base_size;
 	auto owner_with_candidate = [&](const CoordinateCandidate4a17f5 &candidate) {
 		GeneratorRelationOwnerState4a218c candidate_owner = current_owner;
@@ -14490,7 +14491,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		}
 		const int32_t zone_index = runtime.runtime_zone_index >= 0 ? runtime.runtime_zone_index : runtime_index;
 		const int32_t source_payload = runtime.source_payload_0x08 > 0 ? runtime.source_payload_0x08 : 0;
-		const int32_t source_payload_owner_word_0x00 = runtime.source_payload_owner_word_0x00 > 0
+		const int32_t source_payload_owner_word_0x00 = runtime.source_payload_owner_word_0x00 >= 0
 				? runtime.source_payload_owner_word_0x00
 				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id : zone_index);
 		const int32_t x = runtime.x_after_bbox_rescale;
