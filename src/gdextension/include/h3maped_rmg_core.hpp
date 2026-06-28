@@ -1107,6 +1107,10 @@ struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x48 = 0;
 	bool generator_value_band_0x10bc_known = false;
 	int32_t generator_value_band_0x10bc = 0;
+	bool setup_object_0x4c_known = false;
+	int32_t setup_object_0x4c = 0;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
 	bool randomized_setup_sentinel_3 = false;
 	int32_t setup_rng_value = -1;
 	int32_t setup_rng_call_count = 0;
@@ -1519,6 +1523,9 @@ struct RuntimeTerrainSelectionResult49b53d {
 	uint32_t rng_state_before = 0;
 	uint32_t rng_state_after = 0;
 	uint32_t rng_state_after_monster_town_0x49b4e1 = 0;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
+	bool generator_field_0x08_non_negative = true;
 	int32_t rng_call_count = 0;
 	int32_t match_to_town_count = 0;
 	int32_t allowed_flag_choice_count = 0;
@@ -1639,6 +1646,9 @@ struct CoordinateOwnerGridResult4a218c {
 	BoundaryOwnerGridResult4a3a03 owner_grid;
 	RuntimeTerrainSelectionResult49b53d terrain_selection;
 	TerrainRepaintResult4a3f27 terrain_repaint;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
+	bool generator_field_0x08_non_negative = true;
 	bool coordinate_seed_blocked = false;
 	bool owner_grid_executed = false;
 	bool terrain_selection_executed = false;
@@ -2995,6 +3005,8 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t setup_object_0x44 = 0;
 	bool setup_object_0x48_known = true;
 	int32_t setup_object_0x48 = 0;
+	bool setup_object_0x4c_known = true;
+	int32_t setup_object_0x4c = 0;
 	bool same_run_final_tile_payload_authority_known = false;
 	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
 	bool same_run_generated_object_payload_authority_known = false;
@@ -3721,7 +3733,7 @@ bool point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bound
 const char *boundary_vector_append_callsite_label_4a2777(uint32_t callsite);
 bool boundary_vector_append_callsite_recovered_4a2777(uint32_t callsite);
 bool boundary_vector_append_4a2777(BoundaryVector4a2777 &vector, int32_t x, int32_t y, uint32_t callsite);
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0);
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0, bool setup_object_0x4c_known = true, int32_t setup_object_0x4c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);
 PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t human_count, int32_t player_count, uint8_t human_capable_source_owner_mask, uint8_t player_capable_source_owner_mask, uint8_t selected_color_mask = 0xffU);
@@ -3729,13 +3741,13 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask = 0xffU);
 CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
-RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners);
+RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, bool generator_field_0x08_known = true, int32_t generator_field_0x08 = 0);
 TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr, bool visual_rng_state_override_known_0x4a3f27 = false, uint32_t visual_rng_state_override_0x4a3f27 = 0U);
 SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width = -1, int32_t height = -1, int32_t generator_mode_0x10b8 = -1, int32_t caller_level_argument_0x0c = -1);
 FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count, std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr);
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t original_same_level_runtime_zone_count_override = -1);
-CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
+CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links, bool generator_field_0x08_known = true, int32_t generator_field_0x08 = 0);
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
 BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles);
 BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);
