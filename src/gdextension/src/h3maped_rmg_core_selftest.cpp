@@ -3174,6 +3174,7 @@ int main() {
 	int32_t summed_owner_local_vector_0x404_count = 0;
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
+	int32_t relation_owner_success_byte_0x3c_set_count = 0;
 	const int32_t expected_relation_order_word_count_0x49b61b =
 			generator_state.relation_owner_vector_count_10e4_10e8;
 	auto relation_owner_vector_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
@@ -3201,8 +3202,11 @@ int main() {
 					"0x4a1f3b relation owner scan bounds were not materialized before relation scan consumers ran")) {
 			return 1;
 		}
-		if (!require(owner.byte_0x3c_known && owner.byte_0x3c == 0U, "0x49b452 relation owner byte +0x3c was not zeroed")) {
+		if (!require(owner.byte_0x3c_known, "relation owner source-order success byte +0x3c was not carried")) {
 			return 1;
+		}
+		if (owner.byte_0x3c != 0U) {
+			relation_owner_success_byte_0x3c_set_count += 1;
 		}
 		if (!require(owner.descriptor_type_counter_table_0x44_known
 						&& owner.descriptor_type_counter_table_0x44_byte_size == aurelion::h3maped_rmg_core::RELATION_OWNER_DESCRIPTOR_TABLE_0X44_BYTE_SIZE
@@ -3359,6 +3363,12 @@ int main() {
 		}
 	}
 	if (!require(relation_owner_source_slot_known_count > 0, "0x49b452 relation owner source +0x08 to owner +0x1c slot was not carried for any owner")) {
+		return 1;
+	}
+	if (!require(generator_state.source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c
+						+ generator_state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 == 0
+					|| relation_owner_success_byte_0x3c_set_count > 0,
+				"0x4a8d2c/0x4a8db2 relation-pointer commits did not mark any relation owner +0x3c success byte")) {
 		return 1;
 	}
 	if (!require(summed_owner_local_vector_0x404_count >= 0,
