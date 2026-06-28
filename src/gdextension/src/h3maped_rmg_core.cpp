@@ -19046,7 +19046,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 
 	SourceObjectResolverState4af785 &type98_descriptor_state =
 			ensure_source_object_resolver_state_4af785(state);
-	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		const bool source_pointer_known =
 				owner.source_pointer_0x00_known
 				&& owner.source_pointer_source_index_0x00 >= 0
@@ -19143,31 +19143,38 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						owner.source_order_source_record_0x00.field_0x24);
 		state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c += 1;
 		if (direct.committed) {
+			owner.byte_0x3c_known = true;
+			owner.byte_0x3c = 1U;
 			state.source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c += 1;
 		}
 
 		const int32_t before_scheduler_commit_count = state.source_order_scheduler_commit_count_0x4a8db2;
-		source_order_weighted_scheduler_from_source_record_0x4a8db2(
-				state,
-				join,
-				owner.source_order_source_record_0x00,
-				true,
-				true,
-				join.source_catalog_index_0x49da08,
-				context_wrapper_index_0x04,
-				relation_owner_byte2,
-				owner.scan_bound_low_x_0x20,
-				owner.scan_bound_low_y_0x24,
-				owner.scan_bound_high_x_0x28,
-				owner.scan_bound_high_y_0x2c,
-				owner.coordinate_level_0x18,
-				lane_state_0xee4,
-				rng,
-				true,
-				direct.committed ? 1 : 0,
-				true,
-				owner.coordinate_x_0x10,
-				owner.coordinate_y_0x14);
+		const SourceOrderSchedulerResult4a8db2 scheduler =
+				source_order_weighted_scheduler_from_source_record_0x4a8db2(
+						state,
+						join,
+						owner.source_order_source_record_0x00,
+						true,
+						true,
+						join.source_catalog_index_0x49da08,
+						context_wrapper_index_0x04,
+						relation_owner_byte2,
+						owner.scan_bound_low_x_0x20,
+						owner.scan_bound_low_y_0x24,
+						owner.scan_bound_high_x_0x28,
+						owner.scan_bound_high_y_0x2c,
+						owner.coordinate_level_0x18,
+						lane_state_0xee4,
+						rng,
+						owner.byte_0x3c_known,
+						owner.byte_0x3c,
+						true,
+						owner.coordinate_x_0x10,
+						owner.coordinate_y_0x14);
+		if (scheduler.source_pair_success_byte_0x3c_known) {
+			owner.byte_0x3c_known = true;
+			owner.byte_0x3c = scheduler.source_pair_success_byte_0x3c_final != 0 ? 1U : 0U;
+		}
 		state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 += 1;
 		state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 +=
 				state.source_order_scheduler_commit_count_0x4a8db2 - before_scheduler_commit_count;
