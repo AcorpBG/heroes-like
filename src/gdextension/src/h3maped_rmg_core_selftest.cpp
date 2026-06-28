@@ -851,65 +851,6 @@ int main() {
 	}
 
 	{
-		GeneratorObjectPrivateState projection_state;
-		projection_state.width = 3;
-		projection_state.height = 3;
-		projection_state.level_count = 1;
-		projection_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(3, 3, 1);
-		projection_state.generated_cell_buffer_owned = true;
-		projection_state.relation_owner_vectors_10e4_10e8.resize(2);
-		projection_state.relation_owner_vectors_10e4_10e8[0].owner_vector_index = 0;
-		projection_state.relation_owner_vectors_10e4_10e8[0].runtime_zone_index = 10;
-		projection_state.relation_owner_vectors_10e4_10e8[1].owner_vector_index = 1;
-		projection_state.relation_owner_vectors_10e4_10e8[1].runtime_zone_index = 17;
-		GeneratedCellRecord0x30 &projection_cell =
-				projection_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0))];
-		projection_cell.word_0x20_known = true;
-		projection_cell.word_0x20 = 0x0102000aU;
-		const auto source_relation =
-				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
-		if (!require(source_relation.applied
-						&& source_relation.projection_coordinate_known
-						&& source_relation.generated_cell_grid_available
-						&& source_relation.word_0x20_known
-						&& source_relation.projection_flat_index == aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0)
-						&& source_relation.projection_word_0x20 == 0x0102000aU
-						&& source_relation.source_owner_high_byte_signed == 1
-						&& source_relation.source_owner_vector_index == 1
-						&& source_relation.source_relation_known
-						&& source_relation.source_relation_runtime_zone_index == 17,
-					"0x4ad947 did not resolve source relation from projection cell +0x20 signed high byte")) {
-			return 1;
-		}
-		projection_cell.word_0x20 = 0xff02000aU;
-		const auto sentinel_relation =
-				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
-		if (!require(!sentinel_relation.applied
-						&& sentinel_relation.source_owner_high_byte_signed == -1
-						&& sentinel_relation.blocked_reason == "0x4ad947_projection_cell_owner_high_byte_sentinel",
-					"0x4ad947 did not fail closed on signed high-byte sentinel owner")) {
-			return 1;
-		}
-		projection_cell.word_0x20 = 0x0502000aU;
-		const auto out_of_range_relation =
-				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
-		if (!require(!out_of_range_relation.applied
-						&& out_of_range_relation.source_owner_high_byte_signed == 5
-						&& out_of_range_relation.blocked_reason == "0x4ad947_projection_cell_owner_high_byte_out_of_relation_vector",
-					"0x4ad947 did not fail closed on out-of-range relation vector index")) {
-			return 1;
-		}
-		projection_cell.word_0x20_known = false;
-		const auto unknown_word_relation =
-				aurelion::h3maped_rmg_core::reward_guard_projection_source_relation_from_coordinate_0x4ad947(projection_state, 1, 1, 0);
-		if (!require(!unknown_word_relation.applied
-						&& unknown_word_relation.blocked_reason == "0x4ad947_projection_cell_word_0x20_unknown",
-					"0x4ad947 did not fail closed on unknown projection cell +0x20")) {
-			return 1;
-		}
-	}
-
-	{
 		GeneratorObjectPrivateState selected_create_state;
 		selected_create_state.reward_guard_candidate_vector_10f4_10f8.present = true;
 		selected_create_state.reward_guard_candidate_vector_10f4_10f8.contents_known = true;
@@ -1026,6 +967,7 @@ int main() {
 						&& selected_create.selected_source_record_known_0x4a9e40
 						&& selected_create.candidate_decisions.size() > 1
 						&& selected_create.candidate_decisions[1].descriptor_selector_0x4a9e40.selected_from_resolver_state
+						&& selected_create.selected_wrapper_index_0x4af785 >= 0
 						&& selected_create.selected_descriptor_vector_index_0x398 >= 0
 						&& selected_create.selected_object_record_allocated_0x4aa166
 						&& selected_create.selected_object_record_key_known_0x4aa166
@@ -1040,8 +982,17 @@ int main() {
 						&& selected_create.selected_projection_object_0x540b14.vtable_0x00_known
 						&& selected_create.selected_projection_object_0x540b14.vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
 						&& selected_create.selected_projection_object_0x540b14.generator_context_plus_0x1c_known
-						&& selected_create.selected_projection_object_0x540b14.cleanup_pointer_plus_0x20_known
-						&& !selected_create.selected_projection_object_0x540b14.projection_coordinate_known
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_pointer_plus_0x20_known
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_key_known
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_key == 1U
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_value_0x1c_known
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_value_0x1c == 1
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_value_0x20_known
+						&& selected_create.selected_projection_object_0x540b14.owned_object_record_value_0x20 == 2000
+						&& selected_create.selected_projection_object_0x540b14.selected_wrapper_index_0x4af785_known
+						&& selected_create.selected_projection_object_0x540b14.selected_wrapper_index_0x4af785 == selected_create.selected_wrapper_index_0x4af785
+						&& selected_create.selected_projection_object_0x540b14.selected_source_subtype_0x20_known
+						&& selected_create.selected_projection_object_0x540b14.selected_source_subtype_0x20 == selected_create.selected_source_record_copy.subtype_0x20
 						&& selected_create_state.next_native_object_record_key_0x4a93a2 == 2U
 						&& selected_create_state.object_record_sequence_allocator_0xf44 == 2
 						&& selected_create_state.object_record_allocation_count_0x4a93a2 == 1
@@ -1103,10 +1054,16 @@ int main() {
 						&& selected_object_members[0].projection_object_0x540b14.live_input_known
 						&& selected_object_members[0].projection_object_0x540b14.vtable_0x00_known
 						&& selected_object_members[0].projection_object_0x540b14.vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
-						&& selected_object_members[0].projection_object_0x540b14.projection_coordinate_known
-						&& selected_object_members[0].projection_object_0x540b14.projection_x == selected_object.initial_center_x
-						&& selected_object_members[0].projection_object_0x540b14.projection_y == selected_object.initial_center_y
-						&& selected_object_members[0].projection_object_0x540b14.projection_level == selected_object.initial_center_level,
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_pointer_plus_0x20_known
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_key_known
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_key == selected_object_members[0].object_record_key
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_value_0x1c_known
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_value_0x1c == selected_object_members[0].object_record_sequence_0x1c
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_value_0x20_known
+						&& selected_object_members[0].projection_object_0x540b14.owned_object_record_value_0x20 == selected_object_members[0].object_record_selected_index_0x20
+						&& selected_object_members[0].selected_wrapper_index_0x4af785 >= 0
+						&& selected_object_members[0].projection_object_0x540b14.selected_wrapper_index_0x4af785_known
+						&& selected_object_members[0].projection_object_0x540b14.selected_wrapper_index_0x4af785 == selected_object_members[0].selected_wrapper_index_0x4af785,
 					"0x4aa1db/0x4aa166 did not preserve recovered 0x540b14 projection object through wrapper member creation: " + selected_object_projection_detail)) {
 			return 1;
 		}
@@ -4409,11 +4366,16 @@ int main() {
 		projection_slot_member.projection_object_0x540b14.vtable_0x00_known = true;
 		projection_slot_member.projection_object_0x540b14.vtable_0x00 = aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14;
 		projection_slot_member.projection_object_0x540b14.generator_context_plus_0x1c_known = true;
-		projection_slot_member.projection_object_0x540b14.cleanup_pointer_plus_0x20_known = true;
-		projection_slot_member.projection_object_0x540b14.projection_coordinate_known = true;
-		projection_slot_member.projection_object_0x540b14.projection_x = 2;
-		projection_slot_member.projection_object_0x540b14.projection_y = 2;
-		projection_slot_member.projection_object_0x540b14.projection_level = 0;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_pointer_plus_0x20_known = true;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_key_known = true;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_key = projection_slot_member.object_record_key;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_value_0x1c_known = projection_slot_member.object_record_sequence_known_0x1c;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_value_0x1c = projection_slot_member.object_record_sequence_0x1c;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_value_0x20_known = projection_slot_member.object_record_selected_index_known_0x20;
+		projection_slot_member.projection_object_0x540b14.owned_object_record_value_0x20 = projection_slot_member.object_record_selected_index_0x20;
+		projection_slot_member.projection_object_0x540b14.selected_source_subtype_0x20_known = projection_slot_member.source_record_copy_known_0x04;
+		projection_slot_member.projection_object_0x540b14.selected_source_subtype_0x20 =
+				projection_slot_member.source_record_copy_known_0x04 ? projection_slot_member.source_record_copy.subtype_0x20 : -1;
 		H3MapedRng projection_slot_rng;
 		projection_slot_rng.state = 58U;
 		const RewardGuardCoordinateScanResult4aa9b7 projection_slot_result =
@@ -4430,6 +4392,60 @@ int main() {
 						&& projection_slot_result.commit_0x4aa3e9.selected_member_slot8_projection_blocked_reason == "0x4ad947_projection_global_table_0x57c7cc_plus_0x0c_live_input_pending_before_selected_global_entry"
 						&& projection_slot_result.blocked_reason.empty(),
 					"0x4aa3e9 projection slot should route through 0x49c0a6/0x4ad947 and fail closed without the recovered 0x57c7cc+0x0c table")) {
+			return 1;
+		}
+
+		GeneratorObjectPrivateState projection_global_state = reward_guard_state;
+		RewardGuardWrapperState4aa3e9 projection_global_wrapper = reward_guard_wrapper;
+		RewardGuardWrapperMember4aa3e9 &projection_global_member =
+				projection_global_wrapper.selected_members_0x2c_0x30[0];
+		projection_global_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14;
+		projection_global_member.projection_object_0x540b14_known = true;
+		projection_global_member.projection_object_0x540b14.live_input_known = true;
+		projection_global_member.projection_object_0x540b14.vtable_0x00_known = true;
+		projection_global_member.projection_object_0x540b14.vtable_0x00 = aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14;
+		projection_global_member.projection_object_0x540b14.generator_context_plus_0x1c_known = true;
+		projection_global_member.projection_object_0x540b14.owned_object_record_pointer_plus_0x20_known = true;
+		projection_global_member.projection_object_0x540b14.owned_object_record_key_known = true;
+		projection_global_member.projection_object_0x540b14.owned_object_record_key = projection_global_member.object_record_key;
+		projection_global_member.projection_object_0x540b14.owned_object_record_value_0x1c_known = projection_global_member.object_record_sequence_known_0x1c;
+		projection_global_member.projection_object_0x540b14.owned_object_record_value_0x1c = projection_global_member.object_record_sequence_0x1c;
+		projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c_known = true;
+		projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c.assign(
+				size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947),
+				aurelion::h3maped_rmg_core::RewardGuardProjectionGlobalEntry4ad947 {});
+		for (int32_t index = 0; index < aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947; ++index) {
+			auto &entry = projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c[size_t(index)];
+			entry.entry_index = index;
+			entry.flag_byte_0x00_known = true;
+			entry.flag_byte_0x00 = 0U;
+			entry.disabled_byte_0x10_known = true;
+			entry.disabled_byte_0x10 = 0U;
+		}
+		projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c[size_t(9)].flag_byte_0x00 = 0x2U;
+		projection_global_state.reward_guard_projection_used_flags_0x1024_known = true;
+		projection_global_state.reward_guard_projection_used_flags_0x1024.assign(
+				size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947),
+				uint8_t(0));
+		H3MapedRng projection_global_rng;
+		projection_global_rng.state = 58U;
+		const RewardGuardCoordinateScanResult4aa9b7 projection_global_result =
+				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+						projection_global_state,
+						projection_global_wrapper,
+						reward_guard_relation,
+						7,
+						true,
+						projection_global_rng);
+		if (!require(projection_global_result.applied
+						&& !projection_global_result.committed
+						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_0x540b14_count == 1
+						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_blocked_reason == "0x4ad947_generator_wrapper_vector_0x88_0x8c_relation_handoff_pending_after_selected_global_entry"
+						&& projection_global_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7.projection_record_selected_global_index_0x1c_written
+						&& projection_global_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7.projection_record_selected_global_index_0x1c == 9
+						&& projection_global_wrapper.selected_members_0x2c_0x30[0].object_record_sequence_known_0x1c
+						&& projection_global_wrapper.selected_members_0x2c_0x30[0].object_record_sequence_0x1c == 9,
+					"0x4aa3e9 projection slot did not write selected 0x57c7cc global index into the owned record before blocking at the unrecovered wrapper-vector relation handoff")) {
 			return 1;
 		}
 	}

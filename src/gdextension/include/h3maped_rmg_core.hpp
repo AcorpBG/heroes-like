@@ -1742,23 +1742,6 @@ struct RewardGuardRelationPriorityResult4ad7f7 {
 	std::string blocked_reason;
 };
 
-struct RewardGuardProjectionSourceRelationResult4ad947 {
-	bool applied = false;
-	bool projection_coordinate_known = false;
-	bool generated_cell_grid_available = false;
-	bool word_0x20_known = false;
-	int32_t projection_x = 0;
-	int32_t projection_y = 0;
-	int32_t projection_level = 0;
-	int64_t projection_flat_index = -1;
-	uint32_t projection_word_0x20 = 0U;
-	int32_t source_owner_high_byte_signed = -1;
-	int32_t source_owner_vector_index = -1;
-	bool source_relation_known = false;
-	int32_t source_relation_runtime_zone_index = -1;
-	std::string blocked_reason;
-};
-
 struct RewardGuardProjectionGlobalEntry4ad947 {
 	int32_t entry_index = -1;
 	bool flag_byte_0x00_known = false;
@@ -1792,11 +1775,17 @@ struct RewardGuardProjectionObject540b14 {
 	bool vtable_0x00_known = false;
 	uint32_t vtable_0x00 = 0U;
 	bool generator_context_plus_0x1c_known = false;
-	bool cleanup_pointer_plus_0x20_known = false;
-	bool projection_coordinate_known = false;
-	int32_t projection_x = 0;
-	int32_t projection_y = 0;
-	int32_t projection_level = 0;
+	bool owned_object_record_pointer_plus_0x20_known = false;
+	bool owned_object_record_key_known = false;
+	uint32_t owned_object_record_key = 0U;
+	bool owned_object_record_value_0x1c_known = false;
+	int32_t owned_object_record_value_0x1c = -1;
+	bool owned_object_record_value_0x20_known = false;
+	int32_t owned_object_record_value_0x20 = -1;
+	bool selected_wrapper_index_0x4af785_known = false;
+	int32_t selected_wrapper_index_0x4af785 = -1;
+	bool selected_source_subtype_0x20_known = false;
+	int32_t selected_source_subtype_0x20 = -1;
 };
 
 struct RewardGuardProjectionChainResult49c0a6 {
@@ -1806,10 +1795,11 @@ struct RewardGuardProjectionChainResult49c0a6 {
 	bool projection_context_plus_0x1c_forwarded_to_0x4ad947 = false;
 	bool projection_cleanup_plus_0x20_cleared = false;
 	bool projection_driver_invoked_0x4ad947 = false;
-	bool source_relation_lookup_invoked_0x4ad947 = false;
+	bool projection_record_selected_global_index_0x1c_written = false;
+	int32_t projection_record_selected_global_index_0x1c = -1;
+	bool generator_wrapper_vector_join_invoked_0x4ad947 = false;
 	bool relation_priority_invoked_0x4ad7f7 = false;
 	RewardGuardProjectionDriverSelectionResult4ad947 projection_driver_0x4ad947;
-	RewardGuardProjectionSourceRelationResult4ad947 source_relation_0x4ad947;
 	RewardGuardRelationPriorityResult4ad7f7 relation_priority_0x4ad7f7;
 	std::string blocked_reason;
 };
@@ -2030,6 +2020,7 @@ struct RewardGuardCandidateDecision4a9f1c {
 	bool selected_source_record_known_0x4a9e40 = false;
 	int32_t selected_source_catalog_index_0x49da08 = -1;
 	int32_t selected_descriptor_vector_index_0x398 = -1;
+	int32_t selected_wrapper_index_0x4af785 = -1;
 	SourceObjectRecord0x4c selected_source_record_copy;
 	bool selected_by_weighted_rng_0x4aa110 = false;
 	bool selected_score_replayed_0x4aa151 = false;
@@ -2086,6 +2077,7 @@ struct RewardGuardSelectorResult4a9f1c {
 	bool selected_source_record_known_0x4a9e40 = false;
 	int32_t selected_source_catalog_index_0x49da08 = -1;
 	int32_t selected_descriptor_vector_index_0x398 = -1;
+	int32_t selected_wrapper_index_0x4af785 = -1;
 	SourceObjectRecord0x4c selected_source_record_copy;
 	bool selected_score_dispatch_replayed_0x4aa151 = false;
 	bool selected_create_dispatched_0x4aa166 = false;
@@ -2905,9 +2897,6 @@ struct GeneratorObjectPrivateState {
 	bool reward_guard_relation_priority_live_replay_blocked = false;
 	std::string reward_guard_relation_priority_live_replay_blocker;
 	RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_0x4ad7f7;
-	bool reward_guard_projection_source_relation_0x4ad947_ported = false;
-	bool reward_guard_projection_source_relation_input_known = false;
-	RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_0x4ad947;
 	bool reward_guard_projection_generator_0x10b4_known = false;
 	bool reward_guard_projection_generator_0x10b4 = false;
 	bool reward_guard_terrain_pressure_zeroed_0x4aadd2 = false;
@@ -3312,6 +3301,7 @@ struct RewardGuardWrapperMember4aa3e9 {
 	int32_t descriptor_offset_y_0x30 = 0;
 	bool source_record_copy_known_0x04 = false;
 	SourceObjectRecord0x4c source_record_copy;
+	int32_t selected_wrapper_index_0x4af785 = -1;
 	bool descriptor_body_offsets_0x49a6f9_known = false;
 	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
 };
@@ -3679,7 +3669,6 @@ RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_bounds_4
 bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offset);
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records = nullptr);
 RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known = false);
-RewardGuardProjectionSourceRelationResult4ad947 reward_guard_projection_source_relation_from_coordinate_0x4ad947(const GeneratorObjectPrivateState &state, int32_t projection_x, int32_t projection_y, int32_t projection_level);
 RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_select_global_entry_0x4ad947(const std::vector<RewardGuardProjectionGlobalEntry4ad947> &global_entries_0x57c7cc_plus_0x0c, const std::vector<uint8_t> &used_flags_0x1024, H3MapedRng &rng);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
