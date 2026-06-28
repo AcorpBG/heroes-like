@@ -18834,6 +18834,30 @@ static void apply_relation_high_owner_propagation_49a318(GeneratorObjectPrivateS
 	record_relation_high_owner_propagation_49a318(state, high_owner_propagation);
 }
 
+static void apply_reward_guard_terrain_pressure_0x4aadd2(GeneratorObjectPrivateState &state) {
+	state.reward_guard_terrain_pressure_zeroed_0x4aadd2 = true;
+	state.reward_guard_terrain_pressure_0xf60_0xf64_known = true;
+	state.reward_guard_terrain_pressure_total_0xf60 = 0;
+	state.reward_guard_terrain_pressure_by_terrain_0xf64.fill(0);
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (!owner.byte_0x3c_known || owner.byte_0x3c == 0U) {
+			continue;
+		}
+		if (!owner.town_choice_0x04_known) {
+			state.reward_guard_terrain_pressure_0xf60_0xf64_known = false;
+			continue;
+		}
+		const int32_t terrain_pressure_index = owner.town_choice_0x04;
+		if (terrain_pressure_index < 0
+				|| terrain_pressure_index >= int32_t(state.reward_guard_terrain_pressure_by_terrain_0xf64.size())) {
+			state.reward_guard_terrain_pressure_0xf60_0xf64_known = false;
+			continue;
+		}
+		state.reward_guard_terrain_pressure_by_terrain_0xf64[size_t(terrain_pressure_index)] += 1;
+		state.reward_guard_terrain_pressure_total_0xf60 += 1;
+	}
+}
+
 static void apply_materialization_bridge_relation_normalization_0x4a5767(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	apply_relation_normalization_full_grid_reset_0x4a5767(state);
 	SourceObjectResolverState4af785 &resolver_state =
@@ -21085,10 +21109,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		}
 	}
 	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
-		result.generator_object_private_state.reward_guard_terrain_pressure_zeroed_0x4aadd2 = true;
-		result.generator_object_private_state.reward_guard_terrain_pressure_0xf60_0xf64_known = true;
-		result.generator_object_private_state.reward_guard_terrain_pressure_total_0xf60 = 0;
-		result.generator_object_private_state.reward_guard_terrain_pressure_by_terrain_0xf64.fill(0);
+		apply_reward_guard_terrain_pressure_0x4aadd2(result.generator_object_private_state);
 		// Outer 0x4ac552 calls 0x4aadd2 and then 0x4a5767 after
 		// 0x4a9d6a. The earlier 0x4a5767 replay belongs to 0x4a8c15's
 		// internal tail, so reward/guard must see this post-mine replay too.
