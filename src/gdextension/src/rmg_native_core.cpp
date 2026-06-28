@@ -411,6 +411,7 @@ void append_final_object_record_samples_json(std::ostream &out, const std::vecto
 			<< ",\"object_record_vtable_0x00\":" << record.object_record_vtable_0x00
 			<< ",\"serializer_slot_0x0c_known\":" << (record.serializer_slot_0x0c_known ? "true" : "false")
 			<< ",\"serializer_slot_0x0c\":" << record.serializer_slot_0x0c
+			<< ",\"pass_split_type_id_0x1c\":" << record.pass_split_type_id_0x1c
 			<< ",\"pass_split_metadata_byte_0x0c_known\":" << (record.pass_split_metadata_byte_0x0c_known ? "true" : "false")
 			<< ",\"first_flagged_pass_0x4ad36f\":" << (record.first_flagged_pass_0x4ad36f ? "true" : "false")
 			<< ",\"second_unflagged_pass_0x4ad3b1\":" << (record.second_unflagged_pass_0x4ad3b1 ? "true" : "false")

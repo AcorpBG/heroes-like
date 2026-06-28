@@ -3126,6 +3126,7 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	uint32_t object_record_vtable_0x00 = 0U;
 	bool serializer_slot_0x0c_known = false;
 	uint32_t serializer_slot_0x0c = 0U;
+	int32_t pass_split_type_id_0x1c = -1;
 	bool pass_split_metadata_byte_0x0c_known = false;
 	bool first_flagged_pass_0x4ad36f = false;
 	bool second_unflagged_pass_0x4ad3b1 = false;
