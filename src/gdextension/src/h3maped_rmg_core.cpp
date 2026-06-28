@@ -760,18 +760,15 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	if (toolkit.simple_vtable_4baa66) {
 		if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 			selected_row = current_row;
-			copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
 			return true;
 		}
 		if (!select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[0], rng, selected_row)) {
 			return false;
 		}
-		copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
 		return true;
 	}
 	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 		selected_row = current_row;
-		copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
 		return true;
 	}
 	const TerrainVisualRange4ba868 *range = &toolkit.ranges_0x14[0];
@@ -783,7 +780,6 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	if (!select_visual_row_from_range_4ba938(*range, rng, selected_row)) {
 		return false;
 	}
-	copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
 	return true;
 }
 
@@ -8440,18 +8436,10 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
 	// Recovered 0x4aa9b7, 0x4aa603, and 0x49a09c compare generated-cell
-	// owner byte2 against relation->leading->+0x00.
+	// owner byte2 against relation->leading->+0x00. Missing recovered owner
+	// state must fail closed; source/zone fallbacks are native proxy behavior.
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
-	}
-	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00;
-	}
-	if (relation.source_index >= 0) {
-		return relation.source_index;
-	}
-	if (relation.source_zone_id > 0) {
-		return relation.source_zone_id - 1;
 	}
 	return -1;
 }
