@@ -1457,11 +1457,11 @@ int main() {
 		if (!require((mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U && (mutable_record.word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U, "record 0x49a932(true) did not set bit27 and clear bit26")) {
 			return 1;
 		}
-		if (!require(aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 0, true)
-						&& !aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 1, true)
+		if (!require(!aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 0, true)
+						&& aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 1, true)
 						&& aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(true, 1, false)
 						&& aurelion::h3maped_rmg_core::relation_boundary_triggers_candidate_0x4a4c8e(false, 1, true),
-					"0x4a4c8e relation boundary trigger must follow recovered level-not-one branch")) {
+					"0x4a4c8e relation boundary trigger must follow recovered level-one branch")) {
 			return 1;
 		}
 		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(mutable_record), "record 0x49abd6 action stamp did not mutate bit22/bit27")) {
@@ -4445,6 +4445,113 @@ int main() {
 					&& blocked_reward_guard_result.blocked_reason == "0x4aa9b7_0x4aa603_feasibility_filter_inputs_missing",
 				"0x4aa9b7 did not fail closed when recovered 0x4aa603 feasibility inputs are missing")) {
 		return 1;
+	}
+	{
+		GeneratorObjectPrivateState mask_order_state;
+		mask_order_state.width = 6;
+		mask_order_state.height = 6;
+		mask_order_state.level_count = 1;
+		mask_order_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(6, 6, 1);
+		mask_order_state.generated_cell_buffer_owned = true;
+		for (GeneratedCellRecord0x30 &record : mask_order_state.generated_cell_buffer.records) {
+			record.object_reference_vector_contents_known = true;
+			record.object_reference_count = 0;
+			record.object_references_0x04_0x08.clear();
+			record.word_0x20_known = true;
+			record.word_0x20 = 0x0004000aU;
+			record.word_0x24_known = true;
+			record.word_0x24 = 0U;
+			record.word_0x28_known = true;
+			record.word_0x28 = aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X28_VALUE;
+			aurelion::h3maped_rmg_core::generated_cell_49a932(record, false);
+			record.word_0x2c_known = true;
+			record.word_0x2c = 0U;
+		}
+		auto mask_order_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
+			return mask_order_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, x, y, 0))];
+		};
+		aurelion::h3maped_rmg_core::generated_cell_49aa63(mask_order_cell(2, 3), true);
+
+		RewardGuardWrapperMember4aa3e9 mask_order_member;
+		mask_order_member.object_record_key = 0x0364df10U;
+		mask_order_member.object_record_key_known = true;
+		mask_order_member.object_record_vtable_0x00 = aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540A74;
+		mask_order_member.descriptor_type_0x1c = 45;
+		mask_order_member.relative_x_0x08 = 0;
+		mask_order_member.relative_y_0x0c = 0;
+		mask_order_member.relative_level_0x10 = 0;
+		mask_order_member.descriptor_offset_x_0x2c = 0;
+		mask_order_member.descriptor_offset_y_0x30 = 0;
+		mask_order_member.source_record_copy_known_0x04 = true;
+		mask_order_member.source_record_copy.type_id_0x1c = 45;
+		mask_order_member.source_record_copy.descriptor_width_0x34 = 2;
+		mask_order_member.source_record_copy.descriptor_height_0x38 = 2;
+		mask_order_member.source_record_copy.descriptor_mask_fields_0x34_0x48_known = true;
+		mask_order_member.source_record_copy.descriptor_mask_a_0x3c_0x40 =
+				(uint64_t(1) << 47U) | (uint64_t(1) << 46U) | (uint64_t(1) << 39U) | (uint64_t(1) << 38U);
+		mask_order_member.source_record_copy.descriptor_mask_b_0x44_0x48 = uint64_t(1) << 39U;
+
+		RewardGuardWrapperState4aa3e9 mask_order_wrapper;
+		mask_order_wrapper.wrapper_bounds_0x18_0x24_known = true;
+		mask_order_wrapper.bound_left_0x18 = 0;
+		mask_order_wrapper.bound_top_0x1c = 0;
+		mask_order_wrapper.bound_right_0x20 = 0;
+		mask_order_wrapper.bound_bottom_0x24 = 0;
+		mask_order_wrapper.selected_member_vector_0x2c_0x30_known = true;
+		mask_order_wrapper.selected_members_0x2c_0x30.push_back(mask_order_member);
+		mask_order_wrapper.candidate_coordinate_vector_0x3c_0x40_known = true;
+		mask_order_wrapper.generated_cell_grid_0x08_0x10_known = true;
+		mask_order_wrapper.generated_cell_grid_0x08_0x10 = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 2, 1);
+
+		GeneratorRelationOwnerState4a218c mask_order_relation;
+		mask_order_relation.runtime_zone_index = 2;
+		mask_order_relation.source_zone_id = 5;
+		mask_order_relation.source_pointer_0x00_known = true;
+		mask_order_relation.source_pointer_source_index_0x00 = 4;
+		mask_order_relation.relation_owner_byte2_0x4aa9b7_known = true;
+		mask_order_relation.relation_owner_byte2_0x4aa9b7 = 4;
+		mask_order_relation.terrain_policy_0x0c_known = true;
+		mask_order_relation.terrain_policy_0x0c = 0;
+		mask_order_relation.coordinate_triple_0x10_0x18_known = true;
+		mask_order_relation.coordinate_x_0x10 = 3;
+		mask_order_relation.coordinate_y_0x14 = 3;
+		mask_order_relation.coordinate_level_0x18 = 0;
+		mask_order_relation.scan_bounds_0x20_0x2c_known = true;
+		mask_order_relation.scan_bound_low_x_0x20 = 3;
+		mask_order_relation.scan_bound_low_y_0x24 = 3;
+		mask_order_relation.scan_bound_high_x_0x28 = 3;
+		mask_order_relation.scan_bound_high_y_0x2c = 3;
+		H3MapedRng mask_order_rng;
+		mask_order_rng.state = 19U;
+		const RewardGuardCoordinateScanResult4aa9b7 mask_order_result =
+				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+						mask_order_state,
+						mask_order_wrapper,
+						mask_order_relation,
+						7,
+						true,
+						mask_order_rng);
+		bool mask_order_trace_ok = false;
+		if (mask_order_result.feasibility_results_0x4aa603.size() == 1) {
+			const auto &mask_order_trace = mask_order_result.feasibility_results_0x4aa603[0].first_footprint_trace_0x49a6f9;
+			mask_order_trace_ok =
+					mask_order_trace.known
+					&& mask_order_trace.mask_x == 1
+					&& mask_order_trace.mask_y == 0
+					&& mask_order_trace.cell_x == 2
+					&& mask_order_trace.cell_y == 3
+					&& mask_order_trace.secondary_mask
+					&& mask_order_trace.primary_mask;
+		}
+		if (!require(!mask_order_result.applied
+						&& !mask_order_result.committed
+						&& mask_order_result.blocked_reason == "0x4aa9b7_candidate_vector_empty_after_score_and_0x4aa603_filters"
+						&& mask_order_result.feasibility_results_0x4aa603.size() == 1
+						&& mask_order_result.feasibility_results_0x4aa603[0].blocked_reason == "0x4aa603_0x49a6f9_footprint_existing_bit26_rejected"
+						&& mask_order_trace_ok,
+					"0x49a6f9 did not use recovered column-major descriptor mask bit order for reward/guard footprint rejection")) {
+			return 1;
+		}
 	}
 	const RewardGuardWrapperConstructResult49ce04 attach_construct =
 			aurelion::h3maped_rmg_core::reward_guard_wrapper_construct_0x49ce04();

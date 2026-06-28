@@ -168,7 +168,7 @@
         "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184"
       },
       "native_cli_required_next_slice": "recover_small_0x4a79a3_fallback_records_or_resolve_medium_0x4a4fc5_source_water",
-      "notes": "2026-06-28: Source-backed final-object wrapper state implemented in shared h3maped_rmg_core: wrapper +0x08 refcounts are incremented during 0x4a54a7 object commits and 0x4ad1e3 assigns wrapper +0x0c definition indexes from active +0x08 wrappers in 0xe8 bucket order. Focused Medium seed10 setup0 no-Godot compare still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload (tile first mismatch offset 1 native 55 vs H3MapEd 54; object payload 9088 vs 17057), so final parity/runtime output remain blocked.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns recovered 0x49a6f9 descriptor mask helper bit order for reward/guard footprint filtering: 0x4268eb/0x41e951 read 8x6 descriptor mask fields with bit index 47 - (x * 8) - y instead of stale row-major order. h3maped_rmg_core_selftest covers the 0x4aa603 -> 0x49a6f9 trace at mask_x=1,mask_y=0. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288, generated-object payload is 8960 native bytes vs 17057 H3MapEd bytes, and reward/guard still has zero successful 0x4aa9b7 commits. First 0x4aa603 rejection moved from existing bit26 to owner-byte mismatch, so the next blocker is source-backed owner/generated-cell state for reward/guard candidates, not bit26 weakening or final-map tuning.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities; runtime map output remains disabled for supported H3MapEd scopes.",
@@ -179,7 +179,7 @@
       "status": "in_progress",
       "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now follows the recovered 0x4bb681 TerrainPlacement branch: current effective terrain is read through 0x4bb71b, changed-terrain cells enter 0x4bb74b live feedback, and same-terrain cells use the direct 0x4bcfc3 + 0x4bad0f visual/scratch rewrite path. Owner/member-gated 0x4a3f27 repaint now calls the same topology path instead of pre-setting terrain and posting feedback unconditionally. h3maped_rmg_core_selftest covers the same-terrain water-scope branch and remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. The native tile stream SHA remains 3123f1bf830e6cc6fbda007cd23e2f86d4f5e05a03cc519d416fc7a5a9d6fb12, so this closes source-order branch drift but does not close TerrainPlacement/final-payload parity or runtime map output.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-06-28T01:34:46Z",
+      "updatedAt": "2026-06-28T02:53:49Z",
       "validation": {
         "id": "native-rmg-final-wrapper-refcount-state-20260628",
         "title": "Recovered Final-Object Wrapper Refcount State",
@@ -14400,10 +14400,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "2026-06-27: Source-backed setup +0x4c / generator +0x08 propagation implemented through 0x49ecf2 -> 0x4a218c/0x49b53d -> 0x49b4e1; selftest covers negative generator+0x08 removing candidate 8. No-Godot Medium seed10 setup0 +0x4c=0 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload (tile first mismatch offset 1 native 55 vs H3MapEd 54; object payload 9088 vs 17057), so final parity/runtime output remain blocked.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns recovered 0x49a6f9 descriptor mask helper bit order for reward/guard footprint filtering: 0x4268eb/0x41e951 read 8x6 descriptor mask fields with bit index 47 - (x * 8) - y instead of stale row-major order. h3maped_rmg_core_selftest covers the 0x4aa603 -> 0x49a6f9 trace at mask_x=1,mask_y=0. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288, generated-object payload is 8960 native bytes vs 17057 H3MapEd bytes, and reward/guard still has zero successful 0x4aa9b7 commits. First 0x4aa603 rejection moved from existing bit26 to owner-byte mismatch, so the next blocker is source-backed owner/generated-cell state for reward/guard candidates, not bit26 weakening or final-map tuning.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-06-28T01:53:54Z",
+  "currentSliceUpdatedAt": "2026-06-28T02:53:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61291,7 +61291,7 @@
   ],
   "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now follows the recovered 0x4bb681 TerrainPlacement branch: current effective terrain is read through 0x4bb71b, changed-terrain cells enter 0x4bb74b live feedback, and same-terrain cells use the direct 0x4bcfc3 + 0x4bad0f visual/scratch rewrite path. Owner/member-gated 0x4a3f27 repaint now calls the same topology path instead of pre-setting terrain and posting feedback unconditionally. h3maped_rmg_core_selftest covers the same-terrain water-scope branch and remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=57 expected=54; generated-object payload is 8212 vs 17057 bytes with first mismatch offset 0 native=35 expected=2. The native tile stream SHA remains 3123f1bf830e6cc6fbda007cd23e2f86d4f5e05a03cc519d416fc7a5a9d6fb12, so this closes source-order branch drift but does not close TerrainPlacement/final-payload parity or runtime map output.",
   "taskId": "10184",
-  "updatedAt": "2026-06-28T01:53:54Z",
+  "updatedAt": "2026-06-28T02:53:49Z",
   "validation": {
     "id": "native-rmg-final-wrapper-refcount-state-20260628",
     "title": "Recovered Final-Object Wrapper Refcount State",

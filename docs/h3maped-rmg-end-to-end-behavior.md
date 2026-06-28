@@ -233,6 +233,13 @@ This initializer intentionally sets bit25 and bit27. Later mutation phases reduc
 - stack `+0x08` is masked to three bits and written to `+0x28` bits `12..14`;
 - stack `+0x0c` becomes byte3 of `+0x20`.
 
+`0x4a4c8e` scans generated-cell relation boundaries after `0x4a8260`.
+For a neighboring generated cell with a different non-negative owner, it calls
+`0x49b3fb` through the current owner relation vector. The boundary trigger is
+true when the relation record is missing, when the level index is exactly `1`,
+or when relation byte `+0x08` is zero. On one-level land maps, a present
+nonzero `+0x08` relation does not trigger the candidate-boundary stamp.
+
 `0x49a932` writes occupied bit27 and is gated by `+0x2c` bit0:
 
 - false clears bit27;
@@ -400,7 +407,7 @@ R1 closes the reward/guard projection chain:
 
 `0x4aa9b7` scans generated-cell owner/score candidate cells and randomly selects reward coordinates.
 
-`0x4aa603` filters reward templates.
+`0x4aa603` filters reward templates. Its `0x49a6f9` footprint helper reads descriptor mask helpers `0x4268eb` and `0x41e951` with bit index `47 - (x * 8) - y` over the 8x6 descriptor-mask fields. That is column-major over descriptor cells, not row-major. The `0x4268eb`/secondary-mask branch checks generated-cell validity, bit22 absence, relation owner byte, and optional existing bit26 rejection; the `0x41e951`/primary-mask branch is a separate footprint gate and does not replace the secondary bit26 rule.
 
 `0x4aa3e9` mutates generated-cell/object state for rewards.
 
