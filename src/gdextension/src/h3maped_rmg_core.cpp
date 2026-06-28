@@ -8414,13 +8414,13 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 }
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
-	// Recovered 0x4aa9b7 and 0x4aa603 both load the owner gate through
-	// [[relation_pointer]], i.e. relation +0x00 followed by source +0x00.
-	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00;
-	}
+	// Recovered 0x4aa9b7, 0x4aa603, and 0x49a09c compare generated-cell
+	// owner byte2 against relation->leading->+0x00.
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
+	}
+	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
+		return relation.source_pointer_source_index_0x00;
 	}
 	if (relation.source_index >= 0) {
 		return relation.source_index;
@@ -8684,9 +8684,17 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 
 	const RewardGuardWrapperMember4aa3e9 &last_member = wrapper.selected_members_0x2c_0x30.back();
 	const bool terrain8_policy = relation.terrain_policy_0x0c == 8;
-	const bool full_direction_policy = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1);
-	const int32_t direction_start = full_direction_policy ? 0 : 1;
-	const int32_t direction_end = full_direction_policy ? 8 : 4;
+	const bool selected_member_policy_allows_existing_bit22 =
+			reward_guard_selected_members_policy_allow_existing_bit22_0x49d65c(wrapper);
+	// Recovered 0x4aa603 computes the direction-loop start from 0x49d65c and
+	// the attached flag, then computes the loop end independently from the
+	// 0x598300 +1 metadata byte of the last selected member.
+	const int32_t direction_start =
+			(selected_member_policy_allows_existing_bit22
+					&& (!wrapper.attached_flag_0x48_known || !wrapper.attached_flag_0x48))
+			? 1
+			: 0;
+	const int32_t direction_end = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1) ? 8 : 4;
 	const int32_t base_x = last_member.relative_x_0x08 - last_member.descriptor_offset_x_0x2c;
 	const int32_t base_y = last_member.relative_y_0x0c - last_member.descriptor_offset_y_0x30;
 	for (int32_t direction_index = direction_start; direction_index < direction_end; ++direction_index) {
@@ -8728,8 +8736,6 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 		return result;
 	}
 
-	const bool selected_member_policy_allows_existing_bit22 =
-			reward_guard_selected_members_policy_allow_existing_bit22_0x49d65c(wrapper);
 	const bool allow_existing_bit22 =
 			selected_member_policy_allows_existing_bit22
 			&& (!wrapper.attached_flag_0x48_known || !wrapper.attached_flag_0x48);
