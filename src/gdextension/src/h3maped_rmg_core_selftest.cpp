@@ -6380,15 +6380,41 @@ int main() {
 		}
 		if (!require(workflow_generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
 						&& workflow.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
 					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the final writeout blocker")) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() > 10
-							&& workflow.phases[10].id == "reward_guard_materialization"
-							&& workflow.phases[10].status == "complete_source_order_prefix"
+		bool type98_scheduler_context_replayed_from_source_pair = false;
+		for (const SourceOrderSchedulerResult4a8db2 &replay : workflow_generator_state.source_order_scheduler_replays_0x4a8db2) {
+			if (!replay.context_pointer_carried
+					|| replay.source_pair_copied_source_catalog_index < 0
+					|| replay.context_wrapper_index_0x04 < 0) {
+				continue;
+			}
+			for (const SourceObjectResolverSourcePair4af785 &pair : workflow_generator_state.source_pair_records_edc) {
+				if (pair.source_record_copy.type_id_0x1c == 98
+						&& pair.source_record_pointer_0x00_carried
+						&& pair.context_pointer_0x04_carried
+						&& pair.copied_source_catalog_index == replay.source_pair_copied_source_catalog_index
+						&& pair.context_wrapper_index_0x04 == replay.context_wrapper_index_0x04) {
+					type98_scheduler_context_replayed_from_source_pair = true;
+					break;
+				}
+			}
+			if (type98_scheduler_context_replayed_from_source_pair) {
+				break;
+			}
+		}
+		if (!require(type98_scheduler_context_replayed_from_source_pair,
+					"entry-to-writeout workflow did not carry recovered type-98 source-pair +0x04 wrapper context into 0x4a8db2 scheduler replay")) {
+			return 1;
+		}
+		if (!require(workflow.phases.size() > 10
+						&& workflow.phases[10].id == "reward_guard_materialization"
+						&& workflow.phases[10].status == "complete_source_order_prefix"
 							&& workflow.phases.size() > 11
 							&& workflow.phases[11].id == "connection_road_river"
 							&& workflow.phases[11].status == "complete_source_order_prefix"

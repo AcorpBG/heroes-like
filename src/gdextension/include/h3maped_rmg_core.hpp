@@ -2868,6 +2868,7 @@ struct GeneratorObjectPrivateState {
 	int32_t source_order_relation_pointer_loop_missing_source_pointer_count = 0;
 	int32_t source_order_relation_pointer_loop_missing_source_record_field_0x04_count = 0;
 	int32_t source_order_relation_pointer_loop_missing_scan_bounds_count = 0;
+	int32_t source_order_relation_pointer_loop_missing_context_wrapper_0x04_count = 0;
 	int32_t source_order_relation_pointer_loop_no_source_record_skip_count = 0;
 	int32_t source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c = 0;
 	int32_t source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 = 0;
