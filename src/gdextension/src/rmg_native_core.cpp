@@ -4312,8 +4312,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, mine/resource materialization, reward/guard source stream, decorative dispatch, 0x4a79a3 connection-tail replay, 0x4ab52a road/river adjacency pair scanning, the recovered 0x4ac857 header/player metadata write, 0x4ad206 post-header zero, 0x49b2b6 tile-cell stream, 0x4ad29f object-definition count, source-backed object-definition table, 0x4ad309/0x4ad318 generated-object count header write, the 0x57c648[type*16+0x0c] 0x4ad3eb pass split, field-backed object serializer bodies, the 0x4ad3db/0x4ad3de/0x4ae09a zero-sentinel success path, ordered final payload assembly, and scoped same-run Medium seed-10 tile/object payload comparison when recovered authority bytes are available. The workflow intentionally fails closed before native map output until the compared payloads match and non-authority scopes have equivalent recovered comparison coverage.\",\n";
-	out << "    \"required_refactor\": \"fix native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload first, then the generated-object payload mismatch, before allowing native map output\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, the materialization bridge, bridge relation normalization, bridge water-edge write, and the source-backed 0x4a89da relation-scan prefix. It intentionally fails closed before 0x4a9d6a mine/resource materialization, reward/guard, connection-tail, final writeout, and native map output until the recovered 0x4a8bfc and 0x4a8722 helper chain after 0x4a89da is ported.\",\n";
+	out << "    \"required_refactor\": \"port recovered 0x4a8bfc and 0x4a8722 relation-scan helper chain after the source-backed 0x4a89da prefix before resuming 0x4a9d6a mine/resource materialization\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -4344,7 +4344,7 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"fix_native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload_then_generated_object_payload_mismatch\",\n";
+	out << "  \"next_required_native_core_slice\": \"port_recovered_0x4a8bfc_and_0x4a8722_relation_scan_helper_chain_after_0x4a89da_prefix\",\n";
 	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
 	out << "}\n";
 	return out.str();

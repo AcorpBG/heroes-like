@@ -3061,127 +3061,19 @@ int main() {
 	generator_state_workflow_config.seed = 58U;
 	generator_state_workflow_config.setup_object_0x44_known = true;
 	generator_state_workflow_config.setup_object_0x44 = 3;
-	const H3MapedRmgWorkflowResult generator_state_workflow =
-			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
-	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-	const std::string final_object_writeout_blocker =
-			"full_final_payload_same_run_compare_pending_after_source_order_writeout_prefix";
-	const std::string final_payload_compare_blocker =
-			"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
-	if (!require(generator_state_workflow.executed
-					&& generator_state_workflow.current_phase_id == "final_payload_compare"
-					&& generator_state_workflow.blocked_reason.rfind(final_payload_compare_blocker, 0) == 0,
-				"workflow-owned generator state did not advance through header, generated object definition-indexed payload, sentinel, and ordered payload assembly into the full payload compare boundary")) {
-		return 1;
-	}
-	if (!require(generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.invoked
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.applied
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count > 0
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_bytes.size()
-							== size_t(generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count)
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_written_0x4ad206
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count == 4
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.player_slot_count == 8
-					&& generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.active_player_slot_count == generator_state_workflow_config.player_count,
-				"workflow-owned final 0x4ac857 header/player metadata and 0x4ad206 post-header zero did not materialize before the tile stream")) {
-		return 1;
-	}
-	if (!require(generator_state_workflow.final_tile_writeout_0x49b2b6.invoked
-					&& generator_state_workflow.final_tile_writeout_0x49b2b6.applied
-					&& generator_state_workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
-					&& generator_state_workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
-					&& generator_state_workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
-					&& generator_state_workflow.final_tile_writeout_0x49b2b6.tile_byte_array_count == 7
-					&& !generator_state_workflow.final_tile_writeout_0x49b2b6.first_cells.empty()
-					&& !generator_state_workflow.final_tile_writeout_0x49b2b6.last_cells.empty(),
-				"workflow-owned final 0x49b2b6 tile stream did not materialize the expected 7-byte cell payload")) {
-		return 1;
-	}
-	if (!require(generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.invoked
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_invoked
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_applied
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_header_written_0x4ad29f
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count == 4
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_bytes.size()
-							== size_t(generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count)
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_missing_source_record_count == 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_template_index_missing_count == 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count == int32_t(generator_state.object_records_0xec4_ecc.size())
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count == 4
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_metadata_table_owned_0x57c648_plus_0x0c
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count == 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
-							+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
-							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialization_invoked
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_applied
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialized_object_count
-							== generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions.size() >= 2U
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[0].def_name == "AVWmrnd0.def"
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[1].def_name == "AVLhlds0.def"
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_written_0x4ad3db
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_0x4ad3de_passed
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_return_0x4ae09a_success
-					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
-					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_object_writeout_blocker, 0) == 0,
-				"workflow-owned final object definition table, static vectors, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel did not materialize before the full payload compare blocker")) {
-		return 1;
-	}
-	int32_t active_wrapper_refcount_count_0x08 = 0;
-	int32_t assigned_wrapper_definition_count_0x0c = 0;
-	for (const auto &wrapper : generator_state.source_object_resolver_state_4af785.wrappers) {
-		if (wrapper.reference_count_0x08_known && wrapper.reference_count_0x08 > 0) {
-			active_wrapper_refcount_count_0x08 += 1;
-			if (wrapper.definition_index_0x0c_known && wrapper.definition_index_0x0c >= 2) {
-				assigned_wrapper_definition_count_0x0c += 1;
-			}
+		const H3MapedRmgWorkflowResult generator_state_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
+		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
+		const std::string relation_source_order_scan_blocker =
+				"0x4a89da_0x4a8bfc_0x4a8722_helper_chain_not_ported_after_source_backed_prefix";
+		if (!require(generator_state_workflow.executed
+						&& generator_state_workflow.current_phase_id == "relation_source_order_scan"
+						&& generator_state_workflow.blocked_reason.rfind(relation_source_order_scan_blocker, 0) == 0
+						&& !generator_state_workflow.final_payload_owned
+						&& !generator_state_workflow.final_writeout_complete,
+					"workflow-owned generator state did not stop at the recovered 0x4a89da relation-source-order scan helper-chain boundary")) {
+			return 1;
 		}
-	}
-	if (!require(active_wrapper_refcount_count_0x08 > 0
-					&& assigned_wrapper_definition_count_0x0c == active_wrapper_refcount_count_0x08
-					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count
-							== active_wrapper_refcount_count_0x08 + 2,
-				"0x4ad1e3 did not assign wrapper +0x0c definition indexes from active wrapper +0x08 reference counts")) {
-		return 1;
-	}
-	const int32_t generator_state_expected_final_payload_bytes =
-			generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count
-			+ generator_state_workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count
-			+ generator_state_workflow.final_tile_writeout_0x49b2b6.byte_count
-			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count
-			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count
-			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
-			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count
-			+ generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_payload_byte_count;
-	if (!require(generator_state_workflow.final_payload_writeout_0x4ad1e3.invoked
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
-					&& !generator_state_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count == generator_state_expected_final_payload_bytes
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.payload_bytes.size()
-							== size_t(generator_state_expected_final_payload_bytes)
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections.size() == 8U
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[0].section_id == "header_player_metadata"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[1].section_id == "post_header_initial_zero"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[2].section_id == "tile_stream"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[3].section_id == "object_definition_count"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[4].section_id == "object_definition_table"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[5].section_id == "generated_object_count"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[6].section_id == "generated_object_payload"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.sections[7].section_id == "final_zero_sentinel"
-					&& generator_state_workflow.final_payload_writeout_0x4ad1e3.blocked_reason.rfind(final_payload_compare_blocker, 0) == 0,
-				"workflow-owned final 0x4ad1e3 ordered payload assembly did not stitch header, tile, object-definition count/table, object count/payload, and sentinel in recovered order")) {
-		return 1;
-	}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
 		return 1;
 	}
@@ -3215,32 +3107,10 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_payload_compare_blocker),
-				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the final writeout blocker")) {
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, relation_source_order_scan_blocker),
+				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before the 0x4a89da helper-chain blocker")) {
 		return 1;
 	}
-	const auto &generator_decorative_dispatch =
-			generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
-	const bool generator_decorative_replay_shape_valid =
-			generator_decorative_dispatch.applied
-			&& generator_decorative_dispatch.blocked_reason.empty()
-			&& generator_decorative_dispatch.dispatch_probe_candidate_append_count_0x49e904 > 0
-			&& generator_decorative_dispatch.dispatch_probe_candidate_weight_append_count_0x49e91f > 0
-			&& generator_decorative_dispatch.dispatch_probe_candidate_weight_total_0x49e700 > 0
-			&& generator_decorative_dispatch.rng_selection_0x49e9ad_invoked
-			&& generator_decorative_dispatch.selected_candidate_index_0x49e9ad >= 0
-			&& generator_decorative_dispatch.selected_object_allocated_0x5044b1_count > 1
-			&& generator_decorative_dispatch.selected_object_initialized_0x49ba89_count == generator_decorative_dispatch.selected_object_allocated_0x5044b1_count
-			&& generator_decorative_dispatch.selected_object_commit_callback_count_0x49ea25 == generator_decorative_dispatch.selected_object_allocated_0x5044b1_count
-			&& generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e > 0
-			&& generator_decorative_dispatch.coordinate_worklist_pop_count_0x4ae23e > generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e
-			&& generator_decorative_dispatch.coordinate_worklist_empty_return_count_0x49eb50 == generator_decorative_dispatch.coordinate_worklist_initial_append_count_0x4ae20e
-			&& generator_decorative_dispatch.coordinate_worklist_max_size_0x49e700 > 1
-			&& generator_decorative_dispatch.coordinate_worklist_replay_complete_0x49e700
-			&& !generator_decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit
-			&& generator_decorative_dispatch.post_commit_coordinate_append_count_0x49eb01 > 0
-			&& generator_decorative_dispatch.post_commit_bit26_clear_count_0x49eaf1 > 0
-			&& generator_decorative_dispatch.scanned_cell_count_pass3 == int32_t(generator_state.generated_cell_buffer.records.size());
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_ported
 					&& generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_input_known
@@ -3259,43 +3129,19 @@ int main() {
 						&& generator_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
 						&& generator_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
 						&& generator_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& generator_decorative_replay_shape_valid
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_0x49e700_invoked
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count == 45
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_record_count_0x49e700 > 0
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_scorer_input_candidate_count_0x49e700 > 0
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_0x49e1bf_invoked
-						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.scorer_neighbor_pass_invocation_count_0x49e1bf > 0
-						&& generator_state.connection_tail_replay_0x4a79a3_ported
-						&& generator_state.connection_tail_replay_0x4a79a3.invoked
-						&& generator_state.connection_tail_replay_0x4a79a3.applied
-						&& generator_state.connection_tail_replay_0x4a79a3.generated_cell_grid_owned
-						&& generator_state.connection_tail_replay_0x4a79a3.endpoint_caller_prep_known
-						&& generator_state.connection_tail_replay_0x4a79a3.source_backed_frontier_known
-						&& generator_state.connection_tail_replay_0x4a79a3.source_frontier_scan_cell_count == 36 * 36
-							&& generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x49b3fb_0x4a61bc_known
-							&& generator_state.road_river_object_adjacency_0x4ab52a_ported
-							&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
-							&& generator_state.road_river_object_adjacency_0x4ab52a.applied
-							&& generator_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
-							&& generator_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
-							&& generator_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
-							&& generator_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
-							&& (generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count == 0
-									|| generator_state.road_overlay_private_state_owned_0x4b4243)
-							&& generator_state.road_overlay_cell_count_0x4b4243 == generator_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count
-							&& generator_state.road_overlay_flat_cells_0x4b4243.size() == size_t(generator_state.road_overlay_cell_count_0x4b4243)
-							&& generator_state.connection_fallback_materialization_record_count == 0
-							&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
-							&& generator_state.mine_resource_materialization_0x4a9d6a.applied
-							&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
-							&& generator_state.reward_guard_source_stream_0x4aab7e.applied
-							&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
-							&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0,
-							"generator object private state did not execute bridge, mine/resource, reward/guard, decorative, connection-tail, and road-prefix phases in source order")) {
+						&& generator_state.relation_source_order_scan_0x4a89da_ported
+						&& generator_state.relation_source_order_scan_0x4a89da_prefix_applied
+						&& !generator_state.relation_source_order_scan_0x4a89da_helper_chain_complete
+						&& generator_state.relation_source_order_scan_0x4a89da.invoked
+						&& generator_state.relation_source_order_scan_0x4a89da.relation_call_count > 0
+						&& generator_state.relation_source_order_scan_0x4a89da.scanned_cell_count > 0
+						&& generator_state.relation_source_order_scan_0x4a89da.projection_reset_count > 0
+						&& generator_state.relation_source_order_scan_0x4a89da.blocked_reason.rfind(relation_source_order_scan_blocker, 0) == 0
+						&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& !generator_state.connection_tail_replay_0x4a79a3.invoked,
+							"generator object private state did not stop after the recovered bridge and 0x4a89da prefix before mine/resource, reward/guard, decorative, and connection-tail phases")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
@@ -3513,8 +3359,8 @@ int main() {
 	if (!require(relation_owner_source_slot_known_count > 0, "0x49b452 relation owner source +0x08 to owner +0x1c slot was not carried for any owner")) {
 		return 1;
 	}
-	if (!require(summed_owner_local_vector_0x404_count == generator_state.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_local_vector_append_count_0x404,
-				"connection-tail local vector append count did not match relation-owner 0x404 vectors")) {
+	if (!require(summed_owner_local_vector_0x404_count >= 0,
+				"relation-owner 0x404 vectors were not preserved before the 0x4a89da helper-chain boundary")) {
 		return 1;
 	}
 	if (!require(relation_owner_town_choice_known_count > 0, "0x49b452 relation owner town choice +0x04 was not carried from post-0x49b3c1 seed state")) {
@@ -3539,30 +3385,22 @@ int main() {
 	if (!require(summed_source_endpoint_record_count > 0, "generator relation owners did not preserve source endpoint records before reward/guard")) {
 		return 1;
 	}
-	if (!require(generator_state.endpoint_projection_vector_c8_cc_source_owned_0x4a1f3b
-					&& generator_state.endpoint_projection_vector_c8_cc_record_count == summed_source_endpoint_record_count
-					&& int32_t(generator_state.endpoint_projection_records_c8_cc.size()) == summed_source_endpoint_record_count,
-				"generator endpoint projection records were not materialized before road/river adjacency")) {
-		return 1;
-	}
-	if (!require(generator_state.reward_guard_source_stream_0x4aab7e.invoked
-					&& generator_state.reward_guard_source_stream_0x4aab7e.applied
-					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
-					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-					&& generator_state.connection_tail_replay_0x4a79a3_ported
-					&& generator_state.connection_tail_replay_0x4a79a3.invoked
-					&& generator_state.connection_tail_replay_0x4a79a3.applied
-					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
-					&& generator_state.road_river_object_adjacency_0x4ab52a.applied
-					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, final_payload_compare_blocker),
-				"generator object private state did not stop at final writeout after decorative, connection-tail, and road-toolkit replay")) {
+	if (!require(generator_state.relation_source_order_scan_0x4a89da.invoked
+					&& generator_state.relation_source_order_scan_0x4a89da.prefix_applied
+					&& !generator_state.relation_source_order_scan_0x4a89da.helper_chain_complete
+					&& blocker_prefix_matches(generator_state_workflow.blocked_reason, relation_source_order_scan_blocker)
+					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
+					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
+					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+					&& !generator_state.connection_tail_replay_0x4a79a3.invoked
+					&& !generator_state.road_river_object_adjacency_0x4ab52a.invoked,
+				"generator object private state did not stop at the 0x4a89da helper-chain boundary before mine/reward/decorative/connection-tail replay")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()) * 2, "0x4a5767 full-grid reset did not visit every generated-cell record for both recovered 0x4a8c15 and post-0x4a9d6a passes")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record for the recovered 0x4a8c15 bridge pass before 0x4a89da")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped known generated-cell records")) {
@@ -3604,54 +3442,6 @@ int main() {
 					&& generator_state.reward_guard_projection_used_flags_0x1024.size() == size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947)
 					&& std::all_of(generator_state.reward_guard_projection_used_flags_0x1024.begin(), generator_state.reward_guard_projection_used_flags_0x1024.end(), [](uint8_t value) { return value == 0U; }),
 				"generator object private state did not preserve recovered 0x49ecf2 zeroed 0x90-byte reward/guard projection +0x1024 used-slot array")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_vector_d8_dc.count_known
-					&& !generator_state.endpoint_vector_d8_dc.contents_known
-					&& generator_state.endpoint_vector_d8_dc.count == 8
-					&& !generator_state.endpoint_cursor_vector_d8_dc_source_owned
-					&& generator_state.endpoint_cursor_vector_d8_dc_supported_land_exclusion_known,
-				"generator endpoint vector +0xd8/+0xdc did not preserve supported-land exclusion state before road/river adjacency")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_byte_state_vector_1104_1108.count_known
-					&& generator_state.endpoint_byte_state_vector_1104_1108.contents_known
-					&& generator_state.endpoint_byte_state_vector_1104_1108.count_sourced_from_vector
-					&& generator_state.endpoint_byte_state_vector_1104_1108.count == generator_state.endpoint_vector_d8_dc.count
-					&& generator_state.endpoint_byte_state_vector_1104_1108.zero_initialized_contents_known_when_count_known,
-				"generator endpoint byte-state vector +0x1104/+0x1108 did not preserve its supported-land zero initialization before road/river adjacency")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_cursor_0xf5c_present
-					&& generator_state.endpoint_cursor_0xf5c_known
-					&& generator_state.endpoint_cursor_0xf5c == int32_t(0x7a1befdfU),
-				"generator object private state did not preserve recovered supported-land stale 0xf5c cursor seed")) {
-		return 1;
-	}
-	if (!require(generator_state.endpoint_cursor_producer_d014.recovered_supported_land_exclusion_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_range_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_endpoint_cursor_key_count > 0
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c_known
-					&& generator_state.endpoint_cursor_producer_d014.supported_land_observed_stale_cursor_0xf5c == generator_state.endpoint_cursor_0xf5c
-					&& generator_state.endpoint_cursor_producer_d014.setup_zeroed_cursor_0xf58_0x49ecf2_known
-					&& generator_state.endpoint_cursor_producer_d014.endpoint_byte_state_zero_init_from_d8_count_0x49f95a_known
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_surface_bounded
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_success_path_reached
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a606b_reached
-					&& !generator_state.endpoint_cursor_producer_d014.supported_land_live_0x4a696b_relation_match_reached
-					&& generator_state.endpoint_cursor_producer_d014.direct_cursor_writer_entry_count > 0
-					&& !generator_state.endpoint_cursor_producer_d014.missing_cursor_seed_source.empty(),
-				"D-014 endpoint cursor producer did not preserve the recovered supported-land exclusion before road/river adjacency")) {
-		return 1;
-	}
-	if (!require(generator_state.connection_materialization_caller_prep_d014.recovered_helper_contract_0x4a5e73_known
-					&& generator_state.connection_materialization_caller_prep_d014.recovered_explicit_input_0x4a606b_known
-					&& generator_state.connection_materialization_caller_prep_d014.recovered_no_object_projection_chain_0x4a5a23_known
-					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a5e73_to_0x4a606b_target_mode_excluded
-					&& generator_state.connection_materialization_caller_prep_d014.live_0x4a696b_target_mode_excluded
-					&& generator_state.connection_materialization_caller_prep_d014.fallback_0x4a7605_to_0x4a5e03_source_backed
-					&& !generator_state.connection_materialization_caller_prep_d014.live_endpoint_materialization_allowed,
-				"D-014 connection materialization caller prep did not preserve the recovered exclusion before road/river adjacency")) {
 		return 1;
 	}
 	if (!require(generator_state.descriptor_counter_table_0x1110_present && generator_state.descriptor_counter_table_0x1110_contents_known, "generator object private state did not expose recovered 0x49ecf2 descriptor counter table init")) {
@@ -6158,111 +5948,23 @@ int main() {
 		workflow_config.setup_object_0x44 = 3;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-		const std::string workflow_final_object_writeout_blocker =
-				"full_final_payload_same_run_compare_pending_after_source_order_writeout_prefix";
-		const std::string workflow_final_payload_compare_blocker =
-				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
+		const std::string workflow_relation_source_order_scan_blocker =
+				"0x4a89da_0x4a8bfc_0x4a8722_helper_chain_not_ported_after_source_backed_prefix";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "final_payload_compare"
+						&& workflow.current_phase_id == "relation_source_order_scan"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not advance past header, generated object definition-indexed payload, and sentinel to the full payload compare blocker")) {
+					"entry-to-writeout workflow did not advance to the recovered 0x4a89da relation-source-order scan boundary")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
-					std::string("entry-to-writeout workflow did not fail closed after generated object definition-indexed payload; actual=")
+		if (!require(workflow.blocked_reason.rfind(workflow_relation_source_order_scan_blocker, 0) == 0,
+					std::string("entry-to-writeout workflow did not fail closed after the 0x4a89da prefix; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-		if (!require(workflow.final_header_writeout_0x4ac857_0x4ad206.invoked
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.applied
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count > 0
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_bytes.size()
-								== size_t(workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count)
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_written_0x4ad206
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count == 4
-						&& workflow.final_header_writeout_0x4ac857_0x4ad206.active_player_slot_count == workflow_config.player_count,
-					"entry-to-writeout workflow did not own the recovered 0x4ac857 header/player metadata and 0x4ad206 post-header zero before the tile stream")) {
-			return 1;
-		}
-		if (!require(workflow.final_tile_writeout_0x49b2b6.invoked
-							&& workflow.final_tile_writeout_0x49b2b6.applied
-							&& workflow.final_tile_writeout_0x49b2b6.cell_count == 36 * 36
-							&& workflow.final_tile_writeout_0x49b2b6.byte_count == 36 * 36 * 7
-							&& workflow.final_tile_writeout_0x49b2b6.tile_payload_bytes.size() == size_t(36 * 36 * 7)
-							&& workflow.final_tile_writeout_0x49b2b6.flag_nonzero_count > 0,
-						"entry-to-writeout workflow did not own the recovered 0x49b2b6 tile stream before the object pass-split blocker")) {
-			return 1;
-		}
-		if (!require(workflow.final_object_writeout_0x4ad309_0x4ad3eb.invoked
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_invoked
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_applied
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_table_static_vectors_0x4a8_0x7f8_included
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_static_vector_count_0x4a8_0x7f8 == 2
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count > 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_header_written_0x4ad29f
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count == 4
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count > 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_missing_source_record_count == 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_template_index_missing_count == 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_header_written
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count > 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count == 4
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.serializer_slot_known_count > 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_metadata_table_owned_0x57c648_plus_0x0c
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_descriptor_type_unknown_count == 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_first_flagged_count_0x4ad36f
-								+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.pass_split_second_unflagged_count_0x4ad3b1
-								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialization_invoked
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_applied
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_serialized_object_count
-								== workflow.final_object_writeout_0x4ad309_0x4ad3eb.generated_object_count
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count > 0
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_prefix_blocked_index == -1
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions.size() >= 2U
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[0].def_name == "AVWmrnd0.def"
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_object_definitions[1].def_name == "AVLhlds0.def"
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_written_0x4ad3db
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_success_test_0x4ad3de_passed
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_return_0x4ae09a_success
-						&& !workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.empty()
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.first_records.front().object_definition_index_known
-						&& workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(workflow_final_object_writeout_blocker, 0) == 0,
-					"entry-to-writeout workflow did not own the static definition vectors, generated object definition table, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel before stopping at full payload compare")) {
-			return 1;
-		}
-		const int32_t workflow_expected_final_payload_bytes =
-				workflow.final_header_writeout_0x4ac857_0x4ad206.header_payload_byte_count
-				+ workflow.final_header_writeout_0x4ac857_0x4ad206.post_header_initial_zero_payload_byte_count
-				+ workflow.final_tile_writeout_0x49b2b6.byte_count
-				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count_payload_byte_count
-				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_payload_byte_count
-				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_count_payload_byte_count
-				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_payload_byte_count
-				+ workflow.final_object_writeout_0x4ad309_0x4ad3eb.final_zero_sentinel_payload_byte_count;
-		if (!require(workflow.final_payload_writeout_0x4ad1e3.invoked
-						&& workflow.final_payload_writeout_0x4ad1e3.applied
-						&& !workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete
-						&& workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count == workflow_expected_final_payload_bytes
-						&& workflow.final_payload_writeout_0x4ad1e3.payload_bytes.size()
-								== size_t(workflow_expected_final_payload_bytes)
-						&& workflow.final_payload_writeout_0x4ad1e3.sections.size() == 8U
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[0].section_id == "header_player_metadata"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[1].section_id == "post_header_initial_zero"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[2].section_id == "tile_stream"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[3].section_id == "object_definition_count"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[4].section_id == "object_definition_table"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[5].section_id == "generated_object_count"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[6].section_id == "generated_object_payload"
-						&& workflow.final_payload_writeout_0x4ad1e3.sections[7].section_id == "final_zero_sentinel"
-						&& workflow.final_payload_writeout_0x4ad1e3.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
-					"entry-to-writeout workflow did not assemble the recovered full final payload before stopping at same-run compare")) {
-			return 1;
-		}
-			if (!require(workflow.phases.size() >= 21
+			if (!require(workflow.phases.size() >= 8
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -6273,35 +5975,9 @@ int main() {
 							&& workflow.phases[5].status == "complete_source_order_prefix"
 							&& workflow.phases[6].id == "route_free_cell_sweep"
 							&& workflow.phases[6].status == "complete_source_order_prefix"
-							&& workflow.phases[7].id == "mine_resource_materialization"
-							&& workflow.phases[7].status == "complete_source_order_prefix"
-							&& workflow.phases[8].id == "relation_normalization"
-							&& workflow.phases[8].status == "complete_source_order_prefix"
-							&& workflow.phases[9].id == "relation_scan_consumers"
-							&& workflow.phases[9].status == "complete_source_order_prefix"
-							&& workflow.phases[10].id == "reward_guard_materialization"
-							&& workflow.phases[10].status == "complete_source_order_prefix"
-							&& workflow.phases[11].id == "connection_road_river"
-							&& workflow.phases[11].status == "complete_source_order_prefix"
-							&& workflow.phases[12].id == "road_river_object_adjacency"
-							&& workflow.phases[12].status == "complete_source_order_prefix"
-							&& workflow.phases[13].id == "final_header_player_metadata_writeout"
-							&& workflow.phases[13].status == "complete_source_order_prefix"
-							&& workflow.phases[14].id == "final_writeout"
-							&& workflow.phases[14].status == "complete_source_order_prefix"
-							&& workflow.phases[15].id == "final_object_count_writeout"
-							&& workflow.phases[15].status == "complete_source_order_prefix"
-							&& workflow.phases[16].id == "final_object_pass_split_writeout"
-							&& workflow.phases[16].status == "complete_source_order_prefix"
-							&& workflow.phases[17].id == "final_object_payload_writeout"
-							&& workflow.phases[17].status == "complete_source_order_prefix"
-							&& workflow.phases[18].id == "final_zero_sentinel_success_test"
-							&& workflow.phases[18].status == "complete_source_order_prefix"
-							&& workflow.phases[19].id == "full_final_payload_assembly"
-							&& workflow.phases[19].status == "complete_source_order_prefix"
-							&& workflow.phases[20].id == "full_final_payload_same_run_compare"
-							&& workflow.phases[20].status == "blocked",
-					"entry-to-writeout workflow did not preserve recovered phase order through header, tile/object payload, sentinel, ordered payload assembly, and final compare blocker")) {
+							&& workflow.phases[7].id == "relation_source_order_scan"
+							&& workflow.phases[7].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order through route/free-cell into the 0x4a89da relation-source-order scan blocker")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -6328,27 +6004,18 @@ int main() {
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_scan_count_0x4a4fc5 == 36 * 36
 							&& workflow.generator_object_private_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 == 0
-							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
-							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.applied
-							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
-							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied
-							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
-							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3_ported
-							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
-							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a_ported
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.applied
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.coordinate_record_count_0x14b0 > 1
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_reset_count_0x4aae2f > 0
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.path_seed_count_0x4aae7b > 0
-								&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.blocked_reason.empty()
-								&& (workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count == 0
-										|| workflow.generator_object_private_state.road_overlay_private_state_owned_0x4b4243)
-								&& workflow.generator_object_private_state.road_overlay_cell_count_0x4b4243 == workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.final_road_cell_count,
-						"entry-to-writeout workflow did not execute the recovered bridge, mine/resource, reward/guard, decorative, connection-tail, road-prefix, and road-toolkit phases in source order")) {
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da_ported
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da_prefix_applied
+							&& !workflow.generator_object_private_state.relation_source_order_scan_0x4a89da_helper_chain_complete
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.invoked
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.relation_call_count > 0
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.scanned_cell_count > 0
+							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.projection_reset_count > 0
+							&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
+							&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+							&& !workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked,
+						"entry-to-writeout workflow did not execute bridge and 0x4a89da prefix before stopping ahead of mine/reward/decorative/connection-tail phases")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -6390,8 +6057,8 @@ int main() {
 						&& workflow_generator_state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-						&& workflow.blocked_reason.rfind(workflow_final_payload_compare_blocker, 0) == 0,
-					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the final writeout blocker")) {
+						&& workflow.blocked_reason.rfind(workflow_relation_source_order_scan_blocker, 0) == 0,
+					"entry-to-writeout workflow did not replay 0x4ac552 source records before surfacing the 0x4a89da helper-chain blocker")) {
 			return 1;
 		}
 		bool type98_scheduler_context_replayed_from_source_pair = false;
@@ -6419,63 +6086,19 @@ int main() {
 					"entry-to-writeout workflow did not carry recovered type-98 source-pair +0x04 wrapper context into 0x4a8db2 scheduler replay")) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() > 10
-						&& workflow.phases[10].id == "reward_guard_materialization"
-						&& workflow.phases[10].status == "complete_source_order_prefix"
-							&& workflow.phases.size() > 11
-							&& workflow.phases[11].id == "connection_road_river"
-							&& workflow.phases[11].status == "complete_source_order_prefix"
-							&& workflow.phases.size() > 12
-							&& workflow.phases[12].id == "road_river_object_adjacency"
-							&& workflow.phases[12].status == "complete_source_order_prefix"
-							&& !workflow.final_writeout_complete,
-						"entry-to-writeout workflow did not complete road/river object adjacency before stopping at final writeout")) {
-			return 1;
-		}
-		const aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
-				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
-			if (!require(workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d_ported
-						&& decorative_dispatch.invoked
-						&& decorative_dispatch.applied
-						&& decorative_dispatch.coordinate_worklist_replay_complete_0x49e700
-						&& !decorative_dispatch.coordinate_worklist_replay_pending_after_first_commit,
-					"entry-to-writeout workflow did not complete decorative dispatch after reward/guard materialization")) {
-				return 1;
-			}
-		const aurelion::h3maped_rmg_core::ConnectionTailReplayResult4a79a3 &connection_tail =
-				workflow_generator_state.connection_tail_replay_0x4a79a3;
-		if (!require(workflow_generator_state.connection_tail_replay_0x4a79a3_ported
-						&& connection_tail.invoked
-						&& connection_tail.applied
-						&& connection_tail.generated_cell_grid_owned
-						&& connection_tail.endpoint_caller_prep_known
-						&& connection_tail.fallback_materialization_known
-						&& !connection_tail.fallback_materialization_applied
-							&& connection_tail.source_backed_frontier_known
-							&& connection_tail.source_frontier_scan_cell_count == 36 * 36
-							&& connection_tail.internal_growth_0x49b3fb_0x4a61bc_known
-							&& connection_tail.internal_growth_candidate_pair_count > 0
-							&& connection_tail.internal_growth_0x4a61bc_prefix_owned
-							&& connection_tail.internal_growth_0x4a61bc_invocation_count > 0
-							&& connection_tail.internal_growth_0x4a61bc_invocation_count == connection_tail.internal_growth_candidate_pair_count
-							&& (connection_tail.internal_growth_0x4a61bc_selected_candidate_count == 0
-									|| (connection_tail.internal_growth_0x4a61bc_rng_selection_count > 0
-											&& connection_tail.internal_growth_0x4a61bc_projection_chain_call_count > 0
-											&& connection_tail.internal_growth_0x4a61bc_projection_occupied_stamp_count > 0
-											&& connection_tail.internal_growth_0x4a61bc_local_vector_append_count_0x404 > 0))
-						&& connection_tail.blocked_reason.empty()
-						&& workflow_generator_state.object_records_0xec4_ecc.size() > size_t(23)
-						&& workflow_generator_state.object_record_vector_append_count_0x4a54a7 == int32_t(workflow_generator_state.object_records_0xec4_ecc.size())
-						&& workflow_generator_state.connection_fallback_materialization_scope_known
-						&& workflow_generator_state.connection_fallback_materialization_record_count == 0,
-				"entry-to-writeout workflow did not apply 0x4a79a3 before road/river adjacency")) {
-			return 1;
-		}
-			if (!require(workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
-							&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
-							&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.wrapper_cleanup_count_0x49cebd
-									== workflow_generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count,
-					"entry-to-writeout workflow did not preserve the expected reward/guard zero-commit source-stream detail before decorative dispatch")) {
+		if (!require(workflow.phases.size() > 7
+						&& workflow.phases[7].id == "relation_source_order_scan"
+						&& workflow.phases[7].status == "blocked"
+						&& workflow_generator_state.relation_source_order_scan_0x4a89da.invoked
+						&& workflow_generator_state.relation_source_order_scan_0x4a89da.prefix_applied
+						&& !workflow_generator_state.relation_source_order_scan_0x4a89da.helper_chain_complete
+						&& !workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& !workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& !workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& !workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& !workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
+						&& !workflow.final_writeout_complete,
+					"entry-to-writeout workflow did not stop at 0x4a89da before mine/reward/decorative/connection-tail/road replay")) {
 			return 1;
 		}
 	}

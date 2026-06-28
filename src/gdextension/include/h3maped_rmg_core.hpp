@@ -1915,6 +1915,26 @@ struct RelationScanConsumerResult4a5767 {
 	std::vector<RelationScanConsumerOwnerReport4a5767> owner_reports;
 };
 
+struct RelationSourceOrderScanResult4a89da {
+	bool invoked = false;
+	bool prefix_applied = false;
+	bool helper_chain_complete = false;
+	int32_t relation_call_count = 0;
+	int32_t relation_input_blocked_count = 0;
+	int32_t scanned_cell_count = 0;
+	int32_t out_of_bounds_cell_count = 0;
+	int32_t unknown_word_skip_count = 0;
+	int32_t owner_byte_reject_count = 0;
+	int32_t terrain8_skip_count = 0;
+	int32_t projection_reset_count = 0;
+	int32_t low_word_reset_count = 0;
+	int32_t object_reference_nonempty_skip_count = 0;
+	int32_t object_reference_unknown_count = 0;
+	int32_t candidate_mark_attempt_count_0x49aa63 = 0;
+	int32_t candidate_mark_count_0x49aa63 = 0;
+	std::string blocked_reason;
+};
+
 struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 	uint32_t object_record_key = 0U;
 	uint32_t object_record_pointer_4a5e03 = 0U;
@@ -2986,6 +3006,10 @@ struct GeneratorObjectPrivateState {
 	int32_t relation_normalization_4a5767_full_grid_reset_visited_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_changed_count = 0;
 	int32_t relation_normalization_4a5767_full_grid_reset_skipped_count = 0;
+	bool relation_source_order_scan_0x4a89da_ported = false;
+	bool relation_source_order_scan_0x4a89da_prefix_applied = false;
+	bool relation_source_order_scan_0x4a89da_helper_chain_complete = false;
+	RelationSourceOrderScanResult4a89da relation_source_order_scan_0x4a89da;
 	bool relation_scan_consumers_4a5767_applied = false;
 	bool relation_scan_consumers_4a5767_no_object_projection_chain_complete = false;
 	int32_t relation_scan_consumer_owner_scan_count_4a5767 = 0;
