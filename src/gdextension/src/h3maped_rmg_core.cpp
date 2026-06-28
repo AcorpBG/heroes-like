@@ -543,7 +543,7 @@ int32_t source_node_payload_for_coordinate_zone(const CoordinateZone4a218c &zone
 }
 
 int32_t source_node_payload_owner_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
-	return zone_word_for_coordinate_zone(zone, fallback);
+	return generated_cell_owner_byte2_for_coordinate_zone(zone, fallback);
 }
 
 int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
@@ -5802,12 +5802,26 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	result.selected_descriptor_vector_index_0x398 = selected_decision.selected_descriptor_vector_index_0x398;
 	result.selected_wrapper_index_0x4af785 = selected_decision.selected_wrapper_index_0x4af785;
 	result.selected_source_record_copy = selected_decision.selected_source_record_copy;
-	result.selected_score_dispatch_replayed_0x4aa151 = true;
-	result.selected_score_value_known_0x04 = selected_decision.score_dispatch_0x04_known;
-	result.selected_score_value_0x04 = selected_decision.score_dispatch_value_0x04;
 	selected_decision.selected_create_dispatched_0x4aa166 = true;
 	result.selected_create_dispatched_0x4aa166 = true;
 	const RewardGuardCandidateRecord4a9f1c &selected_candidate = state.reward_guard_candidate_records_10f4_10f8[size_t(result.selected_candidate_index)];
+	int32_t selected_score_replay_0x04 = 0;
+	std::string selected_score_replay_blocker;
+	if (!reward_guard_candidate_score_0x4aa151(
+				state,
+				selector,
+				selected_candidate,
+				selected_score_replay_0x04,
+				selected_score_replay_blocker)) {
+		result.blocked_reason = selected_score_replay_blocker.empty()
+				? "0x4a9f1c_selected_candidate_score_replay_0x4aa151_failed"
+				: selected_score_replay_blocker;
+		return result;
+	}
+	selected_decision.selected_score_replayed_0x4aa151 = true;
+	result.selected_score_dispatch_replayed_0x4aa151 = true;
+	result.selected_score_value_known_0x04 = true;
+	result.selected_score_value_0x04 = selected_score_replay_0x04;
 	uint32_t selected_object_vtable_0x00 = 0U;
 	if (!selected_candidate.candidate_vtable_0x00_known
 			|| !reward_guard_candidate_vtable_returned_object_vtable_0x4aa166(
@@ -7638,9 +7652,6 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 
 				const bool policy_byte_0x13 =
 						((uint32_t(result.minimum_low_word_score_0x10) >> 24) & 0xffU) != 0U;
-				// Recovered 0x4aab7e dispatches directly from successful 0x4aa354
-				// materialization into 0x4aa9b7. Projection-ordered scans belong to
-				// their own caller path and must not preempt this source stream.
 				attempt.coordinate_scan_invoked_0x4aa9b7 = true;
 				RewardGuardCoordinateScanResult4aa9b7 coordinate_scan =
 						reward_guard_coordinate_scan_and_commit_0x4aa9b7(
@@ -17047,11 +17058,11 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_pointer_allowed_terrain_mask_0x85_0x8c_known = source_record.source_id_0x00 >= 0;
 	owner.source_pointer_allowed_terrain_mask_0x85_0x8c = source_record_seed.allowed_terrain_mask_0x85_0x8c;
 	owner.source_pointer_value_0x90_known = source_record.source_id_0x00 >= 0;
-	owner.source_pointer_value_0x90 = seed.source_payload.monster_strength_mode;
+	owner.source_pointer_value_0x90 = source_record_seed.source_payload.monster_strength_mode;
 	owner.source_pointer_monster_match_to_town_0x94_known = source_record.source_id_0x00 >= 0;
-	owner.source_pointer_monster_match_to_town_0x94 = seed.source_payload.monster_match_to_town;
+	owner.source_pointer_monster_match_to_town_0x94 = source_record_seed.source_payload.monster_match_to_town;
 	owner.source_pointer_allowed_monster_town_mask_0x95_known = source_record.source_id_0x00 >= 0;
-	owner.source_pointer_allowed_monster_town_mask_0x95 = seed.source_payload.allowed_monster_town_mask;
+	owner.source_pointer_allowed_monster_town_mask_0x95 = source_record_seed.source_payload.allowed_monster_town_mask;
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
@@ -17061,14 +17072,14 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_order_source_record_0x00 = source_record;
 	owner.source_order_source_record_field_0x04_known =
 			owner.source_order_source_record_0x00_known;
-	owner.reward_guard_source_bands_0xa0_0xc0_known = seed.source_index >= 0;
+	owner.reward_guard_source_bands_0xa0_0xc0_known = source_record_seed.source_index >= 0;
 	owner.reward_guard_source_bands_0xa0_0xc0 = {
-		seed.source_payload.treasure_band_0,
-		seed.source_payload.treasure_band_1,
-		seed.source_payload.treasure_band_2,
+		source_record_seed.source_payload.treasure_band_0,
+		source_record_seed.source_payload.treasure_band_1,
+		source_record_seed.source_payload.treasure_band_2,
 	};
-	owner.mine_resource_rules_0x4c_0x84_known = seed.source_index >= 0;
-	owner.mine_resource_rules_0x4c_0x84 = seed.source_payload.mines;
+	owner.mine_resource_rules_0x4c_0x84_known = source_record_seed.source_index >= 0;
+	owner.mine_resource_rules_0x4c_0x84 = source_record_seed.source_payload.mines;
 	owner.scan_bounds_0x20_0x2c_known = false;
 	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
 	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
