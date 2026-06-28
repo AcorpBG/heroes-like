@@ -1387,7 +1387,11 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 		}
 		out_flag_a = 0;
 		out_flag_b = 0;
-		return select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row);
+		if (!select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row)) {
+			return false;
+		}
+		copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
+		return true;
 	}
 	// Normal toolkit vfunc 0x4ba989 checks only the shape class and selects from
 	// toolkit-local ranges_0x14; flags are returned through the caller's out word.
