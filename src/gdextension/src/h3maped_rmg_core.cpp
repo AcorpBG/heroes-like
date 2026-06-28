@@ -2388,6 +2388,14 @@ void preserve_source_pair_vector_edc(GeneratorObjectPrivateState &state, const S
 	state.source_pair_records_edc = resolver_state.source_pairs_0xedc;
 }
 
+static SourceObjectResolverState4af785 &ensure_source_object_resolver_state_4af785(GeneratorObjectPrivateState &state) {
+	if (!state.source_object_resolver_state_4af785_known) {
+		state.source_object_resolver_state_4af785 = source_object_resolver_state_from_catalog_0x49db76();
+		state.source_object_resolver_state_4af785_known = true;
+	}
+	return state.source_object_resolver_state_4af785;
+}
+
 bool recovered_descriptor_join_context_0x4903e8(int32_t target_context) {
 	return target_context == 45
 			|| target_context == 53
@@ -2449,7 +2457,10 @@ SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(So
 	result.descriptor_source_key_is_not_source_row_id = descriptor.source_key_0x00 != selected_source_record.source_row;
 	result.descriptor_only_identity_ambiguous = descriptor_only_source_identity_is_ambiguous(selected_source_record);
 
-	if (!result.recovered_target_context) {
+	const bool source_backed_type98_bridge =
+			target_context == 98
+			&& descriptor.descriptor_type_0x1c == 98;
+	if (!result.recovered_target_context && !source_backed_type98_bridge) {
 		result.blocked_reason = "0x4903e8_target_context_unrecovered_for_descriptor_source_join";
 		return result;
 	}
@@ -2465,6 +2476,15 @@ SourceObjectDescriptorJoinResult4903e8 source_object_descriptor_join_0x4903e8(So
 	result.resolver_0x4af785 = source_object_descriptor_resolver_0x4af785(state, selected_source_record);
 	result.resolver_invoked_0x4af785 = true;
 	result.copied_source_record_is_identity_authority = true;
+	if (source_backed_type98_bridge) {
+		if (!result.resolver_0x4af785.reused_existing_wrapper
+				&& !result.resolver_0x4af785.created_new_wrapper) {
+			result.blocked_reason = "0x4af785_resolver_did_not_resolve_or_create_source_wrapper";
+		} else if (result.resolver_0x4af785.selected_wrapper_index < 0) {
+			result.blocked_reason = "0x4af785_resolver_selected_wrapper_index_missing";
+		}
+		return result;
+	}
 	result.joined = result.resolver_0x4af785.reused_existing_wrapper
 			|| result.resolver_0x4af785.created_new_wrapper;
 	if (result.resolver_0x4af785.appended_source_pair_0xedc
@@ -2539,6 +2559,10 @@ ObjectMaterializationPrep4a8db2_4a901a object_materialization_prep_from_weighted
 		return prep;
 	}
 	if (source_backed_type98_bridge) {
+		if (prep.selected_wrapper_index_0x4af785 < 0) {
+			prep.blocked_reason = "0x4a93a2_type98_bridge_missing_0x4af785_selected_wrapper";
+			return prep;
+		}
 		prep.copied_source_record_carried = true;
 		prep.weighted_type98_descriptor_bridge_0x4a93a2_known = true;
 	}
@@ -18517,19 +18541,17 @@ static void apply_relation_high_owner_propagation_49a318(GeneratorObjectPrivateS
 
 static void apply_materialization_bridge_relation_normalization_0x4a5767(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	apply_relation_normalization_full_grid_reset_0x4a5767(state);
-	if (!state.source_object_resolver_state_4af785_known) {
-		state.source_object_resolver_state_4af785 = source_object_resolver_state_from_catalog_0x49db76();
-		state.source_object_resolver_state_4af785_known = true;
-	}
+	SourceObjectResolverState4af785 &resolver_state =
+			ensure_source_object_resolver_state_4af785(state);
 	H3MapedRng relation_scan_rng;
 	relation_scan_rng.state = rng.state;
 	const RelationScanConsumerResult4a5767 relation_scan_consumers =
 			relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(
 					state,
-					state.source_object_resolver_state_4af785,
+					resolver_state,
 					relation_scan_rng,
 					state.relation_owner_vectors_10e4_10e8);
-	preserve_source_pair_vector_edc(state, state.source_object_resolver_state_4af785);
+	preserve_source_pair_vector_edc(state, resolver_state);
 	state.relation_scan_consumers_4a5767_applied = relation_scan_consumers.applied;
 	state.relation_scan_consumers_4a5767_no_object_projection_chain_complete = relation_scan_consumers.no_object_projection_chain_complete;
 	state.relation_scan_consumer_owner_scan_count_4a5767 = relation_scan_consumers.owner_scan_count;
@@ -18702,7 +18724,8 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 		return true;
 	}
 
-	SourceObjectResolverState4af785 type98_descriptor_state;
+	SourceObjectResolverState4af785 &type98_descriptor_state =
+			ensure_source_object_resolver_state_4af785(state);
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
 		const bool source_pointer_known =
 				owner.source_pointer_0x00_known
@@ -18814,6 +18837,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 		state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 +=
 				state.source_order_scheduler_commit_count_0x4a8db2 - before_scheduler_commit_count;
 	}
+	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 
 	state.source_order_relation_pointer_loop_0x4ac552_input_known =
 			state.source_order_relation_pointer_loop_missing_scan_bounds_count == 0
@@ -18830,7 +18854,8 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 }
 
 static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result, H3MapedRng &rng) {
-	SourceObjectResolverState4af785 type98_descriptor_state;
+	SourceObjectResolverState4af785 &type98_descriptor_state =
+			ensure_source_object_resolver_state_4af785(state);
 	const std::vector<RuntimeZoneSeedInput4a218c> &post_town_choice_zones =
 			coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1;
 	for (const RuntimeZoneSeedInput4a218c &base_runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
@@ -18887,10 +18912,12 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				owner->coordinate_x_0x10,
 				owner->coordinate_y_0x14);
 	}
+	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 }
 
 static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPrivateState &state, const TemplateSelectionRuntimeResult4ac552 &template_selection, const CoordinateOwnerGridResult4a218c &coordinate_result, H3MapedRng &rng) {
-	SourceObjectResolverState4af785 type98_descriptor_state;
+	SourceObjectResolverState4af785 &type98_descriptor_state =
+			ensure_source_object_resolver_state_4af785(state);
 	const std::vector<RuntimeZoneSeedInput4a218c> &post_town_choice_zones =
 			coordinate_result.coordinate_seed.runtime_zone_records_after_0x49b3c1;
 	for (const RuntimeZoneSeedInput4a218c &base_runtime_zone : template_selection.runtime_seed.runtime_zone_seeds) {
@@ -18941,6 +18968,7 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 				source_record.field_0x24_known,
 				source_record.field_0x24);
 	}
+	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 }
 
 static SourceObjectDescriptor4903e8 source_descriptor_from_preserved_pair_context_0x4903e8(const SourceObjectDescriptorJoinContext4903e8 &context) {
