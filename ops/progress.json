@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now matches recovered base TerrainPlacement 0x4bcfc3 by never preserving current art row in that selector, and final-object samples now expose the 0x4ad3eb pass-split type separately from copied source-record type. Pass splitting uses native descriptor/provider type descriptor_type_0x1c, matching recovered 0x4ad1e3 object record +0x04 -> [provider] -> +0x1c semantics; source records still drive definition identity. h3maped_rmg_core_selftest passes. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_descriptor_pass_split_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=49 expected=54; generated-object payload improved to 11344 vs 17057 but remains short with first mismatch offset 0 native=21 expected=2; native generated objects=901 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
-      "currentSliceNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now matches recovered base TerrainPlacement 0x4bcfc3 by never preserving current art row in that selector, and final-object samples now expose the 0x4ad3eb pass-split type separately from copied source-record type. Pass splitting uses native descriptor/provider type descriptor_type_0x1c, matching recovered 0x4ad1e3 object record +0x04 -> [provider] -> +0x1c semantics; source records still drive definition identity. h3maped_rmg_core_selftest passes. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_descriptor_pass_split_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=49 expected=54; generated-object payload improved to 11344 vs 17057 but remains short with first mismatch offset 0 native=21 expected=2; native generated objects=901 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
+      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now keeps base TerrainPlacement 0x4bcfc3 on the recovered no-current-row path while adding the separate recovered final-sweep class-0 0x4bbfcc -> 0x4bc5a3 -> toolkit+0x10 / 0x4ba938 path: classified class-0 final-sweep cells preserve the current scratch visual row/flags when that row class is zero, otherwise they fall back to the base selector. Final-object pass splitting still uses descriptor/provider type descriptor_type_0x1c; copied source records remain definition identity. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_final_sweep_class0_selector_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 8524 vs 17057 with first mismatch offset 0 native=30 expected=2; native generated objects=666 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
+      "currentSliceNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now keeps base TerrainPlacement 0x4bcfc3 on the recovered no-current-row path while adding the separate recovered final-sweep class-0 0x4bbfcc -> 0x4bc5a3 -> toolkit+0x10 / 0x4ba938 path: classified class-0 final-sweep cells preserve the current scratch visual row/flags when that row class is zero, otherwise they fall back to the base selector. Final-object pass splitting still uses descriptor/provider type descriptor_type_0x1c; copied source records remain definition identity. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_final_sweep_class0_selector_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 8524 vs 17057 with first mismatch offset 0 native=30 expected=2; native generated objects=666 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,66 +21,50 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-4ad947-wrapper-vector-handoff-20260628",
-        "title": "Recovered 0x4ad947 Wrapper-Vector Relation Handoff",
+        "id": "native-rmg-final-sweep-class0-selector-20260628",
+        "title": "Recovered Final-Sweep Class-0 Terrain Selector",
+        "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
         "status": "passed_source_backed_behavior_progress_not_parity",
-        "validatedAt": "2026-06-28T04:22:07Z",
-        "updatedAt": "2026-06-28T04:22:07Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now implements the recovered 0x4ad947 wrapper-vector relation handoff: 0x540b14 projection objects carry base wrapper pointer +0x04 and base coordinates +0x08/+0x0c/+0x10; 0x4aa3e9 sets those absolute coordinates before dispatch; after selecting a 0x57c7cc+0x0c global entry native scans generator +0x88/+0x8c resolver wrappers for copied source +0x20, switches wrapper +0x08 refcounts, derives the relation owner from generated-cell word +0x20, and invokes recovered 0x4ad7f7 ordering. h3maped_rmg_core_selftest now proves global index 9 writes into the owned record, wrapper 1 -> 3 switches, relation owner 4 is derived, and 0x4ad7f7 builds ordered target relation 5. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 8960 vs 17057 bytes with first mismatch offset 0 native=19 expected=2. This is source-backed 0x4ad947/0x4ad7f7 behavior progress, not final-payload parity or runtime map-output authorization.",
+        "validatedAt": "2026-06-28T08:33:31Z",
+        "updatedAt": "2026-06-28T08:33:31Z",
+        "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now keeps base TerrainPlacement 0x4bcfc3 on the recovered no-current-row path while adding the separate recovered final-sweep class-0 0x4bbfcc -> 0x4bc5a3 -> toolkit+0x10 / 0x4ba938 path: classified class-0 final-sweep cells preserve the current scratch visual row/flags when that row class is zero, otherwise they fall back to the base selector. Final-object pass splitting still uses descriptor/provider type descriptor_type_0x1c; copied source records remain definition identity. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_final_sweep_class0_selector_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 8524 vs 17057 with first mismatch offset 0 native=30 expected=2; native generated objects=666 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-        "validation": [
+        "artifacts": [
+          "src/gdextension/src/h3maped_rmg_core.cpp",
+          "PLAN.md",
+          "ops/progress.json",
+          ".artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.final_payload_compare.json"
+        ],
+        "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_final_sweep_class0_selector_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_final_sweep_class0_selector_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
         ],
-        "artifacts": [
-          "src/gdextension/include/h3maped_rmg_core.hpp",
-          "src/gdextension/src/h3maped_rmg_core.cpp",
-          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
-          "PLAN.md",
-          "ops/progress.json",
-          "bin/h3maped_rmg_core_selftest",
-          "bin/rmg_native_batch_export_cli",
-          ".artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-          ".artifacts/native_rmg_4ad947_wrapper_vector_handoff_20260628/medium_seed10_setup0_2p.final_payload_compare.json"
-        ],
         "metrics": {
-          "tile_native_bytes": 36288,
-          "tile_expected_bytes": 36288,
+          "native_rmg_end_to_end_parity_complete": false,
+          "runtime_generation_allowed": false,
+          "same_run_private_state_compare_passed": false,
+          "source_backed_behavior_progress": true,
+          "tile_native_byte_count": 36288,
+          "tile_h3maped_byte_count": 36288,
           "tile_first_mismatch_offset": 1,
           "tile_native_byte_at_mismatch": 55,
-          "tile_expected_byte_at_mismatch": 54,
-          "tile_native_sha256": "9e19bf0c6aeaaa0d36115df7046376141f48a2413a9a23f9464b56ba935390b0",
-          "tile_expected_sha256": "cfe2b13aba85076445f55535ff1e99fd2e373782b3867c95721ce333a0663f65",
-          "object_native_bytes": 8960,
-          "object_expected_bytes": 17057,
-          "object_first_mismatch_offset": 0,
-          "object_native_byte_at_mismatch": 19,
-          "object_expected_byte_at_mismatch": 2,
-          "object_native_sha256": "e3faa03010f0f15460bc16a19ae2bae8fb6758a486207ca7485311f411e7740c",
-          "object_expected_sha256": "4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c",
-          "native_generated_object_count": 700,
-          "native_final_payload_byte_count": 59706,
-          "phase_snapshot_written_count": 1,
-          "final_payload_binary_written_count": 1,
-          "godot_process_started": false
+          "tile_h3maped_byte_at_mismatch": 54,
+          "native_generated_object_payload_bytes": 8524,
+          "h3maped_generated_object_payload_bytes": 17057,
+          "generated_object_payload_first_mismatch_offset": 0,
+          "native_generated_object_byte_at_mismatch": 30,
+          "h3maped_generated_object_byte_at_mismatch": 2,
+          "native_generated_object_count": 666,
+          "h3maped_generated_object_count": 1212,
+          "native_first_pass_flagged_object_count": 18
         },
-        "sourceBackedBehaviorProgress": true,
-        "native_rmg_end_to_end_parity_complete": false,
-        "runtime_map_output_enabled": false,
-        "resolvedBlockers": [
-          "0x4ad947_generator_wrapper_vector_0x88_0x8c_relation_handoff_pending_after_selected_global_entry"
-        ],
-        "namedBlockers": [
-          "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-          "generated_object_payload_mismatch_against_same_run_0x4ad3eb_payload"
-        ]
+        "remainingWork": "Continue source-backed alignment of upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and object-vector/source-pointer materialization before 0x4ad3eb. Do not tune from final counts or enable runtime map output."
       },
       "latestEvidence": {
         "id": "native-rmg-relation-owner-handoff-source-owner-20260628",
@@ -19879,7 +19863,7 @@
   },
   "native_cli_required_next_slice": "fix_native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload_then_generated_object_payload_mismatch",
   "nextActionGuardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot phase snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. Defer Windows .dll builds until Linux parity reaches the final boundary. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload.",
-  "notes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now matches recovered base TerrainPlacement 0x4bcfc3 by never preserving current art row in that selector, and final-object samples now expose the 0x4ad3eb pass-split type separately from copied source-record type. Pass splitting uses native descriptor/provider type descriptor_type_0x1c, matching recovered 0x4ad1e3 object record +0x04 -> [provider] -> +0x1c semantics; source records still drive definition identity. h3maped_rmg_core_selftest passes. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_descriptor_pass_split_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=49 expected=54; generated-object payload improved to 11344 vs 17057 but remains short with first mismatch offset 0 native=21 expected=2; native generated objects=901 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
+  "notes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now keeps base TerrainPlacement 0x4bcfc3 on the recovered no-current-row path while adding the separate recovered final-sweep class-0 0x4bbfcc -> 0x4bc5a3 -> toolkit+0x10 / 0x4ba938 path: classified class-0 final-sweep cells preserve the current scratch visual row/flags when that row class is zero, otherwise they fall back to the base selector. Final-object pass splitting still uses descriptor/provider type descriptor_type_0x1c; copied source records remain definition identity. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_final_sweep_class0_selector_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 8524 vs 17057 with first mismatch offset 0 native=30 expected=2; native generated objects=666 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
   "plannedSlices": [
     {
       "baselineChecks": [
@@ -61537,6 +61521,52 @@
     ]
   },
   "validationHistory": [
+    {
+      "id": "native-rmg-final-sweep-class0-selector-20260628",
+      "title": "Recovered Final-Sweep Class-0 Terrain Selector",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "status": "passed_source_backed_behavior_progress_not_parity",
+      "validatedAt": "2026-06-28T08:33:31Z",
+      "updatedAt": "2026-06-28T08:33:31Z",
+      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now keeps base TerrainPlacement 0x4bcfc3 on the recovered no-current-row path while adding the separate recovered final-sweep class-0 0x4bbfcc -> 0x4bc5a3 -> toolkit+0x10 / 0x4ba938 path: classified class-0 final-sweep cells preserve the current scratch visual row/flags when that row class is zero, otherwise they fall back to the base selector. Final-object pass splitting still uses descriptor/provider type descriptor_type_0x1c; copied source records remain definition identity. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_final_sweep_class0_selector_20260628 still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 8524 vs 17057 with first mismatch offset 0 native=30 expected=2; native generated objects=666 vs H3MapEd 1212; native flagged first-pass objects=18. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and generated-object vector/source-pointer materialization parity before 0x4ad3eb.",
+      "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+      "artifacts": [
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "PLAN.md",
+        "ops/progress.json",
+        ".artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.final_payload_compare.json"
+      ],
+      "commands": [
+        "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
+        "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_final_sweep_class0_selector_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_final_sweep_class0_selector_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_final_sweep_class0_selector_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "metrics": {
+        "native_rmg_end_to_end_parity_complete": false,
+        "runtime_generation_allowed": false,
+        "same_run_private_state_compare_passed": false,
+        "source_backed_behavior_progress": true,
+        "tile_native_byte_count": 36288,
+        "tile_h3maped_byte_count": 36288,
+        "tile_first_mismatch_offset": 1,
+        "tile_native_byte_at_mismatch": 55,
+        "tile_h3maped_byte_at_mismatch": 54,
+        "native_generated_object_payload_bytes": 8524,
+        "h3maped_generated_object_payload_bytes": 17057,
+        "generated_object_payload_first_mismatch_offset": 0,
+        "native_generated_object_byte_at_mismatch": 30,
+        "h3maped_generated_object_byte_at_mismatch": 2,
+        "native_generated_object_count": 666,
+        "h3maped_generated_object_count": 1212,
+        "native_first_pass_flagged_object_count": 18
+      },
+      "remainingWork": "Continue source-backed alignment of upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and object-vector/source-pointer materialization before 0x4ad3eb. Do not tune from final counts or enable runtime map output."
+    },
     {
       "id": "native-rmg-final-wrapper-refcount-state-20260628",
       "title": "Recovered Final-Object Wrapper Refcount State",
