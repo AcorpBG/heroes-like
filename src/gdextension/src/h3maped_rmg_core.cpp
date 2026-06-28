@@ -2017,7 +2017,7 @@ static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	const int32_t bit_index = 47 - (8 * x) - y;
+	const int32_t bit_index = 47 - (8 * y) - x;
 	const bool def_msk_primary_bit =
 			(record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
 	if (record.descriptor_mask_fields_0x34_0x48_known) {
@@ -2033,7 +2033,7 @@ static bool source_object_descriptor_mask_bit_0x4268eb(const SourceObjectRecord0
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	const int32_t bit_index = 47 - (8 * x) - y;
+	const int32_t bit_index = 47 - (8 * y) - x;
 	const bool descriptor_secondary_bit =
 			(record.descriptor_mask_b_0x44_0x48 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
 	if (record.descriptor_mask_fields_0x34_0x48_known) {

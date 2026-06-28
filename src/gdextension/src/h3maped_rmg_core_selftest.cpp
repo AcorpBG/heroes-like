@@ -4778,7 +4778,7 @@ int main() {
 		auto mask_order_cell = [&](int32_t x, int32_t y) -> GeneratedCellRecord0x30 & {
 			return mask_order_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, x, y, 0))];
 		};
-		aurelion::h3maped_rmg_core::generated_cell_49aa63(mask_order_cell(2, 3), true);
+		aurelion::h3maped_rmg_core::generated_cell_49aa63(mask_order_cell(3, 2), true);
 
 		RewardGuardWrapperMember4aa3e9 mask_order_member;
 		mask_order_member.object_record_key = 0x0364df10U;
@@ -4844,10 +4844,10 @@ int main() {
 			const auto &mask_order_trace = mask_order_result.feasibility_results_0x4aa603[0].first_footprint_trace_0x49a6f9;
 			mask_order_trace_ok =
 					mask_order_trace.known
-					&& mask_order_trace.mask_x == 1
-					&& mask_order_trace.mask_y == 0
-					&& mask_order_trace.cell_x == 2
-					&& mask_order_trace.cell_y == 3
+					&& mask_order_trace.mask_x == 0
+					&& mask_order_trace.mask_y == 1
+					&& mask_order_trace.cell_x == 3
+					&& mask_order_trace.cell_y == 2
 					&& mask_order_trace.secondary_mask
 					&& mask_order_trace.primary_mask;
 		}
@@ -4857,7 +4857,7 @@ int main() {
 						&& mask_order_result.feasibility_results_0x4aa603.size() == 1
 						&& mask_order_result.feasibility_results_0x4aa603[0].blocked_reason == "0x4aa603_0x49a6f9_footprint_existing_bit26_rejected"
 						&& mask_order_trace_ok,
-					"0x49a6f9 did not use recovered column-major descriptor mask bit order for reward/guard footprint rejection")) {
+					"0x49a6f9 did not use recovered row-major descriptor mask bit order for reward/guard footprint rejection")) {
 			return 1;
 		}
 	}
