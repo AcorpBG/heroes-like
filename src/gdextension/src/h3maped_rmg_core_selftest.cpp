@@ -4664,42 +4664,78 @@ int main() {
 				"0x4aa3e9 did not mirror captured source bit26/bit27 into the wrapper generated-cell grid after member commit")) {
 		return 1;
 	}
-	{
-		GeneratorObjectPrivateState overlap_state = reward_guard_base_state;
-		RewardGuardWrapperState4aa3e9 overlap_wrapper = reward_guard_base_wrapper;
-		GeneratorRelationOwnerState4a218c overlap_relation = reward_guard_relation;
-		overlap_wrapper.bound_left_0x18 = 2;
-		overlap_wrapper.bound_top_0x1c = 0;
-		overlap_wrapper.bound_right_0x20 = 3;
-		overlap_wrapper.bound_bottom_0x24 = 1;
-		overlap_relation.scan_bound_low_x_0x20 = 4;
-		overlap_relation.scan_bound_low_y_0x24 = 2;
-		overlap_relation.scan_bound_high_x_0x28 = 5;
-		overlap_relation.scan_bound_high_y_0x2c = 3;
-		GeneratedCellRecord0x30 &overlap_destination =
-				overlap_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 4, 2, 0))];
-		overlap_destination.word_0x20 = 0x0004000aU;
-		aurelion::h3maped_rmg_core::generated_cell_49aa63(overlap_destination, true);
-		H3MapedRng overlap_rng;
-		overlap_rng.state = 58U;
-		const RewardGuardCoordinateScanResult4aa9b7 overlap_result =
-				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
-						overlap_state,
-						overlap_wrapper,
-						overlap_relation,
-						7,
-						true,
-						overlap_rng);
-		if (!require(!overlap_result.applied
-						&& !overlap_result.committed
-						&& overlap_result.feasibility_results_0x4aa603.size() == 1
-						&& overlap_result.feasibility_results_0x4aa603[0].overlap_bit26_reject_count == 1
-						&& overlap_result.feasibility_results_0x4aa603[0].blocked_reason == "0x4aa603_overlap_existing_bit26_reject"
-						&& overlap_result.blocked_reason == "0x4aa9b7_candidate_vector_empty_after_score_and_0x4aa603_filters",
-					"0x4aa603 overlap pass did not reject a bit26-marked generator destination under a wrapper bit27-clear cell")) {
-			return 1;
+		{
+			GeneratorObjectPrivateState overlap_bit26_state = reward_guard_base_state;
+			RewardGuardWrapperState4aa3e9 overlap_bit26_wrapper = reward_guard_base_wrapper;
+			GeneratorRelationOwnerState4a218c overlap_bit26_relation = reward_guard_relation;
+			overlap_bit26_wrapper.bound_left_0x18 = 2;
+			overlap_bit26_wrapper.bound_top_0x1c = 0;
+			overlap_bit26_wrapper.bound_right_0x20 = 3;
+			overlap_bit26_wrapper.bound_bottom_0x24 = 1;
+			overlap_bit26_relation.scan_bound_low_x_0x20 = 4;
+			overlap_bit26_relation.scan_bound_low_y_0x24 = 2;
+			overlap_bit26_relation.scan_bound_high_x_0x28 = 5;
+			overlap_bit26_relation.scan_bound_high_y_0x2c = 3;
+			GeneratedCellRecord0x30 &overlap_bit26_destination =
+					overlap_bit26_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 4, 2, 0))];
+			overlap_bit26_destination.word_0x20 = 0x0004000aU;
+			aurelion::h3maped_rmg_core::generated_cell_49aa63(overlap_bit26_destination, true);
+			H3MapedRng overlap_bit26_rng;
+			overlap_bit26_rng.state = 58U;
+			const RewardGuardCoordinateScanResult4aa9b7 overlap_bit26_result =
+					aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+							overlap_bit26_state,
+							overlap_bit26_wrapper,
+							overlap_bit26_relation,
+							7,
+							true,
+							overlap_bit26_rng);
+			if (!require(overlap_bit26_result.applied
+							&& overlap_bit26_result.committed
+							&& overlap_bit26_result.feasibility_results_0x4aa603.size() == 1
+							&& overlap_bit26_result.feasibility_results_0x4aa603[0].accepted
+							&& overlap_bit26_result.feasibility_results_0x4aa603[0].overlap_bit26_reject_count == 0
+							&& overlap_bit26_result.feasibility_results_0x4aa603[0].overlap_bit22_reject_count == 0,
+						"0x4aa603 overlap pass incorrectly rejected a bit26-only generator destination under a wrapper bit27-clear cell")) {
+				return 1;
+			}
 		}
-	}
+		{
+			GeneratorObjectPrivateState overlap_bit22_state = reward_guard_base_state;
+			RewardGuardWrapperState4aa3e9 overlap_bit22_wrapper = reward_guard_base_wrapper;
+			GeneratorRelationOwnerState4a218c overlap_bit22_relation = reward_guard_relation;
+			overlap_bit22_wrapper.bound_left_0x18 = 2;
+			overlap_bit22_wrapper.bound_top_0x1c = 0;
+			overlap_bit22_wrapper.bound_right_0x20 = 3;
+			overlap_bit22_wrapper.bound_bottom_0x24 = 1;
+			overlap_bit22_relation.scan_bound_low_x_0x20 = 4;
+			overlap_bit22_relation.scan_bound_low_y_0x24 = 2;
+			overlap_bit22_relation.scan_bound_high_x_0x28 = 5;
+			overlap_bit22_relation.scan_bound_high_y_0x2c = 3;
+			GeneratedCellRecord0x30 &overlap_bit22_destination =
+					overlap_bit22_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 4, 2, 0))];
+			overlap_bit22_destination.word_0x20 = 0x0004000aU;
+			overlap_bit22_destination.word_0x28 |= aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22;
+			H3MapedRng overlap_bit22_rng;
+			overlap_bit22_rng.state = 58U;
+			const RewardGuardCoordinateScanResult4aa9b7 overlap_bit22_result =
+					aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+							overlap_bit22_state,
+							overlap_bit22_wrapper,
+							overlap_bit22_relation,
+							7,
+							true,
+							overlap_bit22_rng);
+			if (!require(!overlap_bit22_result.applied
+							&& !overlap_bit22_result.committed
+							&& overlap_bit22_result.feasibility_results_0x4aa603.size() == 1
+							&& overlap_bit22_result.feasibility_results_0x4aa603[0].overlap_bit22_reject_count == 1
+							&& overlap_bit22_result.feasibility_results_0x4aa603[0].blocked_reason == "0x4aa603_overlap_existing_bit22_reject"
+							&& overlap_bit22_result.blocked_reason == "0x4aa9b7_candidate_vector_empty_after_score_and_0x4aa603_filters",
+						"0x4aa603 overlap pass did not reject a bit22-marked generator destination under a wrapper bit27-clear cell")) {
+				return 1;
+			}
+		}
 	RewardGuardWrapperState4aa3e9 blocked_reward_guard_wrapper = reward_guard_wrapper;
 	blocked_reward_guard_wrapper.selected_members_0x2c_0x30[0].source_record_copy_known_0x04 = false;
 	H3MapedRng blocked_reward_guard_rng;
