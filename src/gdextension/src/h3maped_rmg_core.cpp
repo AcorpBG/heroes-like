@@ -754,21 +754,13 @@ void copy_selected_visual_row_flags_4bad0f(const std::vector<TerrainVisualRow> &
 	out_flag_b = row.flag_b;
 }
 
-bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t neighbor_mask, int32_t current_row, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	out_flag_a = 0;
 	out_flag_b = 0;
 	if (toolkit.simple_vtable_4baa66) {
-		if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
-			selected_row = current_row;
-			return true;
-		}
 		if (!select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[0], rng, selected_row)) {
 			return false;
 		}
-		return true;
-	}
-	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
-		selected_row = current_row;
 		return true;
 	}
 	const TerrainVisualRange4ba868 *range = &toolkit.ranges_0x14[0];
@@ -11342,10 +11334,14 @@ struct FinalObjectDefinitionTableBuild4ad3eb;
 static int32_t final_object_definition_index_for_record_0x4ad1e3(
 		const ObjectRecordReference4a54a7 &record,
 		const FinalObjectDefinitionTableBuild4ad3eb &definition_table);
+static int32_t final_object_pass_split_type_id_0x4ad1e3(
+		const ObjectRecordReference4a54a7 &record,
+		const GeneratorObjectPrivateState &state);
 
 static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3eb(
 		const ObjectRecordReference4a54a7 &record,
 		int32_t vector_index,
+		const GeneratorObjectPrivateState &state,
 		const FinalObjectDefinitionTableBuild4ad3eb &definition_table) {
 	FinalObjectWriteoutRecord4ad1e3 sample;
 	sample.vector_index = vector_index;
@@ -11366,12 +11362,13 @@ static FinalObjectWriteoutRecord4ad1e3 final_object_writeout_record_sample_4ad3e
 	sample.object_record_vtable_0x00 = record.object_record_vtable_0x00;
 	sample.serializer_slot_0x0c = final_object_serializer_slot_0x0c_4ad3eb(record.object_record_vtable_0x00);
 	sample.serializer_slot_0x0c_known = sample.serializer_slot_0x0c != 0U;
+	sample.pass_split_type_id_0x1c = final_object_pass_split_type_id_0x4ad1e3(record, state);
 	sample.pass_split_metadata_byte_0x0c_known =
-			sample.descriptor_type_0x1c >= 0
-			&& sample.descriptor_type_0x1c < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8;
+			sample.pass_split_type_id_0x1c >= 0
+			&& sample.pass_split_type_id_0x1c < SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8;
 	if (sample.pass_split_metadata_byte_0x0c_known) {
 		sample.first_flagged_pass_0x4ad36f =
-				object_metadata_pass_split_flag_0x598300_plus_0x0c(sample.descriptor_type_0x1c);
+				object_metadata_pass_split_flag_0x598300_plus_0x0c(sample.pass_split_type_id_0x1c);
 		sample.second_unflagged_pass_0x4ad3b1 = !sample.first_flagged_pass_0x4ad36f;
 	}
 	sample.x = record.x;
@@ -11439,6 +11436,37 @@ static int32_t final_object_source_catalog_index_0x4ad3eb(const ObjectRecordRefe
 		return source_object_catalog_index_0x49da08(record.source_record_copy);
 	}
 	return -1;
+}
+
+static const SourceObjectRecord0x4c *final_object_source_record_for_pass_split_0x4ad1e3(
+		const ObjectRecordReference4a54a7 &record,
+		const GeneratorObjectPrivateState &state) {
+	if (state.source_object_resolver_state_4af785_known && record.selected_wrapper_index_0x4af785 >= 0) {
+		for (const SourceObjectResolvedWrapper4af785 &wrapper : state.source_object_resolver_state_4af785.wrappers) {
+			if (wrapper.wrapper_index == record.selected_wrapper_index_0x4af785) {
+				return &wrapper.source_record_copy;
+			}
+		}
+	}
+	if (record.copied_source_record_carried) {
+		return &record.source_record_copy;
+	}
+	const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
+	const std::vector<SourceObjectRecord0x4c> &catalog = source_object_catalog_0x49da08();
+	if (source_catalog_index >= 0 && source_catalog_index < int32_t(catalog.size())) {
+		return &catalog[size_t(source_catalog_index)];
+	}
+	return nullptr;
+}
+
+static int32_t final_object_pass_split_type_id_0x4ad1e3(
+		const ObjectRecordReference4a54a7 &record,
+		const GeneratorObjectPrivateState &state) {
+	const SourceObjectRecord0x4c *source_record = final_object_source_record_for_pass_split_0x4ad1e3(record, state);
+	if (source_record != nullptr) {
+		return source_record->type_id_0x1c;
+	}
+	return record.descriptor_type_0x1c;
 }
 
 static FinalObjectDefinitionRecord4ad3eb final_object_definition_record_from_source_0x4ad3eb(
@@ -11817,7 +11845,8 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 		int32_t pass_arg) {
 	for (int32_t index = 0; index < result.generated_object_count; ++index) {
 		const ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc[size_t(index)];
-		const bool record_first_pass = object_metadata_pass_split_flag_0x598300_plus_0x0c(record.descriptor_type_0x1c);
+		const int32_t pass_split_type_id_0x1c = final_object_pass_split_type_id_0x4ad1e3(record, state);
+		const bool record_first_pass = object_metadata_pass_split_flag_0x598300_plus_0x0c(pass_split_type_id_0x1c);
 		if (record_first_pass != first_flagged_pass) {
 			continue;
 		}
@@ -11897,6 +11926,7 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 					final_object_writeout_record_sample_4ad3eb(
 							state.object_records_0xec4_ecc[size_t(index)],
 							index,
+							state,
 							definition_table);
 		if (sample.serializer_slot_0x0c_known) {
 			result.serializer_slot_known_count += 1;
@@ -15092,7 +15122,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		if (final_sweep_classified_cell && classified.shape_class != 0) {
 			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		} else {
-			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, rows, neighbor_mask, final_sweep ? current_art_row : -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		}
 		if (!selected) {
 			if (final_sweep) {
