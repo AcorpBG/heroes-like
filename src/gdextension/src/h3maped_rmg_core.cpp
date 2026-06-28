@@ -8641,7 +8641,7 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				&& generated_cell_49a1d8_valid_record(*wrapper_record)
 				&& generated_cell_49a1d8_valid_record(*state_record)
 				&& !state_bit22
-				&& !state_bit27
+				&& state_bit27
 				&& ((generated_cell_terrain_code_0x24(*state_record) == 8) == terrain8_policy)) {
 			result.direction_accept_count += 1;
 			break;
