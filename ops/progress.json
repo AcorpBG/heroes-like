@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now preserves recovered 0x4bbfcc classified visual-row flags when the exact current terrain-art row is reused, instead of zeroing those flags in native. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement flag preservation progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
-      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now preserves recovered 0x4bbfcc classified visual-row flags when the exact current terrain-art row is reused, instead of zeroing those flags in native. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement flag preservation progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
+      "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns the simple/rock TerrainPlacement base selector with recovered 0x4baa94/0x4ba938 current-row semantics: it preserves an existing visual row only when that row has shape_class == 0, instead of preserving nonzero-shape rows in the simple/rock path. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement selector progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
+      "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns the simple/rock TerrainPlacement base selector with recovered 0x4baa94/0x4ba938 current-row semantics: it preserves an existing visual row only when that row has shape_class == 0, instead of preserving nonzero-shape rows in the simple/rock path. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement selector progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,12 +21,12 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-terrain-0x4bbfcc-flag-preserve-20260628",
-        "title": "Recovered 0x4bbfcc Classified Row Flag Preservation",
+        "id": "native-rmg-simple-selector-current-row-20260628",
+        "title": "Recovered Simple/Rock Base Selector Current Row Semantics",
         "status": "passed_source_backed_behavior_progress_not_parity",
-        "validatedAt": "2026-06-28T01:33:58Z",
-        "updatedAt": "2026-06-28T01:33:58Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now preserves recovered 0x4bbfcc classified visual-row flags when the exact current terrain-art row is reused, instead of zeroing those flags in native. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement flag preservation progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
+        "validatedAt": "2026-06-28T02:24:14Z",
+        "updatedAt": "2026-06-28T02:24:14Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now aligns the simple/rock TerrainPlacement base selector with recovered 0x4baa94/0x4ba938 current-row semantics: it preserves an existing visual row only when that row has shape_class == 0, instead of preserving nonzero-shape rows in the simple/rock path. h3maped_rmg_core_selftest remains green. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes are 36288 vs 36288 with first mismatch offset 1 native=55 expected=54; generated-object payload is 9088 vs 17057 bytes with first mismatch offset 0 native=21 expected=2. This is source-backed TerrainPlacement selector progress, not final-payload parity or runtime map-output authorization. The remaining implementation blocker is upstream generated-cell/TerrainPlacement state before 0x49b2b6 plus object materialization payload parity, not final-map tuning.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -34,17 +34,17 @@
           "ops/progress.json",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/native_rmg_live_flag_preserve_verify_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/native_rmg_live_flag_preserve_verify_20260628/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/native_rmg_live_flag_preserve_verify_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-          ".artifacts/native_rmg_live_flag_preserve_verify_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+          ".artifacts/native_rmg_simple_selector_20260628_verify/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/native_rmg_simple_selector_20260628_verify/medium_seed10_setup0_2p.final_payload.bin",
+          ".artifacts/native_rmg_simple_selector_20260628_verify/medium_seed10_setup0_2p.final_payload_sections.json",
+          ".artifacts/native_rmg_simple_selector_20260628_verify/medium_seed10_setup0_2p.final_payload_compare.json",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bbd01_FUN_004bbd01.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bc988_FUN_004bc988.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/target_004bba13_FUN_004bba13.txt",
           ".artifacts/rmg_recovery/ghidra_terrain_queue_helpers_dump_20260627/caller_004bba36_FUN_004bba36.txt"
         ],
         "checks": [
-          "Source-backed code check: recovered 0x4bbfcc current-row preserve path compares the returned row and flags against current scratch flags; native no longer clears those flags on reuse.",
+          "Source-backed code check: recovered 0x4baa94/0x4ba938 simple/rock base selector preserves current visual row only when the row shape_class is 0; native no longer preserves nonzero-shape rows in that path.",
           "No-Godot build check: cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 passed.",
           "Selftest check: timeout 120s bin/h3maped_rmg_core_selftest passed.",
           "Standalone snapshot check: tools/rmg_native_batch_export.py wrote the Medium seed10 setup0 phase snapshot/final payload and failed closed before full map JSON.",
@@ -54,8 +54,8 @@
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2",
           "timeout 120s bin/h3maped_rmg_core_selftest",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_live_flag_preserve_verify_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked; no Godot; phase snapshot and final payload written)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_live_flag_preserve_verify_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_live_flag_preserve_verify_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_simple_selector_20260628_verify --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked; no Godot; phase snapshot and final payload written)",
+          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_simple_selector_20260628_verify --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_simple_selector_20260628_verify/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
@@ -77,7 +77,7 @@
         "sourceBackedBehaviorProgress": true,
         "parityCompletionClaimed": false,
         "resolvedBlockers": [
-          "0x4bbfcc_current_row_flag_preserve_zeroed_flags_in_native"
+          "0x4baa94_0x4ba938_simple_base_selector_current_row_shape_class_inversion"
         ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
