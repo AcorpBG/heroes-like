@@ -369,6 +369,8 @@ struct SourceObjectResolverSourcePair4af785 {
 	int32_t source_order_relation_owner_byte2 = -1;
 	bool source_order_source_pair_key_0x0c_known = false;
 	int32_t source_order_source_pair_key_0x0c = -1;
+	bool source_pair_success_byte_0x3c_known = true;
+	int32_t source_pair_success_byte_0x3c = 0;
 	bool source_order_anchor_known = false;
 	int32_t source_order_anchor_x_0x10 = 0;
 	int32_t source_order_anchor_y_0x14 = 0;
@@ -613,6 +615,11 @@ struct SourceOrderSchedulerCall4a8db2 {
 	bool returned_nonzero = false;
 	bool committed = false;
 	bool disabled_after_false = false;
+	bool early_direct_0x4a901a = false;
+	int32_t source_pair_success_byte_0x3c_before = 0;
+	int32_t source_pair_success_byte_0x3c_after = 0;
+	int32_t direct_candidate_vector_index_0x4a93a2 = -1;
+	int32_t direct_candidate_accepted_count_0x4a93a2 = 0;
 	int32_t weighted_candidate_vector_index_0x4a901a = -1;
 	int32_t weighted_candidate_accepted_count_0x4a901a = 0;
 	std::string blocked_reason;
@@ -626,6 +633,9 @@ struct SourceOrderSchedulerResult4a8db2 {
 	int32_t source_record_relation_selector_0x1c = -1;
 	bool context_pointer_carried = false;
 	int32_t context_wrapper_index_0x04 = -1;
+	bool source_pair_success_byte_0x3c_known = false;
+	int32_t source_pair_success_byte_0x3c_initial = 0;
+	int32_t source_pair_success_byte_0x3c_final = 0;
 	int32_t lane_state_0xee4 = -1;
 	bool descriptor_source_bridge_known = false;
 	bool scan_bounds_known = false;
@@ -643,6 +653,7 @@ struct SourceOrderSchedulerResult4a8db2 {
 	int32_t threshold_arg_0x18 = 0;
 	int32_t direct_prepass_call_count = 0;
 	int32_t weighted_call_count = 0;
+	int32_t early_direct_call_count_0x4a901a = 0;
 	int32_t committed_call_count = 0;
 	int32_t disabled_lane_count = 0;
 	std::vector<SourceOrderSchedulerLane4a8db2> lanes;
@@ -3740,7 +3751,7 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x20_known = false, int32_t source_field_0x20 = 0, bool source_field_0x24_known = false, int32_t source_field_0x24 = 0);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
 WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false);
-SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng);
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_pair_success_byte_0x3c_known = true, int32_t source_pair_success_byte_0x3c = 0, bool anchor_0x10_0x14_known = false, int32_t anchor_x_0x10 = 0, int32_t anchor_y_0x14 = 0);
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x3c_known = false, int32_t source_field_0x3c = 0);
 void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng);
 EndpointMaterializationResult4a5e73 endpoint_materialization_4a5e73(GeneratedCellRecordGrid0x30 &grid, EndpointMaterializationState4a5e73 &state, int32_t x, int32_t y, int32_t level, int32_t repeat_count, const SourceBoundedCandidatePickerResult4a7312 *projection_helper_0x4a7312 = nullptr);
