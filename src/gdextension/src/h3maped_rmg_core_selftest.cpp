@@ -4301,7 +4301,7 @@ int main() {
 	GeneratedCellRecord0x30 &reward_guard_target =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	reward_guard_target.word_0x20 = 0x0004000aU;
-	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, false);
+	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, true);
 	GeneratedCellRecord0x30 &reward_guard_contour_cell =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
 	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_contour_cell, true);
