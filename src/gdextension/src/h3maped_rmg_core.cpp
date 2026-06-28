@@ -8264,14 +8264,14 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
 	// Recovered 0x4aa9b7 and 0x4aa603 both load the owner gate through
 	// [[relation_pointer]], i.e. relation +0x00 followed by source +0x00.
+	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
+		return relation.relation_owner_byte2_0x4aa9b7;
+	}
 	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
 		return relation.source_pointer_source_index_0x00;
 	}
 	if (relation.source_index >= 0) {
 		return relation.source_index;
-	}
-	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
-		return relation.relation_owner_byte2_0x4aa9b7;
 	}
 	if (relation.source_zone_id > 0) {
 		return relation.source_zone_id - 1;
