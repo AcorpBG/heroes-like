@@ -19,6 +19,7 @@ using aurelion::h3maped_rmg_core::EndpointPointerRecord4a5e73;
 using aurelion::h3maped_rmg_core::FootprintFinalizerResult4a3710;
 using aurelion::h3maped_rmg_core::GeneratorCoordinateCandidateVectorState4a1f3b;
 using aurelion::h3maped_rmg_core::GeneratorObjectPrivateState;
+using aurelion::h3maped_rmg_core::GeneratorRelationOwnerAdjacencyRecord4a3710;
 using aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c;
 using aurelion::h3maped_rmg_core::GeneratorRelationRecordState4a218c;
 using aurelion::h3maped_rmg_core::GeneratorSourceEndpointRecordState4a1f3b;
@@ -56,6 +57,7 @@ using aurelion::h3maped_rmg_core::SourceObjectDescriptorJoinResult4903e8;
 using aurelion::h3maped_rmg_core::SourceObjectMaskLaneResult4af89f;
 using aurelion::h3maped_rmg_core::ObjectMaterializationPrep4a8db2_4a901a;
 using aurelion::h3maped_rmg_core::SourceObjectRecord0x4c;
+using aurelion::h3maped_rmg_core::SourceObjectResolvedWrapper4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverResult4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverSourcePair4af785;
 using aurelion::h3maped_rmg_core::SourceObjectResolverState4af785;
@@ -4410,6 +4412,31 @@ int main() {
 		projection_global_member.projection_object_0x540b14.owned_object_record_key = projection_global_member.object_record_key;
 		projection_global_member.projection_object_0x540b14.owned_object_record_value_0x1c_known = projection_global_member.object_record_sequence_known_0x1c;
 		projection_global_member.projection_object_0x540b14.owned_object_record_value_0x1c = projection_global_member.object_record_sequence_0x1c;
+		projection_global_member.selected_wrapper_index_0x4af785 = 1;
+		projection_global_member.projection_object_0x540b14.base_wrapper_pointer_plus_0x04_known = true;
+		projection_global_member.projection_object_0x540b14.base_wrapper_index_plus_0x04 = 1;
+		projection_global_member.projection_object_0x540b14.selected_wrapper_index_0x4af785_known = true;
+		projection_global_member.projection_object_0x540b14.selected_wrapper_index_0x4af785 = 1;
+		projection_global_state.source_object_resolver_state_4af785_known = true;
+		projection_global_state.source_object_resolver_state_4af785.wrappers.clear();
+		projection_global_state.source_object_resolver_state_4af785.wrapper_bucket_indices_0xe8 = {};
+		projection_global_state.source_object_resolver_state_4af785.next_wrapper_index = 4;
+		SourceObjectResolvedWrapper4af785 previous_projection_wrapper;
+		previous_projection_wrapper.wrapper_index = 1;
+		previous_projection_wrapper.source_catalog_index = 101;
+		previous_projection_wrapper.source_record_copy.type_id_0x1c = 45;
+		previous_projection_wrapper.source_record_copy.subtype_0x20 = 45;
+		previous_projection_wrapper.reference_count_0x08_known = true;
+		previous_projection_wrapper.reference_count_0x08 = 1;
+		SourceObjectResolvedWrapper4af785 selected_projection_wrapper;
+		selected_projection_wrapper.wrapper_index = 3;
+		selected_projection_wrapper.source_catalog_index = 103;
+		selected_projection_wrapper.source_record_copy.type_id_0x1c = 45;
+		selected_projection_wrapper.source_record_copy.subtype_0x20 = 9;
+		selected_projection_wrapper.reference_count_0x08_known = true;
+		selected_projection_wrapper.reference_count_0x08 = 0;
+		projection_global_state.source_object_resolver_state_4af785.wrappers.push_back(previous_projection_wrapper);
+		projection_global_state.source_object_resolver_state_4af785.wrappers.push_back(selected_projection_wrapper);
 		projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c_known = true;
 		projection_global_state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c.assign(
 				size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947),
@@ -4427,6 +4454,56 @@ int main() {
 		projection_global_state.reward_guard_projection_used_flags_0x1024.assign(
 				size_t(aurelion::h3maped_rmg_core::REWARD_GUARD_PROJECTION_GLOBAL_ENTRY_COUNT_0X4AD947),
 				uint8_t(0));
+		GeneratorRelationOwnerState4a218c projection_source_owner;
+		projection_source_owner.owner_vector_index = 4;
+		projection_source_owner.runtime_zone_index = 4;
+		projection_source_owner.source_zone_id = 5;
+		projection_source_owner.source_pointer_0x00_known = true;
+		projection_source_owner.source_pointer_source_index_0x00 = 4;
+		projection_source_owner.relation_owner_byte2_0x4aa9b7_known = true;
+		projection_source_owner.relation_owner_byte2_0x4aa9b7 = 4;
+		projection_source_owner.terrain_policy_0x0c_known = true;
+		projection_source_owner.terrain_policy_0x0c = 0;
+		projection_source_owner.adjacency_vector_0xc4_contents_known = true;
+		GeneratorRelationOwnerAdjacencyRecord4a3710 projection_edge;
+		projection_edge.source_owner_vector_index = 4;
+		projection_edge.source_runtime_zone_index = 4;
+		projection_edge.source_zone_id = 5;
+		projection_edge.target_owner_vector_index = 5;
+		projection_edge.target_runtime_zone_index = 5;
+		projection_edge.target_source_zone_id = 6;
+		projection_source_owner.adjacency_records_0xc4.push_back(projection_edge);
+		GeneratorRelationOwnerState4a218c projection_target_owner;
+		projection_target_owner.owner_vector_index = 5;
+		projection_target_owner.runtime_zone_index = 5;
+		projection_target_owner.source_zone_id = 6;
+		projection_target_owner.source_pointer_0x00_known = true;
+		projection_target_owner.source_pointer_source_index_0x00 = 5;
+		projection_target_owner.relation_owner_byte2_0x4aa9b7_known = true;
+		projection_target_owner.relation_owner_byte2_0x4aa9b7 = 5;
+		projection_target_owner.source_pointer_type_0x04_known = true;
+		projection_target_owner.source_pointer_type_0x04 = 0;
+		projection_target_owner.terrain_policy_0x0c_known = true;
+		projection_target_owner.terrain_policy_0x0c = 0;
+		projection_target_owner.coordinate_triple_0x10_0x18_known = true;
+		projection_target_owner.coordinate_x_0x10 = 2;
+		projection_target_owner.coordinate_y_0x14 = 3;
+		projection_target_owner.coordinate_level_0x18 = 0;
+		projection_target_owner.scan_bounds_0x20_0x2c_known = true;
+		projection_target_owner.scan_bound_low_x_0x20 = 2;
+		projection_target_owner.scan_bound_low_y_0x24 = 3;
+		projection_target_owner.scan_bound_high_x_0x28 = 2;
+		projection_target_owner.scan_bound_high_y_0x2c = 3;
+		projection_global_state.relation_owner_vectors_10e4_10e8 = { projection_source_owner, projection_target_owner };
+		projection_global_state.relation_owner_vector_count_10e4_10e8 = 2;
+		projection_global_state.relation_vector_10e4_10e8.present = true;
+		projection_global_state.relation_vector_10e4_10e8.contents_known = true;
+		projection_global_state.relation_vector_10e4_10e8.count_known = true;
+		projection_global_state.relation_vector_10e4_10e8.count = 2;
+		GeneratedCellRecord0x30 &projection_target =
+				projection_global_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 3, 0))];
+		projection_target.word_0x20 = 0x0005000aU;
+		aurelion::h3maped_rmg_core::generated_cell_49a932(projection_target, true);
 		H3MapedRng projection_global_rng;
 		projection_global_rng.state = 58U;
 		const RewardGuardCoordinateScanResult4aa9b7 projection_global_result =
@@ -4437,15 +4514,35 @@ int main() {
 						7,
 						true,
 						projection_global_rng);
+		const RewardGuardProjectionChainResult49c0a6 &projection_global_chain =
+				projection_global_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
 		if (!require(projection_global_result.applied
-						&& !projection_global_result.committed
 						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_0x540b14_count == 1
-						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_blocked_reason == "0x4ad947_generator_wrapper_vector_0x88_0x8c_relation_handoff_pending_after_selected_global_entry"
-						&& projection_global_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7.projection_record_selected_global_index_0x1c_written
-						&& projection_global_state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7.projection_record_selected_global_index_0x1c == 9
+						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_blocked_reason != "0x4ad947_generator_wrapper_vector_0x88_0x8c_relation_handoff_pending_after_selected_global_entry"
+						&& projection_global_result.commit_0x4aa3e9.selected_member_slot8_projection_ordered_scan_count_0x4ad7f7 == 1
+						&& projection_global_chain.projection_record_selected_global_index_0x1c_written
+						&& projection_global_chain.projection_record_selected_global_index_0x1c == 9
+						&& projection_global_chain.generator_wrapper_vector_join_invoked_0x4ad947
+						&& projection_global_chain.generator_wrapper_vector_match_found_0x4ad947
+						&& projection_global_chain.selected_wrapper_index_0x4ad947 == 3
+						&& projection_global_chain.previous_wrapper_index_0x4ad947 == 1
+						&& projection_global_chain.wrapper_reference_switch_applied_0x4ad947
+						&& projection_global_chain.projection_coordinate_plus_0x08_0x10_known
+						&& projection_global_chain.projection_x_plus_0x08 == 2
+						&& projection_global_chain.projection_y_plus_0x0c == 2
+						&& projection_global_chain.projection_level_plus_0x10 == 0
+						&& projection_global_chain.projection_relation_owner_index_known_0x4ad947
+						&& projection_global_chain.projection_relation_owner_index_0x4ad947 == 4
+						&& projection_global_chain.relation_priority_invoked_0x4ad7f7
+						&& projection_global_chain.relation_priority_0x4ad7f7.ordered_vector_ready_for_0x4aa9b7
+						&& !projection_global_chain.relation_priority_0x4ad7f7.ordered_owner_vector_indexes_0x4ccecb.empty()
+						&& projection_global_chain.relation_priority_0x4ad7f7.ordered_owner_vector_indexes_0x4ccecb[0] == 5
+						&& projection_global_state.source_object_resolver_state_4af785.wrappers[0].reference_count_0x08 == 0
+						&& projection_global_state.source_object_resolver_state_4af785.wrappers[1].reference_count_0x08 == 1
 						&& projection_global_wrapper.selected_members_0x2c_0x30[0].object_record_sequence_known_0x1c
-						&& projection_global_wrapper.selected_members_0x2c_0x30[0].object_record_sequence_0x1c == 9,
-					"0x4aa3e9 projection slot did not write selected 0x57c7cc global index into the owned record before blocking at the unrecovered wrapper-vector relation handoff")) {
+						&& projection_global_wrapper.selected_members_0x2c_0x30[0].object_record_sequence_0x1c == 9
+						&& projection_global_wrapper.selected_members_0x2c_0x30[0].selected_wrapper_index_0x4af785 == 3,
+					"0x4aa3e9 projection slot did not complete recovered 0x4ad947 wrapper-vector relation handoff into 0x4ad7f7")) {
 			return 1;
 		}
 	}
