@@ -5249,10 +5249,17 @@ int main() {
 			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(weighted_resolver_state, weighted_descriptor, *dungeon_town);
 	if (!require(!weighted_join.joined
 					&& !weighted_join.recovered_target_context
+					&& weighted_join.resolver_invoked_0x4af785
+					&& weighted_join.copied_source_record_is_identity_authority
 					&& weighted_join.descriptor_source_fields_match
 					&& weighted_join.descriptor_mask_fields_match_source_0x34_0x48
-					&& weighted_join.source_catalog_index_0x49da08 >= 0,
-				"type-98 weighted materialization must remain a recovered 0x4a93a2 bridge, not a fake 0x4903e8 join")) {
+					&& weighted_join.source_catalog_index_0x49da08 >= 0
+					&& weighted_join.resolver_0x4af785.selected_wrapper_index >= 0
+					&& weighted_join.blocked_reason.empty()
+					&& weighted_resolver_state.source_pairs_0xedc.size() == 1U
+					&& weighted_resolver_state.source_pairs_0xedc[0].wrapper_index == weighted_join.resolver_0x4af785.selected_wrapper_index
+					&& !weighted_resolver_state.source_pairs_0xedc[0].descriptor_join_0x4903e8_known,
+				"type-98 weighted materialization did not preserve the recovered 0x4af785 wrapper/source-pair bridge state")) {
 		return 1;
 	}
 	SourceObjectDescriptor4903e8 mismatched_weighted_descriptor = weighted_descriptor;
@@ -5261,7 +5268,9 @@ int main() {
 	const SourceObjectDescriptorJoinResult4903e8 mismatched_weighted_join =
 			aurelion::h3maped_rmg_core::source_object_descriptor_join_0x4903e8(mismatched_weighted_resolver_state, mismatched_weighted_descriptor, *dungeon_town);
 	if (!require(!mismatched_weighted_join.descriptor_source_fields_match
-					&& !mismatched_weighted_join.descriptor_mask_fields_match_source_0x34_0x48,
+					&& !mismatched_weighted_join.descriptor_mask_fields_match_source_0x34_0x48
+					&& !mismatched_weighted_join.resolver_invoked_0x4af785
+					&& mismatched_weighted_resolver_state.source_pairs_0xedc.empty(),
 				"0x4903e8 descriptor/source join accepted mismatched recovered .msk fields")) {
 		return 1;
 	}
@@ -5970,6 +5979,15 @@ int main() {
 	weighted_commit_state.object_record_sequence_allocator_0xf44 = 5;
 	weighted_commit_state.native_object_record_key_allocator_0x4a93a2_known = true;
 	weighted_commit_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	weighted_commit_state.source_object_resolver_state_4af785_known = true;
+	weighted_commit_state.source_object_resolver_state_4af785 = weighted_resolver_state;
+	weighted_commit_state.source_pair_vector_edc.present = true;
+	weighted_commit_state.source_pair_vector_edc.contents_known = true;
+	weighted_commit_state.source_pair_vector_edc.count_known = true;
+	weighted_commit_state.source_pair_vector_edc.count =
+			int32_t(weighted_resolver_state.source_pairs_0xedc.size());
+	weighted_commit_state.source_pair_vector_edc.element_size_bytes = 8;
+	weighted_commit_state.source_pair_records_edc = weighted_resolver_state.source_pairs_0xedc;
 	for (GeneratedCellRecord0x30 &record : weighted_commit_state.generated_cell_buffer.records) {
 		record.object_reference_vector_contents_known = true;
 		record.object_reference_count = 0;
@@ -6006,6 +6024,7 @@ int main() {
 	}
 	if (!require(weighted_commit.commit_0x4a54a7.object_vector_appended
 					&& weighted_commit.commit_0x4a54a7.object_vector_count_after == 5
+					&& weighted_commit.commit_0x4a54a7.resolver_wrapper_reference_incremented_0x08
 					&& weighted_commit.commit_0x4a54a7.descriptor_counter_incremented
 					&& weighted_commit_state.descriptor_counter_table_0x1110[size_t(98)] == 5U,
 				"weighted 0x4a93a2 materialization did not reproduce the recovered object-vector/counter transition")) {
@@ -6019,8 +6038,22 @@ int main() {
 					&& weighted_object_record.object_record_key == 0x036b6d40U
 					&& weighted_object_record.object_record_sequence_0x1c == 5
 					&& weighted_object_record.source_catalog_index_0x49da08 == weighted_join.source_catalog_index_0x49da08
+					&& weighted_object_record.selected_wrapper_index_0x4af785 == weighted_join.resolver_0x4af785.selected_wrapper_index
+					&& weighted_object_record.selected_wrapper_index_0x4af785 >= 0
 					&& weighted_object_record.source_record_copy.def_name == dungeon_town->def_name,
 				"weighted 0x4a93a2 object record did not carry recovered record metadata and source identity")) {
+		return 1;
+	}
+	const auto weighted_wrapper = std::find_if(
+			weighted_commit_state.source_object_resolver_state_4af785.wrappers.begin(),
+			weighted_commit_state.source_object_resolver_state_4af785.wrappers.end(),
+			[&](const auto &wrapper) {
+				return wrapper.wrapper_index == weighted_join.resolver_0x4af785.selected_wrapper_index;
+			});
+	if (!require(weighted_wrapper != weighted_commit_state.source_object_resolver_state_4af785.wrappers.end()
+					&& weighted_wrapper->reference_count_0x08_known
+					&& weighted_wrapper->reference_count_0x08 == 1,
+				"weighted 0x4a93a2 commit did not increment the carried 0x4af785 wrapper reference count")) {
 		return 1;
 	}
 	if (!require(weighted_commit.commit_0x4a54a7.generated_cell_reference_appended
