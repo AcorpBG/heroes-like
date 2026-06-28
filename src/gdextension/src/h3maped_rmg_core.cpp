@@ -1356,8 +1356,6 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 					&& current.flag_a == classified.flag_a
 					&& current.flag_b == classified.flag_b) {
 				selected_row = current_row;
-				out_flag_a = 0;
-				out_flag_b = 0;
 				return true;
 			}
 		}
