@@ -407,7 +407,7 @@ R1 closes the reward/guard projection chain:
 
 `0x4aa9b7` scans generated-cell owner/score candidate cells and randomly selects reward coordinates.
 
-`0x4aa603` filters reward templates. Its `0x49a6f9` footprint helper reads descriptor mask helpers `0x4268eb` and `0x41e951` with bit index `47 - (x * 8) - y` over the 8x6 descriptor-mask fields. That is column-major over descriptor cells, not row-major. The `0x4268eb`/secondary-mask branch checks generated-cell validity, bit22 absence, relation owner byte, and optional existing bit26 rejection; the `0x41e951`/primary-mask branch is a separate footprint gate and does not replace the secondary bit26 rule.
+`0x4aa603` filters reward templates. Its `0x49a6f9` footprint helper reads descriptor mask helpers `0x4268eb` and `0x41e951` with bit index `47 - (y * 8) - x` over the 8x6 descriptor-mask fields. That is the recovered row-major descriptor-cell order used by the helper call sites. The `0x4268eb`/secondary-mask branch checks generated-cell validity, bit22 absence, relation owner byte, and optional existing bit26 rejection; the `0x41e951`/primary-mask branch is a separate footprint gate and does not replace the secondary bit26 rule.
 
 `0x4aa3e9` mutates generated-cell/object state for rewards.
 
