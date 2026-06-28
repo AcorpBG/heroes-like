@@ -1723,7 +1723,7 @@ int32_t H3MapedRng::next() {
 	return int32_t((state >> 16U) & 0x7fffu);
 }
 
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48) {
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48, bool setup_object_0x4c_known, int32_t setup_object_0x4c) {
 	GeneratorSetupModeResult49ecf2 result;
 	result.setup_object_0x44 = setup_object_0x44;
 	result.generator_mode_0x10b8 = setup_object_0x44;
@@ -1733,6 +1733,10 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_
 		result.generator_value_band_0x10bc_known = true;
 		result.generator_value_band_0x10bc = std::min<int32_t>(5, std::max<int32_t>(1, setup_object_0x48 + 3));
 	}
+	result.setup_object_0x4c_known = setup_object_0x4c_known;
+	result.setup_object_0x4c = setup_object_0x4c;
+	result.generator_field_0x08_known = setup_object_0x4c_known;
+	result.generator_field_0x08 = setup_object_0x4c;
 	result.rng_state_before_setup = seed;
 	result.rng_state_before_template_selection = seed;
 	if (setup_object_0x44 == 3) {
@@ -14425,11 +14429,14 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 	return result;
 }
 
-RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
+RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, bool generator_field_0x08_known, int32_t generator_field_0x08) {
 	RuntimeTerrainSelectionResult49b53d result;
 	result.rng_state_before = rng_state_after_coordinate_replay;
 	result.rng_state_after = rng_state_after_coordinate_replay;
 	result.rng_state_after_monster_town_0x49b4e1 = rng_state_after_coordinate_replay;
+	result.generator_field_0x08_known = generator_field_0x08_known;
+	result.generator_field_0x08 = generator_field_0x08;
+	result.generator_field_0x08_non_negative = !generator_field_0x08_known || generator_field_0x08 >= 0;
 
 	H3MapedRng rng;
 	rng.state = rng_state_after_coordinate_replay;
@@ -14492,7 +14499,7 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 		}
 		replay_monster_town_choice_0x49b4e1(
 				record,
-				true,
+				result.generator_field_0x08_non_negative,
 				rng,
 				result.monster_town_rng_call_count_0x49b4e1);
 		apply_relation_owner_terrain_policy_0x49b53d(owner, &record);
@@ -16211,8 +16218,11 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 	return result;
 }
 
-CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links) {
+CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links, bool generator_field_0x08_known, int32_t generator_field_0x08) {
 	CoordinateOwnerGridResult4a218c result;
+	result.generator_field_0x08_known = generator_field_0x08_known;
+	result.generator_field_0x08 = generator_field_0x08;
+	result.generator_field_0x08_non_negative = !generator_field_0x08_known || generator_field_0x08 >= 0;
 	result.coordinate_seed = coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(
 			width,
 			height,
@@ -16227,7 +16237,9 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 	}
 	result.terrain_selection = runtime_terrain_selection_49b53d(
 			result.coordinate_seed.rng_state_after,
-			result.coordinate_seed.relation_owner_vectors_10e4_10e8);
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
+			generator_field_0x08_known,
+			generator_field_0x08);
 	result.terrain_selection_executed = true;
 	int32_t original_same_level_runtime_zone_count = 0;
 	for (const GeneratorRelationOwnerState4a218c &owner : result.coordinate_seed.relation_owner_vectors_10e4_10e8) {
@@ -20059,7 +20071,9 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			config.seed,
 			config.setup_object_0x44,
 			config.setup_object_0x48_known,
-			config.setup_object_0x48);
+			config.setup_object_0x48,
+			config.setup_object_0x4c_known,
+			config.setup_object_0x4c);
 	const int32_t score = size_score(
 			config.width,
 			config.height,
@@ -20103,7 +20117,9 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					result.setup_mode_0x49ecf2.generator_mode_0x10b8,
 					result.template_selection_0x4ac552.rng_state_after_template_selection,
 					result.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds,
-					result.template_selection_0x4ac552.runtime_seed.runtime_links);
+					result.template_selection_0x4ac552.runtime_seed.runtime_links,
+					result.setup_mode_0x49ecf2.generator_field_0x08_known,
+					result.setup_mode_0x49ecf2.generator_field_0x08);
 	const bool coordinate_terrain_done = result.coordinate_owner_grid_0x4a218c.owner_grid_executed
 			&& !result.coordinate_owner_grid_0x4a218c.coordinate_seed_blocked
 			&& result.coordinate_owner_grid_0x4a218c.terrain_repaint.status != "pending_execution";

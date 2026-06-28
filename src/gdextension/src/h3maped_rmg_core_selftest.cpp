@@ -2458,6 +2458,60 @@ int main() {
 			return 1;
 		}
 	}
+	{
+		auto make_owner_for_terrain5 = []() {
+			std::vector<GeneratorRelationOwnerState4a218c> owners(1);
+			GeneratorRelationOwnerState4a218c &owner = owners[0];
+			owner.runtime_zone_index = 0;
+			owner.owner_vector_index = 0;
+			owner.relation_owner_byte2_0x4aa9b7_known = true;
+			owner.relation_owner_byte2_0x4aa9b7 = 0;
+			owner.coordinate_triple_0x10_0x18_known = true;
+			owner.coordinate_x_0x10 = 0;
+			owner.coordinate_y_0x14 = 0;
+			owner.coordinate_level_0x18 = 0;
+			owner.source_pointer_terrain_match_to_town_0x84_known = true;
+			owner.source_pointer_terrain_match_to_town_0x84 = false;
+			owner.source_pointer_allowed_terrain_mask_0x85_0x8c_known = true;
+			owner.source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 5U);
+			return owners;
+		};
+		H3MapedRng expected_rng;
+		expected_rng.state = 4321U;
+		const int32_t terrain_rng = expected_rng.next();
+		const int32_t monster_rng = expected_rng.next();
+		std::vector<GeneratorRelationOwnerState4a218c> non_negative_owners = make_owner_for_terrain5();
+		RuntimeTerrainSelectionResult49b53d non_negative_selection =
+				aurelion::h3maped_rmg_core::runtime_terrain_selection_49b53d(4321U, non_negative_owners, true, 0);
+		std::vector<GeneratorRelationOwnerState4a218c> negative_owners = make_owner_for_terrain5();
+		RuntimeTerrainSelectionResult49b53d negative_selection =
+				aurelion::h3maped_rmg_core::runtime_terrain_selection_49b53d(4321U, negative_owners, true, -1);
+		if (!require(non_negative_selection.records.size() == 1 && negative_selection.records.size() == 1,
+					"0x49b4e1 generator+0x08 sign test did not emit one terrain record per relation owner")) {
+			return 1;
+		}
+		if (!require(non_negative_selection.records[0].rng_value == terrain_rng
+						&& non_negative_selection.records[0].monster_town_choice_rng_value_0x49b4e1 == monster_rng,
+					"0x49b4e1 generator+0x08 non-negative path did not consume expected RNG values")) {
+			return 1;
+		}
+		if (!require(non_negative_selection.records[0].monster_town_choice_rng_modulus_0x49b4e1 == 3
+						&& non_negative_selection.records[0].monster_town_choice_0x08 == 8,
+					"0x49b4e1 non-negative generator+0x08 path did not keep town candidate 8")) {
+			return 1;
+		}
+		if (!require(negative_selection.records[0].monster_town_choice_rng_modulus_0x49b4e1 == 2
+						&& negative_selection.records[0].monster_town_choice_0x08 == 0,
+					"0x49b4e1 negative generator+0x08 path did not remove town candidate 8")) {
+			return 1;
+		}
+		if (!require(negative_selection.generator_field_0x08_known
+						&& !negative_selection.generator_field_0x08_non_negative
+						&& negative_owners[0].monster_town_choice_0x08 == 0,
+					"0x49b4e1 generator+0x08 metadata/result was not applied back to relation owners")) {
+			return 1;
+		}
+	}
 	TerrainRepaintResult4a3f27 terrain_repaint = aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
 			36,
 			36,
@@ -2764,6 +2818,14 @@ int main() {
 		return 1;
 	}
 	if (!require(setup0.generator_value_band_0x10bc_known && setup0.generator_value_band_0x10bc == 3, "0x49ecf2 setup object +0x48 default did not produce generator +0x10bc normal strength band")) {
+		return 1;
+	}
+	const GeneratorSetupModeResult49ecf2 setup0_field08 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 0, true, -7);
+	if (!require(setup0_field08.setup_object_0x4c_known
+					&& setup0_field08.setup_object_0x4c == -7
+					&& setup0_field08.generator_field_0x08_known
+					&& setup0_field08.generator_field_0x08 == -7,
+				"0x49ecf2 setup object +0x4c did not populate generator +0x08")) {
 		return 1;
 	}
 	const GeneratorSetupModeResult49ecf2 setup3 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 3);

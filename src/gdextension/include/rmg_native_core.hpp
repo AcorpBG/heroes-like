@@ -23,6 +23,9 @@ struct ControlledCase {
 	bool setup_object_0x44_known = false;
 	bool setup_object_0x44_supplied = false;
 	int32_t setup_object_0x44 = 0;
+	bool setup_object_0x4c_known = true;
+	bool setup_object_0x4c_supplied = false;
+	int32_t setup_object_0x4c = 0;
 	bool parse_ok = false;
 	std::string parse_error;
 };
@@ -1157,6 +1160,9 @@ struct RecoveredOwnerGridPayload {
 	int32_t terrain_selection_match_to_town_count = 0;
 	int32_t terrain_selection_allowed_flag_choice_count = 0;
 	int32_t terrain_selection_no_eligible_default_zero_count = 0;
+	bool terrain_selection_generator_field_0x08_known = false;
+	int32_t terrain_selection_generator_field_0x08 = 0;
+	bool terrain_selection_generator_field_0x08_non_negative = true;
 	int32_t terrain_repaint_write_count_0x4a4163 = 0;
 	int32_t terrain_visual_write_count_0x4bb74b = 0;
 	int32_t terrain_visual_missing_bucket_count_0x4bcfc3 = 0;

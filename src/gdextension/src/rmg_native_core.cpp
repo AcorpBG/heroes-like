@@ -160,6 +160,8 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.setup_object_0x44 = controlled_case.setup_object_0x44;
 	config.setup_object_0x48_known = true;
 	config.setup_object_0x48 = 0;
+	config.setup_object_0x4c_known = controlled_case.setup_object_0x4c_known;
+	config.setup_object_0x4c = controlled_case.setup_object_0x4c;
 	return config;
 }
 
@@ -3697,6 +3699,9 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"rmg_setup_object_0x44_known\": " << (controlled_case.setup_object_0x44_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x44_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x44_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x44\": " << controlled_case.setup_object_0x44 << ",\n";
+	out << "    \"rmg_setup_object_0x4c_known\": " << (controlled_case.setup_object_0x4c_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x4c_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x4c_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x4c\": " << controlled_case.setup_object_0x4c << ",\n";
 	const std::string generator_mode_source = !input.generator_mode_0x10b8_known
 			? "missing_same_run_rmg_setup_object_0x44_or_explicit_cli"
 			: (input.recovered_setup_mode_randomized_sentinel_3
@@ -3780,6 +3785,9 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"terrain_selection_match_to_town_count\": " << payload.terrain_selection_match_to_town_count << ",\n";
 		out << "    \"terrain_selection_allowed_flag_choice_count\": " << payload.terrain_selection_allowed_flag_choice_count << ",\n";
 		out << "    \"terrain_selection_no_eligible_default_zero_count\": " << payload.terrain_selection_no_eligible_default_zero_count << ",\n";
+		out << "    \"terrain_selection_generator_field_0x08_known\": " << (payload.terrain_selection_generator_field_0x08_known ? "true" : "false") << ",\n";
+		out << "    \"terrain_selection_generator_field_0x08\": " << payload.terrain_selection_generator_field_0x08 << ",\n";
+		out << "    \"terrain_selection_generator_field_0x08_non_negative\": " << (payload.terrain_selection_generator_field_0x08_non_negative ? "true" : "false") << ",\n";
 		out << "    \"terrain_repaint_write_count_0x4a4163\": " << payload.terrain_repaint_write_count_0x4a4163 << ",\n";
 		out << "    \"terrain_visual_write_count_0x4bb74b\": " << payload.terrain_visual_write_count_0x4bb74b << ",\n";
 		out << "    \"terrain_visual_missing_bucket_count_0x4bcfc3\": " << payload.terrain_visual_missing_bucket_count_0x4bcfc3 << ",\n";
@@ -3818,8 +3826,8 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 	ControlledCase controlled_case;
 	controlled_case.raw = raw;
 	const std::vector<std::string> parts = split(raw, ':');
-	if (parts.size() < 6) {
-		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44]]]";
+	if (parts.size() < 6 || parts.size() > 10) {
+		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c]]]]";
 		return controlled_case;
 	}
 
@@ -3864,6 +3872,14 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 			return controlled_case;
 		}
 		controlled_case.setup_object_0x44_supplied = true;
+	}
+	if (parts.size() >= 10 && !parts[9].empty()) {
+		controlled_case.setup_object_0x4c_known = parse_i32(parts[9], controlled_case.setup_object_0x4c);
+		if (!controlled_case.setup_object_0x4c_known) {
+			controlled_case.parse_error = "invalid setup_object_0x4c";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x4c_supplied = true;
 	}
 
 	controlled_case.parse_ok = true;
@@ -4146,6 +4162,9 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.terrain_selection_match_to_town_count = result.terrain_selection.match_to_town_count;
 	payload.terrain_selection_allowed_flag_choice_count = result.terrain_selection.allowed_flag_choice_count;
 	payload.terrain_selection_no_eligible_default_zero_count = result.terrain_selection.no_eligible_default_zero_count;
+	payload.terrain_selection_generator_field_0x08_known = result.terrain_selection.generator_field_0x08_known;
+	payload.terrain_selection_generator_field_0x08 = result.terrain_selection.generator_field_0x08;
+	payload.terrain_selection_generator_field_0x08_non_negative = result.terrain_selection.generator_field_0x08_non_negative;
 	payload.terrain_selection_rng_state_after = result.terrain_selection.rng_state_after;
 	payload.terrain_repaint_write_count_0x4a4163 = result.terrain_repaint.zone_repaint_write_count_0x4a4163;
 	payload.terrain_visual_write_count_0x4bb74b = result.terrain_repaint.terrain_visual_write_count_0x4bb74b;
