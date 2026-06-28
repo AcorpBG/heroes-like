@@ -45,7 +45,7 @@ The active shared native core now executes these recovered TerrainPlacement piec
    - `0x4bb74b` byte5-zero live feedback walks the runtime-initialized `0x5a5028..0x5a5068` direction order, filters same active scratch terrain, removes and seeds existing set-A members that fail `0x4bc988`, and inserts absent same-terrain neighbors only when `0x4bc988` accepts them;
    - `0x4bba59` diagonal neighbor seeding only accepts the recovered byte5-zero neighbor branch;
    - `0x4bbfcc` final whole-map sweep revisits the full grid and applies recovered class corrections only through the source-backed `0x4bcb91` and `0x4bcd43` probe predicates;
-   - class-0 final-sweep cells route through the recovered `0x4ba938` current-row/base selector path instead of the classified `+0x14` bucket selector;
+   - class-0 final-sweep cells route through the recovered `0x4ba938` current-row/base selector path instead of the classified `+0x14` bucket selector; preserved current-row art does not copy stale current scratch flags because the recovered caller reloads the classified flag word before `0x4bad0f`;
    - final sweep preserves the current scratch visual record through the recovered `0x4bc5a3` path when a corrected class has no direct visual bucket.
 
 ## Native Implementation
