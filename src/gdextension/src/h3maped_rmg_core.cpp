@@ -3896,7 +3896,112 @@ static RewardGuardProjectionChainResult49c0a6 reward_guard_projection_chain_0x49
 			result.projection_driver_0x4ad947.selected_global_entry_index;
 
 	result.generator_wrapper_vector_join_invoked_0x4ad947 = true;
-	result.blocked_reason = "0x4ad947_generator_wrapper_vector_0x88_0x8c_relation_handoff_pending_after_selected_global_entry";
+	if (!state.source_object_resolver_state_4af785_known
+			|| state.source_object_resolver_state_4af785.wrappers.empty()) {
+		result.blocked_reason = "0x4ad947_generator_wrapper_vector_0x88_0x8c_missing_or_empty_after_selected_global_entry";
+		return result;
+	}
+	result.generator_wrapper_vector_available_0x88_0x8c = true;
+	const int32_t selected_global_entry_index =
+			result.projection_driver_0x4ad947.selected_global_entry_index;
+	int32_t selected_wrapper_vector_index = -1;
+	for (int32_t wrapper_vector_index = 0;
+			wrapper_vector_index < int32_t(state.source_object_resolver_state_4af785.wrappers.size());
+			++wrapper_vector_index) {
+		result.generator_wrapper_vector_scan_count_0x4ad947 += 1;
+		const SourceObjectResolvedWrapper4af785 &wrapper =
+				state.source_object_resolver_state_4af785.wrappers[size_t(wrapper_vector_index)];
+		if (wrapper.source_record_copy.subtype_0x20 == selected_global_entry_index) {
+			selected_wrapper_vector_index = wrapper_vector_index;
+			break;
+		}
+	}
+	if (selected_wrapper_vector_index < 0) {
+		result.blocked_reason = "0x4ad947_generator_wrapper_vector_0x88_0x8c_no_wrapper_matching_selected_global_entry";
+		return result;
+	}
+	SourceObjectResolvedWrapper4af785 &selected_wrapper =
+			state.source_object_resolver_state_4af785.wrappers[size_t(selected_wrapper_vector_index)];
+	result.generator_wrapper_vector_match_found_0x4ad947 = true;
+	result.selected_wrapper_index_0x4ad947 = selected_wrapper.wrapper_index;
+	result.previous_wrapper_index_0x4ad947 =
+			projection_object->base_wrapper_pointer_plus_0x04_known
+			? projection_object->base_wrapper_index_plus_0x04
+			: (projection_object->selected_wrapper_index_0x4af785_known
+					? projection_object->selected_wrapper_index_0x4af785
+					: -1);
+	if (result.previous_wrapper_index_0x4ad947 >= 0
+			&& result.previous_wrapper_index_0x4ad947 != selected_wrapper.wrapper_index) {
+		for (SourceObjectResolvedWrapper4af785 &wrapper :
+				state.source_object_resolver_state_4af785.wrappers) {
+			if (wrapper.wrapper_index == result.previous_wrapper_index_0x4ad947) {
+				wrapper.reference_count_0x08_known = true;
+				wrapper.reference_count_0x08 -= 1;
+				break;
+			}
+		}
+	}
+	selected_wrapper.reference_count_0x08_known = true;
+	selected_wrapper.reference_count_0x08 += 1;
+	selected_wrapper.definition_index_0x0c_known = false;
+	selected_wrapper.definition_index_0x0c = -1;
+	projection_object->base_wrapper_pointer_plus_0x04_known = true;
+	projection_object->base_wrapper_index_plus_0x04 = selected_wrapper.wrapper_index;
+	projection_object->selected_wrapper_index_0x4af785_known = true;
+	projection_object->selected_wrapper_index_0x4af785 = selected_wrapper.wrapper_index;
+	projection_object->selected_source_subtype_0x20_known = true;
+	projection_object->selected_source_subtype_0x20 =
+			selected_wrapper.source_record_copy.subtype_0x20;
+	result.wrapper_reference_switch_applied_0x4ad947 = true;
+
+	if (!projection_object->base_coordinate_plus_0x08_0x10_known) {
+		result.blocked_reason = "0x4ad947_projection_object_base_coordinate_plus_0x08_0x10_pending_before_relation_handoff";
+		return result;
+	}
+	result.projection_coordinate_plus_0x08_0x10_known = true;
+	result.projection_x_plus_0x08 = projection_object->base_x_plus_0x08;
+	result.projection_y_plus_0x0c = projection_object->base_y_plus_0x0c;
+	result.projection_level_plus_0x10 = projection_object->base_level_plus_0x10;
+	const int64_t projection_flat = cell_index(
+			state.width,
+			state.height,
+			result.projection_x_plus_0x08,
+			result.projection_y_plus_0x0c,
+			result.projection_level_plus_0x10);
+	if (projection_flat < 0 || projection_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		result.blocked_reason = "0x4ad947_projection_object_base_coordinate_plus_0x08_0x10_out_of_generated_cell_bounds";
+		return result;
+	}
+	const GeneratedCellRecord0x30 &projection_record =
+			state.generated_cell_buffer.records[size_t(projection_flat)];
+	if (!projection_record.word_0x20_known) {
+		result.blocked_reason = "0x4ad947_projection_generated_cell_word_0x20_pending_before_relation_owner_lookup";
+		return result;
+	}
+	result.projection_generated_cell_word_0x20_known = true;
+	result.projection_generated_cell_word_0x20 = projection_record.word_0x20;
+	result.projection_relation_owner_index_0x4ad947 =
+			generated_cell_word20_owner_byte2_signed(projection_record.word_0x20);
+	result.projection_relation_owner_index_known_0x4ad947 = true;
+	if (result.projection_relation_owner_index_0x4ad947 < 0) {
+		result.blocked_reason = "0x4ad947_projection_generated_cell_relation_owner_negative";
+		return result;
+	}
+
+	result.relation_priority_invoked_0x4ad7f7 = true;
+	result.relation_priority_0x4ad7f7 =
+			reward_guard_relation_priority_ordering_0x4ad7f7(
+					state.relation_owner_vectors_10e4_10e8,
+					result.projection_relation_owner_index_0x4ad947,
+					rng,
+					false);
+	state.reward_guard_relation_priority_0x4ad7f7 = result.relation_priority_0x4ad7f7;
+	if (!result.relation_priority_0x4ad7f7.ordered_vector_ready_for_0x4aa9b7) {
+		result.blocked_reason = result.relation_priority_0x4ad7f7.blocked_reason.empty()
+				? "0x4ad7f7_ordered_relation_vector_not_ready_after_0x4ad947_handoff"
+				: result.relation_priority_0x4ad7f7.blocked_reason;
+		return result;
+	}
 	return result;
 }
 
@@ -6563,6 +6668,8 @@ static void reward_guard_projection_member_attach_owned_record_0x540b14(
 	object.owned_object_record_value_0x20 = member.object_record_selected_index_0x20;
 	object.selected_wrapper_index_0x4af785_known = member.selected_wrapper_index_0x4af785 >= 0;
 	object.selected_wrapper_index_0x4af785 = member.selected_wrapper_index_0x4af785;
+	object.base_wrapper_pointer_plus_0x04_known = member.selected_wrapper_index_0x4af785 >= 0;
+	object.base_wrapper_index_plus_0x04 = member.selected_wrapper_index_0x4af785;
 	object.selected_source_subtype_0x20_known = member.source_record_copy_known_0x04;
 	object.selected_source_subtype_0x20 =
 			member.source_record_copy_known_0x04 ? member.source_record_copy.subtype_0x20 : -1;
@@ -8741,6 +8848,13 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 						"0x4aa3e9_0x540b14_slot8_projection_object_missing_before_0x49c0a6";
 				return finish_blocked(result.selected_member_slot8_projection_blocked_reason);
 			}
+			member.projection_object_0x540b14.base_coordinate_plus_0x08_0x10_known = true;
+			member.projection_object_0x540b14.base_x_plus_0x08 =
+					selected_x + member.relative_x_0x08;
+			member.projection_object_0x540b14.base_y_plus_0x0c =
+					selected_y + member.relative_y_0x0c;
+			member.projection_object_0x540b14.base_level_plus_0x10 =
+					selected_level + member.relative_level_0x10;
 			const std::vector<RewardGuardProjectionGlobalEntry4ad947> *projection_global_table =
 					state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c_known
 					? &state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c
@@ -8761,6 +8875,16 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 				member.projection_object_0x540b14.owned_object_record_value_0x1c =
 						projection_chain.projection_record_selected_global_index_0x1c;
 			}
+			if (projection_chain.wrapper_reference_switch_applied_0x4ad947) {
+				member.selected_wrapper_index_0x4af785 =
+						projection_chain.selected_wrapper_index_0x4ad947;
+				member.projection_object_0x540b14.base_wrapper_pointer_plus_0x04_known = true;
+				member.projection_object_0x540b14.base_wrapper_index_plus_0x04 =
+						projection_chain.selected_wrapper_index_0x4ad947;
+				member.projection_object_0x540b14.selected_wrapper_index_0x4af785_known = true;
+				member.projection_object_0x540b14.selected_wrapper_index_0x4af785 =
+						projection_chain.selected_wrapper_index_0x4ad947;
+			}
 			if (!projection_chain.relation_priority_0x4ad7f7.ordered_vector_ready_for_0x4aa9b7) {
 				result.selected_member_slot8_projection_blocked_reason =
 						projection_chain.blocked_reason.empty()
@@ -8779,6 +8903,13 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 							*rng,
 							false);
 			if (projection_scan.coordinate_scan.committed && projection_scan.coordinate_scan.blocked_reason.empty()) {
+				if (projection_chain.projection_record_selected_global_index_0x1c_written
+						&& projection_chain.projection_record_selected_global_index_0x1c >= 0
+						&& projection_chain.projection_record_selected_global_index_0x1c
+								< int32_t(state.reward_guard_projection_used_flags_0x1024.size())) {
+					state.reward_guard_projection_used_flags_0x1024[size_t(
+							projection_chain.projection_record_selected_global_index_0x1c)] = 1U;
+				}
 				result.selected_member_slot8_projection_success_count_0x4aa9b7 += 1;
 				continue;
 			}
