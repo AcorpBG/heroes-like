@@ -13499,7 +13499,7 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	return result;
 }
 
-SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng) {
+SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_pair_success_byte_0x3c_known, int32_t source_pair_success_byte_0x3c, bool anchor_0x10_0x14_known, int32_t anchor_x_0x10, int32_t anchor_y_0x14) {
 	SourceOrderSchedulerResult4a8db2 result;
 	result.source_pair_pointer_carried = source_pair_pointer_0x00_carried;
 	result.source_pair_copied_source_catalog_index = source_pair_copied_source_catalog_index;
@@ -13508,6 +13508,9 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 	result.source_record_relation_selector_0x1c = source_record.relation_selector_0x1c;
 	result.context_pointer_carried = context_pointer_0x04_carried;
 	result.context_wrapper_index_0x04 = context_wrapper_index_0x04;
+	result.source_pair_success_byte_0x3c_known = source_pair_success_byte_0x3c_known;
+	result.source_pair_success_byte_0x3c_initial = source_pair_success_byte_0x3c;
+	result.source_pair_success_byte_0x3c_final = source_pair_success_byte_0x3c;
 	result.lane_state_0xee4 = lane_state_0xee4;
 	result.scan_bounds_known = true;
 	result.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
@@ -13607,6 +13610,9 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 	if (!result.context_pointer_carried) {
 		return finish("0x4a8db2_source_pair_plus_0x04_context_missing", false);
 	}
+	if (!result.source_pair_success_byte_0x3c_known) {
+		return finish("0x4a901a_source_pair_plus_0x3c_success_byte_missing", false);
+	}
 
 	bool has_positive_count_work = false;
 	for (const SourceOrderSchedulerLane4a8db2 &lane : result.lanes) {
@@ -13641,6 +13647,10 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		return finish("0x4a8db2_relation_owner_byte2_missing", false);
 	}
 
+	bool source_pair_success_byte_set = result.source_pair_success_byte_0x3c_initial != 0;
+	const int32_t direct_anchor_x_0x10 = anchor_0x10_0x14_known ? anchor_x_0x10 : scan_low_x;
+	const int32_t direct_anchor_y_0x14 = anchor_0x10_0x14_known ? anchor_y_0x14 : scan_low_y;
+
 	auto run_scan_call = [&](SourceOrderSchedulerLane4a8db2 &lane,
 			const std::string &phase,
 			uint32_t callsite,
@@ -13660,8 +13670,43 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		call.scheduler_score_before = score_before;
 		call.scheduler_increment = increment;
 		call.scheduler_score_after = score_after;
-		call.weighted_candidate_vector_index_0x4a901a = int32_t(state.weighted_candidate_vectors_0x4a901a.size());
 		call.attempted_0x4a901a = true;
+		call.source_pair_success_byte_0x3c_before = source_pair_success_byte_set ? 1 : 0;
+		if (!source_pair_success_byte_set) {
+			call.early_direct_0x4a901a = true;
+			call.direct_candidate_vector_index_0x4a93a2 = int32_t(state.source_order_direct_candidate_vectors_0x4a93a2.size());
+			const SourceOrderObjectPlacementResult4a93a2 direct = source_order_object_placement_0x4a93a2(
+					state,
+					join,
+					relation_owner_byte2,
+					direct_anchor_x_0x10,
+					direct_anchor_y_0x14,
+					level,
+					scan_low_x,
+					scan_low_y,
+					scan_high_x,
+					scan_high_y,
+					context_wrapper_index_0x04,
+					lane.selected_index_0x20,
+					lane.enabled_low_byte_0x24,
+					rng);
+			call.returned_nonzero = direct.committed;
+			call.committed = direct.committed;
+			call.direct_candidate_accepted_count_0x4a93a2 = direct.placement_state_0x4a93a2.accepted_candidate_count;
+			call.blocked_reason = direct.blocked_reason;
+			if (direct.committed) {
+				source_pair_success_byte_set = true;
+				result.source_pair_success_byte_0x3c_final = 1;
+				result.early_direct_call_count_0x4a901a += 1;
+			}
+			call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
+			lane.committed_call_count += direct.committed ? 1 : 0;
+			result.committed_call_count += direct.committed ? 1 : 0;
+			result.calls.push_back(call);
+			return direct.committed;
+		}
+
+		call.weighted_candidate_vector_index_0x4a901a = int32_t(state.weighted_candidate_vectors_0x4a901a.size());
 		const WeightedObjectCandidateScanResult4a901a scan = weighted_object_candidate_scan_0x4a901a(
 				state,
 				join,
@@ -13680,6 +13725,7 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		call.committed = scan.committed;
 		call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
 		call.blocked_reason = scan.blocked_reason;
+		call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
 		lane.committed_call_count += scan.committed ? 1 : 0;
 		result.committed_call_count += scan.committed ? 1 : 0;
 		result.calls.push_back(call);
@@ -13796,7 +13842,12 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(Genera
 			scan_high_y,
 			level,
 			lane_state_0xee4,
-			rng);
+			rng,
+			source_pair.source_pair_success_byte_0x3c_known,
+			source_pair.source_pair_success_byte_0x3c,
+			source_pair.source_order_anchor_known,
+			source_pair.source_order_anchor_x_0x10,
+			source_pair.source_order_anchor_y_0x14);
 }
 
 static bool endpoint_vector_contains_key_4a5e73(const std::vector<EndpointPointerRecord4a5e73> &records, int32_t key_0x20) {
@@ -18709,7 +18760,12 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				owner.scan_bound_high_y_0x2c,
 				owner.coordinate_level_0x18,
 				lane_state_0xee4,
-				rng);
+				rng,
+				true,
+				direct.committed ? 1 : 0,
+				true,
+				owner.coordinate_x_0x10,
+				owner.coordinate_y_0x14);
 		state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 += 1;
 		state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 +=
 				state.source_order_scheduler_commit_count_0x4a8db2 - before_scheduler_commit_count;
@@ -18780,7 +18836,12 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				owner->scan_bound_high_y_0x2c,
 				owner->coordinate_level_0x18,
 				lane_state_0xee4,
-				rng);
+				rng,
+				true,
+				0,
+				true,
+				owner->coordinate_x_0x10,
+				owner->coordinate_y_0x14);
 	}
 }
 
@@ -18920,7 +18981,7 @@ static SourceObjectDescriptorJoinResult4903e8 source_descriptor_join_from_preser
 void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	state.generic_source_order_pair_replay_applied_0x4a8d2c_0x4a8db2 = true;
 	for (size_t index = 0; index < state.source_pair_records_edc.size(); ++index) {
-		const SourceObjectResolverSourcePair4af785 &pair = state.source_pair_records_edc[index];
+		SourceObjectResolverSourcePair4af785 pair = state.source_pair_records_edc[index];
 		state.generic_source_order_pair_scan_count_0xedc += 1;
 		if (pair.source_record_copy.type_id_0x1c == 98) {
 			state.generic_source_order_pair_type98_skip_count += 1;
@@ -18978,9 +19039,12 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 		state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c += 1;
 		if (direct.committed) {
 			state.generic_source_order_pair_direct_commit_count_0x4a8d2c += 1;
+			pair.source_pair_success_byte_0x3c_known = true;
+			pair.source_pair_success_byte_0x3c = 1;
+			state.source_pair_records_edc[index] = pair;
 		}
 		const int32_t before_weighted_commit_count = state.source_order_scheduler_commit_count_0x4a8db2;
-		source_order_weighted_scheduler_0x4a8db2(
+		const SourceOrderSchedulerResult4a8db2 scheduler = source_order_weighted_scheduler_0x4a8db2(
 				state,
 				join,
 				pair,
@@ -18998,6 +19062,9 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 				pair.source_record_copy.raw_field_0x34,
 				pair.source_record_copy.raw_field_0x3c_known,
 				pair.source_record_copy.raw_field_0x3c);
+		pair.source_pair_success_byte_0x3c_known = scheduler.source_pair_success_byte_0x3c_known;
+		pair.source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;
+		state.source_pair_records_edc[index] = pair;
 		state.generic_source_order_pair_weighted_replay_count_0x4a8db2 += 1;
 		state.generic_source_order_pair_weighted_commit_count_0x4a8db2 +=
 				state.source_order_scheduler_commit_count_0x4a8db2 - before_weighted_commit_count;
