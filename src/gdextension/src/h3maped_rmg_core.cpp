@@ -6516,10 +6516,16 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 				: result.candidate_rebuild_0x49d7c3.blocked_reason);
 	}
 
+	bool post_attach_base_offsets_known = false;
+	int32_t post_attach_base_offset_x_0x49d179 = 0;
+	int32_t post_attach_base_offset_y_0x49d17c = 0;
 	for (const RewardGuardWrapperMember4aa3e9 &selected_member : wrapper.selected_members_0x2c_0x30) {
 		if (selected_member.descriptor_type_0x1c < 0) {
 			continue;
 		}
+		post_attach_base_offsets_known = true;
+		post_attach_base_offset_x_0x49d179 = selected_member.descriptor_offset_x_0x2c;
+		post_attach_base_offset_y_0x49d17c = selected_member.descriptor_offset_y_0x30;
 		const int32_t direction_count = object_metadata_flag_0x598300(selected_member.descriptor_type_0x1c, 1) ? 8 : 5;
 		const int32_t base_x = selected_member.relative_x_0x08 - selected_member.descriptor_offset_x_0x2c;
 		const int32_t base_y = selected_member.relative_y_0x0c - selected_member.descriptor_offset_y_0x30;
@@ -6620,8 +6626,12 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 		return finish_blocked("0x49cf34_0x49d69d_0x49abd6_member_body_stamp_empty");
 	}
 
-	const int32_t descriptor_relative_x = placed_member.relative_x_0x08 - placed_member.descriptor_offset_x_0x2c;
-	const int32_t descriptor_relative_y = placed_member.relative_y_0x0c - placed_member.descriptor_offset_y_0x30;
+	const int32_t descriptor_relative_x =
+			placed_member.relative_x_0x08
+			- (post_attach_base_offsets_known ? post_attach_base_offset_x_0x49d179 : placed_member.descriptor_offset_x_0x2c);
+	const int32_t descriptor_relative_y =
+			placed_member.relative_y_0x0c
+			- (post_attach_base_offsets_known ? post_attach_base_offset_y_0x49d17c : placed_member.descriptor_offset_y_0x30);
 	result.primary_bit27_descriptor_relative_base_known_0x49d179_0x49d184 = true;
 	result.primary_bit27_descriptor_relative_x_0x49d184 = descriptor_relative_x;
 	result.primary_bit27_descriptor_relative_y_0x49d17f = descriptor_relative_y;
@@ -8727,15 +8737,13 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 	const bool terrain8_policy = relation.terrain_policy_0x0c == 8;
 	const bool selected_member_policy_allows_existing_bit22 =
 			reward_guard_selected_members_policy_allow_existing_bit22_0x49d65c(wrapper);
-	// Recovered 0x4aa603 computes the direction-loop start from 0x49d65c and
-	// the attached flag, then computes the loop end independently from the
-	// 0x598300 +1 metadata byte of the last selected member.
-	const int32_t direction_start =
-			(selected_member_policy_allows_existing_bit22
-					&& (!wrapper.attached_flag_0x48_known || !wrapper.attached_flag_0x48))
-			? 1
-			: 0;
-	const int32_t direction_end = object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1) ? 8 : 4;
+	// Recovered 0x4aa603 uses the last member's 0x598300 +1 metadata byte for
+	// both direction-loop bounds. 0x49d65c is consulted later for the contour
+	// allow-existing-bit22 argument, not for direction-loop start.
+	const bool last_member_uses_full_direction_set =
+			object_metadata_flag_0x598300(last_member.descriptor_type_0x1c, 1);
+	const int32_t direction_start = last_member_uses_full_direction_set ? 0 : 1;
+	const int32_t direction_end = last_member_uses_full_direction_set ? 8 : 4;
 	const int32_t base_x = last_member.relative_x_0x08 - last_member.descriptor_offset_x_0x2c;
 	const int32_t base_y = last_member.relative_y_0x0c - last_member.descriptor_offset_y_0x30;
 	for (int32_t direction_index = direction_start; direction_index < direction_end; ++direction_index) {
@@ -20574,6 +20582,26 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		}
 	}
 	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
+		// Recovered 0x4ac552 executes source-order object replay before
+		// 0x4a8c15. Native preserves the non-type98 0xedc pair records during
+		// the relation-pointer replay above, so replay them here before the
+		// generated-cell bridge phases mutate the grid.
+		replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(
+				result.generator_object_private_state,
+				route_free_cell_rng);
+		const GeneratorObjectPrivateState &generic_state = result.generator_object_private_state;
+		std::ostringstream generic_note;
+		generic_note << "edc_pairs=" << generic_state.generic_source_order_pair_scan_count_0xedc
+				<< ",direct_dispatches=" << generic_state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c
+				<< ",direct_commits=" << generic_state.generic_source_order_pair_direct_commit_count_0x4a8d2c
+				<< ",weighted_replays=" << generic_state.generic_source_order_pair_weighted_replay_count_0x4a8db2
+				<< ",weighted_commits=" << generic_state.generic_source_order_pair_weighted_commit_count_0x4a8db2;
+		if (!generic_state.generic_source_order_pair_replay_blockers_0xedc.empty()) {
+			generic_note << ",blocked_pairs=" << generic_state.generic_source_order_pair_replay_blockers_0xedc.size();
+		}
+		add_phase("generic_non_type98_source_order_pairs", "0xedc_0x4a8d2c_0x4a8db2", "complete_source_order_prefix", generic_note.str());
+	}
+	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 		const RouteFreeCellPhaseResult4a8260 route_free_cell_phase =
 				route_free_cell_phase_0x4a8260_0x4a4c8e(
 						result.generator_object_private_state.generated_cell_buffer,
@@ -20750,6 +20778,10 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		result.generator_object_private_state.reward_guard_terrain_pressure_0xf60_0xf64_known = true;
 		result.generator_object_private_state.reward_guard_terrain_pressure_total_0xf60 = 0;
 		result.generator_object_private_state.reward_guard_terrain_pressure_by_terrain_0xf64.fill(0);
+		// Outer 0x4ac552 calls 0x4aadd2 and then 0x4a5767 after
+		// 0x4a9d6a. The earlier 0x4a5767 replay belongs to 0x4a8c15's
+		// internal tail, so reward/guard must see this post-mine replay too.
+		apply_materialization_bridge_relation_normalization_0x4a5767(result.generator_object_private_state, route_free_cell_rng);
 		result.generator_object_private_state.reward_guard_materialization_driver_0x4aa354_ported = true;
 		result.generator_object_private_state.reward_guard_source_stream_0x4aab7e_ported = true;
 		result.generator_object_private_state.reward_guard_source_stream_0x4aab7e =
@@ -20999,23 +21031,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		return result;
 	}
 	add_phase("relation_scan_consumers", "0x4aadd2_0x4a5767_0x49a318_0x4a5a23_0x4a9e40_0x4af785_0x49ba89_0x4a54a7", "complete_source_order_prefix", "source_pair_preservation_continues_into_reward_guard_materialization");
-
-	replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(
-			result.generator_object_private_state,
-			route_free_cell_rng);
-	{
-		const GeneratorObjectPrivateState &generic_state = result.generator_object_private_state;
-		std::ostringstream generic_note;
-		generic_note << "edc_pairs=" << generic_state.generic_source_order_pair_scan_count_0xedc
-				<< ",direct_dispatches=" << generic_state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c
-				<< ",direct_commits=" << generic_state.generic_source_order_pair_direct_commit_count_0x4a8d2c
-				<< ",weighted_replays=" << generic_state.generic_source_order_pair_weighted_replay_count_0x4a8db2
-				<< ",weighted_commits=" << generic_state.generic_source_order_pair_weighted_commit_count_0x4a8db2;
-		if (!generic_state.generic_source_order_pair_replay_blockers_0xedc.empty()) {
-			generic_note << ",blocked_pairs=" << generic_state.generic_source_order_pair_replay_blockers_0xedc.size();
-		}
-		add_phase("generic_non_type98_source_order_pairs", "0xedc_0x4a8d2c_0x4a8db2", "complete_source_order_prefix", generic_note.str());
-	}
 
 	const bool reward_guard_source_stream_owned = object_state.reward_guard_source_stream_0x4aab7e_ported
 			&& object_state.reward_guard_source_stream_0x4aab7e_input_known
