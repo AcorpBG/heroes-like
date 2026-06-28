@@ -11438,34 +11438,10 @@ static int32_t final_object_source_catalog_index_0x4ad3eb(const ObjectRecordRefe
 	return -1;
 }
 
-static const SourceObjectRecord0x4c *final_object_source_record_for_pass_split_0x4ad1e3(
-		const ObjectRecordReference4a54a7 &record,
-		const GeneratorObjectPrivateState &state) {
-	if (state.source_object_resolver_state_4af785_known && record.selected_wrapper_index_0x4af785 >= 0) {
-		for (const SourceObjectResolvedWrapper4af785 &wrapper : state.source_object_resolver_state_4af785.wrappers) {
-			if (wrapper.wrapper_index == record.selected_wrapper_index_0x4af785) {
-				return &wrapper.source_record_copy;
-			}
-		}
-	}
-	if (record.copied_source_record_carried) {
-		return &record.source_record_copy;
-	}
-	const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
-	const std::vector<SourceObjectRecord0x4c> &catalog = source_object_catalog_0x49da08();
-	if (source_catalog_index >= 0 && source_catalog_index < int32_t(catalog.size())) {
-		return &catalog[size_t(source_catalog_index)];
-	}
-	return nullptr;
-}
-
 static int32_t final_object_pass_split_type_id_0x4ad1e3(
 		const ObjectRecordReference4a54a7 &record,
 		const GeneratorObjectPrivateState &state) {
-	const SourceObjectRecord0x4c *source_record = final_object_source_record_for_pass_split_0x4ad1e3(record, state);
-	if (source_record != nullptr) {
-		return source_record->type_id_0x1c;
-	}
+	(void)state;
 	return record.descriptor_type_0x1c;
 }
 
