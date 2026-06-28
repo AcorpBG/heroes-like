@@ -12884,6 +12884,25 @@ static void append_road_coordinate_record_0x14b0_0x4ae1fd(GeneratorObjectPrivate
 	state.road_coordinate_vector_append_count_0x4ae1fd = int32_t(state.road_coordinate_records_0x14b0.size());
 }
 
+static bool source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+		GeneratorObjectPrivateState &state,
+		const SourceObjectDescriptorJoinResult4903e8 &join,
+		int32_t selected_x,
+		int32_t selected_y,
+		int32_t selected_level,
+		uint32_t source_callsite) {
+	const int32_t adjusted_x = selected_x - join.descriptor.source_cell_x_0x2c;
+	const int32_t adjusted_y = selected_y - join.descriptor.source_cell_y_0x30;
+	append_road_coordinate_record_0x14b0_0x4ae1fd(state, adjusted_x, adjusted_y, selected_level, source_callsite);
+
+	const int64_t flat = cell_index(state.width, state.height, adjusted_x, adjusted_y + 1, selected_level);
+	if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		return true;
+	}
+	generated_cell_49a932(state.generated_cell_buffer.records[size_t(flat)], true);
+	return true;
+}
+
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
 	WeightedObjectMaterializationCommitResult4a93a2 result;
 	result.record_vtable_0x540a9c = record.object_record_vtable_0x00 == WEIGHTED_OBJECT_RECORD_VTABLE_0X540A9C;
@@ -13038,18 +13057,19 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	placement.allocated_record_0x4a93a2 = true;
 	placement.object_record_key_known = result.object_record_0x4a93a2.object_record_key_known;
 	placement.object_record_key = result.object_record_0x4a93a2.object_record_key;
-	append_road_coordinate_record_0x14b0_0x4ae1fd(
-			state,
-			result.object_record_0x4a93a2.x,
-			result.object_record_0x4a93a2.y,
-			result.object_record_0x4a93a2.level,
-			0x004a95afU);
 
 	result.commit_0x4a93a2_0x4a54a7 = object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(state, join, result.object_record_0x4a93a2);
 	result.committed = result.commit_0x4a93a2_0x4a54a7.committed;
 	placement.committed_through_0x4a54a7 = result.committed;
 	placement.object_vector_count_after = result.commit_0x4a93a2_0x4a54a7.commit_0x4a54a7.object_vector_count_after;
 	if (result.committed) {
+		source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+				state,
+				join,
+				result.object_record_0x4a93a2.x,
+				result.object_record_0x4a93a2.y,
+				result.object_record_0x4a93a2.level,
+				0x004a95afU);
 		placement.source_pair_success_byte_0x3c_set = true;
 		state.source_order_direct_commit_count_0x4a93a2 += 1;
 		if (!state.object_records_0xec4_ecc.empty()) {
@@ -13251,18 +13271,19 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.allocated_record_0x4a93a2 = true;
 	vector_state.object_record_key_known = result.weighted_record_0x4a93a2.object_record_key_known;
 	vector_state.object_record_key = result.weighted_record_0x4a93a2.object_record_key;
-	append_road_coordinate_record_0x14b0_0x4ae1fd(
-			state,
-			result.weighted_record_0x4a93a2.x,
-			result.weighted_record_0x4a93a2.y,
-			result.weighted_record_0x4a93a2.level,
-			0x004a9347U);
 
 	result.commit_0x4a93a2_0x4a901a_0x4a54a7 = object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(state, join, result.weighted_record_0x4a93a2);
 	result.committed = result.commit_0x4a93a2_0x4a901a_0x4a54a7.committed;
 	vector_state.committed_through_0x4a54a7 = result.committed;
 	vector_state.object_vector_count_after = result.commit_0x4a93a2_0x4a901a_0x4a54a7.commit_0x4a54a7.object_vector_count_after;
 	if (result.committed) {
+		source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+				state,
+				join,
+				result.weighted_record_0x4a93a2.x,
+				result.weighted_record_0x4a93a2.y,
+				result.weighted_record_0x4a93a2.level,
+				0x004a9347U);
 		state.weighted_candidate_commit_count_0x4a901a += 1;
 	} else {
 		result.blocked_reason = result.commit_0x4a93a2_0x4a901a_0x4a54a7.blocked_reason.empty()
