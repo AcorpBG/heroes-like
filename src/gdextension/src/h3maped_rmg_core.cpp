@@ -15478,7 +15478,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			result.terrain_visual_preserved_current_record_count_0x4bc5a3 += 1;
 			return true;
 		}
-		result.terrain_scratch_word_0x4bad0f[size_t(index)] = terrain_scratch_word_4bad0f(terrain_id, selected_row, out_flag_a, out_flag_b);
+		result.terrain_scratch_word_0x4bad0f[size_t(index)] = (current_record & 0xc000U) | terrain_scratch_word_4bad0f(terrain_id, selected_row, out_flag_a, out_flag_b);
 		result.generated_cell_word_0x24[size_t(index)] = generated_cell_49acf6_word24(result.generated_cell_word_0x24[size_t(index)], terrain_id, selected_row);
 		result.generated_cell_word_0x28[size_t(index)] = generated_cell_49acf6_word28(result.generated_cell_word_0x28[size_t(index)], out_flag_a, out_flag_b);
 		result.terrain_visual_write_count_0x4bb74b += 1;
