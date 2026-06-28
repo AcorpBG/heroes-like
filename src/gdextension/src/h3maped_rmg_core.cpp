@@ -4232,7 +4232,10 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 					false,
 					0,
 					0,
-					&selected_record);
+					&selected_record,
+					true,
+					0,
+					resolver.selected_wrapper_index);
 			if (!commit.object_vector_appended) {
 				result.object_branch_blocked_count += 1;
 				result.object_branch_blocked_reason = "0x4a5a23_object_branch_vtable_slot_0x04_commit_failed";
@@ -4456,7 +4459,71 @@ static void generated_grid_stamp_object_footprint_0x49abd6(
 	result.generator_body_stamp_applied_0x49abd6 = result.generator_body_stamp_count_0x49abd6 > 0;
 }
 
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04, bool descriptor_raw_0x0c_known, int32_t descriptor_raw_0x0c) {
+static SourceObjectResolvedWrapper4af785 *source_object_wrapper_by_wrapper_index_0x4a54a7(
+		SourceObjectResolverState4af785 &resolver_state,
+		int32_t wrapper_index_0x04) {
+	if (wrapper_index_0x04 < 0) {
+		return nullptr;
+	}
+	for (SourceObjectResolvedWrapper4af785 &wrapper : resolver_state.wrappers) {
+		if (wrapper.wrapper_index == wrapper_index_0x04) {
+			return &wrapper;
+		}
+	}
+	return nullptr;
+}
+
+static SourceObjectResolvedWrapper4af785 *source_object_unique_wrapper_by_source_catalog_0x4a54a7(
+		SourceObjectResolverState4af785 &resolver_state,
+		int32_t source_catalog_index_0x49da08) {
+	if (source_catalog_index_0x49da08 < 0) {
+		return nullptr;
+	}
+	SourceObjectResolvedWrapper4af785 *selected = nullptr;
+	for (SourceObjectResolvedWrapper4af785 &wrapper : resolver_state.wrappers) {
+		if (wrapper.source_catalog_index != source_catalog_index_0x49da08) {
+			continue;
+		}
+		if (selected != nullptr) {
+			return nullptr;
+		}
+		selected = &wrapper;
+	}
+	return selected;
+}
+
+static void source_object_increment_wrapper_reference_0x4a54a7(
+		GeneratorObjectPrivateState &state,
+		ObjectFootprintCommitResult4a54a7 &result,
+		ObjectRecordReference4a54a7 &object_record,
+		int32_t selected_wrapper_index_0x4af785) {
+	if (!state.source_object_resolver_state_4af785_known) {
+		return;
+	}
+	SourceObjectResolvedWrapper4af785 *wrapper =
+			source_object_wrapper_by_wrapper_index_0x4a54a7(
+					state.source_object_resolver_state_4af785,
+					selected_wrapper_index_0x4af785);
+	if (wrapper == nullptr) {
+		wrapper = source_object_unique_wrapper_by_source_catalog_0x4a54a7(
+				state.source_object_resolver_state_4af785,
+				object_record.source_catalog_index_0x49da08);
+	}
+	if (wrapper == nullptr) {
+		return;
+	}
+	wrapper->reference_count_0x08_known = true;
+	wrapper->reference_count_0x08 += 1;
+	wrapper->definition_index_0x0c_known = false;
+	wrapper->definition_index_0x0c = -1;
+	result.resolver_wrapper_reference_incremented_0x08 = true;
+	result.resolver_wrapper_reference_count_after_0x08 = wrapper->reference_count_0x08;
+	if (object_record.selected_wrapper_index_0x4af785 < 0 && wrapper->wrapper_index >= 0) {
+		object_record.selected_wrapper_index_0x4af785 = wrapper->wrapper_index;
+	}
+}
+
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04, bool descriptor_raw_0x0c_known, int32_t descriptor_raw_0x0c, int32_t selected_wrapper_index_0x4af785) {
 	ObjectFootprintCommitResult4a54a7 result;
 	ObjectRecordReference4a54a7 object_record;
 	object_record.object_record_key = object_record_key;
@@ -4466,6 +4533,7 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	object_record.x = x;
 	object_record.y = y;
 	object_record.level = level;
+	object_record.selected_wrapper_index_0x4af785 = selected_wrapper_index_0x4af785;
 
 	const int64_t target_flat = cell_index(state.width, state.height, x, y, level);
 	GeneratedCellRecord0x30 *target_record = nullptr;
@@ -4483,6 +4551,11 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 	object_record.source_record_copy = *source_record_copy_0x04;
 	object_record.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(*source_record_copy_0x04);
 	build_object_record_score_cache_0x49b89c(object_record);
+	source_object_increment_wrapper_reference_0x4a54a7(
+			state,
+			result,
+			object_record,
+			selected_wrapper_index_0x4af785);
 	generated_grid_stamp_object_footprint_0x49abd6(
 			state,
 			result,
@@ -4588,7 +4661,8 @@ ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObject
 			descriptor.source_cell_y_0x30,
 			prep.copied_source_record_carried ? &prep.source_record_copy : nullptr,
 			descriptor.descriptor_raw_0x0c_known,
-			descriptor.descriptor_raw_0x0c);
+			descriptor.descriptor_raw_0x0c,
+			prep.selected_wrapper_index_0x4af785);
 	if (result.object_vector_appended && !state.object_records_0xec4_ecc.empty()) {
 		ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc.back();
 		record.source_descriptor_join_0x4903e8_known = prep.descriptor_joined;
@@ -11299,7 +11373,7 @@ static int32_t final_object_definition_index_for_record_0x4ad1e3(
 }
 
 static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_definition_table_0x4ad1e3_0x4ad3eb(
-		const GeneratorObjectPrivateState &state,
+		GeneratorObjectPrivateState &state,
 		FinalObjectWriteoutResult4ad1e3 &result) {
 	FinalObjectDefinitionTableBuild4ad3eb build;
 	result.object_definition_table_invoked = true;
@@ -11319,56 +11393,22 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 	}
 
 	const std::vector<SourceObjectRecord0x4c> &catalog = source_object_catalog_0x49da08();
-	const SourceObjectResolverState4af785 &resolver_state = state.source_object_resolver_state_4af785;
-	std::map<int32_t, int32_t> wrapper_index_to_vector_index;
-	std::map<int32_t, int32_t> source_catalog_to_unique_wrapper_vector_index;
-	std::set<int32_t> ambiguous_source_catalog_indices;
-	for (int32_t wrapper_vector_index = 0; wrapper_vector_index < int32_t(resolver_state.wrappers.size()); ++wrapper_vector_index) {
-		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
-		if (wrapper.wrapper_index >= 0) {
-			wrapper_index_to_vector_index[wrapper.wrapper_index] = wrapper_vector_index;
-		}
-		if (wrapper.source_catalog_index < 0) {
-			continue;
-		}
-		const auto existing = source_catalog_to_unique_wrapper_vector_index.find(wrapper.source_catalog_index);
-		if (existing == source_catalog_to_unique_wrapper_vector_index.end()) {
-			source_catalog_to_unique_wrapper_vector_index[wrapper.source_catalog_index] = wrapper_vector_index;
-		} else if (existing->second != wrapper_vector_index) {
-			ambiguous_source_catalog_indices.insert(wrapper.source_catalog_index);
-		}
-	}
-
+	SourceObjectResolverState4af785 &resolver_state = state.source_object_resolver_state_4af785;
 	std::set<int32_t> active_wrapper_vector_indices;
-	for (const ObjectRecordReference4a54a7 &record : state.object_records_0xec4_ecc) {
-		int32_t wrapper_vector_index = -1;
-		if (record.selected_wrapper_index_0x4af785 >= 0) {
-			const auto wrapper_it = wrapper_index_to_vector_index.find(record.selected_wrapper_index_0x4af785);
-			if (wrapper_it != wrapper_index_to_vector_index.end()) {
-				wrapper_vector_index = wrapper_it->second;
-			}
-		}
-		if (wrapper_vector_index < 0) {
-			const int32_t source_catalog_index = final_object_source_catalog_index_0x4ad3eb(record);
-			if (ambiguous_source_catalog_indices.find(source_catalog_index) != ambiguous_source_catalog_indices.end()) {
-				result.object_definition_duplicate_source_record_count += 1;
-				result.blocked_reason = "final_object_definition_table_selected_wrapper_ambiguous_for_generated_object_source";
-				return build;
-			}
-			const auto source_it = source_catalog_to_unique_wrapper_vector_index.find(source_catalog_index);
-			if (source_it != source_catalog_to_unique_wrapper_vector_index.end()) {
-				wrapper_vector_index = source_it->second;
-			}
-		}
-		if (wrapper_vector_index < 0 || wrapper_vector_index >= int32_t(resolver_state.wrappers.size())) {
-			result.object_definition_missing_source_record_count += 1;
-			result.blocked_reason = "final_object_definition_table_selected_wrapper_missing_for_generated_object";
+	for (int32_t wrapper_vector_index = 0; wrapper_vector_index < int32_t(resolver_state.wrappers.size()); ++wrapper_vector_index) {
+		SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+		wrapper.definition_index_0x0c_known = false;
+		wrapper.definition_index_0x0c = -1;
+		if (!wrapper.reference_count_0x08_known) {
+			result.blocked_reason = "final_object_definition_table_wrapper_reference_count_0x08_unknown";
 			return build;
 		}
-		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(wrapper_vector_index)];
+		if (wrapper.reference_count_0x08 <= 0) {
+			continue;
+		}
 		if (wrapper.source_catalog_index < 0 || wrapper.source_catalog_index >= int32_t(catalog.size())) {
 			result.object_definition_missing_source_record_count += 1;
-			result.blocked_reason = "final_object_definition_table_selected_wrapper_source_catalog_index_out_of_range";
+			result.blocked_reason = "final_object_definition_table_active_wrapper_source_catalog_index_out_of_range";
 			return build;
 		}
 		active_wrapper_vector_indices.insert(wrapper_vector_index);
@@ -11442,8 +11482,10 @@ static FinalObjectDefinitionTableBuild4ad3eb final_object_build_generated_defini
 		const FinalObjectDefinitionRecord4ad3eb definition =
 				final_object_definition_record_from_source_0x4ad3eb(source_record, source_catalog_index, definition_index);
 		if (ordered_definition.wrapper_vector_index >= 0) {
-			const SourceObjectResolvedWrapper4af785 &wrapper =
+			SourceObjectResolvedWrapper4af785 &wrapper =
 					resolver_state.wrappers[size_t(ordered_definition.wrapper_vector_index)];
+			wrapper.definition_index_0x0c_known = true;
+			wrapper.definition_index_0x0c = definition_index;
 			build.wrapper_vector_to_definition_index[ordered_definition.wrapper_vector_index] = definition_index;
 			if (wrapper.wrapper_index >= 0) {
 				build.wrapper_index_to_definition_index[wrapper.wrapper_index] = definition_index;
@@ -11646,7 +11688,7 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 }
 
 static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4ad318(
-		const GeneratorObjectPrivateState &state) {
+		GeneratorObjectPrivateState &state) {
 	FinalObjectWriteoutResult4ad1e3 result;
 	result.invoked = true;
 	result.object_record_vector_count_known_0xec8_0xecc =
@@ -11733,7 +11775,7 @@ static FinalObjectWriteoutResult4ad1e3 final_object_count_writeout_0x4ad309_0x4a
 		result.final_success_test_0x4ad3de_passed = result.final_success_test_eax_0x4ad3de == 4;
 		result.final_return_0x4ae09a_success = result.final_success_test_0x4ad3de_passed;
 		result.applied = result.final_return_0x4ae09a_success;
-		result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
+		result.blocked_reason = "full_final_payload_same_run_compare_pending_after_source_order_writeout_prefix";
 		return result;
 	}
 
@@ -11955,7 +11997,7 @@ static FinalPayloadWriteoutResult4ad1e3 final_payload_assemble_ordered_0x4ad1e3(
 	if (result.same_run_h3maped_compare_complete) {
 		return result;
 	}
-	result.blocked_reason = "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
+	result.blocked_reason = "full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
 	return result;
 }
 
@@ -12823,7 +12865,8 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 			join.descriptor.source_cell_y_0x30,
 			join.copied_source_record_is_identity_authority ? &join.source_record_copy : nullptr,
 			join.descriptor.descriptor_raw_0x0c_known,
-			join.descriptor.descriptor_raw_0x0c);
+			join.descriptor.descriptor_raw_0x0c,
+			join.resolver_0x4af785.selected_wrapper_index);
 	result.committed_through_vtable_slot_0x04 = result.commit_0x4a54a7.object_vector_appended;
 	if (!result.committed_through_vtable_slot_0x04) {
 		result.blocked_reason = "0x4a7312_vtable_slot_0x04_object_commit_did_not_append";
@@ -20906,7 +20949,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	result.current_phase_id = "final_payload_compare";
 	result.status = "blocked";
 	result.blocked_reason = result.final_payload_writeout_0x4ad1e3.blocked_reason.empty()
-			? "full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly"
+			? "full_final_payload_same_run_compare_pending_after_ordered_payload_assembly"
 			: result.final_payload_writeout_0x4ad1e3.blocked_reason;
 	add_phase("full_final_payload_same_run_compare", "0x4ad1e3_ordered_payload_and_same_run_h3maped_stream", "blocked", result.blocked_reason);
 	return result;

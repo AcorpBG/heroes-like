@@ -3070,9 +3070,9 @@ int main() {
 			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 	const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 	const std::string final_object_writeout_blocker =
-			"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
+			"full_final_payload_same_run_compare_pending_after_source_order_writeout_prefix";
 	const std::string final_payload_compare_blocker =
-			"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
+			"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
 	if (!require(generator_state_workflow.executed
 					&& generator_state_workflow.current_phase_id == "final_payload_compare"
 					&& generator_state_workflow.blocked_reason.rfind(final_payload_compare_blocker, 0) == 0,
@@ -3140,6 +3140,23 @@ int main() {
 					&& !generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.last_records.empty()
 					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.blocked_reason.rfind(final_object_writeout_blocker, 0) == 0,
 				"workflow-owned final object definition table, static vectors, 0x4ad309 count header, 0x4ad3eb pass split, indexed object payload, and sentinel did not materialize before the full payload compare blocker")) {
+		return 1;
+	}
+	int32_t active_wrapper_refcount_count_0x08 = 0;
+	int32_t assigned_wrapper_definition_count_0x0c = 0;
+	for (const auto &wrapper : generator_state.source_object_resolver_state_4af785.wrappers) {
+		if (wrapper.reference_count_0x08_known && wrapper.reference_count_0x08 > 0) {
+			active_wrapper_refcount_count_0x08 += 1;
+			if (wrapper.definition_index_0x0c_known && wrapper.definition_index_0x0c >= 2) {
+				assigned_wrapper_definition_count_0x0c += 1;
+			}
+		}
+	}
+	if (!require(active_wrapper_refcount_count_0x08 > 0
+					&& assigned_wrapper_definition_count_0x0c == active_wrapper_refcount_count_0x08
+					&& generator_state_workflow.final_object_writeout_0x4ad309_0x4ad3eb.object_definition_count
+							== active_wrapper_refcount_count_0x08 + 2,
+				"0x4ad1e3 did not assign wrapper +0x0c definition indexes from active wrapper +0x08 reference counts")) {
 		return 1;
 	}
 	const int32_t generator_state_expected_final_payload_bytes =
@@ -3687,6 +3704,16 @@ int main() {
 	if (!require(!commit_type54_records.empty(), "0x49da08 type-54 subtype-48 source record missing for 0x4a54a7 source-backed commit")) {
 		return 1;
 	}
+	commit_state.source_object_resolver_state_4af785_known = true;
+	const SourceObjectResolverResult4af785 commit_source_resolve =
+			aurelion::h3maped_rmg_core::source_object_descriptor_resolver_0x4af785(
+					commit_state.source_object_resolver_state_4af785,
+					commit_type54_records[0]);
+	if (!require(commit_source_resolve.created_new_wrapper
+					&& commit_source_resolve.selected_wrapper_index >= 0,
+				"0x4af785 did not create a source wrapper before 0x4a54a7 reference-count commit")) {
+		return 1;
+	}
 	const auto commit_result = aurelion::h3maped_rmg_core::object_footprint_commit_4a54a7(
 			commit_state,
 			0x036260c0U,
@@ -3697,7 +3724,10 @@ int main() {
 			true,
 			0,
 			0,
-			&commit_type54_records[0]);
+			&commit_type54_records[0],
+			true,
+			0,
+			commit_source_resolve.selected_wrapper_index);
 	const GeneratedCellRecord0x30 &commit_target = commit_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(3, 3, 1, 1, 0))];
 	if (!require(commit_result.object_vector_appended
 					&& commit_state.object_records_0xec4_ecc.size() == 1
@@ -3711,6 +3741,15 @@ int main() {
 					&& commit_target.object_reference_count == 1
 					&& commit_target.object_references_0x04_0x08[0] == 0x036260c0U,
 				"0x4a54a7 did not append the object record to the target cell object-reference vector")) {
+		return 1;
+	}
+	if (!require(commit_result.resolver_wrapper_reference_incremented_0x08
+					&& commit_result.resolver_wrapper_reference_count_after_0x08 == 1
+					&& commit_state.source_object_resolver_state_4af785.wrappers.size() == 1U
+					&& commit_state.source_object_resolver_state_4af785.wrappers[0].reference_count_0x08 == 1
+					&& commit_state.object_records_0xec4_ecc[0].selected_wrapper_index_0x4af785
+							== commit_source_resolve.selected_wrapper_index,
+				"0x4a54a7 did not increment recovered resolver wrapper +0x08 or preserve selected wrapper identity")) {
 		return 1;
 	}
 	if (!require(commit_result.descriptor_counter_incremented
@@ -5585,9 +5624,9 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_final_object_writeout_blocker =
-				"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_source_order_writeout_prefix";
+				"full_final_payload_same_run_compare_pending_after_source_order_writeout_prefix";
 		const std::string workflow_final_payload_compare_blocker =
-				"full_final_payload_same_run_compare_and_descriptor_wrapper_bucket_0x08_0x0c_replay_unowned_after_ordered_payload_assembly";
+				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"

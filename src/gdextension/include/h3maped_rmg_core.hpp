@@ -317,6 +317,10 @@ struct SourceObjectResolvedWrapper4af785 {
 	int32_t metadata_bucket_index_0x08 = -1;
 	int32_t resolver_lane_0x04 = 9;
 	int32_t wrapper_0x04 = -1;
+	bool reference_count_0x08_known = true;
+	int32_t reference_count_0x08 = 0;
+	bool definition_index_0x0c_known = false;
+	int32_t definition_index_0x0c = -1;
 	bool wrapper_0x10_known = false;
 	int32_t wrapper_0x10 = 0;
 	bool initialized_by_0x49db76 = false;
@@ -3266,6 +3270,7 @@ struct ObjectFootprintCommitResult4a54a7 {
 	bool target_cell_words_known = false;
 	bool source_record_copy_present_0x04 = false;
 	bool object_vector_appended = false;
+	bool resolver_wrapper_reference_incremented_0x08 = false;
 	bool generated_cell_reference_appended = false;
 	bool generator_body_stamp_applied_0x49abd6 = false;
 	bool descriptor_counter_incremented = false;
@@ -3274,6 +3279,7 @@ struct ObjectFootprintCommitResult4a54a7 {
 	bool projection_anchor_in_bounds = false;
 	int32_t relation_descriptor_counter_owner_runtime_zone_index = -1;
 	int32_t object_vector_count_after = 0;
+	int32_t resolver_wrapper_reference_count_after_0x08 = 0;
 	int32_t target_cell_reference_count_after = 0;
 	int32_t generator_body_stamp_count_0x49abd6 = 0;
 	int32_t generator_body_reference_append_count_0x49abd6 = 0;
@@ -3692,7 +3698,7 @@ GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr, bool descriptor_raw_0x0c_known = true, int32_t descriptor_raw_0x0c = 0);
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr, bool descriptor_raw_0x0c_known = true, int32_t descriptor_raw_0x0c = 0, int32_t selected_wrapper_index_0x4af785 = -1);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);
