@@ -3562,7 +3562,7 @@ int main() {
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()), "0x4a5767 full-grid reset did not visit every generated-cell record exactly once")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == int32_t(generator_state.generated_cell_buffer.records.size()) * 2, "0x4a5767 full-grid reset did not visit every generated-cell record for both recovered 0x4a8c15 and post-0x4a9d6a passes")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped known generated-cell records")) {
@@ -4631,27 +4631,34 @@ int main() {
 		}
 	}
 	{
-		GeneratorObjectPrivateState direction_zero_state = reward_guard_base_state;
-		RewardGuardWrapperState4aa3e9 direction_zero_wrapper = reward_guard_base_wrapper;
-		direction_zero_wrapper.selected_members_0x2c_0x30[0].descriptor_offset_y_0x30 = 0;
-		H3MapedRng direction_zero_rng;
-		direction_zero_rng.state = 58U;
-		const RewardGuardCoordinateScanResult4aa9b7 direction_zero_result =
+		GeneratorObjectPrivateState reduced_direction_state = reward_guard_base_state;
+		RewardGuardWrapperState4aa3e9 reduced_direction_wrapper = reward_guard_base_wrapper;
+		reduced_direction_wrapper.selected_members_0x2c_0x30[0].descriptor_offset_y_0x30 = 0;
+		GeneratedCellRecord0x30 &reduced_direction_cell =
+				reduced_direction_wrapper.generated_cell_grid_0x08_0x10.records[size_t(
+						aurelion::h3maped_rmg_core::cell_index(3, 3, 0, 1, 0))];
+		aurelion::h3maped_rmg_core::generated_cell_49aa63(reduced_direction_cell, true);
+		aurelion::h3maped_rmg_core::generated_cell_49a932(reduced_direction_cell, true);
+		reduced_direction_cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_DIRECTION_BIT_23
+				| aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26;
+		H3MapedRng reduced_direction_rng;
+		reduced_direction_rng.state = 58U;
+		const RewardGuardCoordinateScanResult4aa9b7 reduced_direction_result =
 				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
-						direction_zero_state,
-						direction_zero_wrapper,
+						reduced_direction_state,
+						reduced_direction_wrapper,
 						reward_guard_relation,
 						7,
 						true,
-						direction_zero_rng);
-		if (!require(direction_zero_result.applied
-						&& direction_zero_result.committed
-						&& !aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(45, 2)
-						&& direction_zero_result.feasibility_results_0x4aa603.size() == 1
-						&& direction_zero_result.feasibility_results_0x4aa603[0].accepted
-						&& direction_zero_result.feasibility_results_0x4aa603[0].direction_scan_count == 1
-						&& direction_zero_result.feasibility_results_0x4aa603[0].direction_accept_count == 1,
-					"0x4aa603 skipped direction 0 for a selected member whose recovered 0x49d65c policy is false")) {
+						reduced_direction_rng);
+		if (!require(reduced_direction_result.applied
+						&& reduced_direction_result.committed
+						&& !aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(45, 1)
+						&& reduced_direction_result.feasibility_results_0x4aa603.size() == 1
+						&& reduced_direction_result.feasibility_results_0x4aa603[0].accepted
+						&& reduced_direction_result.feasibility_results_0x4aa603[0].direction_scan_count == 1
+						&& reduced_direction_result.feasibility_results_0x4aa603[0].direction_accept_count == 1,
+					"0x4aa603 did not use the recovered metadata +1 reduced direction range starting at direction 1")) {
 			return 1;
 		}
 	}
@@ -6260,17 +6267,17 @@ int main() {
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
 							&& workflow.phases[3].id == "generator_object_private_state"
-							&& workflow.phases[4].id == "source_order_object_materialization"
+							&& workflow.phases[4].id == "generic_non_type98_source_order_pairs"
 							&& workflow.phases[4].status == "complete_source_order_prefix"
-							&& workflow.phases[5].id == "route_free_cell_sweep"
+							&& workflow.phases[5].id == "source_order_object_materialization"
 							&& workflow.phases[5].status == "complete_source_order_prefix"
-							&& workflow.phases[6].id == "mine_resource_materialization"
+							&& workflow.phases[6].id == "route_free_cell_sweep"
 							&& workflow.phases[6].status == "complete_source_order_prefix"
-							&& workflow.phases[7].id == "relation_normalization"
+							&& workflow.phases[7].id == "mine_resource_materialization"
 							&& workflow.phases[7].status == "complete_source_order_prefix"
-							&& workflow.phases[8].id == "relation_scan_consumers"
+							&& workflow.phases[8].id == "relation_normalization"
 							&& workflow.phases[8].status == "complete_source_order_prefix"
-							&& workflow.phases[9].id == "generic_non_type98_source_order_pairs"
+							&& workflow.phases[9].id == "relation_scan_consumers"
 							&& workflow.phases[9].status == "complete_source_order_prefix"
 							&& workflow.phases[10].id == "reward_guard_materialization"
 							&& workflow.phases[10].status == "complete_source_order_prefix"
