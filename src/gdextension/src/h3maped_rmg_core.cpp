@@ -18698,6 +18698,7 @@ static std::string source_order_relation_pointer_loop_blocker_detail_0x4ac552(co
 			<< ",missing_source_pointer=" << state.source_order_relation_pointer_loop_missing_source_pointer_count
 			<< ",missing_source_record_field_0x04=" << state.source_order_relation_pointer_loop_missing_source_record_field_0x04_count
 			<< ",missing_scan_bounds=" << state.source_order_relation_pointer_loop_missing_scan_bounds_count
+			<< ",missing_context_wrapper_0x04=" << state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count
 			<< ",no_source_record_skips=" << state.source_order_relation_pointer_loop_no_source_record_skip_count
 			<< ",direct_replays_0x4a8d2c=" << state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c
 			<< ",scheduler_replays_0x4a8db2=" << state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2
@@ -18774,7 +18775,22 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 			const SourceObjectDescriptor4903e8 descriptor =
 					source_type98_town_descriptor_from_record_0x4a8db2(*town_record);
 			join = source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
+			if (join.resolver_0x4af785.selected_wrapper_index < 0) {
+				state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count += 1;
+				append_blocked_source_order_scheduler_replay_0x4a8db2(
+						state,
+						owner.source_order_source_record_0x00,
+						relation_owner_byte2_for_generated_cell_gate(owner),
+						join.blocked_reason.empty()
+								? "0x4a8db2_type98_context_wrapper_0x04_missing"
+								: join.blocked_reason);
+				state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 += 1;
+				continue;
+			}
 		}
+		const int32_t context_wrapper_index_0x04 = descriptor_required
+				? join.resolver_0x4af785.selected_wrapper_index
+				: owner.owner_vector_index;
 		const int32_t lane_state_0xee4 =
 				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(
 						state,
@@ -18819,7 +18835,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				true,
 				true,
 				join.source_catalog_index_0x49da08,
-				owner.owner_vector_index,
+				context_wrapper_index_0x04,
 				relation_owner_byte2,
 				owner.scan_bound_low_x_0x20,
 				owner.scan_bound_low_y_0x24,
@@ -18841,7 +18857,8 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 
 	state.source_order_relation_pointer_loop_0x4ac552_input_known =
 			state.source_order_relation_pointer_loop_missing_scan_bounds_count == 0
-			&& state.source_order_relation_pointer_loop_missing_town_record_count == 0;
+			&& state.source_order_relation_pointer_loop_missing_town_record_count == 0
+			&& state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0;
 	if (!state.source_order_relation_pointer_loop_0x4ac552_input_known) {
 		state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
 				source_order_relation_pointer_loop_blocker_detail_0x4ac552(state);
@@ -18887,6 +18904,16 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				source_type98_town_descriptor_from_record_0x4a8db2(*town_record);
 		const SourceObjectDescriptorJoinResult4903e8 join =
 				source_object_descriptor_join_0x4903e8(type98_descriptor_state, descriptor, *town_record);
+		if (join.resolver_0x4af785.selected_wrapper_index < 0) {
+			append_blocked_source_order_scheduler_replay_0x4a8db2(
+					state,
+					source_record,
+					relation_owner_byte2_for_generated_cell_gate(*owner),
+					join.blocked_reason.empty()
+							? "0x4a8db2_type98_context_wrapper_0x04_missing"
+							: join.blocked_reason);
+			continue;
+		}
 		const int32_t source_selector = source_record.relation_selector_0x1c;
 		const int32_t lane_state_0xee4 =
 				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
@@ -18897,7 +18924,7 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				source_record.source_id_0x00 >= 0,
 				true,
 				join.source_catalog_index_0x49da08,
-				owner->owner_vector_index,
+				join.resolver_0x4af785.selected_wrapper_index,
 				relation_owner_byte2_for_generated_cell_gate(*owner),
 				owner->scan_bound_low_x_0x20,
 				owner->scan_bound_low_y_0x24,
