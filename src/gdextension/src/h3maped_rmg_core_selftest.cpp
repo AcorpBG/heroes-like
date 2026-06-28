@@ -2258,6 +2258,8 @@ int main() {
 		owner.boundary_payload_span_limit_0x1c_known = true;
 		owner.boundary_payload_span_limit_0x1c = 7 + index;
 	}
+	relation_owner_inputs[0].source_pointer_source_index_0x00 = 9;
+	relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7 = 9;
 	const BoundaryOwnerGridResult4a3a03 owner_grid_from_relation_owners =
 			aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
 					36,
@@ -2291,8 +2293,8 @@ int main() {
 				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].owner_vector_index,
-				"relation-owner vector owner-grid chain did not carry recovered relation-owner vector index into generated-cell owner byte")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into generated-cell owner byte")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x

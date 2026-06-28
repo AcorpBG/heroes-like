@@ -16431,9 +16431,10 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
-		const int32_t owner_byte2 = owner->owner_vector_index >= 0
-				? owner->owner_vector_index
-				: source_vector_handoff_index;
+		int32_t owner_byte2 = payload_owner_word_0x00;
+		if (owner_byte2 < 0) {
+			owner_byte2 = owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index;
+		}
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = payload_owner_word_0x00 >= 0
