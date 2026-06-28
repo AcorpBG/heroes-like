@@ -14475,7 +14475,7 @@
       "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
       "status": "passed_source_backed_behavior_progress_not_parity",
       "updatedAt": "2026-06-28T04:45:47Z",
-      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+      "summary": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
       "artifacts": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -14483,10 +14483,10 @@
         "ops/progress.json",
         "bin/h3maped_rmg_core_selftest",
         "bin/rmg_native_batch_export_cli",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
         ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
         ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
         ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -14494,8 +14494,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
         "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -14534,11 +14534,11 @@
       "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
     }
   ],
-  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+  "currentNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+  "currentSliceNotes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-28T04:45:47Z",
@@ -19095,17 +19095,17 @@
   "guardrailNote": "Use the H3MapEd authority artifacts as source evidence for native implementation, but keep active work focused on porting/alignment. Do not add density scalars, gates, brute-force retries, GDScript reports, or final-map delta tuning. Do not launch Godot/headless Godot for native RMG export or validation on this memory-constrained host; tools/rmg_native_batch_export.py only supports standalone no-Godot diagnostic snapshots through bin/rmg_native_batch_export_cli, refuses to run while Godot is already active, and unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI until final payload generation is owned by the shared H3MapEd-aligned RMG core. --phase-snapshot-only may write diagnostic files but must still return blocked until the shared recovered H3MapEd state chain owns payload generation. Validator-gated H3MapEd package/session adoption must stay fail-closed until exact executable-order state replay owns the payload. Defer Windows .dll builds until Linux parity reaches the final boundary.",
   "lastValidation": {
     "id": "native-rmg-4aa603-feasibility-gates-20260628",
-    "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+    "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
     "status": "passed_source_backed_behavior_progress_not_parity",
     "validatedAt": "2026-06-28T04:45:47Z",
     "updatedAt": "2026-06-28T04:45:47Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "validation": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
       "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -19117,10 +19117,10 @@
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
       ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
       ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -19160,8 +19160,9 @@
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
     "resolvedBlockers": [
-      "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+      "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
     ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -19171,17 +19172,17 @@
   },
   "latestEvidence": {
     "id": "native-rmg-4aa603-feasibility-gates-20260628",
-    "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+    "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
     "status": "passed_source_backed_behavior_progress_not_parity",
     "validatedAt": "2026-06-28T04:45:47Z",
     "updatedAt": "2026-06-28T04:45:47Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "validation": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
       "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -19193,10 +19194,10 @@
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
       ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
       ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -19236,8 +19237,9 @@
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
     "resolvedBlockers": [
-      "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+      "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
     ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -19252,16 +19254,16 @@
     "ops/progress.json",
     "bin/h3maped_rmg_core_selftest",
     "bin/rmg_native_batch_export_cli",
-    ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-    ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-    ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-    ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+    ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+    ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+    ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+    ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
     ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
     ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
     ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
   ],
   "latestEvidenceId": "native-rmg-4aa603-feasibility-gates-20260628",
-  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+  "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
   "metrics": {
     "active_source_proxy_reconstruction_scan_passed": true,
     "active_source_reconstruction_token_scan_passed": true,
@@ -53773,7 +53775,7 @@
         ".artifacts/rmg_recovery/ghidra_terrain_toolkit_vfuncs_dump_20260627/target_004baa81_references.txt"
       ],
       "latestEvidenceId": "native-rmg-terrain-0x4bb681-topology-branch-20260627",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
       "metrics": {
         "4a9641_4a98f0_sampled_projection_write_count": 319,
         "4a9911_4a9c3f_sampled_projection_write_count": 98,
@@ -54437,7 +54439,7 @@
         "new gates without player-facing value",
         "broad release/parity claims"
       ],
-      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+      "notes": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Harden strict Small generated-map evidence without claiming larger sizes, water, underground, or broad template parity.",
@@ -54456,17 +54458,17 @@
       "updatedAt": "2026-06-28T04:45:47Z",
       "validation": {
         "id": "native-rmg-4aa603-feasibility-gates-20260628",
-        "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+        "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
         "status": "passed_source_backed_behavior_progress_not_parity",
         "validatedAt": "2026-06-28T04:45:47Z",
         "updatedAt": "2026-06-28T04:45:47Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+        "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "validation": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
@@ -54478,10 +54480,10 @@
           "ops/progress.json",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-          ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+          ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+          ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+          ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
           ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
           ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
           ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -54521,8 +54523,9 @@
         "native_rmg_end_to_end_parity_complete": false,
         "runtime_map_output_enabled": false,
         "resolvedBlockers": [
-          "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-          "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+          "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+          "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
         ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -61519,17 +61522,17 @@
   "updatedAt": "2026-06-28T04:45:47Z",
   "validation": {
     "id": "native-rmg-4aa603-feasibility-gates-20260628",
-    "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+    "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
     "status": "passed_source_backed_behavior_progress_not_parity",
     "validatedAt": "2026-06-28T04:45:47Z",
     "updatedAt": "2026-06-28T04:45:47Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "validation": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
       "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -61541,10 +61544,10 @@
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
       ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
       ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -61584,8 +61587,9 @@
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
     "resolvedBlockers": [
-      "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+      "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
     ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -74307,17 +74311,17 @@
     },
     {
       "id": "native-rmg-4aa603-feasibility-gates-20260628",
-      "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+      "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
       "status": "passed_source_backed_behavior_progress_not_parity",
       "validatedAt": "2026-06-28T04:45:47Z",
       "updatedAt": "2026-06-28T04:45:47Z",
-      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
       "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "validation": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
         "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -74329,10 +74333,10 @@
         "ops/progress.json",
         "bin/h3maped_rmg_core_selftest",
         "bin/rmg_native_batch_export_cli",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-        ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+        ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
         ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
         ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
         ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -74372,8 +74376,9 @@
       "native_rmg_end_to_end_parity_complete": false,
       "runtime_map_output_enabled": false,
       "resolvedBlockers": [
-        "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-        "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+        "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+        "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
       ],
       "namedBlockers": [
         "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -74384,17 +74389,17 @@
   ],
   "validationResults": {
     "id": "native-rmg-4aa603-feasibility-gates-20260628",
-    "title": "Recovered 0x4aa603 Reward/Guard Feasibility Gates",
+    "title": "Recovered 0x4aa603/0x4aa9b7 Reward/Guard Feasibility",
     "status": "passed_source_backed_behavior_progress_not_parity",
     "validatedAt": "2026-06-28T04:45:47Z",
     "updatedAt": "2026-06-28T04:45:47Z",
-    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard feasibility gates: direction pass requires the generator destination bit27 clear, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-clear coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603 behavior progress, not final-payload parity or runtime map-output authorization.",
+    "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. Shared h3maped_rmg_core now corrects recovered 0x4aa603 reward/guard destination gating and 0x4aa9b7 relation owner sourcing: direction pass requires the generator destination bit27 set, and overlap pass rejects generator bit26 under wrapper bit27-clear cells instead of bit22. h3maped_rmg_core_selftest covers the successful bit27-set coordinate path and bit26 overlap rejection. Focused Medium seed10 setup0 no-Godot evidence still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload 8960 vs 17057 first mismatch offset 0 native=19 expected=2; reward/guard materialization still has 180 attempts and 0 successful 0x4aa9b7 commits, first rejecting on generated-cell owner mismatch expected owner 9 but cell owner 6 at (28,57,0). This is source-backed 0x4aa603/0x4aa9b7 behavior progress, not final-payload parity or runtime map-output authorization.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "validation": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
       "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_bit27_overlap_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_4aa603_owner_bit27_20260628_final --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed; blocker=native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
@@ -74406,10 +74411,10 @@
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/native_rmg_4aa603_bit27_overlap_20260628/medium_seed10_setup0_2p.final_payload_compare.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/native_rmg_4aa603_owner_bit27_20260628_final/medium_seed10_setup0_2p.final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_4268eb_descriptor_mask_helper_dump/caller_004aa603_FUN_004aa603.txt",
       ".artifacts/rmg_recovery/ghidra_49b76d_policy_helper_dump/caller_004aa9b7_FUN_004aa9b7.txt",
       ".artifacts/rmg_recovery/ghidra_41e915_descriptor_mask_helper_dump/caller_0049a6f9_FUN_0049a6f9.txt"
@@ -74449,8 +74454,9 @@
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
     "resolvedBlockers": [
-      "0x4aa603_direction_gate_used_generator_bit27_set_instead_of_clear",
-      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26"
+      "0x4aa603_direction_gate_used_generator_bit27_clear_instead_of_set",
+      "0x4aa603_overlap_gate_rejected_bit22_instead_of_bit26",
+      "0x4aa9b7_relation_owner_prefers_relation_source_pointer_index"
     ],
     "namedBlockers": [
       "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",

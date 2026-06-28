@@ -4292,9 +4292,9 @@ int main() {
 	GeneratedCellRecord0x30 &reward_guard_target =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 2, 2, 0))];
 	reward_guard_target.word_0x20 = 0x0004000aU;
-	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, false);
-	const bool reward_guard_target_bit27_clear_before_scan =
-			(reward_guard_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) == 0U;
+	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_target, true);
+	const bool reward_guard_target_bit27_set_before_scan =
+			(reward_guard_target.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
 	GeneratedCellRecord0x30 &reward_guard_contour_cell =
 			reward_guard_state.generated_cell_buffer.records[size_t(aurelion::h3maped_rmg_core::cell_index(6, 6, 3, 2, 0))];
 	aurelion::h3maped_rmg_core::generated_cell_49a932(reward_guard_contour_cell, true);
@@ -4565,7 +4565,7 @@ int main() {
 	const GeneratedCellRecord0x30 &reward_guard_wrapper_cell_after = reward_guard_wrapper.generated_cell_grid_0x08_0x10.records[0];
 	if (!require(reward_guard_result.applied
 					&& reward_guard_result.committed
-					&& reward_guard_target_bit27_clear_before_scan
+					&& reward_guard_target_bit27_set_before_scan
 					&& reward_guard_result.relation_owner_byte2 == 4
 					&& reward_guard_result.scanned_cell_count == 1
 					&& reward_guard_result.accepted_candidate_count == 1
@@ -4581,7 +4581,7 @@ int main() {
 					&& reward_guard_result.selected_candidate.y == 2
 					&& reward_guard_result.selected_candidate.level == 0
 					&& reward_guard_result.threshold_after_scan == 10,
-				"0x4aa9b7 did not scan, run recovered 0x4aa603 bit27-clear destination gate, append, and select the reward/guard coordinate")) {
+				"0x4aa9b7 did not scan, run recovered 0x4aa603 bit27-set destination gate, append, and select the reward/guard coordinate")) {
 		return 1;
 	}
 	if (!require(reward_guard_wrapper.selected_coordinate_0x54_0x5c_known

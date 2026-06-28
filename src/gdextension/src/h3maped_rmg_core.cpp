@@ -8416,11 +8416,11 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
 	// Recovered 0x4aa9b7 and 0x4aa603 both load the owner gate through
 	// [[relation_pointer]], i.e. relation +0x00 followed by source +0x00.
-	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
-		return relation.relation_owner_byte2_0x4aa9b7;
-	}
 	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
 		return relation.source_pointer_source_index_0x00;
+	}
+	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
+		return relation.relation_owner_byte2_0x4aa9b7;
 	}
 	if (relation.source_index >= 0) {
 		return relation.source_index;
@@ -8717,7 +8717,7 @@ static RewardGuardFeasibilityResult4aa603 reward_guard_coordinate_feasibility_0x
 				&& generated_cell_49a1d8_valid_record(*wrapper_record)
 				&& generated_cell_49a1d8_valid_record(*state_record)
 				&& !state_bit22
-				&& !state_bit27
+				&& state_bit27
 				&& ((generated_cell_terrain_code_0x24(*state_record) == 8) == terrain8_policy)) {
 			result.direction_accept_count += 1;
 			break;
