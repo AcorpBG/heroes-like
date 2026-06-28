@@ -4602,6 +4602,55 @@ int main() {
 				"0x4aa3e9 wrapper member commit did not append recovered object key/reference/counter state")) {
 		return 1;
 	}
+	{
+		GeneratorObjectPrivateState split_owner_state = reward_guard_base_state;
+		RewardGuardWrapperState4aa3e9 split_owner_wrapper = reward_guard_base_wrapper;
+		GeneratorRelationOwnerState4a218c split_owner_relation = reward_guard_relation;
+		split_owner_relation.source_pointer_source_index_0x00 = 9;
+		H3MapedRng split_owner_rng;
+		split_owner_rng.state = 58U;
+		const RewardGuardCoordinateScanResult4aa9b7 split_owner_result =
+				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+						split_owner_state,
+						split_owner_wrapper,
+						split_owner_relation,
+						7,
+						true,
+						split_owner_rng);
+		if (!require(split_owner_result.applied
+						&& split_owner_result.committed
+						&& split_owner_result.relation_owner_byte2 == 4
+						&& split_owner_result.owner_byte_reject_count == 0
+						&& split_owner_result.accepted_candidate_count == 1,
+					"0x4aa9b7/0x4aa603 owner gate used source-pointer index instead of recovered relation-leading owner byte")) {
+			return 1;
+		}
+	}
+	{
+		GeneratorObjectPrivateState direction_zero_state = reward_guard_base_state;
+		RewardGuardWrapperState4aa3e9 direction_zero_wrapper = reward_guard_base_wrapper;
+		direction_zero_wrapper.selected_members_0x2c_0x30[0].descriptor_offset_y_0x30 = 0;
+		H3MapedRng direction_zero_rng;
+		direction_zero_rng.state = 58U;
+		const RewardGuardCoordinateScanResult4aa9b7 direction_zero_result =
+				aurelion::h3maped_rmg_core::reward_guard_coordinate_scan_and_commit_0x4aa9b7(
+						direction_zero_state,
+						direction_zero_wrapper,
+						reward_guard_relation,
+						7,
+						true,
+						direction_zero_rng);
+		if (!require(direction_zero_result.applied
+						&& direction_zero_result.committed
+						&& !aurelion::h3maped_rmg_core::object_metadata_flag_0x598300(45, 2)
+						&& direction_zero_result.feasibility_results_0x4aa603.size() == 1
+						&& direction_zero_result.feasibility_results_0x4aa603[0].accepted
+						&& direction_zero_result.feasibility_results_0x4aa603[0].direction_scan_count == 1
+						&& direction_zero_result.feasibility_results_0x4aa603[0].direction_accept_count == 1,
+					"0x4aa603 skipped direction 0 for a selected member whose recovered 0x49d65c policy is false")) {
+			return 1;
+		}
+	}
 	const bool reward_guard_mirror_ok =
 			(reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_ACTION_CONTROL_BIT_22) != 0U
 			&& (reward_guard_target_after.word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
