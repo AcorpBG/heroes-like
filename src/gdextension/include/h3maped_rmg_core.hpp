@@ -1183,6 +1183,11 @@ struct GeneratorRelationOwnerAdjacencyRecord4a3710 {
 	uint8_t flag_byte_0x66 = 0U;
 };
 
+struct RelationOwnerLocalVectorRecord0x404 {
+	int32_t x = 0;
+	int32_t y = 0;
+};
+
 struct GeneratorSourceEndpointRecordState4a1f3b {
 	int32_t target_relation_owner_vector_index_0x00 = -1;
 	int32_t source_link_index = -1;
@@ -1288,6 +1293,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t owner_local_vector_0x3e4_count = 0;
 	int32_t owner_local_vector_0x3f4_count = 0;
 	int32_t owner_local_vector_0x404_count = 0;
+	bool owner_local_vector_0x404_contents_known = false;
+	std::vector<RelationOwnerLocalVectorRecord0x404> owner_local_vector_records_0x404;
 	bool relation_order_words_0x3e8_known = false;
 	std::vector<int16_t> relation_order_words_0x3e8;
 	bool adjacency_vector_0xc4_present = false;
@@ -1932,6 +1939,16 @@ struct RelationSourceOrderScanResult4a89da {
 	int32_t object_reference_unknown_count = 0;
 	int32_t candidate_mark_attempt_count_0x49aa63 = 0;
 	int32_t candidate_mark_count_0x49aa63 = 0;
+	int32_t local_vector_count_helper_call_count_0x4a8bfc = 0;
+	int32_t local_vector_zero_exit_count_0x4a8bfc = 0;
+	int32_t local_vector_count_unknown_count_0x4a8bfc = 0;
+	int32_t local_vector_contents_unknown_count_0x404 = 0;
+	int32_t first_vector_seed_reset_count = 0;
+	int32_t first_vector_seed_propagation_count_0x49a318 = 0;
+	int32_t route_pair_scan_count = 0;
+	int32_t route_pair_low_word_skip_count = 0;
+	int32_t route_pair_projection_follow_count = 0;
+	int32_t route_pair_requires_helper_count_0x4a8722 = 0;
 	std::string blocked_reason;
 };
 

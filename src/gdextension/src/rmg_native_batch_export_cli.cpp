@@ -552,9 +552,14 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	const std::string status = native_workflow_final_writeout_complete_count == int(case_reports.size()) && !case_reports.empty()
 			? "complete"
 			: "blocked";
+	const bool final_payload_compare_reached =
+			native_workflow_final_payload_assembly_applied_count > 0
+			&& native_workflow_final_writeout_complete_count < native_workflow_final_payload_assembly_applied_count;
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: "native_h3maped_workflow_stops_at_0x4a89da_relation_source_order_scan_helper_chain_for_at_least_one_case";
+			: (final_payload_compare_reached
+							? "native_h3maped_workflow_reaches_ordered_final_payload_compare_but_same_run_payload_parity_is_not_owned"
+							: "native_h3maped_workflow_blocked_before_ordered_final_payload_compare");
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -625,11 +630,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"final_payload_binary_written_count\": " << final_payload_binary_written_count << ",\n";
 	out << "  \"final_payload_sections_written_count\": " << final_payload_sections_written_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_stops_after_source_backed_0x4a89da_prefix_before_unported_0x4a8bfc_0x4a8722_relation_scan_helpers\",\n";
+	out << "  \"generation_core_stage\": \"native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"port_recovered_0x4a8bfc_and_0x4a8722_relation_scan_helper_chain_after_0x4a89da_prefix\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes the currently ported ordered phases through the source-backed 0x4a89da relation-scan prefix, then exits blocked before mine/resource, reward/guard, final writeout, and native map output until 0x4a8bfc and 0x4a8722 are ported.\",\n";
+	out << "  \"required_next_slice\": \"align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload\",\n";
+	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned.\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
