@@ -747,7 +747,7 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	out_flag_a = 0;
 	out_flag_b = 0;
 	if (toolkit.simple_vtable_4baa66) {
-		if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class != 0) {
+		if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 			selected_row = current_row;
 			return true;
 		}
