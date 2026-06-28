@@ -775,14 +775,16 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	return true;
 }
 
-bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t current_row, int32_t current_flag_a, int32_t current_flag_b, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t current_row, int32_t classified_flag_a, int32_t classified_flag_b, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+	out_flag_a = classified_flag_a;
+	out_flag_b = classified_flag_b;
 	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 		selected_row = current_row;
-		out_flag_a = current_flag_a;
-		out_flag_b = current_flag_b;
 		return true;
 	}
-	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, rng, selected_row, out_flag_a, out_flag_b);
+	int32_t ignored_flag_a = 0;
+	int32_t ignored_flag_b = 0;
+	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, rng, selected_row, ignored_flag_a, ignored_flag_b);
 }
 
 uint32_t terrain_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
@@ -15112,8 +15114,8 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					toolkit,
 					rows,
 					current_art_row,
-					current_flag_a,
-					current_flag_b,
+					classified.flag_a,
+					classified.flag_b,
 					neighbor_mask,
 					live_visual_rng,
 					selected_row,
