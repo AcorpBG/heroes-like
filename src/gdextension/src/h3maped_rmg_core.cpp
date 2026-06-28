@@ -6610,6 +6610,17 @@ struct RewardGuardMemberAllocationResult4a5c07 {
 	std::string blocked_reason;
 };
 
+static void reward_guard_projection_member_set_coordinate_0x540b14(
+		RewardGuardWrapperMember4aa3e9 &member) {
+	if (!member.projection_object_0x540b14_known) {
+		return;
+	}
+	member.projection_object_0x540b14.projection_coordinate_known = true;
+	member.projection_object_0x540b14.projection_x = member.relative_x_0x08;
+	member.projection_object_0x540b14.projection_y = member.relative_y_0x0c;
+	member.projection_object_0x540b14.projection_level = member.relative_level_0x10;
+}
+
 struct ConnectionMonsterAllocationResult4a5c07 {
 	bool invoked = false;
 	bool applied = false;
@@ -6704,6 +6715,10 @@ static RewardGuardMemberAllocationResult4a5c07 reward_guard_member_from_selector
 	result.member.object_record_key = result.object_record_key;
 	result.member.object_record_key_known = true;
 	result.member.object_record_vtable_0x00 = selector.selected_object_vtable_0x00;
+	if (selector.selected_projection_object_0x540b14_known) {
+		result.member.projection_object_0x540b14_known = true;
+		result.member.projection_object_0x540b14 = selector.selected_projection_object_0x540b14;
+	}
 	result.member.object_record_sequence_known_0x1c = selector.selected_object_sequence_0x1c_0x4aa166 >= 0;
 	result.member.object_record_sequence_0x1c = selector.selected_object_sequence_0x1c_0x4aa166;
 	result.member.object_record_selected_index_known_0x20 = true;
@@ -6936,6 +6951,7 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 	member.relative_x_0x08 = result.selected_candidate.x;
 	member.relative_y_0x0c = result.selected_candidate.y;
 	member.relative_level_0x10 = result.selected_candidate.level;
+	reward_guard_projection_member_set_coordinate_0x540b14(member);
 	wrapper.selected_members_0x2c_0x30.push_back(member);
 	result.selected_member_count_after = int32_t(wrapper.selected_members_0x2c_0x30.size());
 	result.body_stamp_count_0x49abd6 = reward_guard_stamp_member_body_0x49abd6(wrapper, member);
@@ -7069,6 +7085,7 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 	member.relative_x_0x08 = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.width + descriptor_width) / 2);
 	member.relative_y_0x0c = std::max<int32_t>(0, (wrapper.generated_cell_grid_0x08_0x10.height + descriptor_height) / 2);
 	member.relative_level_0x10 = 0;
+	reward_guard_projection_member_set_coordinate_0x540b14(member);
 	result.initial_center_coordinate_known = true;
 	result.initial_center_x = member.relative_x_0x08;
 	result.initial_center_y = member.relative_y_0x0c;
@@ -7370,6 +7387,15 @@ struct RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 {
 	RewardGuardCoordinateScanResult4aa9b7 coordinate_scan;
 	std::string blocked_reason;
 };
+
+static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_projection_ordered_coordinate_scan_from_relation_order_0x4ad7f7_0x4aa9b7(
+		GeneratorObjectPrivateState &state,
+		RewardGuardWrapperState4aa3e9 &wrapper,
+		const RewardGuardRelationPriorityResult4ad7f7 &relation_order,
+		int32_t minimum_low_word_score_0x10,
+		bool policy_byte_0x13,
+		H3MapedRng &rng,
+		bool allow_projection_slot_dispatch_0x4aa3e9);
 
 static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
 		GeneratorObjectPrivateState &state,
@@ -8712,7 +8738,6 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 		int32_t selected_x,
 		int32_t selected_y,
 		int32_t selected_level,
-		const GeneratorRelationOwnerState4a218c *slot_dispatch_source_relation_0x4ad7f7,
 		int32_t minimum_low_word_score_0x10,
 		bool policy_byte_0x13,
 		H3MapedRng *rng,
@@ -8763,17 +8788,42 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 				result.selected_member_slot8_projection_reentry_suppressed_count += 1;
 				continue;
 			}
-			if (slot_dispatch_source_relation_0x4ad7f7 == nullptr || rng == nullptr) {
+			if (rng == nullptr) {
 				result.selected_member_slot8_projection_blocked_reason =
-						"0x4aa3e9_0x540b14_slot8_source_relation_or_rng_missing_before_0x49c0a6_0x4ad7f7";
+						"0x4aa3e9_0x540b14_slot8_rng_missing_before_0x49c0a6_0x4ad947";
+				return finish_blocked(result.selected_member_slot8_projection_blocked_reason);
+			}
+			if (!member.projection_object_0x540b14_known) {
+				result.selected_member_slot8_projection_blocked_reason =
+						"0x4aa3e9_0x540b14_slot8_projection_object_missing_before_0x49c0a6";
+				return finish_blocked(result.selected_member_slot8_projection_blocked_reason);
+			}
+			const std::vector<RewardGuardProjectionGlobalEntry4ad947> *projection_global_table =
+					state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c_known
+					? &state.reward_guard_projection_global_table_0x57c7cc_plus_0x0c
+					: nullptr;
+			state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7 =
+					reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7(
+							state,
+							&member.projection_object_0x540b14,
+							projection_global_table,
+							*rng);
+			const RewardGuardProjectionChainResult49c0a6 &projection_chain =
+					state.reward_guard_projection_chain_0x49c0a6_0x4ad947_0x4ad7f7;
+			if (!projection_chain.source_relation_0x4ad947.applied
+					|| !projection_chain.relation_priority_0x4ad7f7.ordered_vector_ready_for_0x4aa9b7) {
+				result.selected_member_slot8_projection_blocked_reason =
+						projection_chain.blocked_reason.empty()
+						? "0x4aa3e9_0x540b14_slot8_0x49c0a6_0x4ad947_0x4ad7f7_chain_failed"
+						: projection_chain.blocked_reason;
 				return finish_blocked(result.selected_member_slot8_projection_blocked_reason);
 			}
 			result.selected_member_slot8_projection_ordered_scan_count_0x4ad7f7 += 1;
 			const RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 projection_scan =
-					reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
+					reward_guard_projection_ordered_coordinate_scan_from_relation_order_0x4ad7f7_0x4aa9b7(
 							state,
 							wrapper,
-							*slot_dispatch_source_relation_0x4ad7f7,
+							projection_chain.relation_priority_0x4ad7f7,
 							minimum_low_word_score_0x10,
 							policy_byte_0x13,
 							*rng,
@@ -8905,7 +8955,6 @@ RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and_commit
 			selected_x,
 			selected_y,
 			selected_level,
-			nullptr,
 			0,
 			false,
 			nullptr,
@@ -9049,7 +9098,6 @@ static RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_co
 			result.selected_candidate.x,
 			result.selected_candidate.y,
 			result.selected_candidate.level,
-			&relation,
 			minimum_low_word_score_0x10,
 			policy_byte_0x13,
 			&rng,
@@ -9081,28 +9129,16 @@ static const GeneratorRelationOwnerState4a218c *relation_owner_for_owner_vector_
 	return nullptr;
 }
 
-static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
+static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_projection_ordered_coordinate_scan_from_relation_order_0x4ad7f7_0x4aa9b7(
 		GeneratorObjectPrivateState &state,
 		RewardGuardWrapperState4aa3e9 &wrapper,
-		const GeneratorRelationOwnerState4a218c &source_relation,
+		const RewardGuardRelationPriorityResult4ad7f7 &relation_order,
 		int32_t minimum_low_word_score_0x10,
 		bool policy_byte_0x13,
 		H3MapedRng &rng,
 		bool allow_projection_slot_dispatch_0x4aa3e9) {
 	RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 result;
 	result.invoked = true;
-	if (source_relation.owner_vector_index < 0) {
-		result.blocked_reason = "0x4ad7f7_source_relation_owner_vector_index_missing_before_projection_ordered_0x4aa9b7";
-		return result;
-	}
-
-	RewardGuardRelationPriorityResult4ad7f7 relation_order =
-			reward_guard_relation_priority_ordering_0x4ad7f7(
-					state.relation_owner_vectors_10e4_10e8,
-					source_relation.owner_vector_index,
-					rng,
-					false);
-	state.reward_guard_relation_priority_0x4ad7f7 = relation_order;
 	result.relation_order_ready_0x4ad7f7 = relation_order.ordered_vector_ready_for_0x4aa9b7;
 	result.candidate_relation_count_0x4ad7f7 =
 			int32_t(relation_order.ordered_owner_vector_indexes_0x4ccecb.size());
@@ -9144,6 +9180,38 @@ static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_proje
 				: result.coordinate_scan.blocked_reason;
 	}
 	return result;
+}
+
+static RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 reward_guard_projection_ordered_coordinate_scan_0x4ad7f7_0x4aa9b7(
+		GeneratorObjectPrivateState &state,
+		RewardGuardWrapperState4aa3e9 &wrapper,
+		const GeneratorRelationOwnerState4a218c &source_relation,
+		int32_t minimum_low_word_score_0x10,
+		bool policy_byte_0x13,
+		H3MapedRng &rng,
+		bool allow_projection_slot_dispatch_0x4aa3e9) {
+	RewardGuardProjectionOrderedCoordinateScanResult4ad7f7 result;
+	result.invoked = true;
+	if (source_relation.owner_vector_index < 0) {
+		result.blocked_reason = "0x4ad7f7_source_relation_owner_vector_index_missing_before_projection_ordered_0x4aa9b7";
+		return result;
+	}
+
+	RewardGuardRelationPriorityResult4ad7f7 relation_order =
+			reward_guard_relation_priority_ordering_0x4ad7f7(
+					state.relation_owner_vectors_10e4_10e8,
+					source_relation.owner_vector_index,
+					rng,
+					false);
+	state.reward_guard_relation_priority_0x4ad7f7 = relation_order;
+	return reward_guard_projection_ordered_coordinate_scan_from_relation_order_0x4ad7f7_0x4aa9b7(
+			state,
+			wrapper,
+			relation_order,
+			minimum_low_word_score_0x10,
+			policy_byte_0x13,
+			rng,
+			allow_projection_slot_dispatch_0x4aa3e9);
 }
 
 static std::string reward_guard_footprint_trace_detail_0x49a6f9(const SourceDescriptorFootprintTrace49a6f9 &trace) {

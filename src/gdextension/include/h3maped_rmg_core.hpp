@@ -2918,6 +2918,8 @@ struct GeneratorObjectPrivateState {
 	int32_t reward_guard_projection_used_flags_0x1024_count = 0;
 	int32_t reward_guard_projection_used_flags_0x1024_zero_count = 0;
 	std::vector<uint8_t> reward_guard_projection_used_flags_0x1024;
+	bool reward_guard_projection_global_table_0x57c7cc_plus_0x0c_known = false;
+	std::vector<RewardGuardProjectionGlobalEntry4ad947> reward_guard_projection_global_table_0x57c7cc_plus_0x0c;
 	bool reward_guard_projection_driver_selection_0x4ad947_ported = false;
 	bool reward_guard_projection_driver_selection_input_known = false;
 	RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_selection_0x4ad947;
@@ -3293,6 +3295,8 @@ struct RewardGuardWrapperMember4aa3e9 {
 	uint32_t object_record_key = 0U;
 	bool object_record_key_known = false;
 	uint32_t object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+	bool projection_object_0x540b14_known = false;
+	RewardGuardProjectionObject540b14 projection_object_0x540b14;
 	bool object_record_sequence_known_0x1c = false;
 	int32_t object_record_sequence_0x1c = -1;
 	bool object_record_selected_index_known_0x20 = false;
