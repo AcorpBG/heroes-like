@@ -196,7 +196,7 @@
         "nextNamedBlocker": "final_payload_0x49b2b6_terrainplacement_word24_and_0x4ad3eb_generated_object_payload_parity"
       },
       "native_cli_required_next_slice": "source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output",
-      "notes": "Removed the stale native-only zero-commit reward/guard hard stop: recovered 0x4ac552 continues after 0x4aab7e, and no-Godot Small seed58/Medium seed10 now reach ordered final payload assembly/final_payload_compare. Remaining blocker is source-backed final tile/generated-object payload parity before runtime output.",
+      "notes": "Ported recovered 0x4a4522 bridge brush surface into h3maped_rmg_core: RNG %6 active TerrainPlacement terrain, 0x4a42d1 mask, masked 0x4bd099 cell repaint, then preserved full-rectangle bit26 mutation. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. The recovered 0x4ac552 caller order continues after a zero-commit 0x4aab7e reward/guard source stream, and native now reaches ordered final payload assembly. Focused Medium seed10 setup0 fails at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload with equal tile length 36288 but first mismatch offset 1 (native 55, H3MapEd 54), and generated-object payload remains short/order-diverged. Small seed58 reaches final_payload_compare but has no same-run authority payload for that fixture.",
@@ -207,7 +207,7 @@
       "status": "in_progress",
       "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-05T19:36:08Z",
+      "updatedAt": "2026-07-05T20:20:03Z",
       "validation": {
         "id": "native-rmg-type98-wrapper-identity-20260628",
         "title": "Recovered Type-98 Wrapper Identity Bridge",
@@ -14432,10 +14432,10 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Removed the stale native-only zero-commit reward/guard hard stop: recovered 0x4ac552 continues after 0x4aab7e, and no-Godot Small seed58/Medium seed10 now reach ordered final payload assembly/final_payload_compare. Remaining blocker is source-backed final tile/generated-object payload parity before runtime output.",
+  "currentSliceNotes": "Ported recovered 0x4a4522 bridge brush surface into h3maped_rmg_core: RNG %6 active TerrainPlacement terrain, 0x4a42d1 mask, masked 0x4bd099 cell repaint, then preserved full-rectangle bit26 mutation. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-07-05T19:36:08Z",
+  "currentSliceUpdatedAt": "2026-07-05T20:20:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61251,7 +61251,7 @@
   ],
   "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
   "taskId": "10184",
-  "updatedAt": "2026-07-05T19:36:08Z",
+  "updatedAt": "2026-07-05T20:20:03Z",
   "validation": {
     "id": "native-rmg-final-sweep-class0-flags-20260628",
     "title": "Recovered Final-Sweep Class-0 Flag Source",
