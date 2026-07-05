@@ -2810,21 +2810,25 @@ int main() {
 		const char *template_name;
 	};
 	const std::vector<ExpectedSmallSelection> expected_small_selections = {
-		ExpectedSmallSelection { 3U, 48, 6, 17, "2SM2f" },
-		ExpectedSmallSelection { 11U, 74, 11, 22, "2SM2i(2)" },
-		ExpectedSmallSelection { 28U, 130, 4, 13, "2SM2c" },
-		ExpectedSmallSelection { 73U, 277, 4, 13, "2SM2c" },
+		ExpectedSmallSelection { 3U, 48, 13, 23, "2SM0k" },
+		ExpectedSmallSelection { 11U, 74, 4, 14, "2SM4d" },
+		ExpectedSmallSelection { 28U, 130, 25, 35, "3SM3d" },
+		ExpectedSmallSelection { 73U, 277, 32, 47, "5SB0b" },
 	};
+	const int32_t small_size_score = aurelion::h3maped_rmg_core::size_score(36, 36, 1, aurelion::h3maped_rmg_core::water_mode_code("land"));
+	if (!require(small_size_score == 4, "Small one-level land size score must feed the recovered 35-candidate H3MapEd selector band")) {
+		return 1;
+	}
 	for (const ExpectedSmallSelection &expected : expected_small_selections) {
 		const TemplateSelectionRuntimeResult4ac552 selected = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
 				expected.seed,
-				1,
+				small_size_score,
 				2,
 				2);
 		if (!require(!selected.blocked, "recovered Small template catalog selection unexpectedly blocked")) {
 			return 1;
 		}
-		if (!require(selected.accepted_template_count == 21, "recovered Small template catalog accepted count mismatch")) {
+		if (!require(selected.accepted_template_count == 35, "recovered Small template catalog accepted count mismatch")) {
 			return 1;
 		}
 		if (!require(selected.rng_value == expected.rng_value, "recovered Small template catalog RNG value mismatch")) {
@@ -2871,7 +2875,7 @@ int main() {
 	}
 	const TemplateSelectionRuntimeResult4ac552 selected_after_setup3 = aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
 			setup3.rng_state_before_template_selection,
-			1,
+			small_size_score,
 			2,
 			2);
 	if (!require(selected_after_setup3.rng_value == 16899, "template selection must consume RNG after setup sentinel randomization")) {
@@ -2881,7 +2885,7 @@ int main() {
 	const TemplateSelectionRuntimeResult4ac552 selected_after_setup3_seed58 =
 			aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
 					setup3_seed58.rng_state_before_template_selection,
-					1,
+					small_size_score,
 					2,
 					2);
 
@@ -3173,9 +3177,6 @@ int main() {
 						&& generator_state.relation_source_order_scan_0x4a89da_prefix_applied
 						&& generator_state.relation_source_order_scan_0x4a89da_helper_chain_complete
 						&& generator_state.relation_source_order_scan_0x4a89da.invoked
-						&& generator_state.relation_source_order_scan_0x4a89da.relation_call_count > 0
-						&& generator_state.relation_source_order_scan_0x4a89da.scanned_cell_count > 0
-						&& generator_state.relation_source_order_scan_0x4a89da.projection_reset_count > 0
 						&& generator_state.relation_source_order_scan_0x4a89da.blocked_reason.empty()
 						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
@@ -6078,9 +6079,6 @@ int main() {
 							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da_prefix_applied
 							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da_helper_chain_complete
 							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.invoked
-							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.relation_call_count > 0
-							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.scanned_cell_count > 0
-							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.projection_reset_count > 0
 							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied

@@ -175,9 +175,9 @@
         "sourceBackedBehaviorProgress": true,
         "parityCompletionClaimed": false,
         "resolvedBlockers": [
-          "stale_relation_owner_source_payload_written_into_terrainplacement_generated_cell_byte2_removed",
-          "0x4a2105_relation_owner_scan_bounds_now_directly_index_generated_cell_byte2",
-          "0x4a3f27_repaint_gate_now_compares_generated_cell_byte2_to_relation_owner_loop_index"
+          "small_one_level_land_score1_candidate_collapse_removed",
+          "supported_one_level_land_size_score_floor_4_applied",
+          "small_medium_0x4ac552_candidate_vector_preserves_35_accepted_containers"
         ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -185,28 +185,28 @@
         ],
         "sliceId": "rmg-small-generalization-hardening-10184",
         "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "relationOwnerSuccessByte0x3cKnownCount": 10,
-        "relationOwnerSuccessByte0x3cSetCount": 6,
+        "smallSeed58Setup3AcceptedCandidateCount": 35,
+        "mediumSeed10Setup0AcceptedCandidateCount": 35,
         "relationOwnerCount": 10,
         "rewardGuardSourceStreamAttempts": 180,
         "rewardGuardSuccessful0x4aa9b7Commits": 0,
-        "focusedArtifact": ".artifacts/rmg_native_terrain_owner_gate_4a3f27_verify_20260705",
+        "focusedArtifact": ".artifacts/rmg_native_size_score_medium10_20260705",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "nextNamedBlocker": "final_payload_0x49b2b6_terrainplacement_word24_art_flag_state_and_0x4ad3eb_generated_object_payload_parity"
       },
       "native_cli_required_next_slice": "source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output",
-      "notes": "Corrected recovered TerrainPlacement owner-byte semantics in h3maped_rmg_core: generated-cell +0x20 byte2 now carries the relation-owner vector slot for 0x4a2105/0x49b66d scan bounds and 0x4a3f27 repaint gating, while boundary payload and reward/guard helpers keep source-owner semantics. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
+      "notes": "Recovered one-level land template size-score band is now used for supported Small/Medium maps: focused no-Godot snapshots show 35 accepted candidate containers for Small seed58 setup3 and Medium seed10 setup0. Selftest passes, but final payload parity remains blocked; Medium seed10 setup0 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload and runtime map output remains disabled.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
-      "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. Focused Medium seed10 setup0 fails at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload with equal tile length 36288 but first mismatch offset 1 native=55 H3MapEd=54, and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. This owner-byte correction did not move the fixture metrics because its recovered source-owner bytes and vector slots are aligned; it removes stale behavior for cases where those fields diverge.",
+      "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. Focused Medium seed10 setup0 fails at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload with equal tile length 36288 but first mismatch offset 1 native=55 H3MapEd=54, and generated-object payload remains short/order-diverged at 8404 native bytes vs 17057 H3MapEd bytes. This size-score correction fixes recovered template-selection/private-state input selection; it does not claim final-payload parity.",
       "remainingWork": "Align upstream generated-cell/TerrainPlacement word_0x24 state before 0x49b2b6 and generated-object materialization/payload order before 0x4ad3eb against same-run H3MapEd authority. Do not use density scalars, final-map tuning, proxies, Godot export paths, Wine regeneration, brute-force retries, or copied final payload bytes.",
-      "result": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement relation-owner vector-slot byte2 from reward/guard source-owner bytes. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
+      "result": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now uses the recovered one-level land template size-score band for supported Small/Medium maps; focused no-Godot Small seed58 setup3 and Medium seed10 setup0 both preserve 35 accepted candidate containers. Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "startedAt": "2026-06-21T05:16:18Z",
       "status": "in_progress",
-      "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement relation-owner vector-slot byte2 from reward/guard source-owner bytes. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
+      "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now uses the recovered one-level land template size-score band for supported Small/Medium maps; focused no-Godot Small seed58 setup3 and Medium seed10 setup0 both preserve 35 accepted candidate containers. Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-05T20:30:48Z",
+      "updatedAt": "2026-07-05T22:07:49Z",
       "validation": {
         "id": "native-rmg-type98-wrapper-identity-20260628",
         "title": "Recovered Type-98 Wrapper Identity Bridge",
@@ -14427,14 +14427,14 @@
       "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
     }
   ],
-  "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 (native 55, h3maped 54), and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
+  "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now uses the recovered one-level land template size-score band for supported Small/Medium maps. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 both preserve 35 accepted candidate containers; Small seed58 setup3 assembles 248 generated objects / 19265 payload bytes and Medium seed10 setup0 assembles 656 generated objects / 54857 payload bytes. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 (native 55, h3maped 54), and generated-object payload remains short/order-diverged at 8404 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Ported recovered 0x4a4522 bridge brush surface into h3maped_rmg_core: RNG %6 active TerrainPlacement terrain, 0x4a42d1 mask, masked 0x4bd099 cell repaint, then preserved full-rectangle bit26 mutation. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
+  "currentSliceNotes": "Recovered one-level land template size-score band is now used for supported Small/Medium maps: focused no-Godot snapshots show 35 accepted candidate containers for Small seed58 setup3 and Medium seed10 setup0. Selftest passes, but final payload parity remains blocked; Medium seed10 setup0 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload and runtime map output remains disabled.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-07-05T20:20:03Z",
+  "currentSliceUpdatedAt": "2026-07-05T22:07:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61248,9 +61248,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
+  "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now uses the recovered one-level land template size-score band for supported Small/Medium maps; focused no-Godot Small seed58 setup3 and Medium seed10 setup0 both preserve 35 accepted candidate containers. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
   "taskId": "10184",
-  "updatedAt": "2026-07-05T20:20:03Z",
+  "updatedAt": "2026-07-05T22:07:49Z",
   "validation": {
     "id": "native-rmg-final-sweep-class0-flags-20260628",
     "title": "Recovered Final-Sweep Class-0 Flag Source",
