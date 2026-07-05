@@ -15824,7 +15824,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = owner_index;
+			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			if (!owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
@@ -18359,6 +18359,20 @@ static void update_relation_owner_scan_bounds_0x49b66d(GeneratorRelationOwnerSta
 	owner.scan_bounds_0x20_0x2c_known = relation_owner_scan_bounds_non_empty_0x49b66d(owner);
 }
 
+static int32_t relation_owner_vector_index_for_generated_cell_owner_byte2_0x49b66d(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_byte2) {
+	if (owner_byte2 < 0) {
+		return -1;
+	}
+	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
+		if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(owner_index)]) == owner_byte2) {
+			return owner_index;
+		}
+	}
+	return -1;
+}
+
 static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
 		const GeneratedCellRecordGrid0x30 &grid,
 		std::vector<GeneratorRelationOwnerState4a218c> &owners) {
@@ -18377,8 +18391,10 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 				if (!record.word_0x20_known) {
 					continue;
 				}
-				const int32_t owner_index = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
-				if (owner_index < 0 || owner_index >= int32_t(owners.size())) {
+				const int32_t owner_byte2 = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
+				const int32_t owner_index =
+						relation_owner_vector_index_for_generated_cell_owner_byte2_0x49b66d(owners, owner_byte2);
+				if (owner_index < 0) {
 					continue;
 				}
 				update_relation_owner_scan_bounds_0x49b66d(owners[size_t(owner_index)], x, y);
