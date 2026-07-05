@@ -2334,8 +2334,8 @@ int main() {
 				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
-				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into generated-cell owner byte")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == 0,
+				"relation-owner vector owner-grid chain did not carry recovered relation-owner vector slot into generated-cell owner byte")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
@@ -2613,11 +2613,12 @@ int main() {
 	}
 	{
 		BoundaryMaterialization4a2777 relation_gate_materialization;
-		relation_gate_materialization.generator_mode_0x10b8 = 2;
+		relation_gate_materialization.generator_mode_0x10b8 = 0;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
-		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(7U << 16U);
-		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(7U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(1U << 16U);
 		relation_gate_materialization.generated_cell_word_0x28.assign(4, 0U);
+		relation_gate_materialization.generated_cell_word_0x28[0] = aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 		relation_gate_materialization.cell_flags.assign(4, 0U);
 		relation_gate_materialization.cell_flags[3] = 0x10U;
 		RuntimeTerrainSelectionResult49b53d relation_gate_selection;
@@ -2662,25 +2663,22 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint must gate by recovered relation-owner source byte, not loop index, stale terrain zone words, or owner_vector_index field")) {
+					"0x4a3f27 relation-owner repaint must gate by recovered relation-owner loop index, not source byte, stale terrain zone words, or owner_vector_index field")) {
 			return 1;
 		}
-		if (!require((relation_gate_repaint.generated_cell_word_0x28[0] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
+		if (!require(!relation_gate_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied
+						&& relation_gate_repaint.zone_repaint_write_count_0x4a4163 == 1
+						&& relation_gate_repaint.member_gate_skip_count_0x4a4150 >= 1
 						&& (relation_gate_repaint.generated_cell_word_0x28[3] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) == 0U,
-					"0x4a2ec3 must materialize the repaint marker from relation scan bounds, not raw boundary/span cell_flags")) {
-			return 1;
-		}
-		if (!require(relation_gate_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied
-						&& relation_gate_repaint.relation_owner_eligibility_marker_set_count_0x4a2ec3 == 2,
-					"0x4a2ec3 relation-owner eligibility marker did not set exactly the owner-matched cells")) {
+					"0x4a3f27 mode-0 repaint must consume carried generated-cell +0x28 bit 28 and ignore raw cell_flags")) {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
 						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 1
 						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 0
 						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
-					"0x4a3f27 did not carry relation-owner scan/recenter state for the generator handoff: scan_known="
+					"0x4a3f27 did not carry direct relation-owner scan bounds for generated-cell byte2: scan_known="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
 						+ " scan_blocked="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b)
@@ -2690,26 +2688,26 @@ int main() {
 						+ std::to_string(relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa))) {
 			return 1;
 		}
-		BoundaryMaterialization4a2777 mode_zero_repaint_materialization = relation_gate_materialization;
-		mode_zero_repaint_materialization.generator_mode_0x10b8 = 0;
-		mode_zero_repaint_materialization.generated_cell_word_0x28.assign(4, 0U);
-		mode_zero_repaint_materialization.generated_cell_word_0x28[0] = aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
-		const TerrainRepaintResult4a3f27 mode_zero_repaint =
+		BoundaryMaterialization4a2777 marker_materialization = relation_gate_materialization;
+		marker_materialization.generator_mode_0x10b8 = 2;
+		marker_materialization.generated_cell_word_0x28.assign(4, 0U);
+		std::vector<GeneratorRelationOwnerState4a218c> marker_owners = relation_gate_owners;
+		marker_owners[1].source_pointer_source_index_0x00 = 1;
+		marker_owners[1].relation_owner_byte2_0x4aa9b7 = 1;
+		const TerrainRepaintResult4a3f27 marker_repaint =
 				aurelion::h3maped_rmg_core::terrain_repaint_4a3f27(
 						2,
 						2,
 						1,
-						mode_zero_repaint_materialization,
+						marker_materialization,
 						relation_gate_selection,
-						&relation_gate_owners);
-		if (!require(mode_zero_repaint.executed && !mode_zero_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied,
-					"0x4a3f27 mode-0 repaint must not enter the recovered mode-2-only 0x4a30c2/0x4a2ec3 marker path")) {
-			return 1;
-		}
-		if (!require(mode_zero_repaint.zone_repaint_write_count_0x4a4163 == 1
-						&& mode_zero_repaint.member_gate_skip_count_0x4a4150 >= 1
-						&& (mode_zero_repaint.generated_cell_word_0x28[3] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) == 0U,
-					"0x4a3f27 mode-0 repaint must consume carried generated-cell +0x28 bit 28 and ignore raw cell_flags")) {
+						&marker_owners);
+		if (!require(marker_repaint.relation_owner_eligibility_marker_0x4a2ec3_applied
+						&& marker_repaint.relation_owner_eligibility_marker_set_count_0x4a2ec3 == 2
+						&& (marker_repaint.generated_cell_word_0x28[0] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
+						&& (marker_repaint.generated_cell_word_0x28[1] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U
+						&& (marker_repaint.generated_cell_word_0x28[3] & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) == 0U,
+					"0x4a2ec3 relation-owner eligibility marker did not set exactly the owner-matched cells")) {
 			return 1;
 		}
 	}
