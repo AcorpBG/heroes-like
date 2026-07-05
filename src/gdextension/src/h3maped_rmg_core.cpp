@@ -12706,6 +12706,24 @@ static bool relation_source_order_loop_owner_eligible_0x4ac552_0x4a89da(const Ge
 	return !owner.terrain_policy_0x0c_known || owner.terrain_policy_0x0c != 8;
 }
 
+static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(
+		const GeneratedCellRecord0x30 &record,
+		RelationSourceOrderScanResult4a89da *source_order_result = nullptr) {
+	if (!record.object_reference_vector_contents_known) {
+		if (source_order_result != nullptr) {
+			source_order_result->object_reference_unknown_count += 1;
+		}
+		return false;
+	}
+	if (record.object_references_0x04_0x08.size() > 1U) {
+		if (source_order_result != nullptr) {
+			source_order_result->object_reference_nonempty_skip_count += 1;
+		}
+		return false;
+	}
+	return true;
+}
+
 static bool relation_source_order_scan_prefix_mutate_cell_0x4a89da(GeneratedCellRecord0x30 &record, RelationSourceOrderScanResult4a89da &result) {
 	result.projection_reset_count += 1;
 	record.word_0x10_known = true;
@@ -12720,12 +12738,7 @@ static bool relation_source_order_scan_prefix_mutate_cell_0x4a89da(GeneratedCell
 	if (record.word_0x1c != before_0x1c) {
 		result.low_word_reset_count += 1;
 	}
-	if (!record.object_reference_vector_contents_known) {
-		result.object_reference_unknown_count += 1;
-		return false;
-	}
-	if (!record.object_references_0x04_0x08.empty()) {
-		result.object_reference_nonempty_skip_count += 1;
+	if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(record, &result)) {
 		return false;
 	}
 	result.candidate_mark_attempt_count_0x49aa63 += 1;
@@ -13023,7 +13036,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (terrain_class == 8U && owner.terrain_policy_0x0c != 8) {
 					continue;
 				}
-				if (record.object_reference_vector_contents_known && !record.object_references_0x04_0x08.empty()) {
+				if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(record)) {
 					continue;
 				}
 				if ((record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) == 0U) {
