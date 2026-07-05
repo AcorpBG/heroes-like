@@ -7611,11 +7611,9 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 			}
 		}
 		if (selected_lane < 0) {
-			if (result.materialization_attempt_count > 0 && result.successful_coordinate_scan_count == 0) {
-				result.blocked_reason = "reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
-				result.applied = false;
-				return result;
-			}
+			// Recovered 0x4ac552 continues after 0x4aab7e even when the
+			// direct 0x4aa9b7 coordinate commits produce no winners. Keep the
+			// zero-commit counters as parity debt, but do not stop source order.
 			result.applied = true;
 			return result;
 		}

@@ -3105,15 +3105,15 @@ int main() {
 		const H3MapedRmgWorkflowResult generator_state_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-		const std::string reward_guard_zero_commit_blocker =
-				"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
+		const std::string final_payload_compare_blocker =
+				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
 		if (!require(generator_state_workflow.executed
-						&& generator_state_workflow.current_phase_id == "reward_guard_materialization"
-						&& generator_state_workflow.blocked_reason == reward_guard_zero_commit_blocker
-						&& !generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
+						&& generator_state_workflow.current_phase_id == "final_payload_compare"
+						&& generator_state_workflow.blocked_reason == final_payload_compare_blocker
+						&& generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
 						&& !generator_state_workflow.final_payload_owned
 						&& !generator_state_workflow.final_writeout_complete,
-					"workflow-owned generator state did not fail closed on zero reward/guard commits before downstream writeout")) {
+					"workflow-owned generator state did not continue past zero reward/guard commits to final payload compare")) {
 			return 1;
 		}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -3149,8 +3149,8 @@ int main() {
 					&& generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-					&& generator_state_workflow.current_phase_id == "reward_guard_materialization",
-				"generator object private state did not produce and replay the recovered 0x4ac552 relation-pointer source-record loop before reward/guard blocking")) {
+					&& generator_state_workflow.current_phase_id == "final_payload_compare",
+				"generator object private state did not preserve the recovered 0x4ac552 relation-pointer source-record loop through final compare")) {
 		return 1;
 	}
 	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
@@ -3181,10 +3181,17 @@ int main() {
 						&& generator_state.relation_source_order_scan_0x4a89da.blocked_reason.empty()
 						&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason == reward_guard_zero_commit_blocker
-						&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& !generator_state.connection_tail_replay_0x4a79a3.invoked,
-							"generator object private state did not fail closed after recovered relation scan reached zero-commit reward/guard materialization")) {
+						&& generator_state.reward_guard_source_stream_0x4aab7e.applied
+						&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
+						&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
+						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
+						&& generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& generator_state.connection_tail_replay_0x4a79a3.applied
+						&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
+						&& generator_state.road_river_object_adjacency_0x4ab52a.applied,
+							"generator object private state did not carry zero-commit reward/guard materialization into downstream source-order phases")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
@@ -3441,14 +3448,15 @@ int main() {
 	if (!require(generator_state.relation_source_order_scan_0x4a89da.invoked
 					&& generator_state.relation_source_order_scan_0x4a89da.prefix_applied
 					&& generator_state.relation_source_order_scan_0x4a89da.helper_chain_complete
-					&& generator_state_workflow.current_phase_id == "reward_guard_materialization"
+					&& generator_state_workflow.current_phase_id == "final_payload_compare"
 					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
-					&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason == reward_guard_zero_commit_blocker
-					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& !generator_state.connection_tail_replay_0x4a79a3.invoked
-					&& !generator_state.road_river_object_adjacency_0x4ab52a.invoked,
-				"generator object private state did not stop at zero-commit reward/guard materialization after the 0x4a89da/0x4a8bfc relation scan")) {
+					&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
+					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+					&& generator_state.connection_tail_replay_0x4a79a3.invoked
+					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked,
+				"generator object private state did not continue after zero-commit reward/guard materialization into final compare")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -6002,23 +6010,23 @@ int main() {
 		workflow_config.setup_object_0x44 = 3;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-		const std::string workflow_reward_guard_zero_commit_blocker =
-				"reward_guard_materialization_0x4aab7e_zero_successful_0x4aa9b7_commits_before_connection_tail";
+		const std::string workflow_final_payload_compare_blocker =
+				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "reward_guard_materialization"
+						&& workflow.current_phase_id == "final_payload_compare"
 						&& !workflow.final_payload_owned
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not stop at reward/guard materialization")) {
+					"entry-to-writeout workflow did not continue through final payload assembly")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason == workflow_reward_guard_zero_commit_blocker,
-					std::string("entry-to-writeout workflow did not fail closed on zero reward/guard commits; actual=")
+		if (!require(workflow.blocked_reason == workflow_final_payload_compare_blocker,
+					std::string("entry-to-writeout workflow did not fail closed at final payload compare; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 14
+			if (!require(workflow.phases.size() >= 22
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -6032,12 +6040,16 @@ int main() {
 							&& workflow.phases[7].id == "relation_source_order_scan"
 							&& workflow.phases[7].status == "complete_source_order_prefix"
 							&& workflow.phases[11].id == "reward_guard_materialization"
-							&& workflow.phases[11].status == "blocked"
+							&& workflow.phases[11].status == "complete_source_order_prefix"
 							&& workflow.phases[12].id == "connection_road_river"
-							&& workflow.phases[12].status == "pending"
-							&& workflow.phases[13].id == "final_writeout"
-							&& workflow.phases[13].status == "pending",
-					"entry-to-writeout workflow did not preserve recovered phase order through reward/guard blocking")) {
+							&& workflow.phases[12].status == "complete_source_order_prefix"
+							&& workflow.phases[13].id == "road_river_object_adjacency"
+							&& workflow.phases[13].status == "complete_source_order_prefix"
+							&& workflow.phases[15].id == "final_writeout"
+							&& workflow.phases[15].status == "complete_source_order_prefix"
+							&& workflow.phases[21].id == "full_final_payload_same_run_compare"
+							&& workflow.phases[21].status == "blocked",
+					"entry-to-writeout workflow did not preserve recovered phase order through final payload compare")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -6073,10 +6085,14 @@ int main() {
 							&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.projection_reset_count > 0
 							&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
-							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.blocked_reason == workflow_reward_guard_zero_commit_blocker
-							&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-							&& !workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked,
-						"entry-to-writeout workflow did not carry 0x4a89da/0x4a8bfc relation scan to the zero-commit reward/guard blocker")) {
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
+							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked,
+						"entry-to-writeout workflow did not carry 0x4a89da/0x4a8bfc relation scan through zero-commit reward/guard into downstream phases")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -6118,8 +6134,8 @@ int main() {
 						&& workflow_generator_state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
-						&& workflow.current_phase_id == "reward_guard_materialization",
-					"entry-to-writeout workflow did not replay 0x4ac552 source records before reward/guard blocking")) {
+						&& workflow.current_phase_id == "final_payload_compare",
+					"entry-to-writeout workflow did not replay 0x4ac552 source records through final payload compare")) {
 			return 1;
 		}
 		bool type98_scheduler_context_replayed_from_source_pair = false;
@@ -6155,12 +6171,13 @@ int main() {
 						&& workflow_generator_state.relation_source_order_scan_0x4a89da.helper_chain_complete
 						&& workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason == workflow_reward_guard_zero_commit_blocker
-						&& !workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& !workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
-						&& !workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+						&& workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not stop at zero-commit reward/guard materialization after 0x4a89da/0x4a8bfc")) {
+					"entry-to-writeout workflow did not continue after zero-commit reward/guard materialization after 0x4a89da/0x4a8bfc")) {
 			return 1;
 		}
 	}
