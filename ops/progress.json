@@ -196,7 +196,7 @@
         "nextNamedBlocker": "reward_guard_0x4aa9b7_0x4aa603_0x49a6f9_footprint_owner_byte_mismatch"
       },
       "native_cli_required_next_slice": "port_reward_guard_0x4aa9b7_0x4aa603_footprint_owner_byte_feasibility",
-      "notes": "Implemented recovered 0x4a5767/0x4a89da object-reference span gate in native no-Godot RMG core; parity still blocked at final 0x49b2b6 tile stream mismatch.",
+      "notes": "Native no-Godot RMG now fails closed when reward/guard source stream attempts 0x4aa9b7/0x4aa3e9 commits but produces zero successful commits; downstream decorative/connection/final writeout stay blocked until the source-backed commit path is aligned.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. The relation-owner +0x3c success-byte propagation blocker is implemented for the 0x4ac552 relation-pointer source-order loop, but reward/guard 0x4aab7e -> 0x4aa9b7 still produces zero commits because 0x4aa603/0x49a6f9 footprint feasibility rejects candidate owner bytes. Next source-backed blocker: recover/align the reward-guard coordinate/owner-byte feasibility path before generated-object vector/source-pointer materialization and final 0x4ad3eb writeout parity.",
@@ -207,7 +207,7 @@
       "status": "in_progress",
       "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries the recovered relation-owner source-order success byte side effect: the 0x4ac552 relation-pointer source-order loop mutates relation owner +0x3c when 0x4a8d2c/0x4a8db2 placement commits, and passes the live owner byte into the scheduler instead of a detached local flag. The selftest was updated to validate the final workflow lifecycle: constructor zeroes +0x3c, later source-order commits may set it. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_continue_medium10_relation_3c_v2 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload, but relation owners now carry byte +0x3c as 6/10 set instead of all zero. Reward/guard remains the next implementation blocker: source_stream_attempts=180, successful_0x4aa9b7_commits=0, first 0x4aa603/0x49a6f9 trace still rejects on footprint owner byte mismatch. This is not final payload parity and runtime map output remains disabled/fail-closed.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-05T19:10:17Z",
+      "updatedAt": "2026-07-05T19:17:43Z",
       "validation": {
         "id": "native-rmg-type98-wrapper-identity-20260628",
         "title": "Recovered Type-98 Wrapper Identity Bridge",
@@ -14431,7 +14431,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Implemented recovered 0x4a5767/0x4a89da object-reference span gate in native no-Godot RMG core; parity still blocked at final 0x49b2b6 tile stream mismatch.",
+  "currentSliceNotes": "Native no-Godot RMG now fails closed when reward/guard source stream attempts 0x4aa9b7/0x4aa3e9 commits but produces zero successful commits; downstream decorative/connection/final writeout stay blocked until the source-backed commit path is aligned.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-06-28T12:28:46Z",
@@ -61250,7 +61250,7 @@
   ],
   "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries the recovered relation-owner source-order success byte side effect: the 0x4ac552 relation-pointer source-order loop mutates relation owner +0x3c when 0x4a8d2c/0x4a8db2 placement commits, and passes the live owner byte into the scheduler instead of a detached local flag. The selftest was updated to validate the final workflow lifecycle: constructor zeroes +0x3c, later source-order commits may set it. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_continue_medium10_relation_3c_v2 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload, but relation owners now carry byte +0x3c as 6/10 set instead of all zero. Reward/guard remains the next implementation blocker: source_stream_attempts=180, successful_0x4aa9b7_commits=0, first 0x4aa603/0x49a6f9 trace still rejects on footprint owner byte mismatch. This is not final payload parity and runtime map output remains disabled/fail-closed.",
   "taskId": "10184",
-  "updatedAt": "2026-07-05T19:10:17Z",
+  "updatedAt": "2026-07-05T19:17:43Z",
   "validation": {
     "id": "native-rmg-final-sweep-class0-flags-20260628",
     "title": "Recovered Final-Sweep Class-0 Flag Source",
