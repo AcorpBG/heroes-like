@@ -1796,6 +1796,9 @@ int32_t water_mode_code(const std::string &water_mode) {
 
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_code) {
 	int32_t score = int32_t((int64_t(std::max(1, width)) * int64_t(std::max(1, height)) * int64_t(std::max(1, level_count))) / 0x510);
+	if (level_count == 1 && water_code == 0) {
+		score = std::max(4, score);
+	}
 	if (water_code == 2) {
 		score = std::max(1, score / 2);
 	}
@@ -3063,7 +3066,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 	}
 	result.grid_available = true;
 
-	struct HighOwnerQueueNode {
+	struct HighOwnerFrontierNode49a318 {
 		int32_t x = 0;
 		int32_t y = 0;
 		int32_t level = 0;
@@ -3098,28 +3101,35 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 		}
 
 		GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
-		report.source_owner_byte = seed_record.word_0x20_known ? generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20) : -1;
-		if (report.source_owner_byte < 0 || !generated_cell_relation_member_49a318(seed_record) || generated_cell_terrain_code_0x24(seed_record) == 9) {
-			report.status = "blocked_seed_not_materialized_or_unowned";
+		if (!seed_record.word_0x20_known) {
+			report.status = "blocked_seed_owner_word_unknown";
 			result.seed_blocked_count += 1;
 			result.seed_reports.push_back(report);
 			continue;
 		}
+		report.source_owner_byte = generated_cell_owner_byte2_signed_4a4142(seed_record.word_0x20);
 		generated_cell_49a318_clear_source_projection(seed_record);
 
-		std::vector<HighOwnerQueueNode> queue;
-		queue.push_back(HighOwnerQueueNode { report.seed_x, report.seed_y, report.seed_level, 0 });
-		result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(queue.size()));
-
-		for (int32_t guard = 0; guard < tile_count * 16 && !queue.empty(); ++guard) {
-			int32_t best_index = 0;
-			for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
-				if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
-					best_index = index;
+		std::vector<HighOwnerFrontierNode49a318> frontier;
+		auto insert_frontier_49a318 = [&](const HighOwnerFrontierNode49a318 &node) {
+			int32_t low = 0;
+			int32_t high = int32_t(frontier.size());
+			while (low < high) {
+				const int32_t middle = (low + high) / 2;
+				if (node.score < frontier[size_t(middle)].score) {
+					low = middle + 1;
+				} else {
+					high = middle;
 				}
 			}
-			const HighOwnerQueueNode node = queue[size_t(best_index)];
-			queue.erase(queue.begin() + best_index);
+			frontier.insert(frontier.begin() + low, node);
+		};
+		insert_frontier_49a318(HighOwnerFrontierNode49a318 { report.seed_x, report.seed_y, report.seed_level, 0 });
+		result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(frontier.size()));
+
+		while (!frontier.empty()) {
+			const HighOwnerFrontierNode49a318 node = frontier.back();
+			frontier.pop_back();
 			report.popped_cell_count += 1;
 			result.popped_cell_count += 1;
 			const int64_t node_flat = cell_index(grid.width, grid.height, node.x, node.y, node.level);
@@ -3189,7 +3199,7 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 						next_record.word_0x14_known = true;
 						next_record.word_0x18 = uint32_t(node.level);
 						next_record.word_0x18_known = true;
-						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						insert_frontier_49a318(HighOwnerFrontierNode49a318 { nx, ny, nl, next_score });
 						report.same_owner_relax_count += 1;
 						result.same_owner_relax_count += 1;
 					}
@@ -3209,12 +3219,12 @@ RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(
 								reverse_direction_0x5a2658(direction));
 						next_record.word_0x28_known = true;
 						sync_generated_cell_byte_0x2b_from_word28(next_record);
-						queue.push_back(HighOwnerQueueNode { nx, ny, nl, next_score });
+						insert_frontier_49a318(HighOwnerFrontierNode49a318 { nx, ny, nl, next_score });
 						report.cross_owner_high_byte_write_count += 1;
 						result.cross_owner_high_byte_write_count += 1;
 					}
 				}
-				result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(queue.size()));
+				result.max_queue_size = std::max<int32_t>(result.max_queue_size, int32_t(frontier.size()));
 			}
 		}
 		report.status = "0x49a318_seed_propagated";
@@ -6530,16 +6540,10 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 				: result.candidate_rebuild_0x49d7c3.blocked_reason);
 	}
 
-	bool post_attach_base_offsets_known = false;
-	int32_t post_attach_base_offset_x_0x49d179 = 0;
-	int32_t post_attach_base_offset_y_0x49d17c = 0;
 	for (const RewardGuardWrapperMember4aa3e9 &selected_member : wrapper.selected_members_0x2c_0x30) {
 		if (selected_member.descriptor_type_0x1c < 0) {
 			continue;
 		}
-		post_attach_base_offsets_known = true;
-		post_attach_base_offset_x_0x49d179 = selected_member.descriptor_offset_x_0x2c;
-		post_attach_base_offset_y_0x49d17c = selected_member.descriptor_offset_y_0x30;
 		const int32_t direction_count = object_metadata_flag_0x598300(selected_member.descriptor_type_0x1c, 1) ? 8 : 5;
 		const int32_t base_x = selected_member.relative_x_0x08 - selected_member.descriptor_offset_x_0x2c;
 		const int32_t base_y = selected_member.relative_y_0x0c - selected_member.descriptor_offset_y_0x30;
@@ -6641,11 +6645,9 @@ RewardGuardAttachResult49cf34 reward_guard_attach_member_0x49cf34(RewardGuardWra
 	}
 
 	const int32_t descriptor_relative_x =
-			placed_member.relative_x_0x08
-			- (post_attach_base_offsets_known ? post_attach_base_offset_x_0x49d179 : placed_member.descriptor_offset_x_0x2c);
+			placed_member.relative_x_0x08 - placed_member.descriptor_offset_x_0x2c;
 	const int32_t descriptor_relative_y =
-			placed_member.relative_y_0x0c
-			- (post_attach_base_offsets_known ? post_attach_base_offset_y_0x49d17c : placed_member.descriptor_offset_y_0x30);
+			placed_member.relative_y_0x0c - placed_member.descriptor_offset_y_0x30;
 	result.primary_bit27_descriptor_relative_base_known_0x49d179_0x49d184 = true;
 	result.primary_bit27_descriptor_relative_x_0x49d184 = descriptor_relative_x;
 	result.primary_bit27_descriptor_relative_y_0x49d17f = descriptor_relative_y;
@@ -8037,7 +8039,6 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 	}
 
 	result.scorer_neighbor_pass_positive_count_0x49e1bf += 1;
-	score = scratch.score;
 	return true;
 }
 
@@ -20246,24 +20247,31 @@ static int32_t relation_bridge_seed_propagation_0x4a4694(
 	seed_record.word_0x28_known = true;
 	sync_generated_cell_byte_0x2b_from_word28(seed_record);
 
-	struct QueueNode4a4694 {
+	struct FrontierNode4a4694 {
 		int32_t x = 0;
 		int32_t y = 0;
 		int32_t level = 0;
 		int32_t score = 0;
 	};
-	std::vector<QueueNode4a4694> queue;
-	queue.push_back(QueueNode4a4694 { seed_x, seed_y, seed_level, 0 });
-	int32_t relax_count = 0;
-	while (!queue.empty()) {
-		int32_t best_index = 0;
-		for (int32_t index = 1; index < int32_t(queue.size()); ++index) {
-			if (queue[size_t(index)].score < queue[size_t(best_index)].score) {
-				best_index = index;
+	std::vector<FrontierNode4a4694> frontier;
+	auto insert_frontier_0x4a489d = [&](const FrontierNode4a4694 &node) {
+		int32_t low = 0;
+		int32_t high = int32_t(frontier.size());
+		while (low < high) {
+			const int32_t middle = (low + high) / 2;
+			if (node.score < frontier[size_t(middle)].score) {
+				low = middle + 1;
+			} else {
+				high = middle;
 			}
 		}
-		const QueueNode4a4694 node = queue[size_t(best_index)];
-		queue.erase(queue.begin() + best_index);
+		frontier.insert(frontier.begin() + low, node);
+	};
+	insert_frontier_0x4a489d(FrontierNode4a4694 { seed_x, seed_y, seed_level, 0 });
+	int32_t relax_count = 0;
+	while (!frontier.empty()) {
+		const FrontierNode4a4694 node = frontier.back();
+		frontier.pop_back();
 		const int64_t node_flat = cell_index(grid.width, grid.height, node.x, node.y, node.level);
 		if (node_flat < 0 || node_flat >= int64_t(grid.records.size())) {
 			continue;
@@ -20292,7 +20300,7 @@ static int32_t relation_bridge_seed_propagation_0x4a4694(
 			next_record.word_0x28 = generated_cell_word28_set_direction_0x4a4694(next_record.word_0x28, direction);
 			next_record.word_0x28_known = true;
 			sync_generated_cell_byte_0x2b_from_word28(next_record);
-			queue.push_back(QueueNode4a4694 { next_x, next_y, node.level, next_score });
+			insert_frontier_0x4a489d(FrontierNode4a4694 { next_x, next_y, node.level, next_score });
 			relax_count += 1;
 		}
 	}
