@@ -74287,13 +74287,13 @@
       }
     },
     {
-      "id": "native-rmg-type98-context-wrapper-20260628",
-      "title": "Recovered Type-98 Scheduler Context Wrapper Handoff",
+      "id": "native-rmg-reward-guard-bit23-final-writeout-20260705",
+      "title": "Recovered Reward Guard Mark Mirror And Final Writeout",
       "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
       "status": "passed_source_backed_behavior_progress_not_parity",
-      "validatedAt": "2026-06-28T09:14:25Z",
-      "updatedAt": "2026-06-28T09:14:25Z",
-      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered type-98 source-pair +0x04 wrapper context into live 0x4a8db2 scheduler replays: relation-pointer and live type-98 scheduler paths require the 0x4af785 selected wrapper index when a type-98 descriptor is required, and fail closed as 0x4a8db2_type98_context_wrapper_0x04_missing if that context is absent. h3maped_rmg_core_selftest now asserts the entry-to-writeout workflow scheduler context comes from the recovered +0xedc source-pair wrapper payload. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_type98_context_wrapper_20260628 shows first scheduler contexts 1328,1329,1330,1330,1331,1328 matching recovered type-98 source-pair contexts instead of old owner-slot values 0..5. The same run still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload remains 8524 vs 17057 with first mismatch offset 0 native=30 expected=2. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and broader generated-object vector/source-pointer materialization count/order parity before 0x4ad3eb.",
+      "validatedAt": "2026-07-05T23:01:31Z",
+      "updatedAt": "2026-07-05T23:01:31Z",
+      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now mirrors recovered 0x49cefb cell+0x2a bit7 into generated-cell +0x28 bit23 consumed by 0x4aa603, moving focused Medium seed10 setup0 reward/guard materialization from zero successful commits to 149 successful coordinate scans / 495 attempts. Final object writeout now carries selected reward/guard candidate vtables and ports recovered serializer slot 0x49c3f4 plus the source-backed 0x49be93 variants used by the focused case; the same run serializes all 862 generated objects, writes a sentinel, and emits 12138 object-payload bytes with 212 definitions. It still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 12138 vs 17057 with first mismatch offset 0 native=30 expected=2. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and broader generated-object vector/source-pointer materialization count/order parity before 0x4ad3eb.",
       "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "artifacts": [
         "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -74301,14 +74301,14 @@
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
         "PLAN.md",
         "ops/progress.json",
-        ".artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-        ".artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.final_payload_compare.json"
+        ".artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.phase_snapshot.json",
+        ".artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.final_payload_compare.json"
       ],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-        "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_type98_context_wrapper_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_type98_context_wrapper_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocked mismatch)",
+        "bin/h3maped_rmg_core_selftest (passed)",
+        "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_reward_bit23_20260705 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; final_payload_sections_written=1)",
+        "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_reward_bit23_20260705 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocked mismatch)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -74316,13 +74316,13 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-type98-context-wrapper-20260628",
-    "title": "Recovered Type-98 Scheduler Context Wrapper Handoff",
+    "id": "native-rmg-reward-guard-bit23-final-writeout-20260705",
+    "title": "Recovered Reward Guard Mark Mirror And Final Writeout",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
     "status": "passed_source_backed_behavior_progress_not_parity",
-    "validatedAt": "2026-06-28T09:14:25Z",
-    "updatedAt": "2026-06-28T09:14:25Z",
-    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries recovered type-98 source-pair +0x04 wrapper context into live 0x4a8db2 scheduler replays: relation-pointer and live type-98 scheduler paths require the 0x4af785 selected wrapper index when a type-98 descriptor is required, and fail closed as 0x4a8db2_type98_context_wrapper_0x04_missing if that context is absent. h3maped_rmg_core_selftest now asserts the entry-to-writeout workflow scheduler context comes from the recovered +0xedc source-pair wrapper payload. Focused no-Godot Medium seed10 setup0 evidence in .artifacts/native_rmg_type98_context_wrapper_20260628 shows first scheduler contexts 1328,1329,1330,1330,1331,1328 matching recovered type-98 source-pair contexts instead of old owner-slot values 0..5. The same run still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload remains 8524 vs 17057 with first mismatch offset 0 native=30 expected=2. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and broader generated-object vector/source-pointer materialization count/order parity before 0x4ad3eb.",
+    "validatedAt": "2026-07-05T23:01:31Z",
+    "updatedAt": "2026-07-05T23:01:31Z",
+    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now mirrors recovered 0x49cefb cell+0x2a bit7 into generated-cell +0x28 bit23 consumed by 0x4aa603, moving focused Medium seed10 setup0 reward/guard materialization from zero successful commits to 149 successful coordinate scans / 495 attempts. Final object writeout now carries selected reward/guard candidate vtables and ports recovered serializer slot 0x49c3f4 plus the source-backed 0x49be93 variants used by the focused case; the same run serializes all 862 generated objects, writes a sentinel, and emits 12138 object-payload bytes with 212 definitions. It still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 1 native=55 expected=54; generated-object payload is 12138 vs 17057 with first mismatch offset 0 native=30 expected=2. Remaining blockers: upstream TerrainPlacement/generated-cell private state before 0x49b2b6 and broader generated-object vector/source-pointer materialization count/order parity before 0x4ad3eb.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -74330,14 +74330,14 @@
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "PLAN.md",
       "ops/progress.json",
-      ".artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.final_payload_compare.json"
+      ".artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.final_payload_compare.json"
     ],
     "commands": [
       "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-      "timeout 120s bin/h3maped_rmg_core_selftest (passed)",
-      "python3 tools/rmg_native_batch_export.py --out .artifacts/native_rmg_type98_context_wrapper_20260628 --phase-snapshot-only --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/native_rmg_type98_context_wrapper_20260628 --case-id medium_seed10_setup0_2p --out .artifacts/native_rmg_type98_context_wrapper_20260628/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocked mismatch)",
+      "bin/h3maped_rmg_core_selftest (passed)",
+      "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --out .artifacts/rmg_native_reward_bit23_20260705 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=1; final_payload_binary_written=1; final_payload_sections_written=1)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_reward_bit23_20260705 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_reward_bit23_20260705/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocked mismatch)",
       "python3 tests/validate_repo.py (passed)",
       "jq empty ops/progress.json (passed)",
       "git diff --check (passed)"
