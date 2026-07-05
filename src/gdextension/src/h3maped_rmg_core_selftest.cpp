@@ -3183,14 +3183,14 @@ int main() {
 						&& generator_state.reward_guard_source_stream_0x4aab7e.applied
 						&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
 						&& generator_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
-						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+						&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count > 0
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 						&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.applied
 						&& generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& generator_state.connection_tail_replay_0x4a79a3.applied
 						&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
 						&& generator_state.road_river_object_adjacency_0x4ab52a.applied,
-							"generator object private state did not carry zero-commit reward/guard materialization into downstream source-order phases")) {
+							"generator object private state did not carry source-backed reward/guard materialization into downstream source-order phases")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
@@ -3451,11 +3451,11 @@ int main() {
 					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
 					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
 					&& generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
-					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+					&& generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count > 0
 					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 					&& generator_state.connection_tail_replay_0x4a79a3.invoked
 					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked,
-				"generator object private state did not continue after zero-commit reward/guard materialization into final compare")) {
+				"generator object private state did not continue after source-backed reward/guard materialization into final compare")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after the 0x4a4913 materialization bridge relation loop")) {
@@ -4982,11 +4982,16 @@ int main() {
 	const RewardGuardWrapperFinalMarkResult49cefb final_mark_result =
 			aurelion::h3maped_rmg_core::reward_guard_wrapper_mark_candidate_cells_0x49cefb(attach_wrapper);
 	int32_t final_marked_grid_cell_count = 0;
+	int32_t final_marked_word_mirror_cell_count = 0;
 	for (const GeneratedCellRecord0x30 &record : attach_wrapper.generated_cell_grid_0x08_0x10.records) {
 		if (record.byte_0x2a_known
 				&& (record.byte_0x2a_known_mask & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U
 				&& (record.byte_0x2a & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7) != 0U) {
 			final_marked_grid_cell_count += 1;
+			if (record.word_0x28_known
+					&& (record.word_0x28 & aurelion::h3maped_rmg_core::CELL_REWARD_GUARD_DIRECTION_BIT_23) != 0U) {
+				final_marked_word_mirror_cell_count += 1;
+			}
 		}
 	}
 	if (!require(final_mark_result.applied
@@ -4996,8 +5001,9 @@ int main() {
 					&& final_mark_result.marked_candidate_cell_count > 0
 					&& final_mark_result.marked_candidate_cell_count <= attach_rebuilt_candidate_count
 					&& final_mark_result.out_of_bounds_candidate_count == 0
-					&& final_marked_grid_cell_count == final_mark_result.marked_candidate_cell_count,
-				"0x49cefb did not set wrapper +0x60 and mark candidate cells at cell+0x2a bit7")) {
+					&& final_marked_grid_cell_count == final_mark_result.marked_candidate_cell_count
+					&& final_marked_word_mirror_cell_count == final_marked_grid_cell_count,
+				"0x49cefb did not set wrapper +0x60 and mirror cell+0x2a bit7 into generated-cell +0x28 bit23")) {
 		return 1;
 	}
 	RewardGuardWrapperState4aa3e9 blocked_attach_wrapper = attach_construct.wrapper;
@@ -6084,11 +6090,11 @@ int main() {
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.applied
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
 							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.materialization_attempt_count > 0
-							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+							&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count > 0
 							&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 							&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
 							&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked,
-						"entry-to-writeout workflow did not carry 0x4a89da/0x4a8bfc relation scan through zero-commit reward/guard into downstream phases")) {
+						"entry-to-writeout workflow did not carry 0x4a89da/0x4a8bfc relation scan through source-backed reward/guard into downstream phases")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -6168,12 +6174,12 @@ int main() {
 						&& workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
 						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked
 						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.blocked_reason.empty()
-						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count == 0
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.successful_coordinate_scan_count > 0
 						&& workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 						&& workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
 						&& !workflow.final_writeout_complete,
-					"entry-to-writeout workflow did not continue after zero-commit reward/guard materialization after 0x4a89da/0x4a8bfc")) {
+					"entry-to-writeout workflow did not continue after source-backed reward/guard materialization after 0x4a89da/0x4a8bfc")) {
 			return 1;
 		}
 	}

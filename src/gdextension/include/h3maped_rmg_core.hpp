@@ -2034,6 +2034,8 @@ struct ObjectRecordReference4a54a7 {
 	bool source_descriptor_join_0x4903e8_known = false;
 	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;
+	bool reward_guard_candidate_vtable_0x00_known = false;
+	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	int32_t source_catalog_index_0x49da08 = -1;
 	bool copied_source_record_carried = false;
@@ -3366,6 +3368,8 @@ struct RewardGuardWrapperMember4aa3e9 {
 	int32_t object_record_selected_index_0x20 = -1;
 	bool object_record_enabled_word_known_0x24 = false;
 	uint32_t object_record_enabled_word_0x24 = 0U;
+	bool reward_guard_candidate_vtable_0x00_known = false;
+	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t relative_x_0x08 = 0;
 	int32_t relative_y_0x0c = 0;

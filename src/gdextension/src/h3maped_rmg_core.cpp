@@ -6504,6 +6504,9 @@ RewardGuardWrapperFinalMarkResult49cefb reward_guard_wrapper_mark_candidate_cell
 			result.marked_candidate_cell_count += 1;
 		}
 		record.byte_0x2a |= CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7;
+		// cell+0x2a is byte 2 of GeneratedCell+0x28; 0x4aa603 consumes this mark as bit 23.
+		record.word_0x28 |= CELL_REWARD_GUARD_DIRECTION_BIT_23;
+		record.word_0x28_known = true;
 	}
 	result.applied = true;
 	return result;
@@ -6844,6 +6847,8 @@ static RewardGuardMemberAllocationResult4a5c07 reward_guard_member_from_selector
 	result.member.object_record_key = result.object_record_key;
 	result.member.object_record_key_known = true;
 	result.member.object_record_vtable_0x00 = selector.selected_object_vtable_0x00;
+	result.member.reward_guard_candidate_vtable_0x00_known = selector.selected_candidate_vtable_known;
+	result.member.reward_guard_candidate_vtable_0x00 = selector.selected_candidate_vtable_0x00;
 	if (selector.selected_projection_object_0x540b14_known) {
 		result.member.projection_object_0x540b14_known = true;
 		result.member.projection_object_0x540b14 = selector.selected_projection_object_0x540b14;
@@ -9031,6 +9036,8 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 					object_record.object_record_enabled_low_byte_0x24 =
 							(member.object_record_enabled_word_0x24 & 0xffU) != 0U;
 				}
+				object_record.reward_guard_candidate_vtable_0x00_known = member.reward_guard_candidate_vtable_0x00_known;
+				object_record.reward_guard_candidate_vtable_0x00 = member.reward_guard_candidate_vtable_0x00;
 				if (member.source_record_copy_known_0x04) {
 					object_record.copied_source_record_carried = true;
 					object_record.source_record_copy = member.source_record_copy;
@@ -11386,6 +11393,8 @@ static uint32_t final_object_serializer_slot_0x0c_4ad3eb(uint32_t object_record_
 			return 0x0049c105U;
 		case OBJECT_RECORD_VTABLE_0X540B3C:
 			return 0x0049c273U;
+		case OBJECT_RECORD_VTABLE_0X540B50:
+			return 0x0049c3f4U;
 		case OBJECT_RECORD_VTABLE_0X540B64:
 			return 0x0049c44dU;
 		case OBJECT_RECORD_VTABLE_0X540B78:
@@ -11850,10 +11859,76 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 			final_object_append_le32_0x4ad3eb(bytes, 0U);
 			final_object_append_le32_0x4ad3eb(bytes, 0U);
 			return true;
+		case 0x0049be93U: {
+			if (!record.reward_guard_candidate_vtable_0x00_known) {
+				blocked_reason = "final_object_payload_0x49be93_selected_candidate_vtable_missing";
+				return false;
+			}
+			uint32_t field_0x1c = 0U;
+			std::array<uint32_t, 7> fields_0x20_0x38 {};
+			int32_t field_0x3c = -1;
+			uint32_t field_0x40 = 0U;
+			switch (record.reward_guard_candidate_vtable_0x00) {
+				case 0x00540bd0U:
+					field_0x1c = uint32_t(record.object_record_selected_index_0x20);
+					break;
+				case 0x00540be0U:
+					fields_0x20_0x38[6] = uint32_t(record.object_record_selected_index_0x20);
+					break;
+				case 0x00540bc0U:
+					blocked_reason = "final_object_payload_0x49be93_0x540bc0_monster_fields_0x14_0x18_missing";
+					return false;
+				case 0x00540bf0U:
+					blocked_reason = "final_object_payload_0x49be93_0x540bf0_dynamic_vector_0x48_0x4c_missing";
+					return false;
+				default: {
+					std::ostringstream reason;
+					reason << "final_object_payload_0x49be93_candidate_vtable_0x"
+							<< std::hex << std::setw(8) << std::setfill('0')
+							<< record.reward_guard_candidate_vtable_0x00
+							<< "_unrecovered";
+					blocked_reason = reason.str();
+					return false;
+				}
+			}
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, field_0x1c);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			for (uint32_t value : fields_0x20_0x38) {
+				final_object_append_le32_0x4ad3eb(bytes, value);
+			}
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			if (field_0x3c == -1) {
+				final_object_append_u8_0x4ad3eb(bytes, 0U);
+			} else {
+				final_object_append_u8_0x4ad3eb(bytes, 1U);
+				if (pass_arg >= 1) {
+					final_object_append_le16_0x4ad3eb(bytes, uint32_t(field_0x3c));
+				} else {
+					final_object_append_u8_0x4ad3eb(bytes, uint32_t(field_0x3c));
+				}
+				final_object_append_le16_0x4ad3eb(bytes, field_0x40);
+			}
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			return true;
+		}
 		case 0x0049c44dU:
 			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
 			final_object_append_le16_0x4ad3eb(bytes, 0U);
 			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			return true;
+		case 0x0049c3f4U:
+			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_le16_0x4ad3eb(bytes, 0U);
 			return true;
 		case 0x0049c495U:
 			if (!final_object_require_sequence_0x1c_0x4ad3eb(record, serializer_slot_0x0c, blocked_reason)) {
