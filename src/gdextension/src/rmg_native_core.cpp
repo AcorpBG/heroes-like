@@ -4312,8 +4312,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the source-order private-state chain through relation/object replay, route/free-cell sweep, the materialization bridge, bridge relation normalization, bridge water-edge write, and the source-backed 0x4a89da relation-scan prefix. It intentionally fails closed before 0x4a9d6a mine/resource materialization, reward/guard, connection-tail, final writeout, and native map output until the recovered 0x4a8bfc and 0x4a8722 helper chain after 0x4a89da is ported.\",\n";
-	out << "    \"required_refactor\": \"port recovered 0x4a8bfc and 0x4a8722 relation-scan helper chain after the source-backed 0x4a89da prefix before resuming 0x4a9d6a mine/resource materialization\",\n";
+	out << "    \"current_blocker\": \"native workflow now carries the single H3MapEd-aligned source-order chain through relation/object replay, route/free-cell sweep, materialization bridge, mine/resource materialization, reward/guard source stream, decorative dispatch, connection/road replay, and ordered final payload assembly. Runtime map output remains disabled until native_h3maped_workflow.current_phase_id/native_h3maped_workflow.blocked_reason is resolved by source-backed final tile and generated-object payload parity.\",\n";
+	out << "    \"required_refactor\": \"align upstream generated-cell/TerrainPlacement state before 0x49b2b6 and generated-object payload materialization before 0x4ad3eb against the same-run H3MapEd authority payload\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";
@@ -4344,8 +4344,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"port_recovered_0x4a8bfc_and_0x4a8722_relation_scan_helper_chain_after_0x4a89da_prefix\",\n";
-	out << "  \"next_required_alignment_slice\": \"do_not_compare_pre_0x4a4c8e_generated_cells_until_full_mutation_chain_is_source_owned\"\n";
+	out << "  \"next_required_native_core_slice\": \"source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output\",\n";
+	out << "  \"next_required_alignment_slice\": \"align_generated_cell_terrainplacement_state_before_0x49b2b6_and_generated_object_payload_before_0x4ad3eb\"\n";
 	out << "}\n";
 	return out.str();
 }
