@@ -15840,7 +15840,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+			const int32_t owner_gate_byte2 = owner_index;
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			if (!owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
@@ -16818,17 +16818,19 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
-		int32_t owner_byte2 = payload_owner_word_0x00;
-		if (owner_byte2 < 0) {
-			owner_byte2 = owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index;
-		}
+		const int32_t owner_vector_slot =
+				(!relation_owners.empty() && owner >= relation_owners.data() && owner < relation_owners.data() + relation_owners.size())
+				? int32_t(owner - relation_owners.data())
+				: -1;
+		const int32_t generated_cell_owner_byte2 =
+				owner_vector_slot >= 0 ? owner_vector_slot : source_vector_handoff_index;
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = payload_owner_word_0x00 >= 0
 				? payload_owner_word_0x00
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = owner_byte2 >= 0
-				? owner_byte2
+		handoff.generated_cell_owner_byte2 = generated_cell_owner_byte2 >= 0
+				? generated_cell_owner_byte2
 				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : -1);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
@@ -18375,18 +18377,13 @@ static void update_relation_owner_scan_bounds_0x49b66d(GeneratorRelationOwnerSta
 	owner.scan_bounds_0x20_0x2c_known = relation_owner_scan_bounds_non_empty_0x49b66d(owner);
 }
 
-static int32_t relation_owner_vector_index_for_generated_cell_owner_byte2_0x49b66d(
+static int32_t relation_owner_vector_index_for_generated_cell_owner_byte2_0x4a2105(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
 		int32_t owner_byte2) {
-	if (owner_byte2 < 0) {
+	if (owner_byte2 < 0 || owner_byte2 >= int32_t(owners.size())) {
 		return -1;
 	}
-	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
-		if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(owner_index)]) == owner_byte2) {
-			return owner_index;
-		}
-	}
-	return -1;
+	return owner_byte2;
 }
 
 static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
@@ -18409,7 +18406,7 @@ static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49
 				}
 				const int32_t owner_byte2 = generated_cell_owner_byte2_signed_4a4142(record.word_0x20);
 				const int32_t owner_index =
-						relation_owner_vector_index_for_generated_cell_owner_byte2_0x49b66d(owners, owner_byte2);
+						relation_owner_vector_index_for_generated_cell_owner_byte2_0x4a2105(owners, owner_byte2);
 				if (owner_index < 0) {
 					continue;
 				}

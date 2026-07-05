@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 (native 55, h3maped 54), and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
-      "currentSliceNotes": "Removed the stale native-only zero-commit reward/guard hard stop: recovered 0x4ac552 continues after 0x4aab7e, and no-Godot Small seed58/Medium seed10 now reach ordered final payload assembly/final_payload_compare. Remaining blocker is source-backed final tile/generated-object payload parity before runtime output.",
+      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement generated-cell byte2 semantics from reward/guard source-owner semantics: relation-owner boundary handoffs keep the source owner in the boundary payload word, but write the relation-owner vector slot into generated-cell +0x20 byte2; 0x4a2105/0x49b66d indexes relation owners directly from that byte; and 0x4a3f27 compares generated-cell byte2 to the current relation-owner loop index. Reward/guard/source-owner helpers were not widened. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 native=55 h3maped=54, and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
+      "currentSliceNotes": "Corrected stale TerrainPlacement owner-byte drift: generated-cell +0x20 byte2 is now the relation-owner vector slot for 0x4a2105/0x49b66d and 0x4a3f27, while source-owner bytes remain reward/guard metadata. Remaining blocker is source-backed final tile/generated-object payload parity before runtime output.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -152,8 +152,8 @@
         ".artifacts/rmg_recovery/r1_projection_chain_closure_summary_20260610.json",
         ".artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump/target_004ad947_FUN_004ad947.txt"
       ],
-      "latestEvidenceId": "native-rmg-reward-guard-zero-commit-continue-20260705",
-      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 (native 55, h3maped 54), and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
+      "latestEvidenceId": "native-rmg-terrainplacement-byte2-split-20260705",
+      "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement generated-cell byte2 semantics from reward/guard source-owner semantics: relation-owner boundary handoffs keep the source owner in the boundary payload word, but write the relation-owner vector slot into generated-cell +0x20 byte2; 0x4a2105/0x49b66d indexes relation owners directly from that byte; and 0x4a3f27 compares generated-cell byte2 to the current relation-owner loop index. Reward/guard/source-owner helpers were not widened. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; tile stream length is 36288 vs 36288 with first mismatch offset 1 native=55 h3maped=54, and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. Runtime map output remains disabled/fail-closed.",
       "metrics": {
         "nativeTilePayloadByteCount": 36288,
         "h3mapedTilePayloadByteCount": 36288,
@@ -175,10 +175,9 @@
         "sourceBackedBehaviorProgress": true,
         "parityCompletionClaimed": false,
         "resolvedBlockers": [
-          "stale_0x4ad947_coordinate_derived_source_relation_proxy_removed",
-          "0x540b14_owned_record_plus_0x20_selected_global_index_write_modeled",
-          "0x4aa166_0x4aa1db_selected_wrapper_identity_carried_to_0x4aa3e9_and_0x4a54a7",
-          "stale_reward_guard_zero_commit_hard_stop_removed_after_recovered_0x4ac552_continuation"
+          "stale_relation_owner_source_payload_written_into_terrainplacement_generated_cell_byte2_removed",
+          "0x4a2105_relation_owner_scan_bounds_now_directly_index_generated_cell_byte2",
+          "0x4a3f27_repaint_gate_now_compares_generated_cell_byte2_to_relation_owner_loop_index"
         ],
         "namedBlockers": [
           "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
@@ -191,23 +190,23 @@
         "relationOwnerCount": 10,
         "rewardGuardSourceStreamAttempts": 180,
         "rewardGuardSuccessful0x4aa9b7Commits": 0,
-        "focusedArtifact": ".artifacts/native_rmg_medium10_zero_commit_continue_verify",
+        "focusedArtifact": ".artifacts/rmg_native_terrain_owner_gate_4a3f27_verify_20260705",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-        "nextNamedBlocker": "final_payload_0x49b2b6_terrainplacement_word24_and_0x4ad3eb_generated_object_payload_parity"
+        "nextNamedBlocker": "final_payload_0x49b2b6_terrainplacement_word24_art_flag_state_and_0x4ad3eb_generated_object_payload_parity"
       },
       "native_cli_required_next_slice": "source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output",
-      "notes": "Ported recovered 0x4a4522 bridge brush surface into h3maped_rmg_core: RNG %6 active TerrainPlacement terrain, 0x4a42d1 mask, masked 0x4bd099 cell repaint, then preserved full-rectangle bit26 mutation. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
+      "notes": "Corrected recovered TerrainPlacement owner-byte semantics in h3maped_rmg_core: generated-cell +0x20 byte2 now carries the relation-owner vector slot for 0x4a2105/0x49b66d scan bounds and 0x4a3f27 repaint gating, while boundary payload and reward/guard helpers keep source-owner semantics. Build/selftest/validate_repo pass; no-Godot export still fail-closed at same-run final payload parity, so slice remains in progress.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
-      "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. The recovered 0x4ac552 caller order continues after a zero-commit 0x4aab7e reward/guard source stream, and native now reaches ordered final payload assembly. Focused Medium seed10 setup0 fails at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload with equal tile length 36288 but first mismatch offset 1 (native 55, H3MapEd 54), and generated-object payload remains short/order-diverged. Small seed58 reaches final_payload_compare but has no same-run authority payload for that fixture.",
+      "remainingGap": "Final tile payload and generated-object payload parity remain blocked against same-run 0x49b2b6/0x4ad1e3 H3MapEd authorities. Focused Medium seed10 setup0 fails at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload with equal tile length 36288 but first mismatch offset 1 native=55 H3MapEd=54, and generated-object payload remains short/order-diverged at 8116 native bytes vs 17057 H3MapEd bytes. This owner-byte correction did not move the fixture metrics because its recovered source-owner bytes and vector slots are aligned; it removes stale behavior for cases where those fields diverge.",
       "remainingWork": "Align upstream generated-cell/TerrainPlacement word_0x24 state before 0x49b2b6 and generated-object materialization/payload order before 0x4ad3eb against same-run H3MapEd authority. Do not use density scalars, final-map tuning, proxies, Godot export paths, Wine regeneration, brute-force retries, or copied final payload bytes.",
-      "result": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
+      "result": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement relation-owner vector-slot byte2 from reward/guard source-owner bytes. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
       "sliceId": "rmg-small-generalization-hardening-10184",
       "startedAt": "2026-06-21T05:16:18Z",
       "status": "in_progress",
-      "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now treats zero successful direct 0x4aa9b7 reward/guard commits as diagnostic parity debt instead of a native hard stop, matching recovered 0x4ac552 continuation after 0x4aab7e. Focused no-Godot Small seed58 setup3 and Medium seed10 setup0 now execute through reward/guard, decorative dispatch, connection/road replay, ordered final header/tile/object payload assembly, and stop at final_payload_compare. Medium seed10 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
+      "summary": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now separates TerrainPlacement relation-owner vector-slot byte2 from reward/guard source-owner bytes. Focused no-Godot Medium seed10 setup0 still fails against same-run authority at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled/fail-closed.",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-05T20:20:03Z",
+      "updatedAt": "2026-07-05T20:30:48Z",
       "validation": {
         "id": "native-rmg-type98-wrapper-identity-20260628",
         "title": "Recovered Type-98 Wrapper Identity Bridge",
