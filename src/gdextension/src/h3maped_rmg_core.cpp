@@ -1622,10 +1622,9 @@ void append_angle_candidates_4a17f5(const GeneratorRelationOwnerState4a218c &bas
 	const int32_t combined_size = base_source_span + current_source_span;
 	for (int32_t direction = 0; direction < 32; ++direction) {
 		CoordinateCandidate4a17f5 candidate;
-		// H3MapEd 0x4a17f5 writes current-owner +0x10 from source +0x14/table 0x58dd28
-		// and +0x14 from source +0x10/table 0x58dc28 before appending the 12-byte tuple.
-		candidate.x = int32_t(std::trunc(double(combined_size) * Y_TABLE[direction] + double(base.y)));
-		candidate.y = int32_t(std::trunc(double(combined_size) * X_TABLE[direction] + double(base.x)));
+		// H3MapEd 0x4a17f5 writes +0x10 from 0x58dc28/base +0x10 and +0x14 from 0x58dd28/base +0x14.
+		candidate.x = int32_t(std::trunc(double(combined_size) * X_TABLE[direction] + double(base.x)));
+		candidate.y = int32_t(std::trunc(double(combined_size) * Y_TABLE[direction] + double(base.y)));
 		candidate.level = base.level;
 		if (coordinate_candidate_valid_4a1701(current, current_owner, candidate, zones, relation_owners)) {
 			candidates.push_back(candidate);
@@ -19341,9 +19340,12 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 	}
 	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 
+	// H3MapEd's recovered scan-bound users treat an owner with no cells as no
+	// work: 0x4a2ffa returns on a zero matching-cell count, and the source-order
+	// scans never iterate sentinel bounds. Keep counting that condition above,
+	// but do not promote it to a generator-wide input blocker.
 	state.source_order_relation_pointer_loop_0x4ac552_input_known =
-			state.source_order_relation_pointer_loop_missing_scan_bounds_count == 0
-			&& state.source_order_relation_pointer_loop_missing_town_record_count == 0
+			state.source_order_relation_pointer_loop_missing_town_record_count == 0
 			&& state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0;
 	if (!state.source_order_relation_pointer_loop_0x4ac552_input_known) {
 		state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
@@ -21165,14 +21167,24 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 		return result;
 	}
 	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
-		if (!owner.terrain_policy_0x0c_known
-				|| !owner.scan_bounds_0x20_0x2c_known
+		if (!owner.terrain_policy_0x0c_known) {
+			result.blocked_reason = "0x4a4913_relation_record_input_unknown";
+			return result;
+		}
+		// 0x4a4913 checks relation +0x0c first and returns immediately unless
+		// it is type 8. Bounds/coordinate/source fields are read only inside
+		// that branch, so non-type8 records must not be rejected for sentinel
+		// scan bounds left by an owner with no generated cells.
+		if (owner.terrain_policy_0x0c != 8) {
+			continue;
+		}
+		if (!owner.scan_bounds_0x20_0x2c_known
 				|| !owner.coordinate_triple_0x10_0x18_known
 				|| !owner.source_pointer_0x00_known
 				|| owner.source_pointer_source_index_0x00 < 0
 				|| !owner.relation_owner_byte2_0x4aa9b7_known
 				|| owner.relation_owner_byte2_0x4aa9b7 < 0) {
-			result.blocked_reason = "0x4a4913_relation_record_input_unknown";
+			result.blocked_reason = "0x4a4913_type8_relation_record_input_unknown";
 			return result;
 		}
 	}
