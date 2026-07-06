@@ -116,6 +116,7 @@ BoundarySourceCycleHandoff4a2777 square_handoff(bool gate_first_edge) {
 		source_node(6, 6, 2),
 		source_node(1, 6, 3),
 	};
+	handoff.source_cycle_anchor_model_node_index_4a325d = handoff.source_nodes[0].model_node_index;
 	if (gate_first_edge) {
 		handoff.source_nodes[0].next_pair_has_payload = true;
 		handoff.source_nodes[0].next_pair_payload = 1;
@@ -271,15 +272,15 @@ int main() {
 				return 1;
 			}
 			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
-						return write.reserved;
+						return !write.reserved;
 					}),
-					"0x4a325d must reserve generator mode 2 level 1 writes")) {
+					"0x4a325d must suppress generator mode 2 level 1 reserved writes")) {
 				return 1;
 			}
-			if (!require(std::any_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+			if (!require(std::none_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
 						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
 					}),
-					"0x4a325d reserved writes must set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
+					"0x4a325d unreserved writes must not set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
 		}
@@ -292,18 +293,59 @@ int main() {
 			if (!require(!fill.trace.empty(), "0x4a325d level-0 span fill did not emit trace writes")) {
 				return 1;
 			}
-			if (!require(std::none_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
+			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
 						return write.reserved;
 					}),
-					"0x4a325d must suppress reserved flags for generator mode 2 level 0")) {
+					"0x4a325d must reserve generator mode 2 level 0 writes")) {
 				return 1;
 			}
-			if (!require(std::none_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+			if (!require(std::any_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
 						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
 					}),
-					"0x4a325d unreserved writes must not set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
+					"0x4a325d reserved writes must set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
+		}
+	}
+
+	{
+		BoundarySourceCycleHandoff4a2777 deterministic_handoff = square_handoff(false);
+		deterministic_handoff.boundary_pass_index_0x0c = 0;
+		deterministic_handoff.random_span_limit = 3;
+		const BoundaryMaterialization4a2777 deterministic_boundary =
+				aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+						10,
+						10,
+						1,
+						0,
+						1,
+						123U,
+						{ deterministic_handoff });
+		if (!require(deterministic_boundary.flagged_writer_segment_count == 0
+						&& deterministic_boundary.deterministic_writer_segment_count > 0
+						&& deterministic_boundary.randomized_rng_call_count == 0
+						&& deterministic_boundary.rng_state_after == 123U,
+					"0x4a2777 pass byte 0 must use deterministic 0x4a261a even when generator mode is non-2")) {
+			return 1;
+		}
+
+		BoundarySourceCycleHandoff4a2777 randomized_handoff = square_handoff(false);
+		randomized_handoff.boundary_pass_index_0x0c = 1;
+		randomized_handoff.random_span_limit = 3;
+		const BoundaryMaterialization4a2777 randomized_boundary =
+				aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
+						10,
+						10,
+						1,
+						0,
+						1,
+						123U,
+						{ randomized_handoff });
+		if (!require(randomized_boundary.flagged_writer_segment_count > 0
+						&& randomized_boundary.randomized_rng_call_count > 0
+						&& randomized_boundary.rng_state_after != 123U,
+					"0x4a2777 pass byte 1 must use randomized 0x4a2413 and consume RNG")) {
+			return 1;
 		}
 	}
 
@@ -2030,6 +2072,10 @@ int main() {
 		}
 	}
 
+	BoundarySourceCycleHandoff4a2777 active_ungated_handoff = square_handoff(false);
+	active_ungated_handoff.boundary_pass_index_0x0c = 1;
+	BoundarySourceCycleHandoff4a2777 active_gated_handoff = square_handoff(true);
+	active_gated_handoff.boundary_pass_index_0x0c = 1;
 	const BoundaryMaterialization4a2777 ungated = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
 			8,
 			8,
@@ -2037,7 +2083,7 @@ int main() {
 			1,
 			0,
 			1234U,
-			{ square_handoff(false) });
+			{ active_ungated_handoff });
 	const BoundaryMaterialization4a2777 gated = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
 			8,
 			8,
@@ -2045,7 +2091,7 @@ int main() {
 			1,
 			0,
 			1234U,
-			{ square_handoff(true) });
+			{ active_gated_handoff });
 	const BoundaryMaterialization4a2777 land_setup_mode_two = aurelion::h3maped_rmg_core::materialize_boundary_source_handoffs_4a2777_4a325d(
 			8,
 			8,
@@ -2130,7 +2176,7 @@ int main() {
 			land_setup_mode_two_member_flags += 1;
 		}
 	}
-	if (!require(land_setup_mode_two_member_flags == 0, "one-level land water mode must suppress level-0 0x4a325d member flags when setup mode is 2")) {
+	if (!require(land_setup_mode_two_member_flags > 0, "one-level land mode 2 must preserve recovered level-0 0x4a325d member flags")) {
 		return 1;
 	}
 	BoundarySourceCycleHandoff4a2777 per_source_owner_handoff = square_handoff(false);
@@ -2195,6 +2241,7 @@ int main() {
 		descriptor_source_node(5, 8, 30, 20, 40, 20, 20),
 		descriptor_source_node(2, 5, 40, 30, 10, 30, 30),
 	};
+	relocated_seed_handoff.source_cycle_anchor_model_node_index_4a325d = 10;
 	for (SourceNodeCyclePoint4a2777 &node : relocated_seed_handoff.source_nodes) {
 		node.raw_x_0x00 = 1;
 		node.raw_y_0x04 = 1;
@@ -2209,9 +2256,9 @@ int main() {
 			{ relocated_seed_handoff });
 	if (!require(!relocated_seed.zones.empty()
 					&& relocated_seed.zones[0].span_seed_relocated_4a325d
-					&& relocated_seed.zones[0].effective_span_seed_4a325d.x == 9
-					&& relocated_seed.zones[0].effective_span_seed_4a325d.y < 9,
-				"0x4a325d out-of-bounds seed relocation must scan appended 0x4a2777 boundary vector points, not source-pair raw coordinates")) {
+					&& relocated_seed.zones[0].effective_span_seed_4a325d.x == 7
+					&& relocated_seed.zones[0].effective_span_seed_4a325d.y == 9,
+				"0x4a325d out-of-bounds seed relocation must scan source-cycle next links from the anchor, not appended boundary-vector points")) {
 		return 1;
 	}
 	BoundarySourceCycleHandoff4a2777 missing_seed = square_handoff(false);
