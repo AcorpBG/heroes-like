@@ -2962,12 +2962,130 @@ int main() {
 				"0x4adfe1 -> 0x49ecf2 setup stack model did not preserve known recovered argument order and missing source words")) {
 		return 1;
 	}
+	const aurelion::h3maped_rmg_core::GeneratorSetupStackArgs49ecf2 setup_stack_full = aurelion::h3maped_rmg_core::setup_stack_args_0x4adfe1_to_0x49ecf2(
+			72,
+			72,
+			1,
+			true,
+			0,
+			true,
+			aurelion::h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(0),
+			true,
+			0,
+			true,
+			1,
+			true,
+			1,
+			true,
+			1,
+			true,
+			0,
+			true,
+			2);
+	if (!require(setup_stack_full.full_args_known
+					&& setup_stack_full.missing_arg_labels.empty()
+					&& setup_stack_full.args[0] == 72
+					&& setup_stack_full.args[1] == 72
+					&& setup_stack_full.args[2] == 1
+					&& setup_stack_full.args[3] == 1
+					&& setup_stack_full.args[4] == 1
+					&& setup_stack_full.args[5] == 1
+					&& setup_stack_full.args[6] == 0
+					&& setup_stack_full.args[7] == 0
+					&& setup_stack_full.args[8] == 3
+					&& setup_stack_full.args[9] == 2
+					&& setup_stack_full.args[10] == 0,
+				"0x4adfe1 -> 0x49ecf2 full setup stack model did not preserve all recovered source words")) {
+		return 1;
+	}
+	const aurelion::h3maped_rmg_core::GeneratorSetupStackArgs49ecf2 setup_stack_normalized = aurelion::h3maped_rmg_core::setup_stack_args_0x4adfe1_to_0x49ecf2(
+			72,
+			72,
+			1,
+			true,
+			0,
+			true,
+			3,
+			true,
+			0,
+			true,
+			1,
+			true,
+			2,
+			true,
+			0,
+			true,
+			4,
+			true,
+			2);
+	if (!require(setup_stack_normalized.full_args_known
+					&& setup_stack_normalized.args[3] == 0
+					&& setup_stack_normalized.args[4] == 2
+					&& setup_stack_normalized.args[5] == 0
+					&& setup_stack_normalized.args[6] == 4,
+				"0x4adfe1 did not zero setup +0x34/+0x3c stack args when their recovered sum is below 2")) {
+		return 1;
+	}
 	const GeneratorSetupModeResult49ecf2 setup0_field08 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 0, true, -7);
 	if (!require(setup0_field08.setup_object_0x4c_known
 					&& setup0_field08.setup_object_0x4c == -7
 					&& setup0_field08.generator_field_0x08_known
 					&& setup0_field08.generator_field_0x08 == -7,
 				"0x49ecf2 setup object +0x4c did not populate generator +0x08")) {
+		return 1;
+	}
+	const GeneratorSetupModeResult49ecf2 setup_fields = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(
+			10U,
+			0,
+			true,
+			3,
+			true,
+			0,
+			true,
+			1,
+			true,
+			2,
+			true,
+			1,
+			true,
+			4,
+			true,
+			2);
+	if (!require(setup_fields.generator_field_0xf48_known
+					&& setup_fields.generator_field_0xf48 == 1
+					&& setup_fields.generator_field_0xf4c_known
+					&& setup_fields.generator_field_0xf4c == 2
+					&& setup_fields.generator_field_0xf50_known
+					&& setup_fields.generator_field_0xf50 == 1
+					&& setup_fields.generator_field_0xf54_known
+					&& setup_fields.generator_field_0xf54 == 4
+					&& setup_fields.setup_fields_0x4adfe1.setup_caller_arg_0x0c_known
+					&& setup_fields.setup_fields_0x4adfe1.setup_caller_arg_0x0c == 2,
+				"0x49ecf2 did not copy recovered setup fields into generator +0xf48/+0xf4c/+0xf50/+0xf54")) {
+		return 1;
+	}
+	const GeneratorSetupModeResult49ecf2 setup_fields_zeroed = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(
+			10U,
+			0,
+			true,
+			3,
+			true,
+			0,
+			true,
+			1,
+			true,
+			2,
+			true,
+			0,
+			true,
+			4,
+			true,
+			2);
+	if (!require(setup_fields_zeroed.setup_fields_0x4adfe1.normalized_pair_0x34_0x3c_known
+					&& setup_fields_zeroed.setup_fields_0x4adfe1.normalized_pair_0x34_0x3c_zeroed
+					&& setup_fields_zeroed.generator_field_0xf48 == 0
+					&& setup_fields_zeroed.generator_field_0xf50 == 0,
+				"0x49ecf2 setup field normalization did not zero generator +0xf48/+0xf50 for a below-two +0x34/+0x3c pair")) {
 		return 1;
 	}
 	const GeneratorSetupModeResult49ecf2 setup3 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 3, true, 3);

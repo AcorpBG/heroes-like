@@ -61613,13 +61613,13 @@
   "taskId": "10184",
   "updatedAt": "2026-07-06T09:04:27Z",
   "validation": {
-    "id": "native-rmg-setup-stack-modeled-final-mismatch-20260706",
-    "title": "Modeled 0x49ecf2 setup stack and resumed final payload compare",
+    "id": "native-rmg-setup-fields-ported-final-mismatch-20260706",
+    "title": "Ported recovered 0x49ecf2 setup fields and resumed final payload compare",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
     "status": "passed_source_backed_behavior_progress_not_parity",
-    "validatedAt": "2026-07-06T09:04:27Z",
-    "updatedAt": "2026-07-06T09:04:27Z",
-    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. The shared workflow now carries a source-backed 0x4adfe1 -> 0x49ecf2 setup stack model into the no-Godot snapshot: width, height, level count, setup mode +0x44, prepared value band clamp(raw +0x48 + 3, 1, 5), and setup +0x4c are known; the remaining five source words are named. Missing setup-stack capture in the authority ledger no longer masks final payload comparison. Focused no-Godot Medium seed10 setup0 still writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, emits a 61,424-byte ordered payload, and now blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Compare output shows tile payload 36,288 vs 36,288 bytes first mismatch offset 0 native=4 expected=2, and generated-object payload 12,376 vs 17,057 bytes first mismatch offset 0 native=4 expected=2. Runtime/native map output remains disabled.",
+    "validatedAt": "2026-07-06T09:25:21Z",
+    "updatedAt": "2026-07-06T09:25:21Z",
+    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. The shared workflow now carries recovered 0x4adfe1 -> 0x49ecf2 setup fields +0x34/+0x38/+0x3c/+0x40 through the no-Godot workflow, setup stack model, generator setup result, generator-object private state, controlled-case schema, and phase snapshot. The recovered caller normalization zeroes +0x34/+0x3c when their sum is below 2. Focused no-Godot Medium seed10 setup0 with trace-backed setup fields shows setup stack args [72,72,1,1,1,1,0,0,3,null,0], so only caller-stack arg9 remains uncaptured. The same run still writes final payload sections and blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile payload is 36,288 vs 36,288 bytes, and generated-object payload is 12,376 vs 17,057 bytes. Runtime/native map output remains disabled.",
     "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
@@ -74883,26 +74883,27 @@
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
-      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050/final_payload_compare.json",
+      ".artifacts/rmg_native_setup_fields_20260706092352/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/rmg_native_setup_fields_20260706092352/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/rmg_native_setup_fields_20260706092352/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/rmg_native_setup_fields_20260706092352/final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_candidate_container_producer_49ecf2_dump_20260607/caller_004adfe1_FUN_004adfe1.txt",
       ".artifacts/rmg_recovery/ghidra_final_object_serializers_20260610/target_0049c273_FUN_0049c273.txt",
       ".artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_0049c8f3_FUN_0049c8f3.txt",
       ".artifacts/rmg_recovery/ghidra_relation_vector_helper_dump/caller_0049f95a_FUN_0049f95a.txt"
     ],
     "commands": [
-      "cmake --build src/gdextension/build --target h3maped_rmg_core_selftest --parallel 2 (passed)",
+      "cmake --build src/gdextension/build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
       "bin/h3maped_rmg_core_selftest (passed)",
-      "cmake --build src/gdextension/build --target rmg_native_batch_export_cli --parallel 2 (passed)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0 --phase-snapshot-only --print-manifest (status=blocked; final_payload_binary_written=1; final_payload_sections_written=1; setup_stack_known_arg_count=6; setup_stack_missing_arg_count=5; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_setup_stack_modeled_medium10_cli_20260706090050/final_payload_compare.json --expect-mismatch (passed with expected blocker native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_setup_fields_20260706092352 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0:1:1:1:0 --phase-snapshot-only --print-manifest (status=blocked; final_payload_binary_written=1; final_payload_sections_written=1; setup_stack_known_arg_count=10; setup_stack_missing_arg_count=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_setup_fields_20260706092352 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_setup_fields_20260706092352/final_payload_compare.json --expect-mismatch (passed with expected blocker native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload)",
+      "python3 tests/validate_repo.py (passed)",
+      "jq empty ops/progress.json (passed)",
+      "git diff --check (passed)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
@@ -74913,8 +74914,11 @@
       "setup_raw_0x48_prepared_by_0x4adfe1_clamp_raw_plus_3_1_5": true,
       "setup_stack_model_recovered_call_shape_known": true,
       "setup_stack_model_expected_arg_count": 11,
-      "setup_stack_model_known_arg_count": 6,
-      "setup_stack_model_missing_arg_count": 5,
+      "setup_stack_model_known_arg_count": 10,
+      "setup_stack_model_missing_arg_count": 1,
+      "setup_fields_0x34_0x38_0x3c_0x40_carried": true,
+      "setup_fields_0x34_0x3c_below_two_zeroing_ported": true,
+      "setup_stack_model_missing_arg9_caller_stack_ebp_0x0c": true,
       "same_run_authority_enforces_setup_stack_only_when_captured": true,
       "same_run_authority_missing_setup_stack_capture_is_not_a_compare_veto": true,
       "reward_guard_0x540c20_constructor_fields_carried": true,
@@ -74936,7 +74940,7 @@
       "generated_object_payload_expected_byte_at_mismatch": 2,
       "same_run_authority_scope_blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
     },
-    "remainingWork": "Continue source-backed tile stream 0x49b2b6 and generated-object payload 0x4ad36f/0x4ad3b1/0x4ad3eb parity work. The native setup stack model still names five unrecovered source words; recover those before enforcing captured-stack word parity when a future authority ledger includes the setup-call stack. Runtime/native map output stays disabled until same-run payload parity is proven."
+    "remainingWork": "Continue source-backed tile stream 0x49b2b6 and generated-object payload 0x4ad36f/0x4ad3b1/0x4ad3eb parity work. The native setup stack model now carries trace-backed setup args 3-6; only caller-stack arg9 from 0x4adfe1 [EBP+0x0c] remains uncaptured before a future authority ledger can enforce full setup-call stack parity. Runtime/native map output stays disabled until same-run payload parity is proven."
   },
   "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
 }
