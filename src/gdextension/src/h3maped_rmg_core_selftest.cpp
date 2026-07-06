@@ -1614,9 +1614,9 @@ int main() {
 							single_ref_seed_grid,
 							{ single_ref_owner });
 			if (!require(single_ref_seed_result.applied
-						&& single_ref_seed_result.projected_chain_call_count == 0
+						&& single_ref_seed_result.projected_chain_call_count == 1
 						&& (single_ref_seed_grid.records[1].word_0x1c & 0x0000ffffU) == 0U,
-					"relation scan consumer did not accept recovered single-entry object-reference span as 0x49a318 seed")) {
+					"relation scan consumer did not defer recovered non-empty object-reference span to the route-pair 0x4a5a23/0x49a318 pass")) {
 				return 1;
 			}
 		}
