@@ -2117,6 +2117,45 @@ SourceObjectMaskLaneResult4af89f source_object_mask_lane_selector_0x4af89f(const
 	return result;
 }
 
+static int32_t source_object_attached_score_obstacle_id_0x49dc9e(
+		const SourceObjectRecord0x4c &source_record,
+		int32_t wrapper_lane_0x04) {
+	if (!source_record.rand_trn_backed
+			|| source_record.rand_trn_score_records_0x49dc9e.empty()
+			|| !source_record.raw_field_0x20_known
+			|| wrapper_lane_0x04 < 0
+			|| wrapper_lane_0x04 >= RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E) {
+		return 0;
+	}
+
+	const int32_t lookup_type_0x57c648_plus_0x08 = source_record.metadata_bucket_index_0x08;
+	const int32_t source_field_0x20 = source_record.raw_field_0x20;
+	for (auto it = source_record.rand_trn_score_records_0x49dc9e.rbegin();
+			it != source_record.rand_trn_score_records_0x49dc9e.rend();
+			++it) {
+		if (it->type_id == lookup_type_0x57c648_plus_0x08
+				&& it->terrain_id == wrapper_lane_0x04
+				&& it->subtype == source_field_0x20) {
+			return it->obstacle_id;
+		}
+	}
+	return 0;
+}
+
+static const RandTrnObstacleScoreRecord49dc9e *source_object_attached_score_record_by_obstacle_id_0x49dc9e(
+		const SourceObjectRecord0x4c &source_record,
+		int32_t attached_obstacle_id_0x10) {
+	if (attached_obstacle_id_0x10 <= 0) {
+		return nullptr;
+	}
+	for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
+		if (score_record.obstacle_id == attached_obstacle_id_0x10) {
+			return &score_record;
+		}
+	}
+	return nullptr;
+}
+
 static bool source_object_selector_accepts_record_0x4a9e40(SourceObjectSelectorResult4a9e40 &result, const SourceObjectRecord0x4c &record) {
 	result.scanned_record_count += 1;
 	if (record.subtype_0x20 != result.requested_source_field_0x20) {
@@ -2259,7 +2298,8 @@ SourceObjectResolverState4af785 source_object_resolver_state_from_catalog_0x49db
 			wrapper.resolver_lane_0x04 = source_object_mask_lane_selector_0x4af89f(record).selected_lane;
 			wrapper.wrapper_0x04 = -1;
 			wrapper.wrapper_0x10_known = true;
-			wrapper.wrapper_0x10 = 0;
+			wrapper.wrapper_0x10 =
+					source_object_attached_score_obstacle_id_0x49dc9e(record, wrapper.resolver_lane_0x04);
 			wrapper.initialized_by_0x49db76 = true;
 			wrapper.copied_source_record = true;
 			state.wrappers.push_back(wrapper);
@@ -2301,6 +2341,21 @@ static bool source_object_text_mask_bit_0x490f3f(const std::string &mask_text, i
 		return false;
 	}
 	return mask_text[size_t((y * 8) + x)] == '1';
+}
+
+static bool source_object_descriptor_primary_mask_bit_0x41e951_exact(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6 || record.passability_mask.size() < 48U) {
+		return false;
+	}
+	return source_object_text_mask_bit_0x490f3f(record.passability_mask, x, y);
+}
+
+static bool source_object_descriptor_tertiary_mask_bit_0x41e915_exact(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6 || !record.descriptor_mask_fields_0x34_0x48_known) {
+		return false;
+	}
+	const int32_t bit_index = 47 - (8 * y) - x;
+	return (record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
 }
 
 static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
@@ -8320,15 +8375,15 @@ static constexpr int32_t DECORATIVE_TYPE_TABLE_0X54092C[] = {
 	0xcf, 0xd0, 0xd1, 0xd2, 0xd3,
 };
 
-static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPrivateState &state, int32_t type_id) {
+static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPrivateState &state, int32_t source_type_id_0x1c) {
 	if (!state.generator_field_0x08_known) {
 		return false;
 	}
-	// Recovered 0x49e700 reads generator +0x08 for these type gates, not map level count.
-	if (state.generator_field_0x08 < 2 && type_id >= 0xde) {
+	// Recovered 0x49e700 reads generator +0x08, then gates the carried source record +0x1c.
+	if (state.generator_field_0x08 < 2 && source_type_id_0x1c >= 0xde) {
 		return false;
 	}
-	if (state.generator_field_0x08 < 1 && type_id >= 0xa5) {
+	if (state.generator_field_0x08 < 1 && source_type_id_0x1c >= 0xa5) {
 		return false;
 	}
 	return true;
@@ -8336,6 +8391,7 @@ static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPriva
 
 struct DecorativeScorerScratch49e1bf {
 	std::array<uint32_t, 80> flags {};
+	std::array<int32_t, 80> compare_score_index_0x49b89c {};
 	std::array<bool, RAND_TRN_TERRAIN_SCORE_COUNT_0X49DC9E> terrain_hits {};
 	int32_t score = 0;
 	bool accepted = false;
@@ -8395,14 +8451,13 @@ static int32_t object_record_score_cache_offset_0x49b89c(int32_t local_x, int32_
 	return local_x * 6 + local_y;
 }
 
-static bool build_object_record_score_cache_0x49b89c(ObjectRecordReference4a54a7 &object_record) {
-	object_record.object_score_cache_0x49b89c.fill(-1);
-	object_record.object_score_cache_known_0x49b89c = false;
-	if (!object_record.copied_source_record_carried
-			|| !object_record.source_record_copy.descriptor_mask_fields_0x34_0x48_known) {
+static bool build_source_object_score_cache_values_0x49b89c(
+		const SourceObjectRecord0x4c &source,
+		std::array<int32_t, 48> &score_cache) {
+	score_cache.fill(0);
+	if (!source.descriptor_mask_fields_0x34_0x48_known) {
 		return false;
 	}
-	const SourceObjectRecord0x4c &source = object_record.source_record_copy;
 	const int32_t width = std::min(source.descriptor_width_0x34, 8);
 	const int32_t height = std::min(source.descriptor_height_0x38, 6);
 	if (width <= 0 || height <= 0) {
@@ -8416,38 +8471,50 @@ static bool build_object_record_score_cache_0x49b89c(ObjectRecordReference4a54a7
 			if (cache_offset < 0) {
 				continue;
 			}
-			if (source_object_descriptor_body_mask_bit_0x41e915_native(source, col, row)) {
-				object_record.object_score_cache_0x49b89c[size_t(cache_offset)] = score_index;
-				continue;
+			if (source_object_descriptor_tertiary_mask_bit_0x41e915_exact(source, col, row)) {
+				score_cache[size_t(cache_offset)] = score_index;
 			}
 			if (source.last_flag_0x28 != 0) {
 				continue;
 			}
-			if (source_object_descriptor_mask_bit_0x41e951(source, col, row)) {
-				if (col == 0 || source_object_descriptor_mask_bit_0x41e951(source, col - 1, row)) {
+			if (source_object_descriptor_primary_mask_bit_0x41e951_exact(source, col, row)) {
+				if (col == 0 || source_object_descriptor_primary_mask_bit_0x41e951_exact(source, col - 1, row)) {
 					score_index += 1;
 				} else {
 					const int32_t left_offset = object_record_score_cache_offset_0x49b89c(col - 1, row);
 					if (left_offset >= 0) {
-						score_index = object_record.object_score_cache_0x49b89c[size_t(left_offset)];
+						score_index = score_cache[size_t(left_offset)];
 					}
 				}
-			} else if (source_object_descriptor_mask_bit_0x41e951(source, col, row - 1)) {
+			} else if (source_object_descriptor_primary_mask_bit_0x41e951_exact(source, col, row - 1)) {
 				score_index = 1;
 			} else {
 				score_index += 1;
 			}
 		}
 	}
+	return true;
+}
+
+static bool build_object_record_score_cache_0x49b89c(ObjectRecordReference4a54a7 &object_record) {
+	object_record.object_score_cache_0x49b89c.fill(0);
+	object_record.object_score_cache_known_0x49b89c = false;
+	if (!object_record.copied_source_record_carried) {
+		return false;
+	}
+	const SourceObjectRecord0x4c &source = object_record.source_record_copy;
+	if (!build_source_object_score_cache_values_0x49b89c(source, object_record.object_score_cache_0x49b89c)) {
+		return false;
+	}
 	object_record.object_score_cache_known_0x49b89c = true;
 	return true;
 }
 
-static bool object_record_score_index_0x49b89c(
+static bool object_record_score_cache_value_0x49b89c(
 		const ObjectRecordReference4a54a7 &object_record,
 		int32_t local_x,
 		int32_t local_y,
-		int32_t &score_index) {
+		int32_t &score_value) {
 	if (!object_record.object_score_cache_known_0x49b89c) {
 		return false;
 	}
@@ -8455,8 +8522,19 @@ static bool object_record_score_index_0x49b89c(
 	if (cache_offset < 0) {
 		return false;
 	}
-	score_index = object_record.object_score_cache_0x49b89c[size_t(cache_offset)];
-	return score_index >= 0 && score_index < RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E;
+	score_value = object_record.object_score_cache_0x49b89c[size_t(cache_offset)];
+	return true;
+}
+
+static bool object_record_decorative_obstacle_index_0x49e1bf(
+		const ObjectRecordReference4a54a7 &object_record,
+		int32_t &obstacle_index) {
+	obstacle_index = -1;
+	if (!object_record.decorative_score_record_0x10_known) {
+		return false;
+	}
+	obstacle_index = object_record.decorative_obstacle_id_0x10;
+	return obstacle_index >= 0 && obstacle_index < RAND_TRN_OBSTACLE_SCORE_COUNT_0X49DC9E;
 }
 
 static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e1bf(
@@ -8470,11 +8548,32 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 	result.scorer_first_pass_invocation_count_0x49e1bf += 1;
 	result.scorer_first_pass_candidate_anchor_count_0x49e1bf += 1;
 	DecorativeScorerScratch49e1bf scratch;
+	scratch.compare_score_index_0x49b89c.fill(0);
+	std::array<int32_t, 48> candidate_score_cache_0x49b89c {};
+	if (!build_source_object_score_cache_values_0x49b89c(source_record, candidate_score_cache_0x49b89c)) {
+		result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+		return scratch;
+	}
 	bool scanned_footprint_cell = false;
 	for (int32_t row = 0; row < source_record.descriptor_height_0x38; ++row) {
 		for (int32_t col = 0; col < source_record.descriptor_width_0x34; ++col) {
-			if (source_object_descriptor_mask_bit_0x41e951(source_record, col, row)) {
+			if (!source_object_descriptor_tertiary_mask_bit_0x41e915_exact(source_record, col, row)) {
 				continue;
+			}
+			const int32_t scratch_index = decorative_scorer_scratch_index_0x49e1bf(col + 1, row + 1);
+			if (scratch_index >= 0) {
+				scratch.flags[size_t(scratch_index)] |= 0x2U;
+				const int32_t score_cache_offset = object_record_score_cache_offset_0x49b89c(col, row);
+				if (score_cache_offset >= 0) {
+					scratch.compare_score_index_0x49b89c[size_t(scratch_index)] =
+							candidate_score_cache_0x49b89c[size_t(score_cache_offset)];
+				}
+			}
+			if (source_object_descriptor_primary_mask_bit_0x41e951_exact(source_record, col, row)) {
+				continue;
+			}
+			if (scratch_index >= 0) {
+				scratch.flags[size_t(scratch_index)] |= 0x4U;
 			}
 			result.scorer_first_pass_footprint_cell_scan_count_0x49e1bf += 1;
 			scanned_footprint_cell = true;
@@ -8507,9 +8606,24 @@ static DecorativeScorerScratch49e1bf decorative_dispatch_scorer_first_pass_0x49e
 			}
 			scratch.terrain_hits[size_t(terrain_code)] = true;
 			scratch.score += score_record.terrain_scores[size_t(terrain_code)];
-			const int32_t scratch_index = decorative_scorer_scratch_index_0x49e1bf(col + 1, row + 1);
 			if (scratch_index >= 0) {
-				scratch.flags[size_t(scratch_index)] |= 0x1U;
+				scratch.flags[size_t(scratch_index)] = 0x1U;
+			}
+			const int32_t local_y_begin =
+					candidate_y - std::min<int32_t>(state.height, cell_y + 1) + 1;
+			const int32_t local_y_end =
+					candidate_y - std::max<int32_t>(0, cell_y - 2) + 1;
+			const int32_t local_x_begin =
+					candidate_x - std::min<int32_t>(state.width, cell_x + 1) + 1;
+			const int32_t local_x_end =
+					candidate_x - std::max<int32_t>(0, cell_x - 2) + 1;
+			for (int32_t local_x = local_x_begin; local_x < local_x_end; ++local_x) {
+				for (int32_t local_y = local_y_begin; local_y < local_y_end; ++local_y) {
+					const int32_t local_scratch_index = decorative_scorer_scratch_index_0x49e1bf(local_x, local_y);
+					if (local_scratch_index >= 0) {
+						scratch.flags[size_t(local_scratch_index)] |= 0x1U;
+					}
+				}
 			}
 		}
 	}
@@ -8592,11 +8706,30 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 					temp_ref.score_cache_coordinate_known_0x49b89c = true;
 				}
 				const bool had_score_flags = temp_ref.flag_0x16 || temp_ref.flag_0x17 || temp_ref.flag_0x18;
+				if ((flags & 0x2U) != 0U) {
+					const int32_t candidate_compare_score =
+							scratch.compare_score_index_0x49b89c[size_t(scratch_index)];
+					const int32_t ref_local_x = object_record->x - neighbor_x;
+					const int32_t ref_local_y = object_record->y - neighbor_y;
+					int32_t referenced_score_index = 0;
+					if (!object_record_score_cache_value_0x49b89c(
+							*object_record,
+							ref_local_x,
+							ref_local_y,
+							referenced_score_index)) {
+						result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
+						result.blocked_reason = "0x49e1bf_neighbor_compare_score_cache_missing_or_out_of_bounds";
+						return false;
+					}
+					if (referenced_score_index > candidate_compare_score) {
+						temp_ref.flag_0x15 = true;
+					} else {
+						temp_ref.flag_0x14 = true;
+					}
+					temp_ref.flag_0x17 = true;
+				}
 				if ((flags & 0x1U) != 0U) {
 					temp_ref.flag_0x16 = true;
-				}
-				if ((flags & 0x2U) != 0U) {
-					temp_ref.flag_0x17 = true;
 				}
 				if ((flags & 0x4U) != 0U) {
 					temp_ref.flag_0x18 = true;
@@ -8620,23 +8753,21 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 		}
 		if (temp_ref.flag_0x18 || temp_ref.flag_0x16) {
 			const ObjectRecordReference4a54a7 *object_record = object_record_by_key_0xec4_ecc(state, temp_ref.object_record_key);
-			int32_t score_index = -1;
-			if (object_record == nullptr
-					|| !temp_ref.score_cache_coordinate_known_0x49b89c
-					|| !object_record_score_index_0x49b89c(
-							*object_record,
-							temp_ref.score_cache_local_x_0x49b89c,
-							temp_ref.score_cache_local_y_0x49b89c,
-							score_index)) {
-				result.scorer_neighbor_pass_score_index_missing_count_0x49b89c += 1;
-				result.blocked_reason = "0x49b89c_object_record_score_cache_missing_or_out_of_bounds";
-				return false;
-			}
-			if (temp_ref.flag_0x16) {
-				score += score_record.overlap_scores[size_t(score_index)];
-			}
 			if (temp_ref.flag_0x18) {
-				score += score_record.adjacent_scores[size_t(score_index)];
+				int32_t obstacle_index = -1;
+				if (object_record == nullptr
+						|| !object_record_decorative_obstacle_index_0x49e1bf(*object_record, obstacle_index)) {
+					result.scorer_neighbor_pass_hard_reject_count_0x49e1bf += 1;
+					score = RAND_TRN_HARD_REJECT_SCORE_0X49E700;
+					return false;
+				}
+				score += score_record.adjacent_scores[size_t(obstacle_index)];
+			}
+			if (temp_ref.flag_0x16 && object_record != nullptr) {
+				int32_t obstacle_index = -1;
+				if (object_record_decorative_obstacle_index_0x49e1bf(*object_record, obstacle_index)) {
+					score += score_record.overlap_scores[size_t(obstacle_index)];
+				}
 			}
 		}
 		if (temp_ref.flag_0x14 && temp_ref.flag_0x15) {
@@ -8653,6 +8784,7 @@ static bool decorative_dispatch_scorer_neighbor_pass_0x49e1bf(
 struct DecorativeWeightedCandidate49e700 {
 	SourceObjectRecord0x4c source_record;
 	int32_t source_catalog_index_0x49da08 = -1;
+	int32_t decorative_obstacle_id_0x10 = -1;
 	int32_t candidate_x = 0;
 	int32_t candidate_y = 0;
 	int32_t candidate_level = 0;
@@ -8762,6 +8894,7 @@ static bool decorative_dispatch_collect_record_candidates_0x49e700(
 			DecorativeWeightedCandidate49e700 candidate;
 			candidate.source_record = source_record;
 			candidate.source_catalog_index_0x49da08 = source_object_catalog_index_0x49da08(source_record);
+			candidate.decorative_obstacle_id_0x10 = score_record.obstacle_id;
 			candidate.candidate_x = candidate_x;
 			candidate.candidate_y = candidate_y;
 			candidate.candidate_level = dispatch_level;
@@ -8856,6 +8989,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 	std::vector<DecorativeCoordinateWorklistEntry49e700> worklist;
 	decorative_dispatch_append_coordinate_0x49eb01(worklist, dispatch_x, dispatch_y, dispatch_level, result);
 	result.coordinate_worklist_initial_append_count_0x4ae20e += 1;
+	SourceObjectResolverState4af785 &resolver_state = ensure_source_object_resolver_state_4af785(state);
 
 	while (!worklist.empty()) {
 		const DecorativeCoordinateWorklistEntry49e700 current = worklist.back();
@@ -8883,32 +9017,45 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 
 		std::vector<DecorativeWeightedCandidate49e700> accepted_candidates;
 		int32_t accepted_weight_total = 0;
-		for (const int32_t type_id : DECORATIVE_TYPE_TABLE_0X54092C) {
-			if (!decorative_dispatch_type_allowed_0x49e700(state, type_id)) {
-				continue;
+		for (const int32_t bucket_index_0x54092c : DECORATIVE_TYPE_TABLE_0X54092C) {
+			if (bucket_index_0x54092c < 0 || bucket_index_0x54092c >= SOURCE_OBJECT_WRAPPER_BUCKET_COUNT_0XE8) {
+				result.blocked_reason = "0x49e700_0x54092c_bucket_index_out_of_range";
+				return;
 			}
-			const std::vector<SourceObjectRecord0x4c> source_records =
-					source_object_records_by_type_0x49da08(type_id);
-			for (const SourceObjectRecord0x4c &source_record : source_records) {
+			const std::vector<int32_t> &bucket =
+					resolver_state.wrapper_bucket_indices_0xe8[size_t(bucket_index_0x54092c)];
+			for (const int32_t wrapper_vector_index : bucket) {
+				if (wrapper_vector_index < 0 || wrapper_vector_index >= int32_t(resolver_state.wrappers.size())) {
+					result.blocked_reason = "0x49e700_source_wrapper_bucket_entry_out_of_range";
+					return;
+				}
+				const SourceObjectResolvedWrapper4af785 &wrapper =
+						resolver_state.wrappers[size_t(wrapper_vector_index)];
+				const SourceObjectRecord0x4c &source_record = wrapper.source_record_copy;
 				result.dispatch_probe_source_record_scan_count_0x49e700 += 1;
-				if (!source_record.rand_trn_backed) {
+				const RandTrnObstacleScoreRecord49dc9e *score_record =
+						wrapper.wrapper_0x10_known
+						? source_object_attached_score_record_by_obstacle_id_0x49dc9e(source_record, wrapper.wrapper_0x10)
+						: nullptr;
+				if (score_record == nullptr) {
 					continue;
 				}
 				result.dispatch_probe_rand_trn_record_count_0x49e700 += 1;
-				for (const RandTrnObstacleScoreRecord49dc9e &score_record : source_record.rand_trn_score_records_0x49dc9e) {
-					result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
-					if (!decorative_dispatch_collect_record_candidates_0x49e700(
-								state,
-								source_record,
-								score_record,
-								current.x,
-								current.y,
-								current.level,
-								terrain_code,
-								accepted_candidates,
-								result)) {
-						return;
-					}
+				result.dispatch_probe_rand_trn_score_variant_count_0x49e700 += 1;
+				if (!decorative_dispatch_type_allowed_0x49e700(state, source_record.type_id_0x1c)) {
+					continue;
+				}
+				if (!decorative_dispatch_collect_record_candidates_0x49e700(
+							state,
+							source_record,
+							*score_record,
+							current.x,
+							current.y,
+							current.level,
+							terrain_code,
+							accepted_candidates,
+							result)) {
+					return;
 				}
 			}
 		}
@@ -8971,6 +9118,8 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 			object_record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
 			object_record.descriptor_source_key_0x00 = selected.source_record.source_row;
 			object_record.source_catalog_index_0x49da08 = selected.source_catalog_index_0x49da08;
+			object_record.decorative_score_record_0x10_known = selected.decorative_obstacle_id_0x10 >= 0;
+			object_record.decorative_obstacle_id_0x10 = selected.decorative_obstacle_id_0x10;
 			object_record.copied_source_record_carried = true;
 			object_record.source_record_copy = selected.source_record;
 			build_object_record_score_cache_0x49b89c(object_record);
@@ -21965,6 +22114,19 @@ bool relation_boundary_triggers_candidate_0x4a4c8e(bool relation_found, int32_t 
 	return !relation_found || level == 1 || !relation_wide;
 }
 
+static bool source_endpoint_boundary_triggers_candidate_0x4a4c8e(
+		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t neighbor_runtime_zone,
+		int32_t level) {
+	const GeneratorSourceEndpointRecordState4a1f3b *endpoint =
+			source_endpoint_record_find_0x49b3fb(owners, owner_runtime_zone, neighbor_runtime_zone);
+	if (endpoint == nullptr) {
+		return true;
+	}
+	return relation_boundary_triggers_candidate_0x4a4c8e(true, level, endpoint->wide);
+}
+
 static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, H3MapedRng &rng) {
 	RouteFreeCellPhaseResult4a8260 result;
 	result.rng_state_before = rng.state;
@@ -21979,6 +22141,10 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 			result.blocked_reason = "route_container_free_cell_sweep_0x4a8260_generated_cell_record_input_unknown";
 			return result;
 		}
+	}
+	if (!source_endpoint_records_known_for_lookup_0x49b3fb(owners)) {
+		result.blocked_reason = "candidate_boundary_0x4a4c8e_source_endpoint_vector_0xc8_0xcc_input_unknown";
+		return result;
 	}
 	result.input_known = true;
 
@@ -22120,7 +22286,7 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				}
 				GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
 				result.candidate_boundary_scan_count_0x4a4c8e += 1;
-				const int32_t owner_signed = int32_t(int8_t((record.word_0x20 >> 16U) & 0xffU));
+				const int32_t owner_signed = generated_cell_word20_owner_byte2_signed(record.word_0x20);
 				if (owner_signed < 0 || (record.word_0x24 & 0x3fU) == 8U) {
 					continue;
 				}
@@ -22128,11 +22294,11 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
 					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
 						const int64_t neighbor_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
-						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size()) || neighbor_flat == flat) {
+						if (neighbor_flat < 0 || neighbor_flat >= int64_t(grid.records.size())) {
 							continue;
 						}
 						const GeneratedCellRecord0x30 &neighbor = grid.records[size_t(neighbor_flat)];
-						const int32_t neighbor_owner_signed = int32_t(int8_t((neighbor.word_0x20 >> 16U) & 0xffU));
+						const int32_t neighbor_owner_signed = generated_cell_word20_owner_byte2_signed(neighbor.word_0x20);
 						if (neighbor_owner_signed < 0) {
 							if ((neighbor.word_0x24 & 0x3fU) == 8U) {
 								triggered = true;
@@ -22142,9 +22308,7 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 						if (neighbor_owner_signed == owner_signed) {
 							continue;
 						}
-						bool relation_wide = false;
-						const bool relation_found = relation_lookup_wide_0x4a4c8e(owners, owner_signed, neighbor_owner_signed, relation_wide);
-						if (relation_boundary_triggers_candidate_0x4a4c8e(relation_found, level, relation_wide)) {
+						if (source_endpoint_boundary_triggers_candidate_0x4a4c8e(owners, owner_signed, neighbor_owner_signed, level)) {
 							triggered = true;
 						}
 					}
