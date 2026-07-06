@@ -158,8 +158,8 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.seed = controlled_case.seed;
 	config.setup_object_0x44_known = controlled_case.setup_object_0x44_known;
 	config.setup_object_0x44 = controlled_case.setup_object_0x44;
-	config.setup_object_0x48_known = true;
-	config.setup_object_0x48 = 0;
+	config.setup_object_0x48_known = controlled_case.setup_object_0x48_known;
+	config.setup_object_0x48 = controlled_case.setup_object_0x48;
 	config.setup_object_0x4c_known = controlled_case.setup_object_0x4c_known;
 	config.setup_object_0x4c = controlled_case.setup_object_0x4c;
 	return config;
@@ -3749,6 +3749,9 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"rmg_setup_object_0x44_known\": " << (controlled_case.setup_object_0x44_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x44_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x44_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x44\": " << controlled_case.setup_object_0x44 << ",\n";
+	out << "    \"rmg_setup_object_0x48_known\": " << (controlled_case.setup_object_0x48_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x48_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x48_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x48\": " << controlled_case.setup_object_0x48 << ",\n";
 	out << "    \"rmg_setup_object_0x4c_known\": " << (controlled_case.setup_object_0x4c_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x4c_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c\": " << controlled_case.setup_object_0x4c << ",\n";
@@ -3876,8 +3879,8 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 	ControlledCase controlled_case;
 	controlled_case.raw = raw;
 	const std::vector<std::string> parts = split(raw, ':');
-	if (parts.size() < 6 || parts.size() > 10) {
-		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c]]]]";
+	if (parts.size() < 6 || parts.size() > 11) {
+		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c[:setup_object_0x48]]]]]";
 		return controlled_case;
 	}
 
@@ -3931,6 +3934,14 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 		}
 		controlled_case.setup_object_0x4c_supplied = true;
 	}
+	if (parts.size() >= 11 && !parts[10].empty()) {
+		controlled_case.setup_object_0x48_known = parse_i32(parts[10], controlled_case.setup_object_0x48);
+		if (!controlled_case.setup_object_0x48_known) {
+			controlled_case.parse_error = "invalid setup_object_0x48";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x48_supplied = true;
+	}
 
 	controlled_case.parse_ok = true;
 	return controlled_case;
@@ -3977,7 +3988,13 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 	uint32_t rng_state_before_template_selection = controlled_case.seed;
 	if (controlled_case.setup_object_0x44_known) {
 		const h3maped_rmg_core::GeneratorSetupModeResult49ecf2 setup =
-				h3maped_rmg_core::generator_setup_mode_49ecf2(controlled_case.seed, controlled_case.setup_object_0x44);
+				h3maped_rmg_core::generator_setup_mode_49ecf2(
+						controlled_case.seed,
+						controlled_case.setup_object_0x44,
+						controlled_case.setup_object_0x48_known,
+						controlled_case.setup_object_0x48,
+						controlled_case.setup_object_0x4c_known,
+						controlled_case.setup_object_0x4c);
 		resolved.recovered_setup_mode_known = true;
 		resolved.recovered_setup_object_0x44 = setup.setup_object_0x44;
 		resolved.recovered_setup_mode_randomized_sentinel_3 = setup.randomized_setup_sentinel_3;

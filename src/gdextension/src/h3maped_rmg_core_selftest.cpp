@@ -2855,7 +2855,11 @@ int main() {
 	if (!require(!setup0.randomized_setup_sentinel_3 && setup0.generator_mode_0x10b8 == 0 && setup0.rng_state_before_template_selection == 10U, "0x49ecf2 setup mode 0 must not consume RNG before template selection")) {
 		return 1;
 	}
-	if (!require(setup0.generator_value_band_0x10bc_known && setup0.generator_value_band_0x10bc == 3, "0x49ecf2 setup object +0x48 default did not produce generator +0x10bc normal strength band")) {
+	if (!require(setup0.generator_value_band_0x10bc_known && setup0.generator_value_band_0x10bc == 0, "0x49ecf2 setup object +0x48 default did not copy directly into generator +0x10bc")) {
+		return 1;
+	}
+	const GeneratorSetupModeResult49ecf2 setup0_value_band = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 6);
+	if (!require(setup0_value_band.generator_value_band_0x10bc_known && setup0_value_band.generator_value_band_0x10bc == 6, "0x49ecf2 setup object +0x48 nonzero value did not copy directly into generator +0x10bc")) {
 		return 1;
 	}
 	const GeneratorSetupModeResult49ecf2 setup0_field08 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 0, true, -7);
@@ -2866,7 +2870,7 @@ int main() {
 				"0x49ecf2 setup object +0x4c did not populate generator +0x08")) {
 		return 1;
 	}
-	const GeneratorSetupModeResult49ecf2 setup3 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 3);
+	const GeneratorSetupModeResult49ecf2 setup3 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 3, true, 3);
 	if (!require(setup3.randomized_setup_sentinel_3 && setup3.setup_rng_value == 71 && setup3.generator_mode_0x10b8 == 2 && setup3.setup_rng_call_count == 1, "0x49ecf2 setup sentinel 3 must randomize generator mode with rand % 3")) {
 		return 1;
 	}
@@ -2881,7 +2885,7 @@ int main() {
 	if (!require(selected_after_setup3.rng_value == 16899, "template selection must consume RNG after setup sentinel randomization")) {
 		return 1;
 	}
-	const GeneratorSetupModeResult49ecf2 setup3_seed58 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(58U, 3);
+	const GeneratorSetupModeResult49ecf2 setup3_seed58 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(58U, 3, true, 3);
 	const TemplateSelectionRuntimeResult4ac552 selected_after_setup3_seed58 =
 			aurelion::h3maped_rmg_core::template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(
 					setup3_seed58.rng_state_before_template_selection,
@@ -3104,11 +3108,13 @@ int main() {
 	generator_state_workflow_config.seed = 58U;
 	generator_state_workflow_config.setup_object_0x44_known = true;
 	generator_state_workflow_config.setup_object_0x44 = 3;
+	generator_state_workflow_config.setup_object_0x48_known = true;
+	generator_state_workflow_config.setup_object_0x48 = 3;
 		const H3MapedRmgWorkflowResult generator_state_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 		const std::string final_payload_compare_blocker =
-				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
+				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
 		if (!require(generator_state_workflow.executed
 						&& generator_state_workflow.current_phase_id == "final_payload_compare"
 						&& generator_state_workflow.blocked_reason == final_payload_compare_blocker
@@ -6035,10 +6041,12 @@ int main() {
 		workflow_config.seed = 58U;
 		workflow_config.setup_object_0x44_known = true;
 		workflow_config.setup_object_0x44 = 3;
+		workflow_config.setup_object_0x48_known = true;
+		workflow_config.setup_object_0x48 = 3;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_final_payload_compare_blocker =
-				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
+				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"

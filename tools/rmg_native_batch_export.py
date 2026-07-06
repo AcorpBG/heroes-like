@@ -307,7 +307,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--controlled-case",
         action="append",
         default=[],
-        help="Explicit native case as id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c]]]]. Bypasses owner filename inference.",
+        help="Explicit native case as id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c[:setup_object_0x48]]]]]. Bypasses owner filename inference.",
     )
     parser.add_argument(
         "--controlled-reference-manifest",

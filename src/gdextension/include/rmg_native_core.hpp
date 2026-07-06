@@ -23,6 +23,9 @@ struct ControlledCase {
 	bool setup_object_0x44_known = false;
 	bool setup_object_0x44_supplied = false;
 	int32_t setup_object_0x44 = 0;
+	bool setup_object_0x48_known = true;
+	bool setup_object_0x48_supplied = false;
+	int32_t setup_object_0x48 = 0;
 	bool setup_object_0x4c_known = true;
 	bool setup_object_0x4c_supplied = false;
 	int32_t setup_object_0x4c = 0;
