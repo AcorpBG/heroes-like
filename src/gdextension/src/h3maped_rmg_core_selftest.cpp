@@ -1619,6 +1619,49 @@ int main() {
 				return 1;
 			}
 		}
+		{
+			GeneratedCellRecordGrid0x30 loop_index_seed_grid =
+					aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(2, 1, 1);
+			for (int32_t x = 0; x < 2; ++x) {
+				GeneratedCellRecord0x30 &cell = loop_index_seed_grid.records[size_t(x)];
+				cell.word_0x20 = aurelion::h3maped_rmg_core::generated_cell_zone_word_4a325d(cell.word_0x20, 0);
+				cell.word_0x24 = aurelion::h3maped_rmg_core::generated_cell_49acf6_word24(cell.word_0x24, 0, 0);
+				cell.word_0x28 |= aurelion::h3maped_rmg_core::CELL_DECOR_READY_BIT_25;
+				cell.object_reference_vector_contents_known = true;
+				if (!require(aurelion::h3maped_rmg_core::generated_cell_4a5767_reset_projection(cell),
+							"loop-index relation seed setup 0x4a5767 reset failed")) {
+					return 1;
+				}
+			}
+			GeneratedCellRecord0x30 &loop_index_seed = loop_index_seed_grid.records[1];
+			loop_index_seed.word_0x28 |= aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
+			loop_index_seed.object_references_0x04_0x08 = { 0x1300U };
+			loop_index_seed.object_reference_count = 1;
+			GeneratorRelationOwnerState4a218c loop_index_owner;
+			loop_index_owner.owner_vector_index = 0;
+			loop_index_owner.runtime_zone_index = 0;
+			loop_index_owner.relation_owner_byte2_0x4aa9b7_known = true;
+			loop_index_owner.relation_owner_byte2_0x4aa9b7 = 9;
+			loop_index_owner.coordinate_triple_0x10_0x18_known = true;
+			loop_index_owner.coordinate_x_0x10 = 9;
+			loop_index_owner.coordinate_y_0x14 = 0;
+			loop_index_owner.coordinate_level_0x18 = 0;
+			loop_index_owner.scan_bounds_0x20_0x2c_known = true;
+			loop_index_owner.scan_bound_low_x_0x20 = 0;
+			loop_index_owner.scan_bound_low_y_0x24 = 0;
+			loop_index_owner.scan_bound_high_x_0x28 = 2;
+			loop_index_owner.scan_bound_high_y_0x2c = 1;
+			const auto loop_index_seed_result =
+					aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(
+							loop_index_seed_grid,
+							{ loop_index_owner });
+			if (!require(loop_index_seed_result.applied
+						&& loop_index_seed_result.owner_bounds_blocked_count == 0
+						&& (loop_index_seed_grid.records[1].word_0x1c & 0x0000ffffU) == 0U,
+					"0x4a5767 relation scan must gate on relation-vector loop index, not final source-owner byte2")) {
+				return 1;
+			}
+		}
 		const GeneratedCellWordGrid word_grid = aurelion::h3maped_rmg_core::generated_cell_grid_reset_0x49a072(2, 2, 1);
 		if (!require(word_grid.word_0x20.size() == record_grid.records.size() && word_grid.word_0x20[0] == record.word_0x20, "legacy generated-cell word grid no longer projects from record grid")) {
 			return 1;
