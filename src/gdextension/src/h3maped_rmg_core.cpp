@@ -4782,7 +4782,8 @@ static GeneratorRelationOwnerState4a218c *relation_owner_for_runtime_zone_0x4a54
 
 static GeneratorRelationOwnerState4a218c *relation_owner_for_owner_byte2_0x4a54a7(GeneratorObjectPrivateState &state, int32_t relation_owner_byte2) {
 	for (GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
-		if (relation_owner_byte2_for_generated_cell_gate(owner) == relation_owner_byte2) {
+		if (owner.relation_owner_byte2_0x4aa9b7_known
+				&& owner.relation_owner_byte2_0x4aa9b7 == relation_owner_byte2) {
 			return &owner;
 		}
 	}
@@ -9255,9 +9256,9 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 }
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
-	// Recovered 0x4aa9b7, 0x4aa603, and 0x49a09c compare generated-cell
-	// owner byte2 against the recovered relation owner byte. Missing recovered
-	// owner state must fail closed; source-record identity is a separate field.
+	// 0x4aa9b7/0x4aa603 compare generated-cell +0x20 byte2 against the
+	// relation-leading owner byte. Source-pointer identity is carried
+	// separately for boundary payload/source ordering.
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
@@ -9265,6 +9266,9 @@ static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelati
 }
 
 static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelationOwnerState4a218c &relation) {
+	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
+		return relation.source_pointer_source_index_0x00;
+	}
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
@@ -18753,12 +18757,12 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00;
+	}
 	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 	if (relation_owner_byte2 >= 0) {
 		return relation_owner_byte2;
-	}
-	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
-		return owner.source_pointer_source_index_0x00;
 	}
 	if (owner.source_zone_id > 0) {
 		return owner.source_zone_id;
@@ -23551,7 +23555,8 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_water_edge_writer_0x4a4fc5(
 		GeneratedCellRecordGrid0x30 &grid,
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
-		const std::string &water_mode) {
+		const std::string &water_mode,
+		H3MapedRng &rng) {
 	MaterializationBridgeWaterEdgeWriterResult4a4fc5 result;
 	const int64_t expected_cell_count = int64_t(grid.width) * int64_t(grid.height) * int64_t(grid.level_count);
 	if (grid.width <= 0 || grid.height <= 0 || grid.level_count <= 0 || expected_cell_count <= 0 || expected_cell_count != int64_t(grid.records.size())) {
@@ -23636,6 +23641,7 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 					continue;
 				}
 				result.mutation_source_count += 1;
+				std::vector<std::array<int32_t, 2>> terrainplacement_points_0x4bd099;
 				for (int32_t mutation_y = std::max<int32_t>(0, y - 1); mutation_y < std::min<int32_t>(grid.height, y + 2); ++mutation_y) {
 					for (int32_t mutation_x = std::max<int32_t>(0, x - 1); mutation_x < std::min<int32_t>(grid.width, x + 2); ++mutation_x) {
 						const int64_t mutation_flat = cell_index(grid.width, grid.height, mutation_x, mutation_y, level);
@@ -23653,9 +23659,24 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 							}
 						}
 						if ((mutation_record.word_0x24 & 0x3fU) == 8U) {
-							(void)replacement_terrain_id;
+							terrainplacement_points_0x4bd099.push_back({ mutation_x, mutation_y });
 							result.visual_repaint_pending_count += 1;
 						}
+					}
+				}
+				if (!terrainplacement_points_0x4bd099.empty()) {
+					const TerrainPlacementBrushApplyResult4a4522 repaint_result =
+							terrainplacement_apply_points_to_generated_cell_grid_0x4bcff5_4bd099(
+									grid,
+									replacement_terrain_id,
+									level,
+									terrainplacement_points_0x4bd099,
+									rng);
+					if (!repaint_result.applied || !repaint_result.blocked_reason.empty()) {
+						result.blocked_reason = repaint_result.blocked_reason.empty()
+								? "0x4a4fc5_terrainplacement_bridge_repaint_not_applied"
+								: repaint_result.blocked_reason;
+						return result;
 					}
 				}
 				for (int32_t clear_y = std::max<int32_t>(0, y - 2); clear_y < std::min<int32_t>(grid.height, y + 3); ++clear_y) {
@@ -24222,7 +24243,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				materialization_bridge_water_edge_writer_0x4a4fc5(
 						result.generator_object_private_state.generated_cell_buffer,
 						result.generator_object_private_state.relation_owner_vectors_10e4_10e8,
-						config.water_mode);
+						config.water_mode,
+						route_free_cell_rng);
 		result.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_input_known = water_edge_writer.input_known;
 		result.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied = water_edge_writer.applied;
 		result.generator_object_private_state.materialization_bridge_water_edge_writer_0x4a4fc5_source_backed_land_scope =

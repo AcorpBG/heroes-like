@@ -166,9 +166,11 @@ bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &gr
 	expected_y = owner.coordinate_y_0x14;
 	expected_level = owner.coordinate_level_0x18;
 	matched_count = 0;
-	const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 >= 0
-			? owner.relation_owner_byte2_0x4aa9b7
-			: owner.runtime_zone_index;
+	const int32_t relation_owner_byte2 = owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0
+			? owner.source_pointer_source_index_0x00
+			: (owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 >= 0
+							? owner.relation_owner_byte2_0x4aa9b7
+							: owner.runtime_zone_index);
 	if (!owner.scan_bounds_0x20_0x2c_known || relation_owner_byte2 < 0 || !owner.coordinate_triple_0x10_0x18_known) {
 		return false;
 	}
@@ -346,6 +348,52 @@ int main() {
 						&& randomized_boundary.randomized_rng_call_count > 0
 						&& randomized_boundary.rng_state_after != 123U,
 					"0x4a2777 pass byte 1 must use randomized 0x4a2413 and consume RNG")) {
+			return 1;
+		}
+	}
+
+	{
+		GeneratorRelationOwnerState4a218c owner;
+		owner.owner_vector_index = 0;
+		owner.runtime_zone_index = 0;
+		owner.source_zone_id = 1;
+		owner.source_index = 0;
+		owner.source_pointer_0x00_known = true;
+		owner.source_pointer_source_index_0x00 = 9;
+		owner.source_pointer_source_span_0x08_known = true;
+		owner.source_pointer_source_span_0x08 = 3;
+		owner.relation_owner_byte2_0x4aa9b7_known = true;
+		owner.relation_owner_byte2_0x4aa9b7 = 0;
+		owner.boundary_payload_span_limit_0x1c_known = true;
+		owner.boundary_payload_span_limit_0x1c = 3;
+		owner.coordinate_triple_0x10_0x18_known = true;
+		owner.coordinate_x_0x10 = 3;
+		owner.coordinate_y_0x14 = 3;
+		owner.coordinate_level_0x18 = 0;
+
+		const BoundaryOwnerGridResult4a3a03 owner_grid =
+				aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
+						10,
+						10,
+						1,
+						0,
+						1,
+						123U,
+						{},
+						{ owner },
+						1);
+		if (!require(!owner_grid.source_blocked && owner_grid.materialization_executed,
+					"0x4a3a03 relation-owner boundary materialization should execute for source-pointer owner test")) {
+			return 1;
+		}
+		const bool wrote_source_pointer_owner = std::any_of(
+				owner_grid.materialization.generated_cell_word_0x20.begin(),
+				owner_grid.materialization.generated_cell_word_0x20.end(),
+				[](uint32_t word) {
+					return owner_byte2_signed(word) == 9;
+				});
+		if (!require(wrote_source_pointer_owner,
+					"0x4a325d must write relation owner source pointer +0x00 word into generated-cell +0x20 byte2, not compact owner slot 0")) {
 			return 1;
 		}
 	}
@@ -2534,12 +2582,12 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve the selected source-record vector index into the handoff")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into the boundary payload")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not carry recovered source pointer +0x00 word into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into generated-cell byte2")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not carry recovered source pointer +0x00 word into generated-cell byte2")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
