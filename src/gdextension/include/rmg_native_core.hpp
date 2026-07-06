@@ -274,7 +274,7 @@ struct SharedRuntimeZoneSeedInput {
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
-	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	h3maped_rmg_core::AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	int32_t fixed_player_town_choice_index_0xf24 = -1;
 	SharedSourceZonePayload source_payload;
 };

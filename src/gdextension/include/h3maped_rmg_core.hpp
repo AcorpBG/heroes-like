@@ -97,6 +97,17 @@ struct H3MapedRng {
 	int32_t next();
 };
 
+struct AllowedTerrainFlags0x85_0x8c {
+	std::array<uint8_t, 8> bytes {};
+
+	AllowedTerrainFlags0x85_0x8c() = default;
+	AllowedTerrainFlags0x85_0x8c(uint16_t mask);
+	AllowedTerrainFlags0x85_0x8c(const std::array<uint8_t, 8> &source_bytes);
+
+	uint16_t mask() const;
+	bool enabled(int32_t terrain_id) const;
+};
+
 struct GeneratedCellInitialWords {
 	uint32_t word_0x10 = GENERATED_CELL_INITIAL_WORD_0X10;
 	uint32_t word_0x1c = GENERATED_CELL_INITIAL_WORD_0X1C;
@@ -959,7 +970,7 @@ struct RuntimeZoneBoundaryInput4a3a03 {
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
-	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	int32_t fixed_player_town_choice_index_0xf24 = -1;
 };
 
@@ -1021,7 +1032,7 @@ struct RuntimeZoneSeedInput4a218c {
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
-	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	int32_t fixed_player_town_choice_index_0xf24 = -1;
 	SourceZonePayload4a218c source_payload;
 };
@@ -1068,7 +1079,7 @@ struct TemplateZoneRecord4a218c {
 	int32_t player_filter_max_total = 8;
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 	bool terrain_match_to_town_0x84 = false;
-	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	SourceZonePayload4a218c source_payload;
 };
 
@@ -1317,8 +1328,8 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t source_pointer_type_0x04 = 0;
 	bool source_pointer_terrain_match_to_town_0x84_known = false;
 	bool source_pointer_terrain_match_to_town_0x84 = false;
-	bool source_pointer_allowed_terrain_mask_0x85_0x8c_known = false;
-	uint16_t source_pointer_allowed_terrain_mask_0x85_0x8c = 0U;
+	bool source_pointer_allowed_terrain_flags_0x85_0x8c_known = false;
+	AllowedTerrainFlags0x85_0x8c source_pointer_allowed_terrain_flags_0x85_0x8c;
 	bool source_pointer_value_0x90_known = false;
 	int32_t source_pointer_value_0x90 = 0;
 	bool source_pointer_monster_match_to_town_0x94_known = false;
@@ -1610,7 +1621,7 @@ struct RuntimeTerrainSelectionRecord49b53d {
 	int32_t level = 0;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
 	bool terrain_match_to_town_0x84 = false;
-	uint16_t allowed_terrain_mask_0x85_0x8c = 0U;
+	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	int32_t selected_terrain_id_0x49b53d = 0;
 	std::string selection_source;
 	int32_t rng_value = -1;

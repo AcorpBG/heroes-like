@@ -635,7 +635,8 @@ Options parse_options(int argc, char **argv) {
 					input.allowed_town_mask_0x41_0x49 = uint16_t(fields[7]);
 					input.selected_town_choice_index_0x49b3c1 = fields[8];
 					input.terrain_match_to_town_0x84 = fields[9] != 0;
-					input.allowed_terrain_mask_0x85_0x8c = uint16_t(fields[10]);
+					input.allowed_terrain_flags_0x85_0x8c =
+							aurelion::h3maped_rmg_core::AllowedTerrainFlags0x85_0x8c(uint16_t(fields[10]));
 				}
 				if (fields.size() >= 12) {
 					input.source_owner_index = fields[11];

@@ -10,6 +10,7 @@ namespace {
 using aurelion::h3maped_rmg_core::BoundaryMaterialization4a2777;
 using aurelion::h3maped_rmg_core::BoundaryOwnerGridResult4a3a03;
 using aurelion::h3maped_rmg_core::BoundarySourceCycleHandoff4a2777;
+using aurelion::h3maped_rmg_core::AllowedTerrainFlags0x85_0x8c;
 using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationRecord4a7605_4a5e03;
 using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationResult4a7605_4a5e03;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
@@ -2626,9 +2627,9 @@ int main() {
 	std::vector<RuntimeZoneBoundaryInput4a3a03> terrain_inputs = boundary_inputs;
 	terrain_inputs[0].terrain_match_to_town_0x84 = true;
 	terrain_inputs[0].selected_town_choice_index_0x49b3c1 = 2;
-	terrain_inputs[1].allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 5U);
-	terrain_inputs[2].allowed_terrain_mask_0x85_0x8c = 0U;
-	terrain_inputs[3].allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 6U);
+	terrain_inputs[1].allowed_terrain_flags_0x85_0x8c = AllowedTerrainFlags0x85_0x8c(uint16_t(1U << 5U));
+	terrain_inputs[2].allowed_terrain_flags_0x85_0x8c = AllowedTerrainFlags0x85_0x8c(0U);
+	terrain_inputs[3].allowed_terrain_flags_0x85_0x8c = AllowedTerrainFlags0x85_0x8c(uint16_t(1U << 6U));
 	RuntimeTerrainSelectionResult49b53d terrain_selection = aurelion::h3maped_rmg_core::runtime_terrain_selection_49b53d(1234U, terrain_inputs);
 	if (!require(terrain_selection.records.size() == terrain_inputs.size(), "0x49b53d did not emit one terrain record per runtime zone")) {
 		return 1;
@@ -2662,10 +2663,12 @@ int main() {
 			owner.coordinate_level_0x18 = 0;
 			owner.source_pointer_terrain_match_to_town_0x84_known = true;
 			owner.source_pointer_terrain_match_to_town_0x84 = false;
-			owner.source_pointer_allowed_terrain_mask_0x85_0x8c_known = true;
+			owner.source_pointer_allowed_terrain_flags_0x85_0x8c_known = true;
 		}
-		interleaved_owners[0].source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 0U);
-		interleaved_owners[1].source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t((1U << 0U) | (1U << 1U));
+		interleaved_owners[0].source_pointer_allowed_terrain_flags_0x85_0x8c =
+				AllowedTerrainFlags0x85_0x8c(uint16_t(1U << 0U));
+		interleaved_owners[1].source_pointer_allowed_terrain_flags_0x85_0x8c =
+				AllowedTerrainFlags0x85_0x8c(uint16_t((1U << 0U) | (1U << 1U)));
 		H3MapedRng expected_rng;
 		expected_rng.state = 1234U;
 		const int32_t owner0_terrain_rng = expected_rng.next();
@@ -2711,8 +2714,9 @@ int main() {
 			owner.coordinate_level_0x18 = 0;
 			owner.source_pointer_terrain_match_to_town_0x84_known = true;
 			owner.source_pointer_terrain_match_to_town_0x84 = false;
-			owner.source_pointer_allowed_terrain_mask_0x85_0x8c_known = true;
-			owner.source_pointer_allowed_terrain_mask_0x85_0x8c = uint16_t(1U << 5U);
+			owner.source_pointer_allowed_terrain_flags_0x85_0x8c_known = true;
+			owner.source_pointer_allowed_terrain_flags_0x85_0x8c =
+					AllowedTerrainFlags0x85_0x8c(uint16_t(1U << 5U));
 			return owners;
 		};
 		H3MapedRng expected_rng;
