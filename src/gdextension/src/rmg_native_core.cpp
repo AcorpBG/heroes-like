@@ -177,6 +177,22 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(
 			input.same_run_generated_object_payload_authority_known;
 	config.same_run_generated_object_payload_authority_0x4ad1e3 =
 			input.same_run_generated_object_payload_authority_0x4ad1e3;
+	config.same_run_payload_authority_profile_known =
+			input.same_run_payload_authority_profile_known;
+	config.same_run_payload_authority_profile =
+			input.same_run_payload_authority_profile;
+	config.same_run_payload_authority_tile_byte_count =
+			input.same_run_payload_authority_tile_byte_count;
+	config.same_run_payload_authority_object_byte_count =
+			input.same_run_payload_authority_object_byte_count;
+	config.same_run_payload_authority_setup_stack_join_known =
+			input.same_run_payload_authority_setup_stack_join_known;
+	config.same_run_payload_authority_setup_object_0x44 =
+			input.same_run_payload_authority_setup_object_0x44;
+	config.same_run_payload_authority_setup_object_0x48 =
+			input.same_run_payload_authority_setup_object_0x48;
+	config.same_run_payload_authority_setup_object_0x4c =
+			input.same_run_payload_authority_setup_object_0x4c;
 	return config;
 }
 
