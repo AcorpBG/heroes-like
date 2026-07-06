@@ -1070,6 +1070,30 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.level_count = input.level_count;
 	out.generator_field_0x08_known = input.generator_field_0x08_known;
 	out.generator_field_0x08 = input.generator_field_0x08;
+	out.generator_field_0x04_known = input.generator_field_0x04_known;
+	out.generator_field_0x04 = input.generator_field_0x04;
+	out.generator_field_0xed4_known = input.generator_field_0xed4_known;
+	out.generator_field_0xed4 = input.generator_field_0xed4;
+	out.backing_state_constructor_0x49d914_invoked = input.backing_state_constructor_0x49d914.invoked;
+	out.backing_state_constructor_0x49d914_applied = input.backing_state_constructor_0x49d914.applied;
+	out.backing_state_constructor_0x49d914_allocation_size_known =
+			input.backing_state_constructor_0x49d914.allocation_size_arg_0x18_known;
+	out.backing_state_constructor_0x49d914_allocation_size =
+			input.backing_state_constructor_0x49d914.allocation_size_arg_0x18;
+	out.backing_state_constructor_0x49d914_source_handler_known =
+			input.backing_state_constructor_0x49d914.source_handler_arg_0x14_known;
+	out.backing_state_constructor_0x49d914_source_handler =
+			input.backing_state_constructor_0x49d914.source_handler_arg_0x14;
+	out.backing_state_constructor_0x49d914_virtual_init_invoked =
+			input.backing_state_constructor_0x49d914.source_handler_virtual_init_invoked;
+	out.backing_state_constructor_0x49d914_virtual_init_offset_known =
+			input.backing_state_constructor_0x49d914.source_handler_virtual_init_offset_known;
+	out.backing_state_constructor_0x49d914_virtual_init_offset =
+			input.backing_state_constructor_0x49d914.source_handler_virtual_init_offset;
+	out.backing_state_constructor_0x49d914_object_table_loader_invoked =
+			input.backing_state_constructor_0x49d914.object_table_loader_invoked_0x49da08;
+	out.backing_state_constructor_0x49d914_blocked_reason =
+			input.backing_state_constructor_0x49d914.blocked_reason;
 	out.generator_field_0xf48_known = input.generator_field_0xf48_known;
 	out.generator_field_0xf48 = input.generator_field_0xf48;
 	out.generator_field_0xf4c_known = input.generator_field_0xf4c_known;
@@ -3037,6 +3061,21 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"level_count\":" << state.level_count << ","
 		<< "\"generator_field_0x08_known\":" << (state.generator_field_0x08_known ? "true" : "false") << ","
 		<< "\"generator_field_0x08\":" << state.generator_field_0x08 << ","
+		<< "\"generator_field_0x04_known\":" << (state.generator_field_0x04_known ? "true" : "false") << ","
+		<< "\"generator_field_0x04\":" << state.generator_field_0x04 << ","
+		<< "\"generator_field_0xed4_known\":" << (state.generator_field_0xed4_known ? "true" : "false") << ","
+		<< "\"generator_field_0xed4\":" << state.generator_field_0xed4 << ","
+		<< "\"backing_state_constructor_0x49d914_invoked\":" << (state.backing_state_constructor_0x49d914_invoked ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_applied\":" << (state.backing_state_constructor_0x49d914_applied ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_allocation_size_known\":" << (state.backing_state_constructor_0x49d914_allocation_size_known ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_allocation_size\":" << state.backing_state_constructor_0x49d914_allocation_size << ","
+		<< "\"backing_state_constructor_0x49d914_source_handler_known\":" << (state.backing_state_constructor_0x49d914_source_handler_known ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_source_handler\":" << state.backing_state_constructor_0x49d914_source_handler << ","
+		<< "\"backing_state_constructor_0x49d914_virtual_init_invoked\":" << (state.backing_state_constructor_0x49d914_virtual_init_invoked ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_virtual_init_offset_known\":" << (state.backing_state_constructor_0x49d914_virtual_init_offset_known ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_virtual_init_offset\":" << state.backing_state_constructor_0x49d914_virtual_init_offset << ","
+		<< "\"backing_state_constructor_0x49d914_object_table_loader_invoked\":" << (state.backing_state_constructor_0x49d914_object_table_loader_invoked ? "true" : "false") << ","
+		<< "\"backing_state_constructor_0x49d914_blocked_reason\":\"" << json_escape(state.backing_state_constructor_0x49d914_blocked_reason) << "\","
 		<< "\"generator_field_0xf48_known\":" << (state.generator_field_0xf48_known ? "true" : "false") << ","
 		<< "\"generator_field_0xf48\":" << state.generator_field_0xf48 << ","
 		<< "\"generator_field_0xf4c_known\":" << (state.generator_field_0xf4c_known ? "true" : "false") << ","

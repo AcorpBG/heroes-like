@@ -66,6 +66,7 @@ constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_A_0X540C60 = 0x00540
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_B_0X540C70 = 0x00540c70U;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_C_0X540C80 = 0x00540c80U;
 constexpr uint32_t REWARD_GUARD_CANDIDATE_VTABLE_PROJECTION_ADJACENT_0X540CA0 = 0x00540ca0U;
+constexpr uint32_t GENERATOR_OBJECT_VTABLE_0X540CB0 = 0x00540cb0U;
 constexpr int32_t RELATION_OWNER_ALLOC_SIZE_0X49B452 = 0x414;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452 = 0x7d00;
 constexpr int32_t RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452 = -32000;
@@ -1141,6 +1142,37 @@ struct GeneratorSetupCallerFields4adfe1 {
 	int32_t normalized_setup_object_0x3c = 0;
 };
 
+struct GeneratorBackingStateConstructor49d914 {
+	bool invoked = false;
+	bool applied = false;
+	bool width_known = false;
+	int32_t width = 0;
+	bool height_known = false;
+	int32_t height = 0;
+	bool level_count_known = false;
+	int32_t level_count = 0;
+	uint8_t level_count_high_byte_0x13 = 0;
+	bool source_handler_arg_0x14_known = false;
+	int32_t source_handler_arg_0x14 = 0;
+	bool allocation_size_arg_0x18_known = false;
+	int32_t allocation_size_arg_0x18 = 0;
+	bool setup_object_0x4c_arg_0x1c_known = false;
+	int32_t setup_object_0x4c_arg_0x1c = 0;
+	bool generator_vtable_0x00_known = false;
+	uint32_t generator_vtable_0x00 = 0U;
+	bool generator_field_0x04_known = false;
+	int32_t generator_field_0x04 = 0;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
+	bool generator_field_0xed4_known = false;
+	int32_t generator_field_0xed4 = 0;
+	bool source_handler_virtual_init_invoked = false;
+	bool source_handler_virtual_init_offset_known = false;
+	int32_t source_handler_virtual_init_offset = 0;
+	bool object_table_loader_invoked_0x49da08 = false;
+	std::string blocked_reason;
+};
+
 struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x44 = 0;
 	int32_t generator_mode_0x10b8 = 0;
@@ -1167,6 +1199,7 @@ struct GeneratorSetupModeResult49ecf2 {
 	uint32_t rng_state_before_template_selection = 0;
 	GeneratorSetupCallerFields4adfe1 setup_fields_0x4adfe1;
 	GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2;
+	GeneratorBackingStateConstructor49d914 backing_state_constructor_0x49d914;
 };
 
 struct CoordinatePlacementStep4a1f3b {
@@ -2837,6 +2870,11 @@ struct GeneratorObjectPrivateState {
 	int32_t generator_value_band_0x10bc = 0;
 	bool generator_field_0x08_known = false;
 	int32_t generator_field_0x08 = 0;
+	bool generator_field_0x04_known = false;
+	int32_t generator_field_0x04 = 0;
+	bool generator_field_0xed4_known = false;
+	int32_t generator_field_0xed4 = 0;
+	GeneratorBackingStateConstructor49d914 backing_state_constructor_0x49d914;
 	bool generator_field_0xf48_known = false;
 	int32_t generator_field_0xf48 = 0;
 	bool generator_field_0xf4c_known = false;
@@ -3939,6 +3977,14 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 		int32_t setup_object_0x40 = 0,
 		bool setup_caller_arg_0x0c_known = false,
 		int32_t setup_caller_arg_0x0c = 0);
+GeneratorBackingStateConstructor49d914 generator_backing_state_constructor_0x49d914(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		bool source_handler_arg_0x14_known,
+		int32_t source_handler_arg_0x14,
+		bool setup_object_0x4c_arg_0x1c_known,
+		int32_t setup_object_0x4c_arg_0x1c);
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
 		uint32_t seed,
 		int32_t setup_object_0x44,
