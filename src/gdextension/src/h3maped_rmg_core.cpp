@@ -18481,23 +18481,6 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 	return fallback;
 }
 
-static int32_t relation_owner_generated_cell_byte2_for_source_payload_owner_word_4a3a03(
-		const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
-		int32_t source_payload_owner_word) {
-	if (source_payload_owner_word < 0) {
-		return -1;
-	}
-	for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
-		const int32_t owner_payload_word = relation_owner_source_payload_owner_word_4a3a03(owner, -1);
-		if (owner_payload_word == source_payload_owner_word
-				|| (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == source_payload_owner_word)
-				|| owner.source_zone_id == source_payload_owner_word) {
-			return relation_owner_byte2_for_generated_cell_gate(owner);
-		}
-	}
-	return -1;
-}
-
 static int32_t relation_owner_span_limit_4a3a03(const GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneBoundaryInput4a3a03 *matched_input) {
 	if (owner.boundary_payload_span_limit_0x1c_known && owner.boundary_payload_span_limit_0x1c > 0) {
 		return owner.boundary_payload_span_limit_0x1c;
@@ -18580,16 +18563,10 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				const int32_t source_payload_owner_word = source_walk_payload_owner_word_4a3a03(
 						walk,
 						source_vector_handoff_index);
-				const int32_t generated_cell_owner_byte2 =
-						relation_owner_generated_cell_byte2_for_source_payload_owner_word_4a3a03(
-								relation_owners,
-								source_payload_owner_word);
 				BoundarySourceCycleHandoff4a2777 handoff;
 				handoff.runtime_zone_index = walk.runtime_zone_index;
 				handoff.zone_word = source_payload_owner_word;
-				handoff.generated_cell_owner_byte2 = generated_cell_owner_byte2 >= 0
-						? generated_cell_owner_byte2
-						: source_payload_owner_word;
+				handoff.generated_cell_owner_byte2 = source_payload_owner_word;
 				handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 				handoff.level = caller_level_argument_0x0c;
 				handoff.boundary_pass_index_0x0c = 0;
