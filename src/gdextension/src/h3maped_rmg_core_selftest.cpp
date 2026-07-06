@@ -2818,8 +2818,8 @@ int main() {
 		BoundaryMaterialization4a2777 relation_gate_materialization;
 		relation_gate_materialization.generator_mode_0x10b8 = 0;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
-		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(7U << 16U);
-		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(7U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(1U << 16U);
 		relation_gate_materialization.generated_cell_word_0x28.assign(4, 0U);
 		relation_gate_materialization.generated_cell_word_0x28[0] = aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 		relation_gate_materialization.cell_flags.assign(4, 0U);
@@ -2866,7 +2866,7 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint must compare generated-cell byte2 to recovered relation owner byte, not the loop index: terrain0="
+					"0x4a3f27 relation-owner repaint must compare generated-cell byte2 to the relation vector loop index, not the source owner byte: terrain0="
 						+ std::to_string(relation_gate_repaint.terrain_code[0])
 						+ " writes="
 						+ std::to_string(relation_gate_repaint.zone_repaint_write_count_0x4a4163)
@@ -2890,10 +2890,10 @@ int main() {
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
 						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 1
 						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 1
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 0
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 2
 						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
-					"0x4a3f27 did not carry recovered relation-owner byte scan bounds through 0x4a2ffa: scan_known="
+					"0x4a3f27 did not split recovered loop-index scan bounds from source-byte 0x4a2ffa recenter: scan_known="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
 						+ " scan_blocked="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b)
@@ -3457,13 +3457,20 @@ int main() {
 						1234U,
 						fixed_town_zones,
 						{});
+		const bool fixed_town_owner_slot_valid =
+				fixed_town_coordinate.relation_owner_vectors_10e4_10e8.size() > 7
+				&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[7].runtime_zone_index == 0;
+		const GeneratorRelationOwnerState4a218c *fixed_town_owner =
+				fixed_town_owner_slot_valid
+				? &fixed_town_coordinate.relation_owner_vectors_10e4_10e8[7]
+				: nullptr;
 		if (!require(!fixed_town_coordinate.blocked
 						&& fixed_town_coordinate.town_choice_rng_call_count_0x49b3c1 == 1
 						&& fixed_town_coordinate.runtime_zone_records_after_0x49b3c1.size() == 1
 						&& fixed_town_coordinate.runtime_zone_records_after_0x49b3c1[0].fixed_player_town_choice_index_0xf24 == 5
-						&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8.size() == 1
-						&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[0].town_choice_0x04_known
-						&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[0].town_choice_0x04 == 5,
+						&& fixed_town_owner != nullptr
+						&& fixed_town_owner->town_choice_0x04_known
+						&& fixed_town_owner->town_choice_0x04 == 5,
 					"0x4a218c did not apply generator+0xf24 fixed player town override after 0x49b3c1 RNG")) {
 			return 1;
 		}
@@ -3513,9 +3520,16 @@ int main() {
 	if (!require(composed.terrain_repaint.full_map_water_repaint_count_0x4a4025 == 36 * 36, "composed chain did not apply terrain full-map repaint")) {
 		return 1;
 	}
+	const int32_t composed_materialized_relation_owner_count =
+			int32_t(std::count_if(
+					composed.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.begin(),
+					composed.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.end(),
+					[](const GeneratorRelationOwnerState4a218c &owner) {
+						return owner.runtime_zone_index >= 0;
+					}));
 	if (!require(composed.terrain_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
 					&& composed.terrain_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-					&& composed.terrain_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == seed_inputs.size(),
+					&& composed_materialized_relation_owner_count == int32_t(seed_inputs.size()),
 				"composed chain did not expose source-order relation-owner state after 0x4a3f27")) {
 		return 1;
 	}
@@ -3664,8 +3678,15 @@ int main() {
 	int32_t relation_owner_town_choice_known_count = 0;
 	int32_t relation_owner_success_byte_0x3c_set_count = 0;
 	int32_t relation_owner_missing_scan_bounds_count = 0;
+	const int32_t materialized_relation_owner_count_10e4 =
+			int32_t(std::count_if(
+					generator_state.relation_owner_vectors_10e4_10e8.begin(),
+					generator_state.relation_owner_vectors_10e4_10e8.end(),
+					[](const GeneratorRelationOwnerState4a218c &owner) {
+						return owner.runtime_zone_index >= 0;
+					}));
 	const int32_t expected_relation_order_word_count_0x49b61b =
-			generator_state.relation_owner_vector_count_10e4_10e8;
+			materialized_relation_owner_count_10e4;
 	auto relation_owner_vector_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
 		for (int32_t index = 0; index < int32_t(generator_state.relation_owner_vectors_10e4_10e8.size()); ++index) {
 			if (generator_state.relation_owner_vectors_10e4_10e8[size_t(index)].runtime_zone_index == runtime_zone_index) {
@@ -3675,6 +3696,9 @@ int main() {
 		return -1;
 	};
 	for (const aurelion::h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : generator_state.relation_owner_vectors_10e4_10e8) {
+		if (owner.runtime_zone_index < 0) {
+			continue;
+		}
 		summed_relation_record_count += owner.relation_record_count;
 		if (!require(owner.constructor_0x49b452_known, "generator relation owner did not carry recovered 0x49b452 constructor state")) {
 			return 1;
@@ -3888,7 +3912,7 @@ int main() {
 					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b > 0
 					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b
 							+ generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b
-							>= generator_state.relation_owner_vector_count_10e4_10e8,
+							>= materialized_relation_owner_count_10e4,
 				"0x4a1f3b relation-owner scan-bound pass did not run before relation scan consumers")) {
 		return 1;
 	}
@@ -3896,7 +3920,7 @@ int main() {
 					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa > 0
 					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa
 							+ generator_state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa
-							>= generator_state.relation_owner_vector_count_10e4_10e8
+							>= materialized_relation_owner_count_10e4
 					&& generator_state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa > 0,
 				"0x4a2ffa relation-owner coordinate recenter pass did not run before route/object consumers")) {
 		return 1;
