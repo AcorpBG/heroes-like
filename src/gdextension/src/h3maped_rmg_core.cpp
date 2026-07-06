@@ -15154,6 +15154,31 @@ static bool source_order_descriptor_source_bridge_known_0x4a93a2(const SourceObj
 	return join.joined || source_backed_type98_bridge;
 }
 
+static const SourceObjectResolvedWrapper4af785 *source_type98_bucket_entry_0x658(
+		GeneratorObjectPrivateState &state,
+		int32_t source_pair_key_0x0c,
+		std::string &blocked_reason) {
+	SourceObjectResolverState4af785 &resolver_state = ensure_source_object_resolver_state_4af785(state);
+	constexpr int32_t source_type98_bucket_index = 98;
+	const std::vector<int32_t> &bucket =
+			resolver_state.wrapper_bucket_indices_0xe8[size_t(source_type98_bucket_index)];
+	if (bucket.empty()) {
+		blocked_reason = "source_type98_bucket_0x658_empty";
+		return nullptr;
+	}
+	if (source_pair_key_0x0c < 0 || source_pair_key_0x0c >= int32_t(bucket.size())) {
+		blocked_reason = "source_type98_bucket_0x658_key_out_of_range";
+		return nullptr;
+	}
+	const int32_t wrapper_index = bucket[size_t(source_pair_key_0x0c)];
+	if (wrapper_index < 0 || wrapper_index >= int32_t(resolver_state.wrappers.size())) {
+		blocked_reason = "source_type98_bucket_0x658_wrapper_index_out_of_range";
+		return nullptr;
+	}
+	blocked_reason.clear();
+	return &resolver_state.wrappers[size_t(wrapper_index)];
+}
+
 SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t selected_index_0x20, bool enabled_low_byte_0x24, H3MapedRng &rng) {
 	SourceOrderObjectPlacementResult4a93a2 result;
 	SourceOrderObjectPlacementState4a93a2 &placement = result.placement_state_0x4a93a2;
@@ -15164,6 +15189,16 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	placement.relation_owner_byte_known = relation_owner_byte2 >= 0;
 	placement.source_pair_key_known = true;
 	placement.source_pair_key_not_minus_one = source_pair_key_0x0c != -1;
+	const SourceObjectResolverState4af785 &resolver_state_for_0x658 =
+			ensure_source_object_resolver_state_4af785(state);
+	const std::vector<int32_t> &source_type98_bucket_0x658 =
+			resolver_state_for_0x658.wrapper_bucket_indices_0xe8[size_t(98)];
+	state.source_type98_bucket_0x658_present = state.source_object_resolver_state_4af785_known;
+	state.source_type98_bucket_0x658_contents_known = state.source_object_resolver_state_4af785_known;
+	state.source_type98_bucket_0x658_count = int32_t(source_type98_bucket_0x658.size());
+	placement.source_type98_bucket_0x658_present = state.source_type98_bucket_0x658_present;
+	placement.source_type98_bucket_0x658_contents_known = state.source_type98_bucket_0x658_contents_known;
+	placement.source_type98_bucket_0x658_count = state.source_type98_bucket_0x658_count;
 	placement.relation_owner_byte2 = relation_owner_byte2;
 	placement.source_pair_key_0x0c = source_pair_key_0x0c;
 	placement.selected_index_0x20 = selected_index_0x20;
@@ -15203,6 +15238,15 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	if (!placement.source_pair_key_not_minus_one) {
 		return finish_blocked("0x4a93a2_source_pair_key_arg_0x0c_minus_one");
 	}
+	std::string source_bucket_blocker;
+	const SourceObjectResolvedWrapper4af785 *source_bucket_wrapper_0x658 =
+			source_type98_bucket_entry_0x658(state, source_pair_key_0x0c, source_bucket_blocker);
+	placement.source_type98_bucket_entry_0x658_known = source_bucket_wrapper_0x658 != nullptr;
+	if (source_bucket_wrapper_0x658 == nullptr) {
+		state.source_type98_bucket_0x658_blocked_reason = source_bucket_blocker;
+		return finish_blocked("0x4a93a2_" + source_bucket_blocker);
+	}
+	(void)source_bucket_wrapper_0x658;
 
 	int32_t current_best_distance = placement.best_distance_squared_initial_0x7d00;
 	for (int32_t y = scan_low_y_0x24; y < scan_high_y_0x2c; ++y) {
@@ -15370,7 +15414,7 @@ SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(
 	return result;
 }
 
-WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
+WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t source_pair_key_0x0c, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
 	WeightedObjectCandidateScanResult4a901a result;
 	WeightedObjectCandidateVectorState4a901a &vector_state = result.vector_state_0x4a901a;
 	const int32_t descriptor_width_0x34 = join.descriptor.descriptor_width_0x34 > 0
@@ -15384,8 +15428,21 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.scan_bounds_known = true;
 	vector_state.scan_bounds_non_empty = scan_high_x > adjusted_scan_low_x && scan_high_y > adjusted_scan_low_y;
 	vector_state.relation_owner_byte_known = relation_owner_byte2 >= 0;
+	vector_state.source_pair_key_known = true;
+	vector_state.source_pair_key_not_minus_one = source_pair_key_0x0c != -1;
+	const SourceObjectResolverState4af785 &resolver_state_for_0x658 =
+			ensure_source_object_resolver_state_4af785(state);
+	const std::vector<int32_t> &source_type98_bucket_0x658 =
+			resolver_state_for_0x658.wrapper_bucket_indices_0xe8[size_t(98)];
+	state.source_type98_bucket_0x658_present = state.source_object_resolver_state_4af785_known;
+	state.source_type98_bucket_0x658_contents_known = state.source_object_resolver_state_4af785_known;
+	state.source_type98_bucket_0x658_count = int32_t(source_type98_bucket_0x658.size());
+	vector_state.source_type98_bucket_0x658_present = state.source_type98_bucket_0x658_present;
+	vector_state.source_type98_bucket_0x658_contents_known = state.source_type98_bucket_0x658_contents_known;
+	vector_state.source_type98_bucket_0x658_count = state.source_type98_bucket_0x658_count;
 	vector_state.threshold_arg_0x18_known = threshold_arg_0x18 >= 0;
 	vector_state.relation_owner_byte2 = relation_owner_byte2;
+	vector_state.source_pair_key_0x0c = source_pair_key_0x0c;
 	vector_state.scan_bound_low_x = adjusted_scan_low_x;
 	vector_state.scan_bound_low_y = adjusted_scan_low_y;
 	vector_state.scan_bound_high_x = scan_high_x;
@@ -15428,6 +15485,18 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	if (!vector_state.threshold_arg_0x18_known) {
 		return finish_blocked("0x4a901a_threshold_arg_0x18_missing");
 	}
+	if (!vector_state.source_pair_key_not_minus_one) {
+		return finish_blocked("0x4a901a_source_pair_key_arg_0x0c_minus_one");
+	}
+	std::string source_bucket_blocker;
+	const SourceObjectResolvedWrapper4af785 *source_bucket_wrapper_0x658 =
+			source_type98_bucket_entry_0x658(state, source_pair_key_0x0c, source_bucket_blocker);
+	vector_state.source_type98_bucket_entry_0x658_known = source_bucket_wrapper_0x658 != nullptr;
+	if (source_bucket_wrapper_0x658 == nullptr) {
+		state.source_type98_bucket_0x658_blocked_reason = source_bucket_blocker;
+		return finish_blocked("0x4a901a_" + source_bucket_blocker);
+	}
+	(void)source_bucket_wrapper_0x658;
 
 	int32_t current_threshold = threshold_arg_0x18;
 	for (int32_t y = adjusted_scan_low_y; y < scan_high_y; ++y) {
@@ -15728,6 +15797,7 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 				state,
 				join,
 				relation_owner_byte2,
+				context_wrapper_index_0x04,
 				scan_low_x,
 				scan_low_y,
 				scan_high_x,
@@ -17172,6 +17242,12 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	std::set<int64_t> set_a;
 	std::set<int64_t> set_b;
 
+	auto begin_terrainplacement_scope_4bcff5 = [&]() {
+		std::fill(result.terrain_scratch_word_0x4bad0f.begin(), result.terrain_scratch_word_0x4bad0f.end(), 0U);
+		set_a.clear();
+		set_b.clear();
+	};
+
 	auto append_set_b = [&](int32_t level, int32_t x, int32_t y, int32_t current_terrain) {
 		if (x < 0 || y < 0 || level < 0 || x >= width || y >= height || level >= level_count) {
 			return;
@@ -17418,6 +17494,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	};
 
 	auto run_full_map_terrain_scope_4bd099 = [&](int32_t terrain_id, bool water_scope) {
+		begin_terrainplacement_scope_4bcff5();
 		for (int32_t level = 0; level < level_count; ++level) {
 			for (int32_t y = 0; y < height; ++y) {
 				for (int32_t x = 0; x < width; ++x) {
@@ -17449,6 +17526,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		if (scan_level < 0 || scan_level >= level_count) {
 			return;
 		}
+		begin_terrainplacement_scope_4bcff5();
 		low_x = std::clamp(low_x, 0, width);
 		high_x = std::clamp(high_x, 0, width);
 		low_y = std::clamp(low_y, 0, height);
@@ -17513,6 +17591,13 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 		}
 	}
 
+	for (int32_t level = 0; level < level_count; ++level) {
+		for (int32_t y = 0; y < height; ++y) {
+			for (int32_t x = 0; x < width; ++x) {
+				(void)ensure_scratch_record_4bb71b_4bad97(level, x, y);
+			}
+		}
+	}
 	for (int32_t index = 0; index < cell_count; ++index) {
 		const uint32_t scratch_word = result.terrain_scratch_word_0x4bad0f[size_t(index)];
 		if ((scratch_word & 0x01U) != 0U) {

@@ -938,8 +938,15 @@ SharedWeightedObjectCandidateVectorState4a901a from_h3maped_weighted_object_cand
 	out.scan_bounds_known = input.scan_bounds_known;
 	out.scan_bounds_non_empty = input.scan_bounds_non_empty;
 	out.relation_owner_byte_known = input.relation_owner_byte_known;
+	out.source_pair_key_known = input.source_pair_key_known;
+	out.source_pair_key_not_minus_one = input.source_pair_key_not_minus_one;
+	out.source_type98_bucket_0x658_present = input.source_type98_bucket_0x658_present;
+	out.source_type98_bucket_0x658_contents_known = input.source_type98_bucket_0x658_contents_known;
+	out.source_type98_bucket_entry_0x658_known = input.source_type98_bucket_entry_0x658_known;
 	out.threshold_arg_0x18_known = input.threshold_arg_0x18_known;
 	out.relation_owner_byte2 = input.relation_owner_byte2;
+	out.source_pair_key_0x0c = input.source_pair_key_0x0c;
+	out.source_type98_bucket_0x658_count = input.source_type98_bucket_0x658_count;
 	out.scan_bound_low_x = input.scan_bound_low_x;
 	out.scan_bound_low_y = input.scan_bound_low_y;
 	out.scan_bound_high_x = input.scan_bound_high_x;
@@ -1070,6 +1077,11 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.level_count_offset_0x20 = input.level_count_offset_0x20;
 	out.generated_cell_buffer_owned = input.generated_cell_buffer_owned;
 	out.generated_cell_buffer_record_count = int32_t(input.generated_cell_buffer.records.size());
+	out.source_type98_bucket_vector_offset_0x658 = input.source_type98_bucket_vector_offset_0x658;
+	out.source_type98_bucket_0x658_present = input.source_type98_bucket_0x658_present;
+	out.source_type98_bucket_0x658_contents_known = input.source_type98_bucket_0x658_contents_known;
+	out.source_type98_bucket_0x658_count = input.source_type98_bucket_0x658_count;
+	out.source_type98_bucket_0x658_blocked_reason = input.source_type98_bucket_0x658_blocked_reason;
 	out.width = input.width;
 	out.height = input.height;
 	out.level_count = input.level_count;
@@ -3014,8 +3026,15 @@ void append_weighted_object_candidate_vectors_4a901a_json(std::ostream &out, con
 			<< ",\"scan_bounds_known\":" << (vector.scan_bounds_known ? "true" : "false")
 			<< ",\"scan_bounds_non_empty\":" << (vector.scan_bounds_non_empty ? "true" : "false")
 			<< ",\"relation_owner_byte_known\":" << (vector.relation_owner_byte_known ? "true" : "false")
+			<< ",\"source_pair_key_known\":" << (vector.source_pair_key_known ? "true" : "false")
+			<< ",\"source_pair_key_not_minus_one\":" << (vector.source_pair_key_not_minus_one ? "true" : "false")
+			<< ",\"source_type98_bucket_0x658_present\":" << (vector.source_type98_bucket_0x658_present ? "true" : "false")
+			<< ",\"source_type98_bucket_0x658_contents_known\":" << (vector.source_type98_bucket_0x658_contents_known ? "true" : "false")
+			<< ",\"source_type98_bucket_entry_0x658_known\":" << (vector.source_type98_bucket_entry_0x658_known ? "true" : "false")
 			<< ",\"threshold_arg_0x18_known\":" << (vector.threshold_arg_0x18_known ? "true" : "false")
 			<< ",\"relation_owner_byte2\":" << vector.relation_owner_byte2
+			<< ",\"source_pair_key_0x0c\":" << vector.source_pair_key_0x0c
+			<< ",\"source_type98_bucket_0x658_count\":" << vector.source_type98_bucket_0x658_count
 			<< ",\"scan_bound_low_x\":" << vector.scan_bound_low_x
 			<< ",\"scan_bound_low_y\":" << vector.scan_bound_low_y
 			<< ",\"scan_bound_high_x\":" << vector.scan_bound_high_x
@@ -3061,6 +3080,12 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"level_count_offset_0x20\":" << state.level_count_offset_0x20 << ","
 		<< "\"generated_cell_buffer_owned\":" << (state.generated_cell_buffer_owned ? "true" : "false") << ","
 		<< "\"generated_cell_buffer_record_count\":" << state.generated_cell_buffer_record_count << ","
+		<< "\"source_type98_bucket_vector_offset_0x658\":" << state.source_type98_bucket_vector_offset_0x658 << ","
+		<< "\"source_type98_bucket_0x658_present\":" << (state.source_type98_bucket_0x658_present ? "true" : "false") << ","
+		<< "\"source_type98_bucket_0x658_contents_known\":" << (state.source_type98_bucket_0x658_contents_known ? "true" : "false") << ","
+		<< "\"source_type98_bucket_0x658_count\":" << state.source_type98_bucket_0x658_count << ","
+		<< "\"source_type98_bucket_0x658_blocked_reason\":\"" << json_escape(state.source_type98_bucket_0x658_blocked_reason) << "\","
+		<< "\"source_type98_bucket_0x658_source\":\"0x49d914_constructs_0xe8_bucket_array_at_generator_plus_0x34;0x4a93a2_and_0x4a901a_load_bucket_98_contents_pointer_at_generator_plus_0x658_then_index_by_source_key\","
 		<< "\"width\":" << state.width << ","
 		<< "\"height\":" << state.height << ","
 		<< "\"level_count\":" << state.level_count << ","
