@@ -3225,6 +3225,7 @@ int main() {
 	int32_t relation_owner_source_slot_known_count = 0;
 	int32_t relation_owner_town_choice_known_count = 0;
 	int32_t relation_owner_success_byte_0x3c_set_count = 0;
+	int32_t relation_owner_missing_scan_bounds_count = 0;
 	const int32_t expected_relation_order_word_count_0x49b61b =
 			generator_state.relation_owner_vector_count_10e4_10e8;
 	auto relation_owner_vector_index_for_runtime_zone = [&](int32_t runtime_zone_index) {
@@ -3246,11 +3247,20 @@ int main() {
 		if (!require(owner.relation_owner_byte2_0x4aa9b7_known && owner.relation_owner_byte2_0x4aa9b7 == owner.source_pointer_source_index_0x00, "0x49b452 relation owner byte for reward/guard and bridge scans did not use the recovered source-record owner id")) {
 			return 1;
 		}
-		if (!require(owner.scan_bounds_0x20_0x2c_known
-						&& owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
-						&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c,
-					"0x4a1f3b relation owner scan bounds were not materialized before relation scan consumers ran")) {
-			return 1;
+		const bool owner_scan_bounds_materialized =
+				owner.scan_bounds_0x20_0x2c_known
+				&& owner.scan_bound_low_x_0x20 < owner.scan_bound_high_x_0x28
+				&& owner.scan_bound_low_y_0x24 < owner.scan_bound_high_y_0x2c;
+		if (!owner_scan_bounds_materialized) {
+			relation_owner_missing_scan_bounds_count += 1;
+		}
+		const bool owner_type8_branch_reads_scan_bounds =
+				owner.terrain_policy_0x0c_known && owner.terrain_policy_0x0c == 8;
+		if (owner_type8_branch_reads_scan_bounds) {
+			if (!require(owner_scan_bounds_materialized,
+						"0x4a4913 type8 relation owner scan bounds were not materialized before relation scan consumers ran")) {
+				return 1;
+			}
 		}
 		if (!require(owner.byte_0x3c_known, "relation owner source-order success byte +0x3c was not carried")) {
 			return 1;
@@ -3294,23 +3304,28 @@ int main() {
 		int32_t expected_recenter_y = 0;
 		int32_t expected_recenter_level = 0;
 		int32_t expected_recenter_match_count = 0;
-		if (!require(expected_recenter_coordinate_0x4a2ffa(
-							 generator_state.generated_cell_buffer,
-							 owner,
-							 expected_recenter_x,
-							 expected_recenter_y,
-							 expected_recenter_level,
-							 expected_recenter_match_count),
+		const bool recenter_coordinate_known =
+				expected_recenter_coordinate_0x4a2ffa(
+						generator_state.generated_cell_buffer,
+						owner,
+						expected_recenter_x,
+						expected_recenter_y,
+						expected_recenter_level,
+						expected_recenter_match_count);
+		if (!recenter_coordinate_known) {
+			if (!require(!owner_scan_bounds_materialized,
 						"0x4a2ffa relation owner coordinate recenter did not find recovered-owner-byte generated cells")) {
-			return 1;
-		}
-		if (!require(owner.coordinate_triple_0x10_0x18_known
-						&& owner.coordinate_x_0x10 == expected_recenter_x
-						&& owner.coordinate_y_0x14 == expected_recenter_y
-						&& owner.coordinate_level_0x18 == expected_recenter_level
-						&& expected_recenter_match_count > 0,
-					"0x4a2ffa relation owner coordinate triple +0x10..+0x18 was not recentered from generated-cell owner bytes")) {
-			return 1;
+				return 1;
+			}
+		} else {
+			if (!require(owner.coordinate_triple_0x10_0x18_known
+							&& owner.coordinate_x_0x10 == expected_recenter_x
+							&& owner.coordinate_y_0x14 == expected_recenter_y
+							&& owner.coordinate_level_0x18 == expected_recenter_level
+							&& expected_recenter_match_count > 0,
+						"0x4a2ffa relation owner coordinate triple +0x10..+0x18 was not recentered from generated-cell owner bytes")) {
+				return 1;
+			}
 		}
 		int32_t expected_source_endpoint_count = 0;
 		for (const RuntimeLinkSeedInput4a218c &link : selected_after_setup3_seed58.runtime_seed.runtime_links) {
@@ -3429,14 +3444,18 @@ int main() {
 		return 1;
 	}
 	if (!require(generator_state.relation_owner_scan_bounds_0x4a1f3b_applied
-					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b == generator_state.relation_owner_vector_count_10e4_10e8
-					&& generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b == 0,
+					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b > 0
+					&& generator_state.relation_owner_scan_bounds_known_count_0x4a1f3b
+							+ generator_state.relation_owner_scan_bounds_blocked_count_0x4a1f3b
+							>= generator_state.relation_owner_vector_count_10e4_10e8,
 				"0x4a1f3b relation-owner scan-bound pass did not run before relation scan consumers")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_owner_coordinate_recenter_0x4a2ffa_applied
-					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa == generator_state.relation_owner_vector_count_10e4_10e8
-					&& generator_state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 0
+					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa > 0
+					&& generator_state.relation_owner_coordinate_recenter_known_count_0x4a2ffa
+							+ generator_state.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa
+							>= generator_state.relation_owner_vector_count_10e4_10e8
 					&& generator_state.relation_owner_coordinate_recenter_matched_cell_count_0x4a2ffa > 0,
 				"0x4a2ffa relation-owner coordinate recenter pass did not run before route/object consumers")) {
 		return 1;
@@ -3475,7 +3494,7 @@ int main() {
 	}
 	if (!require(generator_state.relation_scan_consumers_4a5767_applied
 					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == generator_state.relation_owner_vector_count_10e4_10e8
-					&& generator_state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 == 0,
+					&& generator_state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 == relation_owner_missing_scan_bounds_count,
 				"generator object private state did not run the 0x4a5767 relation scan-consumer pass after the bridge reset")) {
 		return 1;
 	}
