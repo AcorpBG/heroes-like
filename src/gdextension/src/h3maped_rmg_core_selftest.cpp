@@ -6532,6 +6532,41 @@ int main() {
 		}
 	}
 
+	{
+		H3MapedRmgWorkflowConfig authority_join_config;
+		authority_join_config.size_class = "medium";
+		authority_join_config.water_mode = "land";
+		authority_join_config.width = 72;
+		authority_join_config.height = 72;
+		authority_join_config.level_count = 1;
+		authority_join_config.human_count = 1;
+		authority_join_config.player_count = 2;
+		authority_join_config.seed = 10U;
+		authority_join_config.setup_object_0x44_known = true;
+		authority_join_config.setup_object_0x44 = 0;
+		authority_join_config.setup_object_0x48_known = true;
+		authority_join_config.setup_object_0x48 = 0;
+		authority_join_config.setup_object_0x4c_known = true;
+		authority_join_config.setup_object_0x4c = 0;
+		authority_join_config.setup_caller_arg_0x0c_known = true;
+		authority_join_config.setup_caller_arg_0x0c =
+				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		authority_join_config.same_run_final_tile_payload_authority_known = true;
+		authority_join_config.same_run_generated_object_payload_authority_known = true;
+		authority_join_config.same_run_payload_authority_profile_known = true;
+		authority_join_config.same_run_payload_authority_profile =
+				"H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
+		const H3MapedRmgWorkflowResult authority_join_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_join_config);
+		if (!require(authority_join_workflow.current_phase_id == "final_payload_compare"
+						&& authority_join_workflow.blocked_reason == "same_run_payload_authority_missing_same_run_0x49ecf2_setup_stack_join"
+						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches
+						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked,
+					"same-run final payload compare did not require recovered 0x49ecf2 setup-stack authority join")) {
+			return 1;
+		}
+	}
+
 	std::cout << "h3maped_rmg_core_selftest: ok\n";
 	return 0;
 }
