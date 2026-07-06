@@ -1749,6 +1749,58 @@ int32_t setup_value_band_arg_0x4adfe1_to_0x49ecf2(int32_t raw_setup_object_0x48)
 	return std::min<int32_t>(5, std::max<int32_t>(1, raw_setup_object_0x48 + 3));
 }
 
+GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		bool setup_object_0x44_known,
+		int32_t setup_object_0x44,
+		bool setup_value_band_arg_known,
+		int32_t setup_value_band_arg,
+		bool setup_object_0x4c_known,
+		int32_t setup_object_0x4c) {
+	GeneratorSetupStackArgs49ecf2 result;
+	auto set_arg = [&result](size_t index, int32_t value) {
+		if (index < result.args.size()) {
+			result.arg_known[index] = true;
+			result.args[index] = value;
+		}
+	};
+	set_arg(0, width); // 0x49ecf2 [EBP+0x08] <- 0x4adfe1 [ESI+0x28]
+	set_arg(1, height); // [EBP+0x0c] <- [ESI+0x2c]
+	set_arg(2, level_count); // [EBP+0x10] <- [ESI+0x30]
+	if (setup_object_0x44_known) {
+		set_arg(7, setup_object_0x44); // [EBP+0x24] <- [ESI+0x44], later generator+0x10b8 before sentinel randomization.
+	}
+	if (setup_value_band_arg_known) {
+		set_arg(8, setup_value_band_arg); // [EBP+0x28] <- prepared EAX from clamp([ESI+0x48]+3, 1, 5).
+	}
+	if (setup_object_0x4c_known) {
+		set_arg(10, setup_object_0x4c); // [EBP+0x30] <- [ESI+0x4c], later generator+0x08.
+	}
+	static const std::array<const char *, RMG_SETUP_STACK_ARG_COUNT_0X49ECF2> ARG_LABELS = {
+		"arg0_ebp_0x08_from_setup_object_esi_0x28_width",
+		"arg1_ebp_0x0c_from_setup_object_esi_0x2c_height",
+		"arg2_ebp_0x10_from_setup_object_esi_0x30_level_count",
+		"arg3_ebp_0x14_from_setup_object_esi_0x34_generator_f48",
+		"arg4_ebp_0x18_from_setup_object_esi_0x38_generator_f4c",
+		"arg5_ebp_0x1c_from_setup_object_esi_0x3c_generator_f50",
+		"arg6_ebp_0x20_from_setup_object_esi_0x40_generator_f54",
+		"arg7_ebp_0x24_from_setup_object_esi_0x44_generator_mode_0x10b8",
+		"arg8_ebp_0x28_prepared_from_setup_object_esi_0x48_generator_value_band_0x10bc",
+		"arg9_ebp_0x2c_from_0x4adfe1_caller_stack_ebp_0x0c",
+		"arg10_ebp_0x30_from_setup_object_esi_0x4c_generator_field_0x08",
+	};
+	result.full_args_known = true;
+	for (size_t index = 0; index < result.arg_known.size(); ++index) {
+		if (!result.arg_known[index]) {
+			result.full_args_known = false;
+			result.missing_arg_labels.push_back(ARG_LABELS[index]);
+		}
+	}
+	return result;
+}
+
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48, bool setup_object_0x4c_known, int32_t setup_object_0x4c) {
 	GeneratorSetupModeResult49ecf2 result;
 	result.setup_object_0x44 = setup_object_0x44;
@@ -12597,16 +12649,43 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 			|| config.seed != 10U) {
 		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
 	}
-	if (!config.same_run_payload_authority_setup_stack_args_known
-			|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
-		if (!config.same_run_payload_authority_setup_stack_args_0x49ecf2.empty()) {
+	if (!config.same_run_payload_authority_setup_stack_args_0x49ecf2.empty()) {
+		if (!config.same_run_payload_authority_setup_stack_args_known
+				|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
 			return "same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_"
 					+ std::to_string(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size())
 					+ "_of_" + std::to_string(RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
 		}
-		return "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing";
+		const bool setup_value_band_arg_0x28_known =
+				config.setup_object_raw_0x48_known || config.setup_object_0x48_known;
+		const int32_t setup_value_band_arg_0x28 = config.setup_object_raw_0x48_known
+				? setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48)
+				: config.setup_object_0x48;
+		const GeneratorSetupStackArgs49ecf2 native_stack =
+				setup_stack_args_0x4adfe1_to_0x49ecf2(
+						config.width,
+						config.height,
+						config.level_count,
+						config.setup_object_0x44_known,
+						config.setup_object_0x44,
+						setup_value_band_arg_0x28_known,
+						setup_value_band_arg_0x28,
+						config.setup_object_0x4c_known,
+						config.setup_object_0x4c);
+		if (!native_stack.full_args_known) {
+			return "native_0x49ecf2_setup_stack_missing_"
+					+ std::to_string(native_stack.missing_arg_labels.size())
+					+ "_source_words_for_same_run_payload_authority_compare";
+		}
+		for (size_t index = 0; index < native_stack.args.size(); ++index) {
+			if (native_stack.args[index] != config.same_run_payload_authority_setup_stack_args_0x49ecf2[index]) {
+				return "native_0x49ecf2_setup_stack_word_"
+						+ std::to_string(index)
+						+ "_does_not_match_same_run_payload_authority_profile";
+			}
+		}
 	}
-	return "native_0x49ecf2_setup_stack_full_11_word_model_missing_for_same_run_payload_authority_compare";
+	return "";
 }
 
 static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
@@ -22070,6 +22149,17 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			setup_value_band_arg_0x28,
 			config.setup_object_0x4c_known,
 			config.setup_object_0x4c);
+	result.setup_mode_0x49ecf2.setup_stack_args_0x4adfe1_to_0x49ecf2 =
+			setup_stack_args_0x4adfe1_to_0x49ecf2(
+					config.width,
+					config.height,
+					config.level_count,
+					config.setup_object_0x44_known,
+					config.setup_object_0x44,
+					setup_value_band_arg_0x28_known,
+					setup_value_band_arg_0x28,
+					config.setup_object_0x4c_known,
+					config.setup_object_0x4c);
 	const int32_t score = size_score(
 			config.width,
 			config.height,

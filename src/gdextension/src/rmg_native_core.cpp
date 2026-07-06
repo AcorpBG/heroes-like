@@ -269,6 +269,41 @@ void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values
 	out << "]";
 }
 
+void append_setup_stack_args_json(std::ostream &out, const h3maped_rmg_core::GeneratorSetupStackArgs49ecf2 &stack) {
+	out << "{";
+	out << "\"recovered_call_shape_known\":" << (stack.recovered_call_shape_known ? "true" : "false");
+	out << ",\"full_args_known\":" << (stack.full_args_known ? "true" : "false");
+	out << ",\"arg_count\":" << stack.args.size();
+	out << ",\"expected_arg_count\":" << h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2;
+	out << ",\"args\":[";
+	for (size_t index = 0; index < stack.args.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		if (stack.arg_known[index]) {
+			out << stack.args[index];
+		} else {
+			out << "null";
+		}
+	}
+	out << "]";
+	out << ",\"known_arg_indexes\":[";
+	bool first = true;
+	for (size_t index = 0; index < stack.arg_known.size(); ++index) {
+		if (stack.arg_known[index]) {
+			if (!first) {
+				out << ", ";
+			}
+			first = false;
+			out << index;
+		}
+	}
+	out << "]";
+	out << ",\"missing_arg_labels\":";
+	append_json_string_array(out, stack.missing_arg_labels);
+	out << "}";
+}
+
 void append_json_u32_array(std::ostream &out, const std::vector<uint32_t> &values) {
 	out << "[";
 	for (size_t index = 0; index < values.size(); ++index) {
@@ -4384,6 +4419,7 @@ NativeH3MapedWorkflowResult run_native_h3maped_workflow(const ControlledCase &co
 	result.executed = shared_workflow.executed;
 	result.final_payload_owned = shared_workflow.final_payload_owned;
 	result.final_writeout_complete = shared_workflow.final_writeout_complete;
+	result.setup_mode_0x49ecf2 = shared_workflow.setup_mode_0x49ecf2;
 	result.final_header_writeout_0x4ac857_0x4ad206 = shared_workflow.final_header_writeout_0x4ac857_0x4ad206;
 	result.final_tile_writeout_0x49b2b6 = shared_workflow.final_tile_writeout_0x49b2b6;
 	result.final_object_writeout_0x4ad309_0x4ad3eb = shared_workflow.final_object_writeout_0x4ad309_0x4ad3eb;
@@ -4470,6 +4506,9 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "    \"executed\": " << (workflow.executed ? "true" : "false") << ",\n";
 	out << "    \"final_payload_owned\": " << (workflow.final_payload_owned ? "true" : "false") << ",\n";
 	out << "    \"final_writeout_complete\": " << (workflow.final_writeout_complete ? "true" : "false") << ",\n";
+	out << "    \"setup_stack_args_0x4adfe1_to_0x49ecf2\": ";
+	append_setup_stack_args_json(out, workflow.setup_mode_0x49ecf2.setup_stack_args_0x4adfe1_to_0x49ecf2);
+	out << ",\n";
 	out << "    \"final_header_writeout_0x4ac857_0x4ad206\": ";
 	append_final_header_writeout_json(out, workflow.final_header_writeout_0x4ac857_0x4ad206);
 	out << ",\n";

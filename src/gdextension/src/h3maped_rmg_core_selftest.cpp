@@ -2934,6 +2934,34 @@ int main() {
 				"0x4adfe1 did not prepare setup object +0x48 as clamp(raw + 3, 1, 5) before 0x49ecf2")) {
 		return 1;
 	}
+	const aurelion::h3maped_rmg_core::GeneratorSetupStackArgs49ecf2 setup_stack = aurelion::h3maped_rmg_core::setup_stack_args_0x4adfe1_to_0x49ecf2(
+			72,
+			72,
+			1,
+			true,
+			1,
+			true,
+			aurelion::h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(0),
+			true,
+			0);
+	if (!require(setup_stack.recovered_call_shape_known
+					&& !setup_stack.full_args_known
+					&& setup_stack.arg_known[0]
+					&& setup_stack.args[0] == 72
+					&& setup_stack.arg_known[1]
+					&& setup_stack.args[1] == 72
+					&& setup_stack.arg_known[2]
+					&& setup_stack.args[2] == 1
+					&& setup_stack.arg_known[7]
+					&& setup_stack.args[7] == 1
+					&& setup_stack.arg_known[8]
+					&& setup_stack.args[8] == 3
+					&& setup_stack.arg_known[10]
+					&& setup_stack.args[10] == 0
+					&& setup_stack.missing_arg_labels.size() == 5,
+				"0x4adfe1 -> 0x49ecf2 setup stack model did not preserve known recovered argument order and missing source words")) {
+		return 1;
+	}
 	const GeneratorSetupModeResult49ecf2 setup0_field08 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 0, true, -7);
 	if (!require(setup0_field08.setup_object_0x4c_known
 					&& setup0_field08.setup_object_0x4c == -7

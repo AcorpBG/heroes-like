@@ -1116,6 +1116,14 @@ struct CoordinateCandidate4a17f5 {
 	int32_t level = 0;
 };
 
+struct GeneratorSetupStackArgs49ecf2 {
+	bool recovered_call_shape_known = true;
+	bool full_args_known = false;
+	std::array<bool, RMG_SETUP_STACK_ARG_COUNT_0X49ECF2> arg_known {};
+	std::array<int32_t, RMG_SETUP_STACK_ARG_COUNT_0X49ECF2> args {};
+	std::vector<std::string> missing_arg_labels;
+};
+
 struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x44 = 0;
 	int32_t generator_mode_0x10b8 = 0;
@@ -1132,6 +1140,7 @@ struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_rng_call_count = 0;
 	uint32_t rng_state_before_setup = 0;
 	uint32_t rng_state_before_template_selection = 0;
+	GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2;
 };
 
 struct CoordinatePlacementStep4a1f3b {
@@ -3866,6 +3875,16 @@ const char *boundary_vector_append_callsite_label_4a2777(uint32_t callsite);
 bool boundary_vector_append_callsite_recovered_4a2777(uint32_t callsite);
 bool boundary_vector_append_4a2777(BoundaryVector4a2777 &vector, int32_t x, int32_t y, uint32_t callsite);
 int32_t setup_value_band_arg_0x4adfe1_to_0x49ecf2(int32_t raw_setup_object_0x48);
+GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		bool setup_object_0x44_known,
+		int32_t setup_object_0x44,
+		bool setup_value_band_arg_known,
+		int32_t setup_value_band_arg,
+		bool setup_object_0x4c_known,
+		int32_t setup_object_0x4c);
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0, bool setup_object_0x4c_known = true, int32_t setup_object_0x4c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);

@@ -1295,6 +1295,7 @@ struct NativeH3MapedWorkflowResult {
 	bool executed = false;
 	bool final_payload_owned = false;
 	bool final_writeout_complete = false;
+	aurelion::h3maped_rmg_core::GeneratorSetupModeResult49ecf2 setup_mode_0x49ecf2;
 	aurelion::h3maped_rmg_core::FinalHeaderWriteoutResult4ac857 final_header_writeout_0x4ac857_0x4ad206;
 	aurelion::h3maped_rmg_core::FinalTileWriteoutResult49b2b6 final_tile_writeout_0x49b2b6;
 	aurelion::h3maped_rmg_core::FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
