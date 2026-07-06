@@ -31,6 +31,7 @@ using aurelion::h3maped_rmg_core::GeneratedCellWordGrid;
 using aurelion::h3maped_rmg_core::H3MapedRng;
 using aurelion::h3maped_rmg_core::H3MapedRmgWorkflowConfig;
 using aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult;
+using aurelion::h3maped_rmg_core::generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03;
 using aurelion::h3maped_rmg_core::MineResourceMaterializationResult4a9d6a;
 using aurelion::h3maped_rmg_core::ObjectRecordReference4a54a7;
 using aurelion::h3maped_rmg_core::RelationHighOwnerPropagationResult49a318;
@@ -2540,6 +2541,15 @@ int main() {
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
 				"relation-owner vector owner-grid chain did not keep recovered relation owner byte2 as the generated-cell byte2 gate")) {
+		return 1;
+	}
+	if (!require(generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(1, 10, -1) == 0
+					&& generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(10, 10, -1) == 9,
+				"source payload owner word should map to zero-based generated-cell owner byte2 for one-level land repaint gates")) {
+		return 1;
+	}
+	if (!require(generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(17, 10, 3) == 3,
+				"unmapped source payload owner word should preserve the caller-provided generated-cell owner byte2 fallback")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
