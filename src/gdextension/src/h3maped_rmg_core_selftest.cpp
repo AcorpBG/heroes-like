@@ -3050,14 +3050,14 @@ int main() {
 					0x1234,
 					true,
 					0);
-	if (!require(!backing_state_nonzero_handler.applied
+	if (!require(backing_state_nonzero_handler.applied
 					&& backing_state_nonzero_handler.generator_field_0xed4_known
 					&& backing_state_nonzero_handler.generator_field_0xed4 == 0x1234
 					&& backing_state_nonzero_handler.source_handler_virtual_init_invoked
 					&& backing_state_nonzero_handler.source_handler_virtual_init_offset_known
 					&& backing_state_nonzero_handler.source_handler_virtual_init_offset == 72 * 72 + 0x4fcf4 + 0x3bc4
-					&& backing_state_nonzero_handler.blocked_reason == "0x49d914_nonzero_source_handler_virtual_init_not_ported",
-				"0x49d914 constructor did not preserve nonzero source-handler virtual-init blocker")) {
+					&& backing_state_nonzero_handler.blocked_reason.empty(),
+				"0x49d914 constructor did not model recovered nonzero optional handler path")) {
 		return 1;
 	}
 	const aurelion::h3maped_rmg_core::GeneratorSetupStackArgs49ecf2 setup_stack_normalized = aurelion::h3maped_rmg_core::setup_stack_args_0x4adfe1_to_0x49ecf2(
