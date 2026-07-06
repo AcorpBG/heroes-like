@@ -12403,30 +12403,48 @@ static int32_t final_payload_first_mismatch_offset_0x4ad1e3(
 	return -1;
 }
 
-static bool final_payload_same_run_authority_scope_matches_0x4ad1e3(
-		const H3MapedRmgWorkflowConfig &config) {
-	const bool medium_seed10_payload_profile =
-			config.size_class == "medium"
-			&& config.water_mode == "land"
-			&& config.width == 72
-			&& config.height == 72
-			&& config.level_count == 1
-			&& config.human_count == 1
-			&& config.player_count == 2
-			&& config.seed == 10U
-			&& config.setup_object_0x44_known
-			&& config.setup_object_0x44 == 0;
-	if (!medium_seed10_payload_profile) {
-		return false;
-	}
+static const char *same_run_medium_seed10_payload_profile_0x4ad1e3() {
+	return "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
+}
 
-	// The recovered payload files were captured from the H3MapEd UI profile
-	// "Human/Computer: 1, Computer only: Random, Monster strength: Random".
-	// A fixed native 2-player case has the same visible player total after
-	// resolution, but the payload capture itself does not include a joined
-	// 0x49ecf2 setup stack event proving the exact setup words for that final
-	// stream, so it is not a valid byte authority for a controlled native case.
-	return false;
+static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
+		const H3MapedRmgWorkflowConfig &config) {
+	if (!config.same_run_payload_authority_profile_known) {
+		return "same_run_payload_authority_missing_recovered_profile_metadata";
+	}
+	if (config.same_run_payload_authority_profile != same_run_medium_seed10_payload_profile_0x4ad1e3()) {
+		return "same_run_payload_authority_unrecognized_recovered_profile";
+	}
+	if (config.same_run_payload_authority_tile_byte_count > 0
+			&& config.same_run_payload_authority_tile_byte_count != int32_t(config.same_run_final_tile_payload_authority_0x49b2b6.size())) {
+		return "same_run_payload_authority_tile_byte_count_mismatch_with_recovered_profile";
+	}
+	if (config.same_run_payload_authority_object_byte_count > 0
+			&& config.same_run_payload_authority_object_byte_count != int32_t(config.same_run_generated_object_payload_authority_0x4ad1e3.size())) {
+		return "same_run_payload_authority_object_byte_count_mismatch_with_recovered_profile";
+	}
+	if (config.size_class != "medium"
+			|| config.water_mode != "land"
+			|| config.width != 72
+			|| config.height != 72
+			|| config.level_count != 1
+			|| config.seed != 10U) {
+		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
+	}
+	if (!config.same_run_payload_authority_setup_stack_join_known) {
+		return "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing";
+	}
+	if (!config.setup_object_0x44_known
+			|| !config.setup_object_0x48_known
+			|| !config.setup_object_0x4c_known) {
+		return "native_0x49ecf2_setup_words_missing_for_same_run_payload_authority_compare";
+	}
+	if (config.setup_object_0x44 != config.same_run_payload_authority_setup_object_0x44
+			|| config.setup_object_0x48 != config.same_run_payload_authority_setup_object_0x48
+			|| config.setup_object_0x4c != config.same_run_payload_authority_setup_object_0x4c) {
+		return "native_0x49ecf2_setup_words_do_not_match_same_run_payload_authority_profile";
+	}
+	return "";
 }
 
 static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
@@ -12437,12 +12455,10 @@ static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
 	result.same_run_tile_payload_authority_known = config.same_run_final_tile_payload_authority_known;
 	result.same_run_generated_object_payload_authority_known =
 			config.same_run_generated_object_payload_authority_known;
+	result.same_run_h3maped_authority_scope_blocker =
+			final_payload_same_run_authority_scope_blocker_0x4ad1e3(config);
 	result.same_run_h3maped_authority_scope_matches =
-			final_payload_same_run_authority_scope_matches_0x4ad1e3(config);
-	if (!result.same_run_h3maped_authority_scope_matches) {
-		result.same_run_h3maped_authority_scope_blocker =
-				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
-	}
+			result.same_run_h3maped_authority_scope_blocker.empty();
 	if (!result.same_run_tile_payload_authority_known
 			|| !result.same_run_generated_object_payload_authority_known
 			|| !result.same_run_h3maped_authority_scope_matches) {

@@ -3114,7 +3114,7 @@ int main() {
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 		const std::string final_payload_compare_blocker =
-				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
+				"same_run_payload_authority_missing_recovered_profile_metadata";
 		if (!require(generator_state_workflow.executed
 						&& generator_state_workflow.current_phase_id == "final_payload_compare"
 						&& generator_state_workflow.blocked_reason == final_payload_compare_blocker
@@ -6046,7 +6046,7 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_final_payload_compare_blocker =
-				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
+				"same_run_payload_authority_missing_recovered_profile_metadata";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"

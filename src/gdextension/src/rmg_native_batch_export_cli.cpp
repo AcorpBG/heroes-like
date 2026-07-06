@@ -28,6 +28,8 @@ struct Options {
 			".artifacts/rmg_recovery/same_run_final_tile_payload_bytes_20260610.bin";
 	std::filesystem::path same_run_object_payload_authority_path =
 			".artifacts/rmg_recovery/same_run_final_object_payload_replay_bytes_20260610.bin";
+	std::filesystem::path same_run_payload_summary_path =
+			".artifacts/rmg_recovery/same_run_final_payload_summary_20260610.json";
 	std::vector<std::string> controlled_cases;
 	std::string case_filter;
 	SharedRuntimeChainInput shared_runtime_chain_input;
@@ -123,6 +125,17 @@ bool read_binary_file(const std::filesystem::path &path, std::vector<uint8_t> &b
 	}
 	bytes = std::move(loaded);
 	return true;
+}
+
+bool read_text_file(const std::filesystem::path &path, std::string &text) {
+	std::ifstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+	std::ostringstream out;
+	out << file.rdbuf();
+	text = out.str();
+	return bool(file) || file.eof();
 }
 
 bool write_final_payload_sections_json(
@@ -287,6 +300,12 @@ Options parse_options(int argc, char **argv) {
 			if (!raw.empty()) {
 				options.same_run_object_payload_authority_path = raw;
 			}
+		} else if (arg == "--same-run-payload-summary") {
+			std::string raw;
+			take_value(raw);
+			if (!raw.empty()) {
+				options.same_run_payload_summary_path = raw;
+			}
 		} else if (arg == "--controlled-case") {
 			std::string raw;
 			take_value(raw);
@@ -404,6 +423,18 @@ void hydrate_same_run_authority_payloads(Options &options) {
 		options.shared_runtime_chain_input.same_run_generated_object_payload_authority_known = true;
 		options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3 =
 				std::move(object_payload);
+	}
+	std::string payload_summary;
+	static const char *EXPECTED_PROFILE =
+			"H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
+	if (read_text_file(options.same_run_payload_summary_path, payload_summary)
+			&& payload_summary.find(EXPECTED_PROFILE) != std::string::npos
+			&& payload_summary.find("\"tile_payload_byte_count\": 36288") != std::string::npos
+			&& payload_summary.find("\"object_payload_byte_count\": 17057") != std::string::npos) {
+		options.shared_runtime_chain_input.same_run_payload_authority_profile_known = true;
+		options.shared_runtime_chain_input.same_run_payload_authority_profile = EXPECTED_PROFILE;
+		options.shared_runtime_chain_input.same_run_payload_authority_tile_byte_count = 36288;
+		options.shared_runtime_chain_input.same_run_payload_authority_object_byte_count = 17057;
 	}
 }
 
@@ -589,6 +620,10 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"same_run_object_payload_authority_path\": \"" << json_escape(options.same_run_object_payload_authority_path.string()) << "\",\n";
 	out << "  \"same_run_object_payload_authority_known\": " << (options.shared_runtime_chain_input.same_run_generated_object_payload_authority_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_object_payload_authority_byte_count\": " << options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3.size() << ",\n";
+	out << "  \"same_run_payload_summary_path\": \"" << json_escape(options.same_run_payload_summary_path.string()) << "\",\n";
+	out << "  \"same_run_payload_authority_profile_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_profile_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_payload_authority_profile\": \"" << json_escape(options.shared_runtime_chain_input.same_run_payload_authority_profile) << "\",\n";
+	out << "  \"same_run_payload_authority_setup_stack_join_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known ? "true" : "false") << ",\n";
 	out << "  \"shared_runtime_zone_seed_count\": " << options.shared_runtime_chain_input.runtime_zone_seeds.size() << ",\n";
 	int64_t shared_runtime_link_guard_value_sum = 0;
 	int32_t shared_runtime_link_wide_count = 0;

@@ -332,6 +332,14 @@ struct SharedRuntimeChainInput {
 	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
 	bool same_run_generated_object_payload_authority_known = false;
 	std::vector<uint8_t> same_run_generated_object_payload_authority_0x4ad1e3;
+	bool same_run_payload_authority_profile_known = false;
+	std::string same_run_payload_authority_profile;
+	int32_t same_run_payload_authority_tile_byte_count = 0;
+	int32_t same_run_payload_authority_object_byte_count = 0;
+	bool same_run_payload_authority_setup_stack_join_known = false;
+	int32_t same_run_payload_authority_setup_object_0x44 = 0;
+	int32_t same_run_payload_authority_setup_object_0x48 = 0;
+	int32_t same_run_payload_authority_setup_object_0x4c = 0;
 };
 
 struct CaseReport {
