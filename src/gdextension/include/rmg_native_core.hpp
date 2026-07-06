@@ -23,6 +23,9 @@ struct ControlledCase {
 	bool setup_object_0x44_known = false;
 	bool setup_object_0x44_supplied = false;
 	int32_t setup_object_0x44 = 0;
+	bool setup_object_raw_0x48_known = false;
+	bool setup_object_raw_0x48_supplied = false;
+	int32_t setup_object_raw_0x48 = 0;
 	bool setup_object_0x48_known = true;
 	bool setup_object_0x48_supplied = false;
 	int32_t setup_object_0x48 = 0;
@@ -566,6 +569,12 @@ struct SharedObjectRecordReference4a54a7 {
 	int32_t object_record_selected_index_0x20 = -1;
 	uint32_t object_record_enabled_word_0x24 = 0U;
 	bool object_record_enabled_low_byte_0x24 = false;
+	bool object_record_field_0x20_known = false;
+	uint32_t object_record_field_0x20 = 0U;
+	bool object_record_field_0x24_known = false;
+	uint32_t object_record_field_0x24 = 0U;
+	bool object_record_field_0x28_known = false;
+	uint32_t object_record_field_0x28 = 0U;
 	bool source_descriptor_join_0x4903e8_known = false;
 	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;

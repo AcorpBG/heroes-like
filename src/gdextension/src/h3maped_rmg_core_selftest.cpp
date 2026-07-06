@@ -868,6 +868,10 @@ int main() {
 		selected_create_state.endpoint_cursor_0xf58 = 0;
 		selected_create_state.reward_guard_projection_generator_0x10b4_known = true;
 		selected_create_state.reward_guard_projection_generator_0x10b4 = false;
+		selected_create_state.generator_field_0x08_known = true;
+		selected_create_state.generator_field_0x08 = 0;
+		selected_create_state.reward_guard_slot_bytes_0xf88_known = true;
+		selected_create_state.reward_guard_slot_bytes_0xf88.fill(0U);
 		selected_create_state.native_object_record_key_allocator_0x4a93a2_known = true;
 		selected_create_state.next_native_object_record_key_0x4a93a2 = 1U;
 		selected_create_state.object_record_sequence_allocator_0xf44_known = true;
@@ -938,6 +942,7 @@ int main() {
 		selected_create_state.source_object_resolver_state_4af785 =
 				aurelion::h3maped_rmg_core::source_object_resolver_state_from_catalog_0x49db76();
 		selected_create_state.source_object_resolver_state_4af785_known = true;
+		const GeneratorObjectPrivateState selected_create_base_state = selected_create_state;
 
 		GeneratorRelationOwnerState4a218c selector;
 		selector.descriptor_type_counter_table_0x44_known = true;
@@ -1002,6 +1007,67 @@ int main() {
 						&& selected_create_state.object_record_allocation_count_0x4a93a2 == 1
 						&& selected_create_rng.state == selected_create.rng_state_after_0x4aa110,
 					"0x4a9f1c selected-create dispatch did not use source-owned descriptor selection, weighted RNG, and recovered 0x540c80 -> 0x49cc22 -> 0x540b14/0x4aa166 constructor behavior")) {
+			return 1;
+		}
+
+		GeneratorObjectPrivateState slot_constructor_state = selected_create_base_state;
+		slot_constructor_state.next_native_object_record_key_0x4a93a2 = 7U;
+		slot_constructor_state.object_record_sequence_allocator_0xf44 = 11;
+		slot_constructor_state.object_record_allocation_count_0x4a93a2 = 0;
+		aurelion::h3maped_rmg_core::RewardGuardCandidateRecord4a9f1c slot_candidate;
+		slot_candidate.candidate_vtable_0x00_known = true;
+		slot_candidate.candidate_vtable_0x00 = 0x00540c20U;
+		slot_candidate.descriptor_type_0x04_known = true;
+		slot_candidate.descriptor_type_0x04 = 62;
+		slot_candidate.cursor_source_0x08_known = true;
+		slot_candidate.cursor_source_0x08 = 0;
+		slot_candidate.direct_value_0x0c_known = true;
+		slot_candidate.direct_value_0x0c = 10000;
+		slot_candidate.selection_weight_0x10_known = true;
+		slot_candidate.selection_weight_0x10 = 30;
+		slot_candidate.direct_payload_field_0x14_known = true;
+		slot_candidate.direct_payload_field_0x14 = 15000U;
+		slot_constructor_state.reward_guard_candidate_records_10f4_10f8 = { slot_candidate };
+		slot_constructor_state.reward_guard_candidate_record_count_10f4_10f8 = 1;
+		slot_constructor_state.reward_guard_candidate_vector_10f4_10f8.count = 1;
+		H3MapedRng slot_constructor_rng;
+		slot_constructor_rng.state = 3U;
+		const auto slot_constructor =
+				aurelion::h3maped_rmg_core::reward_guard_selected_create_dispatch_0x4a9f1c(
+						slot_constructor_state,
+						&selector,
+						0,
+						aurelion::h3maped_rmg_core::REWARD_GUARD_DESCRIPTOR_TYPE_LIMIT_DEFAULT_0X7D00,
+						slot_constructor_rng,
+						aurelion::h3maped_rmg_core::RewardGuardSelectorCallsiteArgs4a9f1c(),
+						&slot_constructor_state.source_object_resolver_state_4af785);
+		const uint32_t selected_slot =
+				slot_constructor.selected_object_record_field_0x24_known_0x4aa166
+						? slot_constructor.selected_object_record_field_0x24_0x4aa166
+						: uint32_t(slot_constructor_state.reward_guard_slot_bytes_0xf88.size());
+		if (!require(slot_constructor.applied
+						&& slot_constructor.blocked_reason.empty()
+						&& slot_constructor.accepted_count == 1
+						&& slot_constructor.selected_candidate_vtable_known
+						&& slot_constructor.selected_candidate_vtable_0x00 == 0x00540c20U
+						&& slot_constructor.selected_object_vtable_0x00_known
+						&& slot_constructor.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::OBJECT_RECORD_VTABLE_0X540B3C
+						&& slot_constructor.selected_object_record_key_known_0x4aa166
+						&& slot_constructor.selected_object_record_key_0x4aa166 == 7U
+						&& slot_constructor.selected_object_sequence_0x1c_0x4aa166 == 11
+						&& slot_constructor.selected_object_record_field_0x20_known_0x4aa166
+						&& slot_constructor.selected_object_record_field_0x20_0x4aa166 == 11U
+						&& slot_constructor.selected_object_record_field_0x24_known_0x4aa166
+						&& selected_slot < slot_constructor_state.reward_guard_slot_bytes_0xf88.size()
+						&& slot_constructor_state.reward_guard_slot_bytes_0xf88[size_t(selected_slot)] == 1U
+						&& slot_constructor.selected_object_record_field_0x28_known_0x4aa166
+						&& slot_constructor.selected_object_record_field_0x28_0x4aa166 == 15000U
+						&& slot_constructor_state.reward_guard_slot_0x4ad640_allocation_count == 1
+						&& slot_constructor_state.next_native_object_record_key_0x4a93a2 == 8U
+						&& slot_constructor_state.object_record_sequence_allocator_0xf44 == 12
+						&& slot_constructor_state.object_record_allocation_count_0x4a93a2 == 1
+						&& slot_constructor_rng.state != slot_constructor.rng_state_after_0x4aa110,
+					"0x49c8f3 0x540c20 constructor did not allocate 0x4ad640 slot state and carry exact record +0x20/+0x24/+0x28 fields")) {
 			return 1;
 		}
 
@@ -2862,6 +2928,12 @@ int main() {
 	if (!require(setup0_value_band.generator_value_band_0x10bc_known && setup0_value_band.generator_value_band_0x10bc == 6, "0x49ecf2 setup object +0x48 nonzero value did not copy directly into generator +0x10bc")) {
 		return 1;
 	}
+	if (!require(aurelion::h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(0) == 3
+					&& aurelion::h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(-8) == 1
+					&& aurelion::h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(9) == 5,
+				"0x4adfe1 did not prepare setup object +0x48 as clamp(raw + 3, 1, 5) before 0x49ecf2")) {
+		return 1;
+	}
 	const GeneratorSetupModeResult49ecf2 setup0_field08 = aurelion::h3maped_rmg_core::generator_setup_mode_49ecf2(10U, 0, true, 0, true, -7);
 	if (!require(setup0_field08.setup_object_0x4c_known
 					&& setup0_field08.setup_object_0x4c == -7
@@ -3108,8 +3180,10 @@ int main() {
 	generator_state_workflow_config.seed = 58U;
 	generator_state_workflow_config.setup_object_0x44_known = true;
 	generator_state_workflow_config.setup_object_0x44 = 3;
-	generator_state_workflow_config.setup_object_0x48_known = true;
-	generator_state_workflow_config.setup_object_0x48 = 3;
+	generator_state_workflow_config.setup_object_raw_0x48_known = true;
+	generator_state_workflow_config.setup_object_raw_0x48 = 0;
+	generator_state_workflow_config.setup_object_0x48_known = false;
+	generator_state_workflow_config.setup_object_0x48 = 0;
 		const H3MapedRmgWorkflowResult generator_state_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
@@ -3125,6 +3199,11 @@ int main() {
 			return 1;
 		}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
+		return 1;
+	}
+	if (!require(generator_state_workflow.setup_mode_0x49ecf2.generator_value_band_0x10bc_known
+					&& generator_state_workflow.setup_mode_0x49ecf2.generator_value_band_0x10bc == 3,
+				"entry-to-writeout workflow did not feed recovered 0x4adfe1 prepared raw +0x48 into 0x49ecf2")) {
 		return 1;
 	}
 	if (!require(generator_state.width == 36 && generator_state.height == 36 && generator_state.level_count == 1, "generator object private state did not preserve +0x18/+0x1c/+0x20 dimensions")) {
@@ -6041,8 +6120,10 @@ int main() {
 		workflow_config.seed = 58U;
 		workflow_config.setup_object_0x44_known = true;
 		workflow_config.setup_object_0x44 = 3;
-		workflow_config.setup_object_0x48_known = true;
-		workflow_config.setup_object_0x48 = 3;
+		workflow_config.setup_object_raw_0x48_known = true;
+		workflow_config.setup_object_raw_0x48 = 0;
+		workflow_config.setup_object_0x48_known = false;
+		workflow_config.setup_object_0x48 = 0;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_final_payload_compare_blocker =
