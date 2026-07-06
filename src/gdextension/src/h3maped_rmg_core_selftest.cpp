@@ -2345,6 +2345,11 @@ int main() {
 	if (!require(footprint.source_record_count_after_0x4a3dbc > int32_t(runtime_zones.size()), "source-node footprint producer did not preserve appended source records")) {
 		return 1;
 	}
+	if (!require(int32_t(footprint.synthetic_source_records_0x4a3dbc.size()) == footprint.synthetic_source_record_count_0x4a3dbc
+					&& int32_t(footprint.source_records_after_0x4a3dbc.size()) == footprint.source_record_count_after_0x4a3dbc,
+				"0x4a3a03 synthetic source records must be carried as records, not only as counters")) {
+		return 1;
+	}
 	const SourceNodeFootprintResult4a3a03 mode0_footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(
 			runtime_zones,
 			36,
@@ -2555,6 +2560,38 @@ int main() {
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
 					&& owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.y == boundary_inputs[0].source_record_seed_0x10.y,
 				"relation-owner vector owner-grid chain did not use the selected source-record seed as the span seed")) {
+		return 1;
+	}
+	const BoundaryOwnerGridResult4a3a03 owner_grid_mode2_appended =
+			aurelion::h3maped_rmg_core::materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(
+					36,
+					36,
+					1,
+					aurelion::h3maped_rmg_core::water_mode_code("land"),
+					2,
+					1234U,
+					boundary_inputs,
+					relation_owner_inputs);
+	if (!require(owner_grid_mode2_appended.source_footprints.synthetic_source_record_count_0x4a3dbc > 0,
+				"mode-2 relation-owner owner-grid chain did not enter the recovered 0x4a3a03 synthetic append branch")) {
+		return 1;
+	}
+	if (!require(owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size()
+						== relation_owner_inputs.size() + owner_grid_mode2_appended.source_footprints.synthetic_source_records_0x4a3dbc.size(),
+				"0x4a3a03 synthetic source records were not appended to the relation-owner vector consumed by later passes")) {
+		return 1;
+	}
+	if (!require(owner_grid_mode2_appended.handoffs.size()
+						== owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size(),
+				"0x4a3e1d/0x4a3e99 handoff loops must walk the relation-owner vector after synthetic append")) {
+		return 1;
+	}
+	if (!require(owner_grid_mode2_appended.footprint_finalizer.appended_runtime_zone_count
+						== owner_grid_mode2_appended.source_footprints.synthetic_source_record_count_0x4a3dbc
+					&& !owner_grid_mode2_appended.footprint_finalizer.blocked
+					&& owner_grid_mode2_appended.footprint_finalizer.relation_order_vectors_materialized
+					&& owner_grid_mode2_appended.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_append_finalized",
+				"0x4a3710 must finalize synthetic relation-owner appends when relation-owner state is available")) {
 		return 1;
 	}
 	const FootprintFinalizerResult4a3710 synthetic_mode_finalizer =

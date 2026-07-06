@@ -1495,6 +1495,8 @@ struct SourceNodeFootprintResult4a3a03 {
 	int32_t source_descriptor_node_count = 0;
 	int32_t source_descriptor_active_node_count = 0;
 	int32_t source_descriptor_finalized_node_count = 0;
+	std::vector<RuntimeZoneFootprintInput4a3a03> source_records_after_0x4a3dbc;
+	std::vector<RuntimeZoneFootprintInput4a3a03> synthetic_source_records_0x4a3dbc;
 	std::vector<SourceSplitStep4ccb64> split_steps;
 	std::vector<SourceDescriptorNode4cca55> descriptor_nodes;
 	std::vector<SourceWalk4cca55> walks;
@@ -1748,6 +1750,7 @@ struct FootprintFinalizerResult4a3710 {
 
 struct BoundaryOwnerGridResult4a3a03 {
 	SourceNodeFootprintResult4a3a03 source_footprints;
+	std::vector<GeneratorRelationOwnerState4a218c> relation_owner_vectors_after_source_append_0x4a3dbc;
 	std::vector<BoundarySourceCycleHandoff4a2777> handoffs;
 	BoundaryMaterialization4a2777 materialization;
 	FootprintFinalizerResult4a3710 footprint_finalizer;
