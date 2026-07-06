@@ -2356,10 +2356,15 @@ int main() {
 	if (!require(zero_owner_payload_preserved, "source-node footprint producer did not preserve source payload owner word zero")) {
 		return 1;
 	}
+	bool appended_owner_payload_inherits_origin_owner = false;
 	bool appended_owner_payload_uses_source_vector_index = false;
 	for (int32_t walk_index = int32_t(runtime_zones.size()); walk_index < int32_t(footprint.walks.size()); ++walk_index) {
 		const auto &walk = footprint.walks[size_t(walk_index)];
 		for (const SourceNodeCyclePoint4a2777 &node : walk.source_nodes) {
+			if ((node.has_payload && node.payload_owner_word_0x00 >= 0 && node.payload_owner_word_0x00 < int32_t(runtime_zones.size()))
+					|| (node.next_pair_has_payload && node.next_pair_payload_owner_word_0x00 >= 0 && node.next_pair_payload_owner_word_0x00 < int32_t(runtime_zones.size()))) {
+				appended_owner_payload_inherits_origin_owner = true;
+			}
 			if ((node.has_payload && node.payload_owner_word_0x00 == walk.runtime_zone_index)
 					|| (node.next_pair_has_payload && node.next_pair_payload_owner_word_0x00 == walk.runtime_zone_index)) {
 				appended_owner_payload_uses_source_vector_index = true;
@@ -2370,7 +2375,10 @@ int main() {
 			break;
 		}
 	}
-	if (!require(appended_owner_payload_uses_source_vector_index, "0x4a3dbc appended source record must use source-vector count as source pointer +0x00 owner word")) {
+	if (!require(appended_owner_payload_inherits_origin_owner, "0x4a3dbc appended source record must preserve origin source pointer +0x00 owner word")) {
+		return 1;
+	}
+	if (!require(!appended_owner_payload_uses_source_vector_index, "0x4a3dbc appended source record must not invent a source-vector-count owner word")) {
 		return 1;
 	}
 
