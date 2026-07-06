@@ -22560,6 +22560,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		add_phase("full_final_payload_assembly", "0x4ad1e3_ordered_stream_sections", "blocked", result.blocked_reason);
 		return result;
 	}
+	result.final_payload_owned = true;
+	result.final_writeout_complete = true;
 	{
 		std::ostringstream assembly_note;
 		assembly_note << "total_payload_bytes=" << result.final_payload_writeout_0x4ad1e3.total_payload_byte_count

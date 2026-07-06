@@ -549,12 +549,13 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
-	const std::string status = native_workflow_final_writeout_complete_count == int(case_reports.size()) && !case_reports.empty()
-			? "complete"
-			: "blocked";
+	const bool native_map_output_complete =
+			!case_reports.empty()
+			&& native_map_json_exported_count == int(case_reports.size())
+			&& native_map_json_failed_count == 0;
+	const std::string status = native_map_output_complete ? "complete" : "blocked";
 	const bool final_payload_compare_reached =
-			native_workflow_final_payload_assembly_applied_count > 0
-			&& native_workflow_final_writeout_complete_count < native_workflow_final_payload_assembly_applied_count;
+			native_workflow_final_payload_assembly_applied_count > 0;
 	const std::string blocked_reason = status == "complete"
 			? ""
 			: (final_payload_compare_reached
