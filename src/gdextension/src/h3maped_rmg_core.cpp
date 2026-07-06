@@ -526,6 +526,12 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
+	if (zone.source_index >= 0) {
+		return zone.source_index + 1;
+	}
 	return runtime_index_for_coordinate_zone(zone, fallback);
 }
 
@@ -546,6 +552,12 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
+	if (seed.source_zone_id > 0) {
+		return seed.source_zone_id;
+	}
+	if (seed.source_index >= 0) {
+		return seed.source_index + 1;
+	}
 	return seed.runtime_zone_index;
 }
 
@@ -9047,8 +9059,8 @@ static int32_t generator_state_object_descriptor_type_0x4aa603(const GeneratorOb
 
 static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelationOwnerState4a218c &relation) {
 	// Recovered 0x4aa9b7, 0x4aa603, and 0x49a09c compare generated-cell
-	// owner byte2 against relation->leading->+0x00. Missing recovered owner
-	// state must fail closed; source/zone fallbacks are native proxy behavior.
+	// owner byte2 against the recovered relation owner byte. Missing recovered
+	// owner state must fail closed; source-record identity is a separate field.
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
@@ -16818,8 +16830,9 @@ RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rn
 		GeneratorRelationOwnerState4a218c &owner = relation_owners[size_t(index)];
 		RuntimeTerrainSelectionRecord49b53d record;
 		record.runtime_zone_index = owner.runtime_zone_index >= 0 ? owner.runtime_zone_index : index;
-		record.zone_word_0x4a2777 = owner.relation_owner_byte2_0x4aa9b7_known
-				? owner.relation_owner_byte2_0x4aa9b7
+		const int32_t generated_cell_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+		record.zone_word_0x4a2777 = generated_cell_owner_byte2 >= 0
+				? generated_cell_owner_byte2
 				: record.runtime_zone_index;
 		record.level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : 0;
 		record.selected_town_choice_index_0x49b3c1 =
@@ -18598,15 +18611,12 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				: source_walk_payload_owner_word_4a3a03(
 						  walk,
 						  matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
-		const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = source_payload_owner_word_0x4a325d >= 0
 				? source_payload_owner_word_0x4a325d
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = relation_owner_byte2 >= 0
-				? relation_owner_byte2
-				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : -1);
+		handoff.generated_cell_owner_byte2 = handoff.zone_word;
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
@@ -22988,8 +22998,7 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 				|| !owner.coordinate_triple_0x10_0x18_known
 				|| !owner.source_pointer_0x00_known
 				|| owner.source_pointer_source_index_0x00 < 0
-				|| !owner.relation_owner_byte2_0x4aa9b7_known
-				|| owner.relation_owner_byte2_0x4aa9b7 < 0) {
+				|| relation_owner_byte2_for_generated_cell_gate(owner) < 0) {
 			result.blocked_reason = "0x4a4913_type8_relation_record_input_unknown";
 			return result;
 		}
@@ -23003,7 +23012,7 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 			continue;
 		}
 		const int32_t level = owner.coordinate_level_0x18;
-		const int32_t relation_owner_byte2 = owner.relation_owner_byte2_0x4aa9b7;
+		const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
 				const int64_t flat = cell_index(state.width, state.height, x, y, level);
