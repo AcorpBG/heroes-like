@@ -31,9 +31,17 @@ struct Options {
 			".artifacts/rmg_recovery/same_run_final_object_payload_replay_bytes_20260610.bin";
 	std::filesystem::path same_run_payload_summary_path =
 			".artifacts/rmg_recovery/same_run_final_payload_summary_20260610.json";
+	std::filesystem::path same_run_ordered_writeout_spine_summary_path =
+			".artifacts/rmg_recovery/ordered_writeout_spine_summary_20260610.json";
+	std::filesystem::path same_run_setup_stack_boundary_ledger_path;
 	std::vector<std::string> controlled_cases;
 	std::string case_filter;
 	SharedRuntimeChainInput shared_runtime_chain_input;
+	bool same_run_setup_stack_prefix_known = false;
+	bool same_run_setup_prepared_arg8_known = false;
+	int32_t same_run_setup_prepared_arg8 = 0;
+	bool same_run_setup_caller_arg9_known = false;
+	int32_t same_run_setup_caller_arg9 = 0;
 	int limit = 0;
 	bool include_unsupported = false;
 	bool emit_phase_snapshot = false;
@@ -237,6 +245,178 @@ bool extract_setup_stack_args_0x49ecf2_from_ledger_text(const std::string &ledge
 	return !args.empty();
 }
 
+bool extract_stack_arg_from_ledger_event_text(
+		const std::string &ledger_text,
+		const std::string &address,
+		size_t arg_index,
+		int32_t &value) {
+	const size_t event_pos = ledger_text.find("\"address\": \"" + address + "\"");
+	if (event_pos == std::string::npos) {
+		return false;
+	}
+	size_t event_end = ledger_text.find("\"registers\"", event_pos);
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.find("\n    }", event_pos);
+	}
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.size();
+	}
+	std::vector<int32_t> stack_words;
+	size_t cursor = event_pos;
+	while (cursor < event_end) {
+		const size_t words_pos = ledger_text.find("\"words\"", cursor);
+		if (words_pos == std::string::npos || words_pos >= event_end) {
+			break;
+		}
+		const size_t open_pos = ledger_text.find('[', words_pos);
+		const size_t close_pos = ledger_text.find(']', open_pos);
+		if (open_pos == std::string::npos || close_pos == std::string::npos || close_pos > event_end) {
+			break;
+		}
+		const std::string words = ledger_text.substr(open_pos + 1, close_pos - open_pos - 1);
+		const char *cursor_chars = words.c_str();
+		while (*cursor_chars != '\0') {
+			while (*cursor_chars != '\0' && (std::isspace(static_cast<unsigned char>(*cursor_chars)) || *cursor_chars == ',')) {
+				++cursor_chars;
+			}
+			if (*cursor_chars == '\0') {
+				break;
+			}
+			char *next = nullptr;
+			const long parsed = std::strtol(cursor_chars, &next, 0);
+			if (next == cursor_chars) {
+				++cursor_chars;
+				continue;
+			}
+			if (parsed >= std::numeric_limits<int32_t>::min() && parsed <= std::numeric_limits<int32_t>::max()) {
+				stack_words.push_back(static_cast<int32_t>(parsed));
+			}
+			cursor_chars = next;
+		}
+		cursor = close_pos + 1;
+	}
+	const size_t word_index = arg_index + 1; // skip return address
+	if (word_index >= stack_words.size()) {
+		return false;
+	}
+	value = stack_words[word_index];
+	return true;
+}
+
+bool extract_i32_field_between(
+		const std::string &text,
+		size_t begin,
+		size_t end,
+		const std::string &field_name,
+		int32_t &value) {
+	const std::string key = "\"" + field_name + "\"";
+	const size_t key_pos = text.find(key, begin);
+	if (key_pos == std::string::npos || key_pos >= end) {
+		return false;
+	}
+	const size_t colon_pos = text.find(':', key_pos + key.size());
+	if (colon_pos == std::string::npos || colon_pos >= end) {
+		return false;
+	}
+	const char *cursor = text.c_str() + colon_pos + 1;
+	char *next = nullptr;
+	const long parsed = std::strtol(cursor, &next, 0);
+	if (next == cursor || parsed < std::numeric_limits<int32_t>::min() || parsed > std::numeric_limits<int32_t>::max()) {
+		return false;
+	}
+	value = static_cast<int32_t>(parsed);
+	return true;
+}
+
+bool extract_setup_arg8_prepared_0x49ecf2_from_ledger_text(const std::string &ledger_text, int32_t &value) {
+	const size_t event_pos = ledger_text.find("\"address\": \"0x0049ecf2\"");
+	if (event_pos == std::string::npos) {
+		return false;
+	}
+	size_t event_end = ledger_text.find("\"stop_kind\"", event_pos);
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.find("\n    }", event_pos);
+	}
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.size();
+	}
+	return extract_i32_field_between(ledger_text, event_pos, event_end, "eax", value);
+}
+
+bool controlled_case_matches_same_run_medium_seed10_payload_profile(const ControlledCase &controlled_case) {
+	return controlled_case.parse_ok
+			&& controlled_case.size_class == "medium"
+			&& controlled_case.players == 2
+			&& controlled_case.seed == 10U
+			&& controlled_case.water_mode == "land"
+			&& controlled_case.level_count == 1
+			&& controlled_case.human_count == 1
+			&& controlled_case.computer_count == 1;
+}
+
+void apply_same_run_setup_authority_prefix_to_case(ControlledCase &controlled_case, const Options &options) {
+	const std::vector<int32_t> &args =
+			options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2;
+	if (!options.same_run_setup_stack_prefix_known
+			|| args.size() < 7
+			|| !controlled_case_matches_same_run_medium_seed10_payload_profile(controlled_case)) {
+		return;
+	}
+	const int32_t width = aurelion::h3maped_rmg_core::map_width_for_size_class(controlled_case.size_class);
+	if (args[0] != width || args[1] != width || args[2] != controlled_case.level_count) {
+		return;
+	}
+	if (!controlled_case.setup_object_0x34_supplied) {
+		controlled_case.setup_object_0x34_known = true;
+		controlled_case.setup_object_0x34 = args[3];
+	}
+	if (!controlled_case.setup_object_0x38_supplied) {
+		controlled_case.setup_object_0x38_known = true;
+		controlled_case.setup_object_0x38 = args[4];
+	}
+	if (!controlled_case.setup_object_0x3c_supplied) {
+		controlled_case.setup_object_0x3c_known = true;
+		controlled_case.setup_object_0x3c = args[5];
+	}
+	if (!controlled_case.setup_object_0x40_supplied) {
+		controlled_case.setup_object_0x40_known = true;
+		controlled_case.setup_object_0x40 = args[6];
+	}
+	if (options.same_run_setup_prepared_arg8_known && !controlled_case.setup_object_0x48_supplied) {
+		controlled_case.setup_object_raw_0x48_known = false;
+		controlled_case.setup_object_raw_0x48_supplied = false;
+		controlled_case.setup_object_0x48_known = true;
+		controlled_case.setup_object_0x48 = options.same_run_setup_prepared_arg8;
+	}
+}
+
+SharedRuntimeChainInput same_run_authority_input_for_case(const ControlledCase &controlled_case, const Options &options) {
+	SharedRuntimeChainInput input = options.shared_runtime_chain_input;
+	std::vector<int32_t> &args = input.same_run_payload_authority_setup_stack_args_0x49ecf2;
+	if (!options.same_run_setup_stack_prefix_known
+			|| !controlled_case_matches_same_run_medium_seed10_payload_profile(controlled_case)
+			|| args.size() < 7
+			|| args.size() >= size_t(aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2)
+			|| !options.same_run_setup_prepared_arg8_known
+			|| !options.same_run_setup_caller_arg9_known
+			|| !controlled_case.setup_object_0x44_known
+			|| !controlled_case.setup_object_0x4c_known) {
+		return input;
+	}
+	const int32_t width = aurelion::h3maped_rmg_core::map_width_for_size_class(controlled_case.size_class);
+	if (args[0] != width || args[1] != width || args[2] != controlled_case.level_count) {
+		return input;
+	}
+	args.resize(size_t(aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2));
+	args[7] = controlled_case.setup_object_0x44;
+	args[8] = options.same_run_setup_prepared_arg8;
+	args[9] = options.same_run_setup_caller_arg9;
+	args[10] = controlled_case.setup_object_0x4c;
+	input.same_run_payload_authority_setup_stack_join_known = true;
+	input.same_run_payload_authority_setup_stack_args_known = true;
+	return input;
+}
+
 bool write_final_payload_sections_json(
 		const std::filesystem::path &path,
 		const std::vector<aurelion::h3maped_rmg_core::FinalPayloadWriteoutSection4ad1e3> &sections) {
@@ -405,6 +585,12 @@ Options parse_options(int argc, char **argv) {
 			if (!raw.empty()) {
 				options.same_run_payload_summary_path = raw;
 			}
+		} else if (arg == "--same-run-ordered-writeout-spine-summary") {
+			std::string raw;
+			take_value(raw);
+			if (!raw.empty()) {
+				options.same_run_ordered_writeout_spine_summary_path = raw;
+			}
 		} else if (arg == "--controlled-case") {
 			std::string raw;
 			take_value(raw);
@@ -549,6 +735,41 @@ void hydrate_same_run_authority_payloads(Options &options) {
 						options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known;
 			}
 		}
+		std::string spine_summary;
+		std::string boundary_ledger_path_text;
+		if (!options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known
+				&& read_text_file(options.same_run_ordered_writeout_spine_summary_path, spine_summary)
+				&& spine_summary.find(EXPECTED_PROFILE) != std::string::npos
+				&& extract_json_string_field(spine_summary, "boundary_ledger", boundary_ledger_path_text)) {
+			std::string boundary_ledger_text;
+			std::vector<int32_t> setup_stack_args;
+			if (read_text_file(std::filesystem::path(boundary_ledger_path_text), boundary_ledger_text)
+					&& extract_setup_stack_args_0x49ecf2_from_ledger_text(boundary_ledger_text, setup_stack_args)
+					&& setup_stack_args.size() >= 7
+					&& setup_stack_args[0] == 72
+					&& setup_stack_args[1] == 72
+					&& setup_stack_args[2] == 1) {
+				options.same_run_setup_stack_boundary_ledger_path = boundary_ledger_path_text;
+				options.same_run_setup_stack_prefix_known = true;
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2 =
+						std::move(setup_stack_args);
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known =
+						options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2.size()
+						== size_t(aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known = true;
+				int32_t prepared_arg8 = 0;
+				if (extract_setup_arg8_prepared_0x49ecf2_from_ledger_text(boundary_ledger_text, prepared_arg8)) {
+					options.same_run_setup_prepared_arg8_known = true;
+					options.same_run_setup_prepared_arg8 = prepared_arg8;
+				}
+				int32_t caller_arg9 = 0;
+				if (extract_stack_arg_from_ledger_event_text(boundary_ledger_text, "0x004adfe1", 1, caller_arg9)
+						&& caller_arg9 != 0) {
+					options.same_run_setup_caller_arg9_known = true;
+					options.same_run_setup_caller_arg9 = caller_arg9;
+				}
+			}
+		}
 	}
 }
 
@@ -574,11 +795,14 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 			++skipped_count;
 			continue;
 		}
+		apply_same_run_setup_authority_prefix_to_case(controlled_case, options);
+		const SharedRuntimeChainInput case_shared_input =
+				same_run_authority_input_for_case(controlled_case, options);
 		CaseReport report;
 		report.input = controlled_case;
 		report.supported_scope = supported;
 		const aurelion::rmg_native_core::NativeH3MapedWorkflowResult workflow =
-				aurelion::rmg_native_core::run_native_h3maped_workflow(controlled_case, options.shared_runtime_chain_input);
+				aurelion::rmg_native_core::run_native_h3maped_workflow(controlled_case, case_shared_input);
 		report.shared_chain_input_status = workflow.payload.executable ? "native_workflow_inputs_ready" : "missing_exact_runtime_zone_seed_link_inputs";
 		report.shared_chain_executed = workflow.executed;
 		report.native_workflow_executed = workflow.executed;
@@ -602,7 +826,7 @@ std::vector<CaseReport> build_case_reports(const Options &options, const std::fi
 			const std::filesystem::path snapshot_path = absolute_output_dir / (safe_case_id + ".phase_snapshot.json");
 			std::ofstream snapshot(snapshot_path, std::ios::binary);
 			if (snapshot) {
-				snapshot << aurelion::rmg_native_core::case_native_h3maped_workflow_json(controlled_case, report.status, report.blocked_reason, options.shared_runtime_chain_input);
+				snapshot << aurelion::rmg_native_core::case_native_h3maped_workflow_json(controlled_case, report.status, report.blocked_reason, case_shared_input);
 				report.phase_snapshot_written = true;
 				report.phase_snapshot_path = snapshot_path;
 			}
@@ -715,15 +939,16 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 							? "native_h3maped_workflow_reaches_ordered_final_payload_compare_but_same_run_payload_parity_is_not_owned"
 							: "native_h3maped_workflow_blocked_before_ordered_final_payload_compare"));
 	const bool setup_stack_authority_missing =
-			blocked_reason == "same_run_payload_authority_0x49ecf2_stack_join_missing";
+			blocked_reason == "same_run_payload_authority_0x49ecf2_stack_join_missing"
+			|| blocked_reason.rfind("same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_", 0) == 0;
 	const std::string generation_core_stage = setup_stack_authority_missing
-			? "native_h3maped_workflow_reaches_ordered_final_payload_assembly_but_same_run_setup_stack_authority_missing"
+			? "native_h3maped_workflow_reaches_ordered_final_payload_assembly_but_same_run_setup_stack_authority_incomplete"
 			: "native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare";
 	const std::string required_next_slice = setup_stack_authority_missing
-			? "recover_or_supply_same_run_0x49ecf2_setup_stack_authority_before_final_payload_compare"
+			? "recover_or_supply_uncaptured_same_run_0x49ecf2_setup_stack_tail_before_final_payload_compare"
 			: "align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload";
 	const std::string message = setup_stack_authority_missing
-			? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through final payload assembly, but refuses same-run tile/object byte comparison until the recovered authority includes the exact 0x49ecf2 setup stack; final-byte deltas are not actionable before that setup identity is owned."
+			? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through final payload assembly and hydrates the recovered same-run 0x49ecf2 setup prefix, but refuses same-run tile/object byte comparison until the uncaptured setup-stack tail words are recovered or supplied; final-byte deltas are not actionable before that setup identity is owned."
 			: "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned.";
 	std::ostringstream out;
 	out << "{\n";
@@ -754,8 +979,15 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"same_run_object_payload_authority_known\": " << (options.shared_runtime_chain_input.same_run_generated_object_payload_authority_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_object_payload_authority_byte_count\": " << options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3.size() << ",\n";
 	out << "  \"same_run_payload_summary_path\": \"" << json_escape(options.same_run_payload_summary_path.string()) << "\",\n";
+	out << "  \"same_run_ordered_writeout_spine_summary_path\": \"" << json_escape(options.same_run_ordered_writeout_spine_summary_path.string()) << "\",\n";
+	out << "  \"same_run_setup_stack_boundary_ledger_path\": \"" << json_escape(options.same_run_setup_stack_boundary_ledger_path.string()) << "\",\n";
 	out << "  \"same_run_payload_authority_profile_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_profile_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_profile\": \"" << json_escape(options.shared_runtime_chain_input.same_run_payload_authority_profile) << "\",\n";
+	out << "  \"same_run_setup_stack_prefix_known\": " << (options.same_run_setup_stack_prefix_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_setup_prepared_arg8_known\": " << (options.same_run_setup_prepared_arg8_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_setup_prepared_arg8\": " << options.same_run_setup_prepared_arg8 << ",\n";
+	out << "  \"same_run_setup_caller_arg9_known\": " << (options.same_run_setup_caller_arg9_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_setup_caller_arg9\": " << options.same_run_setup_caller_arg9 << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_join_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_args_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_arg_count\": " << options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2.size() << ",\n";
