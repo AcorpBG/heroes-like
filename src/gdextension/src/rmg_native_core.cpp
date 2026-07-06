@@ -2271,6 +2271,17 @@ void append_source_zone_payload_json(std::ostream &out, const SharedSourceZonePa
 	out << "]}";
 }
 
+void append_allowed_terrain_flags_json(std::ostream &out, const h3maped_rmg_core::AllowedTerrainFlags0x85_0x8c &flags) {
+	out << "[";
+	for (size_t index = 0; index < flags.bytes.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << int32_t(flags.bytes[index]);
+	}
+	out << "]";
+}
+
 void append_runtime_zone_source_payload_records_json(std::ostream &out, const std::vector<SharedRuntimeZoneSeedInput> &records) {
 	out << "[";
 	for (size_t index = 0; index < records.size(); ++index) {
@@ -2289,8 +2300,10 @@ void append_runtime_zone_source_payload_records_json(std::ostream &out, const st
 			<< ",\"allowed_town_mask_0x41_0x49\":" << record.allowed_town_mask_0x41_0x49
 			<< ",\"selected_town_choice_index_0x49b3c1\":" << record.selected_town_choice_index_0x49b3c1
 			<< ",\"terrain_match_to_town_0x84\":" << (record.terrain_match_to_town_0x84 ? "true" : "false")
-			<< ",\"allowed_terrain_mask_0x85_0x8c\":" << record.allowed_terrain_mask_0x85_0x8c
-			<< ",\"fixed_player_town_choice_index_0xf24\":" << record.fixed_player_town_choice_index_0xf24
+			<< ",\"allowed_terrain_mask_0x85_0x8c\":" << record.allowed_terrain_flags_0x85_0x8c.mask()
+			<< ",\"allowed_terrain_flags_0x85_0x8c\":";
+		append_allowed_terrain_flags_json(out, record.allowed_terrain_flags_0x85_0x8c);
+		out << ",\"fixed_player_town_choice_index_0xf24\":" << record.fixed_player_town_choice_index_0xf24
 			<< ",\"source_payload\":";
 		append_source_zone_payload_json(out, record.source_payload);
 		out << "}";
@@ -3671,7 +3684,7 @@ std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zon
 		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
 		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
 		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
-		zone.allowed_terrain_mask_0x85_0x8c = input.allowed_terrain_mask_0x85_0x8c;
+		zone.allowed_terrain_flags_0x85_0x8c = input.allowed_terrain_flags_0x85_0x8c;
 		zone.fixed_player_town_choice_index_0xf24 = input.fixed_player_town_choice_index_0xf24;
 		zone.source_payload = to_h3maped_source_zone_payload(input.source_payload);
 		out.push_back(zone);
@@ -3714,7 +3727,7 @@ std::vector<SharedRuntimeZoneSeedInput> from_h3maped_runtime_zone_seeds(const st
 		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
 		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
 		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
-		zone.allowed_terrain_mask_0x85_0x8c = input.allowed_terrain_mask_0x85_0x8c;
+		zone.allowed_terrain_flags_0x85_0x8c = input.allowed_terrain_flags_0x85_0x8c;
 		zone.fixed_player_town_choice_index_0xf24 = input.fixed_player_town_choice_index_0xf24;
 		zone.source_payload = from_h3maped_source_zone_payload(input.source_payload);
 		out.push_back(zone);

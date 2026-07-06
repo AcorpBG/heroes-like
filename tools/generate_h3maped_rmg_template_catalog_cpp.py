@@ -120,6 +120,18 @@ def mask_from_names(values: Any, mapping: dict[str, int], max_slots: int) -> int
     return mask
 
 
+def terrain_flags_from_names(values: Any) -> str:
+    flags = [0] * 8
+    if isinstance(values, list):
+        for value in values:
+            index = H3_TERRAIN_INDEX_BY_NAME.get(str(value))
+            if index is not None and 0 <= index < len(flags):
+                flags[index] = 1
+    return "AllowedTerrainFlags0x85_0x8c(std::array<uint8_t, 8>{ " + ", ".join(
+        f"uint8_t({flag})" for flag in flags
+    ) + " })"
+
+
 def int_dict_values(payload: Any, keys: tuple[str, ...]) -> list[int]:
     data = payload if isinstance(payload, dict) else {}
     return [i32(data.get(key), 0) for key in keys]
@@ -208,7 +220,7 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
             ownership = zone.get("ownership", -1)
             source_owner = i32(ownership, -1) if isinstance(ownership, (int, float)) else -1
             allowed_town_mask = mask_from_names(zone.get("allowed_towns", []), H3_TOWN_INDEX_BY_NAME, 9)
-            allowed_terrain_mask = mask_from_names(zone.get("allowed_terrains", []), H3_TERRAIN_INDEX_BY_NAME, 8)
+            allowed_terrain_flags = terrain_flags_from_names(zone.get("allowed_terrains", []))
             zone_rows.append(
                 "\t{ "
                 "{ "
@@ -218,7 +230,7 @@ def render(catalog_path: Path, payload: dict[str, Any]) -> str:
                 f"{player_filter['min_total']}, {player_filter['max_total']}, "
                 f"uint16_t({allowed_town_mask}), "
                 f"{'true' if bool(zone.get('terrain_match_to_town', False)) else 'false'}, "
-                f"uint16_t({allowed_terrain_mask}), "
+                f"{allowed_terrain_flags}, "
                 f"{source_zone_payload(zone)} "
                 "}, "
                 f"{role_code(str(zone.get('type', '')))} "
