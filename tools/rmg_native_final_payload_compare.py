@@ -123,15 +123,21 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
     native_object, object_section = section_bytes(payload, sections, "generated_object_payload")
     tile = compare_blob(native_tile, expected_tile, tile_section)
     generated_object_payload = compare_blob(native_object, expected_object, object_section)
-    match = bool(tile["match"] and generated_object_payload["match"])
-    if not bool(tile["match"]):
+    workflow = snapshot.get("native_h3maped_workflow", {})
+    final_payload = workflow.get("final_payload_writeout_0x4ad1e3", {})
+    authority_scope_blocker = str(final_payload.get("same_run_h3maped_authority_scope_blocker", ""))
+    authority_scope_matches = bool(final_payload.get("same_run_h3maped_authority_scope_matches", False))
+    match = bool(authority_scope_matches and tile["match"] and generated_object_payload["match"])
+    if authority_scope_blocker:
+        blocker = authority_scope_blocker
+    elif not authority_scope_matches:
+        blocker = "same_run_payload_authority_scope_mismatch"
+    elif not bool(tile["match"]):
         blocker = "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
     elif not bool(generated_object_payload["match"]):
         blocker = "native_generated_object_payload_mismatch_against_same_run_0x4ad1e3_payload"
     else:
         blocker = ""
-    workflow = snapshot.get("native_h3maped_workflow", {})
-    final_payload = workflow.get("final_payload_writeout_0x4ad1e3", {})
     return {
         "schema_id": "rmg_native_final_payload_compare_v1",
         "status": "matched" if match else "blocked",
@@ -151,6 +157,8 @@ def build_report(args: argparse.Namespace) -> dict[str, Any]:
             "sha256": sha256(payload),
             "section_count": len(sections),
             "final_payload_same_run_compare_complete": bool(final_payload.get("same_run_h3maped_compare_complete", False)),
+            "same_run_authority_scope_matches": authority_scope_matches,
+            "same_run_authority_scope_blocker": authority_scope_blocker,
         },
         "tile_stream": tile,
         "generated_object_payload": generated_object_payload,

@@ -2334,8 +2334,8 @@ int main() {
 				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == 0,
-				"relation-owner vector owner-grid chain did not carry recovered relation-owner vector slot into generated-cell owner byte")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into generated-cell owner byte")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
@@ -3108,7 +3108,7 @@ int main() {
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
 		const std::string final_payload_compare_blocker =
-				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
+				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
 		if (!require(generator_state_workflow.executed
 						&& generator_state_workflow.current_phase_id == "final_payload_compare"
 						&& generator_state_workflow.blocked_reason == final_payload_compare_blocker
@@ -6038,7 +6038,7 @@ int main() {
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
 		const std::string workflow_final_payload_compare_blocker =
-				"full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
+				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"

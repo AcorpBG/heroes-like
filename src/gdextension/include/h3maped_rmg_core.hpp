@@ -3263,6 +3263,7 @@ struct FinalPayloadWriteoutResult4ad1e3 {
 	bool same_run_h3maped_compare_complete = false;
 	bool same_run_h3maped_compare_invoked = false;
 	bool same_run_h3maped_authority_scope_matches = false;
+	std::string same_run_h3maped_authority_scope_blocker;
 	bool same_run_tile_payload_authority_known = false;
 	bool same_run_generated_object_payload_authority_known = false;
 	bool same_run_tile_payload_match = false;

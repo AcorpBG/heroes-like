@@ -12200,7 +12200,8 @@ static int32_t final_payload_first_mismatch_offset_0x4ad1e3(
 
 static bool final_payload_same_run_authority_scope_matches_0x4ad1e3(
 		const H3MapedRmgWorkflowConfig &config) {
-	return config.size_class == "medium"
+	const bool medium_seed10_payload_profile =
+			config.size_class == "medium"
 			&& config.water_mode == "land"
 			&& config.width == 72
 			&& config.height == 72
@@ -12210,6 +12211,16 @@ static bool final_payload_same_run_authority_scope_matches_0x4ad1e3(
 			&& config.seed == 10U
 			&& config.setup_object_0x44_known
 			&& config.setup_object_0x44 == 0;
+	if (!medium_seed10_payload_profile) {
+		return false;
+	}
+
+	// The recovered payload files were captured from the H3MapEd UI profile
+	// "Human/Computer: 1, Computer only: Random, Monster strength: Random".
+	// A fixed native 2-player case has the same visible player total after
+	// resolution, but not the same source setup contract, so it is not a valid
+	// authority for byte parity.
+	return false;
 }
 
 static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
@@ -12222,6 +12233,10 @@ static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
 			config.same_run_generated_object_payload_authority_known;
 	result.same_run_h3maped_authority_scope_matches =
 			final_payload_same_run_authority_scope_matches_0x4ad1e3(config);
+	if (!result.same_run_h3maped_authority_scope_matches) {
+		result.same_run_h3maped_authority_scope_blocker =
+				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
+	}
 	if (!result.same_run_tile_payload_authority_known
 			|| !result.same_run_generated_object_payload_authority_known
 			|| !result.same_run_h3maped_authority_scope_matches) {
@@ -12357,6 +12372,10 @@ static FinalPayloadWriteoutResult4ad1e3 final_payload_assemble_ordered_0x4ad1e3(
 		return result;
 	}
 	if (result.same_run_h3maped_compare_complete) {
+		return result;
+	}
+	if (!result.same_run_h3maped_authority_scope_blocker.empty()) {
+		result.blocked_reason = result.same_run_h3maped_authority_scope_blocker;
 		return result;
 	}
 	result.blocked_reason = "full_final_payload_same_run_compare_pending_after_ordered_payload_assembly";
@@ -16937,19 +16956,18 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
-		const int32_t owner_vector_slot =
-				(!relation_owners.empty() && owner >= relation_owners.data() && owner < relation_owners.data() + relation_owners.size())
-				? int32_t(owner - relation_owners.data())
-				: -1;
-		const int32_t generated_cell_owner_byte2 =
-				owner_vector_slot >= 0 ? owner_vector_slot : source_vector_handoff_index;
+		const int32_t source_payload_owner_word_0x4a325d = payload_owner_word_0x00 >= 0
+				? payload_owner_word_0x00
+				: source_walk_payload_owner_word_4a3a03(
+						  walk,
+						  matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
-		handoff.zone_word = payload_owner_word_0x00 >= 0
-				? payload_owner_word_0x00
+		handoff.zone_word = source_payload_owner_word_0x4a325d >= 0
+				? source_payload_owner_word_0x4a325d
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = generated_cell_owner_byte2 >= 0
-				? generated_cell_owner_byte2
+		handoff.generated_cell_owner_byte2 = source_payload_owner_word_0x4a325d >= 0
+				? source_payload_owner_word_0x4a325d
 				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : -1);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;

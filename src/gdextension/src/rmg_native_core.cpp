@@ -534,6 +534,7 @@ void append_final_payload_writeout_json(std::ostream &out, const h3maped_rmg_cor
 		<< ",\"same_run_h3maped_compare_complete\":" << (writeout.same_run_h3maped_compare_complete ? "true" : "false")
 		<< ",\"same_run_h3maped_compare_invoked\":" << (writeout.same_run_h3maped_compare_invoked ? "true" : "false")
 		<< ",\"same_run_h3maped_authority_scope_matches\":" << (writeout.same_run_h3maped_authority_scope_matches ? "true" : "false")
+		<< ",\"same_run_h3maped_authority_scope_blocker\":\"" << json_escape(writeout.same_run_h3maped_authority_scope_blocker) << "\""
 		<< ",\"same_run_tile_payload_authority_known\":" << (writeout.same_run_tile_payload_authority_known ? "true" : "false")
 		<< ",\"same_run_generated_object_payload_authority_known\":" << (writeout.same_run_generated_object_payload_authority_known ? "true" : "false")
 		<< ",\"same_run_tile_payload_match\":" << (writeout.same_run_tile_payload_match ? "true" : "false")
