@@ -6606,11 +6606,46 @@ int main() {
 		const H3MapedRmgWorkflowResult authority_join_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_join_config);
 		if (!require(authority_join_workflow.current_phase_id == "final_payload_compare"
-						&& authority_join_workflow.blocked_reason == "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
-						&& authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches
-						&& authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
+						&& authority_join_workflow.blocked_reason == "same_run_payload_authority_0x49ecf2_stack_join_missing"
+						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches
+						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
 						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete,
-					"same-run final payload compare did not reach recovered tile/object payload byte comparison")) {
+					"same-run final payload compare did not fail closed when recovered 0x49ecf2 stack authority was missing")) {
+			return 1;
+		}
+
+		H3MapedRmgWorkflowConfig authority_stack_matched_config = authority_join_config;
+		authority_stack_matched_config.setup_object_0x34_known = true;
+		authority_stack_matched_config.setup_object_0x34 = 0;
+		authority_stack_matched_config.setup_object_0x38_known = true;
+		authority_stack_matched_config.setup_object_0x38 = 0;
+		authority_stack_matched_config.setup_object_0x3c_known = true;
+		authority_stack_matched_config.setup_object_0x3c = 0;
+		authority_stack_matched_config.setup_object_0x40_known = true;
+		authority_stack_matched_config.setup_object_0x40 = 0;
+		authority_stack_matched_config.same_run_payload_authority_setup_stack_join_known = true;
+		authority_stack_matched_config.same_run_payload_authority_setup_stack_args_known = true;
+		authority_stack_matched_config.same_run_payload_authority_setup_stack_args_0x49ecf2 = {
+			72,
+			72,
+			1,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1,
+			0,
+		};
+		const H3MapedRmgWorkflowResult authority_stack_matched_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_stack_matched_config);
+		if (!require(authority_stack_matched_workflow.current_phase_id == "final_payload_compare"
+						&& authority_stack_matched_workflow.blocked_reason == "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
+						&& authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches
+						&& authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
+						&& !authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete,
+					"same-run final payload compare did not reach recovered tile/object payload byte comparison after 0x49ecf2 stack authority matched")) {
 			return 1;
 		}
 	}

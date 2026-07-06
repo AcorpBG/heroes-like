@@ -13530,7 +13530,10 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 			|| config.seed != 10U) {
 		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
 	}
-	if (config.same_run_payload_authority_setup_stack_join_known) {
+	if (!config.same_run_payload_authority_setup_stack_join_known) {
+		return "same_run_payload_authority_0x49ecf2_stack_join_missing";
+	}
+	{
 		const GeneratorBackingStateConstructor49d914 backing_state =
 				generator_backing_state_constructor_0x49d914(
 						config.width,
