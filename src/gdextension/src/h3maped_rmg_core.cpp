@@ -2960,7 +2960,18 @@ static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20[] = {
 	214, 215, 219
 };
 
-static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[] = {
+static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FB74[] = {
+	114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125,
+	126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137,
+	138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149,
+	150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161,
+	165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176,
+	177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188,
+	189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200,
+	201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211
+};
+
+static constexpr int32_t OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FCF0[] = {
 	5, 6, 9, 12, 26, 29, 34, 54, 59, 62, 65, 66, 67, 68,
 	69, 70, 71, 72, 73, 74, 75, 162, 163, 164, 76, 79, 81,
 	82, 86, 93, 101, 212, 214, 215
@@ -2971,8 +2982,8 @@ static bool object_metadata_pass_split_flag_0x598300_plus_0x0c(int32_t object_ty
 		return false;
 	}
 	return int_table_contains_49a318(
-			OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0,
-			int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0) / sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[0])),
+			OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FB74,
+			int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FB74) / sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FB74[0])),
 			object_type_id);
 }
 
@@ -2987,7 +2998,7 @@ bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offs
 		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20) / sizeof(OBJECT_METADATA_FIELD_PLUS_00_TYPES_0X52FE20[0])), object_type_id);
 	}
 	if (metadata_offset == 2) {
-		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0) / sizeof(OBJECT_METADATA_FIELD_PLUS_0C_TYPES_0X52FCF0[0])), object_type_id);
+		return int_table_contains_49a318(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FCF0, int32_t(sizeof(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FCF0) / sizeof(OBJECT_METADATA_FIELD_PLUS_02_TYPES_0X52FCF0[0])), object_type_id);
 	}
 	return false;
 }
@@ -4552,6 +4563,20 @@ static SourceObjectResolvedWrapper4af785 *source_object_wrapper_by_wrapper_index
 		return nullptr;
 	}
 	for (SourceObjectResolvedWrapper4af785 &wrapper : resolver_state.wrappers) {
+		if (wrapper.wrapper_index == wrapper_index_0x04) {
+			return &wrapper;
+		}
+	}
+	return nullptr;
+}
+
+static const SourceObjectResolvedWrapper4af785 *source_object_wrapper_by_wrapper_index_0x4a54a7(
+		const SourceObjectResolverState4af785 &resolver_state,
+		int32_t wrapper_index_0x04) {
+	if (wrapper_index_0x04 < 0) {
+		return nullptr;
+	}
+	for (const SourceObjectResolvedWrapper4af785 &wrapper : resolver_state.wrappers) {
 		if (wrapper.wrapper_index == wrapper_index_0x04) {
 			return &wrapper;
 		}
@@ -11525,7 +11550,18 @@ static int32_t final_object_source_catalog_index_0x4ad3eb(const ObjectRecordRefe
 static int32_t final_object_pass_split_type_id_0x4ad1e3(
 		const ObjectRecordReference4a54a7 &record,
 		const GeneratorObjectPrivateState &state) {
-	(void)state;
+	if (state.source_object_resolver_state_4af785_known && record.selected_wrapper_index_0x4af785 >= 0) {
+		const SourceObjectResolvedWrapper4af785 *wrapper =
+				source_object_wrapper_by_wrapper_index_0x4a54a7(
+						state.source_object_resolver_state_4af785,
+						record.selected_wrapper_index_0x4af785);
+		if (wrapper != nullptr) {
+			return wrapper->source_record_copy.type_id_0x1c;
+		}
+	}
+	if (record.copied_source_record_carried) {
+		return record.source_record_copy.type_id_0x1c;
+	}
 	return record.descriptor_type_0x1c;
 }
 
