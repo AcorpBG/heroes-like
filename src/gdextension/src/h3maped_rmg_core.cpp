@@ -526,11 +526,11 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
 	if (zone.source_index >= 0) {
 		return zone.source_index;
-	}
-	if (zone.source_zone_id > 0) {
-		return zone.source_zone_id - 1;
 	}
 	if (zone.h3maped_zone_word_id >= 0) {
 		return zone.h3maped_zone_word_id;
@@ -539,6 +539,9 @@ int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218
 }
 
 int32_t source_node_payload_for_coordinate_zone(const CoordinateZone4a218c &zone) {
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
 	return zone.source_index >= 0 ? zone.source_index + 1 : -1;
 }
 
@@ -552,11 +555,11 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
+	if (seed.source_zone_id > 0) {
+		return seed.source_zone_id;
+	}
 	if (seed.source_index >= 0) {
 		return seed.source_index;
-	}
-	if (seed.source_zone_id > 0) {
-		return seed.source_zone_id - 1;
 	}
 	if (seed.h3maped_zone_word_id >= 0) {
 		return seed.h3maped_zone_word_id;
@@ -1478,6 +1481,9 @@ int32_t relation_owner_source_pointer_index_0x00(const GeneratorRelationOwnerSta
 	if (owner.source_pointer_0x00_known) {
 		return owner.source_pointer_source_index_0x00;
 	}
+	if (zone.source_zone_id > 0) {
+		return zone.source_zone_id;
+	}
 	return zone.source_index >= 0 ? zone.source_index : zone.source_zone_id;
 }
 
@@ -1498,8 +1504,8 @@ CoordinateZone4a218c coordinate_zone_from_relation_owner_0x10(const GeneratorRel
 		zone.source_zone_id = owner.source_zone_id;
 		zone.source_index = owner.source_index;
 	}
-	if (owner.source_pointer_0x00_known) {
-		zone.source_index = owner.source_pointer_source_index_0x00;
+	if (owner.source_pointer_0x00_known && zone.source_zone_id <= 0) {
+		zone.source_zone_id = owner.source_pointer_source_index_0x00;
 	}
 	if (owner.coordinate_triple_0x10_0x18_known) {
 		zone.x = owner.coordinate_x_0x10;
@@ -1511,8 +1517,8 @@ CoordinateZone4a218c coordinate_zone_from_relation_owner_0x10(const GeneratorRel
 
 CoordinateZone4a218c coordinate_zone_with_candidate_0x4a1701(const CoordinateZone4a218c &current, const GeneratorRelationOwnerState4a218c &current_owner, const CoordinateCandidate4a17f5 &candidate) {
 	CoordinateZone4a218c zone = current;
-	if (current_owner.source_pointer_0x00_known) {
-		zone.source_index = current_owner.source_pointer_source_index_0x00;
+	if (current_owner.source_pointer_0x00_known && zone.source_zone_id <= 0) {
+		zone.source_zone_id = current_owner.source_pointer_source_index_0x00;
 	}
 	zone.x = candidate.x;
 	zone.y = candidate.y;
@@ -2855,7 +2861,9 @@ SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from
 	const bool assigned_player_source =
 			runtime_zone.source_owner_index >= 0
 			&& runtime_zone.actual_player_color >= 0;
-	record.source_id_0x00 = runtime_zone.source_index >= 0 ? runtime_zone.source_index : payload.source_row;
+	record.source_id_0x00 = runtime_zone.source_zone_id > 0
+			? runtime_zone.source_zone_id
+			: (runtime_zone.source_index >= 0 ? runtime_zone.source_index : payload.source_row);
 	record.owner_or_type_0x04 = payload.source_ownership >= 0
 			? payload.source_ownership
 			: (assigned_player_source ? 0 : 2);
@@ -4692,7 +4700,7 @@ static bool increment_relation_descriptor_counter_0x4a54a7(GeneratorObjectPrivat
 	if (source_owner < 0) {
 		return false;
 	}
-	GeneratorRelationOwnerState4a218c *owner = relation_owner_for_runtime_zone_0x4a54a7(state, source_owner);
+	GeneratorRelationOwnerState4a218c *owner = relation_owner_for_owner_byte2_0x4a54a7(state, source_owner);
 	if (owner == nullptr || !owner->descriptor_type_counter_table_0x44_known) {
 		return false;
 	}
@@ -4709,7 +4717,7 @@ static bool increment_relation_descriptor_counter_0x4a54a7(GeneratorObjectPrivat
 	counter += 1U;
 	state.relation_descriptor_counter_increment_count_0x4a54a7 += 1;
 	result.relation_descriptor_counter_incremented = true;
-	result.relation_descriptor_counter_owner_runtime_zone_index = source_owner;
+	result.relation_descriptor_counter_owner_runtime_zone_index = owner->runtime_zone_index;
 	result.relation_descriptor_counter_after = int32_t(counter);
 	return true;
 }
@@ -9068,11 +9076,11 @@ static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelat
 	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
 		return relation.source_pointer_source_index_0x00;
 	}
+	if (relation.source_zone_id > 0) {
+		return relation.source_zone_id;
+	}
 	if (relation.source_index >= 0) {
 		return relation.source_index;
-	}
-	if (relation.source_zone_id > 0) {
-		return relation.source_zone_id - 1;
 	}
 	return relation.runtime_zone_index;
 }
@@ -10070,15 +10078,15 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	first.source_cell_y = 47;
 	first.source_cell_level = 0;
 	first.expected_source_word_0x20_known = true;
-	first.expected_source_word_0x20 = 0x00010002U;
+	first.expected_source_word_0x20 = 0x01020002U;
 	first.expected_source_word_0x24_known = true;
 	first.expected_source_word_0x24 = 0x00000d07U;
 	first.expected_source_word_0x28_known = true;
 	first.expected_source_word_0x28 = 0x12005000U;
 	first.expected_owner_byte2_known = true;
-	first.expected_owner_byte2 = 1;
+	first.expected_owner_byte2 = 2;
 	first.expected_target_word_0x20_known = true;
-	first.expected_target_word_0x20 = 0x00010002U;
+	first.expected_target_word_0x20 = 0x01020002U;
 	first.expected_target_word_0x24_known = true;
 	first.expected_target_word_0x24 = 0x00000d07U;
 	first.expected_target_word_0x28_known = true;
@@ -10132,15 +10140,15 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	second.source_cell_y = 31;
 	second.source_cell_level = 0;
 	second.expected_source_word_0x20_known = true;
-	second.expected_source_word_0x20 = 0x00040002U;
+	second.expected_source_word_0x20 = 0x01050002U;
 	second.expected_source_word_0x24_known = true;
 	second.expected_source_word_0x24 = 0x00000dc3U;
 	second.expected_source_word_0x28_known = true;
 	second.expected_source_word_0x28 = 0x1a000000U;
 	second.expected_owner_byte2_known = true;
-	second.expected_owner_byte2 = 4;
+	second.expected_owner_byte2 = 5;
 	second.expected_target_word_0x20_known = true;
-	second.expected_target_word_0x20 = 0x00040002U;
+	second.expected_target_word_0x20 = 0x01050002U;
 	second.expected_target_word_0x24_known = true;
 	second.expected_target_word_0x24 = 0x00000dc3U;
 	second.expected_target_word_0x28_known = true;
@@ -10318,7 +10326,7 @@ static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recover
 	first.descriptor_offset_x_0x2c = 0;
 	first.descriptor_offset_y_0x30 = 0;
 	first.expected_owner_byte2_known = true;
-	first.expected_owner_byte2 = 1;
+	first.expected_owner_byte2 = 2;
 	first.require_source_cell_prestate_0x4a5e03 = false;
 	first.object_record_vtable_0x00_known = true;
 	first.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
@@ -10343,7 +10351,7 @@ static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recover
 	second.descriptor_offset_x_0x2c = 0;
 	second.descriptor_offset_y_0x30 = 0;
 	second.expected_owner_byte2_known = true;
-	second.expected_owner_byte2 = 4;
+	second.expected_owner_byte2 = 5;
 	second.require_source_cell_prestate_0x4a5e03 = false;
 	second.object_record_vtable_0x00_known = true;
 	second.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
@@ -13522,67 +13530,66 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 			|| config.seed != 10U) {
 		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
 	}
-	if (!config.same_run_payload_authority_setup_stack_join_known) {
-		return "same_run_payload_authority_missing_same_run_0x49ecf2_setup_stack_join";
-	}
-	const GeneratorBackingStateConstructor49d914 backing_state =
-			generator_backing_state_constructor_0x49d914(
-					config.width,
-					config.height,
-					config.level_count,
-					config.setup_caller_arg_0x0c_known,
-					config.setup_caller_arg_0x0c,
-					config.setup_object_0x4c_known,
-					config.setup_object_0x4c);
-	if (!backing_state.applied) {
-		return "native_0x49d914_backing_state_constructor_"
-				+ backing_state.blocked_reason;
-	}
-	if (!config.same_run_payload_authority_setup_stack_args_known
-			|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
-		return "same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_"
-				+ std::to_string(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size())
-				+ "_of_" + std::to_string(RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
-	}
-	const bool setup_value_band_arg_0x28_known =
-			config.setup_object_raw_0x48_known || config.setup_object_0x48_known;
-	const int32_t setup_value_band_arg_0x28 = config.setup_object_raw_0x48_known
-			? setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48)
-			: config.setup_object_0x48;
-	const GeneratorSetupStackArgs49ecf2 native_stack =
-			setup_stack_args_0x4adfe1_to_0x49ecf2(
-					config.width,
-					config.height,
-					config.level_count,
-					config.setup_object_0x44_known,
-					config.setup_object_0x44,
-					setup_value_band_arg_0x28_known,
-					setup_value_band_arg_0x28,
-					config.setup_object_0x4c_known,
-					config.setup_object_0x4c,
-					config.setup_object_0x34_known,
-					config.setup_object_0x34,
-					config.setup_object_0x38_known,
-					config.setup_object_0x38,
-					config.setup_object_0x3c_known,
-					config.setup_object_0x3c,
-					config.setup_object_0x40_known,
-					config.setup_object_0x40,
-					config.setup_caller_arg_0x0c_known,
-					config.setup_caller_arg_0x0c);
-	if (!native_stack.full_args_known) {
-		return "native_0x49ecf2_setup_stack_missing_"
-				+ std::to_string(native_stack.missing_arg_labels.size())
-				+ "_source_words_for_same_run_payload_authority_compare";
-	}
-	for (size_t index = 0; index < native_stack.args.size(); ++index) {
-		if (!setup_stack_word_matches_same_run_authority_0x49ecf2(
-					index,
-					native_stack.args[index],
-					config.same_run_payload_authority_setup_stack_args_0x49ecf2[index])) {
-			return "native_0x49ecf2_setup_stack_word_"
-					+ std::to_string(index)
-					+ "_does_not_match_same_run_payload_authority_profile";
+	if (config.same_run_payload_authority_setup_stack_join_known) {
+		const GeneratorBackingStateConstructor49d914 backing_state =
+				generator_backing_state_constructor_0x49d914(
+						config.width,
+						config.height,
+						config.level_count,
+						config.setup_caller_arg_0x0c_known,
+						config.setup_caller_arg_0x0c,
+						config.setup_object_0x4c_known,
+						config.setup_object_0x4c);
+		if (!backing_state.applied) {
+			return "native_0x49d914_backing_state_constructor_"
+					+ backing_state.blocked_reason;
+		}
+		if (!config.same_run_payload_authority_setup_stack_args_known
+				|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
+			return "same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_"
+					+ std::to_string(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size())
+					+ "_of_" + std::to_string(RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
+		}
+		const bool setup_value_band_arg_0x28_known =
+				config.setup_object_raw_0x48_known || config.setup_object_0x48_known;
+		const int32_t setup_value_band_arg_0x28 = config.setup_object_raw_0x48_known
+				? setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48)
+				: config.setup_object_0x48;
+		const GeneratorSetupStackArgs49ecf2 native_stack =
+				setup_stack_args_0x4adfe1_to_0x49ecf2(
+						config.width,
+						config.height,
+						config.level_count,
+						config.setup_object_0x44_known,
+						config.setup_object_0x44,
+						setup_value_band_arg_0x28_known,
+						setup_value_band_arg_0x28,
+						config.setup_object_0x4c_known,
+						config.setup_object_0x4c,
+						config.setup_object_0x34_known,
+						config.setup_object_0x34,
+						config.setup_object_0x38_known,
+						config.setup_object_0x38,
+						config.setup_object_0x3c_known,
+						config.setup_object_0x3c,
+						config.setup_object_0x40_known,
+						config.setup_object_0x40,
+						config.setup_caller_arg_0x0c_known,
+						config.setup_caller_arg_0x0c);
+		if (!native_stack.full_args_known) {
+			return "native_0x49ecf2_setup_stack_missing_"
+					+ std::to_string(native_stack.missing_arg_labels.size())
+					+ "_source_words_for_same_run_payload_authority_compare";
+		}
+		for (size_t index = 0; index < native_stack.args.size(); ++index) {
+			if (!setup_stack_word_matches_same_run_authority_0x49ecf2(
+						index,
+						native_stack.args[index],
+						config.same_run_payload_authority_setup_stack_args_0x49ecf2[index])) {
+				return "native_0x49ecf2_setup_stack_word_"
+						+ std::to_string(index)
+						+ "_does_not_match_same_run_payload_authority_profile";
+			}
 		}
 	}
 	return "";
@@ -17484,7 +17491,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = owner_index;
+			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			if (!owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
@@ -17978,11 +17985,14 @@ static bool append_relation_owner_adjacency_pair_0x4ae166(
 }
 
 static int32_t relation_owner_source_slot_0x49b61b(const GeneratorRelationOwnerState4a218c &owner) {
-	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
-		return owner.source_pointer_source_index_0x00;
-	}
 	if (owner.source_index >= 0) {
 		return owner.source_index;
+	}
+	if (owner.source_zone_id > 0) {
+		return owner.source_zone_id - 1;
+	}
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00;
 	}
 	return -1;
 }
@@ -18330,7 +18340,10 @@ static int32_t source_walk_payload_span_limit_4a3a03(const SourceWalk4cca55 &wal
 
 static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a218c &owner) {
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
-		return owner.source_pointer_source_index_0x00 + 1;
+		return owner.source_pointer_source_index_0x00;
+	}
+	if (owner.source_zone_id > 0) {
+		return owner.source_zone_id;
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index + 1;
@@ -18342,8 +18355,8 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
 		return owner.source_pointer_source_index_0x00;
 	}
-	if (owner.source_zone_id >= 0) {
-		return owner.source_zone_id > 0 ? owner.source_zone_id - 1 : owner.source_zone_id;
+	if (owner.source_zone_id > 0) {
+		return owner.source_zone_id;
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index;
@@ -20024,10 +20037,12 @@ static void update_relation_owner_scan_bounds_0x49b66d(GeneratorRelationOwnerSta
 static int32_t relation_owner_vector_index_for_generated_cell_owner_byte2_0x4a2105(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
 		int32_t owner_byte2) {
-	if (owner_byte2 < 0 || owner_byte2 >= int32_t(owners.size())) {
-		return -1;
+	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
+		if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(index)]) == owner_byte2) {
+			return index;
+		}
 	}
-	return owner_byte2;
+	return -1;
 }
 
 static int32_t apply_relation_owner_scan_bounds_from_generated_cells_0x4a2105_49b66d(
