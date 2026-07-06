@@ -18650,7 +18650,11 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 				BoundarySourceCycleHandoff4a2777 handoff;
 				handoff.runtime_zone_index = walk.runtime_zone_index;
 				handoff.zone_word = source_payload_owner_word;
-				handoff.generated_cell_owner_byte2 = source_payload_owner_word;
+				handoff.generated_cell_owner_byte2 =
+						generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
+								source_payload_owner_word,
+								original_same_level_runtime_zone_count,
+								source_vector_handoff_index);
 				handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 				handoff.level = caller_level_argument_0x0c;
 				handoff.boundary_pass_index_0x0c = 0;
@@ -18770,6 +18774,24 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 	return fallback;
 }
 
+int32_t generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
+		int32_t source_payload_owner_word,
+		int32_t original_same_level_runtime_zone_count,
+		int32_t fallback_generated_cell_owner_byte2) {
+	if (original_same_level_runtime_zone_count > 0) {
+		if (source_payload_owner_word > 0 && source_payload_owner_word <= original_same_level_runtime_zone_count) {
+			return source_payload_owner_word - 1;
+		}
+		if (fallback_generated_cell_owner_byte2 >= 0
+				&& fallback_generated_cell_owner_byte2 < original_same_level_runtime_zone_count) {
+			return fallback_generated_cell_owner_byte2;
+		}
+	}
+	return fallback_generated_cell_owner_byte2 >= 0
+			? fallback_generated_cell_owner_byte2
+			: source_payload_owner_word;
+}
+
 static int32_t relation_owner_span_limit_4a3a03(const GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneBoundaryInput4a3a03 *matched_input) {
 	if (owner.boundary_payload_span_limit_0x1c_known && owner.boundary_payload_span_limit_0x1c > 0) {
 		return owner.boundary_payload_span_limit_0x1c;
@@ -18855,7 +18877,11 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				BoundarySourceCycleHandoff4a2777 handoff;
 				handoff.runtime_zone_index = walk.runtime_zone_index;
 				handoff.zone_word = source_payload_owner_word;
-				handoff.generated_cell_owner_byte2 = source_payload_owner_word;
+				handoff.generated_cell_owner_byte2 =
+						generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
+								source_payload_owner_word,
+								original_same_level_runtime_zone_count,
+								source_vector_handoff_index);
 				handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 				handoff.level = caller_level_argument_0x0c;
 				handoff.boundary_pass_index_0x0c = 0;
