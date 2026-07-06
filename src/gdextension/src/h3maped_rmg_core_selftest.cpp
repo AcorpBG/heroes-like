@@ -2534,12 +2534,12 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve the selected source-record vector index into the handoff")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].source_pointer_source_index_0x00,
-				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into the boundary payload")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
+				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into the boundary payload")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
-				"relation-owner vector owner-grid chain did not carry recovered source pointer owner word into generated-cell byte2")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
+				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into generated-cell byte2")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
@@ -3712,9 +3712,9 @@ int main() {
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == expected_source_record_id_0x00, "0x49b452 relation owner source-record +0x00 identity was not preserved")) {
 			return 1;
 		}
-		const int32_t expected_relation_owner_byte2 = owner.source_zone_id > 0
-				? owner.source_zone_id
-				: (owner.source_index >= 0 ? owner.source_index + 1 : relation_owner_vector_index_for_runtime_zone(owner.runtime_zone_index));
+		const int32_t expected_relation_owner_byte2 = owner.source_index >= 0
+				? owner.source_index
+				: (owner.source_zone_id > 0 ? owner.source_zone_id : relation_owner_vector_index_for_runtime_zone(owner.runtime_zone_index));
 		if (!require(expected_relation_owner_byte2 >= 0
 						&& owner.relation_owner_byte2_0x4aa9b7_known
 						&& owner.relation_owner_byte2_0x4aa9b7 == expected_relation_owner_byte2,
