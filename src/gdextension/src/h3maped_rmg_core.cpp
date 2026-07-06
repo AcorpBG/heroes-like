@@ -12597,25 +12597,16 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 			|| config.seed != 10U) {
 		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
 	}
-	if (!config.same_run_payload_authority_setup_stack_join_known) {
-		return "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing";
+	if (!config.same_run_payload_authority_setup_stack_args_known
+			|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
+		if (!config.same_run_payload_authority_setup_stack_args_0x49ecf2.empty()) {
+			return "same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_"
+					+ std::to_string(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size())
+					+ "_of_" + std::to_string(RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
+		}
+		return "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing";
 	}
-	const bool setup_value_band_arg_0x28_known =
-			config.setup_object_raw_0x48_known || config.setup_object_0x48_known;
-	const int32_t setup_value_band_arg_0x28 = config.setup_object_raw_0x48_known
-			? setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48)
-			: config.setup_object_0x48;
-	if (!config.setup_object_0x44_known
-			|| !setup_value_band_arg_0x28_known
-			|| !config.setup_object_0x4c_known) {
-		return "native_0x49ecf2_setup_words_missing_for_same_run_payload_authority_compare";
-	}
-	if (config.setup_object_0x44 != config.same_run_payload_authority_setup_object_0x44
-			|| setup_value_band_arg_0x28 != config.same_run_payload_authority_setup_object_0x48
-			|| config.setup_object_0x4c != config.same_run_payload_authority_setup_object_0x4c) {
-		return "native_0x49ecf2_setup_words_do_not_match_same_run_payload_authority_profile";
-	}
-	return "";
+	return "native_0x49ecf2_setup_stack_full_11_word_model_missing_for_same_run_payload_authority_compare";
 }
 
 static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(

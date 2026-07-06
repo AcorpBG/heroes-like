@@ -1,10 +1,10 @@
 {
   "actionableNextTasks": [
     {
-      "blocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing",
-      "currentBlocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing",
-      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. The shared workflow now carries recovered 0x4adfe1 raw +0x48 setup preparation into 0x49ecf2 as clamp(raw + 3, 1, 5). It also ports the recovered 0x540c20 -> 0x49c8f3 -> 0x540b3c reward/guard object constructor state and the 0x49c273 final-object serializer: candidate +0x14 payload, 0x4ad640 slot allocation from generator +0xf88, exact record +0x20/+0x24/+0x28 fields, and 0x4ad3eb byte serialization are now implemented. Focused no-Godot Medium seed10 setup0 now writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run still blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing; compare output shows tile payload 36,288 vs 36,288 bytes first mismatch offset 0 native=4 expected=2, and generated-object payload 12,376 vs 17,057 bytes first mismatch offset 0 native=4 expected=2. Runtime/native map output remains disabled.",
-      "currentSliceNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. The shared workflow now carries recovered 0x4adfe1 raw +0x48 setup preparation into 0x49ecf2 as clamp(raw + 3, 1, 5). It also ports the recovered 0x540c20 -> 0x49c8f3 -> 0x540b3c reward/guard object constructor state and the 0x49c273 final-object serializer: candidate +0x14 payload, 0x4ad640 slot allocation from generator +0xf88, exact record +0x20/+0x24/+0x28 fields, and 0x4ad3eb byte serialization are now implemented. Focused no-Godot Medium seed10 setup0 now writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run still blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing; compare output shows tile payload 36,288 vs 36,288 bytes first mismatch offset 0 native=4 expected=2, and generated-object payload 12,376 vs 17,057 bytes first mismatch offset 0 native=4 expected=2. Runtime/native map output remains disabled.",
+      "blocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing",
+      "currentBlocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing",
+      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. The final payload authority guard now requires the exact 11-word 0x4adfe1 -> 0x49ecf2 setup stack instead of the old three-field proxy. Focused no-Godot Medium seed10 setup0 still writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run now blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing because the stitched final-payload authority ledger does not contain the setup-call event. Runtime/native map output remains disabled.",
+      "currentSliceNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. The final payload authority guard now requires the exact 11-word 0x4adfe1 -> 0x49ecf2 setup stack instead of the old three-field proxy. Focused no-Godot Medium seed10 setup0 still writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run now blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing because the stitched final-payload authority ledger does not contain the setup-call event. Runtime/native map output remains disabled.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -74859,28 +74859,29 @@
     }
   ],
   "validationResults": {
-    "id": "native-rmg-49c273-serializer-slot-20260706",
-    "title": "Recovered 0x49c273 reward/guard final object serializer",
+    "id": "native-rmg-49ecf2-setup-stack-authority-20260706",
+    "title": "Exact 0x49ecf2 setup stack authority guard",
     "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
     "status": "passed_source_backed_behavior_progress_not_parity",
-    "validatedAt": "2026-07-06T08:42:10Z",
-    "updatedAt": "2026-07-06T08:42:10Z",
-    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. The shared workflow now carries recovered 0x4adfe1 raw +0x48 setup preparation into 0x49ecf2 as clamp(raw + 3, 1, 5). It also ports the recovered 0x540c20 -> 0x49c8f3 -> 0x540b3c reward/guard object constructor state and the 0x49c273 final-object serializer: candidate +0x14 payload, 0x4ad640 slot allocation from generator +0xf88, exact record +0x20/+0x24/+0x28 fields, and 0x4ad3eb byte serialization are now implemented. Focused no-Godot Medium seed10 setup0 now writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run still blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing; compare output shows tile payload 36,288 vs 36,288 bytes first mismatch offset 0 native=4 expected=2, and generated-object payload 12,376 vs 17,057 bytes first mismatch offset 0 native=4 expected=2. Runtime/native map output remains disabled.",
-    "blockedReason": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing",
+    "validatedAt": "2026-07-06T08:52:10Z",
+    "updatedAt": "2026-07-06T08:52:10Z",
+    "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. The final payload authority guard now requires the exact 11-word 0x4adfe1 -> 0x49ecf2 setup stack instead of the old three-field proxy. Focused no-Godot Medium seed10 setup0 still writes final payload sections, serializes all 900 generated objects with zero serializer blocks, writes the 0x4ad3db final zero sentinel, and emits a 61,424-byte ordered payload. The run now blocks at final_payload_compare with same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing because the stitched final-payload authority ledger does not contain the setup-call event. Runtime/native map output remains disabled.",
+    "blockedReason": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing",
     "artifacts": [
       "src/gdextension/include/h3maped_rmg_core.hpp",
       "src/gdextension/include/rmg_native_core.hpp",
       "src/gdextension/src/h3maped_rmg_core.cpp",
       "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
       "src/gdextension/src/rmg_native_core.cpp",
+      "src/gdextension/src/rmg_native_batch_export_cli.cpp",
       "PLAN.md",
       "ops/progress.json",
       "bin/h3maped_rmg_core_selftest",
       "bin/rmg_native_batch_export_cli",
-      ".artifacts/rmg_native_49c273_medium10_cli_20260706083902/medium_seed10_setup0_2p.phase_snapshot.json",
-      ".artifacts/rmg_native_49c273_medium10_cli_20260706083902/medium_seed10_setup0_2p.final_payload.bin",
-      ".artifacts/rmg_native_49c273_medium10_cli_20260706083902/medium_seed10_setup0_2p.final_payload_sections.json",
-      ".artifacts/rmg_native_49c273_medium10_cli_20260706083902/final_payload_compare.json",
+      ".artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046/medium_seed10_setup0_2p.phase_snapshot.json",
+      ".artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046/medium_seed10_setup0_2p.final_payload.bin",
+      ".artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046/medium_seed10_setup0_2p.final_payload_sections.json",
+      ".artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046/final_payload_compare.json",
       ".artifacts/rmg_recovery/ghidra_candidate_container_producer_49ecf2_dump_20260607/caller_004adfe1_FUN_004adfe1.txt",
       ".artifacts/rmg_recovery/ghidra_final_object_serializers_20260610/target_0049c273_FUN_0049c273.txt",
       ".artifacts/rmg_recovery/ghidra_object_projection_helper_dump/caller_0049c8f3_FUN_0049c8f3.txt",
@@ -74890,8 +74891,8 @@
       "cmake --build src/gdextension/build --target h3maped_rmg_core_selftest --parallel 2 (passed)",
       "bin/h3maped_rmg_core_selftest (passed)",
       "cmake --build src/gdextension/build --target rmg_native_batch_export_cli --parallel 2 (passed)",
-      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_49c273_medium10_cli_20260706083902 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0 --phase-snapshot-only --print-manifest (status=blocked; final_payload_binary_written=1; final_payload_sections_written=1; godot_process_started=false)",
-      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_49c273_medium10_cli_20260706083902 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_49c273_medium10_cli_20260706083902/final_payload_compare.json --expect-mismatch (passed with expected blocker same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing)"
+      "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0 --phase-snapshot-only --print-manifest (status=blocked; final_payload_binary_written=1; final_payload_sections_written=1; godot_process_started=false)",
+      "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_setup_stack_exact_medium10_cli_20260706085046/final_payload_compare.json --expect-mismatch (passed with expected blocker same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing)"
     ],
     "metrics": {
       "native_rmg_end_to_end_parity_complete": false,
@@ -74900,6 +74901,10 @@
       "wine_process_started": false,
       "source_backed_behavior_progress": true,
       "setup_raw_0x48_prepared_by_0x4adfe1_clamp_raw_plus_3_1_5": true,
+      "same_run_authority_requires_full_0x49ecf2_setup_stack": true,
+      "same_run_authority_setup_stack_expected_arg_count": 11,
+      "same_run_authority_setup_stack_captured_arg_count": 0,
+      "same_run_authority_setup_stack_args_known": false,
       "reward_guard_0x540c20_constructor_fields_carried": true,
       "reward_guard_slot_allocator_0x4ad640_implemented": true,
       "final_object_serializer_0x49c273_implemented": true,
@@ -74911,15 +74916,15 @@
       "h3maped_authority_object_payload_byte_count": 17057,
       "focused_medium_seed10_setup0_tile_payload_byte_count": 36288,
       "h3maped_authority_tile_payload_byte_count": 36288,
-      "tile_first_mismatch_offset": 0,
-      "tile_native_byte_at_mismatch": 4,
-      "tile_expected_byte_at_mismatch": 2,
-      "generated_object_payload_first_mismatch_offset": 0,
-      "generated_object_payload_native_byte_at_mismatch": 4,
-      "generated_object_payload_expected_byte_at_mismatch": 2,
-      "same_run_authority_scope_blocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing"
+      "tile_first_mismatch_offset": null,
+      "tile_native_byte_at_mismatch": null,
+      "tile_expected_byte_at_mismatch": null,
+      "generated_object_payload_first_mismatch_offset": null,
+      "generated_object_payload_native_byte_at_mismatch": null,
+      "generated_object_payload_expected_byte_at_mismatch": null,
+      "same_run_authority_scope_blocker": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing"
     },
-    "remainingWork": "Join or recover the exact same-run 0x49ecf2 setup stack/profile for the Medium seed10 final payload authority, then continue source-backed tile stream 0x49b2b6 and generated-object payload 0x4ad36f/0x4ad3b1/0x4ad3eb parity work. Runtime/native map output stays disabled until same-run payload parity is proven."
+    "remainingWork": "Recover or provide the exact same-run 11-word 0x49ecf2 setup stack for the Medium seed10 final payload authority, then model the native 11-word setup stack before continuing source-backed tile stream 0x49b2b6 and generated-object payload 0x4ad36f/0x4ad3b1/0x4ad3eb parity work. Runtime/native map output stays disabled until same-run payload parity is proven."
   },
-  "blockedReason": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing"
+  "blockedReason": "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_words_missing"
 }

@@ -340,6 +340,8 @@ struct SharedRuntimeChainInput {
 	int32_t same_run_payload_authority_tile_byte_count = 0;
 	int32_t same_run_payload_authority_object_byte_count = 0;
 	bool same_run_payload_authority_setup_stack_join_known = false;
+	bool same_run_payload_authority_setup_stack_args_known = false;
+	std::vector<int32_t> same_run_payload_authority_setup_stack_args_0x49ecf2;
 	int32_t same_run_payload_authority_setup_object_0x44 = 0;
 	int32_t same_run_payload_authority_setup_object_0x48 = 0;
 	int32_t same_run_payload_authority_setup_object_0x4c = 0;

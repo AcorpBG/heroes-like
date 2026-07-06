@@ -1,6 +1,7 @@
 #include "rmg_native_core.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <cerrno>
 #include <cstdint>
 #include <cstdlib>
@@ -94,6 +95,17 @@ void append_json_string_array(std::ostream &out, const std::vector<std::string> 
 	out << "]";
 }
 
+void append_json_int_array(std::ostream &out, const std::vector<int32_t> &values) {
+	out << "[";
+	for (size_t index = 0; index < values.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		out << values[index];
+	}
+	out << "]";
+}
+
 bool write_binary_file(const std::filesystem::path &path, const std::vector<uint8_t> &bytes) {
 	std::ofstream file(path, std::ios::binary);
 	if (!file) {
@@ -136,6 +148,93 @@ bool read_text_file(const std::filesystem::path &path, std::string &text) {
 	out << file.rdbuf();
 	text = out.str();
 	return bool(file) || file.eof();
+}
+
+bool extract_json_string_field(const std::string &text, const std::string &field_name, std::string &value) {
+	const std::string key = "\"" + field_name + "\"";
+	const size_t key_pos = text.find(key);
+	if (key_pos == std::string::npos) {
+		return false;
+	}
+	const size_t colon_pos = text.find(':', key_pos + key.size());
+	if (colon_pos == std::string::npos) {
+		return false;
+	}
+	const size_t quote_pos = text.find('"', colon_pos + 1);
+	if (quote_pos == std::string::npos) {
+		return false;
+	}
+	std::string decoded;
+	for (size_t index = quote_pos + 1; index < text.size(); ++index) {
+		const char ch = text[index];
+		if (ch == '"') {
+			value = decoded;
+			return true;
+		}
+		if (ch == '\\' && index + 1 < text.size()) {
+			decoded.push_back(text[++index]);
+		} else {
+			decoded.push_back(ch);
+		}
+	}
+	return false;
+}
+
+bool extract_setup_stack_args_0x49ecf2_from_ledger_text(const std::string &ledger_text, std::vector<int32_t> &args) {
+	const size_t event_pos = ledger_text.find("\"address\": \"0x0049ecf2\"");
+	if (event_pos == std::string::npos) {
+		return false;
+	}
+	size_t event_end = ledger_text.find("\"registers\"", event_pos);
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.find("\n    }", event_pos);
+	}
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.size();
+	}
+	std::vector<int32_t> stack_words;
+	size_t cursor = event_pos;
+	while (cursor < event_end) {
+		const size_t words_pos = ledger_text.find("\"words\"", cursor);
+		if (words_pos == std::string::npos || words_pos >= event_end) {
+			break;
+		}
+		const size_t open_pos = ledger_text.find('[', words_pos);
+		const size_t close_pos = ledger_text.find(']', open_pos);
+		if (open_pos == std::string::npos || close_pos == std::string::npos || close_pos > event_end) {
+			break;
+		}
+		const std::string words = ledger_text.substr(open_pos + 1, close_pos - open_pos - 1);
+		const char *cursor_chars = words.c_str();
+		while (*cursor_chars != '\0') {
+			while (*cursor_chars != '\0' && (std::isspace(static_cast<unsigned char>(*cursor_chars)) || *cursor_chars == ',')) {
+				++cursor_chars;
+			}
+			if (*cursor_chars == '\0') {
+				break;
+			}
+			char *next = nullptr;
+			const long value = std::strtol(cursor_chars, &next, 0);
+			if (next == cursor_chars) {
+				++cursor_chars;
+				continue;
+			}
+			if (value >= std::numeric_limits<int32_t>::min() && value <= std::numeric_limits<int32_t>::max()) {
+				stack_words.push_back(static_cast<int32_t>(value));
+			}
+			cursor_chars = next;
+		}
+		cursor = close_pos + 1;
+	}
+	if (stack_words.size() <= 1) {
+		return false;
+	}
+	args.clear();
+	for (size_t index = 1; index < stack_words.size()
+			&& args.size() < size_t(aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2); ++index) {
+		args.push_back(stack_words[index]);
+	}
+	return !args.empty();
 }
 
 bool write_final_payload_sections_json(
@@ -435,6 +534,21 @@ void hydrate_same_run_authority_payloads(Options &options) {
 		options.shared_runtime_chain_input.same_run_payload_authority_profile = EXPECTED_PROFILE;
 		options.shared_runtime_chain_input.same_run_payload_authority_tile_byte_count = 36288;
 		options.shared_runtime_chain_input.same_run_payload_authority_object_byte_count = 17057;
+		std::string ledger_path_text;
+		if (extract_json_string_field(payload_summary, "ledger", ledger_path_text)) {
+			std::string ledger_text;
+			std::vector<int32_t> setup_stack_args;
+			if (read_text_file(std::filesystem::path(ledger_path_text), ledger_text)
+					&& extract_setup_stack_args_0x49ecf2_from_ledger_text(ledger_text, setup_stack_args)) {
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2 =
+						std::move(setup_stack_args);
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known =
+						options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2.size()
+						== size_t(aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2);
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known =
+						options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known;
+			}
+		}
 	}
 }
 
@@ -624,6 +738,12 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"same_run_payload_authority_profile_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_profile_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_profile\": \"" << json_escape(options.shared_runtime_chain_input.same_run_payload_authority_profile) << "\",\n";
 	out << "  \"same_run_payload_authority_setup_stack_join_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_payload_authority_setup_stack_args_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_payload_authority_setup_stack_arg_count\": " << options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2.size() << ",\n";
+	out << "  \"same_run_payload_authority_setup_stack_expected_arg_count\": " << aurelion::h3maped_rmg_core::RMG_SETUP_STACK_ARG_COUNT_0X49ECF2 << ",\n";
+	out << "  \"same_run_payload_authority_setup_stack_args_0x49ecf2\": ";
+	append_json_int_array(out, options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2);
+	out << ",\n";
 	out << "  \"shared_runtime_zone_seed_count\": " << options.shared_runtime_chain_input.runtime_zone_seeds.size() << ",\n";
 	int64_t shared_runtime_link_guard_value_sum = 0;
 	int32_t shared_runtime_link_wide_count = 0;
