@@ -1692,8 +1692,12 @@ void prune_candidates_4a1ad8_single_level(const CoordinateZone4a218c &current_te
 	}
 }
 
-bool boundary_cell_reserved_flag_4a261a_4a325d(int32_t generator_mode_0x10b8, int32_t level) {
+bool boundary_line_reserved_flag_4a261a(int32_t generator_mode_0x10b8, int32_t level) {
 	return level == 1 || generator_mode_0x10b8 != 2;
+}
+
+bool span_fill_reserved_flag_4a325d(int32_t generator_mode_0x10b8, int32_t level) {
+	return generator_mode_0x10b8 != 2 || level != 1;
 }
 
 void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t x, int32_t y, int32_t zone_id, int32_t level, bool allow_reserved_flag = true) {
@@ -1706,7 +1710,7 @@ void write_line_cell_4a261a(BoundaryLineWriteResult &result, int32_t width, int3
 	write.y = y;
 	write.level = level;
 	write.zone_id = zone_id & 0xff;
-	write.reserved = allow_reserved_flag && boundary_cell_reserved_flag_4a261a_4a325d(generator_mode_0x10b8, level);
+	write.reserved = allow_reserved_flag && boundary_line_reserved_flag_4a261a(generator_mode_0x10b8, level);
 	result.trace.push_back(write);
 	const int64_t key = generated_cell_flat_key_4a325d(width, height, x, y, level);
 	result.unique_cells[key] = true;
@@ -18366,6 +18370,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 				handoff.source_record_vector_index_4a3e9c = -1;
 				handoff.has_source_record_seed_0x10 = true;
 				handoff.source_record_seed_0x10 = SpanRecord { walk.start_x, walk.start_y, caller_level_argument_0x0c };
+				handoff.source_cycle_anchor_model_node_index_4a325d = walk.locator_node_index;
 				handoff.source_nodes = walk.source_nodes;
 				result.handoffs.push_back(std::move(handoff));
 				source_vector_handoff_index += 1;
@@ -18392,6 +18397,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 		handoff.source_record_vector_index_4a3e9c = matched_input->source_record_vector_index_4a3e9c;
 		handoff.has_source_record_seed_0x10 = matched_input->has_source_record_seed_0x10;
 		handoff.source_record_seed_0x10 = matched_input->source_record_seed_0x10;
+		handoff.source_cycle_anchor_model_node_index_4a325d = walk.locator_node_index;
 		handoff.source_nodes = walk.source_nodes;
 		result.handoffs.push_back(std::move(handoff));
 		source_vector_handoff_index += 1;
@@ -18565,6 +18571,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				handoff.source_record_vector_index_4a3e9c = -1;
 				handoff.has_source_record_seed_0x10 = true;
 				handoff.source_record_seed_0x10 = SpanRecord { walk.start_x, walk.start_y, caller_level_argument_0x0c };
+				handoff.source_cycle_anchor_model_node_index_4a325d = walk.locator_node_index;
 				handoff.source_nodes = walk.source_nodes;
 				result.handoffs.push_back(std::move(handoff));
 				source_vector_handoff_index += 1;
@@ -18611,6 +18618,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		handoff.source_record_seed_0x10 = handoff.has_source_record_seed_0x10
 				? matched_input->source_record_seed_0x10
 				: SpanRecord {};
+		handoff.source_cycle_anchor_model_node_index_4a325d = walk.locator_node_index;
 		handoff.source_nodes = walk.source_nodes;
 		result.handoffs.push_back(std::move(handoff));
 		source_vector_handoff_index += 1;
@@ -24470,6 +24478,7 @@ std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a277
 		cycle.source_record_vector_index_4a3e9c = handoff.source_record_vector_index_4a3e9c;
 		cycle.has_span_seed_4a325d = handoff.has_source_record_seed_0x10;
 		cycle.span_seed_4a325d = handoff.source_record_seed_0x10;
+		cycle.source_cycle_anchor_model_node_index_4a325d = handoff.source_cycle_anchor_model_node_index_4a325d;
 		cycle.cycle_nodes.reserve(handoff.source_nodes.size());
 		for (const SourceNodeCyclePoint4a2777 &source_node : handoff.source_nodes) {
 			BoundaryCyclePoint4a2777 point;
@@ -24606,6 +24615,72 @@ void apply_line_trace_to_zone_buffer_4a2777(const BoundaryLineWriteResult &line,
 			cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);
 		}
 	}
+}
+
+static int32_t boundary_cycle_position_for_model_node_4a325d(
+		const std::vector<BoundaryCyclePoint4a2777> &points,
+		int32_t model_node_index) {
+	for (int32_t index = 0; index < int32_t(points.size()); ++index) {
+		if (points[size_t(index)].model_node_index == model_node_index) {
+			return index;
+		}
+	}
+	return -1;
+}
+
+static int32_t boundary_cycle_next_position_4a325d(
+		const std::vector<BoundaryCyclePoint4a2777> &points,
+		int32_t position) {
+	if (position < 0 || position >= int32_t(points.size())) {
+		return -1;
+	}
+	const int32_t linked_position = boundary_cycle_position_for_model_node_4a325d(points, points[size_t(position)].next_index);
+	if (linked_position >= 0 && linked_position != position) {
+		return linked_position;
+	}
+	return -1;
+}
+
+static bool source_cycle_relocation_candidate_4a325d(
+		const std::vector<BoundaryCyclePoint4a2777> &points,
+		int32_t anchor_model_node_index,
+		int32_t width,
+		int32_t height,
+		int32_t &best_x,
+		int32_t &best_y) {
+	best_x = -1;
+	best_y = -1;
+	if (points.empty()) {
+		return false;
+	}
+	int32_t anchor_position = boundary_cycle_position_for_model_node_4a325d(points, anchor_model_node_index);
+	if (anchor_position < 0) {
+		anchor_position = 0;
+	}
+	int32_t position = boundary_cycle_next_position_4a325d(points, anchor_position);
+	if (position < 0 || position == anchor_position) {
+		return false;
+	}
+	int32_t best_clearance = -1;
+	for (int32_t guard = 0; guard < int32_t(points.size()) && position >= 0 && position != anchor_position; ++guard) {
+		const BoundaryCyclePoint4a2777 &point = points[size_t(position)];
+		if (point.finalized) {
+			const int32_t x = point.x;
+			const int32_t y = point.y;
+			if (x >= 1 && x < width - 1 && y >= 1 && y < height - 1) {
+				const int32_t x_clearance = std::min<int32_t>(x, width - x - 1);
+				const int32_t y_clearance = std::min<int32_t>(y, height - y - 1);
+				const int32_t clearance = std::min<int32_t>(x_clearance, y_clearance);
+				if (clearance > best_clearance) {
+					best_clearance = clearance;
+					best_x = x;
+					best_y = y;
+				}
+			}
+		}
+		position = boundary_cycle_next_position_4a325d(points, position);
+	}
+	return best_x >= 0 && best_y >= 0;
 }
 
 BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<BoundaryCycleInput4a2777> &cycles) {
@@ -24778,6 +24853,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				: cycle.zone_word;
 		zone.level = cycle.level;
 		zone.source_record_vector_index_4a3e9c = cycle.source_record_vector_index_4a3e9c;
+		zone.source_cycle_anchor_model_node_index_4a325d = cycle.source_cycle_anchor_model_node_index_4a325d;
 		zone.status = "blocked_before_cycle_consumption";
 		zone.has_span_seed_4a325d = cycle.has_span_seed_4a325d;
 		zone.span_seed_4a325d = cycle.span_seed_4a325d;
@@ -24825,7 +24901,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			return (position + 1) % node_count;
 		};
 
-		const bool randomized_writer_branch_0x4a3a03 = generator_mode_0x10b8 != 2 || cycle.boundary_pass_index_0x0c == 1;
+		const bool randomized_writer_branch_0x4a3a03 = cycle.boundary_pass_index_0x0c != 0;
 		const int32_t random_span_limit = std::max<int32_t>(1, cycle.random_span_limit);
 		int32_t selected_segment_index = -1;
 		ClipResult clipped_current;
@@ -24992,31 +25068,21 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		if (!span_cell_in_bounds_4a325d(width, height, level_count, seed)) {
 			int32_t best_x = -1;
 			int32_t best_y = -1;
-			int32_t best_clearance = -1;
-			for (const BoundaryVectorRecord4a2777 &vertex : zone.appended_vertices) {
-				const int32_t x = vertex.x;
-				const int32_t y = vertex.y;
-				if (x < 1 || x >= width - 1 || y < 1 || y >= height - 1) {
-					continue;
-				}
-				const int32_t x_clearance = std::min<int32_t>(x, width - x - 1);
-				const int32_t y_clearance = std::min<int32_t>(y, height - y - 1);
-				const int32_t clearance = std::min<int32_t>(x_clearance, y_clearance);
-				if (clearance > best_clearance) {
-					best_clearance = clearance;
-					best_x = x;
-					best_y = y;
-				}
-			}
-			if (best_x >= 0 && best_y >= 0) {
+			if (source_cycle_relocation_candidate_4a325d(
+						zone.finalized_points,
+						zone.source_cycle_anchor_model_node_index_4a325d,
+						width,
+						height,
+						best_x,
+						best_y)) {
 				const ClipResult clipped = clip_point_4a2b33(seed.x, seed.y, best_x, best_y, bounds);
 				seed.x = clipped.x;
 				seed.y = clipped.y;
 				zone.span_seed_relocated_4a325d = true;
-				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_relocated_from_source_pair_with_0x4a2b33";
+				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_relocated_from_source_cycle_with_0x4a2b33";
 				result.span_fill_seed_relocated_count += 1;
 			} else {
-				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_no_source_pair_relocation_candidate";
+				zone.span_seed_relocation_status_4a325d = "0x4a325d_seed_out_of_bounds_no_source_cycle_relocation_candidate";
 			}
 		}
 		zone.effective_span_seed_4a325d = seed;
@@ -25024,10 +25090,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.span_fill_seed_blocked_count += 1;
 			continue;
 		}
-		if (!generated_cell_owner_unassigned_4a325d(result.generated_cell_word_0x20, width, height, seed.x, seed.y, seed.level)) {
-			result.span_fill_seed_blocked_count += 1;
-			continue;
-		}
+		// 0x4a325d queues the candidate and lets its row scan stop on owned cells.
 		SpanFillResult fill = span_fill_4a325d(
 				result.private_zone_words,
 				result.generated_cell_word_0x20,
@@ -25122,7 +25185,7 @@ SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<u
 				continue;
 			}
 			generated_cell_apply_owner_word_4a2777(zone_words, generated_cell_word_0x20, key, private_zone_id, generated_cell_owner_byte2);
-			const bool reserved = boundary_cell_reserved_flag_4a261a_4a325d(generator_mode_0x10b8, coord.level);
+			const bool reserved = span_fill_reserved_flag_4a325d(generator_mode_0x10b8, coord.level);
 			if (reserved) {
 				generated_cell_word_0x28[size_t(key)] |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 				cell_flags[size_t(key)] = uint8_t(cell_flags[size_t(key)] | 0x10U);

@@ -932,6 +932,7 @@ struct BoundarySourceCycleHandoff4a2777 {
 	int32_t source_record_vector_index_4a3e9c = -1;
 	bool has_source_record_seed_0x10 = false;
 	SpanRecord source_record_seed_0x10;
+	int32_t source_cycle_anchor_model_node_index_4a325d = -1;
 	std::vector<SourceNodeCyclePoint4a2777> source_nodes;
 };
 
@@ -1499,6 +1500,7 @@ struct BoundaryCycleInput4a2777 {
 	int32_t source_record_vector_index_4a3e9c = -1;
 	bool has_span_seed_4a325d = false;
 	SpanRecord span_seed_4a325d;
+	int32_t source_cycle_anchor_model_node_index_4a325d = -1;
 	std::vector<BoundaryCyclePoint4a2777> cycle_nodes;
 };
 
@@ -1536,6 +1538,7 @@ struct BoundaryZoneMaterialization4a2777 {
 	int32_t level = 0;
 	int32_t source_record_vector_index_4a3e9c = -1;
 	int32_t selected_segment_index = -1;
+	int32_t source_cycle_anchor_model_node_index_4a325d = -1;
 	std::string status;
 	std::vector<BoundaryCyclePoint4a2777> finalized_points;
 	std::vector<BoundaryVectorRecord4a2777> appended_vertices;
