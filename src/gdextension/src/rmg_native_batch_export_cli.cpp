@@ -941,15 +941,27 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	const bool setup_stack_authority_missing =
 			blocked_reason == "same_run_payload_authority_0x49ecf2_stack_join_missing"
 			|| blocked_reason.rfind("same_run_payload_authority_0x49ecf2_stack_words_incomplete_captured_", 0) == 0;
+	const bool type98_source_pair_feed_missing =
+			blocked_reason == "0x4ac552_live_type98_source_pair_feed_0xedc_missing_before_0x4a8d2c_0x4a8db2";
 	const std::string generation_core_stage = setup_stack_authority_missing
 			? "native_h3maped_workflow_reaches_ordered_final_payload_assembly_but_same_run_setup_stack_authority_incomplete"
-			: "native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare";
+			: (final_payload_compare_reached
+					? "native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare"
+					: "native_h3maped_workflow_blocks_before_ordered_final_payload_assembly");
 	const std::string required_next_slice = setup_stack_authority_missing
 			? "recover_or_supply_uncaptured_same_run_0x49ecf2_setup_stack_tail_before_final_payload_compare"
-			: "align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload";
+			: (type98_source_pair_feed_missing
+					? "recover_or_port_live_type98_0xedc_source_pair_feed_before_0x4a8d2c_0x4a8db2"
+					: (final_payload_compare_reached
+							? "align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload"
+							: "resolve_current_native_h3maped_workflow_phase_blocker_before_final_payload_compare"));
 	const std::string message = setup_stack_authority_missing
 			? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through final payload assembly and hydrates the recovered same-run 0x49ecf2 setup prefix, but refuses same-run tile/object byte comparison until the uncaptured setup-stack tail words are recovered or supplied; final-byte deltas are not actionable before that setup identity is owned."
-			: "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned.";
+			: (type98_source_pair_feed_missing
+					? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It now refuses to manufacture type-98 town/castle materialization from runtime-zone template fields; the recovered live +0xedc source-pair feed into 0x4a8d2c/0x4a8db2 must be owned before route, connection, road, or final payload phases can run."
+					: (final_payload_compare_reached
+							? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned."
+							: "This executable is the no-Godot boundary for the single native H3MapEd workflow. It exits at the current source-order phase blocker before final payload assembly; native map output remains disabled until that phase is source-owned."));
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
