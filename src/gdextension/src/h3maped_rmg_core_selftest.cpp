@@ -2534,12 +2534,12 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve the selected source-record vector index into the handoff")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into the boundary payload")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].zone_word == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not preserve source pointer +0x00 as the boundary payload owner word")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not carry recovered relation owner byte2 into generated-cell byte2")) {
+				"relation-owner vector owner-grid chain did not keep recovered relation owner byte2 as the generated-cell byte2 gate")) {
 		return 1;
 	}
 	if (!require(owner_grid_from_relation_owners.handoffs[0].source_record_seed_0x10.x == boundary_inputs[0].source_record_seed_0x10.x
