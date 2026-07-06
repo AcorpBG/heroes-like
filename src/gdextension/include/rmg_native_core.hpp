@@ -739,6 +739,8 @@ struct SharedGeneratorObjectPrivateState {
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
 	SharedGeneratorObjectVectorState endpoint_vector_c8_cc;
 	SharedGeneratorObjectVectorState endpoint_vector_d8_dc;
 	SharedGeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;

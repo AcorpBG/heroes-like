@@ -3127,6 +3127,9 @@ int main() {
 	if (!require(generator_state.generator_value_band_0x10bc_known && generator_state.generator_value_band_0x10bc == setup3_seed58.generator_value_band_0x10bc, "generator object private state did not preserve setup-derived generator +0x10bc value band")) {
 		return 1;
 	}
+	if (!require(generator_state.generator_field_0x08_known && generator_state.generator_field_0x08 == setup3_seed58.generator_field_0x08, "generator object private state did not preserve setup-derived generator +0x08 field")) {
+		return 1;
+	}
 	if (!require(generator_state.candidate_container_vector_10d4_10d8.count_known && generator_state.candidate_container_vector_10d4_10d8.count == selected_after_setup3_seed58.accepted_template_count, "generator object private state did not preserve accepted candidate vector count")) {
 		return 1;
 	}

@@ -994,6 +994,8 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.width = input.width;
 	out.height = input.height;
 	out.level_count = input.level_count;
+	out.generator_field_0x08_known = input.generator_field_0x08_known;
+	out.generator_field_0x08 = input.generator_field_0x08;
 	out.endpoint_vector_c8_cc = from_h3maped_generator_object_vector_state(input.endpoint_vector_c8_cc);
 	out.endpoint_vector_d8_dc = from_h3maped_generator_object_vector_state(input.endpoint_vector_d8_dc);
 	out.mine_resource_descriptor_vector_388_38c = from_h3maped_generator_object_vector_state(input.mine_resource_descriptor_vector_388_38c);
@@ -2945,6 +2947,8 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"width\":" << state.width << ","
 		<< "\"height\":" << state.height << ","
 		<< "\"level_count\":" << state.level_count << ","
+		<< "\"generator_field_0x08_known\":" << (state.generator_field_0x08_known ? "true" : "false") << ","
+		<< "\"generator_field_0x08\":" << state.generator_field_0x08 << ","
 		<< "\"source_owner_player_slots_ed8_ee0_ee4_present\":" << (state.source_owner_player_slots_ed8_ee0_ee4_present ? "true" : "false") << ","
 		<< "\"selected_color_order_ed8_count\":" << state.selected_color_order_ed8_count << ","
 		<< "\"raw_source_owner_slots_ee0_count\":" << state.raw_source_owner_slots_ee0_count << ","
