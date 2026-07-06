@@ -644,6 +644,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	int native_workflow_final_payload_assembly_applied_count = 0;
 	int final_payload_binary_written_count = 0;
 	int final_payload_sections_written_count = 0;
+	std::string first_blocked_reason;
 	for (const CaseReport &report : case_reports) {
 		if (report.status == "failed") {
 			++failed_count;
@@ -692,6 +693,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 		if (report.final_payload_sections_written) {
 			++final_payload_sections_written_count;
 		}
+		if (first_blocked_reason.empty()
+				&& report.status == "blocked"
+				&& !report.blocked_reason.empty()) {
+			first_blocked_reason = report.blocked_reason;
+		}
 	}
 	const int blocked_count = int(case_reports.size()) - failed_count - unsupported_count - native_map_json_exported_count;
 	const bool native_map_output_complete =
@@ -703,9 +709,22 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 			native_workflow_final_payload_assembly_applied_count > 0;
 	const std::string blocked_reason = status == "complete"
 			? ""
-			: (final_payload_compare_reached
+			: (!first_blocked_reason.empty()
+							? first_blocked_reason
+							: (final_payload_compare_reached
 							? "native_h3maped_workflow_reaches_ordered_final_payload_compare_but_same_run_payload_parity_is_not_owned"
-							: "native_h3maped_workflow_blocked_before_ordered_final_payload_compare");
+							: "native_h3maped_workflow_blocked_before_ordered_final_payload_compare"));
+	const bool setup_stack_authority_missing =
+			blocked_reason == "same_run_payload_authority_0x49ecf2_stack_join_missing";
+	const std::string generation_core_stage = setup_stack_authority_missing
+			? "native_h3maped_workflow_reaches_ordered_final_payload_assembly_but_same_run_setup_stack_authority_missing"
+			: "native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare";
+	const std::string required_next_slice = setup_stack_authority_missing
+			? "recover_or_supply_same_run_0x49ecf2_setup_stack_authority_before_final_payload_compare"
+			: "align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload";
+	const std::string message = setup_stack_authority_missing
+			? "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through final payload assembly, but refuses same-run tile/object byte comparison until the recovered authority includes the exact 0x49ecf2 setup stack; final-byte deltas are not actionable before that setup identity is owned."
+			: "This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned.";
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_v4\",\n";
@@ -786,11 +805,11 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"final_payload_binary_written_count\": " << final_payload_binary_written_count << ",\n";
 	out << "  \"final_payload_sections_written_count\": " << final_payload_sections_written_count << ",\n";
 	out << "  \"failed_count\": " << failed_count << ",\n";
-	out << "  \"generation_core_stage\": \"native_h3maped_workflow_reaches_ordered_final_payload_assembly_and_blocks_on_same_run_payload_compare\",\n";
+	out << "  \"generation_core_stage\": \"" << json_escape(generation_core_stage) << "\",\n";
 	out << "  \"phase_snapshot_schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
 	out << "  \"native_map_json_schema_id\": \"disabled_until_full_recovered_h3maped_entrypoint_to_writeout_chain_owns_payload\",\n";
-	out << "  \"required_next_slice\": \"align_final_tile_stream_0x49b2b6_and_generated_object_payload_against_same_run_h3maped_payload\",\n";
-	out << "  \"message\": \"This executable is the no-Godot boundary for the single native H3MapEd workflow. It executes ordered phases through relation scan, mine/resource, reward/guard, connection/road, final header, final tile, and generated-object payload assembly, then exits blocked before native map output until same-run 0x49b2b6 tile and generated-object payload parity are owned.\",\n";
+	out << "  \"required_next_slice\": \"" << json_escape(required_next_slice) << "\",\n";
+	out << "  \"message\": \"" << json_escape(message) << "\",\n";
 	out << "  \"cases\": ";
 	append_case_report_array(out, case_reports);
 	out << "\n";
