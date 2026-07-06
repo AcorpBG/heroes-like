@@ -2157,6 +2157,8 @@ struct ObjectRecordReference4a54a7 {
 	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	int32_t source_catalog_index_0x49da08 = -1;
+	bool decorative_score_record_0x10_known = false;
+	int32_t decorative_obstacle_id_0x10 = -1;
 	bool copied_source_record_carried = false;
 	SourceObjectRecord0x4c source_record_copy;
 	bool object_score_cache_known_0x49b89c = false;

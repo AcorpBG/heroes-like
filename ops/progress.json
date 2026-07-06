@@ -235,7 +235,7 @@
         "final_writeout_complete_for_all_focused_cases": true
       },
       "native_cli_required_next_slice": "resolve_final_generated_cell_and_object_payload_parity_after_connection_tail",
-      "notes": "Recovered 0x4a7312 direct endpoint target-vector policy is now source-owned inside the single workflow; parity remains blocked at final generated-cell/generated-object payload comparison.",
+      "notes": "2026-07-06 source-backed 0x49e1bf/0x49b89c decorative compare-cache fix: no-Godot build and h3maped_rmg_core_selftest pass; focused Medium seed10 setup1 now reaches final_payload_compare with score_miss=0 and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Resolve final generated-cell and generated-object producer parity against the same-run H3MapEd Medium seed-10 authority. The next source-backed blocker is upstream generated-cell word_0x20/word_0x24/word_0x28 mutation and generated-object materialization order before 0x49b2b6/0x4ad3eb, not a final-map count adjustment. Runtime/native map output remains disabled until final payload parity is owned.",
@@ -246,7 +246,7 @@
       "status": "in_progress",
       "summary": "Native RMG source-order H3MapEd alignment",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-06T18:15:55Z",
+      "updatedAt": "2026-07-06T21:56:47Z",
       "validation": {
         "id": "native-rmg-type98-edc-feed-port-20260706",
         "title": "Port live type-98 +0xedc source-pair feed into source-order object materialization",
@@ -14648,14 +14648,14 @@
       "remainingWork": "Recover or port the live type-98 +0xedc source-pair feed into 0x4a8d2c/0x4a8db2 from the H3MapEd same-run chain. Do not resume route, connection, road, river, or final payload phases until that feed is source-owned."
     }
   ],
-  "currentNotes": "Type-98 +0xedc source-pair feed is now source-owned inside the single workflow; parity remains blocked downstream at connection-tail/final-payload boundaries.",
+  "currentNotes": "2026-07-06 source-backed 0x49e1bf/0x49b89c decorative compare-cache fix: no-Godot build and h3maped_rmg_core_selftest pass; focused Medium seed10 setup1 now reaches final_payload_compare with score_miss=0 and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Type-98 +0xedc source-pair feed is now source-owned inside the single workflow; parity remains blocked downstream at connection-tail/final-payload boundaries.",
+  "currentSliceNotes": "2026-07-06 source-backed 0x49e1bf/0x49b89c decorative compare-cache fix: no-Godot build and h3maped_rmg_core_selftest pass; focused Medium seed10 setup1 now reaches final_payload_compare with score_miss=0 and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-07-06T18:15:55Z",
+  "currentSliceUpdatedAt": "2026-07-06T21:56:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61222,9 +61222,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Source-backed 0x4a901a weighted scan-window alignment implemented in h3maped_rmg_core: weighted candidate scans now start at source-pair bounds plus selected descriptor width/height while direct 0x4a93a2 remains raw-bound. h3maped_rmg_core_selftest passes, and focused no-Godot Medium seed10 setup0 2p snapshot regenerates without Godot, increasing final object surface to 921 objects / 12688 object payload bytes. Final parity is still blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload.",
+  "summary": "Source-backed 0x49e1bf/0x49b89c decorative scoring alignment implemented in h3maped_rmg_core: decorative dispatch now uses recovered source-wrapper bucket order, exact descriptor +0x04/+0x3c mask reads, raw in-bounds score-cache compare values, and carried decorative obstacle ids for +0x30/+0x40 score-table adjustments. h3maped_rmg_core_selftest passes, and focused no-Godot Medium seed10 setup1 reaches final_payload_compare with score_miss=0. Final parity is still blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled.",
   "taskId": "10184",
-  "updatedAt": "2026-07-06T17:58:24Z",
+  "updatedAt": "2026-07-06T21:56:47Z",
   "validation": {
     "id": "native-rmg-type98-edc-feed-port-20260706",
     "title": "Port live type-98 +0xedc source-pair feed into source-order object materialization",
