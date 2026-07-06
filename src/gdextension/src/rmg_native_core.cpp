@@ -164,6 +164,16 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.setup_object_0x48 = controlled_case.setup_object_0x48;
 	config.setup_object_0x4c_known = controlled_case.setup_object_0x4c_known;
 	config.setup_object_0x4c = controlled_case.setup_object_0x4c;
+	config.setup_object_0x34_known = controlled_case.setup_object_0x34_known;
+	config.setup_object_0x34 = controlled_case.setup_object_0x34;
+	config.setup_object_0x38_known = controlled_case.setup_object_0x38_known;
+	config.setup_object_0x38 = controlled_case.setup_object_0x38;
+	config.setup_object_0x3c_known = controlled_case.setup_object_0x3c_known;
+	config.setup_object_0x3c = controlled_case.setup_object_0x3c;
+	config.setup_object_0x40_known = controlled_case.setup_object_0x40_known;
+	config.setup_object_0x40 = controlled_case.setup_object_0x40;
+	config.setup_caller_arg_0x0c_known = controlled_case.setup_caller_arg_0x0c_known;
+	config.setup_caller_arg_0x0c = controlled_case.setup_caller_arg_0x0c;
 	return config;
 }
 
@@ -1060,6 +1070,14 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.level_count = input.level_count;
 	out.generator_field_0x08_known = input.generator_field_0x08_known;
 	out.generator_field_0x08 = input.generator_field_0x08;
+	out.generator_field_0xf48_known = input.generator_field_0xf48_known;
+	out.generator_field_0xf48 = input.generator_field_0xf48;
+	out.generator_field_0xf4c_known = input.generator_field_0xf4c_known;
+	out.generator_field_0xf4c = input.generator_field_0xf4c;
+	out.generator_field_0xf50_known = input.generator_field_0xf50_known;
+	out.generator_field_0xf50 = input.generator_field_0xf50;
+	out.generator_field_0xf54_known = input.generator_field_0xf54_known;
+	out.generator_field_0xf54 = input.generator_field_0xf54;
 	out.endpoint_vector_c8_cc = from_h3maped_generator_object_vector_state(input.endpoint_vector_c8_cc);
 	out.endpoint_vector_d8_dc = from_h3maped_generator_object_vector_state(input.endpoint_vector_d8_dc);
 	out.mine_resource_descriptor_vector_388_38c = from_h3maped_generator_object_vector_state(input.mine_resource_descriptor_vector_388_38c);
@@ -3019,6 +3037,14 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"level_count\":" << state.level_count << ","
 		<< "\"generator_field_0x08_known\":" << (state.generator_field_0x08_known ? "true" : "false") << ","
 		<< "\"generator_field_0x08\":" << state.generator_field_0x08 << ","
+		<< "\"generator_field_0xf48_known\":" << (state.generator_field_0xf48_known ? "true" : "false") << ","
+		<< "\"generator_field_0xf48\":" << state.generator_field_0xf48 << ","
+		<< "\"generator_field_0xf4c_known\":" << (state.generator_field_0xf4c_known ? "true" : "false") << ","
+		<< "\"generator_field_0xf4c\":" << state.generator_field_0xf4c << ","
+		<< "\"generator_field_0xf50_known\":" << (state.generator_field_0xf50_known ? "true" : "false") << ","
+		<< "\"generator_field_0xf50\":" << state.generator_field_0xf50 << ","
+		<< "\"generator_field_0xf54_known\":" << (state.generator_field_0xf54_known ? "true" : "false") << ","
+		<< "\"generator_field_0xf54\":" << state.generator_field_0xf54 << ","
 		<< "\"source_owner_player_slots_ed8_ee0_ee4_present\":" << (state.source_owner_player_slots_ed8_ee0_ee4_present ? "true" : "false") << ","
 		<< "\"selected_color_order_ed8_count\":" << state.selected_color_order_ed8_count << ","
 		<< "\"raw_source_owner_slots_ee0_count\":" << state.raw_source_owner_slots_ee0_count << ","
@@ -3833,6 +3859,21 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"rmg_setup_object_0x4c_known\": " << (controlled_case.setup_object_0x4c_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x4c_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c\": " << controlled_case.setup_object_0x4c << ",\n";
+	out << "    \"rmg_setup_object_0x34_known\": " << (controlled_case.setup_object_0x34_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x34_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x34_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x34\": " << controlled_case.setup_object_0x34 << ",\n";
+	out << "    \"rmg_setup_object_0x38_known\": " << (controlled_case.setup_object_0x38_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x38_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x38_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x38\": " << controlled_case.setup_object_0x38 << ",\n";
+	out << "    \"rmg_setup_object_0x3c_known\": " << (controlled_case.setup_object_0x3c_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x3c_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x3c_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x3c\": " << controlled_case.setup_object_0x3c << ",\n";
+	out << "    \"rmg_setup_object_0x40_known\": " << (controlled_case.setup_object_0x40_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x40_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x40_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_0x40\": " << controlled_case.setup_object_0x40 << ",\n";
+	out << "    \"rmg_setup_caller_arg_0x0c_known\": " << (controlled_case.setup_caller_arg_0x0c_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_caller_arg_0x0c_supplied_by_controlled_case\": " << (controlled_case.setup_caller_arg_0x0c_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_caller_arg_0x0c\": " << controlled_case.setup_caller_arg_0x0c << ",\n";
 	const std::string generator_mode_source = !input.generator_mode_0x10b8_known
 			? "missing_same_run_rmg_setup_object_0x44_or_explicit_cli"
 			: (input.recovered_setup_mode_randomized_sentinel_3
@@ -3957,8 +3998,8 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 	ControlledCase controlled_case;
 	controlled_case.raw = raw;
 	const std::vector<std::string> parts = split(raw, ':');
-	if (parts.size() < 6 || parts.size() > 11) {
-		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c[:setup_object_0x48]]]]]";
+	if (parts.size() < 6 || parts.size() > 16) {
+		controlled_case.parse_error = "expected id:size_class:players:seed:water_mode:level_count[:human_count[:computer_count[:setup_object_0x44[:setup_object_0x4c[:setup_object_0x48[:setup_object_0x34[:setup_object_0x38[:setup_object_0x3c[:setup_object_0x40[:setup_caller_arg_0x0c]]]]]]]]]]";
 		return controlled_case;
 	}
 
@@ -4023,6 +4064,46 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 		controlled_case.setup_object_raw_0x48_supplied = true;
 		controlled_case.setup_object_0x48_supplied = true;
 	}
+	if (parts.size() >= 12 && !parts[11].empty()) {
+		controlled_case.setup_object_0x34_known = parse_i32(parts[11], controlled_case.setup_object_0x34);
+		if (!controlled_case.setup_object_0x34_known) {
+			controlled_case.parse_error = "invalid setup_object_0x34";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x34_supplied = true;
+	}
+	if (parts.size() >= 13 && !parts[12].empty()) {
+		controlled_case.setup_object_0x38_known = parse_i32(parts[12], controlled_case.setup_object_0x38);
+		if (!controlled_case.setup_object_0x38_known) {
+			controlled_case.parse_error = "invalid setup_object_0x38";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x38_supplied = true;
+	}
+	if (parts.size() >= 14 && !parts[13].empty()) {
+		controlled_case.setup_object_0x3c_known = parse_i32(parts[13], controlled_case.setup_object_0x3c);
+		if (!controlled_case.setup_object_0x3c_known) {
+			controlled_case.parse_error = "invalid setup_object_0x3c";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x3c_supplied = true;
+	}
+	if (parts.size() >= 15 && !parts[14].empty()) {
+		controlled_case.setup_object_0x40_known = parse_i32(parts[14], controlled_case.setup_object_0x40);
+		if (!controlled_case.setup_object_0x40_known) {
+			controlled_case.parse_error = "invalid setup_object_0x40";
+			return controlled_case;
+		}
+		controlled_case.setup_object_0x40_supplied = true;
+	}
+	if (parts.size() >= 16 && !parts[15].empty()) {
+		controlled_case.setup_caller_arg_0x0c_known = parse_i32(parts[15], controlled_case.setup_caller_arg_0x0c);
+		if (!controlled_case.setup_caller_arg_0x0c_known) {
+			controlled_case.parse_error = "invalid setup_caller_arg_0x0c";
+			return controlled_case;
+		}
+		controlled_case.setup_caller_arg_0x0c_supplied = true;
+	}
 
 	controlled_case.parse_ok = true;
 	return controlled_case;
@@ -4079,7 +4160,17 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 								? h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(controlled_case.setup_object_raw_0x48)
 								: controlled_case.setup_object_0x48,
 						controlled_case.setup_object_0x4c_known,
-						controlled_case.setup_object_0x4c);
+						controlled_case.setup_object_0x4c,
+						controlled_case.setup_object_0x34_known,
+						controlled_case.setup_object_0x34,
+						controlled_case.setup_object_0x38_known,
+						controlled_case.setup_object_0x38,
+						controlled_case.setup_object_0x3c_known,
+						controlled_case.setup_object_0x3c,
+						controlled_case.setup_object_0x40_known,
+						controlled_case.setup_object_0x40,
+						controlled_case.setup_caller_arg_0x0c_known,
+						controlled_case.setup_caller_arg_0x0c);
 		resolved.recovered_setup_mode_known = true;
 		resolved.recovered_setup_object_0x44 = setup.setup_object_0x44;
 		resolved.recovered_setup_mode_randomized_sentinel_3 = setup.randomized_setup_sentinel_3;

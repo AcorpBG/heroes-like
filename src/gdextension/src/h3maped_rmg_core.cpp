@@ -1749,6 +1749,41 @@ int32_t setup_value_band_arg_0x4adfe1_to_0x49ecf2(int32_t raw_setup_object_0x48)
 	return std::min<int32_t>(5, std::max<int32_t>(1, raw_setup_object_0x48 + 3));
 }
 
+static GeneratorSetupCallerFields4adfe1 setup_caller_fields_0x4adfe1(
+		bool setup_object_0x34_known,
+		int32_t setup_object_0x34,
+		bool setup_object_0x38_known,
+		int32_t setup_object_0x38,
+		bool setup_object_0x3c_known,
+		int32_t setup_object_0x3c,
+		bool setup_object_0x40_known,
+		int32_t setup_object_0x40,
+		bool setup_caller_arg_0x0c_known,
+		int32_t setup_caller_arg_0x0c) {
+	GeneratorSetupCallerFields4adfe1 result;
+	result.setup_object_0x34_known = setup_object_0x34_known;
+	result.setup_object_0x34 = setup_object_0x34;
+	result.setup_object_0x38_known = setup_object_0x38_known;
+	result.setup_object_0x38 = setup_object_0x38;
+	result.setup_object_0x3c_known = setup_object_0x3c_known;
+	result.setup_object_0x3c = setup_object_0x3c;
+	result.setup_object_0x40_known = setup_object_0x40_known;
+	result.setup_object_0x40 = setup_object_0x40;
+	result.setup_caller_arg_0x0c_known = setup_caller_arg_0x0c_known;
+	result.setup_caller_arg_0x0c = setup_caller_arg_0x0c;
+	result.normalized_setup_object_0x34 = setup_object_0x34;
+	result.normalized_setup_object_0x3c = setup_object_0x3c;
+	if (setup_object_0x34_known && setup_object_0x3c_known) {
+		result.normalized_pair_0x34_0x3c_known = true;
+		if (setup_object_0x34 + setup_object_0x3c < 2) {
+			result.normalized_pair_0x34_0x3c_zeroed = true;
+			result.normalized_setup_object_0x34 = 0;
+			result.normalized_setup_object_0x3c = 0;
+		}
+	}
+	return result;
+}
+
 GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 		int32_t width,
 		int32_t height,
@@ -1758,7 +1793,17 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 		bool setup_value_band_arg_known,
 		int32_t setup_value_band_arg,
 		bool setup_object_0x4c_known,
-		int32_t setup_object_0x4c) {
+		int32_t setup_object_0x4c,
+		bool setup_object_0x34_known,
+		int32_t setup_object_0x34,
+		bool setup_object_0x38_known,
+		int32_t setup_object_0x38,
+		bool setup_object_0x3c_known,
+		int32_t setup_object_0x3c,
+		bool setup_object_0x40_known,
+		int32_t setup_object_0x40,
+		bool setup_caller_arg_0x0c_known,
+		int32_t setup_caller_arg_0x0c) {
 	GeneratorSetupStackArgs49ecf2 result;
 	auto set_arg = [&result](size_t index, int32_t value) {
 		if (index < result.args.size()) {
@@ -1766,14 +1811,40 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 			result.args[index] = value;
 		}
 	};
+	const GeneratorSetupCallerFields4adfe1 setup_fields = setup_caller_fields_0x4adfe1(
+			setup_object_0x34_known,
+			setup_object_0x34,
+			setup_object_0x38_known,
+			setup_object_0x38,
+			setup_object_0x3c_known,
+			setup_object_0x3c,
+			setup_object_0x40_known,
+			setup_object_0x40,
+			setup_caller_arg_0x0c_known,
+			setup_caller_arg_0x0c);
 	set_arg(0, width); // 0x49ecf2 [EBP+0x08] <- 0x4adfe1 [ESI+0x28]
 	set_arg(1, height); // [EBP+0x0c] <- [ESI+0x2c]
 	set_arg(2, level_count); // [EBP+0x10] <- [ESI+0x30]
+	if (setup_fields.setup_object_0x34_known) {
+		set_arg(3, setup_fields.normalized_setup_object_0x34); // [EBP+0x14] <- normalized [ESI+0x34], later generator+0xf48.
+	}
+	if (setup_fields.setup_object_0x38_known) {
+		set_arg(4, setup_fields.setup_object_0x38); // [EBP+0x18] <- [ESI+0x38], later generator+0xf4c.
+	}
+	if (setup_fields.setup_object_0x3c_known) {
+		set_arg(5, setup_fields.normalized_setup_object_0x3c); // [EBP+0x1c] <- normalized [ESI+0x3c], later generator+0xf50.
+	}
+	if (setup_fields.setup_object_0x40_known) {
+		set_arg(6, setup_fields.setup_object_0x40); // [EBP+0x20] <- [ESI+0x40], later generator+0xf54.
+	}
 	if (setup_object_0x44_known) {
 		set_arg(7, setup_object_0x44); // [EBP+0x24] <- [ESI+0x44], later generator+0x10b8 before sentinel randomization.
 	}
 	if (setup_value_band_arg_known) {
 		set_arg(8, setup_value_band_arg); // [EBP+0x28] <- prepared EAX from clamp([ESI+0x48]+3, 1, 5).
+	}
+	if (setup_fields.setup_caller_arg_0x0c_known) {
+		set_arg(9, setup_fields.setup_caller_arg_0x0c); // [EBP+0x2c] <- 0x4adfe1 caller stack [EBP+0x0c].
 	}
 	if (setup_object_0x4c_known) {
 		set_arg(10, setup_object_0x4c); // [EBP+0x30] <- [ESI+0x4c], later generator+0x08.
@@ -1801,10 +1872,37 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 	return result;
 }
 
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48, bool setup_object_0x4c_known, int32_t setup_object_0x4c) {
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
+		uint32_t seed,
+		int32_t setup_object_0x44,
+		bool setup_object_0x48_known,
+		int32_t setup_object_0x48,
+		bool setup_object_0x4c_known,
+		int32_t setup_object_0x4c,
+		bool setup_object_0x34_known,
+		int32_t setup_object_0x34,
+		bool setup_object_0x38_known,
+		int32_t setup_object_0x38,
+		bool setup_object_0x3c_known,
+		int32_t setup_object_0x3c,
+		bool setup_object_0x40_known,
+		int32_t setup_object_0x40,
+		bool setup_caller_arg_0x0c_known,
+		int32_t setup_caller_arg_0x0c) {
 	GeneratorSetupModeResult49ecf2 result;
 	result.setup_object_0x44 = setup_object_0x44;
 	result.generator_mode_0x10b8 = setup_object_0x44;
+	result.setup_fields_0x4adfe1 = setup_caller_fields_0x4adfe1(
+			setup_object_0x34_known,
+			setup_object_0x34,
+			setup_object_0x38_known,
+			setup_object_0x38,
+			setup_object_0x3c_known,
+			setup_object_0x3c,
+			setup_object_0x40_known,
+			setup_object_0x40,
+			setup_caller_arg_0x0c_known,
+			setup_caller_arg_0x0c);
 	result.setup_object_0x48_known = setup_object_0x48_known;
 	result.setup_object_0x48 = setup_object_0x48;
 	if (setup_object_0x48_known) {
@@ -1815,6 +1913,14 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_
 	result.setup_object_0x4c = setup_object_0x4c;
 	result.generator_field_0x08_known = setup_object_0x4c_known;
 	result.generator_field_0x08 = setup_object_0x4c;
+	result.generator_field_0xf48_known = result.setup_fields_0x4adfe1.setup_object_0x34_known;
+	result.generator_field_0xf48 = result.setup_fields_0x4adfe1.normalized_setup_object_0x34;
+	result.generator_field_0xf4c_known = result.setup_fields_0x4adfe1.setup_object_0x38_known;
+	result.generator_field_0xf4c = result.setup_fields_0x4adfe1.setup_object_0x38;
+	result.generator_field_0xf50_known = result.setup_fields_0x4adfe1.setup_object_0x3c_known;
+	result.generator_field_0xf50 = result.setup_fields_0x4adfe1.normalized_setup_object_0x3c;
+	result.generator_field_0xf54_known = result.setup_fields_0x4adfe1.setup_object_0x40_known;
+	result.generator_field_0xf54 = result.setup_fields_0x4adfe1.setup_object_0x40;
 	result.rng_state_before_setup = seed;
 	result.rng_state_before_template_selection = seed;
 	if (setup_object_0x44 == 3) {
@@ -12671,7 +12777,17 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 						setup_value_band_arg_0x28_known,
 						setup_value_band_arg_0x28,
 						config.setup_object_0x4c_known,
-						config.setup_object_0x4c);
+						config.setup_object_0x4c,
+						config.setup_object_0x34_known,
+						config.setup_object_0x34,
+						config.setup_object_0x38_known,
+						config.setup_object_0x38,
+						config.setup_object_0x3c_known,
+						config.setup_object_0x3c,
+						config.setup_object_0x40_known,
+						config.setup_object_0x40,
+						config.setup_caller_arg_0x0c_known,
+						config.setup_caller_arg_0x0c);
 		if (!native_stack.full_args_known) {
 			return "native_0x49ecf2_setup_stack_missing_"
 					+ std::to_string(native_stack.missing_arg_labels.size())
@@ -21932,6 +22048,14 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.generator_value_band_0x10bc = setup_mode.generator_value_band_0x10bc;
 	state.generator_field_0x08_known = setup_mode.generator_field_0x08_known;
 	state.generator_field_0x08 = setup_mode.generator_field_0x08;
+	state.generator_field_0xf48_known = setup_mode.generator_field_0xf48_known;
+	state.generator_field_0xf48 = setup_mode.generator_field_0xf48;
+	state.generator_field_0xf4c_known = setup_mode.generator_field_0xf4c_known;
+	state.generator_field_0xf4c = setup_mode.generator_field_0xf4c;
+	state.generator_field_0xf50_known = setup_mode.generator_field_0xf50_known;
+	state.generator_field_0xf50 = setup_mode.generator_field_0xf50;
+	state.generator_field_0xf54_known = setup_mode.generator_field_0xf54_known;
+	state.generator_field_0xf54 = setup_mode.generator_field_0xf54;
 	state.reward_guard_slot_bytes_0xf88_known = true;
 	state.reward_guard_slot_bytes_0xf88.fill(0U);
 	state.reward_guard_slot_0x4ad640_allocation_count = 0;
@@ -22148,7 +22272,17 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			setup_value_band_arg_0x28_known,
 			setup_value_band_arg_0x28,
 			config.setup_object_0x4c_known,
-			config.setup_object_0x4c);
+			config.setup_object_0x4c,
+			config.setup_object_0x34_known,
+			config.setup_object_0x34,
+			config.setup_object_0x38_known,
+			config.setup_object_0x38,
+			config.setup_object_0x3c_known,
+			config.setup_object_0x3c,
+			config.setup_object_0x40_known,
+			config.setup_object_0x40,
+			config.setup_caller_arg_0x0c_known,
+			config.setup_caller_arg_0x0c);
 	result.setup_mode_0x49ecf2.setup_stack_args_0x4adfe1_to_0x49ecf2 =
 			setup_stack_args_0x4adfe1_to_0x49ecf2(
 					config.width,
@@ -22159,7 +22293,17 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					setup_value_band_arg_0x28_known,
 					setup_value_band_arg_0x28,
 					config.setup_object_0x4c_known,
-					config.setup_object_0x4c);
+					config.setup_object_0x4c,
+					config.setup_object_0x34_known,
+					config.setup_object_0x34,
+					config.setup_object_0x38_known,
+					config.setup_object_0x38,
+					config.setup_object_0x3c_known,
+					config.setup_object_0x3c,
+					config.setup_object_0x40_known,
+					config.setup_object_0x40,
+					config.setup_caller_arg_0x0c_known,
+					config.setup_caller_arg_0x0c);
 	const int32_t score = size_score(
 			config.width,
 			config.height,

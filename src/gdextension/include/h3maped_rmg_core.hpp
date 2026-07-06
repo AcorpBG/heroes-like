@@ -1124,6 +1124,23 @@ struct GeneratorSetupStackArgs49ecf2 {
 	std::vector<std::string> missing_arg_labels;
 };
 
+struct GeneratorSetupCallerFields4adfe1 {
+	bool setup_object_0x34_known = false;
+	int32_t setup_object_0x34 = 0;
+	bool setup_object_0x38_known = false;
+	int32_t setup_object_0x38 = 0;
+	bool setup_object_0x3c_known = false;
+	int32_t setup_object_0x3c = 0;
+	bool setup_object_0x40_known = false;
+	int32_t setup_object_0x40 = 0;
+	bool setup_caller_arg_0x0c_known = false;
+	int32_t setup_caller_arg_0x0c = 0;
+	bool normalized_pair_0x34_0x3c_known = false;
+	bool normalized_pair_0x34_0x3c_zeroed = false;
+	int32_t normalized_setup_object_0x34 = 0;
+	int32_t normalized_setup_object_0x3c = 0;
+};
+
 struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x44 = 0;
 	int32_t generator_mode_0x10b8 = 0;
@@ -1135,11 +1152,20 @@ struct GeneratorSetupModeResult49ecf2 {
 	int32_t setup_object_0x4c = 0;
 	bool generator_field_0x08_known = false;
 	int32_t generator_field_0x08 = 0;
+	bool generator_field_0xf48_known = false;
+	int32_t generator_field_0xf48 = 0;
+	bool generator_field_0xf4c_known = false;
+	int32_t generator_field_0xf4c = 0;
+	bool generator_field_0xf50_known = false;
+	int32_t generator_field_0xf50 = 0;
+	bool generator_field_0xf54_known = false;
+	int32_t generator_field_0xf54 = 0;
 	bool randomized_setup_sentinel_3 = false;
 	int32_t setup_rng_value = -1;
 	int32_t setup_rng_call_count = 0;
 	uint32_t rng_state_before_setup = 0;
 	uint32_t rng_state_before_template_selection = 0;
+	GeneratorSetupCallerFields4adfe1 setup_fields_0x4adfe1;
 	GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2;
 };
 
@@ -2811,6 +2837,14 @@ struct GeneratorObjectPrivateState {
 	int32_t generator_value_band_0x10bc = 0;
 	bool generator_field_0x08_known = false;
 	int32_t generator_field_0x08 = 0;
+	bool generator_field_0xf48_known = false;
+	int32_t generator_field_0xf48 = 0;
+	bool generator_field_0xf4c_known = false;
+	int32_t generator_field_0xf4c = 0;
+	bool generator_field_0xf50_known = false;
+	int32_t generator_field_0xf50 = 0;
+	bool generator_field_0xf54_known = false;
+	int32_t generator_field_0xf54 = 0;
 	bool reward_guard_slot_bytes_0xf88_known = false;
 	std::array<uint8_t, 0x91> reward_guard_slot_bytes_0xf88 {};
 	int32_t reward_guard_slot_0x4ad640_allocation_count = 0;
@@ -3119,6 +3153,16 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t setup_object_0x48 = 0;
 	bool setup_object_0x4c_known = true;
 	int32_t setup_object_0x4c = 0;
+	bool setup_object_0x34_known = false;
+	int32_t setup_object_0x34 = 0;
+	bool setup_object_0x38_known = false;
+	int32_t setup_object_0x38 = 0;
+	bool setup_object_0x3c_known = false;
+	int32_t setup_object_0x3c = 0;
+	bool setup_object_0x40_known = false;
+	int32_t setup_object_0x40 = 0;
+	bool setup_caller_arg_0x0c_known = false;
+	int32_t setup_caller_arg_0x0c = 0;
 	bool same_run_final_tile_payload_authority_known = false;
 	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
 	bool same_run_generated_object_payload_authority_known = false;
@@ -3884,8 +3928,34 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 		bool setup_value_band_arg_known,
 		int32_t setup_value_band_arg,
 		bool setup_object_0x4c_known,
-		int32_t setup_object_0x4c);
-GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0, bool setup_object_0x4c_known = true, int32_t setup_object_0x4c = 0);
+		int32_t setup_object_0x4c,
+		bool setup_object_0x34_known = false,
+		int32_t setup_object_0x34 = 0,
+		bool setup_object_0x38_known = false,
+		int32_t setup_object_0x38 = 0,
+		bool setup_object_0x3c_known = false,
+		int32_t setup_object_0x3c = 0,
+		bool setup_object_0x40_known = false,
+		int32_t setup_object_0x40 = 0,
+		bool setup_caller_arg_0x0c_known = false,
+		int32_t setup_caller_arg_0x0c = 0);
+GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
+		uint32_t seed,
+		int32_t setup_object_0x44,
+		bool setup_object_0x48_known = true,
+		int32_t setup_object_0x48 = 0,
+		bool setup_object_0x4c_known = true,
+		int32_t setup_object_0x4c = 0,
+		bool setup_object_0x34_known = false,
+		int32_t setup_object_0x34 = 0,
+		bool setup_object_0x38_known = false,
+		int32_t setup_object_0x38 = 0,
+		bool setup_object_0x3c_known = false,
+		int32_t setup_object_0x3c = 0,
+		bool setup_object_0x40_known = false,
+		int32_t setup_object_0x40 = 0,
+		bool setup_caller_arg_0x0c_known = false,
+		int32_t setup_caller_arg_0x0c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);
 PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t human_count, int32_t player_count, uint8_t human_capable_source_owner_mask, uint8_t player_capable_source_owner_mask, uint8_t selected_color_mask = 0xffU);
