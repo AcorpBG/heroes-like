@@ -189,6 +189,10 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(
 			input.same_run_payload_authority_object_byte_count;
 	config.same_run_payload_authority_setup_stack_join_known =
 			input.same_run_payload_authority_setup_stack_join_known;
+	config.same_run_payload_authority_setup_stack_args_known =
+			input.same_run_payload_authority_setup_stack_args_known;
+	config.same_run_payload_authority_setup_stack_args_0x49ecf2 =
+			input.same_run_payload_authority_setup_stack_args_0x49ecf2;
 	config.same_run_payload_authority_setup_object_0x44 =
 			input.same_run_payload_authority_setup_object_0x44;
 	config.same_run_payload_authority_setup_object_0x48 =

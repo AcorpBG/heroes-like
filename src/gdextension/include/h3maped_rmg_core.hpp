@@ -78,6 +78,7 @@ constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_3 = 0x004a2907
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT = 0x004a2990U;
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_WRAP_CONTINUATION_ENDPOINT = 0x004a2adcU;
 constexpr uint32_t BOUNDARY_VECTOR_APPEND_4A2777_FINAL_CLIPPED_ENDPOINT = 0x004a2b1eU;
+constexpr int32_t RMG_SETUP_STACK_ARG_COUNT_0X49ECF2 = 11;
 
 struct RelationResetCell {
 	uint32_t word_0x10 = RELATION_RESET_COORD_MINUS_ONE;
@@ -3118,6 +3119,8 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t same_run_payload_authority_tile_byte_count = 0;
 	int32_t same_run_payload_authority_object_byte_count = 0;
 	bool same_run_payload_authority_setup_stack_join_known = false;
+	bool same_run_payload_authority_setup_stack_args_known = false;
+	std::vector<int32_t> same_run_payload_authority_setup_stack_args_0x49ecf2;
 	int32_t same_run_payload_authority_setup_object_0x44 = 0;
 	int32_t same_run_payload_authority_setup_object_0x48 = 0;
 	int32_t same_run_payload_authority_setup_object_0x4c = 0;
