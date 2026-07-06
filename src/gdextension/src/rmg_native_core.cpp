@@ -4655,8 +4655,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow is allowed to advance only through source-owned phases. It now fails closed at native_h3maped_workflow.current_phase_id/native_h3maped_workflow.blocked_reason when the recovered live type-98 +0xedc source-pair feed into 0x4a8d2c/0x4a8db2 is missing, instead of manufacturing town/castle materialization from runtime-zone template fields.\",\n";
-	out << "    \"required_refactor\": \"recover or port the live type-98 +0xedc source-pair producer/feed before 0x4a8d2c/0x4a8db2; only then resume downstream route, connection, road, and final-payload parity work\",\n";
+	out << "    \"current_blocker\": \"native workflow is allowed to advance only through source-owned phases. The recovered live type-98 +0xedc source-pair producer now feeds 0x4a8d2c/0x4a8db2; remaining failures are reported at native_h3maped_workflow.current_phase_id/native_h3maped_workflow.blocked_reason, currently downstream connection-tail or final-payload parity boundaries depending on the controlled case.\",\n";
+	out << "    \"required_refactor\": \"resolve the current source-owned workflow phase blocker before native map output; do not replace connection-tail, final-tile, or generated-object payload mismatches with density/count tuning\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";

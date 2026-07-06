@@ -3463,15 +3463,18 @@ int main() {
 		const H3MapedRmgWorkflowResult generator_state_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(generator_state_workflow_config);
 		const GeneratorObjectPrivateState &generator_state = generator_state_workflow.generator_object_private_state;
-		const std::string source_order_type98_feed_blocker =
-				"0x4ac552_live_type98_source_pair_feed_0xedc_missing_before_0x4a8d2c_0x4a8db2";
+		const std::string final_payload_profile_blocker =
+				"same_run_payload_authority_missing_recovered_profile_metadata";
 		if (!require(generator_state_workflow.executed
-						&& generator_state_workflow.current_phase_id == "source_order_object_materialization"
-						&& generator_state_workflow.blocked_reason == source_order_type98_feed_blocker
-						&& !generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
-						&& !generator_state_workflow.final_payload_owned
-						&& !generator_state_workflow.final_writeout_complete,
-					"workflow-owned generator state did not fail closed at the missing live type-98 +0xedc source-pair feed")) {
+						&& generator_state_workflow.current_phase_id == "final_payload_compare"
+						&& generator_state_workflow.blocked_reason == final_payload_profile_blocker
+						&& generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
+						&& generator_state_workflow.final_payload_owned
+						&& generator_state_workflow.final_writeout_complete,
+					"workflow-owned generator state did not advance past source-order type-98 +0xedc materialization into final payload compare: phase="
+							+ generator_state_workflow.current_phase_id
+							+ " reason="
+							+ generator_state_workflow.blocked_reason)) {
 			return 1;
 		}
 	if (!require(generator_state.generated_cell_buffer_owned && generator_state.generated_cell_buffer.records.size() == 36U * 36U, "generator object private state did not own the generated-cell buffer at +0x14")) {
@@ -3507,31 +3510,30 @@ int main() {
 		return value.rfind(prefix, 0) == 0;
 	};
 	if (!require(generator_state.source_order_relation_pointer_loop_0x4ac552_ported
-					&& !generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
-					&& !generator_state.source_order_relation_pointer_loop_0x4ac552_applied
-					&& generator_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason == source_order_type98_feed_blocker
+					&& generator_state.source_order_relation_pointer_loop_0x4ac552_input_known
+					&& generator_state.source_order_relation_pointer_loop_0x4ac552_applied
+					&& generator_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason.empty()
 					&& generator_state.relation_owner_vector_produced_by_0x4ac552_0x4a218c
 					&& generator_state.relation_owner_vector_selected_candidate_input_known
 					&& generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 == generator_state.relation_owner_vector_count_10e4_10e8
-					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c == 0
-					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 == 0
-					&& generator_state.object_records_0xec4_ecc.empty()
-					&& generator_state_workflow.current_phase_id == "source_order_object_materialization",
-				"generator object private state still treated reconstructed type-98 runtime-zone fields as a recovered 0x4ac552 source-record loop")) {
+					&& generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
+					&& generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
+					&& !generator_state.source_pair_records_edc.empty()
+					&& !generator_state.object_records_0xec4_ecc.empty()
+					&& generator_state_workflow.current_phase_id == "final_payload_compare",
+				"generator object private state did not replay source-owned type-98 +0xedc pairs through 0x4ac552 source-order materialization")) {
 		return 1;
 	}
-	if (!require(!generator_state.route_container_free_cell_sweep_0x4a8260_applied
-					&& !generator_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
-					&& !generator_state.materialization_bridge_relation_loop_0x4a4913_applied
-					&& !generator_state.relation_normalization_4a5767_full_grid_reset_applied
-					&& !generator_state.relation_scan_consumers_4a5767_applied
-					&& !generator_state.relation_source_order_scan_0x4a89da.invoked
-					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
-					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
-					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& !generator_state.connection_tail_replay_0x4a79a3.invoked
-					&& !generator_state.road_river_object_adjacency_0x4ab52a.invoked,
-							"generator object private state continued downstream after the live type-98 source-pair feed blocker")) {
+	if (!require(generator_state.route_container_free_cell_sweep_0x4a8260_applied
+					&& generator_state.relation_normalization_4a5767_full_grid_reset_applied
+					&& generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.relation_source_order_scan_0x4a89da.invoked
+					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
+					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
+					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+					&& generator_state.connection_tail_replay_0x4a79a3.invoked
+					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked,
+							"generator object private state did not continue downstream after source-owned type-98 source-order materialization")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_vector_10e4_10e8.present && generator_state.relation_vector_10e4_10e8.contents_known, "generator object private state must keep relation/object state explicit")) {
@@ -3805,37 +3807,36 @@ int main() {
 	if (!require(summed_source_endpoint_record_count > 0, "generator relation owners did not preserve source endpoint records before reward/guard")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_source_order_scan_0x4a89da.invoked
-					&& !generator_state.mine_resource_materialization_0x4a9d6a.invoked
-					&& !generator_state.reward_guard_source_stream_0x4aab7e.invoked
-					&& !generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-					&& !generator_state.connection_tail_replay_0x4a79a3.invoked
-					&& !generator_state.road_river_object_adjacency_0x4ab52a.invoked
-					&& generator_state_workflow.current_phase_id == "source_order_object_materialization",
-				"generator object private state ran downstream materialization after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_source_order_scan_0x4a89da.invoked
+					&& generator_state.mine_resource_materialization_0x4a9d6a.invoked
+					&& generator_state.reward_guard_source_stream_0x4aab7e.invoked
+					&& generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+					&& generator_state.connection_tail_replay_0x4a79a3.invoked
+					&& generator_state.road_river_object_adjacency_0x4ab52a.invoked
+					&& generator_state_workflow.current_phase_id == "final_payload_compare",
+				"generator object private state did not run downstream materialization after source-owned type-98 source-pair replay")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state applied 0x4a5767 after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_applied, "generator object private state did not apply 0x4a5767 after source-owned type-98 source-order replay")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count == 0, "0x4a5767 full-grid reset visited cells after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_visited_count > 0, "0x4a5767 full-grid reset did not visit cells after source-owned type-98 source-order replay")) {
 		return 1;
 	}
 	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_skipped_count == 0, "0x4a5767 full-grid reset skipped known generated-cell records")) {
 		return 1;
 	}
-	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count == 0, "0x4a5767 full-grid reset mutated cells after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_normalization_4a5767_full_grid_reset_changed_count > 0, "0x4a5767 full-grid reset did not mutate cells after source-owned type-98 source-order replay")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_scan_consumers_4a5767_applied
-					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 == 0
-					&& generator_state.relation_scan_consumer_owner_bounds_blocked_count_4a5767 == 0,
-				"generator object private state ran the 0x4a5767 relation scan-consumer pass after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_scan_consumers_4a5767_applied
+					&& generator_state.relation_scan_consumer_owner_scan_count_4a5767 > 0,
+				"generator object private state did not run the 0x4a5767 relation scan-consumer pass after source-owned type-98 source-order replay")) {
 		return 1;
 	}
-	if (!require(!generator_state.relation_high_owner_propagation_49a318_applied
-					&& generator_state.relation_high_owner_seed_attempt_count_49a318 == 0,
-				"generator object private state ran 0x49a318 owner/projection propagation after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.relation_high_owner_propagation_49a318_applied
+					&& generator_state.relation_high_owner_seed_attempt_count_49a318 > 0,
+				"generator object private state did not run 0x49a318 owner/projection propagation after source-owned type-98 source-order replay")) {
 		return 1;
 	}
 	if (!require(std::all_of(generator_state.generated_cell_buffer.records.begin(), generator_state.generated_cell_buffer.records.end(), [](const aurelion::h3maped_rmg_core::GeneratedCellRecord0x30 &record) {
@@ -3872,9 +3873,9 @@ int main() {
 	if (!require(generator_state.descriptor_counter_table_0x1110.size() == size_t(aurelion::h3maped_rmg_core::DESCRIPTOR_COUNTER_TABLE_0X1110_DWORD_COUNT), "generator object private state descriptor counter table vector size mismatch")) {
 		return 1;
 	}
-	if (!require(generator_state.descriptor_counter_increment_count_0x4a54a7 == 0
-					&& std::all_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value == 0U; }),
-				"generator object private state mutated descriptor counter table after the live type-98 source-pair blocker")) {
+	if (!require(generator_state.descriptor_counter_increment_count_0x4a54a7 > 0
+					&& std::any_of(generator_state.descriptor_counter_table_0x1110.begin(), generator_state.descriptor_counter_table_0x1110.end(), [](uint32_t value) { return value != 0U; }),
+				"generator object private state did not mutate descriptor counter table after source-owned type-98 source-order replay")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState commit_state;
@@ -6417,20 +6418,20 @@ int main() {
 		workflow_config.setup_object_0x48 = 0;
 		const H3MapedRmgWorkflowResult workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
-		const std::string workflow_type98_feed_blocker =
-				"0x4ac552_live_type98_source_pair_feed_0xedc_missing_before_0x4a8d2c_0x4a8db2";
+		const std::string workflow_final_payload_profile_blocker =
+				"same_run_payload_authority_missing_recovered_profile_metadata";
 		if (!require(workflow.supported_scope
 						&& workflow.executed
 						&& workflow.status == "blocked"
-						&& workflow.current_phase_id == "source_order_object_materialization"
-						&& !workflow.final_payload_owned
-						&& !workflow.final_writeout_complete
-						&& !workflow.final_payload_writeout_0x4ad1e3.applied,
-					"entry-to-writeout workflow did not fail closed before final payload assembly when the type-98 +0xedc feed was missing")) {
+						&& workflow.current_phase_id == "final_payload_compare"
+						&& workflow.final_payload_owned
+						&& workflow.final_writeout_complete
+						&& workflow.final_payload_writeout_0x4ad1e3.applied,
+					"entry-to-writeout workflow did not advance past source-owned type-98 +0xedc source-order replay")) {
 			return 1;
 		}
-		if (!require(workflow.blocked_reason == workflow_type98_feed_blocker,
-					std::string("entry-to-writeout workflow did not fail closed at the missing type-98 +0xedc feed; actual=")
+		if (!require(workflow.blocked_reason == workflow_final_payload_profile_blocker,
+					std::string("entry-to-writeout workflow did not fail closed at the expected final-payload authority profile boundary; actual=")
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
@@ -6439,16 +6440,13 @@ int main() {
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
 							&& workflow.phases[3].id == "generator_object_private_state"
-							&& workflow.phases[4].id == "source_order_object_materialization"
-							&& workflow.phases[4].status == "blocked"
-							&& workflow.phases[4].blocker == workflow_type98_feed_blocker
-							&& workflow.phases[5].id == "route_free_cell_sweep"
-							&& workflow.phases[5].status == "pending"
-							&& workflow.phases[9].id == "connection_road_river"
-							&& workflow.phases[9].status == "pending"
-							&& workflow.phases[10].id == "final_writeout"
-							&& workflow.phases[10].status == "pending",
-					"entry-to-writeout workflow did not preserve fail-closed phase order at source-order object materialization")) {
+							&& workflow.phases[4].id == "generic_non_type98_source_order_pairs"
+							&& workflow.phases[5].id == "source_order_object_materialization"
+							&& workflow.phases[5].status == "complete_source_order_prefix"
+							&& workflow.phases.back().id == "full_final_payload_same_run_compare"
+							&& workflow.phases.back().status == "blocked"
+							&& workflow.phases.back().blocker == workflow_final_payload_profile_blocker,
+					"entry-to-writeout workflow did not preserve phase order after source-owned source-order object materialization")) {
 				return 1;
 			}
 		if (!require(workflow.setup_mode_0x49ecf2.generator_mode_0x10b8 == 0
@@ -6457,20 +6455,18 @@ int main() {
 						&& workflow.coordinate_owner_grid_0x4a218c.owner_grid_executed
 						&& workflow.generator_object_private_state.generated_cell_buffer_owned
 						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_ported
-						&& !workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
-						&& !workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
-						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason == workflow_type98_feed_blocker
-						&& !workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
-						&& !workflow.generator_object_private_state.materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied
-						&& !workflow.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_applied
-						&& !workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
-						&& !workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.invoked
-						&& !workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& !workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& !workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& !workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
-						&& !workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked,
-						"entry-to-writeout workflow continued downstream after the missing live type-98 +0xedc source-pair feed")) {
+						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_input_known
+						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_applied
+						&& workflow.generator_object_private_state.source_order_relation_pointer_loop_0x4ac552_blocked_reason.empty()
+						&& workflow.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_applied
+						&& workflow.generator_object_private_state.relation_normalization_4a5767_full_grid_reset_applied
+						&& workflow.generator_object_private_state.relation_source_order_scan_0x4a89da.invoked
+						&& workflow.generator_object_private_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& workflow.generator_object_private_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& workflow.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.invoked
+						&& workflow.generator_object_private_state.road_river_object_adjacency_0x4ab52a.invoked,
+						"entry-to-writeout workflow did not continue downstream after source-owned live type-98 +0xedc source-pair replay")) {
 			return 1;
 		}
 		const GeneratorObjectPrivateState &workflow_generator_state = workflow.generator_object_private_state;
@@ -6508,12 +6504,13 @@ int main() {
 			return 1;
 		}
 		if (!require(workflow_generator_state.source_order_relation_pointer_loop_relation_count_0x10e4 > 0
-						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count == 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_source_record_field_0x04_known_count > 0
 						&& workflow_generator_state.source_order_relation_pointer_loop_missing_context_wrapper_0x04_count == 0
-						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c == 0
-						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 == 0
-						&& workflow.current_phase_id == "source_order_object_materialization",
-					"entry-to-writeout workflow replayed reconstructed 0x4ac552 type-98 source records without recovered +0xedc feed")) {
+						&& workflow_generator_state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c > 0
+						&& workflow_generator_state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 > 0
+						&& !workflow_generator_state.source_pair_records_edc.empty()
+						&& workflow.current_phase_id == "final_payload_compare",
+					"entry-to-writeout workflow did not replay recovered 0x4ac552 type-98 source records through +0xedc feed")) {
 			return 1;
 		}
 		bool type98_scheduler_context_replayed_from_source_pair = false;
@@ -6537,27 +6534,25 @@ int main() {
 				break;
 			}
 		}
-		if (!require(!type98_scheduler_context_replayed_from_source_pair
-						&& workflow_generator_state.source_pair_records_edc.empty()
-						&& workflow_generator_state.source_order_scheduler_replays_0x4a8db2.empty(),
-					"entry-to-writeout workflow manufactured type-98 scheduler context instead of blocking on missing +0xedc feed")) {
+		if (!require(type98_scheduler_context_replayed_from_source_pair
+						&& !workflow_generator_state.source_pair_records_edc.empty()
+						&& !workflow_generator_state.source_order_scheduler_replays_0x4a8db2.empty(),
+					"entry-to-writeout workflow did not carry type-98 scheduler context from recovered +0xedc source pairs")) {
 			return 1;
 		}
 		if (!require(workflow.phases.size() > 5
-						&& workflow.phases[4].id == "source_order_object_materialization"
-						&& workflow.phases[4].status == "blocked"
-						&& workflow.phases[5].id == "route_free_cell_sweep"
-						&& workflow.phases[5].status == "pending"
-						&& !workflow_generator_state.relation_source_order_scan_0x4a89da.invoked
-						&& !workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
-						&& !workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked
-						&& !workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
-						&& !workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
-						&& !workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
-						&& !workflow.final_payload_owned
-						&& !workflow.final_writeout_complete
-						&& !workflow.final_payload_writeout_0x4ad1e3.applied,
-					"entry-to-writeout workflow continued after source-order object materialization was blocked")) {
+						&& workflow.phases[5].id == "source_order_object_materialization"
+						&& workflow.phases[5].status == "complete_source_order_prefix"
+						&& workflow_generator_state.relation_source_order_scan_0x4a89da.invoked
+						&& workflow_generator_state.mine_resource_materialization_0x4a9d6a.invoked
+						&& workflow_generator_state.reward_guard_source_stream_0x4aab7e.invoked
+						&& workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
+						&& workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
+						&& workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
+						&& workflow.final_payload_owned
+						&& workflow.final_writeout_complete
+						&& workflow.final_payload_writeout_0x4ad1e3.applied,
+					"entry-to-writeout workflow did not continue after source-order object materialization completed")) {
 			return 1;
 		}
 	}
@@ -6586,16 +6581,16 @@ int main() {
 		authority_join_config.same_run_payload_authority_profile_known = true;
 		authority_join_config.same_run_payload_authority_profile =
 				"H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
-		const std::string authority_type98_feed_blocker =
-				"0x4ac552_live_type98_source_pair_feed_0xedc_missing_before_0x4a8d2c_0x4a8db2";
+		const std::string authority_connection_tail_blocker =
+				"0x4a79a3_direct_endpoint_0x4a7312_0x4a54a7_blocked_at_record_4_0x4a79a3_exact_target_object_reference_vector_not_empty";
 		const H3MapedRmgWorkflowResult authority_join_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_join_config);
-		if (!require(authority_join_workflow.current_phase_id == "source_order_object_materialization"
-						&& authority_join_workflow.blocked_reason == authority_type98_feed_blocker
+		if (!require(authority_join_workflow.current_phase_id == "connection_tail"
+						&& authority_join_workflow.blocked_reason == authority_connection_tail_blocker
 						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches
 						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
 						&& !authority_join_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete,
-					"same-run final payload compare ran before the live type-98 +0xedc source-pair feed was recovered: phase="
+					"same-run final payload compare ran before the current connection-tail blocker was resolved: phase="
 						+ authority_join_workflow.current_phase_id
 						+ " reason="
 						+ authority_join_workflow.blocked_reason
@@ -6634,11 +6629,11 @@ int main() {
 		};
 		const H3MapedRmgWorkflowResult authority_stack_matched_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_stack_matched_config);
-		if (!require(authority_stack_matched_workflow.current_phase_id == "source_order_object_materialization"
-						&& authority_stack_matched_workflow.blocked_reason == authority_type98_feed_blocker
+		if (!require(authority_stack_matched_workflow.current_phase_id == "connection_tail"
+						&& authority_stack_matched_workflow.blocked_reason == authority_connection_tail_blocker
 						&& !authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
 						&& !authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete,
-					"same-run final payload compare advanced past missing live type-98 +0xedc source-pair feed after 0x49ecf2 stack authority matched: phase="
+					"same-run final payload compare advanced past current connection-tail blocker after 0x49ecf2 stack authority matched: phase="
 						+ authority_stack_matched_workflow.current_phase_id
 						+ " reason="
 						+ authority_stack_matched_workflow.blocked_reason
