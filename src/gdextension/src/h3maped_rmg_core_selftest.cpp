@@ -2767,8 +2767,8 @@ int main() {
 		BoundaryMaterialization4a2777 relation_gate_materialization;
 		relation_gate_materialization.generator_mode_0x10b8 = 0;
 		relation_gate_materialization.generated_cell_word_0x20.assign(4, aurelion::h3maped_rmg_core::GENERATED_CELL_INITIAL_WORD_0X20);
-		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(1U << 16U);
-		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(1U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[0] = uint32_t(7U << 16U);
+		relation_gate_materialization.generated_cell_word_0x20[1] = uint32_t(7U << 16U);
 		relation_gate_materialization.generated_cell_word_0x28.assign(4, 0U);
 		relation_gate_materialization.generated_cell_word_0x28[0] = aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 		relation_gate_materialization.cell_flags.assign(4, 0U);
@@ -2815,7 +2815,7 @@ int main() {
 			return 1;
 		}
 		if (!require(relation_gate_repaint.terrain_code[0] == 2,
-					"0x4a3f27 relation-owner repaint must compare generated-cell byte2 to the current relation-owner loop index: terrain0="
+					"0x4a3f27 relation-owner repaint must compare generated-cell byte2 to recovered relation owner byte, not the loop index: terrain0="
 						+ std::to_string(relation_gate_repaint.terrain_code[0])
 						+ " writes="
 						+ std::to_string(relation_gate_repaint.zone_repaint_write_count_0x4a4163)
@@ -2839,10 +2839,10 @@ int main() {
 		if (!require(relation_gate_repaint.relation_owner_scan_bounds_0x4a1f3b_applied
 						&& relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b == 1
 						&& relation_gate_repaint.relation_owner_coordinate_recenter_0x4a2ffa_applied
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 0
-						&& relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 2
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_known_count_0x4a2ffa == 1
+						&& relation_gate_repaint.relation_owner_coordinate_recenter_blocked_count_0x4a2ffa == 1
 						&& relation_gate_repaint.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa.size() == relation_gate_owners.size(),
-					"0x4a3f27 did not carry direct relation-owner scan bounds while keeping 0x4a2ffa on source-pointer owner comparison: scan_known="
+					"0x4a3f27 did not carry recovered relation-owner byte scan bounds through 0x4a2ffa: scan_known="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_known_count_0x4a1f3b)
 						+ " scan_blocked="
 						+ std::to_string(relation_gate_repaint.relation_owner_scan_bounds_blocked_count_0x4a1f3b)
