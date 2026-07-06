@@ -9074,6 +9074,13 @@ static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelat
 	return -1;
 }
 
+static int32_t relation_scan_loop_owner_byte2_0x4a5767(int32_t relation_vector_loop_index) {
+	// Recovered 0x4a5767 compares generated-cell +0x20 byte2 with the
+	// relation-pointer vector loop index at [EBP-0x0c], not the final source
+	// owner byte carried by later reward/object gates.
+	return relation_vector_loop_index >= 0 ? relation_vector_loop_index : -1;
+}
+
 static bool reward_guard_generated_footprint_rejects_0x4aa603(
 		const GeneratorObjectPrivateState &state,
 		const RewardGuardWrapperMember4aa3e9 &member,
@@ -14664,14 +14671,15 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 
 	std::vector<int32_t> report_relation_owner_byte2;
 	report_relation_owner_byte2.reserve(owners.size());
-	for (const GeneratorRelationOwnerState4a218c &owner : owners) {
+	for (int32_t owner_loop_index = 0; owner_loop_index < int32_t(owners.size()); ++owner_loop_index) {
+		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_loop_index)];
 		RelationScanConsumerOwnerReport4a5767 report;
 		report.owner_vector_index = owner.owner_vector_index;
 		report.runtime_zone_index = owner.runtime_zone_index;
 		report.scan_bounds_known = owner.scan_bounds_0x20_0x2c_known;
 		report.scan_bounds_non_sentinel = relation_scan_bounds_0x4a7312_non_sentinel(owner);
 		result.owner_scan_count += 1;
-		const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+		const int32_t relation_owner_byte2 = relation_scan_loop_owner_byte2_0x4a5767(owner_loop_index);
 		if (!report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known || relation_owner_byte2 < 0) {
 			result.owner_bounds_blocked_count += 1;
 			result.owner_reports.push_back(report);
