@@ -556,6 +556,9 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
+	if (zone.h3maped_zone_word_id >= 0) {
+		return zone.h3maped_zone_word_id;
+	}
 	if (zone.source_zone_id > 0) {
 		return zone.source_zone_id;
 	}
@@ -582,6 +585,9 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
+	if (seed.h3maped_zone_word_id >= 0) {
+		return seed.h3maped_zone_word_id;
+	}
 	if (seed.source_zone_id > 0) {
 		return seed.source_zone_id;
 	}
@@ -18747,6 +18753,10 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
+	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+	if (relation_owner_byte2 >= 0) {
+		return relation_owner_byte2;
+	}
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
 		return owner.source_pointer_source_index_0x00;
 	}
