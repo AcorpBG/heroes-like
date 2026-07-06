@@ -5491,6 +5491,12 @@ int main() {
 				"0x4a8db2 weighted scheduler threshold did not fail closed on zero density")) {
 		return 1;
 	}
+	const int32_t weighted_raw_scan_low_x = 101;
+	const int32_t weighted_raw_scan_low_y = 0;
+	const int32_t weighted_raw_scan_high_x = 108;
+	const int32_t weighted_raw_scan_high_y = 7;
+	const int32_t weighted_adjusted_candidate_x = weighted_raw_scan_low_x + dungeon_town->descriptor_width_0x34;
+	const int32_t weighted_adjusted_candidate_y = weighted_raw_scan_low_y + dungeon_town->descriptor_height_0x38;
 	RuntimeZoneSeedInput4a218c scheduler_source_zone;
 	scheduler_source_zone.source_index = 5;
 	scheduler_source_zone.source_owner_index = 2;
@@ -5567,10 +5573,10 @@ int main() {
 					scheduler_direct_join,
 					make_scheduler_pair(scheduler_direct_record),
 					0,
-					107,
-					6,
-					108,
-					7,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
 					0,
 					12,
 					scheduler_direct_rng,
@@ -5621,10 +5627,10 @@ int main() {
 					scheduler_weighted_join,
 					make_scheduler_pair(scheduler_weighted_record),
 					0,
-					107,
-					6,
-					108,
-					7,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
 					0,
 					12,
 					scheduler_weighted_rng,
@@ -5696,8 +5702,18 @@ int main() {
 	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_rng;
 	weighted_scan_rng.state = 10U;
 	const auto weighted_scan_result =
-			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(weighted_scan_state, weighted_join, 0, 107, 6, 108, 7, 0, 83, weighted_scan_rng);
-	const int64_t weighted_scan_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(
+					weighted_scan_state,
+					weighted_join,
+					0,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
+					0,
+					83,
+					weighted_scan_rng);
+	const int64_t weighted_scan_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, weighted_adjusted_candidate_x, weighted_adjusted_candidate_y, 0);
 	const GeneratedCellRecord0x30 &weighted_scan_target = weighted_scan_state.generated_cell_buffer.records[size_t(weighted_scan_target_flat)];
 	if (!require(weighted_scan_result.committed
 					&& weighted_scan_result.vector_state_0x4a901a.descriptor_source_bridge_known
@@ -5707,8 +5723,8 @@ int main() {
 					&& weighted_scan_result.vector_state_0x4a901a.local_vector_clear_count_0x4ae52a == 1
 					&& weighted_scan_result.vector_state_0x4a901a.local_vector_append_count_0x4ae1fd == 1
 					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate_known
-					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.x == 107
-					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.y == 6
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.x == weighted_adjusted_candidate_x
+					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.y == weighted_adjusted_candidate_y
 					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.level == 0
 					&& weighted_scan_result.vector_state_0x4a901a.selected_candidate.low_word_score_0x20 == 100U,
 				"0x4a901a weighted candidate scan did not reproduce recovered value-floor/local-vector selection")) {
@@ -5778,10 +5794,10 @@ int main() {
 					scheduler_success_join,
 					make_scheduler_pair(scheduler_success_record),
 					0,
-					107,
-					6,
-					108,
-					7,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
 					0,
 					12,
 					scheduler_success_rng,
@@ -5791,7 +5807,7 @@ int main() {
 					0,
 					true,
 					0);
-	const int64_t scheduler_success_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const int64_t scheduler_success_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, weighted_adjusted_candidate_x, weighted_adjusted_candidate_y, 0);
 	const GeneratedCellRecord0x30 &scheduler_success_target = scheduler_success_state.generated_cell_buffer.records[size_t(scheduler_success_target_flat)];
 	if (!require(scheduler_success.replay_finished
 					&& scheduler_success.threshold_arg_0x18_known
@@ -5856,10 +5872,10 @@ int main() {
 					scheduler_success_join,
 					scheduler_early_direct_pair,
 					0,
-					107,
-					6,
-					108,
-					7,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
 					0,
 					12,
 					scheduler_early_direct_rng,
@@ -6131,7 +6147,17 @@ int main() {
 	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_reject_rng;
 	weighted_scan_reject_rng.state = 10U;
 	const auto weighted_scan_reject =
-			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(weighted_scan_reject_state, weighted_join, 0, 107, 6, 108, 7, 0, 101, weighted_scan_reject_rng);
+			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(
+					weighted_scan_reject_state,
+					weighted_join,
+					0,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
+					0,
+					101,
+					weighted_scan_reject_rng);
 	if (!require(!weighted_scan_reject.committed
 					&& weighted_scan_reject.blocked_reason == "0x4a901a_weighted_candidate_vector_empty_after_value_floor_and_0x49aa93_filters"
 					&& weighted_scan_reject.vector_state_0x4a901a.value_floor_reject_count == 1

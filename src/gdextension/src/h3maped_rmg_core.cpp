@@ -14554,13 +14554,21 @@ SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(
 WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
 	WeightedObjectCandidateScanResult4a901a result;
 	WeightedObjectCandidateVectorState4a901a &vector_state = result.vector_state_0x4a901a;
+	const int32_t descriptor_width_0x34 = join.descriptor.descriptor_width_0x34 > 0
+			? join.descriptor.descriptor_width_0x34
+			: (join.source_record_copy.descriptor_width_0x34 > 0 ? join.source_record_copy.descriptor_width_0x34 : 0);
+	const int32_t descriptor_height_0x38 = join.descriptor.descriptor_height_0x38 > 0
+			? join.descriptor.descriptor_height_0x38
+			: (join.source_record_copy.descriptor_height_0x38 > 0 ? join.source_record_copy.descriptor_height_0x38 : 0);
+	const int32_t adjusted_scan_low_x = scan_low_x + descriptor_width_0x34;
+	const int32_t adjusted_scan_low_y = scan_low_y + descriptor_height_0x38;
 	vector_state.scan_bounds_known = true;
-	vector_state.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
+	vector_state.scan_bounds_non_empty = scan_high_x > adjusted_scan_low_x && scan_high_y > adjusted_scan_low_y;
 	vector_state.relation_owner_byte_known = relation_owner_byte2 >= 0;
 	vector_state.threshold_arg_0x18_known = threshold_arg_0x18 >= 0;
 	vector_state.relation_owner_byte2 = relation_owner_byte2;
-	vector_state.scan_bound_low_x = scan_low_x;
-	vector_state.scan_bound_low_y = scan_low_y;
+	vector_state.scan_bound_low_x = adjusted_scan_low_x;
+	vector_state.scan_bound_low_y = adjusted_scan_low_y;
 	vector_state.scan_bound_high_x = scan_high_x;
 	vector_state.scan_bound_high_y = scan_high_y;
 	vector_state.level = level;
@@ -14603,8 +14611,8 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	}
 
 	int32_t current_threshold = threshold_arg_0x18;
-	for (int32_t y = scan_low_y; y < scan_high_y; ++y) {
-		for (int32_t x = scan_low_x; x < scan_high_x; ++x) {
+	for (int32_t y = adjusted_scan_low_y; y < scan_high_y; ++y) {
+		for (int32_t x = adjusted_scan_low_x; x < scan_high_x; ++x) {
 			vector_state.scanned_cell_count += 1;
 			const int64_t flat = cell_index(state.width, state.height, x, y, level);
 			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
