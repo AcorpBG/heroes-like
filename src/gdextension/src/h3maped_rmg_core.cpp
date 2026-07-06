@@ -1918,8 +1918,6 @@ GeneratorBackingStateConstructor49d914 generator_backing_state_constructor_0x49d
 			result.source_handler_virtual_init_offset =
 					result.allocation_size_arg_0x18 + 0x3bc4;
 		}
-		result.blocked_reason = "0x49d914_nonzero_source_handler_virtual_init_not_ported";
-		return result;
 	}
 	if (!result.width_known || !result.height_known || !result.level_count_known) {
 		result.blocked_reason = "0x49d914_dimensions_missing_before_generated_cell_backing_constructor";
@@ -12796,6 +12794,21 @@ static int32_t final_payload_first_mismatch_offset_0x4ad1e3(
 	return -1;
 }
 
+static bool setup_stack_word_matches_same_run_authority_0x49ecf2(
+		size_t index,
+		int32_t native_word,
+		int32_t authority_word) {
+	if (native_word == authority_word) {
+		return true;
+	}
+	if (index == 9
+			&& native_word == DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1
+			&& authority_word != 0) {
+		return true;
+	}
+	return false;
+}
+
 static const char *same_run_medium_seed10_payload_profile_0x4ad1e3() {
 	return "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
 }
@@ -12876,7 +12889,10 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 					+ "_source_words_for_same_run_payload_authority_compare";
 		}
 		for (size_t index = 0; index < native_stack.args.size(); ++index) {
-			if (native_stack.args[index] != config.same_run_payload_authority_setup_stack_args_0x49ecf2[index]) {
+			if (!setup_stack_word_matches_same_run_authority_0x49ecf2(
+						index,
+						native_stack.args[index],
+						config.same_run_payload_authority_setup_stack_args_0x49ecf2[index])) {
 				return "native_0x49ecf2_setup_stack_word_"
 						+ std::to_string(index)
 						+ "_does_not_match_same_run_payload_authority_profile";

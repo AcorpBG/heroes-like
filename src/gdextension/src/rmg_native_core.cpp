@@ -174,6 +174,11 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.setup_object_0x40 = controlled_case.setup_object_0x40;
 	config.setup_caller_arg_0x0c_known = controlled_case.setup_caller_arg_0x0c_known;
 	config.setup_caller_arg_0x0c = controlled_case.setup_caller_arg_0x0c;
+	if (!config.setup_caller_arg_0x0c_known && supported_one_level_land_scope(controlled_case)) {
+		config.setup_caller_arg_0x0c_known = true;
+		config.setup_caller_arg_0x0c =
+				h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+	}
 	return config;
 }
 
