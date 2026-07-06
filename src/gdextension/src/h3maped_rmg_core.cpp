@@ -14722,6 +14722,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 
 	std::vector<int32_t> report_relation_owner_byte2;
 	report_relation_owner_byte2.reserve(owners.size());
+	CoordinateCandidate4a17f5 first_pass_selected_coordinate_0x24 { -1, -1, -1 };
 	for (int32_t owner_loop_index = 0; owner_loop_index < int32_t(owners.size()); ++owner_loop_index) {
 		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_loop_index)];
 		RelationScanConsumerOwnerReport4a5767 report;
@@ -14739,7 +14740,6 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 		}
 
 		const int32_t level = owner.coordinate_level_0x18;
-		CoordinateCandidate4a17f5 high_owner_seed { owner.coordinate_x_0x10, owner.coordinate_y_0x14, level };
 		bool seed_cell_found = false;
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c && !seed_cell_found; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
@@ -14767,13 +14767,18 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (!generated_cell_49a1d8_valid_record(record)) {
 					continue;
 				}
-				high_owner_seed = CoordinateCandidate4a17f5 { x, y, level };
+				first_pass_selected_coordinate_0x24 = CoordinateCandidate4a17f5 { x, y, level };
 				seed_cell_found = true;
 				break;
 			}
 		}
 		if (!seed_cell_found) {
-			const int64_t seed_flat = cell_index(grid.width, grid.height, owner.coordinate_x_0x10, owner.coordinate_y_0x14, level);
+			const int64_t seed_flat = cell_index(
+					grid.width,
+					grid.height,
+					first_pass_selected_coordinate_0x24.x,
+					first_pass_selected_coordinate_0x24.y,
+					first_pass_selected_coordinate_0x24.level);
 			if (seed_flat >= 0 && seed_flat < int64_t(grid.records.size())) {
 				GeneratedCellRecord0x30 &seed_record = grid.records[size_t(seed_flat)];
 				if (generated_cell_49a932(seed_record, true)) {
@@ -14786,7 +14791,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				high_owner_propagation,
 				relation_high_owner_propagation_coordinate_49a318(
 						grid,
-						high_owner_seed,
+						first_pass_selected_coordinate_0x24,
 						owner,
 						object_records));
 		result.owner_reports.push_back(report);
