@@ -1872,6 +1872,75 @@ GeneratorSetupStackArgs49ecf2 setup_stack_args_0x4adfe1_to_0x49ecf2(
 	return result;
 }
 
+GeneratorBackingStateConstructor49d914 generator_backing_state_constructor_0x49d914(
+		int32_t width,
+		int32_t height,
+		int32_t level_count,
+		bool source_handler_arg_0x14_known,
+		int32_t source_handler_arg_0x14,
+		bool setup_object_0x4c_arg_0x1c_known,
+		int32_t setup_object_0x4c_arg_0x1c) {
+	GeneratorBackingStateConstructor49d914 result;
+	result.invoked = true;
+	result.width_known = width > 0;
+	result.width = width;
+	result.height_known = height > 0;
+	result.height = height;
+	result.level_count_known = level_count > 0;
+	result.level_count = level_count;
+	result.level_count_high_byte_0x13 = uint8_t((uint32_t(level_count) >> 8U) & 0xffU);
+	result.source_handler_arg_0x14_known = source_handler_arg_0x14_known;
+	result.source_handler_arg_0x14 = source_handler_arg_0x14;
+	result.setup_object_0x4c_arg_0x1c_known = setup_object_0x4c_arg_0x1c_known;
+	result.setup_object_0x4c_arg_0x1c = setup_object_0x4c_arg_0x1c;
+	result.generator_vtable_0x00_known = true;
+	result.generator_vtable_0x00 = GENERATOR_OBJECT_VTABLE_0X540CB0;
+	result.generator_field_0x04_known = true;
+	result.generator_field_0x04 = 0x3a;
+	result.generator_field_0x08_known = setup_object_0x4c_arg_0x1c_known;
+	result.generator_field_0x08 = setup_object_0x4c_arg_0x1c;
+	result.generator_field_0xed4_known = source_handler_arg_0x14_known;
+	result.generator_field_0xed4 = source_handler_arg_0x14;
+	result.object_table_loader_invoked_0x49da08 = true;
+	if (result.width_known && result.height_known) {
+		const int64_t allocation_size =
+				int64_t(width) * int64_t(height) + int64_t(0x4fcf4);
+		if (allocation_size >= std::numeric_limits<int32_t>::min()
+				&& allocation_size <= std::numeric_limits<int32_t>::max()) {
+			result.allocation_size_arg_0x18_known = true;
+			result.allocation_size_arg_0x18 = int32_t(allocation_size);
+		}
+	}
+	if (source_handler_arg_0x14_known && source_handler_arg_0x14 != 0) {
+		result.source_handler_virtual_init_invoked = true;
+		if (result.allocation_size_arg_0x18_known) {
+			result.source_handler_virtual_init_offset_known = true;
+			result.source_handler_virtual_init_offset =
+					result.allocation_size_arg_0x18 + 0x3bc4;
+		}
+		result.blocked_reason = "0x49d914_nonzero_source_handler_virtual_init_not_ported";
+		return result;
+	}
+	if (!result.width_known || !result.height_known || !result.level_count_known) {
+		result.blocked_reason = "0x49d914_dimensions_missing_before_generated_cell_backing_constructor";
+		return result;
+	}
+	if (!result.allocation_size_arg_0x18_known) {
+		result.blocked_reason = "0x49d914_allocation_size_width_height_plus_0x4fcf4_not_representable";
+		return result;
+	}
+	if (!source_handler_arg_0x14_known) {
+		result.blocked_reason = "0x49d914_source_handler_arg9_from_0x4adfe1_caller_stack_ebp_0x0c_missing";
+		return result;
+	}
+	if (!setup_object_0x4c_arg_0x1c_known) {
+		result.blocked_reason = "0x49d914_setup_object_0x4c_arg_0x1c_missing";
+		return result;
+	}
+	result.applied = true;
+	return result;
+}
+
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
 		uint32_t seed,
 		int32_t setup_object_0x44,
@@ -12755,6 +12824,19 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 			|| config.seed != 10U) {
 		return "same_run_payload_authority_profile_mismatch_expected_medium_seed10_one_level_land";
 	}
+	const GeneratorBackingStateConstructor49d914 backing_state =
+			generator_backing_state_constructor_0x49d914(
+					config.width,
+					config.height,
+					config.level_count,
+					config.setup_caller_arg_0x0c_known,
+					config.setup_caller_arg_0x0c,
+					config.setup_object_0x4c_known,
+					config.setup_object_0x4c);
+	if (!backing_state.applied) {
+		return "native_0x49d914_backing_state_constructor_"
+				+ backing_state.blocked_reason;
+	}
 	if (!config.same_run_payload_authority_setup_stack_args_0x49ecf2.empty()) {
 		if (!config.same_run_payload_authority_setup_stack_args_known
 				|| int32_t(config.same_run_payload_authority_setup_stack_args_0x49ecf2.size()) != RMG_SETUP_STACK_ARG_COUNT_0X49ECF2) {
@@ -22048,6 +22130,11 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.generator_value_band_0x10bc = setup_mode.generator_value_band_0x10bc;
 	state.generator_field_0x08_known = setup_mode.generator_field_0x08_known;
 	state.generator_field_0x08 = setup_mode.generator_field_0x08;
+	state.backing_state_constructor_0x49d914 = setup_mode.backing_state_constructor_0x49d914;
+	state.generator_field_0x04_known = setup_mode.backing_state_constructor_0x49d914.generator_field_0x04_known;
+	state.generator_field_0x04 = setup_mode.backing_state_constructor_0x49d914.generator_field_0x04;
+	state.generator_field_0xed4_known = setup_mode.backing_state_constructor_0x49d914.generator_field_0xed4_known;
+	state.generator_field_0xed4 = setup_mode.backing_state_constructor_0x49d914.generator_field_0xed4;
 	state.generator_field_0xf48_known = setup_mode.generator_field_0xf48_known;
 	state.generator_field_0xf48 = setup_mode.generator_field_0xf48;
 	state.generator_field_0xf4c_known = setup_mode.generator_field_0xf4c_known;
@@ -22304,6 +22391,15 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					config.setup_object_0x40,
 					config.setup_caller_arg_0x0c_known,
 					config.setup_caller_arg_0x0c);
+	result.setup_mode_0x49ecf2.backing_state_constructor_0x49d914 =
+			generator_backing_state_constructor_0x49d914(
+					config.width,
+					config.height,
+					config.level_count,
+					config.setup_caller_arg_0x0c_known,
+					config.setup_caller_arg_0x0c,
+					config.setup_object_0x4c_known,
+					config.setup_object_0x4c);
 	const int32_t score = size_score(
 			config.width,
 			config.height,
