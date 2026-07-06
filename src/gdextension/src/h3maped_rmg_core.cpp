@@ -18754,10 +18754,6 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
-	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
-	if (relation_owner_byte2 >= 0) {
-		return relation_owner_byte2;
-	}
 	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
 		return owner.source_pointer_source_index_0x00;
 	}
@@ -18766,6 +18762,10 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index;
+	}
+	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+	if (relation_owner_byte2 >= 0) {
+		return relation_owner_byte2;
 	}
 	return fallback;
 }
@@ -18892,7 +18892,10 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		handoff.zone_word = source_payload_owner_word_0x4a325d >= 0
 				? source_payload_owner_word_0x4a325d
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = handoff.zone_word;
+		const int32_t generated_cell_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
+		handoff.generated_cell_owner_byte2 = generated_cell_owner_byte2 >= 0
+				? generated_cell_owner_byte2
+				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
