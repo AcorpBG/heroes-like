@@ -3,8 +3,8 @@
     {
       "blocker": "same_run_payload_authority_missing_0x49ecf2_setup_profile_join",
       "currentBlocker": "same_run_payload_authority_missing_0x49ecf2_setup_profile_join",
-      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now follows the recovered 0x49ecf2 setup-object +0x48 semantics by copying the caller value directly into generator +0x10bc; the stale native setup_object_0x48 + 3 clamp/monster-band derivation is removed. Controlled no-Godot cases can now supply setup_object_0x48 explicitly, rmg_native_core passes it into the shared workflow, and the shared-chain snapshot records the supplied value. h3maped_rmg_core_selftest proves default +0x48=0, explicit +0x48=6, and setup-mode-3 workflow fixtures with explicit +0x48=3. Focused no-Godot Medium seed10 setup0 reaches final_payload_compare and remains fail-closed at same_run_payload_authority_missing_0x49ecf2_setup_profile_join because the recovered final-payload authority still lacks a joined same-run 0x49ecf2 setup stack event. Runtime map output remains disabled.",
-      "currentSliceNotes": "0x49ecf2 now copies setup_object_0x48 directly into generator+0x10bc; final-payload byte authority remains blocked until the same-run payload is joined to its exact setup profile.",
+      "currentNotes": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now records ordered final payload assembly at workflow scope: after header/post-zero, final tile stream, object count/definition/payload, and final zero sentinel/success-test sections assemble through 0x4ad1e3, final_payload_owned and final_writeout_complete are true. The workflow still returns status=blocked at final_payload_compare with same_run_payload_authority_missing_0x49ecf2_setup_profile_join, native_rmg_end_to_end_parity_complete remains false, and runtime/native map output remains disabled. The no-Godot CLI manifest now stays blocked even when internal final writeout is complete, so final-writeout state is not mistaken for export/parity completion.",
+      "currentSliceNotes": "The single workflow now exposes final writeout assembly state while keeping runtime output blocked on same-run payload authority/parity.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,19 +21,20 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-49ecf2-setup48-direct-band-20260706",
-        "title": "Recovered 0x49ecf2 setup +0x48 direct value band",
+        "id": "native-rmg-final-writeout-state-20260706",
+        "title": "Single workflow final writeout state",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
         "status": "passed_source_backed_behavior_progress_not_parity",
-        "validatedAt": "2026-07-06T07:16:42Z",
-        "updatedAt": "2026-07-06T07:16:42Z",
-        "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now follows recovered 0x49ecf2 setup-object +0x48 semantics: caller +0x48 is copied directly into generator +0x10bc instead of being derived with setup_object_0x48 + 3 and clamped. Controlled no-Godot cases can now supply setup_object_0x48 explicitly, rmg_native_core carries it into the shared workflow, and snapshots expose the supplied value. h3maped_rmg_core_selftest proves default +0x48=0, explicit +0x48=6, and setup-mode-3 workflow fixtures with explicit +0x48=3. Focused no-Godot Medium seed10 setup0 reaches final_payload_compare and remains fail-closed at same_run_payload_authority_missing_0x49ecf2_setup_profile_join; the available final-payload authority still lacks a same-run joined 0x49ecf2 setup stack event, so runtime map output remains disabled.",
+        "validatedAt": "2026-07-06T07:22:46Z",
+        "updatedAt": "2026-07-06T07:22:46Z",
+        "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now distinguishes ordered final writeout assembly from parity/export completion: once 0x4ac857/0x4ad206 header/post-zero, 0x49b2b6 tile stream, 0x4ad309/0x4ad318 object count, 0x4ad3eb object definition/payload, and 0x4ad3db/0x4ad3de final sentinel/success-test sections assemble through 0x4ad1e3, the workflow sets final_payload_owned=true and final_writeout_complete=true. The same workflow remains status=blocked at final_payload_compare with same_run_payload_authority_missing_0x49ecf2_setup_profile_join, native_rmg_end_to_end_parity_complete=false, and runtime map output disabled. rmg_native_batch_export_cli was corrected so internal final_writeout_complete no longer makes the manifest status complete; the wrapper stays blocked while still writing diagnostic final_payload.bin/sections.",
         "blockedReason": "same_run_payload_authority_missing_0x49ecf2_setup_profile_join",
         "artifacts": [
           "src/gdextension/include/h3maped_rmg_core.hpp",
           "src/gdextension/include/rmg_native_core.hpp",
           "src/gdextension/src/h3maped_rmg_core.cpp",
           "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+          "src/gdextension/src/rmg_native_batch_export_cli.cpp",
           "src/gdextension/src/rmg_native_core.cpp",
           "tools/rmg_native_batch_export.py",
           "tools/rmg_native_final_payload_compare.py",
@@ -41,19 +42,19 @@
           "ops/progress.json",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/manifest.json",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/wrapper_manifest.json",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup0_2p.phase_snapshot.json",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup1_band0_2p.phase_snapshot.json",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup0_2p.final_payload.bin",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup0_2p.final_payload_sections.json",
-          ".artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup0_2p.final_payload_compare.json"
+          ".artifacts/rmg_native_final_writeout_state_20260706/manifest.json",
+          ".artifacts/rmg_native_final_writeout_state_20260706/wrapper_manifest.json",
+          ".artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.phase_snapshot.json",
+          ".artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.final_payload.bin",
+          ".artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.final_payload_sections.json",
+          ".artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.final_payload_compare.json"
         ],
         "commands": [
           "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
           "bin/h3maped_rmg_core_selftest (passed)",
-          "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --out .artifacts/rmg_native_setup48_direct_band_20260706 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0 --controlled-case medium_seed10_setup1_band0_2p:medium:2:10:land:1:1:1:1:0:0 --print-manifest (expected blocked exit 1; phase_snapshot_written=2; final_payload_binary_written=1; godot_process_started=false)",
-          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_setup48_direct_band_20260706 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_setup48_direct_band_20260706/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocker same_run_payload_authority_missing_0x49ecf2_setup_profile_join)",
+          "python3 tools/rmg_native_batch_export.py --phase-snapshot-only --emit-phase-snapshot --out .artifacts/rmg_native_final_writeout_state_20260706 --controlled-case medium_seed10_setup0_2p:medium:2:10:land:1:1:1:0:0:0 --print-manifest (expected blocked exit 1; manifest_status=blocked; phase_snapshot_written=1; final_payload_binary_written=1; godot_process_started=false)",
+          "jq '.native_h3maped_workflow | {status, blocked_reason, current_phase_id, final_payload_owned, final_writeout_complete, final_payload_writeout_0x4ad1e3: .final_payload_writeout_0x4ad1e3 | {applied, blocked_reason, total_payload_byte_count, same_run_h3maped_authority_scope_blocker}}' .artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.phase_snapshot.json (passed; final_payload_owned=true; final_writeout_complete=true; status=blocked)",
+          "python3 tools/rmg_native_final_payload_compare.py --native-output-dir .artifacts/rmg_native_final_writeout_state_20260706 --case-id medium_seed10_setup0_2p --out .artifacts/rmg_native_final_writeout_state_20260706/medium_seed10_setup0_2p.final_payload_compare.json --expect-mismatch (passed with expected blocker same_run_payload_authority_missing_0x49ecf2_setup_profile_join)",
           "python3 tests/validate_repo.py (passed)",
           "jq empty ops/progress.json (passed)",
           "git diff --check (passed)"
@@ -63,13 +64,12 @@
           "runtime_map_output_enabled": false,
           "godot_process_started": false,
           "wine_process_started": false,
-          "setup_object_0x48_direct_to_generator_0x10bc": true,
-          "setup_object_0x48_cli_field_supported": true,
-          "setup_object_0x48_default_selftest_value": 0,
-          "setup_object_0x48_explicit_selftest_value": 6,
-          "setup_mode_3_fixture_explicit_setup_object_0x48": 3,
+          "final_payload_owned": true,
+          "final_writeout_complete": true,
+          "final_payload_writeout_applied": true,
+          "cli_manifest_status": "blocked",
+          "cli_blocked_reason": "native_h3maped_workflow_reaches_ordered_final_payload_compare_but_same_run_payload_parity_is_not_owned",
           "focused_medium_seed10_setup0_reached_final_payload_compare": true,
-          "focused_medium_seed10_setup1_band0_blocked_before_final_payload_compare": "0x4ad1e3_ordered_payload_final_zero_sentinel_missing",
           "same_run_authority_scope_matches": false,
           "same_run_authority_scope_blocker": "same_run_payload_authority_missing_0x49ecf2_setup_profile_join",
           "native_final_payload_byte_count": 55537,
@@ -85,7 +85,7 @@
           "h3maped_random_profile_generated_object_payload_byte_count": 17057,
           "h3maped_random_profile_generated_object_payload_sha256": "4bec25ac2d378ea5c3ca838a53da6b10244ac7260ac57ee3981098512f2bd91c"
         },
-        "remainingWork": "Recover or provide the same-run 0x49ecf2 setup-profile join for the final payload authority before treating the stitched tile/object payload bytes as comparable authority. Continue source-order private-state alignment from the recovered H3MapEd chain; no runtime map output is authorized."
+        "remainingWork": "Recover or provide the same-run 0x49ecf2 setup-profile join for the final payload authority, then continue source-backed final tile/generated-object payload parity work. Keep runtime/native map output disabled until same-run parity is proven."
       },
       "latestEvidence": {
         "id": "native-rmg-relation-owner-handoff-source-owner-20260628",

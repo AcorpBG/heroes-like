@@ -3119,8 +3119,8 @@ int main() {
 						&& generator_state_workflow.current_phase_id == "final_payload_compare"
 						&& generator_state_workflow.blocked_reason == final_payload_compare_blocker
 						&& generator_state_workflow.final_payload_writeout_0x4ad1e3.applied
-						&& !generator_state_workflow.final_payload_owned
-						&& !generator_state_workflow.final_writeout_complete,
+						&& generator_state_workflow.final_payload_owned
+						&& generator_state_workflow.final_writeout_complete,
 					"workflow-owned generator state did not continue past zero reward/guard commits to final payload compare")) {
 			return 1;
 		}
@@ -6051,8 +6051,9 @@ int main() {
 						&& workflow.executed
 						&& workflow.status == "blocked"
 						&& workflow.current_phase_id == "final_payload_compare"
-						&& !workflow.final_payload_owned
-						&& !workflow.final_writeout_complete,
+						&& workflow.final_payload_owned
+						&& workflow.final_writeout_complete
+						&& workflow.final_payload_writeout_0x4ad1e3.applied,
 					"entry-to-writeout workflow did not continue through final payload assembly")) {
 			return 1;
 		}
@@ -6208,7 +6209,9 @@ int main() {
 						&& workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d.invoked
 						&& workflow_generator_state.connection_tail_replay_0x4a79a3.invoked
 						&& workflow_generator_state.road_river_object_adjacency_0x4ab52a.invoked
-						&& !workflow.final_writeout_complete,
+						&& workflow.final_payload_owned
+						&& workflow.final_writeout_complete
+						&& workflow.final_payload_writeout_0x4ad1e3.applied,
 					"entry-to-writeout workflow did not continue after source-backed reward/guard materialization after 0x4a89da/0x4a8bfc")) {
 			return 1;
 		}
