@@ -2774,6 +2774,8 @@ struct GeneratorObjectPrivateState {
 	int32_t level_count = 0;
 	bool generator_value_band_0x10bc_known = false;
 	int32_t generator_value_band_0x10bc = 0;
+	bool generator_field_0x08_known = false;
+	int32_t generator_field_0x08 = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
 	GeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;

@@ -7722,10 +7722,14 @@ static constexpr int32_t DECORATIVE_TYPE_TABLE_0X54092C[] = {
 };
 
 static bool decorative_dispatch_type_allowed_0x49e700(const GeneratorObjectPrivateState &state, int32_t type_id) {
-	if (state.level_count < 2 && type_id >= 0xde) {
+	if (!state.generator_field_0x08_known) {
 		return false;
 	}
-	if (state.level_count < 1 && type_id >= 0xa5) {
+	// Recovered 0x49e700 reads generator +0x08 for these type gates, not map level count.
+	if (state.generator_field_0x08 < 2 && type_id >= 0xde) {
+		return false;
+	}
+	if (state.generator_field_0x08 < 1 && type_id >= 0xa5) {
 		return false;
 	}
 	return true;
@@ -8245,6 +8249,10 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 	result.dispatch_probe_invocation_count_0x49e700 += 1;
 	result.type_table_0x54092c_known = true;
 	result.type_table_0x54092c_count = int32_t(sizeof(DECORATIVE_TYPE_TABLE_0X54092C) / sizeof(DECORATIVE_TYPE_TABLE_0X54092C[0]));
+	if (!state.generator_field_0x08_known) {
+		result.blocked_reason = "0x49e700_generator_plus_0x08_missing_for_type_gate";
+		return;
+	}
 
 	std::vector<DecorativeCoordinateWorklistEntry49e700> worklist;
 	decorative_dispatch_append_coordinate_0x49eb01(worklist, dispatch_x, dispatch_y, dispatch_level, result);
@@ -21387,6 +21395,8 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.level_count = level_count;
 	state.generator_value_band_0x10bc_known = setup_mode.generator_value_band_0x10bc_known;
 	state.generator_value_band_0x10bc = setup_mode.generator_value_band_0x10bc;
+	state.generator_field_0x08_known = setup_mode.generator_field_0x08_known;
+	state.generator_field_0x08 = setup_mode.generator_field_0x08;
 	state.generated_cell_buffer = generated_cell_record_grid_reset_0x49a072(width, height, level_count);
 	state.generated_cell_buffer_owned = !state.generated_cell_buffer.records.empty();
 	if (coordinate_result.terrain_repaint_executed) {
