@@ -16564,6 +16564,7 @@ RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a
 
 static void append_relation_record_0x49f7c4(GeneratorRelationOwnerState4a218c &owner, int32_t source_link_index, int32_t target_runtime_zone_index, int32_t target_source_zone_id, const RuntimeLinkSeedInput4a218c &link, bool reciprocal);
 static void append_source_endpoint_record_0x4a1f3b(GeneratorRelationOwnerState4a218c &owner, int32_t target_relation_owner_vector_index_0x00, int32_t source_link_index, int32_t target_runtime_zone_index, int32_t target_source_zone_id, const RuntimeLinkSeedInput4a218c &link, bool reciprocal);
+static GeneratorRelationOwnerState4a218c empty_relation_owner_pointer_slot_10e4(int32_t slot_index);
 static std::vector<GeneratorRelationOwnerState4a218c> source_indexed_relation_owner_vector_10e4(
 		const std::vector<GeneratorRelationOwnerState4a218c> &compact_owners);
 static void apply_relation_owner_coordinate_candidate_vectors_0x4a1f3b(GeneratorRelationOwnerState4a218c &owner, const std::vector<CoordinatePlacementStep4a1f3b> &placement_steps);
@@ -18106,6 +18107,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				generated.source_payload_owner_word_0x00 = origin.source_payload_owner_word_0x00;
 				generated.source_payload_random_span_limit_0x1c = span;
 				source_records.push_back(generated);
+				result.synthetic_source_records_0x4a3dbc.push_back(generated);
 				result.synthetic_source_record_count_0x4a3dbc += 1;
 				if (!split_source_record_4ccb64(generated, "0x4ccb64_synthetic_source_record_inserted_0x4a3dbc")) {
 					break;
@@ -18114,6 +18116,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		}
 	}
 	result.source_record_count_after_0x4a3dbc = int32_t(source_records.size());
+	result.source_records_after_0x4a3dbc = source_records;
 
 	result.allocated_node_pair_count = int32_t(model.nodes.size() / 2);
 	result.active_node_pair_count = model.active_node_pair_count();
@@ -18590,7 +18593,9 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 		}
 	}
 	result.status = result.synthetic_branch_allowed_by_0x4a3a9d
-			? "0x4a3710_synthetic_runtime_zone_scan_executed_without_append"
+			? (result.appended_runtime_zone_count > 0
+					? "0x4a3710_synthetic_runtime_zone_append_finalized"
+					: "0x4a3710_synthetic_runtime_zone_scan_executed_without_append")
 			: "0x4a3710_source_backed_no_synthetic_runtime_zone_append_executed";
 	return result;
 }
@@ -18792,6 +18797,126 @@ int32_t generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
 			: source_payload_owner_word;
 }
 
+static const GeneratorRelationOwnerState4a218c *origin_relation_owner_for_synthetic_source_record_4a3a03(
+		const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
+		const RuntimeZoneFootprintInput4a3a03 &synthetic_record,
+		int32_t original_same_level_runtime_zone_count) {
+	const int32_t source_owner_word = synthetic_record.source_payload_owner_word_0x00;
+	for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+		if (!relation_owner_slot_materialized_10e4(owner)) {
+			continue;
+		}
+		const int32_t owner_payload_word =
+				relation_owner_source_payload_owner_word_4a3a03(
+						owner,
+						owner.owner_vector_index >= 0 ? owner.owner_vector_index : -1);
+		if (source_owner_word >= 0 && owner_payload_word == source_owner_word) {
+			return &owner;
+		}
+		if (synthetic_record.source_zone_id >= 0
+				&& owner.source_zone_id == synthetic_record.source_zone_id) {
+			return &owner;
+		}
+		if (source_owner_word >= 0
+				&& owner.relation_owner_byte2_0x4aa9b7_known
+				&& owner.relation_owner_byte2_0x4aa9b7 == source_owner_word) {
+			return &owner;
+		}
+	}
+	if (source_owner_word >= 0 && source_owner_word < original_same_level_runtime_zone_count) {
+		for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
+			if (owner.owner_vector_index == source_owner_word) {
+				return &owner;
+			}
+		}
+	}
+	return nullptr;
+}
+
+static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_record_4a3a03(
+		const RuntimeZoneFootprintInput4a3a03 &synthetic_record,
+		int32_t owner_vector_index,
+		int32_t original_same_level_runtime_zone_count,
+		const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners) {
+	const GeneratorRelationOwnerState4a218c *origin =
+			origin_relation_owner_for_synthetic_source_record_4a3a03(
+					relation_owners,
+					synthetic_record,
+					original_same_level_runtime_zone_count);
+	GeneratorRelationOwnerState4a218c owner = empty_relation_owner_pointer_slot_10e4(owner_vector_index);
+	owner.runtime_zone_index = synthetic_record.runtime_zone_index;
+	owner.source_zone_id = synthetic_record.source_zone_id;
+	owner.source_index = origin != nullptr
+			? origin->source_index
+			: (synthetic_record.source_payload_owner_word_0x00 >= 0
+					&& synthetic_record.source_payload_owner_word_0x00 < original_same_level_runtime_zone_count
+					? synthetic_record.source_payload_owner_word_0x00
+					: -1);
+	owner.constructor_0x49b452_known = true;
+	owner.source_pointer_0x00_known = synthetic_record.source_payload_owner_word_0x00 >= 0;
+	owner.source_pointer_source_index_0x00 = synthetic_record.source_payload_owner_word_0x00;
+	owner.source_pointer_source_span_0x08_known = synthetic_record.source_payload_random_span_limit_0x1c > 0;
+	owner.source_pointer_source_span_0x08 = std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
+	owner.relation_owner_byte2_0x4aa9b7_known =
+			origin != nullptr && origin->relation_owner_byte2_0x4aa9b7_known;
+	owner.relation_owner_byte2_0x4aa9b7 = owner.relation_owner_byte2_0x4aa9b7_known
+			? origin->relation_owner_byte2_0x4aa9b7
+			: generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
+					  synthetic_record.source_payload_owner_word_0x00,
+					  original_same_level_runtime_zone_count,
+					  owner_vector_index);
+	owner.source_pointer_type_0x04_known = true;
+	owner.source_pointer_type_0x04 = 3;
+	owner.source_owner_slot_0x1c_known = origin != nullptr && origin->source_owner_slot_0x1c_known;
+	owner.source_owner_slot_0x1c = owner.source_owner_slot_0x1c_known
+			? origin->source_owner_slot_0x1c
+			: -1;
+	owner.coordinate_triple_0x10_0x18_known = true;
+	owner.coordinate_x_0x10 = synthetic_record.x_after_bbox_rescale;
+	owner.coordinate_y_0x14 = synthetic_record.y_after_bbox_rescale;
+	owner.coordinate_level_0x18 = synthetic_record.level;
+	owner.boundary_payload_span_limit_0x1c_known = true;
+	owner.boundary_payload_span_limit_0x1c =
+			std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
+	owner.terrain_policy_0x0c_known = true;
+	owner.terrain_policy_0x0c = 0;
+	owner.source_order_source_record_0x00_known = owner.source_pointer_0x00_known;
+	owner.source_order_source_record_0x00.source_id_0x00 =
+			synthetic_record.source_payload_owner_word_0x00;
+	owner.source_order_source_record_0x00.owner_or_type_0x04 = 3;
+	owner.source_order_source_record_0x00.relation_selector_0x1c = owner.source_owner_slot_0x1c;
+	owner.source_order_source_record_field_0x04_known = owner.source_order_source_record_0x00_known;
+	owner.reward_guard_source_bands_0xa0_0xc0_known = true;
+	owner.reward_guard_source_bands_0xa0_0xc0 = {
+		SourceTreasureBand4a218c {},
+		SourceTreasureBand4a218c {},
+		SourceTreasureBand4a218c {},
+	};
+	owner.mine_resource_rules_0x4c_0x84_known = true;
+	owner.mine_resource_rules_0x4c_0x84 = SourceMineRules4a218c {};
+	owner.scan_bounds_0x20_0x2c_known = false;
+	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
+	owner.scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	return owner;
+}
+
+static void append_synthetic_relation_owners_4a3a03(
+		std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
+		const std::vector<RuntimeZoneFootprintInput4a3a03> &synthetic_records,
+		int32_t original_same_level_runtime_zone_count) {
+	for (const RuntimeZoneFootprintInput4a3a03 &synthetic_record : synthetic_records) {
+		const int32_t owner_vector_index = int32_t(relation_owners.size());
+		relation_owners.push_back(
+				relation_owner_from_synthetic_source_record_4a3a03(
+						synthetic_record,
+						owner_vector_index,
+						original_same_level_runtime_zone_count,
+						relation_owners));
+	}
+}
+
 static int32_t relation_owner_span_limit_4a3a03(const GeneratorRelationOwnerState4a218c &owner, const RuntimeZoneBoundaryInput4a3a03 *matched_input) {
 	if (owner.boundary_payload_span_limit_0x1c_known && owner.boundary_payload_span_limit_0x1c > 0) {
 		return owner.boundary_payload_span_limit_0x1c;
@@ -18860,11 +18985,18 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 	const int32_t original_same_level_runtime_zone_count = original_same_level_runtime_zone_count_override >= 0
 			? std::min<int32_t>(original_same_level_runtime_zone_count_override, int32_t(footprint_inputs.size()))
 			: int32_t(footprint_inputs.size());
+	result.relation_owner_vectors_after_source_append_0x4a3dbc = relation_owners;
+	append_synthetic_relation_owners_4a3a03(
+			result.relation_owner_vectors_after_source_append_0x4a3dbc,
+			result.source_footprints.synthetic_source_records_0x4a3dbc,
+			original_same_level_runtime_zone_count);
 	int32_t source_vector_handoff_index = 0;
 	for (int32_t source_walk_index = 0; source_walk_index < int32_t(result.source_footprints.walks.size()); ++source_walk_index) {
 		const SourceWalk4cca55 &walk = result.source_footprints.walks[size_t(source_walk_index)];
 		const GeneratorRelationOwnerState4a218c *owner =
-				relation_owner_for_source_walk_4a3a03(relation_owners, walk);
+				relation_owner_for_source_walk_4a3a03(
+						result.relation_owner_vectors_after_source_append_0x4a3dbc,
+						walk);
 		if (owner == nullptr) {
 			if (source_walk_index >= original_same_level_runtime_zone_count) {
 				if (walk.source_nodes.empty()) {
@@ -18905,6 +19037,10 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 			continue;
 		}
 
+		const bool synthetic_appended_owner_0x4a3dbc =
+				source_vector_handoff_index >= original_same_level_runtime_zone_count
+				|| (owner->runtime_zone_index >= original_same_level_runtime_zone_count
+						&& matched_input == nullptr);
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
@@ -18932,10 +19068,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				? matched_input->source_record_vector_index_4a3e9c
 				: -1;
 		handoff.has_source_record_seed_0x10 =
-				matched_input != nullptr && matched_input->has_source_record_seed_0x10;
-		handoff.source_record_seed_0x10 = handoff.has_source_record_seed_0x10
+				matched_input != nullptr
+						? matched_input->has_source_record_seed_0x10
+						: synthetic_appended_owner_0x4a3dbc;
+		handoff.source_record_seed_0x10 = matched_input != nullptr && matched_input->has_source_record_seed_0x10
 				? matched_input->source_record_seed_0x10
-				: SpanRecord {};
+				: (synthetic_appended_owner_0x4a3dbc
+						? SpanRecord { walk.start_x, walk.start_y, caller_level_argument_0x0c }
+						: SpanRecord {});
 		handoff.source_cycle_anchor_model_node_index_4a325d = walk.locator_node_index;
 		handoff.source_nodes = walk.source_nodes;
 		result.handoffs.push_back(std::move(handoff));
@@ -18944,7 +19084,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 
 	result.materialization = materialize_boundary_source_handoffs_4a2777_4a325d(width, height, level_count, water_mode_code, generator_mode_0x10b8, rng_state, result.handoffs);
 	result.materialization_executed = true;
-	result.footprint_finalizer = footprint_finalizer_4a3710(level_count, water_mode_code, generator_mode_0x10b8, caller_level_argument_0x0c, original_same_level_runtime_zone_count, int32_t(footprint_inputs.size()));
+	result.footprint_finalizer = footprint_finalizer_4a3710(
+			level_count,
+			water_mode_code,
+			generator_mode_0x10b8,
+			caller_level_argument_0x0c,
+			original_same_level_runtime_zone_count,
+			int32_t(result.relation_owner_vectors_after_source_append_0x4a3dbc.size()),
+			&result.relation_owner_vectors_after_source_append_0x4a3dbc);
 	result.footprint_finalizer_executed = result.footprint_finalizer.executed;
 	return result;
 }
@@ -18989,6 +19136,10 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
 			original_same_level_runtime_zone_count);
 	result.owner_grid_executed = result.owner_grid.materialization_executed;
+	if (!result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc.empty()) {
+		result.coordinate_seed.relation_owner_vectors_10e4_10e8 =
+				result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc;
+	}
 	if (result.owner_grid_executed) {
 		result.owner_grid.footprint_finalizer = footprint_finalizer_4a3710(
 				level_count,
