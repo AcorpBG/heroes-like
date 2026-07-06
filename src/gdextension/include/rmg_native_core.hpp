@@ -734,8 +734,15 @@ struct SharedWeightedObjectCandidateVectorState4a901a {
 	bool scan_bounds_known = false;
 	bool scan_bounds_non_empty = false;
 	bool relation_owner_byte_known = false;
+	bool source_pair_key_known = false;
+	bool source_pair_key_not_minus_one = false;
+	bool source_type98_bucket_0x658_present = false;
+	bool source_type98_bucket_0x658_contents_known = false;
+	bool source_type98_bucket_entry_0x658_known = false;
 	bool threshold_arg_0x18_known = false;
 	int32_t relation_owner_byte2 = -1;
+	int32_t source_pair_key_0x0c = -1;
+	int32_t source_type98_bucket_0x658_count = 0;
 	int32_t scan_bound_low_x = 0;
 	int32_t scan_bound_low_y = 0;
 	int32_t scan_bound_high_x = 0;
@@ -773,6 +780,11 @@ struct SharedGeneratorObjectPrivateState {
 	uint32_t level_count_offset_0x20 = 0x20U;
 	bool generated_cell_buffer_owned = false;
 	int32_t generated_cell_buffer_record_count = 0;
+	uint32_t source_type98_bucket_vector_offset_0x658 = 0x658U;
+	bool source_type98_bucket_0x658_present = false;
+	bool source_type98_bucket_0x658_contents_known = false;
+	int32_t source_type98_bucket_0x658_count = 0;
+	std::string source_type98_bucket_0x658_blocked_reason;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;

@@ -129,6 +129,36 @@ int32_t owner_byte2_signed(uint32_t word_0x20) {
 	return value >= 0x80U ? int32_t(value) - 0x100 : int32_t(value);
 }
 
+void install_source_type98_bucket_fixture_0x658(GeneratorObjectPrivateState &state, int32_t source_key) {
+	const std::vector<SourceObjectRecord0x4c> type98_records =
+			aurelion::h3maped_rmg_core::source_object_records_by_type_0x49da08(98);
+	if (type98_records.empty() || source_key < 0) {
+		return;
+	}
+	SourceObjectResolverState4af785 resolver_state;
+	for (int32_t index = 0; index <= source_key; ++index) {
+		SourceObjectResolvedWrapper4af785 wrapper;
+		wrapper.wrapper_index = resolver_state.next_wrapper_index++;
+		wrapper.source_catalog_index = aurelion::h3maped_rmg_core::source_object_catalog_index_0x49da08(type98_records[0]);
+		wrapper.source_record_copy = type98_records[0];
+		wrapper.metadata_bucket_index_0x08 = 98;
+		wrapper.resolver_lane_0x04 = 9;
+		wrapper.wrapper_0x04 = 9;
+		wrapper.wrapper_0x10_known = true;
+		wrapper.wrapper_0x10 = 0;
+		wrapper.initialized_by_0x49db76 = true;
+		wrapper.copied_source_record = true;
+		resolver_state.wrappers.push_back(wrapper);
+		resolver_state.wrapper_bucket_indices_0xe8[size_t(98)].push_back(int32_t(resolver_state.wrappers.size()) - 1);
+	}
+	state.source_object_resolver_state_4af785 = resolver_state;
+	state.source_object_resolver_state_4af785_known = true;
+	state.source_type98_bucket_0x658_present = true;
+	state.source_type98_bucket_0x658_contents_known = true;
+	state.source_type98_bucket_0x658_count = int32_t(resolver_state.wrapper_bucket_indices_0xe8[size_t(98)].size());
+	state.source_type98_bucket_0x658_blocked_reason.clear();
+}
+
 bool expected_recenter_coordinate_0x4a2ffa(const GeneratedCellRecordGrid0x30 &grid, const GeneratorRelationOwnerState4a218c &owner, int32_t &expected_x, int32_t &expected_y, int32_t &expected_level, int32_t &matched_count) {
 	expected_x = owner.coordinate_x_0x10;
 	expected_y = owner.coordinate_y_0x14;
@@ -618,6 +648,7 @@ int main() {
 		generic_pair.source_order_lane_state_0xee4_known = true;
 		generic_pair.source_order_lane_state_0xee4 = 2;
 		generic_replay_state.source_pair_records_edc.push_back(generic_pair);
+		install_source_type98_bucket_fixture_0x658(generic_replay_state, 5);
 		aurelion::h3maped_rmg_core::H3MapedRng generic_replay_rng;
 		generic_replay_rng.state = 10U;
 		aurelion::h3maped_rmg_core::replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(generic_replay_state, generic_replay_rng);
@@ -5707,6 +5738,7 @@ int main() {
 		record.word_0x2c_known = true;
 		record.word_0x2c = 0U;
 	}
+	install_source_type98_bucket_fixture_0x658(weighted_scan_state, 77);
 	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_rng;
 	weighted_scan_rng.state = 10U;
 	const auto weighted_scan_result =
@@ -5714,6 +5746,7 @@ int main() {
 					weighted_scan_state,
 					weighted_join,
 					0,
+					77,
 					weighted_raw_scan_low_x,
 					weighted_raw_scan_low_y,
 					weighted_raw_scan_high_x,
@@ -5955,6 +5988,7 @@ int main() {
 		record.word_0x2c_known = true;
 		record.word_0x2c = 0U;
 	}
+	install_source_type98_bucket_fixture_0x658(direct_placement_state, 77);
 	aurelion::h3maped_rmg_core::H3MapedRng direct_placement_rng;
 	direct_placement_rng.state = 10U;
 	const auto direct_placement =
@@ -6018,6 +6052,7 @@ int main() {
 		record.word_0x20 = 0xff000064U;
 		record.word_0x28 = 0x12005000U;
 	}
+	install_source_type98_bucket_fixture_0x658(direct_dispatch_state, 77);
 	aurelion::h3maped_rmg_core::H3MapedRng direct_dispatch_rng;
 	direct_dispatch_rng.state = 10U;
 	const auto direct_dispatch =
@@ -6152,6 +6187,7 @@ int main() {
 		record.word_0x20 = 0xff000064U;
 		record.word_0x28 = 0x12005000U;
 	}
+	install_source_type98_bucket_fixture_0x658(weighted_scan_reject_state, 77);
 	aurelion::h3maped_rmg_core::H3MapedRng weighted_scan_reject_rng;
 	weighted_scan_reject_rng.state = 10U;
 	const auto weighted_scan_reject =
@@ -6159,6 +6195,7 @@ int main() {
 					weighted_scan_reject_state,
 					weighted_join,
 					0,
+					77,
 					weighted_raw_scan_low_x,
 					weighted_raw_scan_low_y,
 					weighted_raw_scan_high_x,
