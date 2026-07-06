@@ -13496,6 +13496,20 @@ static const char *same_run_medium_seed10_payload_profile_0x4ad1e3() {
 	return "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0";
 }
 
+static bool same_run_authority_is_mismatched_fixed_native_2p_scope_0x4ad1e3(
+		const H3MapedRmgWorkflowConfig &config) {
+	return config.size_class == "medium"
+			&& config.water_mode == "land"
+			&& config.width == 72
+			&& config.height == 72
+			&& config.level_count == 1
+			&& config.seed == 10U
+			&& config.human_count == 1
+			&& config.player_count == 2
+			&& config.setup_object_0x44_known
+			&& config.setup_object_0x44 == 0;
+}
+
 static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 		const H3MapedRmgWorkflowConfig &config) {
 	if (!config.same_run_payload_authority_profile_known) {
@@ -13503,6 +13517,9 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 	}
 	if (config.same_run_payload_authority_profile != same_run_medium_seed10_payload_profile_0x4ad1e3()) {
 		return "same_run_payload_authority_unrecognized_recovered_profile";
+	}
+	if (same_run_authority_is_mismatched_fixed_native_2p_scope_0x4ad1e3(config)) {
+		return "same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
 	}
 	if (config.same_run_payload_authority_tile_byte_count > 0
 			&& config.same_run_payload_authority_tile_byte_count != int32_t(config.same_run_final_tile_payload_authority_0x49b2b6.size())) {
