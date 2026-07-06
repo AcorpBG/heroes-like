@@ -4655,8 +4655,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	out << "  \"blocked_chain\": {\n";
 	out << "    \"required_source\": \"full_recovered_h3maped_entrypoint_to_writeout_private_state_chain\",\n";
-	out << "    \"current_blocker\": \"native workflow now carries the single H3MapEd-aligned source-order chain through relation/object replay, route/free-cell sweep, materialization bridge, mine/resource materialization, reward/guard source stream, decorative dispatch, connection/road replay, and ordered final payload assembly. Runtime map output remains disabled until native_h3maped_workflow.current_phase_id/native_h3maped_workflow.blocked_reason is resolved by source-backed final tile and generated-object payload parity.\",\n";
-	out << "    \"required_refactor\": \"align upstream generated-cell/TerrainPlacement state before 0x49b2b6 and generated-object payload materialization before 0x4ad3eb against the same-run H3MapEd authority payload\",\n";
+	out << "    \"current_blocker\": \"native workflow is allowed to advance only through source-owned phases. It now fails closed at native_h3maped_workflow.current_phase_id/native_h3maped_workflow.blocked_reason when the recovered live type-98 +0xedc source-pair feed into 0x4a8d2c/0x4a8db2 is missing, instead of manufacturing town/castle materialization from runtime-zone template fields.\",\n";
+	out << "    \"required_refactor\": \"recover or port the live type-98 +0xedc source-pair producer/feed before 0x4a8d2c/0x4a8db2; only then resume downstream route, connection, road, and final-payload parity work\",\n";
 	out << "    \"forbidden_substitutes\": [\"parallel native state substitute\", \"density scalars\", \"final-map delta tuning\", \"validator-gated package draft adoption\", \"brute-force retries\"]\n";
 	out << "  },\n";
 	out << "  \"native_h3maped_workflow\": {\n";

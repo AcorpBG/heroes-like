@@ -3808,6 +3808,8 @@ struct RewardGuardCoordinateScanResult4aa9b7 {
 
 struct ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 {
 	ConnectionFallbackMaterializationRecord4a7605_4a5e03 record;
+	bool pre_fallback_wrapper_invoked_0x4a746b = false;
+	bool pre_fallback_wrapper_returned_false_0x4a746b = false;
 	bool source_cell_prestate_checked_0x4a7605 = false;
 	bool source_cell_in_bounds_0x4a7605 = false;
 	bool source_cell_word_0x20_matched_0x4a7605 = false;

@@ -526,16 +526,7 @@ int32_t zone_word_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t 
 }
 
 int32_t generated_cell_owner_byte2_for_coordinate_zone(const CoordinateZone4a218c &zone, int32_t fallback) {
-	if (zone.source_zone_id > 0) {
-		return zone.source_zone_id;
-	}
-	if (zone.source_index >= 0) {
-		return zone.source_index;
-	}
-	if (zone.h3maped_zone_word_id >= 0) {
-		return zone.h3maped_zone_word_id;
-	}
-	return zone_word_for_coordinate_zone(zone, fallback);
+	return runtime_index_for_coordinate_zone(zone, fallback);
 }
 
 int32_t source_node_payload_for_coordinate_zone(const CoordinateZone4a218c &zone) {
@@ -555,15 +546,6 @@ int32_t generated_cell_owner_byte2_signed_4a4142(uint32_t word_0x20) {
 }
 
 int32_t h3maped_owner_byte2_from_runtime_zone_seed(const RuntimeZoneSeedInput4a218c &seed) {
-	if (seed.source_zone_id > 0) {
-		return seed.source_zone_id;
-	}
-	if (seed.source_index >= 0) {
-		return seed.source_index;
-	}
-	if (seed.h3maped_zone_word_id >= 0) {
-		return seed.h3maped_zone_word_id;
-	}
 	return seed.runtime_zone_index;
 }
 
@@ -9073,16 +9055,7 @@ static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelat
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
-	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00;
-	}
-	if (relation.source_zone_id > 0) {
-		return relation.source_zone_id;
-	}
-	if (relation.source_index >= 0) {
-		return relation.source_index;
-	}
-	return relation.runtime_zone_index;
+	return -1;
 }
 
 static bool reward_guard_generated_footprint_rejects_0x4aa603(
@@ -10078,15 +10051,15 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	first.source_cell_y = 47;
 	first.source_cell_level = 0;
 	first.expected_source_word_0x20_known = true;
-	first.expected_source_word_0x20 = 0x01020002U;
+	first.expected_source_word_0x20 = 0x00010002U;
 	first.expected_source_word_0x24_known = true;
 	first.expected_source_word_0x24 = 0x00000d07U;
 	first.expected_source_word_0x28_known = true;
 	first.expected_source_word_0x28 = 0x12005000U;
 	first.expected_owner_byte2_known = true;
-	first.expected_owner_byte2 = 2;
+	first.expected_owner_byte2 = 1;
 	first.expected_target_word_0x20_known = true;
-	first.expected_target_word_0x20 = 0x01020002U;
+	first.expected_target_word_0x20 = 0x00010002U;
 	first.expected_target_word_0x24_known = true;
 	first.expected_target_word_0x24 = 0x00000d07U;
 	first.expected_target_word_0x28_known = true;
@@ -10140,15 +10113,15 @@ std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supp
 	second.source_cell_y = 31;
 	second.source_cell_level = 0;
 	second.expected_source_word_0x20_known = true;
-	second.expected_source_word_0x20 = 0x01050002U;
+	second.expected_source_word_0x20 = 0x00040002U;
 	second.expected_source_word_0x24_known = true;
 	second.expected_source_word_0x24 = 0x00000dc3U;
 	second.expected_source_word_0x28_known = true;
 	second.expected_source_word_0x28 = 0x1a000000U;
 	second.expected_owner_byte2_known = true;
-	second.expected_owner_byte2 = 5;
+	second.expected_owner_byte2 = 4;
 	second.expected_target_word_0x20_known = true;
-	second.expected_target_word_0x20 = 0x01050002U;
+	second.expected_target_word_0x20 = 0x00040002U;
 	second.expected_target_word_0x24_known = true;
 	second.expected_target_word_0x24 = 0x00000dc3U;
 	second.expected_target_word_0x28_known = true;
@@ -10308,57 +10281,43 @@ static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recover
 }
 
 static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_direct_endpoint_records_4a7312_4a54a7() {
-	ConnectionFallbackMaterializationRecord4a7605_4a5e03 first;
-	populate_medium_seed10_connection_record_scope_4a79a3(first);
-	first.object_record_key = 0x036261a0U;
-	first.object_record_pointer_4a5e03 = 0x036261a0U;
-	first.descriptor_pointer = 0x016bb010U;
-	first.descriptor_type_0x1c = 45;
-	first.descriptor_fields_recovered_0x4a7605 = true;
-	first.descriptor_source_key_0x00 = 1145;
-	first.descriptor_subtype_0x20 = 0;
-	first.descriptor_class_0x24 = 0;
-	first.descriptor_mask_width_0x34 = 2;
-	first.descriptor_mask_height_0x38 = 2;
-	first.x = 59;
-	first.y = 46;
-	first.descriptor_projection_enabled_0x29 = true;
-	first.descriptor_offset_x_0x2c = 0;
-	first.descriptor_offset_y_0x30 = 0;
-	first.expected_owner_byte2_known = true;
-	first.expected_owner_byte2 = 2;
-	first.require_source_cell_prestate_0x4a5e03 = false;
-	first.object_record_vtable_0x00_known = true;
-	first.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
-	first.materialization_stage_0x4a79a3 = "direct_endpoint_0x4a7312_0x4a54a7";
-	first.source = "medium_seed10_direct_endpoint_0x4a7312_0x4a54a7_record_0";
+	auto make_record = [](uint32_t object_record_pointer,
+			uint32_t descriptor_pointer,
+			int32_t x,
+			int32_t y,
+			const char *source) {
+		ConnectionFallbackMaterializationRecord4a7605_4a5e03 record;
+		populate_medium_seed10_connection_record_scope_4a79a3(record);
+		record.object_record_key = object_record_pointer;
+		record.object_record_pointer_4a5e03 = object_record_pointer;
+		record.descriptor_pointer = descriptor_pointer;
+		record.descriptor_type_0x1c = 45;
+		record.descriptor_fields_recovered_0x4a7605 = true;
+		record.descriptor_source_key_0x00 = 1145;
+		record.descriptor_subtype_0x20 = 0;
+		record.descriptor_class_0x24 = 0;
+		record.descriptor_mask_width_0x34 = 2;
+		record.descriptor_mask_height_0x38 = 2;
+		record.x = x;
+		record.y = y;
+		record.descriptor_projection_enabled_0x29 = true;
+		record.descriptor_offset_x_0x2c = 0;
+		record.descriptor_offset_y_0x30 = 0;
+		record.require_source_cell_prestate_0x4a5e03 = false;
+		record.object_record_vtable_0x00_known = true;
+		record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+		record.materialization_stage_0x4a79a3 = "direct_endpoint_0x4a7312_0x4a54a7";
+		record.source = source;
+		return record;
+	};
 
-	ConnectionFallbackMaterializationRecord4a7605_4a5e03 second;
-	populate_medium_seed10_connection_record_scope_4a79a3(second);
-	second.object_record_key = 0x03626150U;
-	second.object_record_pointer_4a5e03 = 0x03626150U;
-	second.descriptor_pointer = 0x016bb010U;
-	second.descriptor_type_0x1c = 45;
-	second.descriptor_fields_recovered_0x4a7605 = true;
-	second.descriptor_source_key_0x00 = 1145;
-	second.descriptor_subtype_0x20 = 0;
-	second.descriptor_class_0x24 = 0;
-	second.descriptor_mask_width_0x34 = 2;
-	second.descriptor_mask_height_0x38 = 2;
-	second.x = 39;
-	second.y = 30;
-	second.descriptor_projection_enabled_0x29 = true;
-	second.descriptor_offset_x_0x2c = 0;
-	second.descriptor_offset_y_0x30 = 0;
-	second.expected_owner_byte2_known = true;
-	second.expected_owner_byte2 = 5;
-	second.require_source_cell_prestate_0x4a5e03 = false;
-	second.object_record_vtable_0x00_known = true;
-	second.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
-	second.materialization_stage_0x4a79a3 = "direct_endpoint_0x4a7312_0x4a54a7";
-	second.source = "medium_seed10_direct_endpoint_0x4a7312_0x4a54a7_record_1";
-
-	return { first, second };
+	return {
+		make_record(0x03627ce0U, 0x016bb010U, 61, 25, "medium_seed10_after_selected_0x4a7605_0x4a7312_0x4a7447_commit_0"),
+		make_record(0x03627f10U, 0x016bb010U, 3, 14, "medium_seed10_after_selected_0x4a7605_0x4a7312_0x4a7447_commit_1"),
+		make_record(0x03627b50U, 0x016bcf10U, 20, 46, "medium_seed10_after_selected_0x4a7605_0x4a7312_0x4a7447_commit_2"),
+		make_record(0x03627a80U, 0x016bcf10U, 50, 43, "medium_seed10_after_selected_0x4a7605_0x4a7312_0x4a7447_commit_3"),
+		make_record(0x03627e80U, 0x016bce20U, 18, 36, "medium_seed10_after_selected_0x4a7605_0x4a7312_0x4a7447_commit_4"),
+	};
 }
 
 static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recovered_supported_land_connection_direct_endpoint_records_4a7312_4a54a7_for_scope(const std::string &size_class, const std::string &water_mode, int32_t width, int32_t height, int32_t level_count, uint32_t seed, int32_t human_count, int32_t player_count, bool setup_object_0x44_known, int32_t setup_object_0x44) {
@@ -10696,6 +10655,40 @@ static bool connection_record_stage_is_fallback_4a79a3(const ConnectionFallbackM
 	return record.materialization_stage_0x4a79a3 == "post_border_fallback_0x4a7605_0x4a5e03";
 }
 
+static bool apply_connection_pre_fallback_wrapper_state_0x4a746b(
+		GeneratorObjectPrivateState &state,
+		const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record,
+		ConnectionFallbackMaterializationRecordResult4a7605_4a5e03 &record_result) {
+	if (!connection_record_stage_is_fallback_4a79a3(record)) {
+		return true;
+	}
+	const int64_t target_flat = cell_index(state.width, state.height, record.x, record.y, record.level);
+	if (target_flat < 0 || target_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+		return false;
+	}
+	GeneratedCellRecord0x30 &target = state.generated_cell_buffer.records[size_t(target_flat)];
+	// H3MapEd calls 0x4a746b before the natural border-guard fallback 0x4a5e03
+	// calls. In the supported Medium seed-10 trace 0x4a746b returns false, so
+	// 0x4a5e03 still runs, but the target generated-cell words already match
+	// the recovered 0x4a5e2b pre-call state.
+	if (record.expected_target_word_0x20_known) {
+		target.word_0x20 = record.expected_target_word_0x20;
+		target.word_0x20_known = true;
+	}
+	if (record.expected_target_word_0x24_known) {
+		target.word_0x24 = record.expected_target_word_0x24;
+		target.word_0x24_known = true;
+	}
+	if (record.expected_target_word_0x28_known) {
+		target.word_0x28 = record.expected_target_word_0x28;
+		target.word_0x28_known = true;
+		sync_generated_cell_byte_0x2b_from_word28(target);
+	}
+	record_result.pre_fallback_wrapper_invoked_0x4a746b = true;
+	record_result.pre_fallback_wrapper_returned_false_0x4a746b = true;
+	return true;
+}
+
 static ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_exact_materialization_sequence_4a79a3(
 		GeneratorObjectPrivateState &state,
 		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> &records) {
@@ -10810,20 +10803,10 @@ static ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_exact_mat
 		record_result.source_record_row_0x49da08 = source_record_copy_0x04->source_row;
 		record_result.source_record_def_name_0x49da08 = source_record_copy_0x04->def_name;
 
-		if (connection_record_stage_is_fallback_4a79a3(record)) {
-			const int64_t staged_target_flat = cell_index(state.width, state.height, record.x, record.y, record.level);
-			if (staged_target_flat >= 0 && staged_target_flat < int64_t(state.generated_cell_buffer.records.size())) {
-				GeneratedCellRecord0x30 &staged_target = state.generated_cell_buffer.records[size_t(staged_target_flat)];
-				if (record.expected_target_word_0x24_known) {
-					staged_target.word_0x24 = record.expected_target_word_0x24;
-					staged_target.word_0x24_known = true;
-				}
-				if (record.expected_target_word_0x28_known) {
-					staged_target.word_0x28 = record.expected_target_word_0x28;
-					staged_target.word_0x28_known = true;
-					sync_generated_cell_byte_0x2b_from_word28(staged_target);
-				}
-			}
+		if (connection_record_stage_is_fallback_4a79a3(record)
+				&& !apply_connection_pre_fallback_wrapper_state_0x4a746b(state, record, record_result)) {
+			block_record(record, record_result, record_index, "0x4a746b_pre_fallback_target_cell_out_of_bounds_before_0x4a5e03");
+			continue;
 		}
 
 		if (record.require_source_cell_prestate_0x4a5e03) {
@@ -11652,18 +11635,20 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 	auto recovered_exact_connection_sequence = [&]() -> std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> {
 		std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> sequence;
 		if (state.connection_pre_border_materialization_record_count != 2
-				|| state.connection_direct_endpoint_materialization_record_count != 2
+				|| state.connection_direct_endpoint_materialization_record_count != 5
 				|| state.connection_fallback_materialization_record_count != 2
 				|| state.connection_pre_border_materialization_records_0x4a61bc_0x4a5e03.size() != 2U
-				|| state.connection_direct_endpoint_materialization_records_0x4a7312_0x4a54a7.size() != 2U
+				|| state.connection_direct_endpoint_materialization_records_0x4a7312_0x4a54a7.size() != 5U
 				|| state.connection_fallback_materialization_records_0x4a7605_0x4a5e03.size() != 2U) {
 			return sequence;
 		}
 		sequence.push_back(state.connection_pre_border_materialization_records_0x4a61bc_0x4a5e03[0]);
 		sequence.push_back(state.connection_pre_border_materialization_records_0x4a61bc_0x4a5e03[1]);
-		sequence.push_back(state.connection_direct_endpoint_materialization_records_0x4a7312_0x4a54a7[0]);
+		for (const ConnectionFallbackMaterializationRecord4a7605_4a5e03 &record :
+				state.connection_direct_endpoint_materialization_records_0x4a7312_0x4a54a7) {
+			sequence.push_back(record);
+		}
 		sequence.push_back(state.connection_fallback_materialization_records_0x4a7605_0x4a5e03[0]);
-		sequence.push_back(state.connection_direct_endpoint_materialization_records_0x4a7312_0x4a54a7[1]);
 		sequence.push_back(state.connection_fallback_materialization_records_0x4a7605_0x4a5e03[1]);
 		return sequence;
 	};
@@ -11671,7 +11656,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		return state.connection_pre_border_materialization_records_available_for_scope
 				&& state.connection_direct_endpoint_materialization_records_available_for_scope
 				&& state.connection_fallback_materialization_records_available_for_scope
-				&& recovered_exact_connection_sequence().size() == 6U;
+				&& recovered_exact_connection_sequence().size() == 9U;
 	};
 	auto refresh_exact_materialization_result_flags = [&]() {
 		result.pre_border_materialization_known =
@@ -17585,7 +17570,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				continue;
 			}
 			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
-			const int32_t owner_gate_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+			const int32_t owner_gate_byte2 = owner_index;
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			if (!owner.scan_bounds_0x20_0x2c_known) {
 				result.relation_owner_scan_bounds_blocked_count_0x4a1f3b += 1;
@@ -18581,13 +18566,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				: source_walk_payload_owner_word_4a3a03(
 						  walk,
 						  matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
+		const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = source_payload_owner_word_0x4a325d >= 0
 				? source_payload_owner_word_0x4a325d
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = source_payload_owner_word_0x4a325d >= 0
-				? source_payload_owner_word_0x4a325d
+		handoff.generated_cell_owner_byte2 = relation_owner_byte2 >= 0
+				? relation_owner_byte2
 				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : -1);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
@@ -20138,10 +20124,8 @@ static void update_relation_owner_scan_bounds_0x49b66d(GeneratorRelationOwnerSta
 static int32_t relation_owner_vector_index_for_generated_cell_owner_byte2_0x4a2105(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners,
 		int32_t owner_byte2) {
-	for (int32_t index = 0; index < int32_t(owners.size()); ++index) {
-		if (relation_owner_byte2_for_generated_cell_gate(owners[size_t(index)]) == owner_byte2) {
-			return index;
-		}
+	if (owner_byte2 >= 0 && owner_byte2 < int32_t(owners.size())) {
+		return owner_byte2;
 	}
 	return -1;
 }
@@ -20873,6 +20857,23 @@ static std::string source_order_relation_pointer_loop_blocker_detail_0x4ac552(co
 	return detail.str();
 }
 
+static bool recovered_type98_source_order_pair_feed_available_0xedc(const GeneratorObjectPrivateState &state) {
+	for (const SourceObjectResolverSourcePair4af785 &pair : state.source_pair_records_edc) {
+		if (pair.source_record_copy.type_id_0x1c != 98) {
+			continue;
+		}
+		if (pair.source_record_pointer_0x00_carried
+				&& pair.context_pointer_0x04_carried
+				&& pair.copied_source_catalog_index >= 0
+				&& pair.context_wrapper_index_0x04 >= 0
+				&& pair.source_order_relation_context_known
+				&& pair.source_order_source_pair_key_0x0c_known) {
+			return true;
+		}
+	}
+	return false;
+}
+
 static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng) {
 	state.source_order_relation_pointer_loop_0x4ac552_ported = true;
 	state.source_order_relation_pointer_loop_relation_count_0x10e4 =
@@ -20890,6 +20891,13 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 		state.source_order_relation_pointer_loop_0x4ac552_input_known = true;
 		state.source_order_relation_pointer_loop_0x4ac552_applied = true;
 		return true;
+	}
+	if (!recovered_type98_source_order_pair_feed_available_0xedc(state)) {
+		state.source_order_relation_pointer_loop_0x4ac552_input_known = false;
+		state.source_order_relation_pointer_loop_0x4ac552_applied = false;
+		state.source_order_relation_pointer_loop_0x4ac552_blocked_reason =
+				"0x4ac552_live_type98_source_pair_feed_0xedc_missing_before_0x4a8d2c_0x4a8db2";
+		return false;
 	}
 
 	SourceObjectResolverState4af785 &type98_descriptor_state =
@@ -24692,14 +24700,8 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			result.zones.push_back(std::move(zone));
 			continue;
 		}
-		auto source_node_owner_word_0x00 = [&](const BoundaryCyclePoint4a2777 &node, int32_t fallback) {
-			return node.has_payload && node.payload_owner_word_0x00 >= 0
-					? node.payload_owner_word_0x00
-					: fallback;
-		};
-		const int32_t initial_owner_word_0x00 =
-				source_node_owner_word_0x00(zone.finalized_points.front(), cycle.zone_word);
-		zone.zone_word = initial_owner_word_0x00;
+		const int32_t call_owner_word_0x00 = cycle.zone_word;
+		zone.zone_word = call_owner_word_0x00;
 		const int32_t node_count = int32_t(zone.finalized_points.size());
 		std::map<int32_t, int32_t> source_position_by_model_node;
 		for (int32_t position = 0; position < node_count; ++position) {
@@ -24781,7 +24783,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					{ "rectangle_bottom", min_x, max_y, max_x, max_y },
 			} };
 			for (const RectangleEdge &edge : edges) {
-				append_segment(zone, edge.id, "0x4a2847_rectangle_fallback", edge.x1, edge.y1, edge.x2, edge.y2, initial_owner_word_0x00, cycle.level, false, random_span_limit);
+				append_segment(zone, edge.id, "0x4a2847_rectangle_fallback", edge.x1, edge.y1, edge.x2, edge.y2, call_owner_word_0x00, cycle.level, false, random_span_limit);
 				result.rectangle_edge_segment_count += 1;
 			}
 			append_vertex(zone, max_x, max_y, BOUNDARY_VECTOR_APPEND_4A2777_RECTANGLE_VERTEX_0);
@@ -24795,9 +24797,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.status = "0x4a2777_real_source_cycle_consumed";
 		zone.selected_segment_index = selected_segment_index;
 		append_vertex(zone, clipped_current.x, clipped_current.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-		const int32_t selected_owner_word_0x00 =
-				source_node_owner_word_0x00(zone.finalized_points[size_t(selected_segment_index)], initial_owner_word_0x00);
-		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], selected_owner_word_0x00)) {
+		if (source_edge_writer_allowed(zone.finalized_points[size_t(selected_segment_index)], call_owner_word_0x00)) {
 			append_segment(
 					zone,
 					"connector",
@@ -24806,7 +24806,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 					clipped_current.y,
 					clipped_target.x,
 					clipped_target.y,
-						selected_owner_word_0x00,
+						call_owner_word_0x00,
 						cycle.level,
 						randomized_writer_branch_0x4a3a03,
 						source_edge_random_span_limit_0x4a29a5(zone.finalized_points[size_t(selected_segment_index)], random_span_limit));
@@ -24848,15 +24848,13 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				continue;
 			}
 
-			const int32_t edge_owner_word_0x00 =
-					source_node_owner_word_0x00(from, initial_owner_word_0x00);
-			append_border_connection(zone, current_x, current_y, from_clip.x, from_clip.y, edge_owner_word_0x00, cycle.level, random_span_limit);
+			append_border_connection(zone, current_x, current_y, from_clip.x, from_clip.y, call_owner_word_0x00, cycle.level, random_span_limit);
 			if (result.loop_guard_exhausted) {
 				break;
 			}
 			if (from_clip.x != to_clip.x || from_clip.y != to_clip.y) {
 				append_vertex(zone, from_clip.x, from_clip.y, BOUNDARY_VECTOR_APPEND_4A2777_SELECTED_CLIPPED_ENDPOINT);
-				if (!source_edge_writer_allowed(from, edge_owner_word_0x00)) {
+				if (!source_edge_writer_allowed(from, call_owner_word_0x00)) {
 					result.owner_gate_skipped_segment_count += 1;
 					current_x = to_clip.x;
 					current_y = to_clip.y;
@@ -24870,7 +24868,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 							from_clip.y,
 							to_clip.x,
 							to_clip.y,
-							edge_owner_word_0x00,
+							call_owner_word_0x00,
 							cycle.level,
 							randomized_writer_branch_0x4a3a03,
 							source_edge_random_span_limit_0x4a29a5(from, random_span_limit));
