@@ -2031,6 +2031,12 @@ struct ObjectRecordReference4a54a7 {
 	int32_t object_record_selected_index_0x20 = -1;
 	uint32_t object_record_enabled_word_0x24 = 0U;
 	bool object_record_enabled_low_byte_0x24 = false;
+	bool object_record_field_0x20_known = false;
+	uint32_t object_record_field_0x20 = 0U;
+	bool object_record_field_0x24_known = false;
+	uint32_t object_record_field_0x24 = 0U;
+	bool object_record_field_0x28_known = false;
+	uint32_t object_record_field_0x28 = 0U;
 	bool source_descriptor_join_0x4903e8_known = false;
 	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;
@@ -2068,6 +2074,8 @@ struct RewardGuardCandidateRecord4a9f1c {
 	int32_t spell_level_min_0x14 = -1;
 	int32_t spell_level_max_0x18 = -1;
 	uint32_t spell_school_mask_0x1c = 0U;
+	bool direct_payload_field_0x14_known = false;
+	uint32_t direct_payload_field_0x14 = 0U;
 };
 
 struct RewardGuardCandidateDecision4a9f1c {
@@ -2155,6 +2163,12 @@ struct RewardGuardSelectorResult4a9f1c {
 	int32_t selected_object_sequence_0x1c_0x4aa166 = -1;
 	int32_t selected_object_selected_value_0x20_0x4aa166 = 0;
 	uint32_t selected_object_enabled_word_0x24_0x4aa166 = 0U;
+	bool selected_object_record_field_0x20_known_0x4aa166 = false;
+	uint32_t selected_object_record_field_0x20_0x4aa166 = 0U;
+	bool selected_object_record_field_0x24_known_0x4aa166 = false;
+	uint32_t selected_object_record_field_0x24_0x4aa166 = 0U;
+	bool selected_object_record_field_0x28_known_0x4aa166 = false;
+	uint32_t selected_object_record_field_0x28_0x4aa166 = 0U;
 	bool selected_source_record_known_0x4a9e40 = false;
 	int32_t selected_source_catalog_index_0x49da08 = -1;
 	int32_t selected_descriptor_vector_index_0x398 = -1;
@@ -2787,6 +2801,9 @@ struct GeneratorObjectPrivateState {
 	int32_t generator_value_band_0x10bc = 0;
 	bool generator_field_0x08_known = false;
 	int32_t generator_field_0x08 = 0;
+	bool reward_guard_slot_bytes_0xf88_known = false;
+	std::array<uint8_t, 0x91> reward_guard_slot_bytes_0xf88 {};
+	int32_t reward_guard_slot_0x4ad640_allocation_count = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
 	GeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;
@@ -3086,6 +3103,8 @@ struct H3MapedRmgWorkflowConfig {
 	uint32_t seed = 0;
 	bool setup_object_0x44_known = false;
 	int32_t setup_object_0x44 = 0;
+	bool setup_object_raw_0x48_known = false;
+	int32_t setup_object_raw_0x48 = 0;
 	bool setup_object_0x48_known = true;
 	int32_t setup_object_0x48 = 0;
 	bool setup_object_0x4c_known = true;
@@ -3390,6 +3409,12 @@ struct RewardGuardWrapperMember4aa3e9 {
 	int32_t object_record_selected_index_0x20 = -1;
 	bool object_record_enabled_word_known_0x24 = false;
 	uint32_t object_record_enabled_word_0x24 = 0U;
+	bool object_record_field_0x20_known = false;
+	uint32_t object_record_field_0x20 = 0U;
+	bool object_record_field_0x24_known = false;
+	uint32_t object_record_field_0x24 = 0U;
+	bool object_record_field_0x28_known = false;
+	uint32_t object_record_field_0x28 = 0U;
 	bool reward_guard_candidate_vtable_0x00_known = false;
 	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
 	int32_t descriptor_type_0x1c = -1;
@@ -3837,6 +3862,7 @@ bool point_inside_bounds_4a2777(const ClipResult &point, const ClipBounds &bound
 const char *boundary_vector_append_callsite_label_4a2777(uint32_t callsite);
 bool boundary_vector_append_callsite_recovered_4a2777(uint32_t callsite);
 bool boundary_vector_append_4a2777(BoundaryVector4a2777 &vector, int32_t x, int32_t y, uint32_t callsite);
+int32_t setup_value_band_arg_0x4adfe1_to_0x49ecf2(int32_t raw_setup_object_0x48);
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known = true, int32_t setup_object_0x48 = 0, bool setup_object_0x4c_known = true, int32_t setup_object_0x4c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);

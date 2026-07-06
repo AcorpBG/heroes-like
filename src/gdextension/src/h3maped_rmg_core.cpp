@@ -1745,6 +1745,10 @@ int32_t H3MapedRng::next() {
 	return int32_t((state >> 16U) & 0x7fffu);
 }
 
+int32_t setup_value_band_arg_0x4adfe1_to_0x49ecf2(int32_t raw_setup_object_0x48) {
+	return std::min<int32_t>(5, std::max<int32_t>(1, raw_setup_object_0x48 + 3));
+}
+
 GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_t setup_object_0x44, bool setup_object_0x48_known, int32_t setup_object_0x48, bool setup_object_0x4c_known, int32_t setup_object_0x4c) {
 	GeneratorSetupModeResult49ecf2 result;
 	result.setup_object_0x44 = setup_object_0x44;
@@ -4804,6 +4808,8 @@ struct RecoveredRewardGuardCandidateSpec49f95a {
 	int32_t spell_level_min_0x14 = -1;
 	int32_t spell_level_max_0x18 = -1;
 	uint32_t spell_school_mask_0x1c = 0U;
+	bool direct_payload_field_0x14_known = false;
+	uint32_t direct_payload_field_0x14 = 0U;
 };
 
 static constexpr RecoveredRewardGuardCandidateSpec49f95a reward_guard_spell_candidate_spec_49f95a(
@@ -4830,6 +4836,22 @@ static constexpr RecoveredRewardGuardCandidateSpec49f95a reward_guard_spell_cand
 	};
 }
 
+static constexpr RecoveredRewardGuardCandidateSpec49f95a reward_guard_0x540c20_candidate_spec_49f95a(
+		int32_t value_0x0c,
+		int32_t weight_0x10,
+		uint32_t payload_field_0x14) {
+	RecoveredRewardGuardCandidateSpec49f95a spec;
+	spec.vtable_0x00 = 0x540c20U;
+	spec.descriptor_type_0x04 = 62;
+	spec.subtype_or_cursor_0x08 = 0;
+	spec.value_0x0c = value_0x0c;
+	spec.weight_0x10 = weight_0x10;
+	spec.direct_value_known = true;
+	spec.direct_payload_field_0x14_known = true;
+	spec.direct_payload_field_0x14 = payload_field_0x14;
+	return spec;
+}
+
 static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(const RecoveredRewardGuardCandidateSpec49f95a &spec) {
 	RewardGuardCandidateRecord4a9f1c record;
 	record.candidate_vtable_0x00_known = true;
@@ -4850,6 +4872,8 @@ static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(con
 	record.spell_level_min_0x14 = spec.spell_level_min_0x14;
 	record.spell_level_max_0x18 = spec.spell_level_max_0x18;
 	record.spell_school_mask_0x1c = spec.spell_school_mask_0x1c;
+	record.direct_payload_field_0x14_known = spec.direct_payload_field_0x14_known;
+	record.direct_payload_field_0x14 = spec.direct_payload_field_0x14;
 	return record;
 }
 
@@ -5246,11 +5270,11 @@ static std::vector<RewardGuardCandidateRecord4a9f1c> reward_guard_candidate_reco
 		{ 0x540ba0U, 58, 0, 750, 100, true },
 		{ 0x540ba0U, 60, 0, 750, 100, true },
 		{ 0x540ba0U, 61, 0, 1500, 100, true },
-		{ 0x540c20U, 62, 0, 2500, 30, true },
-		{ 0x540c20U, 62, 0, 5000, 30, true },
-		{ 0x540c20U, 62, 0, 10000, 30, true },
-		{ 0x540c20U, 62, 0, 20000, 30, true },
-		{ 0x540c20U, 62, 0, 30000, 30, true },
+		reward_guard_0x540c20_candidate_spec_49f95a(2500, 30, 0U),
+		reward_guard_0x540c20_candidate_spec_49f95a(5000, 30, 5000U),
+		reward_guard_0x540c20_candidate_spec_49f95a(10000, 30, 15000U),
+		reward_guard_0x540c20_candidate_spec_49f95a(20000, 30, 90000U),
+		reward_guard_0x540c20_candidate_spec_49f95a(30000, 30, 500000U),
 		{ 0x540ba0U, 63, 0, 5000, 20, true },
 		{ 0x540ba0U, 64, 0, 100, 100, true },
 		{ 0x540bb0U, 66, 0, 2000, 150, true },
@@ -5704,6 +5728,66 @@ static int32_t reward_guard_descriptor_mask_extent_count_0x4aa195(const SourceOb
 	return count;
 }
 
+struct RewardGuardSlotAllocationResult4ad640 {
+	bool applied = false;
+	int32_t selected_slot_0xf88 = -1;
+	int32_t scan_start_index = -1;
+	int32_t free_slot_count = 0;
+	int32_t rng_value_0x4e7276 = -1;
+	uint32_t rng_state_after = 0U;
+	std::string blocked_reason;
+};
+
+static RewardGuardSlotAllocationResult4ad640 reward_guard_slot_allocator_0x4ad640(
+		GeneratorObjectPrivateState &state,
+		H3MapedRng &rng) {
+	RewardGuardSlotAllocationResult4ad640 result;
+	if (!state.generator_field_0x08_known) {
+		result.blocked_reason = "0x4ad640_generator_field_0x08_missing_for_reward_guard_slot_allocator";
+		return result;
+	}
+	if (!state.reward_guard_slot_bytes_0xf88_known) {
+		result.blocked_reason = "0x4ad640_reward_guard_slot_byte_array_0xf88_missing";
+		return result;
+	}
+
+	result.scan_start_index = state.generator_field_0x08 < 1 ? 0x7f : 0x90;
+	if (result.scan_start_index < 0
+			|| result.scan_start_index >= int32_t(state.reward_guard_slot_bytes_0xf88.size())) {
+		result.blocked_reason = "0x4ad640_reward_guard_slot_scan_start_out_of_range";
+		return result;
+	}
+	for (int32_t index = result.scan_start_index; index >= 0; --index) {
+		if (state.reward_guard_slot_bytes_0xf88[size_t(index)] == 0U) {
+			result.free_slot_count += 1;
+		}
+	}
+	if (result.free_slot_count <= 0) {
+		result.blocked_reason = "0x4ad640_reward_guard_slot_byte_array_full";
+		return result;
+	}
+
+	result.rng_value_0x4e7276 = rng.next();
+	result.rng_state_after = rng.state;
+	int32_t remaining = result.rng_value_0x4e7276 % result.free_slot_count;
+	for (int32_t index = result.scan_start_index; index >= 0; --index) {
+		if (state.reward_guard_slot_bytes_0xf88[size_t(index)] != 0U) {
+			continue;
+		}
+		remaining -= 1;
+		if (remaining < 0) {
+			state.reward_guard_slot_bytes_0xf88[size_t(index)] = 1U;
+			state.reward_guard_slot_0x4ad640_allocation_count += 1;
+			result.selected_slot_0xf88 = index;
+			result.applied = true;
+			return result;
+		}
+	}
+
+	result.blocked_reason = "0x4ad640_reward_guard_slot_selection_failed";
+	return result;
+}
+
 RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args, SourceObjectResolverState4af785 *resolver_state) {
 	RewardGuardSelectorResult4a9f1c result;
 	result.applied = true;
@@ -6038,6 +6122,23 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 		result.blocked_reason = "0x4a9f1c_0x4aa166_object_sequence_allocator_0xf44_missing";
 		return result;
 	}
+	RewardGuardSlotAllocationResult4ad640 reward_guard_slot_0x4ad640;
+	const bool selected_candidate_0x540c20 =
+			selected_candidate.candidate_vtable_0x00_known
+			&& selected_candidate.candidate_vtable_0x00 == 0x00540c20U;
+	if (selected_candidate_0x540c20) {
+		if (!selected_candidate.direct_payload_field_0x14_known) {
+			result.blocked_reason = "0x49c8f3_0x540c20_candidate_field_0x14_missing";
+			return result;
+		}
+		reward_guard_slot_0x4ad640 = reward_guard_slot_allocator_0x4ad640(state, rng);
+		if (!reward_guard_slot_0x4ad640.applied) {
+			result.blocked_reason = reward_guard_slot_0x4ad640.blocked_reason.empty()
+					? "0x49c8f3_0x4ad640_slot_allocation_failed"
+					: reward_guard_slot_0x4ad640.blocked_reason;
+			return result;
+		}
+	}
 	result.selected_object_record_key_known_0x4aa166 = true;
 	result.selected_object_record_key_0x4aa166 = state.next_native_object_record_key_0x4a93a2;
 	state.next_native_object_record_key_0x4a93a2 += 1U;
@@ -6046,6 +6147,17 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	state.object_record_sequence_allocator_0xf44 += 1;
 	result.selected_object_selected_value_0x20_0x4aa166 = result.selected_score_value_0x04;
 	result.selected_object_enabled_word_0x24_0x4aa166 = 3U;
+	if (selected_candidate_0x540c20) {
+		result.selected_object_record_field_0x20_known_0x4aa166 = true;
+		result.selected_object_record_field_0x20_0x4aa166 =
+				uint32_t(result.selected_object_sequence_0x1c_0x4aa166);
+		result.selected_object_record_field_0x24_known_0x4aa166 = true;
+		result.selected_object_record_field_0x24_0x4aa166 =
+				uint32_t(reward_guard_slot_0x4ad640.selected_slot_0xf88);
+		result.selected_object_record_field_0x28_known_0x4aa166 = true;
+		result.selected_object_record_field_0x28_0x4aa166 =
+				selected_candidate.direct_payload_field_0x14;
+	}
 	result.selected_object_record_allocated_0x4aa166 = true;
 	if (result.selected_projection_object_0x540b14_known) {
 		RewardGuardProjectionObject540b14 &projection_object =
@@ -7034,6 +7146,12 @@ static RewardGuardMemberAllocationResult4a5c07 reward_guard_member_from_selector
 	result.member.object_record_selected_index_0x20 = selector.selected_object_selected_value_0x20_0x4aa166;
 	result.member.object_record_enabled_word_known_0x24 = true;
 	result.member.object_record_enabled_word_0x24 = selector.selected_object_enabled_word_0x24_0x4aa166;
+	result.member.object_record_field_0x20_known = selector.selected_object_record_field_0x20_known_0x4aa166;
+	result.member.object_record_field_0x20 = selector.selected_object_record_field_0x20_0x4aa166;
+	result.member.object_record_field_0x24_known = selector.selected_object_record_field_0x24_known_0x4aa166;
+	result.member.object_record_field_0x24 = selector.selected_object_record_field_0x24_0x4aa166;
+	result.member.object_record_field_0x28_known = selector.selected_object_record_field_0x28_known_0x4aa166;
+	result.member.object_record_field_0x28 = selector.selected_object_record_field_0x28_0x4aa166;
 	if (selector.selected_candidate_vtable_known && selector.selected_candidate_vtable_0x00 == 0x00540bf0U) {
 		if (!selector.selected_candidate_record_known_0x4aa166) {
 			result.blocked_reason = "0x4aa166_0x540bf0_selected_candidate_record_missing_before_0x49c764";
@@ -9252,6 +9370,12 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 					object_record.object_record_enabled_low_byte_0x24 =
 							(member.object_record_enabled_word_0x24 & 0xffU) != 0U;
 				}
+				object_record.object_record_field_0x20_known = member.object_record_field_0x20_known;
+				object_record.object_record_field_0x20 = member.object_record_field_0x20;
+				object_record.object_record_field_0x24_known = member.object_record_field_0x24_known;
+				object_record.object_record_field_0x24 = member.object_record_field_0x24;
+				object_record.object_record_field_0x28_known = member.object_record_field_0x28_known;
+				object_record.object_record_field_0x28 = member.object_record_field_0x28;
 				object_record.reward_guard_candidate_vtable_0x00_known = member.reward_guard_candidate_vtable_0x00_known;
 				object_record.reward_guard_candidate_vtable_0x00 = member.reward_guard_candidate_vtable_0x00;
 				object_record.final_payload_dynamic_vector_0x48_0x4c_known = member.final_payload_dynamic_vector_0x48_0x4c_known;
@@ -12167,6 +12291,48 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 			final_object_append_le32_0x4ad3eb(bytes, 0U);
 			return true;
 		}
+		case 0x0049c273U:
+			if (!record.object_record_field_0x20_known) {
+				blocked_reason = final_object_payload_field_blocker_0x4ad3eb(serializer_slot_0x0c, "record_field_0x20");
+				return false;
+			}
+			if (!record.object_record_field_0x24_known) {
+				blocked_reason = final_object_payload_field_blocker_0x4ad3eb(serializer_slot_0x0c, "record_field_0x24");
+				return false;
+			}
+			if (!record.object_record_field_0x28_known) {
+				blocked_reason = final_object_payload_field_blocker_0x4ad3eb(serializer_slot_0x0c, "record_field_0x28");
+				return false;
+			}
+			if (pass_arg >= 1) {
+				final_object_append_le32_0x4ad3eb(bytes, record.object_record_field_0x20);
+			}
+			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			final_object_append_u8_0x4ad3eb(bytes, record.object_record_field_0x24);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			if (pass_arg >= 2) {
+				const bool has_payload_0x28 = record.object_record_field_0x28 != 0U;
+				final_object_append_u8_0x4ad3eb(bytes, has_payload_0x28 ? 1U : 0U);
+				if (has_payload_0x28) {
+					final_object_append_le32_0x4ad3eb(bytes, record.object_record_field_0x28);
+				}
+			} else {
+				final_object_append_le32_0x4ad3eb(bytes, record.object_record_field_0x28);
+			}
+			final_object_append_zeroes_0x4ad3eb(bytes, 5);
+			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			if (pass_arg >= 1) {
+				final_object_append_u8_0x4ad3eb(bytes, 0U);
+				final_object_append_u8_0x4ad3eb(bytes, 0xffU);
+			}
+			if (pass_arg >= 2) {
+				final_object_append_u8_0x4ad3eb(bytes, 0U);
+				final_object_append_u8_0x4ad3eb(bytes, 0U);
+			} else {
+				final_object_append_u8_0x4ad3eb(bytes, 0xfeU);
+			}
+			final_object_append_zeroes_0x4ad3eb(bytes, 16);
+			return true;
 		case 0x0049c44dU:
 			final_object_append_u8_0x4ad3eb(bytes, 0xffU);
 			final_object_append_le16_0x4ad3eb(bytes, 0U);
@@ -12434,13 +12600,18 @@ static std::string final_payload_same_run_authority_scope_blocker_0x4ad1e3(
 	if (!config.same_run_payload_authority_setup_stack_join_known) {
 		return "same_run_payload_authority_profile_loaded_but_0x49ecf2_setup_stack_join_missing";
 	}
+	const bool setup_value_band_arg_0x28_known =
+			config.setup_object_raw_0x48_known || config.setup_object_0x48_known;
+	const int32_t setup_value_band_arg_0x28 = config.setup_object_raw_0x48_known
+			? setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48)
+			: config.setup_object_0x48;
 	if (!config.setup_object_0x44_known
-			|| !config.setup_object_0x48_known
+			|| !setup_value_band_arg_0x28_known
 			|| !config.setup_object_0x4c_known) {
 		return "native_0x49ecf2_setup_words_missing_for_same_run_payload_authority_compare";
 	}
 	if (config.setup_object_0x44 != config.same_run_payload_authority_setup_object_0x44
-			|| config.setup_object_0x48 != config.same_run_payload_authority_setup_object_0x48
+			|| setup_value_band_arg_0x28 != config.same_run_payload_authority_setup_object_0x48
 			|| config.setup_object_0x4c != config.same_run_payload_authority_setup_object_0x4c) {
 		return "native_0x49ecf2_setup_words_do_not_match_same_run_payload_authority_profile";
 	}
@@ -21691,6 +21862,9 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.generator_value_band_0x10bc = setup_mode.generator_value_band_0x10bc;
 	state.generator_field_0x08_known = setup_mode.generator_field_0x08_known;
 	state.generator_field_0x08 = setup_mode.generator_field_0x08;
+	state.reward_guard_slot_bytes_0xf88_known = true;
+	state.reward_guard_slot_bytes_0xf88.fill(0U);
+	state.reward_guard_slot_0x4ad640_allocation_count = 0;
 	state.generated_cell_buffer = generated_cell_record_grid_reset_0x49a072(width, height, level_count);
 	state.generated_cell_buffer_owned = !state.generated_cell_buffer.records.empty();
 	if (coordinate_result.terrain_repaint_executed) {
@@ -21890,11 +22064,19 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		return result;
 	}
 
+	bool setup_value_band_arg_0x28_known = config.setup_object_0x48_known;
+	int32_t setup_value_band_arg_0x28 = config.setup_object_0x48;
+	if (config.setup_object_raw_0x48_known) {
+		setup_value_band_arg_0x28_known = true;
+		setup_value_band_arg_0x28 =
+				setup_value_band_arg_0x4adfe1_to_0x49ecf2(config.setup_object_raw_0x48);
+	}
+
 	result.setup_mode_0x49ecf2 = generator_setup_mode_49ecf2(
 			config.seed,
 			config.setup_object_0x44,
-			config.setup_object_0x48_known,
-			config.setup_object_0x48,
+			setup_value_band_arg_0x28_known,
+			setup_value_band_arg_0x28,
 			config.setup_object_0x4c_known,
 			config.setup_object_0x4c);
 	const int32_t score = size_score(

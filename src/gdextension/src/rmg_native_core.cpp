@@ -158,6 +158,8 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.seed = controlled_case.seed;
 	config.setup_object_0x44_known = controlled_case.setup_object_0x44_known;
 	config.setup_object_0x44 = controlled_case.setup_object_0x44;
+	config.setup_object_raw_0x48_known = controlled_case.setup_object_raw_0x48_known;
+	config.setup_object_raw_0x48 = controlled_case.setup_object_raw_0x48;
 	config.setup_object_0x48_known = controlled_case.setup_object_0x48_known;
 	config.setup_object_0x48 = controlled_case.setup_object_0x48;
 	config.setup_object_0x4c_known = controlled_case.setup_object_0x4c_known;
@@ -846,6 +848,12 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.object_record_selected_index_0x20 = input.object_record_selected_index_0x20;
 	out.object_record_enabled_word_0x24 = input.object_record_enabled_word_0x24;
 	out.object_record_enabled_low_byte_0x24 = input.object_record_enabled_low_byte_0x24;
+	out.object_record_field_0x20_known = input.object_record_field_0x20_known;
+	out.object_record_field_0x20 = input.object_record_field_0x20;
+	out.object_record_field_0x24_known = input.object_record_field_0x24_known;
+	out.object_record_field_0x24 = input.object_record_field_0x24;
+	out.object_record_field_0x28_known = input.object_record_field_0x28_known;
+	out.object_record_field_0x28 = input.object_record_field_0x28;
 	out.source_descriptor_join_0x4903e8_known = input.source_descriptor_join_0x4903e8_known;
 	out.weighted_type98_descriptor_bridge_0x4a93a2_known = input.weighted_type98_descriptor_bridge_0x4a93a2_known;
 	out.descriptor_source_key_0x00 = input.descriptor_source_key_0x00;
@@ -2550,6 +2558,12 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"object_record_selected_index_0x20\":" << record.object_record_selected_index_0x20
 			<< ",\"object_record_enabled_word_0x24\":" << record.object_record_enabled_word_0x24
 			<< ",\"object_record_enabled_low_byte_0x24\":" << (record.object_record_enabled_low_byte_0x24 ? "true" : "false")
+			<< ",\"object_record_field_0x20_known\":" << (record.object_record_field_0x20_known ? "true" : "false")
+			<< ",\"object_record_field_0x20\":" << record.object_record_field_0x20
+			<< ",\"object_record_field_0x24_known\":" << (record.object_record_field_0x24_known ? "true" : "false")
+			<< ",\"object_record_field_0x24\":" << record.object_record_field_0x24
+			<< ",\"object_record_field_0x28_known\":" << (record.object_record_field_0x28_known ? "true" : "false")
+			<< ",\"object_record_field_0x28\":" << record.object_record_field_0x28
 			<< ",\"source_descriptor_join_0x4903e8_known\":" << (record.source_descriptor_join_0x4903e8_known ? "true" : "false")
 			<< ",\"weighted_type98_descriptor_bridge_0x4a93a2_known\":" << (record.weighted_type98_descriptor_bridge_0x4a93a2_known ? "true" : "false")
 			<< ",\"descriptor_source_key_0x00\":" << record.descriptor_source_key_0x00
@@ -3768,6 +3782,15 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"rmg_setup_object_0x48_known\": " << (controlled_case.setup_object_0x48_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x48_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x48_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x48\": " << controlled_case.setup_object_0x48 << ",\n";
+	out << "    \"rmg_setup_object_raw_0x48_known\": " << (controlled_case.setup_object_raw_0x48_known ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_raw_0x48_supplied_by_controlled_case\": " << (controlled_case.setup_object_raw_0x48_supplied ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_object_raw_0x48\": " << controlled_case.setup_object_raw_0x48 << ",\n";
+	out << "    \"rmg_setup_value_band_arg_0x49ecf2_ebp_0x28_known\": " << ((controlled_case.setup_object_raw_0x48_known || controlled_case.setup_object_0x48_known) ? "true" : "false") << ",\n";
+	out << "    \"rmg_setup_value_band_arg_0x49ecf2_ebp_0x28\": "
+		<< (controlled_case.setup_object_raw_0x48_known
+						? h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(controlled_case.setup_object_raw_0x48)
+						: controlled_case.setup_object_0x48)
+		<< ",\n";
 	out << "    \"rmg_setup_object_0x4c_known\": " << (controlled_case.setup_object_0x4c_known ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c_supplied_by_controlled_case\": " << (controlled_case.setup_object_0x4c_supplied ? "true" : "false") << ",\n";
 	out << "    \"rmg_setup_object_0x4c\": " << controlled_case.setup_object_0x4c << ",\n";
@@ -3956,6 +3979,9 @@ ControlledCase parse_controlled_case(const std::string &raw) {
 			controlled_case.parse_error = "invalid setup_object_0x48";
 			return controlled_case;
 		}
+		controlled_case.setup_object_raw_0x48_known = true;
+		controlled_case.setup_object_raw_0x48 = controlled_case.setup_object_0x48;
+		controlled_case.setup_object_raw_0x48_supplied = true;
 		controlled_case.setup_object_0x48_supplied = true;
 	}
 
@@ -4003,12 +4029,16 @@ SharedRuntimeChainInput resolved_shared_runtime_chain_input(const ControlledCase
 	bool used_setup_object = false;
 	uint32_t rng_state_before_template_selection = controlled_case.seed;
 	if (controlled_case.setup_object_0x44_known) {
+		const bool setup_value_band_known =
+				controlled_case.setup_object_raw_0x48_known || controlled_case.setup_object_0x48_known;
 		const h3maped_rmg_core::GeneratorSetupModeResult49ecf2 setup =
 				h3maped_rmg_core::generator_setup_mode_49ecf2(
 						controlled_case.seed,
 						controlled_case.setup_object_0x44,
-						controlled_case.setup_object_0x48_known,
-						controlled_case.setup_object_0x48,
+						setup_value_band_known,
+						controlled_case.setup_object_raw_0x48_known
+								? h3maped_rmg_core::setup_value_band_arg_0x4adfe1_to_0x49ecf2(controlled_case.setup_object_raw_0x48)
+								: controlled_case.setup_object_0x48,
 						controlled_case.setup_object_0x4c_known,
 						controlled_case.setup_object_0x4c);
 		resolved.recovered_setup_mode_known = true;
