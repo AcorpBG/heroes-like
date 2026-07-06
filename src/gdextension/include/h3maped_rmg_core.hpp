@@ -2042,6 +2042,11 @@ struct ObjectRecordReference4a54a7 {
 	SourceObjectRecord0x4c source_record_copy;
 	bool object_score_cache_known_0x49b89c = false;
 	std::array<int32_t, 48> object_score_cache_0x49b89c {};
+	bool final_payload_dynamic_vector_0x48_0x4c_known = false;
+	std::vector<uint8_t> final_payload_dynamic_vector_0x48_0x4c;
+	bool final_payload_optional_fields_0x3c_0x40_known = false;
+	int32_t final_payload_field_0x3c = -1;
+	uint32_t final_payload_field_0x40 = 0U;
 };
 
 struct RewardGuardCandidateRecord4a9f1c {
@@ -2059,6 +2064,10 @@ struct RewardGuardCandidateRecord4a9f1c {
 	int32_t monster_table_index_0x14 = -1;
 	int32_t monster_terrain_id_0x57cea0 = -1;
 	int32_t monster_base_score_0x49c64b = 0;
+	bool spell_vector_fields_known_0x49c764 = false;
+	int32_t spell_level_min_0x14 = -1;
+	int32_t spell_level_max_0x18 = -1;
+	uint32_t spell_school_mask_0x1c = 0U;
 };
 
 struct RewardGuardCandidateDecision4a9f1c {
@@ -2132,6 +2141,8 @@ struct RewardGuardSelectorResult4a9f1c {
 	int32_t selected_weight_remainder = -1;
 	int32_t selected_accepted_ordinal = -1;
 	int32_t selected_candidate_index = -1;
+	bool selected_candidate_record_known_0x4aa166 = false;
+	RewardGuardCandidateRecord4a9f1c selected_candidate_record_copy_0x4aa166;
 	bool selected_candidate_vtable_known = false;
 	uint32_t selected_candidate_vtable_0x00 = 0U;
 	bool selected_score_value_known_0x04 = false;
@@ -3385,6 +3396,11 @@ struct RewardGuardWrapperMember4aa3e9 {
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	bool descriptor_body_offsets_0x49a6f9_known = false;
 	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
+	bool final_payload_dynamic_vector_0x48_0x4c_known = false;
+	std::vector<uint8_t> final_payload_dynamic_vector_0x48_0x4c;
+	bool final_payload_optional_fields_0x3c_0x40_known = false;
+	int32_t final_payload_field_0x3c = -1;
+	uint32_t final_payload_field_0x40 = 0U;
 };
 
 struct RewardGuardWrapperState4aa3e9 {

@@ -4800,7 +4800,35 @@ struct RecoveredRewardGuardCandidateSpec49f95a {
 	int32_t monster_table_index_0x14 = -1;
 	int32_t monster_terrain_id_0x57cea0 = -1;
 	int32_t monster_base_score_0x49c64b = 0;
+	bool spell_vector_fields_known_0x49c764 = false;
+	int32_t spell_level_min_0x14 = -1;
+	int32_t spell_level_max_0x18 = -1;
+	uint32_t spell_school_mask_0x1c = 0U;
 };
+
+static constexpr RecoveredRewardGuardCandidateSpec49f95a reward_guard_spell_candidate_spec_49f95a(
+		int32_t value_0x0c,
+		int32_t weight_0x10,
+		int32_t level_min_0x14,
+		int32_t level_max_0x18,
+		uint32_t school_mask_0x1c) {
+	return RecoveredRewardGuardCandidateSpec49f95a {
+		0x540bf0U,
+		6,
+		0,
+		value_0x0c,
+		weight_0x10,
+		true,
+		false,
+		-1,
+		-1,
+		0,
+		true,
+		level_min_0x14,
+		level_max_0x18,
+		school_mask_0x1c
+	};
+}
 
 static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(const RecoveredRewardGuardCandidateSpec49f95a &spec) {
 	RewardGuardCandidateRecord4a9f1c record;
@@ -4818,7 +4846,128 @@ static RewardGuardCandidateRecord4a9f1c reward_guard_candidate_record_49f95a(con
 	record.monster_table_index_0x14 = spec.monster_table_index_0x14;
 	record.monster_terrain_id_0x57cea0 = spec.monster_terrain_id_0x57cea0;
 	record.monster_base_score_0x49c64b = spec.monster_base_score_0x49c64b;
+	record.spell_vector_fields_known_0x49c764 = spec.spell_vector_fields_known_0x49c764;
+	record.spell_level_min_0x14 = spec.spell_level_min_0x14;
+	record.spell_level_max_0x18 = spec.spell_level_max_0x18;
+	record.spell_school_mask_0x1c = spec.spell_school_mask_0x1c;
 	return record;
+}
+
+struct RewardGuardSpellTraitRecord592520 {
+	uint8_t flags_0x0d = 0U;
+	int32_t level_0x18 = 0;
+	uint32_t school_mask_0x1c = 0U;
+};
+
+static constexpr std::array<RewardGuardSpellTraitRecord592520, 70> REWARD_GUARD_SPELL_TRAITS_0X592520 {{
+	/* 00 Summon Boat */ { 0x20U, 1, 0x02U },
+	/* 01 Scuttle Boat */ { 0x20U, 2, 0x02U },
+	/* 02 Visions */ { 0x20U, 2, 0x0fU },
+	/* 03 View Earth */ { 0x20U, 1, 0x01U },
+	/* 04 Disguise */ { 0x20U, 2, 0x08U },
+	/* 05 View Air */ { 0x20U, 1, 0x08U },
+	/* 06 Fly */ { 0x20U, 5, 0x08U },
+	/* 07 Water Walk */ { 0x20U, 4, 0x02U },
+	/* 08 Dimension Door */ { 0x20U, 5, 0x08U },
+	/* 09 Town Portal */ { 0x20U, 4, 0x01U },
+	/* 10 Quicksand */ { 0x00U, 2, 0x01U },
+	/* 11 Land Mine */ { 0x00U, 3, 0x04U },
+	/* 12 Force Field */ { 0x00U, 3, 0x01U },
+	/* 13 Fire Wall */ { 0x00U, 2, 0x04U },
+	/* 14 Earthquake */ { 0x00U, 3, 0x01U },
+	/* 15 Magic Arrow */ { 0x00U, 1, 0x0fU },
+	/* 16 Ice Bolt */ { 0x00U, 2, 0x02U },
+	/* 17 Lightning Bolt */ { 0x00U, 2, 0x08U },
+	/* 18 Implosion */ { 0x00U, 5, 0x01U },
+	/* 19 Chain Lightning */ { 0x00U, 4, 0x08U },
+	/* 20 Frost Ring */ { 0x00U, 3, 0x02U },
+	/* 21 Fireball */ { 0x00U, 3, 0x04U },
+	/* 22 Inferno */ { 0x00U, 4, 0x04U },
+	/* 23 Meteor Shower */ { 0x00U, 4, 0x01U },
+	/* 24 Death Ripple */ { 0x00U, 2, 0x01U },
+	/* 25 Destroy Undead */ { 0x00U, 3, 0x08U },
+	/* 26 Armageddon */ { 0x00U, 4, 0x04U },
+	/* 27 Shield */ { 0x00U, 1, 0x01U },
+	/* 28 Air Shield */ { 0x00U, 3, 0x08U },
+	/* 29 Fire Shield */ { 0x00U, 4, 0x04U },
+	/* 30 Protection from Air */ { 0x00U, 2, 0x08U },
+	/* 31 Protection from Fire */ { 0x00U, 1, 0x04U },
+	/* 32 Prot. from Water */ { 0x00U, 1, 0x02U },
+	/* 33 Prot. from Earth */ { 0x00U, 3, 0x01U },
+	/* 34 Anti-Magic */ { 0x00U, 3, 0x01U },
+	/* 35 Dispel */ { 0x00U, 1, 0x02U },
+	/* 36 Magic Mirror */ { 0x00U, 5, 0x08U },
+	/* 37 Cure */ { 0x00U, 1, 0x02U },
+	/* 38 Resurrection */ { 0x00U, 4, 0x01U },
+	/* 39 Animate Dead */ { 0x00U, 3, 0x01U },
+	/* 40 Sacrifice */ { 0x00U, 5, 0x04U },
+	/* 41 Bless */ { 0x00U, 1, 0x02U },
+	/* 42 Curse */ { 0x00U, 1, 0x04U },
+	/* 43 Bloodlust */ { 0x00U, 1, 0x04U },
+	/* 44 Precision */ { 0x00U, 2, 0x08U },
+	/* 45 Weakness */ { 0x00U, 2, 0x02U },
+	/* 46 Stone Skin */ { 0x00U, 1, 0x01U },
+	/* 47 Disrupting Ray */ { 0x00U, 2, 0x08U },
+	/* 48 Prayer */ { 0x00U, 4, 0x02U },
+	/* 49 Mirth */ { 0x00U, 3, 0x02U },
+	/* 50 Sorrow */ { 0x00U, 4, 0x01U },
+	/* 51 Fortune */ { 0x00U, 2, 0x08U },
+	/* 52 Misfortune */ { 0x00U, 3, 0x04U },
+	/* 53 Haste */ { 0x00U, 1, 0x08U },
+	/* 54 Slow */ { 0x00U, 1, 0x01U },
+	/* 55 Slayer */ { 0x00U, 4, 0x04U },
+	/* 56 Frenzy */ { 0x00U, 4, 0x04U },
+	/* 57 Titan's Lightning Bolt */ { 0x00U, 5, 0x08U },
+	/* 58 Counterstrike */ { 0x00U, 4, 0x08U },
+	/* 59 Berserk */ { 0x00U, 4, 0x04U },
+	/* 60 Hypnotize */ { 0x00U, 3, 0x08U },
+	/* 61 Forgetfulness */ { 0x00U, 3, 0x02U },
+	/* 62 Blind */ { 0x00U, 2, 0x04U },
+	/* 63 Teleport */ { 0x00U, 3, 0x02U },
+	/* 64 Remove Obstacle */ { 0x00U, 2, 0x02U },
+	/* 65 Clone */ { 0x00U, 4, 0x02U },
+	/* 66 Fire Elemental */ { 0x00U, 5, 0x04U },
+	/* 67 Earth Elemental */ { 0x00U, 5, 0x01U },
+	/* 68 Water Elemental */ { 0x00U, 5, 0x02U },
+	/* 69 Air Elemental */ { 0x00U, 5, 0x08U },
+}};
+
+static bool reward_guard_spell_vector_from_candidate_0x49c764(
+		const RewardGuardCandidateRecord4a9f1c &candidate,
+		std::vector<uint8_t> &spell_vector_0x48_0x4c,
+		std::string &blocked_reason) {
+	if (!candidate.spell_vector_fields_known_0x49c764) {
+		blocked_reason = "0x49c764_0x540bf0_candidate_spell_fields_0x14_0x18_0x1c_missing";
+		return false;
+	}
+	if (candidate.spell_level_min_0x14 < 0
+			|| candidate.spell_level_max_0x18 < candidate.spell_level_min_0x14
+			|| candidate.spell_school_mask_0x1c == 0U) {
+		blocked_reason = "0x49c764_0x540bf0_candidate_spell_fields_invalid";
+		return false;
+	}
+
+	spell_vector_0x48_0x4c.clear();
+	for (int32_t level = candidate.spell_level_max_0x18; level >= candidate.spell_level_min_0x14; --level) {
+		for (int32_t spell_index = 0; spell_index < int32_t(REWARD_GUARD_SPELL_TRAITS_0X592520.size()); ++spell_index) {
+			const RewardGuardSpellTraitRecord592520 &spell = REWARD_GUARD_SPELL_TRAITS_0X592520[size_t(spell_index)];
+			if ((spell.flags_0x0d & 0x20U) != 0U) {
+				continue;
+			}
+			if (spell.level_0x18 != level) {
+				continue;
+			}
+			if ((candidate.spell_school_mask_0x1c & spell.school_mask_0x1c) == 0U) {
+				continue;
+			}
+			spell_vector_0x48_0x4c.push_back(uint8_t(spell_index));
+			if (spell_vector_0x48_0x4c.size() > 0xffU) {
+				blocked_reason = "0x49c764_0x540bf0_spell_vector_count_exceeds_byte";
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 static void append_reward_guard_candidate_49f95a(std::vector<RewardGuardCandidateRecord4a9f1c> &records, const RecoveredRewardGuardCandidateSpec49f95a &spec) {
@@ -5045,16 +5194,16 @@ static std::vector<RewardGuardCandidateRecord4a9f1c> reward_guard_candidate_reco
 		{ 0x540be0U, 6, 0, 10000, 5, true },
 		{ 0x540be0U, 6, 0, 15000, 5, true },
 		{ 0x540be0U, 6, 0, 20000, 5, true },
-		{ 0x540bf0U, 6, 0, 5000, 2, true },
-		{ 0x540bf0U, 6, 0, 7500, 2, true },
-		{ 0x540bf0U, 6, 0, 10000, 2, true },
-		{ 0x540bf0U, 6, 0, 12500, 2, true },
-		{ 0x540bf0U, 6, 0, 15000, 2, true },
-		{ 0x540bf0U, 6, 0, 15000, 2, true },
-		{ 0x540bf0U, 6, 0, 15000, 2, true },
-		{ 0x540bf0U, 6, 0, 15000, 2, true },
-		{ 0x540bf0U, 6, 0, 15000, 2, true },
-		{ 0x540bf0U, 6, 0, 30000, 2, true },
+		reward_guard_spell_candidate_spec_49f95a(5000, 2, 1, 1, 0x0fU),
+		reward_guard_spell_candidate_spec_49f95a(7500, 2, 2, 2, 0x0fU),
+		reward_guard_spell_candidate_spec_49f95a(10000, 2, 3, 3, 0x0fU),
+		reward_guard_spell_candidate_spec_49f95a(12500, 2, 4, 4, 0x0fU),
+		reward_guard_spell_candidate_spec_49f95a(15000, 2, 5, 5, 0x0fU),
+		reward_guard_spell_candidate_spec_49f95a(15000, 2, 1, 5, 0x01U),
+		reward_guard_spell_candidate_spec_49f95a(15000, 2, 1, 5, 0x02U),
+		reward_guard_spell_candidate_spec_49f95a(15000, 2, 1, 5, 0x04U),
+		reward_guard_spell_candidate_spec_49f95a(15000, 2, 1, 5, 0x08U),
+		reward_guard_spell_candidate_spec_49f95a(30000, 2, 1, 5, 0x0fU),
 	};
 	static constexpr RecoveredRewardGuardCandidateSpec49f95a STATIC_AFTER_TYPE10_BEFORE_TYPE17_0X49F95A[] = {
 		{ 0x540ba0U, 7, 0, 8000, 20, true },
@@ -5828,6 +5977,9 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 		return result;
 	}
 
+	const RewardGuardCandidateRecord4a9f1c &selected_candidate = state.reward_guard_candidate_records_10f4_10f8[size_t(result.selected_candidate_index)];
+	result.selected_candidate_record_known_0x4aa166 = true;
+	result.selected_candidate_record_copy_0x4aa166 = selected_candidate;
 	RewardGuardCandidateDecision4a9f1c &selected_decision = result.candidate_decisions[size_t(result.selected_candidate_index)];
 	selected_decision.selected_by_weighted_rng_0x4aa110 = true;
 	selected_decision.selected_score_replayed_0x4aa151 = true;
@@ -5838,7 +5990,6 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 	result.selected_source_record_copy = selected_decision.selected_source_record_copy;
 	selected_decision.selected_create_dispatched_0x4aa166 = true;
 	result.selected_create_dispatched_0x4aa166 = true;
-	const RewardGuardCandidateRecord4a9f1c &selected_candidate = state.reward_guard_candidate_records_10f4_10f8[size_t(result.selected_candidate_index)];
 	int32_t selected_score_replay_0x04 = 0;
 	std::string selected_score_replay_blocker;
 	if (!reward_guard_candidate_score_0x4aa151(
@@ -6883,6 +7034,39 @@ static RewardGuardMemberAllocationResult4a5c07 reward_guard_member_from_selector
 	result.member.object_record_selected_index_0x20 = selector.selected_object_selected_value_0x20_0x4aa166;
 	result.member.object_record_enabled_word_known_0x24 = true;
 	result.member.object_record_enabled_word_0x24 = selector.selected_object_enabled_word_0x24_0x4aa166;
+	if (selector.selected_candidate_vtable_known && selector.selected_candidate_vtable_0x00 == 0x00540bf0U) {
+		if (!selector.selected_candidate_record_known_0x4aa166) {
+			result.blocked_reason = "0x4aa166_0x540bf0_selected_candidate_record_missing_before_0x49c764";
+			return result;
+		}
+		std::string spell_vector_blocker;
+		if (!reward_guard_spell_vector_from_candidate_0x49c764(
+					selector.selected_candidate_record_copy_0x4aa166,
+					result.member.final_payload_dynamic_vector_0x48_0x4c,
+					spell_vector_blocker)) {
+			result.blocked_reason = spell_vector_blocker.empty()
+					? "0x4aa166_0x540bf0_spell_vector_0x49c764_failed"
+					: spell_vector_blocker;
+			return result;
+		}
+		result.member.final_payload_dynamic_vector_0x48_0x4c_known = true;
+	}
+	if (selector.selected_candidate_vtable_known && selector.selected_candidate_vtable_0x00 == 0x00540bc0U) {
+		if (!selector.selected_candidate_record_known_0x4aa166) {
+			result.blocked_reason = "0x4aa166_0x540bc0_selected_candidate_record_missing_before_0x49c69b";
+			return result;
+		}
+		const RewardGuardCandidateRecord4a9f1c &candidate = selector.selected_candidate_record_copy_0x4aa166;
+		if (!candidate.monster_score_fields_known_0x49c64b
+				|| candidate.monster_table_index_0x14 < 0
+				|| candidate.monster_base_score_0x49c64b < 0) {
+			result.blocked_reason = "0x4aa166_0x540bc0_monster_candidate_fields_0x14_0x18_missing_before_0x49c69b";
+			return result;
+		}
+		result.member.final_payload_optional_fields_0x3c_0x40_known = true;
+		result.member.final_payload_field_0x3c = candidate.monster_table_index_0x14;
+		result.member.final_payload_field_0x40 = uint32_t(candidate.monster_base_score_0x49c64b);
+	}
 	result.member.descriptor_type_0x1c = selected_descriptor->descriptor_type_0x1c;
 	result.member.descriptor_projection_enabled_0x29 = selected_descriptor->descriptor_projection_enabled_0x29;
 	result.member.descriptor_offset_x_0x2c = selected_descriptor->descriptor_source_cell_x_0x2c;
@@ -9070,6 +9254,11 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 				}
 				object_record.reward_guard_candidate_vtable_0x00_known = member.reward_guard_candidate_vtable_0x00_known;
 				object_record.reward_guard_candidate_vtable_0x00 = member.reward_guard_candidate_vtable_0x00;
+				object_record.final_payload_dynamic_vector_0x48_0x4c_known = member.final_payload_dynamic_vector_0x48_0x4c_known;
+				object_record.final_payload_dynamic_vector_0x48_0x4c = member.final_payload_dynamic_vector_0x48_0x4c;
+				object_record.final_payload_optional_fields_0x3c_0x40_known = member.final_payload_optional_fields_0x3c_0x40_known;
+				object_record.final_payload_field_0x3c = member.final_payload_field_0x3c;
+				object_record.final_payload_field_0x40 = member.final_payload_field_0x40;
 				if (member.source_record_copy_known_0x04) {
 					object_record.copied_source_record_carried = true;
 					object_record.source_record_copy = member.source_record_copy;
@@ -11911,6 +12100,7 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 			std::array<uint32_t, 7> fields_0x20_0x38 {};
 			int32_t field_0x3c = -1;
 			uint32_t field_0x40 = 0U;
+			std::vector<uint8_t> dynamic_vector_0x48_0x4c;
 			switch (record.reward_guard_candidate_vtable_0x00) {
 				case 0x00540bd0U:
 					field_0x1c = uint32_t(record.object_record_selected_index_0x20);
@@ -11919,11 +12109,24 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 					fields_0x20_0x38[6] = uint32_t(record.object_record_selected_index_0x20);
 					break;
 				case 0x00540bc0U:
-					blocked_reason = "final_object_payload_0x49be93_0x540bc0_monster_fields_0x14_0x18_missing";
-					return false;
+					if (!record.final_payload_optional_fields_0x3c_0x40_known) {
+						blocked_reason = "final_object_payload_0x49be93_0x540bc0_monster_fields_0x14_0x18_missing";
+						return false;
+					}
+					field_0x3c = record.final_payload_field_0x3c;
+					field_0x40 = record.final_payload_field_0x40;
+					break;
 				case 0x00540bf0U:
-					blocked_reason = "final_object_payload_0x49be93_0x540bf0_dynamic_vector_0x48_0x4c_missing";
-					return false;
+					if (!record.final_payload_dynamic_vector_0x48_0x4c_known) {
+						blocked_reason = "final_object_payload_0x49be93_0x540bf0_dynamic_vector_0x48_0x4c_missing";
+						return false;
+					}
+					if (record.final_payload_dynamic_vector_0x48_0x4c.size() > 0xffU) {
+						blocked_reason = "final_object_payload_0x49be93_0x540bf0_dynamic_vector_0x48_0x4c_count_exceeds_byte";
+						return false;
+					}
+					dynamic_vector_0x48_0x4c = record.final_payload_dynamic_vector_0x48_0x4c;
+					break;
 				default: {
 					std::ostringstream reason;
 					reason << "final_object_payload_0x49be93_candidate_vtable_0x"
@@ -11937,16 +12140,18 @@ static bool final_object_append_payload_for_record_0x4ad3eb(
 			final_object_append_u8_0x4ad3eb(bytes, 0U);
 			final_object_append_le32_0x4ad3eb(bytes, field_0x1c);
 			final_object_append_le32_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, 0U);
 			for (uint32_t value : fields_0x20_0x38) {
 				final_object_append_le32_0x4ad3eb(bytes, value);
 			}
 			final_object_append_le32_0x4ad3eb(bytes, 0U);
-			final_object_append_le32_0x4ad3eb(bytes, 0U);
 			final_object_append_u8_0x4ad3eb(bytes, 0U);
 			final_object_append_u8_0x4ad3eb(bytes, 0U);
-			final_object_append_u8_0x4ad3eb(bytes, 0U);
-			final_object_append_u8_0x4ad3eb(bytes, 0U);
-			final_object_append_u8_0x4ad3eb(bytes, 0U);
+			final_object_append_u8_0x4ad3eb(bytes, uint32_t(dynamic_vector_0x48_0x4c.size()));
+			for (const uint8_t value : dynamic_vector_0x48_0x4c) {
+				final_object_append_u8_0x4ad3eb(bytes, value);
+			}
 			if (field_0x3c == -1) {
 				final_object_append_u8_0x4ad3eb(bytes, 0U);
 			} else {
@@ -19026,12 +19231,18 @@ static void apply_reward_guard_terrain_pressure_0x4aadd2(GeneratorObjectPrivateS
 			continue;
 		}
 		const int32_t terrain_pressure_index = owner.town_choice_0x04;
-		if (terrain_pressure_index < 0
-				|| terrain_pressure_index >= int32_t(state.reward_guard_terrain_pressure_by_terrain_0xf64.size())) {
+		if (terrain_pressure_index == -1) {
+			// 0x4aadd2 indexes +0xf64 directly. Index -1 aliases the
+			// adjacent +0xf60 total dword, then the explicit total increment
+			// below runs as well.
+			state.reward_guard_terrain_pressure_total_0xf60 += 1;
+		} else if (terrain_pressure_index >= 0
+				&& terrain_pressure_index < int32_t(state.reward_guard_terrain_pressure_by_terrain_0xf64.size())) {
+			state.reward_guard_terrain_pressure_by_terrain_0xf64[size_t(terrain_pressure_index)] += 1;
+		} else {
 			state.reward_guard_terrain_pressure_0xf60_0xf64_known = false;
 			continue;
 		}
-		state.reward_guard_terrain_pressure_by_terrain_0xf64[size_t(terrain_pressure_index)] += 1;
 		state.reward_guard_terrain_pressure_total_0xf60 += 1;
 	}
 }
