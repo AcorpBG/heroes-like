@@ -9266,9 +9266,6 @@ static int32_t reward_guard_relation_source_owner_0x4aa9b7(const GeneratorRelati
 }
 
 static int32_t relation_owner_byte2_for_generated_cell_gate(const GeneratorRelationOwnerState4a218c &relation) {
-	if (relation.source_pointer_0x00_known && relation.source_pointer_source_index_0x00 >= 0) {
-		return relation.source_pointer_source_index_0x00;
-	}
 	if (relation.relation_owner_byte2_0x4aa9b7_known && relation.relation_owner_byte2_0x4aa9b7 >= 0) {
 		return relation.relation_owner_byte2_0x4aa9b7;
 	}
@@ -18757,12 +18754,12 @@ static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a
 }
 
 static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRelationOwnerState4a218c &owner, int32_t fallback) {
-	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
-		return owner.source_pointer_source_index_0x00;
-	}
 	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 	if (relation_owner_byte2 >= 0) {
 		return relation_owner_byte2;
+	}
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00;
 	}
 	if (owner.source_zone_id > 0) {
 		return owner.source_zone_id;
