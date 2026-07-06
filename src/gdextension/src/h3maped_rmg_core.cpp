@@ -15159,6 +15159,19 @@ static const SourceObjectResolvedWrapper4af785 *source_type98_bucket_entry_0x658
 		int32_t source_pair_key_0x0c,
 		std::string &blocked_reason) {
 	SourceObjectResolverState4af785 &resolver_state = ensure_source_object_resolver_state_4af785(state);
+	if (source_pair_key_0x0c >= 0 && source_pair_key_0x0c < int32_t(resolver_state.wrappers.size())) {
+		const SourceObjectResolvedWrapper4af785 &wrapper = resolver_state.wrappers[size_t(source_pair_key_0x0c)];
+		if (wrapper.wrapper_index == source_pair_key_0x0c && wrapper.metadata_bucket_index_0x08 == 98) {
+			blocked_reason.clear();
+			return &wrapper;
+		}
+	}
+	for (const SourceObjectResolvedWrapper4af785 &wrapper : resolver_state.wrappers) {
+		if (wrapper.wrapper_index == source_pair_key_0x0c && wrapper.metadata_bucket_index_0x08 == 98) {
+			blocked_reason.clear();
+			return &wrapper;
+		}
+	}
 	constexpr int32_t source_type98_bucket_index = 98;
 	const std::vector<int32_t> &bucket =
 			resolver_state.wrapper_bucket_indices_0xe8[size_t(source_type98_bucket_index)];
@@ -20939,16 +20952,14 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				continue;
 			}
 		}
-		const int32_t context_wrapper_index_0x04 = descriptor_required
-				? join.resolver_0x4af785.selected_wrapper_index
-				: owner.owner_vector_index;
 		const int32_t lane_state_0xee4 =
 				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(
 						state,
 						owner.source_order_source_record_0x00.relation_selector_0x1c);
-		const int32_t source_pair_key_0x0c = owner.source_order_source_record_0x00.source_id_0x00 >= 0
-				? owner.source_order_source_record_0x00.source_id_0x00
-				: owner.runtime_zone_index;
+		const int32_t context_wrapper_index_0x04 = descriptor_required
+				? join.resolver_0x4af785.selected_wrapper_index
+				: owner.owner_vector_index;
+		const int32_t source_pair_key_0x0c = context_wrapper_index_0x04;
 		const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 		const SourceOrderObjectDispatcherResult4a8d2c direct =
 				source_order_object_dispatcher_0x4a8d2c(
@@ -20989,7 +21000,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						true,
 						true,
 						join.source_catalog_index_0x49da08,
-						context_wrapper_index_0x04,
+						source_pair_key_0x0c,
 						relation_owner_byte2,
 						owner.scan_bound_low_x_0x20,
 						owner.scan_bound_low_y_0x24,
@@ -21130,9 +21141,7 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 		const int32_t source_selector = source_record.relation_selector_0x1c;
 		const int32_t lane_state_0xee4 =
 				source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
-		const int32_t source_pair_key_0x0c = source_record.source_id_0x00 >= 0
-				? source_record.source_id_0x00
-				: runtime_zone.runtime_zone_index;
+		const int32_t source_pair_key_0x0c = join.resolver_0x4af785.selected_wrapper_index;
 		source_order_object_dispatcher_0x4a8d2c(
 				state,
 				join,
