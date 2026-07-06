@@ -1753,7 +1753,7 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(uint32_t seed, int32_
 	result.setup_object_0x48 = setup_object_0x48;
 	if (setup_object_0x48_known) {
 		result.generator_value_band_0x10bc_known = true;
-		result.generator_value_band_0x10bc = std::min<int32_t>(5, std::max<int32_t>(1, setup_object_0x48 + 3));
+		result.generator_value_band_0x10bc = setup_object_0x48;
 	}
 	result.setup_object_0x4c_known = setup_object_0x4c_known;
 	result.setup_object_0x4c = setup_object_0x4c;
@@ -12218,8 +12218,9 @@ static bool final_payload_same_run_authority_scope_matches_0x4ad1e3(
 	// The recovered payload files were captured from the H3MapEd UI profile
 	// "Human/Computer: 1, Computer only: Random, Monster strength: Random".
 	// A fixed native 2-player case has the same visible player total after
-	// resolution, but not the same source setup contract, so it is not a valid
-	// authority for byte parity.
+	// resolution, but the payload capture itself does not include a joined
+	// 0x49ecf2 setup stack event proving the exact setup words for that final
+	// stream, so it is not a valid byte authority for a controlled native case.
 	return false;
 }
 
@@ -12235,7 +12236,7 @@ static void final_payload_compare_recovered_same_run_authority_0x4ad1e3(
 			final_payload_same_run_authority_scope_matches_0x4ad1e3(config);
 	if (!result.same_run_h3maped_authority_scope_matches) {
 		result.same_run_h3maped_authority_scope_blocker =
-				"same_run_payload_authority_profile_is_hc1_computer_random_not_fixed_native_2p";
+				"same_run_payload_authority_missing_0x49ecf2_setup_profile_join";
 	}
 	if (!result.same_run_tile_payload_authority_known
 			|| !result.same_run_generated_object_payload_authority_known
