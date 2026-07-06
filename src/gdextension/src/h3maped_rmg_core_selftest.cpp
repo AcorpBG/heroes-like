@@ -6377,7 +6377,7 @@ int main() {
 							+ workflow.blocked_reason)) {
 			return 1;
 		}
-			if (!require(workflow.phases.size() >= 22
+			if (!require(workflow.phases.size() >= 23
 							&& workflow.phases[0].id == "entry_scope"
 							&& workflow.phases[1].id == "setup_template_selection"
 							&& workflow.phases[2].id == "coordinate_boundary_terrain"
@@ -6388,18 +6388,18 @@ int main() {
 							&& workflow.phases[5].status == "complete_source_order_prefix"
 							&& workflow.phases[6].id == "route_free_cell_sweep"
 							&& workflow.phases[6].status == "complete_source_order_prefix"
-							&& workflow.phases[7].id == "relation_source_order_scan"
+							&& workflow.phases[7].id == "connection_tail"
 							&& workflow.phases[7].status == "complete_source_order_prefix"
-							&& workflow.phases[11].id == "reward_guard_materialization"
-							&& workflow.phases[11].status == "complete_source_order_prefix"
-							&& workflow.phases[12].id == "connection_road_river"
+							&& workflow.phases[8].id == "relation_source_order_scan"
+							&& workflow.phases[8].status == "complete_source_order_prefix"
+							&& workflow.phases[12].id == "reward_guard_materialization"
 							&& workflow.phases[12].status == "complete_source_order_prefix"
-							&& workflow.phases[13].id == "road_river_object_adjacency"
-							&& workflow.phases[13].status == "complete_source_order_prefix"
-							&& workflow.phases[15].id == "final_writeout"
-							&& workflow.phases[15].status == "complete_source_order_prefix"
-							&& workflow.phases[21].id == "full_final_payload_same_run_compare"
-							&& workflow.phases[21].status == "blocked",
+							&& workflow.phases[14].id == "road_river_object_adjacency"
+							&& workflow.phases[14].status == "complete_source_order_prefix"
+							&& workflow.phases[16].id == "final_writeout"
+							&& workflow.phases[16].status == "complete_source_order_prefix"
+							&& workflow.phases[22].id == "full_final_payload_same_run_compare"
+							&& workflow.phases[22].status == "blocked",
 					"entry-to-writeout workflow did not preserve recovered phase order through final payload compare")) {
 				return 1;
 			}
@@ -6511,9 +6511,11 @@ int main() {
 					"entry-to-writeout workflow did not carry recovered type-98 source-pair +0x04 wrapper context into 0x4a8db2 scheduler replay")) {
 			return 1;
 		}
-		if (!require(workflow.phases.size() > 7
-						&& workflow.phases[7].id == "relation_source_order_scan"
+		if (!require(workflow.phases.size() > 8
+						&& workflow.phases[7].id == "connection_tail"
 						&& workflow.phases[7].status == "complete_source_order_prefix"
+						&& workflow.phases[8].id == "relation_source_order_scan"
+						&& workflow.phases[8].status == "complete_source_order_prefix"
 						&& workflow_generator_state.relation_source_order_scan_0x4a89da.invoked
 						&& workflow_generator_state.relation_source_order_scan_0x4a89da.prefix_applied
 						&& workflow_generator_state.relation_source_order_scan_0x4a89da.helper_chain_complete
