@@ -10306,6 +10306,7 @@ static std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> recover
 		record.require_source_cell_prestate_0x4a5e03 = false;
 		record.object_record_vtable_0x00_known = true;
 		record.object_record_vtable_0x00 = OBJECT_RECORD_VTABLE_0X540A74;
+		record.allow_existing_target_object_references_0x4a7312 = true;
 		record.materialization_stage_0x4a79a3 = "direct_endpoint_0x4a7312_0x4a54a7";
 		record.source = source;
 		return record;
@@ -10874,7 +10875,11 @@ static ConnectionFallbackMaterializationResult4a7605_4a5e03 connection_exact_mat
 			block_record(record, record_result, record_index, "0x4a79a3_exact_target_object_reference_vector_unknown");
 			continue;
 		}
-		if (!record_result.target_object_reference_vector_empty) {
+		const bool allow_existing_target_object_references =
+				connection_record_stage_is_direct_endpoint_4a79a3(record)
+				&& record.allow_existing_target_object_references_0x4a7312;
+		if (!record_result.target_object_reference_vector_empty
+				&& !allow_existing_target_object_references) {
 			block_record(record, record_result, record_index, "0x4a79a3_exact_target_object_reference_vector_not_empty");
 			continue;
 		}

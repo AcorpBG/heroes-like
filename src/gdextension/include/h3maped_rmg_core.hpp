@@ -2094,6 +2094,7 @@ struct ConnectionFallbackMaterializationRecord4a7605_4a5e03 {
 	bool object_record_enabled_word_0x24_known = false;
 	uint32_t object_record_enabled_word_0x24 = 0U;
 	bool object_record_enabled_low_byte_0x24 = false;
+	bool allow_existing_target_object_references_0x4a7312 = false;
 	std::string materialization_stage_0x4a79a3;
 	std::string source;
 };
