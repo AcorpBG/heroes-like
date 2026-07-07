@@ -8982,10 +8982,14 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		int32_t dispatch_x,
 		int32_t dispatch_y,
 		int32_t dispatch_level,
+		int32_t budget_arg_0x14,
 		H3MapedRng &rng,
 		DecorativeFlaggedCellDispatchResult49eb8d &result) {
 	result.dispatch_probe_0x49e700_invoked = true;
 	result.dispatch_probe_invocation_count_0x49e700 += 1;
+	result.budget_argument_to_0x49e700_known = true;
+	result.budget_argument_to_0x49e700 = budget_arg_0x14;
+	result.budget_argument_handoff_count_0x49e700 += 1;
 	result.type_table_0x54092c_known = true;
 	result.type_table_0x54092c_count = int32_t(sizeof(DECORATIVE_TYPE_TABLE_0X54092C) / sizeof(DECORATIVE_TYPE_TABLE_0X54092C[0]));
 	if (!state.generator_field_0x08_known) {
@@ -9019,6 +9023,15 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 		if (generated_cell_terrain_code_0x24(record) == 9) {
 			result.dispatch_probe_terrain9_reject_count_0x49e700 += 1;
 			continue;
+		}
+		if (state.generator_field_0xed4_known && state.generator_field_0xed4 != 0) {
+			if (state.generator_field_0xed4 == DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1) {
+				result.dispatch_probe_optional_handler_sentinel_suppressed_count_0x49e700 += 1;
+			} else {
+				result.dispatch_probe_optional_handler_unowned_pointer_count_0x49e700 += 1;
+				result.blocked_reason = "0x49e700_optional_handler_plus_0xed4_live_pointer_unowned";
+				return;
+			}
 		}
 		const int32_t terrain_code = generated_cell_terrain_code_0x24(record);
 
@@ -9183,12 +9196,28 @@ DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49e
 				}
 				if (generated_cell_49a1d8_valid_record(record)) {
 					result.valid_0x49e700_dispatch_candidate_count += 1;
-					decorative_dispatch_probe_valid_cell_0x49e700(state, x, y, level, rng, result);
+					decorative_dispatch_probe_valid_cell_0x49e700(
+							state,
+							x,
+							y,
+							level,
+							result.budget_0x4374c_div_bit26,
+							rng,
+							result);
 					if (!result.blocked_reason.empty()) {
 						return result;
 					}
 				} else {
 					result.invalid_optional_handler_candidate_count += 1;
+					if (state.generator_field_0xed4_known && state.generator_field_0xed4 != 0) {
+						if (state.generator_field_0xed4 == DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1) {
+							result.invalid_optional_handler_sentinel_suppressed_count += 1;
+						} else {
+							result.invalid_optional_handler_unowned_pointer_count += 1;
+							result.blocked_reason = "0x49eb8d_optional_handler_plus_0xed4_live_pointer_unowned";
+							return result;
+						}
+					}
 				}
 			}
 		}
@@ -25275,6 +25304,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		std::ostringstream decorative_note;
 		decorative_note << "bit26_candidates=" << decorative.bit26_candidate_count
 				<< ",budget=" << decorative.budget_0x4374c_div_bit26
+				<< ",budget_handoffs_0x49e700=" << decorative.budget_argument_handoff_count_0x49e700
 				<< ",valid_dispatches=" << decorative.valid_0x49e700_dispatch_candidate_count
 				<< ",selected_commits=" << decorative.selected_object_commit_callback_count_0x49ea25
 				<< ",pass3_stamps=" << decorative.pass3_occupied_stamp_count_0x49a932;
