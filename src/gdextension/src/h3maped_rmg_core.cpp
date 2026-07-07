@@ -17959,6 +17959,9 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		const int32_t source_payload_owner_word_0x00 = runtime.source_payload_owner_word_0x00 >= 0
 				? runtime.source_payload_owner_word_0x00
 				: (runtime.source_zone_id >= 0 ? runtime.source_zone_id : zone_index);
+		const int32_t boundary_payload_owner_word_0x4a325d = runtime.boundary_payload_owner_word_0x4a325d >= 0
+				? runtime.boundary_payload_owner_word_0x4a325d
+				: source_payload_owner_word_0x00;
 		const int32_t x = runtime.x_after_bbox_rescale;
 		const int32_t y = runtime.y_after_bbox_rescale;
 		SourceSplitStep4ccb64 step;
@@ -17999,7 +18002,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 					located_node.payload_random_span_limit_0x1c,
 					runtime.source_payload_random_span_limit_0x1c,
 					located_node.payload_owner_word_0x00,
-					source_payload_owner_word_0x00);
+					boundary_payload_owner_word_0x4a325d);
 		model.relink_4cc643(split_primary, located);
 		model.root = split_primary;
 		result.inserted_node_pair_count += 1;
@@ -18122,6 +18125,9 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				// container's source-vector count, not the growing appended
 				// source-record vector length.
 				generated.source_payload_owner_word_0x00 = candidate_container_source_vector_count_0x4a3c77;
+				generated.boundary_payload_owner_word_0x4a325d =
+						candidate_container_source_vector_count_0x4a3c77
+						+ result.synthetic_source_record_count_0x4a3dbc;
 				generated.synthetic_source_record_candidate_container_count_0x4a3c77_known = true;
 				generated.synthetic_source_record_candidate_container_count_0x4a3c77 =
 						candidate_container_source_vector_count_0x4a3c77;
@@ -19133,23 +19139,33 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 		const int32_t payload_owner_word_0x00 = relation_owner_source_payload_owner_word_4a3a03(
 				*owner,
 				owner->owner_vector_index >= 0 ? owner->owner_vector_index : source_vector_handoff_index);
-		const int32_t source_payload_owner_word_0x4a325d = payload_owner_word_0x00 >= 0
-				? payload_owner_word_0x00
-				: source_walk_payload_owner_word_4a3a03(
-						  walk,
-						  matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
+		const int32_t walk_payload_owner_word_0x4a325d = source_walk_payload_owner_word_4a3a03(
+				walk,
+				matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
+		const int32_t source_payload_owner_word_0x4a325d =
+				synthetic_appended_owner_0x4a3dbc
+						? walk_payload_owner_word_0x4a325d
+						: (payload_owner_word_0x00 >= 0
+								? payload_owner_word_0x00
+								: walk_payload_owner_word_0x4a325d);
 		const int32_t source_record_word0_0x4a325d =
 				relation_owner_source_record_word0_for_span_fill_4a325d(
 						*owner,
 						source_payload_owner_word_0x4a325d);
+		const bool use_synthetic_boundary_owner_0x4a325d =
+				synthetic_appended_owner_0x4a3dbc && source_payload_owner_word_0x4a325d >= 0;
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
-		handoff.zone_word = source_record_word0_0x4a325d >= 0
-				? source_record_word0_0x4a325d
-				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		handoff.generated_cell_owner_byte2 = source_record_word0_0x4a325d >= 0
-				? source_record_word0_0x4a325d
-				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word);
+		handoff.zone_word = use_synthetic_boundary_owner_0x4a325d
+				? source_payload_owner_word_0x4a325d
+				: (source_record_word0_0x4a325d >= 0
+						  ? source_record_word0_0x4a325d
+						  : (matched_input != nullptr ? matched_input->zone_word : 0));
+		handoff.generated_cell_owner_byte2 = use_synthetic_boundary_owner_0x4a325d
+				? source_payload_owner_word_0x4a325d
+				: (source_record_word0_0x4a325d >= 0
+						  ? source_record_word0_0x4a325d
+						  : (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word));
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
