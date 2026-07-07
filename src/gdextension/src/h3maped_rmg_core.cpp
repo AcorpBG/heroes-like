@@ -18960,10 +18960,6 @@ static int32_t relation_owner_source_record_word0_for_span_fill_4a325d(
 	if (owner.source_zone_id > 0) {
 		return owner.source_zone_id - 1;
 	}
-	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
-	if (relation_owner_byte2 >= 0) {
-		return relation_owner_byte2;
-	}
 	return fallback;
 }
 
@@ -19300,26 +19296,14 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 						: (source_payload_owner_word_0x4a325d >= 0
 								? source_payload_owner_word_0x4a325d
 								: source_vector_handoff_index);
-		const int32_t relation_slot_owner_byte2_0x4a325d =
-				relation_owner_byte2_for_generated_cell_gate(*owner);
 		const int32_t span_fill_owner_word_0x4a325d =
-				synthetic_appended_owner_0x4a3dbc
-						? (source_payload_owner_word_0x4a325d >= 0
-								? source_payload_owner_word_0x4a325d
-								: (relation_slot_owner_byte2_0x4a325d >= 0
-										? relation_slot_owner_byte2_0x4a325d
-										: fallback_owner_word_0x4a325d))
-						: (source_record_word0_0x4a325d >= 0
-								? source_record_word0_0x4a325d
-								: fallback_owner_word_0x4a325d);
+				source_record_word0_0x4a325d >= 0
+						? source_record_word0_0x4a325d
+						: fallback_owner_word_0x4a325d;
 		const int32_t generated_cell_owner_byte2_0x4a325d =
-				synthetic_appended_owner_0x4a3dbc
-						? (relation_slot_owner_byte2_0x4a325d >= 0
-								? relation_slot_owner_byte2_0x4a325d
-								: span_fill_owner_word_0x4a325d)
-						: (source_record_word0_0x4a325d >= 0
-								? source_record_word0_0x4a325d
-								: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : span_fill_owner_word_0x4a325d));
+				source_record_word0_0x4a325d >= 0
+						? source_record_word0_0x4a325d
+						: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : span_fill_owner_word_0x4a325d);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
 		handoff.zone_word = span_fill_owner_word_0x4a325d;

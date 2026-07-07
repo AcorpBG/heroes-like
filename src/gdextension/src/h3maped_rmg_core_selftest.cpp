@@ -2670,10 +2670,12 @@ int main() {
 					"0x4a3dbc appended synthetic handoff must use source-record +0x10/+0x14/+0x18 as the 0x4a325d span seed")) {
 			return 1;
 		}
-		if (!require(handoff_it->zone_word == int32_t(appended_index)
-						&& handoff_it->span_fill_owner_word_0x4a325d == int32_t(appended_index)
-						&& handoff_it->generated_cell_owner_byte2 == int32_t(appended_index),
-					"0x4a3dbc appended synthetic handoff must write the appended relation slot into 0x4a325d/generated-cell owner byte2, not collapse to source-record +0x00")) {
+		const int32_t expected_source_record_word0_0x4a325d =
+				synthetic_record.source_payload_owner_word_0x00;
+		if (!require(handoff_it->zone_word == expected_source_record_word0_0x4a325d
+						&& handoff_it->span_fill_owner_word_0x4a325d == expected_source_record_word0_0x4a325d
+						&& handoff_it->generated_cell_owner_byte2 == expected_source_record_word0_0x4a325d,
+					"0x4a3dbc appended synthetic handoff must write relation-owner +0x00 -> source-record +0x00 into 0x4a325d/generated-cell owner byte2")) {
 			return 1;
 		}
 	}
