@@ -1592,6 +1592,7 @@ int main() {
 					return 1;
 				}
 			}
+			aurelion::h3maped_rmg_core::generated_cell_49a932(single_ref_seed_grid.records[0], false);
 			GeneratedCellRecord0x30 &single_ref_seed = single_ref_seed_grid.records[1];
 			single_ref_seed.word_0x28 |= aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27;
 			single_ref_seed.object_references_0x04_0x08 = { 0x1200U };
@@ -1614,10 +1615,14 @@ int main() {
 					aurelion::h3maped_rmg_core::relation_scan_consumers_after_0x4a1f3b_bounds_4a5767(
 							single_ref_seed_grid,
 							{ single_ref_owner });
-			if (!require(single_ref_seed_result.applied
-						&& single_ref_seed_result.projected_chain_call_count == 1
-						&& (single_ref_seed_grid.records[1].word_0x1c & 0x0000ffffU) == 0U,
-					"relation scan consumer did not defer recovered non-empty object-reference span to the route-pair 0x4a5a23/0x49a318 pass")) {
+			const bool single_ref_condition = single_ref_seed_result.applied
+					&& single_ref_seed_result.projected_chain_call_count == 0
+					&& single_ref_seed_result.projected_chain_occupied_stamp_count == 1
+					&& (single_ref_seed_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
+					&& (single_ref_seed_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
+					&& (single_ref_seed_grid.records[1].word_0x1c & 0x0000ffffU) == 0U;
+			if (!require(single_ref_condition,
+					"relation scan consumer did not carry the recovered empty-reference first-pass coordinate before the 0x49a318 low-word skip")) {
 				return 1;
 			}
 		}
@@ -6615,12 +6620,17 @@ int main() {
 	if (composed_mode2.owner_grid.footprint_finalizer.appended_runtime_zone_count > 0) {
 		if (!require(!composed_mode2.owner_grid.footprint_finalizer.blocked
 						&& composed_mode2.owner_grid.footprint_finalizer.relation_order_vectors_materialized,
-					"mode-2 appended synthetic owners should materialize recovered 0x4a3710 adjacency/order when relation-owner state is available")) {
+				"mode-2 appended synthetic owners should materialize recovered 0x4a3710 adjacency/order when relation-owner state is available")) {
+			return 1;
+		}
+		if (!require(composed_mode2.coordinate_seed.relation_owner_vectors_10e4_10e8.size()
+						== composed_mode2.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc.size(),
+				"mode-2 composed chain did not expose 0x4a3dbc appended relation-owner slots through generator+0x10e4/+0x10e8 consumers")) {
 			return 1;
 		}
 	} else if (!require(!composed_mode2.owner_grid.footprint_finalizer.blocked
-					&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_scan_executed_without_append",
-				"mode-2 synthetic branch with no appended owner should not report an unported append path")) {
+				&& composed_mode2.owner_grid.footprint_finalizer.status == "0x4a3710_synthetic_runtime_zone_scan_executed_without_append",
+			"mode-2 synthetic branch with no appended owner should not report an unported append path")) {
 		return 1;
 	}
 	{

@@ -14876,8 +14876,6 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 	const std::vector<ObjectRecordReference4a54a7> *object_records =
 			state != nullptr ? &state->object_records_0xec4_ecc : nullptr;
 
-	std::vector<int32_t> report_relation_owner_byte2;
-	report_relation_owner_byte2.reserve(owners.size());
 	CoordinateCandidate4a17f5 first_pass_selected_coordinate_0x24 { -1, -1, -1 };
 	for (int32_t owner_loop_index = 0; owner_loop_index < int32_t(owners.size()); ++owner_loop_index) {
 		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_loop_index)];
@@ -14891,7 +14889,6 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 		if (!report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known || relation_owner_byte2 < 0) {
 			result.owner_bounds_blocked_count += 1;
 			result.owner_reports.push_back(report);
-			report_relation_owner_byte2.push_back(-1);
 			continue;
 		}
 
@@ -14907,7 +14904,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known) {
 					continue;
 				}
-			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 					continue;
 				}
 				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
@@ -14917,13 +14914,16 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(record)) {
 					continue;
 				}
+				// 0x4a5892..0x4a58a0 copies the candidate coordinate before
+				// the bit27/0x49a1d8 acceptance gates decide whether the scan
+				// stops on it.
+				first_pass_selected_coordinate_0x24 = CoordinateCandidate4a17f5 { x, y, level };
 				if ((record.word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) == 0U) {
 					continue;
 				}
 				if (!generated_cell_49a1d8_valid_record(record)) {
 					continue;
 				}
-				first_pass_selected_coordinate_0x24 = CoordinateCandidate4a17f5 { x, y, level };
 				seed_cell_found = true;
 				break;
 			}
@@ -14950,22 +14950,10 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 						first_pass_selected_coordinate_0x24,
 						owner,
 						object_records));
-		result.owner_reports.push_back(report);
-		report_relation_owner_byte2.push_back(relation_owner_byte2);
-	}
 
-	for (int32_t owner_index = 0; owner_index < int32_t(owners.size()); ++owner_index) {
-		if (owner_index >= int32_t(result.owner_reports.size()) || owner_index >= int32_t(report_relation_owner_byte2.size())) {
-			break;
-		}
-		RelationScanConsumerOwnerReport4a5767 &report = result.owner_reports[size_t(owner_index)];
-		const int32_t relation_owner_byte2 = report_relation_owner_byte2[size_t(owner_index)];
-		const GeneratorRelationOwnerState4a218c &owner = owners[size_t(owner_index)];
-		if (relation_owner_byte2 < 0 || !report.scan_bounds_non_sentinel || !owner.coordinate_triple_0x10_0x18_known) {
-			continue;
-		}
-		const int32_t level = owner.coordinate_level_0x18;
-
+		// 0x4a5914 resumes the same relation-owner iteration after the first
+		// 0x49a318 call. The recovered loop then performs the projected
+		// 0x4a5a23/0x49a318 scan before advancing to the next owner.
 		for (int32_t y = owner.scan_bound_low_y_0x24; y < owner.scan_bound_high_y_0x2c; ++y) {
 			for (int32_t x = owner.scan_bound_low_x_0x20; x < owner.scan_bound_high_x_0x28; ++x) {
 				report.scanned_cell_count += 1;
@@ -14980,7 +14968,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 					report.unknown_word_skip_count += 1;
 					continue;
 				}
-			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 					report.owner_byte_reject_count += 1;
 					result.owner_byte_reject_count += 1;
 					continue;
@@ -15030,6 +15018,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 								object_records));
 			}
 		}
+		result.owner_reports.push_back(report);
 	}
 
 	if (state != nullptr) {
@@ -19238,11 +19227,15 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 			result.coordinate_seed.relation_owner_vectors_10e4_10e8,
 			original_same_level_runtime_zone_count);
 	result.owner_grid_executed = result.owner_grid.materialization_executed;
-	if (!result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc.empty()) {
-		result.coordinate_seed.relation_owner_vectors_10e4_10e8 =
-				result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc;
-	}
 	if (result.owner_grid_executed) {
+		if (!result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc.empty()) {
+			// 0x4a3a03/0x4a3dbc appends synthetic relation-owner slots to the
+			// generator +0x10e4/+0x10e8 surface. 0x4a3f27 and 0x4a5767 compare
+			// generated-cell +0x20 byte2 against the current relation loop index,
+			// so byte2 values written by 0x4a325d must remain addressable here.
+			result.coordinate_seed.relation_owner_vectors_10e4_10e8 =
+					result.owner_grid.relation_owner_vectors_after_source_append_0x4a3dbc;
+		}
 		result.owner_grid.footprint_finalizer = footprint_finalizer_4a3710(
 				level_count,
 				water_mode_code,
@@ -22729,6 +22722,13 @@ struct MaterializationBridgeWaterEdgeWriterResult4a4fc5 {
 	int32_t bit26_candidate_count = 0;
 };
 
+struct WaterEdgeRepaintRecord4a4fc5 {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t terrain_id = 0;
+};
+
 struct Coord12Candidate4a4913 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -23909,6 +23909,7 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 	}
 	result.source_backed_land_scope = true;
 
+	std::vector<WaterEdgeRepaintRecord4a4fc5> staged_repaints_0x4ae1fd_0x40bb26;
 	for (int32_t level = 0; level < grid.level_count; ++level) {
 		for (int32_t y = 0; y < grid.height; ++y) {
 			for (int32_t x = 0; x < grid.width; ++x) {
@@ -23965,7 +23966,6 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 					continue;
 				}
 				result.mutation_source_count += 1;
-				std::vector<std::array<int32_t, 2>> terrainplacement_points_0x4bd099;
 				for (int32_t mutation_y = std::max<int32_t>(0, y - 1); mutation_y < std::min<int32_t>(grid.height, y + 2); ++mutation_y) {
 					for (int32_t mutation_x = std::max<int32_t>(0, x - 1); mutation_x < std::min<int32_t>(grid.width, x + 2); ++mutation_x) {
 						const int64_t mutation_flat = cell_index(grid.width, grid.height, mutation_x, mutation_y, level);
@@ -23983,24 +23983,13 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 							}
 						}
 						if ((mutation_record.word_0x24 & 0x3fU) == 8U) {
-							terrainplacement_points_0x4bd099.push_back({ mutation_x, mutation_y });
+							// 0x4a523c/0x4a5248 stage the coordinate and
+							// replacement terrain vectors; 0x4a5367 replays
+							// TerrainPlacement only after the full scan.
+							staged_repaints_0x4ae1fd_0x40bb26.push_back(
+									WaterEdgeRepaintRecord4a4fc5 { mutation_x, mutation_y, level, replacement_terrain_id });
 							result.visual_repaint_pending_count += 1;
 						}
-					}
-				}
-				if (!terrainplacement_points_0x4bd099.empty()) {
-					const TerrainPlacementBrushApplyResult4a4522 repaint_result =
-							terrainplacement_apply_points_to_generated_cell_grid_0x4bcff5_4bd099(
-									grid,
-									replacement_terrain_id,
-									level,
-									terrainplacement_points_0x4bd099,
-									rng);
-					if (!repaint_result.applied || !repaint_result.blocked_reason.empty()) {
-						result.blocked_reason = repaint_result.blocked_reason.empty()
-								? "0x4a4fc5_terrainplacement_bridge_repaint_not_applied"
-								: repaint_result.blocked_reason;
-						return result;
 					}
 				}
 				for (int32_t clear_y = std::max<int32_t>(0, y - 2); clear_y < std::min<int32_t>(grid.height, y + 3); ++clear_y) {
@@ -24023,6 +24012,38 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 					}
 				}
 			}
+		}
+	}
+	if (!staged_repaints_0x4ae1fd_0x40bb26.empty()) {
+		size_t run_begin = 0;
+		while (run_begin < staged_repaints_0x4ae1fd_0x40bb26.size()) {
+			const int32_t active_terrain = staged_repaints_0x4ae1fd_0x40bb26[run_begin].terrain_id;
+			const int32_t level = staged_repaints_0x4ae1fd_0x40bb26[run_begin].level;
+			std::vector<std::array<int32_t, 2>> terrainplacement_points_0x4bd099;
+			size_t run_end = run_begin;
+			while (run_end < staged_repaints_0x4ae1fd_0x40bb26.size()
+					&& staged_repaints_0x4ae1fd_0x40bb26[run_end].terrain_id == active_terrain
+					&& staged_repaints_0x4ae1fd_0x40bb26[run_end].level == level) {
+				terrainplacement_points_0x4bd099.push_back({
+					staged_repaints_0x4ae1fd_0x40bb26[run_end].x,
+					staged_repaints_0x4ae1fd_0x40bb26[run_end].y,
+				});
+				++run_end;
+			}
+			const TerrainPlacementBrushApplyResult4a4522 repaint_result =
+					terrainplacement_apply_points_to_generated_cell_grid_0x4bcff5_4bd099(
+							grid,
+							active_terrain,
+							level,
+							terrainplacement_points_0x4bd099,
+							rng);
+			if (!repaint_result.applied || !repaint_result.blocked_reason.empty()) {
+				result.blocked_reason = repaint_result.blocked_reason.empty()
+						? "0x4a4fc5_terrainplacement_bridge_repaint_not_applied"
+						: repaint_result.blocked_reason;
+				return result;
+			}
+			run_begin = run_end;
 		}
 	}
 	result.applied = true;
