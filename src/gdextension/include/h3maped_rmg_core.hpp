@@ -944,6 +944,7 @@ struct BoundarySourceCycleHandoff4a2777 {
 	int32_t generated_cell_owner_byte2 = -1;
 	int32_t span_fill_owner_word_0x4a325d = -1;
 	int32_t level = 0;
+	bool run_boundary_writer_4a2777 = true;
 	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
 	int32_t source_record_vector_index_4a3e9c = -1;
@@ -961,6 +962,7 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	int32_t level = 0;
 	int32_t source_payload_0x08 = -1;
 	int32_t source_payload_owner_word_0x00 = -1;
+	int32_t source_record_first_word_0x00 = -1;
 	int32_t source_payload_random_span_limit_0x1c = 1;
 	bool synthetic_source_record_candidate_container_count_0x4a3c77_known = false;
 	int32_t synthetic_source_record_candidate_container_count_0x4a3c77 = -1;
@@ -1519,6 +1521,7 @@ struct BoundaryCycleInput4a2777 {
 	int32_t generated_cell_owner_byte2 = -1;
 	int32_t span_fill_owner_word_0x4a325d = -1;
 	int32_t level = 0;
+	bool run_boundary_writer_4a2777 = true;
 	int32_t boundary_pass_index_0x0c = 0;
 	int32_t random_span_limit = 1;
 	int32_t source_record_vector_index_4a3e9c = -1;
@@ -1563,6 +1566,7 @@ struct BoundaryZoneMaterialization4a2777 {
 	int32_t source_record_vector_index_4a3e9c = -1;
 	int32_t selected_segment_index = -1;
 	int32_t source_cycle_anchor_model_node_index_4a325d = -1;
+	bool run_boundary_writer_4a2777 = true;
 	std::string status;
 	std::vector<BoundaryCyclePoint4a2777> finalized_points;
 	std::vector<BoundaryVectorRecord4a2777> appended_vertices;

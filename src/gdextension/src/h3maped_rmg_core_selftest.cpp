@@ -2637,6 +2637,40 @@ int main() {
 				"0x4a3e1d/0x4a3e99 handoff loops must walk the relation-owner vector after synthetic append")) {
 		return 1;
 	}
+	for (size_t original_index = 0; original_index < relation_owner_inputs.size(); ++original_index) {
+		if (!require(owner_grid_mode2_appended.handoffs[original_index].run_boundary_writer_4a2777,
+					"0x4a3e1d original source-record loop must still run the 0x4a2777 boundary writer")) {
+			return 1;
+		}
+	}
+	for (size_t appended_index = relation_owner_inputs.size();
+			appended_index < owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size();
+			++appended_index) {
+		const size_t synthetic_index = appended_index - relation_owner_inputs.size();
+		const RuntimeZoneFootprintInput4a3a03 &synthetic_record =
+				owner_grid_mode2_appended.source_footprints.synthetic_source_records_0x4a3dbc[synthetic_index];
+		const auto handoff_it = std::find_if(
+				owner_grid_mode2_appended.handoffs.begin(),
+				owner_grid_mode2_appended.handoffs.end(),
+				[&](const BoundarySourceCycleHandoff4a2777 &handoff) {
+					return handoff.runtime_zone_index == synthetic_record.runtime_zone_index;
+				});
+		if (!require(handoff_it != owner_grid_mode2_appended.handoffs.end(),
+					"0x4a3dbc appended synthetic owner did not emit a source-cycle handoff")) {
+			return 1;
+		}
+		if (!require(!handoff_it->run_boundary_writer_4a2777,
+					"0x4a3e99 appended synthetic handoff must skip the 0x4a2777 boundary writer and enter the 0x4a325d span-fill loop only")) {
+			return 1;
+		}
+		if (!require(handoff_it->has_source_record_seed_0x10
+						&& handoff_it->source_record_seed_0x10.x == synthetic_record.x_after_bbox_rescale
+						&& handoff_it->source_record_seed_0x10.y == synthetic_record.y_after_bbox_rescale
+						&& handoff_it->source_record_seed_0x10.level == synthetic_record.level,
+					"0x4a3dbc appended synthetic handoff must use source-record +0x10/+0x14/+0x18 as the 0x4a325d span seed")) {
+			return 1;
+		}
+	}
 	if (!require(owner_grid_mode2_appended.footprint_finalizer.appended_runtime_zone_count
 						== owner_grid_mode2_appended.source_footprints.synthetic_source_record_count_0x4a3dbc
 					&& !owner_grid_mode2_appended.footprint_finalizer.blocked
