@@ -18857,14 +18857,12 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 	owner.source_pointer_source_index_0x00 = synthetic_record.source_payload_owner_word_0x00;
 	owner.source_pointer_source_span_0x08_known = synthetic_record.source_payload_random_span_limit_0x1c > 0;
 	owner.source_pointer_source_span_0x08 = std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
-	owner.relation_owner_byte2_0x4aa9b7_known =
-			origin != nullptr && origin->relation_owner_byte2_0x4aa9b7_known;
-	owner.relation_owner_byte2_0x4aa9b7 = owner.relation_owner_byte2_0x4aa9b7_known
-			? origin->relation_owner_byte2_0x4aa9b7
-			: generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(
-					  synthetic_record.source_payload_owner_word_0x00,
-					  original_same_level_runtime_zone_count,
-					  owner_vector_index);
+	// 0x4a3710 and 0x4a3f27 consume generated-cell +0x20 byte2 as an
+	// index into generator+0x10e4. Synthetic source records inherit source
+	// identity through +0x00, but the generated-cell owner gate must address
+	// the appended relation-owner slot, not the origin zone's byte.
+	owner.relation_owner_byte2_0x4aa9b7_known = owner_vector_index >= 0;
+	owner.relation_owner_byte2_0x4aa9b7 = owner_vector_index;
 	owner.source_pointer_type_0x04_known = true;
 	owner.source_pointer_type_0x04 = 3;
 	owner.source_owner_slot_0x1c_known = origin != nullptr && origin->source_owner_slot_0x1c_known;
