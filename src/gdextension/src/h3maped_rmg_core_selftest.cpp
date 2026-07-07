@@ -274,15 +274,15 @@ int main() {
 				return 1;
 			}
 			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
-						return !write.reserved;
+						return write.reserved;
 					}),
-					"0x4a325d must suppress generator mode 2 level 1 reserved writes")) {
+					"0x4a325d must reserve generator mode 2 level 1 writes")) {
 				return 1;
 			}
-			if (!require(std::none_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+			if (!require(std::any_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
 						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
 					}),
-					"0x4a325d unreserved writes must not set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
+					"0x4a325d reserved writes must set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
 		}
@@ -296,15 +296,15 @@ int main() {
 				return 1;
 			}
 			if (!require(std::all_of(fill.trace.begin(), fill.trace.end(), [](const auto &write) {
-						return write.reserved;
+						return !write.reserved;
 					}),
-					"0x4a325d must reserve generator mode 2 level 0 writes")) {
+					"0x4a325d must suppress generator mode 2 level 0 reserved writes")) {
 				return 1;
 			}
-			if (!require(std::any_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
+			if (!require(std::none_of(generated_word_0x28.begin(), generated_word_0x28.end(), [](uint32_t word) {
 						return (word & aurelion::h3maped_rmg_core::CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28) != 0U;
 					}),
-					"0x4a325d reserved writes must set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
+					"0x4a325d unreserved writes must not set generated-cell +0x2b bit 0x10 / word +0x28 bit 28")) {
 				return 1;
 			}
 		}
@@ -2226,7 +2226,7 @@ int main() {
 			land_setup_mode_two_member_flags += 1;
 		}
 	}
-	if (!require(land_setup_mode_two_member_flags > 0, "one-level land mode 2 must preserve recovered level-0 0x4a325d member flags")) {
+	if (!require(land_setup_mode_two_member_flags == 0, "one-level land mode 2 must suppress recovered level-0 0x4a325d member flags")) {
 		return 1;
 	}
 	BoundarySourceCycleHandoff4a2777 per_source_owner_handoff = square_handoff(false);
