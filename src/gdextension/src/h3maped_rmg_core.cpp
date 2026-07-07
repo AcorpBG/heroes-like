@@ -17494,7 +17494,14 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					y,
 					terrain_id);
 		}
-		if (final_sweep_classified_cell && classified.shape_class != 0) {
+		if (final_sweep && !final_sweep_classified_cell && current_record_matches_terrain) {
+			// Recovered 0x4bbfcc branches count-zero final-sweep cells through
+			// 0x4bc5a3, which copies the current 0x4bb71b scratch record.
+			selected_row = current_art_row;
+			out_flag_a = current_flag_a;
+			out_flag_b = current_flag_b;
+			selected = true;
+		} else if (final_sweep_classified_cell && classified.shape_class != 0) {
 			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class == 0) {
 			selected = select_final_sweep_class0_visual_row_4ba938(
@@ -21026,7 +21033,11 @@ static std::vector<GeneratorRelationOwnerState4a218c> relation_owner_records_fro
 		owner.source_endpoint_vector_0xc8_0xcc_count = int32_t(owner.source_endpoint_records_0xc8_0xcc.size());
 	}
 
-	return source_indexed_relation_owner_vector_10e4(owners);
+	// Recovered 0x4a218c appends cloned selected-container owners into
+	// generator+0x10e4/+0x10e8 in container order, and later indexes that same
+	// vector directly for 0x49b53d/0x49b4e1. Generated-cell byte2 lookup is a
+	// later consumer concern, not a reason to reorder this private vector.
+	return owners;
 }
 
 static bool relation_owner_scan_bounds_non_empty_0x49b66d(const GeneratorRelationOwnerState4a218c &owner) {
@@ -23592,7 +23603,14 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 					y,
 					terrain_id);
 		}
-		if (final_sweep_classified_cell && classified.shape_class != 0) {
+		if (final_sweep && !final_sweep_classified_cell && current_record_matches_terrain) {
+			// Recovered 0x4bbfcc branches count-zero final-sweep cells through
+			// 0x4bc5a3, which copies the current 0x4bb71b scratch record.
+			selected_row = current_art_row;
+			out_flag_a = current_flag_a;
+			out_flag_b = current_flag_b;
+			selected = true;
+		} else if (final_sweep_classified_cell && classified.shape_class != 0) {
 			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class == 0) {
 			selected = select_final_sweep_class0_visual_row_4ba938(
