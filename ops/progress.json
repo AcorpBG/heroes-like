@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "2026-07-07 source-backed synthetic owner constructor correction: 0x4a3dbc appended owners now run through the recovered 0x49b452 constructor path, preserve the type-3 overwrite/fixed treasure bands/appended relation-vector owner byte, and carry recovered post-constructor relation +0x0c = 8; 0x4a4913 no longer blocks on empty type-8 scan bounds. No-Godot build/selftest pass; focused Medium seed10 setup1 reaches final_payload_compare and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
-      "currentSliceNotes": "2026-07-07 source-backed synthetic owner constructor correction: 0x4a3dbc appended owners now run through the recovered 0x49b452 constructor path, preserve the type-3 overwrite/fixed treasure bands/appended relation-vector owner byte, and carry recovered post-constructor relation +0x0c = 8; 0x4a4913 no longer blocks on empty type-8 scan bounds. No-Godot build/selftest pass; focused Medium seed10 setup1 reaches final_payload_compare and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
+      "currentNotes": "2026-07-07 source-backed source-order replay correction: 0x4ac552 now runs all recovered direct 0x4a8d2c source-order placements across relation owners before starting the 0x4a8db2 scheduler pass, matching the recovered pre-scheduler 0x4a54a7 ordering. Ghidra 0x4a8d2c control flow was checked and native keeps the recovered early return after the first successful 0x4a93a2 branch. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 and Small seed58 setup3 phase snapshots still fail closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload/final payload compare. Runtime map output remains disabled; not parity.",
+      "currentSliceNotes": "2026-07-07 source-backed source-order replay correction: 0x4ac552 now runs all recovered direct 0x4a8d2c source-order placements across relation owners before starting the 0x4a8db2 scheduler pass, matching the recovered pre-scheduler 0x4a54a7 ordering. Ghidra 0x4a8d2c control flow was checked and native keeps the recovered early return after the first successful 0x4a93a2 branch. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 and Small seed58 setup3 phase snapshots still fail closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload/final payload compare. Runtime map output remains disabled; not parity.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,62 +21,30 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-synthetic-owner-constructor-20260707",
-        "title": "Route 0x4a3dbc synthetic owners through recovered 0x49b452 construction",
+        "id": "native-rmg-source-order-direct-before-scheduler-20260707",
+        "title": "Replay direct 0x4a8d2c placements before 0x4a8db2 scheduler",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "status": "passed_source_backed_constructor_progress_not_parity",
-        "validatedAt": "2026-07-07T06:30:10Z",
-        "updatedAt": "2026-07-07T06:30:10Z",
-        "latestFinding": "Source-backed native RMG alignment remains in progress and parity remains blocked. h3maped_rmg_core now routes 0x4a3dbc appended synthetic relation owners through the recovered 0x49b452 constructor path, preserves the recovered type-3 source-record overwrite/fixed synthetic treasure bands/appended relation-vector owner byte, and carries recovered post-constructor relation +0x0c = 8. 0x4a4913 now treats empty type-8 scan bounds as the recovered no-op loop case instead of blocking before the loop. Focused no-Godot Medium seed10 setup1 reaches ordered final writeout and still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288 vs 36288 first mismatch offset 0 native=0 expected=2; generated-object payload is 10159 vs 17057 with first mismatch offset 1 native=3 expected=0. Runtime/native map output remains disabled.",
+        "status": "passed_source_backed_ordering_progress_not_parity",
+        "validatedAt": "2026-07-07T07:43:53Z",
+        "updatedAt": "2026-07-07T07:43:53Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress. h3maped_rmg_core now collects prepared relation owner source-order contexts, completes all direct 0x4a8d2c placement attempts first, then reacquires type98 source-pair context and runs 0x4a8db2 scheduler replays. Focused standalone snapshots reach the final payload compare boundary but still block there; runtime/native map output remains disabled.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
-          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/rmg_native_continue_20260707_synthetic_constructor_v3/medium_seed10_setup1_2p.phase_snapshot.json",
-          ".artifacts/rmg_native_continue_20260707_synthetic_constructor_v3/medium_seed10_setup1_2p.final_payload.bin",
-          ".artifacts/rmg_native_continue_20260707_synthetic_constructor_v3/medium_seed10_setup1_2p.final_payload_sections.json"
+          ".artifacts/rmg_native_continue_20260707_direct_batch_medium_seed10/medium_seed10_setup1_2p.phase_snapshot.json",
+          ".artifacts/rmg_native_continue_20260707_direct_batch_small_seed58/small_2p_seed58_setup3.phase_snapshot.json"
         ],
-        "commands": [
-          "cmake --build build/linux-debug --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
-          "bin/h3maped_rmg_core_selftest (passed)",
-          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_synthetic_constructor_v3 --controlled-case medium_seed10_setup1_2p:medium:2:10:land:1:1:1:1:0 --phase-snapshot-only --emit-phase-snapshot --print-manifest (blocked as expected; no Godot; final payload sections written)",
-          "git diff --check (passed)",
-          "jq empty ops/progress.json (passed after tracker update)",
-          "python3 tests/validate_repo.py (passed)"
-        ],
-        "metrics": {
-          "native_rmg_end_to_end_parity_complete": false,
-          "runtime_map_output_enabled": false,
-          "godot_process_started": false,
-          "wine_process_started": false,
-          "source_backed_behavior_progress": true,
-          "synthetic_owner_constructor_0x49b452_used": true,
-          "synthetic_owner_type3_overwrite_preserved": true,
-          "synthetic_owner_relation_kind_0x0c_is_8": true,
-          "synthetic_owner_fixed_treasure_bands_preserved": true,
-          "synthetic_owner_byte2_uses_appended_relation_vector_slot": true,
-          "focused_controlled_case_count": 1,
-          "focused_blocked_case_count": 1,
-          "phase_snapshot_written_count": 1,
-          "final_payload_binary_written_count": 1,
-          "final_payload_sections_written_count": 1,
-          "medium_seed10_setup1_current_phase": "final_payload_compare",
-          "medium_seed10_setup1_final_tile_byte_count": 36288,
-          "medium_seed10_setup1_final_object_count": 809,
-          "medium_seed10_setup1_native_generated_object_payload_byte_count": 10159,
-          "h3maped_generated_object_payload_byte_count": 17057,
-          "tile_first_mismatch_offset": 0,
-          "tile_native_byte_at_mismatch": 0,
-          "tile_h3maped_byte_at_mismatch": 2,
-          "generated_object_payload_first_mismatch_offset": 1,
-          "generated_object_payload_native_byte_at_mismatch": 3,
-          "generated_object_payload_h3maped_byte_at_mismatch": 0,
-          "final_payload_owned": false,
-          "parityCompletionClaimed": false
-        },
-        "remainingWork": "Resolve the next source-owned workflow blocker upstream of the 0x49b2b6 final tile stream: exact TerrainPlacement/generated-cell input state and downstream generated-object payload materialization must match same-run H3MapEd authority before runtime map output can be enabled."
+        "validation": [
+          "cmake --build build/linux-debug --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2",
+          "bin/h3maped_rmg_core_selftest",
+          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_direct_batch_medium_seed10 --controlled-case medium_seed10_setup1_2p:medium:2:10:land:1:1:1:1:0 --phase-snapshot-only --emit-phase-snapshot (expected fail-closed at final payload compare)",
+          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_direct_batch_small_seed58 --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot (expected fail-closed at final payload compare)",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
       },
       "latestEvidence": {
         "id": "native-rmg-synthetic-owner-constructor-20260707",
