@@ -1305,6 +1305,7 @@ struct GeneratorSourceEndpointRecordState4a1f3b {
 	bool wide = false;
 	bool border_guard = false;
 	bool reciprocal = false;
+	uint32_t control_dword_0x08 = 0U;
 };
 
 struct GeneratorCoordinateCandidateVectorState4a1f3b {
