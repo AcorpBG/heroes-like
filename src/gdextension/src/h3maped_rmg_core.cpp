@@ -24927,36 +24927,6 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 		}
 	}
 		if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
-			apply_endpoint_materialization_state_d014(
-					result.generator_object_private_state,
-					config.size_class,
-					config.water_mode,
-					config.seed,
-					config.human_count,
-					config.player_count,
-					config.setup_object_0x44_known,
-					config.setup_object_0x44);
-			result.generator_object_private_state.connection_tail_replay_0x4a79a3_ported = true;
-			result.generator_object_private_state.connection_tail_replay_0x4a79a3 =
-					connection_tail_replay_0x4a79a3(result.generator_object_private_state, route_free_cell_rng);
-			if (!result.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
-					|| !result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
-				const std::string connection_blocker =
-						result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
-						? "0x4a79a3_connection_tail_replay_not_applied_after_0x4a4fc5"
-						: result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason;
-				result.generator_object_private_state.remaining_private_state_blockers = {
-					connection_blocker,
-					"relation_source_order_scan_0x4a89da_not_executed_until_0x4a79a3_tail_is_owned",
-					"mine_resource_materialization_0x4a9d6a_not_executed_until_0x4a79a3_tail_is_owned",
-					"reward_guard_materialization_not_executed_until_0x4a79a3_tail_is_owned",
-					"decorative_dispatch_0x49eb8d_not_executed_until_0x4a79a3_tail_is_owned",
-					"road_river_object_adjacency_0x4ab52a_not_executed_until_0x4a79a3_tail_is_owned",
-					"final_writeout_not_executed_until_source_order_payload_is_owned",
-				};
-			}
-		}
-		if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 			result.generator_object_private_state.relation_source_order_scan_0x4a89da_ported = true;
 			result.generator_object_private_state.relation_source_order_scan_0x4a89da =
 					relation_source_order_scan_prefix_0x4ac552_0x4a89da(result.generator_object_private_state, route_free_cell_rng);
@@ -25053,7 +25023,35 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				};
 		}
 	}
-		if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
+	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
+		apply_endpoint_materialization_state_d014(
+				result.generator_object_private_state,
+				config.size_class,
+				config.water_mode,
+				config.seed,
+				config.human_count,
+				config.player_count,
+				config.setup_object_0x44_known,
+				config.setup_object_0x44);
+		result.generator_object_private_state.connection_tail_replay_0x4a79a3_ported = true;
+		result.generator_object_private_state.connection_tail_replay_0x4a79a3 =
+				connection_tail_replay_0x4a79a3(result.generator_object_private_state, route_free_cell_rng);
+		if (!result.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
+				|| !result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason.empty()) {
+			const std::string connection_blocker =
+					result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason.empty()
+					? "0x4a79a3_connection_tail_replay_not_applied_after_reward_guard"
+					: result.generator_object_private_state.connection_tail_replay_0x4a79a3.blocked_reason;
+			result.generator_object_private_state.remaining_private_state_blockers = {
+				connection_blocker,
+				"decorative_dispatch_0x49eb8d_not_executed_until_0x4a79a3_tail_is_owned",
+				"road_river_object_adjacency_0x4ab52a_not_executed_until_0x49eb8d_decorative_dispatch_is_owned",
+				"descriptor_counter_table_0x1110_later_increment_decrement_replay_unported",
+				"final_writeout_not_executed_until_source_order_payload_is_owned",
+			};
+		}
+	}
+	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 		result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
 		result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d =
 				decorative_flagged_cell_dispatch_0x49eb8d(result.generator_object_private_state, route_free_cell_rng);
@@ -25157,54 +25155,21 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					<< ",bit25_probes=" << object_state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5
 						<< ",bit26_candidates=" << object_state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
 				add_phase("bridge_water_edge_writer", "0x4a4fc5", "complete_source_order_prefix", water_edge_note.str());
-				add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a79a3");
+				add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_reward_guard_materialization");
 			} else {
 				add_phase("bridge_water_edge_writer", "0x4a4fc5", "blocked", result.blocked_reason);
 				add_phase("connection_tail", "0x4a79a3", "pending", "blocked_before_0x4a4fc5");
 			}
 			const std::string downstream_bridge_blocker = object_state.materialization_bridge_water_edge_writer_0x4a4fc5_applied
-					? "blocked_before_0x4a79a3_connection_tail"
-					: "blocked_before_0x4a4fc5_0x4a79a3_materialization_bridge";
+					? "blocked_before_0x4a89da_relation_source_order_scan"
+					: "blocked_before_0x4a4fc5_materialization_bridge";
 		add_phase("relation_source_order_scan", "0x4ac552_0x4a89da_0x4a8bfc_0x4a8722", "pending", downstream_bridge_blocker);
 		add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", downstream_bridge_blocker);
 		add_phase("source_order_object_materialization", "0x4a8d2c_0x4a8db2_0x4a901a_0x4a93a2_0x4a54a7", "pending", downstream_bridge_blocker);
 		add_phase("reward_guard_materialization", "0x540b14_0x49c0a6_0x4ad947_0x4ad7f7_0x4a9f1c_0x4aa1db_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_source_order_object_materialization");
-		add_phase("connection_road_river", "0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_0x4a79a3_connection_tail");
+		add_phase("connection_road_river", "0x4a61bc_0x4a7605_0x4a5e03_0x4ab52a", "pending", "blocked_before_reward_guard_materialization");
 		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
 			return result;
-		}
-
-		const bool connection_tail_owned = object_state.connection_tail_replay_0x4a79a3_ported
-				&& object_state.connection_tail_replay_0x4a79a3.invoked
-				&& object_state.connection_tail_replay_0x4a79a3.applied
-				&& object_state.connection_tail_replay_0x4a79a3.blocked_reason.empty();
-		if (!connection_tail_owned) {
-			result.current_phase_id = "connection_tail";
-			result.status = "blocked";
-			result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
-					? object_state.remaining_private_state_blockers.front()
-					: "0x4a79a3_connection_tail_not_owned_after_0x4a4fc5";
-			add_phase("connection_tail", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "blocked", result.blocked_reason);
-			add_phase("relation_source_order_scan", "0x4ac552_0x4a89da_0x4a8bfc_0x4a8722", "pending", "blocked_before_0x4a79a3_connection_tail");
-			add_phase("mine_resource_materialization", "0x4a9d6a_0x4a9911_0x4a9c7c_0x4a9641", "pending", "blocked_before_0x4a79a3_connection_tail");
-			add_phase("reward_guard_materialization", "0x4ac552_0x4aab7e_0x4aa354_0x4aa9b7_0x4aa3e9", "pending", "blocked_before_0x4a79a3_connection_tail");
-			add_phase("decorative_dispatch", "0x49eb8d_0x49e700", "pending", "blocked_before_0x4a79a3_connection_tail");
-			add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243", "pending", "blocked_before_0x4a79a3_connection_tail");
-			add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
-			return result;
-		}
-		{
-			const ConnectionTailReplayResult4a79a3 &connection_tail =
-					object_state.connection_tail_replay_0x4a79a3;
-			std::ostringstream connection_note;
-			connection_note << "append_pairs=" << connection_tail.internal_growth_candidate_pair_count
-					<< ",positive_appends=" << connection_tail.internal_growth_positive_append_count
-					<< ",payload_records=" << connection_tail.payload_loop_non_null_record_count
-					<< ",fallback_commits=" << object_state.connection_fallback_materialization_commit_count
-					<< ",4a696b_samples=" << connection_tail.controlled_0x4a696b_sampled_call_count
-					<< ",4a696b_direct_mutations=" << connection_tail.controlled_0x4a696b_direct_mutation_hits
-					<< ",direct_4a7312_commits=" << connection_tail.after_selected_direct_0x4a7312_commit_count;
-			add_phase("connection_tail", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "complete_source_order_prefix", connection_note.str());
 		}
 
 		const bool relation_source_order_scan_owned =
@@ -25355,6 +25320,36 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				<< reward_guard_zero_commit_blocker_detail_0x4aab7e(object_state.reward_guard_source_stream_0x4aab7e);
 	}
 	add_phase("reward_guard_materialization", "0x4ac552_0x4aab7e_0x4aa354_0x4aa9b7_0x4aa3e9", "complete_source_order_prefix", reward_guard_note.str());
+
+	const bool connection_tail_owned = object_state.connection_tail_replay_0x4a79a3_ported
+			&& object_state.connection_tail_replay_0x4a79a3.invoked
+			&& object_state.connection_tail_replay_0x4a79a3.applied
+			&& object_state.connection_tail_replay_0x4a79a3.blocked_reason.empty();
+	if (!connection_tail_owned) {
+		result.current_phase_id = "connection_tail";
+		result.status = "blocked";
+		result.blocked_reason = !object_state.remaining_private_state_blockers.empty()
+				? object_state.remaining_private_state_blockers.front()
+				: "0x4a79a3_connection_tail_not_owned_after_reward_guard";
+		add_phase("connection_tail", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "blocked", result.blocked_reason);
+		add_phase("decorative_dispatch", "0x49eb8d_0x49e700", "pending", "blocked_before_0x4a79a3_connection_tail");
+		add_phase("road_river_object_adjacency", "0x4ab52a_0x4aae2f_0x4aae7b_0x4ab37f_0x4b4243", "pending", "blocked_before_0x4a79a3_connection_tail");
+		add_phase("final_writeout", "0x4ad1e3_0x49b2b6_0x4ad309_0x4ad3eb_0x4ad3de_0x4ae09a", "pending", "blocked_before_final_payload");
+		return result;
+	}
+	{
+		const ConnectionTailReplayResult4a79a3 &connection_tail =
+				object_state.connection_tail_replay_0x4a79a3;
+		std::ostringstream connection_note;
+		connection_note << "append_pairs=" << connection_tail.internal_growth_candidate_pair_count
+				<< ",positive_appends=" << connection_tail.internal_growth_positive_append_count
+				<< ",payload_records=" << connection_tail.payload_loop_non_null_record_count
+				<< ",fallback_commits=" << object_state.connection_fallback_materialization_commit_count
+				<< ",4a696b_samples=" << connection_tail.controlled_0x4a696b_sampled_call_count
+				<< ",4a696b_direct_mutations=" << connection_tail.controlled_0x4a696b_direct_mutation_hits
+				<< ",direct_4a7312_commits=" << connection_tail.after_selected_direct_0x4a7312_commit_count;
+		add_phase("connection_tail", "0x4a79a3_0x49b3fb_0x4a61bc_0x4a696b_0x4a7605_0x4a7312_0x4a5e03", "complete_source_order_prefix", connection_note.str());
+	}
 
 	result.current_phase_id = "decorative_dispatch";
 	result.status = "blocked";
