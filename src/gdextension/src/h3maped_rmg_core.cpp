@@ -19152,20 +19152,20 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				relation_owner_source_record_word0_for_span_fill_4a325d(
 						*owner,
 						source_payload_owner_word_0x4a325d);
-		const bool use_synthetic_boundary_owner_0x4a325d =
-				synthetic_appended_owner_0x4a3dbc && source_payload_owner_word_0x4a325d >= 0;
+		const int32_t fallback_owner_word_0x4a325d =
+				matched_input != nullptr
+						? matched_input->zone_word
+						: (source_payload_owner_word_0x4a325d >= 0
+								? source_payload_owner_word_0x4a325d
+								: source_vector_handoff_index);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
-		handoff.zone_word = use_synthetic_boundary_owner_0x4a325d
-				? source_payload_owner_word_0x4a325d
-				: (source_record_word0_0x4a325d >= 0
-						  ? source_record_word0_0x4a325d
-						  : (matched_input != nullptr ? matched_input->zone_word : 0));
-		handoff.generated_cell_owner_byte2 = use_synthetic_boundary_owner_0x4a325d
-				? source_payload_owner_word_0x4a325d
-				: (source_record_word0_0x4a325d >= 0
-						  ? source_record_word0_0x4a325d
-						  : (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word));
+		handoff.zone_word = source_record_word0_0x4a325d >= 0
+				? source_record_word0_0x4a325d
+				: fallback_owner_word_0x4a325d;
+		handoff.generated_cell_owner_byte2 = source_record_word0_0x4a325d >= 0
+				? source_record_word0_0x4a325d
+				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
