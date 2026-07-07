@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "2026-07-07 source-backed source-order replay correction: 0x4ac552 now runs all recovered direct 0x4a8d2c source-order placements across relation owners before starting the 0x4a8db2 scheduler pass, matching the recovered pre-scheduler 0x4a54a7 ordering. Ghidra 0x4a8d2c control flow was checked and native keeps the recovered early return after the first successful 0x4a93a2 branch. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 and Small seed58 setup3 phase snapshots still fail closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload/final payload compare. Runtime map output remains disabled; not parity.",
-      "currentSliceNotes": "2026-07-07 source-backed source-order replay correction: 0x4ac552 now runs all recovered direct 0x4a8d2c source-order placements across relation owners before starting the 0x4a8db2 scheduler pass, matching the recovered pre-scheduler 0x4a54a7 ordering. Ghidra 0x4a8d2c control flow was checked and native keeps the recovered early return after the first successful 0x4a93a2 branch. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 and Small seed58 setup3 phase snapshots still fail closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload/final payload compare. Runtime map output remains disabled; not parity.",
+      "currentNotes": "2026-07-07 source-backed owner-word correction: 0x4a325d handoff no longer uses the relation-vector slot as the GeneratedCell+0x20 byte2 source; it uses the recovered source-record +0x00 word. Synthetic source records now model the recovered 0x4a3c77 current source-vector-count write, and source polygon payloads use source +0x08/span as the positive payload marker instead of source identity. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Current concrete blocker is upstream synthetic source-cycle ownership/terrain repaint state before 0x49b2b6, not the final serializer. Runtime map output remains disabled; not parity.",
+      "currentSliceNotes": "2026-07-07 source-backed owner-word correction: 0x4a325d handoff no longer uses the relation-vector slot as the GeneratedCell+0x20 byte2 source; it uses the recovered source-record +0x00 word. Synthetic source records now model the recovered 0x4a3c77 current source-vector-count write, and source polygon payloads use source +0x08/span as the positive payload marker instead of source identity. No-Godot build/selftest/validate_repo pass; focused Medium seed10 setup1 still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Current concrete blocker is upstream synthetic source-cycle ownership/terrain repaint state before 0x49b2b6, not the final serializer. Runtime map output remains disabled; not parity.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -21,26 +21,25 @@
         "tests/validate_repo.py"
       ],
       "lastValidation": {
-        "id": "native-rmg-source-order-direct-before-scheduler-20260707",
-        "title": "Replay direct 0x4a8d2c placements before 0x4a8db2 scheduler",
+        "id": "native-rmg-0x4a325d-source-record-owner-word-20260707",
+        "title": "Use recovered source-record owner word for 0x4a325d",
         "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
-        "status": "passed_source_backed_ordering_progress_not_parity",
-        "validatedAt": "2026-07-07T07:43:53Z",
-        "updatedAt": "2026-07-07T07:43:53Z",
-        "latestFinding": "Native RMG source-order alignment remains in progress. h3maped_rmg_core now collects prepared relation owner source-order contexts, completes all direct 0x4a8d2c placement attempts first, then reacquires type98 source-pair context and runs 0x4a8db2 scheduler replays. Focused standalone snapshots reach the final payload compare boundary but still block there; runtime/native map output remains disabled.",
+        "status": "passed_source_backed_owner_word_progress_not_parity",
+        "validatedAt": "2026-07-07T08:17:32Z",
+        "updatedAt": "2026-07-07T08:17:32Z",
+        "latestFinding": "Native RMG source-order alignment remains in progress. h3maped_rmg_core now feeds 0x4a325d GeneratedCell+0x20 byte2 from the recovered source-record +0x00 word instead of the relation-vector slot, models 0x4a3c77 synthetic source-record +0x00 as the current source-vector count, and keeps source +0x08/span as the positive source polygon payload marker. Focused Medium seed10 setup1 reaches final_payload_compare and still fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; the next named blocker is upstream synthetic source-cycle ownership/terrain repaint state before 0x49b2b6. Runtime/native map output remains disabled.",
         "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
         "artifacts": [
           "src/gdextension/src/h3maped_rmg_core.cpp",
+          "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
           "bin/h3maped_rmg_core_selftest",
           "bin/rmg_native_batch_export_cli",
-          ".artifacts/rmg_native_continue_20260707_direct_batch_medium_seed10/medium_seed10_setup1_2p.phase_snapshot.json",
-          ".artifacts/rmg_native_continue_20260707_direct_batch_small_seed58/small_2p_seed58_setup3.phase_snapshot.json"
+          ".artifacts/rmg_native_continue_20260707_synthetic_source_count_medium_seed10/medium_seed10_setup1_2p.phase_snapshot.json"
         ],
         "validation": [
           "cmake --build build/linux-debug --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2",
           "bin/h3maped_rmg_core_selftest",
-          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_direct_batch_medium_seed10 --controlled-case medium_seed10_setup1_2p:medium:2:10:land:1:1:1:1:0 --phase-snapshot-only --emit-phase-snapshot (expected fail-closed at final payload compare)",
-          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_direct_batch_small_seed58 --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot (expected fail-closed at final payload compare)",
+          "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_synthetic_source_count_medium_seed10 --controlled-case medium_seed10_setup1_2p:medium:2:10:land:1:1:1:1:0 --phase-snapshot-only --emit-phase-snapshot (expected fail-closed at final payload compare)",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"

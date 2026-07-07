@@ -2425,10 +2425,10 @@ int main() {
 			break;
 		}
 	}
-	if (!require(appended_owner_payload_inherits_origin_owner, "0x4a3dbc appended source record must preserve origin source pointer +0x00 owner word")) {
+	if (!require(!appended_owner_payload_inherits_origin_owner, "0x4a3dbc appended source record must not preserve origin source pointer +0x00 owner word after 0x4a3c77 count write")) {
 		return 1;
 	}
-	if (!require(!appended_owner_payload_uses_source_vector_index, "0x4a3dbc appended source record must not invent a source-vector-count owner word")) {
+	if (!require(appended_owner_payload_uses_source_vector_index, "0x4a3dbc appended source record must use the current source-vector-count owner word written at 0x4a3c77")) {
 		return 1;
 	}
 
@@ -2544,8 +2544,8 @@ int main() {
 				"relation-owner vector owner-grid chain did not preserve source pointer +0x00 as the boundary payload owner word")) {
 		return 1;
 	}
-	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].relation_owner_byte2_0x4aa9b7,
-				"relation-owner vector owner-grid chain did not keep recovered relation owner byte2 as the generated-cell byte2 gate")) {
+	if (!require(owner_grid_from_relation_owners.handoffs[0].generated_cell_owner_byte2 == relation_owner_inputs[0].source_pointer_source_index_0x00,
+				"relation-owner vector owner-grid chain did not use source-record +0x00 as the 0x4a325d generated-cell byte2 write")) {
 		return 1;
 	}
 	if (!require(generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(1, 10, -1) == 0
@@ -2588,7 +2588,7 @@ int main() {
 				owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc[appended_index];
 		if (!require(owner.relation_owner_byte2_0x4aa9b7_known
 						&& owner.relation_owner_byte2_0x4aa9b7 == int32_t(appended_index),
-					"0x4a3a03 appended synthetic owners must use their relation-vector slot as the generated-cell owner byte2 gate")) {
+					"0x4a3a03 appended synthetic owners must keep their relation-vector slot for later relation/object gates")) {
 			return 1;
 		}
 		if (!require(owner.constructor_0x49b452_known
@@ -3788,8 +3788,9 @@ int main() {
 		if (!require(owner.constructor_0x49b452_known, "generator relation owner did not carry recovered 0x49b452 constructor state")) {
 			return 1;
 		}
-			const int32_t expected_source_record_id_0x00 =
-					owner.source_zone_id > 0 ? owner.source_zone_id : owner.source_index;
+			const int32_t expected_source_record_id_0x00 = owner.source_index >= 0
+					? owner.source_index
+					: (owner.source_zone_id > 0 ? owner.source_zone_id - 1 : owner.source_index);
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == expected_source_record_id_0x00, "0x49b452 relation owner source-record +0x00 identity was not preserved")) {
 			return 1;
 		}
