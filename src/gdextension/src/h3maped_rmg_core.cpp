@@ -12114,9 +12114,6 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				}
 			}
 		}
-		if (exact_connection_sequence_available) {
-			continue;
-		}
 		for (const GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
 			const GeneratorRelationOwnerState4a218c *target_owner_from_record =
 					relation_owner_for_endpoint_record_4a1f3b(state.relation_owner_vectors_10e4_10e8, record);
@@ -12183,7 +12180,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		}
 	}
 
-	if (exact_connection_sequence_available) {
+	if (exact_connection_sequence_available && result.internal_growth_candidate_pair_count == 0) {
 		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> exact_sequence =
 				recovered_exact_connection_sequence();
 		const ConnectionFallbackMaterializationResult4a7605_4a5e03 exact_result =
@@ -12221,14 +12218,6 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			result.blocked_reason =
 					"0x4a61bc_live_direct_0x4a5c07_0x4a5e03_commit_blocked";
 		} else {
-			// H3MapEd treats a false 0x4a61bc return as a processed pair and
-			// continues into the recovered stale-endpoint fallback for supported
-			// one-level land Border Guard materialization.
-			if (state.connection_fallback_materialization_records_available_for_scope
-					&& !result.fallback_materialization_applied
-					&& !apply_recovered_fallback_materialization()) {
-				return result;
-			}
 			result.applied = true;
 			return result;
 		}
@@ -22835,8 +22824,21 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				}
 				result.candidate_boundary_trigger_count_0x4a4c8e += 1;
 				generated_cell_49aa63(record, true);
-				if ((record.word_0x24 & 0x3fU) != 8U && generated_cell_record_object_vector_empty_0x4a8260(record)) {
-					generated_cell_49aa63(record, true);
+				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
+						const int64_t candidate_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+						if (candidate_flat < 0 || candidate_flat >= int64_t(grid.records.size())) {
+							continue;
+						}
+						GeneratedCellRecord0x30 &candidate = grid.records[size_t(candidate_flat)];
+						if ((candidate.word_0x24 & 0x3fU) == 8U) {
+							continue;
+						}
+						if (!generated_cell_record_object_vector_empty_0x4a8260(candidate)) {
+							continue;
+						}
+						generated_cell_49aa63(candidate, true);
+					}
 				}
 				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
 					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
