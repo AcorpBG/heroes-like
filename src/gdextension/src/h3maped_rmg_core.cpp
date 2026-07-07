@@ -16926,8 +16926,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		owner.source_endpoint_vector_0xc8_0xcc_count = int32_t(owner.source_endpoint_records_0xc8_0xcc.size());
 		apply_relation_owner_coordinate_candidate_vectors_0x4a1f3b(owner, result.placement_steps);
 	}
-	result.relation_owner_vectors_10e4_10e8 =
-			source_indexed_relation_owner_vector_10e4(relation_owners);
+	result.relation_owner_vectors_10e4_10e8 = relation_owners;
 	result.rng_state_after = rng.state;
 	return result;
 }

@@ -3560,20 +3560,23 @@ int main() {
 						fixed_town_zones,
 						{});
 		const bool fixed_town_owner_slot_valid =
-				fixed_town_coordinate.relation_owner_vectors_10e4_10e8.size() > 7
-				&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[7].runtime_zone_index == 0;
+				fixed_town_coordinate.relation_owner_vectors_10e4_10e8.size() == 1
+				&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[0].owner_vector_index == 0
+				&& fixed_town_coordinate.relation_owner_vectors_10e4_10e8[0].runtime_zone_index == 0;
 		const GeneratorRelationOwnerState4a218c *fixed_town_owner =
 				fixed_town_owner_slot_valid
-				? &fixed_town_coordinate.relation_owner_vectors_10e4_10e8[7]
+				? &fixed_town_coordinate.relation_owner_vectors_10e4_10e8[0]
 				: nullptr;
 		if (!require(!fixed_town_coordinate.blocked
 						&& fixed_town_coordinate.town_choice_rng_call_count_0x49b3c1 == 1
 						&& fixed_town_coordinate.runtime_zone_records_after_0x49b3c1.size() == 1
 						&& fixed_town_coordinate.runtime_zone_records_after_0x49b3c1[0].fixed_player_town_choice_index_0xf24 == 5
 						&& fixed_town_owner != nullptr
+						&& fixed_town_owner->source_pointer_0x00_known
+						&& fixed_town_owner->source_pointer_source_index_0x00 == 0
 						&& fixed_town_owner->town_choice_0x04_known
 						&& fixed_town_owner->town_choice_0x04 == 5,
-					"0x4a218c did not apply generator+0xf24 fixed player town override after 0x49b3c1 RNG")) {
+					"0x4a218c did not preserve selected-order owner state while applying generator+0xf24 fixed player town override after 0x49b3c1 RNG")) {
 			return 1;
 		}
 	}
