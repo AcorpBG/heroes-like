@@ -964,6 +964,7 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	int32_t source_payload_random_span_limit_0x1c = 1;
 	bool synthetic_source_record_candidate_container_count_0x4a3c77_known = false;
 	int32_t synthetic_source_record_candidate_container_count_0x4a3c77 = -1;
+	int32_t boundary_payload_owner_word_0x4a325d = -1;
 };
 
 struct RuntimeZoneBoundaryInput4a3a03 {
