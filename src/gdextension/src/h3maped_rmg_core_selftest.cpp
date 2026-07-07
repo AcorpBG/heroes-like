@@ -2581,6 +2581,17 @@ int main() {
 				"0x4a3a03 synthetic source records were not appended to the relation-owner vector consumed by later passes")) {
 		return 1;
 	}
+	for (size_t appended_index = relation_owner_inputs.size();
+			appended_index < owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size();
+			++appended_index) {
+		const GeneratorRelationOwnerState4a218c &owner =
+				owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc[appended_index];
+		if (!require(owner.relation_owner_byte2_0x4aa9b7_known
+						&& owner.relation_owner_byte2_0x4aa9b7 == int32_t(appended_index),
+					"0x4a3a03 appended synthetic owners must use their relation-vector slot as the generated-cell owner byte2 gate")) {
+			return 1;
+		}
+	}
 	if (!require(owner_grid_mode2_appended.handoffs.size()
 						== owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size(),
 				"0x4a3e1d/0x4a3e99 handoff loops must walk the relation-owner vector after synthetic append")) {
