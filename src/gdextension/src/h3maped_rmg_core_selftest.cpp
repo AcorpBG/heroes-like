@@ -2350,6 +2350,14 @@ int main() {
 				"0x4a3a03 synthetic source records must be carried as records, not only as counters")) {
 		return 1;
 	}
+	for (const RuntimeZoneFootprintInput4a3a03 &synthetic : footprint.synthetic_source_records_0x4a3dbc) {
+		if (!require(synthetic.synthetic_source_record_candidate_container_count_0x4a3c77_known
+						&& synthetic.synthetic_source_record_candidate_container_count_0x4a3c77 == int32_t(runtime_zones.size())
+						&& synthetic.source_payload_owner_word_0x00 == int32_t(runtime_zones.size()),
+					"0x4a3c6f..0x4a3c77 must preserve selected candidate source-vector count instead of growing with synthetic append order")) {
+			return 1;
+		}
+	}
 	const SourceNodeFootprintResult4a3a03 mode0_footprint = aurelion::h3maped_rmg_core::build_source_node_footprints_4a3a03_4ccb64_4cca55(
 			runtime_zones,
 			36,
@@ -2586,6 +2594,11 @@ int main() {
 			++appended_index) {
 		const GeneratorRelationOwnerState4a218c &owner =
 				owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc[appended_index];
+		if (!require(owner.source_pointer_0x00_known
+						&& owner.source_pointer_source_index_0x00 == int32_t(relation_owner_inputs.size()),
+					"0x4a3a03 appended synthetic owners must keep source record +0x00 equal to the selected candidate source-vector count, not the appended relation slot")) {
+			return 1;
+		}
 		if (!require(owner.relation_owner_byte2_0x4aa9b7_known
 						&& owner.relation_owner_byte2_0x4aa9b7 == int32_t(appended_index),
 					"0x4a3a03 appended synthetic owners must keep their relation-vector slot for later relation/object gates")) {

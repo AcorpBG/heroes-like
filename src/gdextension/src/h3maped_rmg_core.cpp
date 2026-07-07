@@ -17912,7 +17912,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	return result;
 }
 
-SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width, int32_t height, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c) {
+SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width, int32_t height, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t selected_candidate_source_vector_count_0x4a3c77) {
 	SourceNodeFootprintResult4a3a03 result;
 	SourcePolygonModel4ccb64 model;
 	const int32_t p0 = model.add_pair(-200, -200, 0, 400, -200, 0);
@@ -17938,6 +17938,14 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		}
 	}
 	const int32_t original_surface_source_record_count = int32_t(source_records.size());
+	const int32_t candidate_container_source_vector_count_0x4a3c77 =
+			selected_candidate_source_vector_count_0x4a3c77 >= 0
+					? selected_candidate_source_vector_count_0x4a3c77
+					: original_surface_source_record_count;
+	result.synthetic_source_record_candidate_container_count_0x4a3c77_known =
+			candidate_container_source_vector_count_0x4a3c77 >= 0;
+	result.synthetic_source_record_candidate_container_count_0x4a3c77 =
+			candidate_container_source_vector_count_0x4a3c77;
 
 	auto source_spacing_accept_4a1701 = [&](const RuntimeZoneFootprintInput4a3a03 &origin, int32_t x, int32_t y, int32_t level) {
 		const int32_t origin_span = std::max<int32_t>(1, origin.source_payload_random_span_limit_0x1c);
@@ -18120,10 +18128,13 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				generated.x_after_bbox_rescale = x;
 				generated.y_after_bbox_rescale = y;
 				generated.source_payload_0x08 = origin.source_payload_0x08;
-				// 0x4a3c6f..0x4a3c77 writes the current source-record
-				// vector count into synthetic source record +0x00 before
-				// appending that record and constructing the relation owner.
-				generated.source_payload_owner_word_0x00 = int32_t(source_records.size());
+				// 0x4a3c6f..0x4a3c77 reads the selected candidate
+				// container's source-vector count, not the growing appended
+				// source-record vector length.
+				generated.source_payload_owner_word_0x00 = candidate_container_source_vector_count_0x4a3c77;
+				generated.synthetic_source_record_candidate_container_count_0x4a3c77_known = true;
+				generated.synthetic_source_record_candidate_container_count_0x4a3c77 =
+						candidate_container_source_vector_count_0x4a3c77;
 				generated.source_payload_random_span_limit_0x1c = span;
 				source_records.push_back(generated);
 				result.synthetic_source_records_0x4a3dbc.push_back(generated);
