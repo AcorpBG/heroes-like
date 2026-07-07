@@ -3788,8 +3788,8 @@ int main() {
 		if (!require(owner.constructor_0x49b452_known, "generator relation owner did not carry recovered 0x49b452 constructor state")) {
 			return 1;
 		}
-		const int32_t expected_source_record_id_0x00 =
-				owner.source_zone_id > 0 ? owner.source_zone_id : owner.source_index;
+			const int32_t expected_source_record_id_0x00 =
+					owner.source_zone_id > 0 ? owner.source_zone_id : owner.source_index;
 		if (!require(owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 == expected_source_record_id_0x00, "0x49b452 relation owner source-record +0x00 identity was not preserved")) {
 			return 1;
 		}

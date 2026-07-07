@@ -14907,7 +14907,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (!record.word_0x20_known || !record.word_0x24_known || !record.word_0x28_known) {
 					continue;
 				}
-				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 					continue;
 				}
 				const uint32_t terrain_class = record.word_0x24 & 0x3fU;
@@ -14980,7 +14980,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 					report.unknown_word_skip_count += 1;
 					continue;
 				}
-				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 					report.owner_byte_reject_count += 1;
 					result.owner_byte_reject_count += 1;
 					continue;
@@ -15438,14 +15438,17 @@ static const SourceObjectResolvedWrapper4af785 *source_type98_bucket_entry_0x658
 	return &resolver_state.wrappers[size_t(wrapper_index)];
 }
 
-SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t selected_index_0x20, bool enabled_low_byte_0x24, H3MapedRng &rng) {
+SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t selected_index_0x20, bool enabled_low_byte_0x24, H3MapedRng &rng, int32_t source_record_identity_arg_0x00) {
 	SourceOrderObjectPlacementResult4a93a2 result;
 	SourceOrderObjectPlacementState4a93a2 &placement = result.placement_state_0x4a93a2;
+	const int32_t source_record_identity_0x00 =
+			source_record_identity_arg_0x00 >= 0 ? source_record_identity_arg_0x00 : relation_owner_byte2;
 	placement.descriptor_source_bridge_known = source_order_descriptor_source_bridge_known_0x4a93a2(join);
 	placement.copied_source_record_carried = join.copied_source_record_is_identity_authority || placement.descriptor_source_bridge_known;
 	placement.scan_bounds_known = true;
 	placement.scan_bounds_non_empty = scan_high_x_0x28 > scan_low_x_0x20 && scan_high_y_0x2c > scan_low_y_0x24;
 	placement.relation_owner_byte_known = relation_owner_byte2 >= 0;
+	placement.source_record_identity_known_0x00 = source_record_identity_0x00 >= 0;
 	placement.source_pair_key_known = true;
 	placement.source_pair_key_not_minus_one = source_pair_key_0x0c != -1;
 	const SourceObjectResolverState4af785 &resolver_state_for_0x658 =
@@ -15459,6 +15462,7 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	placement.source_type98_bucket_0x658_contents_known = state.source_type98_bucket_0x658_contents_known;
 	placement.source_type98_bucket_0x658_count = state.source_type98_bucket_0x658_count;
 	placement.relation_owner_byte2 = relation_owner_byte2;
+	placement.source_record_identity_0x00 = source_record_identity_0x00;
 	placement.source_pair_key_0x0c = source_pair_key_0x0c;
 	placement.selected_index_0x20 = selected_index_0x20;
 	placement.enabled_low_byte_0x24 = enabled_low_byte_0x24;
@@ -15494,6 +15498,9 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	if (!placement.relation_owner_byte_known) {
 		return finish_blocked("0x4a93a2_relation_owner_byte2_missing");
 	}
+	if (!placement.source_record_identity_known_0x00) {
+		return finish_blocked("0x4a93a2_source_record_identity_0x00_missing");
+	}
 	if (!placement.source_pair_key_not_minus_one) {
 		return finish_blocked("0x4a93a2_source_pair_key_arg_0x0c_minus_one");
 	}
@@ -15521,7 +15528,7 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 				placement.unknown_cell_word_count += 1;
 				continue;
 			}
-			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 				placement.owner_byte_reject_count += 1;
 				continue;
 			}
@@ -15603,7 +15610,7 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	return result;
 }
 
-SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x20_known, int32_t source_field_0x20, bool source_field_0x24_known, int32_t source_field_0x24) {
+SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x20_known, int32_t source_field_0x20, bool source_field_0x24_known, int32_t source_field_0x24, int32_t source_record_identity_0x00) {
 	SourceOrderObjectDispatcherResult4a8d2c result;
 	result.source_field_0x20_known = source_field_0x20_known || join.source_record_copy.raw_field_0x20_known;
 	result.source_field_0x20 = source_field_0x20_known ? source_field_0x20 : join.source_record_copy.raw_field_0x20;
@@ -15658,7 +15665,8 @@ SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(
 				source_pair_key_0x0c,
 				branch.selected_index_0x20,
 				branch.enabled_low_byte_0x24,
-				rng);
+				rng,
+				source_record_identity_0x00);
 		if (branch.placement_0x4a93a2.committed) {
 			result.selected_branch_index = int32_t(index);
 			result.committed = true;
@@ -15673,9 +15681,11 @@ SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(
 	return result;
 }
 
-WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t source_pair_key_0x0c, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24) {
+WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t source_pair_key_0x0c, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20, uint32_t enabled_word_0x24, bool enabled_low_byte_0x24, int32_t source_record_identity_arg_0x00) {
 	WeightedObjectCandidateScanResult4a901a result;
 	WeightedObjectCandidateVectorState4a901a &vector_state = result.vector_state_0x4a901a;
+	const int32_t source_record_identity_0x00 =
+			source_record_identity_arg_0x00 >= 0 ? source_record_identity_arg_0x00 : relation_owner_byte2;
 	const int32_t descriptor_width_0x34 = join.descriptor.descriptor_width_0x34 > 0
 			? join.descriptor.descriptor_width_0x34
 			: (join.source_record_copy.descriptor_width_0x34 > 0 ? join.source_record_copy.descriptor_width_0x34 : 0);
@@ -15701,6 +15711,8 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.source_type98_bucket_0x658_count = state.source_type98_bucket_0x658_count;
 	vector_state.threshold_arg_0x18_known = threshold_arg_0x18 >= 0;
 	vector_state.relation_owner_byte2 = relation_owner_byte2;
+	vector_state.source_record_identity_known_0x00 = source_record_identity_0x00 >= 0;
+	vector_state.source_record_identity_0x00 = source_record_identity_0x00;
 	vector_state.source_pair_key_0x0c = source_pair_key_0x0c;
 	vector_state.scan_bound_low_x = adjusted_scan_low_x;
 	vector_state.scan_bound_low_y = adjusted_scan_low_y;
@@ -15741,6 +15753,9 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	if (!vector_state.relation_owner_byte_known) {
 		return finish_blocked("0x4a901a_relation_owner_byte2_missing");
 	}
+	if (!vector_state.source_record_identity_known_0x00) {
+		return finish_blocked("0x4a901a_source_record_identity_0x00_missing");
+	}
 	if (!vector_state.threshold_arg_0x18_known) {
 		return finish_blocked("0x4a901a_threshold_arg_0x18_missing");
 	}
@@ -15771,7 +15786,7 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 				vector_state.unknown_cell_word_count += 1;
 				continue;
 			}
-			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
 				vector_state.owner_byte_reject_count += 1;
 				continue;
 			}
@@ -15861,6 +15876,8 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 	result.scan_bounds_non_empty = scan_high_x > scan_low_x && scan_high_y > scan_low_y;
 	result.relation_owner_byte_known = relation_owner_byte2 >= 0;
 	result.relation_owner_byte2 = relation_owner_byte2;
+	result.source_record_identity_known_0x00 = source_record.source_id_0x00 >= 0;
+	result.source_record_identity_0x00 = source_record.source_id_0x00;
 	result.scan_bound_low_x = scan_low_x;
 	result.scan_bound_low_y = scan_low_y;
 	result.scan_bound_high_x = scan_high_x;
@@ -16034,7 +16051,8 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 					context_wrapper_index_0x04,
 					lane.selected_index_0x20,
 					lane.enabled_low_byte_0x24,
-					rng);
+					rng,
+					source_record.source_id_0x00);
 			call.returned_nonzero = direct.committed;
 			call.committed = direct.committed;
 			call.direct_candidate_accepted_count_0x4a93a2 = direct.placement_state_0x4a93a2.accepted_candidate_count;
@@ -16066,7 +16084,8 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 				rng,
 				lane.selected_index_0x20,
 				0U,
-				lane.enabled_low_byte_0x24);
+				lane.enabled_low_byte_0x24,
+				source_record.source_id_0x00);
 		call.returned_nonzero = scan.committed;
 		call.committed = scan.committed;
 		call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
@@ -21739,7 +21758,8 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						owner.source_order_source_record_0x00.field_0x20_known,
 						owner.source_order_source_record_0x00.field_0x20,
 						owner.source_order_source_record_0x00.field_0x24_known,
-						owner.source_order_source_record_0x00.field_0x24);
+						owner.source_order_source_record_0x00.field_0x24,
+						owner.source_order_source_record_0x00.source_id_0x00);
 		state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c += 1;
 		if (direct.committed) {
 			owner.byte_0x3c_known = true;
@@ -21934,7 +21954,8 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 				source_record.field_0x20_known,
 				source_record.field_0x20,
 				source_record.field_0x24_known,
-				source_record.field_0x24);
+				source_record.field_0x24,
+				source_record.source_id_0x00);
 	}
 	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 }

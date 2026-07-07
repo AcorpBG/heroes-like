@@ -14719,6 +14719,54 @@
         "parityCompletionClaimed": false
       },
       "remainingWork": "Resolve the next source-owned workflow blocker upstream of the 0x49b2b6 final tile stream: exact TerrainPlacement/generated-cell input state and downstream generated-object payload materialization must match same-run H3MapEd authority before runtime map output can be enabled."
+    },
+    {
+      "id": "native-rmg-source-record-identity-20260707",
+      "title": "Carry source-order source-record identity separately from relation owner scan byte",
+      "sliceId": "native-rmg-source-order-h3maped-alignment-10184",
+      "status": "passed_source_backed_identity_progress_not_parity",
+      "validatedAt": "2026-07-07T07:15:13Z",
+      "updatedAt": "2026-07-07T07:15:13Z",
+      "latestFinding": "Native RMG source-order alignment remains in progress and parity remains blocked. h3maped_rmg_core now carries the source-order source-record +0x00 identity through 0x4a8d2c/0x4a8db2/0x4a901a/0x4a93a2 state separately from the relation-owner byte used by the current generated-cell scan path. A zero-based identity/gate experiment was rejected because it regressed Small seed58 before final writeout; the recovered 0x49b452 source-pointer identity remains source-zone based while placement scans continue to use relation byte2 until the remaining owner-byte semantics are reconciled. Focused no-Godot Small seed58 setup3 and Medium seed10 setup1 both reach final_payload_compare. Runtime/native map output remains disabled.",
+      "blockedReason": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
+      "artifacts": [
+        "PLAN.md",
+        "ops/progress.json",
+        "src/gdextension/include/h3maped_rmg_core.hpp",
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/rmg_native_batch_export_cli",
+        ".artifacts/rmg_native_continue_20260707_small_seed58_identity_v4/small_2p_seed58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_native_continue_20260707_medium_seed10_identity_v4/medium_seed10_setup1_2p.phase_snapshot.json"
+      ],
+      "commands": [
+        "cmake --build build/linux-debug --target h3maped_rmg_core_selftest rmg_native_batch_export_cli -j2 (passed)",
+        "bin/h3maped_rmg_core_selftest (passed)",
+        "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_small_seed58_identity_v4 --controlled-case small_2p_seed58_setup3:small:2:58:land:1:1:1:3 --phase-snapshot-only --emit-phase-snapshot (blocked as expected; no Godot; final payload sections written)",
+        "bin/rmg_native_batch_export_cli --out .artifacts/rmg_native_continue_20260707_medium_seed10_identity_v4 --controlled-case medium_seed10_setup1_2p:medium:2:10:land:1:1:1:1:0 --phase-snapshot-only --emit-phase-snapshot (blocked as expected; no Godot; final payload sections written)"
+      ],
+      "metrics": {
+        "native_rmg_end_to_end_parity_complete": false,
+        "runtime_map_output_enabled": false,
+        "godot_process_started": false,
+        "wine_process_started": false,
+        "source_record_identity_carried_separately": true,
+        "unsafe_zero_based_identity_gate_rejected": true,
+        "focused_controlled_case_count": 2,
+        "focused_blocked_case_count": 2,
+        "small_seed58_current_phase": "final_payload_compare",
+        "small_seed58_final_writeout_complete": true,
+        "small_seed58_final_object_count": 185,
+        "medium_seed10_setup1_current_phase": "final_payload_compare",
+        "medium_seed10_setup1_final_writeout_complete": true,
+        "medium_seed10_setup1_final_tile_byte_count": 36288,
+        "medium_seed10_setup1_final_object_count": 809,
+        "medium_seed10_setup1_native_generated_object_payload_byte_count": 10159,
+        "h3maped_generated_object_payload_byte_count": 17057,
+        "parityCompletionClaimed": false
+      },
+      "remainingWork": "Resolve the next source-owned workflow blocker upstream of the 0x49b2b6 final tile stream: exact TerrainPlacement/generated-cell input state and downstream generated-object payload materialization must match same-run H3MapEd authority before runtime map output can be enabled. Separately reconcile the direct source-order source-record +0x00 versus relation-byte owner semantics before using source-record identity as a generated-cell scan gate."
     }
   ],
   "currentNotes": "2026-07-07 source-backed synthetic owner constructor correction: 0x4a3dbc appended owners now run through the recovered 0x49b452 constructor path, preserve the type-3 overwrite/fixed treasure bands/appended relation-vector owner byte, and carry recovered post-constructor relation +0x0c = 8; 0x4a4913 no longer blocks on empty type-8 scan bounds. No-Godot build/selftest pass; focused Medium seed10 setup1 reaches final_payload_compare and remains blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload. Runtime map output remains disabled; not parity.",
