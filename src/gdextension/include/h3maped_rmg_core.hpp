@@ -2549,9 +2549,16 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t bit26_candidate_count = 0;
 	bool budget_known = false;
 	int32_t budget_0x4374c_div_bit26 = 0;
+	bool budget_argument_to_0x49e700_known = false;
+	int32_t budget_argument_to_0x49e700 = 0;
+	int32_t budget_argument_handoff_count_0x49e700 = 0;
 	int32_t valid_0x49e700_dispatch_candidate_count = 0;
 	int32_t invalid_optional_handler_candidate_count = 0;
+	int32_t invalid_optional_handler_sentinel_suppressed_count = 0;
+	int32_t invalid_optional_handler_unowned_pointer_count = 0;
 	bool dispatch_probe_0x49e700_invoked = false;
+	int32_t dispatch_probe_optional_handler_sentinel_suppressed_count_0x49e700 = 0;
+	int32_t dispatch_probe_optional_handler_unowned_pointer_count_0x49e700 = 0;
 	bool type_table_0x54092c_known = false;
 	int32_t type_table_0x54092c_count = 0;
 	int32_t dispatch_probe_invocation_count_0x49e700 = 0;

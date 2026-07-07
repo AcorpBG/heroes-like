@@ -1307,9 +1307,18 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_flagged_cell_dispatch_0x49eb8d_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.invoked;
 	out.decorative_flagged_cell_dispatch_0x49eb8d_applied = input.decorative_flagged_cell_dispatch_0x49eb8d.applied;
 	out.decorative_flagged_cell_dispatch_bit26_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.bit26_candidate_count;
+	out.decorative_flagged_cell_dispatch_budget_known = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_known;
+	out.decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_0x4374c_div_bit26;
+	out.decorative_dispatch_budget_argument_to_0x49e700_known = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_to_0x49e700_known;
+	out.decorative_dispatch_budget_argument_to_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_to_0x49e700;
+	out.decorative_dispatch_budget_argument_handoff_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_handoff_count_0x49e700;
 	out.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.valid_0x49e700_dispatch_candidate_count;
 	out.decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_candidate_count;
+	out.decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_sentinel_suppressed_count;
+	out.decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_unowned_pointer_count;
 	out.decorative_dispatch_probe_0x49e700_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_0x49e700_invoked;
+	out.decorative_dispatch_optional_handler_sentinel_suppressed_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_optional_handler_sentinel_suppressed_count_0x49e700;
+	out.decorative_dispatch_optional_handler_unowned_pointer_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_optional_handler_unowned_pointer_count_0x49e700;
 	out.decorative_dispatch_type_table_0x54092c_known = input.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known;
 	out.decorative_dispatch_type_table_0x54092c_count = input.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count;
 	out.decorative_dispatch_probe_invocation_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_invocation_count_0x49e700;
@@ -3332,9 +3341,18 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_flagged_cell_dispatch_0x49eb8d_invoked\":" << (state.decorative_flagged_cell_dispatch_0x49eb8d_invoked ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_0x49eb8d_applied\":" << (state.decorative_flagged_cell_dispatch_0x49eb8d_applied ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_bit26_candidate_count\":" << state.decorative_flagged_cell_dispatch_bit26_candidate_count << ","
+			<< "\"decorative_flagged_cell_dispatch_budget_known\":" << (state.decorative_flagged_cell_dispatch_budget_known ? "true" : "false") << ","
+			<< "\"decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26\":" << state.decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26 << ","
+			<< "\"decorative_dispatch_budget_argument_to_0x49e700_known\":" << (state.decorative_dispatch_budget_argument_to_0x49e700_known ? "true" : "false") << ","
+			<< "\"decorative_dispatch_budget_argument_to_0x49e700\":" << state.decorative_dispatch_budget_argument_to_0x49e700 << ","
+			<< "\"decorative_dispatch_budget_argument_handoff_count_0x49e700\":" << state.decorative_dispatch_budget_argument_handoff_count_0x49e700 << ","
 			<< "\"decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count\":" << state.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count << ","
 			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count << ","
+			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count << ","
+			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count << ","
 			<< "\"decorative_dispatch_probe_0x49e700_invoked\":" << (state.decorative_dispatch_probe_0x49e700_invoked ? "true" : "false") << ","
+			<< "\"decorative_dispatch_optional_handler_sentinel_suppressed_count_0x49e700\":" << state.decorative_dispatch_optional_handler_sentinel_suppressed_count_0x49e700 << ","
+			<< "\"decorative_dispatch_optional_handler_unowned_pointer_count_0x49e700\":" << state.decorative_dispatch_optional_handler_unowned_pointer_count_0x49e700 << ","
 			<< "\"decorative_dispatch_type_table_0x54092c_known\":" << (state.decorative_dispatch_type_table_0x54092c_known ? "true" : "false") << ","
 			<< "\"decorative_dispatch_type_table_0x54092c_count\":" << state.decorative_dispatch_type_table_0x54092c_count << ","
 			<< "\"decorative_dispatch_probe_invocation_count_0x49e700\":" << state.decorative_dispatch_probe_invocation_count_0x49e700 << ","

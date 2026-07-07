@@ -14,6 +14,7 @@ using aurelion::h3maped_rmg_core::AllowedTerrainFlags0x85_0x8c;
 using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationRecord4a7605_4a5e03;
 using aurelion::h3maped_rmg_core::ConnectionFallbackMaterializationResult4a7605_4a5e03;
 using aurelion::h3maped_rmg_core::CoordinateOwnerGridResult4a218c;
+using aurelion::h3maped_rmg_core::DecorativeFlaggedCellDispatchResult49eb8d;
 using aurelion::h3maped_rmg_core::EndpointMaterializationResult4a5e73;
 using aurelion::h3maped_rmg_core::EndpointMaterializationState4a5e73;
 using aurelion::h3maped_rmg_core::EndpointPointerRecord4a5e73;
@@ -6830,6 +6831,17 @@ int main() {
 						&& workflow.final_writeout_complete
 						&& workflow.final_payload_writeout_0x4ad1e3.applied,
 					"entry-to-writeout workflow did not continue after source-order object materialization completed")) {
+			return 1;
+		}
+		const DecorativeFlaggedCellDispatchResult49eb8d &decorative_dispatch =
+				workflow_generator_state.decorative_flagged_cell_dispatch_0x49eb8d;
+		if (!require(decorative_dispatch.budget_known
+						&& decorative_dispatch.budget_argument_to_0x49e700_known
+						&& decorative_dispatch.budget_argument_to_0x49e700 == decorative_dispatch.budget_0x4374c_div_bit26
+						&& decorative_dispatch.budget_argument_handoff_count_0x49e700 == decorative_dispatch.dispatch_probe_invocation_count_0x49e700
+						&& decorative_dispatch.dispatch_probe_optional_handler_unowned_pointer_count_0x49e700 == 0
+						&& decorative_dispatch.invalid_optional_handler_unowned_pointer_count == 0,
+					"0x49eb8d did not hand the recovered budget argument through every normal 0x49e700 dispatch")) {
 			return 1;
 		}
 	}
