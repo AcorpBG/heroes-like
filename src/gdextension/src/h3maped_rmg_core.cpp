@@ -16879,6 +16879,9 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		input.footprint.source_zone_id = zone.source_zone_id;
 		input.footprint.source_payload_0x08 = source_node_payload_for_coordinate_zone(zone);
 		input.footprint.source_payload_owner_word_0x00 = source_node_payload_owner_word_for_coordinate_zone(zone, zone_position);
+		input.footprint.source_record_first_word_0x00 = zone.source_index >= 0
+				? zone.source_index
+				: runtime_index_for_coordinate_zone(zone, zone_position);
 		input.footprint.x_after_bbox_rescale = zone.x;
 		input.footprint.y_after_bbox_rescale = zone.y;
 		input.footprint.level = zone.level;
@@ -17845,12 +17848,25 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 			if (!relation_owner_slot_materialized_10e4(owner)) {
 				continue;
 			}
-			const RuntimeTerrainSelectionRecord49b53d *record =
+			const RuntimeTerrainSelectionRecord49b53d *direct_record =
 					runtime_terrain_selection_for_runtime_zone_0x49b53d(&terrain_selection, owner.runtime_zone_index);
+			const RuntimeTerrainSelectionRecord49b53d *source_zone_record =
+					direct_record == nullptr && owner.source_zone_id >= 0
+					? runtime_terrain_selection_for_runtime_zone_0x49b53d(&terrain_selection, owner.source_zone_id)
+					: nullptr;
+			const RuntimeTerrainSelectionRecord49b53d *record =
+					direct_record != nullptr ? direct_record : source_zone_record;
 			if (!owner.terrain_policy_0x0c_known && record == nullptr) {
 				continue;
 			}
-			const int32_t terrain_id = owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d;
+			const bool synthetic_source_zone_terrain_record =
+					direct_record == nullptr
+					&& source_zone_record != nullptr
+					&& owner.runtime_zone_index >= int32_t(terrain_selection.records.size());
+			const int32_t terrain_id =
+					synthetic_source_zone_terrain_record
+					? source_zone_record->selected_terrain_id_0x49b53d
+					: (owner.terrain_policy_0x0c_known ? owner.terrain_policy_0x0c : record->selected_terrain_id_0x49b53d);
 			const int32_t owner_gate_byte2 = terrain_repaint_loop_owner_byte2_0x4a3f27(owner_index);
 			const int32_t scan_level = owner.coordinate_triple_0x10_0x18_known ? owner.coordinate_level_0x18 : (record != nullptr ? record->level : 0);
 			if (!owner.scan_bounds_0x20_0x2c_known) {
@@ -18147,6 +18163,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				// container's source-vector count, not the growing appended
 				// source-record vector length.
 				generated.source_payload_owner_word_0x00 = candidate_container_source_vector_count_0x4a3c77;
+				generated.source_record_first_word_0x00 = candidate_container_source_vector_count_0x4a3c77;
 				generated.boundary_payload_owner_word_0x4a325d =
 						candidate_container_source_vector_count_0x4a3c77
 						+ result.synthetic_source_record_count_0x4a3dbc;
@@ -18658,6 +18675,9 @@ static int32_t source_walk_payload_owner_word_4a3a03(const SourceWalk4cca55 &wal
 static int32_t source_walk_payload_span_limit_4a3a03(const SourceWalk4cca55 &walk, int32_t fallback);
 
 static int32_t source_spacing_origin_source_word_4a1701(const RuntimeZoneFootprintInput4a3a03 &origin) {
+	if (origin.source_record_first_word_0x00 >= 0) {
+		return origin.source_record_first_word_0x00;
+	}
 	if (origin.source_payload_owner_word_0x00 >= 0) {
 		return origin.source_payload_owner_word_0x00;
 	}
@@ -18802,6 +18822,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 								source_vector_handoff_index);
 				handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 				handoff.level = caller_level_argument_0x0c;
+				handoff.run_boundary_writer_4a2777 = source_vector_handoff_index < original_same_level_runtime_zone_count;
 				handoff.boundary_pass_index_0x0c = 0;
 				handoff.random_span_limit = source_walk_payload_span_limit_4a3a03(walk, 1);
 				handoff.source_record_vector_index_4a3e9c = -1;
@@ -18827,6 +18848,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_
 		handoff.generated_cell_owner_byte2 = matched_input->generated_cell_owner_byte2;
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = matched_input->footprint.level;
+		handoff.run_boundary_writer_4a2777 = source_vector_handoff_index < original_same_level_runtime_zone_count;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
 				&& (generator_mode_0x10b8 != 2 || caller_level_argument_0x0c == 1);
 		handoff.boundary_pass_index_0x0c = source_order_boundary_flag_4a3e80 ? 1 : 0;
@@ -19227,6 +19249,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 								source_vector_handoff_index);
 				handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 				handoff.level = caller_level_argument_0x0c;
+				handoff.run_boundary_writer_4a2777 = source_vector_handoff_index < original_same_level_runtime_zone_count;
 				handoff.boundary_pass_index_0x0c = 0;
 				handoff.random_span_limit = source_walk_payload_span_limit_4a3a03(walk, 1);
 				handoff.source_record_vector_index_4a3e9c = -1;
@@ -19284,6 +19307,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
+		handoff.run_boundary_writer_4a2777 = source_vector_handoff_index < original_same_level_runtime_zone_count;
 		const bool source_order_boundary_flag_4a3e80 = source_vector_handoff_index < original_same_level_runtime_zone_count
 				&& (generator_mode_0x10b8 != 2 || caller_level_argument_0x0c == 1);
 		handoff.boundary_pass_index_0x0c = source_order_boundary_flag_4a3e80 ? 1 : 0;
@@ -25451,6 +25475,7 @@ std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a277
 				? handoff.span_fill_owner_word_0x4a325d
 				: handoff.zone_word;
 		cycle.level = handoff.level;
+		cycle.run_boundary_writer_4a2777 = handoff.run_boundary_writer_4a2777;
 		cycle.boundary_pass_index_0x0c = handoff.boundary_pass_index_0x0c;
 		cycle.random_span_limit = handoff.random_span_limit;
 		cycle.source_record_vector_index_4a3e9c = handoff.source_record_vector_index_4a3e9c;
@@ -25832,6 +25857,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		zone.level = cycle.level;
 		zone.source_record_vector_index_4a3e9c = cycle.source_record_vector_index_4a3e9c;
 		zone.source_cycle_anchor_model_node_index_4a325d = cycle.source_cycle_anchor_model_node_index_4a325d;
+		zone.run_boundary_writer_4a2777 = cycle.run_boundary_writer_4a2777;
 		zone.status = "blocked_before_cycle_consumption";
 		zone.has_span_seed_4a325d = cycle.has_span_seed_4a325d;
 		zone.span_seed_4a325d = cycle.span_seed_4a325d;
@@ -25878,6 +25904,13 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			}
 			return (position + 1) % node_count;
 		};
+
+		if (!zone.run_boundary_writer_4a2777) {
+			zone.status = "0x4a3e99_0x4a325d_span_fill_only_source_record";
+			result.runtime_zone_walk_count += 1;
+			result.zones.push_back(std::move(zone));
+			continue;
+		}
 
 		const bool randomized_writer_branch_0x4a3a03 = cycle.boundary_pass_index_0x0c != 0;
 		const int32_t random_span_limit = std::max<int32_t>(1, cycle.random_span_limit);
@@ -26038,7 +26071,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 
 	std::map<int64_t, bool> span_fill_unique_cells;
 	for (BoundaryZoneMaterialization4a2777 &zone : result.zones) {
-		if (!zone.has_span_seed_4a325d || zone.segments.empty()) {
+		if (!zone.has_span_seed_4a325d) {
 			continue;
 		}
 		SpanRecord seed = zone.span_seed_4a325d;

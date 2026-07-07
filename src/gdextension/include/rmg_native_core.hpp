@@ -406,6 +406,33 @@ struct TerrainVisualMissingBucketSample {
 	bool final_sweep = false;
 };
 
+struct BoundaryZoneSummary4a2777 {
+	int32_t runtime_zone_index = -1;
+	int32_t zone_word = 0;
+	int32_t generated_cell_owner_byte2 = -1;
+	int32_t span_fill_owner_word_0x4a325d = -1;
+	int32_t level = 0;
+	int32_t source_record_vector_index_4a3e9c = -1;
+	int32_t selected_segment_index = -1;
+	int32_t segment_count = 0;
+	bool run_boundary_writer_4a2777 = true;
+	bool has_span_seed_4a325d = false;
+	int32_t span_seed_x_4a325d = 0;
+	int32_t span_seed_y_4a325d = 0;
+	int32_t span_seed_level_4a325d = 0;
+	int32_t effective_span_seed_x_4a325d = 0;
+	int32_t effective_span_seed_y_4a325d = 0;
+	int32_t effective_span_seed_level_4a325d = 0;
+	bool span_seed_relocated_4a325d = false;
+	bool span_fill_executed_4a325d = false;
+	int32_t span_fill_trace_count = 0;
+	int32_t span_fill_pushed_span_count = 0;
+	int32_t span_fill_popped_span_count = 0;
+	int32_t span_fill_blocked_initial_span_count = 0;
+	std::string status;
+	std::string span_seed_relocation_status_4a325d;
+};
+
 struct SharedGeneratedCellRecord0x30 {
 	int32_t flat = -1;
 	int32_t x = -1;
@@ -780,6 +807,10 @@ struct SharedGeneratorObjectPrivateState {
 	uint32_t level_count_offset_0x20 = 0x20U;
 	bool generated_cell_buffer_owned = false;
 	int32_t generated_cell_buffer_record_count = 0;
+	bool generated_cell_first_record_known = false;
+	uint32_t generated_cell_first_word_0x20 = 0U;
+	uint32_t generated_cell_first_word_0x24 = 0U;
+	uint32_t generated_cell_first_word_0x28 = 0U;
 	uint32_t source_type98_bucket_vector_offset_0x658 = 0x658U;
 	bool source_type98_bucket_0x658_present = false;
 	bool source_type98_bucket_0x658_contents_known = false;
@@ -1260,6 +1291,10 @@ struct RecoveredOwnerGridPayload {
 	int32_t terrain_repaint_write_count_0x4a4163 = 0;
 	int32_t terrain_visual_write_count_0x4bb74b = 0;
 	int32_t terrain_visual_missing_bucket_count_0x4bcfc3 = 0;
+	bool terrain_repaint_first_cell_known = false;
+	uint32_t terrain_repaint_first_word_0x20 = 0U;
+	uint32_t terrain_repaint_first_word_0x24 = 0U;
+	uint32_t terrain_repaint_first_word_0x28 = 0U;
 	int32_t terrain_visual_art_nonzero_cell_count = 0;
 	int32_t terrain_visual_flag_cell_count = 0;
 	int32_t terrain_visual_final_sweep_cell_count_0x4bbfcc = 0;
@@ -1290,6 +1325,7 @@ struct RecoveredOwnerGridPayload {
 	int32_t footprint_finalizer_appended_runtime_zone_count = 0;
 	int32_t footprint_finalizer_zone_order_reset_call_count = 0;
 	int32_t footprint_finalizer_per_zone_order_helper_call_count = 0;
+	std::vector<BoundaryZoneSummary4a2777> boundary_zone_summaries_4a2777_4a325d;
 	std::vector<std::string> missing_generated_cell_mutation_phases;
 	std::vector<std::string> terrain_selection_parity_blockers;
 	std::vector<std::string> terrain_repaint_parity_blockers;

@@ -33,6 +33,8 @@ struct Options {
 			".artifacts/rmg_recovery/same_run_final_payload_summary_20260610.json";
 	std::filesystem::path same_run_ordered_writeout_spine_summary_path =
 			".artifacts/rmg_recovery/ordered_writeout_spine_summary_20260610.json";
+	std::filesystem::path same_run_preobject_trace_ledger_path =
+			".artifacts/rmg_recovery/medium_seed10_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace_ledger.json";
 	std::filesystem::path same_run_setup_stack_boundary_ledger_path;
 	std::vector<std::string> controlled_cases;
 	std::string case_filter;
@@ -42,6 +44,8 @@ struct Options {
 	int32_t same_run_setup_prepared_arg8 = 0;
 	bool same_run_setup_caller_arg9_known = false;
 	int32_t same_run_setup_caller_arg9 = 0;
+	bool same_run_setup_object_0x4c_known = false;
+	int32_t same_run_setup_object_0x4c = 0;
 	int limit = 0;
 	bool include_unsupported = false;
 	bool emit_phase_snapshot = false;
@@ -328,6 +332,84 @@ bool extract_i32_field_between(
 	return true;
 }
 
+bool extract_i32_words_array_after(
+		const std::string &text,
+		size_t words_pos,
+		size_t end,
+		std::vector<int32_t> &words_out) {
+	if (words_pos == std::string::npos || words_pos >= end) {
+		return false;
+	}
+	const size_t open_pos = text.find('[', words_pos);
+	const size_t close_pos = text.find(']', open_pos);
+	if (open_pos == std::string::npos || close_pos == std::string::npos || close_pos > end) {
+		return false;
+	}
+	std::vector<int32_t> parsed_words;
+	const std::string words = text.substr(open_pos + 1, close_pos - open_pos - 1);
+	const char *cursor_chars = words.c_str();
+	while (*cursor_chars != '\0') {
+		while (*cursor_chars != '\0' && (std::isspace(static_cast<unsigned char>(*cursor_chars)) || *cursor_chars == ',')) {
+			++cursor_chars;
+		}
+		if (*cursor_chars == '\0') {
+			break;
+		}
+		char *next = nullptr;
+		const long long parsed = std::strtoll(cursor_chars, &next, 0);
+		if (next == cursor_chars) {
+			++cursor_chars;
+			continue;
+		}
+		if (parsed >= std::numeric_limits<int32_t>::min() && parsed <= std::numeric_limits<int32_t>::max()) {
+			parsed_words.push_back(static_cast<int32_t>(parsed));
+		}
+		cursor_chars = next;
+	}
+	if (parsed_words.empty()) {
+		return false;
+	}
+	words_out = std::move(parsed_words);
+	return true;
+}
+
+bool extract_generator_field_0x08_from_4a4c8e_ledger_text(const std::string &ledger_text, int32_t &value) {
+	const size_t event_pos = ledger_text.find("\"address\": \"0x004a4c8e\"");
+	if (event_pos == std::string::npos) {
+		return false;
+	}
+	size_t event_end = ledger_text.find("\"stop_kind\"", event_pos);
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.find("\n    }", event_pos);
+	}
+	if (event_end == std::string::npos) {
+		event_end = ledger_text.size();
+	}
+	int32_t generator_address = 0;
+	if (!extract_i32_field_between(ledger_text, event_pos, event_end, "esi", generator_address)) {
+		return false;
+	}
+	const std::string address_key = "\"address\": " + std::to_string(generator_address);
+	size_t memory_line_pos = event_pos;
+	while (memory_line_pos < event_end) {
+		memory_line_pos = ledger_text.find(address_key, memory_line_pos);
+		if (memory_line_pos == std::string::npos || memory_line_pos >= event_end) {
+			return false;
+		}
+		const size_t words_pos = ledger_text.find("\"words\"", memory_line_pos);
+		if (words_pos == std::string::npos || words_pos >= event_end) {
+			return false;
+		}
+		std::vector<int32_t> words;
+		if (extract_i32_words_array_after(ledger_text, words_pos, event_end, words) && words.size() >= 3) {
+			value = words[2];
+			return true;
+		}
+		memory_line_pos += address_key.size();
+	}
+	return false;
+}
+
 bool extract_setup_arg8_prepared_0x49ecf2_from_ledger_text(const std::string &ledger_text, int32_t &value) {
 	const size_t event_pos = ledger_text.find("\"address\": \"0x0049ecf2\"");
 	if (event_pos == std::string::npos) {
@@ -382,13 +464,17 @@ void apply_same_run_setup_authority_prefix_to_case(ControlledCase &controlled_ca
 		controlled_case.setup_object_0x40_known = true;
 		controlled_case.setup_object_0x40 = args[6];
 	}
-	if (options.same_run_setup_prepared_arg8_known && !controlled_case.setup_object_0x48_supplied) {
-		controlled_case.setup_object_raw_0x48_known = false;
-		controlled_case.setup_object_raw_0x48_supplied = false;
-		controlled_case.setup_object_0x48_known = true;
-		controlled_case.setup_object_0x48 = options.same_run_setup_prepared_arg8;
+		if (options.same_run_setup_prepared_arg8_known && !controlled_case.setup_object_0x48_supplied) {
+			controlled_case.setup_object_raw_0x48_known = false;
+			controlled_case.setup_object_raw_0x48_supplied = false;
+			controlled_case.setup_object_0x48_known = true;
+			controlled_case.setup_object_0x48 = options.same_run_setup_prepared_arg8;
+		}
+		if (options.same_run_setup_object_0x4c_known && !controlled_case.setup_object_0x4c_supplied) {
+			controlled_case.setup_object_0x4c_known = true;
+			controlled_case.setup_object_0x4c = options.same_run_setup_object_0x4c;
+		}
 	}
-}
 
 SharedRuntimeChainInput same_run_authority_input_for_case(const ControlledCase &controlled_case, const Options &options) {
 	SharedRuntimeChainInput input = options.shared_runtime_chain_input;
@@ -591,6 +677,12 @@ Options parse_options(int argc, char **argv) {
 			if (!raw.empty()) {
 				options.same_run_ordered_writeout_spine_summary_path = raw;
 			}
+		} else if (arg == "--same-run-preobject-trace-ledger") {
+			std::string raw;
+			take_value(raw);
+			if (!raw.empty()) {
+				options.same_run_preobject_trace_ledger_path = raw;
+			}
 		} else if (arg == "--controlled-case") {
 			std::string raw;
 			take_value(raw);
@@ -738,10 +830,10 @@ void hydrate_same_run_authority_payloads(Options &options) {
 		}
 		std::string spine_summary;
 		std::string boundary_ledger_path_text;
-		if (!options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known
-				&& read_text_file(options.same_run_ordered_writeout_spine_summary_path, spine_summary)
-				&& spine_summary.find(EXPECTED_PROFILE) != std::string::npos
-				&& extract_json_string_field(spine_summary, "boundary_ledger", boundary_ledger_path_text)) {
+			if (!options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known
+					&& read_text_file(options.same_run_ordered_writeout_spine_summary_path, spine_summary)
+					&& spine_summary.find(EXPECTED_PROFILE) != std::string::npos
+					&& extract_json_string_field(spine_summary, "boundary_ledger", boundary_ledger_path_text)) {
 			std::string boundary_ledger_text;
 			std::vector<int32_t> setup_stack_args;
 			if (read_text_file(std::filesystem::path(boundary_ledger_path_text), boundary_ledger_text)
@@ -769,6 +861,14 @@ void hydrate_same_run_authority_payloads(Options &options) {
 					options.same_run_setup_caller_arg9_known = true;
 					options.same_run_setup_caller_arg9 = caller_arg9;
 				}
+			}
+			std::string preobject_ledger_text;
+			int32_t setup_object_0x4c = 0;
+			if (read_text_file(options.same_run_preobject_trace_ledger_path, preobject_ledger_text)
+					&& extract_generator_field_0x08_from_4a4c8e_ledger_text(preobject_ledger_text, setup_object_0x4c)) {
+				options.same_run_setup_object_0x4c_known = true;
+				options.same_run_setup_object_0x4c = setup_object_0x4c;
+				options.shared_runtime_chain_input.same_run_payload_authority_setup_object_0x4c = setup_object_0x4c;
 			}
 		}
 	}
@@ -1001,6 +1101,7 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"same_run_object_payload_authority_byte_count\": " << options.shared_runtime_chain_input.same_run_generated_object_payload_authority_0x4ad1e3.size() << ",\n";
 	out << "  \"same_run_payload_summary_path\": \"" << json_escape(options.same_run_payload_summary_path.string()) << "\",\n";
 	out << "  \"same_run_ordered_writeout_spine_summary_path\": \"" << json_escape(options.same_run_ordered_writeout_spine_summary_path.string()) << "\",\n";
+	out << "  \"same_run_preobject_trace_ledger_path\": \"" << json_escape(options.same_run_preobject_trace_ledger_path.string()) << "\",\n";
 	out << "  \"same_run_setup_stack_boundary_ledger_path\": \"" << json_escape(options.same_run_setup_stack_boundary_ledger_path.string()) << "\",\n";
 	out << "  \"same_run_payload_authority_profile_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_profile_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_profile\": \"" << json_escape(options.shared_runtime_chain_input.same_run_payload_authority_profile) << "\",\n";
@@ -1009,6 +1110,8 @@ std::string manifest_json(const Options &options, const std::filesystem::path &a
 	out << "  \"same_run_setup_prepared_arg8\": " << options.same_run_setup_prepared_arg8 << ",\n";
 	out << "  \"same_run_setup_caller_arg9_known\": " << (options.same_run_setup_caller_arg9_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_setup_caller_arg9\": " << options.same_run_setup_caller_arg9 << ",\n";
+	out << "  \"same_run_setup_object_0x4c_known\": " << (options.same_run_setup_object_0x4c_known ? "true" : "false") << ",\n";
+	out << "  \"same_run_setup_object_0x4c\": " << options.same_run_setup_object_0x4c << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_join_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_join_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_args_known\": " << (options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_known ? "true" : "false") << ",\n";
 	out << "  \"same_run_payload_authority_setup_stack_arg_count\": " << options.shared_runtime_chain_input.same_run_payload_authority_setup_stack_args_0x49ecf2.size() << ",\n";

@@ -1077,6 +1077,16 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.level_count_offset_0x20 = input.level_count_offset_0x20;
 	out.generated_cell_buffer_owned = input.generated_cell_buffer_owned;
 	out.generated_cell_buffer_record_count = int32_t(input.generated_cell_buffer.records.size());
+	if (!input.generated_cell_buffer.records.empty()) {
+		const h3maped_rmg_core::GeneratedCellRecord0x30 &first = input.generated_cell_buffer.records.front();
+		out.generated_cell_first_record_known =
+				first.word_0x20_known
+				&& first.word_0x24_known
+				&& first.word_0x28_known;
+		out.generated_cell_first_word_0x20 = first.word_0x20;
+		out.generated_cell_first_word_0x24 = first.word_0x24;
+		out.generated_cell_first_word_0x28 = first.word_0x28;
+	}
 	out.source_type98_bucket_vector_offset_0x658 = input.source_type98_bucket_vector_offset_0x658;
 	out.source_type98_bucket_0x658_present = input.source_type98_bucket_0x658_present;
 	out.source_type98_bucket_0x658_contents_known = input.source_type98_bucket_0x658_contents_known;
@@ -2629,6 +2639,42 @@ void append_terrain_visual_missing_bucket_samples_json(std::ostream &out, const 
 	out << "]";
 }
 
+void append_boundary_zone_summaries_json(std::ostream &out, const std::vector<BoundaryZoneSummary4a2777> &zones) {
+	out << "[";
+	for (size_t index = 0; index < zones.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const BoundaryZoneSummary4a2777 &zone = zones[index];
+		out << "{\"runtime_zone_index\":" << zone.runtime_zone_index
+			<< ",\"zone_word\":" << zone.zone_word
+			<< ",\"generated_cell_owner_byte2\":" << zone.generated_cell_owner_byte2
+			<< ",\"span_fill_owner_word_0x4a325d\":" << zone.span_fill_owner_word_0x4a325d
+			<< ",\"level\":" << zone.level
+			<< ",\"source_record_vector_index_4a3e9c\":" << zone.source_record_vector_index_4a3e9c
+			<< ",\"selected_segment_index\":" << zone.selected_segment_index
+			<< ",\"segment_count\":" << zone.segment_count
+			<< ",\"run_boundary_writer_4a2777\":" << (zone.run_boundary_writer_4a2777 ? "true" : "false")
+			<< ",\"has_span_seed_4a325d\":" << (zone.has_span_seed_4a325d ? "true" : "false")
+			<< ",\"span_seed_x_4a325d\":" << zone.span_seed_x_4a325d
+			<< ",\"span_seed_y_4a325d\":" << zone.span_seed_y_4a325d
+			<< ",\"span_seed_level_4a325d\":" << zone.span_seed_level_4a325d
+			<< ",\"effective_span_seed_x_4a325d\":" << zone.effective_span_seed_x_4a325d
+			<< ",\"effective_span_seed_y_4a325d\":" << zone.effective_span_seed_y_4a325d
+			<< ",\"effective_span_seed_level_4a325d\":" << zone.effective_span_seed_level_4a325d
+			<< ",\"span_seed_relocated_4a325d\":" << (zone.span_seed_relocated_4a325d ? "true" : "false")
+			<< ",\"span_fill_executed_4a325d\":" << (zone.span_fill_executed_4a325d ? "true" : "false")
+			<< ",\"span_fill_trace_count\":" << zone.span_fill_trace_count
+			<< ",\"span_fill_pushed_span_count\":" << zone.span_fill_pushed_span_count
+			<< ",\"span_fill_popped_span_count\":" << zone.span_fill_popped_span_count
+			<< ",\"span_fill_blocked_initial_span_count\":" << zone.span_fill_blocked_initial_span_count
+			<< ",\"status\":\"" << json_escape(zone.status) << "\""
+			<< ",\"span_seed_relocation_status_4a325d\":\"" << json_escape(zone.span_seed_relocation_status_4a325d) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_object_vector_state_json(std::ostream &out, const SharedGeneratorObjectVectorState &state) {
 	out << "{\"label\":\"" << json_escape(state.label) << "\""
 		<< ",\"begin_offset\":" << state.begin_offset
@@ -3093,6 +3139,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"level_count_offset_0x20\":" << state.level_count_offset_0x20 << ","
 		<< "\"generated_cell_buffer_owned\":" << (state.generated_cell_buffer_owned ? "true" : "false") << ","
 		<< "\"generated_cell_buffer_record_count\":" << state.generated_cell_buffer_record_count << ","
+		<< "\"generated_cell_first_record_known\":" << (state.generated_cell_first_record_known ? "true" : "false") << ","
+		<< "\"generated_cell_first_word_0x20\":" << state.generated_cell_first_word_0x20 << ","
+		<< "\"generated_cell_first_word_0x24\":" << state.generated_cell_first_word_0x24 << ","
+		<< "\"generated_cell_first_word_0x28\":" << state.generated_cell_first_word_0x28 << ","
 		<< "\"source_type98_bucket_vector_offset_0x658\":" << state.source_type98_bucket_vector_offset_0x658 << ","
 		<< "\"source_type98_bucket_0x658_present\":" << (state.source_type98_bucket_0x658_present ? "true" : "false") << ","
 		<< "\"source_type98_bucket_0x658_contents_known\":" << (state.source_type98_bucket_0x658_contents_known ? "true" : "false") << ","
@@ -4023,6 +4073,9 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"materialization_runtime_zone_walk_count\": " << payload.materialization_runtime_zone_walk_count << ",\n";
 		out << "    \"materialization_appended_vertex_count\": " << payload.materialization_appended_vertex_count << ",\n";
 		out << "    \"materialization_span_fill_zone_count\": " << payload.materialization_span_fill_zone_count << ",\n";
+		out << "    \"boundary_zone_summaries_4a2777_4a325d\": ";
+		append_boundary_zone_summaries_json(out, payload.boundary_zone_summaries_4a2777_4a325d);
+		out << ",\n";
 		out << "    \"footprint_finalizer_4a3710_executed\": " << (payload.footprint_finalizer_executed ? "true" : "false") << ",\n";
 		out << "    \"footprint_finalizer_4a3710_blocked\": " << (payload.footprint_finalizer_blocked ? "true" : "false") << ",\n";
 		out << "    \"footprint_finalizer_4a3710_status\": \"" << json_escape(payload.footprint_finalizer_status) << "\",\n";
@@ -4045,6 +4098,10 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"terrain_repaint_write_count_0x4a4163\": " << payload.terrain_repaint_write_count_0x4a4163 << ",\n";
 		out << "    \"terrain_visual_write_count_0x4bb74b\": " << payload.terrain_visual_write_count_0x4bb74b << ",\n";
 		out << "    \"terrain_visual_missing_bucket_count_0x4bcfc3\": " << payload.terrain_visual_missing_bucket_count_0x4bcfc3 << ",\n";
+		out << "    \"terrain_repaint_first_cell_known\": " << (payload.terrain_repaint_first_cell_known ? "true" : "false") << ",\n";
+		out << "    \"terrain_repaint_first_word_0x20\": " << payload.terrain_repaint_first_word_0x20 << ",\n";
+		out << "    \"terrain_repaint_first_word_0x24\": " << payload.terrain_repaint_first_word_0x24 << ",\n";
+		out << "    \"terrain_repaint_first_word_0x28\": " << payload.terrain_repaint_first_word_0x28 << ",\n";
 		out << "    \"terrain_visual_missing_bucket_samples_0x4bcfc3\": ";
 		append_terrain_visual_missing_bucket_samples_json(out, payload.terrain_visual_missing_bucket_samples_0x4bcfc3);
 		out << ",\n";
@@ -4494,6 +4551,14 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.terrain_repaint_write_count_0x4a4163 = result.terrain_repaint.zone_repaint_write_count_0x4a4163;
 	payload.terrain_visual_write_count_0x4bb74b = result.terrain_repaint.terrain_visual_write_count_0x4bb74b;
 	payload.terrain_visual_missing_bucket_count_0x4bcfc3 = result.terrain_repaint.terrain_visual_missing_bucket_count_0x4bcfc3;
+	if (!result.terrain_repaint.generated_cell_word_0x20.empty()
+			&& !result.terrain_repaint.generated_cell_word_0x24.empty()
+			&& !result.terrain_repaint.generated_cell_word_0x28.empty()) {
+		payload.terrain_repaint_first_cell_known = true;
+		payload.terrain_repaint_first_word_0x20 = result.terrain_repaint.generated_cell_word_0x20.front();
+		payload.terrain_repaint_first_word_0x24 = result.terrain_repaint.generated_cell_word_0x24.front();
+		payload.terrain_repaint_first_word_0x28 = result.terrain_repaint.generated_cell_word_0x28.front();
+	}
 	for (const h3maped_rmg_core::TerrainVisualMissingBucketSample4bcfc3 &source : result.terrain_repaint.terrain_visual_missing_bucket_samples_0x4bcfc3) {
 		TerrainVisualMissingBucketSample sample;
 		sample.level = source.level;
@@ -4530,6 +4595,36 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.materialization_runtime_zone_walk_count = result.owner_grid.materialization.runtime_zone_walk_count;
 	payload.materialization_appended_vertex_count = result.owner_grid.materialization.appended_vertex_count;
 	payload.materialization_span_fill_zone_count = result.owner_grid.materialization.span_fill_zone_count;
+	payload.boundary_zone_summaries_4a2777_4a325d.clear();
+	payload.boundary_zone_summaries_4a2777_4a325d.reserve(result.owner_grid.materialization.zones.size());
+	for (const h3maped_rmg_core::BoundaryZoneMaterialization4a2777 &zone : result.owner_grid.materialization.zones) {
+		BoundaryZoneSummary4a2777 summary;
+		summary.runtime_zone_index = zone.runtime_zone_index;
+		summary.zone_word = zone.zone_word;
+		summary.generated_cell_owner_byte2 = zone.generated_cell_owner_byte2;
+		summary.span_fill_owner_word_0x4a325d = zone.span_fill_owner_word_0x4a325d;
+		summary.level = zone.level;
+		summary.source_record_vector_index_4a3e9c = zone.source_record_vector_index_4a3e9c;
+		summary.selected_segment_index = zone.selected_segment_index;
+		summary.segment_count = int32_t(zone.segments.size());
+		summary.run_boundary_writer_4a2777 = zone.run_boundary_writer_4a2777;
+		summary.has_span_seed_4a325d = zone.has_span_seed_4a325d;
+		summary.span_seed_x_4a325d = zone.span_seed_4a325d.x;
+		summary.span_seed_y_4a325d = zone.span_seed_4a325d.y;
+		summary.span_seed_level_4a325d = zone.span_seed_4a325d.level;
+		summary.effective_span_seed_x_4a325d = zone.effective_span_seed_4a325d.x;
+		summary.effective_span_seed_y_4a325d = zone.effective_span_seed_4a325d.y;
+		summary.effective_span_seed_level_4a325d = zone.effective_span_seed_4a325d.level;
+		summary.span_seed_relocated_4a325d = zone.span_seed_relocated_4a325d;
+		summary.span_fill_executed_4a325d = zone.span_fill_executed_4a325d;
+		summary.span_fill_trace_count = int32_t(zone.span_fill_4a325d.trace.size());
+		summary.span_fill_pushed_span_count = zone.span_fill_4a325d.pushed_span_count;
+		summary.span_fill_popped_span_count = zone.span_fill_4a325d.popped_span_count;
+		summary.span_fill_blocked_initial_span_count = zone.span_fill_4a325d.blocked_initial_span_count;
+		summary.status = zone.status;
+		summary.span_seed_relocation_status_4a325d = zone.span_seed_relocation_status_4a325d;
+		payload.boundary_zone_summaries_4a2777_4a325d.push_back(std::move(summary));
+	}
 	payload.footprint_finalizer_executed = result.owner_grid.footprint_finalizer_executed;
 	payload.footprint_finalizer_blocked = result.owner_grid.footprint_finalizer.blocked;
 	payload.footprint_finalizer_status = result.owner_grid.footprint_finalizer.status;
