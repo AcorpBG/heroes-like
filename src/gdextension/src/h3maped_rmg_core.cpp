@@ -11248,8 +11248,23 @@ static const GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_fi
 		int32_t owner_runtime_zone,
 		int32_t lookup_key);
 
+static GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_find_mutable_0x49b3fb(
+		std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t lookup_key);
+
 static bool source_endpoint_records_known_for_lookup_0x49b3fb(
 		const std::vector<GeneratorRelationOwnerState4a218c> &owners);
+
+static bool source_endpoint_record_processed_marker_0x0a(
+		const GeneratorSourceEndpointRecordState4a1f3b &record) {
+	return (record.control_dword_0x08 & 0x00010000U) != 0U;
+}
+
+static void source_endpoint_record_mark_processed_0x0a(
+		GeneratorSourceEndpointRecordState4a1f3b &record) {
+	record.control_dword_0x08 |= 0x00010000U;
+}
 
 struct ConnectionFrontierCandidate4a79a3 {
 	int32_t source_x = 0;
@@ -12114,7 +12129,10 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				}
 			}
 		}
-		for (const GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
+		for (GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
+			if (source_endpoint_record_processed_marker_0x0a(record)) {
+				continue;
+			}
 			const GeneratorRelationOwnerState4a218c *target_owner_from_record =
 					relation_owner_for_endpoint_record_4a1f3b(state.relation_owner_vectors_10e4_10e8, record);
 			const int32_t target_runtime_zone = target_owner_from_record != nullptr
@@ -12125,8 +12143,8 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 			if (target_owner == nullptr) {
 				continue;
 			}
-			const GeneratorSourceEndpointRecordState4a1f3b *reciprocal_endpoint =
-					source_endpoint_record_find_0x49b3fb(
+			GeneratorSourceEndpointRecordState4a1f3b *reciprocal_endpoint =
+					source_endpoint_record_find_mutable_0x49b3fb(
 							state.relation_owner_vectors_10e4_10e8,
 							target_owner->runtime_zone_index,
 							owner.runtime_zone_index);
@@ -12170,6 +12188,10 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 						prefix.projection_object_branch_blocked_count;
 				if (prefix.constructor_blocked) {
 					result.internal_growth_0x4a61bc_constructor_blocked_count += 1;
+				}
+				if (prefix.constructor_commit_count_0x4a54a7 > 0) {
+					source_endpoint_record_mark_processed_0x0a(record);
+					source_endpoint_record_mark_processed_0x0a(*reciprocal_endpoint);
 				}
 				if (!prefix.blocked_reason.empty()
 						&& prefix.blocked_reason != "0x4a61bc_live_prefix_no_source_frontier_candidate_after_0x49b3fb"
@@ -19514,6 +19536,7 @@ static void append_source_endpoint_record_0x4a1f3b(GeneratorRelationOwnerState4a
 	record.wide = link.wide;
 	record.border_guard = link.border_guard;
 	record.reciprocal = reciprocal;
+	record.control_dword_0x08 = relation_record_control_dword_0x49f7c4(link.wide, link.border_guard);
 	owner.source_endpoint_records_0xc8_0xcc.push_back(record);
 }
 
@@ -22969,6 +22992,38 @@ static const GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_fi
 			return nullptr;
 		}
 		for (const GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
+			if (record.target_relation_owner_vector_index_0x00 >= 0) {
+				const int32_t lookup_owner_index =
+						relation_owner_vector_index_for_runtime_zone_10e4_10e8(owners, lookup_key);
+				if (lookup_owner_index >= 0 && record.target_relation_owner_vector_index_0x00 == lookup_owner_index) {
+					return &record;
+				}
+				continue;
+			}
+			if (record.target_runtime_zone_index == lookup_key) {
+				return &record;
+			}
+		}
+		return nullptr;
+	}
+	return nullptr;
+}
+
+static GeneratorSourceEndpointRecordState4a1f3b *source_endpoint_record_find_mutable_0x49b3fb(
+		std::vector<GeneratorRelationOwnerState4a218c> &owners,
+		int32_t owner_runtime_zone,
+		int32_t lookup_key) {
+	for (GeneratorRelationOwnerState4a218c &owner : owners) {
+		if (owner.runtime_zone_index != owner_runtime_zone) {
+			continue;
+		}
+		if (!owner.source_endpoint_vector_0xc8_0xcc_present
+				|| !owner.source_endpoint_vector_0xc8_0xcc_contents_known
+				|| !owner.source_endpoint_vector_0xc8_0xcc_count_known
+				|| owner.source_endpoint_vector_0xc8_0xcc_count != int32_t(owner.source_endpoint_records_0xc8_0xcc.size())) {
+			return nullptr;
+		}
+		for (GeneratorSourceEndpointRecordState4a1f3b &record : owner.source_endpoint_records_0xc8_0xcc) {
 			if (record.target_relation_owner_vector_index_0x00 >= 0) {
 				const int32_t lookup_owner_index =
 						relation_owner_vector_index_for_runtime_zone_10e4_10e8(owners, lookup_key);

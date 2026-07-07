@@ -760,6 +760,7 @@ SharedGeneratorSourceEndpointRecordState from_h3maped_generator_source_endpoint_
 	out.wide = input.wide;
 	out.border_guard = input.border_guard;
 	out.reciprocal = input.reciprocal;
+	out.control_dword_0x08 = input.control_dword_0x08;
 	return out;
 }
 
@@ -2798,6 +2799,7 @@ void append_generator_source_endpoint_records_json(std::ostream &out, const std:
 			<< ",\"wide\":" << (record.wide ? "true" : "false")
 			<< ",\"border_guard\":" << (record.border_guard ? "true" : "false")
 			<< ",\"reciprocal\":" << (record.reciprocal ? "true" : "false")
+			<< ",\"control_dword_0x08\":" << record.control_dword_0x08
 			<< "}";
 	}
 	out << "]";
