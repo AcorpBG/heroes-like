@@ -2950,9 +2950,9 @@ SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from
 	const bool assigned_player_source =
 			runtime_zone.source_owner_index >= 0
 			&& runtime_zone.actual_player_color >= 0;
-	record.source_id_0x00 = runtime_zone.source_zone_id > 0
-			? runtime_zone.source_zone_id
-			: (runtime_zone.source_index >= 0 ? runtime_zone.source_index : payload.source_row);
+	record.source_id_0x00 = runtime_zone.source_index >= 0
+			? runtime_zone.source_index
+			: (runtime_zone.source_zone_id > 0 ? runtime_zone.source_zone_id - 1 : payload.source_row);
 	record.owner_or_type_0x04 = payload.source_ownership >= 0
 			? payload.source_ownership
 			: (assigned_player_source ? 0 : 2);
@@ -18120,10 +18120,10 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 				generated.x_after_bbox_rescale = x;
 				generated.y_after_bbox_rescale = y;
 				generated.source_payload_0x08 = origin.source_payload_0x08;
-				// 0x4a3d8f..0x4a3da4 updates the synthetic record's
-				// coordinates after construction; it does not assign a new
-				// generated-cell owner word.
-				generated.source_payload_owner_word_0x00 = origin.source_payload_owner_word_0x00;
+				// 0x4a3c6f..0x4a3c77 writes the current source-record
+				// vector count into synthetic source record +0x00 before
+				// appending that record and constructing the relation owner.
+				generated.source_payload_owner_word_0x00 = int32_t(source_records.size());
 				generated.source_payload_random_span_limit_0x1c = span;
 				source_records.push_back(generated);
 				result.synthetic_source_records_0x4a3dbc.push_back(generated);
@@ -18769,14 +18769,17 @@ static int32_t source_walk_payload_span_limit_4a3a03(const SourceWalk4cca55 &wal
 }
 
 static int32_t relation_owner_payload_4a3a03(const GeneratorRelationOwnerState4a218c &owner) {
-	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
-		return owner.source_pointer_source_index_0x00;
+	if (owner.source_pointer_source_span_0x08_known && owner.source_pointer_source_span_0x08 > 0) {
+		return owner.source_pointer_source_span_0x08;
 	}
 	if (owner.source_zone_id > 0) {
 		return owner.source_zone_id;
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index + 1;
+	}
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00 + 1;
 	}
 	return -1;
 }
@@ -18790,6 +18793,29 @@ static int32_t relation_owner_source_payload_owner_word_4a3a03(const GeneratorRe
 	}
 	if (owner.source_index >= 0) {
 		return owner.source_index;
+	}
+	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
+	if (relation_owner_byte2 >= 0) {
+		return relation_owner_byte2;
+	}
+	return fallback;
+}
+
+static int32_t relation_owner_source_record_word0_for_span_fill_4a325d(
+		const GeneratorRelationOwnerState4a218c &owner,
+		int32_t fallback) {
+	if (owner.source_order_source_record_0x00_known
+			&& owner.source_order_source_record_0x00.source_id_0x00 >= 0) {
+		return owner.source_order_source_record_0x00.source_id_0x00;
+	}
+	if (owner.source_pointer_0x00_known && owner.source_pointer_source_index_0x00 >= 0) {
+		return owner.source_pointer_source_index_0x00;
+	}
+	if (owner.source_index >= 0) {
+		return owner.source_index;
+	}
+	if (owner.source_zone_id > 0) {
+		return owner.source_zone_id - 1;
 	}
 	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 	if (relation_owner_byte2 >= 0) {
@@ -18945,10 +18971,9 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 					: -1);
 	apply_relation_owner_constructor_0x49b452(owner, seed, &seed);
 	apply_relation_owner_source_order_boundary_record_0x4a3a03(owner);
-	// 0x4a3710 and 0x4a3f27 consume generated-cell +0x20 byte2 as an
-	// index into generator+0x10e4. Synthetic source records inherit source
-	// identity through +0x00, but the generated-cell owner gate must address
-	// the appended relation-owner slot, not the origin zone's byte.
+	// 0x4a3710 and later relation/object gates consume this relation-vector
+	// slot separately from the source-record word that 0x4a325d writes into
+	// generated-cell +0x20 byte2.
 	owner.relation_owner_byte2_0x4aa9b7_known = owner_vector_index >= 0;
 	owner.relation_owner_byte2_0x4aa9b7 = owner_vector_index;
 	owner.coordinate_triple_0x10_0x18_known = true;
@@ -19112,14 +19137,17 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 				: source_walk_payload_owner_word_4a3a03(
 						  walk,
 						  matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : source_vector_handoff_index);
+		const int32_t source_record_word0_0x4a325d =
+				relation_owner_source_record_word0_for_span_fill_4a325d(
+						*owner,
+						source_payload_owner_word_0x4a325d);
 		BoundarySourceCycleHandoff4a2777 handoff;
 		handoff.runtime_zone_index = walk.runtime_zone_index;
-		handoff.zone_word = source_payload_owner_word_0x4a325d >= 0
-				? source_payload_owner_word_0x4a325d
+		handoff.zone_word = source_record_word0_0x4a325d >= 0
+				? source_record_word0_0x4a325d
 				: (matched_input != nullptr ? matched_input->zone_word : 0);
-		const int32_t generated_cell_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(*owner);
-		handoff.generated_cell_owner_byte2 = generated_cell_owner_byte2 >= 0
-				? generated_cell_owner_byte2
+		handoff.generated_cell_owner_byte2 = source_record_word0_0x4a325d >= 0
+				? source_record_word0_0x4a325d
 				: (matched_input != nullptr ? matched_input->generated_cell_owner_byte2 : handoff.zone_word);
 		handoff.span_fill_owner_word_0x4a325d = handoff.zone_word;
 		handoff.level = owner->coordinate_level_0x18;
