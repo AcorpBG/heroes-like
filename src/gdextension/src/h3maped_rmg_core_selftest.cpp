@@ -2591,6 +2591,29 @@ int main() {
 					"0x4a3a03 appended synthetic owners must use their relation-vector slot as the generated-cell owner byte2 gate")) {
 			return 1;
 		}
+		if (!require(owner.constructor_0x49b452_known
+						&& owner.source_pointer_type_0x04_known
+						&& owner.source_pointer_type_0x04 == 3
+						&& owner.source_order_source_record_field_0x04_known
+						&& owner.source_order_source_record_0x00.owner_or_type_0x04 == 3,
+					"0x4a3a03 appended synthetic owners must pass through 0x49b452 and preserve the recovered source-record type 3 overwrite")) {
+			return 1;
+		}
+		if (!require(owner.terrain_policy_0x0c_known
+						&& owner.terrain_policy_0x0c == 8,
+					"0x4a3a03 appended synthetic owners must carry the recovered post-constructor relation +0x0c value 8")) {
+			return 1;
+		}
+		if (!require(owner.reward_guard_source_bands_0xa0_0xc0_known
+						&& owner.reward_guard_source_bands_0xa0_0xc0[0].density == 100
+						&& owner.reward_guard_source_bands_0xa0_0xc0[0].low == 1000
+						&& owner.reward_guard_source_bands_0xa0_0xc0[0].high == 5
+						&& owner.reward_guard_source_bands_0xa0_0xc0[1].density == 2000
+						&& owner.reward_guard_source_bands_0xa0_0xc0[1].low == 6000
+						&& owner.reward_guard_source_bands_0xa0_0xc0[1].high == 1,
+					"0x4a3a03 appended synthetic owners must carry the recovered fixed synthetic treasure bands into 0x49b452")) {
+			return 1;
+		}
 	}
 	if (!require(owner_grid_mode2_appended.handoffs.size()
 						== owner_grid_mode2_appended.relation_owner_vectors_after_source_append_0x4a3dbc.size(),
