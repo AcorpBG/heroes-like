@@ -14466,7 +14466,9 @@ static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a5
 		}
 		return false;
 	}
-	if (!record.object_references_0x04_0x08.empty()) {
+	// 0x4a5767 tests ([+0x08] - [+0x04]) & 0xfffffffc and rejects only
+	// when the object-reference span is larger than one 4-byte entry.
+	if (record.object_references_0x04_0x08.size() > 1U) {
 		if (source_order_result != nullptr) {
 			source_order_result->object_reference_nonempty_skip_count += 1;
 		}

@@ -1617,12 +1617,11 @@ int main() {
 							{ single_ref_owner });
 			const bool single_ref_condition = single_ref_seed_result.applied
 					&& single_ref_seed_result.projected_chain_call_count == 0
-					&& single_ref_seed_result.projected_chain_occupied_stamp_count == 1
-					&& (single_ref_seed_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) != 0U
-					&& (single_ref_seed_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_DECOR_CANDIDATE_BIT_26) == 0U
+					&& single_ref_seed_result.projected_chain_occupied_stamp_count == 0
+					&& (single_ref_seed_grid.records[0].word_0x28 & aurelion::h3maped_rmg_core::CELL_OCCUPIED_BLOCKED_BIT_27) == 0U
 					&& (single_ref_seed_grid.records[1].word_0x1c & 0x0000ffffU) == 0U;
 			if (!require(single_ref_condition,
-					"relation scan consumer did not carry the recovered empty-reference first-pass coordinate before the 0x49a318 low-word skip")) {
+					"relation scan consumer did not allow a recovered single-reference first-pass coordinate before the 0x49a318 low-word skip")) {
 				return 1;
 			}
 		}
