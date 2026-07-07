@@ -18833,6 +18833,73 @@ static const GeneratorRelationOwnerState4a218c *origin_relation_owner_for_synthe
 	return nullptr;
 }
 
+static RuntimeZoneSeedInput4a218c runtime_seed_from_synthetic_source_record_4a3a03(
+		const RuntimeZoneFootprintInput4a3a03 &synthetic_record,
+		int32_t owner_vector_index,
+		const GeneratorRelationOwnerState4a218c *origin) {
+	RuntimeZoneSeedInput4a218c seed;
+	if (origin != nullptr) {
+		seed.source_index = origin->source_index;
+		seed.source_owner_index = origin->source_owner_slot_0x1c_known
+				? origin->source_owner_slot_0x1c
+				: -1;
+		seed.source_payload.source_row = origin->source_pointer_0x00_known
+				? origin->source_pointer_source_index_0x00
+				: origin->source_index;
+		seed.source_payload.source_ownership = origin->source_pointer_type_0x04_known
+				? origin->source_pointer_type_0x04
+				: -1;
+		seed.source_payload.monster_strength_mode = origin->source_pointer_value_0x90_known
+				? origin->source_pointer_value_0x90
+				: seed.source_payload.monster_strength_mode;
+		seed.source_payload.monster_match_to_town = origin->source_pointer_monster_match_to_town_0x94_known
+				? origin->source_pointer_monster_match_to_town_0x94
+				: seed.source_payload.monster_match_to_town;
+		seed.source_payload.allowed_monster_town_mask = origin->source_pointer_allowed_monster_town_mask_0x95_known
+				? origin->source_pointer_allowed_monster_town_mask_0x95
+				: seed.source_payload.allowed_monster_town_mask;
+		if (origin->reward_guard_source_bands_0xa0_0xc0_known) {
+			seed.source_payload.treasure_band_0 = origin->reward_guard_source_bands_0xa0_0xc0[0];
+			seed.source_payload.treasure_band_1 = origin->reward_guard_source_bands_0xa0_0xc0[1];
+			seed.source_payload.treasure_band_2 = origin->reward_guard_source_bands_0xa0_0xc0[2];
+		}
+		if (origin->mine_resource_rules_0x4c_0x84_known) {
+			seed.source_payload.mines = origin->mine_resource_rules_0x4c_0x84;
+		}
+		seed.allowed_town_mask_0x41_0x49 = origin->town_choice_0x04_known
+				&& origin->town_choice_0x04 >= 0
+				&& origin->town_choice_0x04 < 9
+						? uint16_t(1U << uint32_t(origin->town_choice_0x04))
+						: 0U;
+		seed.terrain_match_to_town_0x84 = origin->source_pointer_terrain_match_to_town_0x84_known
+				? origin->source_pointer_terrain_match_to_town_0x84
+				: false;
+		seed.allowed_terrain_flags_0x85_0x8c = origin->source_pointer_allowed_terrain_flags_0x85_0x8c_known
+				? origin->source_pointer_allowed_terrain_flags_0x85_0x8c
+				: AllowedTerrainFlags0x85_0x8c {};
+	}
+	seed.runtime_zone_index = synthetic_record.runtime_zone_index >= 0
+			? synthetic_record.runtime_zone_index
+			: owner_vector_index;
+	seed.source_zone_id = -1;
+	if (synthetic_record.source_payload_owner_word_0x00 >= 0) {
+		seed.source_index = synthetic_record.source_payload_owner_word_0x00;
+		seed.source_payload.source_row = synthetic_record.source_payload_owner_word_0x00;
+	}
+	seed.h3maped_zone_word_id = owner_vector_index;
+	seed.source_base_size = std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
+	seed.selected_town_choice_index_0x49b3c1 = origin != nullptr && origin->town_choice_0x04_known
+			? origin->town_choice_0x04
+			: -1;
+	// 0x4a3d37..0x4a3d5e writes fixed synthetic treasure bands before
+	// 0x49b452 constructs the relation owner from the synthetic source record.
+	seed.source_payload.treasure_band_0 = SourceTreasureBand4a218c { 100, 1000, 5 };
+	seed.source_payload.treasure_band_1 = SourceTreasureBand4a218c { 2000, 6000, 1 };
+	seed.source_payload.treasure_band_2 = SourceTreasureBand4a218c {};
+	seed.source_payload.source_ownership = 3;
+	return seed;
+}
+
 static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_record_4a3a03(
 		const RuntimeZoneFootprintInput4a3a03 &synthetic_record,
 		int32_t owner_vector_index,
@@ -18843,6 +18910,11 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 					relation_owners,
 					synthetic_record,
 					original_same_level_runtime_zone_count);
+	const RuntimeZoneSeedInput4a218c seed =
+			runtime_seed_from_synthetic_source_record_4a3a03(
+					synthetic_record,
+					owner_vector_index,
+					origin);
 	GeneratorRelationOwnerState4a218c owner = empty_relation_owner_pointer_slot_10e4(owner_vector_index);
 	owner.runtime_zone_index = synthetic_record.runtime_zone_index;
 	owner.source_zone_id = synthetic_record.source_zone_id;
@@ -18852,23 +18924,14 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 					&& synthetic_record.source_payload_owner_word_0x00 < original_same_level_runtime_zone_count
 					? synthetic_record.source_payload_owner_word_0x00
 					: -1);
-	owner.constructor_0x49b452_known = true;
-	owner.source_pointer_0x00_known = synthetic_record.source_payload_owner_word_0x00 >= 0;
-	owner.source_pointer_source_index_0x00 = synthetic_record.source_payload_owner_word_0x00;
-	owner.source_pointer_source_span_0x08_known = synthetic_record.source_payload_random_span_limit_0x1c > 0;
-	owner.source_pointer_source_span_0x08 = std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
+	apply_relation_owner_constructor_0x49b452(owner, seed, &seed);
+	apply_relation_owner_source_order_boundary_record_0x4a3a03(owner);
 	// 0x4a3710 and 0x4a3f27 consume generated-cell +0x20 byte2 as an
 	// index into generator+0x10e4. Synthetic source records inherit source
 	// identity through +0x00, but the generated-cell owner gate must address
 	// the appended relation-owner slot, not the origin zone's byte.
 	owner.relation_owner_byte2_0x4aa9b7_known = owner_vector_index >= 0;
 	owner.relation_owner_byte2_0x4aa9b7 = owner_vector_index;
-	owner.source_pointer_type_0x04_known = true;
-	owner.source_pointer_type_0x04 = 3;
-	owner.source_owner_slot_0x1c_known = origin != nullptr && origin->source_owner_slot_0x1c_known;
-	owner.source_owner_slot_0x1c = owner.source_owner_slot_0x1c_known
-			? origin->source_owner_slot_0x1c
-			: -1;
 	owner.coordinate_triple_0x10_0x18_known = true;
 	owner.coordinate_x_0x10 = synthetic_record.x_after_bbox_rescale;
 	owner.coordinate_y_0x14 = synthetic_record.y_after_bbox_rescale;
@@ -18876,27 +18939,10 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 	owner.boundary_payload_span_limit_0x1c_known = true;
 	owner.boundary_payload_span_limit_0x1c =
 			std::max<int32_t>(1, synthetic_record.source_payload_random_span_limit_0x1c);
+	// 0x4a3c96..0x4a3c98 loads ESI with 8; 0x4a3d8f stores it into
+	// the appended relation owner +0x0c immediately after 0x49b452.
 	owner.terrain_policy_0x0c_known = true;
-	owner.terrain_policy_0x0c = 0;
-	owner.source_order_source_record_0x00_known = owner.source_pointer_0x00_known;
-	owner.source_order_source_record_0x00.source_id_0x00 =
-			synthetic_record.source_payload_owner_word_0x00;
-	owner.source_order_source_record_0x00.owner_or_type_0x04 = 3;
-	owner.source_order_source_record_0x00.relation_selector_0x1c = owner.source_owner_slot_0x1c;
-	owner.source_order_source_record_field_0x04_known = owner.source_order_source_record_0x00_known;
-	owner.reward_guard_source_bands_0xa0_0xc0_known = true;
-	owner.reward_guard_source_bands_0xa0_0xc0 = {
-		SourceTreasureBand4a218c {},
-		SourceTreasureBand4a218c {},
-		SourceTreasureBand4a218c {},
-	};
-	owner.mine_resource_rules_0x4c_0x84_known = true;
-	owner.mine_resource_rules_0x4c_0x84 = SourceMineRules4a218c {};
-	owner.scan_bounds_0x20_0x2c_known = false;
-	owner.scan_bound_low_x_0x20 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
-	owner.scan_bound_low_y_0x24 = RELATION_OWNER_SCAN_BOUND_LOW_SENTINEL_0X49B452;
-	owner.scan_bound_high_x_0x28 = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
-	owner.scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
+	owner.terrain_policy_0x0c = 8;
 	return owner;
 }
 
@@ -23603,10 +23649,10 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 		if (owner.terrain_policy_0x0c != 8) {
 			continue;
 		}
-		if (!owner.scan_bounds_0x20_0x2c_known
-				|| !owner.coordinate_triple_0x10_0x18_known
-				|| !owner.source_pointer_0x00_known
-				|| owner.source_pointer_source_index_0x00 < 0
+		if (!relation_owner_scan_bounds_non_empty_0x49b66d(owner)) {
+			continue;
+		}
+		if (!owner.coordinate_triple_0x10_0x18_known
 				|| relation_owner_byte2_for_generated_cell_gate(owner) < 0) {
 			result.blocked_reason = "0x4a4913_type8_relation_record_input_unknown";
 			return result;
@@ -23621,6 +23667,9 @@ static MaterializationBridgeRelationLoopResult4a4913 materialization_bridge_rela
 		result.call_count_0x4a4913 += 1;
 		if (owner.terrain_policy_0x0c != 8) {
 			result.non_type8_skip_count += 1;
+			continue;
+		}
+		if (!relation_owner_scan_bounds_non_empty_0x49b66d(owner)) {
 			continue;
 		}
 		const int32_t level = owner.coordinate_level_0x18;
