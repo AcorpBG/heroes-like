@@ -5991,6 +5991,42 @@ int main() {
 				"0x4a8db2 scheduler did not preserve weighted lane tie order and disable-on-false behavior")) {
 		return 1;
 	}
+	SourceObjectRecord0x4c scheduler_raw_3c_record = scheduler_weighted_record;
+	scheduler_raw_3c_record.raw_field_0x30_known = true;
+	scheduler_raw_3c_record.raw_field_0x30 = 0;
+	scheduler_raw_3c_record.raw_field_0x34_known = true;
+	scheduler_raw_3c_record.raw_field_0x34 = 0;
+	scheduler_raw_3c_record.raw_field_0x3c_known = true;
+	scheduler_raw_3c_record.raw_field_0x3c = 5;
+	SourceObjectDescriptorJoinResult4903e8 scheduler_raw_3c_join = weighted_join;
+	scheduler_raw_3c_join.source_record_copy = scheduler_raw_3c_record;
+	GeneratorObjectPrivateState scheduler_raw_3c_state;
+	aurelion::h3maped_rmg_core::H3MapedRng scheduler_raw_3c_rng;
+	scheduler_raw_3c_rng.state = 10U;
+	const SourceOrderSchedulerResult4a8db2 scheduler_raw_3c =
+			aurelion::h3maped_rmg_core::source_order_weighted_scheduler_0x4a8db2(
+					scheduler_raw_3c_state,
+					scheduler_raw_3c_join,
+					make_scheduler_pair(scheduler_raw_3c_record),
+					0,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
+					0,
+					12,
+					scheduler_raw_3c_rng);
+	if (!require(scheduler_raw_3c.replay_finished
+					&& scheduler_raw_3c.positive_density_sum == 8
+					&& scheduler_raw_3c.threshold_arg_0x18_known
+					&& scheduler_raw_3c.threshold_arg_0x18 == 101
+					&& scheduler_raw_3c.lanes.size() == size_t(4)
+					&& scheduler_raw_3c.lanes[2].density_field_offset == 0x3c
+					&& scheduler_raw_3c.lanes[2].density_field_known
+					&& scheduler_raw_3c.lanes[2].density_field_value == 5,
+				"0x4a8db2 scheduler did not preserve copied source-record raw +0x3c without caller override")) {
+		return 1;
+	}
 	GeneratorObjectPrivateState weighted_scan_state;
 	weighted_scan_state.width = 112;
 	weighted_scan_state.height = 112;
