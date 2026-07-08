@@ -1055,6 +1055,7 @@ struct SourceZonePayload4a218c {
 	SourceTreasureBand4a218c treasure_band_0;
 	SourceTreasureBand4a218c treasure_band_1;
 	SourceTreasureBand4a218c treasure_band_2;
+	std::array<uint8_t, 10> allowed_monster_town_flags_0x95 {};
 };
 
 struct RuntimeZoneSeedInput4a218c {
@@ -1374,6 +1375,7 @@ struct GeneratorRelationOwnerState4a218c {
 	bool source_pointer_monster_match_to_town_0x94 = false;
 	bool source_pointer_allowed_monster_town_mask_0x95_known = false;
 	uint16_t source_pointer_allowed_monster_town_mask_0x95 = 0U;
+	std::array<uint8_t, 10> source_pointer_allowed_monster_town_flags_0x95 {};
 	bool town_choice_0x04_known = false;
 	int32_t town_choice_0x04 = -1;
 	bool monster_town_choice_0x08_known = false;
