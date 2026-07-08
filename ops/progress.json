@@ -184,7 +184,7 @@
         "medium_seed10_setup1_object_payload_expected_byte_at_mismatch": 2
       },
       "native_cli_required_next_slice": "resolve_final_generated_cell_and_object_payload_parity_after_connection_tail",
-      "notes": "Preserved copied source-record raw +0x3c in source-order 0x4a8db2 scheduler helper; selftest covers raw +0x3c without caller override. Focused no-Godot Medium compare still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload.",
+      "notes": "Implemented source-backed TerrainPlacement class-0/simple visual-row flag-zero behavior in h3maped_rmg_core and refreshed the TerrainPlacement ledger. No-Godot focused Medium seed-10 setup-1 still reaches ordered final payload assembly but fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=50 h3maped=54; generated-object payload 11331 vs 17057, first mismatch offset 0. Runtime map output remains disabled.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Resolve the next source-owned workflow blocker upstream of 0x49b2b6: generated-cell TerrainPlacement/terrain source state still starts as water where the same-run H3MapEd tile stream starts as terrain 2, and generated-object materialization remains short. Runtime/native map output remains disabled until tile/object payload parity is owned.",
@@ -195,7 +195,7 @@
       "status": "in_progress",
       "summary": "Native RMG source-order H3MapEd alignment",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-08T01:18:02Z",
+      "updatedAt": "2026-07-08T01:48:54Z",
       "validation": {
         "id": "native-rmg-source-record-span-owner-20260707",
         "title": "Use recovered source-record owner for synthetic span fill",
@@ -14864,7 +14864,7 @@
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Preserved copied source-record raw +0x3c in source-order 0x4a8db2 scheduler helper; selftest covers raw +0x3c without caller override. Focused no-Godot Medium compare still blocks at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload.",
+  "currentSliceNotes": "Implemented source-backed TerrainPlacement class-0/simple visual-row flag-zero behavior in h3maped_rmg_core and refreshed the TerrainPlacement ledger. No-Godot focused Medium seed-10 setup-1 still reaches ordered final payload assembly but fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=50 h3maped=54; generated-object payload 11331 vs 17057, first mismatch offset 0. Runtime map output remains disabled.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
   "currentSliceUpdatedAt": "2026-07-07T16:44:42Z",
@@ -61686,7 +61686,7 @@
   ],
   "summary": "Source-backed synthetic-owner constructor alignment implemented in h3maped_rmg_core: 0x4a3dbc appended owners now run through recovered 0x49b452 construction, preserve recovered type-3 overwrite/fixed treasure bands/appended relation-vector owner byte, carry recovered post-constructor relation +0x0c = 8, and 0x4a4913 treats empty type-8 scan bounds as the recovered no-op loop case. h3maped_rmg_core_selftest passes, and focused no-Godot Medium seed10 setup1 reaches final_payload_compare. Final parity is still blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled.",
   "taskId": "10184",
-  "updatedAt": "2026-07-08T01:18:02Z",
+  "updatedAt": "2026-07-08T01:48:54Z",
   "validation": {
     "id": "native-rmg-synthetic-owner-constructor-20260707",
     "title": "Route 0x4a3dbc synthetic owners through recovered 0x49b452 construction",
