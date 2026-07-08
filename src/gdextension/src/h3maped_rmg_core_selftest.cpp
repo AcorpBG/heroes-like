@@ -1696,6 +1696,42 @@ int main() {
 					"0x4a4c8e relation boundary trigger must follow recovered level-one branch")) {
 			return 1;
 		}
+		{
+			std::vector<GeneratorRelationOwnerState4a218c> endpoint_owners(2);
+			endpoint_owners[0].runtime_zone_index = 100;
+			endpoint_owners[0].owner_vector_index = 4;
+			endpoint_owners[0].relation_owner_byte2_0x4aa9b7_known = true;
+			endpoint_owners[0].relation_owner_byte2_0x4aa9b7 = 4;
+			endpoint_owners[0].source_endpoint_vector_0xc8_0xcc_present = true;
+			endpoint_owners[0].source_endpoint_vector_0xc8_0xcc_contents_known = true;
+			endpoint_owners[0].source_endpoint_vector_0xc8_0xcc_count_known = true;
+			endpoint_owners[0].source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
+			GeneratorSourceEndpointRecordState4a1f3b endpoint_record;
+			endpoint_record.target_relation_owner_vector_index_0x00 = 7;
+			endpoint_record.target_runtime_zone_index = 200;
+			endpoint_record.wide = true;
+			endpoint_owners[0].source_endpoint_records_0xc8_0xcc.push_back(endpoint_record);
+			endpoint_owners[0].source_endpoint_vector_0xc8_0xcc_count = 1;
+
+			endpoint_owners[1].runtime_zone_index = 200;
+			endpoint_owners[1].owner_vector_index = 7;
+			endpoint_owners[1].relation_owner_byte2_0x4aa9b7_known = true;
+			endpoint_owners[1].relation_owner_byte2_0x4aa9b7 = 7;
+			endpoint_owners[1].source_endpoint_vector_0xc8_0xcc_present = true;
+			endpoint_owners[1].source_endpoint_vector_0xc8_0xcc_contents_known = true;
+			endpoint_owners[1].source_endpoint_vector_0xc8_0xcc_count_known = true;
+			endpoint_owners[1].source_endpoint_vector_0xc8_0xcc_stride_bytes = 0x1c;
+			endpoint_owners[1].source_endpoint_vector_0xc8_0xcc_count = 0;
+
+			if (!require(aurelion::h3maped_rmg_core::source_endpoint_record_lookup_0x49b3fb(endpoint_owners, 4, 7),
+						"0x49b3fb must match the current owner key plus endpoint record first dword, not runtime-zone ids")) {
+				return 1;
+			}
+			if (!require(!aurelion::h3maped_rmg_core::source_endpoint_record_lookup_0x49b3fb(endpoint_owners, 4, 200),
+						"0x49b3fb must not translate lookup keys through runtime-zone ids")) {
+				return 1;
+			}
+		}
 		if (!require(aurelion::h3maped_rmg_core::generated_cell_49abd6_action_stamp(mutable_record), "record 0x49abd6 action stamp did not mutate bit22/bit27")) {
 			return 1;
 		}

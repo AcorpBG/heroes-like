@@ -4028,6 +4028,7 @@ bool object_metadata_flag_0x598300(int32_t object_type_id, int32_t metadata_offs
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records = nullptr);
 RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_0x4ad7f7(std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t source_owner_vector_index, H3MapedRng &rng, bool descriptor_filter_fields_known = false);
 RewardGuardProjectionDriverSelectionResult4ad947 reward_guard_projection_driver_select_global_entry_0x4ad947(const std::vector<RewardGuardProjectionGlobalEntry4ad947> &global_entries_0x57c7cc_plus_0x0c, const std::vector<uint8_t> &used_flags_0x1024, H3MapedRng &rng);
+bool source_endpoint_record_lookup_0x49b3fb(const std::vector<GeneratorRelationOwnerState4a218c> &owners, int32_t owner_key, int32_t lookup_key);
 
 bool generated_cell_index_valid(const std::vector<uint32_t> &word_0x28, const std::vector<uint32_t> &word_0x24, int64_t flat);
 bool generated_cell_49a1d8_valid_record(const GeneratedCellRecord0x30 &record);
