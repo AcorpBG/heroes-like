@@ -14491,7 +14491,7 @@ static bool relation_scan_bounds_0x4a7312_non_sentinel(const GeneratorRelationOw
 static bool relation_source_order_loop_owner_eligible_0x4ac552_0x4a89da(const GeneratorRelationOwnerState4a218c &owner) {
 	if (!owner.source_order_source_record_0x00_known
 			|| !owner.source_order_source_record_field_0x04_known
-			|| owner.source_order_source_record_0x00.owner_or_type_0x04 != 3) {
+			|| owner.source_order_boundary_field_0x04 != 3) {
 		return false;
 	}
 	return !owner.terrain_policy_0x0c_known || owner.terrain_policy_0x0c != 8;
@@ -16065,7 +16065,11 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		call.scheduler_score_after = score_after;
 		call.attempted_0x4a901a = true;
 		call.source_pair_success_byte_0x3c_before = source_pair_success_byte_set ? 1 : 0;
-		if (!source_pair_success_byte_set) {
+		const bool direct_delegate_0x4a901a =
+				!source_pair_success_byte_set
+				&& lane.selected_index_0x20 == -1
+				&& context_wrapper_index_0x04 == -1;
+		if (direct_delegate_0x4a901a) {
 			call.early_direct_0x4a901a = true;
 			call.direct_candidate_vector_index_0x4a93a2 = int32_t(state.source_order_direct_candidate_vectors_0x4a93a2.size());
 			const SourceOrderObjectPlacementResult4a93a2 direct = source_order_object_placement_0x4a93a2(
@@ -16623,11 +16627,11 @@ static void apply_relation_owner_terrain_policy_0x49b53d(GeneratorRelationOwnerS
 static const RuntimeTerrainSelectionRecord49b53d *runtime_terrain_selection_for_runtime_zone_0x49b53d(const RuntimeTerrainSelectionResult49b53d *terrain_selection, int32_t runtime_zone_index);
 
 static void apply_relation_owner_source_order_boundary_record_0x4a3a03(GeneratorRelationOwnerState4a218c &owner) {
-	// 0x4a3a03 overwrites the relation-owner constructor source record +0x04
-	// with 3 before appending the owner to generator+0x10e0.
-	owner.source_order_source_record_0x00_known = true;
-	owner.source_order_source_record_0x00.owner_or_type_0x04 = 3;
+	// 0x4a3a03 carries a boundary/classification +0x04 value used by the
+	// relation-source-order loop. Keep it separate from the copied scheduler
+	// source record consumed later by 0x4a8db2.
 	owner.source_order_source_record_field_0x04_known = true;
+	owner.source_order_boundary_field_0x04 = 3;
 }
 
 CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links) {
@@ -19759,6 +19763,7 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_order_source_record_0x00 = source_record;
 	owner.source_order_source_record_field_0x04_known =
 			owner.source_order_source_record_0x00_known;
+	owner.source_order_boundary_field_0x04 = source_record.owner_or_type_0x04;
 	owner.reward_guard_source_bands_0xa0_0xc0_known = source_record_seed.source_index >= 0;
 	owner.reward_guard_source_bands_0xa0_0xc0 = {
 		source_record_seed.source_payload.treasure_band_0,
@@ -22358,6 +22363,9 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 		const int32_t anchor_y = pair.source_order_anchor_known ? pair.source_order_anchor_y_0x14 : owner->coordinate_y_0x14;
 		const int32_t anchor_level = pair.source_order_anchor_known ? pair.source_order_anchor_level_0x18 : owner->coordinate_level_0x18;
 		const int32_t lane_state = pair.source_order_lane_state_0xee4_known ? pair.source_order_lane_state_0xee4 : pair.source_lane_0x1c;
+		const int32_t source_record_identity_0x00 = pair.copied_source_catalog_index >= 0
+				? pair.copied_source_catalog_index
+				: join.source_catalog_index_0x49da08;
 		if (!pair.source_record_copy.raw_field_0x20_known
 				|| !pair.source_record_copy.raw_field_0x24_known
 				|| !pair.source_record_copy.raw_field_0x28_known
@@ -22380,7 +22388,16 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 				owner->scan_bound_high_y_0x2c,
 				pair.source_order_source_pair_key_0x0c,
 				lane_state,
-				rng);
+				rng,
+				pair.source_record_copy.raw_field_0x30_known,
+				pair.source_record_copy.raw_field_0x30,
+				pair.source_record_copy.raw_field_0x34_known,
+				pair.source_record_copy.raw_field_0x34,
+				pair.source_record_copy.raw_field_0x20_known,
+				pair.source_record_copy.raw_field_0x20,
+				pair.source_record_copy.raw_field_0x24_known,
+				pair.source_record_copy.raw_field_0x24,
+				source_record_identity_0x00);
 		state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c += 1;
 		if (direct.committed) {
 			state.generic_source_order_pair_direct_commit_count_0x4a8d2c += 1;

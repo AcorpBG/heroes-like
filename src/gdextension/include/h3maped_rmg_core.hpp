@@ -1363,6 +1363,7 @@ struct GeneratorRelationOwnerState4a218c {
 	bool source_order_source_record_0x00_known = false;
 	SourceOrderSchedulerSourceRecord4a8db2 source_order_source_record_0x00;
 	bool source_order_source_record_field_0x04_known = false;
+	int32_t source_order_boundary_field_0x04 = -1;
 	bool coordinate_triple_0x10_0x18_known = false;
 	int32_t coordinate_x_0x10 = 0;
 	int32_t coordinate_y_0x14 = 0;
