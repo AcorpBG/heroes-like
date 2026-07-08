@@ -3,8 +3,8 @@
     {
       "blocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
       "currentBlocker": "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload",
-      "currentNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
-      "currentSliceNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+      "currentNotes": "Implemented source-backed 0x4a8722 route-helper span alignment in h3maped_rmg_core: route split now consumes carried relation/source +0x1c, fails closed when that span is absent/nonpositive, uses min(source +0x1c, distance) for the 0x4e7276 modulus/half-offset, and keeps geometric displacement divided by full 0x4cc5ad distance. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10922 vs 17057; native generated objects 845; native 0x49eb8d bit26 candidates 3236 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+      "currentSliceNotes": "Implemented source-backed 0x4a8722 route-helper span alignment in h3maped_rmg_core: route split now consumes carried relation/source +0x1c, fails closed when that span is absent/nonpositive, uses min(source +0x1c, distance) for the 0x4e7276 modulus/half-offset, and keeps geometric displacement divided by full 0x4cc5ad distance. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10922 vs 17057; native generated objects 845; native 0x49eb8d bit26 candidates 3236 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
       "id": "native-rmg-source-order-h3maped-alignment-10184",
       "implementationTargets": [
         "src/gdextension/src/h3maped_rmg_core.cpp",
@@ -217,7 +217,7 @@
         "h3maped_expected_first_cell_art_row": 54
       },
       "native_cli_required_next_slice": "resolve_final_generated_cell_word_0x24_visual_row_and_object_payload_order_before_0x49b2b6_0x4ad3eb",
-      "notes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+      "notes": "Implemented source-backed 0x4a8722 route-helper span alignment in h3maped_rmg_core: route split now consumes carried relation/source +0x1c, fails closed when that span is absent/nonpositive, uses min(source +0x1c, distance) for the 0x4e7276 modulus/half-offset, and keeps geometric displacement divided by full 0x4cc5ad distance. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10922 vs 17057; native generated objects 845; native 0x49eb8d bit26 candidates 3236 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
       "remainingGap": "Resolve the next source-owned workflow blocker upstream of 0x49b2b6: native generated-cell word_0x24 now carries terrain 2/art row 53 at cell 0 where the recovered same-run H3MapEd tile stream expects terrain 2/art row 54, and generated-object payload materialization remains short. Runtime/native map output remains disabled until tile/object payload parity is owned.",
@@ -228,7 +228,7 @@
       "status": "in_progress",
       "summary": "Native RMG source-order H3MapEd alignment",
       "title": "Native RMG source-order H3MapEd alignment",
-      "updatedAt": "2026-07-08T02:19:11Z",
+      "updatedAt": "2026-07-08T03:02:17Z",
       "validation": {
         "id": "native-rmg-4ba938-selector-mask-stack-slot-20260708",
         "title": "Use recovered 0x4ba938 selector mask stack slot",
@@ -15093,14 +15093,14 @@
       }
     }
   ],
-  "currentNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+  "currentNotes": "Implemented source-backed 0x4a8722 route-helper span alignment in h3maped_rmg_core: route split now consumes carried relation/source +0x1c, fails closed when that span is absent/nonpositive, uses min(source +0x1c, distance) for the 0x4e7276 modulus/half-offset, and keeps geometric displacement divided by full 0x4cc5ad distance. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10922 vs 17057; native generated objects 845; native 0x49eb8d bit26 candidates 3236 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "native-rmg-source-order-h3maped-alignment-10184",
   "currentSliceId": "native-rmg-source-order-h3maped-alignment-10184",
-  "currentSliceNotes": "Implemented source-backed generated-cell span-gate alignment in h3maped_rmg_core: 0x4a5767 preserves the recovered single-reference first-pass coordinate path, 0x4a89da now skips candidate marking for any positive object-reference span, 0x4a8260 initial object-span bit26/bit27 classification is explicit, and 0x4a4c8e no longer spreads bit26 candidates across a 3x3 neighborhood while preserving the 3x3 0x49a932(false) clear pass. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 11082 vs 17057; native 0x49eb8d bit26 candidates 3264 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
+  "currentSliceNotes": "Implemented source-backed 0x4a8722 route-helper span alignment in h3maped_rmg_core: route split now consumes carried relation/source +0x1c, fails closed when that span is absent/nonpositive, uses min(source +0x1c, distance) for the 0x4e7276 modulus/half-offset, and keeps geometric displacement divided by full 0x4cc5ad distance. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10922 vs 17057; native generated objects 845; native 0x49eb8d bit26 candidates 3236 vs recovered H3MapEd 2284. Runtime map output remains disabled.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Native RMG source-order H3MapEd alignment",
-  "currentSliceUpdatedAt": "2026-07-08T02:54:14Z",
+  "currentSliceUpdatedAt": "2026-07-08T03:02:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -62132,7 +62132,7 @@
   ],
   "summary": "Source-backed synthetic-owner constructor alignment implemented in h3maped_rmg_core: 0x4a3dbc appended owners now run through recovered 0x49b452 construction, preserve recovered type-3 overwrite/fixed treasure bands/appended relation-vector owner byte, carry recovered post-constructor relation +0x0c = 8, and 0x4a4913 treats empty type-8 scan bounds as the recovered no-op loop case. h3maped_rmg_core_selftest passes, and focused no-Godot Medium seed10 setup1 reaches final_payload_compare. Final parity is still blocked at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload; runtime map output remains disabled.",
   "taskId": "10184",
-  "updatedAt": "2026-07-08T02:19:11Z",
+  "updatedAt": "2026-07-08T03:02:17Z",
   "validation": {
     "id": "native-rmg-4ba938-selector-mask-stack-slot-20260708",
     "title": "Use recovered 0x4ba938 selector mask stack slot",
