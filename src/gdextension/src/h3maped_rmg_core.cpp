@@ -2350,11 +2350,11 @@ static bool source_object_descriptor_primary_mask_bit_0x41e951_exact(const Sourc
 }
 
 static bool source_object_descriptor_tertiary_mask_bit_0x41e915_exact(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
-	if (x < 0 || x >= 8 || y < 0 || y >= 6 || !record.descriptor_mask_fields_0x34_0x48_known) {
+	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	const int32_t bit_index = 47 - (8 * y) - x;
-	return (record.descriptor_mask_a_0x3c_0x40 & (uint64_t(1) << uint32_t(bit_index))) != 0U;
+	return !source_object_descriptor_mask_bit_0x41e951(record, x, y)
+			|| source_object_descriptor_mask_bit_0x4268eb(record, x, y);
 }
 
 static bool source_object_descriptor_mask_bit_0x41e951(const SourceObjectRecord0x4c &record, int32_t x, int32_t y) {
@@ -2393,8 +2393,7 @@ static bool source_object_descriptor_body_mask_bit_0x41e915_native(const SourceO
 	if (x < 0 || x >= 8 || y < 0 || y >= 6) {
 		return false;
 	}
-	return !source_object_descriptor_mask_bit_0x41e951(record, x, y)
-			|| source_object_descriptor_mask_bit_0x4268eb(record, x, y);
+	return source_object_descriptor_tertiary_mask_bit_0x41e915_exact(record, x, y);
 }
 
 static std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_from_primary_mask_0x49a6f9(
@@ -11440,6 +11439,40 @@ static int32_t monster_allowed_mask_index_4a5c07(int32_t faction_index_0x00) {
 	return faction_index_0x00 + 1;
 }
 
+static std::array<uint8_t, 10> monster_town_flags_from_mask_0x95(uint16_t mask) {
+	std::array<uint8_t, 10> flags {};
+	for (int32_t index = 0; index < int32_t(flags.size()); ++index) {
+		flags[size_t(index)] = (mask & (uint16_t(1U) << uint16_t(index))) != 0U ? 1U : 0U;
+	}
+	return flags;
+}
+
+static bool monster_town_flags_any_0x95(const std::array<uint8_t, 10> &flags) {
+	for (uint8_t flag : flags) {
+		if (flag != 0U) {
+			return true;
+		}
+	}
+	return false;
+}
+
+static std::array<uint8_t, 10> source_payload_monster_town_flags_0x95(const SourceZonePayload4a218c &payload) {
+	if (monster_town_flags_any_0x95(payload.allowed_monster_town_flags_0x95)) {
+		return payload.allowed_monster_town_flags_0x95;
+	}
+	return monster_town_flags_from_mask_0x95(payload.allowed_monster_town_mask);
+}
+
+static uint16_t monster_town_mask_from_flags_0x95(const std::array<uint8_t, 10> &flags) {
+	uint16_t mask = 0U;
+	for (int32_t index = 0; index < int32_t(flags.size()); ++index) {
+		if (flags[size_t(index)] != 0U) {
+			mask |= uint16_t(1U) << uint16_t(index);
+		}
+	}
+	return mask;
+}
+
 static bool monster_allowed_mask_from_relation_4a5c07(
 		const GeneratorRelationOwnerState4a218c &relation,
 		std::array<bool, 10> &allowed_mask,
@@ -11467,7 +11500,7 @@ static bool monster_allowed_mask_from_relation_4a5c07(
 	}
 	for (int32_t index = 0; index < int32_t(allowed_mask.size()); ++index) {
 		allowed_mask[size_t(index)] =
-				(relation.source_pointer_allowed_monster_town_mask_0x95 & (uint16_t(1U) << uint16_t(index))) != 0U;
+				relation.source_pointer_allowed_monster_town_flags_0x95[size_t(index)] != 0U;
 	}
 	return true;
 }
@@ -11769,6 +11802,8 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		return result;
 	}
 
+	SourceObjectResolverState4af785 &resolver_state =
+			ensure_source_object_resolver_state_4af785(state);
 	const int32_t selected_loop_limit =
 			std::min<int32_t>(int32_t(best_candidates.size()), (result.frontier_candidate_count + 39) / 40);
 	for (int32_t loop_index = 0; loop_index < selected_loop_limit; ++loop_index) {
@@ -11783,8 +11818,10 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		result.selected_loop_count += 1;
 
 		const ProjectedCellChainResult4a5a23 source_chain =
-				projected_cell_chain_no_object_4a5a23(
-						state.generated_cell_buffer,
+				projected_cell_chain_with_object_branch_4a5a23(
+						state,
+						resolver_state,
+						rng,
 						selected.source_x,
 						selected.source_y,
 						selected.level,
@@ -11802,8 +11839,10 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		result.local_vector_append_count_0x404 += 1;
 
 		const ProjectedCellChainResult4a5a23 target_chain =
-				projected_cell_chain_no_object_4a5a23(
-						state.generated_cell_buffer,
+				projected_cell_chain_with_object_branch_4a5a23(
+						state,
+						resolver_state,
+						rng,
 						selected.neighbor_x,
 						selected.neighbor_y,
 						selected.level,
@@ -19282,6 +19321,13 @@ static RuntimeZoneSeedInput4a218c runtime_seed_from_synthetic_source_record_4a3a
 		seed.source_payload.allowed_monster_town_mask = origin->source_pointer_allowed_monster_town_mask_0x95_known
 				? origin->source_pointer_allowed_monster_town_mask_0x95
 				: seed.source_payload.allowed_monster_town_mask;
+		seed.source_payload.allowed_monster_town_flags_0x95 =
+				origin->source_pointer_allowed_monster_town_flags_0x95;
+		if (seed.source_payload.allowed_monster_town_mask == 0U
+				&& monster_town_flags_any_0x95(seed.source_payload.allowed_monster_town_flags_0x95)) {
+			seed.source_payload.allowed_monster_town_mask =
+					monster_town_mask_from_flags_0x95(seed.source_payload.allowed_monster_town_flags_0x95);
+		}
 		if (origin->reward_guard_source_bands_0xa0_0xc0_known) {
 			seed.source_payload.treasure_band_0 = origin->reward_guard_source_bands_0xa0_0xc0[0];
 			seed.source_payload.treasure_band_1 = origin->reward_guard_source_bands_0xa0_0xc0[1];
@@ -19939,7 +19985,10 @@ static void apply_relation_owner_constructor_0x49b452(GeneratorRelationOwnerStat
 	owner.source_pointer_monster_match_to_town_0x94_known = source_record.source_id_0x00 >= 0;
 	owner.source_pointer_monster_match_to_town_0x94 = source_record_seed.source_payload.monster_match_to_town;
 	owner.source_pointer_allowed_monster_town_mask_0x95_known = source_record.source_id_0x00 >= 0;
-	owner.source_pointer_allowed_monster_town_mask_0x95 = source_record_seed.source_payload.allowed_monster_town_mask;
+	owner.source_pointer_allowed_monster_town_flags_0x95 =
+			source_payload_monster_town_flags_0x95(source_record_seed.source_payload);
+	owner.source_pointer_allowed_monster_town_mask_0x95 =
+			monster_town_mask_from_flags_0x95(owner.source_pointer_allowed_monster_town_flags_0x95);
 	const int32_t town_choice = post_town_choice_seed != nullptr ? post_town_choice_seed->selected_town_choice_index_0x49b3c1 : seed.selected_town_choice_index_0x49b3c1;
 	owner.town_choice_0x04_known = post_town_choice_seed != nullptr || town_choice >= 0;
 	owner.town_choice_0x04 = town_choice;
