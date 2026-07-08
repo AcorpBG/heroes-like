@@ -14691,8 +14691,13 @@ static bool relation_source_order_route_helper_0x4a8722(
 		int32_t end_y,
 		int32_t level,
 		int32_t relation_owner_byte2,
+		int32_t source_random_span_limit_0x1c,
 		H3MapedRng &rng,
 		RelationSourceOrderScanResult4a89da &result) {
+	if (source_random_span_limit_0x1c <= 0) {
+		result.blocked_reason = "0x4a8722_source_random_span_limit_0x1c_missing_or_nonpositive";
+		return false;
+	}
 	std::vector<RelationOwnerLocalVectorRecord0x404> pending;
 	pending.push_back(RelationOwnerLocalVectorRecord0x404 { start_x, start_y });
 	pending.push_back(RelationOwnerLocalVectorRecord0x404 { end_x, end_y });
@@ -14722,8 +14727,9 @@ static bool relation_source_order_route_helper_0x4a8722(
 		const int32_t dyneg_p2_to_p1 = p2.y - p1.y;
 		const int32_t distance = relation_source_order_route_distance_0x4cc5ad(dx_p2_to_p1, dyneg_p2_to_p1);
 		if (distance > 1) {
+			const int32_t split_limit_0x1c = std::min<int32_t>(source_random_span_limit_0x1c, distance);
 			const int32_t split_rng_value = rng.next();
-			const int32_t offset = (split_rng_value % distance) - (distance / 2);
+			const int32_t offset = (split_rng_value % split_limit_0x1c) - (split_limit_0x1c / 2);
 			mid.x += (offset * dyneg_p2_to_p1) / distance;
 			mid.y += (offset * dx_p2_to_p1) / distance;
 		}
@@ -14747,6 +14753,10 @@ static bool relation_source_order_route_pair_process_0x4a8722(
 	const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
 	if (relation_owner_byte2 < 0) {
 		result.blocked_reason = "0x4a89da_0x404_route_owner_byte2_unknown_before_0x4a8722";
+		return false;
+	}
+	if (!owner.boundary_payload_span_limit_0x1c_known || owner.boundary_payload_span_limit_0x1c <= 0) {
+		result.blocked_reason = "0x4a89da_0x404_route_source_random_span_limit_0x1c_missing_before_0x4a8722";
 		return false;
 	}
 	int32_t current_x = record_0x404.x;
@@ -14806,6 +14816,7 @@ static bool relation_source_order_route_pair_process_0x4a8722(
 			current_y,
 			level,
 			relation_owner_byte2,
+			owner.boundary_payload_span_limit_0x1c,
 			rng,
 			result);
 }
