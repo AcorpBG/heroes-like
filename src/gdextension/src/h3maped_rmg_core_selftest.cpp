@@ -5120,12 +5120,13 @@ int main() {
 						7,
 						true,
 						split_owner_rng);
-		if (!require(split_owner_result.applied
-						&& split_owner_result.committed
-						&& split_owner_result.relation_owner_byte2 == 4
-						&& split_owner_result.owner_byte_reject_count == 0
-						&& split_owner_result.accepted_candidate_count == 1,
-					"0x4aa9b7/0x4aa603 owner gate used source-pointer index instead of recovered relation-leading owner byte")) {
+		if (!require(!split_owner_result.applied
+						&& !split_owner_result.committed
+						&& split_owner_result.relation_owner_byte2 == 9
+						&& split_owner_result.owner_byte_reject_count == 1
+						&& split_owner_result.accepted_candidate_count == 0
+						&& split_owner_result.blocked_reason == "0x4aa9b7_candidate_vector_empty_after_score_and_0x4aa603_filters",
+					"0x4aa9b7/0x4aa603 owner gate did not use the recovered relation+0x00 source-pointer first dword")) {
 			return 1;
 		}
 	}
