@@ -5830,10 +5830,11 @@ int main() {
 	const int32_t weighted_raw_scan_high_y = 7;
 	const int32_t weighted_adjusted_candidate_x = weighted_raw_scan_low_x + dungeon_town->descriptor_width_0x34;
 	const int32_t weighted_adjusted_candidate_y = weighted_raw_scan_low_y + dungeon_town->descriptor_height_0x38;
-	RuntimeZoneSeedInput4a218c scheduler_source_zone;
-	scheduler_source_zone.source_index = 5;
-	scheduler_source_zone.source_owner_index = 2;
-	scheduler_source_zone.source_payload.source_ownership = 1;
+		RuntimeZoneSeedInput4a218c scheduler_source_zone;
+		scheduler_source_zone.source_index = 5;
+		scheduler_source_zone.source_bucket = 4;
+		scheduler_source_zone.source_owner_index = 2;
+		scheduler_source_zone.source_payload.source_ownership = 1;
 	scheduler_source_zone.source_payload.player_towns.min_towns = 3;
 	scheduler_source_zone.source_payload.player_towns.min_castles = 4;
 	scheduler_source_zone.source_payload.player_towns.town_density = 5;
@@ -5842,11 +5843,11 @@ int main() {
 	scheduler_source_zone.source_payload.neutral_towns.min_castles = 8;
 	scheduler_source_zone.source_payload.neutral_towns.town_density = 9;
 	scheduler_source_zone.source_payload.neutral_towns.castle_density = 10;
-	const SourceOrderSchedulerSourceRecord4a8db2 scheduler_source_record =
-			aurelion::h3maped_rmg_core::source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(scheduler_source_zone);
-	if (!require(scheduler_source_record.source_id_0x00 == 5
-					&& scheduler_source_record.owner_or_type_0x04 == 1
-					&& scheduler_source_record.relation_selector_0x1c == 2
+		const SourceOrderSchedulerSourceRecord4a8db2 scheduler_source_record =
+				aurelion::h3maped_rmg_core::source_order_scheduler_source_record_from_runtime_zone_0x4a8db2(scheduler_source_zone);
+		if (!require(scheduler_source_record.source_id_0x00 == 5
+						&& scheduler_source_record.owner_or_type_0x04 == 4
+						&& scheduler_source_record.relation_selector_0x1c == 2
 					&& scheduler_source_record.field_0x20_known && scheduler_source_record.field_0x20 == 3
 					&& scheduler_source_record.field_0x24_known && scheduler_source_record.field_0x24 == 4
 					&& scheduler_source_record.field_0x28_known && scheduler_source_record.field_0x28 == 5
@@ -5855,9 +5856,9 @@ int main() {
 					&& scheduler_source_record.field_0x34_known && scheduler_source_record.field_0x34 == 8
 					&& scheduler_source_record.field_0x38_known && scheduler_source_record.field_0x38 == 9
 					&& scheduler_source_record.field_0x3c_known && scheduler_source_record.field_0x3c == 10,
-				"0x4a8db2 runtime-zone scheduler source record did not map recovered source town/castle fields")) {
-		return 1;
-	}
+					"0x4a8db2 runtime-zone scheduler source record did not map recovered source bucket and town/castle fields")) {
+			return 1;
+		}
 	RuntimeZoneSeedInput4a218c neutral_scheduler_source_zone;
 	neutral_scheduler_source_zone.source_index = 2;
 	neutral_scheduler_source_zone.source_owner_index = 2;

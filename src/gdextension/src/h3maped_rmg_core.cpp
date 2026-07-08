@@ -2953,9 +2953,15 @@ SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from
 	record.source_id_0x00 = runtime_zone.source_index >= 0
 			? runtime_zone.source_index
 			: (runtime_zone.source_zone_id > 0 ? runtime_zone.source_zone_id - 1 : payload.source_row);
-	record.owner_or_type_0x04 = payload.source_ownership >= 0
-			? payload.source_ownership
-			: (assigned_player_source ? 0 : 2);
+	if (runtime_zone.source_bucket >= 0) {
+		record.owner_or_type_0x04 = runtime_zone.source_bucket;
+	} else if (payload.source_ownership == 3) {
+		record.owner_or_type_0x04 = 3;
+	} else if (payload.source_ownership >= 0 || assigned_player_source) {
+		record.owner_or_type_0x04 = 0;
+	} else {
+		record.owner_or_type_0x04 = 2;
+	}
 	record.relation_selector_0x1c =
 			(runtime_zone.source_owner_index >= 0 && (explicit_non_neutral_source || assigned_player_source))
 			? runtime_zone.source_owner_index
