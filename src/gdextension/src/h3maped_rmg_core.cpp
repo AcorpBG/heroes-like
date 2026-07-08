@@ -14496,7 +14496,7 @@ static bool relation_source_order_loop_owner_eligible_0x4ac552_0x4a89da(const Ge
 	return !owner.terrain_policy_0x0c_known || owner.terrain_policy_0x0c != 8;
 }
 
-static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(
+static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a5767(
 		const GeneratedCellRecord0x30 &record,
 		RelationSourceOrderScanResult4a89da *source_order_result = nullptr) {
 	if (!record.object_reference_vector_contents_known) {
@@ -14505,9 +14505,29 @@ static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a5
 		}
 		return false;
 	}
-	// 0x4a5767 tests ([+0x08] - [+0x04]) & 0xfffffffc and rejects only
-	// when the object-reference span is larger than one 4-byte entry.
+	// The recovered 0x4a5767 first-pass coordinate capture allows the
+	// single-reference low-word skip path covered by the core selftest.
 	if (record.object_references_0x04_0x08.size() > 1U) {
+		if (source_order_result != nullptr) {
+			source_order_result->object_reference_nonempty_skip_count += 1;
+		}
+		return false;
+	}
+	return true;
+}
+
+static bool generated_cell_object_reference_span_allows_relation_candidate_0x4a89da(
+		const GeneratedCellRecord0x30 &record,
+		RelationSourceOrderScanResult4a89da *source_order_result = nullptr) {
+	if (!record.object_reference_vector_contents_known) {
+		if (source_order_result != nullptr) {
+			source_order_result->object_reference_unknown_count += 1;
+		}
+		return false;
+	}
+	// 0x4a89da tests ([+0x08] - [+0x04]) & 0xfffffffc and skips the
+	// 0x49aa63 candidate mark when the aligned span is positive.
+	if (!record.object_references_0x04_0x08.empty()) {
 		if (source_order_result != nullptr) {
 			source_order_result->object_reference_nonempty_skip_count += 1;
 		}
@@ -14530,7 +14550,7 @@ static bool relation_source_order_scan_prefix_mutate_cell_0x4a89da(GeneratedCell
 	if (record.word_0x1c != before_0x1c) {
 		result.low_word_reset_count += 1;
 	}
-	if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(record, &result)) {
+	if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a89da(record, &result)) {
 		return false;
 	}
 	result.candidate_mark_attempt_count_0x49aa63 += 1;
@@ -14952,7 +14972,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 				if (terrain_class == 8U && owner.terrain_policy_0x0c != 8) {
 					continue;
 				}
-				if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767_0x4a89da(record)) {
+				if (!generated_cell_object_reference_span_allows_relation_candidate_0x4a5767(record)) {
 					continue;
 				}
 				// 0x4a5892..0x4a58a0 copies the candidate coordinate before
@@ -22450,9 +22470,9 @@ struct RouteFreeCellPhaseResult4a8260 {
 	std::string blocked_reason;
 	uint32_t rng_state_before = 0U;
 	uint32_t rng_state_after = 0U;
-	int32_t route_scan_cell_count = 0;
-	int32_t route_scan_empty_object_vector_count = 0;
-	int32_t route_scan_nonempty_object_vector_count = 0;
+	int32_t initial_span_classification_count_0x4a8260 = 0;
+	int32_t initial_span_candidate_write_count_0x4a8260 = 0;
+	int32_t initial_span_occupied_write_count_0x4a8260 = 0;
 	int32_t route_stamp_call_count_0x49a85d = 0;
 	int32_t route_cut_call_count_0x4a80dc = 0;
 	int32_t final_sweep_call_count_0x49a962 = 0;
@@ -22472,6 +22492,19 @@ static bool generated_cell_record_input_known_for_route_0x4a8260(const Generated
 
 static bool generated_cell_record_object_vector_empty_0x4a8260(const GeneratedCellRecord0x30 &record) {
 	return record.object_reference_vector_contents_known && record.object_references_0x04_0x08.empty();
+}
+
+static bool route_initial_span_classification_write_0x4a8260(GeneratedCellRecord0x30 &record, bool candidate_for_empty_span) {
+	if (!record.word_0x28_known || !record.word_0x2c_known || (record.word_0x2c & 0x1U) != 0U) {
+		return false;
+	}
+	if (candidate_for_empty_span) {
+		record.word_0x28 = (record.word_0x28 & ~CELL_OCCUPIED_BLOCKED_BIT_27) | CELL_DECOR_CANDIDATE_BIT_26;
+	} else {
+		record.word_0x28 = (record.word_0x28 & ~CELL_DECOR_CANDIDATE_BIT_26) | CELL_OCCUPIED_BLOCKED_BIT_27;
+	}
+	sync_generated_cell_byte_0x2b_from_word28(record);
+	return true;
 }
 
 static bool route_point_in_bounds_0x4a8260(const GeneratedCellRecordGrid0x30 &grid, const RoutePoint4a8260 &point) {
@@ -22710,16 +22743,14 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 	result.input_known = true;
 
 	for (GeneratedCellRecord0x30 &record : grid.records) {
-		result.route_scan_cell_count += 1;
-		if ((record.word_0x2c & 0x1U) != 0U) {
-			continue;
-		}
-		if (generated_cell_record_object_vector_empty_0x4a8260(record)) {
-			result.route_scan_empty_object_vector_count += 1;
-			generated_cell_49aa63(record, true);
-		} else {
-			result.route_scan_nonempty_object_vector_count += 1;
-			generated_cell_49a932(record, true);
+		result.initial_span_classification_count_0x4a8260 += 1;
+		const bool candidate_for_empty_span = generated_cell_record_object_vector_empty_0x4a8260(record);
+		if (route_initial_span_classification_write_0x4a8260(record, candidate_for_empty_span)) {
+			if (candidate_for_empty_span) {
+				result.initial_span_candidate_write_count_0x4a8260 += 1;
+			} else {
+				result.initial_span_occupied_write_count_0x4a8260 += 1;
+			}
 		}
 	}
 
@@ -22879,21 +22910,8 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				}
 				result.candidate_boundary_trigger_count_0x4a4c8e += 1;
 				generated_cell_49aa63(record, true);
-				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
-					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
-						const int64_t candidate_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
-						if (candidate_flat < 0 || candidate_flat >= int64_t(grid.records.size())) {
-							continue;
-						}
-						GeneratedCellRecord0x30 &candidate = grid.records[size_t(candidate_flat)];
-						if ((candidate.word_0x24 & 0x3fU) == 8U) {
-							continue;
-						}
-						if (!generated_cell_record_object_vector_empty_0x4a8260(candidate)) {
-							continue;
-						}
-						generated_cell_49aa63(candidate, true);
-					}
+				if ((record.word_0x24 & 0x3fU) != 8U && generated_cell_record_object_vector_empty_0x4a8260(record)) {
+					generated_cell_49aa63(record, true);
 				}
 				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
 					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
