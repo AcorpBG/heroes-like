@@ -15403,23 +15403,98 @@ static void append_road_coordinate_record_0x14b0_0x4ae1fd(GeneratorObjectPrivate
 	state.road_coordinate_vector_append_count_0x4ae1fd = int32_t(state.road_coordinate_records_0x14b0.size());
 }
 
-static bool source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+static SourceOrderPostCommitRouteState4a93a2 source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
 		GeneratorObjectPrivateState &state,
 		const SourceObjectDescriptorJoinResult4903e8 &join,
 		int32_t selected_x,
 		int32_t selected_y,
 		int32_t selected_level,
 		uint32_t source_callsite) {
+	SourceOrderPostCommitRouteState4a93a2 result;
 	const int32_t adjusted_x = selected_x - join.descriptor.source_cell_x_0x2c;
 	const int32_t adjusted_y = selected_y - join.descriptor.source_cell_y_0x30;
+	result.source_record_route_fields_known_0x30_0x38 = true;
+	result.source_record_route_x_0x30 = adjusted_x;
+	result.source_record_route_y_0x34 = adjusted_y;
+	result.source_record_route_level_0x38 = selected_level;
+	result.source_record_success_byte_written_0x3c = true;
+	result.source_callsite = source_callsite;
 	append_road_coordinate_record_0x14b0_0x4ae1fd(state, adjusted_x, adjusted_y, selected_level, source_callsite);
+	result.road_coordinate_appended_0x14b0 = true;
 
 	const int64_t flat = cell_index(state.width, state.height, adjusted_x, adjusted_y + 1, selected_level);
 	if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
-		return true;
+		return result;
 	}
-	generated_cell_49a932(state.generated_cell_buffer.records[size_t(flat)], true);
-	return true;
+	result.projected_y_plus_one_in_bounds = true;
+	result.projected_y_plus_one_stamp_attempted_0x49a932 = true;
+	result.projected_x = adjusted_x;
+	result.projected_y_plus_one = adjusted_y + 1;
+	result.projected_level = selected_level;
+	result.projected_y_plus_one_stamp_applied_0x49a932 =
+			generated_cell_49a932(state.generated_cell_buffer.records[size_t(flat)], true);
+	return result;
+}
+
+static void apply_source_order_post_commit_route_to_owner_0x4a93a2(
+		GeneratorRelationOwnerState4a218c &owner,
+		const SourceOrderPostCommitRouteState4a93a2 &route_state) {
+	if (!route_state.source_record_route_fields_known_0x30_0x38) {
+		return;
+	}
+	owner.source_order_post_commit_route_fields_known_0x30_0x38 = true;
+	owner.source_order_post_commit_route_x_0x30 = route_state.source_record_route_x_0x30;
+	owner.source_order_post_commit_route_y_0x34 = route_state.source_record_route_y_0x34;
+	owner.source_order_post_commit_route_level_0x38 = route_state.source_record_route_level_0x38;
+	if (route_state.source_record_success_byte_written_0x3c) {
+		owner.byte_0x3c_known = true;
+		owner.byte_0x3c = 1U;
+	}
+}
+
+static void apply_source_order_post_commit_route_to_pair_0xedc(
+		SourceObjectResolverSourcePair4af785 &pair,
+		const SourceOrderPostCommitRouteState4a93a2 &route_state) {
+	if (!route_state.source_record_route_fields_known_0x30_0x38) {
+		return;
+	}
+	pair.source_order_post_commit_route_fields_known_0x30_0x38 = true;
+	pair.source_order_post_commit_route_x_0x30 = route_state.source_record_route_x_0x30;
+	pair.source_order_post_commit_route_y_0x34 = route_state.source_record_route_y_0x34;
+	pair.source_order_post_commit_route_level_0x38 = route_state.source_record_route_level_0x38;
+	if (route_state.source_record_success_byte_written_0x3c) {
+		pair.source_pair_success_byte_0x3c_known = true;
+		pair.source_pair_success_byte_0x3c = 1;
+	}
+}
+
+static const SourceOrderPostCommitRouteState4a93a2 *post_commit_route_from_dispatcher_0x4a8d2c(
+		const SourceOrderObjectDispatcherResult4a8d2c &dispatcher) {
+	if (!dispatcher.committed
+			|| dispatcher.selected_branch_index < 0
+			|| dispatcher.selected_branch_index >= int32_t(dispatcher.branches.size())) {
+		return nullptr;
+	}
+	const SourceOrderObjectPlacementResult4a93a2 &placement =
+			dispatcher.branches[size_t(dispatcher.selected_branch_index)].placement_0x4a93a2;
+	if (!placement.post_commit_route_state_0x4a93a2.source_record_route_fields_known_0x30_0x38) {
+		return nullptr;
+	}
+	return &placement.post_commit_route_state_0x4a93a2;
+}
+
+static SourceOrderPostCommitRouteState4a93a2 post_commit_route_from_scheduler_0x4a8db2(
+		const SourceOrderSchedulerResult4a8db2 &scheduler) {
+	SourceOrderPostCommitRouteState4a93a2 route_state;
+	if (!scheduler.source_pair_post_commit_route_fields_known_0x30_0x38) {
+		return route_state;
+	}
+	route_state.source_record_route_fields_known_0x30_0x38 = true;
+	route_state.source_record_route_x_0x30 = scheduler.source_pair_post_commit_route_x_0x30;
+	route_state.source_record_route_y_0x34 = scheduler.source_pair_post_commit_route_y_0x34;
+	route_state.source_record_route_level_0x38 = scheduler.source_pair_post_commit_route_level_0x38;
+	route_state.source_record_success_byte_written_0x3c = scheduler.source_pair_success_byte_0x3c_final != 0;
+	return route_state;
 }
 
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record) {
@@ -15646,13 +15721,15 @@ SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(Ge
 	placement.committed_through_0x4a54a7 = result.committed;
 	placement.object_vector_count_after = result.commit_0x4a93a2_0x4a54a7.commit_0x4a54a7.object_vector_count_after;
 	if (result.committed) {
-		source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+		result.post_commit_route_state_0x4a93a2 =
+				source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
 				state,
 				join,
 				result.object_record_0x4a93a2.x,
 				result.object_record_0x4a93a2.y,
 				result.object_record_0x4a93a2.level,
 				0x004a95afU);
+		placement.post_commit_route_state_0x4a93a2 = result.post_commit_route_state_0x4a93a2;
 		placement.source_pair_success_byte_0x3c_set = true;
 		state.source_order_direct_commit_count_0x4a93a2 += 1;
 		if (!state.object_records_0xec4_ecc.empty()) {
@@ -15901,13 +15978,15 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.committed_through_0x4a54a7 = result.committed;
 	vector_state.object_vector_count_after = result.commit_0x4a93a2_0x4a901a_0x4a54a7.commit_0x4a54a7.object_vector_count_after;
 	if (result.committed) {
-		source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
+		result.post_commit_route_state_0x4a901a =
+				source_order_post_commit_coordinate_and_block_0x4a93a2_0x4a901a(
 				state,
 				join,
 				result.weighted_record_0x4a93a2.x,
 				result.weighted_record_0x4a93a2.y,
 				result.weighted_record_0x4a93a2.level,
 				0x004a9347U);
+		vector_state.post_commit_route_state_0x4a901a = result.post_commit_route_state_0x4a901a;
 		state.weighted_candidate_commit_count_0x4a901a += 1;
 	} else {
 		result.blocked_reason = result.commit_0x4a93a2_0x4a901a_0x4a54a7.blocked_reason.empty()
@@ -16095,10 +16174,13 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 		call.scheduler_score_after = score_after;
 		call.attempted_0x4a901a = true;
 		call.source_pair_success_byte_0x3c_before = source_pair_success_byte_set ? 1 : 0;
+		// Recovered 0x4a901a direct-delegate sample reaches 0x4a907b
+		// with selector -1 and enabled byte 1. The wrapper context is
+		// forwarded to 0x4a93a2; it is not a suppressing condition.
 		const bool direct_delegate_0x4a901a =
 				!source_pair_success_byte_set
 				&& lane.selected_index_0x20 == -1
-				&& context_wrapper_index_0x04 == -1;
+				&& lane.enabled_low_byte_0x24;
 		if (direct_delegate_0x4a901a) {
 			call.early_direct_0x4a901a = true;
 			call.direct_candidate_vector_index_0x4a93a2 = int32_t(state.source_order_direct_candidate_vectors_0x4a93a2.size());
@@ -16126,6 +16208,15 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 				source_pair_success_byte_set = true;
 				result.source_pair_success_byte_0x3c_final = 1;
 				result.early_direct_call_count_0x4a901a += 1;
+				if (direct.post_commit_route_state_0x4a93a2.source_record_route_fields_known_0x30_0x38) {
+					result.source_pair_post_commit_route_fields_known_0x30_0x38 = true;
+					result.source_pair_post_commit_route_x_0x30 =
+							direct.post_commit_route_state_0x4a93a2.source_record_route_x_0x30;
+					result.source_pair_post_commit_route_y_0x34 =
+							direct.post_commit_route_state_0x4a93a2.source_record_route_y_0x34;
+					result.source_pair_post_commit_route_level_0x38 =
+							direct.post_commit_route_state_0x4a93a2.source_record_route_level_0x38;
+				}
 			}
 			call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
 			lane.committed_call_count += direct.committed ? 1 : 0;
@@ -16151,11 +16242,24 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 				0U,
 				lane.enabled_low_byte_0x24,
 				source_record.source_id_0x00);
-		call.returned_nonzero = scan.committed;
-		call.committed = scan.committed;
-		call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
-		call.blocked_reason = scan.blocked_reason;
-		call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
+			call.returned_nonzero = scan.committed;
+			call.committed = scan.committed;
+			call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
+			call.blocked_reason = scan.blocked_reason;
+			if (scan.committed) {
+				source_pair_success_byte_set = true;
+				result.source_pair_success_byte_0x3c_final = 1;
+				if (scan.post_commit_route_state_0x4a901a.source_record_route_fields_known_0x30_0x38) {
+					result.source_pair_post_commit_route_fields_known_0x30_0x38 = true;
+					result.source_pair_post_commit_route_x_0x30 =
+							scan.post_commit_route_state_0x4a901a.source_record_route_x_0x30;
+					result.source_pair_post_commit_route_y_0x34 =
+							scan.post_commit_route_state_0x4a901a.source_record_route_y_0x34;
+					result.source_pair_post_commit_route_level_0x38 =
+							scan.post_commit_route_state_0x4a901a.source_record_route_level_0x38;
+				}
+			}
+			call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
 		lane.committed_call_count += scan.committed ? 1 : 0;
 		result.committed_call_count += scan.committed ? 1 : 0;
 		result.calls.push_back(call);
@@ -22055,15 +22159,23 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						owner.source_order_source_record_0x00.field_0x24_known,
 						owner.source_order_source_record_0x00.field_0x24,
 						owner.source_order_source_record_0x00.source_id_0x00);
-		state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c += 1;
-		if (direct.committed) {
-			owner.byte_0x3c_known = true;
-			owner.byte_0x3c = 1U;
-			if (type98_pair != nullptr) {
-				type98_pair->source_pair_success_byte_0x3c_known = true;
-				type98_pair->source_pair_success_byte_0x3c = 1;
-			}
-			state.source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c += 1;
+			state.source_order_relation_pointer_loop_direct_replay_count_0x4a8d2c += 1;
+			if (direct.committed) {
+				if (const SourceOrderPostCommitRouteState4a93a2 *route_state =
+								post_commit_route_from_dispatcher_0x4a8d2c(direct)) {
+					apply_source_order_post_commit_route_to_owner_0x4a93a2(owner, *route_state);
+					if (type98_pair != nullptr) {
+						apply_source_order_post_commit_route_to_pair_0xedc(*type98_pair, *route_state);
+					}
+				} else {
+					owner.byte_0x3c_known = true;
+					owner.byte_0x3c = 1U;
+				}
+				if (type98_pair != nullptr) {
+					type98_pair->source_pair_success_byte_0x3c_known = true;
+					type98_pair->source_pair_success_byte_0x3c = 1;
+				}
+				state.source_order_relation_pointer_loop_direct_commit_count_0x4a8d2c += 1;
 		}
 		PreparedRelationSourceOrderReplay4ac552 prepared;
 		prepared.owner_index = owner_index;
@@ -22124,18 +22236,26 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						true,
 						owner.coordinate_x_0x10,
 						owner.coordinate_y_0x14);
-		if (scheduler.source_pair_success_byte_0x3c_known) {
-			owner.byte_0x3c_known = true;
-			owner.byte_0x3c = scheduler.source_pair_success_byte_0x3c_final != 0 ? 1U : 0U;
-			if (type98_pair != nullptr) {
-				type98_pair->source_pair_success_byte_0x3c_known = true;
-				type98_pair->source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;
+			if (scheduler.source_pair_success_byte_0x3c_known) {
+				owner.byte_0x3c_known = true;
+				owner.byte_0x3c = scheduler.source_pair_success_byte_0x3c_final != 0 ? 1U : 0U;
+				if (type98_pair != nullptr) {
+					type98_pair->source_pair_success_byte_0x3c_known = true;
+					type98_pair->source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;
+				}
 			}
+			const SourceOrderPostCommitRouteState4a93a2 scheduler_route =
+					post_commit_route_from_scheduler_0x4a8db2(scheduler);
+			if (scheduler_route.source_record_route_fields_known_0x30_0x38) {
+				apply_source_order_post_commit_route_to_owner_0x4a93a2(owner, scheduler_route);
+				if (type98_pair != nullptr) {
+					apply_source_order_post_commit_route_to_pair_0xedc(*type98_pair, scheduler_route);
+				}
+			}
+			state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 += 1;
+			state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 +=
+					state.source_order_scheduler_commit_count_0x4a8db2 - before_scheduler_commit_count;
 		}
-		state.source_order_relation_pointer_loop_scheduler_replay_count_0x4a8db2 += 1;
-		state.source_order_relation_pointer_loop_scheduler_commit_count_0x4a8db2 +=
-				state.source_order_scheduler_commit_count_0x4a8db2 - before_scheduler_commit_count;
-	}
 	preserve_source_pair_vector_edc(state, type98_descriptor_state);
 
 	// H3MapEd's recovered scan-bound users treat an owner with no cells as no
@@ -22433,13 +22553,19 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 				pair.source_record_copy.raw_field_0x24_known,
 				pair.source_record_copy.raw_field_0x24,
 				source_record_identity_0x00);
-		state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c += 1;
-		if (direct.committed) {
-			state.generic_source_order_pair_direct_commit_count_0x4a8d2c += 1;
-			pair.source_pair_success_byte_0x3c_known = true;
-			pair.source_pair_success_byte_0x3c = 1;
-			state.source_pair_records_edc[index] = pair;
-		}
+			state.generic_source_order_pair_direct_dispatch_count_0x4a8d2c += 1;
+			if (direct.committed) {
+				state.generic_source_order_pair_direct_commit_count_0x4a8d2c += 1;
+				if (const SourceOrderPostCommitRouteState4a93a2 *route_state =
+								post_commit_route_from_dispatcher_0x4a8d2c(direct)) {
+					apply_source_order_post_commit_route_to_owner_0x4a93a2(*owner, *route_state);
+					apply_source_order_post_commit_route_to_pair_0xedc(pair, *route_state);
+				} else {
+					pair.source_pair_success_byte_0x3c_known = true;
+					pair.source_pair_success_byte_0x3c = 1;
+				}
+				state.source_pair_records_edc[index] = pair;
+			}
 		const int32_t before_weighted_commit_count = state.source_order_scheduler_commit_count_0x4a8db2;
 		const SourceOrderSchedulerResult4a8db2 scheduler = source_order_weighted_scheduler_0x4a8db2(
 				state,
@@ -22459,10 +22585,16 @@ void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObj
 				pair.source_record_copy.raw_field_0x34,
 				pair.source_record_copy.raw_field_0x3c_known,
 				pair.source_record_copy.raw_field_0x3c);
-		pair.source_pair_success_byte_0x3c_known = scheduler.source_pair_success_byte_0x3c_known;
-		pair.source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;
-		state.source_pair_records_edc[index] = pair;
-		state.generic_source_order_pair_weighted_replay_count_0x4a8db2 += 1;
+			pair.source_pair_success_byte_0x3c_known = scheduler.source_pair_success_byte_0x3c_known;
+			pair.source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;
+			const SourceOrderPostCommitRouteState4a93a2 scheduler_route =
+					post_commit_route_from_scheduler_0x4a8db2(scheduler);
+			if (scheduler_route.source_record_route_fields_known_0x30_0x38) {
+				apply_source_order_post_commit_route_to_owner_0x4a93a2(*owner, scheduler_route);
+				apply_source_order_post_commit_route_to_pair_0xedc(pair, scheduler_route);
+			}
+			state.source_pair_records_edc[index] = pair;
+			state.generic_source_order_pair_weighted_replay_count_0x4a8db2 += 1;
 		state.generic_source_order_pair_weighted_commit_count_0x4a8db2 +=
 				state.source_order_scheduler_commit_count_0x4a8db2 - before_weighted_commit_count;
 	}

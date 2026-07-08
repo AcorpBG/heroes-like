@@ -6191,6 +6191,8 @@ int main() {
 					&& scheduler_success.calls[0].committed
 					&& scheduler_success.calls[0].weighted_candidate_vector_index_0x4a901a == 0
 					&& scheduler_success.calls[1].disabled_after_false
+					&& scheduler_success.source_pair_success_byte_0x3c_final == 1
+					&& scheduler_success.source_pair_post_commit_route_fields_known_0x30_0x38
 					&& scheduler_success_state.object_record_allocation_count_0x4a93a2 == 1
 					&& scheduler_success_state.weighted_candidate_commit_count_0x4a901a == 1
 					&& scheduler_success_state.source_order_scheduler_commit_count_0x4a8db2 == 1
@@ -6257,29 +6259,127 @@ int main() {
 					0,
 					true,
 					0);
-	const int64_t scheduler_early_direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, weighted_adjusted_candidate_x, weighted_adjusted_candidate_y, 0);
-	const GeneratedCellRecord0x30 &scheduler_early_direct_target =
-			scheduler_early_direct_state.generated_cell_buffer.records[size_t(scheduler_early_direct_target_flat)];
-	if (!require(!scheduler_early_direct.calls.empty()
-					&& !scheduler_early_direct.calls[0].early_direct_0x4a901a
-					&& scheduler_early_direct.calls[0].committed
-					&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_before == 0
-					&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_after == 0
-					&& scheduler_early_direct.calls[0].weighted_candidate_vector_index_0x4a901a == 0
-					&& scheduler_early_direct.early_direct_call_count_0x4a901a == 0
-					&& scheduler_early_direct.source_pair_success_byte_0x3c_final == 0
-					&& scheduler_early_direct_state.source_order_direct_commit_count_0x4a93a2 == 0
-					&& scheduler_early_direct_state.weighted_candidate_commit_count_0x4a901a == 1
-					&& scheduler_early_direct_state.object_records_0xec4_ecc.size() == size_t(5)
-					&& scheduler_early_direct_state.object_records_0xec4_ecc.back().weighted_record_0x4a93a2_known
-					&& scheduler_early_direct_state.descriptor_counter_table_0x1110[size_t(98)] == 5U
-					&& scheduler_early_direct_target.object_reference_count == 1
-					&& scheduler_early_direct_target.object_references_0x04_0x08[0] == 0x036b6d40U,
-				"0x4a901a did not preserve recovered argument-gated weighted path while source-pair +0x3c was zero")) {
-		return 1;
-	}
-	GeneratorObjectPrivateState direct_placement_state;
-	direct_placement_state.width = 112;
+		const int32_t scheduler_early_direct_route_x = 107 - scheduler_success_join.descriptor.source_cell_x_0x2c;
+		const int32_t scheduler_early_direct_route_y = 6 - scheduler_success_join.descriptor.source_cell_y_0x30;
+		const int64_t scheduler_early_direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+		const GeneratedCellRecord0x30 &scheduler_early_direct_target =
+				scheduler_early_direct_state.generated_cell_buffer.records[size_t(scheduler_early_direct_target_flat)];
+		if (!require(!scheduler_early_direct.calls.empty()
+						&& !scheduler_early_direct.calls[0].early_direct_0x4a901a
+						&& scheduler_early_direct.calls[0].committed
+						&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_before == 0
+						&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_after == 1
+						&& scheduler_early_direct.calls[0].weighted_candidate_vector_index_0x4a901a == 0
+						&& scheduler_early_direct.early_direct_call_count_0x4a901a == 0
+						&& scheduler_early_direct.source_pair_success_byte_0x3c_final == 1
+						&& scheduler_early_direct.source_pair_post_commit_route_fields_known_0x30_0x38
+						&& scheduler_early_direct.source_pair_post_commit_route_x_0x30 == scheduler_early_direct_route_x
+						&& scheduler_early_direct.source_pair_post_commit_route_y_0x34 == scheduler_early_direct_route_y
+						&& scheduler_early_direct.source_pair_post_commit_route_level_0x38 == 0
+						&& scheduler_early_direct_state.source_order_direct_commit_count_0x4a93a2 == 0
+						&& scheduler_early_direct_state.weighted_candidate_commit_count_0x4a901a == 1
+						&& scheduler_early_direct_state.object_records_0xec4_ecc.size() == size_t(5)
+						&& scheduler_early_direct_state.object_records_0xec4_ecc.back().weighted_record_0x4a93a2_known
+						&& scheduler_early_direct_state.descriptor_counter_table_0x1110[size_t(98)] == 5U
+						&& scheduler_early_direct_target.object_reference_count == 1
+						&& scheduler_early_direct_target.object_references_0x04_0x08[0] == 0x036b6d40U,
+					"0x4a901a weighted path did not preserve recovered source-record route/success afterstate")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState scheduler_direct_delegate_state = scheduler_success_state;
+		scheduler_direct_delegate_state.object_records_0xec4_ecc.resize(4);
+		scheduler_direct_delegate_state.object_record_sequence_allocator_0xf44 = 5;
+		scheduler_direct_delegate_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+		scheduler_direct_delegate_state.object_record_allocation_count_0x4a93a2 = 0;
+		scheduler_direct_delegate_state.source_order_direct_candidate_vectors_0x4a93a2.clear();
+		scheduler_direct_delegate_state.source_order_direct_candidate_vector_count_0x4a93a2 = 0;
+		scheduler_direct_delegate_state.source_order_direct_candidate_total_count_0x4a93a2 = 0;
+		scheduler_direct_delegate_state.source_order_direct_selected_count_0x4a93a2 = 0;
+		scheduler_direct_delegate_state.source_order_direct_commit_count_0x4a93a2 = 0;
+		scheduler_direct_delegate_state.weighted_candidate_vectors_0x4a901a.clear();
+		scheduler_direct_delegate_state.weighted_candidate_vector_count_0x4a901a = 0;
+		scheduler_direct_delegate_state.weighted_candidate_total_count_0x4a901a = 0;
+		scheduler_direct_delegate_state.weighted_candidate_selected_count_0x4a901a = 0;
+		scheduler_direct_delegate_state.weighted_candidate_commit_count_0x4a901a = 0;
+		scheduler_direct_delegate_state.source_order_scheduler_replays_0x4a8db2.clear();
+		scheduler_direct_delegate_state.source_order_scheduler_replay_count_0x4a8db2 = 0;
+		scheduler_direct_delegate_state.source_order_scheduler_direct_call_count_0x4a8db2 = 0;
+		scheduler_direct_delegate_state.source_order_scheduler_weighted_call_count_0x4a8db2 = 0;
+		scheduler_direct_delegate_state.source_order_scheduler_commit_count_0x4a8db2 = 0;
+		scheduler_direct_delegate_state.source_order_scheduler_blocked_count_0x4a8db2 = 0;
+		scheduler_direct_delegate_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+		for (GeneratedCellRecord0x30 &record : scheduler_direct_delegate_state.generated_cell_buffer.records) {
+			record.object_reference_count = 0;
+			record.object_references_0x04_0x08.clear();
+			record.word_0x20 = 0xff000064U;
+			record.word_0x28 = 0x12005000U;
+		}
+		SourceObjectRecord0x4c scheduler_direct_delegate_record = *dungeon_town;
+		scheduler_direct_delegate_record.raw_field_0x20_known = true;
+		scheduler_direct_delegate_record.raw_field_0x20 = 0;
+		scheduler_direct_delegate_record.raw_field_0x24_known = true;
+		scheduler_direct_delegate_record.raw_field_0x24 = 0;
+		scheduler_direct_delegate_record.raw_field_0x28_known = true;
+		scheduler_direct_delegate_record.raw_field_0x28 = 0;
+		scheduler_direct_delegate_record.raw_field_0x2c_known = true;
+		scheduler_direct_delegate_record.raw_field_0x2c = 0;
+		scheduler_direct_delegate_record.raw_field_0x30_known = true;
+		scheduler_direct_delegate_record.raw_field_0x30 = 0;
+		scheduler_direct_delegate_record.raw_field_0x34_known = true;
+		scheduler_direct_delegate_record.raw_field_0x34 = 0;
+		scheduler_direct_delegate_record.raw_field_0x38_known = true;
+		scheduler_direct_delegate_record.raw_field_0x38 = 0;
+		scheduler_direct_delegate_record.raw_field_0x3c_known = true;
+		scheduler_direct_delegate_record.raw_field_0x3c = 9;
+		SourceObjectDescriptorJoinResult4903e8 scheduler_direct_delegate_join = weighted_join;
+		scheduler_direct_delegate_join.source_record_copy = scheduler_direct_delegate_record;
+		SourceObjectResolverSourcePair4af785 scheduler_direct_delegate_pair = make_scheduler_pair(scheduler_direct_delegate_record);
+		scheduler_direct_delegate_pair.source_pair_success_byte_0x3c_known = true;
+		scheduler_direct_delegate_pair.source_pair_success_byte_0x3c = 0;
+		scheduler_direct_delegate_pair.source_order_anchor_known = true;
+		scheduler_direct_delegate_pair.source_order_anchor_x_0x10 = 107;
+		scheduler_direct_delegate_pair.source_order_anchor_y_0x14 = 6;
+		scheduler_direct_delegate_pair.source_order_anchor_level_0x18 = 0;
+		aurelion::h3maped_rmg_core::H3MapedRng scheduler_direct_delegate_rng;
+		scheduler_direct_delegate_rng.state = 10U;
+		const SourceOrderSchedulerResult4a8db2 scheduler_direct_delegate =
+				aurelion::h3maped_rmg_core::source_order_weighted_scheduler_0x4a8db2(
+						scheduler_direct_delegate_state,
+						scheduler_direct_delegate_join,
+						scheduler_direct_delegate_pair,
+						0,
+						weighted_raw_scan_low_x,
+						weighted_raw_scan_low_y,
+						weighted_raw_scan_high_x,
+						weighted_raw_scan_high_y,
+						0,
+						12,
+						scheduler_direct_delegate_rng,
+						true,
+						0,
+						true,
+						0,
+						true,
+						0);
+		if (!require(!scheduler_direct_delegate.calls.empty()
+						&& scheduler_direct_delegate.calls[0].early_direct_0x4a901a
+						&& scheduler_direct_delegate.calls[0].committed
+						&& scheduler_direct_delegate.calls[0].source_pair_success_byte_0x3c_before == 0
+						&& scheduler_direct_delegate.calls[0].source_pair_success_byte_0x3c_after == 1
+						&& scheduler_direct_delegate.calls[0].direct_candidate_vector_index_0x4a93a2 == 0
+						&& scheduler_direct_delegate.early_direct_call_count_0x4a901a == 1
+						&& scheduler_direct_delegate.source_pair_success_byte_0x3c_final == 1
+						&& scheduler_direct_delegate.source_pair_post_commit_route_fields_known_0x30_0x38
+						&& scheduler_direct_delegate.source_pair_post_commit_route_x_0x30 == scheduler_early_direct_route_x
+						&& scheduler_direct_delegate.source_pair_post_commit_route_y_0x34 == scheduler_early_direct_route_y
+						&& scheduler_direct_delegate.source_pair_post_commit_route_level_0x38 == 0
+						&& scheduler_direct_delegate_state.source_order_direct_commit_count_0x4a93a2 == 1
+						&& scheduler_direct_delegate_state.weighted_candidate_commit_count_0x4a901a == 0,
+					"0x4a901a selector-minus-one enabled-byte direct delegate did not route through 0x4a93a2")) {
+			return 1;
+		}
+		GeneratorObjectPrivateState direct_placement_state;
+		direct_placement_state.width = 112;
 	direct_placement_state.height = 112;
 	direct_placement_state.level_count = 1;
 	direct_placement_state.generated_cell_buffer = aurelion::h3maped_rmg_core::generated_cell_record_grid_reset_0x49a072(112, 112, 1);
@@ -6339,22 +6439,30 @@ int main() {
 					12,
 					true,
 					direct_placement_rng);
-	const int64_t direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
-	const GeneratedCellRecord0x30 &direct_target = direct_placement_state.generated_cell_buffer.records[size_t(direct_target_flat)];
-	if (!require(direct_placement.committed
-					&& direct_placement.placement_state_0x4a93a2.scanned_cell_count == 1
-					&& direct_placement.placement_state_0x4a93a2.accepted_candidate_count == 1
+		const int64_t direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+		const GeneratedCellRecord0x30 &direct_target = direct_placement_state.generated_cell_buffer.records[size_t(direct_target_flat)];
+		const int32_t direct_route_x = 107 - weighted_join.descriptor.source_cell_x_0x2c;
+		const int32_t direct_route_y = 6 - weighted_join.descriptor.source_cell_y_0x30;
+		if (!require(direct_placement.committed
+						&& direct_placement.placement_state_0x4a93a2.scanned_cell_count == 1
+						&& direct_placement.placement_state_0x4a93a2.accepted_candidate_count == 1
 					&& direct_placement.placement_state_0x4a93a2.best_distance_squared_after_scan == 0
 					&& direct_placement.placement_state_0x4a93a2.local_vector_clear_count_0x4ae52a == 1
 					&& direct_placement.placement_state_0x4a93a2.local_vector_append_count_0x4ae1fd == 1
 					&& direct_placement.placement_state_0x4a93a2.source_pair_success_byte_0x3c_set
-					&& direct_placement.object_record_0x4a93a2.object_record_key == 0x036b6d50U
-					&& direct_placement.object_record_0x4a93a2.sequence_0x1c == 9
-					&& direct_placement.object_record_0x4a93a2.selected_index_0x20 == 12
-					&& direct_placement.object_record_0x4a93a2.enabled_low_byte_0x24,
+						&& direct_placement.object_record_0x4a93a2.object_record_key == 0x036b6d50U
+						&& direct_placement.object_record_0x4a93a2.sequence_0x1c == 9
+						&& direct_placement.object_record_0x4a93a2.selected_index_0x20 == 12
+						&& direct_placement.object_record_0x4a93a2.enabled_low_byte_0x24
+						&& direct_placement.post_commit_route_state_0x4a93a2.source_record_route_fields_known_0x30_0x38
+						&& direct_placement.post_commit_route_state_0x4a93a2.source_record_route_x_0x30 == direct_route_x
+						&& direct_placement.post_commit_route_state_0x4a93a2.source_record_route_y_0x34 == direct_route_y
+						&& direct_placement.post_commit_route_state_0x4a93a2.source_record_route_level_0x38 == 0
+						&& direct_placement.post_commit_route_state_0x4a93a2.source_record_success_byte_written_0x3c
+						&& direct_placement.post_commit_route_state_0x4a93a2.road_coordinate_appended_0x14b0,
 				"0x4a93a2 direct source-order placement did not reproduce nearest-distance allocation metadata")) {
-		return 1;
-	}
+			return 1;
+		}
 	if (!require(direct_placement_state.source_order_direct_candidate_vector_count_0x4a93a2 == 1
 					&& direct_placement_state.source_order_direct_candidate_total_count_0x4a93a2 == 1
 					&& direct_placement_state.source_order_direct_selected_count_0x4a93a2 == 1
