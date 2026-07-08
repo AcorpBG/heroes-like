@@ -23053,8 +23053,21 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				}
 				result.candidate_boundary_trigger_count_0x4a4c8e += 1;
 				generated_cell_49aa63(record, true);
-				if ((record.word_0x24 & 0x3fU) != 8U && generated_cell_record_object_vector_empty_0x4a8260(record)) {
-					generated_cell_49aa63(record, true);
+				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
+						const int64_t candidate_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
+						if (candidate_flat < 0 || candidate_flat >= int64_t(grid.records.size())) {
+							continue;
+						}
+						GeneratedCellRecord0x30 &candidate = grid.records[size_t(candidate_flat)];
+						if ((candidate.word_0x24 & 0x3fU) == 8U) {
+							continue;
+						}
+						if (!generated_cell_record_object_vector_empty_0x4a8260(candidate)) {
+							continue;
+						}
+						generated_cell_49aa63(candidate, true);
+					}
 				}
 				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
 					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
