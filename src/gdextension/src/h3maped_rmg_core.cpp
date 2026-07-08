@@ -24181,14 +24181,14 @@ static int32_t relation_bridge_brush_0x4a4522(
 			}
 		}
 	}
-	if (!terrainplacement_points_0x4bd099.empty()) {
-		(void)terrainplacement_apply_points_to_generated_cell_grid_0x4bcff5_4bd099(
-				grid,
-				active_terrain_0x4bcff5,
-				level,
-				terrainplacement_points_0x4bd099,
-				rng);
-	}
+	// 0x4a4522 always destroys the local TerrainPlacement wrapper after the
+	// mask walk; even an empty point feed reaches 0x4bd077 finalization.
+	(void)terrainplacement_apply_points_to_generated_cell_grid_0x4bcff5_4bd099(
+			grid,
+			active_terrain_0x4bcff5,
+			level,
+			terrainplacement_points_0x4bd099,
+			rng);
 	int32_t set_count = 0;
 	for (int32_t y = low_y; y < high_y; ++y) {
 		for (int32_t x = low_x; x < high_x; ++x) {
