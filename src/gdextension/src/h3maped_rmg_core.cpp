@@ -11701,7 +11701,7 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 	result.entry_gate_passed = true;
 	result.frontier_vector_known = true;
 
-	int32_t best_score = std::numeric_limits<int32_t>::max();
+	int32_t best_score = 100;
 	std::vector<ConnectionFrontierCandidate4a79a3> best_candidates;
 	const int32_t source_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(source_owner);
 	const int32_t target_owner_byte3 = relation_owner_byte2_for_generated_cell_gate(target_owner);
@@ -11711,6 +11711,25 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		}
 		if (candidate.source_owner_byte2 != source_owner_byte2
 				|| candidate.source_owner_byte3 != target_owner_byte3) {
+			continue;
+		}
+		const int64_t candidate_flat = cell_index(
+				state.generated_cell_buffer.width,
+				state.generated_cell_buffer.height,
+				candidate.source_x,
+				candidate.source_y,
+				candidate.level);
+		if (candidate_flat < 0 || candidate_flat >= int64_t(state.generated_cell_buffer.records.size())) {
+			result.blocked_reason = "0x4a61bc_frontier_candidate_cell_out_of_bounds";
+			return result;
+		}
+		const GeneratedCellRecord0x30 &candidate_cell =
+				state.generated_cell_buffer.records[size_t(candidate_flat)];
+		if (!candidate_cell.object_reference_vector_contents_known) {
+			result.blocked_reason = "0x4a61bc_frontier_candidate_object_reference_vector_unowned";
+			return result;
+		}
+		if (!candidate_cell.object_references_0x04_0x08.empty()) {
 			continue;
 		}
 		result.frontier_candidate_count += 1;
