@@ -16231,8 +16231,8 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(Genera
 	source_record.field_0x34 = record.raw_field_0x34_known ? record.raw_field_0x34 : source_field_0x34;
 	source_record.field_0x38_known = record.raw_field_0x38_known;
 	source_record.field_0x38 = record.raw_field_0x38;
-	source_record.field_0x3c_known = source_field_0x3c_known;
-	source_record.field_0x3c = source_field_0x3c;
+	source_record.field_0x3c_known = record.raw_field_0x3c_known || source_field_0x3c_known;
+	source_record.field_0x3c = record.raw_field_0x3c_known ? record.raw_field_0x3c : source_field_0x3c;
 	return source_order_weighted_scheduler_from_source_record_0x4a8db2(
 			state,
 			join,
