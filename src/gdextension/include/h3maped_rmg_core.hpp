@@ -385,6 +385,10 @@ struct SourceObjectResolverSourcePair4af785 {
 	int32_t source_order_source_pair_key_0x0c = -1;
 	bool source_pair_success_byte_0x3c_known = true;
 	int32_t source_pair_success_byte_0x3c = 0;
+	bool source_order_post_commit_route_fields_known_0x30_0x38 = false;
+	int32_t source_order_post_commit_route_x_0x30 = 0;
+	int32_t source_order_post_commit_route_y_0x34 = 0;
+	int32_t source_order_post_commit_route_level_0x38 = 0;
 	bool source_order_anchor_known = false;
 	int32_t source_order_anchor_x_0x10 = 0;
 	int32_t source_order_anchor_y_0x14 = 0;
@@ -506,6 +510,22 @@ struct RoadCoordinateRecord14b0 {
 	uint32_t source_callsite = 0U;
 };
 
+struct SourceOrderPostCommitRouteState4a93a2 {
+	bool source_record_route_fields_known_0x30_0x38 = false;
+	int32_t source_record_route_x_0x30 = 0;
+	int32_t source_record_route_y_0x34 = 0;
+	int32_t source_record_route_level_0x38 = 0;
+	bool source_record_success_byte_written_0x3c = false;
+	bool road_coordinate_appended_0x14b0 = false;
+	uint32_t source_callsite = 0U;
+	bool projected_y_plus_one_in_bounds = false;
+	bool projected_y_plus_one_stamp_attempted_0x49a932 = false;
+	bool projected_y_plus_one_stamp_applied_0x49a932 = false;
+	int32_t projected_x = 0;
+	int32_t projected_y_plus_one = 0;
+	int32_t projected_level = 0;
+};
+
 struct SourceOrderObjectCandidate4a93a2 {
 	int32_t x = 0;
 	int32_t y = 0;
@@ -557,6 +577,7 @@ struct SourceOrderObjectPlacementState4a93a2 {
 	bool allocated_record_0x4a93a2 = false;
 	bool committed_through_0x4a54a7 = false;
 	bool source_pair_success_byte_0x3c_set = false;
+	SourceOrderPostCommitRouteState4a93a2 post_commit_route_state_0x4a93a2;
 	uint32_t object_record_key = 0U;
 	bool object_record_key_known = false;
 	int32_t object_vector_count_after = 0;
@@ -656,6 +677,10 @@ struct SourceOrderSchedulerResult4a8db2 {
 	bool source_pair_success_byte_0x3c_known = false;
 	int32_t source_pair_success_byte_0x3c_initial = 0;
 	int32_t source_pair_success_byte_0x3c_final = 0;
+	bool source_pair_post_commit_route_fields_known_0x30_0x38 = false;
+	int32_t source_pair_post_commit_route_x_0x30 = 0;
+	int32_t source_pair_post_commit_route_y_0x34 = 0;
+	int32_t source_pair_post_commit_route_level_0x38 = 0;
 	int32_t lane_state_0xee4 = -1;
 	bool descriptor_source_bridge_known = false;
 	bool scan_bounds_known = false;
@@ -737,6 +762,7 @@ struct WeightedObjectCandidateVectorState4a901a {
 	std::vector<WeightedObjectCandidate4a901a> accepted_candidates_0x4ae1fd;
 	bool allocated_record_0x4a93a2 = false;
 	bool committed_through_0x4a54a7 = false;
+	SourceOrderPostCommitRouteState4a93a2 post_commit_route_state_0x4a901a;
 	uint32_t object_record_key = 0U;
 	bool object_record_key_known = false;
 	int32_t object_vector_count_after = 0;
@@ -1386,6 +1412,10 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t scan_bound_high_y_0x2c = RELATION_OWNER_SCAN_BOUND_HIGH_SENTINEL_0X49B452;
 	bool byte_0x3c_known = false;
 	uint8_t byte_0x3c = 0U;
+	bool source_order_post_commit_route_fields_known_0x30_0x38 = false;
+	int32_t source_order_post_commit_route_x_0x30 = 0;
+	int32_t source_order_post_commit_route_y_0x34 = 0;
+	int32_t source_order_post_commit_route_level_0x38 = 0;
 	bool reward_guard_priority_0x40_known = false;
 	int32_t reward_guard_priority_0x40 = 0;
 	int32_t reward_guard_priority_before_randomization_0x4ad7f7 = 0;
@@ -3924,6 +3954,7 @@ struct SourceOrderObjectPlacementResult4a93a2 {
 	SourceOrderObjectPlacementState4a93a2 placement_state_0x4a93a2;
 	WeightedObjectRecord4a93a2 object_record_0x4a93a2;
 	WeightedObjectMaterializationCommitResult4a93a2 commit_0x4a93a2_0x4a54a7;
+	SourceOrderPostCommitRouteState4a93a2 post_commit_route_state_0x4a93a2;
 	bool allocated_record_0x4a93a2 = false;
 	bool committed = false;
 	std::string blocked_reason;
@@ -3963,6 +3994,7 @@ struct WeightedObjectCandidateScanResult4a901a {
 	WeightedObjectCandidateVectorState4a901a vector_state_0x4a901a;
 	WeightedObjectRecord4a93a2 weighted_record_0x4a93a2;
 	WeightedObjectMaterializationCommitResult4a93a2 commit_0x4a93a2_0x4a901a_0x4a54a7;
+	SourceOrderPostCommitRouteState4a93a2 post_commit_route_state_0x4a901a;
 	bool allocated_record_0x4a93a2 = false;
 	bool committed = false;
 	std::string blocked_reason;
