@@ -12201,7 +12201,15 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		}
 	}
 
-	if (exact_connection_sequence_available && result.internal_growth_candidate_pair_count == 0) {
+	result.internal_growth_0x49b3fb_0x4a61bc_known = result.internal_growth_candidate_pair_count > 0;
+	result.internal_growth_0x4a61bc_prefix_owned =
+			result.internal_growth_0x49b3fb_0x4a61bc_known
+			&& result.internal_growth_0x4a61bc_invocation_count == result.internal_growth_candidate_pair_count;
+	result.internal_growth_final_object_count = int32_t(state.object_records_0xec4_ecc.size());
+	result.internal_growth_positive_append_count =
+			result.internal_growth_final_object_count - result.internal_growth_initial_object_count;
+
+	if (exact_connection_sequence_available) {
 		const std::vector<ConnectionFallbackMaterializationRecord4a7605_4a5e03> exact_sequence =
 				recovered_exact_connection_sequence();
 		const ConnectionFallbackMaterializationResult4a7605_4a5e03 exact_result =
@@ -12221,17 +12229,8 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 		result.after_selected_0x4a7605_endpoint_path_known = true;
 		result.delegated_endpoint_gates_skipped_with_zero_control_bytes = true;
 		result.pair_bookkeeping_processed_marker_known = true;
-		result.applied = true;
-		return result;
 	}
 
-	result.internal_growth_0x49b3fb_0x4a61bc_known = result.internal_growth_candidate_pair_count > 0;
-	result.internal_growth_0x4a61bc_prefix_owned =
-			result.internal_growth_0x49b3fb_0x4a61bc_known
-			&& result.internal_growth_0x4a61bc_invocation_count == result.internal_growth_candidate_pair_count;
-	result.internal_growth_final_object_count = int32_t(state.object_records_0xec4_ecc.size());
-	result.internal_growth_positive_append_count =
-			result.internal_growth_final_object_count - result.internal_growth_initial_object_count;
 	if (result.internal_growth_candidate_pair_count > 0) {
 		if (!result.blocked_reason.empty()) {
 			// Keep the exact first source-backed blocker discovered inside 0x4a61bc.

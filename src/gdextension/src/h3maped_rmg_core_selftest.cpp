@@ -7072,15 +7072,28 @@ int main() {
 		};
 		const H3MapedRmgWorkflowResult authority_stack_matched_workflow =
 				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(authority_stack_matched_config);
+		const auto &authority_stack_tail =
+				authority_stack_matched_workflow.generator_object_private_state.connection_tail_replay_0x4a79a3;
 		if (!require(authority_stack_matched_workflow.current_phase_id == "final_payload_compare"
 						&& authority_stack_matched_workflow.blocked_reason == "native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload"
-						&& authority_stack_matched_workflow.generator_object_private_state.connection_tail_replay_0x4a79a3.applied
+						&& authority_stack_tail.applied
+						&& authority_stack_tail.pre_border_materialization_applied
+						&& authority_stack_tail.pre_border_materialization_commit_count == 2
+						&& authority_stack_tail.direct_endpoint_materialization_applied
+						&& authority_stack_tail.direct_endpoint_materialization_commit_count == 5
+						&& authority_stack_tail.fallback_materialization_applied
 						&& authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_invoked
 						&& !authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete,
-					"same-run final payload compare did not expose the tile-stream mismatch after 0x49ecf2 stack authority matched: phase="
+					"same-run final payload compare did not expose the tile-stream mismatch after exact 0x4a79a3 materialization applied: phase="
 						+ authority_stack_matched_workflow.current_phase_id
 						+ " reason="
 						+ authority_stack_matched_workflow.blocked_reason
+						+ " pre="
+						+ std::to_string(authority_stack_tail.pre_border_materialization_commit_count)
+						+ " direct="
+						+ std::to_string(authority_stack_tail.direct_endpoint_materialization_commit_count)
+						+ " fallback="
+						+ std::to_string(authority_stack_tail.after_selected_0x4a7605_call_count)
 						+ " scope="
 						+ std::to_string(authority_stack_matched_workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_authority_scope_matches ? 1 : 0)
 						+ " invoked="
