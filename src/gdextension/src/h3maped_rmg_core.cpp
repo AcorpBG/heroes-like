@@ -15144,6 +15144,7 @@ static bool source_descriptor_contour_passes_0x49a09c(
 static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectDescriptorJoinResult4903e8 &join,
+		const SourceObjectRecord0x4c &source_record,
 		int32_t x,
 		int32_t y,
 		int32_t level,
@@ -15161,7 +15162,6 @@ static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		return false;
 	}
 
-	const SourceObjectRecord0x4c &source_record = join.source_record_copy;
 	const SourceDescriptorFootprintResult49a6f9 footprint =
 			source_descriptor_footprint_rejects_0x49a6f9(
 					state.generated_cell_buffer,
@@ -15217,6 +15217,23 @@ static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		return false;
 	}
 	return ((projection.word_0x24 & 0x3fU) == 8U) == (terrain_policy_0x0c == 8);
+}
+
+static bool source_relation_object_coordinate_eligibility_0x49aa93(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectDescriptorJoinResult4903e8 &join,
+		int32_t x,
+		int32_t y,
+		int32_t level,
+		int32_t relation_owner_byte2) {
+	return source_relation_object_coordinate_eligibility_0x49aa93(
+			state,
+			join,
+			join.source_record_copy,
+			x,
+			y,
+			level,
+			relation_owner_byte2);
 }
 
 static bool source_relation_endpoint_coordinate_eligibility_0x49aa93(
@@ -15844,16 +15861,7 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	WeightedObjectCandidateVectorState4a901a &vector_state = result.vector_state_0x4a901a;
 	const int32_t source_record_identity_0x00 =
 			source_record_identity_arg_0x00 >= 0 ? source_record_identity_arg_0x00 : relation_owner_byte2;
-	const int32_t descriptor_width_0x34 = join.descriptor.descriptor_width_0x34 > 0
-			? join.descriptor.descriptor_width_0x34
-			: (join.source_record_copy.descriptor_width_0x34 > 0 ? join.source_record_copy.descriptor_width_0x34 : 0);
-	const int32_t descriptor_height_0x38 = join.descriptor.descriptor_height_0x38 > 0
-			? join.descriptor.descriptor_height_0x38
-			: (join.source_record_copy.descriptor_height_0x38 > 0 ? join.source_record_copy.descriptor_height_0x38 : 0);
-	const int32_t adjusted_scan_low_x = scan_low_x + descriptor_width_0x34;
-	const int32_t adjusted_scan_low_y = scan_low_y + descriptor_height_0x38;
 	vector_state.scan_bounds_known = true;
-	vector_state.scan_bounds_non_empty = scan_high_x > adjusted_scan_low_x && scan_high_y > adjusted_scan_low_y;
 	vector_state.relation_owner_byte_known = relation_owner_byte2 >= 0;
 	vector_state.source_pair_key_known = true;
 	vector_state.source_pair_key_not_minus_one = source_pair_key_0x0c != -1;
@@ -15872,8 +15880,6 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	vector_state.source_record_identity_known_0x00 = source_record_identity_0x00 >= 0;
 	vector_state.source_record_identity_0x00 = source_record_identity_0x00;
 	vector_state.source_pair_key_0x0c = source_pair_key_0x0c;
-	vector_state.scan_bound_low_x = adjusted_scan_low_x;
-	vector_state.scan_bound_low_y = adjusted_scan_low_y;
 	vector_state.scan_bound_high_x = scan_high_x;
 	vector_state.scan_bound_high_y = scan_high_y;
 	vector_state.level = level;
@@ -15905,9 +15911,6 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 	if (!state.generated_cell_buffer_owned || state.generated_cell_buffer.records.empty()) {
 		return finish_blocked("0x4a901a_generated_cell_buffer_missing");
 	}
-	if (!vector_state.scan_bounds_non_empty) {
-		return finish_blocked("0x4a901a_scan_bounds_empty_or_unordered");
-	}
 	if (!vector_state.relation_owner_byte_known) {
 		return finish_blocked("0x4a901a_relation_owner_byte2_missing");
 	}
@@ -15928,7 +15931,24 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 		state.source_type98_bucket_0x658_blocked_reason = source_bucket_blocker;
 		return finish_blocked("0x4a901a_" + source_bucket_blocker);
 	}
-	(void)source_bucket_wrapper_0x658;
+	const SourceObjectRecord0x4c &source_bucket_record_0x658 =
+			source_bucket_wrapper_0x658->source_record_copy;
+	const int32_t descriptor_width_0x34 =
+			source_bucket_record_0x658.descriptor_width_0x34 > 0
+					? source_bucket_record_0x658.descriptor_width_0x34
+					: 0;
+	const int32_t descriptor_height_0x38 =
+			source_bucket_record_0x658.descriptor_height_0x38 > 0
+					? source_bucket_record_0x658.descriptor_height_0x38
+					: 0;
+	const int32_t adjusted_scan_low_x = scan_low_x + descriptor_width_0x34;
+	const int32_t adjusted_scan_low_y = scan_low_y + descriptor_height_0x38;
+	vector_state.scan_bound_low_x = adjusted_scan_low_x;
+	vector_state.scan_bound_low_y = adjusted_scan_low_y;
+	vector_state.scan_bounds_non_empty = scan_high_x > adjusted_scan_low_x && scan_high_y > adjusted_scan_low_y;
+	if (!vector_state.scan_bounds_non_empty) {
+		return finish_blocked("0x4a901a_scan_bounds_empty_or_unordered");
+	}
 
 	int32_t current_threshold = threshold_arg_0x18;
 	for (int32_t y = adjusted_scan_low_y; y < scan_high_y; ++y) {
@@ -15944,7 +15964,7 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 				vector_state.unknown_cell_word_count += 1;
 				continue;
 			}
-				if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(relation_owner_byte2 & 0xff)) {
+			if (generated_cell_word20_owner_byte2(record.word_0x20) != uint8_t(source_record_identity_0x00 & 0xff)) {
 				vector_state.owner_byte_reject_count += 1;
 				continue;
 			}
@@ -15953,7 +15973,14 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 				vector_state.value_floor_reject_count += 1;
 				continue;
 			}
-			if (!source_relation_object_coordinate_eligibility_0x49aa93(state, join, x, y, level, relation_owner_byte2)) {
+			if (!source_relation_object_coordinate_eligibility_0x49aa93(
+						state,
+						join,
+						source_bucket_record_0x658,
+						x,
+						y,
+						level,
+						relation_owner_byte2)) {
 				vector_state.eligibility_reject_count_0x49aa93 += 1;
 				continue;
 			}
@@ -16362,7 +16389,7 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known, int32_t source_field_0x30, bool source_field_0x34_known, int32_t source_field_0x34, bool source_field_0x3c_known, int32_t source_field_0x3c) {
 	const SourceObjectRecord0x4c &record = source_pair.source_record_copy;
 	SourceOrderSchedulerSourceRecord4a8db2 source_record;
-	source_record.source_id_0x00 = source_pair.copied_source_catalog_index;
+	source_record.source_id_0x00 = relation_owner_byte2;
 	source_record.owner_or_type_0x04 = source_pair.context_wrapper_lane_0x04;
 	source_record.relation_selector_0x1c = source_pair.source_lane_0x1c;
 	source_record.field_0x20_known = record.raw_field_0x20_known;
