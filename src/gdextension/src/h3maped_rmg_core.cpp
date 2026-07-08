@@ -776,7 +776,7 @@ bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, 
 	return true;
 }
 
-bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t current_row_arg_0x4ba938, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	out_flag_a = 0;
 	out_flag_b = 0;
 	if (toolkit.simple_vtable_4baa66) {
@@ -788,8 +788,9 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	const TerrainVisualRange4ba868 *range = &toolkit.ranges_0x14[0];
 	if (toolkit.ranges_0x14[1].count > 0) {
 		const int32_t probability_rng_value = rng.next();
-		const int32_t probability_threshold = (toolkit.range_probability_0x08 * std::max(0, neighbor_mask)) >> 3;
-		range = (probability_rng_value % 100) < probability_threshold ? &toolkit.ranges_0x14[1] : &toolkit.ranges_0x14[0];
+		const uint32_t probability_threshold =
+				(uint32_t(toolkit.range_probability_0x08) * uint32_t(current_row_arg_0x4ba938)) >> 3U;
+		range = uint32_t(probability_rng_value % 100) < probability_threshold ? &toolkit.ranges_0x14[1] : &toolkit.ranges_0x14[0];
 	}
 	if (!select_visual_row_from_range_4ba938(*range, rng, selected_row)) {
 		return false;
@@ -800,6 +801,7 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t current_row, int32_t classified_flag_a, int32_t classified_flag_b, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	(void)classified_flag_a;
 	(void)classified_flag_b;
+	(void)neighbor_mask;
 	out_flag_a = 0;
 	out_flag_b = 0;
 	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
@@ -808,7 +810,7 @@ bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba86
 	}
 	int32_t ignored_flag_a = 0;
 	int32_t ignored_flag_b = 0;
-	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, rng, selected_row, ignored_flag_a, ignored_flag_b);
+	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, current_row, rng, selected_row, ignored_flag_a, ignored_flag_b);
 }
 
 uint32_t terrain_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
@@ -17494,13 +17496,18 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					y,
 					terrain_id);
 		}
-		if (final_sweep && !final_sweep_classified_cell && current_record_matches_terrain) {
-			// Recovered 0x4bbfcc branches count-zero final-sweep cells through
-			// 0x4bc5a3, which copies the current 0x4bb71b scratch record.
-			selected_row = current_art_row;
-			out_flag_a = current_flag_a;
-			out_flag_b = current_flag_b;
-			selected = true;
+		if (final_sweep && !final_sweep_classified_cell) {
+			selected = select_final_sweep_class0_visual_row_4ba938(
+					toolkit,
+					rows,
+					current_art_row,
+					0,
+					0,
+					neighbor_mask,
+					live_visual_rng,
+					selected_row,
+					out_flag_a,
+					out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class != 0) {
 			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class == 0) {
@@ -17516,7 +17523,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					out_flag_a,
 					out_flag_b);
 		} else {
-			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		}
 		if (!selected) {
 			if (final_sweep) {
@@ -23616,13 +23623,18 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 					y,
 					terrain_id);
 		}
-		if (final_sweep && !final_sweep_classified_cell && current_record_matches_terrain) {
-			// Recovered 0x4bbfcc branches count-zero final-sweep cells through
-			// 0x4bc5a3, which copies the current 0x4bb71b scratch record.
-			selected_row = current_art_row;
-			out_flag_a = current_flag_a;
-			out_flag_b = current_flag_b;
-			selected = true;
+		if (final_sweep && !final_sweep_classified_cell) {
+			selected = select_final_sweep_class0_visual_row_4ba938(
+					toolkit,
+					rows,
+					current_art_row,
+					0,
+					0,
+					neighbor_mask,
+					live_visual_rng,
+					selected_row,
+					out_flag_a,
+					out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class != 0) {
 			selected = select_classified_visual_row_for_grid_cell_4bbfcc(toolkit, rows, terrain_id, classified, current_art_row, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		} else if (final_sweep_classified_cell && classified.shape_class == 0) {
@@ -23638,7 +23650,7 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 					out_flag_a,
 					out_flag_b);
 		} else {
-			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		}
 		if (!selected) {
 			if (final_sweep && current_record_matches_terrain) {
