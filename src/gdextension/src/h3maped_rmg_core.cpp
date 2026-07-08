@@ -23053,8 +23053,10 @@ static RouteFreeCellPhaseResult4a8260 route_free_cell_phase_0x4a8260_0x4a4c8e(Ge
 				}
 				result.candidate_boundary_trigger_count_0x4a4c8e += 1;
 				generated_cell_49aa63(record, true);
-				for (int32_t local_y = std::max<int32_t>(0, y - 1); local_y < std::min<int32_t>(grid.height, y + 2); ++local_y) {
-					for (int32_t local_x = std::max<int32_t>(0, x - 1); local_x < std::min<int32_t>(grid.width, x + 2); ++local_x) {
+				// 0x4e01..0x4e5f narrows the second 0x49aa63 pass to the current
+				// pseudo-coordinate cell; the following 0x49a932 pass owns the 3x3 clear.
+				for (int32_t local_y = std::max<int32_t>(0, y); local_y < std::min<int32_t>(grid.height, y + 1); ++local_y) {
+					for (int32_t local_x = std::max<int32_t>(0, x); local_x < std::min<int32_t>(grid.width, x + 1); ++local_x) {
 						const int64_t candidate_flat = cell_index(grid.width, grid.height, local_x, local_y, level);
 						if (candidate_flat < 0 || candidate_flat >= int64_t(grid.records.size())) {
 							continue;
