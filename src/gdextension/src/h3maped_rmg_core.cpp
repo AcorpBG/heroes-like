@@ -776,17 +776,6 @@ bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, 
 	return true;
 }
 
-void copy_selected_visual_row_flags_4bad0f(const std::vector<TerrainVisualRow> &rows, int32_t selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
-	if (selected_row < 0 || selected_row >= int32_t(rows.size())) {
-		out_flag_a = 0;
-		out_flag_b = 0;
-		return;
-	}
-	const TerrainVisualRow &row = rows[size_t(selected_row)];
-	out_flag_a = row.flag_a;
-	out_flag_b = row.flag_b;
-}
-
 bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
 	out_flag_a = 0;
 	out_flag_b = 0;
@@ -809,8 +798,10 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 }
 
 bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba868 &toolkit, const std::vector<TerrainVisualRow> &rows, int32_t current_row, int32_t classified_flag_a, int32_t classified_flag_b, int32_t neighbor_mask, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
-	out_flag_a = classified_flag_a;
-	out_flag_b = classified_flag_b;
+	(void)classified_flag_a;
+	(void)classified_flag_b;
+	out_flag_a = 0;
+	out_flag_b = 0;
 	if (current_row >= 0 && current_row < int32_t(rows.size()) && rows[size_t(current_row)].shape_class == 0) {
 		selected_row = current_row;
 		return true;
@@ -1423,7 +1414,6 @@ bool select_classified_visual_row_for_grid_cell_4bbfcc(const TerrainVisualToolki
 		if (!select_visual_row_from_range_4ba938(toolkit.simple_ranges_0x5a4318[size_t(slot)], rng, selected_row)) {
 			return false;
 		}
-		copy_selected_visual_row_flags_4bad0f(rows, selected_row, out_flag_a, out_flag_b);
 		return true;
 	}
 	// Normal toolkit vfunc 0x4ba989 checks only the shape class and selects from
