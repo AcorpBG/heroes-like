@@ -6159,6 +6159,51 @@ int main() {
 				"0x4a901a weighted candidate scan did not dispatch through 0x4a54a7 into object-vector/reference/counter state")) {
 		return 1;
 	}
+	GeneratorObjectPrivateState weighted_source_identity_state = weighted_scan_state;
+	weighted_source_identity_state.object_records_0xec4_ecc.resize(4);
+	weighted_source_identity_state.object_record_sequence_allocator_0xf44 = 5;
+	weighted_source_identity_state.next_native_object_record_key_0x4a93a2 = 0x036b6d40U;
+	weighted_source_identity_state.object_record_allocation_count_0x4a93a2 = 0;
+	weighted_source_identity_state.weighted_candidate_vectors_0x4a901a.clear();
+	weighted_source_identity_state.weighted_candidate_vector_count_0x4a901a = 0;
+	weighted_source_identity_state.weighted_candidate_total_count_0x4a901a = 0;
+	weighted_source_identity_state.weighted_candidate_selected_count_0x4a901a = 0;
+	weighted_source_identity_state.weighted_candidate_commit_count_0x4a901a = 0;
+	weighted_source_identity_state.descriptor_counter_table_0x1110[size_t(98)] = 4U;
+	for (GeneratedCellRecord0x30 &record : weighted_source_identity_state.generated_cell_buffer.records) {
+		record.object_reference_count = 0;
+		record.object_references_0x04_0x08.clear();
+		record.word_0x20 = 0xff000064U;
+		record.word_0x28 = 0x12005000U;
+	}
+	install_source_type98_bucket_fixture_0x658(weighted_source_identity_state, 77);
+	aurelion::h3maped_rmg_core::H3MapedRng weighted_source_identity_rng;
+	weighted_source_identity_rng.state = 10U;
+	const auto weighted_source_identity_reject =
+			aurelion::h3maped_rmg_core::weighted_object_candidate_scan_0x4a901a(
+					weighted_source_identity_state,
+					weighted_join,
+					0,
+					77,
+					weighted_raw_scan_low_x,
+					weighted_raw_scan_low_y,
+					weighted_raw_scan_high_x,
+					weighted_raw_scan_high_y,
+					0,
+					83,
+					weighted_source_identity_rng,
+					-1,
+					0U,
+					false,
+					2);
+	if (!require(!weighted_source_identity_reject.committed
+					&& weighted_source_identity_reject.blocked_reason == "0x4a901a_weighted_candidate_vector_empty_after_value_floor_and_0x49aa93_filters"
+					&& weighted_source_identity_reject.vector_state_0x4a901a.owner_byte_reject_count == 1
+					&& weighted_source_identity_reject.vector_state_0x4a901a.value_floor_reject_count == 0
+					&& weighted_source_identity_state.object_record_allocation_count_0x4a93a2 == 0,
+				"0x4a901a weighted candidate scan used relation owner instead of recovered source-pair +0x00 identity")) {
+		return 1;
+	}
 	GeneratorObjectPrivateState scheduler_success_state = weighted_scan_state;
 	scheduler_success_state.object_records_0xec4_ecc.resize(4);
 	scheduler_success_state.object_record_sequence_allocator_0xf44 = 5;
