@@ -653,7 +653,7 @@ int main() {
 			record.object_reference_count = 0;
 			record.object_references_0x04_0x08.clear();
 			record.word_0x20_known = true;
-			record.word_0x20 = 0xff000064U;
+			record.word_0x20 = 0xff070064U;
 			record.word_0x24_known = true;
 			record.word_0x24 = 0x00000540U;
 			record.word_0x28_known = true;
@@ -665,7 +665,7 @@ int main() {
 		generic_owner.runtime_zone_index = 0;
 		generic_owner.owner_vector_index = 0;
 		generic_owner.relation_owner_byte2_0x4aa9b7_known = true;
-		generic_owner.relation_owner_byte2_0x4aa9b7 = 0;
+		generic_owner.relation_owner_byte2_0x4aa9b7 = 7;
 		generic_owner.coordinate_triple_0x10_0x18_known = true;
 		generic_owner.coordinate_x_0x10 = 6;
 		generic_owner.coordinate_y_0x14 = 6;
@@ -685,7 +685,7 @@ int main() {
 		SourceObjectResolverSourcePair4af785 generic_pair = generic_replay_join_state.source_pairs_0xedc[0];
 		generic_pair.source_record_copy = generic_record;
 		generic_pair.source_order_relation_context_known = true;
-		generic_pair.source_order_relation_owner_byte2 = 0;
+		generic_pair.source_order_relation_owner_byte2 = 7;
 		generic_pair.source_order_source_pair_key_0x0c_known = true;
 		generic_pair.source_order_source_pair_key_0x0c = 5;
 		generic_pair.source_order_anchor_known = true;
@@ -713,6 +713,9 @@ int main() {
 						&& generic_replay_state.object_records_0xec4_ecc.back().source_order_direct_record_0x4a8d2c_0x4a93a2_known
 						&& generic_replay_state.object_records_0xec4_ecc.back().object_record_key == 0x036b7000U
 						&& generic_replay_state.object_records_0xec4_ecc.back().object_record_selected_index_0x20 == 2
+						&& generic_replay_state.source_order_direct_candidate_vectors_0x4a93a2.size() == 1
+						&& generic_replay_state.source_order_direct_candidate_vectors_0x4a93a2[0].source_record_identity_0x00 == generic_pair.copied_source_catalog_index
+						&& generic_replay_state.source_order_direct_candidate_vectors_0x4a93a2[0].source_record_identity_0x00 != generic_pair.source_order_relation_owner_byte2
 						&& generic_replay_state.descriptor_counter_table_0x1110[size_t(generic_record.type_id_0x1c)] == 1U
 						&& generic_replay_state.relation_owner_vectors_10e4_10e8[0].descriptor_type_counters_0x44[size_t(generic_record.type_id_0x1c)] == 1U
 						&& generic_target.object_reference_count == 1
@@ -2613,6 +2616,7 @@ int main() {
 						&& owner.source_pointer_type_0x04_known
 						&& owner.source_pointer_type_0x04 == 3
 						&& owner.source_order_source_record_field_0x04_known
+						&& owner.source_order_boundary_field_0x04 == 3
 						&& owner.source_order_source_record_0x00.owner_or_type_0x04 == 3,
 					"0x4a3a03 appended synthetic owners must pass through 0x49b452 and preserve the recovered source-record type 3 overwrite")) {
 			return 1;
@@ -3617,9 +3621,13 @@ int main() {
 						&& fixed_town_owner != nullptr
 						&& fixed_town_owner->source_pointer_0x00_known
 						&& fixed_town_owner->source_pointer_source_index_0x00 == 0
+						&& fixed_town_owner->source_order_source_record_0x00_known
+						&& fixed_town_owner->source_order_source_record_0x00.owner_or_type_0x04 == 0
+						&& fixed_town_owner->source_order_source_record_field_0x04_known
+						&& fixed_town_owner->source_order_boundary_field_0x04 == 3
 						&& fixed_town_owner->town_choice_0x04_known
 						&& fixed_town_owner->town_choice_0x04 == 5,
-					"0x4a218c did not preserve selected-order owner state while applying generator+0xf24 fixed player town override after 0x49b3c1 RNG")) {
+					"0x4a218c did not preserve selected-order owner state and separate scheduler source record from 0x4a3a03 boundary classification")) {
 			return 1;
 		}
 	}
@@ -6212,24 +6220,25 @@ int main() {
 					0,
 					true,
 					0);
-	const int64_t scheduler_early_direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, 107, 6, 0);
+	const int64_t scheduler_early_direct_target_flat = aurelion::h3maped_rmg_core::cell_index(112, 112, weighted_adjusted_candidate_x, weighted_adjusted_candidate_y, 0);
 	const GeneratedCellRecord0x30 &scheduler_early_direct_target =
 			scheduler_early_direct_state.generated_cell_buffer.records[size_t(scheduler_early_direct_target_flat)];
 	if (!require(!scheduler_early_direct.calls.empty()
-					&& scheduler_early_direct.calls[0].early_direct_0x4a901a
+					&& !scheduler_early_direct.calls[0].early_direct_0x4a901a
 					&& scheduler_early_direct.calls[0].committed
 					&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_before == 0
-					&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_after == 1
-					&& scheduler_early_direct.early_direct_call_count_0x4a901a == 1
-					&& scheduler_early_direct.source_pair_success_byte_0x3c_final == 1
-					&& scheduler_early_direct_state.source_order_direct_commit_count_0x4a93a2 == 1
-					&& scheduler_early_direct_state.weighted_candidate_commit_count_0x4a901a == 0
+					&& scheduler_early_direct.calls[0].source_pair_success_byte_0x3c_after == 0
+					&& scheduler_early_direct.calls[0].weighted_candidate_vector_index_0x4a901a == 0
+					&& scheduler_early_direct.early_direct_call_count_0x4a901a == 0
+					&& scheduler_early_direct.source_pair_success_byte_0x3c_final == 0
+					&& scheduler_early_direct_state.source_order_direct_commit_count_0x4a93a2 == 0
+					&& scheduler_early_direct_state.weighted_candidate_commit_count_0x4a901a == 1
 					&& scheduler_early_direct_state.object_records_0xec4_ecc.size() == size_t(5)
-					&& scheduler_early_direct_state.object_records_0xec4_ecc.back().source_order_direct_record_0x4a8d2c_0x4a93a2_known
+					&& scheduler_early_direct_state.object_records_0xec4_ecc.back().weighted_record_0x4a93a2_known
 					&& scheduler_early_direct_state.descriptor_counter_table_0x1110[size_t(98)] == 5U
 					&& scheduler_early_direct_target.object_reference_count == 1
 					&& scheduler_early_direct_target.object_references_0x04_0x08[0] == 0x036b6d40U,
-				"0x4a901a did not take recovered early 0x4a93a2 direct-placement branch while source-pair +0x3c was zero")) {
+				"0x4a901a did not preserve recovered argument-gated weighted path while source-pair +0x3c was zero")) {
 		return 1;
 	}
 	GeneratorObjectPrivateState direct_placement_state;
