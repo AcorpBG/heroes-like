@@ -776,7 +776,8 @@ bool select_visual_row_from_range_4ba938(const TerrainVisualRange4ba868 &range, 
 	return true;
 }
 
-bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t current_row_arg_0x4ba938, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba868 &toolkit, int32_t selector_mask_arg_0x4bce6d, int32_t current_row_arg_0x4ba938, H3MapedRng &rng, int32_t &selected_row, int32_t &out_flag_a, int32_t &out_flag_b) {
+	(void)current_row_arg_0x4ba938;
 	out_flag_a = 0;
 	out_flag_b = 0;
 	if (toolkit.simple_vtable_4baa66) {
@@ -789,7 +790,7 @@ bool select_base_visual_row_for_grid_cell_4bcfc3(const TerrainVisualToolkit4ba86
 	if (toolkit.ranges_0x14[1].count > 0) {
 		const int32_t probability_rng_value = rng.next();
 		const uint32_t probability_threshold =
-				(uint32_t(toolkit.range_probability_0x08) * uint32_t(current_row_arg_0x4ba938)) >> 3U;
+				(uint32_t(toolkit.range_probability_0x08) * uint32_t(selector_mask_arg_0x4bce6d)) >> 3U;
 		range = uint32_t(probability_rng_value % 100) < probability_threshold ? &toolkit.ranges_0x14[1] : &toolkit.ranges_0x14[0];
 	}
 	if (!select_visual_row_from_range_4ba938(*range, rng, selected_row)) {
@@ -810,7 +811,7 @@ bool select_final_sweep_class0_visual_row_4ba938(const TerrainVisualToolkit4ba86
 	}
 	int32_t ignored_flag_a = 0;
 	int32_t ignored_flag_b = 0;
-	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, current_row, rng, selected_row, ignored_flag_a, ignored_flag_b);
+	return select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, current_row, rng, selected_row, ignored_flag_a, ignored_flag_b);
 }
 
 uint32_t terrain_scratch_word_4bad0f(int32_t terrain_id, int32_t selected_row, int32_t flag_a, int32_t flag_b) {
@@ -17523,7 +17524,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					out_flag_a,
 					out_flag_b);
 		} else {
-			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		}
 		if (!selected) {
 			if (final_sweep) {
@@ -23650,7 +23651,7 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 					out_flag_a,
 					out_flag_b);
 		} else {
-			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
+			selected = select_base_visual_row_for_grid_cell_4bcfc3(toolkit, neighbor_mask, -1, live_visual_rng, selected_row, out_flag_a, out_flag_b);
 		}
 		if (!selected) {
 			if (final_sweep && current_record_matches_terrain) {
