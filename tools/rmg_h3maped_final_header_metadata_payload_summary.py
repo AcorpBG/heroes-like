@@ -119,7 +119,7 @@ def section_for_site(site: dict[str, Any]) -> str:
     return "metadata_helper_payload"
 
 
-def summarize(ledger_path: Path, ghidra_dir: Path) -> tuple[dict[str, Any], bytes]:
+def summarize(ledger_path: Path, ghidra_dir: Path, profile: str = PROFILE) -> tuple[dict[str, Any], bytes]:
     ledger = load_json(ledger_path)
     static = summarize_static(ghidra_dir)
     raw_sites = {site["address"]: site for site in static["raw_stream_write_sites"]}
@@ -207,7 +207,7 @@ def summarize(ledger_path: Path, ghidra_dir: Path) -> tuple[dict[str, Any], byte
             else "final_header_player_metadata_payload_replay_incomplete"
         ),
         "scope": {
-            "profile": PROFILE,
+            "profile": profile,
             "positive_claim": "same-run byte replay for raw final header/player/static metadata stream writes around 0x4ac857, 0x4ad1e3, 0x4ad3eb, and their direct metadata helpers",
             "negative_claim": "does not replay tile bytes, generated-object vtable payloads, or claim native RMG parity",
         },
@@ -258,9 +258,10 @@ def main() -> int:
     parser.add_argument("--ghidra-dir", type=Path, default=DEFAULT_GHIDRA_DIR)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--bytes-out", type=Path, default=DEFAULT_BYTES_OUT)
+    parser.add_argument("--profile", default=PROFILE)
     args = parser.parse_args()
 
-    summary, payload = summarize(args.ledger, args.ghidra_dir)
+    summary, payload = summarize(args.ledger, args.ghidra_dir, args.profile)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.bytes_out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

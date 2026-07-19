@@ -1680,6 +1680,14 @@ static func _persist_and_load_generated_packages(service: Variant, adoption: Dic
 	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
 	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
 	var boundary: Dictionary = adoption.get("session_boundary_record", {}) if adoption.get("session_boundary_record", {}) is Dictionary else {}
+	if String(boundary.get("scenario_id", "")) == "":
+		boundary["scenario_id"] = String(scenario_ref.get("scenario_id", scenario_document.get_scenario_id()))
+	if String(boundary.get("map_id", "")) == "":
+		boundary["map_id"] = String(map_ref.get("map_id", map_document.get_map_id()))
+	if String(boundary.get("session_id", "")) == "":
+		boundary["session_id"] = "native_rmg_session_%s" % String(boundary.get("map_id", ""))
+	if String(boundary.get("hero_id", "")) == "":
+		boundary["hero_id"] = "hero_lyra"
 	boundary["map_package_ref"] = map_ref
 	boundary["scenario_package_ref"] = scenario_ref
 	boundary["launch_mode"] = SessionStateStoreScript.LAUNCH_MODE_SKIRMISH

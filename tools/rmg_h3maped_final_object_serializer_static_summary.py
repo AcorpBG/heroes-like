@@ -29,10 +29,13 @@ from typing import Any
 ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_CALLSTREAM = ROOT / "final_object_callstream_summary_20260610.json"
 DEFAULT_GHIDRA_DIR = ROOT / "ghidra_final_object_serializers_20260610"
+DEFAULT_EXTRA_GHIDRA_DUMPS = [
+    ROOT / "ghidra_selected_recycle_owner_dump_20260610" / "caller_0049c3f4_FUN_0049c3f4.txt"
+]
 DEFAULT_OUT = ROOT / "final_object_serializer_static_summary_20260610.json"
 
 INSTRUCTION_RE = re.compile(r"^([0-9a-fA-F]{8}):\s+(.*)$")
-TARGET_RE = re.compile(r"target_([0-9a-fA-F]{8})_FUN_[0-9a-fA-F]+\.txt$")
+TARGET_RE = re.compile(r"(?:target|caller)_([0-9a-fA-F]{8})_FUN_[0-9a-fA-F]+\.txt$")
 PUSH_IMMEDIATE_RE = re.compile(r"^PUSH\s+0x([0-9a-fA-F]+)$")
 CALL_DIRECT_RE = re.compile(r"^CALL\s+0x([0-9a-fA-F]+)$")
 EDI_OFFSET_RE = re.compile(r"\[EDI\s+\+\s+0x([0-9a-fA-F]+)\]")
@@ -247,11 +250,17 @@ def load_serializer_counts(callstream: dict[str, Any]) -> dict[str, int]:
     return {hex32(key) or key: int(value) for key, value in counts.items()}
 
 
-def summarize(callstream_path: Path, ghidra_dir: Path) -> dict[str, Any]:
+def summarize(
+    callstream_path: Path,
+    ghidra_dir: Path,
+    extra_ghidra_dumps: list[Path] | None = None,
+) -> dict[str, Any]:
     callstream = load_json(callstream_path)
     serializer_counts = load_serializer_counts(callstream)
     functions: dict[str, dict[str, Any]] = {}
-    for path in sorted(ghidra_dir.glob("target_*_FUN_*.txt")):
+    dump_paths = list(ghidra_dir.glob("target_*_FUN_*.txt"))
+    dump_paths.extend(extra_ghidra_dumps or [])
+    for path in sorted(set(dump_paths)):
         summary = summarize_function(path)
         entry = summary["entry"]
         summary["final_callstream_count"] = serializer_counts.get(entry, 0)
@@ -294,6 +303,7 @@ def summarize(callstream_path: Path, ghidra_dir: Path) -> dict[str, Any]:
         "inputs": {
             "callstream_summary": str(callstream_path),
             "ghidra_serializer_dir": str(ghidra_dir),
+            "extra_ghidra_dumps": [str(path) for path in (extra_ghidra_dumps or [])],
         },
         "metrics": {
             "serializer_function_count": len(functions),
@@ -335,10 +345,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--callstream", type=Path, default=DEFAULT_CALLSTREAM)
     parser.add_argument("--ghidra-dir", type=Path, default=DEFAULT_GHIDRA_DIR)
+    parser.add_argument(
+        "--extra-ghidra-dump",
+        action="append",
+        type=Path,
+        default=list(DEFAULT_EXTRA_GHIDRA_DUMPS),
+        help="Additional recovered serializer dump outside --ghidra-dir. May be repeated.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
-    summary = summarize(args.callstream, args.ghidra_dir)
+    summary = summarize(args.callstream, args.ghidra_dir, args.extra_ghidra_dump)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

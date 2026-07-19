@@ -26,6 +26,7 @@ DEFAULT_FIRST_TILE_LEDGER = (
 )
 DEFAULT_GHIDRA_DIR = ROOT / "ghidra_writeout_spine_dump_20260610"
 DEFAULT_OUT = ROOT / "ordered_writeout_spine_summary_20260610.json"
+DEFAULT_PROFILE = "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0"
 
 EXPECTED_BOUNDARY_SEQUENCE = [
     "0x004602c1",
@@ -170,7 +171,12 @@ def checks_for_ghidra(ghidra_dir: Path) -> dict[str, Any]:
     return checks
 
 
-def summarize(boundary_ledger: Path, first_tile_ledger: Path, ghidra_dir: Path) -> dict[str, Any]:
+def summarize(
+    boundary_ledger: Path,
+    first_tile_ledger: Path,
+    ghidra_dir: Path,
+    profile: str = DEFAULT_PROFILE,
+) -> dict[str, Any]:
     boundary = load_json(boundary_ledger)
     first_tile = load_json(first_tile_ledger)
     boundary_sequence = event_sequence(boundary)
@@ -237,7 +243,7 @@ def summarize(boundary_ledger: Path, first_tile_ledger: Path, ghidra_dir: Path) 
         "schema_id": "h3maped_ordered_writeout_spine_summary_v1",
         "status": status,
         "scope": {
-            "profile": "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0",
+            "profile": profile,
             "positive_claim": "same-run ordered boundary spine from RMG entrypoint through 0x4ad1e3 final map writeout return",
             "negative_claim": "does not claim full per-cell byte payload parity or full per-object serialized payload replay",
         },
@@ -279,10 +285,11 @@ def main() -> int:
     parser.add_argument("--boundary-ledger", type=Path, default=DEFAULT_BOUNDARY_LEDGER)
     parser.add_argument("--first-tile-ledger", type=Path, default=DEFAULT_FIRST_TILE_LEDGER)
     parser.add_argument("--ghidra-dir", type=Path, default=DEFAULT_GHIDRA_DIR)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
-    summary = summarize(args.boundary_ledger, args.first_tile_ledger, args.ghidra_dir)
+    summary = summarize(args.boundary_ledger, args.first_tile_ledger, args.ghidra_dir, args.profile)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

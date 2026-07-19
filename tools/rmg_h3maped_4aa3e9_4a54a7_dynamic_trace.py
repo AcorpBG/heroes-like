@@ -262,6 +262,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--display-number", type=int, default=164)
     parser.add_argument("--screen-size", default="1024x768x24")
     parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
+    parser.add_argument("--startup-settle-seconds", type=float, default=3.0)
     parser.add_argument("--generate-wait-seconds", type=int, default=8)
     parser.add_argument("--debugger-timeout", type=int, default=180)
     parser.add_argument("--max-events", type=int, default=1800)
@@ -321,6 +322,8 @@ def main() -> int:
             str(args.display_number),
             "--screen-size",
             args.screen_size,
+            "--startup-settle-seconds",
+            str(args.startup_settle_seconds),
             "--generate-wait-seconds",
             str(args.generate_wait_seconds),
             "--debugger-timeout",

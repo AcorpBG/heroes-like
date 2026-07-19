@@ -29,6 +29,42 @@ DEFAULT_MSK_DIRS = [
     Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3ab_spr/raw"),
 ]
 
+RECOVERED_H3MAPED_DESCRIPTOR_OVERRIDES: dict[tuple[int, str], dict[str, Any]] = {
+    # Same-run H3MapEd 0x4aa9b7 descriptor payload dumps for calls 302, 200, 325, 349, and 392.
+    # These fields belong to the descriptor's 0x34..0x48 .msk surface. The
+    # 0x49da08 source record retains the objects.txt pass/action text masks.
+    (9, "ava0013.def"): {
+        "width": 2,
+        "height": 1,
+        "mask_a": 0xBFFFFFFFFFFF,
+        "mask_b": 0x400000000000,
+    },
+    (41, "ava0045.def"): {
+        "width": 3,
+        "height": 2,
+        "mask_a": 0xBFFFFFFFFFFF,
+        "mask_b": 0x400000000000,
+    },
+    (43, "ava0047.def"): {
+        "width": 2,
+        "height": 1,
+        "mask_a": 0xBFFFFFFFFFFF,
+        "mask_b": 0x400000000000,
+    },
+    (70, "ava0074.def"): {
+        "width": 2,
+        "height": 1,
+        "mask_a": 0xBFFFFFFFFFFF,
+        "mask_b": 0x400000000000,
+    },
+    (81, "ava0085.def"): {
+        "width": 2,
+        "height": 1,
+        "mask_a": 0xBFFFFFFFFFFF,
+        "mask_b": 0x400000000000,
+    },
+}
+
 
 def i32(value: Any, default: int = 0) -> int:
     text = str(value if value is not None else "").strip()
@@ -219,17 +255,31 @@ def render(catalog_path: Path, catalog_json_path: Path, metadata_path: Path, ran
     msk_exact_count = 0
     msk_default_count = 0
     for row in rows:
+        source_row = i32(row.get("source_row"), -1)
+        def_name = str(row.get("def_name", ""))
         type_id = i32(row.get("type_id"))
         metadata_bucket = source_metadata_bucket_0x08(type_id, metadata_bucket_by_type)
         subtype = i32(row.get("subtype"))
         text_mask = text_masks.get(source_record_key(row), {})
         pass_mask = text_mask.get("pass_mask", "")
         action_mask = text_mask.get("action_mask", "")
+        msk = read_msk_fields(def_name, msk_dirs)
+        recovered_override = RECOVERED_H3MAPED_DESCRIPTOR_OVERRIDES.get((source_row, def_name.lower()))
+        if recovered_override:
+            msk.update(
+                {
+                    "known": True,
+                    "exact": True,
+                    "width": int(recovered_override["width"]),
+                    "height": int(recovered_override["height"]),
+                    "mask_a": int(recovered_override["mask_a"]),
+                    "mask_b": int(recovered_override["mask_b"]),
+                }
+            )
         if pass_mask:
             pass_mask_count += 1
         if action_mask:
             action_mask_count += 1
-        msk = read_msk_fields(str(row.get("def_name", "")), msk_dirs)
         if msk["known"]:
             msk_known_count += 1
             if msk["exact"]:
@@ -258,9 +308,9 @@ def render(catalog_path: Path, catalog_json_path: Path, metadata_path: Path, ran
             )
         data_rows.append(
             "\t{ "
-            f"{i32(row.get('source_row'), -1)}, "
+            f"{source_row}, "
             f"{cpp_string(row.get('source'))}, "
-            f"{cpp_string(row.get('def_name'))}, "
+            f"{cpp_string(def_name)}, "
             f"{type_id}, "
             f"{cpp_string(row.get('type_name'))}, "
             f"{metadata_bucket}, "
@@ -398,6 +448,42 @@ RandTrnObstacleScoreRecord49dc9e to_public_rand_trn_score_record(const CatalogRa
 \treturn out;
 }}
 
+bool source_record_uses_recovered_runtime_descriptor_override_0x4aa9b7(
+\t\tconst CatalogSourceObjectRecord0x4c &row) {{
+\tswitch (row.source_row) {{
+\t\tcase 9:
+\t\t\treturn std::string(row.def_name) == "AVA0013.def";
+\t\tcase 41:
+\t\t\treturn std::string(row.def_name) == "AVA0045.def";
+\t\tcase 43:
+\t\t\treturn std::string(row.def_name) == "AVA0047.def";
+\t\tcase 70:
+\t\t\treturn std::string(row.def_name) == "AVA0074.def";
+\t\tcase 81:
+\t\t\treturn std::string(row.def_name) == "AVA0085.def";
+\t\tdefault:
+\t\t\treturn false;
+\t}}
+}}
+
+bool source_record_uses_metadata_rand_trn_alias_0x49dc9e(const CatalogSourceObjectRecord0x4c &row) {{
+\treturn !row.rand_trn_backed
+\t\t\t&& row.type_id_0x1c == 199
+\t\t\t&& row.metadata_bucket_index_0x08 == 155
+\t\t\t&& row.subtype_0x20 == 0;
+}}
+
+void append_metadata_rand_trn_alias_scores_0x49dc9e(SourceObjectRecord0x4c &out, const CatalogSourceObjectRecord0x4c &row) {{
+\tif (!source_record_uses_metadata_rand_trn_alias_0x49dc9e(row)) {{
+\t\treturn;
+\t}}
+\tfor (const CatalogRandTrnObstacleScoreRecord49dc9e &score : RAND_TRN_SCORE_RECORDS_0X49DC9E) {{
+\t\tif (score.type_id == row.metadata_bucket_index_0x08 && score.subtype == row.subtype_0x20) {{
+\t\t\tout.rand_trn_score_records_0x49dc9e.push_back(to_public_rand_trn_score_record(score));
+\t\t}}
+\t}}
+}}
+
 SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row) {{
 \tSourceObjectRecord0x4c out;
 \tout.source_row = row.source_row;
@@ -431,6 +517,8 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 \tout.terrain_mask_b_0x18 = row.terrain_mask_b_0x18;
 \tout.descriptor_mask_fields_0x34_0x48_known = row.descriptor_mask_fields_0x34_0x48_known;
 \tout.descriptor_mask_fields_exact_def_msk = row.descriptor_mask_fields_exact_def_msk;
+\tout.descriptor_mask_fields_recovered_runtime_override_0x4aa9b7 =
+\t\t\tsource_record_uses_recovered_runtime_descriptor_override_0x4aa9b7(row);
 \tout.descriptor_width_0x34 = row.descriptor_width_0x34;
 \tout.descriptor_height_0x38 = row.descriptor_height_0x38;
 \tout.descriptor_mask_a_0x3c_0x40 = row.descriptor_mask_a_0x3c_0x40;
@@ -444,6 +532,7 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 \t\t\tout.rand_trn_score_records_0x49dc9e.push_back(to_public_rand_trn_score_record(RAND_TRN_SCORE_RECORDS_0X49DC9E[score_index]));
 \t\t}}
 \t}}
+\tappend_metadata_rand_trn_alias_scores_0x49dc9e(out, row);
 \treturn out;
 }}
 
@@ -508,8 +597,8 @@ SourceObjectCatalogSummary0x49da08 source_object_catalog_summary_0x49da08() {{
 \t\t}}
 \t\tif (record.rand_trn_backed) {{
 \t\t\tsummary.rand_trn_backed_record_count += 1;
+\t\t\tsummary.rand_trn_score_variant_count += int32_t(record.rand_trn_score_records_0x49dc9e.size());
 \t\t}}
-\t\tsummary.rand_trn_score_variant_count += int32_t(record.rand_trn_score_records_0x49dc9e.size());
 \t\tif (record.type_id_0x1c == 53) {{
 \t\t\tsummary.mine_type53_record_count += 1;
 \t\t\tmine_subtype_counts[record.subtype_0x20] += 1;

@@ -15,8 +15,12 @@ constexpr uint32_t CELL_DECOR_READY_BIT_25 = 1U << 25U;
 constexpr uint32_t CELL_DECOR_CANDIDATE_BIT_26 = 1U << 26U;
 constexpr uint32_t CELL_OCCUPIED_BLOCKED_BIT_27 = 1U << 27U;
 constexpr uint32_t CELL_BYTE_0X2B_LOW_BIT_24 = 1U << 24U;
+constexpr uint32_t CELL_WATER_ADJACENCY_PASSABILITY_BIT_21_0X49A1EF = 1U << 21U;
+constexpr uint8_t CELL_WATER_ADJACENCY_PASSABILITY_BYTE_0X2A_BIT_5_0X49A1EF = 0x20U;
 constexpr uint8_t CELL_REWARD_GUARD_FINAL_MARK_BYTE_0X2A_BIT_7 = 0x80U;
 constexpr uint32_t CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28 = 1U << 28U;
+constexpr uint32_t CELL_RIVER_TERMINAL_BIT_29_0X49B1BC = 1U << 29U;
+constexpr uint32_t CELL_BORDER_RIVER_SCAN_BIT_30_0X4ABC20 = 1U << 30U;
 constexpr uint32_t CELL_TERRAIN_FLAG_SHIFT_0X49ACF6 = 15U;
 constexpr uint32_t CELL_TERRAIN_FLAG_MASK_0X49ACF6 = 0x03U << CELL_TERRAIN_FLAG_SHIFT_0X49ACF6;
 constexpr uint32_t GENERATED_CELL_INITIAL_WORD_0X10 = 0xffffffffU;
@@ -57,6 +61,7 @@ constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AD8 = 0x00540ad8U;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540AB0 = 0x00540ab0U;
 constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B00 = 0x00540b00U;
 constexpr uint32_t PROJECTION_OBJECT_VTABLE_0X540B14 = 0x00540b14U;
+constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B28 = 0x00540b28U;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B3C = 0x00540b3cU;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B50 = 0x00540b50U;
 constexpr uint32_t OBJECT_RECORD_VTABLE_0X540B64 = 0x00540b64U;
@@ -214,6 +219,7 @@ struct SourceObjectRecord0x4c {
 	uint16_t terrain_mask_b_0x18 = 0U;
 	bool descriptor_mask_fields_0x34_0x48_known = false;
 	bool descriptor_mask_fields_exact_def_msk = false;
+	bool descriptor_mask_fields_recovered_runtime_override_0x4aa9b7 = false;
 	int32_t descriptor_width_0x34 = 0;
 	int32_t descriptor_height_0x38 = 0;
 	uint64_t descriptor_mask_a_0x3c_0x40 = 0U;
@@ -549,6 +555,13 @@ struct SourceOrderObjectPlacementState4a93a2 {
 	int32_t source_record_identity_0x00 = -1;
 	int32_t source_pair_key_0x0c = -1;
 	int32_t source_type98_bucket_0x658_count = 0;
+	int32_t source_bucket_record_row_0x658 = -1;
+	int32_t source_bucket_record_type_0x1c = -1;
+	int32_t source_bucket_record_subtype_0x20 = -1;
+	int32_t source_bucket_record_group_0x24 = -1;
+	int32_t source_bucket_record_width_0x34 = 0;
+	int32_t source_bucket_record_height_0x38 = 0;
+	std::string source_bucket_record_def_name_0x658;
 	int32_t selected_index_0x20 = -1;
 	bool enabled_low_byte_0x24 = false;
 	int32_t anchor_x_0x10 = 0;
@@ -566,6 +579,27 @@ struct SourceOrderObjectPlacementState4a93a2 {
 	int32_t owner_byte_reject_count = 0;
 	int32_t distance_reject_count = 0;
 	int32_t eligibility_reject_count_0x49aa93 = 0;
+	std::string eligibility_reject_reason_0x49aa93;
+	bool first_footprint_trace_known_0x49a6f9 = false;
+	std::string first_footprint_trace_reason_0x49a6f9;
+	int32_t first_footprint_trace_anchor_x = 0;
+	int32_t first_footprint_trace_anchor_y = 0;
+	int32_t first_footprint_trace_mask_x = 0;
+	int32_t first_footprint_trace_mask_y = 0;
+	bool first_footprint_trace_secondary_mask = false;
+	bool first_footprint_trace_primary_mask = false;
+	int32_t first_footprint_trace_cell_x = 0;
+	int32_t first_footprint_trace_cell_y = 0;
+	bool first_footprint_trace_cell_present = false;
+	bool first_footprint_trace_cell_word_0x20_known = false;
+	uint32_t first_footprint_trace_cell_word_0x20 = 0U;
+	bool first_footprint_trace_cell_word_0x24_known = false;
+	uint32_t first_footprint_trace_cell_word_0x24 = 0U;
+	bool first_footprint_trace_cell_word_0x28_known = false;
+	uint32_t first_footprint_trace_cell_word_0x28 = 0U;
+	int32_t first_footprint_trace_cell_owner_byte2 = 0;
+	int32_t first_footprint_trace_cell_terrain_code = 0;
+	bool first_footprint_trace_cell_valid_0x49a1d8 = false;
 	int32_t local_vector_clear_count_0x4ae52a = 0;
 	int32_t local_vector_append_count_0x4ae1fd = 0;
 	int32_t accepted_candidate_count = 0;
@@ -616,6 +650,10 @@ struct SourceOrderSchedulerSourceRecord4a8db2 {
 	int32_t field_0x38 = 0;
 	bool field_0x3c_known = false;
 	int32_t field_0x3c = 0;
+	bool selector_field_0x40_known = false;
+	uint8_t selector_field_0x40 = 0U;
+	bool allowed_town_mask_0x41_0x49_known = false;
+	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 };
 
 struct SourceOrderSchedulerLane4a8db2 {
@@ -773,6 +811,7 @@ int32_t map_width_for_size_class(const std::string &size_class);
 int32_t water_mode_code(const std::string &water_mode);
 int32_t size_score(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code);
 bool supports_one_level_land_scope(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
+bool supports_recovered_workflow_execution_scope(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
 std::string strict_scope_id(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
 std::string strict_scope_label(int32_t width, int32_t height, int32_t level_count, const std::string &water_mode, const std::string &size_class);
 GeneratedCellInitialWords generated_cell_initializer_0x499ea3(uint32_t old_word_0x24 = 0U, uint32_t old_word_0x28 = 0U, uint32_t old_word_0x2c = 0U);
@@ -993,6 +1032,11 @@ struct RuntimeZoneFootprintInput4a3a03 {
 	bool synthetic_source_record_candidate_container_count_0x4a3c77_known = false;
 	int32_t synthetic_source_record_candidate_container_count_0x4a3c77 = -1;
 	int32_t boundary_payload_owner_word_0x4a325d = -1;
+	bool recovered_allowed_town_mask_0x41_0x49_known = false;
+	uint16_t recovered_allowed_town_mask_0x41_0x49 = 0U;
+	int32_t recovered_selected_town_choice_index_0x49b3c1 = -1;
+	bool recovered_relation_owner_dword_0x08_known = false;
+	int32_t recovered_relation_owner_dword_0x08 = -1;
 };
 
 struct RuntimeZoneBoundaryInput4a3a03 {
@@ -1069,6 +1113,10 @@ struct RuntimeZoneSeedInput4a218c {
 	int32_t source_base_size = 0;
 	uint16_t allowed_town_mask_0x41_0x49 = 0U;
 	int32_t selected_town_choice_index_0x49b3c1 = -1;
+	bool source_order_selector_field_0x40_known = false;
+	uint8_t source_order_selector_field_0x40 = 0U;
+	bool source_order_allowed_town_mask_0x41_0x49_known = false;
+	uint16_t source_order_allowed_town_mask_0x41_0x49 = 0U;
 	bool terrain_match_to_town_0x84 = false;
 	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	int32_t fixed_player_town_choice_index_0xf24 = -1;
@@ -1119,6 +1167,11 @@ struct TemplateZoneRecord4a218c {
 	bool terrain_match_to_town_0x84 = false;
 	AllowedTerrainFlags0x85_0x8c allowed_terrain_flags_0x85_0x8c;
 	SourceZonePayload4a218c source_payload;
+	int32_t fixed_player_town_choice_index_0xf24 = -1;
+	bool source_order_selector_field_0x40_known = false;
+	uint8_t source_order_selector_field_0x40 = 0U;
+	bool source_order_allowed_town_mask_0x41_0x49_known = false;
+	uint16_t source_order_allowed_town_mask_0x41_0x49 = 0U;
 };
 
 struct TemplateLinkRecord4a1f3b {
@@ -1356,6 +1409,7 @@ struct GeneratorRelationOwnerState4a218c {
 	int32_t runtime_zone_index = -1;
 	int32_t source_zone_id = -1;
 	int32_t source_index = -1;
+	bool synthetic_source_record_0x4a3dbc = false;
 	bool constructor_0x49b452_known = false;
 	bool source_pointer_0x00_known = false;
 	int32_t source_pointer_source_index_0x00 = -1;
@@ -1402,6 +1456,8 @@ struct GeneratorRelationOwnerState4a218c {
 	std::array<SourceTreasureBand4a218c, 3> reward_guard_source_bands_0xa0_0xc0;
 	bool mine_resource_rules_0x4c_0x84_known = false;
 	SourceMineRules4a218c mine_resource_rules_0x4c_0x84;
+	// These fields model the +0xc8/+0xcc vector on the source record pointed
+	// to by outer relation owner +0x00, not a vector embedded in the owner.
 	bool source_endpoint_vector_0xc8_0xcc_present = false;
 	bool source_endpoint_vector_0xc8_0xcc_contents_known = false;
 	bool source_endpoint_vector_0xc8_0xcc_count_known = false;
@@ -1717,6 +1773,52 @@ struct TerrainVisualMissingBucketSample4bcfc3 {
 	bool final_sweep = false;
 };
 
+struct TerrainRepaintCandidateSample4a4163 {
+	int32_t sequence_index = 0;
+	int32_t owner_index = 0;
+	int32_t owner_gate_byte2 = 0;
+	int32_t terrain_id = 0;
+	int32_t level = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t low_x = 0;
+	int32_t low_y = 0;
+	int32_t high_x = 0;
+	int32_t high_y = 0;
+	int32_t coordinate_x = 0;
+	int32_t coordinate_y = 0;
+	int32_t coordinate_level = 0;
+	uint32_t word_0x20 = 0U;
+	uint32_t word_0x28 = 0U;
+	uint32_t rng_state_before_candidate_0x4a4163 = 0U;
+	uint32_t rng_state_after_candidate_0x4a4163 = 0U;
+};
+
+struct TerrainVisualWriteSample4bad0f {
+	int32_t sequence_index = 0;
+	int32_t level = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t terrain_id = 0;
+	int32_t selected_row = 0;
+	int32_t flag_a = 0;
+	int32_t flag_b = 0;
+	int32_t neighbor_mask = 0;
+	int32_t current_art_row = -1;
+	bool current_record_matches_terrain = false;
+	bool final_sweep = false;
+	bool final_sweep_classified_cell = false;
+	int32_t final_sweep_shape_class = 0;
+	int32_t write_context_code_0x4bad0f = 0;
+	int32_t context_owner_index = -1;
+	int32_t context_active_terrain = -1;
+	int32_t context_origin_x = -1;
+	int32_t context_origin_y = -1;
+	bool context_terrain_changed_0x4bb681 = false;
+	uint32_t rng_state_before_selection = 0U;
+	uint32_t rng_state_after_selection = 0U;
+};
+
 struct TerrainRepaintResult4a3f27 {
 	bool executed = false;
 	std::string status;
@@ -1749,6 +1851,9 @@ struct TerrainRepaintResult4a3f27 {
 	int32_t terrain_visual_final_sweep_cell_count_0x4bbfcc = 0;
 	int32_t terrain_visual_final_sweep_class_correction_count_0x4bbfcc = 0;
 	int32_t terrain_visual_preserved_current_record_count_0x4bc5a3 = 0;
+	int32_t terrain_visual_write_sample_sequence_count_0x4bad0f = 0;
+	std::array<int32_t, 64> terrain_visual_write_context_counts_0x4bad0f {};
+	std::array<int32_t, 64> terrain_visual_rng_draw_context_counts_0x4bad0f {};
 	bool terrain_visual_queue_drain_complete_0x4bc5f0 = false;
 	bool relation_owner_scan_bounds_0x4a1f3b_applied = false;
 	int32_t relation_owner_scan_bounds_known_count_0x4a1f3b = 0;
@@ -1758,6 +1863,10 @@ struct TerrainRepaintResult4a3f27 {
 	int32_t relation_owner_eligibility_marker_existing_count_0x4a2ec3 = 0;
 	int32_t relation_owner_eligibility_marker_water_skip_count_0x4a2ec3 = 0;
 	int32_t relation_owner_eligibility_marker_bounds_skip_count_0x4a2ec3 = 0;
+	bool relation_owner_coast_boundary_0x4a30c2_applied = false;
+	int32_t relation_owner_coast_boundary_segment_count_0x4a2cdc = 0;
+	int32_t relation_owner_coast_boundary_write_count_0x4a2e91 = 0;
+	int32_t relation_owner_coast_boundary_rng_call_count_0x4e7276 = 0;
 	bool relation_owner_coordinate_recenter_0x4a2ffa_applied = false;
 	int32_t relation_owner_coordinate_recenter_known_count_0x4a2ffa = 0;
 	int32_t relation_owner_coordinate_recenter_blocked_count_0x4a2ffa = 0;
@@ -1774,6 +1883,8 @@ struct TerrainRepaintResult4a3f27 {
 	std::vector<uint32_t> terrain_scratch_word_0x4bad0f;
 	std::vector<int32_t> terrain_code;
 	std::vector<TerrainVisualMissingBucketSample4bcfc3> terrain_visual_missing_bucket_samples_0x4bcfc3;
+	std::vector<TerrainRepaintCandidateSample4a4163> terrain_repaint_candidate_samples_0x4a4163;
+	std::vector<TerrainVisualWriteSample4bad0f> terrain_visual_write_samples_0x4bad0f;
 };
 
 struct FootprintFinalizerResult4a3710 {
@@ -1953,10 +2064,26 @@ struct RewardGuardProjectionObject540b14 {
 	int32_t owned_object_record_value_0x1c = -1;
 	bool owned_object_record_value_0x20_known = false;
 	int32_t owned_object_record_value_0x20 = -1;
+	bool owned_object_record_field_0x20_known = false;
+	uint32_t owned_object_record_field_0x20 = 0U;
+	bool owned_object_record_field_0x24_known = false;
+	uint32_t owned_object_record_field_0x24 = 0U;
+	bool owned_object_record_field_0x28_known = false;
+	uint32_t owned_object_record_field_0x28 = 0U;
+	bool owned_object_record_field_0x2c_known = false;
+	int32_t owned_object_record_field_0x2c = -1;
+	bool owned_object_record_field_0x30_known = false;
+	int32_t owned_object_record_field_0x30 = 0;
 	bool selected_wrapper_index_0x4af785_known = false;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	bool selected_source_subtype_0x20_known = false;
 	int32_t selected_source_subtype_0x20 = -1;
+	bool constructor_selector_0x4a9e40_invoked = false;
+	SourceObjectSelectorResult4a9e40 constructor_selector_0x4a9e40;
+	bool constructor_selected_source_record_known_0x49ba89 = false;
+	int32_t constructor_selected_source_catalog_index_0x49da08 = -1;
+	int32_t constructor_selected_wrapper_index_0x4af785 = -1;
+	SourceObjectRecord0x4c constructor_selected_source_record_copy;
 };
 
 struct RewardGuardProjectionChainResult49c0a6 {
@@ -1983,9 +2110,42 @@ struct RewardGuardProjectionChainResult49c0a6 {
 	uint32_t projection_generated_cell_word_0x20 = 0U;
 	bool projection_relation_owner_index_known_0x4ad947 = false;
 	int32_t projection_relation_owner_index_0x4ad947 = -1;
+	bool projection_wrapper_construct_invoked_0x49ce04 = false;
+	bool projection_wrapper_construct_applied_0x49ce04 = false;
+	bool projection_wrapper_member_stamp_invoked_0x49abd6 = false;
+	int32_t projection_wrapper_member_stamp_count_0x49abd6 = 0;
+	bool projection_wrapper_bounds_refresh_applied_0x49d6e0 = false;
+	bool projection_wrapper_candidate_rebuild_applied_0x49d7c3 = false;
+	bool projection_wrapper_final_mark_applied_0x49cefb = false;
+	int32_t projection_wrapper_final_candidate_count_0x49cefb = 0;
+	bool projection_wrapper_ready_for_0x4ad7f7 = false;
+	bool projection_owned_final_source_override_known_0x540b28 = false;
+	bool projection_owned_final_object_key_known_0x540b28 = false;
+	uint32_t projection_owned_final_object_key_0x540b28 = 0U;
+	int32_t projection_owned_final_source_catalog_index_0x49da08 = -1;
+	int32_t projection_owned_final_wrapper_index_0x4af785 = -1;
+	SourceObjectRecord0x4c projection_owned_final_source_record_copy_0x540b28;
 	bool relation_priority_invoked_0x4ad7f7 = false;
+	bool projection_success_side_effects_invoked_0x4adb17 = false;
+	bool projection_used_flag_written_0x1024 = false;
+	int32_t projection_used_flag_index_0x1024 = -1;
+	bool projection_endpoint_cursor_0xf58_advanced_0x4adb4e = false;
+	int32_t projection_endpoint_cursor_modulo_count_0x568_0x56c = 0;
+	int32_t projection_endpoint_cursor_0xf58_before_0x4adb3b = -1;
+	int32_t projection_endpoint_cursor_0xf58_after_0x4adb4e = -1;
 	RewardGuardProjectionDriverSelectionResult4ad947 projection_driver_0x4ad947;
 	RewardGuardRelationPriorityResult4ad7f7 relation_priority_0x4ad7f7;
+	bool projection_failure_cleanup_invoked_0x4adef7 = false;
+	bool projection_record_uncommitted_0x4add76 = false;
+	bool projection_replacement_selector_invoked_0x4a9f1c = false;
+	bool projection_replacement_selected_0x4a9f1c = false;
+	bool projection_replacement_committed_0x4a54a7 = false;
+	int32_t projection_cleanup_removed_reference_count_0x499ee8 = 0;
+	int32_t projection_cleanup_object_count_before_0x4add76 = 0;
+	int32_t projection_cleanup_object_count_after_0x4add76 = 0;
+	int32_t projection_replacement_object_count_after_0x4adef7 = 0;
+	uint32_t projection_replacement_rng_state_before_0x4a9f1c = 0U;
+	uint32_t projection_replacement_rng_state_after_0x4a9f1c = 0U;
 	std::string blocked_reason;
 };
 
@@ -2173,6 +2333,10 @@ struct ObjectRecordReference4a54a7 {
 	int32_t x = 0;
 	int32_t y = 0;
 	int32_t level = 0;
+	bool descriptor_projection_enabled_0x29 = false;
+	bool descriptor_source_cell_offset_0x2c_0x30_known = false;
+	int32_t descriptor_source_cell_x_0x2c = 0;
+	int32_t descriptor_source_cell_y_0x30 = 0;
 	bool connection_fallback_record_0x4a7605_0x4a5e03_known = false;
 	uint32_t connection_fallback_arg0_0x4a5e03 = 0U;
 	uint32_t connection_fallback_descriptor_pointer = 0U;
@@ -2202,17 +2366,29 @@ struct ObjectRecordReference4a54a7 {
 	uint32_t object_record_field_0x24 = 0U;
 	bool object_record_field_0x28_known = false;
 	uint32_t object_record_field_0x28 = 0U;
+	bool object_record_field_0x2c_known = false;
+	int32_t object_record_field_0x2c = -1;
+	bool object_record_field_0x30_known = false;
+	int32_t object_record_field_0x30 = 0;
 	bool source_descriptor_join_0x4903e8_known = false;
 	bool weighted_type98_descriptor_bridge_0x4a93a2_known = false;
 	int32_t descriptor_source_key_0x00 = -1;
 	bool reward_guard_candidate_vtable_0x00_known = false;
 	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
+	bool generated_descriptor_wrapper_0x4903e8_known = false;
+	int32_t generated_descriptor_wrapper_source_key_0x00 = -1;
+	int32_t generated_descriptor_wrapper_type_0x0c = -1;
+	int32_t generated_descriptor_wrapper_subtype_0x08 = -1;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	int32_t source_catalog_index_0x49da08 = -1;
 	bool decorative_score_record_0x10_known = false;
 	int32_t decorative_obstacle_id_0x10 = -1;
 	bool copied_source_record_carried = false;
 	SourceObjectRecord0x4c source_record_copy;
+	bool final_source_record_override_known_0x4ad1e3 = false;
+	int32_t final_source_catalog_index_0x49da08 = -1;
+	int32_t final_selected_wrapper_index_0x4af785 = -1;
+	SourceObjectRecord0x4c final_source_record_copy_0x4ad1e3;
 	bool object_score_cache_known_0x49b89c = false;
 	std::array<int32_t, 48> object_score_cache_0x49b89c {};
 	bool final_payload_dynamic_vector_0x48_0x4c_known = false;
@@ -2236,6 +2412,7 @@ struct RewardGuardCandidateRecord4a9f1c {
 	bool monster_score_fields_known_0x49c64b = false;
 	int32_t monster_table_index_0x14 = -1;
 	int32_t monster_terrain_id_0x57cea0 = -1;
+	int32_t monster_quantity_field_0x18_49c5cd = 0;
 	int32_t monster_base_score_0x49c64b = 0;
 	bool spell_vector_fields_known_0x49c764 = false;
 	int32_t spell_level_min_0x14 = -1;
@@ -2551,6 +2728,23 @@ struct RewardGuardSourceStreamAttempt4aab7e {
 	std::string blocked_reason;
 };
 
+struct RewardGuardSourceOwnerGrowth4aab7e {
+	int32_t source_index_0x4ac552 = -1;
+	int32_t owner_vector_index = -1;
+	int32_t relation_owner_byte2_0x4aa9b7 = -1;
+	bool terrain_policy_0x0c_known = false;
+	int32_t terrain_policy_0x0c = -1;
+	int32_t object_count_before_0xec4_ecc = 0;
+	int32_t object_count_after_0xec4_ecc = 0;
+	int32_t object_count_delta_0xec4_ecc = 0;
+	int32_t stream_active_lane_count = 0;
+	int32_t stream_total_source_count = 0;
+	int32_t stream_selected_lane_count = 0;
+	int32_t stream_materialization_attempt_count = 0;
+	int32_t stream_successful_coordinate_scan_count = 0;
+	std::string stream_blocked_reason;
+};
+
 struct RewardGuardSourceStreamResult4aab7e {
 	bool invoked = false;
 	bool applied = false;
@@ -2572,6 +2766,7 @@ struct RewardGuardSourceStreamResult4aab7e {
 	int32_t wrapper_cleanup_count_0x49cebd = 0;
 	std::vector<RewardGuardSourceStreamLane4aab7e> lanes;
 	std::vector<RewardGuardSourceStreamAttempt4aab7e> attempts;
+	std::vector<RewardGuardSourceOwnerGrowth4aab7e> owner_growths_0x4ac552;
 	std::string blocked_reason;
 };
 
@@ -2581,22 +2776,30 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	bool generated_cell_grid_known = false;
 	int32_t scanned_cell_count_pass1 = 0;
 	int32_t bit26_candidate_count = 0;
+	std::vector<int32_t> bit26_candidate_flat_indices_0x49eb8d;
 	bool budget_known = false;
 	int32_t budget_0x4374c_div_bit26 = 0;
 	bool budget_argument_to_0x49e700_known = false;
 	int32_t budget_argument_to_0x49e700 = 0;
 	int32_t budget_argument_handoff_count_0x49e700 = 0;
 	int32_t valid_0x49e700_dispatch_candidate_count = 0;
+	std::vector<int32_t> valid_0x49e700_dispatch_flat_indices_0x49eb8d;
 	int32_t invalid_optional_handler_candidate_count = 0;
 	int32_t invalid_optional_handler_sentinel_suppressed_count = 0;
 	int32_t invalid_optional_handler_unowned_pointer_count = 0;
+	int32_t invalid_optional_handler_progress_call_count_0x45e1a6 = 0;
 	bool dispatch_probe_0x49e700_invoked = false;
 	int32_t dispatch_probe_optional_handler_sentinel_suppressed_count_0x49e700 = 0;
 	int32_t dispatch_probe_optional_handler_unowned_pointer_count_0x49e700 = 0;
+	int32_t dispatch_probe_optional_handler_progress_call_count_0x45e1a6 = 0;
 	bool type_table_0x54092c_known = false;
 	int32_t type_table_0x54092c_count = 0;
 	int32_t dispatch_probe_invocation_count_0x49e700 = 0;
 	int32_t dispatch_probe_terrain9_reject_count_0x49e700 = 0;
+	std::vector<int32_t> dispatch_probe_x_0x49e700;
+	std::vector<int32_t> dispatch_probe_y_0x49e700;
+	std::vector<int32_t> dispatch_probe_level_0x49e700;
+	std::vector<int32_t> dispatch_selected_object_commit_counts_0x49e700;
 	int32_t dispatch_probe_source_record_scan_count_0x49e700 = 0;
 	int32_t dispatch_probe_rand_trn_record_count_0x49e700 = 0;
 	int32_t dispatch_probe_rand_trn_score_variant_count_0x49e700 = 0;
@@ -2643,6 +2846,95 @@ struct DecorativeFlaggedCellDispatchResult49eb8d {
 	int32_t dispatch_probe_candidate_append_count_0x49e904 = 0;
 	int32_t dispatch_probe_candidate_weight_append_count_0x49e91f = 0;
 	int32_t dispatch_probe_candidate_weight_total_0x49e700 = 0;
+	bool first_dispatch_0x49e700_observed = false;
+	bool first_dispatch_0x49e700_complete = false;
+	int32_t first_dispatch_x_0x49e700 = -1;
+	int32_t first_dispatch_y_0x49e700 = -1;
+	int32_t first_dispatch_level_0x49e700 = -1;
+	int32_t first_dispatch_budget_arg_0x49e700 = 0;
+	int32_t first_dispatch_source_record_scan_count_0x49e700 = 0;
+	int32_t first_dispatch_scorer_call_count_0x49e1bf = 0;
+	int32_t first_dispatch_candidate_append_count_0x49e904 = 0;
+	int32_t first_dispatch_candidate_weight_append_count_0x49e91f = 0;
+	int32_t first_dispatch_candidate_weight_total_0x49e700 = 0;
+	int32_t first_dispatch_rng_value_0x49e9ad = -1;
+	int32_t first_dispatch_selected_candidate_index_0x49e9ad = -1;
+	int32_t first_dispatch_selected_candidate_score_0x49e9ad = 0;
+	int32_t first_dispatch_selected_candidate_source_row_0x49e9ad = -1;
+	std::string first_dispatch_selected_candidate_def_name_0x49e9ad;
+	int32_t first_dispatch_selected_object_commit_callback_count_0x49ea25 = 0;
+	std::vector<int32_t> first_dispatch_commit_x_sample_0x49ea25;
+	std::vector<int32_t> first_dispatch_commit_y_sample_0x49ea25;
+	std::vector<int32_t> first_dispatch_commit_source_row_sample_0x49ea25;
+	std::vector<int32_t> first_dispatch_pop_x_sample_0x4ae23e;
+	std::vector<int32_t> first_dispatch_pop_y_sample_0x4ae23e;
+	std::vector<int32_t> first_dispatch_pop_level_sample_0x4ae23e;
+	std::vector<int32_t> first_dispatch_pop_candidate_weight_total_sample_0x49e700;
+	std::vector<int32_t> first_dispatch_pop_rng_value_sample_0x49e9ad;
+	std::vector<int32_t> first_dispatch_pop_selected_x_sample_0x49ea25;
+	std::vector<int32_t> first_dispatch_pop_selected_y_sample_0x49ea25;
+	std::vector<int32_t> first_dispatch_pop_selected_source_row_sample_0x49e9ad;
+	std::vector<int32_t> first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01;
+	std::vector<int32_t> first_dispatch_pop_post_commit_bit26_clear_count_sample_0x49eaf1;
+	std::vector<int32_t> first_dispatch_post_commit_coordinate_x_sample_0x49eb01;
+	std::vector<int32_t> first_dispatch_post_commit_coordinate_y_sample_0x49eb01;
+	std::vector<int32_t> first_dispatch_post_commit_coordinate_level_sample_0x49eb01;
+	int32_t first_dispatch_post_commit_coordinate_append_count_0x49eb01 = 0;
+	int32_t first_dispatch_post_commit_bit26_clear_count_0x49eaf1 = 0;
+	int32_t first_dispatch_coordinate_worklist_pop_count_0x4ae23e = 0;
+	bool first_dispatch_first_pop_0x49e700_observed = false;
+	bool first_dispatch_first_pop_0x49e700_complete = false;
+	int32_t first_dispatch_first_pop_x_0x49e700 = -1;
+	int32_t first_dispatch_first_pop_y_0x49e700 = -1;
+	int32_t first_dispatch_first_pop_level_0x49e700 = -1;
+	int32_t first_dispatch_first_pop_source_record_scan_count_0x49e700 = 0;
+	int32_t first_dispatch_first_pop_scorer_call_count_0x49e1bf = 0;
+	std::vector<int32_t> first_dispatch_first_pop_scorer_source_row_sample_0x49e8eb;
+	std::vector<int32_t> first_dispatch_first_pop_scorer_source_type_sample_0x49e8eb;
+	std::vector<int32_t> first_dispatch_first_pop_scorer_candidate_x_sample_0x49e8eb;
+	std::vector<int32_t> first_dispatch_first_pop_scorer_candidate_y_sample_0x49e8eb;
+	std::vector<int32_t> first_dispatch_first_pop_scorer_candidate_level_sample_0x49e8eb;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_source_row_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_source_type_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_candidate_x_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_candidate_y_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_first_pass_score_sample_0x49e442;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_adjacent_delta_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_overlap_delta_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_reference_count_sample_0x40bb26;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_first_ref_key_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_flag16_count_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_neighbor_flag18_count_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_first_pop_accepted_score_sample_0x49e91f;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_source_row_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_source_type_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_candidate_x_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_candidate_y_sample_0x49e904;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_first_pass_score_sample_0x49e442;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_adjacent_delta_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_overlap_delta_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_reference_count_sample_0x40bb26;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_first_ref_key_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_flag16_count_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_neighbor_flag18_count_sample_0x49e681;
+	std::vector<int32_t> first_dispatch_second_pop_accepted_score_sample_0x49e91f;
+	int32_t first_dispatch_first_pop_candidate_append_count_0x49e904 = 0;
+	int32_t first_dispatch_first_pop_candidate_weight_append_count_0x49e91f = 0;
+	int32_t first_dispatch_first_pop_candidate_weight_total_0x49e700 = 0;
+	int32_t first_dispatch_first_pop_rng_value_0x49e9ad = -1;
+	int32_t first_dispatch_first_pop_selected_candidate_index_0x49e9ad = -1;
+	int32_t first_dispatch_first_pop_selected_candidate_score_0x49e9ad = 0;
+	int32_t first_dispatch_first_pop_selected_candidate_source_row_0x49e9ad = -1;
+	std::string first_dispatch_first_pop_selected_candidate_def_name_0x49e9ad;
+	int32_t first_dispatch_first_pop_selected_object_commit_callback_count_0x49ea25 = 0;
+	int32_t first_dispatch_first_pop_post_commit_coordinate_append_count_0x49eb01 = 0;
+	int32_t first_dispatch_first_pop_post_commit_bit26_clear_count_0x49eaf1 = 0;
 	bool rng_selection_0x49e9ad_invoked = false;
 	int32_t rng_value_0x49e9ad = -1;
 	int32_t selected_candidate_index_0x49e9ad = -1;
@@ -2707,8 +2999,13 @@ struct ConnectionTailReplayResult4a79a3 {
 	int32_t internal_growth_0x4a61bc_guard_budget_positive_count = 0;
 	int32_t internal_growth_0x4a61bc_projection_object_branch_blocked_count = 0;
 	int32_t internal_growth_0x4a61bc_constructor_blocked_count = 0;
+	bool recovered_rng_callstream_replayed_0x4a79a3 = false;
+	int32_t recovered_rng_callstream_call_count_0x4e7276 = 0;
+	uint32_t recovered_rng_callstream_state_before_0x4e7276 = 0U;
+	uint32_t recovered_rng_callstream_state_after_0x4e7276 = 0U;
 	int32_t internal_growth_positive_append_count = 0;
 	int32_t internal_growth_initial_object_count = 0;
+	int32_t internal_growth_after_prefix_object_count = 0;
 	int32_t internal_growth_final_object_count = 0;
 	bool internal_growth_reallocation_observed = false;
 	std::vector<uint32_t> internal_growth_appended_object_pointers;
@@ -2719,9 +3016,21 @@ struct ConnectionTailReplayResult4a79a3 {
 	int32_t controlled_0x4a696b_sampled_call_count = 0;
 	int32_t controlled_0x4a696b_source_relation_match_hits = 0;
 	int32_t controlled_0x4a696b_direct_mutation_hits = 0;
+	int32_t cross_level_0x4a6cf2_call_count = 0;
+	int32_t cross_level_0x4a6cf2_success_count = 0;
+	int32_t cross_level_0x4a6cf2_candidate_count = 0;
+	int32_t cross_level_0x4a6cf2_base_object_commit_count = 0;
+	int32_t cross_level_0x4a6cf2_guard_object_commit_count = 0;
+	int32_t cross_level_0x4a6cf2_local_vector_append_count_0x404 = 0;
+	int32_t cross_level_0x4a6cf2_cell_stamp_count = 0;
+	bool direct_endpoint_descriptor_lanes_0x2e8_0x2f8_0x308_source_owned = false;
+	int32_t direct_endpoint_descriptor_lane_count_0x2e8 = 0;
+	int32_t direct_endpoint_descriptor_lane_count_0x2f8 = 0;
+	int32_t direct_endpoint_descriptor_lane_count_0x308 = 0;
 	bool after_selected_0x4a7605_endpoint_path_known = false;
 	int32_t after_selected_0x4a7605_call_count = 0;
 	int32_t after_selected_direct_0x4a7312_commit_count = 0;
+	int32_t after_selected_companion_0x4a7312_commit_count = 0;
 	int32_t delegated_0x4a746b_call_count = 0;
 	int32_t endpoint_helper_0x4a5e73_count = 0;
 	int32_t endpoint_mutation_site_0x4a75f1_count = 0;
@@ -2798,6 +3107,26 @@ struct RoadToolkitResult4ab37f4b4243 {
 	std::string blocked_reason;
 };
 
+struct RoadCandidateReport4ab52a {
+	int32_t outer_index = -1;
+	int32_t inner_index = -1;
+	int32_t seed_x = 0;
+	int32_t seed_y = 0;
+	int32_t seed_level = 0;
+	int32_t candidate_x = 0;
+	int32_t candidate_y = 0;
+	int32_t candidate_level = 0;
+	int32_t candidate_low_word = 0x7d00;
+	bool accepted = false;
+	bool toolkit_invoked = false;
+	bool toolkit_applied = false;
+	int32_t toolkit_predecessor_chain_cell_count = 0;
+	int32_t toolkit_line_visit_call_count_0x458e61 = 0;
+	int32_t toolkit_candidate_mark_count_0x49aec5 = 0;
+	int32_t toolkit_final_write_count_0x458a2f = 0;
+	std::string toolkit_blocked_reason;
+};
+
 struct RoadRiverObjectAdjacencyResult4ab52a {
 	bool invoked = false;
 	bool applied = false;
@@ -2832,10 +3161,46 @@ struct RoadRiverObjectAdjacencyResult4ab52a {
 	int32_t final_write_unique_cell_count_0x458a2f = 0;
 	int32_t final_art_rng_call_count_0x4e7276 = 0;
 	uint32_t rng_state_after_final_art_0x4e7276 = 0U;
+	std::vector<RoadCandidateReport4ab52a> candidate_reports;
 	std::vector<int32_t> final_road_flat_cells;
 	std::vector<RoadOverlayCell4b4243> final_road_overlay_cells;
+	bool river_object_post_pass_invoked_0x4ac4ae = false;
+	bool river_object_post_pass_applied_0x4ac4ae = false;
+	int32_t river_object_post_pass_type109_count_0x4ac4ae = 0;
+	int32_t river_object_post_pass_marker_count_0x4ac3df = 0;
+	int32_t river_object_post_pass_border_mark_count_0x4abc20 = 0;
+	int32_t river_object_post_pass_water_adjacency_pending_count_0x4abc20 = 0;
+	int32_t river_object_post_pass_first_type109_x = 0;
+	int32_t river_object_post_pass_first_type109_y = 0;
+	int32_t river_object_post_pass_first_type109_level = 0;
+	bool river_object_post_pass_authority_entry_args_known = false;
+	int32_t river_object_post_pass_authority_4ab6ac_x = 0;
+	int32_t river_object_post_pass_authority_4ab6ac_y = 0;
+	int32_t river_object_post_pass_authority_4ab6ac_level = 0;
+	int32_t river_object_post_pass_authority_4ab6ac_arg3 = 0;
+	int32_t river_object_post_pass_authority_4abd5f_x = 0;
+	int32_t river_object_post_pass_authority_4abd5f_y = 0;
+	int32_t river_object_post_pass_authority_4abd5f_level = 0;
+	int32_t river_object_post_pass_authority_4abd5f_arg3 = 0;
+	bool river_object_post_pass_authority_overlay_writes_known = false;
+	int32_t river_object_post_pass_authority_overlay_write_count = 0;
+	int32_t river_object_post_pass_authority_overlay_type_write_count_0x49b1bc = 0;
+	int32_t river_object_post_pass_authority_overlay_art_write_count_0x49b170 = 0;
+	bool road_coordinate_authority_0x14b0_known = false;
+	int32_t road_coordinate_authority_0x14b0_count = 0;
 	int32_t progress_callback_0xed4_skip_count = 0;
 	std::string blocked_reason;
+};
+
+struct MineResourceCoordinateBuilderCandidate4a9641 {
+	int32_t x = -1;
+	int32_t y = -1;
+	int32_t level = -1;
+	int32_t low_word_score = 0;
+	int32_t body_count = 0;
+	int32_t best_body_count_after = 0;
+	int32_t threshold_after = 0;
+	int32_t clear_count_after = 0;
 };
 
 struct MineResourceSelectedObjectCallbackResult4a9911 {
@@ -2868,6 +3233,9 @@ struct MineResourceSelectedObjectCallbackResult4a9911 {
 	int32_t selected_descriptor_type_0x1c = -1;
 	int32_t selected_source_field_0x20 = 0;
 	std::string selected_def_name;
+	bool primary_scan_last_source_record_known_0x4a9911 = false;
+	int32_t primary_scan_last_source_catalog_index_0x49da08 = -1;
+	SourceObjectRecord0x4c primary_scan_last_source_record_copy_0x4a9911;
 	bool selected_object_allocated_0x5044b1 = false;
 	bool selected_object_initialized_0x49ba89 = false;
 	uint32_t selected_object_vtable_0x540ab0 = 0U;
@@ -2891,6 +3259,8 @@ struct MineResourceSelectedObjectCallbackResult4a9911 {
 	int32_t coordinate_builder_local_vector_clear_count_0x4ae52a_0x4ae27c = 0;
 	int32_t coordinate_builder_local_vector_append_count_0x4ae1fd = 0;
 	int32_t coordinate_builder_candidate_count = 0;
+	std::vector<MineResourceCoordinateBuilderCandidate4a9641> coordinate_builder_append_records_0x4ae1fd;
+	std::vector<MineResourceCoordinateBuilderCandidate4a9641> coordinate_builder_final_candidates_0x4a98c1;
 	int32_t coordinate_builder_selected_candidate_index = -1;
 	int32_t coordinate_builder_selected_x = -1;
 	int32_t coordinate_builder_selected_y = -1;
@@ -2917,6 +3287,24 @@ struct MineResourceSelectedObjectCallbackResult4a9911 {
 	bool guard_object_record_key_known_0x4a5e03 = false;
 	int32_t guard_object_record_sequence_0x1c = -1;
 	int32_t guard_object_vector_count_after_0x4a54a7 = 0;
+	bool support_descriptor_selector_invoked_0x4a9e40 = false;
+	bool support_descriptor_selector_selected_0x4a9e40 = false;
+	int32_t support_selected_source_catalog_index_0x49da08 = -1;
+	int32_t support_selected_descriptor_type_0x1c = -1;
+	std::string support_selected_def_name;
+	bool support_scan_bounds_known_0x4a9911 = false;
+	int32_t support_scan_low_x_0x4a9911 = 0;
+	int32_t support_scan_low_y_0x4a9911 = 0;
+	int32_t support_scan_high_x_0x4a9911 = 0;
+	int32_t support_scan_high_y_0x4a9911 = 0;
+	bool support_descriptor_offsets_known_0x4906fb = false;
+	int32_t support_descriptor_source_cell_x_0x2c = 0;
+	int32_t support_descriptor_source_cell_y_0x30 = 0;
+	int32_t support_scanned_cell_count_0x4a9911 = 0;
+	int32_t support_rng_skip_count_0x4e7276 = 0;
+	int32_t support_eligibility_reject_count_0x49aa93 = 0;
+	int32_t support_materialization_commit_count_0x4a9c3f = 0;
+	int32_t support_object_vector_count_after_0x4a54a7 = 0;
 	std::string blocked_reason;
 };
 
@@ -2990,6 +3378,10 @@ struct GeneratorObjectPrivateState {
 	int32_t generator_field_0x04 = 0;
 	bool generator_field_0xed4_known = false;
 	int32_t generator_field_0xed4 = 0;
+	bool optional_progress_handler_0x539660_owned = false;
+	int32_t optional_progress_handler_max_0x04 = 0;
+	int32_t optional_progress_handler_current_0x08 = 0;
+	int32_t optional_progress_handler_slot8_call_count_0x45e1a6 = 0;
 	GeneratorBackingStateConstructor49d914 backing_state_constructor_0x49d914;
 	bool generator_field_0xf48_known = false;
 	int32_t generator_field_0xf48 = 0;
@@ -3000,10 +3392,19 @@ struct GeneratorObjectPrivateState {
 	bool generator_field_0xf54_known = false;
 	int32_t generator_field_0xf54 = 0;
 	bool reward_guard_slot_bytes_0xf88_known = false;
-	std::array<uint8_t, 0x91> reward_guard_slot_bytes_0xf88 {};
+	std::array<uint8_t, 0x9c> reward_guard_slot_bytes_0xf88 {};
 	int32_t reward_guard_slot_0x4ad640_allocation_count = 0;
 	GeneratorObjectVectorState endpoint_vector_c8_cc;
 	GeneratorObjectVectorState endpoint_vector_d8_dc;
+	GeneratorObjectVectorState monolith_one_way_entrance_descriptor_vector_2e8_2ec;
+	bool monolith_one_way_entrance_descriptor_vector_2e8_2ec_source_owned = false;
+	std::vector<GeneratorDescriptorVectorEntry0x398> monolith_one_way_entrance_descriptor_entries_2e8_2ec;
+	GeneratorObjectVectorState monolith_one_way_exit_descriptor_vector_2f8_2fc;
+	bool monolith_one_way_exit_descriptor_vector_2f8_2fc_source_owned = false;
+	std::vector<GeneratorDescriptorVectorEntry0x398> monolith_one_way_exit_descriptor_entries_2f8_2fc;
+	GeneratorObjectVectorState monolith_two_way_descriptor_vector_308_30c;
+	bool monolith_two_way_descriptor_vector_308_30c_source_owned = false;
+	std::vector<GeneratorDescriptorVectorEntry0x398> monolith_two_way_descriptor_entries_308_30c;
 	GeneratorObjectVectorState mine_resource_descriptor_vector_388_38c;
 	bool mine_resource_descriptor_vector_388_38c_source_owned = false;
 	int32_t mine_resource_descriptor_vector_entry_count_388_38c = 0;
@@ -3032,6 +3433,10 @@ struct GeneratorObjectPrivateState {
 	int32_t relation_owner_vector_selected_candidate_source_link_count = 0;
 	GeneratorObjectVectorState reward_guard_candidate_vector_10f4_10f8;
 	GeneratorObjectVectorState endpoint_byte_state_vector_1104_1108;
+	GeneratorObjectVectorState monolith_paired_output_vector_14c0;
+	std::vector<uint32_t> monolith_paired_output_object_keys_14c0;
+	GeneratorObjectVectorState monolith_two_way_output_vector_14d0;
+	std::vector<uint32_t> monolith_two_way_output_object_keys_14d0;
 	bool endpoint_cursor_0xf58_present = false;
 	bool endpoint_cursor_0xf58_known = false;
 	int32_t endpoint_cursor_0xf58 = 0;
@@ -3106,6 +3511,13 @@ struct GeneratorObjectPrivateState {
 	bool materialization_bridge_post_4a4c8e_cleanup_0x4a8c15_applied = false;
 	int32_t materialization_bridge_post_4a4c8e_cleanup_scan_count_0x4a8c15 = 0;
 	int32_t materialization_bridge_post_4a4c8e_cleanup_call_count_0x49a962 = 0;
+	bool materialization_bridge_pre_boundary_projection_0x4a8c15_0x4a5a23_ported = false;
+	bool materialization_bridge_pre_boundary_projection_0x4a8c15_0x4a5a23_applied = false;
+	int32_t materialization_bridge_pre_boundary_projection_call_count_0x4a5a23 = 0;
+	int32_t materialization_bridge_pre_boundary_projection_visited_count_0x4a5a23 = 0;
+	int32_t materialization_bridge_pre_boundary_projection_cleanup_clear_count_0x4a5a23 = 0;
+	int32_t materialization_bridge_pre_boundary_projection_object_branch_blocked_count_0x4a5a23 = 0;
+	std::string materialization_bridge_pre_boundary_projection_blocked_reason_0x4a5a23;
 	bool materialization_bridge_relation_loop_0x4a4913_ported = false;
 	bool materialization_bridge_relation_loop_0x4a4913_input_known = false;
 	bool materialization_bridge_relation_loop_0x4a4913_applied = false;
@@ -3244,6 +3656,10 @@ struct GeneratorObjectPrivateState {
 	int32_t reward_guard_source_stream_owner_kind_0x0c = 0;
 	std::vector<RewardGuardSourceStreamRecord4aab7e> reward_guard_source_stream_records_0x4aab7e;
 	RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_0x4aab7e;
+	bool water_adjacency_passability_0x49a1ef_applied = false;
+	int32_t water_adjacency_passability_source_water_count_0x49a1ef = 0;
+	int32_t water_adjacency_passability_write_count_0x49a1ef = 0;
+	int32_t water_adjacency_passability_mark_count_0x49a1ef = 0;
 	bool decorative_flagged_cell_dispatch_0x49eb8d_ported = false;
 	DecorativeFlaggedCellDispatchResult49eb8d decorative_flagged_cell_dispatch_0x49eb8d;
 	bool connection_tail_replay_0x4a79a3_ported = false;
@@ -3306,9 +3722,56 @@ struct H3MapedRmgWorkflowPhase {
 	std::string blocker;
 };
 
+struct RecoveredRiverOverlayWrite49b1bc49b170 {
+	uint32_t callsite = 0U;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t river_type = 0;
+	int32_t river_art = -1;
+	int32_t flag_arg3 = -1;
+	int32_t flag_arg4 = -1;
+};
+
+struct RecoveredRoadCall4ab37f {
+	uint32_t callsite = 0U;
+	int32_t sequence_index = -1;
+	int32_t source_x = -1;
+	int32_t source_y = -1;
+	int32_t source_level = -1;
+	int32_t candidate_x = 0;
+	int32_t candidate_y = 0;
+	int32_t candidate_level = 0;
+	int32_t selected_road_type = -1;
+};
+
+struct RecoveredRoadTypeWrite49aec5 {
+	uint32_t callsite = 0U;
+	int32_t sequence_index = -1;
+	int32_t road_call_sequence_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t road_type = -1;
+};
+
+struct RecoveredRoadArtWrite49ae47 {
+	uint32_t callsite = 0U;
+	int32_t sequence_index = -1;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t coord_word_0x08 = 0;
+	int32_t road_type = -1;
+	int32_t road_art = -1;
+	int32_t flip_a = 0;
+	int32_t flip_b = 0;
+};
+
 struct H3MapedRmgWorkflowConfig {
 	std::string size_class;
 	std::string water_mode;
+	bool recovery_probe_scope_allowed = false;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
@@ -3337,9 +3800,12 @@ struct H3MapedRmgWorkflowConfig {
 	std::vector<uint8_t> same_run_final_tile_payload_authority_0x49b2b6;
 	bool same_run_generated_object_payload_authority_known = false;
 	std::vector<uint8_t> same_run_generated_object_payload_authority_0x4ad1e3;
+	bool same_run_full_payload_authority_known = false;
+	std::vector<uint8_t> same_run_full_payload_authority_0x4ac857_0x4ad3db;
 	bool same_run_payload_authority_profile_known = false;
 	std::string same_run_payload_authority_profile;
 	int32_t same_run_payload_authority_tile_byte_count = 0;
+	int32_t same_run_payload_authority_object_count = 0;
 	int32_t same_run_payload_authority_object_byte_count = 0;
 	bool same_run_payload_authority_setup_stack_join_known = false;
 	bool same_run_payload_authority_setup_stack_args_known = false;
@@ -3347,6 +3813,21 @@ struct H3MapedRmgWorkflowConfig {
 	int32_t same_run_payload_authority_setup_object_0x44 = 0;
 	int32_t same_run_payload_authority_setup_object_0x48 = 0;
 	int32_t same_run_payload_authority_setup_object_0x4c = 0;
+	bool same_run_payload_authority_river_entry_args_known = false;
+	std::vector<int32_t> same_run_payload_authority_river_4ab6ac_args;
+	std::vector<int32_t> same_run_payload_authority_river_4abd5f_args;
+	bool same_run_payload_authority_river_overlay_writes_known = false;
+	std::vector<RecoveredRiverOverlayWrite49b1bc49b170> same_run_payload_authority_river_overlay_writes_0x49b1bc_0x49b170;
+	bool same_run_payload_authority_road_type_rng_known = false;
+	int32_t same_run_payload_authority_road_type_rng_value_0x4e7276 = -1;
+	bool same_run_payload_authority_road_coordinate_records_known = false;
+	std::vector<RoadCoordinateRecord14b0> same_run_payload_authority_road_coordinate_records_0x14b0;
+	bool same_run_payload_authority_road_callstream_known = false;
+	std::vector<RecoveredRoadCall4ab37f> same_run_payload_authority_road_calls_0x4ab37f;
+	bool same_run_payload_authority_road_type_writes_known = false;
+	std::vector<RecoveredRoadTypeWrite49aec5> same_run_payload_authority_road_type_writes_0x49aec5;
+	bool same_run_payload_authority_road_art_writes_known = false;
+	std::vector<RecoveredRoadArtWrite49ae47> same_run_payload_authority_road_art_writes_0x49ae47;
 };
 
 struct FinalTileWriteoutCell49b2b6 {
@@ -3422,6 +3903,11 @@ struct FinalHeaderWriteoutResult4ac857 {
 	int32_t player_slot_count = 0;
 	int32_t active_player_slot_count = 0;
 	std::vector<FinalHeaderPlayerSlot4ac857> player_slots;
+	bool team_assignment_applied_0x4acdc5 = false;
+	int32_t team_count = 0;
+	std::array<uint8_t, 8> player_team_assignments {};
+	uint32_t team_assignment_rng_state_before_0x4ad1a5 = 0U;
+	uint32_t team_assignment_rng_state_after_0x4ad1a5 = 0U;
 };
 
 struct FinalObjectWriteoutRecord4ad1e3 {
@@ -3446,6 +3932,9 @@ struct FinalObjectWriteoutRecord4ad1e3 {
 	bool copied_source_record_carried = false;
 	int32_t source_type_id_0x1c = -1;
 	int32_t source_subtype_0x20 = -1;
+	int32_t serialization_pass = 0;
+	int32_t payload_offset = -1;
+	int32_t payload_byte_count = 0;
 };
 
 struct FinalObjectDefinitionRecord4ad3eb {
@@ -3477,6 +3966,7 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	int32_t object_definition_missing_source_record_count = 0;
 	int32_t object_definition_duplicate_source_record_count = 0;
 	int32_t object_definition_template_index_missing_count = 0;
+	std::vector<FinalObjectDefinitionRecord4ad3eb> object_definitions;
 	std::vector<uint8_t> object_definition_payload_bytes;
 	bool object_count_header_written = false;
 	bool applied = false;
@@ -3512,6 +4002,8 @@ struct FinalObjectWriteoutResult4ad1e3 {
 	std::vector<FinalObjectWriteoutRecord4ad1e3> last_records;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> first_pass_records;
 	std::vector<FinalObjectWriteoutRecord4ad1e3> second_pass_records;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> object_records;
+	std::vector<FinalObjectWriteoutRecord4ad1e3> serialized_object_records;
 };
 
 struct FinalPayloadWriteoutSection4ad1e3 {
@@ -3530,16 +4022,30 @@ struct FinalPayloadWriteoutResult4ad1e3 {
 	std::string same_run_h3maped_authority_scope_blocker;
 	bool same_run_tile_payload_authority_known = false;
 	bool same_run_generated_object_payload_authority_known = false;
+	bool same_run_full_payload_authority_known = false;
+	bool generated_object_count_replayed_from_same_run_authority_0x4ad330 = false;
+	bool generated_object_payload_replayed_from_same_run_authority_0x4ad1e3 = false;
 	bool same_run_tile_payload_match = false;
 	bool same_run_generated_object_payload_match = false;
+	bool same_run_generated_object_payload_native_serialization_match = false;
+	bool same_run_full_payload_match = false;
 	int32_t same_run_tile_payload_expected_byte_count = 0;
+	int32_t same_run_generated_object_count_native_value = 0;
+	int32_t same_run_generated_object_count_authority_value = 0;
 	int32_t same_run_generated_object_payload_expected_byte_count = 0;
+	int32_t same_run_full_payload_expected_byte_count = 0;
 	int32_t same_run_tile_payload_first_mismatch_offset = -1;
 	int32_t same_run_generated_object_payload_first_mismatch_offset = -1;
+	int32_t same_run_generated_object_payload_native_first_mismatch_offset = -1;
+	int32_t same_run_full_payload_first_mismatch_offset = -1;
 	int32_t same_run_tile_payload_native_byte_at_mismatch = -1;
 	int32_t same_run_tile_payload_expected_byte_at_mismatch = -1;
 	int32_t same_run_generated_object_payload_native_byte_at_mismatch = -1;
 	int32_t same_run_generated_object_payload_expected_byte_at_mismatch = -1;
+	int32_t same_run_generated_object_payload_native_serialization_byte_at_mismatch = -1;
+	int32_t same_run_generated_object_payload_native_serialization_expected_byte_at_mismatch = -1;
+	int32_t same_run_full_payload_native_byte_at_mismatch = -1;
+	int32_t same_run_full_payload_expected_byte_at_mismatch = -1;
 	std::string blocked_reason;
 	int32_t header_payload_byte_count = 0;
 	int32_t post_header_initial_zero_payload_byte_count = 0;
@@ -3573,6 +4079,56 @@ struct H3MapedRmgWorkflowResult {
 	FinalObjectWriteoutResult4ad1e3 final_object_writeout_0x4ad309_0x4ad3eb;
 	FinalPayloadWriteoutResult4ad1e3 final_payload_writeout_0x4ad1e3;
 	std::vector<H3MapedRmgWorkflowPhase> phases;
+};
+
+struct RuntimeMapTilePoint {
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+};
+
+struct RuntimeMapObjectProjection {
+	int32_t serialized_index = -1;
+	int32_t source_vector_index = -1;
+	int32_t definition_index = -1;
+	int32_t type_id = -1;
+	int32_t subtype = -1;
+	int32_t group = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	int32_t level = 0;
+	int32_t serialization_pass = 0;
+	int32_t payload_offset = -1;
+	int32_t payload_byte_count = 0;
+	std::string def_name;
+	std::array<uint8_t, 6> passability_mask_bytes {};
+	std::array<uint8_t, 6> action_mask_bytes {};
+	std::vector<RuntimeMapTilePoint> body_tiles;
+	std::vector<RuntimeMapTilePoint> action_tiles;
+};
+
+struct RuntimeMapPayloadProjection {
+	bool invoked = false;
+	bool applied = false;
+	std::string blocked_reason;
+	int32_t width = 0;
+	int32_t height = 0;
+	int32_t level_count = 0;
+	int32_t tile_count = 0;
+	int32_t object_definition_count = 0;
+	int32_t object_count = 0;
+	int32_t consumed_object_payload_byte_count = 0;
+	std::vector<uint8_t> terrain_type_codes;
+	std::vector<uint8_t> terrain_art_codes;
+	std::vector<uint8_t> river_type_codes;
+	std::vector<uint8_t> river_art_codes;
+	std::vector<uint8_t> road_type_codes;
+	std::vector<uint8_t> road_art_codes;
+	std::vector<uint8_t> tile_flags;
+	std::vector<RuntimeMapTilePoint> road_tiles;
+	std::vector<FinalObjectDefinitionRecord4ad3eb> object_definitions;
+	std::vector<RuntimeMapObjectProjection> objects;
+	std::vector<FinalHeaderPlayerSlot4ac857> player_slots;
 };
 
 struct EndpointPointerRecord4a5e73 {
@@ -3641,8 +4197,20 @@ struct RewardGuardWrapperMember4aa3e9 {
 	uint32_t object_record_field_0x24 = 0U;
 	bool object_record_field_0x28_known = false;
 	uint32_t object_record_field_0x28 = 0U;
+	bool object_record_field_0x2c_known = false;
+	int32_t object_record_field_0x2c = -1;
+	bool object_record_field_0x30_known = false;
+	int32_t object_record_field_0x30 = 0;
 	bool reward_guard_candidate_vtable_0x00_known = false;
 	uint32_t reward_guard_candidate_vtable_0x00 = 0U;
+	bool selected_candidate_descriptor_type_known_0x04 = false;
+	int32_t selected_candidate_descriptor_type_0x04 = -1;
+	bool selected_candidate_cursor_source_known_0x08 = false;
+	int32_t selected_candidate_cursor_source_0x08 = 0;
+	bool generated_descriptor_wrapper_0x4903e8_known = false;
+	int32_t generated_descriptor_wrapper_source_key_0x00 = -1;
+	int32_t generated_descriptor_wrapper_type_0x0c = -1;
+	int32_t generated_descriptor_wrapper_subtype_0x08 = -1;
 	int32_t descriptor_type_0x1c = -1;
 	int32_t relative_x_0x08 = 0;
 	int32_t relative_y_0x0c = 0;
@@ -3652,6 +4220,10 @@ struct RewardGuardWrapperMember4aa3e9 {
 	int32_t descriptor_offset_y_0x30 = 0;
 	bool source_record_copy_known_0x04 = false;
 	SourceObjectRecord0x4c source_record_copy;
+	bool stamp_source_record_copy_known_0x49abd6 = false;
+	SourceObjectRecord0x4c stamp_source_record_copy_0x49abd6;
+	bool stamp_source_cell_only_0x49abd6 = false;
+	bool footprint_allows_existing_bit26_0x4aa603 = false;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	bool descriptor_body_offsets_0x49a6f9_known = false;
 	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
@@ -3832,6 +4404,10 @@ struct RewardGuardWrapperProjectionResult4aa3e9 {
 	int32_t selected_member_slot8_projection_0x540b14_count = 0;
 	int32_t selected_member_slot8_projection_ordered_scan_count_0x4ad7f7 = 0;
 	int32_t selected_member_slot8_projection_success_count_0x4aa9b7 = 0;
+	int32_t selected_member_slot8_projection_success_side_effect_count_0x4adb17 = 0;
+	int32_t selected_member_slot8_projection_failure_cleanup_count_0x4adef7 = 0;
+	int32_t selected_member_slot8_projection_replacement_commit_count_0x4adef7 = 0;
+	int32_t selected_member_slot8_projection_nonfatal_failure_count_0x4aa5f6 = 0;
 	int32_t selected_member_slot8_projection_reentry_suppressed_count = 0;
 	int32_t selected_member_slot8_projection_0x540b00_deferred_count = 0;
 	std::string selected_member_slot8_projection_blocked_reason;
@@ -4052,7 +4628,7 @@ GeneratedCellObjectReferenceRemoval499ee8Result generated_cell_object_reference_
 ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, int32_t low_nibble_source);
 ProjectedCellChainResult4a5a23 projected_cell_chain_no_object_4a5a23(GeneratedCellRecordGrid0x30 &grid, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
 ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(GeneratorObjectPrivateState &state, SourceObjectResolverState4af785 &resolver_state, H3MapedRng &rng, int32_t x, int32_t y, int32_t level, bool suppress_cleanup);
-ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr, bool descriptor_raw_0x0c_known = true, int32_t descriptor_raw_0x0c = 0, int32_t selected_wrapper_index_0x4af785 = -1);
+ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, uint32_t object_record_key, int32_t descriptor_type_0x1c, int32_t x, int32_t y, int32_t level, bool descriptor_projection_enabled_0x29, int32_t descriptor_offset_x_0x2c, int32_t descriptor_offset_y_0x30, const SourceObjectRecord0x4c *source_record_copy_0x04 = nullptr, bool descriptor_raw_0x0c_known = true, int32_t descriptor_raw_0x0c = 0, int32_t selected_wrapper_index_0x4af785 = -1, bool recovered_secondary_mask_stamping_0x49abd6 = false, bool stamp_source_cell_only_0x49abd6 = false);
 ObjectFootprintCommitResult4a54a7 object_footprint_commit_4a54a7(GeneratorObjectPrivateState &state, const ObjectMaterializationPrep4a8db2_4a901a &prep);
 int32_t reward_guard_global_type_limit_0x5a26e4(int32_t descriptor_type);
 int32_t reward_guard_relation_type_limit_0x5a2a8c(int32_t descriptor_type);
@@ -4080,7 +4656,7 @@ WeightedObjectRecord4a93a2 allocate_weighted_object_record_0x4a93a2(GeneratorObj
 SourceOrderObjectPlacementResult4a93a2 source_order_object_placement_0x4a93a2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t selected_index_0x20, bool enabled_low_byte_0x24, H3MapedRng &rng, int32_t source_record_identity_0x00 = -1);
 SourceOrderObjectDispatcherResult4a8d2c source_order_object_dispatcher_0x4a8d2c(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t anchor_x_0x10, int32_t anchor_y_0x14, int32_t anchor_level_0x18, int32_t scan_low_x_0x20, int32_t scan_low_y_0x24, int32_t scan_high_x_0x28, int32_t scan_high_y_0x2c, int32_t source_pair_key_0x0c, int32_t lane_index_0x1c, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x20_known = false, int32_t source_field_0x20 = 0, bool source_field_0x24_known = false, int32_t source_field_0x24 = 0, int32_t source_record_identity_0x00 = -1);
 WeightedObjectMaterializationCommitResult4a93a2 object_materialization_commit_from_weighted_record_0x4a93a2_0x4a901a_0x4a54a7(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const WeightedObjectRecord4a93a2 &record);
-WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t source_pair_key_0x0c, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false, int32_t source_record_identity_0x00 = -1);
+WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, int32_t relation_owner_byte2, int32_t source_pair_key_0x0c, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t threshold_arg_0x18, H3MapedRng &rng, int32_t selected_index_0x20 = -1, uint32_t enabled_word_0x24 = 0U, bool enabled_low_byte_0x24 = false, int32_t source_record_identity_0x00 = -1, const SourceOrderSchedulerSourceRecord4a8db2 *source_record_0x00 = nullptr);
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_record_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceOrderSchedulerSourceRecord4a8db2 &source_record, bool source_pair_pointer_0x00_carried, bool context_pointer_0x04_carried, int32_t source_pair_copied_source_catalog_index, int32_t context_wrapper_index_0x04, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_pair_success_byte_0x3c_known = true, int32_t source_pair_success_byte_0x3c = 0, bool anchor_0x10_0x14_known = false, int32_t anchor_x_0x10 = 0, int32_t anchor_y_0x14 = 0);
 SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_0x4a8db2(GeneratorObjectPrivateState &state, const SourceObjectDescriptorJoinResult4903e8 &join, const SourceObjectResolverSourcePair4af785 &source_pair, int32_t relation_owner_byte2, int32_t scan_low_x, int32_t scan_low_y, int32_t scan_high_x, int32_t scan_high_y, int32_t level, int32_t lane_state_0xee4, H3MapedRng &rng, bool source_field_0x30_known = false, int32_t source_field_0x30 = 0, bool source_field_0x34_known = false, int32_t source_field_0x34 = 0, bool source_field_0x3c_known = false, int32_t source_field_0x3c = 0);
 void replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(GeneratorObjectPrivateState &state, H3MapedRng &rng);
@@ -4140,18 +4716,29 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
 		bool setup_caller_arg_0x0c_known = false,
 		int32_t setup_caller_arg_0x0c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
+RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(const H3MapedRmgWorkflowResult &workflow);
+RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(const H3MapedRmgWorkflowResult &workflow);
+RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
+		bool workflow_complete,
+		bool final_payload_owned,
+		bool final_writeout_complete,
+		const FinalHeaderWriteoutResult4ac857 &header,
+		const FinalTileWriteoutResult49b2b6 &tiles,
+		const FinalObjectWriteoutResult4ad1e3 &objects,
+		const FinalPayloadWriteoutResult4ad1e3 &payload);
 bool player_filter_allows_4a218c(int32_t min_human, int32_t max_human, int32_t min_total, int32_t max_total, int32_t human_count, int32_t player_count);
 PlayerSlotAssignmentResult4ac62a player_slot_assignment_4ac62a_4ac6ec(int32_t human_count, int32_t player_count, uint8_t human_capable_source_owner_mask, uint8_t player_capable_source_owner_mask, uint8_t selected_color_mask = 0xffU);
+uint16_t final_header_faction_mask_for_source_owner_0x4acb0c_0x4acbb1(const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t source_owner_index);
 RuntimeSeedBuildResult4a218c runtime_seed_inputs_from_template_records_4a218c_4a1f3b(const std::vector<TemplateZoneRecord4a218c> &zones, const std::vector<TemplateLinkRecord4a1f3b> &links, const PlayerSlotAssignmentResult4ac62a &assignment, int32_t human_count, int32_t player_count);
 TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask = 0xffU);
-CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links);
+CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4a1f3b_4a19ed(int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links, int32_t water_mode_code = 0);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
 RuntimeTerrainSelectionResult49b53d runtime_terrain_selection_49b53d(uint32_t rng_state_after_coordinate_replay, std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, bool generator_field_0x08_known = true, int32_t generator_field_0x08 = 0);
-TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr, bool visual_rng_state_override_known_0x4a3f27 = false, uint32_t visual_rng_state_override_0x4a3f27 = 0U);
+TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(int32_t width, int32_t height, int32_t level_count, const BoundaryMaterialization4a2777 &owner_materialization, const RuntimeTerrainSelectionResult49b53d &terrain_selection, const std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr, bool visual_rng_state_override_known_0x4a3f27 = false, uint32_t visual_rng_state_override_0x4a3f27 = 0U, int32_t original_relation_owner_count_0x4a3f27 = -1);
 SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca55(const std::vector<RuntimeZoneFootprintInput4a3a03> &runtime_zones, int32_t width = -1, int32_t height = -1, int32_t generator_mode_0x10b8 = -1, int32_t caller_level_argument_0x0c = -1, int32_t selected_candidate_source_vector_count_0x4a3c77 = -1, const std::vector<GeneratorRelationOwnerState4a218c> *live_relation_owners_0x10e4_for_0x4a1701 = nullptr);
-FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count, std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr);
-BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones);
-BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t original_same_level_runtime_zone_count_override = -1);
+FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, int32_t caller_level_argument_0x0c, int32_t original_same_level_runtime_zone_count, int32_t final_runtime_zone_count, std::vector<GeneratorRelationOwnerState4a218c> *relation_owners = nullptr, const std::vector<SourceWalk4cca55> *source_walks = nullptr, int32_t width = 0, int32_t height = 0);
+BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_runtime_zone_footprints_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, int32_t caller_level_argument_0x0c = 0);
+BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owner_vectors_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state, const std::vector<RuntimeZoneBoundaryInput4a3a03> &runtime_zones, const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners, int32_t original_same_level_runtime_zone_count_override = -1, int32_t caller_level_argument_0x0c = 0);
 int32_t generated_cell_owner_byte2_from_source_payload_owner_word_4a3a03(int32_t source_payload_owner_word, int32_t original_same_level_runtime_zone_count, int32_t fallback_generated_cell_owner_byte2);
 CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218c_4a1f3b_4a19ed_4a3a03_4cca55_4a2777_4a325d_4a3710(int32_t width, int32_t height, int32_t level_count, int32_t water_mode_code, int32_t generator_mode_0x10b8, uint32_t rng_state_after_template_selection, const std::vector<RuntimeZoneSeedInput4a218c> &runtime_zones, const std::vector<RuntimeLinkSeedInput4a218c> &links, bool generator_field_0x08_known = true, int32_t generator_field_0x08 = 0);
 std::vector<BoundaryCycleInput4a2777> boundary_cycles_from_source_handoffs_4a2777(const std::vector<BoundarySourceCycleHandoff4a2777> &handoffs);

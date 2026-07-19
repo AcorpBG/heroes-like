@@ -35,9 +35,10 @@ DEFAULT_STATIC = ROOT / "final_object_serializer_static_summary_20260610.json"
 DEFAULT_CALLSTREAM = ROOT / "final_object_callstream_summary_20260610.json"
 DEFAULT_OUT = ROOT / "final_object_payload_replay_summary_20260610.json"
 DEFAULT_BYTES_OUT = ROOT / "final_object_payload_replay_bytes_20260610.bin"
+DEFAULT_PROFILE = ""
 
 BASE_FIRST_WRITE = "0x0049bb14"
-FINAL_SITE = "0x004ad3de"
+FINAL_SITES = {"0x004ad3db", "0x004ad3de"}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -115,6 +116,7 @@ def summarize(
     static_path: Path,
     callstream_path: Path,
     bytes_out: Path,
+    profile: str = DEFAULT_PROFILE,
 ) -> tuple[dict[str, Any], bytes]:
     ledger = load_json(ledger_path)
     static = load_json(static_path)
@@ -126,7 +128,7 @@ def summarize(
     write_events = [
         event for event in ledger.get("events", []) if event.get("address") in write_sites
     ]
-    final_events = [event for event in ledger.get("events", []) if event.get("address") == FINAL_SITE]
+    final_events = [event for event in ledger.get("events", []) if event.get("address") in FINAL_SITES]
     parsed = [parse_write_event(event, expected_sizes) for event in write_events]
 
     objects: list[dict[str, Any]] = []
@@ -215,15 +217,46 @@ def summarize(
     bytes_out.parent.mkdir(parents=True, exist_ok=True)
     bytes_out.write_bytes(payload_bytes)
 
-    expected_object_count = callstream.get("metrics", {}).get("serializer_event_count")
+    callstream_metrics = callstream.get("metrics", {})
+    expected_object_count = callstream_metrics.get("serializer_event_count")
     expected_weighted_writes = static.get("metrics", {}).get("weighted_minimum_stream_write_events_in_run")
-    matches_prior_callstream = (
-        len(objects) == expected_object_count
-        and len(parsed) == expected_weighted_writes
+    same_run_callstream_complete = bool(
+        callstream_metrics.get("final_object_callstream_replay_complete")
+        and Path(str(callstream.get("inputs", {}).get("ledger", ""))).resolve() == ledger_path.resolve()
     )
+    missing_dispatched_serializer_functions: list[str] = []
+    missing_dispatched_serializer_write_sites: list[dict[str, Any]] = []
+    for serializer, dispatch_count in callstream.get("counts_by_serializer_slot_0c", {}).items():
+        if int(dispatch_count) <= 0:
+            continue
+        function = static.get("functions", {}).get(serializer)
+        if function is None:
+            missing_dispatched_serializer_functions.append(serializer)
+            continue
+        function_sites = [str(write.get("address")) for write in function.get("stream_writes", [])]
+        observed_sites = [site for site in function_sites if counts_by_site.get(site, 0) > 0]
+        if function_sites and not observed_sites:
+            missing_dispatched_serializer_write_sites.append(
+                {"serializer": serializer, "missing_sites": function_sites, "reason": "no_function_write_site_observed"}
+            )
+        elif function.get("jump_count", 0) == 0 and function.get("backward_jump_count", 0) == 0:
+            missing_sites = [site for site in function_sites if counts_by_site.get(site, 0) == 0]
+            if missing_sites:
+                missing_dispatched_serializer_write_sites.append(
+                    {"serializer": serializer, "missing_sites": missing_sites, "reason": "unconditional_write_site_not_observed"}
+                )
+    final_payload_events = [event for event in final_events if event.get("address") == "0x004ad3db"]
+    final_success_events = [event for event in final_events if event.get("address") == "0x004ad3de"]
+    matches_prior_callstream = len(objects) == expected_object_count
     replay_complete = (
         bool(parsed)
-        and len(final_events) == 1
+        and len(final_payload_events) == 1
+        and len(final_success_events) == 1
+        and same_run_callstream_complete
+        and matches_prior_callstream
+        and counts_by_site.get(BASE_FIRST_WRITE, 0) == len(objects)
+        and not missing_dispatched_serializer_functions
+        and not missing_dispatched_serializer_write_sites
         and len(bad_buffer_dumps) == 0
         and len(missing_lengths) == 0
         and len(objects) > 0
@@ -234,7 +267,7 @@ def summarize(
         "schema_id": "h3maped_final_object_payload_replay_summary_v1",
         "status": "final_object_payload_replay_recovered" if replay_complete else "final_object_payload_replay_incomplete",
         "scope": {
-            "profile": callstream.get("scope", {}).get("profile"),
+            "profile": profile or callstream.get("scope", {}).get("profile"),
             "positive_claim": "final generated-object payload byte replay from recovered stream-write call sites",
             "negative_claim": "does not include terrain/tile payload bytes and does not mutate native RMG",
         },
@@ -248,7 +281,11 @@ def summarize(
             "trace_event_count": ledger.get("event_count"),
             "write_event_count": len(parsed),
             "expected_write_event_count": expected_weighted_writes,
-            "final_success_event_count": len(final_events),
+            "final_payload_boundary_event_count": len(final_payload_events),
+            "final_success_event_count": len(final_success_events),
+            "terminal_boundary_addresses": sorted(
+                {str(event.get("address")) for event in final_events}
+            ),
             "object_count": len(objects),
             "prior_callstream_expected_object_count": expected_object_count,
             "payload_byte_count": len(payload_bytes),
@@ -259,6 +296,9 @@ def summarize(
             "bad_buffer_dump_count": len(bad_buffer_dumps),
             "missing_length_count": len(missing_lengths),
             "matches_prior_callstream_counts": matches_prior_callstream,
+            "same_run_callstream_complete": same_run_callstream_complete,
+            "dispatched_serializer_functions_missing_count": len(missing_dispatched_serializer_functions),
+            "dispatched_serializer_write_site_gap_count": len(missing_dispatched_serializer_write_sites),
             "final_object_payload_replay_complete": replay_complete,
             "generated_object_payload_replay_complete": replay_complete,
             "full_private_payload_replay_complete": False,
@@ -274,6 +314,8 @@ def summarize(
         "size_mismatches": size_mismatches[:32],
         "bad_buffer_dumps": bad_buffer_dumps[:32],
         "missing_lengths": missing_lengths[:32],
+        "missing_dispatched_serializer_functions": missing_dispatched_serializer_functions,
+        "missing_dispatched_serializer_write_sites": missing_dispatched_serializer_write_sites,
         "remaining_gap": (
             "Object payload bytes are recovered only if final_object_payload_replay_complete is true. "
             "Full end-to-end recovery still also requires same-run stitching of tile payload, object payload, "
@@ -288,11 +330,12 @@ def main() -> int:
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
     parser.add_argument("--static", type=Path, default=DEFAULT_STATIC)
     parser.add_argument("--callstream", type=Path, default=DEFAULT_CALLSTREAM)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--bytes-out", type=Path, default=DEFAULT_BYTES_OUT)
     args = parser.parse_args()
 
-    summary, _ = summarize(args.ledger, args.static, args.callstream, args.bytes_out)
+    summary, _ = summarize(args.ledger, args.static, args.callstream, args.bytes_out, args.profile)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

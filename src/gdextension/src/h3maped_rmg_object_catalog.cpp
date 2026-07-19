@@ -733,7 +733,7 @@ static const CatalogSourceObjectRecord0x4c OBJECT_SOURCE_RECORDS_0X49DA08[] = {
 	{ 6, "objects.txt", "AVA0010.def", 5, "Artifact", 5, 10, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 7, "objects.txt", "AVA0011.def", 5, "Artifact", 5, 11, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 8, "objects.txt", "AVA0012.def", 5, "Artifact", 5, 12, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
-	{ 9, "objects.txt", "AVA0013.def", 5, "Artifact", 5, 13, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
+	{ 9, "objects.txt", "AVA0013.def", 5, "Artifact", 5, 13, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0xbfffffffffff), uint64_t(0x400000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 10, "objects.txt", "AVA0014.def", 5, "Artifact", 5, 14, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 11, "objects.txt", "AVA0015.def", 5, "Artifact", 5, 15, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 12, "objects.txt", "AVA0016.def", 5, "Artifact", 5, 16, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
@@ -765,9 +765,9 @@ static const CatalogSourceObjectRecord0x4c OBJECT_SOURCE_RECORDS_0X49DA08[] = {
 	{ 38, "objects.txt", "AVA0042.def", 5, "Artifact", 5, 42, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 39, "objects.txt", "AVA0043.def", 5, "Artifact", 5, 43, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 40, "objects.txt", "AVA0044.def", 5, "Artifact", 5, 44, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0xc00000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
-	{ 41, "objects.txt", "AVA0045.def", 5, "Artifact", 5, 45, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
+	{ 41, "objects.txt", "AVA0045.def", 5, "Artifact", 5, 45, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 3, 2, uint64_t(0xbfffffffffff), uint64_t(0x400000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 42, "objects.txt", "AVA0046.def", 5, "Artifact", 5, 46, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
-	{ 43, "objects.txt", "AVA0047.def", 5, "Artifact", 5, 47, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
+	{ 43, "objects.txt", "AVA0047.def", 5, "Artifact", 5, 47, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0xbfffffffffff), uint64_t(0x400000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 44, "objects.txt", "AVA0048.def", 5, "Artifact", 5, 48, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 45, "objects.txt", "AVA0049.def", 5, "Artifact", 5, 49, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 46, "objects.txt", "AVA0050.def", 5, "Artifact", 5, 50, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
@@ -794,7 +794,7 @@ static const CatalogSourceObjectRecord0x4c OBJECT_SOURCE_RECORDS_0X49DA08[] = {
 	{ 67, "objects.txt", "AVA0071.def", 5, "Artifact", 5, 71, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 68, "objects.txt", "AVA0072.def", 5, "Artifact", 5, 72, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 69, "objects.txt", "AVA0073.def", 5, "Artifact", 5, 73, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
-	{ 70, "objects.txt", "AVA0074.def", 5, "Artifact", 5, 74, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
+	{ 70, "objects.txt", "AVA0074.def", 5, "Artifact", 5, 74, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0xbfffffffffff), uint64_t(0x400000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 71, "objects.txt", "AVA0075.def", 5, "Artifact", 5, 75, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 72, "objects.txt", "AVA0076.def", 5, "Artifact", 5, 76, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 73, "objects.txt", "AVA0077.def", 5, "Artifact", 5, 77, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
@@ -805,7 +805,7 @@ static const CatalogSourceObjectRecord0x4c OBJECT_SOURCE_RECORDS_0X49DA08[] = {
 	{ 78, "objects.txt", "AVA0082.def", 5, "Artifact", 5, 82, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 79, "objects.txt", "AVA0083.def", 5, "Artifact", 5, 83, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 80, "objects.txt", "AVA0084.def", 5, "Artifact", 5, 84, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
-	{ 81, "objects.txt", "AVA0085.def", 5, "Artifact", 5, 85, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
+	{ 81, "objects.txt", "AVA0085.def", 5, "Artifact", 5, 85, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0xbfffffffffff), uint64_t(0x400000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 82, "objects.txt", "AVA0086.def", 5, "Artifact", 5, 86, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 83, "objects.txt", "AVA0087.def", 5, "Artifact", 5, 87, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
 	{ 84, "objects.txt", "AVA0088.def", 5, "Artifact", 5, 88, 4, 0, 47, 1, "011111111111111111111111111111111111111111111111", "100000000000000000000000000000000000000000000000", uint16_t(511), uint16_t(1), true, true, 2, 1, uint64_t(0x800000000000), uint64_t(0xc00000000000), "dirt|sand|grass|snow|swamp|rough|cave|lava|water", "water", false, nullptr, 0 },
@@ -2070,6 +2070,42 @@ RandTrnObstacleScoreRecord49dc9e to_public_rand_trn_score_record(const CatalogRa
 	return out;
 }
 
+bool source_record_uses_recovered_runtime_descriptor_override_0x4aa9b7(
+		const CatalogSourceObjectRecord0x4c &row) {
+	switch (row.source_row) {
+		case 9:
+			return std::string(row.def_name) == "AVA0013.def";
+		case 41:
+			return std::string(row.def_name) == "AVA0045.def";
+		case 43:
+			return std::string(row.def_name) == "AVA0047.def";
+		case 70:
+			return std::string(row.def_name) == "AVA0074.def";
+		case 81:
+			return std::string(row.def_name) == "AVA0085.def";
+		default:
+			return false;
+	}
+}
+
+bool source_record_uses_metadata_rand_trn_alias_0x49dc9e(const CatalogSourceObjectRecord0x4c &row) {
+	return !row.rand_trn_backed
+			&& row.type_id_0x1c == 199
+			&& row.metadata_bucket_index_0x08 == 155
+			&& row.subtype_0x20 == 0;
+}
+
+void append_metadata_rand_trn_alias_scores_0x49dc9e(SourceObjectRecord0x4c &out, const CatalogSourceObjectRecord0x4c &row) {
+	if (!source_record_uses_metadata_rand_trn_alias_0x49dc9e(row)) {
+		return;
+	}
+	for (const CatalogRandTrnObstacleScoreRecord49dc9e &score : RAND_TRN_SCORE_RECORDS_0X49DC9E) {
+		if (score.type_id == row.metadata_bucket_index_0x08 && score.subtype == row.subtype_0x20) {
+			out.rand_trn_score_records_0x49dc9e.push_back(to_public_rand_trn_score_record(score));
+		}
+	}
+}
+
 SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row) {
 	SourceObjectRecord0x4c out;
 	out.source_row = row.source_row;
@@ -2103,6 +2139,8 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 	out.terrain_mask_b_0x18 = row.terrain_mask_b_0x18;
 	out.descriptor_mask_fields_0x34_0x48_known = row.descriptor_mask_fields_0x34_0x48_known;
 	out.descriptor_mask_fields_exact_def_msk = row.descriptor_mask_fields_exact_def_msk;
+	out.descriptor_mask_fields_recovered_runtime_override_0x4aa9b7 =
+			source_record_uses_recovered_runtime_descriptor_override_0x4aa9b7(row);
 	out.descriptor_width_0x34 = row.descriptor_width_0x34;
 	out.descriptor_height_0x38 = row.descriptor_height_0x38;
 	out.descriptor_mask_a_0x3c_0x40 = row.descriptor_mask_a_0x3c_0x40;
@@ -2116,6 +2154,7 @@ SourceObjectRecord0x4c to_public_record(const CatalogSourceObjectRecord0x4c &row
 			out.rand_trn_score_records_0x49dc9e.push_back(to_public_rand_trn_score_record(RAND_TRN_SCORE_RECORDS_0X49DC9E[score_index]));
 		}
 	}
+	append_metadata_rand_trn_alias_scores_0x49dc9e(out, row);
 	return out;
 }
 
@@ -2180,8 +2219,8 @@ SourceObjectCatalogSummary0x49da08 source_object_catalog_summary_0x49da08() {
 		}
 		if (record.rand_trn_backed) {
 			summary.rand_trn_backed_record_count += 1;
+			summary.rand_trn_score_variant_count += int32_t(record.rand_trn_score_records_0x49dc9e.size());
 		}
-		summary.rand_trn_score_variant_count += int32_t(record.rand_trn_score_records_0x49dc9e.size());
 		if (record.type_id_0x1c == 53) {
 			summary.mine_type53_record_count += 1;
 			mine_subtype_counts[record.subtype_0x20] += 1;

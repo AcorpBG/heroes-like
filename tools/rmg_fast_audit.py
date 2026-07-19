@@ -458,7 +458,10 @@ def native_roads(doc: dict[str, Any]) -> tuple[dict[str, int], dict[str, list[in
     by_level = {str(level): set() for level in range(level_count)}
     layers = doc.get("terrain_layers", {})
     for road in layers.get("roads", []):
-        for cell in road.get("cells", []):
+        cells = road.get("cells")
+        if not isinstance(cells, list):
+            cells = road.get("tiles", [])
+        for cell in cells:
             level = str(int(cell.get("level", 0)))
             by_level.setdefault(level, set()).add(point_key(int(cell.get("x", 0)), int(cell.get("y", 0))))
     return (
