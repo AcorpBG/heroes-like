@@ -347,6 +347,34 @@ void template_owner_masks_4ac552(const CatalogTemplateRecord4ac552 &template_rec
 \t}}
 }}
 
+bool template_player_owner_counts_allow_49ba1b(
+\t\tconst CatalogTemplateRecord4ac552 &template_record,
+\t\tint32_t human_count,
+\t\tint32_t player_count) {{
+\tint32_t human_owner_count = 0;
+\tint32_t computer_owner_count = 0;
+\tfor (int32_t offset = 0; offset < template_record.zone_count; ++offset) {{
+\t\tconst CatalogZoneRecord4ac552 &record = CATALOG_ZONES_4AC552[template_record.zone_begin + offset];
+\t\tconst TemplateZoneRecord4a218c &zone = record.zone;
+\t\tif (!player_filter_allows_4a218c(
+\t\t\t\t\tzone.player_filter_min_human,
+\t\t\t\t\tzone.player_filter_max_human,
+\t\t\t\t\tzone.player_filter_min_total,
+\t\t\t\t\tzone.player_filter_max_total,
+\t\t\t\t\thuman_count,
+\t\t\t\t\tplayer_count)) {{
+\t\t\tcontinue;
+\t\t}}
+\t\tif (record.role == TEMPLATE_ZONE_ROLE_HUMAN_START) {{
+\t\t\thuman_owner_count += 1;
+\t\t}} else if (record.role == TEMPLATE_ZONE_ROLE_COMPUTER_START) {{
+\t\t\tcomputer_owner_count += 1;
+\t\t}}
+\t}}
+\treturn human_owner_count >= human_count
+\t\t\t&& human_owner_count + computer_owner_count >= player_count;
+}}
+
 }} // namespace
 
 TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask) {{
@@ -360,6 +388,12 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 \tfor (int32_t index = 0; index < int32_t(sizeof(CATALOG_TEMPLATES_4AC552) / sizeof(CATALOG_TEMPLATES_4AC552[0])); ++index) {{
 \t\tconst CatalogTemplateRecord4ac552 &template_record = CATALOG_TEMPLATES_4AC552[index];
 \t\tif (!template_range_allows_4ac552(template_record, size_score, result.human_count, result.player_count)) {{
+\t\t\tcontinue;
+\t\t}}
+\t\tif (!template_player_owner_counts_allow_49ba1b(
+\t\t\t\t\ttemplate_record,
+\t\t\t\t\tresult.human_count,
+\t\t\t\t\tresult.player_count)) {{
 \t\t\tcontinue;
 \t\t}}
 \t\tTemplateCandidateContainerRecord4ac552 candidate;

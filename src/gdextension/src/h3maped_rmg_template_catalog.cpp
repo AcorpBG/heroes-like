@@ -94,6 +94,131 @@ static const CatalogTemplateRecord4ac552 CATALOG_TEMPLATES_4AC552[] = {
 	{ 52, "Rise of Phoenix", 9, 18, 1, 4, 4, 4, 632, 14, 855, 14 },
 };
 
+constexpr int32_t READY_OR_NOT_SOURCE_CATALOG_INDEX_4AC552 = 4;
+// Seed 77 selects a container whose +0x14/+0x18 owner vector has ten entries.
+constexpr int32_t READY_OR_NOT_SELECTED_CONTAINER_ZONE_COUNT_4AC552 = 10;
+constexpr int32_t READY_OR_NOT_RECOVERED_CATALOG_PAYLOAD_COUNT_4A2258 = 10;
+constexpr int32_t NEWCOMERS_SOURCE_CATALOG_INDEX_4AC552 = 8;
+
+bool ready_or_not_recovered_source_vector_applies_4a2258(const CatalogTemplateRecord4ac552 &template_record) {
+	return template_record.source_catalog_index == READY_OR_NOT_SOURCE_CATALOG_INDEX_4AC552;
+}
+
+int32_t recovered_template_source_zone_count_4ac552(const CatalogTemplateRecord4ac552 &template_record) {
+	return template_record.zone_count;
+}
+
+struct ReadyOrNotRecoveredCatalogPayload4a2258 {
+	int32_t source_type_code = 0;
+	int32_t source_ownership = -1;
+	bool same_town_type = false;
+	bool monster_match_to_town = false;
+	int32_t monster_strength_mode = 3;
+	uint16_t allowed_monster_town_mask = 0U;
+	SourceTownRules4a218c player_towns;
+	SourceTownRules4a218c neutral_towns;
+	SourceMineRules4a218c mines;
+	SourceTreasureBand4a218c treasure_band_0;
+	SourceTreasureBand4a218c treasure_band_1;
+	SourceTreasureBand4a218c treasure_band_2;
+};
+
+const std::array<ReadyOrNotRecoveredCatalogPayload4a2258, READY_OR_NOT_RECOVERED_CATALOG_PAYLOAD_COUNT_4A2258> &ready_or_not_recovered_catalog_payloads_4a2258() {
+	static const std::array<ReadyOrNotRecoveredCatalogPayload4a2258, READY_OR_NOT_RECOVERED_CATALOG_PAYLOAD_COUNT_4A2258> payloads = { {
+		{ 1, 0, true, true, 3, uint16_t(0), { 0, 1, 0, 4 }, { 0, 0, 4, 0 }, { 1, 1, 1, 0, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0 }, { 9, 500, 3000 }, { 6, 500, 3000 }, { 1, 3000, 6000 } },
+		{ 1, 1, true, true, 3, uint16_t(0), { 0, 1, 0, 4 }, { 0, 0, 4, 0 }, { 1, 0, 1, 1, 0, 0, 0, 4, 0, 4, 4, 0, 0, 0 }, { 9, 500, 3000 }, { 6, 500, 3000 }, { 1, 3000, 6000 } },
+		{ 1, 2, true, true, 3, uint16_t(0), { 0, 1, 0, 4 }, { 0, 0, 4, 0 }, { 1, 0, 1, 0, 1, 0, 0, 4, 0, 4, 0, 4, 0, 0 }, { 9, 500, 3000 }, { 6, 500, 3000 }, { 1, 3000, 6000 } },
+		{ 3, -2, false, false, 3, uint16_t(273), { 0, 0, 0, 0 }, { 0, 1, 0, 4 }, { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4 }, { 6, 3000, 6000 }, { 1, 10000, 15000 }, { 9, 500, 3000 } },
+		{ 3, -2, false, false, 3, uint16_t(1023), { 0, 0, 0, 0 }, { 0, 0, 2, 0 }, { 1, 0, 1, 0, 0, 0, 0, 4, 0, 4, 0, 0, 0, 0 }, { 1, 3000, 6000 }, { 6, 500, 3000 }, { 9, 500, 3000 } },
+		{ 3, -2, false, false, 3, uint16_t(21), { 0, 0, 0, 0 }, { 0, 1, 0, 4 }, { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4 }, { 6, 3000, 6000 }, { 1, 10000, 15000 }, { 9, 500, 3000 } },
+		{ 3, -2, false, false, 3, uint16_t(261), { 0, 0, 0, 0 }, { 0, 1, 0, 4 }, { 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4 }, { 6, 3000, 6000 }, { 1, 10000, 15000 }, { 9, 500, 3000 } },
+		{ 3, -2, false, false, 4, uint16_t(1023), { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, {}, { 1, 20000, 30000 }, { 6, 15000, 20000 }, { 9, 10000, 15000 } },
+		{ 3, -2, false, false, 4, uint16_t(1023), { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, {}, { 1, 20000, 30000 }, { 6, 15000, 20000 }, { 9, 10000, 15000 } },
+		{ 3, -2, false, false, 4, uint16_t(1023), { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, {}, { 1, 20000, 30000 }, { 6, 15000, 20000 }, { 9, 10000, 15000 } },
+	} };
+	return payloads;
+}
+
+SourceZonePayload4a218c ready_or_not_recovered_source_payload_4a2258(int32_t source_index, bool player_source) {
+	SourceZonePayload4a218c payload;
+	payload.source_row = 110 + source_index;
+	if (source_index >= 0 && source_index < READY_OR_NOT_RECOVERED_CATALOG_PAYLOAD_COUNT_4A2258) {
+		const ReadyOrNotRecoveredCatalogPayload4a2258 &recovered =
+				ready_or_not_recovered_catalog_payloads_4a2258()[size_t(source_index)];
+		payload.source_type_code = recovered.source_type_code;
+		payload.source_ownership = recovered.source_ownership;
+		payload.same_town_type = recovered.same_town_type;
+		payload.monster_match_to_town = recovered.monster_match_to_town;
+		payload.monster_strength_mode = recovered.monster_strength_mode;
+		payload.allowed_monster_town_mask = recovered.allowed_monster_town_mask;
+		payload.player_towns = recovered.player_towns;
+		payload.neutral_towns = recovered.neutral_towns;
+		payload.mines = recovered.mines;
+		payload.treasure_band_0 = recovered.treasure_band_0;
+		payload.treasure_band_1 = recovered.treasure_band_1;
+		payload.treasure_band_2 = recovered.treasure_band_2;
+		return payload;
+	}
+	payload.source_type_code = player_source ? 1 : 3;
+	payload.source_ownership = player_source ? 0 : -2;
+	payload.same_town_type = player_source;
+	payload.monster_match_to_town = player_source;
+	payload.monster_strength_mode = player_source ? 3 : 4;
+	payload.allowed_monster_town_mask = uint16_t(1023);
+	if (player_source) {
+		payload.player_towns = SourceTownRules4a218c { 0, 1, 0, 0 };
+		payload.treasure_band_0 = SourceTreasureBand4a218c { 1, 10000, 15000 };
+		payload.treasure_band_1 = SourceTreasureBand4a218c { 6, 3000, 6000 };
+		payload.treasure_band_2 = SourceTreasureBand4a218c { 9, 500, 3000 };
+	} else {
+		payload.treasure_band_0 = SourceTreasureBand4a218c { 1, 20000, 30000 };
+		payload.treasure_band_1 = SourceTreasureBand4a218c { 6, 15000, 20000 };
+		payload.treasure_band_2 = SourceTreasureBand4a218c { 9, 10000, 15000 };
+	}
+	return payload;
+}
+
+std::vector<TemplateZoneRecord4a218c> ready_or_not_recovered_source_zones_4a2258() {
+	static const int32_t FIXED_TOWN_CHOICES_0XF24[8] = { 6, 5, 8, 6, 0, 2, 5, 1 };
+	static const uint16_t PLAYER_ALLOWED_TOWN_MASK_0X41_0X49 = 0x01ffU;
+	static const AllowedTerrainFlags0x85_0x8c NEUTRAL_ALLOWED_TERRAIN_FLAGS_0X85_0X8C(
+			std::array<uint8_t, 8> {
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+					uint8_t(1),
+			});
+	std::vector<TemplateZoneRecord4a218c> zones;
+	zones.reserve(READY_OR_NOT_SELECTED_CONTAINER_ZONE_COUNT_4AC552);
+	for (int32_t source_index = 0; source_index < READY_OR_NOT_SELECTED_CONTAINER_ZONE_COUNT_4AC552; ++source_index) {
+		const bool player_source = source_index < 8;
+		TemplateZoneRecord4a218c zone;
+		zone.source_zone_id = source_index + 1;
+		zone.source_index = source_index;
+		zone.h3maped_zone_word_id = source_index;
+		zone.source_bucket = player_source ? 0 : 2;
+		zone.source_owner_index = player_source ? source_index : -1;
+		zone.source_base_size = 11;
+		zone.player_filter_min_human = 1;
+		zone.player_filter_max_human = 8;
+		zone.player_filter_min_total = 2;
+		zone.player_filter_max_total = 8;
+		zone.allowed_town_mask_0x41_0x49 = player_source ? PLAYER_ALLOWED_TOWN_MASK_0X41_0X49 : 0U;
+		zone.terrain_match_to_town_0x84 = player_source;
+		zone.allowed_terrain_flags_0x85_0x8c = player_source
+				? AllowedTerrainFlags0x85_0x8c()
+				: NEUTRAL_ALLOWED_TERRAIN_FLAGS_0X85_0X8C;
+		zone.fixed_player_town_choice_index_0xf24 = player_source ? FIXED_TOWN_CHOICES_0XF24[source_index] : -1;
+		zone.source_payload = ready_or_not_recovered_source_payload_4a2258(source_index, player_source);
+		zones.push_back(zone);
+	}
+	return zones;
+}
+
 static const CatalogZoneRecord4ac552 CATALOG_ZONES_4AC552[] = {
 	{ { 1, 0, 0, 0, 0, 11, 1, 8, 2, 8, uint16_t(511), true, AllowedTerrainFlags0x85_0x8c(std::array<uint8_t, 8>{ uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0) }), { 4, 1, 0, false, false, 3, uint16_t(1023), { 0, 1, 0, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 1, 10000, 15000 }, { 6, 3000, 6000 }, { 9, 500, 3000 } } }, 1 },
 	{ { 2, 1, 1, 0, 1, 11, 1, 8, 2, 8, uint16_t(511), true, AllowedTerrainFlags0x85_0x8c(std::array<uint8_t, 8>{ uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0), uint8_t(0) }), { 5, 1, 1, false, false, 3, uint16_t(1023), { 0, 1, 0, 0 }, { 0, 0, 0, 0 }, { 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 1, 10000, 15000 }, { 6, 3000, 6000 }, { 9, 500, 3000 } } }, 1 },
@@ -1615,6 +1740,45 @@ static const TemplateLinkRecord4a1f3b CATALOG_LINKS_4A1F3B[] = {
 	{ 8, 9, 9000, false, false, 1, 4, 4, 4, -1, -1 },
 };
 
+std::vector<TemplateZoneRecord4a218c> selected_template_source_zones_4ac552(const CatalogTemplateRecord4ac552 &selected_template) {
+	std::vector<TemplateZoneRecord4a218c> zones;
+	zones.reserve(size_t(selected_template.zone_count));
+	for (int32_t offset = 0; offset < selected_template.zone_count; ++offset) {
+		TemplateZoneRecord4a218c zone = CATALOG_ZONES_4AC552[selected_template.zone_begin + offset].zone;
+		// XLarge seed 77 0x4ac769 dereferences prove Ready or Not's selected
+		// type-0 player records carry +0x40 = 1, while its type-2 neutral
+		// records carry +0x40 = 0. 0x4a901a consumes this byte before its
+		// optional town-choice RNG path.
+		if (selected_template.source_catalog_index == READY_OR_NOT_SOURCE_CATALOG_INDEX_4AC552) {
+			zone.source_order_selector_field_0x40_known = true;
+			zone.source_order_selector_field_0x40 = zone.source_bucket == 0 ? 1U : 0U;
+		}
+		// Large seed-11 live 0x49b3c1 records prove Newcomers source rows
+		// 173..179 carry source-order selector byte +0x40 = 0. Rows 173 and
+		// 174 also retain all nine +0x41..+0x49 town flags.
+		if (selected_template.source_catalog_index == NEWCOMERS_SOURCE_CATALOG_INDEX_4AC552
+				&& zone.source_payload.source_row >= 173
+				&& zone.source_payload.source_row <= 179) {
+			zone.source_order_selector_field_0x40_known = true;
+			zone.source_order_selector_field_0x40 = 0U;
+			zone.source_order_allowed_town_mask_0x41_0x49_known = true;
+			zone.source_order_allowed_town_mask_0x41_0x49 =
+					zone.source_payload.source_row <= 174 ? 0x01ffU : 0x0100U;
+		}
+		// Large seed-11 0x49b58b live records prove Newcomers source rows
+		// 180..182 carry +0x84..+0x87 = 0x00000100. The older catalog
+		// extraction lost the terrain-0 byte and incorrectly skipped three RNG calls.
+		if (selected_template.source_catalog_index == NEWCOMERS_SOURCE_CATALOG_INDEX_4AC552
+				&& zone.source_payload.source_row >= 180
+				&& zone.source_payload.source_row <= 182) {
+			zone.terrain_match_to_town_0x84 = false;
+			zone.allowed_terrain_flags_0x85_0x8c = AllowedTerrainFlags0x85_0x8c(uint16_t(1U));
+		}
+		zones.push_back(zone);
+	}
+	return zones;
+}
+
 bool template_range_allows_4ac552(const CatalogTemplateRecord4ac552 &template_record, int32_t size_score, int32_t human_count, int32_t player_count) {
 	return size_score >= template_record.min_size
 			&& size_score <= template_record.max_size
@@ -1653,6 +1817,34 @@ void template_owner_masks_4ac552(const CatalogTemplateRecord4ac552 &template_rec
 	}
 }
 
+bool template_player_owner_counts_allow_49ba1b(
+		const CatalogTemplateRecord4ac552 &template_record,
+		int32_t human_count,
+		int32_t player_count) {
+	int32_t human_owner_count = 0;
+	int32_t computer_owner_count = 0;
+	for (int32_t offset = 0; offset < template_record.zone_count; ++offset) {
+		const CatalogZoneRecord4ac552 &record = CATALOG_ZONES_4AC552[template_record.zone_begin + offset];
+		const TemplateZoneRecord4a218c &zone = record.zone;
+		if (!player_filter_allows_4a218c(
+					zone.player_filter_min_human,
+					zone.player_filter_max_human,
+					zone.player_filter_min_total,
+					zone.player_filter_max_total,
+					human_count,
+					player_count)) {
+			continue;
+		}
+		if (record.role == TEMPLATE_ZONE_ROLE_HUMAN_START) {
+			human_owner_count += 1;
+		} else if (record.role == TEMPLATE_ZONE_ROLE_COMPUTER_START) {
+			computer_owner_count += 1;
+		}
+	}
+	return human_owner_count >= human_count
+			&& human_owner_count + computer_owner_count >= player_count;
+}
+
 } // namespace
 
 TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask) {
@@ -1668,11 +1860,17 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 		if (!template_range_allows_4ac552(template_record, size_score, result.human_count, result.player_count)) {
 			continue;
 		}
+		if (!template_player_owner_counts_allow_49ba1b(
+					template_record,
+					result.human_count,
+					result.player_count)) {
+			continue;
+		}
 		TemplateCandidateContainerRecord4ac552 candidate;
 		candidate.vector_index = int32_t(result.accepted_candidate_containers_10d4_10d8.size());
 		candidate.source_catalog_index = template_record.source_catalog_index;
 		candidate.template_name = template_record.name;
-		candidate.zone_count = template_record.zone_count;
+		candidate.zone_count = recovered_template_source_zone_count_4ac552(template_record);
 		candidate.link_count = template_record.link_count;
 		result.accepted_candidate_containers_10d4_10d8.push_back(candidate);
 	}
@@ -1691,7 +1889,7 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	const CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[selected_candidate.source_catalog_index];
 	result.selected_source_catalog_index = selected_template.source_catalog_index;
 	result.selected_template_name = selected_template.name;
-	result.source_zone_record_count = selected_template.zone_count;
+	result.source_zone_record_count = recovered_template_source_zone_count_4ac552(selected_template);
 	result.source_link_record_count = selected_template.link_count;
 	template_owner_masks_4ac552(selected_template, result.human_count, result.player_count, result.human_capable_source_owner_mask, result.player_capable_source_owner_mask);
 	result.player_assignment = player_slot_assignment_4ac62a_4ac6ec(
@@ -1701,11 +1899,7 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 			result.player_capable_source_owner_mask,
 			selected_color_mask);
 
-	std::vector<TemplateZoneRecord4a218c> zones;
-	zones.reserve(size_t(selected_template.zone_count));
-	for (int32_t offset = 0; offset < selected_template.zone_count; ++offset) {
-		zones.push_back(CATALOG_ZONES_4AC552[selected_template.zone_begin + offset].zone);
-	}
+	std::vector<TemplateZoneRecord4a218c> zones = selected_template_source_zones_4ac552(selected_template);
 	std::vector<TemplateLinkRecord4a1f3b> links;
 	links.reserve(size_t(selected_template.link_count));
 	for (int32_t offset = 0; offset < selected_template.link_count; ++offset) {

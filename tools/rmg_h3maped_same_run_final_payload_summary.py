@@ -37,6 +37,8 @@ DEFAULT_OBJECT_BYTES_OUT = ROOT / "same_run_final_object_payload_replay_bytes_20
 DEFAULT_GHIDRA_TILE_WRITER = (
     ROOT / "ghidra_writeout_spine_dump_20260610" / "target_0049b2b6_FUN_0049b2b6.txt"
 )
+DEFAULT_PROFILE = "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 1, monster strength weak"
+FINAL_OBJECT_BOUNDARY_SITE = "0x004ad3db"
 FINAL_OBJECT_SUCCESS_SITE = "0x004ad3de"
 FINAL_TILE_SITE = "0x004ad251"
 
@@ -59,14 +61,16 @@ def summarize(
     tile_bytes_out: Path,
     object_summary_out: Path,
     object_bytes_out: Path,
+    profile: str = DEFAULT_PROFILE,
 ) -> dict[str, Any]:
     ledger = load_json(ledger_path)
-    tile_summary, tile_payload = summarize_tile_payload(ledger_path, ghidra_tile_writer)
+    tile_summary, tile_payload = summarize_tile_payload(ledger_path, ghidra_tile_writer, profile)
     object_summary, object_payload = summarize_object_payload(
         ledger_path,
         static_path,
         callstream_path,
         object_bytes_out,
+        profile,
     )
     tile_bytes_out.parent.mkdir(parents=True, exist_ok=True)
     tile_bytes_out.write_bytes(tile_payload)
@@ -75,14 +79,18 @@ def summarize(
 
     events = ledger.get("events", [])
     tile_event_count = sum(1 for event in events if event.get("address") == FINAL_TILE_SITE)
-    final_object_event_count = sum(
+    final_object_boundary_event_count = sum(
+        1 for event in events if event.get("address") == FINAL_OBJECT_BOUNDARY_SITE
+    )
+    final_object_success_event_count = sum(
         1 for event in events if event.get("address") == FINAL_OBJECT_SUCCESS_SITE
     )
     same_run_stitch_complete = (
         tile_summary.get("metrics", {}).get("final_tile_payload_replay_complete") is True
         and object_summary.get("metrics", {}).get("final_object_payload_replay_complete") is True
         and tile_event_count == 1
-        and final_object_event_count == 1
+        and final_object_boundary_event_count == 1
+        and final_object_success_event_count == 1
     )
 
     return {
@@ -93,7 +101,7 @@ def summarize(
             else "same_run_final_tile_object_payload_incomplete"
         ),
         "scope": {
-            "profile": "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0",
+            "profile": profile,
             "positive_claim": (
                 "same-run replay checkpoint for final generated-cell tile bytes and "
                 "generated-object stream-write bytes"
@@ -118,7 +126,8 @@ def summarize(
         "metrics": {
             "trace_event_count": ledger.get("event_count"),
             "final_tile_event_count": tile_event_count,
-            "final_object_success_event_count": final_object_event_count,
+            "final_object_boundary_event_count": final_object_boundary_event_count,
+            "final_object_success_event_count": final_object_success_event_count,
             "tile_cell_count": tile_summary.get("metrics", {}).get("cell_count"),
             "tile_payload_byte_count": tile_summary.get("metrics", {}).get(
                 "tile_payload_byte_count"
@@ -160,6 +169,7 @@ def main() -> int:
     parser.add_argument("--ghidra-tile-writer", type=Path, default=DEFAULT_GHIDRA_TILE_WRITER)
     parser.add_argument("--static", type=Path, default=DEFAULT_STATIC)
     parser.add_argument("--callstream", type=Path, default=DEFAULT_CALLSTREAM)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--tile-summary-out", type=Path, default=DEFAULT_TILE_OUT)
     parser.add_argument("--tile-bytes-out", type=Path, default=DEFAULT_TILE_BYTES_OUT)
@@ -176,6 +186,7 @@ def main() -> int:
         args.tile_bytes_out,
         args.object_summary_out,
         args.object_bytes_out,
+        args.profile,
     )
     write_json(args.out, summary)
     print(

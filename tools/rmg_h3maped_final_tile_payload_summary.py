@@ -21,11 +21,16 @@ ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_LEDGER = ROOT / "medium_seed10_final_tile_payload_grid_20260610" / "winedbg_interactive_trace_ledger.json"
 DEFAULT_OUT = ROOT / "final_tile_payload_summary_20260610.json"
 DEFAULT_BYTES_OUT = ROOT / "final_tile_payload_bytes_20260610.bin"
+DEFAULT_PROFILE = "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0"
 
 EXPECTED_ADDRESS = "0x004ad251"
-EXPECTED_WIDTH = 72
-EXPECTED_HEIGHT = 72
-EXPECTED_LEVELS = 1
+MAP_SIZE_DIMENSIONS = {
+    "small": 36,
+    "medium": 72,
+    "large": 108,
+    "xlarge": 144,
+}
+SUPPORTED_DIMENSIONS = set(MAP_SIZE_DIMENSIONS.values())
 CELL_STRIDE_BYTES = 0x30
 CELL_DWORDS = CELL_STRIDE_BYTES // 4
 
@@ -143,7 +148,7 @@ def find_generator_dump(event: dict[str, Any]) -> tuple[int, list[int]]:
         height = words[0x1C // 4]
         levels = words[0x20 // 4]
         grid_base = words[0x14 // 4]
-        if width != EXPECTED_WIDTH or height != EXPECTED_HEIGHT or levels != EXPECTED_LEVELS:
+        if width not in SUPPORTED_DIMENSIONS or height != width or levels not in {1, 2}:
             continue
         expected_grid_words = width * height * levels * CELL_DWORDS
         expected_grid_lines = expected_grid_words // 4
@@ -165,7 +170,11 @@ def static_marker_results(path: Path) -> dict[str, Any]:
     }
 
 
-def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, Any], bytes]:
+def summarize(
+    ledger_path: Path,
+    ghidra_tile_writer: Path,
+    profile: str = DEFAULT_PROFILE,
+) -> tuple[dict[str, Any], bytes]:
     ledger = load_json(ledger_path)
     matching_events = [event for event in ledger.get("events", []) if event.get("address") == EXPECTED_ADDRESS]
     if len(matching_events) != 1:
@@ -182,6 +191,9 @@ def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, An
     expected_grid_lines = expected_grid_words // 4
     grid_lines = find_grid_lines(event, grid_base, expected_grid_lines)
     grid_words = flatten_words(grid_lines)
+    ui_map_size = ledger.get("ui_options", {}).get("map_size")
+    ui_dimension = MAP_SIZE_DIMENSIONS.get(ui_map_size)
+    ui_dimensions_match = ui_dimension is None or (width == ui_dimension and height == ui_dimension)
 
     cells: list[list[int]] = []
     for offset in range(0, len(grid_words), CELL_DWORDS):
@@ -204,10 +216,11 @@ def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, An
 
     marker_check = static_marker_results(ghidra_tile_writer)
     payload_complete = (
-        width == EXPECTED_WIDTH
-        and height == EXPECTED_HEIGHT
-        and levels == EXPECTED_LEVELS
-        and len(cells) == expected_cells == EXPECTED_WIDTH * EXPECTED_HEIGHT * EXPECTED_LEVELS
+        width in SUPPORTED_DIMENSIONS
+        and height == width
+        and levels in {1, 2}
+        and ui_dimensions_match
+        and len(cells) == expected_cells == width * height * levels
         and len(grid_words) == expected_grid_words
         and len(payload) == expected_cells * 7
         and marker_check["all_markers_present"]
@@ -225,7 +238,7 @@ def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, An
         "schema_id": "h3maped_final_tile_payload_summary_v1",
         "status": "final_tile_payload_replay_recovered" if payload_complete else "final_tile_payload_replay_incomplete",
         "scope": {
-            "profile": "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0",
+            "profile": profile,
             "positive_claim": "complete final tile payload source-state replay for 0x49b2b6 over every generated cell",
             "negative_claim": "does not decode generated-object serialization payloads or claim full native RMG parity",
         },
@@ -239,6 +252,9 @@ def summarize(ledger_path: Path, ghidra_tile_writer: Path) -> tuple[dict[str, An
             "width": width,
             "height": height,
             "levels": levels,
+            "ui_map_size": ui_map_size,
+            "ui_expected_dimension": ui_dimension,
+            "ui_dimensions_match": ui_dimensions_match,
             "cell_stride_bytes": CELL_STRIDE_BYTES,
             "cell_count": len(cells),
             "expected_cell_count": expected_cells,
@@ -299,6 +315,7 @@ def hex_counter(counter: Counter[int]) -> dict[str, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
     parser.add_argument(
         "--ghidra-tile-writer",
         type=Path,
@@ -308,7 +325,7 @@ def main() -> int:
     parser.add_argument("--bytes-out", type=Path, default=DEFAULT_BYTES_OUT)
     args = parser.parse_args()
 
-    summary, payload = summarize(args.ledger, args.ghidra_tile_writer)
+    summary, payload = summarize(args.ledger, args.ghidra_tile_writer, args.profile)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.bytes_out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")

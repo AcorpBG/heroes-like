@@ -16,14 +16,42 @@ on the host and records that refusal in `wrapper_manifest.json`. The shared
 `tools/rmg_no_godot_guard.py` process guard is also wired into the Python
 quick-validation and validation-gate commands, so native RMG validation fails
 fast instead of parsing large artifacts while the engine is consuming memory.
-Full `.amap` export is not a mode on this host yet: the wrapper refuses before
-spawning the native process. `--phase-snapshot-only` is diagnostic-only and
-still exits blocked until the shared recovered H3MapEd RMG core owns payload
-generation.
+`--phase-snapshot-only` remains diagnostic-only. Once the shared recovered
+H3MapEd RMG core proves final payload parity for a controlled authority case,
+`--emit-final-h3m-payload` writes the owned final H3M bytes and
+`--emit-runtime-package` projects that same parity-owned payload into paired
+`.amap`/`.ascenario` packages. Runtime package output is fail-closed unless the
+same-run compare is complete, native object serialization matches, and no
+recovered tile/object authority bytes were replayed. Native map JSON remains
+disabled. Public runtime generation is enabled only for the supported parity
+matrix and fails closed outside it.
 
-Current blocker: the standalone CLI owns no-Godot controlled-case
-parsing/filtering, but it must not expose any live map-generation surface as a
-checkpoint. `--phase-snapshot-only` writes a blocked shared-chain marker:
+## Current Completion Status
+
+As of 2026-07-19, this section supersedes the historical blocker descriptions
+below. The selected release matrix is exact for all 24 workflows spanning
+Small, Medium, Large, and XLarge sizes; one and two levels; and land,
+normal-water, and Islands modes. Public `MapPackageService::generate_random_map`
+uses authority-independent inputs and owns payload projection, paired
+map/scenario documents, deterministic package-session identity, starts, town
+bindings, object tile metadata, and guard/reward references for that matrix.
+Unsupported shapes or monster strengths remain fail-closed. Linux and Windows
+Debug/Release native outputs build, native self-tests pass on Linux and under
+Wine, the Godot end-to-end runtime boundary passes, and repository validation
+passes. This status does not claim configurations or allocator histories beyond
+the selected supported matrix.
+
+## Historical Blocker Record
+
+The material below is retained as the implementation history that led to the
+completed matrix. Statements that public runtime generation is disabled or that
+the matrix is incomplete are superseded by the completion status above.
+
+Controlled Medium seed-10 setup-1 package projection is proven,
+but public `MapPackageService::generate_random_map` still lacks a production
+input path that does not require externally supplied same-run authority, and
+final parity is not proven across the supported Small/Medium seed/setup/player
+matrix. `--phase-snapshot-only` writes a blocked shared-chain marker:
 `rmg_native_batch_export_cli_shared_h3maped_state_chain_blocked_v1`.
 That marker records `live_generation_surface_present=false` and runtime
 generation disabled. The marker now feeds runtime-zone seeds and links from the
@@ -48,13 +76,12 @@ The duplicate phase/native-map reconstruction body has been deleted from
 controlled-case parsing/filtering and blocked shared-chain marker output. The
 standalone native-core public header does not declare reconstructed
 phase/native-map writers, and the CLI no longer calls the native-map JSON
-writer. A direct `--native-map-json-only` invocation writes only a blocked
-manifest with `native_map_json_public_api_removed=true` and
-`legacy_native_generation_surface_removed=true`.
-Full native map JSON and `.amap` generation remain refused until exact same-run
-H3MapEd runtime-zone seed/link input production feeds the shared core and
-private-state comparison passes, then that core owns final payload generation
-for the standalone CLI and runtime service. The old proxy/reconstruction port is
+writer. A direct `--native-map-json-only` or `--emit-native-map-json` invocation
+is refused by the Python wrapper with `native_map_json_public_api_removed`.
+Native map JSON remains refused. Parity-gated `.amap`/`.ascenario` generation
+uses the owned H3M payload projection and does not reintroduce the old
+proxy/reconstruction path. Public package/session generation remains blocked
+outside the controlled authority case. The old proxy/reconstruction port is
 archived as
 `src/gdextension/src/archived_h3maped_small_rmg_legacy_proxy_20260618.cpp`, its
 proxy catalogs are archived as
@@ -238,11 +265,13 @@ now fails before spawning the CLI with
 `full_export_plain_cpp_core_not_available`. Do not add Godot flags, restore a
 Godot runner, or add a full-export probe override for parity work on this host.
 
-Native map JSON and full `.amap` output are both blocked on this host until
-final payload generation is owned by the shared recovered H3MapEd RMG core.
-Do not use the duplicate plain-C++ CLI surface as a substitute for recovered
-generation behavior; use `--phase-snapshot-only` only when a blocked diagnostic
-snapshot is needed to validate a same-slice source-backed behavior change.
+Native map JSON remains blocked. Paired `.amap`/`.ascenario` output is allowed
+only through `--emit-runtime-package` after the shared recovered H3MapEd RMG
+core proves same-run final payload parity without authority replay. Do not use
+the standalone CLI as a substitute for public generation; use
+`--phase-snapshot-only` only for blocked diagnostics and keep
+`MapPackageService::generate_random_map` fail-closed until authority-independent
+inputs and the supported parity matrix are implemented.
 
 For checkpoint-2 phase snapshots, controlled cases may include the recovered
 setup `+0x44` as the optional ninth field:

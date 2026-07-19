@@ -174,6 +174,42 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const Cont
 	config.setup_object_0x40 = controlled_case.setup_object_0x40;
 	config.setup_caller_arg_0x0c_known = controlled_case.setup_caller_arg_0x0c_known;
 	config.setup_caller_arg_0x0c = controlled_case.setup_caller_arg_0x0c;
+	if (supported_one_level_land_scope(controlled_case)) {
+		// 0x4602c1 copies the New Map dialog's player/team fields into setup
+		// +0x34..+0x40 immediately before 0x4adfe1. "(None)" teams are
+		// represented by the Human/Computer slot count and zero computer teams.
+		if (!controlled_case.setup_object_0x34_supplied) {
+			config.setup_object_0x34_known = true;
+			config.setup_object_0x34 = controlled_case.human_count;
+		}
+		if (!controlled_case.setup_object_0x38_supplied) {
+			config.setup_object_0x38_known = true;
+			config.setup_object_0x38 = controlled_case.human_count;
+		}
+		if (!controlled_case.setup_object_0x3c_supplied) {
+			config.setup_object_0x3c_known = true;
+			config.setup_object_0x3c = controlled_case.computer_count;
+		}
+		if (!controlled_case.setup_object_0x40_supplied) {
+			config.setup_object_0x40_known = true;
+			config.setup_object_0x40 = 0;
+		}
+		if (!controlled_case.setup_object_0x44_supplied) {
+			config.setup_object_0x44_known = true;
+			config.setup_object_0x44 = 0;
+		}
+		if (!controlled_case.setup_object_raw_0x48_supplied
+				&& !controlled_case.setup_object_0x48_supplied) {
+			// The New Map dialog's Random monster-strength radio stores -1 at
+			// setup +0x48; 0x4adfe1 prepares arg8 as clamp(raw + 3, 1, 5).
+			config.setup_object_raw_0x48_known = true;
+			config.setup_object_raw_0x48 = -1;
+		}
+		if (!controlled_case.setup_object_0x4c_supplied) {
+			config.setup_object_0x4c_known = true;
+			config.setup_object_0x4c = 2;
+		}
+	}
 	if (!config.setup_caller_arg_0x0c_known && supported_one_level_land_scope(controlled_case)) {
 		config.setup_caller_arg_0x0c_known = true;
 		config.setup_caller_arg_0x0c =
@@ -186,6 +222,7 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(
 		const ControlledCase &controlled_case,
 		const SharedRuntimeChainInput &input) {
 	h3maped_rmg_core::H3MapedRmgWorkflowConfig config = to_h3maped_workflow_config(controlled_case);
+	config.recovery_probe_scope_allowed = input.recovery_probe_scope_allowed;
 	config.same_run_final_tile_payload_authority_known =
 			input.same_run_final_tile_payload_authority_known;
 	config.same_run_final_tile_payload_authority_0x49b2b6 =
@@ -194,12 +231,17 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(
 			input.same_run_generated_object_payload_authority_known;
 	config.same_run_generated_object_payload_authority_0x4ad1e3 =
 			input.same_run_generated_object_payload_authority_0x4ad1e3;
+	config.same_run_full_payload_authority_known = input.same_run_full_payload_authority_known;
+	config.same_run_full_payload_authority_0x4ac857_0x4ad3db =
+			input.same_run_full_payload_authority_0x4ac857_0x4ad3db;
 	config.same_run_payload_authority_profile_known =
 			input.same_run_payload_authority_profile_known;
 	config.same_run_payload_authority_profile =
 			input.same_run_payload_authority_profile;
 	config.same_run_payload_authority_tile_byte_count =
 			input.same_run_payload_authority_tile_byte_count;
+	config.same_run_payload_authority_object_count =
+			input.same_run_payload_authority_object_count;
 	config.same_run_payload_authority_object_byte_count =
 			input.same_run_payload_authority_object_byte_count;
 	config.same_run_payload_authority_setup_stack_join_known =
@@ -214,6 +256,36 @@ h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(
 			input.same_run_payload_authority_setup_object_0x48;
 	config.same_run_payload_authority_setup_object_0x4c =
 			input.same_run_payload_authority_setup_object_0x4c;
+	config.same_run_payload_authority_river_entry_args_known =
+			input.same_run_payload_authority_river_entry_args_known;
+	config.same_run_payload_authority_river_4ab6ac_args =
+			input.same_run_payload_authority_river_4ab6ac_args;
+	config.same_run_payload_authority_river_4abd5f_args =
+			input.same_run_payload_authority_river_4abd5f_args;
+	config.same_run_payload_authority_river_overlay_writes_known =
+			input.same_run_payload_authority_river_overlay_writes_known;
+	config.same_run_payload_authority_river_overlay_writes_0x49b1bc_0x49b170 =
+			input.same_run_payload_authority_river_overlay_writes_0x49b1bc_0x49b170;
+	config.same_run_payload_authority_road_type_rng_known =
+			input.same_run_payload_authority_road_type_rng_known;
+	config.same_run_payload_authority_road_type_rng_value_0x4e7276 =
+			input.same_run_payload_authority_road_type_rng_value_0x4e7276;
+	config.same_run_payload_authority_road_coordinate_records_known =
+			input.same_run_payload_authority_road_coordinate_records_known;
+	config.same_run_payload_authority_road_coordinate_records_0x14b0 =
+			input.same_run_payload_authority_road_coordinate_records_0x14b0;
+	config.same_run_payload_authority_road_callstream_known =
+			input.same_run_payload_authority_road_callstream_known;
+	config.same_run_payload_authority_road_calls_0x4ab37f =
+			input.same_run_payload_authority_road_calls_0x4ab37f;
+	config.same_run_payload_authority_road_type_writes_known =
+			input.same_run_payload_authority_road_type_writes_known;
+	config.same_run_payload_authority_road_type_writes_0x49aec5 =
+			input.same_run_payload_authority_road_type_writes_0x49aec5;
+	config.same_run_payload_authority_road_art_writes_known =
+			input.same_run_payload_authority_road_art_writes_known;
+	config.same_run_payload_authority_road_art_writes_0x49ae47 =
+			input.same_run_payload_authority_road_art_writes_0x49ae47;
 	return config;
 }
 
@@ -280,6 +352,36 @@ void append_json_i32_array(std::ostream &out, const std::vector<int32_t> &values
 			out << ", ";
 		}
 		out << values[index];
+	}
+	out << "]";
+}
+
+void append_road_candidate_reports_json(std::ostream &out, const std::vector<SharedRoadCandidateReport4ab52a> &reports) {
+	out << "[";
+	for (size_t index = 0; index < reports.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedRoadCandidateReport4ab52a &report = reports[index];
+		out << "{"
+			<< "\"outer_index\":" << report.outer_index
+			<< ",\"inner_index\":" << report.inner_index
+			<< ",\"seed_x\":" << report.seed_x
+			<< ",\"seed_y\":" << report.seed_y
+			<< ",\"seed_level\":" << report.seed_level
+			<< ",\"candidate_x\":" << report.candidate_x
+			<< ",\"candidate_y\":" << report.candidate_y
+			<< ",\"candidate_level\":" << report.candidate_level
+			<< ",\"candidate_low_word\":" << report.candidate_low_word
+			<< ",\"accepted\":" << (report.accepted ? "true" : "false")
+			<< ",\"toolkit_invoked\":" << (report.toolkit_invoked ? "true" : "false")
+			<< ",\"toolkit_applied\":" << (report.toolkit_applied ? "true" : "false")
+			<< ",\"toolkit_predecessor_chain_cell_count\":" << report.toolkit_predecessor_chain_cell_count
+			<< ",\"toolkit_line_visit_call_count_0x458e61\":" << report.toolkit_line_visit_call_count_0x458e61
+			<< ",\"toolkit_candidate_mark_count_0x49aec5\":" << report.toolkit_candidate_mark_count_0x49aec5
+			<< ",\"toolkit_final_write_count_0x458a2f\":" << report.toolkit_final_write_count_0x458a2f
+			<< ",\"toolkit_blocked_reason\":\"" << json_escape(report.toolkit_blocked_reason) << "\""
+			<< "}";
 	}
 	out << "]";
 }
@@ -459,6 +561,18 @@ void append_final_header_writeout_json(std::ostream &out, const h3maped_rmg_core
 	append_final_object_count_bytes_json(out, writeout.post_header_initial_zero_payload_bytes);
 	out << ",\"player_slot_count\":" << writeout.player_slot_count
 		<< ",\"active_player_slot_count\":" << writeout.active_player_slot_count
+		<< ",\"team_assignment_applied_0x4acdc5\":" << (writeout.team_assignment_applied_0x4acdc5 ? "true" : "false")
+		<< ",\"team_count\":" << writeout.team_count
+		<< ",\"player_team_assignments\":[";
+	for (size_t index = 0; index < writeout.player_team_assignments.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		out << int32_t(writeout.player_team_assignments[index]);
+	}
+	out << "]"
+		<< ",\"team_assignment_rng_state_before_0x4ad1a5\":" << writeout.team_assignment_rng_state_before_0x4ad1a5
+		<< ",\"team_assignment_rng_state_after_0x4ad1a5\":" << writeout.team_assignment_rng_state_after_0x4ad1a5
 		<< ",\"source\":\"0x4ac857_header_player_metadata_then_0x4ad206_post_header_initial_zero\""
 		<< ",\"player_slots\":";
 	append_final_header_player_slots_json(out, writeout.player_slots);
@@ -569,6 +683,9 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 		<< ",\"pass_split_second_unflagged_count_0x4ad3b1\":" << writeout.pass_split_second_unflagged_count_0x4ad3b1
 		<< ",\"pass_split_descriptor_type_unknown_count\":" << writeout.pass_split_descriptor_type_unknown_count
 		<< ",\"source\":\"0x4ad1e3_generated_object_definition_table_then_0x4ad309_0x4ad318_object_count_then_0x4ad3eb_0x57c648_plus_0x0c_two_pass_order\""
+		<< ",\"object_definitions\":";
+	append_final_object_definition_samples_json(out, writeout.object_definitions);
+	out
 		<< ",\"first_object_definitions\":";
 	append_final_object_definition_samples_json(out, writeout.first_object_definitions);
 	out << ",\"last_object_definitions\":";
@@ -581,6 +698,8 @@ void append_final_object_writeout_json(std::ostream &out, const h3maped_rmg_core
 	append_final_object_record_samples_json(out, writeout.first_pass_records);
 	out << ",\"second_pass_records\":";
 	append_final_object_record_samples_json(out, writeout.second_pass_records);
+	out << ",\"object_records\":";
+	append_final_object_record_samples_json(out, writeout.object_records);
 	out << "}";
 }
 
@@ -609,16 +728,30 @@ void append_final_payload_writeout_json(std::ostream &out, const h3maped_rmg_cor
 		<< ",\"same_run_h3maped_authority_scope_blocker\":\"" << json_escape(writeout.same_run_h3maped_authority_scope_blocker) << "\""
 		<< ",\"same_run_tile_payload_authority_known\":" << (writeout.same_run_tile_payload_authority_known ? "true" : "false")
 		<< ",\"same_run_generated_object_payload_authority_known\":" << (writeout.same_run_generated_object_payload_authority_known ? "true" : "false")
+		<< ",\"same_run_full_payload_authority_known\":" << (writeout.same_run_full_payload_authority_known ? "true" : "false")
+		<< ",\"generated_object_count_replayed_from_same_run_authority_0x4ad330\":" << (writeout.generated_object_count_replayed_from_same_run_authority_0x4ad330 ? "true" : "false")
+		<< ",\"generated_object_payload_replayed_from_same_run_authority_0x4ad1e3\":" << (writeout.generated_object_payload_replayed_from_same_run_authority_0x4ad1e3 ? "true" : "false")
 		<< ",\"same_run_tile_payload_match\":" << (writeout.same_run_tile_payload_match ? "true" : "false")
 		<< ",\"same_run_generated_object_payload_match\":" << (writeout.same_run_generated_object_payload_match ? "true" : "false")
+		<< ",\"same_run_generated_object_payload_native_serialization_match\":" << (writeout.same_run_generated_object_payload_native_serialization_match ? "true" : "false")
+		<< ",\"same_run_full_payload_match\":" << (writeout.same_run_full_payload_match ? "true" : "false")
 		<< ",\"same_run_tile_payload_expected_byte_count\":" << writeout.same_run_tile_payload_expected_byte_count
+		<< ",\"same_run_generated_object_count_native_value\":" << writeout.same_run_generated_object_count_native_value
+		<< ",\"same_run_generated_object_count_authority_value\":" << writeout.same_run_generated_object_count_authority_value
 		<< ",\"same_run_generated_object_payload_expected_byte_count\":" << writeout.same_run_generated_object_payload_expected_byte_count
+		<< ",\"same_run_full_payload_expected_byte_count\":" << writeout.same_run_full_payload_expected_byte_count
 		<< ",\"same_run_tile_payload_first_mismatch_offset\":" << writeout.same_run_tile_payload_first_mismatch_offset
 		<< ",\"same_run_generated_object_payload_first_mismatch_offset\":" << writeout.same_run_generated_object_payload_first_mismatch_offset
+		<< ",\"same_run_generated_object_payload_native_first_mismatch_offset\":" << writeout.same_run_generated_object_payload_native_first_mismatch_offset
+		<< ",\"same_run_full_payload_first_mismatch_offset\":" << writeout.same_run_full_payload_first_mismatch_offset
 		<< ",\"same_run_tile_payload_native_byte_at_mismatch\":" << writeout.same_run_tile_payload_native_byte_at_mismatch
 		<< ",\"same_run_tile_payload_expected_byte_at_mismatch\":" << writeout.same_run_tile_payload_expected_byte_at_mismatch
 		<< ",\"same_run_generated_object_payload_native_byte_at_mismatch\":" << writeout.same_run_generated_object_payload_native_byte_at_mismatch
 		<< ",\"same_run_generated_object_payload_expected_byte_at_mismatch\":" << writeout.same_run_generated_object_payload_expected_byte_at_mismatch
+		<< ",\"same_run_generated_object_payload_native_serialization_byte_at_mismatch\":" << writeout.same_run_generated_object_payload_native_serialization_byte_at_mismatch
+		<< ",\"same_run_generated_object_payload_native_serialization_expected_byte_at_mismatch\":" << writeout.same_run_generated_object_payload_native_serialization_expected_byte_at_mismatch
+		<< ",\"same_run_full_payload_native_byte_at_mismatch\":" << writeout.same_run_full_payload_native_byte_at_mismatch
+		<< ",\"same_run_full_payload_expected_byte_at_mismatch\":" << writeout.same_run_full_payload_expected_byte_at_mismatch
 		<< ",\"blocked_reason\":\"" << json_escape(writeout.blocked_reason) << "\""
 		<< ",\"header_payload_byte_count\":" << writeout.header_payload_byte_count
 		<< ",\"post_header_initial_zero_payload_byte_count\":" << writeout.post_header_initial_zero_payload_byte_count
@@ -884,6 +1017,26 @@ SharedGeneratorRelationOwnerState from_h3maped_generator_relation_owner_state(co
 	return out;
 }
 
+SharedRewardGuardSourceOwnerGrowth4aab7e from_h3maped_reward_guard_source_owner_growth_4aab7e(
+		const h3maped_rmg_core::RewardGuardSourceOwnerGrowth4aab7e &input) {
+	SharedRewardGuardSourceOwnerGrowth4aab7e out;
+	out.source_index_0x4ac552 = input.source_index_0x4ac552;
+	out.owner_vector_index = input.owner_vector_index;
+	out.relation_owner_byte2_0x4aa9b7 = input.relation_owner_byte2_0x4aa9b7;
+	out.terrain_policy_0x0c_known = input.terrain_policy_0x0c_known;
+	out.terrain_policy_0x0c = input.terrain_policy_0x0c;
+	out.object_count_before_0xec4_ecc = input.object_count_before_0xec4_ecc;
+	out.object_count_after_0xec4_ecc = input.object_count_after_0xec4_ecc;
+	out.object_count_delta_0xec4_ecc = input.object_count_delta_0xec4_ecc;
+	out.stream_active_lane_count = input.stream_active_lane_count;
+	out.stream_total_source_count = input.stream_total_source_count;
+	out.stream_selected_lane_count = input.stream_selected_lane_count;
+	out.stream_materialization_attempt_count = input.stream_materialization_attempt_count;
+	out.stream_successful_coordinate_scan_count = input.stream_successful_coordinate_scan_count;
+	out.stream_blocked_reason = input.stream_blocked_reason;
+	return out;
+}
+
 SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(const h3maped_rmg_core::ObjectRecordReference4a54a7 &input) {
 	SharedObjectRecordReference4a54a7 out;
 	out.object_record_key = input.object_record_key;
@@ -891,6 +1044,10 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	out.x = input.x;
 	out.y = input.y;
 	out.level = input.level;
+	out.descriptor_projection_enabled_0x29 = input.descriptor_projection_enabled_0x29;
+	out.descriptor_source_cell_offset_0x2c_0x30_known = input.descriptor_source_cell_offset_0x2c_0x30_known;
+	out.descriptor_source_cell_x_0x2c = input.descriptor_source_cell_x_0x2c;
+	out.descriptor_source_cell_y_0x30 = input.descriptor_source_cell_y_0x30;
 	out.connection_fallback_record_0x4a7605_0x4a5e03_known = input.connection_fallback_record_0x4a7605_0x4a5e03_known;
 	out.connection_fallback_arg0_0x4a5e03 = input.connection_fallback_arg0_0x4a5e03;
 	out.connection_fallback_descriptor_pointer = input.connection_fallback_descriptor_pointer;
@@ -918,6 +1075,8 @@ SharedObjectRecordReference4a54a7 from_h3maped_object_record_reference_4a54a7(co
 	if (input.copied_source_record_carried) {
 		out.source_record_copy = from_h3maped_source_object_record(input.source_record_copy);
 	}
+	out.decorative_score_record_0x10_known = input.decorative_score_record_0x10_known;
+	out.decorative_obstacle_id_0x10 = input.decorative_obstacle_id_0x10;
 	out.object_score_cache_known_0x49b89c = input.object_score_cache_known_0x49b89c;
 	out.object_score_cache_0x49b89c = input.object_score_cache_0x49b89c;
 	return out;
@@ -977,6 +1136,234 @@ SharedWeightedObjectCandidateVectorState4a901a from_h3maped_weighted_object_cand
 	out.object_record_key = input.object_record_key;
 	out.object_record_key_known = input.object_record_key_known;
 	out.object_vector_count_after = input.object_vector_count_after;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
+SharedSourceOrderObjectCandidate4a93a2 from_h3maped_source_order_object_candidate_4a93a2(const h3maped_rmg_core::SourceOrderObjectCandidate4a93a2 &input) {
+	SharedSourceOrderObjectCandidate4a93a2 out;
+	out.x = input.x;
+	out.y = input.y;
+	out.level = input.level;
+	out.distance_squared_to_anchor = input.distance_squared_to_anchor;
+	return out;
+}
+
+SharedSourceOrderObjectPlacementState4a93a2 from_h3maped_source_order_object_placement_4a93a2(const h3maped_rmg_core::SourceOrderObjectPlacementState4a93a2 &input) {
+	SharedSourceOrderObjectPlacementState4a93a2 out;
+	out.descriptor_source_bridge_known = input.descriptor_source_bridge_known;
+	out.copied_source_record_carried = input.copied_source_record_carried;
+	out.scan_bounds_known = input.scan_bounds_known;
+	out.scan_bounds_non_empty = input.scan_bounds_non_empty;
+	out.relation_owner_byte_known = input.relation_owner_byte_known;
+	out.source_record_identity_known_0x00 = input.source_record_identity_known_0x00;
+	out.source_pair_key_known = input.source_pair_key_known;
+	out.source_pair_key_not_minus_one = input.source_pair_key_not_minus_one;
+	out.source_type98_bucket_entry_0x658_known = input.source_type98_bucket_entry_0x658_known;
+	out.relation_owner_byte2 = input.relation_owner_byte2;
+	out.source_record_identity_0x00 = input.source_record_identity_0x00;
+	out.source_pair_key_0x0c = input.source_pair_key_0x0c;
+	out.source_bucket_record_row_0x658 = input.source_bucket_record_row_0x658;
+	out.source_bucket_record_type_0x1c = input.source_bucket_record_type_0x1c;
+	out.source_bucket_record_subtype_0x20 = input.source_bucket_record_subtype_0x20;
+	out.source_bucket_record_group_0x24 = input.source_bucket_record_group_0x24;
+	out.source_bucket_record_def_name_0x658 = input.source_bucket_record_def_name_0x658;
+	out.selected_index_0x20 = input.selected_index_0x20;
+	out.enabled_low_byte_0x24 = input.enabled_low_byte_0x24;
+	out.anchor_x_0x10 = input.anchor_x_0x10;
+	out.anchor_y_0x14 = input.anchor_y_0x14;
+	out.anchor_level_0x18 = input.anchor_level_0x18;
+	out.scan_bound_low_x_0x20 = input.scan_bound_low_x_0x20;
+	out.scan_bound_low_y_0x24 = input.scan_bound_low_y_0x24;
+	out.scan_bound_high_x_0x28 = input.scan_bound_high_x_0x28;
+	out.scan_bound_high_y_0x2c = input.scan_bound_high_y_0x2c;
+	out.best_distance_squared_initial_0x7d00 = input.best_distance_squared_initial_0x7d00;
+	out.best_distance_squared_after_scan = input.best_distance_squared_after_scan;
+	out.scanned_cell_count = input.scanned_cell_count;
+	out.owner_byte_reject_count = input.owner_byte_reject_count;
+	out.distance_reject_count = input.distance_reject_count;
+	out.eligibility_reject_count_0x49aa93 = input.eligibility_reject_count_0x49aa93;
+	out.local_vector_clear_count_0x4ae52a = input.local_vector_clear_count_0x4ae52a;
+	out.local_vector_append_count_0x4ae1fd = input.local_vector_append_count_0x4ae1fd;
+	out.accepted_candidate_count = input.accepted_candidate_count;
+	out.rng_value_0x4e7276 = input.rng_value_0x4e7276;
+	out.selected_candidate_index = input.selected_candidate_index;
+	out.selected_candidate_known = input.selected_candidate_known;
+	out.selected_candidate = from_h3maped_source_order_object_candidate_4a93a2(input.selected_candidate);
+	out.accepted_candidates_0x4ae1fd.reserve(input.accepted_candidates_0x4ae1fd.size());
+	for (const h3maped_rmg_core::SourceOrderObjectCandidate4a93a2 &candidate : input.accepted_candidates_0x4ae1fd) {
+		out.accepted_candidates_0x4ae1fd.push_back(from_h3maped_source_order_object_candidate_4a93a2(candidate));
+	}
+	out.allocated_record_0x4a93a2 = input.allocated_record_0x4a93a2;
+	out.committed_through_0x4a54a7 = input.committed_through_0x4a54a7;
+	out.object_record_key = input.object_record_key;
+	out.object_record_key_known = input.object_record_key_known;
+	out.object_vector_count_after = input.object_vector_count_after;
+	out.blocked_reason = input.blocked_reason;
+	return out;
+}
+
+SharedMineResourceCategory4a9d6a from_h3maped_mine_resource_category_4a9d6a(const h3maped_rmg_core::MineResourceMaterializationCategory4a9d6a &input) {
+	SharedMineResourceCategory4a9d6a out;
+	out.owner_vector_index = input.owner_vector_index;
+	out.runtime_zone_index = input.runtime_zone_index;
+	out.relation_source_index_0x00 = input.relation_source_index_0x00;
+	out.category_index = input.category_index;
+	out.required_count_0x4c = input.required_count_0x4c;
+	out.density_count = input.density_count;
+	out.force_flag_from_relation_byte_0x3c = input.force_flag_from_relation_byte_0x3c;
+	out.attempted_callback_count_0x4a9911 = input.attempted_callback_count_0x4a9911;
+	out.successful_callback_count_0x4a9911 = input.successful_callback_count_0x4a9911;
+	out.selected_callback_applied_0x4a9911 = input.selected_object_callback_0x4a9911.applied;
+	out.selected_callback_blocked_reason_0x4a9911 = input.selected_object_callback_0x4a9911.blocked_reason;
+	out.selected_descriptor_bucket_count_0x388_0x38c = input.selected_object_callback_0x4a9911.descriptor_bucket_count_0x388_0x38c;
+	out.selected_descriptor_scan_count = input.selected_object_callback_0x4a9911.descriptor_scan_count;
+	out.selected_category_match_count = input.selected_object_callback_0x4a9911.category_match_count;
+	out.selected_first_pass_terrain_match_count_0x42cc99 = input.selected_object_callback_0x4a9911.first_pass_terrain_match_count_0x42cc99;
+	out.selected_fallback_pass_used = input.selected_object_callback_0x4a9911.fallback_pass_used;
+	out.selected_accepted_count = input.selected_object_callback_0x4a9911.accepted_count;
+	out.selected_rng_value_0x4e7276 = input.selected_object_callback_0x4a9911.rng_value_0x4e7276;
+	out.selected_descriptor_candidate_index_0x4a9911 = input.selected_object_callback_0x4a9911.selected_candidate_index;
+	out.selected_descriptor_chosen_0x4a9911 = input.selected_object_callback_0x4a9911.selected;
+	out.selected_descriptor_vector_index_0x388 = input.selected_object_callback_0x4a9911.selected_descriptor_vector_index_0x388;
+	out.selected_source_catalog_index_0x49da08 = input.selected_object_callback_0x4a9911.selected_source_catalog_index_0x49da08;
+	out.selected_descriptor_type_0x1c = input.selected_object_callback_0x4a9911.selected_descriptor_type_0x1c;
+	out.selected_source_field_0x20 = input.selected_object_callback_0x4a9911.selected_source_field_0x20;
+	out.selected_def_name = input.selected_object_callback_0x4a9911.selected_def_name;
+	out.selected_coordinate_builder_invoked_0x4a9641 = input.selected_object_callback_0x4a9911.coordinate_builder_0x4a9641_invoked;
+	out.selected_coordinate_builder_applied_0x4a9641 = input.selected_object_callback_0x4a9911.coordinate_builder_0x4a9641_applied;
+	out.selected_coordinate_builder_scanned_cell_count = input.selected_object_callback_0x4a9911.coordinate_builder_scanned_cell_count;
+	out.selected_coordinate_builder_candidate_count = input.selected_object_callback_0x4a9911.coordinate_builder_candidate_count;
+	out.selected_coordinate_builder_owner_byte_reject_count = input.selected_object_callback_0x4a9911.coordinate_builder_owner_byte_reject_count;
+	out.selected_coordinate_builder_eligibility_reject_count_0x49aa93 = input.selected_object_callback_0x4a9911.coordinate_builder_eligibility_reject_count_0x49aa93;
+	out.selected_coordinate_builder_value_floor_reject_count = input.selected_object_callback_0x4a9911.coordinate_builder_value_floor_reject_count;
+	out.selected_coordinate_builder_distance_reject_count = input.selected_object_callback_0x4a9911.coordinate_builder_distance_reject_count;
+	out.selected_coordinate_builder_body_reject_count = input.selected_object_callback_0x4a9911.coordinate_builder_body_reject_count;
+	out.selected_coordinate_builder_append_records_0x4ae1fd.reserve(
+			input.selected_object_callback_0x4a9911.coordinate_builder_append_records_0x4ae1fd.size());
+	for (const h3maped_rmg_core::MineResourceCoordinateBuilderCandidate4a9641 &candidate :
+			input.selected_object_callback_0x4a9911.coordinate_builder_append_records_0x4ae1fd) {
+		out.selected_coordinate_builder_append_records_0x4ae1fd.push_back(SharedMineResourceCoordinateBuilderCandidate4a9641 {
+				candidate.x,
+				candidate.y,
+				candidate.level,
+				candidate.low_word_score,
+				candidate.body_count,
+				candidate.best_body_count_after,
+				candidate.threshold_after,
+				candidate.clear_count_after,
+		});
+	}
+	out.selected_coordinate_builder_final_candidates_0x4a98c1.reserve(
+			input.selected_object_callback_0x4a9911.coordinate_builder_final_candidates_0x4a98c1.size());
+	for (const h3maped_rmg_core::MineResourceCoordinateBuilderCandidate4a9641 &candidate :
+			input.selected_object_callback_0x4a9911.coordinate_builder_final_candidates_0x4a98c1) {
+		out.selected_coordinate_builder_final_candidates_0x4a98c1.push_back(SharedMineResourceCoordinateBuilderCandidate4a9641 {
+				candidate.x,
+				candidate.y,
+				candidate.level,
+				candidate.low_word_score,
+				candidate.body_count,
+				candidate.best_body_count_after,
+				candidate.threshold_after,
+				candidate.clear_count_after,
+		});
+	}
+	out.selected_coordinate_builder_selected_candidate_index = input.selected_object_callback_0x4a9911.coordinate_builder_selected_candidate_index;
+	out.selected_coordinate_builder_selected_x = input.selected_object_callback_0x4a9911.coordinate_builder_selected_x;
+	out.selected_coordinate_builder_selected_y = input.selected_object_callback_0x4a9911.coordinate_builder_selected_y;
+	out.selected_coordinate_builder_selected_level = input.selected_object_callback_0x4a9911.coordinate_builder_selected_level;
+	out.selected_coordinate_builder_rng_value_0x4e7276 = input.selected_object_callback_0x4a9911.coordinate_builder_rng_value_0x4e7276;
+	out.selected_coordinate_builder_commit_appended_0x4a54a7 = input.selected_object_callback_0x4a9911.coordinate_builder_commit_appended_0x4a54a7;
+	out.selected_coordinate_builder_object_vector_count_after = input.selected_object_callback_0x4a9911.coordinate_builder_object_vector_count_after;
+	out.selected_guard_attach_value_positive_0x4a960a = input.selected_object_callback_0x4a9911.guard_attach_value_positive_0x4a960a;
+	out.selected_guard_materialization_committed_0x4a54a7 = input.selected_object_callback_0x4a9911.guard_materialization_committed_0x4a54a7;
+	out.selected_guard_object_vector_count_after_0x4a54a7 = input.selected_object_callback_0x4a9911.guard_object_vector_count_after_0x4a54a7;
+	out.selected_support_descriptor_selector_selected_0x4a9e40 = input.selected_object_callback_0x4a9911.support_descriptor_selector_selected_0x4a9e40;
+	out.selected_support_scanned_cell_count_0x4a9911 = input.selected_object_callback_0x4a9911.support_scanned_cell_count_0x4a9911;
+	out.selected_support_rng_skip_count_0x4e7276 = input.selected_object_callback_0x4a9911.support_rng_skip_count_0x4e7276;
+	out.selected_support_eligibility_reject_count_0x49aa93 = input.selected_object_callback_0x4a9911.support_eligibility_reject_count_0x49aa93;
+	out.selected_support_materialization_commit_count_0x4a9c3f = input.selected_object_callback_0x4a9911.support_materialization_commit_count_0x4a9c3f;
+	out.selected_support_object_vector_count_after_0x4a54a7 = input.selected_object_callback_0x4a9911.support_object_vector_count_after_0x4a54a7;
+	out.density_active_0x4a9c7c = input.density_active_0x4a9c7c;
+	out.density_disabled_0x4a9c7c = input.density_disabled_0x4a9c7c;
+	out.density_disabled_after_failure_0x4a9c7c = input.density_disabled_after_failure_0x4a9c7c;
+	out.density_step_0x4a9c7c = input.density_step_0x4a9c7c;
+	out.density_counter_initial_0x4a9c7c = input.density_counter_initial_0x4a9c7c;
+	out.density_counter_current_0x4a9c7c = input.density_counter_current_0x4a9c7c;
+	out.density_attempted_callback_count_0x4a9911 = input.density_attempted_callback_count_0x4a9911;
+	out.density_successful_callback_count_0x4a9911 = input.density_successful_callback_count_0x4a9911;
+	out.density_callback_applied_0x4a9911 = input.density_selected_object_callback_0x4a9911.applied;
+	out.density_callback_blocked_reason_0x4a9911 = input.density_selected_object_callback_0x4a9911.blocked_reason;
+	out.density_descriptor_bucket_count_0x388_0x38c = input.density_selected_object_callback_0x4a9911.descriptor_bucket_count_0x388_0x38c;
+	out.density_descriptor_scan_count = input.density_selected_object_callback_0x4a9911.descriptor_scan_count;
+	out.density_category_match_count = input.density_selected_object_callback_0x4a9911.category_match_count;
+	out.density_first_pass_terrain_match_count_0x42cc99 = input.density_selected_object_callback_0x4a9911.first_pass_terrain_match_count_0x42cc99;
+	out.density_fallback_pass_used = input.density_selected_object_callback_0x4a9911.fallback_pass_used;
+	out.density_accepted_count = input.density_selected_object_callback_0x4a9911.accepted_count;
+	out.density_rng_value_0x4e7276 = input.density_selected_object_callback_0x4a9911.rng_value_0x4e7276;
+	out.density_descriptor_candidate_index_0x4a9911 = input.density_selected_object_callback_0x4a9911.selected_candidate_index;
+	out.density_descriptor_chosen_0x4a9911 = input.density_selected_object_callback_0x4a9911.selected;
+	out.density_descriptor_vector_index_0x388 = input.density_selected_object_callback_0x4a9911.selected_descriptor_vector_index_0x388;
+	out.density_source_catalog_index_0x49da08 = input.density_selected_object_callback_0x4a9911.selected_source_catalog_index_0x49da08;
+	out.density_descriptor_type_0x1c = input.density_selected_object_callback_0x4a9911.selected_descriptor_type_0x1c;
+	out.density_source_field_0x20 = input.density_selected_object_callback_0x4a9911.selected_source_field_0x20;
+	out.density_def_name = input.density_selected_object_callback_0x4a9911.selected_def_name;
+	out.density_coordinate_builder_invoked_0x4a9641 = input.density_selected_object_callback_0x4a9911.coordinate_builder_0x4a9641_invoked;
+	out.density_coordinate_builder_applied_0x4a9641 = input.density_selected_object_callback_0x4a9911.coordinate_builder_0x4a9641_applied;
+	out.density_coordinate_builder_scanned_cell_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_scanned_cell_count;
+	out.density_coordinate_builder_candidate_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_candidate_count;
+	out.density_coordinate_builder_owner_byte_reject_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_owner_byte_reject_count;
+	out.density_coordinate_builder_eligibility_reject_count_0x49aa93 = input.density_selected_object_callback_0x4a9911.coordinate_builder_eligibility_reject_count_0x49aa93;
+	out.density_coordinate_builder_value_floor_reject_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_value_floor_reject_count;
+	out.density_coordinate_builder_distance_reject_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_distance_reject_count;
+	out.density_coordinate_builder_body_reject_count = input.density_selected_object_callback_0x4a9911.coordinate_builder_body_reject_count;
+	out.density_coordinate_builder_append_records_0x4ae1fd.reserve(
+			input.density_selected_object_callback_0x4a9911.coordinate_builder_append_records_0x4ae1fd.size());
+	for (const h3maped_rmg_core::MineResourceCoordinateBuilderCandidate4a9641 &candidate :
+			input.density_selected_object_callback_0x4a9911.coordinate_builder_append_records_0x4ae1fd) {
+		out.density_coordinate_builder_append_records_0x4ae1fd.push_back(SharedMineResourceCoordinateBuilderCandidate4a9641 {
+				candidate.x,
+				candidate.y,
+				candidate.level,
+				candidate.low_word_score,
+				candidate.body_count,
+				candidate.best_body_count_after,
+				candidate.threshold_after,
+				candidate.clear_count_after,
+		});
+	}
+	out.density_coordinate_builder_final_candidates_0x4a98c1.reserve(
+			input.density_selected_object_callback_0x4a9911.coordinate_builder_final_candidates_0x4a98c1.size());
+	for (const h3maped_rmg_core::MineResourceCoordinateBuilderCandidate4a9641 &candidate :
+			input.density_selected_object_callback_0x4a9911.coordinate_builder_final_candidates_0x4a98c1) {
+		out.density_coordinate_builder_final_candidates_0x4a98c1.push_back(SharedMineResourceCoordinateBuilderCandidate4a9641 {
+				candidate.x,
+				candidate.y,
+				candidate.level,
+				candidate.low_word_score,
+				candidate.body_count,
+				candidate.best_body_count_after,
+				candidate.threshold_after,
+				candidate.clear_count_after,
+		});
+	}
+	out.density_coordinate_builder_selected_candidate_index = input.density_selected_object_callback_0x4a9911.coordinate_builder_selected_candidate_index;
+	out.density_coordinate_builder_selected_x = input.density_selected_object_callback_0x4a9911.coordinate_builder_selected_x;
+	out.density_coordinate_builder_selected_y = input.density_selected_object_callback_0x4a9911.coordinate_builder_selected_y;
+	out.density_coordinate_builder_selected_level = input.density_selected_object_callback_0x4a9911.coordinate_builder_selected_level;
+	out.density_coordinate_builder_rng_value_0x4e7276 = input.density_selected_object_callback_0x4a9911.coordinate_builder_rng_value_0x4e7276;
+	out.density_coordinate_builder_commit_appended_0x4a54a7 = input.density_selected_object_callback_0x4a9911.coordinate_builder_commit_appended_0x4a54a7;
+	out.density_coordinate_builder_object_vector_count_after = input.density_selected_object_callback_0x4a9911.coordinate_builder_object_vector_count_after;
+	out.density_guard_attach_value_positive_0x4a960a = input.density_selected_object_callback_0x4a9911.guard_attach_value_positive_0x4a960a;
+	out.density_guard_materialization_committed_0x4a54a7 = input.density_selected_object_callback_0x4a9911.guard_materialization_committed_0x4a54a7;
+	out.density_guard_object_vector_count_after_0x4a54a7 = input.density_selected_object_callback_0x4a9911.guard_object_vector_count_after_0x4a54a7;
+	out.density_support_descriptor_selector_selected_0x4a9e40 = input.density_selected_object_callback_0x4a9911.support_descriptor_selector_selected_0x4a9e40;
+	out.density_support_scanned_cell_count_0x4a9911 = input.density_selected_object_callback_0x4a9911.support_scanned_cell_count_0x4a9911;
+	out.density_support_rng_skip_count_0x4e7276 = input.density_selected_object_callback_0x4a9911.support_rng_skip_count_0x4e7276;
+	out.density_support_eligibility_reject_count_0x49aa93 = input.density_selected_object_callback_0x4a9911.support_eligibility_reject_count_0x49aa93;
+	out.density_support_materialization_commit_count_0x4a9c3f = input.density_selected_object_callback_0x4a9911.support_materialization_commit_count_0x4a9c3f;
+	out.density_support_object_vector_count_after_0x4a54a7 = input.density_selected_object_callback_0x4a9911.support_object_vector_count_after_0x4a54a7;
 	out.blocked_reason = input.blocked_reason;
 	return out;
 }
@@ -1304,16 +1691,42 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 = input.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5;
 	out.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5 = input.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5;
+	out.mine_resource_materialization_0x4a9d6a_ported = input.mine_resource_materialization_0x4a9d6a_ported;
+	out.mine_resource_materialization_0x4a9d6a_input_known = input.mine_resource_materialization_0x4a9d6a_input_known;
+	out.mine_resource_materialization_0x4a9d6a_invoked = input.mine_resource_materialization_0x4a9d6a.invoked;
+	out.mine_resource_materialization_0x4a9d6a_applied = input.mine_resource_materialization_0x4a9d6a.applied;
+	out.mine_resource_materialization_0x4a9d6a_relation_vector_known = input.mine_resource_materialization_0x4a9d6a.relation_vector_known;
+	out.mine_resource_materialization_0x4a9d6a_relation_owner_count = input.mine_resource_materialization_0x4a9d6a.relation_owner_count;
+	out.mine_resource_materialization_0x4a9d6a_category_scan_count = input.mine_resource_materialization_0x4a9d6a.category_scan_count;
+	out.mine_resource_materialization_0x4a9d6a_required_total_count_0x4c = input.mine_resource_materialization_0x4a9d6a.required_total_count_0x4c;
+	out.mine_resource_materialization_0x4a9d6a_density_total_count = input.mine_resource_materialization_0x4a9d6a.density_total_count;
+	out.mine_resource_materialization_0x4a9d6a_callback_attempt_count_0x4a9911 = input.mine_resource_materialization_0x4a9d6a.callback_attempt_count_0x4a9911;
+	out.mine_resource_materialization_0x4a9d6a_successful_count_0x4a9911 = input.mine_resource_materialization_0x4a9d6a.successful_count_0x4a9911;
+	out.mine_resource_materialization_0x4a9d6a_density_followup_reached_0x4a9c7c = input.mine_resource_materialization_0x4a9d6a.density_followup_0x4a9c7c_reached;
+	out.mine_resource_materialization_0x4a9d6a_density_followup_applied_0x4a9c7c = input.mine_resource_materialization_0x4a9d6a.density_followup_0x4a9c7c_applied;
+	out.mine_resource_materialization_0x4a9d6a_density_active_category_count_0x4a9c7c = input.mine_resource_materialization_0x4a9d6a.density_active_category_count_0x4a9c7c;
+	out.mine_resource_materialization_0x4a9d6a_density_scheduler_selection_count_0x4a9c7c = input.mine_resource_materialization_0x4a9d6a.density_scheduler_selection_count_0x4a9c7c;
+	out.mine_resource_materialization_0x4a9d6a_density_callback_attempt_count_0x4a9911 = input.mine_resource_materialization_0x4a9d6a.density_callback_attempt_count_0x4a9911;
+	out.mine_resource_materialization_0x4a9d6a_density_successful_count_0x4a9911 = input.mine_resource_materialization_0x4a9d6a.density_successful_count_0x4a9911;
+	out.mine_resource_materialization_0x4a9d6a_density_disabled_count_0x4a9c7c = input.mine_resource_materialization_0x4a9d6a.density_disabled_count_0x4a9c7c;
+	out.mine_resource_materialization_0x4a9d6a_blocked_reason = input.mine_resource_materialization_0x4a9d6a.blocked_reason;
+	out.mine_resource_materialization_categories_0x4a9d6a.reserve(input.mine_resource_materialization_0x4a9d6a.categories.size());
+	for (const h3maped_rmg_core::MineResourceMaterializationCategory4a9d6a &category : input.mine_resource_materialization_0x4a9d6a.categories) {
+		out.mine_resource_materialization_categories_0x4a9d6a.push_back(from_h3maped_mine_resource_category_4a9d6a(category));
+	}
 	out.decorative_flagged_cell_dispatch_0x49eb8d_ported = input.decorative_flagged_cell_dispatch_0x49eb8d_ported;
 	out.decorative_flagged_cell_dispatch_0x49eb8d_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.invoked;
 	out.decorative_flagged_cell_dispatch_0x49eb8d_applied = input.decorative_flagged_cell_dispatch_0x49eb8d.applied;
 	out.decorative_flagged_cell_dispatch_bit26_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.bit26_candidate_count;
+	out.decorative_flagged_cell_dispatch_bit26_candidate_flat_indices_0x49eb8d = input.decorative_flagged_cell_dispatch_0x49eb8d.bit26_candidate_flat_indices_0x49eb8d;
 	out.decorative_flagged_cell_dispatch_budget_known = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_known;
 	out.decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_0x4374c_div_bit26;
 	out.decorative_dispatch_budget_argument_to_0x49e700_known = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_to_0x49e700_known;
 	out.decorative_dispatch_budget_argument_to_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_to_0x49e700;
 	out.decorative_dispatch_budget_argument_handoff_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.budget_argument_handoff_count_0x49e700;
 	out.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.valid_0x49e700_dispatch_candidate_count;
+	out.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_flat_indices_0x49eb8d =
+			input.decorative_flagged_cell_dispatch_0x49eb8d.valid_0x49e700_dispatch_flat_indices_0x49eb8d;
 	out.decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_candidate_count;
 	out.decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_sentinel_suppressed_count;
 	out.decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count = input.decorative_flagged_cell_dispatch_0x49eb8d.invalid_optional_handler_unowned_pointer_count;
@@ -1323,6 +1736,11 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_type_table_0x54092c_known = input.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_known;
 	out.decorative_dispatch_type_table_0x54092c_count = input.decorative_flagged_cell_dispatch_0x49eb8d.type_table_0x54092c_count;
 	out.decorative_dispatch_probe_invocation_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_invocation_count_0x49e700;
+	out.decorative_dispatch_probe_x_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_x_0x49e700;
+	out.decorative_dispatch_probe_y_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_y_0x49e700;
+	out.decorative_dispatch_probe_level_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_level_0x49e700;
+	out.decorative_dispatch_selected_object_commit_counts_0x49e700 =
+			input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_selected_object_commit_counts_0x49e700;
 	out.decorative_dispatch_probe_source_record_scan_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_source_record_scan_count_0x49e700;
 	out.decorative_dispatch_probe_rand_trn_record_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_record_count_0x49e700;
 	out.decorative_dispatch_probe_rand_trn_score_variant_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_rand_trn_score_variant_count_0x49e700;
@@ -1368,6 +1786,95 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.decorative_dispatch_candidate_append_count_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_append_count_0x49e904;
 	out.decorative_dispatch_candidate_weight_append_count_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_weight_append_count_0x49e91f;
 	out.decorative_dispatch_candidate_weight_total_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.dispatch_probe_candidate_weight_total_0x49e700;
+	out.decorative_dispatch_first_dispatch_0x49e700_observed = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_0x49e700_observed;
+	out.decorative_dispatch_first_dispatch_0x49e700_complete = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_0x49e700_complete;
+	out.decorative_dispatch_first_dispatch_x_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_x_0x49e700;
+	out.decorative_dispatch_first_dispatch_y_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_y_0x49e700;
+	out.decorative_dispatch_first_dispatch_level_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_level_0x49e700;
+	out.decorative_dispatch_first_dispatch_budget_arg_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_budget_arg_0x49e700;
+	out.decorative_dispatch_first_dispatch_source_record_scan_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_source_record_scan_count_0x49e700;
+	out.decorative_dispatch_first_dispatch_scorer_call_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_scorer_call_count_0x49e1bf;
+	out.decorative_dispatch_first_dispatch_candidate_append_count_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_candidate_append_count_0x49e904;
+	out.decorative_dispatch_first_dispatch_candidate_weight_append_count_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_candidate_weight_append_count_0x49e91f;
+	out.decorative_dispatch_first_dispatch_candidate_weight_total_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_candidate_weight_total_0x49e700;
+	out.decorative_dispatch_first_dispatch_rng_value_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_rng_value_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_selected_candidate_index_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_selected_candidate_index_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_selected_candidate_score_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_selected_candidate_score_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_selected_candidate_source_row_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_selected_candidate_source_row_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_selected_candidate_def_name_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_selected_candidate_def_name_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_selected_object_commit_callback_count_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_selected_object_commit_callback_count_0x49ea25;
+	out.decorative_dispatch_first_dispatch_commit_x_sample_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_commit_x_sample_0x49ea25;
+	out.decorative_dispatch_first_dispatch_commit_y_sample_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_commit_y_sample_0x49ea25;
+	out.decorative_dispatch_first_dispatch_commit_source_row_sample_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_commit_source_row_sample_0x49ea25;
+	out.decorative_dispatch_first_dispatch_pop_x_sample_0x4ae23e = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_x_sample_0x4ae23e;
+	out.decorative_dispatch_first_dispatch_pop_y_sample_0x4ae23e = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_y_sample_0x4ae23e;
+	out.decorative_dispatch_first_dispatch_pop_level_sample_0x4ae23e = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_level_sample_0x4ae23e;
+	out.decorative_dispatch_first_dispatch_pop_candidate_weight_total_sample_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_candidate_weight_total_sample_0x49e700;
+	out.decorative_dispatch_first_dispatch_pop_rng_value_sample_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_rng_value_sample_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_pop_selected_x_sample_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_selected_x_sample_0x49ea25;
+	out.decorative_dispatch_first_dispatch_pop_selected_y_sample_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_selected_y_sample_0x49ea25;
+	out.decorative_dispatch_first_dispatch_pop_selected_source_row_sample_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_selected_source_row_sample_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01;
+	out.decorative_dispatch_first_dispatch_pop_post_commit_bit26_clear_count_sample_0x49eaf1 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_pop_post_commit_bit26_clear_count_sample_0x49eaf1;
+	out.decorative_dispatch_first_dispatch_post_commit_coordinate_x_sample_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_post_commit_coordinate_x_sample_0x49eb01;
+	out.decorative_dispatch_first_dispatch_post_commit_coordinate_y_sample_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_post_commit_coordinate_y_sample_0x49eb01;
+	out.decorative_dispatch_first_dispatch_post_commit_coordinate_level_sample_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_post_commit_coordinate_level_sample_0x49eb01;
+	out.decorative_dispatch_first_dispatch_post_commit_coordinate_append_count_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_post_commit_coordinate_append_count_0x49eb01;
+	out.decorative_dispatch_first_dispatch_post_commit_bit26_clear_count_0x49eaf1 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_post_commit_bit26_clear_count_0x49eaf1;
+	out.decorative_dispatch_first_dispatch_coordinate_worklist_pop_count_0x4ae23e = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_coordinate_worklist_pop_count_0x4ae23e;
+	out.decorative_dispatch_first_dispatch_first_pop_0x49e700_observed = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_0x49e700_observed;
+	out.decorative_dispatch_first_dispatch_first_pop_0x49e700_complete = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_0x49e700_complete;
+	out.decorative_dispatch_first_dispatch_first_pop_x_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_x_0x49e700;
+	out.decorative_dispatch_first_dispatch_first_pop_y_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_y_0x49e700;
+	out.decorative_dispatch_first_dispatch_first_pop_level_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_level_0x49e700;
+	out.decorative_dispatch_first_dispatch_first_pop_source_record_scan_count_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_source_record_scan_count_0x49e700;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_call_count_0x49e1bf = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_call_count_0x49e1bf;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_source_row_sample_0x49e8eb = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_source_row_sample_0x49e8eb;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_source_type_sample_0x49e8eb = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_source_type_sample_0x49e8eb;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_x_sample_0x49e8eb = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_candidate_x_sample_0x49e8eb;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_y_sample_0x49e8eb = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_candidate_y_sample_0x49e8eb;
+	out.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_level_sample_0x49e8eb = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_scorer_candidate_level_sample_0x49e8eb;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_source_row_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_source_row_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_source_type_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_source_type_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_candidate_x_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_candidate_x_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_candidate_y_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_candidate_y_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_first_pass_score_sample_0x49e442 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_first_pass_score_sample_0x49e442;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_adjacent_delta_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_adjacent_delta_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_overlap_delta_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_overlap_delta_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_reference_count_sample_0x40bb26 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_reference_count_sample_0x40bb26;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_key_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_first_ref_key_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag16_count_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_flag16_count_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag18_count_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_neighbor_flag18_count_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_first_pop_accepted_score_sample_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_accepted_score_sample_0x49e91f;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_source_row_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_source_row_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_source_type_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_source_type_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_candidate_x_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_candidate_x_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_candidate_y_sample_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_candidate_y_sample_0x49e904;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_first_pass_score_sample_0x49e442 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_first_pass_score_sample_0x49e442;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_adjacent_delta_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_adjacent_delta_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_overlap_delta_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_overlap_delta_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_reference_count_sample_0x40bb26 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_reference_count_sample_0x40bb26;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_key_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_first_ref_key_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag16_count_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_flag16_count_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag18_count_sample_0x49e681 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_neighbor_flag18_count_sample_0x49e681;
+	out.decorative_dispatch_first_dispatch_second_pop_accepted_score_sample_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_second_pop_accepted_score_sample_0x49e91f;
+	out.decorative_dispatch_first_dispatch_first_pop_candidate_append_count_0x49e904 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_candidate_append_count_0x49e904;
+	out.decorative_dispatch_first_dispatch_first_pop_candidate_weight_append_count_0x49e91f = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_candidate_weight_append_count_0x49e91f;
+	out.decorative_dispatch_first_dispatch_first_pop_candidate_weight_total_0x49e700 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_candidate_weight_total_0x49e700;
+	out.decorative_dispatch_first_dispatch_first_pop_rng_value_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_rng_value_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_first_pop_selected_candidate_index_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_selected_candidate_index_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_first_pop_selected_candidate_score_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_selected_candidate_score_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_first_pop_selected_candidate_source_row_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_selected_candidate_source_row_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_first_pop_selected_candidate_def_name_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_selected_candidate_def_name_0x49e9ad;
+	out.decorative_dispatch_first_dispatch_first_pop_selected_object_commit_callback_count_0x49ea25 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_selected_object_commit_callback_count_0x49ea25;
+	out.decorative_dispatch_first_dispatch_first_pop_post_commit_coordinate_append_count_0x49eb01 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_post_commit_coordinate_append_count_0x49eb01;
+	out.decorative_dispatch_first_dispatch_first_pop_post_commit_bit26_clear_count_0x49eaf1 = input.decorative_flagged_cell_dispatch_0x49eb8d.first_dispatch_first_pop_post_commit_bit26_clear_count_0x49eaf1;
 	out.decorative_dispatch_rng_selection_0x49e9ad_invoked = input.decorative_flagged_cell_dispatch_0x49eb8d.rng_selection_0x49e9ad_invoked;
 	out.decorative_dispatch_rng_value_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.rng_value_0x49e9ad;
 	out.decorative_dispatch_selected_candidate_index_0x49e9ad = input.decorative_flagged_cell_dispatch_0x49eb8d.selected_candidate_index_0x49e9ad;
@@ -1457,6 +1964,14 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_projection_object_branch_blocked_count;
 	out.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count =
 			input.connection_tail_replay_0x4a79a3.internal_growth_0x4a61bc_constructor_blocked_count;
+	out.connection_tail_replay_recovered_rng_callstream_replayed_0x4a79a3 =
+			input.connection_tail_replay_0x4a79a3.recovered_rng_callstream_replayed_0x4a79a3;
+	out.connection_tail_replay_recovered_rng_callstream_call_count_0x4e7276 =
+			input.connection_tail_replay_0x4a79a3.recovered_rng_callstream_call_count_0x4e7276;
+	out.connection_tail_replay_recovered_rng_callstream_state_before_0x4e7276 =
+			input.connection_tail_replay_0x4a79a3.recovered_rng_callstream_state_before_0x4e7276;
+	out.connection_tail_replay_recovered_rng_callstream_state_after_0x4e7276 =
+			input.connection_tail_replay_0x4a79a3.recovered_rng_callstream_state_after_0x4e7276;
 	out.connection_tail_replay_blocked_reason_0x4a79a3 =
 			input.connection_tail_replay_0x4a79a3.blocked_reason;
 	const h3maped_rmg_core::RoadRiverObjectAdjacencyResult4ab52a &road_adjacency =
@@ -1504,10 +2019,81 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.road_river_object_adjacency_final_write_count_0x458a2f = road_adjacency.final_write_count_0x458a2f;
 	out.road_river_object_adjacency_final_write_unique_cell_count_0x458a2f =
 			road_adjacency.final_write_unique_cell_count_0x458a2f;
-	out.road_river_object_adjacency_final_art_rng_call_count_0x4e7276 =
-			road_adjacency.final_art_rng_call_count_0x4e7276;
-	out.road_river_object_adjacency_rng_state_after_final_art_0x4e7276 =
-			road_adjacency.rng_state_after_final_art_0x4e7276;
+		out.road_river_object_adjacency_final_art_rng_call_count_0x4e7276 =
+				road_adjacency.final_art_rng_call_count_0x4e7276;
+		out.road_river_object_adjacency_rng_state_after_final_art_0x4e7276 =
+				road_adjacency.rng_state_after_final_art_0x4e7276;
+		out.road_river_object_adjacency_candidate_reports.clear();
+		out.road_river_object_adjacency_candidate_reports.reserve(road_adjacency.candidate_reports.size());
+		for (const h3maped_rmg_core::RoadCandidateReport4ab52a &input_report : road_adjacency.candidate_reports) {
+			SharedRoadCandidateReport4ab52a report;
+			report.outer_index = input_report.outer_index;
+			report.inner_index = input_report.inner_index;
+			report.seed_x = input_report.seed_x;
+			report.seed_y = input_report.seed_y;
+			report.seed_level = input_report.seed_level;
+			report.candidate_x = input_report.candidate_x;
+			report.candidate_y = input_report.candidate_y;
+			report.candidate_level = input_report.candidate_level;
+			report.candidate_low_word = input_report.candidate_low_word;
+			report.accepted = input_report.accepted;
+			report.toolkit_invoked = input_report.toolkit_invoked;
+			report.toolkit_applied = input_report.toolkit_applied;
+			report.toolkit_predecessor_chain_cell_count = input_report.toolkit_predecessor_chain_cell_count;
+			report.toolkit_line_visit_call_count_0x458e61 = input_report.toolkit_line_visit_call_count_0x458e61;
+			report.toolkit_candidate_mark_count_0x49aec5 = input_report.toolkit_candidate_mark_count_0x49aec5;
+			report.toolkit_final_write_count_0x458a2f = input_report.toolkit_final_write_count_0x458a2f;
+			report.toolkit_blocked_reason = input_report.toolkit_blocked_reason;
+			out.road_river_object_adjacency_candidate_reports.push_back(report);
+		}
+		out.road_river_object_adjacency_river_object_post_pass_invoked_0x4ac4ae =
+				road_adjacency.river_object_post_pass_invoked_0x4ac4ae;
+	out.road_river_object_adjacency_river_object_post_pass_applied_0x4ac4ae =
+			road_adjacency.river_object_post_pass_applied_0x4ac4ae;
+	out.road_river_object_adjacency_river_object_post_pass_type109_count_0x4ac4ae =
+			road_adjacency.river_object_post_pass_type109_count_0x4ac4ae;
+	out.road_river_object_adjacency_river_object_post_pass_marker_count_0x4ac3df =
+			road_adjacency.river_object_post_pass_marker_count_0x4ac3df;
+	out.road_river_object_adjacency_river_object_post_pass_border_mark_count_0x4abc20 =
+			road_adjacency.river_object_post_pass_border_mark_count_0x4abc20;
+	out.road_river_object_adjacency_river_object_post_pass_water_adjacency_pending_count_0x4abc20 =
+			road_adjacency.river_object_post_pass_water_adjacency_pending_count_0x4abc20;
+	out.road_river_object_adjacency_river_object_post_pass_first_type109_x =
+			road_adjacency.river_object_post_pass_first_type109_x;
+	out.road_river_object_adjacency_river_object_post_pass_first_type109_y =
+			road_adjacency.river_object_post_pass_first_type109_y;
+	out.road_river_object_adjacency_river_object_post_pass_first_type109_level =
+			road_adjacency.river_object_post_pass_first_type109_level;
+	out.road_river_object_adjacency_river_object_post_pass_authority_entry_args_known =
+			road_adjacency.river_object_post_pass_authority_entry_args_known;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_x =
+			road_adjacency.river_object_post_pass_authority_4ab6ac_x;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_y =
+			road_adjacency.river_object_post_pass_authority_4ab6ac_y;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_level =
+			road_adjacency.river_object_post_pass_authority_4ab6ac_level;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_arg3 =
+			road_adjacency.river_object_post_pass_authority_4ab6ac_arg3;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_x =
+			road_adjacency.river_object_post_pass_authority_4abd5f_x;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_y =
+			road_adjacency.river_object_post_pass_authority_4abd5f_y;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_level =
+			road_adjacency.river_object_post_pass_authority_4abd5f_level;
+	out.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_arg3 =
+			road_adjacency.river_object_post_pass_authority_4abd5f_arg3;
+	out.road_river_object_adjacency_river_object_post_pass_authority_overlay_writes_known =
+			road_adjacency.river_object_post_pass_authority_overlay_writes_known;
+	out.road_river_object_adjacency_river_object_post_pass_authority_overlay_write_count =
+			road_adjacency.river_object_post_pass_authority_overlay_write_count;
+	out.road_river_object_adjacency_river_object_post_pass_authority_overlay_type_write_count_0x49b1bc =
+			road_adjacency.river_object_post_pass_authority_overlay_type_write_count_0x49b1bc;
+	out.road_river_object_adjacency_river_object_post_pass_authority_overlay_art_write_count_0x49b170 =
+			road_adjacency.river_object_post_pass_authority_overlay_art_write_count_0x49b170;
+	out.road_river_object_adjacency_road_coordinate_authority_0x14b0_known =
+			road_adjacency.road_coordinate_authority_0x14b0_known;
+	out.road_river_object_adjacency_road_coordinate_authority_0x14b0_count =
+			road_adjacency.road_coordinate_authority_0x14b0_count;
 	out.road_river_object_adjacency_progress_callback_0xed4_skip_count =
 			road_adjacency.progress_callback_0xed4_skip_count;
 	out.road_river_object_adjacency_final_road_flat_cells = road_adjacency.final_road_flat_cells;
@@ -1533,6 +2119,71 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 	out.source_order_direct_candidate_total_count_0x4a93a2 = input.source_order_direct_candidate_total_count_0x4a93a2;
 	out.source_order_direct_selected_count_0x4a93a2 = input.source_order_direct_selected_count_0x4a93a2;
 	out.source_order_direct_commit_count_0x4a93a2 = input.source_order_direct_commit_count_0x4a93a2;
+	out.source_order_direct_candidate_vectors_0x4a93a2.reserve(input.source_order_direct_candidate_vectors_0x4a93a2.size());
+	for (const h3maped_rmg_core::SourceOrderObjectPlacementState4a93a2 &placement : input.source_order_direct_candidate_vectors_0x4a93a2) {
+		out.source_order_direct_candidate_vectors_0x4a93a2.push_back(from_h3maped_source_order_object_placement_4a93a2(placement));
+	}
+	if (!input.source_order_direct_candidate_vectors_0x4a93a2.empty()) {
+		const h3maped_rmg_core::SourceOrderObjectPlacementState4a93a2 &first_direct =
+				input.source_order_direct_candidate_vectors_0x4a93a2.front();
+		out.source_order_direct_first_scanned_cell_count_0x4a93a2 = first_direct.scanned_cell_count;
+		out.source_order_direct_first_accepted_candidate_count_0x4a93a2 = first_direct.accepted_candidate_count;
+		out.source_order_direct_first_eligibility_reject_count_0x49aa93 =
+				first_direct.eligibility_reject_count_0x49aa93;
+		out.source_order_direct_first_relation_owner_byte2 = first_direct.relation_owner_byte2;
+		out.source_order_direct_first_source_record_identity_0x00 = first_direct.source_record_identity_0x00;
+		out.source_order_direct_first_source_pair_key_0x0c = first_direct.source_pair_key_0x0c;
+		out.source_order_direct_first_anchor_x_0x10 = first_direct.anchor_x_0x10;
+		out.source_order_direct_first_anchor_y_0x14 = first_direct.anchor_y_0x14;
+		out.source_order_direct_first_anchor_level_0x18 = first_direct.anchor_level_0x18;
+		out.source_order_direct_first_scan_low_x_0x20 = first_direct.scan_bound_low_x_0x20;
+		out.source_order_direct_first_scan_low_y_0x24 = first_direct.scan_bound_low_y_0x24;
+		out.source_order_direct_first_scan_high_x_0x28 = first_direct.scan_bound_high_x_0x28;
+		out.source_order_direct_first_scan_high_y_0x2c = first_direct.scan_bound_high_y_0x2c;
+		out.source_order_direct_first_source_bucket_record_def_name_0x658 =
+				first_direct.source_bucket_record_def_name_0x658;
+		out.source_order_direct_first_source_bucket_record_type_0x1c =
+				first_direct.source_bucket_record_type_0x1c;
+		out.source_order_direct_first_source_bucket_record_subtype_0x20 =
+				first_direct.source_bucket_record_subtype_0x20;
+		out.source_order_direct_first_source_bucket_record_group_0x24 =
+				first_direct.source_bucket_record_group_0x24;
+		out.source_order_direct_first_footprint_trace_known_0x49a6f9 =
+				first_direct.first_footprint_trace_known_0x49a6f9;
+		out.source_order_direct_first_footprint_trace_reason_0x49a6f9 =
+				first_direct.first_footprint_trace_reason_0x49a6f9;
+		out.source_order_direct_first_footprint_trace_mask_x =
+				first_direct.first_footprint_trace_mask_x;
+		out.source_order_direct_first_footprint_trace_mask_y =
+				first_direct.first_footprint_trace_mask_y;
+		out.source_order_direct_first_footprint_trace_secondary_mask =
+				first_direct.first_footprint_trace_secondary_mask;
+		out.source_order_direct_first_footprint_trace_primary_mask =
+				first_direct.first_footprint_trace_primary_mask;
+		out.source_order_direct_first_footprint_trace_cell_x =
+				first_direct.first_footprint_trace_cell_x;
+		out.source_order_direct_first_footprint_trace_cell_y =
+				first_direct.first_footprint_trace_cell_y;
+		out.source_order_direct_first_footprint_trace_cell_level =
+				first_direct.anchor_level_0x18;
+		out.source_order_direct_first_footprint_trace_cell_present =
+				first_direct.first_footprint_trace_cell_present;
+		out.source_order_direct_first_footprint_trace_cell_owner_byte2 =
+				first_direct.first_footprint_trace_cell_owner_byte2;
+		out.source_order_direct_first_footprint_trace_cell_terrain_code =
+				first_direct.first_footprint_trace_cell_terrain_code;
+		out.source_order_direct_first_footprint_trace_cell_valid_0x49a1d8 =
+				first_direct.first_footprint_trace_cell_valid_0x49a1d8;
+		out.source_order_direct_first_footprint_trace_cell_word_0x20 =
+				first_direct.first_footprint_trace_cell_word_0x20;
+		out.source_order_direct_first_footprint_trace_cell_word_0x24 =
+				first_direct.first_footprint_trace_cell_word_0x24;
+		out.source_order_direct_first_footprint_trace_cell_word_0x28 =
+				first_direct.first_footprint_trace_cell_word_0x28;
+		out.source_order_direct_first_blocked_reason_0x4a93a2 = first_direct.blocked_reason;
+		out.source_order_direct_first_eligibility_reject_reason_0x49aa93 =
+				first_direct.eligibility_reject_reason_0x49aa93;
+	}
 	out.object_records_0xec4_ecc.reserve(input.object_records_0xec4_ecc.size());
 	for (const h3maped_rmg_core::ObjectRecordReference4a54a7 &record : input.object_records_0xec4_ecc) {
 		out.object_records_0xec4_ecc.push_back(from_h3maped_object_record_reference_4a54a7(record));
@@ -1630,6 +2281,13 @@ SharedGeneratorObjectPrivateState from_h3maped_generator_object_private_state(co
 		out.reward_guard_source_stream_0x4aab7e_last_appends_0x4ae1fd = attempt.coordinate_scan_local_vector_append_count_0x4ae1fd;
 		out.reward_guard_source_stream_0x4aab7e_last_first_feasibility_blocked_reason_0x4aa603 = attempt.coordinate_scan_first_feasibility_blocked_reason_0x4aa603;
 		out.reward_guard_source_stream_0x4aab7e_last_attempt_blocked_reason = attempt.blocked_reason;
+	}
+	out.reward_guard_source_stream_owner_growths_0x4ac552.reserve(
+			input.reward_guard_source_stream_0x4aab7e.owner_growths_0x4ac552.size());
+	for (const h3maped_rmg_core::RewardGuardSourceOwnerGrowth4aab7e &growth :
+			input.reward_guard_source_stream_0x4aab7e.owner_growths_0x4ac552) {
+		out.reward_guard_source_stream_owner_growths_0x4ac552.push_back(
+				from_h3maped_reward_guard_source_owner_growth_4aab7e(growth));
 	}
 	out.relation_owner_vectors_10e4_10e8.reserve(input.relation_owner_vectors_10e4_10e8.size());
 	for (const h3maped_rmg_core::GeneratorRelationOwnerState4a218c &owner : input.relation_owner_vectors_10e4_10e8) {
@@ -2309,17 +2967,19 @@ void append_runtime_zone_source_payload_records_json(std::ostream &out, const st
 			out << ", ";
 		}
 		const SharedRuntimeZoneSeedInput &record = records[index];
-		out << "{\"runtime_zone_index\":" << record.runtime_zone_index
+			out << "{\"runtime_zone_index\":" << record.runtime_zone_index
 			<< ",\"source_zone_id\":" << record.source_zone_id
 			<< ",\"source_index\":" << record.source_index
 			<< ",\"h3maped_zone_word_id\":" << record.h3maped_zone_word_id
 			<< ",\"source_bucket\":" << record.source_bucket
 			<< ",\"source_owner_index\":" << record.source_owner_index
 			<< ",\"actual_player_color\":" << record.actual_player_color
-			<< ",\"source_base_size\":" << record.source_base_size
-			<< ",\"allowed_town_mask_0x41_0x49\":" << record.allowed_town_mask_0x41_0x49
-			<< ",\"selected_town_choice_index_0x49b3c1\":" << record.selected_town_choice_index_0x49b3c1
-			<< ",\"terrain_match_to_town_0x84\":" << (record.terrain_match_to_town_0x84 ? "true" : "false")
+				<< ",\"source_base_size\":" << record.source_base_size
+				<< ",\"allowed_town_mask_0x41_0x49\":" << record.allowed_town_mask_0x41_0x49
+				<< ",\"selected_town_choice_index_0x49b3c1\":" << record.selected_town_choice_index_0x49b3c1
+				<< ",\"source_order_selector_field_0x40_known\":" << (record.source_order_selector_field_0x40_known ? "true" : "false")
+				<< ",\"source_order_selector_field_0x40\":" << int(record.source_order_selector_field_0x40)
+				<< ",\"terrain_match_to_town_0x84\":" << (record.terrain_match_to_town_0x84 ? "true" : "false")
 			<< ",\"allowed_terrain_mask_0x85_0x8c\":" << record.allowed_terrain_flags_0x85_0x8c.mask()
 			<< ",\"allowed_terrain_flags_0x85_0x8c\":";
 		append_allowed_terrain_flags_json(out, record.allowed_terrain_flags_0x85_0x8c);
@@ -2649,6 +3309,194 @@ void append_terrain_visual_missing_bucket_samples_json(std::ostream &out, const 
 	out << "]";
 }
 
+void append_terrain_repaint_candidate_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::TerrainRepaintCandidateSample4a4163> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const h3maped_rmg_core::TerrainRepaintCandidateSample4a4163 &sample = samples[index];
+		out << "{\"sequence_index\":" << sample.sequence_index
+			<< ",\"owner_index\":" << sample.owner_index
+			<< ",\"owner_gate_byte2\":" << sample.owner_gate_byte2
+			<< ",\"terrain_id\":" << sample.terrain_id
+			<< ",\"level\":" << sample.level
+			<< ",\"x\":" << sample.x
+			<< ",\"y\":" << sample.y
+			<< ",\"low_x\":" << sample.low_x
+			<< ",\"low_y\":" << sample.low_y
+			<< ",\"high_x\":" << sample.high_x
+			<< ",\"high_y\":" << sample.high_y
+			<< ",\"coordinate_x\":" << sample.coordinate_x
+			<< ",\"coordinate_y\":" << sample.coordinate_y
+			<< ",\"coordinate_level\":" << sample.coordinate_level
+			<< ",\"word_0x20\":" << sample.word_0x20
+			<< ",\"word_0x28\":" << sample.word_0x28
+			<< ",\"rng_state_before_candidate_0x4a4163\":" << sample.rng_state_before_candidate_0x4a4163
+			<< ",\"rng_state_after_candidate_0x4a4163\":" << sample.rng_state_after_candidate_0x4a4163
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_terrain_visual_write_samples_json(std::ostream &out, const std::vector<h3maped_rmg_core::TerrainVisualWriteSample4bad0f> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const h3maped_rmg_core::TerrainVisualWriteSample4bad0f &sample = samples[index];
+		out << "{\"sequence_index\":" << sample.sequence_index
+			<< ",\"level\":" << sample.level
+			<< ",\"x\":" << sample.x
+			<< ",\"y\":" << sample.y
+			<< ",\"terrain_id\":" << sample.terrain_id
+			<< ",\"selected_row\":" << sample.selected_row
+			<< ",\"flag_a\":" << sample.flag_a
+			<< ",\"flag_b\":" << sample.flag_b
+			<< ",\"neighbor_mask\":" << sample.neighbor_mask
+			<< ",\"current_art_row\":" << sample.current_art_row
+			<< ",\"current_record_matches_terrain\":" << (sample.current_record_matches_terrain ? "true" : "false")
+			<< ",\"final_sweep\":" << (sample.final_sweep ? "true" : "false")
+			<< ",\"final_sweep_classified_cell\":" << (sample.final_sweep_classified_cell ? "true" : "false")
+			<< ",\"final_sweep_shape_class\":" << sample.final_sweep_shape_class
+			<< ",\"write_context_code_0x4bad0f\":" << sample.write_context_code_0x4bad0f
+			<< ",\"context_owner_index\":" << sample.context_owner_index
+			<< ",\"context_active_terrain\":" << sample.context_active_terrain
+			<< ",\"context_origin_x\":" << sample.context_origin_x
+			<< ",\"context_origin_y\":" << sample.context_origin_y
+			<< ",\"context_terrain_changed_0x4bb681\":" << (sample.context_terrain_changed_0x4bb681 ? "true" : "false")
+			<< ",\"rng_state_before_selection\":" << sample.rng_state_before_selection
+			<< ",\"rng_state_after_selection\":" << sample.rng_state_after_selection
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_int_array_json(std::ostream &out, const std::array<int32_t, 64> &values) {
+	out << "[";
+	for (size_t index = 0; index < values.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		out << values[index];
+	}
+	out << "]";
+}
+
+void append_boundary_source_point_samples_json(std::ostream &out, const std::vector<BoundarySourcePointSample4a2777> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const BoundarySourcePointSample4a2777 &sample = samples[index];
+		out << "{\"point_index\":" << sample.point_index
+			<< ",\"model_node_index\":" << sample.model_node_index
+			<< ",\"pair_index\":" << sample.pair_index
+			<< ",\"next_index\":" << sample.next_index
+			<< ",\"previous_index\":" << sample.previous_index
+			<< ",\"next_pair_index\":" << sample.next_pair_index
+			<< ",\"raw_x_0x00\":" << sample.raw_x_0x00
+			<< ",\"raw_y_0x04\":" << sample.raw_y_0x04
+			<< ",\"finalized_x_0x1c\":" << sample.finalized_x_0x1c
+			<< ",\"finalized_y_0x20\":" << sample.finalized_y_0x20
+			<< ",\"x\":" << sample.x
+			<< ",\"y\":" << sample.y
+			<< ",\"finalized\":" << (sample.finalized ? "true" : "false")
+			<< ",\"has_payload\":" << (sample.has_payload ? "true" : "false")
+			<< ",\"payload_owner_word_0x00\":" << sample.payload_owner_word_0x00
+			<< ",\"payload_random_span_limit_0x1c\":" << sample.payload_random_span_limit_0x1c
+			<< ",\"next_pair_has_payload\":" << (sample.next_pair_has_payload ? "true" : "false")
+			<< ",\"next_pair_payload_owner_word_0x00\":" << sample.next_pair_payload_owner_word_0x00
+			<< ",\"next_pair_payload_random_span_limit_0x1c\":" << sample.next_pair_payload_random_span_limit_0x1c
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_boundary_segment_samples_json(std::ostream &out, const std::vector<BoundarySegmentSample4a2777> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const BoundarySegmentSample4a2777 &sample = samples[index];
+		out << "{\"segment_index\":" << sample.segment_index
+			<< ",\"id\":\"" << json_escape(sample.id) << "\""
+			<< ",\"branch\":\"" << json_escape(sample.branch) << "\""
+			<< ",\"writer\":\"" << json_escape(sample.writer) << "\""
+			<< ",\"from_x\":" << sample.from_x
+			<< ",\"from_y\":" << sample.from_y
+			<< ",\"to_x\":" << sample.to_x
+			<< ",\"to_y\":" << sample.to_y
+			<< ",\"randomized\":" << (sample.randomized ? "true" : "false")
+			<< ",\"line_trace_count\":" << sample.line_trace_count
+			<< ",\"first_line_writes\":[";
+		for (size_t trace_index = 0; trace_index < sample.first_line_writes.size(); ++trace_index) {
+			if (trace_index != 0) {
+				out << ", ";
+			}
+			const BoundaryLineCellSample4a2777 &write = sample.first_line_writes[trace_index];
+			out << "{\"trace_index\":" << write.trace_index
+				<< ",\"x\":" << write.x
+				<< ",\"y\":" << write.y
+				<< ",\"level\":" << write.level
+				<< ",\"zone_id\":" << write.zone_id
+				<< ",\"reserved\":" << (write.reserved ? "true" : "false")
+				<< "}";
+		}
+		out << "]}";
+	}
+	out << "]";
+}
+
+void append_source_descriptor_samples_json(std::ostream &out, const std::vector<SourceDescriptorNodeSample4cca55> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const SourceDescriptorNodeSample4cca55 &sample = samples[index];
+		out << "{\"sample_index\":" << sample.sample_index
+			<< ",\"model_node_index\":" << sample.model_node_index
+			<< ",\"raw_x_0x00\":" << sample.raw_x_0x00
+			<< ",\"raw_y_0x04\":" << sample.raw_y_0x04
+			<< ",\"has_payload\":" << (sample.has_payload ? "true" : "false")
+			<< ",\"payload_owner_word_0x00\":" << sample.payload_owner_word_0x00
+			<< ",\"pair_index\":" << sample.pair_index
+			<< ",\"next_index\":" << sample.next_index
+			<< ",\"previous_index\":" << sample.previous_index
+			<< ",\"active\":" << (sample.active ? "true" : "false")
+			<< ",\"finalized\":" << (sample.finalized ? "true" : "false")
+			<< ",\"finalized_x_0x1c\":" << sample.finalized_x_0x1c
+			<< ",\"finalized_y_0x20\":" << sample.finalized_y_0x20
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_source_walk_samples_json(std::ostream &out, const std::vector<SourceWalkSample4cca55> &samples) {
+	out << "[";
+	for (size_t index = 0; index < samples.size(); ++index) {
+		if (index != 0) {
+			out << ", ";
+		}
+		const SourceWalkSample4cca55 &sample = samples[index];
+		out << "{\"walk_index\":" << sample.walk_index
+			<< ",\"runtime_zone_index\":" << sample.runtime_zone_index
+			<< ",\"source_zone_id\":" << sample.source_zone_id
+			<< ",\"start_x\":" << sample.start_x
+			<< ",\"start_y\":" << sample.start_y
+			<< ",\"locator_node_index\":" << sample.locator_node_index
+			<< ",\"locator_status\":\"" << json_escape(sample.locator_status) << "\""
+			<< ",\"source_node_samples\":";
+		append_boundary_source_point_samples_json(out, sample.source_node_samples);
+		out << "}";
+	}
+	out << "]";
+}
+
 void append_boundary_zone_summaries_json(std::ostream &out, const std::vector<BoundaryZoneSummary4a2777> &zones) {
 	out << "[";
 	for (size_t index = 0; index < zones.size(); ++index) {
@@ -2680,7 +3528,11 @@ void append_boundary_zone_summaries_json(std::ostream &out, const std::vector<Bo
 			<< ",\"span_fill_blocked_initial_span_count\":" << zone.span_fill_blocked_initial_span_count
 			<< ",\"status\":\"" << json_escape(zone.status) << "\""
 			<< ",\"span_seed_relocation_status_4a325d\":\"" << json_escape(zone.span_seed_relocation_status_4a325d) << "\""
-			<< "}";
+			<< ",\"source_point_samples\":";
+		append_boundary_source_point_samples_json(out, zone.source_point_samples);
+		out << ",\"segment_samples\":";
+		append_boundary_segment_samples_json(out, zone.segment_samples);
+		out << "}";
 	}
 	out << "]";
 }
@@ -2713,6 +3565,10 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"x\":" << record.x
 			<< ",\"y\":" << record.y
 			<< ",\"level\":" << record.level
+			<< ",\"descriptor_projection_enabled_0x29\":" << (record.descriptor_projection_enabled_0x29 ? "true" : "false")
+			<< ",\"descriptor_source_cell_offset_0x2c_0x30_known\":" << (record.descriptor_source_cell_offset_0x2c_0x30_known ? "true" : "false")
+			<< ",\"descriptor_source_cell_x_0x2c\":" << record.descriptor_source_cell_x_0x2c
+			<< ",\"descriptor_source_cell_y_0x30\":" << record.descriptor_source_cell_y_0x30
 			<< ",\"connection_fallback_record_0x4a7605_0x4a5e03_known\":" << (record.connection_fallback_record_0x4a7605_0x4a5e03_known ? "true" : "false")
 			<< ",\"connection_fallback_arg0_0x4a5e03\":" << record.connection_fallback_arg0_0x4a5e03
 			<< ",\"connection_fallback_descriptor_pointer\":" << record.connection_fallback_descriptor_pointer
@@ -2737,6 +3593,8 @@ void append_object_record_references_4a54a7_json(std::ostream &out, const std::v
 			<< ",\"selected_wrapper_index_0x4af785\":" << record.selected_wrapper_index_0x4af785
 			<< ",\"source_catalog_index_0x49da08\":" << record.source_catalog_index_0x49da08
 			<< ",\"copied_source_record_carried\":" << (record.copied_source_record_carried ? "true" : "false")
+			<< ",\"decorative_score_record_0x10_known\":" << (record.decorative_score_record_0x10_known ? "true" : "false")
+			<< ",\"decorative_obstacle_id_0x10\":" << record.decorative_obstacle_id_0x10
 			<< ",\"object_score_cache_known_0x49b89c\":" << (record.object_score_cache_known_0x49b89c ? "true" : "false")
 			<< ",\"object_score_cache_0x49b89c\":[";
 		for (size_t cache_index = 0; cache_index < record.object_score_cache_0x49b89c.size(); ++cache_index) {
@@ -2849,6 +3707,34 @@ void append_generator_coordinate_candidate_vectors_json(std::ostream &out, const
 		out << ",\"candidates_after_prune_4a1ad8\":";
 		append_coordinate_candidates_json(out, vector.candidates_after_prune_4a1ad8);
 		out << "}";
+	}
+	out << "]";
+}
+
+void append_reward_guard_source_owner_growths_json(
+		std::ostream &out,
+		const std::vector<SharedRewardGuardSourceOwnerGrowth4aab7e> &growths) {
+	out << "[";
+	for (size_t index = 0; index < growths.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedRewardGuardSourceOwnerGrowth4aab7e &growth = growths[index];
+		out << "{\"source_index_0x4ac552\":" << growth.source_index_0x4ac552
+			<< ",\"owner_vector_index\":" << growth.owner_vector_index
+			<< ",\"relation_owner_byte2_0x4aa9b7\":" << growth.relation_owner_byte2_0x4aa9b7
+			<< ",\"terrain_policy_0x0c_known\":" << (growth.terrain_policy_0x0c_known ? "true" : "false")
+			<< ",\"terrain_policy_0x0c\":" << growth.terrain_policy_0x0c
+			<< ",\"object_count_before_0xec4_ecc\":" << growth.object_count_before_0xec4_ecc
+			<< ",\"object_count_after_0xec4_ecc\":" << growth.object_count_after_0xec4_ecc
+			<< ",\"object_count_delta_0xec4_ecc\":" << growth.object_count_delta_0xec4_ecc
+			<< ",\"stream_active_lane_count\":" << growth.stream_active_lane_count
+			<< ",\"stream_total_source_count\":" << growth.stream_total_source_count
+			<< ",\"stream_selected_lane_count\":" << growth.stream_selected_lane_count
+			<< ",\"stream_materialization_attempt_count\":" << growth.stream_materialization_attempt_count
+			<< ",\"stream_successful_coordinate_scan_count\":" << growth.stream_successful_coordinate_scan_count
+			<< ",\"stream_blocked_reason\":\"" << json_escape(growth.stream_blocked_reason) << "\""
+			<< "}";
 	}
 	out << "]";
 }
@@ -3139,6 +4025,229 @@ void append_weighted_object_candidate_vectors_4a901a_json(std::ostream &out, con
 	out << "]";
 }
 
+void append_source_order_object_candidate_4a93a2_json(std::ostream &out, const SharedSourceOrderObjectCandidate4a93a2 &candidate) {
+	out << "{\"x\":" << candidate.x
+		<< ",\"y\":" << candidate.y
+		<< ",\"level\":" << candidate.level
+		<< ",\"distance_squared_to_anchor\":" << candidate.distance_squared_to_anchor
+		<< "}";
+}
+
+void append_source_order_object_candidate_vector_4a93a2_json(std::ostream &out, const std::vector<SharedSourceOrderObjectCandidate4a93a2> &candidates) {
+	out << "[";
+	for (size_t index = 0; index < candidates.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		append_source_order_object_candidate_4a93a2_json(out, candidates[index]);
+	}
+	out << "]";
+}
+
+void append_source_order_direct_candidate_vectors_4a93a2_json(std::ostream &out, const std::vector<SharedSourceOrderObjectPlacementState4a93a2> &vectors) {
+	out << "[";
+	for (size_t index = 0; index < vectors.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedSourceOrderObjectPlacementState4a93a2 &vector = vectors[index];
+		out << "{\"descriptor_source_bridge_known\":" << (vector.descriptor_source_bridge_known ? "true" : "false")
+			<< ",\"copied_source_record_carried\":" << (vector.copied_source_record_carried ? "true" : "false")
+			<< ",\"scan_bounds_known\":" << (vector.scan_bounds_known ? "true" : "false")
+			<< ",\"scan_bounds_non_empty\":" << (vector.scan_bounds_non_empty ? "true" : "false")
+			<< ",\"relation_owner_byte_known\":" << (vector.relation_owner_byte_known ? "true" : "false")
+			<< ",\"source_record_identity_known_0x00\":" << (vector.source_record_identity_known_0x00 ? "true" : "false")
+			<< ",\"source_pair_key_known\":" << (vector.source_pair_key_known ? "true" : "false")
+			<< ",\"source_pair_key_not_minus_one\":" << (vector.source_pair_key_not_minus_one ? "true" : "false")
+			<< ",\"source_type98_bucket_entry_0x658_known\":" << (vector.source_type98_bucket_entry_0x658_known ? "true" : "false")
+			<< ",\"relation_owner_byte2\":" << vector.relation_owner_byte2
+			<< ",\"source_record_identity_0x00\":" << vector.source_record_identity_0x00
+			<< ",\"source_pair_key_0x0c\":" << vector.source_pair_key_0x0c
+			<< ",\"source_bucket_record_row_0x658\":" << vector.source_bucket_record_row_0x658
+			<< ",\"source_bucket_record_type_0x1c\":" << vector.source_bucket_record_type_0x1c
+			<< ",\"source_bucket_record_subtype_0x20\":" << vector.source_bucket_record_subtype_0x20
+			<< ",\"source_bucket_record_group_0x24\":" << vector.source_bucket_record_group_0x24
+			<< ",\"source_bucket_record_def_name_0x658\":\"" << json_escape(vector.source_bucket_record_def_name_0x658) << "\""
+			<< ",\"selected_index_0x20\":" << vector.selected_index_0x20
+			<< ",\"enabled_low_byte_0x24\":" << (vector.enabled_low_byte_0x24 ? "true" : "false")
+			<< ",\"anchor_x_0x10\":" << vector.anchor_x_0x10
+			<< ",\"anchor_y_0x14\":" << vector.anchor_y_0x14
+			<< ",\"anchor_level_0x18\":" << vector.anchor_level_0x18
+			<< ",\"scan_bound_low_x_0x20\":" << vector.scan_bound_low_x_0x20
+			<< ",\"scan_bound_low_y_0x24\":" << vector.scan_bound_low_y_0x24
+			<< ",\"scan_bound_high_x_0x28\":" << vector.scan_bound_high_x_0x28
+			<< ",\"scan_bound_high_y_0x2c\":" << vector.scan_bound_high_y_0x2c
+			<< ",\"best_distance_squared_initial_0x7d00\":" << vector.best_distance_squared_initial_0x7d00
+			<< ",\"best_distance_squared_after_scan\":" << vector.best_distance_squared_after_scan
+			<< ",\"scanned_cell_count\":" << vector.scanned_cell_count
+			<< ",\"owner_byte_reject_count\":" << vector.owner_byte_reject_count
+			<< ",\"distance_reject_count\":" << vector.distance_reject_count
+			<< ",\"eligibility_reject_count_0x49aa93\":" << vector.eligibility_reject_count_0x49aa93
+			<< ",\"local_vector_clear_count_0x4ae52a\":" << vector.local_vector_clear_count_0x4ae52a
+			<< ",\"local_vector_append_count_0x4ae1fd\":" << vector.local_vector_append_count_0x4ae1fd
+			<< ",\"accepted_candidate_count\":" << vector.accepted_candidate_count
+			<< ",\"rng_value_0x4e7276\":" << vector.rng_value_0x4e7276
+			<< ",\"selected_candidate_index\":" << vector.selected_candidate_index
+			<< ",\"selected_candidate_known\":" << (vector.selected_candidate_known ? "true" : "false")
+			<< ",\"selected_candidate\":";
+		append_source_order_object_candidate_4a93a2_json(out, vector.selected_candidate);
+		out << ",\"accepted_candidates_0x4ae1fd\":";
+		append_source_order_object_candidate_vector_4a93a2_json(out, vector.accepted_candidates_0x4ae1fd);
+		out << ",\"allocated_record_0x4a93a2\":" << (vector.allocated_record_0x4a93a2 ? "true" : "false")
+			<< ",\"committed_through_0x4a54a7\":" << (vector.committed_through_0x4a54a7 ? "true" : "false")
+			<< ",\"object_record_key\":" << vector.object_record_key
+			<< ",\"object_record_key_known\":" << (vector.object_record_key_known ? "true" : "false")
+			<< ",\"object_vector_count_after\":" << vector.object_vector_count_after
+			<< ",\"blocked_reason\":\"" << json_escape(vector.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_mine_resource_coordinate_builder_candidates_4a9641_json(
+		std::ostream &out,
+		const std::vector<SharedMineResourceCoordinateBuilderCandidate4a9641> &candidates) {
+	out << "[";
+	for (size_t index = 0; index < candidates.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedMineResourceCoordinateBuilderCandidate4a9641 &candidate = candidates[index];
+		out << "{"
+			<< "\"x\":" << candidate.x
+			<< ",\"y\":" << candidate.y
+			<< ",\"level\":" << candidate.level
+			<< ",\"low_word_score\":" << candidate.low_word_score
+			<< ",\"body_count\":" << candidate.body_count
+			<< ",\"best_body_count_after\":" << candidate.best_body_count_after
+			<< ",\"threshold_after\":" << candidate.threshold_after
+			<< ",\"clear_count_after\":" << candidate.clear_count_after
+			<< "}";
+	}
+	out << "]";
+}
+
+void append_mine_resource_categories_4a9d6a_json(std::ostream &out, const std::vector<SharedMineResourceCategory4a9d6a> &categories) {
+	out << "[";
+	for (size_t index = 0; index < categories.size(); ++index) {
+		if (index != 0) {
+			out << ",";
+		}
+		const SharedMineResourceCategory4a9d6a &category = categories[index];
+		out << "{"
+			<< "\"owner_vector_index\":" << category.owner_vector_index
+			<< ",\"runtime_zone_index\":" << category.runtime_zone_index
+			<< ",\"relation_source_index_0x00\":" << category.relation_source_index_0x00
+			<< ",\"category_index\":" << category.category_index
+			<< ",\"required_count_0x4c\":" << category.required_count_0x4c
+			<< ",\"density_count\":" << category.density_count
+			<< ",\"force_flag_from_relation_byte_0x3c\":" << (category.force_flag_from_relation_byte_0x3c ? "true" : "false")
+			<< ",\"attempted_callback_count_0x4a9911\":" << category.attempted_callback_count_0x4a9911
+			<< ",\"successful_callback_count_0x4a9911\":" << category.successful_callback_count_0x4a9911
+			<< ",\"selected_callback_applied_0x4a9911\":" << (category.selected_callback_applied_0x4a9911 ? "true" : "false")
+			<< ",\"selected_callback_blocked_reason_0x4a9911\":\"" << json_escape(category.selected_callback_blocked_reason_0x4a9911) << "\""
+			<< ",\"selected_descriptor_bucket_count_0x388_0x38c\":" << category.selected_descriptor_bucket_count_0x388_0x38c
+			<< ",\"selected_descriptor_scan_count\":" << category.selected_descriptor_scan_count
+			<< ",\"selected_category_match_count\":" << category.selected_category_match_count
+			<< ",\"selected_first_pass_terrain_match_count_0x42cc99\":" << category.selected_first_pass_terrain_match_count_0x42cc99
+			<< ",\"selected_fallback_pass_used\":" << (category.selected_fallback_pass_used ? "true" : "false")
+			<< ",\"selected_accepted_count\":" << category.selected_accepted_count
+			<< ",\"selected_rng_value_0x4e7276\":" << category.selected_rng_value_0x4e7276
+			<< ",\"selected_descriptor_candidate_index_0x4a9911\":" << category.selected_descriptor_candidate_index_0x4a9911
+			<< ",\"selected_descriptor_chosen_0x4a9911\":" << (category.selected_descriptor_chosen_0x4a9911 ? "true" : "false")
+			<< ",\"selected_descriptor_vector_index_0x388\":" << category.selected_descriptor_vector_index_0x388
+			<< ",\"selected_source_catalog_index_0x49da08\":" << category.selected_source_catalog_index_0x49da08
+			<< ",\"selected_descriptor_type_0x1c\":" << category.selected_descriptor_type_0x1c
+			<< ",\"selected_source_field_0x20\":" << category.selected_source_field_0x20
+			<< ",\"selected_def_name\":\"" << json_escape(category.selected_def_name) << "\""
+			<< ",\"selected_coordinate_builder_invoked_0x4a9641\":" << (category.selected_coordinate_builder_invoked_0x4a9641 ? "true" : "false")
+			<< ",\"selected_coordinate_builder_applied_0x4a9641\":" << (category.selected_coordinate_builder_applied_0x4a9641 ? "true" : "false")
+			<< ",\"selected_coordinate_builder_scanned_cell_count\":" << category.selected_coordinate_builder_scanned_cell_count
+			<< ",\"selected_coordinate_builder_candidate_count\":" << category.selected_coordinate_builder_candidate_count
+			<< ",\"selected_coordinate_builder_owner_byte_reject_count\":" << category.selected_coordinate_builder_owner_byte_reject_count
+			<< ",\"selected_coordinate_builder_eligibility_reject_count_0x49aa93\":" << category.selected_coordinate_builder_eligibility_reject_count_0x49aa93
+			<< ",\"selected_coordinate_builder_value_floor_reject_count\":" << category.selected_coordinate_builder_value_floor_reject_count
+			<< ",\"selected_coordinate_builder_distance_reject_count\":" << category.selected_coordinate_builder_distance_reject_count
+			<< ",\"selected_coordinate_builder_body_reject_count\":" << category.selected_coordinate_builder_body_reject_count
+			<< ",\"selected_coordinate_builder_append_records_0x4ae1fd\":";
+		append_mine_resource_coordinate_builder_candidates_4a9641_json(out, category.selected_coordinate_builder_append_records_0x4ae1fd);
+		out << ",\"selected_coordinate_builder_final_candidates_0x4a98c1\":";
+		append_mine_resource_coordinate_builder_candidates_4a9641_json(out, category.selected_coordinate_builder_final_candidates_0x4a98c1);
+		out << ",\"selected_coordinate_builder_selected_candidate_index\":" << category.selected_coordinate_builder_selected_candidate_index
+			<< ",\"selected_coordinate_builder_selected_x\":" << category.selected_coordinate_builder_selected_x
+			<< ",\"selected_coordinate_builder_selected_y\":" << category.selected_coordinate_builder_selected_y
+			<< ",\"selected_coordinate_builder_selected_level\":" << category.selected_coordinate_builder_selected_level
+			<< ",\"selected_coordinate_builder_rng_value_0x4e7276\":" << category.selected_coordinate_builder_rng_value_0x4e7276
+			<< ",\"selected_coordinate_builder_commit_appended_0x4a54a7\":" << (category.selected_coordinate_builder_commit_appended_0x4a54a7 ? "true" : "false")
+			<< ",\"selected_coordinate_builder_object_vector_count_after\":" << category.selected_coordinate_builder_object_vector_count_after
+			<< ",\"selected_guard_attach_value_positive_0x4a960a\":" << (category.selected_guard_attach_value_positive_0x4a960a ? "true" : "false")
+			<< ",\"selected_guard_materialization_committed_0x4a54a7\":" << (category.selected_guard_materialization_committed_0x4a54a7 ? "true" : "false")
+			<< ",\"selected_guard_object_vector_count_after_0x4a54a7\":" << category.selected_guard_object_vector_count_after_0x4a54a7
+			<< ",\"selected_support_descriptor_selector_selected_0x4a9e40\":" << (category.selected_support_descriptor_selector_selected_0x4a9e40 ? "true" : "false")
+			<< ",\"selected_support_scanned_cell_count_0x4a9911\":" << category.selected_support_scanned_cell_count_0x4a9911
+			<< ",\"selected_support_rng_skip_count_0x4e7276\":" << category.selected_support_rng_skip_count_0x4e7276
+			<< ",\"selected_support_eligibility_reject_count_0x49aa93\":" << category.selected_support_eligibility_reject_count_0x49aa93
+			<< ",\"selected_support_materialization_commit_count_0x4a9c3f\":" << category.selected_support_materialization_commit_count_0x4a9c3f
+			<< ",\"selected_support_object_vector_count_after_0x4a54a7\":" << category.selected_support_object_vector_count_after_0x4a54a7
+			<< ",\"density_active_0x4a9c7c\":" << (category.density_active_0x4a9c7c ? "true" : "false")
+			<< ",\"density_disabled_0x4a9c7c\":" << (category.density_disabled_0x4a9c7c ? "true" : "false")
+			<< ",\"density_disabled_after_failure_0x4a9c7c\":" << (category.density_disabled_after_failure_0x4a9c7c ? "true" : "false")
+			<< ",\"density_step_0x4a9c7c\":" << category.density_step_0x4a9c7c
+			<< ",\"density_counter_initial_0x4a9c7c\":" << category.density_counter_initial_0x4a9c7c
+			<< ",\"density_counter_current_0x4a9c7c\":" << category.density_counter_current_0x4a9c7c
+			<< ",\"density_attempted_callback_count_0x4a9911\":" << category.density_attempted_callback_count_0x4a9911
+			<< ",\"density_successful_callback_count_0x4a9911\":" << category.density_successful_callback_count_0x4a9911
+			<< ",\"density_callback_applied_0x4a9911\":" << (category.density_callback_applied_0x4a9911 ? "true" : "false")
+			<< ",\"density_callback_blocked_reason_0x4a9911\":\"" << json_escape(category.density_callback_blocked_reason_0x4a9911) << "\""
+			<< ",\"density_descriptor_bucket_count_0x388_0x38c\":" << category.density_descriptor_bucket_count_0x388_0x38c
+			<< ",\"density_descriptor_scan_count\":" << category.density_descriptor_scan_count
+			<< ",\"density_category_match_count\":" << category.density_category_match_count
+			<< ",\"density_first_pass_terrain_match_count_0x42cc99\":" << category.density_first_pass_terrain_match_count_0x42cc99
+			<< ",\"density_fallback_pass_used\":" << (category.density_fallback_pass_used ? "true" : "false")
+			<< ",\"density_accepted_count\":" << category.density_accepted_count
+			<< ",\"density_rng_value_0x4e7276\":" << category.density_rng_value_0x4e7276
+			<< ",\"density_descriptor_candidate_index_0x4a9911\":" << category.density_descriptor_candidate_index_0x4a9911
+			<< ",\"density_descriptor_chosen_0x4a9911\":" << (category.density_descriptor_chosen_0x4a9911 ? "true" : "false")
+			<< ",\"density_descriptor_vector_index_0x388\":" << category.density_descriptor_vector_index_0x388
+			<< ",\"density_source_catalog_index_0x49da08\":" << category.density_source_catalog_index_0x49da08
+			<< ",\"density_descriptor_type_0x1c\":" << category.density_descriptor_type_0x1c
+			<< ",\"density_source_field_0x20\":" << category.density_source_field_0x20
+			<< ",\"density_def_name\":\"" << json_escape(category.density_def_name) << "\""
+			<< ",\"density_coordinate_builder_invoked_0x4a9641\":" << (category.density_coordinate_builder_invoked_0x4a9641 ? "true" : "false")
+			<< ",\"density_coordinate_builder_applied_0x4a9641\":" << (category.density_coordinate_builder_applied_0x4a9641 ? "true" : "false")
+			<< ",\"density_coordinate_builder_scanned_cell_count\":" << category.density_coordinate_builder_scanned_cell_count
+			<< ",\"density_coordinate_builder_candidate_count\":" << category.density_coordinate_builder_candidate_count
+			<< ",\"density_coordinate_builder_owner_byte_reject_count\":" << category.density_coordinate_builder_owner_byte_reject_count
+			<< ",\"density_coordinate_builder_eligibility_reject_count_0x49aa93\":" << category.density_coordinate_builder_eligibility_reject_count_0x49aa93
+			<< ",\"density_coordinate_builder_value_floor_reject_count\":" << category.density_coordinate_builder_value_floor_reject_count
+			<< ",\"density_coordinate_builder_distance_reject_count\":" << category.density_coordinate_builder_distance_reject_count
+			<< ",\"density_coordinate_builder_body_reject_count\":" << category.density_coordinate_builder_body_reject_count
+			<< ",\"density_coordinate_builder_append_records_0x4ae1fd\":";
+		append_mine_resource_coordinate_builder_candidates_4a9641_json(out, category.density_coordinate_builder_append_records_0x4ae1fd);
+		out << ",\"density_coordinate_builder_final_candidates_0x4a98c1\":";
+		append_mine_resource_coordinate_builder_candidates_4a9641_json(out, category.density_coordinate_builder_final_candidates_0x4a98c1);
+		out << ",\"density_coordinate_builder_selected_candidate_index\":" << category.density_coordinate_builder_selected_candidate_index
+			<< ",\"density_coordinate_builder_selected_x\":" << category.density_coordinate_builder_selected_x
+			<< ",\"density_coordinate_builder_selected_y\":" << category.density_coordinate_builder_selected_y
+			<< ",\"density_coordinate_builder_selected_level\":" << category.density_coordinate_builder_selected_level
+			<< ",\"density_coordinate_builder_rng_value_0x4e7276\":" << category.density_coordinate_builder_rng_value_0x4e7276
+			<< ",\"density_coordinate_builder_commit_appended_0x4a54a7\":" << (category.density_coordinate_builder_commit_appended_0x4a54a7 ? "true" : "false")
+			<< ",\"density_coordinate_builder_object_vector_count_after\":" << category.density_coordinate_builder_object_vector_count_after
+			<< ",\"density_guard_attach_value_positive_0x4a960a\":" << (category.density_guard_attach_value_positive_0x4a960a ? "true" : "false")
+			<< ",\"density_guard_materialization_committed_0x4a54a7\":" << (category.density_guard_materialization_committed_0x4a54a7 ? "true" : "false")
+			<< ",\"density_guard_object_vector_count_after_0x4a54a7\":" << category.density_guard_object_vector_count_after_0x4a54a7
+			<< ",\"density_support_descriptor_selector_selected_0x4a9e40\":" << (category.density_support_descriptor_selector_selected_0x4a9e40 ? "true" : "false")
+			<< ",\"density_support_scanned_cell_count_0x4a9911\":" << category.density_support_scanned_cell_count_0x4a9911
+			<< ",\"density_support_rng_skip_count_0x4e7276\":" << category.density_support_rng_skip_count_0x4e7276
+			<< ",\"density_support_eligibility_reject_count_0x49aa93\":" << category.density_support_eligibility_reject_count_0x49aa93
+			<< ",\"density_support_materialization_commit_count_0x4a9c3f\":" << category.density_support_materialization_commit_count_0x4a9c3f
+			<< ",\"density_support_object_vector_count_after_0x4a54a7\":" << category.density_support_object_vector_count_after_0x4a54a7
+			<< ",\"blocked_reason\":\"" << json_escape(category.blocked_reason) << "\""
+			<< "}";
+	}
+	out << "]";
+}
+
 void append_generator_object_private_state_json(std::ostream &out, const SharedGeneratorObjectPrivateState &state) {
 	out << "{"
 		<< "\"schema_id\":\"rmg_native_generator_object_private_state_v1\","
@@ -3339,16 +4448,53 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_neighbor_bit25_probe_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5\":" << state.materialization_bridge_water_edge_writer_bit26_candidate_count_0x4a4fc5 << ","
 			<< "\"materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5\":\"" << json_escape(state.materialization_bridge_water_edge_writer_blocked_reason_0x4a4fc5) << "\","
+			<< "\"mine_resource_materialization_0x4a9d6a_ported\":" << (state.mine_resource_materialization_0x4a9d6a_ported ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_input_known\":" << (state.mine_resource_materialization_0x4a9d6a_input_known ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_invoked\":" << (state.mine_resource_materialization_0x4a9d6a_invoked ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_applied\":" << (state.mine_resource_materialization_0x4a9d6a_applied ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_relation_vector_known\":" << (state.mine_resource_materialization_0x4a9d6a_relation_vector_known ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_relation_owner_count\":" << state.mine_resource_materialization_0x4a9d6a_relation_owner_count << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_category_scan_count\":" << state.mine_resource_materialization_0x4a9d6a_category_scan_count << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_required_total_count_0x4c\":" << state.mine_resource_materialization_0x4a9d6a_required_total_count_0x4c << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_total_count\":" << state.mine_resource_materialization_0x4a9d6a_density_total_count << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_callback_attempt_count_0x4a9911\":" << state.mine_resource_materialization_0x4a9d6a_callback_attempt_count_0x4a9911 << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_successful_count_0x4a9911\":" << state.mine_resource_materialization_0x4a9d6a_successful_count_0x4a9911 << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_followup_reached_0x4a9c7c\":" << (state.mine_resource_materialization_0x4a9d6a_density_followup_reached_0x4a9c7c ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_followup_applied_0x4a9c7c\":" << (state.mine_resource_materialization_0x4a9d6a_density_followup_applied_0x4a9c7c ? "true" : "false") << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_active_category_count_0x4a9c7c\":" << state.mine_resource_materialization_0x4a9d6a_density_active_category_count_0x4a9c7c << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_scheduler_selection_count_0x4a9c7c\":" << state.mine_resource_materialization_0x4a9d6a_density_scheduler_selection_count_0x4a9c7c << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_callback_attempt_count_0x4a9911\":" << state.mine_resource_materialization_0x4a9d6a_density_callback_attempt_count_0x4a9911 << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_successful_count_0x4a9911\":" << state.mine_resource_materialization_0x4a9d6a_density_successful_count_0x4a9911 << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_density_disabled_count_0x4a9c7c\":" << state.mine_resource_materialization_0x4a9d6a_density_disabled_count_0x4a9c7c << ","
+			<< "\"mine_resource_materialization_0x4a9d6a_blocked_reason\":\"" << json_escape(state.mine_resource_materialization_0x4a9d6a_blocked_reason) << "\","
+			<< "\"mine_resource_materialization_categories_0x4a9d6a\":";
+	append_mine_resource_categories_4a9d6a_json(out, state.mine_resource_materialization_categories_0x4a9d6a);
+	out << ","
 			<< "\"decorative_flagged_cell_dispatch_0x49eb8d_ported\":" << (state.decorative_flagged_cell_dispatch_0x49eb8d_ported ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_0x49eb8d_invoked\":" << (state.decorative_flagged_cell_dispatch_0x49eb8d_invoked ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_0x49eb8d_applied\":" << (state.decorative_flagged_cell_dispatch_0x49eb8d_applied ? "true" : "false") << ","
-			<< "\"decorative_flagged_cell_dispatch_bit26_candidate_count\":" << state.decorative_flagged_cell_dispatch_bit26_candidate_count << ","
+			<< "\"decorative_flagged_cell_dispatch_bit26_candidate_count\":" << state.decorative_flagged_cell_dispatch_bit26_candidate_count << ",";
+	out << "\"decorative_flagged_cell_dispatch_bit26_candidate_flat_indices_0x49eb8d\":";
+	append_json_i32_array(out, state.decorative_flagged_cell_dispatch_bit26_candidate_flat_indices_0x49eb8d);
+	out << ","
 			<< "\"decorative_flagged_cell_dispatch_budget_known\":" << (state.decorative_flagged_cell_dispatch_budget_known ? "true" : "false") << ","
 			<< "\"decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26\":" << state.decorative_flagged_cell_dispatch_budget_0x4374c_div_bit26 << ","
 			<< "\"decorative_dispatch_budget_argument_to_0x49e700_known\":" << (state.decorative_dispatch_budget_argument_to_0x49e700_known ? "true" : "false") << ","
 			<< "\"decorative_dispatch_budget_argument_to_0x49e700\":" << state.decorative_dispatch_budget_argument_to_0x49e700 << ","
 			<< "\"decorative_dispatch_budget_argument_handoff_count_0x49e700\":" << state.decorative_dispatch_budget_argument_handoff_count_0x49e700 << ","
-			<< "\"decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count\":" << state.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count << ","
+			<< "\"decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count\":" << state.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_count << ",";
+	out << "\"decorative_flagged_cell_dispatch_valid_0x49e700_candidate_flat_indices_0x49eb8d\":";
+	append_json_i32_array(out, state.decorative_flagged_cell_dispatch_valid_0x49e700_candidate_flat_indices_0x49eb8d);
+	out << ","
+			<< "\"decorative_dispatch_probe_x_0x49e700\":";
+	append_json_i32_array(out, state.decorative_dispatch_probe_x_0x49e700);
+	out << ",\"decorative_dispatch_probe_y_0x49e700\":";
+	append_json_i32_array(out, state.decorative_dispatch_probe_y_0x49e700);
+	out << ",\"decorative_dispatch_probe_level_0x49e700\":";
+	append_json_i32_array(out, state.decorative_dispatch_probe_level_0x49e700);
+	out << ",\"decorative_dispatch_selected_object_commit_counts_0x49e700\":";
+	append_json_i32_array(out, state.decorative_dispatch_selected_object_commit_counts_0x49e700);
+	out << ","
 			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_candidate_count << ","
 			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_sentinel_suppressed_count << ","
 			<< "\"decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count\":" << state.decorative_flagged_cell_dispatch_invalid_optional_handler_unowned_pointer_count << ","
@@ -3403,6 +4549,148 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"decorative_dispatch_candidate_append_count_0x49e904\":" << state.decorative_dispatch_candidate_append_count_0x49e904 << ","
 			<< "\"decorative_dispatch_candidate_weight_append_count_0x49e91f\":" << state.decorative_dispatch_candidate_weight_append_count_0x49e91f << ","
 			<< "\"decorative_dispatch_candidate_weight_total_0x49e700\":" << state.decorative_dispatch_candidate_weight_total_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_0x49e700_observed\":" << (state.decorative_dispatch_first_dispatch_0x49e700_observed ? "true" : "false") << ","
+			<< "\"decorative_dispatch_first_dispatch_0x49e700_complete\":" << (state.decorative_dispatch_first_dispatch_0x49e700_complete ? "true" : "false") << ","
+			<< "\"decorative_dispatch_first_dispatch_x_0x49e700\":" << state.decorative_dispatch_first_dispatch_x_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_y_0x49e700\":" << state.decorative_dispatch_first_dispatch_y_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_level_0x49e700\":" << state.decorative_dispatch_first_dispatch_level_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_budget_arg_0x49e700\":" << state.decorative_dispatch_first_dispatch_budget_arg_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_source_record_scan_count_0x49e700\":" << state.decorative_dispatch_first_dispatch_source_record_scan_count_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_scorer_call_count_0x49e1bf\":" << state.decorative_dispatch_first_dispatch_scorer_call_count_0x49e1bf << ","
+			<< "\"decorative_dispatch_first_dispatch_candidate_append_count_0x49e904\":" << state.decorative_dispatch_first_dispatch_candidate_append_count_0x49e904 << ","
+			<< "\"decorative_dispatch_first_dispatch_candidate_weight_append_count_0x49e91f\":" << state.decorative_dispatch_first_dispatch_candidate_weight_append_count_0x49e91f << ","
+			<< "\"decorative_dispatch_first_dispatch_candidate_weight_total_0x49e700\":" << state.decorative_dispatch_first_dispatch_candidate_weight_total_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_rng_value_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_rng_value_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_selected_candidate_index_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_selected_candidate_index_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_selected_candidate_score_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_selected_candidate_score_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_selected_candidate_source_row_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_selected_candidate_source_row_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_selected_candidate_def_name_0x49e9ad\":\"" << json_escape(state.decorative_dispatch_first_dispatch_selected_candidate_def_name_0x49e9ad) << "\","
+			<< "\"decorative_dispatch_first_dispatch_selected_object_commit_callback_count_0x49ea25\":" << state.decorative_dispatch_first_dispatch_selected_object_commit_callback_count_0x49ea25 << ",";
+	out << "\"decorative_dispatch_first_dispatch_commit_x_sample_0x49ea25\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_commit_x_sample_0x49ea25);
+	out << ",\"decorative_dispatch_first_dispatch_commit_y_sample_0x49ea25\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_commit_y_sample_0x49ea25);
+	out << ",\"decorative_dispatch_first_dispatch_commit_source_row_sample_0x49ea25\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_commit_source_row_sample_0x49ea25);
+	out << ",\"decorative_dispatch_first_dispatch_pop_x_sample_0x4ae23e\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_x_sample_0x4ae23e);
+	out << ",\"decorative_dispatch_first_dispatch_pop_y_sample_0x4ae23e\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_y_sample_0x4ae23e);
+	out << ",\"decorative_dispatch_first_dispatch_pop_level_sample_0x4ae23e\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_level_sample_0x4ae23e);
+	out << ",\"decorative_dispatch_first_dispatch_pop_candidate_weight_total_sample_0x49e700\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_candidate_weight_total_sample_0x49e700);
+	out << ",\"decorative_dispatch_first_dispatch_pop_rng_value_sample_0x49e9ad\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_rng_value_sample_0x49e9ad);
+	out << ",\"decorative_dispatch_first_dispatch_pop_selected_x_sample_0x49ea25\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_selected_x_sample_0x49ea25);
+	out << ",\"decorative_dispatch_first_dispatch_pop_selected_y_sample_0x49ea25\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_selected_y_sample_0x49ea25);
+	out << ",\"decorative_dispatch_first_dispatch_pop_selected_source_row_sample_0x49e9ad\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_selected_source_row_sample_0x49e9ad);
+	out << ",\"decorative_dispatch_first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_post_commit_coordinate_append_count_sample_0x49eb01);
+	out << ",\"decorative_dispatch_first_dispatch_pop_post_commit_bit26_clear_count_sample_0x49eaf1\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_pop_post_commit_bit26_clear_count_sample_0x49eaf1);
+	out << ",\"decorative_dispatch_first_dispatch_post_commit_coordinate_x_sample_0x49eb01\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_post_commit_coordinate_x_sample_0x49eb01);
+	out << ",\"decorative_dispatch_first_dispatch_post_commit_coordinate_y_sample_0x49eb01\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_post_commit_coordinate_y_sample_0x49eb01);
+	out << ",\"decorative_dispatch_first_dispatch_post_commit_coordinate_level_sample_0x49eb01\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_post_commit_coordinate_level_sample_0x49eb01);
+	out << ","
+			<< "\"decorative_dispatch_first_dispatch_post_commit_coordinate_append_count_0x49eb01\":" << state.decorative_dispatch_first_dispatch_post_commit_coordinate_append_count_0x49eb01 << ","
+			<< "\"decorative_dispatch_first_dispatch_post_commit_bit26_clear_count_0x49eaf1\":" << state.decorative_dispatch_first_dispatch_post_commit_bit26_clear_count_0x49eaf1 << ","
+			<< "\"decorative_dispatch_first_dispatch_coordinate_worklist_pop_count_0x4ae23e\":" << state.decorative_dispatch_first_dispatch_coordinate_worklist_pop_count_0x4ae23e << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_0x49e700_observed\":" << (state.decorative_dispatch_first_dispatch_first_pop_0x49e700_observed ? "true" : "false") << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_0x49e700_complete\":" << (state.decorative_dispatch_first_dispatch_first_pop_0x49e700_complete ? "true" : "false") << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_x_0x49e700\":" << state.decorative_dispatch_first_dispatch_first_pop_x_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_y_0x49e700\":" << state.decorative_dispatch_first_dispatch_first_pop_y_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_level_0x49e700\":" << state.decorative_dispatch_first_dispatch_first_pop_level_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_source_record_scan_count_0x49e700\":" << state.decorative_dispatch_first_dispatch_first_pop_source_record_scan_count_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_scorer_call_count_0x49e1bf\":" << state.decorative_dispatch_first_dispatch_first_pop_scorer_call_count_0x49e1bf << ",";
+	out << "\"decorative_dispatch_first_dispatch_first_pop_scorer_source_row_sample_0x49e8eb\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_scorer_source_row_sample_0x49e8eb);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_scorer_source_type_sample_0x49e8eb\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_scorer_source_type_sample_0x49e8eb);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_scorer_candidate_x_sample_0x49e8eb\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_x_sample_0x49e8eb);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_scorer_candidate_y_sample_0x49e8eb\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_y_sample_0x49e8eb);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_scorer_candidate_level_sample_0x49e8eb\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_scorer_candidate_level_sample_0x49e8eb);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_source_row_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_source_row_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_source_type_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_source_type_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_candidate_x_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_candidate_x_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_candidate_y_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_candidate_y_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_first_pass_score_sample_0x49e442\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_first_pass_score_sample_0x49e442);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_adjacent_delta_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_adjacent_delta_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_overlap_delta_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_overlap_delta_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_reference_count_sample_0x40bb26\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_reference_count_sample_0x40bb26);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_key_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_key_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag16_count_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag16_count_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag18_count_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_neighbor_flag18_count_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_first_pop_accepted_score_sample_0x49e91f\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_first_pop_accepted_score_sample_0x49e91f);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_source_row_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_source_row_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_source_type_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_source_type_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_candidate_x_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_candidate_x_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_candidate_y_sample_0x49e904\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_candidate_y_sample_0x49e904);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_first_pass_score_sample_0x49e442\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_first_pass_score_sample_0x49e442);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_adjacent_delta_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_adjacent_delta_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_overlap_delta_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_overlap_delta_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_reference_count_sample_0x40bb26\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_reference_count_sample_0x40bb26);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_key_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_key_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_x_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_cell_y_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_first_ref_scratch_flags_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag16_count_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag16_count_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag18_count_sample_0x49e681\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_neighbor_flag18_count_sample_0x49e681);
+	out << ",\"decorative_dispatch_first_dispatch_second_pop_accepted_score_sample_0x49e91f\":";
+	append_json_i32_array(out, state.decorative_dispatch_first_dispatch_second_pop_accepted_score_sample_0x49e91f);
+	out << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_candidate_append_count_0x49e904\":" << state.decorative_dispatch_first_dispatch_first_pop_candidate_append_count_0x49e904 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_candidate_weight_append_count_0x49e91f\":" << state.decorative_dispatch_first_dispatch_first_pop_candidate_weight_append_count_0x49e91f << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_candidate_weight_total_0x49e700\":" << state.decorative_dispatch_first_dispatch_first_pop_candidate_weight_total_0x49e700 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_rng_value_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_first_pop_rng_value_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_selected_candidate_index_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_first_pop_selected_candidate_index_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_selected_candidate_score_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_first_pop_selected_candidate_score_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_selected_candidate_source_row_0x49e9ad\":" << state.decorative_dispatch_first_dispatch_first_pop_selected_candidate_source_row_0x49e9ad << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_selected_candidate_def_name_0x49e9ad\":\"" << json_escape(state.decorative_dispatch_first_dispatch_first_pop_selected_candidate_def_name_0x49e9ad) << "\","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_selected_object_commit_callback_count_0x49ea25\":" << state.decorative_dispatch_first_dispatch_first_pop_selected_object_commit_callback_count_0x49ea25 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_post_commit_coordinate_append_count_0x49eb01\":" << state.decorative_dispatch_first_dispatch_first_pop_post_commit_coordinate_append_count_0x49eb01 << ","
+			<< "\"decorative_dispatch_first_dispatch_first_pop_post_commit_bit26_clear_count_0x49eaf1\":" << state.decorative_dispatch_first_dispatch_first_pop_post_commit_bit26_clear_count_0x49eaf1 << ","
 			<< "\"decorative_dispatch_rng_selection_0x49e9ad_invoked\":" << (state.decorative_dispatch_rng_selection_0x49e9ad_invoked ? "true" : "false") << ","
 			<< "\"decorative_dispatch_rng_value_0x49e9ad\":" << state.decorative_dispatch_rng_value_0x49e9ad << ","
 			<< "\"decorative_dispatch_selected_candidate_index_0x49e9ad\":" << state.decorative_dispatch_selected_candidate_index_0x49e9ad << ","
@@ -3460,6 +4748,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_guard_budget_positive_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_guard_budget_positive_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_projection_object_branch_blocked_count << ","
 			<< "\"connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count\":" << state.connection_tail_replay_internal_growth_0x4a61bc_constructor_blocked_count << ","
+			<< "\"connection_tail_replay_recovered_rng_callstream_replayed_0x4a79a3\":" << (state.connection_tail_replay_recovered_rng_callstream_replayed_0x4a79a3 ? "true" : "false") << ","
+			<< "\"connection_tail_replay_recovered_rng_callstream_call_count_0x4e7276\":" << state.connection_tail_replay_recovered_rng_callstream_call_count_0x4e7276 << ","
+			<< "\"connection_tail_replay_recovered_rng_callstream_state_before_0x4e7276\":" << state.connection_tail_replay_recovered_rng_callstream_state_before_0x4e7276 << ","
+			<< "\"connection_tail_replay_recovered_rng_callstream_state_after_0x4e7276\":" << state.connection_tail_replay_recovered_rng_callstream_state_after_0x4e7276 << ","
 			<< "\"connection_tail_replay_blocked_reason_0x4a79a3\":\"" << json_escape(state.connection_tail_replay_blocked_reason_0x4a79a3) << "\","
 			<< "\"road_river_object_adjacency_0x4ab52a_ported\":" << (state.road_river_object_adjacency_0x4ab52a_ported ? "true" : "false") << ","
 			<< "\"road_river_object_adjacency_0x4ab52a_invoked\":" << (state.road_river_object_adjacency_0x4ab52a_invoked ? "true" : "false") << ","
@@ -3495,6 +4787,30 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 			<< "\"road_river_object_adjacency_final_write_unique_cell_count_0x458a2f\":" << state.road_river_object_adjacency_final_write_unique_cell_count_0x458a2f << ","
 			<< "\"road_river_object_adjacency_final_art_rng_call_count_0x4e7276\":" << state.road_river_object_adjacency_final_art_rng_call_count_0x4e7276 << ","
 			<< "\"road_river_object_adjacency_rng_state_after_final_art_0x4e7276\":" << state.road_river_object_adjacency_rng_state_after_final_art_0x4e7276 << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_invoked_0x4ac4ae\":" << (state.road_river_object_adjacency_river_object_post_pass_invoked_0x4ac4ae ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_applied_0x4ac4ae\":" << (state.road_river_object_adjacency_river_object_post_pass_applied_0x4ac4ae ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_type109_count_0x4ac4ae\":" << state.road_river_object_adjacency_river_object_post_pass_type109_count_0x4ac4ae << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_marker_count_0x4ac3df\":" << state.road_river_object_adjacency_river_object_post_pass_marker_count_0x4ac3df << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_border_mark_count_0x4abc20\":" << state.road_river_object_adjacency_river_object_post_pass_border_mark_count_0x4abc20 << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_water_adjacency_pending_count_0x4abc20\":" << state.road_river_object_adjacency_river_object_post_pass_water_adjacency_pending_count_0x4abc20 << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_first_type109_x\":" << state.road_river_object_adjacency_river_object_post_pass_first_type109_x << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_first_type109_y\":" << state.road_river_object_adjacency_river_object_post_pass_first_type109_y << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_first_type109_level\":" << state.road_river_object_adjacency_river_object_post_pass_first_type109_level << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_entry_args_known\":" << (state.road_river_object_adjacency_river_object_post_pass_authority_entry_args_known ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_x\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_x << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_y\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_y << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_level\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_level << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_arg3\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4ab6ac_arg3 << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4abd5f_x\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_x << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4abd5f_y\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_y << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4abd5f_level\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_level << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_4abd5f_arg3\":" << state.road_river_object_adjacency_river_object_post_pass_authority_4abd5f_arg3 << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_overlay_writes_known\":" << (state.road_river_object_adjacency_river_object_post_pass_authority_overlay_writes_known ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_overlay_write_count\":" << state.road_river_object_adjacency_river_object_post_pass_authority_overlay_write_count << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_overlay_type_write_count_0x49b1bc\":" << state.road_river_object_adjacency_river_object_post_pass_authority_overlay_type_write_count_0x49b1bc << ","
+			<< "\"road_river_object_adjacency_river_object_post_pass_authority_overlay_art_write_count_0x49b170\":" << state.road_river_object_adjacency_river_object_post_pass_authority_overlay_art_write_count_0x49b170 << ","
+			<< "\"road_river_object_adjacency_road_coordinate_authority_0x14b0_known\":" << (state.road_river_object_adjacency_road_coordinate_authority_0x14b0_known ? "true" : "false") << ","
+			<< "\"road_river_object_adjacency_road_coordinate_authority_0x14b0_count\":" << state.road_river_object_adjacency_road_coordinate_authority_0x14b0_count << ","
 			<< "\"road_river_object_adjacency_progress_callback_0xed4_skip_count\":" << state.road_river_object_adjacency_progress_callback_0xed4_skip_count << ","
 			<< "\"road_river_object_adjacency_blocked_reason_0x4ab52a\":\"" << json_escape(state.road_river_object_adjacency_blocked_reason_0x4ab52a) << "\","
 			<< "\"road_overlay_private_state_owned_0x4b4243\":" << (state.road_overlay_private_state_owned_0x4b4243 ? "true" : "false") << ","
@@ -3509,8 +4825,10 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	append_json_i32_array(out, state.road_overlay_art_u8_0x49b2b6);
 	out << ",\"road_overlay_flags_u8_0x49b2b6\":";
 	append_json_i32_array(out, state.road_overlay_flags_u8_0x49b2b6);
+	out << ",\"road_river_object_adjacency_candidate_reports\":";
+	append_road_candidate_reports_json(out, state.road_river_object_adjacency_candidate_reports);
 	out << ","
-			<< "\"road_river_object_adjacency_0x4ab52a_source\":\"0x4ab52a_selects_road_type_0x4e7276_scans_generator_0x14b0_pairs_runs_0x4aae2f_0x4aae7b_then_0x4ab37f_0x4b4243_marks_road_type_with_0x49aec5_replays_0x458e61_neighbors_0x458893_shape_classification_0x458a2f_art_rng_and_stages_0x49b2b6_overlay\","
+				<< "\"road_river_object_adjacency_0x4ab52a_source\":\"0x4ab52a_selects_road_type_0x4e7276_scans_generator_0x14b0_pairs_runs_0x4aae2f_0x4aae7b_then_0x4ab37f_0x4b4243_marks_road_type_with_0x49aec5_replays_0x458e61_neighbors_0x458893_shape_classification_0x458a2f_art_rng_stages_0x49b2b6_overlay_then_0x4ac4ae_posts_0x4ac3df_0x4abc20_and_blocks_type109_until_0x4ab6ac_0x4abd5f_0x458d66_river_writeback_is_ported\","
 			<< "\"materialization_bridge_0x4a8c15_blocked_reason\":\"" << json_escape(state.materialization_bridge_0x4a8c15_blocked_reason) << "\","
 			<< "\"materialization_bridge_post_4a4c8e_cleanup_source\":\"0x4a8c15_after_0x4a8260_0x4a4c8e_scans_generated_cell_grid_skips_bit26_bit22_object_refs_negative_owner_byte2_and_terrain_8_9_then_calls_0x49a962\","
 			<< "\"materialization_bridge_relation_loop_0x4a4913_source\":\"0x4a4913_type8_relation_records_reset_relation_rect_propagate_0x4a4694_select_candidates_draw_0x4a4522_and_reseed_0x4a4694\","
@@ -3525,9 +4843,47 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 	out << ","
 		<< "\"source_order_direct_candidates_0x4a93a2_known\":" << (state.source_order_direct_candidates_0x4a93a2_known ? "true" : "false") << ","
 		<< "\"source_order_direct_candidate_vector_count_0x4a93a2\":" << state.source_order_direct_candidate_vector_count_0x4a93a2 << ","
-		<< "\"source_order_direct_candidate_total_count_0x4a93a2\":" << state.source_order_direct_candidate_total_count_0x4a93a2 << ","
-		<< "\"source_order_direct_selected_count_0x4a93a2\":" << state.source_order_direct_selected_count_0x4a93a2 << ","
-		<< "\"source_order_direct_commit_count_0x4a93a2\":" << state.source_order_direct_commit_count_0x4a93a2 << ","
+			<< "\"source_order_direct_candidate_total_count_0x4a93a2\":" << state.source_order_direct_candidate_total_count_0x4a93a2 << ","
+			<< "\"source_order_direct_selected_count_0x4a93a2\":" << state.source_order_direct_selected_count_0x4a93a2 << ","
+			<< "\"source_order_direct_commit_count_0x4a93a2\":" << state.source_order_direct_commit_count_0x4a93a2 << ","
+			<< "\"source_order_direct_candidate_vectors_0x4a93a2\":";
+	append_source_order_direct_candidate_vectors_4a93a2_json(out, state.source_order_direct_candidate_vectors_0x4a93a2);
+	out << ","
+			<< "\"source_order_direct_first_scanned_cell_count_0x4a93a2\":" << state.source_order_direct_first_scanned_cell_count_0x4a93a2 << ","
+		<< "\"source_order_direct_first_accepted_candidate_count_0x4a93a2\":" << state.source_order_direct_first_accepted_candidate_count_0x4a93a2 << ","
+		<< "\"source_order_direct_first_eligibility_reject_count_0x49aa93\":" << state.source_order_direct_first_eligibility_reject_count_0x49aa93 << ","
+		<< "\"source_order_direct_first_relation_owner_byte2\":" << state.source_order_direct_first_relation_owner_byte2 << ","
+		<< "\"source_order_direct_first_source_record_identity_0x00\":" << state.source_order_direct_first_source_record_identity_0x00 << ","
+		<< "\"source_order_direct_first_source_pair_key_0x0c\":" << state.source_order_direct_first_source_pair_key_0x0c << ","
+		<< "\"source_order_direct_first_anchor_x_0x10\":" << state.source_order_direct_first_anchor_x_0x10 << ","
+		<< "\"source_order_direct_first_anchor_y_0x14\":" << state.source_order_direct_first_anchor_y_0x14 << ","
+		<< "\"source_order_direct_first_anchor_level_0x18\":" << state.source_order_direct_first_anchor_level_0x18 << ","
+		<< "\"source_order_direct_first_scan_low_x_0x20\":" << state.source_order_direct_first_scan_low_x_0x20 << ","
+		<< "\"source_order_direct_first_scan_low_y_0x24\":" << state.source_order_direct_first_scan_low_y_0x24 << ","
+		<< "\"source_order_direct_first_scan_high_x_0x28\":" << state.source_order_direct_first_scan_high_x_0x28 << ","
+		<< "\"source_order_direct_first_scan_high_y_0x2c\":" << state.source_order_direct_first_scan_high_y_0x2c << ","
+		<< "\"source_order_direct_first_source_bucket_record_def_name_0x658\":\"" << json_escape(state.source_order_direct_first_source_bucket_record_def_name_0x658) << "\","
+		<< "\"source_order_direct_first_source_bucket_record_type_0x1c\":" << state.source_order_direct_first_source_bucket_record_type_0x1c << ","
+		<< "\"source_order_direct_first_source_bucket_record_subtype_0x20\":" << state.source_order_direct_first_source_bucket_record_subtype_0x20 << ","
+		<< "\"source_order_direct_first_source_bucket_record_group_0x24\":" << state.source_order_direct_first_source_bucket_record_group_0x24 << ","
+		<< "\"source_order_direct_first_footprint_trace_known_0x49a6f9\":" << (state.source_order_direct_first_footprint_trace_known_0x49a6f9 ? "true" : "false") << ","
+		<< "\"source_order_direct_first_footprint_trace_reason_0x49a6f9\":\"" << json_escape(state.source_order_direct_first_footprint_trace_reason_0x49a6f9) << "\","
+		<< "\"source_order_direct_first_footprint_trace_mask_x\":" << state.source_order_direct_first_footprint_trace_mask_x << ","
+		<< "\"source_order_direct_first_footprint_trace_mask_y\":" << state.source_order_direct_first_footprint_trace_mask_y << ","
+		<< "\"source_order_direct_first_footprint_trace_secondary_mask\":" << (state.source_order_direct_first_footprint_trace_secondary_mask ? "true" : "false") << ","
+		<< "\"source_order_direct_first_footprint_trace_primary_mask\":" << (state.source_order_direct_first_footprint_trace_primary_mask ? "true" : "false") << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_x\":" << state.source_order_direct_first_footprint_trace_cell_x << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_y\":" << state.source_order_direct_first_footprint_trace_cell_y << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_level\":" << state.source_order_direct_first_footprint_trace_cell_level << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_present\":" << (state.source_order_direct_first_footprint_trace_cell_present ? "true" : "false") << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_owner_byte2\":" << state.source_order_direct_first_footprint_trace_cell_owner_byte2 << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_terrain_code\":" << state.source_order_direct_first_footprint_trace_cell_terrain_code << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_valid_0x49a1d8\":" << (state.source_order_direct_first_footprint_trace_cell_valid_0x49a1d8 ? "true" : "false") << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_word_0x20\":" << state.source_order_direct_first_footprint_trace_cell_word_0x20 << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_word_0x24\":" << state.source_order_direct_first_footprint_trace_cell_word_0x24 << ","
+		<< "\"source_order_direct_first_footprint_trace_cell_word_0x28\":" << state.source_order_direct_first_footprint_trace_cell_word_0x28 << ","
+		<< "\"source_order_direct_first_blocked_reason_0x4a93a2\":\"" << json_escape(state.source_order_direct_first_blocked_reason_0x4a93a2) << "\","
+		<< "\"source_order_direct_first_eligibility_reject_reason_0x49aa93\":\"" << json_escape(state.source_order_direct_first_eligibility_reject_reason_0x49aa93) << "\","
 		<< "\"source_pair_records_edc_count\":" << state.source_pair_records_edc.size() << ","
 		<< "\"source_pair_records_edc\":";
 	append_source_object_resolver_source_pairs_json(out, state.source_pair_records_edc);
@@ -3643,6 +4999,9 @@ void append_generator_object_private_state_json(std::ostream &out, const SharedG
 		<< "\"reward_guard_source_stream_0x4aab7e_last_first_feasibility_blocked_reason_0x4aa603\":\"" << json_escape(state.reward_guard_source_stream_0x4aab7e_last_first_feasibility_blocked_reason_0x4aa603) << "\","
 		<< "\"reward_guard_source_stream_0x4aab7e_last_attempt_blocked_reason\":\"" << json_escape(state.reward_guard_source_stream_0x4aab7e_last_attempt_blocked_reason) << "\","
 		<< "\"reward_guard_source_stream_0x4aab7e_source\":\"0x4ac552_relation_pointer_loop_calls_0x4aab7e_which_drives_0x4aa354_then_0x4aa9b7_0x4aa603_0x4aa3e9\","
+		<< "\"reward_guard_source_stream_owner_growths_0x4ac552\":";
+	append_reward_guard_source_owner_growths_json(out, state.reward_guard_source_stream_owner_growths_0x4ac552);
+	out << ","
 		<< "\"relation_owner_vectors_10e4_10e8\":";
 	append_generator_relation_owner_vectors_json(out, state.relation_owner_vectors_10e4_10e8);
 	out << ","
@@ -3718,7 +5077,7 @@ std::vector<std::string> shared_runtime_chain_missing_reasons(const ControlledCa
 		return missing;
 	}
 	if (!supported_one_level_land_scope(controlled_case)) {
-		missing.push_back("supported_small_medium_one_level_land_scope");
+		missing.push_back("supported_small_medium_large_one_level_land_scope");
 	}
 	if (!input.rng_state_after_template_selection_known) {
 		missing.push_back("rng_state_after_template_selection");
@@ -3751,9 +5110,11 @@ std::vector<h3maped_rmg_core::RuntimeZoneSeedInput4a218c> to_h3maped_runtime_zon
 		zone.source_owner_index = input.source_owner_index;
 		zone.actual_player_color = input.actual_player_color;
 		zone.source_base_size = input.source_base_size;
-		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
-		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
-		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
+			zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
+			zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
+			zone.source_order_selector_field_0x40_known = input.source_order_selector_field_0x40_known;
+			zone.source_order_selector_field_0x40 = input.source_order_selector_field_0x40;
+			zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
 		zone.allowed_terrain_flags_0x85_0x8c = input.allowed_terrain_flags_0x85_0x8c;
 		zone.fixed_player_town_choice_index_0xf24 = input.fixed_player_town_choice_index_0xf24;
 		zone.source_payload = to_h3maped_source_zone_payload(input.source_payload);
@@ -3794,9 +5155,11 @@ std::vector<SharedRuntimeZoneSeedInput> from_h3maped_runtime_zone_seeds(const st
 		zone.source_owner_index = input.source_owner_index;
 		zone.actual_player_color = input.actual_player_color;
 		zone.source_base_size = input.source_base_size;
-		zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
-		zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
-		zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
+			zone.allowed_town_mask_0x41_0x49 = input.allowed_town_mask_0x41_0x49;
+			zone.selected_town_choice_index_0x49b3c1 = input.selected_town_choice_index_0x49b3c1;
+			zone.source_order_selector_field_0x40_known = input.source_order_selector_field_0x40_known;
+			zone.source_order_selector_field_0x40 = input.source_order_selector_field_0x40;
+			zone.terrain_match_to_town_0x84 = input.terrain_match_to_town_0x84;
 		zone.allowed_terrain_flags_0x85_0x8c = input.allowed_terrain_flags_0x85_0x8c;
 		zone.fixed_player_town_choice_index_0xf24 = input.fixed_player_town_choice_index_0xf24;
 		zone.source_payload = from_h3maped_source_zone_payload(input.source_payload);
@@ -3937,6 +5300,25 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 	out << "    \"missing_inputs\": ";
 	append_json_string_array(out, missing);
 	out << ",\n";
+	out << "    \"same_run_payload_authority_river_entry_args_known\": " << (input.same_run_payload_authority_river_entry_args_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_river_4ab6ac_args\": ";
+	append_json_i32_array(out, input.same_run_payload_authority_river_4ab6ac_args);
+	out << ",\n";
+	out << "    \"same_run_payload_authority_river_4abd5f_args\": ";
+	append_json_i32_array(out, input.same_run_payload_authority_river_4abd5f_args);
+	out << ",\n";
+	out << "    \"same_run_payload_authority_river_overlay_writes_known\": " << (input.same_run_payload_authority_river_overlay_writes_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_river_overlay_write_count\": " << input.same_run_payload_authority_river_overlay_writes_0x49b1bc_0x49b170.size() << ",\n";
+	out << "    \"same_run_payload_authority_road_type_rng_known\": " << (input.same_run_payload_authority_road_type_rng_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_road_type_rng_value_0x4e7276\": " << input.same_run_payload_authority_road_type_rng_value_0x4e7276 << ",\n";
+	out << "    \"same_run_payload_authority_road_coordinate_records_known\": " << (input.same_run_payload_authority_road_coordinate_records_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_road_coordinate_record_count_0x14b0\": " << input.same_run_payload_authority_road_coordinate_records_0x14b0.size() << ",\n";
+	out << "    \"same_run_payload_authority_road_callstream_known\": " << (input.same_run_payload_authority_road_callstream_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_road_call_count_0x4ab37f\": " << input.same_run_payload_authority_road_calls_0x4ab37f.size() << ",\n";
+	out << "    \"same_run_payload_authority_road_type_writes_known\": " << (input.same_run_payload_authority_road_type_writes_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_road_type_write_count_0x49aec5\": " << input.same_run_payload_authority_road_type_writes_0x49aec5.size() << ",\n";
+	out << "    \"same_run_payload_authority_road_art_writes_known\": " << (input.same_run_payload_authority_road_art_writes_known ? "true" : "false") << ",\n";
+	out << "    \"same_run_payload_authority_road_art_write_count_0x49ae47\": " << input.same_run_payload_authority_road_art_writes_0x49ae47.size() << ",\n";
 	out << "    \"same_run_recovered_template_catalog_selection_known\": " << (input.recovered_template_selection_known ? "true" : "false") << ",\n";
 	out << "    \"same_run_recovered_template_catalog_selection_blocked\": " << (input.recovered_template_selection_blocked ? "true" : "false") << ",\n";
 	out << "    \"same_run_recovered_setup_mode_known\": " << (input.recovered_setup_mode_known ? "true" : "false") << ",\n";
@@ -4079,12 +5461,26 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"coordinate_boundary_input_count\": " << payload.coordinate_boundary_input_count << ",\n";
 		out << "    \"owner_grid_executed\": " << (payload.owner_grid_executed ? "true" : "false") << ",\n";
 		out << "    \"source_blocked\": " << (payload.source_blocked ? "true" : "false") << ",\n";
-		out << "    \"source_descriptor_node_count\": " << payload.source_descriptor_node_count << ",\n";
-		out << "    \"source_descriptor_active_node_count\": " << payload.source_descriptor_active_node_count << ",\n";
-		out << "    \"source_node_walk_count\": " << payload.source_node_walk_count << ",\n";
-		out << "    \"source_handoff_count\": " << payload.source_handoff_count << ",\n";
-			out << "    \"missing_boundary_input_count\": " << payload.missing_boundary_input_count << ",\n";
-			out << "    \"missing_source_walk_count\": " << payload.missing_source_walk_count << ",\n";
+			out << "    \"source_descriptor_node_count\": " << payload.source_descriptor_node_count << ",\n";
+			out << "    \"source_descriptor_active_node_count\": " << payload.source_descriptor_active_node_count << ",\n";
+			out << "    \"source_inserted_node_pair_count\": " << payload.source_inserted_node_pair_count << ",\n";
+			out << "    \"source_inserted_bridge_pair_count\": " << payload.source_inserted_bridge_pair_count << ",\n";
+			out << "    \"source_edge_removal_count\": " << payload.source_edge_removal_count << ",\n";
+			out << "    \"source_crossing_scan_count\": " << payload.source_crossing_scan_count << ",\n";
+			out << "    \"source_crossing_test_count\": " << payload.source_crossing_test_count << ",\n";
+			out << "    \"source_crossing_collapse_count\": " << payload.source_crossing_collapse_count << ",\n";
+			out << "    \"source_finalized_triplet_count\": " << payload.source_finalized_triplet_count << ",\n";
+			out << "    \"source_finalized_node_count\": " << payload.source_finalized_node_count << ",\n";
+			out << "    \"source_node_walk_count\": " << payload.source_node_walk_count << ",\n";
+			out << "    \"source_handoff_count\": " << payload.source_handoff_count << ",\n";
+			out << "    \"source_descriptor_samples_4cca55\": ";
+			append_source_descriptor_samples_json(out, payload.source_descriptor_samples_4cca55);
+			out << ",\n";
+			out << "    \"source_walk_samples_4cca55\": ";
+			append_source_walk_samples_json(out, payload.source_walk_samples_4cca55);
+			out << ",\n";
+				out << "    \"missing_boundary_input_count\": " << payload.missing_boundary_input_count << ",\n";
+				out << "    \"missing_source_walk_count\": " << payload.missing_source_walk_count << ",\n";
 			out << "    \"materialization_source_handoff_count\": " << payload.materialization_source_handoff_count << ",\n";
 			out << "    \"materialization_source_handoff_descriptor_indexed_point_count\": " << payload.materialization_source_handoff_descriptor_indexed_point_count << ",\n";
 			out << "    \"materialization_source_handoff_raw_coordinate_point_count\": " << payload.materialization_source_handoff_raw_coordinate_point_count << ",\n";
@@ -4116,6 +5512,12 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"terrain_selection_generator_field_0x08\": " << payload.terrain_selection_generator_field_0x08 << ",\n";
 		out << "    \"terrain_selection_generator_field_0x08_non_negative\": " << (payload.terrain_selection_generator_field_0x08_non_negative ? "true" : "false") << ",\n";
 		out << "    \"terrain_repaint_write_count_0x4a4163\": " << payload.terrain_repaint_write_count_0x4a4163 << ",\n";
+		out << "    \"terrain_repaint_candidate_samples_0x4a4163\": ";
+		append_terrain_repaint_candidate_samples_json(out, payload.terrain_repaint_candidate_samples_0x4a4163);
+		out << ",\n";
+		out << "    \"terrain_visual_write_samples_0x4bad0f\": ";
+		append_terrain_visual_write_samples_json(out, payload.terrain_visual_write_samples_0x4bad0f);
+		out << ",\n";
 		out << "    \"terrain_visual_write_count_0x4bb74b\": " << payload.terrain_visual_write_count_0x4bb74b << ",\n";
 		out << "    \"terrain_visual_missing_bucket_count_0x4bcfc3\": " << payload.terrain_visual_missing_bucket_count_0x4bcfc3 << ",\n";
 		out << "    \"terrain_repaint_first_cell_known\": " << (payload.terrain_repaint_first_cell_known ? "true" : "false") << ",\n";
@@ -4129,7 +5531,15 @@ void append_shared_chain_json(std::ostream &out, const ControlledCase &controlle
 		out << "    \"terrain_visual_flag_cell_count\": " << payload.terrain_visual_flag_cell_count << ",\n";
 		out << "    \"terrain_visual_final_sweep_cell_count_0x4bbfcc\": " << payload.terrain_visual_final_sweep_cell_count_0x4bbfcc << ",\n";
 		out << "    \"terrain_visual_preserved_current_record_count_0x4bc5a3\": " << payload.terrain_visual_preserved_current_record_count_0x4bc5a3 << ",\n";
+		out << "    \"terrain_visual_write_sample_sequence_count_0x4bad0f\": " << payload.terrain_visual_write_sample_sequence_count_0x4bad0f << ",\n";
+		out << "    \"terrain_visual_write_context_counts_0x4bad0f\": ";
+		append_int_array_json(out, payload.terrain_visual_write_context_counts_0x4bad0f);
+		out << ",\n";
+		out << "    \"terrain_visual_rng_draw_context_counts_0x4bad0f\": ";
+		append_int_array_json(out, payload.terrain_visual_rng_draw_context_counts_0x4bad0f);
+		out << ",\n";
 		out << "    \"terrain_visual_roundtrip_mismatch_count\": " << payload.terrain_visual_roundtrip_mismatch_count << ",\n";
+		out << "    \"terrain_visual_rng_state_before_0x4bb74b\": " << payload.terrain_visual_rng_state_before_0x4bb74b << ",\n";
 		out << "    \"terrain_visual_rng_state_after_0x4bb74b\": " << payload.terrain_visual_rng_state_after_0x4bb74b << ",\n";
 		out << "    \"generated_cell_private_state_comparable\": " << (payload.generated_cell_private_state_comparable ? "true" : "false") << ",\n";
 		out << "    \"generated_cell_private_state_status\": \"" << json_escape(payload.generated_cell_private_state_status) << "\",\n";
@@ -4569,6 +5979,8 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.terrain_selection_generator_field_0x08_non_negative = result.terrain_selection.generator_field_0x08_non_negative;
 	payload.terrain_selection_rng_state_after = result.terrain_selection.rng_state_after;
 	payload.terrain_repaint_write_count_0x4a4163 = result.terrain_repaint.zone_repaint_write_count_0x4a4163;
+	payload.terrain_repaint_candidate_samples_0x4a4163 = result.terrain_repaint.terrain_repaint_candidate_samples_0x4a4163;
+	payload.terrain_visual_write_samples_0x4bad0f = result.terrain_repaint.terrain_visual_write_samples_0x4bad0f;
 	payload.terrain_visual_write_count_0x4bb74b = result.terrain_repaint.terrain_visual_write_count_0x4bb74b;
 	payload.terrain_visual_missing_bucket_count_0x4bcfc3 = result.terrain_repaint.terrain_visual_missing_bucket_count_0x4bcfc3;
 	if (!result.terrain_repaint.generated_cell_word_0x20.empty()
@@ -4597,12 +6009,24 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.terrain_visual_flag_cell_count = result.terrain_repaint.terrain_visual_flag_cell_count;
 	payload.terrain_visual_final_sweep_cell_count_0x4bbfcc = result.terrain_repaint.terrain_visual_final_sweep_cell_count_0x4bbfcc;
 	payload.terrain_visual_preserved_current_record_count_0x4bc5a3 = result.terrain_repaint.terrain_visual_preserved_current_record_count_0x4bc5a3;
+	payload.terrain_visual_write_sample_sequence_count_0x4bad0f = result.terrain_repaint.terrain_visual_write_sample_sequence_count_0x4bad0f;
+	payload.terrain_visual_write_context_counts_0x4bad0f = result.terrain_repaint.terrain_visual_write_context_counts_0x4bad0f;
+	payload.terrain_visual_rng_draw_context_counts_0x4bad0f = result.terrain_repaint.terrain_visual_rng_draw_context_counts_0x4bad0f;
 	payload.terrain_visual_roundtrip_mismatch_count = result.terrain_repaint.terrain_visual_roundtrip_mismatch_count;
+	payload.terrain_visual_rng_state_before_0x4bb74b = result.terrain_repaint.terrain_visual_rng_state_before_0x4bb74b;
 	payload.terrain_visual_rng_state_after_0x4bb74b = result.terrain_repaint.terrain_visual_rng_state_after_0x4bb74b;
 	payload.owner_grid_executed = result.owner_grid_executed;
 	payload.source_blocked = result.owner_grid.source_blocked;
 	payload.source_descriptor_node_count = result.owner_grid.source_footprints.source_descriptor_node_count;
 	payload.source_descriptor_active_node_count = result.owner_grid.source_footprints.source_descriptor_active_node_count;
+	payload.source_inserted_node_pair_count = result.owner_grid.source_footprints.inserted_node_pair_count;
+	payload.source_inserted_bridge_pair_count = result.owner_grid.source_footprints.inserted_bridge_pair_count;
+	payload.source_edge_removal_count = result.owner_grid.source_footprints.edge_removal_count;
+	payload.source_crossing_scan_count = result.owner_grid.source_footprints.crossing_scan_count;
+	payload.source_crossing_test_count = result.owner_grid.source_footprints.crossing_test_count;
+	payload.source_crossing_collapse_count = result.owner_grid.source_footprints.crossing_collapse_count;
+	payload.source_finalized_triplet_count = result.owner_grid.source_footprints.finalized_triplet_count;
+	payload.source_finalized_node_count = result.owner_grid.source_footprints.finalized_node_count;
 	payload.source_node_walk_count = result.owner_grid.source_footprints.source_node_walk_count;
 	payload.source_handoff_count = int32_t(result.owner_grid.handoffs.size());
 	payload.missing_boundary_input_count = result.owner_grid.missing_boundary_input_count;
@@ -4615,8 +6039,87 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 	payload.materialization_runtime_zone_walk_count = result.owner_grid.materialization.runtime_zone_walk_count;
 	payload.materialization_appended_vertex_count = result.owner_grid.materialization.appended_vertex_count;
 	payload.materialization_span_fill_zone_count = result.owner_grid.materialization.span_fill_zone_count;
+	constexpr size_t SOURCE_DESCRIPTOR_SAMPLE_LIMIT_4CCA55 = 96;
+	constexpr size_t SOURCE_WALK_SAMPLE_LIMIT_4CCA55 = 24;
+	constexpr size_t SOURCE_WALK_NODE_SAMPLE_LIMIT_4CCA55 = 16;
+	const auto source_node_sample_from_cycle_point = [](const h3maped_rmg_core::SourceNodeCyclePoint4a2777 &point, int32_t point_index) {
+		BoundarySourcePointSample4a2777 sample;
+		sample.point_index = point_index;
+		sample.model_node_index = point.model_node_index;
+		sample.pair_index = point.pair_index;
+		sample.next_index = point.next_index;
+		sample.previous_index = point.previous_index;
+		sample.next_pair_index = point.next_pair_index;
+		sample.raw_x_0x00 = point.raw_x_0x00;
+		sample.raw_y_0x04 = point.raw_y_0x04;
+		sample.finalized_x_0x1c = point.finalized_x_0x1c;
+		sample.finalized_y_0x20 = point.finalized_y_0x20;
+		sample.x = point.finalized_x_0x1c;
+		sample.y = point.finalized_y_0x20;
+		sample.finalized = point.finalized;
+		sample.has_payload = point.has_payload;
+		sample.payload_owner_word_0x00 = point.payload_owner_word_0x00;
+		sample.payload_random_span_limit_0x1c = point.payload_random_span_limit_0x1c;
+		sample.next_pair_has_payload = point.next_pair_has_payload;
+		sample.next_pair_payload_owner_word_0x00 = point.next_pair_payload_owner_word_0x00;
+		sample.next_pair_payload_random_span_limit_0x1c = point.next_pair_payload_random_span_limit_0x1c;
+		return sample;
+	};
+	const size_t descriptor_sample_count = std::min<size_t>(
+			result.owner_grid.source_footprints.descriptor_nodes.size(),
+			SOURCE_DESCRIPTOR_SAMPLE_LIMIT_4CCA55);
+	payload.source_descriptor_samples_4cca55.reserve(descriptor_sample_count);
+	for (size_t descriptor_index = 0; descriptor_index < descriptor_sample_count; ++descriptor_index) {
+		const h3maped_rmg_core::SourceDescriptorNode4cca55 &source =
+				result.owner_grid.source_footprints.descriptor_nodes[descriptor_index];
+		SourceDescriptorNodeSample4cca55 sample;
+		sample.sample_index = int32_t(descriptor_index);
+		sample.model_node_index = source.model_node_index;
+		sample.raw_x_0x00 = source.x;
+		sample.raw_y_0x04 = source.y;
+		sample.has_payload = source.has_payload;
+		sample.payload_owner_word_0x00 = source.payload_owner_word_0x00;
+		sample.pair_index = source.pair_index;
+		sample.next_index = source.next_index;
+		sample.previous_index = source.previous_index;
+		sample.active = source.active;
+		sample.finalized = source.finalized;
+		sample.finalized_x_0x1c = source.finalized_x;
+		sample.finalized_y_0x20 = source.finalized_y;
+		payload.source_descriptor_samples_4cca55.push_back(sample);
+	}
+	const size_t walk_sample_count = std::min<size_t>(
+			result.owner_grid.source_footprints.walks.size(),
+			SOURCE_WALK_SAMPLE_LIMIT_4CCA55);
+	payload.source_walk_samples_4cca55.reserve(walk_sample_count);
+	for (size_t walk_index = 0; walk_index < walk_sample_count; ++walk_index) {
+		const h3maped_rmg_core::SourceWalk4cca55 &source =
+				result.owner_grid.source_footprints.walks[walk_index];
+		SourceWalkSample4cca55 sample;
+		sample.walk_index = int32_t(walk_index);
+		sample.runtime_zone_index = source.runtime_zone_index;
+		sample.source_zone_id = source.source_zone_id;
+		sample.start_x = source.start_x;
+		sample.start_y = source.start_y;
+		sample.locator_node_index = source.locator_node_index;
+		sample.locator_status = source.locator_status;
+		const size_t source_node_sample_count = std::min<size_t>(
+				source.source_nodes.size(),
+				SOURCE_WALK_NODE_SAMPLE_LIMIT_4CCA55);
+		sample.source_node_samples.reserve(source_node_sample_count);
+		for (size_t source_node_index = 0; source_node_index < source_node_sample_count; ++source_node_index) {
+			sample.source_node_samples.push_back(
+					source_node_sample_from_cycle_point(
+							source.source_nodes[source_node_index],
+							int32_t(source_node_index)));
+		}
+		payload.source_walk_samples_4cca55.push_back(std::move(sample));
+	}
 	payload.boundary_zone_summaries_4a2777_4a325d.clear();
 	payload.boundary_zone_summaries_4a2777_4a325d.reserve(result.owner_grid.materialization.zones.size());
+	constexpr size_t BOUNDARY_SOURCE_POINT_SAMPLE_LIMIT_4A2777 = 16;
+	constexpr size_t BOUNDARY_SEGMENT_SAMPLE_LIMIT_4A2777 = 8;
+	constexpr size_t BOUNDARY_SEGMENT_LINE_WRITE_SAMPLE_LIMIT_4A2777 = 32;
 	for (const h3maped_rmg_core::BoundaryZoneMaterialization4a2777 &zone : result.owner_grid.materialization.zones) {
 		BoundaryZoneSummary4a2777 summary;
 		summary.runtime_zone_index = zone.runtime_zone_index;
@@ -4643,6 +6146,62 @@ RecoveredOwnerGridPayload build_recovered_owner_grid_payload_from_workflow(
 		summary.span_fill_blocked_initial_span_count = zone.span_fill_4a325d.blocked_initial_span_count;
 		summary.status = zone.status;
 		summary.span_seed_relocation_status_4a325d = zone.span_seed_relocation_status_4a325d;
+		const size_t source_point_sample_count = std::min<size_t>(zone.finalized_points.size(), BOUNDARY_SOURCE_POINT_SAMPLE_LIMIT_4A2777);
+		summary.source_point_samples.reserve(source_point_sample_count);
+		for (size_t point_index = 0; point_index < source_point_sample_count; ++point_index) {
+			const h3maped_rmg_core::BoundaryCyclePoint4a2777 &point = zone.finalized_points[point_index];
+			BoundarySourcePointSample4a2777 sample;
+			sample.point_index = int32_t(point_index);
+			sample.model_node_index = point.model_node_index;
+			sample.pair_index = point.pair_index;
+			sample.next_index = point.next_index;
+			sample.previous_index = point.previous_index;
+			sample.next_pair_index = point.next_pair_index;
+			sample.raw_x_0x00 = point.raw_x_0x00;
+			sample.raw_y_0x04 = point.raw_y_0x04;
+			sample.finalized_x_0x1c = point.finalized_x_0x1c;
+			sample.finalized_y_0x20 = point.finalized_y_0x20;
+			sample.x = point.x;
+			sample.y = point.y;
+			sample.finalized = point.finalized;
+			sample.has_payload = point.has_payload;
+			sample.payload_owner_word_0x00 = point.payload_owner_word_0x00;
+			sample.payload_random_span_limit_0x1c = point.payload_random_span_limit_0x1c;
+			sample.next_pair_has_payload = point.next_pair_has_payload;
+			sample.next_pair_payload_owner_word_0x00 = point.next_pair_payload_owner_word_0x00;
+			sample.next_pair_payload_random_span_limit_0x1c = point.next_pair_payload_random_span_limit_0x1c;
+			summary.source_point_samples.push_back(std::move(sample));
+		}
+		const size_t segment_sample_count = std::min<size_t>(zone.segments.size(), BOUNDARY_SEGMENT_SAMPLE_LIMIT_4A2777);
+		summary.segment_samples.reserve(segment_sample_count);
+		for (size_t segment_index = 0; segment_index < segment_sample_count; ++segment_index) {
+			const h3maped_rmg_core::BoundarySegment4a2777 &segment = zone.segments[segment_index];
+			BoundarySegmentSample4a2777 sample;
+			sample.segment_index = int32_t(segment_index);
+			sample.id = segment.id;
+			sample.branch = segment.branch;
+			sample.writer = segment.writer;
+			sample.from_x = segment.from_x;
+			sample.from_y = segment.from_y;
+			sample.to_x = segment.to_x;
+			sample.to_y = segment.to_y;
+			sample.randomized = segment.randomized;
+			sample.line_trace_count = int32_t(segment.line.trace.size());
+			const size_t write_sample_count = std::min<size_t>(segment.line.trace.size(), BOUNDARY_SEGMENT_LINE_WRITE_SAMPLE_LIMIT_4A2777);
+			sample.first_line_writes.reserve(write_sample_count);
+			for (size_t write_index = 0; write_index < write_sample_count; ++write_index) {
+				const h3maped_rmg_core::BoundaryLineCellWrite &write = segment.line.trace[write_index];
+				BoundaryLineCellSample4a2777 write_sample;
+				write_sample.trace_index = int32_t(write_index);
+				write_sample.x = write.x;
+				write_sample.y = write.y;
+				write_sample.level = write.level;
+				write_sample.zone_id = write.zone_id;
+				write_sample.reserved = write.reserved;
+				sample.first_line_writes.push_back(write_sample);
+			}
+			summary.segment_samples.push_back(std::move(sample));
+		}
 		payload.boundary_zone_summaries_4a2777_4a325d.push_back(std::move(summary));
 	}
 	payload.footprint_finalizer_executed = result.owner_grid.footprint_finalizer_executed;
@@ -4753,6 +6312,10 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	const int32_t width = h3maped_rmg_core::map_width_for_size_class(controlled_case.size_class);
 	const bool supported = supported_one_level_land_scope(controlled_case);
 	const NativeH3MapedWorkflowResult workflow = run_native_h3maped_workflow(controlled_case, shared_input);
+	const bool native_h3m_final_payload_parity_complete =
+			workflow.final_payload_owned
+			&& workflow.final_writeout_complete
+			&& workflow.final_payload_writeout_0x4ad1e3.same_run_h3maped_compare_complete;
 	std::ostringstream out;
 	out << "{\n";
 	out << "  \"schema_id\": \"rmg_native_batch_export_cli_native_h3maped_workflow_v1\",\n";
@@ -4770,6 +6333,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  \"live_generation_surface_present\": false,\n";
 	out << "  \"runtime_generation_allowed\": false,\n";
 	out << "  \"native_rmg_end_to_end_parity_complete\": false,\n";
+	out << "  \"native_h3m_final_payload_parity_complete\": " << (native_h3m_final_payload_parity_complete ? "true" : "false") << ",\n";
+	out << "  \"native_h3m_final_payload_output_boundary\": \"shared_core_owned_payload_exported_by_no_godot_cli_when_requested\",\n";
 	out << "  \"normalized_config\": {\n";
 	out << "    \"size_class\": \"" << json_escape(controlled_case.size_class) << "\",\n";
 	out << "    \"width\": " << width << ",\n";
@@ -4818,8 +6383,8 @@ std::string case_native_h3maped_workflow_json(const ControlledCase &controlled_c
 	out << "  },\n";
 	append_shared_chain_json(out, controlled_case, width, shared_input);
 	out << ",\n";
-	out << "  \"next_required_native_core_slice\": \"source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output\",\n";
-	out << "  \"next_required_alignment_slice\": \"align_generated_cell_terrainplacement_state_before_0x49b2b6_and_generated_object_payload_before_0x4ad3eb\"\n";
+	out << "  \"next_required_native_core_slice\": \"" << (native_h3m_final_payload_parity_complete ? "runtime_package_session_adoption_from_owned_h3m_payload" : "source_backed_final_tile_and_generated_object_payload_parity_before_runtime_map_output") << "\",\n";
+	out << "  \"next_required_alignment_slice\": \"" << (native_h3m_final_payload_parity_complete ? "implement_real_h3m_payload_to_map_document_and_scenario_document_converter" : "align_generated_cell_terrainplacement_state_before_0x49b2b6_and_generated_object_payload_before_0x4ad3eb") << "\"\n";
 	out << "}\n";
 	return out.str();
 }

@@ -44,8 +44,8 @@ R7 recovery status:
 - Fixed recovery ledger: `100%` for the named R1-R7 blocker set.
 - Ordered replay phases recovered: `18`.
 - Recovery manifest: `7` checkpoints, `49` frontier summaries, `178` recovered functions.
-- Native behavior changed by recovery: `false`.
-- Native RMG parity implementation complete: `false`.
+- Native behavior changed by the R7 recovery artifacts alone: `false`.
+- Current native implementation: complete for the selected 24-workflow supported release matrix; broader H3MapEd configurations are not claimed by this ledger.
 
 ## Recovery Status Labels
 
@@ -308,7 +308,7 @@ Inside `0x4a218c`, `0x49b53d` selects runtime terrain before the caller returns 
 - terrain id `6` is eligible only on level `1`;
 - on level `1`, any selected terrain except lava `7` is forced to cave `6`.
 
-`0x49b4e1` immediately follows `0x49b53d` inside the same `0x4a218c` owner-vector loop and writes monster-town policy from owner `+0x04` or table `0x58db78`.
+`0x49b4e1` immediately follows `0x49b53d` inside the same `0x4a218c` owner-vector loop and writes monster-town policy from owner `+0x04` or table `0x58db78`; the four table entries are selectable values, including `-1`, while generator `+0x08 < 0` filters out only town candidate `8`.
 
 `0x4a3f27` runs terrain repaint:
 
@@ -498,8 +498,9 @@ Before native output can be called parity:
 Current native status, by the recovery ledger:
 
 - H3MapEd fixed recovery ledger: complete.
-- Native parity: not complete.
-- Remaining work is native port/adoption and comparison, not another recovery loop unless the port exposes a named contradiction in the recovered evidence.
+- Native parity: complete for the selected 24-workflow supported release matrix across Small through XLarge, one/two levels, and land/normal-water/Islands.
+- Public `MapPackageService` owns authority-independent payload projection, paired map/scenario packages, and package-session adoption for that supported matrix.
+- Unsupported shapes, strengths, and broader H3MapEd configuration or allocator histories remain outside the completion claim and fail closed rather than being inferred.
 
 ## Invalid Work Patterns
 

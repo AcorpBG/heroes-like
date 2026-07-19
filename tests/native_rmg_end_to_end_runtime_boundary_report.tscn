@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/native_rmg_end_to_end_runtime_boundary_report.gd" id="1"]
+
+[node name="NativeRmgEndToEndRuntimeBoundaryReport" type="Node"]
+script = ExtResource("1")

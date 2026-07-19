@@ -23,6 +23,7 @@ DEFAULT_LEDGER = (
     / "winedbg_interactive_trace_ledger.json"
 )
 DEFAULT_OUT = ROOT / "final_object_callstream_summary_20260610.json"
+DEFAULT_PROFILE = "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0"
 
 FIRST_PASS_SITE = "0x004ad36f"
 SECOND_PASS_SITE = "0x004ad3b1"
@@ -34,29 +35,49 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def words_at_event_line(event: dict[str, Any], index: int) -> list[int]:
-    lines = event.get("memory_lines", [])
-    if len(lines) <= index:
+def words_at_address(event: dict[str, Any], address: int | None, count: int) -> list[int]:
+    if address is None:
         return []
-    return [int(word) & 0xFFFFFFFF for word in lines[index].get("words", [])]
+    lines = event.get("memory_lines", [])
+    for start, line in enumerate(lines):
+        if int(line.get("address", -1)) != int(address):
+            continue
+        words: list[int] = []
+        expected_address = int(address)
+        for candidate in lines[start:]:
+            if int(candidate.get("address", -1)) != expected_address:
+                break
+            candidate_words = [int(word) & 0xFFFFFFFF for word in candidate.get("words", [])]
+            words.extend(candidate_words)
+            expected_address += len(candidate_words) * 4
+            if len(words) >= count:
+                return words[:count]
+        return words[:count]
+    return []
+
+
+def words_at_event_lines(event: dict[str, Any], start: int, line_count: int) -> list[int]:
+    words: list[int] = []
+    for line in event.get("memory_lines", [])[start : start + line_count]:
+        words.extend(int(word) & 0xFFFFFFFF for word in line.get("words", []))
+    return words
 
 
 def record_words(event: dict[str, Any]) -> list[int]:
-    # After the mandatory stack dump, address-command dumps `x/8x $ecx`.
-    return words_at_event_line(event, 2) + words_at_event_line(event, 3)
+    words = words_at_address(event, event.get("registers", {}).get("ecx"), 8)
+    return words if words else words_at_event_lines(event, 2, 2)
 
 
 def vtable_words(event: dict[str, Any]) -> list[int]:
-    # The next address-command dumps `x/8x *(int*)$ecx`.
-    return words_at_event_line(event, 4) + words_at_event_line(event, 5)
+    record = record_words(event)
+    words = words_at_address(event, record[0] if record else None, 8)
+    return words if words else words_at_event_lines(event, 4, 2)
 
 
 def descriptor_wrapper_words(event: dict[str, Any]) -> list[int]:
-    # The final address-command dumps `x/24x *(int*)($ecx+0x4)`.
-    words: list[int] = []
-    for index in range(6, 12):
-        words.extend(words_at_event_line(event, index))
-    return words
+    record = record_words(event)
+    words = words_at_address(event, record[1] if len(record) > 1 else None, 24)
+    return words if words else words_at_event_lines(event, 6, 6)
 
 
 def hex32(value: int | None) -> str | None:
@@ -93,7 +114,7 @@ def counter_to_hex(counter: Counter[int]) -> dict[str, int]:
     return {hex32(key) or "null": counter[key] for key in sorted(counter)}
 
 
-def summarize(ledger_path: Path) -> dict[str, Any]:
+def summarize(ledger_path: Path, profile: str = DEFAULT_PROFILE) -> dict[str, Any]:
     ledger = load_json(ledger_path)
     serializer_events = [event for event in ledger.get("events", []) if event.get("address") in SERIALIZER_SITES]
     final_events = [event for event in ledger.get("events", []) if event.get("address") == FINAL_SITE]
@@ -140,7 +161,7 @@ def summarize(ledger_path: Path) -> dict[str, Any]:
         if callstream_complete
         else "final_object_callstream_incomplete",
         "scope": {
-            "profile": "H3MapEd Medium one-level no-water seed 10, human/computer down 1, computer-only down 0",
+            "profile": profile,
             "positive_claim": "same-run generated-object serialization callstream through both 0x4ad1e3 passes",
             "negative_claim": "does not decode every serializer function into field-level output bytes",
         },
@@ -197,10 +218,11 @@ def sample_event(item: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_LEDGER)
+    parser.add_argument("--profile", default=DEFAULT_PROFILE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
 
-    summary = summarize(args.ledger)
+    summary = summarize(args.ledger, args.profile)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(

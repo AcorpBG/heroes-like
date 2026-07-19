@@ -19231,12 +19231,15 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         wrapper_text = wrapper_path.read_text(encoding="utf-8")
         for required_token in (
             'choices=["native-cli"]',
-            "if not args.phase_snapshot_only:",
+            "if not args.phase_snapshot_only and not args.emit_final_h3m_payload and not args.emit_runtime_package:",
+            "native_map_json_public_api_removed",
             "native_output_plain_cpp_core_not_available",
-            "python_wrapper_refuses_native_output_before_spawning_cli_until_shared_recovered_core_owns_final_payload_generation",
+            "python_wrapper_refuses_native_map_json_but_allows_owned_final_h3m_payload_and_parity_gated_runtime_package_output",
             "godot_processes()",
             "subprocess.run(",
             '"--phase-snapshot-only"',
+            '"--emit-final-h3m-payload"',
+            '"--emit-runtime-package"',
             "--shared-runtime-zone-seed",
             "--shared-runtime-link",
             "--shared-rng-state-after-template-selection",
@@ -19258,12 +19261,14 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     if native_map_service_path.exists():
         native_text = native_map_service_path.read_text(encoding="utf-8")
         for required_token in (
-            "native_rmg_package_session_adoption_disabled",
-            "h3maped_validator_gated_package_session_adoption_removed",
-            "h3maped_exact_state_chain_runtime_blocked_result",
+            "project_runtime_map_from_native_owned_final_payload",
+            "run_h3maped_rmg_entry_to_writeout_workflow",
+            "native_rmg_generated_payload_not_authoritative",
+            "native_rmg_runtime_document_validation_failed",
+            'package_session_adoption_ready"] = true',
             "native_rmg_exact_chain_unimplemented_blocked_result",
         ):
-            ensure(required_token in native_text, errors, f"Native MapPackageService is missing fail-closed RMG token: {required_token}")
+            ensure(required_token in native_text, errors, f"Native MapPackageService is missing native-owned RMG runtime token: {required_token}")
         for forbidden_token in (
             "AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION",
             "native_rmg_archived_legacy_disabled_result",
@@ -19276,7 +19281,6 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "Dictionary generate_connection_payload_resolution",
             "Dictionary generate_terrain_grid",
             "Native package/session adoption accepts partial foundation",
-            "package_session_adoption_ready\"] = true",
             "runtime_authoritative_owner_compared_not_full_parity",
             "ready_feature_gated_not_authoritative",
             "aurelion_native_random_map_foundation",
@@ -19428,8 +19432,9 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     if workflow_path.exists():
         workflow_text = workflow_path.read_text(encoding="utf-8")
         for required_text in (
-            "Full `.amap`",
-            "export is not a mode on this host yet",
+            "`--emit-runtime-package` projects that same parity-owned payload",
+            "Native map JSON remains blocked",
+            "same-run final payload parity without authority replay",
             "Do not add Godot flags, restore a",
             "Godot runner, or add a full-export probe override",
             "`tools/rmg_no_godot_guard.py` process guard",
@@ -19440,17 +19445,17 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     if plan_path.exists():
         plan_text = plan_path.read_text(encoding="utf-8")
         ensure(
-            "the wrapper unconditionally refuses native map JSON/full `.amap` output attempts before spawning the CLI" in plan_text,
+            "refuses native map JSON, and permits paired `.amap`/`.ascenario` output only after no-replay final payload parity" in plan_text,
             errors,
-            "PLAN.md does not record the unconditional no-Godot native-output refusal",
+            "PLAN.md does not record the no-replay runtime-package output gate",
         )
 
     if progress_path.exists():
         progress_text = progress_path.read_text(encoding="utf-8")
         ensure(
-            "unconditionally refuses native map JSON/full .amap output attempts before spawning the CLI" in progress_text,
+            "refuses native map JSON and permits paired .amap/.ascenario output only after no-replay final payload parity" in progress_text,
             errors,
-            "ops/progress.json does not record the unconditional no-Godot native-output refusal",
+            "ops/progress.json does not record the no-replay runtime-package output gate",
         )
 
 
