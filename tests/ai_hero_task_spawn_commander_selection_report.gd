@@ -28,13 +28,19 @@ func _run() -> void:
 	var fresh_fit_case := _fresh_launch_commander_fit_beats_rotation_case()
 	if fresh_fit_case.is_empty():
 		return
+	var generated_front_distribution_case := _generated_multi_town_front_distribution_case()
+	if generated_front_distribution_case.is_empty():
+		return
+	var rebuild_launch_readiness_case := _rebuild_launch_waits_for_viable_commander_case()
+	if rebuild_launch_readiness_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_and_prefers_deployable_saved_task_commander_spell_tempo_and_fresh_fit",
-		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_and_adventure_spell_route_tempo",
+		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_and_rebuild_launch_readiness",
+		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_adventure_spell_route_tempo_generated_multi_town_front_distribution_and_rebuilds_wait_for_viable_commanders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -356,6 +362,180 @@ func _fresh_launch_commander_fit_beats_rotation_case() -> Dictionary:
 		"spawned_commander_id": String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
+
+func _generated_multi_town_front_distribution_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["generated_package_town_config"] = true
+	config["spawn_points"] = [{"x": 7, "y": 1}, {"x": 7, "y": 3}]
+	var state := _enemy_state(session)
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append({
+		"placement_id": "generated_front_distribution_existing_host",
+		"encounter_id": "encounter_mire_raid",
+		"x": 6,
+		"y": 1,
+		"spawn_origin_x": 7,
+		"spawn_origin_y": 1,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 2,
+		"arrived": false,
+		"target_kind": "explore",
+		"target_placement_id": "explore:5:1",
+		"target_label": "Existing frontier sweep",
+		"target_x": 5,
+		"target_y": 1,
+		"goal_x": 5,
+		"goal_y": 1,
+		"goal_distance": 1,
+		"enemy_army": {"id": "generated_front_distribution_host", "name": "Existing Host", "stacks": [{"unit_id": "unit_bog_brute", "count": 3}]},
+	})
+	session.overworld["encounters"] = encounters
+	state = _enemy_state(session)
+	var best_open := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
+		_fail("Generated multi-town launch repeated an occupied deployment origin instead of opening the unused front: %s" % JSON.stringify(best_open))
+		return {}
+	if not bool(best_open.get("spawn_plan_generated_front_distribution", false)) \
+			or int(best_open.get("spawn_plan_active_origin_count", -1)) != 0:
+		_fail("Generated multi-town launch omitted unused-front distribution evidence: %s" % JSON.stringify(best_open))
+		return {}
+	var spawn_result := EnemyTurnRules._spawn_raid(session, config, state, best_open)
+	if not bool(spawn_result.get("ok", false)):
+		_fail("Generated multi-town distributed spawn failed: %s" % JSON.stringify(spawn_result))
+		return {}
+	var raid := _latest_raid(session)
+	if int(raid.get("spawn_origin_x", -1)) != 7 or int(raid.get("spawn_origin_y", -1)) != 3:
+		_fail("Generated multi-town distributed host did not preserve its deployment origin: %s" % JSON.stringify(raid))
+		return {}
+	return {
+		"case_id": "generated_multi_town_ordinary_launch_uses_unoccupied_front",
+		"existing_origin": {"x": 7, "y": 1},
+		"selected_origin": {"x": int(best_open.get("x", 0)), "y": int(best_open.get("y", 0))},
+		"active_origin_count": int(best_open.get("spawn_plan_active_origin_count", -1)),
+		"spawn_plan_source": String(best_open.get("spawn_plan_source", "")),
+		"preserved_spawn_origin": {"x": int(raid.get("spawn_origin_x", -1)), "y": int(raid.get("spawn_origin_y", -1))},
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _rebuild_launch_waits_for_viable_commander_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["generated_package_town_config"] = true
+	config["spawn_points"] = [{"x": 7, "y": 1}, {"x": 7, "y": 3}]
+	_set_all_commander_continuity(session, [{"unit_id": "unit_mire_slinger", "count": 1}])
+	var state := _enemy_state(session)
+	state.erase("hero_task_state")
+	state["rebuild_pressure_request"] = {
+		"requested_day": int(session.day),
+		"origin_town_id": "duskfen_bastion",
+		"commander_id": "hero_tarn",
+		"reason": "no_spare_garrison_after_regroup",
+	}
+	_update_enemy_state(session, state)
+	var blocked_candidate := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if not blocked_candidate.is_empty():
+		_fail("Understrength rebuild roster bypassed target readiness through a scout launch: %s" % JSON.stringify(blocked_candidate))
+		return {}
+
+	_set_commander_continuity(
+		session,
+		"hero_tarn",
+		[
+			{"unit_id": "unit_bog_brute", "count": 12},
+			{"unit_id": "unit_mire_slinger", "count": 15},
+		]
+	)
+	state = _enemy_state(session)
+	var ready_candidate := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	if ready_candidate.is_empty():
+		_fail("Rebuilt commander did not reopen a viable strategic launch.")
+		return {}
+	if String(ready_candidate.get("spawn_plan_source", "")) != "fresh_target":
+		_fail("Rebuilt commander bypassed known strategic targets through a fallback launch: %s" % JSON.stringify(ready_candidate))
+		return {}
+	if not EnemyTurnRules._spawn_candidate_ready_without_immediate_regroup(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		ready_candidate,
+		{}
+	):
+		_fail("Rebuilt commander candidate still required immediate regroup: %s" % JSON.stringify(ready_candidate))
+		return {}
+	var immediate_patrol_candidate: Dictionary = ready_candidate.duplicate(true)
+	immediate_patrol_candidate["spawn_plan_target_kind"] = "explore"
+	immediate_patrol_candidate["spawn_plan_target_id"] = "explore:8:1"
+	immediate_patrol_candidate["spawn_plan_target_label"] = "Immediate patrol"
+	immediate_patrol_candidate["spawn_plan_target_x"] = 8
+	immediate_patrol_candidate["spawn_plan_target_y"] = 1
+	immediate_patrol_candidate["spawn_plan_goal_x"] = 8
+	immediate_patrol_candidate["spawn_plan_goal_y"] = 1
+	immediate_patrol_candidate["spawn_plan_goal_distance"] = 1
+	if EnemyTurnRules._spawn_candidate_ready_without_immediate_regroup(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		immediate_patrol_candidate,
+		{}
+	):
+		_fail("One-turn rebuild patrol was accepted even though launch advance would consume it immediately.")
+		return {}
+	return {
+		"case_id": "rebuild_pressure_waits_for_viable_commander_before_known_target_launch",
+		"understrength_launch_blocked": true,
+		"ready_commander_id": String(ready_candidate.get("roster_hero_id", "")),
+		"ready_spawn_plan_source": String(ready_candidate.get("spawn_plan_source", "")),
+		"ready_target_kind": String(ready_candidate.get("spawn_plan_target_kind", "")),
+		"ready_target_id": String(ready_candidate.get("spawn_plan_target_id", "")),
+		"immediate_patrol_launch_blocked": true,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _set_all_commander_continuity(session, stacks: Array) -> void:
+	var state := _enemy_state(session)
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	for index in range(roster.size()):
+		var entry: Dictionary = roster[index] if roster[index] is Dictionary else {}
+		var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+		commander_state = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			{"stacks": stacks.duplicate(true)},
+			"encounter_mire_raid"
+		)
+		entry["commander_state"] = commander_state
+		entry["army_continuity"] = EnemyAdventureRules.commander_army_continuity(commander_state)
+		entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+		roster[index] = entry
+	state["commander_roster"] = roster
+	_update_enemy_state(session, state)
+
+func _set_commander_continuity(session, actor_id: String, stacks: Array) -> void:
+	var state := _enemy_state(session)
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	for index in range(roster.size()):
+		var entry: Dictionary = roster[index] if roster[index] is Dictionary else {}
+		if String(entry.get("roster_hero_id", "")) != actor_id:
+			continue
+		var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+		commander_state = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			{"stacks": stacks.duplicate(true)},
+			"encounter_mire_raid"
+		)
+		entry["commander_state"] = commander_state
+		entry["army_continuity"] = EnemyAdventureRules.commander_army_continuity(commander_state)
+		entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+		roster[index] = entry
+		state["commander_roster"] = roster
+		_update_enemy_state(session, state)
+		return
+	_fail("Missing commander %s for continuity fixture." % actor_id)
 
 func _seed_task_board(session, tasks: Array) -> void:
 	var state := _enemy_state(session)

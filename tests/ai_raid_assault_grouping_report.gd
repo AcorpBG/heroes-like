@@ -32,6 +32,9 @@ func _run() -> void:
 	var neutral_town_fallback_case_report := _blocked_player_town_prefers_reachable_defended_neutral_town()
 	if neutral_town_fallback_case_report.is_empty():
 		return
+	var resource_traversal_case_report := _resource_visit_tile_allows_contest_route()
+	if resource_traversal_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -45,11 +48,106 @@ func _run() -> void:
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
 		"continued_route_pressure_case": continued_route_pressure_case_report,
 		"neutral_town_fallback_case": neutral_town_fallback_case_report,
+		"resource_traversal_case": resource_traversal_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _resource_visit_tile_allows_contest_route() -> Dictionary:
+	var session = _base_session()
+	session.overworld["map"] = [["grass", "grass", "grass", "grass", "grass"]]
+	session.overworld["map_size"] = {"width": 5, "height": 1}
+	session.overworld["towns"] = []
+	session.overworld["encounters"] = []
+	session.overworld["map_objects"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["player_heroes"] = []
+	session.overworld["hero"] = {}
+	session.overworld["resource_nodes"] = [{
+		"placement_id": "owned_corridor_site",
+		"site_id": "site_generated_town_required_source_cache",
+		"x": 3,
+		"y": 0,
+		"blocking_body": true,
+		"collected": true,
+		"collected_by_faction_id": "player",
+		"visit_tile": {"x": 2, "y": 0, "level": 0},
+		"package_block_tiles": [{"x": 2, "y": 0, "level": 0}],
+	}]
+	var owned_distance := EnemyAdventureRules._path_distance(
+		session,
+		Vector2i(0, 0),
+		[Vector2i(4, 0)],
+		"",
+		MIRECLAW
+	)
+	var opposing_distance := EnemyAdventureRules._path_distance(
+		session,
+		Vector2i(0, 0),
+		[Vector2i(4, 0)],
+		"",
+		"faction_sunvault"
+	)
+	if owned_distance != 4:
+		_fail("Faction-owned resource visit tile did not reopen its corridor: %d" % owned_distance)
+		return {}
+	if opposing_distance != 4:
+		_fail("Contesting faction could not route through a resource visit tile: %d" % opposing_distance)
+		return {}
+	var claim_id := EnemyAdventureRules._current_tile_contestable_resource_id(
+		session,
+		{"x": 2, "y": 0},
+		MIRECLAW
+	)
+	if claim_id != "owned_corridor_site":
+		_fail("AI did not recognize the offset visit tile as the resource interaction tile: %s" % claim_id)
+		return {}
+	var candidates := []
+	EnemyAdventureRules._append_resource_candidate(
+		session,
+		candidates,
+		{},
+		session.overworld.get("resource_nodes", [])[0],
+		Vector2i(0, 0),
+		{"faction_id": MIRECLAW},
+		MIRECLAW,
+		true
+	)
+	if candidates.size() != 1 \
+			or int(candidates[0].get("target_x", -1)) != 2 \
+			or int(candidates[0].get("goal_distance", -1)) != 2:
+		_fail("AI resource candidate did not target the offset visit tile: %s" % JSON.stringify(candidates))
+		return {}
+	var pickup := EnemyAdventureRules._resolve_opportunistic_route_objective(
+		session,
+		{"faction_id": MIRECLAW},
+		{
+			"placement_id": "offset_visit_pickup_raid",
+			"spawned_by_faction_id": MIRECLAW,
+			"x": 2,
+			"y": 0,
+			"target_kind": "explore",
+			"target_placement_id": "explore:4:0",
+			"enemy_army": {"stacks": [{"unit_id": "unit_bog_brute", "count": 3}]},
+		},
+		{},
+		MIRECLAW
+	)
+	if not bool(pickup.get("resolved", false)) \
+			or String(session.overworld.get("resource_nodes", [])[0].get("collected_by_faction_id", "")) != MIRECLAW:
+		_fail("AI did not capture the resource from its offset visit tile: %s" % JSON.stringify(pickup))
+		return {}
+	return {
+		"case_id": "resource_visit_tile_allows_contest_route",
+		"owned_distance": owned_distance,
+		"opposing_distance": opposing_distance,
+		"claim_id": claim_id,
+		"candidate_goal_x": int(candidates[0].get("target_x", -1)),
+		"candidate_goal_distance": int(candidates[0].get("goal_distance", -1)),
+		"visit_tile_pickup_resolved": bool(pickup.get("resolved", false)),
+	}
 
 func _river_pass_nearby_raids_group_for_town_assault() -> Dictionary:
 	var session = _base_session()
@@ -385,6 +483,27 @@ func _blocked_player_town_uses_persistent_frontier_pressure() -> Dictionary:
 	if String(reassigned.get("target_placement_id", "")) != String(assigned.get("target_placement_id", "")):
 		_fail("Active frontier pressure route churned before reaching its waypoint: %s" % JSON.stringify(reassigned))
 		return {}
+	var connected_pressure_count := EnemyAdventureRules._active_player_battle_pressure_raid_count(
+		session,
+		MIRECLAW,
+		String(raids[1].get("placement_id", "")),
+		raids[1]
+	)
+	if connected_pressure_count != 1:
+		_fail("Connected host did not recognize the existing player pressure route: %d" % connected_pressure_count)
+		return {}
+	var disconnected_probe: Dictionary = raids[1].duplicate(true)
+	disconnected_probe["x"] = 60
+	disconnected_probe["y"] = 1
+	var disconnected_pressure_count := EnemyAdventureRules._active_player_battle_pressure_raid_count(
+		session,
+		MIRECLAW,
+		String(disconnected_probe.get("placement_id", "")),
+		disconnected_probe
+	)
+	if disconnected_pressure_count != 0:
+		_fail("Disconnected host was incorrectly suppressed by another front's pressure route: %d" % disconnected_pressure_count)
+		return {}
 	return {
 		"case_id": "blocked_player_town_uses_persistent_frontier_pressure",
 		"active_raid_count": raids.size(),
@@ -393,6 +512,8 @@ func _blocked_player_town_uses_persistent_frontier_pressure() -> Dictionary:
 		"blocked_town_id": String(assigned.get("blocked_route_target_placement_id", "")),
 		"goal_distance": int(assigned.get("goal_distance", -1)),
 		"persistent_assignment": true,
+		"connected_pressure_count": connected_pressure_count,
+		"disconnected_pressure_count": disconnected_pressure_count,
 		"reason_codes": reason_codes,
 	}
 

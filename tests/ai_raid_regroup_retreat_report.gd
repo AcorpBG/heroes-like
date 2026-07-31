@@ -109,6 +109,7 @@ func _river_pass_understrength_raid_regroups() -> Dictionary:
 	session.overworld["encounters"] = encounters
 
 	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+	state = result.get("state", state)
 	var after_raid := _encounter(session, "regroup_vaska_understrength")
 	if after_raid.is_empty():
 		_fail("Regroup raid disappeared after advance.")
@@ -859,6 +860,7 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 		return {}
 	for expected_retry_count in [1, 2]:
 		result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		state = result.get("state", state)
 		after_raid = _encounter(session, "regroup_vaska_understrength")
 		if after_raid.is_empty():
 			_fail("Failed-regroup raid disappeared during bounded retry %d." % expected_retry_count)
@@ -868,6 +870,12 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 			return {}
 	if not bool(after_raid.get("raid_retired_to_rebuild", false)):
 		_fail("Failed-regroup raid did not retire into rebuild: %s" % JSON.stringify(after_raid))
+		return {}
+	var rebuild_request: Dictionary = state.get("rebuild_pressure_request", {}) if state.get("rebuild_pressure_request", {}) is Dictionary else {}
+	if String(rebuild_request.get("origin_town_id", "")) != "duskfen_bastion" \
+			or String(rebuild_request.get("commander_id", "")) != "hero_vaska" \
+			or int(rebuild_request.get("requested_day", 0)) != int(session.day):
+		_fail("Failed-regroup rebuild request was not returned through live empire state: %s" % JSON.stringify(rebuild_request))
 		return {}
 	if String(after_raid.get("target_kind", "")) != "" or bool(after_raid.get("arrived", false)):
 		_fail("Retired failed-regroup raid should clear target and stop applying pressure: %s" % JSON.stringify(after_raid))
@@ -917,6 +925,7 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 		"resource_controller_after": _resource_controller(session, "river_free_company"),
 		"commander_deployable_after": EnemyAdventureRules.commander_can_deploy(roster_entry),
 		"commander_rebuild_need": int(continuity.get("rebuild_need", 0)),
+		"rebuild_request": rebuild_request,
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
