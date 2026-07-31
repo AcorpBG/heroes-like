@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context and honors superior-hero recovery windows. Exact-current-code ordinal 90 passes its 56-turn row; the six earlier credited rows are historical after the behavior fix because retained reports cannot prove the changed threat-delay state was untouched.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinal 91 passes its 56-turn row; earlier credited rows are historical after behavior changes.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Medium ordinal 90 is the sole exact-current-code target row after the threat-recovery behavior fix. It passes 56/56 turns with signature a7b72b21, 260 activity events, 46 assignments, two successful battle autoresolutions, three contested sites, zero stalls, zero behavior bugs, zero integrity violations, and zero unreachable targets. Earlier ordinals 14, 84, 86, 87, 88, and 89 remain historical because their retained reports cannot prove the changed threat-delay branch was untouched. The focused regroup and hero-hunt suites are green; 99 target rows remain.",
+  "currentSliceNotes": "Medium ordinal 91 is the sole exact-current-code target row after the defended-neutral battle-pressure fallback. It passes 56/56 turns with signature 59900a4a, 70 activity events, 59 assignments, two sites seized, zero behavior bugs, zero integrity violations, and zero unreachable targets. The seed never discovers a known reachable neutral fallback and remains battle-free with 27 quiet turns, so topology/exploration pacing remains open. Earlier ordinals 14, 84, 86, 87, 88, 89, and 90 are historical; 99 target rows remain.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-07-31T19:22:14Z",
+  "currentSliceUpdatedAt": "2026-07-31T19:57:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61066,7 +61066,9 @@
         "Final-code Medium ordinal 89 completes 56/56 turns with row signature 6385cffc, 85 activity events, 63 assignments, four sites seized, 15 quiet turns (27%), six active raids, one natural town-defense loss/autoresolution, zero behavior bugs, zero target-integrity violations, and zero unreachable targets. Exact non-runtime behavior matches baseline while row runtime falls from 461132ms to 458446ms, maximum turn runtime falls from 21136ms to 19735ms, and profiled active-front candidate work on the post-capture turn falls from 4459ms to 3359ms. Six exact current-code rows pass and 94 remain.",
         "The formerly failing standalone regroup/retreat and hero-hunt suites are green again. Superior-player-hero avoidance now honors player_threat_avoidance_delay_until_day at the regroup town instead of resuming the dangerous objective on the same day; legacy regroup fixtures now use legal multi-tile-pathing origins and assert the current reachable-retask and bounded no-spare retry lifecycles.",
         "The threat-recovery fix changes strategic runtime behavior after ordinals 14, 84, 86, 87, 88, and 89 were run. Their retained long-run reports do not preserve active-raid reason codes or player_threat_avoidance_delay_until_day, so absence of threat markers in those logs cannot prove the changed branch was untouched. Those six rows are reclassified as historical evidence rather than exact-current-code matrix credit.",
-        "Exact-current-code Medium ordinal 90 passes all 56 turns with row signature a7b72b21, 260 activity events, 46 target assignments, two successful autoresolutions (hero intercept and town defense), three contested sites, zero site seizures, zero stalled turns, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 451021ms with a 16156ms maximum turn. One exact-current-code row passes and 99 remain."
+        "Exact-current-code Medium ordinal 90 passes all 56 turns with row signature a7b72b21, 260 activity events, 46 target assignments, two successful autoresolutions (hero intercept and town defense), three contested sites, zero site seizures, zero stalled turns, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 451021ms with a 16156ms maximum turn. One exact-current-code row passes and 99 remain.",
+        "Ordinal 91 exposes a battle-pressure selection gap: two factions repeatedly reserve hosts for path-inaccessible Riverwatch Hold frontier approaches while four neutral towns remain, and the pressure floor rejects every non-player town. Battle-pressure selection now prefers a known reachable defended neutral town when no reachable player town or hero exists, including replacing an active frontier-only route and clearing stale blocked-route metadata without bypassing known-world visibility.",
+        "The defended-neutral fallback is a real runtime correction with focused coverage, but ordinal 91 does not exercise it because its hosts never know a reachable defended neutral town. The fallback reuses the already-built candidate array rather than repeating target discovery. Exact-current-code ordinal 91 preserves row signature 59900a4a and passes 56/56 turns with 70 activity events, 59 assignments, two sites seized, zero behavior, integrity, or reachability failures, 438555ms runtime, and 9548ms maximum turn. It remains battle-free with 27 quiet turns (48%) and six final encounter/exploration hosts; topology/exploration pacing remains open. Ordinal 90 is historical after this behavior change, leaving one exact-current-code row and 99 remaining."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61079,9 +61081,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes, reuses invariant town/front plus active-front spawn-point context, and holds superior-hero avoidance through its declared regroup recovery window. Exact-current-code ordinal 90 passes 56/56 turns with two successful battle autoresolutions and no stalls, behavior bugs, integrity violations, or unreachable targets. Ordinals 14, 84, 86, 87, 88, and 89 are historical after the threat-recovery behavior fix because their retained reports cannot prove that changed state was untouched. The focused regroup/retreat and hero-hunt suites are green; 99 target rows remain open.",
+      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes, reuses invariant town/front plus active-front spawn-point context, holds superior-hero avoidance through its recovery window, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinal 91 passes 56/56 turns with no behavior, integrity, or reachability failures, but remains battle-free with 27 quiet turns because this seed never exposes a known reachable neutral fallback. Earlier credited rows are historical after behavior changes; 99 target rows and the topology/exploration pacing gap remain open.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-07-31T19:22:14Z",
+      "updatedAt": "2026-07-31T19:57:45Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61486,7 +61488,22 @@
         {
           "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=89 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 90 passes 56/56 turns with row signature a7b72b21, 260 activity events, 46 assignments, two successful autoresolutions, three contested sites, zero stalls, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 451021ms with a 16156ms maximum turn. Earlier credited rows predate the threat-recovery behavior fix and are historical, leaving 99 exact-current-code target rows open.",
-          "status": "pass_with_remaining_99_row_production_gap"
+          "status": "historical_pass_superseded_by_defended_neutral_behavior_change"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_assault_grouping_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_neutral_town_expansion_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_known_world_memory_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_raid_regroup_retreat_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "notes": "Assault grouping proves inaccessible player-route pressure prefers a known reachable defended neutral town while preserving persistent frontier routes when no such town is known. Neutral-town assault, hidden-target known-world boundaries, regroup/retreat, and superior-hero recovery all pass.",
+          "status": "pass"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=90 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 91 passes 56/56 turns with row signature 59900a4a, 70 activity events, 59 assignments, two sites seized, zero behavior bugs, zero integrity violations, and zero unreachable targets. Candidate reuse preserves all behavior while runtime is 438555ms with a 9548ms maximum turn. The fallback is not exercised; the row remains battle-free with 27 quiet turns and keeps topology/exploration pacing open. One exact-current-code row passes and 99 remain.",
+          "status": "pass_with_remaining_99_row_production_gap_and_pacing_caveat"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check",
+          "notes": "Strategic baseline, tactical battle smoke, repository validation, tracker JSON validation, and diff checks pass after the defended-neutral fallback implementation.",
+          "status": "pass_with_existing_production_gap"
         }
       ]
     },
@@ -62393,9 +62410,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero regroup recovery windows, and exact-current-code ordinal 90 passes its target-configured 56-turn trajectory. Earlier ordinals 14, 84, 86, 87, 88, and 89 remain historical after the behavior change; the focused regroup/retreat and hero-hunt suites are green. 99 target rows and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinal 91 passes its 56-turn trajectory; earlier credited rows are historical after behavior changes. The row remains battle-free with 27 quiet turns, so 99 target rows, topology/exploration pacing, and the overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-07-31T19:22:14Z",
+  "updatedAt": "2026-07-31T19:57:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

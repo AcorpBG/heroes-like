@@ -874,19 +874,35 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		return raid
 	if current_kind not in ["resource", "regroup", "explore", "encounter", "artifact"]:
 		return raid
-	if _raid_has_active_player_battle_pressure_route(session, raid):
-		return raid
 	if raid_regroup_needed(raid, config, faction_id):
-		return raid
-	var placement_id := String(raid.get("placement_id", ""))
-	if _active_player_battle_pressure_raid_count(session, faction_id, placement_id) > 0:
 		return raid
 	var active_count := _active_raid_count_for_faction(session, faction_id)
 	if active_count < RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS:
 		return raid
+	if _raid_has_active_player_battle_pressure_route(session, raid):
+		var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+		if "pressure_route_frontier" in active_reason_codes:
+			var route_candidates := _target_candidates(
+				session,
+				config,
+				Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+			)
+			var neutral_fallback := _battle_pressure_floor_defended_neutral_town_candidate(
+				session,
+				raid,
+				active_count,
+				route_candidates
+			)
+			if not neutral_fallback.is_empty():
+				return _replace_battle_pressure_route_with_candidate(raid, neutral_fallback)
+		return raid
+	var placement_id := String(raid.get("placement_id", ""))
+	if _active_player_battle_pressure_raid_count(session, faction_id, placement_id) > 0:
+		return raid
 	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var target_candidates := _target_candidates(session, config, origin)
 	var best := {}
-	for candidate_value in _target_candidates(session, config, origin):
+	for candidate_value in target_candidates:
 		if not (candidate_value is Dictionary):
 			continue
 		var candidate: Dictionary = candidate_value.duplicate(true)
@@ -917,6 +933,16 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		if best.is_empty() or _candidate_beats(candidate, best):
 			best = candidate
 	if best.is_empty():
+		var neutral_fallback := _battle_pressure_floor_defended_neutral_town_candidate(
+			session,
+			raid,
+			active_count,
+			target_candidates
+		)
+		if not neutral_fallback.is_empty():
+			var neutral_updated := raid.duplicate(true)
+			neutral_updated.merge(neutral_fallback, true)
+			return neutral_updated
 		var route_clearance := _battle_pressure_floor_route_clearance_plan(session, config, raid, faction_id, active_count)
 		if not route_clearance.is_empty():
 			var route_updated := raid.duplicate(true)
@@ -925,6 +951,65 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		return raid
 	var updated := raid.duplicate(true)
 	updated.merge(best, true)
+	return updated
+
+static func _battle_pressure_floor_defended_neutral_town_candidate(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	active_count: int,
+	target_candidates: Array
+) -> Dictionary:
+	if session == null or raid.is_empty():
+		return {}
+	var best := {}
+	for candidate_value in target_candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value.duplicate(true)
+		if String(candidate.get("target_kind", "")) != "town":
+			continue
+		var town_result := _find_town_by_placement(session, String(candidate.get("target_placement_id", "")))
+		var town: Dictionary = town_result.get("town", {}) if town_result.get("town", {}) is Dictionary else {}
+		if int(town_result.get("index", -1)) < 0 \
+				or String(town.get("owner", "neutral")) != "neutral" \
+				or _town_garrison_strength(town) <= 0:
+			continue
+		var goal_distance := int(candidate.get("goal_distance", 9999))
+		if goal_distance < 0 or goal_distance >= 9999:
+			continue
+		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
+		if "battle_pressure_floor" not in reason_codes:
+			reason_codes.append("battle_pressure_floor")
+		candidate["previous_target_kind"] = String(raid.get("target_kind", ""))
+		candidate["previous_target_placement_id"] = String(raid.get("target_placement_id", ""))
+		candidate["previous_target_label"] = String(raid.get("target_label", ""))
+		candidate["target_reason_codes"] = reason_codes
+		candidate["priority"] = max(
+			0,
+			int(candidate.get("priority", 0))
+			+ RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS
+			+ min(80, max(0, int(session.day) - RAID_BATTLE_PRESSURE_FLOOR_DAY) * 8)
+			+ (active_count * 6)
+		)
+		candidate["target_public_reason"] = "expanding the battle front"
+		candidate["target_public_importance"] = "high"
+		candidate["target_debug_reason"] = "player battle target was unreachable; selecting known reachable defended neutral town"
+		if best.is_empty() or _candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _replace_battle_pressure_route_with_candidate(raid: Dictionary, candidate: Dictionary) -> Dictionary:
+	var updated := raid.duplicate(true)
+	for key in [
+		"blocked_route_target_kind",
+		"blocked_route_target_placement_id",
+		"blocked_route_target_label",
+		"route_unreachable_started_day",
+		"route_unreachable_day",
+	]:
+		updated.erase(key)
+	updated.merge(candidate, true)
+	updated["arrived"] = false
 	return updated
 
 static func _active_raid_count_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
