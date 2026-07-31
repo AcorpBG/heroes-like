@@ -13462,6 +13462,7 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         "func town_reinforcement_quality",
         "func town_battle_readiness",
         "func town_pressure_output",
+        "func town_development_metrics",
         "func town_recruit_cost",
         "func get_town_build_status",
         "func _normalize_built_buildings_for_town_state",
@@ -13987,7 +13988,6 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         "EnemyAdventureRulesScript.normalize_raid_armies",
         "OverworldRulesScript.town_income",
         "OverworldRulesScript.town_weekly_growth",
-        "OverworldRulesScript.town_reinforcement_quality",
         "OverworldRulesScript.town_battle_readiness",
         "OverworldRulesScript.town_pressure_output",
         "OverworldRulesScript.can_afford_cost_with_town_market",
@@ -14004,6 +14004,12 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         "func _captured_artifact_pressure_bonus",
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required empire-management token: {required_token}")
+    ensure(
+        "OverworldRulesScript.town_reinforcement_quality" in enemy_turn_text
+        or "OverworldRulesScript.town_development_metrics" in enemy_turn_text,
+        errors,
+        "EnemyTurnRules.gd must consume shared town reinforcement/development metrics",
+    )
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (

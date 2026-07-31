@@ -4064,13 +4064,14 @@ static func _town_build_score_context(
 ) -> Dictionary:
 	_town_build_profile_count("town_score_context_count")
 	var started_usec := _town_build_profile_timer()
+	var current_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)
 	var context := {
 		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
 		"current_income": OverworldRulesScript.town_income(town, session),
-		"current_quality": OverworldRulesScript.town_reinforcement_quality(town, session),
-		"current_readiness": OverworldRulesScript.town_battle_readiness(town, session),
-		"current_pressure": OverworldRulesScript.town_pressure_output(town, session),
-		"current_recovery": OverworldRulesScript.town_recovery_state(session, town),
+		"current_quality": int(current_metrics.get("reinforcement_quality", 0)),
+		"current_readiness": int(current_metrics.get("battle_readiness", 0)),
+		"current_pressure": int(current_metrics.get("pressure_output", 0)),
+		"current_recovery": current_metrics.get("recovery", {}),
 		"current_market": OverworldRulesScript.town_market_state(town),
 		"town_front": OverworldRulesScript.town_front_state(session, town),
 		"town_role": OverworldRulesScript.town_strategic_role(town),
@@ -4109,11 +4110,12 @@ static func _build_candidate_score_breakdown(
 		built_buildings = []
 	built_buildings.append(building_id)
 	projected_town["built_buildings"] = built_buildings
+	var projected_metrics: Dictionary = OverworldRulesScript.town_development_metrics(projected_town, session)
 	var projected_income: Dictionary = OverworldRulesScript.town_income(projected_town, session)
-	var projected_quality: int = OverworldRulesScript.town_reinforcement_quality(projected_town, session)
-	var projected_readiness: int = OverworldRulesScript.town_battle_readiness(projected_town, session)
-	var projected_pressure: int = OverworldRulesScript.town_pressure_output(projected_town, session)
-	var projected_recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, projected_town)
+	var projected_quality := int(projected_metrics.get("reinforcement_quality", 0))
+	var projected_readiness := int(projected_metrics.get("battle_readiness", 0))
+	var projected_pressure := int(projected_metrics.get("pressure_output", 0))
+	var projected_recovery: Dictionary = projected_metrics.get("recovery", {})
 	var projected_market: Dictionary = OverworldRulesScript.town_market_state(projected_town)
 	_town_build_profile_add_ms("projected_town_state_ms", started_usec)
 	started_usec = _town_build_profile_timer()

@@ -4132,6 +4132,25 @@ static func town_battle_readiness(town: Dictionary, session: SessionStateStoreSc
 static func town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
 	return _town_pressure_output(town, session)
 
+static func town_development_metrics(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	var logistics := _town_logistics_state(session, town) if session != null else _empty_town_logistics_state()
+	var recovery := _town_recovery_state(session, town, logistics)
+	var capital_project := _town_capital_project_state(town, session, logistics, recovery)
+	var occupation := _town_occupation_state(session, town)
+	var context := {
+		"logistics": logistics,
+		"recovery": recovery,
+		"capital_project": capital_project,
+		"occupation": occupation,
+	}
+	var quality := _town_reinforcement_quality(town, session, context)
+	return {
+		"reinforcement_quality": quality,
+		"battle_readiness": _town_battle_readiness(town, session, context, quality),
+		"pressure_output": _town_pressure_output(town, session, context, quality),
+		"recovery": recovery,
+	}
+
 static func town_strategic_role(town: Dictionary) -> String:
 	return _town_strategic_role(town)
 
@@ -8022,81 +8041,133 @@ static func _seed_recruits_for_town(town: Dictionary) -> Dictionary:
 	normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 	return _seed_scenario_recruits_for_town_state(normalized_town)
 
-static func _town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+static func _town_weekly_growth(
+	town: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	metric_context: Dictionary = {}
+) -> Dictionary:
 	var growth := _seed_recruits_for_town(town)
 	if session == null:
 		return growth
 	var growth_percent := 0
-	var logistics := _town_logistics_state(session, town)
+	var logistics: Dictionary = metric_context.get("logistics", {})
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
 	growth_percent += int(logistics.get("growth_bonus_percent", 0))
 	growth_percent += int(logistics.get("response_growth_bonus_percent", 0))
 	growth_percent -= int(logistics.get("gap_growth_penalty_percent", 0))
-	var recovery := _town_recovery_state(session, town)
+	var recovery: Dictionary = metric_context.get("recovery", {})
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
 	growth_percent -= int(recovery.get("growth_penalty_percent", 0))
-	var capital_project := _town_capital_project_state(town, session)
+	var capital_project: Dictionary = metric_context.get("capital_project", {})
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	growth_percent -= int(capital_project.get("growth_penalty_percent", 0))
-	var occupation := _town_occupation_state(session, town)
+	var occupation: Dictionary = metric_context.get("occupation", {})
+	if occupation.is_empty():
+		occupation = _town_occupation_state(session, town)
 	growth_percent -= int(occupation.get("growth_penalty_percent", 0))
 	return _apply_recruit_percent(growth, growth_percent)
 
-static func _town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	var quality := _weighted_recruit_value(_town_weekly_growth(town, session))
+static func _town_reinforcement_quality(
+	town: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	metric_context: Dictionary = {}
+) -> int:
+	var quality := _weighted_recruit_value(_town_weekly_growth(town, session, metric_context))
 	quality += _town_role_quality_bonus(_town_strategic_role(town))
-	var logistics := _town_logistics_state(session, town)
+	var logistics: Dictionary = metric_context.get("logistics", {})
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
 	quality += int(logistics.get("quality_bonus", 0))
 	quality += int(logistics.get("response_quality_bonus", 0))
 	quality -= int(logistics.get("gap_quality_penalty", 0))
-	var recovery := _town_recovery_state(session, town)
+	var recovery: Dictionary = metric_context.get("recovery", {})
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
 	quality -= int(recovery.get("quality_penalty", 0))
-	var capital_project := town_capital_project_state(town, session)
+	var capital_project: Dictionary = metric_context.get("capital_project", {})
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	quality += int(capital_project.get("quality_bonus", 0))
 	quality -= int(capital_project.get("quality_penalty", 0))
-	var occupation := _town_occupation_state(session, town)
+	var occupation: Dictionary = metric_context.get("occupation", {})
+	if occupation.is_empty():
+		occupation = _town_occupation_state(session, town)
 	quality -= int(occupation.get("quality_penalty", 0))
 	return max(0, quality)
 
-static func _town_battle_readiness(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
+static func _town_battle_readiness(
+	town: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	metric_context: Dictionary = {},
+	reinforcement_quality: int = -1
+) -> int:
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
 	var readiness := int(round(float(_town_garrison_strength(town)) / 12.0))
-	readiness += int(round(float(_town_reinforcement_quality(town, session)) / 6.0))
+	var quality := reinforcement_quality if reinforcement_quality >= 0 else _town_reinforcement_quality(town, session, metric_context)
+	readiness += int(round(float(quality) / 6.0))
 	readiness += _readiness_bonus_from_profile(faction.get("recruitment", {}))
 	readiness += _readiness_bonus_from_profile(town_template.get("recruitment", {}))
 	readiness += _town_building_bonus_total(town, "readiness_bonus")
 	readiness += _town_spell_tier(town) * 6
 	readiness += _town_role_readiness_bonus(_town_strategic_role(town))
-	var logistics := _town_logistics_state(session, town)
+	var logistics: Dictionary = metric_context.get("logistics", {})
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
 	readiness += int(logistics.get("readiness_bonus", 0))
 	readiness += int(logistics.get("response_readiness_bonus", 0))
 	readiness -= int(logistics.get("gap_readiness_penalty", 0))
-	var recovery := _town_recovery_state(session, town)
+	var recovery: Dictionary = metric_context.get("recovery", {})
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
 	readiness -= int(recovery.get("readiness_penalty", 0))
-	var capital_project := town_capital_project_state(town, session)
+	var capital_project: Dictionary = metric_context.get("capital_project", {})
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	readiness += int(round(float(int(capital_project.get("defense_bonus", 0))) / 8.0))
 	readiness -= int(capital_project.get("readiness_penalty", 0))
-	var occupation := _town_occupation_state(session, town)
+	var occupation: Dictionary = metric_context.get("occupation", {})
+	if occupation.is_empty():
+		occupation = _town_occupation_state(session, town)
 	readiness -= int(occupation.get("readiness_penalty", 0))
 	return max(0, readiness)
 
-static func _town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
+static func _town_pressure_output(
+	town: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	metric_context: Dictionary = {},
+	reinforcement_quality: int = -1
+) -> int:
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
 	var pressure := _pressure_bonus_from_profile(faction.get("economy", {}))
 	pressure += _pressure_bonus_from_profile(town_template.get("economy", {}))
 	pressure += _town_building_bonus_total(town, "pressure_bonus")
-	pressure += int(floor(float(_town_reinforcement_quality(town, session)) / 18.0))
+	var quality := reinforcement_quality if reinforcement_quality >= 0 else _town_reinforcement_quality(town, session, metric_context)
+	pressure += int(floor(float(quality) / 18.0))
 	pressure += max(0, _town_spell_tier(town) - 1)
 	pressure += _town_role_pressure_bonus(_town_strategic_role(town))
-	var logistics := _town_logistics_state(session, town)
+	var logistics: Dictionary = metric_context.get("logistics", {})
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
 	pressure += int(logistics.get("pressure_bonus", 0))
 	pressure += int(logistics.get("response_pressure_bonus", 0))
 	pressure -= int(logistics.get("gap_pressure_penalty", 0))
-	var recovery := _town_recovery_state(session, town)
+	var recovery: Dictionary = metric_context.get("recovery", {})
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
 	pressure -= int(recovery.get("pressure_penalty", 0))
-	var capital_project := town_capital_project_state(town, session)
+	var capital_project: Dictionary = metric_context.get("capital_project", {})
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	pressure += int(capital_project.get("pressure_bonus", 0))
 	pressure -= int(capital_project.get("pressure_penalty", 0))
-	var occupation := _town_occupation_state(session, town)
+	var occupation: Dictionary = metric_context.get("occupation", {})
+	if occupation.is_empty():
+		occupation = _town_occupation_state(session, town)
 	pressure -= int(occupation.get("pressure_penalty", 0))
 	return max(0, pressure)
 
@@ -8278,10 +8349,14 @@ static func _town_logistics_state(session: SessionStateStoreScript.SessionData, 
 		"gap_growth_penalty_percent": int(gap_penalties.get("growth_penalty_percent", 0)),
 	}
 
-static func _town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+static func _town_recovery_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	logistics_state: Dictionary = {}
+) -> Dictionary:
 	var recovery := _normalize_town_recovery_state(town.get("recovery", {}))
 	var pressure = max(0, int(recovery.get("pressure", 0)))
-	var relief_rating := _town_recovery_relief_rating(session, town)
+	var relief_rating := _town_recovery_relief_rating(session, town, logistics_state)
 	var relief_per_day = max(1, 1 + int(floor(float(relief_rating) / 3.0)))
 	var readiness_penalty = pressure * 6
 	var quality_penalty = pressure * 4
@@ -8434,7 +8509,12 @@ static func _town_role_label(role: String) -> String:
 		_:
 			return "Frontier Town"
 
-static func _town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+static func _town_capital_project_state(
+	town: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	logistics_state: Dictionary = {},
+	recovery_state: Dictionary = {}
+) -> Dictionary:
 	var project_ids := _town_capital_project_ids(town)
 	var built_buildings := _normalize_built_buildings_for_town_state(town)
 	var active_ids := []
@@ -8496,8 +8576,8 @@ static func _town_capital_project_state(town: Dictionary, session: SessionStateS
 	if session != null:
 		if support_requirements.is_empty():
 			support_requirements = _normalize_support_requirements(_town_logistics_plan(town).get("support_requirements", {}))
-		var logistics := _town_logistics_state(session, town)
-		var recovery := _town_recovery_state(session, town)
+		var logistics := logistics_state if not logistics_state.is_empty() else _town_logistics_state(session, town)
+		var recovery := recovery_state if not recovery_state.is_empty() else _town_recovery_state(session, town, logistics)
 		var requirement_progress := _support_requirement_progress(
 			logistics.get("family_counts", {}),
 			support_requirements
@@ -9164,9 +9244,13 @@ static func _release_town_occupation_reserves(town: Dictionary) -> Dictionary:
 	town["occupation"] = _normalize_town_occupation_state({})
 	return town
 
-static func _town_recovery_relief_rating(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
+static func _town_recovery_relief_rating(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	logistics_state: Dictionary = {}
+) -> int:
 	var relief := int(_town_logistics_plan(town).get("recovery_relief", 0))
-	var logistics := _town_logistics_state(session, town)
+	var logistics := logistics_state if not logistics_state.is_empty() else _town_logistics_state(session, town)
 	relief += _town_building_bonus_total(town, "recovery_relief")
 	relief += int(logistics.get("recovery_relief_bonus", 0))
 	relief += int(logistics.get("response_recovery_relief_bonus", 0))
