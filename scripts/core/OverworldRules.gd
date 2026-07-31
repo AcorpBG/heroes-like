@@ -4148,7 +4148,10 @@ static func town_development_metrics(town: Dictionary, session: SessionStateStor
 		"reinforcement_quality": quality,
 		"battle_readiness": _town_battle_readiness(town, session, context, quality),
 		"pressure_output": _town_pressure_output(town, session, context, quality),
+		"logistics": logistics,
 		"recovery": recovery,
+		"capital_project": capital_project,
+		"occupation": occupation,
 	}
 
 static func town_strategic_role(town: Dictionary) -> String:
