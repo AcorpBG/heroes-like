@@ -13,6 +13,8 @@ static var _spawn_loop_profile_active := false
 static var _spawn_loop_profile: Dictionary = {}
 static var _reinforcement_profile_active := false
 static var _reinforcement_profile: Dictionary = {}
+static var _town_build_profile_active := false
+static var _town_build_profile: Dictionary = {}
 
 const TRACKED_RESOURCES := [
 	"gold",
@@ -337,6 +339,34 @@ static func _reinforcement_profile_count(key: String, amount: int = 1) -> void:
 	counts[key] = int(counts.get(key, 0)) + amount
 	_reinforcement_profile["counts"] = counts
 
+static func _town_build_profile_begin(enabled: bool) -> void:
+	_town_build_profile_active = enabled
+	_town_build_profile = {"schema_id": "strategic_ai_town_build_profile_v1", "phases_ms": {}, "counts": {}} if enabled else {}
+
+static func _town_build_profile_finish() -> Dictionary:
+	var profile := _town_build_profile.duplicate(true) if _town_build_profile_active else {}
+	_town_build_profile_active = false
+	_town_build_profile = {}
+	return profile
+
+static func _town_build_profile_timer() -> int:
+	return Time.get_ticks_usec() if _town_build_profile_active else 0
+
+static func _town_build_profile_add_ms(key: String, started_usec: int) -> void:
+	if not _town_build_profile_active or key == "" or started_usec <= 0:
+		return
+	var phases: Dictionary = _town_build_profile.get("phases_ms", {}) if _town_build_profile.get("phases_ms", {}) is Dictionary else {}
+	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
+	phases[key] = int(phases.get(key, 0)) + elapsed_ms
+	_town_build_profile["phases_ms"] = phases
+
+static func _town_build_profile_count(key: String, amount: int = 1) -> void:
+	if not _town_build_profile_active or key == "":
+		return
+	var counts: Dictionary = _town_build_profile.get("counts", {}) if _town_build_profile.get("counts", {}) is Dictionary else {}
+	counts[key] = int(counts.get(key, 0)) + amount
+	_town_build_profile["counts"] = counts
+
 static func _enemy_turn_result(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"ok": ok, "message": message, "events": events}
 	if profile_enabled:
@@ -616,13 +646,14 @@ static func town_build_pressure_report(
 	faction_id: String
 ) -> Dictionary:
 	var candidates := []
+	var score_context := _town_build_score_context(session, town, config, faction_id)
 	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
 			continue
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
-		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id, score_context)
 		var pacing_report := _enemy_town_development_pacing_report(session, town, String(building_id))
 		breakdown["affordable"] = OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day))
 		breakdown["pacing_eligible"] = bool(pacing_report.get("pacing_eligible", true))
@@ -1033,12 +1064,16 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "pre_build_task_plan_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
+	_town_build_profile_begin(profile_enabled)
 	var build_result := _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
 	var build_messages: Array = build_result.get("messages", [])
 	if not build_messages.is_empty():
 		messages.append_array(build_messages)
 	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
+	var town_build_profile := _town_build_profile_finish()
+	if profile_enabled and not town_build_profile.is_empty():
+		profile["town_build_profile"] = town_build_profile
 	_profile_add_ms(profile, "town_build_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -3925,6 +3960,7 @@ static func _enemy_town_build_candidates(
 	faction_id: String
 ) -> Array:
 	var candidates := []
+	var score_context := _town_build_score_context(session, town, config, faction_id)
 	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
@@ -3935,7 +3971,7 @@ static func _enemy_town_build_candidates(
 			continue
 		if not _enemy_town_development_pacing_allows_build(session, town, String(building_id)):
 			continue
-		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id, score_context)
 		var candidate := breakdown.duplicate(true)
 		candidate["town_index"] = town_index
 		candidate["town_placement_id"] = String(town.get("placement_id", ""))
@@ -3965,23 +4001,53 @@ static func _score_build_candidate(
 ) -> float:
 	return float(_build_candidate_score_breakdown(session, town, building, cost, config, faction_id).get("final_score", 0.0))
 
+static func _town_build_score_context(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	config: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	_town_build_profile_count("town_score_context_count")
+	var started_usec := _town_build_profile_timer()
+	var context := {
+		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
+		"current_income": OverworldRulesScript.town_income(town, session),
+		"current_quality": OverworldRulesScript.town_reinforcement_quality(town, session),
+		"current_readiness": OverworldRulesScript.town_battle_readiness(town, session),
+		"current_pressure": OverworldRulesScript.town_pressure_output(town, session),
+		"current_recovery": OverworldRulesScript.town_recovery_state(session, town),
+		"current_market": OverworldRulesScript.town_market_state(town),
+		"town_front": OverworldRulesScript.town_front_state(session, town),
+		"town_role": OverworldRulesScript.town_strategic_role(town),
+		"garrison_below_target": _desired_town_strength(session, town, config) > _army_strength(town.get("garrison", [])),
+		"raid_capacity_available": active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id),
+		"planned_target": _best_planned_task_recruitment_target(session, config, faction_id, town),
+	}
+	_town_build_profile_add_ms("current_town_state_ms", started_usec)
+	return context
+
 static func _build_candidate_score_breakdown(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	building: Dictionary,
 	cost: Dictionary,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	score_context: Dictionary = {}
 ) -> Dictionary:
-	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	_town_build_profile_count("candidate_score_count")
+	var started_usec := _town_build_profile_timer()
+	var context := score_context if not score_context.is_empty() else _town_build_score_context(session, town, config, faction_id)
+	var strategy = context.get("strategy", {})
 	var building_id = String(building.get("id", ""))
-	var current_income: Dictionary = OverworldRulesScript.town_income(town, session)
-	var current_quality: int = OverworldRulesScript.town_reinforcement_quality(town, session)
-	var current_readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
-	var current_pressure: int = OverworldRulesScript.town_pressure_output(town, session)
-	var current_recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
-	var current_market: Dictionary = OverworldRulesScript.town_market_state(town)
-	var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var current_income: Dictionary = context.get("current_income", {})
+	var current_quality := int(context.get("current_quality", 0))
+	var current_readiness := int(context.get("current_readiness", 0))
+	var current_pressure := int(context.get("current_pressure", 0))
+	var current_recovery: Dictionary = context.get("current_recovery", {})
+	var current_market: Dictionary = context.get("current_market", {})
+	var town_front: Dictionary = context.get("town_front", {})
+	started_usec = _town_build_profile_timer()
 	var projected_town = town.duplicate(true)
 	var built_buildings = projected_town.get("built_buildings", [])
 	if not (built_buildings is Array):
@@ -3994,7 +4060,9 @@ static func _build_candidate_score_breakdown(
 	var projected_pressure: int = OverworldRulesScript.town_pressure_output(projected_town, session)
 	var projected_recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, projected_town)
 	var projected_market: Dictionary = OverworldRulesScript.town_market_state(projected_town)
-	var town_role: String = OverworldRulesScript.town_strategic_role(town)
+	_town_build_profile_add_ms("projected_town_state_ms", started_usec)
+	started_usec = _town_build_profile_timer()
+	var town_role := String(context.get("town_role", ""))
 	var capital_project = building.get("capital_project", {})
 	var marginal_income = _resource_value(_subtract_resource_pools(projected_income, current_income))
 	var growth_value = 0.0
@@ -4053,12 +4121,12 @@ static func _build_candidate_score_breakdown(
 		upgrade_bonus = 90.0
 		score += upgrade_bonus
 	var garrison_need_bonus := 0.0
-	if _desired_town_strength(session, town, config) > _army_strength(town.get("garrison", [])):
+	if bool(context.get("garrison_below_target", false)):
 		if category in ["support", "dwelling"]:
 			garrison_need_bonus = 120.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
 			score += garrison_need_bonus
 	var raid_need_bonus := 0.0
-	if active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id) and category == "dwelling":
+	if bool(context.get("raid_capacity_available", false)) and category == "dwelling":
 		raid_need_bonus = 90.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
 		score += raid_need_bonus
 	var front_bonus := 0.0
@@ -4078,8 +4146,10 @@ static func _build_candidate_score_breakdown(
 		category,
 		growth_value,
 		quality_value,
-		readiness_value
+		readiness_value,
+		context.get("planned_target", {})
 	)
+	_town_build_profile_add_ms("candidate_scoring_ms", started_usec)
 	score += planned_task_build_bonus
 	var project_bonus := 0.0
 	var role_bonus := 0.0
@@ -4159,11 +4229,11 @@ static func _planned_task_build_preparation_bonus(
 	category: String,
 	growth_value: float,
 	quality_value: float,
-	readiness_value: float
+	readiness_value: float,
+	planned_target: Dictionary
 ) -> float:
 	if session == null or faction_id == "" or town.is_empty() or building.is_empty():
 		return 0.0
-	var planned_target := _best_planned_task_recruitment_target(session, config, faction_id, town)
 	if planned_target.is_empty() or int(planned_target.get("need", 0)) <= 0:
 		return 0.0
 	var target_kind := String(planned_target.get("target_kind", ""))
