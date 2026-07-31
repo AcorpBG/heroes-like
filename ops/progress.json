@@ -15140,11 +15140,11 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Current Medium strategic-AI work now avoids repeated emergency scans, reuses invariant town-build context, and reuses invariant recruitment defense/front/strategy context while retaining live per-batch target and garrison evaluation.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Current Medium strategic-AI work avoids repeated emergency scans, reuses invariant build/recruitment context, and evaluates shared town-development state once per current or projected town while preserving the existing gameplay formulas.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Medium ordinal 11 passes 7/7 turns with 24 activity events, 18 target assignments, one allowed stalled turn, zero behavior failures, integrity violations, or unreachable targets. Row runtime is 155166ms and max turn runtime is 20548ms versus 176496ms / 27586ms before recruitment-context reuse. Full 100-seed, 56-turn Medium validation remains unrun.",
+  "currentSliceNotes": "Medium ordinals 11 and 12 pass focused 7/7-turn week-boundary runs. Ordinal 12 preserves its row signature, 17 activity events, 13 target assignments, three allowed stalled turns, and zero behavior failures, integrity violations, or unreachable targets while shared town metrics reduce row runtime from 162781ms to 102970ms and max turn runtime from 21586ms to 11701ms. Full 100-seed, 56-turn Medium validation remains unrun.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
   "currentSliceUpdatedAt": "2026-07-31T00:00:00Z",
@@ -61042,7 +61042,8 @@
         "Spawn-loop profiling exposed repeated fallback target recomputation as the turn-3 ordinal-11 spike. Fallback target selection now preselects and reuses the rebuild-pressure exploration plan for all commander candidates in that no-fresh-target path, dropping the worst fresh_fallback_spawn_candidate_ms buckets from tens of seconds to under one second while preserving clean Medium behavior.",
         "Emergency-defense profiling exposed repeated full commander/path scans when no owned town or persistent resource had an open defense gap. Recruitment and launch readiness now share an exact ownership/front-state/commitment precondition, recruitment reuses its initial destination until a successful recruit mutates state, and spawn selection reuses a proved-empty emergency scan within the faction launch loop. Medium ordinal 11 remains behavior-clean while the 3-turn row improves from 146720ms to 104099ms and max turn runtime from 55539ms to 30785ms.",
         "Town-build profiling then showed eight candidates repeating 3911ms of identical current-town state and 2778ms of repeated scoring context. Current income, quality, readiness, pressure, recovery, market, front, role, capacity, and planned-task context now compute once per town; projected town simulation remains candidate-specific. Medium ordinal 11 stays behavior-identical at 18 events and 13 assignments while row runtime improves again to 92475ms and max turn runtime to 23331ms.",
-        "Seven-turn profiling exposed a week-boundary recruitment spike: 16 destination decisions repeated 5247ms of unchanged town context and 3341ms of unchanged faction-front context. Recruitment now computes desired defense, local front, faction strategy, and faction-front summary once per town pass while continuing to recompute current garrison and rebuild/raid/planned/emergency targets after every successful batch. The 7-turn row remains behavior-identical at 24 events and 18 assignments while runtime improves from 176496ms to 155166ms and turn 7 from 27586ms to 19291ms."
+        "Seven-turn profiling exposed a week-boundary recruitment spike: 16 destination decisions repeated 5247ms of unchanged town context and 3341ms of unchanged faction-front context. Recruitment now computes desired defense, local front, faction strategy, and faction-front summary once per town pass while continuing to recompute current garrison and rebuild/raid/planned/emergency targets after every successful batch. The 7-turn row remains behavior-identical at 24 events and 18 assignments while runtime improves from 176496ms to 155166ms and turn 7 from 27586ms to 19291ms.",
+        "Ordinal-12 profiling confirmed town build scoring repeatedly recalculated reinforcement quality inside readiness and pressure, with each path rescanning the same logistics, recovery, capital-project, and occupation state. OverworldRules now exposes one exact town-development metric evaluation that feeds the unchanged quality/readiness/pressure formulas, and AI scoring uses it once for each current/projected town. Ordinal 12 preserves its row signature, 17 events, and 13 assignments while row runtime drops from 162781ms to 102970ms and max turn runtime from 21586ms to 11701ms."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61055,7 +61056,7 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI now avoids repeated emergency-defense commander/path scans and computes invariant town-build and recruitment context once per town while preserving live candidate projection, garrison strength, and field-target decisions. Focused ordinal 11 has clean 7-turn evidence at 155.2s row runtime and 20.5s maximum turn runtime, including a week boundary, but the slice remains in_progress because the full 100-seed, 56-turn Medium matrix is still unrun.",
+      "summary": "Medium Native RMG strategic AI now avoids repeated emergency-defense scans, reuses invariant build and recruitment context, and evaluates shared town-development state once per current/projected town while retaining the existing scoring formulas and live target decisions. Focused ordinals 11 and 12 have clean 7-turn evidence; ordinal 12 now runs in 103.0s with an 11.7s maximum turn versus 162.8s / 21.6s before shared metric evaluation. The slice remains in_progress because the full 100-seed, 56-turn Medium matrix is still unrun.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
       "updatedAt": "2026-07-31T00:00:00Z",
       "validation": [
@@ -61327,6 +61328,16 @@
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_town_governor_pressure_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
           "notes": "AI governor destination behavior and multi-scenario recruitment delivery pass after static recruitment-context reuse; delivery covers five scenarios and all five expected hostile factions.",
+          "status": "pass"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=11 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=7 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Medium ordinal 12 completes 7/7 turns with row_ok=1, the same row signature as the pre-change run, 17 activity events, 13 target assignments, three allowed stalled turns, and zero behavior bugs, integrity violations, or unreachable active targets. Shared town-development metric evaluation reduces row runtime from 162781ms to 102970ms and max turn runtime from 21586ms to 11701ms.",
+          "status": "pass_with_remaining_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_town_governor_pressure_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/town_development_runtime_balance_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/town_build_per_town_turn_limit_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+          "notes": "AI build and recruitment choices, all 15 authored-town development paths, per-town construction limits, and 165 unique-building payoff cases pass after shared metric evaluation.",
           "status": "pass"
         }
       ]
@@ -62234,7 +62245,7 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Medium strategic-AI runtime improved materially with exact emergency-defense scan preconditions plus per-town build and recruitment context reuse, but the full 100-seed, 56-turn matrix and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Medium strategic-AI runtime improved materially through exact emergency-defense preconditions, per-town build/recruitment context reuse, and shared town-development metric evaluation, but the full 100-seed, 56-turn matrix and the overall game remain in progress.",
   "taskId": "10184",
   "updatedAt": "2026-07-31T00:00:00Z",
   "validation": {
