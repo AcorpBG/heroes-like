@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinals 91 and 92 pass; earlier credited rows are historical after behavior changes.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinals 91, 92, and 93 pass; earlier credited rows are historical after behavior changes.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact-current-code Medium ordinals 91 and 92 pass after the defended-neutral battle-pressure fallback. Ordinal 91 completes 56/56 turns with signature 59900a4a and no behavior, integrity, or reachability failures but remains battle-free with 27 quiet turns. Ordinal 92 reaches correct player defeat on turn 30 with signature cd0ffc78, 164 events, zero quiet turns, two successful autoresolutions, and no behavior, integrity, or reachability failures. Earlier credited rows are historical; 98 target rows remain.",
+  "currentSliceNotes": "Exact-current-code Medium ordinals 91, 92, and 93 pass after the defended-neutral battle-pressure fallback. Ordinal 91 has a battle-free 27-quiet-turn pacing caveat. Ordinal 92 reaches correct player defeat on turn 30 with two successful autoresolutions and zero quiet turns. Ordinal 93 completes 56/56 turns with 197 events, one successful town-loss autoresolution, zero quiet turns, and no behavior, integrity, or reachability failures. Earlier credited rows are historical; 97 target rows remain.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-07-31T20:04:10Z",
+  "currentSliceUpdatedAt": "2026-07-31T20:14:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61069,7 +61069,8 @@
         "Exact-current-code Medium ordinal 90 passes all 56 turns with row signature a7b72b21, 260 activity events, 46 target assignments, two successful autoresolutions (hero intercept and town defense), three contested sites, zero site seizures, zero stalled turns, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 451021ms with a 16156ms maximum turn. One exact-current-code row passes and 99 remain.",
         "Ordinal 91 exposes a battle-pressure selection gap: two factions repeatedly reserve hosts for path-inaccessible Riverwatch Hold frontier approaches while four neutral towns remain, and the pressure floor rejects every non-player town. Battle-pressure selection now prefers a known reachable defended neutral town when no reachable player town or hero exists, including replacing an active frontier-only route and clearing stale blocked-route metadata without bypassing known-world visibility.",
         "The defended-neutral fallback is a real runtime correction with focused coverage, but ordinal 91 does not exercise it because its hosts never know a reachable defended neutral town. The fallback reuses the already-built candidate array rather than repeating target discovery. Exact-current-code ordinal 91 preserves row signature 59900a4a and passes 56/56 turns with 70 activity events, 59 assignments, two sites seized, zero behavior, integrity, or reachability failures, 438555ms runtime, and 9548ms maximum turn. It remains battle-free with 27 quiet turns (48%) and six final encounter/exploration hosts; topology/exploration pacing remains open. Ordinal 90 is historical after this behavior change, leaving one exact-current-code row and 99 remaining.",
-        "Exact-current-code Medium ordinal 92 reaches correct player defeat on turn 30 with row signature cd0ffc78, 164 activity events, 26 target assignments, zero quiet turns, two successful autoresolutions (town loss and final hero defeat), zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 284411ms with a 14462ms maximum turn. Together with ordinal 91, two exact-current-code rows pass and 98 remain."
+        "Exact-current-code Medium ordinal 92 reaches correct player defeat on turn 30 with row signature cd0ffc78, 164 activity events, 26 target assignments, zero quiet turns, two successful autoresolutions (town loss and final hero defeat), zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 284411ms with a 14462ms maximum turn. Together with ordinal 91, two exact-current-code rows pass and 98 remain.",
+        "Exact-current-code Medium ordinal 93 completes all 56 turns with row signature bee60fb8, 197 activity events, 45 target assignments, zero quiet turns, one successful town-loss autoresolution, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 511865ms with a 14480ms maximum turn. The player ends with no town but a live hero, so the scenario correctly remains in progress. Three exact-current-code rows pass and 97 remain."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61082,9 +61083,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes, reuses invariant town/front plus active-front spawn-point context, holds superior-hero avoidance through its recovery window, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinal 91 passes 56/56 turns but retains a battle-free 27-quiet-turn pacing caveat; ordinal 92 reaches correct player defeat on turn 30 with two successful autoresolutions and zero quiet turns. Both have no behavior, integrity, or reachability failures. Earlier credited rows are historical; 98 target rows and the topology/exploration pacing gap remain open.",
+      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes, reuses invariant town/front plus active-front spawn-point context, holds superior-hero avoidance through its recovery window, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinal 91 passes with a battle-free pacing caveat; ordinal 92 reaches correct player defeat with two autoresolutions; ordinal 93 completes 56 turns with one town battle and zero quiet turns. All three have no behavior, integrity, or reachability failures. Earlier credited rows are historical; 97 target rows and the topology/exploration pacing gap remain open.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-07-31T20:04:10Z",
+      "updatedAt": "2026-07-31T20:14:35Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61510,6 +61511,11 @@
           "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=91 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 92 reaches correct player defeat on turn 30 with row signature cd0ffc78, 164 activity events, 26 assignments, zero quiet turns, two successful autoresolutions, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 284411ms with a 14462ms maximum turn. Two exact-current-code rows pass and 98 remain.",
           "status": "pass_with_remaining_98_row_production_gap"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=92 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 93 completes 56/56 turns with row signature bee60fb8, 197 activity events, 45 assignments, zero quiet turns, one successful town-loss autoresolution, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 511865ms with a 14480ms maximum turn. The player retains a live hero after losing all towns, so the scenario correctly remains in progress. Three exact-current-code rows pass and 97 remain.",
+          "status": "pass_with_remaining_97_row_production_gap"
         }
       ]
     },
@@ -62416,9 +62422,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinals 91 and 92 pass; ordinal 91 retains a battle-free pacing caveat while ordinal 92 reaches correct player defeat with two successful autoresolutions and zero quiet turns. 98 target rows, topology/exploration pacing, and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context, honors superior-hero recovery windows, and redirects inaccessible player-route pressure to known reachable defended neutral towns. Exact-current-code ordinals 91, 92, and 93 pass; ordinal 91 retains a battle-free pacing caveat while ordinals 92 and 93 provide successful battle coverage with zero quiet turns. 97 target rows, topology/exploration pacing, and the overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-07-31T20:04:10Z",
+  "updatedAt": "2026-07-31T20:14:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
