@@ -120,6 +120,32 @@ func _resource_visit_tile_allows_contest_route() -> Dictionary:
 			or int(candidates[0].get("goal_distance", -1)) != 2:
 		_fail("AI resource candidate did not target the offset visit tile: %s" % JSON.stringify(candidates))
 		return {}
+	var saved_task_plan := EnemyAdventureRules._ai_hero_task_plan_from_saved_task(
+		session,
+		{"faction_id": MIRECLAW},
+		{
+			"placement_id": "offset_visit_saved_task_probe",
+			"spawned_by_faction_id": MIRECLAW,
+			"x": 0,
+			"y": 0,
+		},
+		{
+			"task_id": "offset_visit_saved_resource_task",
+			"task_class": "contest_site",
+			"task_status": "planned",
+			"actor_id": "hero_vaska",
+			"target_kind": "resource",
+			"target_id": "owned_corridor_site",
+			"priority_reason_codes": ["site_contested"],
+		},
+		Vector2i(0, 0),
+		"offset_visit_saved_task_probe"
+	)
+	if int(saved_task_plan.get("target_x", -1)) != 2 \
+			or int(saved_task_plan.get("goal_x", -1)) != 2 \
+			or int(saved_task_plan.get("goal_distance", -1)) != 2:
+		_fail("Saved AI resource task did not use the offset visit tile: %s" % JSON.stringify(saved_task_plan))
+		return {}
 	var pickup := EnemyAdventureRules._resolve_opportunistic_route_objective(
 		session,
 		{"faction_id": MIRECLAW},
@@ -146,6 +172,8 @@ func _resource_visit_tile_allows_contest_route() -> Dictionary:
 		"claim_id": claim_id,
 		"candidate_goal_x": int(candidates[0].get("target_x", -1)),
 		"candidate_goal_distance": int(candidates[0].get("goal_distance", -1)),
+		"saved_task_goal_x": int(saved_task_plan.get("goal_x", -1)),
+		"saved_task_goal_distance": int(saved_task_plan.get("goal_distance", -1)),
 		"visit_tile_pickup_resolved": bool(pickup.get("resolved", false)),
 	}
 

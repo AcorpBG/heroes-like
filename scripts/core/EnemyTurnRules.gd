@@ -2746,7 +2746,9 @@ static func _best_planned_task_recruitment_target(
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best := {}
 	var best_score := -1.0
-	for task_value in EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id):
+	var live_tasks := EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
+	var saved_plans_by_actor := {}
+	for task_value in live_tasks:
 		if not (task_value is Dictionary):
 			continue
 		var task: Dictionary = task_value
@@ -2762,12 +2764,15 @@ static func _best_planned_task_recruitment_target(
 			continue
 		if not EnemyAdventureRulesScript.commander_can_deploy(entry):
 			continue
-		var saved_plan := EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
-			session,
-			faction_id,
-			actor_id,
-			{"x": int(support_town.get("x", 0)), "y": int(support_town.get("y", 0))}
-		)
+		if not saved_plans_by_actor.has(actor_id):
+			saved_plans_by_actor[actor_id] = EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
+				session,
+				faction_id,
+				actor_id,
+				{"x": int(support_town.get("x", 0)), "y": int(support_town.get("y", 0))},
+				live_tasks
+			)
+		var saved_plan: Dictionary = saved_plans_by_actor.get(actor_id, {})
 		if saved_plan.is_empty():
 			continue
 		var target_kind := String(saved_plan.get("target_kind", task.get("target_kind", "")))
