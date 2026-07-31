@@ -1760,13 +1760,21 @@ static func _reinforce_enemy_forces(
 	var emergency_batches = 0
 	var mobilized_batches = 0
 	var events = []
+	var faction_recruitment_context := {}
 	for index in range(towns.size()):
 		var town = towns[index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
 			continue
 		if _town_controller_faction_id(town) != faction_id:
 			continue
-		var recruit_result = _recruit_town_forces(session, config, town, treasury, faction_id)
+		var recruit_result = _recruit_town_forces(
+			session,
+			config,
+			town,
+			treasury,
+			faction_id,
+			faction_recruitment_context
+		)
 		town = recruit_result.get("town", town)
 		towns[index] = town
 		_append_event_records(events, recruit_result.get("events", []))
@@ -1804,7 +1812,8 @@ static func _recruit_town_forces(
 	config: Dictionary,
 	town: Dictionary,
 	treasury: Dictionary,
-	faction_id: String
+	faction_id: String,
+	faction_recruitment_context: Dictionary = {}
 ) -> Dictionary:
 	var garrisoned = false
 	var raid_batches = 0
@@ -1814,7 +1823,13 @@ static func _recruit_town_forces(
 	var mobilized_batches = 0
 	var events = []
 	var recruit_ids = []
-	var destination_context := _recruit_destination_static_context(session, config, town, faction_id)
+	var destination_context := _recruit_destination_static_context(
+		session,
+		config,
+		town,
+		faction_id,
+		faction_recruitment_context
+	)
 	var initial_destination_breakdown = _choose_recruit_destination_breakdown(
 		session,
 		config,
@@ -1888,6 +1903,8 @@ static func _recruit_town_forces(
 		var final_cost := _scale_resource_pool(cost, applied_count)
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
 		_spend_from_pool(treasury, final_cost)
+		if String(destination.get("type", "")) != "garrison":
+			_invalidate_recruit_destination_field_cache(destination_context)
 		destination_breakdown_needs_refresh = true
 		var selected_recruitment := {
 			"unit_id": unit_id,
@@ -2202,7 +2219,8 @@ static func _recruit_destination_static_context(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	town: Dictionary,
-	faction_id: String
+	faction_id: String,
+	faction_recruitment_context: Dictionary = {}
 ) -> Dictionary:
 	_reinforcement_profile_count("destination_context_count")
 	var started_usec := _reinforcement_profile_timer()
@@ -2210,12 +2228,20 @@ static func _recruit_destination_static_context(
 		"defense_target": _desired_town_strength(session, town, config),
 		"local_front": OverworldRulesScript.town_front_state(session, town),
 		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
+		"faction_recruitment_context": faction_recruitment_context,
 	}
 	_reinforcement_profile_add_ms("town_context_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
 	context["faction_front_state"] = _faction_front_state(session, faction_id)
 	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
 	return context
+
+static func _invalidate_recruit_destination_field_cache(destination_context: Dictionary) -> void:
+	for key in ["best_rebuild", "best_raid", "best_planned", "best_emergency"]:
+		destination_context.erase(key)
+	var faction_context = destination_context.get("faction_recruitment_context", {})
+	if faction_context is Dictionary:
+		faction_context.erase("emergency_defense_recruitment_candidates")
 
 static func _choose_recruit_destination_breakdown(
 	session: SessionStateStoreScript.SessionData,
@@ -2233,16 +2259,34 @@ static func _choose_recruit_destination_breakdown(
 	var current_defense = _army_strength(town.get("garrison", []))
 	var local_front: Dictionary = context.get("local_front", {})
 	var strategy = context.get("strategy", {})
-	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+	var best_rebuild = context.get("best_rebuild", null)
+	if best_rebuild == null:
+		best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+		context["best_rebuild"] = best_rebuild
 	_reinforcement_profile_add_ms("best_rebuild_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
-	var best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
+	var best_raid = context.get("best_raid", null)
+	if best_raid == null:
+		best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
+		context["best_raid"] = best_raid
 	_reinforcement_profile_add_ms("best_raid_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
-	var best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
+	var best_planned = context.get("best_planned", null)
+	if best_planned == null:
+		best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
+		context["best_planned"] = best_planned
 	_reinforcement_profile_add_ms("best_planned_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
-	var best_emergency = _best_emergency_defense_recruitment_target(session, config, faction_id, town)
+	var best_emergency = context.get("best_emergency", null)
+	if best_emergency == null:
+		best_emergency = _best_emergency_defense_recruitment_target(
+			session,
+			config,
+			faction_id,
+			town,
+			context.get("faction_recruitment_context", {})
+		)
+		context["best_emergency"] = best_emergency
 	_reinforcement_profile_add_ms("best_emergency_ms", started_usec)
 	var faction_front_state: Dictionary = context.get("faction_front_state", {})
 	var garrison_gap = max(0, defense_target - current_defense)
@@ -2519,46 +2563,31 @@ static func _best_emergency_defense_recruitment_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	support_town: Dictionary
+	support_town: Dictionary,
+	faction_recruitment_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or support_town.is_empty():
-		return {}
-	if not _has_open_emergency_defense_front(session, faction_id):
 		return {}
 	var base_encounter_id := _primary_raid_encounter_id(config)
 	if base_encounter_id == "":
 		return {}
-	var state := _find_state(session.overworld.get("enemy_states", []), faction_id)
-	if state.is_empty():
-		return {}
-	var points := _open_spawn_points(session, config)
-	if points.is_empty():
-		return {}
-	var occupied_commander_ids := EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var candidates = faction_recruitment_context.get("emergency_defense_recruitment_candidates", null)
+	if candidates == null:
+		candidates = _emergency_defense_recruitment_candidates(session, config, faction_id)
+		faction_recruitment_context["emergency_defense_recruitment_candidates"] = candidates
 	var best := {}
 	var best_score := -1.0
-	for index in range(points.size()):
-		var point = points[index]
-		if not (point is Dictionary):
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
 			continue
-		var candidate := _emergency_defense_spawn_candidate_for_point(
-			session,
-			config,
-			state,
-			faction_id,
-			point,
-			occupied_commander_ids,
-			index
-		)
-		if candidate.is_empty():
-			continue
+		var candidate: Dictionary = candidate_value
 		var current_strength := int(candidate.get("spawn_plan_current_strength", 0))
 		var target_strength := int(candidate.get("spawn_plan_target_strength", 0))
 		var need: int = max(0, target_strength - current_strength)
 		if need <= 0:
 			continue
-		var supply_distance: int = abs(int(support_town.get("x", 0)) - int(point.get("x", 0))) \
-			+ abs(int(support_town.get("y", 0)) - int(point.get("y", 0)))
+		var supply_distance: int = abs(int(support_town.get("x", 0)) - int(candidate.get("x", 0))) \
+			+ abs(int(support_town.get("y", 0)) - int(candidate.get("y", 0)))
 		var score := float(need) * 1.15
 		score += float(int(candidate.get("spawn_plan_priority", 0))) * 0.65
 		score += float(max(0, 18 - supply_distance) * 12)
@@ -2583,6 +2612,38 @@ static func _best_emergency_defense_recruitment_target(
 				"supply_distance": supply_distance,
 			}
 	return best
+
+static func _emergency_defense_recruitment_candidates(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	if session == null or faction_id == "" or not _has_open_emergency_defense_front(session, faction_id):
+		return []
+	var state := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	if state.is_empty():
+		return []
+	var points := _open_spawn_points(session, config)
+	if points.is_empty():
+		return []
+	var occupied_commander_ids := EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var candidates := []
+	for index in range(points.size()):
+		var point = points[index]
+		if not (point is Dictionary):
+			continue
+		var candidate := _emergency_defense_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			index
+		)
+		if not candidate.is_empty():
+			candidates.append(candidate)
+	return candidates
 
 static func _has_open_emergency_defense_front(
 	session: SessionStateStoreScript.SessionData,
@@ -5488,6 +5549,9 @@ static func _emergency_defense_spawn_candidate_for_point(
 	)
 	var best_town := {}
 	var best_resource := {}
+	var town_redirect_template := {}
+	var resource_redirect_template := {}
+	var redirect_templates_resolved := false
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -5514,18 +5578,41 @@ static func _emergency_defense_spawn_candidate_for_point(
 			roster
 		)
 		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
-		var town_defense := EnemyAdventureRulesScript._redirect_raid_to_threatened_town_defense(
-			session,
-			config,
-			probe.duplicate(true),
-			faction_id
-		)
-		var resource_defense := EnemyAdventureRulesScript._redirect_raid_to_threatened_resource_defense(
-			session,
-			config,
-			probe.duplicate(true),
-			faction_id
-		)
+		if EnemyAdventureRulesScript.raid_regroup_needed(probe, config, faction_id):
+			continue
+		var town_defense := {}
+		var resource_defense := {}
+		if not redirect_templates_resolved:
+			town_defense = EnemyAdventureRulesScript._redirect_raid_to_threatened_town_defense(
+				session,
+				config,
+				probe.duplicate(true),
+				faction_id
+			)
+			resource_defense = EnemyAdventureRulesScript._redirect_raid_to_threatened_resource_defense(
+				session,
+				config,
+				probe.duplicate(true),
+				faction_id
+			)
+			if _emergency_defense_redirect_applies(town_defense):
+				town_redirect_template = town_defense.duplicate(true)
+			if _emergency_defense_redirect_applies(resource_defense):
+				resource_redirect_template = resource_defense.duplicate(true)
+			redirect_templates_resolved = true
+		else:
+			town_defense = _emergency_defense_redirect_from_template(
+				session,
+				probe,
+				town_redirect_template,
+				faction_id
+			)
+			resource_defense = _emergency_defense_redirect_from_template(
+				session,
+				probe,
+				resource_redirect_template,
+				faction_id
+			)
 		for redirected_value in [town_defense, resource_defense]:
 			if not (redirected_value is Dictionary):
 				continue
@@ -5547,6 +5634,36 @@ static func _emergency_defense_spawn_candidate_for_point(
 			elif best_resource.is_empty() or _spawn_point_candidate_beats(candidate, best_resource):
 				best_resource = candidate
 	return best_town if not best_town.is_empty() else best_resource
+
+static func _emergency_defense_redirect_from_template(
+	session: SessionStateStoreScript.SessionData,
+	probe: Dictionary,
+	redirect_template: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if redirect_template.is_empty():
+		return probe
+	var redirected := probe.duplicate(true)
+	for key in [
+		"previous_target_kind",
+		"previous_target_placement_id",
+		"previous_target_label",
+		"target_kind",
+		"target_placement_id",
+		"target_label",
+		"target_public_reason",
+		"target_reason_codes",
+		"target_public_importance",
+		"target_debug_reason",
+		"arrived",
+		"town_defense_started_day",
+		"town_defense_front_id",
+		"site_defense_started_day",
+		"site_defense_front_id",
+	]:
+		if redirect_template.has(key):
+			redirected[key] = redirect_template.get(key)
+	return EnemyAdventureRulesScript._refresh_target(session, redirected, faction_id)
 
 static func _emergency_defense_redirect_applies(raid: Dictionary) -> bool:
 	var kind := String(raid.get("target_kind", ""))
