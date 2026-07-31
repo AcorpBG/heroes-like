@@ -20,15 +20,23 @@ func _run() -> void:
 	var post_move_case_report := _river_pass_raids_group_after_leader_movement_for_town_assault()
 	if post_move_case_report.is_empty():
 		return
+	var long_range_pressure_case_report := _long_range_player_town_restores_battle_pressure()
+	if long_range_pressure_case_report.is_empty():
+		return
+	var blocked_route_pressure_case_report := _blocked_player_town_uses_persistent_frontier_pressure()
+	if blocked_route_pressure_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "live_raid_assault_grouping_post_move_no_save_migration",
-		"behavior_policy": "nearby_same_town_raids_group_before_assault_or_after_movement_before_assault",
+		"behavior_policy": "nearby_same_town_raids_group_before_assault_or_after_movement_and_reachable_or_blocked_player_towns_restore_persistent_battle_pressure",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": commanderless_case_report,
 		"commander_case": commander_case_report,
 		"post_move_case": post_move_case_report,
+		"long_range_pressure_case": long_range_pressure_case_report,
+		"blocked_route_pressure_case": blocked_route_pressure_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -273,6 +281,147 @@ func _river_pass_raids_group_after_leader_movement_for_town_assault() -> Diction
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
+
+func _long_range_player_town_restores_battle_pressure() -> Dictionary:
+	var session = _long_range_pressure_session(false)
+
+	var raids := []
+	for index in range(3):
+		var x := 3 + index
+		raids.append(_pressure_floor_raid_seed("long_range_pressure_%d" % index, x, 1, 8 + index))
+	session.overworld["encounters"] = raids
+	var config := _enemy_config()
+	var candidate_before := EnemyAdventureRules._target_candidates(session, config, Vector2i(3, 1))
+	var distant_town_distance := -1
+	for candidate_value in candidate_before:
+		if candidate_value is Dictionary and String(candidate_value.get("target_placement_id", "")) == "riverwatch_hold":
+			distant_town_distance = int(candidate_value.get("goal_distance", -1))
+			break
+	if distant_town_distance <= EnemyAdventureRules.RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE:
+		_fail("Long-range pressure fixture did not place the player town beyond the pressure floor distance: %d" % distant_town_distance)
+		return {}
+
+	var assigned := EnemyAdventureRules.assign_target(session, config, raids[0].duplicate(true))
+	if String(assigned.get("target_kind", "")) != "town" or String(assigned.get("target_placement_id", "")) != "riverwatch_hold":
+		_fail("Long-range reachable player town did not preempt exploration pressure: %s" % JSON.stringify(assigned))
+		return {}
+	if int(assigned.get("goal_distance", 9999)) >= 9999:
+		_fail("Long-range player town pressure produced an unreachable route: %s" % JSON.stringify(assigned))
+		return {}
+	var reason_codes: Array = assigned.get("target_reason_codes", []) if assigned.get("target_reason_codes", []) is Array else []
+	if "battle_pressure_floor" not in reason_codes:
+		_fail("Long-range player town pressure omitted battle_pressure_floor reasoning: %s" % JSON.stringify(assigned))
+		return {}
+	return {
+		"case_id": "long_range_player_town_restores_battle_pressure",
+		"active_raid_count": raids.size(),
+		"previous_target_kind": "explore",
+		"target_kind": String(assigned.get("target_kind", "")),
+		"target_id": String(assigned.get("target_placement_id", "")),
+		"goal_distance": int(assigned.get("goal_distance", -1)),
+		"reason_codes": reason_codes,
+	}
+
+func _pressure_floor_raid_seed(placement_id: String, x: int, y: int, brute_count: int) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"commanderless_support_column": true,
+		"days_active": 8,
+		"arrived": false,
+		"target_kind": "explore",
+		"target_placement_id": "explore:%d:%d" % [x + 4, y],
+		"target_label": "Frontier scout %d,%d" % [x + 4, y],
+		"target_x": x + 4,
+		"target_y": y,
+		"goal_x": x + 4,
+		"goal_y": y,
+		"goal_distance": 4,
+		"target_reason_codes": ["no_known_targets", "frontier_scouting"],
+		"enemy_army": {
+			"id": "%s_host" % placement_id,
+			"name": "Long-range Pressure Host",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": brute_count}],
+		},
+	}
+
+func _blocked_player_town_uses_persistent_frontier_pressure() -> Dictionary:
+	var session = _long_range_pressure_session(true)
+	var raids := []
+	for index in range(3):
+		raids.append(_pressure_floor_raid_seed("blocked_route_pressure_%d" % index, 3 + index, 1, 8 + index))
+	session.overworld["encounters"] = raids
+	var config := _enemy_config()
+	var assigned := EnemyAdventureRules.assign_target(session, config, raids[0].duplicate(true))
+	if String(assigned.get("target_kind", "")) != "explore":
+		_fail("Blocked player town did not select a reachable frontier pressure waypoint: %s" % JSON.stringify(assigned))
+		return {}
+	if String(assigned.get("blocked_route_target_placement_id", "")) != "riverwatch_hold":
+		_fail("Blocked player town frontier pressure lost the town objective: %s" % JSON.stringify(assigned))
+		return {}
+	var reason_codes: Array = assigned.get("target_reason_codes", []) if assigned.get("target_reason_codes", []) is Array else []
+	if "battle_pressure_floor" not in reason_codes or "pressure_route_frontier" not in reason_codes:
+		_fail("Blocked player town frontier pressure omitted route reasoning: %s" % JSON.stringify(assigned))
+		return {}
+	if int(assigned.get("target_x", 0)) <= int(raids[0].get("x", 0)) or int(assigned.get("target_x", 9999)) >= 40:
+		_fail("Blocked player town frontier pressure did not advance toward the reachable side of the divider: %s" % JSON.stringify(assigned))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters[0] = assigned
+	session.overworld["encounters"] = encounters
+	var reassigned := EnemyAdventureRules.assign_target(session, config, assigned.duplicate(true))
+	if String(reassigned.get("target_placement_id", "")) != String(assigned.get("target_placement_id", "")):
+		_fail("Active frontier pressure route churned before reaching its waypoint: %s" % JSON.stringify(reassigned))
+		return {}
+	return {
+		"case_id": "blocked_player_town_uses_persistent_frontier_pressure",
+		"active_raid_count": raids.size(),
+		"target_kind": String(assigned.get("target_kind", "")),
+		"target_id": String(assigned.get("target_placement_id", "")),
+		"blocked_town_id": String(assigned.get("blocked_route_target_placement_id", "")),
+		"goal_distance": int(assigned.get("goal_distance", -1)),
+		"persistent_assignment": true,
+		"reason_codes": reason_codes,
+	}
+
+func _long_range_pressure_session(blocked: bool):
+	var session = _base_session()
+	session.day = 8
+	var map := []
+	for y in range(5):
+		var row := []
+		for x in range(68):
+			row.append("water" if blocked and x == 40 else "grass")
+		map.append(row)
+	session.overworld["map"] = map
+	session.overworld["map_size"] = {"width": 68, "height": 5}
+	session.overworld["resource_nodes"] = []
+	session.overworld["artifact_nodes"] = []
+	session.overworld["resolved_encounters"] = []
+	session.overworld["player_heroes"] = []
+	session.overworld["hero"] = {}
+
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) == "riverwatch_hold":
+			town["x"] = 65
+			town["y"] = 2
+			town["owner"] = "player"
+		elif String(town.get("placement_id", "")) == TOWN_ID:
+			town["x"] = 2
+			town["y"] = 2
+			town["owner"] = "enemy"
+			town["controlling_faction_id"] = MIRECLAW
+		towns[index] = town
+	session.overworld["towns"] = towns
+	return session
 
 func _raid_seed(placement_id: String, x: int, y: int, brute_count: int, with_commander: bool, session, config: Dictionary, roster_hero_id: String = "hero_vaska") -> Dictionary:
 	var raid := {
