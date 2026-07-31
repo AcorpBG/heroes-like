@@ -874,6 +874,8 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		return raid
 	if current_kind not in ["resource", "regroup", "explore", "encounter", "artifact"]:
 		return raid
+	if _raid_has_active_player_battle_pressure_route(session, raid):
+		return raid
 	if raid_regroup_needed(raid, config, faction_id):
 		return raid
 	var placement_id := String(raid.get("placement_id", ""))
@@ -894,7 +896,9 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		if target_kind == "town" and not _candidate_targets_player_town(session, candidate):
 			continue
 		var goal_distance := int(candidate.get("goal_distance", 9999))
-		if goal_distance < 0 or goal_distance > RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE:
+		if goal_distance < 0 or goal_distance >= 9999:
+			continue
+		if target_kind == "hero" and goal_distance > RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE:
 			continue
 		var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
 		if "battle_pressure_floor" not in reason_codes:
@@ -955,7 +959,28 @@ static func _active_player_battle_pressure_raid_count(
 				var town_result := _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
 				if int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player":
 					count += 1
+			_:
+				if _raid_has_active_player_battle_pressure_route(session, encounter):
+					count += 1
 	return count
+
+static func _raid_has_active_player_battle_pressure_route(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary
+) -> bool:
+	if session == null or raid.is_empty():
+		return false
+	if String(raid.get("blocked_route_target_kind", "")) != "town":
+		return false
+	var town_id := String(raid.get("blocked_route_target_placement_id", ""))
+	if town_id == "":
+		return false
+	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "battle_pressure_floor" not in reason_codes:
+		return false
+	var town_result := _find_town_by_placement(session, town_id)
+	return int(town_result.get("index", -1)) >= 0 \
+		and String(town_result.get("town", {}).get("owner", "neutral")) == "player"
 
 static func _candidate_targets_player_town(session: SessionStateStoreScript.SessionData, candidate: Dictionary) -> bool:
 	if session == null or candidate.is_empty():
@@ -1032,6 +1057,23 @@ static func _battle_pressure_floor_route_clearance_plan(
 			):
 				best = stepping_candidate
 				best_score = stepping_score
+		if route_guard.is_empty() and stepping_candidate.is_empty():
+			var frontier_candidate := _battle_pressure_route_frontier_candidate(
+				session,
+				raid,
+				faction_id,
+				town,
+				staging_tiles,
+				active_count
+			)
+			if not frontier_candidate.is_empty():
+				var frontier_score := int(frontier_candidate.get("priority", 0))
+				if best.is_empty() or frontier_score > best_score or (
+					frontier_score == best_score
+					and int(frontier_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+				):
+					best = frontier_candidate
+					best_score = frontier_score
 	return best
 
 static func _battle_pressure_route_guard_candidate(
@@ -1160,6 +1202,77 @@ static func _battle_pressure_route_stepping_candidate(
 		):
 			best = candidate
 			best_score = score
+	return best
+
+static func _battle_pressure_route_frontier_candidate(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	town_staging_tiles: Array,
+	active_count: int
+) -> Dictionary:
+	if session == null or raid.is_empty() or faction_id == "" or town.is_empty() or town_staging_tiles.is_empty():
+		return {}
+	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
+	var origin_gap := _min_manhattan_distance_to_tiles(origin, town_staging_tiles)
+	if origin_gap >= 9999:
+		return {}
+	var placement_id := String(raid.get("placement_id", ""))
+	var path_context := _path_distance_surface_context(session, placement_id, faction_id)
+	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
+	var start_index := _tile_index(origin, map_size)
+	if start_index < 0:
+		return {}
+	var distance_field := _path_distance_field_for_start(path_context, start_index)
+	var best := {}
+	var best_score := -999999
+	for tile_index in range(distance_field.size()):
+		var route_distance := int(distance_field[tile_index])
+		if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
+			continue
+		var tile := _vector_from_index(tile_index, map_size)
+		var target_gap := _min_manhattan_distance_to_tiles(tile, town_staging_tiles)
+		var gap_improvement := origin_gap - target_gap
+		if gap_improvement < 2:
+			continue
+		var score := RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS \
+			+ 180 \
+			+ (active_count * 6) \
+			+ (gap_improvement * 14) \
+			- (route_distance * 3)
+		var target_id := "explore:%d:%d" % [tile.x, tile.y]
+		if best.is_empty() or score > best_score or (
+			score == best_score
+			and route_distance < int(best.get("goal_distance", 9999))
+		) or (
+			score == best_score
+			and route_distance == int(best.get("goal_distance", 9999))
+			and target_id < String(best.get("target_placement_id", ""))
+		):
+			best_score = score
+			best = {
+				"previous_target_kind": String(raid.get("target_kind", "")),
+				"previous_target_placement_id": String(raid.get("target_placement_id", "")),
+				"previous_target_label": String(raid.get("target_label", "")),
+				"blocked_route_target_kind": "town",
+				"blocked_route_target_placement_id": String(town.get("placement_id", "")),
+				"blocked_route_target_label": _town_name(town),
+				"target_kind": "explore",
+				"target_placement_id": target_id,
+				"target_label": "%s approach %d,%d" % [_town_name(town), tile.x, tile.y],
+				"target_x": tile.x,
+				"target_y": tile.y,
+				"goal_x": tile.x,
+				"goal_y": tile.y,
+				"goal_distance": route_distance,
+				"priority": max(0, score),
+				"route_unreachable_started_day": int(session.day),
+				"target_reason_codes": ["town_siege", "route_unreachable", "objective_front", "battle_pressure_floor", "pressure_route_frontier"],
+				"target_public_reason": "scouting route to player town",
+				"target_public_importance": "high",
+				"target_debug_reason": "battle pressure floor selected reachable frontier waypoint closer to unreachable player town",
+			}
 	return best
 
 static func _min_manhattan_distance_to_tiles(origin: Vector2i, tiles: Array) -> int:
