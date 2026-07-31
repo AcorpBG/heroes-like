@@ -26,6 +26,9 @@ func _run() -> void:
 	var blocked_route_pressure_case_report := _blocked_player_town_uses_persistent_frontier_pressure()
 	if blocked_route_pressure_case_report.is_empty():
 		return
+	var continued_route_pressure_case_report := _blocked_player_town_waypoint_continues_town_pressure()
+	if continued_route_pressure_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -37,6 +40,7 @@ func _run() -> void:
 		"post_move_case": post_move_case_report,
 		"long_range_pressure_case": long_range_pressure_case_report,
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
+		"continued_route_pressure_case": continued_route_pressure_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -386,6 +390,65 @@ func _blocked_player_town_uses_persistent_frontier_pressure() -> Dictionary:
 		"goal_distance": int(assigned.get("goal_distance", -1)),
 		"persistent_assignment": true,
 		"reason_codes": reason_codes,
+	}
+
+func _blocked_player_town_waypoint_continues_town_pressure() -> Dictionary:
+	var session = _long_range_pressure_session(true)
+	var raids := []
+	for index in range(3):
+		raids.append(_pressure_floor_raid_seed("continued_route_pressure_%d" % index, 3 + index, 1, 8 + index))
+	session.overworld["encounters"] = raids
+	var config := _enemy_config()
+	var assigned := EnemyAdventureRules.assign_target(session, config, raids[0].duplicate(true))
+	assigned["x"] = int(assigned.get("target_x", 0))
+	assigned["y"] = int(assigned.get("target_y", 0))
+	assigned["goal_distance"] = 0
+	assigned["arrived"] = true
+	var state := _enemy_state(session)
+	var continued_result := EnemyAdventureRules._resolve_arrived_target(session, assigned, state, MIRECLAW, config)
+	var continued: Dictionary = continued_result.get("encounter", {})
+	if String(continued.get("target_kind", "")) != "explore":
+		_fail("Blocked player-town waypoint did not continue through another reachable frontier waypoint: %s" % JSON.stringify(continued))
+		return {}
+	if String(continued.get("blocked_route_target_placement_id", "")) != "riverwatch_hold":
+		_fail("Continued player-town waypoint lost the blocked town identity: %s" % JSON.stringify(continued))
+		return {}
+	if String(continued.get("target_placement_id", "")) == String(assigned.get("target_placement_id", "")):
+		_fail("Continued player-town waypoint repeated the completed waypoint: %s" % JSON.stringify(continued))
+		return {}
+	if int(continued.get("target_x", 0)) <= int(assigned.get("x", 0)):
+		_fail("Continued player-town waypoint did not advance toward the blocked town: %s" % JSON.stringify(continued))
+		return {}
+
+	var opened_session = _long_range_pressure_session(false)
+	var opened_probe := continued.duplicate(true)
+	opened_probe["x"] = int(continued.get("target_x", 0))
+	opened_probe["y"] = int(continued.get("target_y", 0))
+	opened_probe["goal_distance"] = 0
+	opened_probe["arrived"] = true
+	opened_session.overworld["encounters"] = [opened_probe]
+	var opened_result := EnemyAdventureRules._resolve_arrived_target(
+		opened_session,
+		opened_probe,
+		_enemy_state(opened_session),
+		MIRECLAW,
+		config
+	)
+	var opened: Dictionary = opened_result.get("encounter", {})
+	if String(opened.get("target_kind", "")) != "town" or String(opened.get("target_placement_id", "")) != "riverwatch_hold":
+		_fail("Opened player-town route did not graduate from waypoint pressure to town assault: %s" % JSON.stringify(opened))
+		return {}
+	if int(opened.get("goal_distance", 9999)) >= 9999:
+		_fail("Opened player-town route graduated to an unreachable town assault: %s" % JSON.stringify(opened))
+		return {}
+	return {
+		"case_id": "blocked_player_town_waypoint_continues_town_pressure",
+		"first_waypoint_id": String(assigned.get("target_placement_id", "")),
+		"continued_waypoint_id": String(continued.get("target_placement_id", "")),
+		"continued_waypoint_distance": int(continued.get("goal_distance", -1)),
+		"opened_target_kind": String(opened.get("target_kind", "")),
+		"opened_target_id": String(opened.get("target_placement_id", "")),
+		"opened_goal_distance": int(opened.get("goal_distance", -1)),
 	}
 
 func _long_range_pressure_session(blocked: bool):

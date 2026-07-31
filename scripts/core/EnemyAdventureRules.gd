@@ -1014,33 +1014,7 @@ static func _battle_pressure_floor_route_clearance_plan(
 			continue
 		if _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), faction_id) < 9999:
 			continue
-		var probe := raid.duplicate(true)
-		probe["target_kind"] = "town"
-		probe["target_placement_id"] = town_id
-		probe["target_label"] = _town_name(town)
-		probe["target_x"] = int(town.get("x", 0))
-		probe["target_y"] = int(town.get("y", 0))
-		probe["target_reason_codes"] = ["town_siege", "objective_front", "battle_pressure_floor"]
-		var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, probe, faction_id)
-		if not route_guard.is_empty():
-			var guard_candidate := _battle_pressure_route_guard_candidate(
-				session,
-				config,
-				raid,
-				faction_id,
-				town,
-				route_guard,
-				active_count
-			)
-			if not guard_candidate.is_empty():
-				var guard_score := int(guard_candidate.get("priority", 0))
-				if best.is_empty() or guard_score > best_score or (
-					guard_score == best_score
-					and int(guard_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
-				):
-					best = guard_candidate
-					best_score = guard_score
-		var stepping_candidate := _battle_pressure_route_stepping_candidate(
+		var candidate := _battle_pressure_route_plan_for_town(
 			session,
 			config,
 			raid,
@@ -1049,31 +1023,72 @@ static func _battle_pressure_floor_route_clearance_plan(
 			staging_tiles,
 			active_count
 		)
-		if not stepping_candidate.is_empty():
-			var stepping_score := int(stepping_candidate.get("priority", 0))
-			if best.is_empty() or stepping_score > best_score or (
-				stepping_score == best_score
-				and int(stepping_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
-			):
-				best = stepping_candidate
-				best_score = stepping_score
-		if route_guard.is_empty() and stepping_candidate.is_empty():
-			var frontier_candidate := _battle_pressure_route_frontier_candidate(
-				session,
-				raid,
-				faction_id,
-				town,
-				staging_tiles,
-				active_count
-			)
-			if not frontier_candidate.is_empty():
-				var frontier_score := int(frontier_candidate.get("priority", 0))
-				if best.is_empty() or frontier_score > best_score or (
-					frontier_score == best_score
-					and int(frontier_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
-				):
-					best = frontier_candidate
-					best_score = frontier_score
+		var candidate_score := int(candidate.get("priority", 0))
+		if not candidate.is_empty() and (best.is_empty() or candidate_score > best_score or (
+			candidate_score == best_score
+			and int(candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+		)):
+			best = candidate
+			best_score = candidate_score
+	return best
+
+static func _battle_pressure_route_plan_for_town(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	faction_id: String,
+	town: Dictionary,
+	town_staging_tiles: Array,
+	active_count: int
+) -> Dictionary:
+	var best := {}
+	var best_score := -999999
+	var probe := raid.duplicate(true)
+	probe["target_kind"] = "town"
+	probe["target_placement_id"] = String(town.get("placement_id", ""))
+	probe["target_label"] = _town_name(town)
+	probe["target_x"] = int(town.get("x", 0))
+	probe["target_y"] = int(town.get("y", 0))
+	probe["target_reason_codes"] = ["town_siege", "objective_front", "battle_pressure_floor"]
+	var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, probe, faction_id)
+	if not route_guard.is_empty():
+		var guard_candidate := _battle_pressure_route_guard_candidate(
+			session,
+			config,
+			raid,
+			faction_id,
+			town,
+			route_guard,
+			active_count
+		)
+		if not guard_candidate.is_empty():
+			best = guard_candidate
+			best_score = int(guard_candidate.get("priority", 0))
+	var stepping_candidate := _battle_pressure_route_stepping_candidate(
+		session,
+		config,
+		raid,
+		faction_id,
+		town,
+		town_staging_tiles,
+		active_count
+	)
+	var stepping_score := int(stepping_candidate.get("priority", 0))
+	if not stepping_candidate.is_empty() and (best.is_empty() or stepping_score > best_score or (
+		stepping_score == best_score
+		and int(stepping_candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
+	)):
+		best = stepping_candidate
+		best_score = stepping_score
+	if route_guard.is_empty() and stepping_candidate.is_empty():
+		return _battle_pressure_route_frontier_candidate(
+			session,
+			raid,
+			faction_id,
+			town,
+			town_staging_tiles,
+			active_count
+		)
 	return best
 
 static func _battle_pressure_route_guard_candidate(
@@ -16341,6 +16356,26 @@ static func _resolve_exploration_target(
 	continued["last_explored_y"] = int(raid.get("y", 0))
 	continued["last_explored_day"] = int(session.day)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
+	if "pressure_route_frontier" in reason_codes:
+		var route_plan := _blocked_route_resume_target_after_clear(session, continued, faction_id)
+		if route_plan.is_empty():
+			var town_result := _find_town_by_placement(
+				session,
+				String(continued.get("blocked_route_target_placement_id", ""))
+			)
+			var town: Dictionary = town_result.get("town", {})
+			if int(town_result.get("index", -1)) >= 0 and String(town.get("owner", "neutral")) == "player":
+				route_plan = _battle_pressure_route_plan_for_town(
+					session,
+					config,
+					continued,
+					faction_id,
+					town,
+					_town_staging_tiles(session, town),
+					_active_raid_count_for_faction(session, faction_id)
+				)
+		if not route_plan.is_empty():
+			continued.merge(route_plan, true)
 	if "rebuild_pressure_relaunch" in reason_codes:
 		var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 		var scout_plan := _no_known_target_frontier_sweep_plan(session, config, origin)
