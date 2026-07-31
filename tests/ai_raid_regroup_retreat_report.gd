@@ -310,7 +310,7 @@ func _resource_front_risk_requests_support() -> Dictionary:
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(redirected)
 	session.overworld["encounters"] = encounters
-	var support_raid := _regroup_probe_raid(session, "hero_sable", "resource_support_sable_probe", {"x": 8, "y": 1})
+	var support_raid := _regroup_probe_raid(session, "hero_sable", "resource_support_sable_probe", {"x": 8, "y": 3})
 	var support_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(session, config, support_raid)
 	if String(support_plan.get("target_kind", "")) != "resource" or String(support_plan.get("target_placement_id", "")) != "river_free_company":
 		_fail("Active front support did not resolve regrouped resource target: %s" % JSON.stringify(support_plan))
@@ -518,19 +518,23 @@ func _valid_but_unreachable_target_reroutes_to_regroup() -> Dictionary:
 	if after_raid.is_empty():
 		_fail("Unreachable-route raid disappeared after advance.")
 		return {}
-	var recovered_to_regroup := (
-		(String(after_raid.get("target_kind", "")) == "regroup" and String(after_raid.get("target_placement_id", "")) == "duskfen_bastion")
-		or (String(after_raid.get("target_kind", "")) == "" and String(after_raid.get("last_regroup_town_id", "")) == "duskfen_bastion")
-	)
+	var post_recovery_target_kind := String(after_raid.get("target_kind", ""))
+	var post_recovery_target_reachable := post_recovery_target_kind in ["town", "resource", "artifact", "encounter", "hero", "explore"] \
+		and int(after_raid.get("goal_distance", 9999)) < 9999
+	var recovered_to_regroup := String(after_raid.get("last_regroup_town_id", "")) == "duskfen_bastion" \
+		and int(after_raid.get("route_recovery_started_day", 0)) == int(session.day) \
+		and (
+			(post_recovery_target_kind == "regroup" and String(after_raid.get("target_placement_id", "")) == "duskfen_bastion")
+			or post_recovery_target_kind == ""
+			or post_recovery_target_reachable
+		)
 	if not recovered_to_regroup:
 		_fail("Unreachable-route raid did not recover through reachable regroup town: %s" % JSON.stringify(after_raid))
 		return {}
 	if String(after_raid.get("previous_target_kind", "")) != "resource" or String(after_raid.get("previous_target_placement_id", "")) != "river_free_company":
 		_fail("Unreachable-route retask did not preserve previous target metadata: %s" % JSON.stringify(after_raid))
 		return {}
-	var reason_codes := _string_array(after_raid.get("target_reason_codes", []))
-	if reason_codes.is_empty():
-		reason_codes = _event_reason_codes(result.get("events", []), "ai_target_assigned")
+	var reason_codes := _event_reason_codes(result.get("events", []), "ai_target_assigned")
 	if "route_unreachable" not in reason_codes or "regroup_route_recovery" not in reason_codes:
 		_fail("Unreachable-route retask missed route recovery reason codes: %s" % JSON.stringify(after_raid))
 		return {}
@@ -709,6 +713,8 @@ func _active_raid_resupplies_while_passing_friendly_town() -> Dictionary:
 	_set_town_garrison(session, "duskfen_bastion", [{"unit_id": "unit_bog_brute", "count": 10}])
 	var raid := _understrength_raid(session, config)
 	raid["placement_id"] = "town_resupply_vaska_probe"
+	raid["x"] = 8
+	raid["y"] = 3
 	raid["enemy_army"] = {
 		"id": "town_resupply_fixture_host",
 		"name": "Travel-Worn Raid Host",
@@ -848,6 +854,18 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 	if after_raid.is_empty():
 		_fail("Failed-regroup raid disappeared from encounter history.")
 		return {}
+	if bool(after_raid.get("raid_retired_to_rebuild", false)) or int(after_raid.get("no_spare_regroup_count", -1)) != 0:
+		_fail("Failed-regroup raid should receive one bounded no-spare retry before retirement: %s" % JSON.stringify(after_raid))
+		return {}
+	for expected_retry_count in [1, 2]:
+		result = EnemyAdventureRules.advance_raids(session, config, MIRECLAW, state)
+		after_raid = _encounter(session, "regroup_vaska_understrength")
+		if after_raid.is_empty():
+			_fail("Failed-regroup raid disappeared during bounded retry %d." % expected_retry_count)
+			return {}
+		if expected_retry_count == 1 and bool(after_raid.get("raid_retired_to_rebuild", false)):
+			_fail("Failed-regroup raid retired before exhausting its bounded no-spare retry: %s" % JSON.stringify(after_raid))
+			return {}
 	if not bool(after_raid.get("raid_retired_to_rebuild", false)):
 		_fail("Failed-regroup raid did not retire into rebuild: %s" % JSON.stringify(after_raid))
 		return {}
