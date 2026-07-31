@@ -1814,7 +1814,14 @@ static func _recruit_town_forces(
 	var mobilized_batches = 0
 	var events = []
 	var recruit_ids = []
-	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	var destination_context := _recruit_destination_static_context(session, config, town, faction_id)
+	var initial_destination_breakdown = _choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		faction_id,
+		destination_context
+	)
 	var destination_breakdown = initial_destination_breakdown
 	var destination_breakdown_needs_refresh := false
 	for unit_id_value in town.get("available_recruits", {}).keys():
@@ -1836,7 +1843,13 @@ static func _recruit_town_forces(
 		if recruit_count <= 0:
 			continue
 		if destination_breakdown_needs_refresh:
-			destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+			destination_breakdown = _choose_recruit_destination_breakdown(
+				session,
+				config,
+				town,
+				faction_id,
+				destination_context
+			)
 			destination_breakdown_needs_refresh = false
 		var destination = _recruit_destination_from_breakdown(destination_breakdown)
 		var applied_count = recruit_count
@@ -1890,10 +1903,22 @@ static func _recruit_town_forces(
 			events.append(destination_event)
 	var mobilize_allowed := true
 	if emergency_batches > 0:
-		var post_recruit_destination := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+		var post_recruit_destination := _choose_recruit_destination_breakdown(
+			session,
+			config,
+			town,
+			faction_id,
+			destination_context
+		)
 		mobilize_allowed = String(post_recruit_destination.get("type", "garrison")) == "emergency"
 	if mobilize_allowed:
-		var mobilize_result := _mobilize_surplus_garrison_for_field_need(session, config, town, faction_id)
+		var mobilize_result := _mobilize_surplus_garrison_for_field_need(
+			session,
+			config,
+			town,
+			faction_id,
+			destination_context
+		)
 		town = mobilize_result.get("town", town)
 		mobilized_batches += int(mobilize_result.get("mobilized_batches", 0))
 		_append_event_records(events, mobilize_result.get("events", []))
@@ -1912,15 +1937,26 @@ static func _mobilize_surplus_garrison_for_field_need(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	town: Dictionary,
-	faction_id: String
+	faction_id: String,
+	destination_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or town.is_empty() or faction_id == "":
 		return {"town": town, "mobilized_batches": 0, "events": []}
-	var destination_breakdown := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	var destination_breakdown := _choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		faction_id,
+		destination_context
+	)
 	var destination_type := String(destination_breakdown.get("type", "garrison"))
 	if destination_type not in ["raid", "planned", "emergency", "rebuild"]:
 		return {"town": town, "mobilized_batches": 0, "events": []}
-	var defense_target: int = _desired_town_strength(session, town, config)
+	var defense_target := (
+		int(destination_context.get("defense_target", 0))
+		if destination_context.has("defense_target")
+		else _desired_town_strength(session, town, config)
+	)
 	var current_defense: int = _army_strength(town.get("garrison", []))
 	var surplus_strength: int = current_defense - defense_target
 	if surplus_strength <= 0:
@@ -2162,20 +2198,41 @@ static func _recruit_destination_from_breakdown(breakdown: Dictionary) -> Dictio
 		_:
 			return {"type": "garrison"}
 
-static func _choose_recruit_destination_breakdown(
+static func _recruit_destination_static_context(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	town: Dictionary,
 	faction_id: String
 ) -> Dictionary:
-	_reinforcement_profile_count("destination_breakdown_count")
+	_reinforcement_profile_count("destination_context_count")
 	var started_usec := _reinforcement_profile_timer()
-	var defense_target = _desired_town_strength(session, town, config)
-	var current_defense = _army_strength(town.get("garrison", []))
-	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
-	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	var context := {
+		"defense_target": _desired_town_strength(session, town, config),
+		"local_front": OverworldRulesScript.town_front_state(session, town),
+		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
+	}
 	_reinforcement_profile_add_ms("town_context_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
+	context["faction_front_state"] = _faction_front_state(session, faction_id)
+	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
+	return context
+
+static func _choose_recruit_destination_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	faction_id: String,
+	destination_context: Dictionary = {}
+) -> Dictionary:
+	_reinforcement_profile_count("destination_breakdown_count")
+	var context := destination_context
+	if context.is_empty():
+		context = _recruit_destination_static_context(session, config, town, faction_id)
+	var started_usec := _reinforcement_profile_timer()
+	var defense_target := int(context.get("defense_target", 0))
+	var current_defense = _army_strength(town.get("garrison", []))
+	var local_front: Dictionary = context.get("local_front", {})
+	var strategy = context.get("strategy", {})
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
 	_reinforcement_profile_add_ms("best_rebuild_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
@@ -2187,9 +2244,7 @@ static func _choose_recruit_destination_breakdown(
 	started_usec = _reinforcement_profile_timer()
 	var best_emergency = _best_emergency_defense_recruitment_target(session, config, faction_id, town)
 	_reinforcement_profile_add_ms("best_emergency_ms", started_usec)
-	started_usec = _reinforcement_profile_timer()
-	var faction_front_state := _faction_front_state(session, faction_id)
-	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
+	var faction_front_state: Dictionary = context.get("faction_front_state", {})
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
 	garrison_score += float(int(local_front.get("garrison_bonus", 0)))
