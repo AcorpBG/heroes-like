@@ -2224,15 +2224,21 @@ static func _recruit_destination_static_context(
 ) -> Dictionary:
 	_reinforcement_profile_count("destination_context_count")
 	var started_usec := _reinforcement_profile_timer()
+	var development_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)
+	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var context := {
-		"defense_target": _desired_town_strength(session, town, config),
-		"local_front": OverworldRulesScript.town_front_state(session, town),
+		"defense_target": _desired_town_strength(session, town, config, development_metrics, local_front),
+		"local_front": local_front,
 		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
 		"faction_recruitment_context": faction_recruitment_context,
 	}
 	_reinforcement_profile_add_ms("town_context_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
-	context["faction_front_state"] = _faction_front_state(session, faction_id)
+	var faction_front_state = faction_recruitment_context.get("faction_front_state", null)
+	if faction_front_state == null:
+		faction_front_state = _faction_front_state(session, faction_id)
+		faction_recruitment_context["faction_front_state"] = faction_front_state
+	context["faction_front_state"] = faction_front_state
 	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
 	return context
 
@@ -4130,6 +4136,7 @@ static func _town_build_score_context(
 	_town_build_profile_count("town_score_context_count")
 	var started_usec := _town_build_profile_timer()
 	var current_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)
+	var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var context := {
 		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
 		"current_income": OverworldRulesScript.town_income(town, session),
@@ -4138,9 +4145,9 @@ static func _town_build_score_context(
 		"current_pressure": int(current_metrics.get("pressure_output", 0)),
 		"current_recovery": current_metrics.get("recovery", {}),
 		"current_market": OverworldRulesScript.town_market_state(town),
-		"town_front": OverworldRulesScript.town_front_state(session, town),
+		"town_front": town_front,
 		"town_role": OverworldRulesScript.town_strategic_role(town),
-		"garrison_below_target": _desired_town_strength(session, town, config) > _army_strength(town.get("garrison", [])),
+		"garrison_below_target": _desired_town_strength(session, town, config, current_metrics, town_front) > _army_strength(town.get("garrison", [])),
 		"raid_capacity_available": active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id),
 		"planned_target": _best_planned_task_recruitment_target(session, config, faction_id, town),
 	}
@@ -6136,7 +6143,13 @@ static func _capital_watch_summary(capital_state: Dictionary) -> String:
 		return "Anchor watch: %s remain the backbone of the front" % ", ".join(anchor_labels)
 	return ""
 
-static func _desired_town_strength(session: SessionStateStoreScript.SessionData, town: Dictionary, config: Dictionary) -> int:
+static func _desired_town_strength(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	config: Dictionary,
+	development_metrics: Dictionary = {},
+	front_context: Dictionary = {}
+) -> int:
 	var built_count = 0
 	for _building_id in _normalized_built_buildings(town):
 		built_count += 1
@@ -6145,12 +6158,15 @@ static func _desired_town_strength(session: SessionStateStoreScript.SessionData,
 	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	var distance = abs(int(hero_position.get("x", 0)) - int(town.get("x", 0))) + abs(int(hero_position.get("y", 0)) - int(town.get("y", 0)))
 	var town_role: String = OverworldRulesScript.town_strategic_role(town)
-	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
-	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
-	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
-	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var metrics: Dictionary = development_metrics if not development_metrics.is_empty() else OverworldRulesScript.town_development_metrics(town, session)
+	var logistics: Dictionary = metrics.get("logistics", {})
+	if logistics.is_empty():
+		logistics = OverworldRulesScript.town_logistics_state(session, town)
+	var capital_project: Dictionary = metrics.get("capital_project", {})
+	var recovery: Dictionary = metrics.get("recovery", {})
+	var front_state: Dictionary = front_context if not front_context.is_empty() else OverworldRulesScript.town_front_state(session, town)
 	var target = 140 + (built_count * 18)
-	target += int(round(float(OverworldRulesScript.town_battle_readiness(town, session)) / 2.0))
+	target += int(round(float(int(metrics.get("battle_readiness", 0))) / 2.0))
 	match town_role:
 		"capital":
 			target += 140
