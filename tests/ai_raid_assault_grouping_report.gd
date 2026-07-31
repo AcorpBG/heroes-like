@@ -29,6 +29,9 @@ func _run() -> void:
 	var continued_route_pressure_case_report := _blocked_player_town_waypoint_continues_town_pressure()
 	if continued_route_pressure_case_report.is_empty():
 		return
+	var neutral_town_fallback_case_report := _blocked_player_town_prefers_reachable_defended_neutral_town()
+	if neutral_town_fallback_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -41,6 +44,7 @@ func _run() -> void:
 		"long_range_pressure_case": long_range_pressure_case_report,
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
 		"continued_route_pressure_case": continued_route_pressure_case_report,
+		"neutral_town_fallback_case": neutral_town_fallback_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -449,6 +453,62 @@ func _blocked_player_town_waypoint_continues_town_pressure() -> Dictionary:
 		"opened_target_kind": String(opened.get("target_kind", "")),
 		"opened_target_id": String(opened.get("target_placement_id", "")),
 		"opened_goal_distance": int(opened.get("goal_distance", -1)),
+	}
+
+func _blocked_player_town_prefers_reachable_defended_neutral_town() -> Dictionary:
+	var session = _long_range_pressure_session(true)
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) != TOWN_ID:
+			continue
+		town["owner"] = "neutral"
+		town["controlling_faction_id"] = ""
+		town["x"] = 12
+		town["y"] = 2
+		town["garrison"] = [{"unit_id": "unit_bog_brute", "count": 6}]
+		towns[index] = town
+		break
+	session.overworld["towns"] = towns
+	var state := _enemy_state(session)
+	state["known_world_memory"] = {
+		"schema_version": 1,
+		"scouted_targets": [
+			{
+				"target_kind": "town",
+				"target_id": TOWN_ID,
+				"target_label": "Duskfen Bastion",
+				"x": 12,
+				"y": 2,
+				"scouted_day": int(session.day),
+				"expires_day": int(session.day) + 3,
+				"source_kind": "commander",
+				"source_id": "blocked_route_neutral_fallback_scout",
+			}
+		],
+	}
+	_update_enemy_state(session, state)
+	var raids := []
+	for index in range(3):
+		raids.append(_pressure_floor_raid_seed("neutral_fallback_pressure_%d" % index, 3 + index, 1, 8 + index))
+	session.overworld["encounters"] = raids
+	var assigned := EnemyAdventureRules.assign_target(session, _enemy_config(), raids[0].duplicate(true))
+	if String(assigned.get("target_kind", "")) != "town" or String(assigned.get("target_placement_id", "")) != TOWN_ID:
+		_fail("Blocked player-town pressure did not prefer the reachable defended neutral town: %s" % JSON.stringify(assigned))
+		return {}
+	var reason_codes: Array = assigned.get("target_reason_codes", []) if assigned.get("target_reason_codes", []) is Array else []
+	for required_code in ["battle_pressure_floor", "town_expansion", "neutral_town_siege"]:
+		if required_code not in reason_codes:
+			_fail("Defended neutral-town pressure fallback omitted %s: %s" % [required_code, JSON.stringify(assigned)])
+			return {}
+	return {
+		"case_id": "blocked_player_town_prefers_reachable_defended_neutral_town",
+		"target_kind": String(assigned.get("target_kind", "")),
+		"target_id": String(assigned.get("target_placement_id", "")),
+		"goal_distance": int(assigned.get("goal_distance", -1)),
+		"reason_codes": reason_codes,
 	}
 
 func _long_range_pressure_session(blocked: bool):
