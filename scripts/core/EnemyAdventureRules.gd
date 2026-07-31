@@ -6793,7 +6793,8 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	actor_id: String,
-	spawn_point: Dictionary
+	spawn_point: Dictionary,
+	preloaded_tasks: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "" or actor_id == "" or spawn_point.is_empty():
 		return {}
@@ -6808,7 +6809,8 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 	var config := {"faction_id": faction_id}
 	var origin_pos := Vector2i(int(spawn_point.get("x", 0)), int(spawn_point.get("y", 0)))
 	var best := {}
-	for task_value in _ai_hero_task_live_tasks_for_faction(session, faction_id):
+	var tasks: Array = preloaded_tasks if preloaded_tasks is Array else _ai_hero_task_live_tasks_for_faction(session, faction_id)
+	for task_value in tasks:
 		if not (task_value is Dictionary):
 			continue
 		var task: Dictionary = task_value
@@ -13494,7 +13496,7 @@ static func _ai_hero_task_target_snapshot_for_plan(
 			if int(node_result.get("index", -1)) < 0:
 				return {}
 			var node: Dictionary = node_result.get("node", {})
-			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			var tile := _resource_interaction_tile(node)
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			return {
 				"target_label": String(site.get("name", target_id)),
