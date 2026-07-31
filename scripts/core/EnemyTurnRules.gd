@@ -1901,23 +1901,18 @@ static func _recruit_town_forces(
 		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_recruitment)
 		if not destination_event.is_empty():
 			events.append(destination_event)
+	var post_recruit_destination_breakdown: Dictionary = initial_destination_breakdown
 	var mobilize_allowed := true
 	if emergency_batches > 0:
-		var post_recruit_destination := _choose_recruit_destination_breakdown(
-			session,
-			config,
-			town,
-			faction_id,
-			destination_context
-		)
-		mobilize_allowed = String(post_recruit_destination.get("type", "garrison")) == "emergency"
+		mobilize_allowed = String(post_recruit_destination_breakdown.get("type", "garrison")) == "emergency"
 	if mobilize_allowed:
 		var mobilize_result := _mobilize_surplus_garrison_for_field_need(
 			session,
 			config,
 			town,
 			faction_id,
-			destination_context
+			destination_context,
+			post_recruit_destination_breakdown
 		)
 		town = mobilize_result.get("town", town)
 		mobilized_batches += int(mobilize_result.get("mobilized_batches", 0))
@@ -1938,17 +1933,20 @@ static func _mobilize_surplus_garrison_for_field_need(
 	config: Dictionary,
 	town: Dictionary,
 	faction_id: String,
-	destination_context: Dictionary = {}
+	destination_context: Dictionary = {},
+	preselected_destination_breakdown: Dictionary = {}
 ) -> Dictionary:
 	if session == null or town.is_empty() or faction_id == "":
 		return {"town": town, "mobilized_batches": 0, "events": []}
-	var destination_breakdown := _choose_recruit_destination_breakdown(
-		session,
-		config,
-		town,
-		faction_id,
-		destination_context
-	)
+	var destination_breakdown := preselected_destination_breakdown
+	if destination_breakdown.is_empty():
+		destination_breakdown = _choose_recruit_destination_breakdown(
+			session,
+			config,
+			town,
+			faction_id,
+			destination_context
+		)
 	var destination_type := String(destination_breakdown.get("type", "garrison"))
 	if destination_type not in ["raid", "planned", "emergency", "rebuild"]:
 		return {"town": town, "mobilized_batches": 0, "events": []}
@@ -2016,27 +2014,29 @@ static func _mobilize_surplus_garrison_for_field_need(
 					faction_id,
 					String(destination.get("roster_hero_id", "")),
 					unit_id,
-					strength_limited_count
+					strength_limited_count,
+					String(destination.get("base_encounter_id", "")),
+					int(destination.get("target_strength", 0))
 				)
 		if accepted <= 0:
 			continue
-			town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
-			surplus_strength -= accepted * unit_strength
-			mobilized_batches += 1
-			var event_destination := destination_breakdown.duplicate(true)
-			var reason_codes := _normalize_string_array(event_destination.get("reason_codes", []))
-			if "surplus_garrison_mobilization" not in reason_codes:
-				reason_codes.append("surplus_garrison_mobilization")
-			event_destination["reason_codes"] = reason_codes
-			var selected_reserve := {
-				"unit_id": unit_id,
-				"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
-				"recruit_count": accepted,
-				"destination": event_destination,
-			}
-			var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
-			if not destination_event.is_empty():
-				events.append(destination_event)
+		town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
+		surplus_strength -= accepted * unit_strength
+		mobilized_batches += 1
+		var event_destination := destination_breakdown.duplicate(true)
+		var reason_codes := _normalize_string_array(event_destination.get("reason_codes", []))
+		if "surplus_garrison_mobilization" not in reason_codes:
+			reason_codes.append("surplus_garrison_mobilization")
+		event_destination["reason_codes"] = reason_codes
+		var selected_reserve := {
+			"unit_id": unit_id,
+			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			"recruit_count": accepted,
+			"destination": event_destination,
+		}
+		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_reserve)
+		if not destination_event.is_empty():
+			events.append(destination_event)
 	return {"town": town, "mobilized_batches": mobilized_batches, "events": events}
 
 static func _mobilize_rebuild_pressure_reserves(
@@ -3054,9 +3054,8 @@ static func _launchable_spawn_candidate(
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		_spawn_profile_count("launchable_no_encounter_pool")
 		return {}
-	started_usec = _spawn_profile_timer()
-	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
-	_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
+	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
+	var pressure_threshold_met: bool = int(state.get("pressure", 0)) >= int(raid_threshold)
 	var emergency_defense_plan := {}
 	if bool(launch_scan_cache.get("emergency_defense_empty", false)):
 		_spawn_profile_count("emergency_defense_launch_ready_precomputed_empty")
@@ -3066,29 +3065,34 @@ static func _launchable_spawn_candidate(
 		_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
 		if emergency_defense_plan.is_empty():
 			launch_scan_cache["emergency_defense_empty"] = true
-	started_usec = _spawn_profile_timer()
-	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
-	_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
-	started_usec = _spawn_profile_timer()
-	var rebuild_pressure_plan := _rebuild_pressure_launch_ready_report(session, config, state, faction_id)
-	_spawn_profile_add_ms("rebuild_pressure_launch_ready_ms", started_usec)
-	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
-	if (
-		int(state.get("pressure", 0)) < raid_threshold
-		and launch_ready_plan.is_empty()
-		and emergency_defense_plan.is_empty()
-		and active_front_support_plan.is_empty()
-		and rebuild_pressure_plan.is_empty()
-	):
-		_spawn_profile_count("launchable_below_threshold")
-		return {}
+	var skip_emergency_defense_scan := emergency_defense_plan.is_empty()
+	if pressure_threshold_met:
+		_spawn_profile_count("launchable_pressure_threshold_met")
+	else:
+		started_usec = _spawn_profile_timer()
+		var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
+		_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
+		started_usec = _spawn_profile_timer()
+		var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
+		_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
+		started_usec = _spawn_profile_timer()
+		var rebuild_pressure_plan := _rebuild_pressure_launch_ready_report(session, config, state, faction_id)
+		_spawn_profile_add_ms("rebuild_pressure_launch_ready_ms", started_usec)
+		if (
+			launch_ready_plan.is_empty()
+			and emergency_defense_plan.is_empty()
+			and active_front_support_plan.is_empty()
+			and rebuild_pressure_plan.is_empty()
+		):
+			_spawn_profile_count("launchable_below_threshold")
+			return {}
 	started_usec = _spawn_profile_timer()
 	var candidate := _best_open_spawn_point(
 		session,
 		config,
 		state,
 		faction_id,
-		emergency_defense_plan.is_empty()
+		skip_emergency_defense_scan
 	)
 	_spawn_profile_add_ms("best_open_spawn_point_ms", started_usec)
 	if candidate.is_empty():
