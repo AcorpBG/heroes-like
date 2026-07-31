@@ -4806,6 +4806,8 @@ static func _active_front_support_spawn_candidate_for_point(
 		roster
 	)
 	var best := {}
+	var support_plan := {}
+	var support_plan_resolved := false
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -4832,16 +4834,19 @@ static func _active_front_support_spawn_candidate_for_point(
 			roster
 		)
 		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
-		var plan := EnemyAdventureRulesScript.ai_active_front_support_target_selection_plan(
-			session,
-			config,
-			probe
-		)
-		if plan.is_empty():
+		# Route geometry is identical at one spawn point; commander strength and fit stay candidate-specific below.
+		if not support_plan_resolved:
+			support_plan = EnemyAdventureRulesScript.ai_active_front_support_target_selection_plan(
+				session,
+				config,
+				probe
+			)
+			support_plan_resolved = true
+		if support_plan.is_empty():
 			continue
 		var candidate := _spawn_point_candidate_from_plan(
 			point,
-			plan,
+			support_plan,
 			roster_hero_id,
 			"active_front_support",
 			spawn_order + int(commander_value.get("rotation_order", 0))
