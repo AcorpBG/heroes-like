@@ -61064,7 +61064,7 @@
         "Final-code Medium ordinal 88 completes 56/56 turns with row signature 1b59c6ca, 84 activity events, 64 assignments, 22 quiet turns (39%), six active raids, one valid town-defense loss/autoresolution, zero behavior bugs, zero target-integrity violations, and zero unreachable targets. Exact non-runtime behavior matches baseline while row runtime falls from 552665ms to 491707ms (11.0%), the post-capture turn falls from 19737ms to 18153ms, and the following turn falls from 13234ms to 11670ms. Five exact current-code rows pass and 95 remain.",
         "Ordinal 89 profiling exposed active-front target/path selection repeating for every available commander at the same spawn point after a natural town capture. Active-front target geometry is now resolved once per spawn point, while every commander still builds and evaluates its own army continuity, fit bonus, strength, spawn order, and adventure-spell projection.",
         "Final-code Medium ordinal 89 completes 56/56 turns with row signature 6385cffc, 85 activity events, 63 assignments, four sites seized, 15 quiet turns (27%), six active raids, one natural town-defense loss/autoresolution, zero behavior bugs, zero target-integrity violations, and zero unreachable targets. Exact non-runtime behavior matches baseline while row runtime falls from 461132ms to 458446ms, maximum turn runtime falls from 21136ms to 19735ms, and profiled active-front candidate work on the post-capture turn falls from 4459ms to 3359ms. Six exact current-code rows pass and 94 remain.",
-        "The standalone ai_raid_regroup_retreat_report and ai_hero_task_hero_hunt_report scenes fail identically on committed HEAD in direct resource-support and nearby-threat fixtures, respectively. The broad strategic baseline still passes its regroup/assault subsystem, but these focused red tests remain explicit pre-existing strategic test debt rather than being counted as validation for this change."
+        "The formerly failing standalone regroup/retreat and hero-hunt suites are green again. Superior-player-hero avoidance now honors player_threat_avoidance_delay_until_day at the regroup town instead of resuming the dangerous objective on the same day; legacy regroup fixtures now use legal multi-tile-pathing origins and assert the current reachable-retask and bounded no-spare retry lifecycles."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61077,9 +61077,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes and reuses invariant town/front plus active-front spawn-point context. Exact current-code ordinals 14, 84, 86, 87, 88, and 89 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 89 preserves its exact behavior signature and natural town battle while runtime improves from 461132ms to 458446ms and maximum turn runtime from 21136ms to 19735ms. The remaining 94 target rows and two pre-existing focused strategic test failures remain open.",
+      "summary": "Medium Native RMG strategic AI keeps persistent player-town pressure routes, reuses invariant town/front plus active-front spawn-point context, and holds superior-hero avoidance through its declared regroup recovery window. Exact current-code ordinals 14, 84, 86, 87, 88, and 89 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 89 preserves its exact behavior signature and natural town battle while runtime improves from 461132ms to 458446ms and maximum turn runtime from 21136ms to 19735ms. The standalone regroup/retreat and hero-hunt suites are green; the remaining 94 target rows remain open.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-07-31T18:53:51Z",
+      "updatedAt": "2026-07-31T19:10:53Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61470,6 +61470,16 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py && jq empty ops/progress.json && git diff --check",
           "notes": "Strategic baseline passes all 14 subsystems and five generated-map probes with medium_ok_count=3/3, behavior_bug_count=0, and regroup/assault coverage pass; tactical battle AI and repository gates pass. Production readiness remains false behind 94 unrun exact Medium rows and the separately recorded focused test debt.",
           "status": "pass_with_existing_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_raid_regroup_retreat_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/ai_hero_task_hero_hunt_report.tscn",
+          "notes": "Both formerly red focused suites pass. Resource-front support selects the preserved regrouped resource from a legal origin; unreachable-route recovery permits the later reachable retask; no-spare regroup retires after its bounded retries; and both immediate and mid-move superior-player-hero threats remain on regroup through the declared recovery day.",
+          "status": "pass"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+          "notes": "Strategic baseline passes all 14 subsystems and all five generated-map probes with medium_ok_count=3/3, behavior_bug_count=0, 53 activity events, and 25 assignments. Tactical battle AI passes. Production readiness remains false only behind the active Medium long-run matrix in this strategic baseline.",
+          "status": "pass_with_remaining_94_row_production_gap"
         }
       ]
     },
@@ -62376,9 +62386,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context with exact behavior parity, and current-code ordinals 14, 84, 86, 87, 88, and 89 pass target-configured 56-turn trajectories; 94 target rows, two pre-existing focused strategic test failures, and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Medium strategic AI reuses invariant town/front and active-front spawn-point context with exact behavior parity, honors superior-hero regroup recovery windows, and current-code ordinals 14, 84, 86, 87, 88, and 89 pass target-configured 56-turn trajectories. The standalone regroup/retreat and hero-hunt suites are green; 94 target rows and the overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-07-31T18:53:51Z",
+  "updatedAt": "2026-07-31T19:10:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

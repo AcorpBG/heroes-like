@@ -17604,7 +17604,8 @@ static func _regroup_raid_at_town(
 	raid["no_spare_regroup_count"] = no_spare_regroup_count
 
 	var resumed_target_event := {}
-	var ready_to_resume := not raid_regroup_needed(raid, config, faction_id)
+	var threat_recovery_active := int(raid.get("player_threat_avoidance_delay_until_day", 0)) > int(session.day)
+	var ready_to_resume := not threat_recovery_active and not raid_regroup_needed(raid, config, faction_id)
 	if ready_to_resume:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		var resume_result := _resume_previous_target_after_regroup(session, config, raid, faction_id)
