@@ -11,6 +11,8 @@ static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd"
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _spawn_loop_profile_active := false
 static var _spawn_loop_profile: Dictionary = {}
+static var _reinforcement_profile_active := false
+static var _reinforcement_profile: Dictionary = {}
 
 const TRACKED_RESOURCES := [
 	"gold",
@@ -306,6 +308,34 @@ static func _spawn_profile_count(key: String, amount: int = 1) -> void:
 	var counts: Dictionary = _spawn_loop_profile.get("counts", {}) if _spawn_loop_profile.get("counts", {}) is Dictionary else {}
 	counts[key] = int(counts.get(key, 0)) + amount
 	_spawn_loop_profile["counts"] = counts
+
+static func _reinforcement_profile_begin(enabled: bool) -> void:
+	_reinforcement_profile_active = enabled
+	_reinforcement_profile = {"schema_id": "strategic_ai_reinforcement_profile_v1", "phases_ms": {}, "counts": {}} if enabled else {}
+
+static func _reinforcement_profile_finish() -> Dictionary:
+	var profile := _reinforcement_profile.duplicate(true) if _reinforcement_profile_active else {}
+	_reinforcement_profile_active = false
+	_reinforcement_profile = {}
+	return profile
+
+static func _reinforcement_profile_timer() -> int:
+	return Time.get_ticks_usec() if _reinforcement_profile_active else 0
+
+static func _reinforcement_profile_add_ms(key: String, started_usec: int) -> void:
+	if not _reinforcement_profile_active or key == "" or started_usec <= 0:
+		return
+	var phases: Dictionary = _reinforcement_profile.get("phases_ms", {}) if _reinforcement_profile.get("phases_ms", {}) is Dictionary else {}
+	var elapsed_ms := int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
+	phases[key] = int(phases.get(key, 0)) + elapsed_ms
+	_reinforcement_profile["phases_ms"] = phases
+
+static func _reinforcement_profile_count(key: String, amount: int = 1) -> void:
+	if not _reinforcement_profile_active or key == "":
+		return
+	var counts: Dictionary = _reinforcement_profile.get("counts", {}) if _reinforcement_profile.get("counts", {}) is Dictionary else {}
+	counts[key] = int(counts.get(key, 0)) + amount
+	_reinforcement_profile["counts"] = counts
 
 static func _enemy_turn_result(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"ok": ok, "message": message, "events": events}
@@ -1021,6 +1051,7 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "spell_study_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
+	_reinforcement_profile_begin(profile_enabled)
 	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
 	var reinforcement_message = String(reinforcement_result.get("message", ""))
 	if reinforcement_message != "":
@@ -1030,6 +1061,9 @@ static func _run_empire_cycle(
 	var refreshed_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
 	if not refreshed_state.is_empty():
 		state["commander_roster"] = refreshed_state.get("commander_roster", state.get("commander_roster", []))
+	var reinforcement_profile := _reinforcement_profile_finish()
+	if profile_enabled and not reinforcement_profile.is_empty():
+		profile["reinforcement_profile"] = reinforcement_profile
 	_profile_add_ms(profile, "reinforcement_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -1126,7 +1160,8 @@ static func _run_empire_cycle(
 	phase_started = _profile_timer(profile_enabled)
 	_spawn_profile_begin(profile_enabled)
 	var launched_placement_ids := []
-	var launch_candidate := _launchable_spawn_candidate(session, config, state, faction_id)
+	var launch_scan_cache := {}
+	var launch_candidate := _launchable_spawn_candidate(session, config, state, faction_id, launch_scan_cache)
 	while not launch_candidate.is_empty():
 		var spawn_result = _spawn_raid(session, config, state, launch_candidate)
 		if spawn_result.is_empty():
@@ -1138,7 +1173,7 @@ static func _run_empire_cycle(
 			launched_placement_ids.append(launched_id)
 		if String(spawn_result.get("spawn_plan_source", "")).begins_with("emergency_"):
 			break
-		launch_candidate = _launchable_spawn_candidate(session, config, state, faction_id)
+		launch_candidate = _launchable_spawn_candidate(session, config, state, faction_id, launch_scan_cache)
 	var spawn_loop_profile := _spawn_profile_finish()
 	if profile_enabled and not spawn_loop_profile.is_empty():
 		profile["spawn_loop_profile"] = spawn_loop_profile
@@ -1745,6 +1780,8 @@ static func _recruit_town_forces(
 	var events = []
 	var recruit_ids = []
 	var initial_destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	var destination_breakdown = initial_destination_breakdown
+	var destination_breakdown_needs_refresh := false
 	for unit_id_value in town.get("available_recruits", {}).keys():
 		recruit_ids.append(String(unit_id_value))
 	recruit_ids.sort_custom(func(a: String, b: String) -> bool:
@@ -1763,7 +1800,9 @@ static func _recruit_town_forces(
 		var recruit_count = _max_affordable_from_pool_with_town_market(town, treasury, cost, int(session.day), available)
 		if recruit_count <= 0:
 			continue
-		var destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+		if destination_breakdown_needs_refresh:
+			destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
+			destination_breakdown_needs_refresh = false
 		var destination = _recruit_destination_from_breakdown(destination_breakdown)
 		var applied_count = recruit_count
 		if String(destination.get("type", "")) == "raid":
@@ -1801,6 +1840,7 @@ static func _recruit_town_forces(
 		var final_cost := _scale_resource_pool(cost, applied_count)
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
 		_spend_from_pool(treasury, final_cost)
+		destination_breakdown_needs_refresh = true
 		var selected_recruitment := {
 			"unit_id": unit_id,
 			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
@@ -2093,15 +2133,28 @@ static func _choose_recruit_destination_breakdown(
 	town: Dictionary,
 	faction_id: String
 ) -> Dictionary:
+	_reinforcement_profile_count("destination_breakdown_count")
+	var started_usec := _reinforcement_profile_timer()
 	var defense_target = _desired_town_strength(session, town, config)
 	var current_defense = _army_strength(town.get("garrison", []))
 	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	_reinforcement_profile_add_ms("town_context_ms", started_usec)
+	started_usec = _reinforcement_profile_timer()
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+	_reinforcement_profile_add_ms("best_rebuild_ms", started_usec)
+	started_usec = _reinforcement_profile_timer()
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
+	_reinforcement_profile_add_ms("best_raid_ms", started_usec)
+	started_usec = _reinforcement_profile_timer()
 	var best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
+	_reinforcement_profile_add_ms("best_planned_ms", started_usec)
+	started_usec = _reinforcement_profile_timer()
 	var best_emergency = _best_emergency_defense_recruitment_target(session, config, faction_id, town)
+	_reinforcement_profile_add_ms("best_emergency_ms", started_usec)
+	started_usec = _reinforcement_profile_timer()
 	var faction_front_state := _faction_front_state(session, faction_id)
+	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
 	garrison_score += float(int(local_front.get("garrison_bonus", 0)))
@@ -2380,6 +2433,8 @@ static func _best_emergency_defense_recruitment_target(
 ) -> Dictionary:
 	if session == null or faction_id == "" or support_town.is_empty():
 		return {}
+	if not _has_open_emergency_defense_front(session, faction_id):
+		return {}
 	var base_encounter_id := _primary_raid_encounter_id(config)
 	if base_encounter_id == "":
 		return {}
@@ -2438,6 +2493,72 @@ static func _best_emergency_defense_recruitment_target(
 				"supply_distance": supply_distance,
 			}
 	return best
+
+static func _has_open_emergency_defense_front(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> bool:
+	if session == null or faction_id == "":
+		return false
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if EnemyAdventureRulesScript._town_faction_id(town) != faction_id:
+			continue
+		var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+		if (
+			not bool(town_front.get("active", false))
+			or String(town_front.get("faction_id", "")) != faction_id
+			or String(town_front.get("mode", "")) != "stabilizing"
+		):
+			continue
+		var town_need := EnemyAdventureRulesScript._town_defense_commitment_need(town, town_front)
+		var town_committed := EnemyAdventureRulesScript._town_garrison_strength(town)
+		town_committed += EnemyAdventureRulesScript._committed_town_defense_strength(
+			session,
+			faction_id,
+			String(town.get("placement_id", "")),
+			""
+		)
+		if town_need > town_committed:
+			return true
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not EnemyAdventureRulesScript._resource_site_is_persistent(site):
+			continue
+		if String(node.get("collected_by_faction_id", "")) != faction_id:
+			continue
+		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+		var known_threat := EnemyAdventureRulesScript._known_player_threat_position_for_ai(
+			session,
+			faction_id,
+			target_tile
+		)
+		var resource_front := EnemyAdventureRulesScript._resource_defense_front_state(
+			session,
+			node,
+			site,
+			faction_id,
+			known_threat
+		)
+		if not bool(resource_front.get("active", false)):
+			continue
+		var resource_need := EnemyAdventureRulesScript._resource_defense_commitment_need(site, resource_front)
+		var resource_committed := EnemyAdventureRulesScript._committed_resource_defense_strength(
+			session,
+			faction_id,
+			String(node.get("placement_id", "")),
+			""
+		)
+		if resource_need > resource_committed:
+			return true
+	return false
 
 static func _best_planned_task_recruitment_target(
 	session: SessionStateStoreScript.SessionData,
@@ -2816,7 +2937,8 @@ static func _launchable_spawn_candidate(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	launch_scan_cache: Dictionary = {}
 ) -> Dictionary:
 	_spawn_profile_count("launchable_candidate_calls")
 	if _owned_town_count(session, faction_id) <= 0:
@@ -2845,9 +2967,15 @@ static func _launchable_spawn_candidate(
 	started_usec = _spawn_profile_timer()
 	var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
 	_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
-	started_usec = _spawn_profile_timer()
-	var emergency_defense_plan := _emergency_defense_launch_ready_report(session, config, state, faction_id)
-	_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
+	var emergency_defense_plan := {}
+	if bool(launch_scan_cache.get("emergency_defense_empty", false)):
+		_spawn_profile_count("emergency_defense_launch_ready_precomputed_empty")
+	else:
+		started_usec = _spawn_profile_timer()
+		emergency_defense_plan = _emergency_defense_launch_ready_report(session, config, state, faction_id)
+		_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
+		if emergency_defense_plan.is_empty():
+			launch_scan_cache["emergency_defense_empty"] = true
 	started_usec = _spawn_profile_timer()
 	var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
 	_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
@@ -2865,7 +2993,13 @@ static func _launchable_spawn_candidate(
 		_spawn_profile_count("launchable_below_threshold")
 		return {}
 	started_usec = _spawn_profile_timer()
-	var candidate := _best_open_spawn_point(session, config, state, faction_id)
+	var candidate := _best_open_spawn_point(
+		session,
+		config,
+		state,
+		faction_id,
+		emergency_defense_plan.is_empty()
+	)
 	_spawn_profile_add_ms("best_open_spawn_point_ms", started_usec)
 	if candidate.is_empty():
 		_spawn_profile_count("launchable_no_open_candidate")
@@ -2920,6 +3054,8 @@ static func _emergency_defense_launch_ready_report(
 	faction_id: String
 ) -> Dictionary:
 	if session == null or faction_id == "":
+		return {}
+	if not _has_open_emergency_defense_front(session, faction_id):
 		return {}
 	var points := _open_spawn_points(session, config)
 	if points.is_empty():
@@ -4275,7 +4411,8 @@ static func _best_open_spawn_point(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary = {},
-	faction_id: String = ""
+	faction_id: String = "",
+	skip_emergency_defense_scan: bool = false
 ) -> Dictionary:
 	var started_usec := _spawn_profile_timer()
 	var points := _open_spawn_points(session, config)
@@ -4303,7 +4440,8 @@ static func _best_open_spawn_point(
 			resolved_faction_id,
 			point,
 			occupied_commander_ids,
-			index
+			index,
+			skip_emergency_defense_scan
 		)
 		_spawn_profile_add_ms("spawn_point_candidate_total_ms", started_usec)
 		if candidate.is_empty():
@@ -4320,27 +4458,31 @@ static func _spawn_point_candidate(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	skip_emergency_defense_scan: bool = false
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
 	var started_usec := _spawn_profile_timer()
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	_spawn_profile_add_ms("spawn_point_recent_rebuild_pressure_ms", started_usec)
-	started_usec = _spawn_profile_timer()
-	var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
-		session,
-		config,
-		state,
-		faction_id,
-		point,
-		occupied_commander_ids,
-		spawn_order
-	)
-	_spawn_profile_add_ms("emergency_defense_spawn_candidate_ms", started_usec)
-	if not emergency_defense_candidate.is_empty():
-		_spawn_profile_count("emergency_defense_spawn_candidate_selected")
-		return emergency_defense_candidate
+	if skip_emergency_defense_scan:
+		_spawn_profile_count("emergency_defense_spawn_candidate_precomputed_empty")
+	else:
+		started_usec = _spawn_profile_timer()
+		var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			faction_id,
+			point,
+			occupied_commander_ids,
+			spawn_order
+		)
+		_spawn_profile_add_ms("emergency_defense_spawn_candidate_ms", started_usec)
+		if not emergency_defense_candidate.is_empty():
+			_spawn_profile_count("emergency_defense_spawn_candidate_selected")
+			return emergency_defense_candidate
 	if not rebuild_pressure_active:
 		started_usec = _spawn_profile_timer()
 		var ready_saved_candidate := _ready_saved_task_spawn_candidate_for_point(
