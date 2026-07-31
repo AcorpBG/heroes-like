@@ -61055,7 +61055,9 @@
         "Ordinal 84 profiling exposed a 23595ms post-town-capture turn. Emergency recruitment rebuilt the same threatened-front target for every launch-ready commander at a spawn point, consuming 6528ms. It now resolves that invariant target once and reapplies it to each commander's own readiness, army, route, and fit state. Exact 27-turn and 56-turn comparisons preserve row signatures and all non-runtime behavior; the post-capture turn falls to 20301ms, emergency evaluation to 3954ms, total row runtime from 646326ms to 633220ms, and maximum turn runtime to 21994ms.",
         "Final-code Medium ordinal 84 completes all 56 requested turns with one successful town-defense autoresolution, 203 activity events, 54 assignments, two sites seized, zero stalls, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Together with ordinal 14, two exact current-code target rows pass and 98 remain. Ordinal 83 remains historical pre-optimization evidence rather than exact current-code matrix credit.",
         "Ordinal 86 reproduced healthy active raids that spent eight weeks on generic exploration because the battle-pressure floor handled reachable nearby towns and known route objects but had no persistent route owner or town-directed frontier step after a route object resolved. Battle-pressure raids now accept reachable long-range player towns, retain one route owner per faction, and select cached-distance-field frontier waypoints that reduce the gap to a blocked player town without omniscient hero targeting.",
-        "Final-code Medium ordinal 86 completes all 56 turns with zero behavior bugs, target-integrity violations, or unreachable active targets. It remains battle-free and has 20 quiet turns, but repeated Riverwatch approach, route-resource, and Frontier Guard assignments replace the previous exploration-only pressure; runtime improves from 584261ms / 15641ms max turn to 515756ms / 12941ms. Together with ordinals 14 and 84, three exact current-code target rows pass and 97 remain."
+        "Final-code Medium ordinal 86 completes all 56 turns with zero behavior bugs, target-integrity violations, or unreachable active targets. It remains battle-free and has 20 quiet turns, but repeated Riverwatch approach, route-resource, and Frontier Guard assignments replace the previous exploration-only pressure; runtime improves from 584261ms / 15641ms max turn to 515756ms / 12941ms. Together with ordinals 14 and 84, three exact current-code target rows pass and 97 remain.",
+        "Ordinal 87 exposed that completed pressure-route frontier waypoints retained the blocked town metadata but fell through generic target selection on arrival. Frontier arrival now immediately re-evaluates the same player town, chaining another closer reachable waypoint/guard while blocked and promoting to a direct town target once the route opens. Focused live coverage proves both transitions.",
+        "Final-code Medium ordinal 87 completes all 56 turns with zero behavior bugs, target-integrity violations, or unreachable active targets. It records 60 activity events, 55 assignments, two sites seized, 23 quiet turns (41%), 458704ms total runtime, and a 11084ms maximum turn. The row remains battle-free, so route continuity is fixed while battle frequency and travel-heavy pacing remain production gaps. Four exact current-code rows pass and 96 remain."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61068,9 +61070,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI now keeps one persistent player-town pressure route per faction, accepts reachable long-range towns, and uses reachable town-directed frontier waypoints when blocked routes have no known guard/object step. Exact current-code ordinals 14, 84, and 86 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 86 replaces exploration-only pressure with repeated Riverwatch route and guard objectives and improves runtime from 584261ms to 515756ms, but remains battle-free with 20 quiet turns. The remaining 97 target rows are unrun.",
+      "summary": "Medium Native RMG strategic AI keeps one persistent player-town pressure route per faction, accepts reachable long-range towns, and immediately chains town-directed frontier waypoints or promotes to a town assault when the route opens. Exact current-code ordinals 14, 84, 86, and 87 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 87 improves runtime from 471284ms to 458704ms but remains battle-free with 23 quiet turns (41%), so battle frequency and travel-heavy pacing remain explicit gaps. The remaining 96 target rows are unrun.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-07-31T17:04:45Z",
+      "updatedAt": "2026-07-31T17:31:19Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61411,6 +61413,21 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/strategic_ai_baseline_kpi_report.tscn && python3 tests/validate_repo.py && git diff --check",
           "notes": "Strategic baseline passes all 14 subsystems and five generated-map probes with medium_ok_count=3/3 and behavior_bug_count=0; repository validation and diff checks pass. The separately tracked core-systems obstruction-line tactical fixture still fails with its existing May blocker and is not caused by this strategic AI diff.",
           "status": "pass_with_existing_core_smoke_blocker"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_raid_assault_grouping_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+          "notes": "Focused live coverage proves a blocked player-town pressure host advances from explore:16:2 to explore:30:2 when its first waypoint completes, then promotes to riverwatch_hold with finite distance when the same route is open. Known-world visibility and faction-scoped route boundaries remain green.",
+          "status": "pass"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=86 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Final-code Medium ordinal 87 passes 56/56 turns with 60 activity events, 55 assignments, two sites seized, 23 quiet turns (41%), zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime improves from 471284ms / 11514ms max turn to 458704ms / 11084ms. The row remains battle-free; four exact current-code rows pass and 96 remain.",
+          "status": "pass_with_remaining_96_row_production_gap_and_pacing_caveat"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && python3 tests/validate_repo.py && git diff --check",
+          "notes": "Strategic baseline passes all 14 subsystems and five generated-map probes with medium_ok_count=3/3 and behavior_bug_count=0; tactical battle AI, repository validation, and diff checks pass after route continuation behavior changed.",
+          "status": "pass_with_existing_production_gap"
         }
       ]
     },
