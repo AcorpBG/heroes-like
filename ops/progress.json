@@ -15140,11 +15140,11 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic-AI runtime now avoids repeated emergency and town-state work, and ordinal 13 passes a target-configured 56-turn row through real town-defense and hero-intercept battles to terminal defeat.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Medium strategic AI now reuses invariant emergency-defense targets without changing commander-specific decisions, and exact current-code ordinals 14 and 84 pass target-configured production rows.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Medium ordinal 13 passes a target-configured 56-turn row, terminating correctly on turn 48 after a town-defense loss and hero-intercept defeat. It records 154 activity events, 42 assignments, two successful battle autoresolutions, one stalled turn, and zero behavior bugs, integrity violations, or unreachable targets in 460536ms. Ordinals 11-13 also pass focused 7-turn rows. The other 99 target rows remain unrun.",
+  "currentSliceNotes": "Exact current-code Medium ordinals 14 and 84 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 84 completes all 56 turns with 203 events, 54 assignments, two sites seized, one valid town battle, and zero stalls; its row maximum falls from 23595ms to 21994ms with exact behavior parity. The other 98 target rows remain unrun.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
   "currentSliceUpdatedAt": "2026-07-31T00:00:00Z",
@@ -61048,7 +61048,10 @@
         "Current-code ordinal 53 completed all 56 turns with one natural town battle, 138 activity events, 100 assignments, four sites seized, 12 stalled turns, and zero behavior bugs, target-integrity violations, or unreachable active targets. This cleared the historical no-arrival pacing gap for that seed, but the row predates the later surplus-garrison behavior repair and therefore remains historical rather than final-code matrix credit.",
         "Ordinal 14 profiling isolated a 30174ms post-capture turn with 16087ms in the Mireclaw spawn loop; planned-task and active-front readiness scans consumed 3644ms and 4995ms even though normal pressure already authorized launch. Launch gating now keeps the cached emergency-front proof but runs planned/active waiver scans only below the pressure threshold. All 47 deterministic behavior results remain identical while the measured turn drops to 21523ms and spawn_loop_ms to 7412ms.",
         "Focused recruitment validation exposed a June control-flow defect that left every successful surplus-garrison removal/event block unreachable beneath accepted<=0 after continue. Successful transfers now remove actual garrison units and emit commander-prepared events, the town transaction keeps its selected field destination after normal recruitment, and rebuild transfers pass their base encounter and target strength. The full 14-case recruitment/preparation/launch suite passes, including reserve-only and post-recruit mobilization, critical-garrison protection, and below-threshold planned launches.",
-        "Final behavior-changing code passes target-configured Medium ordinal 14 to terminal defeat on turn 52. Five battle interrupts/autoresolutions succeed; the row records 109 activity events, 57 target assignments, three sites seized, 20 stalled turns, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 530096ms with a 23434ms maximum turn. Earlier ordinal 13 and 53 rows predate the final reserve behavior repair, so ordinal 14 is the sole final-code production-length row and 99 target rows remain."
+        "Final behavior-changing code passes target-configured Medium ordinal 14 to terminal defeat on turn 52. Five battle interrupts/autoresolutions succeed; the row records 109 activity events, 57 target assignments, three sites seized, 20 stalled turns, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Runtime is 530096ms with a 23434ms maximum turn. Earlier ordinal 13 and 53 rows predate the final reserve behavior repair, so ordinal 14 is the sole final-code production-length row and 99 target rows remain.",
+        "Historical risk ordinals 83 and 84 both clear their prior unreachable-target diagnostics on the reserve-corrected code. Ordinal 83 terminates correctly on turn 45 after two hero battles with 176 events, 66 assignments, two sites seized, zero stalls, and no behavior, integrity, or reachability failures. Pre-optimization ordinal 84 completes all 56 turns with 203 events, 54 assignments, two sites seized, one town battle, zero stalls, and no behavior, integrity, or reachability failures.",
+        "Ordinal 84 profiling exposed a 23595ms post-town-capture turn. Emergency recruitment rebuilt the same threatened-front target for every launch-ready commander at a spawn point, consuming 6528ms. It now resolves that invariant target once and reapplies it to each commander's own readiness, army, route, and fit state. Exact 27-turn and 56-turn comparisons preserve row signatures and all non-runtime behavior; the post-capture turn falls to 20301ms, emergency evaluation to 3954ms, total row runtime from 646326ms to 633220ms, and maximum turn runtime to 21994ms.",
+        "Final-code Medium ordinal 84 completes all 56 requested turns with one successful town-defense autoresolution, 203 activity events, 54 assignments, two sites seized, zero stalls, zero behavior bugs, zero target-integrity violations, and zero unreachable active targets. Together with ordinal 14, two exact current-code target rows pass and 98 remain. Ordinal 83 remains historical pre-optimization evidence rather than exact current-code matrix credit."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61061,7 +61064,7 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Medium Native RMG strategic AI now skips redundant launch-waiver scans when pressure already authorizes deployment and executes real surplus-garrison transfers while preserving destination continuity and garrison floors. Final-code ordinal 14 passes a target-configured row through five battle autoresolutions to terminal defeat with zero behavior bugs, integrity violations, or unreachable targets; its maximum turn is 23.4s versus the prior 30.1s peak. Earlier production-length rows predate the final behavior correction, so 99 final-code target rows remain unrun.",
+      "summary": "Medium Native RMG strategic AI now reuses invariant emergency-defense targets per spawn point while preserving commander-specific readiness, army, route, and fit decisions. Exact current-code ordinals 14 and 84 pass target-configured production rows with zero behavior bugs, integrity violations, or unreachable targets. Ordinal 84 completes all 56 turns with 203 events, 54 assignments, two sites seized, one valid town battle, zero stalls, and a 21994ms maximum turn versus 23595ms before the optimization. The remaining 98 target rows are unrun.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
       "updatedAt": "2026-07-31T00:00:00Z",
       "validation": [
@@ -61368,6 +61371,26 @@
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && python3 tests/validate_repo.py",
           "notes": "Strategic baseline passes all 14 expected subsystems and all five generated-map probes with medium_ok_count=3/3, behavior_bug_count=0, and production_ready=false behind the active Medium long-run matrix. Tactical battle AI smoke and repository validation pass.",
+          "status": "pass_with_existing_production_gap"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=83 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=27 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 1800 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact before/after structured comparison preserves all 27 non-runtime turn results and row signature e4d2fe69. The post-capture turn improves from 22834ms to 20192ms, Mireclaw reinforcement from 8886ms to 6135ms, and emergency evaluation from 6528ms to 3954ms.",
+          "status": "pass_with_measured_runtime_improvement"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_town_defense_retask_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_town_governor_pressure_report.tscn",
+          "notes": "Planned recruitment and reserve mobilization, commander-fit emergency defense, town/resource defense retask and release, and town governor destination behavior all pass after emergency target reuse.",
+          "status": "pass"
+        },
+        {
+          "command": "HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=83 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 2400 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Final-code Medium ordinal 84 passes all 56 turns with one valid town battle, 203 activity events, 54 assignments, two sites seized, zero stalls, zero behavior bugs, zero integrity violations, and zero unreachable targets. Exact full-row comparison preserves signature 35684931 and all non-runtime behavior while runtime improves from 646326ms / 23595ms max turn to 633220ms / 21994ms.",
+          "status": "pass_with_remaining_98_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 900 --scene res://tests/strategic_ai_baseline_kpi_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_autoplay_tactical_order_report.tscn && python3 tests/validate_repo.py",
+          "notes": "Strategic baseline passes all 14 subsystems and five generated-map probes with medium_ok_count=3/3 and behavior_bug_count=0; tactical battle smoke and repository validation pass. Production readiness remains false behind the 98 remaining exact current-code Medium rows.",
           "status": "pass_with_existing_production_gap"
         }
       ]
@@ -62275,7 +62298,7 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Medium strategic-AI runtime improved materially, and ordinal 13 now passes one target-configured 56-turn trajectory through real town and hero battles; 99 target rows and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Medium strategic-AI emergency recruitment is faster with exact behavior parity, and current-code ordinals 14 and 84 pass target-configured 56-turn trajectories; 98 target rows and the overall game remain in progress.",
   "taskId": "10184",
   "updatedAt": "2026-07-31T00:00:00Z",
   "validation": {
