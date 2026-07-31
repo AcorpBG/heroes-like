@@ -897,7 +897,7 @@ static func _maybe_preempt_for_battle_pressure_floor(
 				return _replace_battle_pressure_route_with_candidate(raid, neutral_fallback)
 		return raid
 	var placement_id := String(raid.get("placement_id", ""))
-	if _active_player_battle_pressure_raid_count(session, faction_id, placement_id) > 0:
+	if _active_player_battle_pressure_raid_count(session, faction_id, placement_id, raid) > 0:
 		return raid
 	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var target_candidates := _target_candidates(session, config, origin)
@@ -1025,7 +1025,8 @@ static func _active_raid_count_for_faction(session: SessionStateStoreScript.Sess
 static func _active_player_battle_pressure_raid_count(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
-	excluded_placement_id: String = ""
+	excluded_placement_id: String = "",
+	reference_raid: Dictionary = {}
 ) -> int:
 	if session == null or faction_id == "":
 		return 0
@@ -1036,6 +1037,13 @@ static func _active_player_battle_pressure_raid_count(
 			continue
 		var encounter: Dictionary = encounter_value
 		if excluded_placement_id != "" and String(encounter.get("placement_id", "")) == excluded_placement_id:
+			continue
+		if not reference_raid.is_empty() and not _pressure_host_reachable_from_raid(
+			session,
+			reference_raid,
+			encounter,
+			faction_id
+		):
 			continue
 		match String(encounter.get("target_kind", "")):
 			"hero":
@@ -1048,6 +1056,29 @@ static func _active_player_battle_pressure_raid_count(
 				if _raid_has_active_player_battle_pressure_route(session, encounter):
 					count += 1
 	return count
+
+static func _pressure_host_reachable_from_raid(
+	session: SessionStateStoreScript.SessionData,
+	reference_raid: Dictionary,
+	pressure_host: Dictionary,
+	faction_id: String
+) -> bool:
+	if session == null or reference_raid.is_empty() or pressure_host.is_empty():
+		return false
+	var pressure_position := Vector2i(
+		int(pressure_host.get("x", 0)),
+		int(pressure_host.get("y", 0))
+	)
+	var goal_tiles: Array = [pressure_position]
+	for delta in PATH_CARDINAL_DELTAS:
+		goal_tiles.append(pressure_position + delta)
+	return _path_distance(
+		session,
+		Vector2i(int(reference_raid.get("x", 0)), int(reference_raid.get("y", 0))),
+		goal_tiles,
+		String(reference_raid.get("placement_id", "")),
+		faction_id
+	) < 9999
 
 static func _raid_has_active_player_battle_pressure_route(
 	session: SessionStateStoreScript.SessionData,
@@ -1500,12 +1531,13 @@ static func _explicit_objective_target_view(
 	if int(resource_result.get("index", -1)) >= 0:
 		var node: Dictionary = resource_result.get("node", {})
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var interaction_tile := _resource_interaction_tile(node)
 		return {
 			"target_kind": "resource",
 			"target_label": String(site.get("name", target_id)),
-			"target_x": int(node.get("x", 0)),
-			"target_y": int(node.get("y", 0)),
-			"goal_tiles": [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))],
+			"target_x": interaction_tile.x,
+			"target_y": interaction_tile.y,
+			"goal_tiles": [interaction_tile],
 		}
 	var artifact_result := _find_artifact_by_placement(session, target_id)
 	if int(artifact_result.get("index", -1)) >= 0:
@@ -1571,7 +1603,7 @@ static func _current_tile_resource_target_selection_plan(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+		if _resource_interaction_tile(node) != current:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if site.is_empty() or not _resource_node_contestable_by_faction(node, site, faction_id):
@@ -1598,10 +1630,10 @@ static func _current_tile_resource_target_selection_plan(
 			"target_kind": "resource",
 			"target_placement_id": target_id,
 			"target_label": String(site.get("name", target_id)),
-			"target_x": int(node.get("x", 0)),
-			"target_y": int(node.get("y", 0)),
-			"goal_x": int(node.get("x", 0)),
-			"goal_y": int(node.get("y", 0)),
+			"target_x": current.x,
+			"target_y": current.y,
+			"goal_x": current.x,
+			"goal_y": current.y,
 			"goal_distance": 0,
 			"priority": 999,
 			"target_reason_codes": reason_codes,
@@ -3930,7 +3962,7 @@ static func _current_tile_contestable_resource_id(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+		if _resource_interaction_tile(node) != current:
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not site.is_empty() and _resource_node_contestable_by_faction(node, site, faction_id):
@@ -4615,7 +4647,7 @@ static func resource_arrival_ready_report(
 	var guard := _resource_guard_encounter_for_node(session, node, site)
 	var guard_strength := _encounter_guard_strength(guard) if not guard.is_empty() else 0
 	var current_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var target_tile := _resource_interaction_tile(node)
 	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id)
 	var reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	var defending_owned_site := (
@@ -9561,7 +9593,7 @@ static func _append_resource_candidate(
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 	if placement_id == "" or seen.has(seen_key) or not _resource_node_contestable_by_faction(node, site, faction_id):
 		return
-	var goal_tile = Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var goal_tile := _resource_interaction_tile(node)
 	var force_known := priority_target_bonus(config, placement_id) > 0 \
 		or target_is_objective_anchor(session, "resource", placement_id)
 	if not include_unscouted and not _enemy_nonhero_target_known(
@@ -9590,7 +9622,10 @@ static func _append_resource_candidate(
 		)
 		if guard_distance >= 9999:
 			return
-	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, goal_distance)
+	var anchor_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var anchor_distance := _path_distance(session, origin_pos, [anchor_tile], "", faction_id)
+	var score_distance: int = anchor_distance if anchor_distance < 9999 else goal_distance
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, score_distance)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
 	var priority := int(breakdown.get("final_priority", 0)) + scouting_bonus
 	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
@@ -11523,8 +11558,9 @@ static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionDat
 static func _resource_staging_tiles(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Array:
 	var options = []
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
-	var node_x = int(node.get("x", 0))
-	var node_y = int(node.get("y", 0))
+	var interaction_tile := _resource_interaction_tile(node)
+	var node_x := interaction_tile.x
+	var node_y := interaction_tile.y
 	for delta in PATH_CARDINAL_DELTAS:
 		var nx: int = node_x + delta.x
 		var ny: int = node_y + delta.y
@@ -11536,6 +11572,15 @@ static func _resource_staging_tiles(session: SessionStateStoreScript.SessionData
 	if options.is_empty():
 		options.append(Vector2i(node_x, node_y))
 	return options
+
+static func _resource_interaction_tile(node: Dictionary) -> Vector2i:
+	var visit_tile: Variant = node.get("visit_tile", {})
+	if visit_tile is Dictionary and not visit_tile.is_empty():
+		return Vector2i(
+			int(visit_tile.get("x", node.get("x", 0))),
+			int(visit_tile.get("y", node.get("y", 0)))
+		)
+	return Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
 
 static func _raid_is_resource_defense_order(raid: Dictionary) -> bool:
 	if String(raid.get("target_kind", "")) != "resource":
@@ -13607,7 +13652,7 @@ static func _ai_hero_task_live_plan_from_task(
 	if int(node_result.get("index", -1)) < 0:
 		return {}
 	var node: Dictionary = node_result.get("node", {})
-	var goal_tile := Vector2i(int(node.get("x", task.get("target_x", 0))), int(node.get("y", task.get("target_y", 0))))
+	var goal_tile := _resource_interaction_tile(node)
 	var faction_id := String(raid.get("spawned_by_faction_id", ""))
 	var goal_distance := _path_distance(session, origin_pos, [goal_tile], String(raid.get("placement_id", "")), faction_id)
 	if goal_distance >= 9999:
@@ -15928,7 +15973,7 @@ static func _resolve_opportunistic_route_objective(
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
-		if Vector2i(int(node.get("x", 0)), int(node.get("y", 0))) != current:
+		if _resource_interaction_tile(node) != current:
 			continue
 		var node_id := String(node.get("placement_id", ""))
 		if assigned_kind == "resource" and assigned_id == node_id:
@@ -17616,7 +17661,7 @@ static func _guarded_claim_resume_target(
 				return {}
 			if not _resource_node_contestable_by_faction(node, site, faction_id):
 				return {}
-			var tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+			var tile := _resource_interaction_tile(node)
 			return {
 				"target_kind": "resource",
 				"target_placement_id": target_id,
@@ -17722,6 +17767,14 @@ static func _regroup_raid_at_town(
 	elif transferred_count <= 0 and no_spare_regroup_count >= 2:
 		_ai_hero_task_finish_live_assignment(session, faction_id, raid, "suspended", "invalid_actor_rebuilding")
 		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
+	if bool(raid.get("raid_retired_to_rebuild", false)):
+		var retired_commander_state = raid.get("enemy_commander_state", {})
+		state["rebuild_pressure_request"] = {
+			"requested_day": int(session.day),
+			"origin_town_id": String(raid.get("retired_to_rebuild_town_id", town.get("placement_id", ""))),
+			"commander_id": String(retired_commander_state.get("roster_hero_id", "")) if retired_commander_state is Dictionary else "",
+			"reason": String(raid.get("retired_to_rebuild_reason", "no_spare_garrison_after_regroup")),
+		}
 
 	var message := ""
 	if transferred_count > 0:
@@ -18369,7 +18422,7 @@ static func _path_distance_surface_context(
 	if cache_key != "" and _path_distance_surface_cache.has(cache_key):
 		return _path_distance_surface_cache[cache_key]
 	var encounter_blocked := _occupied_tiles(session, ignore_placement_id)
-	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id)
+	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id)
 	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id)
 	var terrain_blocked := _impassable_terrain_tiles(session)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
@@ -18591,11 +18644,23 @@ static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore
 		occupied[_pos_key(Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))))] = true
 	return occupied
 
-static func _overworld_body_blocked_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
+static func _overworld_body_blocked_tiles(
+	session: SessionStateStoreScript.SessionData,
+	ignore_placement_id: String,
+	observer_faction_id: String = ""
+) -> Dictionary:
 	var blocked: Dictionary = OverworldRulesScript._build_blocked_tile_index(session)
 	for tile in _placement_body_tiles_for_ignore(session, ignore_placement_id):
 		if tile is Vector2i:
 			blocked.erase(_pos_key(tile))
+	if observer_faction_id != "":
+		for node_value in session.overworld.get("resource_nodes", []):
+			if not (node_value is Dictionary):
+				continue
+			var node: Dictionary = node_value
+			var visit_tile: Variant = node.get("visit_tile", {})
+			if visit_tile is Dictionary and not visit_tile.is_empty():
+				blocked.erase(_pos_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))))
 	return blocked
 
 static func _placement_body_tiles_for_ignore(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Array:
@@ -18789,7 +18854,7 @@ static func _refresh_target(
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
 				var node = resource_result.get("node", {})
-				var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+				var target_tile := _resource_interaction_tile(node)
 				var goal_tiles := [target_tile]
 				if _raid_is_resource_defense_order(raid):
 					goal_tiles = _resource_staging_tiles(session, node)

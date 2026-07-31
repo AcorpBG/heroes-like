@@ -3454,6 +3454,8 @@ static func _spawn_raid(
 		"encounter_id": encounter_id,
 		"x": int(spawn_point.get("x", 0)),
 		"y": int(spawn_point.get("y", 0)),
+		"spawn_origin_x": int(spawn_point.get("x", 0)),
+		"spawn_origin_y": int(spawn_point.get("y", 0)),
 		"difficulty": "pressure",
 		"combat_seed": hash("%s:%d:%s" % [session.session_id, session.day, placement_id]),
 		"spawned_by_faction_id": faction_id,
@@ -3495,8 +3497,13 @@ static func _spawn_raid(
 		config,
 		EnemyAdventureRulesScript.ensure_raid_army(raid_seed, session, occupied_commander_ids)
 	)
-	raid = _promote_spawned_raid_public_threat(raid)
 	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	# The pressure-floor policy must see the host it is assigning, including a launch
+	# that raises the faction to its minimum active force count.
+	raid = EnemyAdventureRulesScript.assign_target(session, config, raid)
+	raid = _promote_spawned_raid_public_threat(raid)
+	encounters[encounters.size() - 1] = raid
 	session.overworld["encounters"] = encounters
 
 	var encounter_name: String = EnemyAdventureRulesScript.raid_display_name(raid)
@@ -4646,9 +4653,62 @@ static func _best_open_spawn_point(
 		if candidate.is_empty():
 			_spawn_profile_count("spawn_point_empty_candidate_count")
 			continue
+		candidate = _apply_generated_multi_town_front_distribution(
+			session,
+			config,
+			resolved_faction_id,
+			point,
+			candidate
+		)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _apply_generated_multi_town_front_distribution(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	point: Dictionary,
+	candidate: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or point.is_empty() or candidate.is_empty():
+		return candidate
+	if not bool(config.get("generated_package_town_config", false)):
+		return candidate
+	var spawn_points: Variant = config.get("spawn_points", [])
+	if not (spawn_points is Array) or spawn_points.size() < 2:
+		return candidate
+	var source := String(candidate.get("spawn_plan_source", ""))
+	if source not in ["fresh_target", "exploration", "frontier_sweep", "fallback_target", "explicit_objective_fallback", "rebuild_pressure_recon"]:
+		return candidate
+	var distributed := candidate.duplicate(true)
+	distributed["spawn_plan_generated_front_distribution"] = true
+	distributed["spawn_plan_active_origin_count"] = _active_raid_count_for_spawn_origin(
+		session,
+		faction_id,
+		int(point.get("x", 0)),
+		int(point.get("y", 0))
+	)
+	return distributed
+
+static func _active_raid_count_for_spawn_origin(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	origin_x: int,
+	origin_y: int
+) -> int:
+	if session == null or faction_id == "":
+		return 0
+	var resolved_encounters: Variant = session.overworld.get("resolved_encounters", [])
+	var count := 0
+	for encounter_value in session.overworld.get("encounters", []):
+		if not EnemyAdventureRulesScript.is_active_pressure_host(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if int(encounter.get("spawn_origin_x", -9999)) == origin_x \
+				and int(encounter.get("spawn_origin_y", -9999)) == origin_y:
+			count += 1
+	return count
 
 static func _spawn_point_candidate(
 	session: SessionStateStoreScript.SessionData,
@@ -4871,6 +4931,7 @@ static func _fresh_spawn_target_candidate_for_point(
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
+	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	var started_usec := _spawn_profile_timer()
 	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates(
 		session,
@@ -4921,6 +4982,17 @@ static func _fresh_spawn_target_candidate_for_point(
 				started_usec = _spawn_profile_timer()
 				var projected_fallback := _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
 				_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
+				if rebuild_pressure_active:
+					projected_fallback = _prepare_rebuild_pressure_candidate_for_spawn(config, state, projected_fallback)
+					if not _spawn_candidate_ready_without_immediate_regroup(
+						session,
+						config,
+						state,
+						faction_id,
+						projected_fallback,
+						occupied_commander_ids
+					):
+						return {}
 				return projected_fallback
 		started_usec = _spawn_profile_timer()
 		var exploration_candidate := _exploration_spawn_candidate_for_point(
@@ -4934,6 +5006,17 @@ static func _fresh_spawn_target_candidate_for_point(
 		)
 		_spawn_profile_add_ms("fresh_exploration_spawn_candidate_ms", started_usec)
 		if not exploration_candidate.is_empty():
+			if rebuild_pressure_active:
+				exploration_candidate = _prepare_rebuild_pressure_candidate_for_spawn(config, state, exploration_candidate)
+				if not _spawn_candidate_ready_without_immediate_regroup(
+					session,
+					config,
+					state,
+					faction_id,
+					exploration_candidate,
+					occupied_commander_ids
+				):
+					return {}
 			return exploration_candidate
 		started_usec = _spawn_profile_timer()
 		var preselected_fallback_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
@@ -4951,7 +5034,6 @@ static func _fresh_spawn_target_candidate_for_point(
 		)
 		_spawn_profile_add_ms("fresh_fallback_spawn_candidate_ms", started_usec)
 		return fallback_candidate
-	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	started_usec = _spawn_profile_timer()
 	var commander_candidates := _rebuild_pressure_commander_spawn_candidates(
 		session,
@@ -5014,8 +5096,9 @@ static func _fresh_spawn_target_candidate_for_point(
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
 		_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
 		started_usec = _spawn_profile_timer()
-		if (
-			not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+		if rebuild_pressure_active:
+			candidate = _prepare_rebuild_pressure_candidate_for_spawn(config, state, candidate)
+		if rebuild_pressure_active \
 			and not _spawn_candidate_ready_without_immediate_regroup(
 				session,
 				config,
@@ -5023,8 +5106,7 @@ static func _fresh_spawn_target_candidate_for_point(
 				faction_id,
 				candidate,
 				occupied_commander_ids
-			)
-		):
+			):
 			_spawn_profile_add_ms("fresh_ready_without_regroup_ms", started_usec)
 			_spawn_profile_count("fresh_rebuild_candidate_not_ready")
 			continue
@@ -5032,6 +5114,8 @@ static func _fresh_spawn_target_candidate_for_point(
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	if best.is_empty():
+		if rebuild_pressure_active:
+			return {}
 		started_usec = _spawn_profile_timer()
 		var preselected_best_empty_fallback_plan := _rebuild_pressure_exploration_plan(session, config, faction_id, point)
 		_spawn_profile_add_ms("fresh_preselected_fallback_plan_ms", started_usec)
@@ -5109,6 +5193,7 @@ static func _fallback_spawn_candidate_for_point(
 		)
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 1500
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _prepare_rebuild_pressure_candidate_for_spawn(config, state, candidate)
 		if not _spawn_candidate_ready_without_immediate_regroup(
 			session,
 			config,
@@ -5121,6 +5206,23 @@ static func _fallback_spawn_candidate_for_point(
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _prepare_rebuild_pressure_candidate_for_spawn(
+	config: Dictionary,
+	state: Dictionary,
+	candidate: Dictionary
+) -> Dictionary:
+	if candidate.is_empty():
+		return {}
+	var encounter_pool = config.get("raid_encounter_ids", [])
+	if not (encounter_pool is Array) or encounter_pool.is_empty():
+		return candidate
+	var prepared := candidate.duplicate(true)
+	prepared["spawn_plan_encounter_id"] = String(
+		encounter_pool[posmod(int(state.get("raid_counter", 0)), encounter_pool.size())]
+	)
+	prepared["spawn_plan_ready_launch"] = true
+	return prepared
 
 static func _rebuild_pressure_commander_spawn_candidates(
 	session: SessionStateStoreScript.SessionData,
@@ -5265,7 +5367,13 @@ static func _spawn_candidate_ready_without_immediate_regroup(
 	var roster_hero_id := String(candidate.get("roster_hero_id", ""))
 	if target_kind == "" or target_id == "" or roster_hero_id == "":
 		return false
-	var encounter_id := String(candidate.get("spawn_plan_encounter_id", _primary_raid_encounter_id(config)))
+	var encounter_id := String(candidate.get("spawn_plan_encounter_id", ""))
+	if encounter_id == "":
+		var encounter_pool = config.get("raid_encounter_ids", [])
+		if encounter_pool is Array and not encounter_pool.is_empty():
+			encounter_id = String(encounter_pool[posmod(int(state.get("raid_counter", 0)), encounter_pool.size())])
+		else:
+			encounter_id = _primary_raid_encounter_id(config)
 	if encounter_id == "":
 		return false
 	var probe := {
@@ -5298,8 +5406,9 @@ static func _spawn_candidate_ready_without_immediate_regroup(
 	probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
 	if not EnemyAdventureRulesScript._raid_target_valid(session, probe):
 		return false
-	if target_kind == "explore":
-		return true
+	if target_kind == "explore" \
+			and int(probe.get("goal_distance", 9999)) <= EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS:
+		return false
 	return not EnemyAdventureRulesScript.raid_regroup_needed(probe, config, faction_id)
 
 static func _rebuild_pressure_frontier_sweep_plan(
@@ -5846,6 +5955,10 @@ static func _spawn_point_candidate_beats(candidate: Dictionary, best: Dictionary
 	var best_emergency_town := String(best.get("spawn_plan_source", "")) == "emergency_town_defense"
 	if candidate_emergency_town != best_emergency_town:
 		return candidate_emergency_town
+	if bool(candidate.get("spawn_plan_generated_front_distribution", false)) \
+			and bool(best.get("spawn_plan_generated_front_distribution", false)) \
+			and int(candidate.get("spawn_plan_active_origin_count", 0)) != int(best.get("spawn_plan_active_origin_count", 0)):
+		return int(candidate.get("spawn_plan_active_origin_count", 0)) < int(best.get("spawn_plan_active_origin_count", 0))
 	if int(candidate.get("spawn_plan_score", 0)) == int(best.get("spawn_plan_score", 0)):
 		if int(candidate.get("spawn_plan_goal_distance", 9999)) == int(best.get("spawn_plan_goal_distance", 9999)):
 			return int(candidate.get("spawn_order", 9999)) < int(best.get("spawn_order", 9999))
