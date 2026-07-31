@@ -29,6 +29,9 @@ func _run() -> void:
 	var continued_route_pressure_case_report := _blocked_player_town_waypoint_continues_town_pressure()
 	if continued_route_pressure_case_report.is_empty():
 		return
+	var exhausted_route_pressure_case_report := _exhausted_player_town_frontier_does_not_recycle()
+	if exhausted_route_pressure_case_report.is_empty():
+		return
 	var neutral_town_fallback_case_report := _blocked_player_town_prefers_reachable_defended_neutral_town()
 	if neutral_town_fallback_case_report.is_empty():
 		return
@@ -47,6 +50,7 @@ func _run() -> void:
 		"long_range_pressure_case": long_range_pressure_case_report,
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
 		"continued_route_pressure_case": continued_route_pressure_case_report,
+		"exhausted_route_pressure_case": exhausted_route_pressure_case_report,
 		"neutral_town_fallback_case": neutral_town_fallback_case_report,
 		"resource_traversal_case": resource_traversal_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
@@ -602,6 +606,88 @@ func _blocked_player_town_waypoint_continues_town_pressure() -> Dictionary:
 		"opened_target_kind": String(opened.get("target_kind", "")),
 		"opened_target_id": String(opened.get("target_placement_id", "")),
 		"opened_goal_distance": int(opened.get("goal_distance", -1)),
+	}
+
+func _exhausted_player_town_frontier_does_not_recycle() -> Dictionary:
+	var session = _long_range_pressure_session(true)
+	var raids := []
+	for index in range(3):
+		raids.append(_pressure_floor_raid_seed("exhausted_route_pressure_%d" % index, 3 + index, 1, 8 + index))
+	session.overworld["encounters"] = raids
+	var config := _enemy_config()
+	var current: Dictionary = EnemyAdventureRules.assign_target(session, config, raids[0].duplicate(true))
+	var completed_frontiers := []
+	var exhausted := {}
+	for _step in range(8):
+		var reason_codes: Array = current.get("target_reason_codes", []) if current.get("target_reason_codes", []) is Array else []
+		if "pressure_route_frontier" not in reason_codes:
+			_fail("Blocked route left frontier pressure before exhausting its component: %s" % JSON.stringify(current))
+			return {}
+		completed_frontiers.append(String(current.get("target_placement_id", "")))
+		current["x"] = int(current.get("target_x", 0))
+		current["y"] = int(current.get("target_y", 0))
+		current["goal_distance"] = 0
+		current["arrived"] = true
+		var encounters: Array = session.overworld.get("encounters", [])
+		encounters[0] = current
+		session.overworld["encounters"] = encounters
+		var result := EnemyAdventureRules._resolve_arrived_target(
+			session,
+			current,
+			_enemy_state(session),
+			MIRECLAW,
+			config
+		)
+		var continued: Dictionary = result.get("encounter", {})
+		if String(continued.get("battle_pressure_exhausted_town_id", "")) == "riverwatch_hold":
+			exhausted = continued
+			break
+		current = continued
+	if exhausted.is_empty():
+		_fail("Blocked route did not record terminal frontier exhaustion: %s" % JSON.stringify(current))
+		return {}
+	var exhausted_target_id := String(exhausted.get("target_placement_id", ""))
+	if exhausted_target_id in completed_frontiers:
+		_fail("Terminal frontier immediately recycled a completed waypoint: %s" % JSON.stringify(exhausted))
+		return {}
+	var exhausted_reason_codes: Array = exhausted.get("target_reason_codes", []) if exhausted.get("target_reason_codes", []) is Array else []
+	if "pressure_route_frontier" in exhausted_reason_codes:
+		_fail("Terminal frontier remained active after its reachable component was exhausted: %s" % JSON.stringify(exhausted))
+		return {}
+	var exhausted_encounters: Array = session.overworld.get("encounters", [])
+	exhausted_encounters[0] = exhausted
+	session.overworld["encounters"] = exhausted_encounters
+	var stable := EnemyAdventureRules.assign_target(session, config, exhausted.duplicate(true))
+	var stable_reason_codes: Array = stable.get("target_reason_codes", []) if stable.get("target_reason_codes", []) is Array else []
+	if "pressure_route_frontier" in stable_reason_codes \
+			and String(stable.get("blocked_route_target_placement_id", "")) == "riverwatch_hold":
+		_fail("Unchanged topology recycled exhausted player-town frontier pressure: %s" % JSON.stringify(stable))
+		return {}
+	var stable_encounters: Array = session.overworld.get("encounters", [])
+	stable_encounters[0] = stable
+	session.overworld["encounters"] = stable_encounters
+
+	var map: Array = session.overworld.get("map", [])
+	for y in range(map.size()):
+		if map[y] is Array and map[y].size() > 40:
+			map[y][40] = "grass"
+	session.overworld["map"] = map
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var reopened := EnemyAdventureRules.assign_target(session, config, stable.duplicate(true))
+	if String(reopened.get("target_kind", "")) != "town" \
+			or String(reopened.get("target_placement_id", "")) != "riverwatch_hold" \
+			or int(reopened.get("goal_distance", 9999)) >= 9999:
+		_fail("Changed topology did not restore reachable player-town pressure: %s" % JSON.stringify(reopened))
+		return {}
+	return {
+		"case_id": "exhausted_player_town_frontier_does_not_recycle",
+		"completed_frontier_count": completed_frontiers.size(),
+		"exhausted_target_id": exhausted_target_id,
+		"exhausted_town_gap": int(exhausted.get("battle_pressure_exhausted_town_gap", -1)),
+		"stable_target_id": String(stable.get("target_placement_id", "")),
+		"reopened_target_kind": String(reopened.get("target_kind", "")),
+		"reopened_target_id": String(reopened.get("target_placement_id", "")),
+		"reopened_goal_distance": int(reopened.get("goal_distance", -1)),
 	}
 
 func _blocked_player_town_prefers_reachable_defended_neutral_town() -> Dictionary:

@@ -1356,6 +1356,20 @@ static func _battle_pressure_route_frontier_candidate(
 	if start_index < 0:
 		return {}
 	var distance_field := _path_distance_field_for_start(path_context, start_index)
+	var exhausted_gap := -1
+	var exhausted_town_id := String(raid.get("battle_pressure_exhausted_town_id", ""))
+	if exhausted_town_id == String(town.get("placement_id", "")):
+		var exhausted_anchor := Vector2i(
+			int(raid.get("battle_pressure_exhausted_frontier_x", -1)),
+			int(raid.get("battle_pressure_exhausted_frontier_y", -1))
+		)
+		var exhausted_anchor_index := _tile_index(exhausted_anchor, map_size)
+		if exhausted_anchor == origin or (
+			exhausted_anchor_index >= 0
+			and exhausted_anchor_index < distance_field.size()
+			and int(distance_field[exhausted_anchor_index]) >= 0
+		):
+			exhausted_gap = max(0, int(raid.get("battle_pressure_exhausted_town_gap", -1)))
 	var best := {}
 	var best_score := -999999
 	for tile_index in range(distance_field.size()):
@@ -1366,6 +1380,8 @@ static func _battle_pressure_route_frontier_candidate(
 		var target_gap := _min_manhattan_distance_to_tiles(tile, town_staging_tiles)
 		var gap_improvement := origin_gap - target_gap
 		if gap_improvement < 2:
+			continue
+		if exhausted_gap >= 0 and target_gap >= exhausted_gap:
 			continue
 		var score := RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS \
 			+ 180 \
@@ -16508,6 +16524,20 @@ static func _resolve_exploration_target(
 				)
 		if not route_plan.is_empty():
 			continued.merge(route_plan, true)
+		else:
+			var town_result := _find_town_by_placement(
+				session,
+				String(continued.get("blocked_route_target_placement_id", ""))
+			)
+			var town: Dictionary = town_result.get("town", {})
+			if int(town_result.get("index", -1)) >= 0 and String(town.get("owner", "neutral")) == "player":
+				continued["battle_pressure_exhausted_town_id"] = String(town.get("placement_id", ""))
+				continued["battle_pressure_exhausted_frontier_x"] = int(raid.get("x", 0))
+				continued["battle_pressure_exhausted_frontier_y"] = int(raid.get("y", 0))
+				continued["battle_pressure_exhausted_town_gap"] = _min_manhattan_distance_to_tiles(
+					Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0))),
+					_town_staging_tiles(session, town)
+				)
 	if "rebuild_pressure_relaunch" in reason_codes:
 		var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 		var scout_plan := _no_known_target_frontier_sweep_plan(session, config, origin)
