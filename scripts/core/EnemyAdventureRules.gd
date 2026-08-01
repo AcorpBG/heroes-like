@@ -748,6 +748,7 @@ const AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
 	"assignment_id_hint",
 	"invalidated_by_task_id",
 ]
+const RAID_RECENT_EXPLORATION_TARGET_LIMIT := 12
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
@@ -829,7 +830,7 @@ static func _assignment_plan_for_raid_without_valid_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-			raid.get("enemy_commander_state", {})
+			raid
 		)
 		if plan.is_empty():
 			plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
@@ -840,7 +841,7 @@ static func _assignment_plan_for_raid_without_valid_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
-			raid.get("enemy_commander_state", {})
+			raid
 		)
 	return plan
 
@@ -852,9 +853,9 @@ static func _active_raid_no_known_target_fallback_plan(
 	if session == null or raid.is_empty():
 		return {}
 	var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	var plan := _no_known_target_frontier_sweep_plan(session, config, origin)
+	var plan := _no_known_target_frontier_sweep_plan(session, config, origin, raid)
 	if plan.is_empty():
-		plan = _no_known_target_exploration_plan(session, config, origin)
+		plan = _no_known_target_exploration_plan(session, config, origin, raid)
 	if plan.is_empty():
 		plan = _no_known_target_regroup_plan(session, config, origin)
 	return plan
@@ -4086,9 +4087,9 @@ static func _redirect_unreachable_raid_target(
 				return redirected_step
 	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
 	if regroup_town.is_empty():
-		var exploration_plan := _no_known_target_frontier_sweep_plan(session, config, current)
+		var exploration_plan := _no_known_target_frontier_sweep_plan(session, config, current, raid)
 		if exploration_plan.is_empty():
-			exploration_plan = _no_known_target_exploration_plan(session, config, current)
+			exploration_plan = _no_known_target_exploration_plan(session, config, current, raid)
 		if not exploration_plan.is_empty():
 			var redirected_explore := raid.duplicate(true)
 			redirected_explore.merge(exploration_plan, true)
@@ -7988,10 +7989,10 @@ static func choose_target(
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos)
 	if candidates.is_empty():
-		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
+		var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos, commander_source)
 		if not exploration_plan.is_empty():
 			return exploration_plan
-		var frontier_sweep_plan := _no_known_target_frontier_sweep_plan(session, config, origin_pos)
+		var frontier_sweep_plan := _no_known_target_frontier_sweep_plan(session, config, origin_pos, commander_source)
 		if not frontier_sweep_plan.is_empty():
 			return frontier_sweep_plan
 		return _no_known_target_regroup_plan(session, config, origin_pos)
@@ -8036,7 +8037,8 @@ static func choose_target(
 static func _no_known_target_exploration_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	origin_pos: Vector2i
+	origin_pos: Vector2i,
+	commander_source: Variant = {}
 ) -> Dictionary:
 	if session == null:
 		return {}
@@ -8049,6 +8051,7 @@ static func _no_known_target_exploration_plan(
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var best := {}
 	var best_score := -999999
+	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			var tile := Vector2i(x, y)
@@ -8064,6 +8067,8 @@ static func _no_known_target_exploration_plan(
 			var center_score := _enemy_exploration_center_score(map_size, tile)
 			var score: int = 280 + frontier_score + center_score - (route_distance * 7) - direct_distance
 			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if recent_target_lookup.has(target_id):
+				continue
 			if (
 				best.is_empty()
 				or score > best_score
@@ -8120,7 +8125,8 @@ static func _enemy_exploration_center_score(map_size: Vector2i, tile: Vector2i) 
 static func _no_known_target_frontier_sweep_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	origin_pos: Vector2i
+	origin_pos: Vector2i,
+	commander_source: Variant = {}
 ) -> Dictionary:
 	if session == null:
 		return {}
@@ -8132,6 +8138,7 @@ static func _no_known_target_frontier_sweep_plan(
 		return {}
 	var best := {}
 	var best_score := -999999
+	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
 	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
 	for y in range(0, map_size.y, step):
 		for x in range(0, map_size.x, step):
@@ -8148,6 +8155,8 @@ static func _no_known_target_frontier_sweep_plan(
 			var distance_band_score: int = 18 - abs(route_distance - 8)
 			var score: int = 220 + center_score + distance_band_score - direct_distance
 			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if recent_target_lookup.has(target_id):
+				continue
 			if (
 				best.is_empty()
 				or score > best_score
@@ -8178,6 +8187,15 @@ static func _no_known_target_frontier_sweep_plan(
 					"target_debug_reason": "no reachable known target candidates or sighting frontier; sweeping reachable fog before passive regroup",
 				}
 	return best
+
+static func _raid_recent_exploration_target_lookup(commander_source: Variant) -> Dictionary:
+	var lookup := {}
+	var source: Dictionary = commander_source if commander_source is Dictionary else {}
+	for target_id_value in source.get("recent_exploration_target_ids", []):
+		var target_id := String(target_id_value)
+		if target_id.begins_with("explore:"):
+			lookup[target_id] = true
+	return lookup
 
 static func _no_known_target_regroup_plan(
 	session: SessionStateStoreScript.SessionData,
@@ -16530,6 +16548,14 @@ static func _resolve_exploration_target(
 	var previous_target := _current_target_snapshot(raid)
 	_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 	var continued := _clear_regroup_target(raid.duplicate(true))
+	var recent_target_ids := _normalize_string_array(continued.get("recent_exploration_target_ids", []))
+	var completed_target_id := String(previous_target.get("target_placement_id", ""))
+	if completed_target_id.begins_with("explore:"):
+		recent_target_ids.erase(completed_target_id)
+		recent_target_ids.append(completed_target_id)
+		while recent_target_ids.size() > RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+			recent_target_ids.pop_front()
+	continued["recent_exploration_target_ids"] = recent_target_ids
 	continued["last_explored_x"] = int(raid.get("x", 0))
 	continued["last_explored_y"] = int(raid.get("y", 0))
 	continued["last_explored_day"] = int(session.day)
@@ -16570,9 +16596,9 @@ static func _resolve_exploration_target(
 				)
 	if "rebuild_pressure_relaunch" in reason_codes:
 		var origin := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-		var scout_plan := _no_known_target_frontier_sweep_plan(session, config, origin)
+		var scout_plan := _no_known_target_frontier_sweep_plan(session, config, origin, continued)
 		if scout_plan.is_empty():
-			scout_plan = _no_known_target_exploration_plan(session, config, origin)
+			scout_plan = _no_known_target_exploration_plan(session, config, origin, continued)
 		if not scout_plan.is_empty():
 			continued.merge(scout_plan, true)
 			var scout_reason_codes := _normalize_string_array(continued.get("target_reason_codes", []))
