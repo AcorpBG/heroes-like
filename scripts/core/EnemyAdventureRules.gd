@@ -5430,7 +5430,8 @@ static func _redirect_raid_to_threatened_town_defense(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
@@ -5439,7 +5440,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
 		return raid
-	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id)
+	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id, preloaded_path_context)
 	if defense_town.is_empty():
 		return raid
 	var town_id := String(defense_town.get("placement_id", ""))
@@ -5449,7 +5450,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	var current_id := String(raid.get("target_placement_id", ""))
 	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if current_kind == "town" and current_id == town_id and "town_defense" in current_codes:
-		return _refresh_target(session, raid, faction_id)
+		return _refresh_target(session, raid, faction_id, preloaded_path_context)
 	raid["previous_target_kind"] = current_kind
 	raid["previous_target_placement_id"] = current_id
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
@@ -5474,13 +5475,14 @@ static func _redirect_raid_to_threatened_town_defense(
 	raid["arrived"] = false
 	raid["town_defense_started_day"] = int(session.day)
 	raid["town_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "town", town_id)
-	return _refresh_target(session, raid, faction_id)
+	return _refresh_target(session, raid, faction_id, preloaded_path_context)
 
 static func _best_threatened_defense_town(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var best := {}
@@ -5502,7 +5504,9 @@ static func _best_threatened_defense_town(
 		if String(front_state.get("mode", "")) != "stabilizing":
 			continue
 		var staging_tiles := _town_staging_tiles(session, town)
-		var distance := _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+		var distance := _path_distance_with_context(preloaded_path_context, current, staging_tiles) \
+			if not preloaded_path_context.is_empty() \
+			else _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
 		var defense_need := _town_defense_commitment_need(town, front_state)
 		var current_defense := _town_garrison_strength(town)
 		var committed_defense := _committed_town_defense_strength(
@@ -5535,7 +5539,8 @@ static func _redirect_raid_to_threatened_resource_defense(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
@@ -5545,8 +5550,8 @@ static func _redirect_raid_to_threatened_resource_defense(
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
 		return raid
 	if String(raid.get("target_kind", "")) == "town" and "town_defense" in active_reason_codes:
-		return _refresh_target(session, raid, faction_id)
-	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id)
+		return _refresh_target(session, raid, faction_id, preloaded_path_context)
+	var defense_node := _best_threatened_resource_defense(session, config, raid, faction_id, preloaded_path_context)
 	if defense_node.is_empty():
 		return raid
 	var resource_id := String(defense_node.get("placement_id", ""))
@@ -5556,7 +5561,7 @@ static func _redirect_raid_to_threatened_resource_defense(
 	var current_id := String(raid.get("target_placement_id", ""))
 	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if current_kind == "resource" and current_id == resource_id and _resource_defense_reason_active(current_codes):
-		return _refresh_target(session, raid, faction_id)
+		return _refresh_target(session, raid, faction_id, preloaded_path_context)
 	var site := ContentService.get_resource_site(String(defense_node.get("site_id", "")))
 	raid["previous_target_kind"] = current_kind
 	raid["previous_target_placement_id"] = current_id
@@ -5571,13 +5576,14 @@ static func _redirect_raid_to_threatened_resource_defense(
 	raid["arrived"] = false
 	raid["site_defense_started_day"] = int(session.day)
 	raid["site_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "resource", resource_id)
-	return _refresh_target(session, raid, faction_id)
+	return _refresh_target(session, raid, faction_id, preloaded_path_context)
 
 static func _best_threatened_resource_defense(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var best := {}
@@ -5597,7 +5603,9 @@ static func _best_threatened_resource_defense(
 		var front_state := _resource_defense_front_state(session, node, site, faction_id, known_threat)
 		if not bool(front_state.get("active", false)):
 			continue
-		var distance := _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")), faction_id)
+		var distance := _path_distance_with_context(preloaded_path_context, current, [target_tile]) \
+			if not preloaded_path_context.is_empty() \
+			else _path_distance(session, current, [target_tile], String(raid.get("placement_id", "")), faction_id)
 		if distance >= 9999:
 			continue
 		var defense_need := _resource_defense_commitment_need(site, front_state)
@@ -19023,7 +19031,8 @@ static func _position_blocked_for_distance_field(
 static func _refresh_target(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, observer_faction_id):
 		return _clear_regroup_target(raid)
@@ -19034,13 +19043,17 @@ static func _refresh_target(
 			if int(town_result.get("index", -1)) >= 0:
 				var town = town_result.get("town", {})
 				var staging_tiles = _town_staging_tiles(session, town)
-				var goal_tile = _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
+				var goal_tile = _best_goal_tile_with_path_context(preloaded_path_context, origin, staging_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
 				raid["target_label"] = _town_name(town)
 				raid["target_x"] = int(town.get("x", 0))
 				raid["target_y"] = int(town.get("y", 0))
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
-				raid["goal_distance"] = _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, staging_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
 		"regroup":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0:
@@ -19072,13 +19085,17 @@ static func _refresh_target(
 				var goal_tiles := [target_tile]
 				if _raid_is_resource_defense_order(raid):
 					goal_tiles = _resource_staging_tiles(session, node)
-				var goal_tile := _best_goal_tile(session, origin, goal_tiles, observer_faction_id)
+				var goal_tile := _best_goal_tile_with_path_context(preloaded_path_context, origin, goal_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _best_goal_tile(session, origin, goal_tiles, observer_faction_id)
 				raid["target_label"] = String(ContentService.get_resource_site(String(node.get("site_id", ""))).get("name", "Resource Site"))
 				raid["target_x"] = target_tile.x
 				raid["target_y"] = target_tile.y
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
-				raid["goal_distance"] = _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, goal_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _path_distance(session, origin, goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
 		"artifact":
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(artifact_result.get("index", -1)) >= 0:
