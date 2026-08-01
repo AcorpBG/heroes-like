@@ -1291,7 +1291,17 @@ static func _latest_enemy_state(
 	if session == null or faction_id == "":
 		return fallback
 	var latest := _find_state(session.overworld.get("enemy_states", []), faction_id)
-	return latest if not latest.is_empty() else fallback
+	if latest.is_empty() or fallback.is_empty():
+		return latest if not latest.is_empty() else fallback
+	var merged := fallback.duplicate(true)
+	# Commander and task helpers persist these fields directly while the empire
+	# cycle still owns economy and pressure in its local state.
+	for runtime_key in ["commander_roster", "known_world_memory", "hero_task_state", "rebuild_pressure_request"]:
+		if latest.has(runtime_key):
+			merged[runtime_key] = latest.get(runtime_key)
+		else:
+			merged.erase(runtime_key)
+	return merged
 
 static func _enemy_activity_origin(town_entries: Array, config: Dictionary) -> Dictionary:
 	for entry_value in town_entries:
@@ -3497,11 +3507,42 @@ static func _spawn_raid(
 		occupied_commander_ids,
 		state.get("commander_roster", [])
 	)
+	var spawn_target_memory_before := EnemyAdventureRulesScript.commander_target_memory(
+		raid_seed.get("enemy_commander_state", {})
+	)
 	var raid = EnemyAdventureRulesScript.assign_target(
 		session,
 		config,
 		EnemyAdventureRulesScript.ensure_raid_army(raid_seed, session, occupied_commander_ids)
 	)
+	var spawn_target_kind := String(raid_seed.get("target_kind", ""))
+	var spawn_target_id := String(raid_seed.get("target_placement_id", ""))
+	if spawn_target_kind != "" and spawn_target_id != "":
+		var spawn_target_memory_after := EnemyAdventureRulesScript.commander_target_memory(
+			raid.get("enemy_commander_state", {})
+		)
+		var memory_was_same_target := (
+			String(spawn_target_memory_before.get("focus_target_kind", "")) == spawn_target_kind
+			and String(spawn_target_memory_before.get("focus_target_id", "")) == spawn_target_id
+		)
+		var memory_is_same_target := (
+			String(spawn_target_memory_after.get("focus_target_kind", "")) == spawn_target_kind
+			and String(spawn_target_memory_after.get("focus_target_id", "")) == spawn_target_id
+		)
+		var assignment_was_recorded := memory_is_same_target and (
+			int(spawn_target_memory_after.get("focus_pressure_count", 0)) > int(spawn_target_memory_before.get("focus_pressure_count", 0))
+			if memory_was_same_target
+			else int(spawn_target_memory_after.get("focus_pressure_count", 0)) >= 1
+		)
+		if not assignment_was_recorded:
+			raid["enemy_commander_state"] = EnemyAdventureRulesScript.record_target_assignment(
+				raid.get("enemy_commander_state", {}),
+				spawn_target_kind,
+				spawn_target_id,
+				String(raid_seed.get("target_label", "")),
+				int(raid_seed.get("target_x", 0)),
+				int(raid_seed.get("target_y", 0))
+			)
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 	# The pressure-floor policy must see the host it is assigning, including a launch

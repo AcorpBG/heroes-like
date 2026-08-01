@@ -660,6 +660,10 @@ static func _battle_context_already_resolved(
 	if session == null or session.battle.is_empty():
 		return true
 	match String(context.get("type", "encounter")):
+		"hero_intercept":
+			# The intercepting map host is retired as soon as combat begins so it
+			# cannot trigger twice; the live battle payload remains resumable.
+			return false
 		"town_assault":
 			var assaulted_town: Dictionary = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
 			return assaulted_town.is_empty() or String(assaulted_town.get("owner", "neutral")) != "enemy"
