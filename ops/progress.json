@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinals 12-34 pass with zero behavior bugs, integrity violations, and unreachable active targets. Ordinal 34 reaches correct player defeat after 29 turns through town loss and final hero defeat, with zero stalls. Twenty-three current-code target rows pass, 77 remain, and ordinal 35 is next.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Strategic AI now reconciles public target-assignment events with final enemy-turn host state and durable same-turn outcomes, removing superseded assignments without hiding completed actions. Exact-current-code Medium ordinal 61 passes 56/56 turns with zero behavior bugs, integrity violations, or unreachable active targets; the former six-turn Frontier sweep 36,30 stale summary is absent. Earlier rows remain historical after this public-behavior correction. One current-code target row passes, 99 remain, and ordinal 62 is next.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Active exploration hosts retain a bounded 12-target completion history. Exact-current-code Medium ordinals 12-34 pass. Ordinal 34 reaches correct player defeat after 29 turns with two valid battles, 102 events, 36 movements, 13 assignments, three groupings, one regroup, one site contest, zero stalls, and no behavior, integrity, or reachability failures. Twenty-three rows pass, 77 remain, and ordinal 35 is next.",
+  "currentSliceNotes": "Public target assignments are reconciled after the complete enemy turn against final active-host targets and durable same-turn outcomes. Exact-current-code Medium ordinal 61 passes all 56 turns with 63 events, 50 assignments, one grouping, five regroups, one site contest, six site seizures, 24 quiet turns, and no behavior, integrity, or reachability failures. The stale Frontier sweep 36,30 summary count is zero. Ordinal 61 is the sole current-code row, 99 remain, and ordinal 62 is next.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-01T07:28:13Z",
+  "currentSliceUpdatedAt": "2026-08-01T20:42:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61130,7 +61130,8 @@
         "Exact-current-code Medium ordinal 57 reaches correct player defeat after 25 completed turns with row signature eb90d0b2 and report signature cc3c1ff4. It records 103 activity events, 48 movement events, 29 assignments, one grouping, six regroups, four garrison reinforcements, four town builds, four town recruitments, one town defense, three adventure-spell casts, one site contest, and four valid autoresolutions (town loss, two player hero victories, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 248480ms with a 15003ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 12-56, forty-six exact-current-code rows pass, 54 remain, and ordinal 58 is next.",
         "Exact-current-code Medium ordinal 58 reaches correct player defeat after 33 completed turns with row signature 0f9fd9f9 and report signature 39bd5532. It records 111 activity events, 43 movement events, 14 assignments, two groupings, two regroups, four raid reinforcements, 15 garrison reinforcements, 12 town builds, 17 town recruitments, and two valid autoresolutions (town loss and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 310741ms with a 13643ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 12-57, forty-seven exact-current-code rows pass, 53 remain, and ordinal 59 is next.",
         "Exact-current-code Medium ordinal 59 reaches correct player defeat after 36 completed turns with row signature 7477981a and report signature b6f1200a. It records 211 activity events, 67 movement events, 24 assignments, two groupings, four regroups, 28 garrison reinforcements, five commander rebuilds, 16 town builds, 35 town recruitments, one town defense, four site contests, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 346057ms with a 17351ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 12-58, forty-eight exact-current-code rows pass, 52 remain, and ordinal 60 is next.",
-        "Exact-current-code Medium ordinal 60 reaches correct player defeat after 35 completed turns with row signature 5f7833b7 and report signature 0393cf3a. It records 149 activity events, 40 movement events, 30 assignments, two groupings, four regroups, 22 garrison reinforcements, two commander rebuilds, 14 town builds, 26 town recruitments, two adventure-spell casts, two site contests, two site seizures, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 344368ms with a 13498ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 12-59, forty-nine exact-current-code rows pass, 51 remain, and ordinal 61 is next."
+        "Exact-current-code Medium ordinal 60 reaches correct player defeat after 35 completed turns with row signature 5f7833b7 and report signature 0393cf3a. It records 149 activity events, 40 movement events, 30 assignments, two groupings, four regroups, 22 garrison reinforcements, two commander rebuilds, 14 town builds, 26 town recruitments, two adventure-spell casts, two site contests, two site seizures, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 344368ms with a 13498ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 12-59, forty-nine exact-current-code rows pass, 51 remain, and ordinal 61 is next.",
+        "Public target-assignment events now reconcile after the complete enemy turn against final active-host targets and durable same-turn target outcomes. Movement alone does not preserve an assignment superseded before publication; captures, defenses, grouping, and regroup completion still preserve their assignments. Exact-current-code Medium ordinal 61 completes 56/56 turns with row signature eecc8295 and report signature a8a48a40, 63 activity events, 50 assignments, one grouping, five regroups, one site contest, six site seizures, 24 public-event-stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. The former six Frontier sweep 36,30 stale summaries are absent. Earlier rows are historical after this user-visible behavior correction; ordinal 61 is the sole current-code row, 99 remain, and ordinal 62 is next."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61143,9 +61144,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Active exploration hosts and alternating rebuild commanders share bounded completed-frontier history and avoid exhausted scout targets while alternatives exist. Exact-current-code ordinals 12-60 pass with zero behavior bugs, integrity violations, and unreachable active targets. Ordinal 60 reaches correct player defeat after three valid battles. Forty-nine target rows pass, 51 remain, and ordinal 61 is next. The matrix slice and overall game remain in progress.",
+      "summary": "Public target assignments reconcile after the complete enemy turn against final active-host targets and durable same-turn outcomes. Exact-current-code Medium ordinal 61 passes 56/56 turns with zero behavior bugs, integrity violations, or unreachable active targets, and the former six Frontier sweep 36,30 stale summaries are absent. Earlier rows remain historical after this public-behavior correction. One target row passes, 99 remain, and ordinal 62 is next. The matrix slice and overall game remain in progress.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-01T19:21:33Z",
+      "updatedAt": "2026-08-01T20:42:45Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61951,6 +61952,16 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=59 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 60 reaches correct player defeat after 35 completed turns with row signature 5f7833b7 and report signature 0393cf3a. It records 149 activity events, 40 movement events, 30 assignments, two groupings, four regroups, 22 garrison reinforcements, two commander rebuilds, 14 town builds, 26 town recruitments, two adventure-spell casts, two site contests, two site seizures, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 344368ms with a 13498ms maximum turn. The report remains needs_attention only because the other 51 exact-current-code rows have not run.",
           "status": "pass_with_remaining_51_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot --headless --path . --scene tests/ai_raid_regroup_retreat_report.tscn && GODOT_SILENCE_ROOT_WARNING=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_baseline_kpi_report.tscn",
+          "notes": "Focused reconciliation coverage removes stale moved-only assignments, deduplicates current assignments, and preserves same-turn site resolution and cross-kind regroup completion. The strategic baseline passes all 14 subsystems and all five generated-map probes with zero behavior bugs.",
+          "status": "pass_with_existing_medium_matrix_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=60 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 61 completes 56/56 turns with row signature eecc8295 and report signature a8a48a40. It records 63 activity events, 50 assignments, one grouping, five regroups, one site contest, six site seizures, 24 public-event-stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. The prior Frontier sweep 36,30 stale summary count falls from six to zero. Five reachable raids remain and the player retains one town, so the battle-free row keeps an explicit topology/contact caveat. Runtime is 410682ms with an 8809ms maximum turn. Earlier rows are historical after this public-event behavior correction; ordinal 61 is the sole exact-current-code row and 99 remain.",
+          "status": "pass_with_remaining_99_row_production_gap_and_topology_contact_caveat"
         }
       ]
     },
@@ -62859,7 +62870,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 1-9 and 100 pass with zero behavior bugs, integrity violations, and unreachable active targets. Ten target rows pass and 90 remain; battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-01T03:29:58Z",
+  "updatedAt": "2026-08-01T20:42:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

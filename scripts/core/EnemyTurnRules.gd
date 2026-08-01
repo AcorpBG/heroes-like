@@ -280,6 +280,12 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	phase_started = _profile_timer(profile_enabled)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
+	events = EnemyAdventureRulesScript._reconcile_raid_assignment_events(
+		events,
+		session.overworld.get("encounters", []),
+		"",
+		session.overworld.get("resolved_encounters", [])
+	)
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 
 static func _enemy_turn_profile_enabled() -> bool:
