@@ -3611,6 +3611,24 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 	var defense_node := _resource_node_by_placement(session, defense_target_id)
 	_set_player_position(session, {"x": int(defense_node.get("x", 0)), "y": int(defense_node.get("y", 0))})
 	state = _enemy_state_for_faction(session, faction_id)
+	var emergency_scan_context := {}
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	var first_recruitment_candidates := EnemyTurnRules._emergency_defense_recruitment_candidates(
+		session,
+		config,
+		faction_id,
+		emergency_scan_context
+	)
+	var second_recruitment_candidates := EnemyTurnRules._emergency_defense_recruitment_candidates(
+		session,
+		config,
+		faction_id,
+		emergency_scan_context
+	)
+	var reinforcement_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var profile_counts: Dictionary = reinforcement_profile.get("counts", {})
+	var path_context_loaded := int(profile_counts.get("emergency_path_context_loaded", 0))
+	var path_context_reused := int(profile_counts.get("emergency_path_context_reused", 0))
 	var emergency_plan := EnemyTurnRules._emergency_defense_launch_ready_report(session, config, state, faction_id)
 	var selected_hero_id := String(emergency_plan.get("roster_hero_id", ""))
 	var selected_fit_bonus := int(emergency_plan.get("spawn_plan_commander_fit_bonus", 0))
@@ -3625,6 +3643,12 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 		failures.append("Emergency defense plan did not expose a positive commander-fit bonus.")
 	if selected_source != "emergency_resource_defense":
 		failures.append("Emergency defense selected wrong plan source %s." % selected_source)
+	if JSON.stringify(first_recruitment_candidates) != JSON.stringify(second_recruitment_candidates):
+		failures.append("Emergency defense recruitment rescans changed candidate behavior while reusing path state.")
+	if path_context_loaded != 1:
+		failures.append("Emergency defense recruitment rescans loaded %d path contexts instead of one." % path_context_loaded)
+	if path_context_reused <= 0:
+		failures.append("Emergency defense recruitment rescans did not reuse the retained path context.")
 	var status := _status_from(failures, warnings, deferred)
 	return _case(
 		"strategic_ai_emergency_defense_commander_fit",
@@ -3638,11 +3662,16 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"expected_hero_id": expected_defender_id,
 			"rotation_first_hero_id": rotation_first_id,
 			"commander_fit_bonus": selected_fit_bonus,
+			"path_context_loaded": path_context_loaded,
+			"path_context_reused": path_context_reused,
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
 		},
 		{
 			"emergency_plan": emergency_plan,
+			"first_recruitment_candidates": first_recruitment_candidates,
+			"second_recruitment_candidates": second_recruitment_candidates,
+			"reinforcement_profile": reinforcement_profile,
 			"target_reason_codes": _string_array(emergency_plan.get("spawn_plan_reason_codes", [])),
 			"warnings": warnings,
 			"failures": failures,

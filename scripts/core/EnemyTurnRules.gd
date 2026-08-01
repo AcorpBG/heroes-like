@@ -2608,7 +2608,12 @@ static func _best_emergency_defense_recruitment_target(
 		return {}
 	var candidates = faction_recruitment_context.get("emergency_defense_recruitment_candidates", null)
 	if candidates == null:
-		candidates = _emergency_defense_recruitment_candidates(session, config, faction_id)
+		candidates = _emergency_defense_recruitment_candidates(
+			session,
+			config,
+			faction_id,
+			faction_recruitment_context
+		)
 		faction_recruitment_context["emergency_defense_recruitment_candidates"] = candidates
 	var best := {}
 	var best_score := -1.0
@@ -2651,7 +2656,8 @@ static func _best_emergency_defense_recruitment_target(
 static func _emergency_defense_recruitment_candidates(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	emergency_scan_context: Dictionary = {}
 ) -> Array:
 	if session == null or faction_id == "" or not _has_open_emergency_defense_front(session, faction_id):
 		return []
@@ -2674,7 +2680,8 @@ static func _emergency_defense_recruitment_candidates(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			index
+			index,
+			emergency_scan_context
 		)
 		if not candidate.is_empty():
 			candidates.append(candidate)
@@ -3256,6 +3263,7 @@ static func _emergency_defense_launch_ready_report(
 	if points.is_empty():
 		return {}
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var emergency_scan_context := {}
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -3268,7 +3276,8 @@ static func _emergency_defense_launch_ready_report(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			index
+			index,
+			emergency_scan_context
 		)
 		if candidate.is_empty():
 			continue
@@ -4830,7 +4839,8 @@ static func _spawn_point_candidate(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("emergency_defense_spawn_candidate_ms", started_usec)
 		if not emergency_defense_candidate.is_empty():
@@ -5899,7 +5909,8 @@ static func _emergency_defense_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	emergency_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5913,6 +5924,13 @@ static func _emergency_defense_spawn_candidate_for_point(
 		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
 		roster
+	)
+	if candidates.is_empty():
+		return {}
+	var path_context := _emergency_defense_path_context(
+		session,
+		faction_id,
+		emergency_scan_context
 	)
 	var best_town := {}
 	var best_resource := {}
@@ -5954,13 +5972,15 @@ static func _emergency_defense_spawn_candidate_for_point(
 				session,
 				config,
 				probe.duplicate(true),
-				faction_id
+				faction_id,
+				path_context
 			)
 			resource_defense = EnemyAdventureRulesScript._redirect_raid_to_threatened_resource_defense(
 				session,
 				config,
 				probe.duplicate(true),
-				faction_id
+				faction_id,
+				path_context
 			)
 			if _emergency_defense_redirect_applies(town_defense):
 				town_redirect_template = town_defense.duplicate(true)
@@ -5972,13 +5992,15 @@ static func _emergency_defense_spawn_candidate_for_point(
 				session,
 				probe,
 				town_redirect_template,
-				faction_id
+				faction_id,
+				path_context
 			)
 			resource_defense = _emergency_defense_redirect_from_template(
 				session,
 				probe,
 				resource_redirect_template,
-				faction_id
+				faction_id,
+				path_context
 			)
 		for redirected_value in [town_defense, resource_defense]:
 			if not (redirected_value is Dictionary):
@@ -6002,11 +6024,32 @@ static func _emergency_defense_spawn_candidate_for_point(
 				best_resource = candidate
 	return best_town if not best_town.is_empty() else best_resource
 
+static func _emergency_defense_path_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	emergency_scan_context: Dictionary
+) -> Dictionary:
+	var cached = emergency_scan_context.get("emergency_defense_path_context", null)
+	if cached is Dictionary and not cached.is_empty():
+		_reinforcement_profile_count("emergency_path_context_reused")
+		_spawn_profile_count("emergency_path_context_reused")
+		return cached
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(
+		session,
+		"",
+		faction_id
+	)
+	emergency_scan_context["emergency_defense_path_context"] = path_context
+	_reinforcement_profile_count("emergency_path_context_loaded")
+	_spawn_profile_count("emergency_path_context_loaded")
+	return path_context
+
 static func _emergency_defense_redirect_from_template(
 	session: SessionStateStoreScript.SessionData,
 	probe: Dictionary,
 	redirect_template: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if redirect_template.is_empty():
 		return probe
@@ -6030,7 +6073,12 @@ static func _emergency_defense_redirect_from_template(
 	]:
 		if redirect_template.has(key):
 			redirected[key] = redirect_template.get(key)
-	return EnemyAdventureRulesScript._refresh_target(session, redirected, faction_id)
+	return EnemyAdventureRulesScript._refresh_target(
+		session,
+		redirected,
+		faction_id,
+		preloaded_path_context
+	)
 
 static func _emergency_defense_redirect_applies(raid: Dictionary) -> bool:
 	var kind := String(raid.get("target_kind", ""))
