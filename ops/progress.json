@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinal 73 completes 56/56 turns with row signature 23a4a465, 63 events, four site seizures, 25 quiet turns, and zero behavior, integrity, or reachability failures. Six reachable raids remain and no tactical battle occurs, so the row retains a topology/contact caveat. Thirteen current-code rows pass, 87 remain, and ordinal 74 is next.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinal 74 completes 56/56 turns with row signature 06bed0d3, 164 events, one valid town-loss battle, four quiet turns, and zero behavior, integrity, reachability, or invalid-order failures. The player has no towns but four live heroes and six active raids remain. Fourteen current-code rows pass, 86 remain, and ordinal 75 is next.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact-current-code Medium ordinal 73 completes all 56 turns with row signature 23a4a465, 63 events, four site seizures, 25 quiet turns, and zero behavior, integrity, or reachability failures. Six reachable raids remain but no tactical battle occurs. Thirteen rows pass, 87 remain, and ordinal 74 is next.",
+  "currentSliceNotes": "Exact-current-code Medium ordinal 74 completes all 56 turns with row signature 06bed0d3, 164 events, one valid town-loss battle, four quiet turns, and zero behavior, integrity, reachability, or invalid-order failures. Runtime is 464606ms with a 13322ms maximum turn. Fourteen rows pass, 86 remain, and ordinal 75 is next.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-01T23:39:35Z",
+  "currentSliceUpdatedAt": "2026-08-01T23:49:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61143,7 +61143,8 @@
         "Exact-current-code Medium ordinal 70 reaches correct player defeat after 21 completed turns with row signature 7e0a3b27 and report signature dc1afa6b. It records 49 activity events, 15 movements, 28 assignments, two regroups, three site contests, one site seizure, and one valid hero-intercept autoresolution, with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. The pre-turn tactical diagnostic records the final hero target at distance 2, then the next turn moves and resolves the valid intercept; the report retains a remaining-validation no-natural-arrival row because its snapshot convention did not observe distance 0 before battle. Runtime is 147364ms with a 7583ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-69, 10 exact-current-code rows pass, 90 remain, and ordinal 71 is next.",
         "Exact-current-code Medium ordinal 71 completes 56/56 turns with row signature 2ac75a69 and report signature 88138590. It records 87 activity events, 66 assignments, four groupings, three regroups, seven site contests, seven site seizures, and 16 public-event-stalled turns (29%), with zero behavior bugs, integrity violations, or unreachable active targets. Six reachable raids remain and the player retains one town, but no tactical battle occurs, so the row retains an explicit topology/contact caveat. Repeated guard breaks and seven distinct site seizures prove objective progression across the quiet periods. Runtime is 387595ms with an 8193ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-70, 11 exact-current-code rows pass, 89 remain, and ordinal 72 is next.",
         "Exact-current-code Medium ordinal 72 reaches correct player defeat after 34 completed turns with row signature 0d2ea294 and report signature b11befb4. It records 181 activity events, 72 movements, 23 assignments, one grouping, four regroups, 20 garrison reinforcements, two commander-task plans, 13 town builds, 22 town recruitments, one town defense, three site contests, and two valid autoresolutions (town loss and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Natural town contact occurs on day 13 and the final hero intercept resolves on day 35. Runtime is 332939ms with a 13442ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-71, 12 exact-current-code rows pass, 88 remain, and ordinal 73 is next.",
-        "Exact-current-code Medium ordinal 73 completes 56/56 turns with row signature 23a4a465 and report signature 706c2dc0. It records 63 activity events, 48 assignments, seven regroups, four site contests, four site seizures, and 25 public-event-stalled turns (45%), with zero behavior bugs, integrity violations, or unreachable active targets. Six reachable raids remain and the player retains one town, but no tactical battle occurs, so the row retains an explicit topology/contact caveat. Four distinct site seizures and the final four-day goal-distance countdown from 4 to 1 prove objective progression during the quiet periods. Runtime is 385058ms with an 8061ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-72, 13 exact-current-code rows pass, 87 remain, and ordinal 74 is next."
+        "Exact-current-code Medium ordinal 73 completes 56/56 turns with row signature 23a4a465 and report signature 706c2dc0. It records 63 activity events, 48 assignments, seven regroups, four site contests, four site seizures, and 25 public-event-stalled turns (45%), with zero behavior bugs, integrity violations, or unreachable active targets. Six reachable raids remain and the player retains one town, but no tactical battle occurs, so the row retains an explicit topology/contact caveat. Four distinct site seizures and the final four-day goal-distance countdown from 4 to 1 prove objective progression during the quiet periods. Runtime is 385058ms with an 8061ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-72, 13 exact-current-code rows pass, 87 remain, and ordinal 74 is next.",
+        "Exact-current-code Medium ordinal 74 completes 56/56 turns with row signature 06bed0d3 and report signature c5d144d7. It records 164 activity events, 49 movements, 28 assignments, three groupings, two regroups, 28 garrison reinforcements, three commander-task plans, 15 town builds, 32 town recruitments, two site contests, and one valid town-loss autoresolution, with four stalled turns and zero invalid player orders, behavior bugs, integrity violations, or unreachable active targets. The player correctly remains in progress with no towns but four live heroes; six reachable raids remain, including two direct hero targets. Runtime is 464606ms with a 13322ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-73, 14 exact-current-code rows pass, 86 remain, and ordinal 75 is next."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61156,9 +61157,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Exact-current-code Medium ordinal 73 completes all 56 turns with 63 events, four site seizures, 25 quiet turns, and zero behavior, integrity, or reachability failures. Six reachable raids remain, but the battle-free row retains a topology/contact caveat. Together with ordinals 61-72, 13 rows pass, 87 remain, and ordinal 74 is next. The matrix slice and overall game remain in progress.",
+      "summary": "Exact-current-code Medium ordinal 74 completes all 56 turns with 164 events, one valid town-loss battle, four quiet turns, and zero invalid-order, behavior, integrity, or reachability failures. The player remains live through four heroes after losing the final town, and six active raids include two direct hero targets. Together with ordinals 61-73, 14 rows pass, 86 remain, and ordinal 75 is next. The matrix slice and overall game remain in progress.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-01T23:39:35Z",
+      "updatedAt": "2026-08-01T23:49:03Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -62029,6 +62030,11 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=72 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 73 completes 56/56 turns with row signature 23a4a465 and report signature 706c2dc0. It records 63 activity events, 48 assignments, seven regroups, four site contests, four site seizures, and 25 public-event-stalled turns (45%), with zero behavior bugs, integrity violations, or unreachable active targets. Six reachable raids remain and the player retains one town, but no tactical battle occurs. Four distinct site seizures and the final four-day goal-distance countdown from 4 to 1 prove objective progression during the quiet periods. Runtime is 385058ms with an 8061ms maximum turn. The report remains needs_attention because the other 87 current-code rows have not run, and this row retains a topology/contact caveat.",
           "status": "pass_with_remaining_87_row_production_gap_and_topology_contact_caveat"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=73 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 74 completes 56/56 turns with row signature 06bed0d3 and report signature c5d144d7. It records 164 activity events, 49 movements, 28 assignments, three groupings, two regroups, 28 garrison reinforcements, three commander-task plans, 15 town builds, 32 town recruitments, two site contests, and one valid town-loss autoresolution, with four stalled turns and zero invalid player orders, behavior bugs, integrity violations, or unreachable active targets. The player remains in progress with no towns but four live heroes; six reachable raids remain, including two direct hero targets. Runtime is 464606ms with a 13322ms maximum turn. The report remains needs_attention only because the other 86 current-code rows have not run.",
+          "status": "pass_with_remaining_86_row_production_gap"
         }
       ]
     },
@@ -62935,9 +62941,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 61-73 pass with zero behavior bugs, integrity violations, and unreachable active targets. Thirteen current-code rows pass and 87 remain; battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 61-74 pass with zero behavior bugs, integrity violations, and unreachable active targets. Fourteen current-code rows pass and 86 remain; battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-01T23:39:35Z",
+  "updatedAt": "2026-08-01T23:49:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
