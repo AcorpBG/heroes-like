@@ -269,8 +269,9 @@ func _target_aware_spawn_point_case() -> Dictionary:
 			_fail("Target-aware multi-point scan should load %s exactly once: %s" % [loaded_key, JSON.stringify(spawn_scan_profile)])
 			return {}
 	if int(spawn_scan_counts.get("spawn_scan_live_tasks_reused", 0)) <= 0 \
-		or int(spawn_scan_counts.get("spawn_scan_path_context_reused", 0)) <= 0:
-		_fail("Target-aware multi-point scan did not reuse task and path context: %s" % JSON.stringify(spawn_scan_profile))
+		or int(spawn_scan_counts.get("spawn_scan_path_context_reused", 0)) <= 0 \
+		or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) <= 0:
+		_fail("Target-aware multi-point scan did not reuse task, path, and spell-projection context: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
 	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
 		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
@@ -542,9 +543,16 @@ func _rebuild_launch_waits_for_viable_commander_case() -> Dictionary:
 		"reason": "no_spare_garrison_after_regroup",
 	}
 	_update_enemy_state(session, state)
+	EnemyTurnRules._spawn_profile_begin(true)
 	var blocked_candidate := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	var blocked_scan_profile := EnemyTurnRules._spawn_profile_finish()
+	var blocked_scan_counts: Dictionary = blocked_scan_profile.get("counts", {}) if blocked_scan_profile.get("counts", {}) is Dictionary else {}
 	if not blocked_candidate.is_empty():
 		_fail("Understrength rebuild roster bypassed target readiness through a scout launch: %s" % JSON.stringify(blocked_candidate))
+		return {}
+	if int(blocked_scan_counts.get("spawn_ready_probe_loaded", 0)) <= 0 \
+			or int(blocked_scan_counts.get("spawn_ready_probe_reused", 0)) <= 0:
+		_fail("Multi-point rebuild readiness scan did not reuse prepared commander probes: %s" % JSON.stringify(blocked_scan_profile))
 		return {}
 
 	_set_commander_continuity(
@@ -599,6 +607,8 @@ func _rebuild_launch_waits_for_viable_commander_case() -> Dictionary:
 		"ready_spawn_plan_source": String(ready_candidate.get("spawn_plan_source", "")),
 		"ready_target_kind": String(ready_candidate.get("spawn_plan_target_kind", "")),
 		"ready_target_id": String(ready_candidate.get("spawn_plan_target_id", "")),
+		"blocked_scan_probe_load_count": int(blocked_scan_counts.get("spawn_ready_probe_loaded", 0)),
+		"blocked_scan_probe_reuse_count": int(blocked_scan_counts.get("spawn_ready_probe_reused", 0)),
 		"immediate_patrol_launch_blocked": true,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}

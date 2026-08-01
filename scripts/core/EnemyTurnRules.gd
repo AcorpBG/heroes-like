@@ -4889,7 +4889,8 @@ static func _spawn_point_candidate(
 		faction_id,
 		point,
 		occupied_commander_ids,
-		spawn_order
+		spawn_order,
+		spawn_scan_context
 	)
 	_spawn_profile_add_ms("fresh_spawn_target_candidate_ms", started_usec)
 	if not fresh_candidate.is_empty():
@@ -5004,7 +5005,7 @@ static func _saved_task_spawn_candidate_for_point(
 			"saved_task",
 			spawn_order + int(commander_value.get("rotation_order", 0))
 		)
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
@@ -5016,7 +5017,8 @@ static func _active_front_support_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5081,7 +5083,7 @@ static func _active_front_support_spawn_candidate_for_point(
 		candidate["spawn_plan_target_strength"] = EnemyAdventureRulesScript.desired_raid_strength(probe)
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 75000
 		candidate = _apply_spawn_plan_commander_fit(session, faction_id, candidate)
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
@@ -5093,7 +5095,8 @@ static func _fresh_spawn_target_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5102,7 +5105,9 @@ static func _fresh_spawn_target_candidate_for_point(
 	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates(
 		session,
 		config,
-		Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
+		Vector2i(int(point.get("x", 0)), int(point.get("y", 0))),
+		false,
+		_spawn_scan_path_context(session, faction_id, spawn_scan_context)
 	)
 	_spawn_profile_add_ms("fresh_target_candidates_ms", started_usec)
 	_spawn_profile_count("fresh_target_candidate_count", target_candidates.size())
@@ -5146,7 +5151,7 @@ static func _fresh_spawn_target_candidate_for_point(
 					spawn_order
 				)
 				started_usec = _spawn_profile_timer()
-				var projected_fallback := _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate)
+				var projected_fallback := _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, fallback_candidate, spawn_scan_context)
 				_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
 				if rebuild_pressure_active:
 					projected_fallback = _prepare_rebuild_pressure_candidate_for_spawn(config, state, projected_fallback)
@@ -5156,7 +5161,8 @@ static func _fresh_spawn_target_candidate_for_point(
 						state,
 						faction_id,
 						projected_fallback,
-						occupied_commander_ids
+						occupied_commander_ids,
+						spawn_scan_context
 					):
 						return {}
 				return projected_fallback
@@ -5168,7 +5174,8 @@ static func _fresh_spawn_target_candidate_for_point(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("fresh_exploration_spawn_candidate_ms", started_usec)
 		if not exploration_candidate.is_empty():
@@ -5180,7 +5187,8 @@ static func _fresh_spawn_target_candidate_for_point(
 					state,
 					faction_id,
 					exploration_candidate,
-					occupied_commander_ids
+					occupied_commander_ids,
+					spawn_scan_context
 				):
 					return {}
 			return exploration_candidate
@@ -5196,7 +5204,8 @@ static func _fresh_spawn_target_candidate_for_point(
 			point,
 			occupied_commander_ids,
 			spawn_order,
-			preselected_fallback_plan
+			preselected_fallback_plan,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("fresh_fallback_spawn_candidate_ms", started_usec)
 		return fallback_candidate
@@ -5259,7 +5268,7 @@ static func _fresh_spawn_target_candidate_for_point(
 		candidate["spawn_plan_commander_fit_bonus"] = int(fitted_target.get("commander_fit_bonus", 0))
 		candidate["spawn_plan_commander_fit_profile"] = String(fitted_target.get("commander_fit_profile", ""))
 		started_usec = _spawn_profile_timer()
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		_spawn_profile_add_ms("fresh_spell_projection_ms", started_usec)
 		started_usec = _spawn_profile_timer()
 		if rebuild_pressure_active:
@@ -5271,7 +5280,8 @@ static func _fresh_spawn_target_candidate_for_point(
 				state,
 				faction_id,
 				candidate,
-				occupied_commander_ids
+				occupied_commander_ids,
+				spawn_scan_context
 			):
 			_spawn_profile_add_ms("fresh_ready_without_regroup_ms", started_usec)
 			_spawn_profile_count("fresh_rebuild_candidate_not_ready")
@@ -5294,7 +5304,8 @@ static func _fresh_spawn_target_candidate_for_point(
 			point,
 			occupied_commander_ids,
 			spawn_order,
-			preselected_best_empty_fallback_plan
+			preselected_best_empty_fallback_plan,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("fresh_fallback_spawn_candidate_ms", started_usec)
 		return fallback
@@ -5308,7 +5319,8 @@ static func _fallback_spawn_candidate_for_point(
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
 	spawn_order: int,
-	preselected_plan: Dictionary = {}
+	preselected_plan: Dictionary = {},
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5358,7 +5370,7 @@ static func _fallback_spawn_candidate_for_point(
 			spawn_order + int(commander_value.get("rotation_order", 0))
 		)
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + 1500
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		candidate = _prepare_rebuild_pressure_candidate_for_spawn(config, state, candidate)
 		if not _spawn_candidate_ready_without_immediate_regroup(
 			session,
@@ -5366,7 +5378,8 @@ static func _fallback_spawn_candidate_for_point(
 			state,
 			faction_id,
 			candidate,
-			occupied_commander_ids
+			occupied_commander_ids,
+			spawn_scan_context
 		):
 			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
@@ -5454,23 +5467,26 @@ static func _rebuild_pressure_exploration_plan(
 	while recent_target_ids.size() > EnemyAdventureRulesScript.RAID_RECENT_EXPLORATION_TARGET_LIMIT:
 		recent_target_ids.pop_front()
 	var rebuild_memory := {"recent_exploration_target_ids": recent_target_ids}
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
 	var plan := EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(
 		session,
 		config,
 		origin,
-		rebuild_memory
+		rebuild_memory,
+		path_context
 	)
 	if plan.is_empty():
 		plan = EnemyAdventureRulesScript._no_known_target_exploration_plan(
 			session,
 			config,
 			origin,
-			rebuild_memory
+			rebuild_memory,
+			path_context
 		)
 	if plan.is_empty():
-		plan = _rebuild_pressure_frontier_sweep_plan(session, config, faction_id, point, rebuild_memory)
+		plan = _rebuild_pressure_frontier_sweep_plan(session, config, faction_id, point, rebuild_memory, path_context)
 	if plan.is_empty():
-		plan = _rebuild_pressure_local_patrol_plan(session, config, faction_id, point, rebuild_memory)
+		plan = _rebuild_pressure_local_patrol_plan(session, config, faction_id, point, rebuild_memory, path_context)
 	if plan.is_empty():
 		return {}
 	var updated := plan.duplicate(true)
@@ -5490,7 +5506,8 @@ static func _rebuild_pressure_local_patrol_plan(
 	config: Dictionary,
 	faction_id: String,
 	point: Dictionary,
-	commander_source: Variant = {}
+	commander_source: Variant = {},
+	path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5509,7 +5526,7 @@ static func _rebuild_pressure_local_patrol_plan(
 				var tile := Vector2i(origin.x + dx, origin.y + dy)
 				if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
 					continue
-				var route_distance := EnemyAdventureRulesScript._path_distance(session, origin, [tile], "", faction_id)
+				var route_distance := EnemyAdventureRulesScript._path_distance_with_context(path_context, origin, [tile])
 				if route_distance < 1 or route_distance >= 9999:
 					continue
 				var score: int = 90 - (route_distance * 6) - abs(dx)
@@ -5550,7 +5567,8 @@ static func _spawn_candidate_ready_without_immediate_regroup(
 	state: Dictionary,
 	faction_id: String,
 	candidate: Dictionary,
-	occupied_commander_ids: Dictionary
+	occupied_commander_ids: Dictionary,
+	spawn_scan_context: Dictionary = {}
 ) -> bool:
 	if session == null or faction_id == "" or candidate.is_empty():
 		return false
@@ -5568,34 +5586,46 @@ static func _spawn_candidate_ready_without_immediate_regroup(
 			encounter_id = _primary_raid_encounter_id(config)
 	if encounter_id == "":
 		return false
-	var probe := {
-		"placement_id": "__rebuild_pressure_launch_probe:%s" % roster_hero_id,
-		"encounter_id": encounter_id,
-		"x": int(candidate.get("x", 0)),
-		"y": int(candidate.get("y", 0)),
-		"difficulty": "pressure",
-		"spawned_by_faction_id": faction_id,
-		"days_active": 0,
-		"arrived": false,
-		"goal_distance": int(candidate.get("spawn_plan_goal_distance", 9999)),
-		"target_kind": target_kind,
-		"target_placement_id": target_id,
-		"target_label": String(candidate.get("spawn_plan_target_label", target_id)),
-		"target_x": int(candidate.get("spawn_plan_target_x", candidate.get("x", 0))),
-		"target_y": int(candidate.get("spawn_plan_target_y", candidate.get("y", 0))),
-		"goal_x": int(candidate.get("spawn_plan_goal_x", candidate.get("spawn_plan_target_x", candidate.get("x", 0)))),
-		"goal_y": int(candidate.get("spawn_plan_goal_y", candidate.get("spawn_plan_target_y", candidate.get("y", 0)))),
-		"target_reason_codes": candidate.get("spawn_plan_reason_codes", []),
-	}
-	probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
-		probe,
-		roster_hero_id,
-		faction_id,
-		session,
-		occupied_commander_ids,
-		state.get("commander_roster", [])
-	)
-	probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+	var probe_key := "%s|%s" % [encounter_id, roster_hero_id]
+	var probe_cache: Dictionary = spawn_scan_context.get("ready_probe_by_commander", {}) if spawn_scan_context.get("ready_probe_by_commander", {}) is Dictionary else {}
+	var probe := {}
+	if probe_cache.has(probe_key):
+		probe = probe_cache[probe_key].duplicate(true)
+		_spawn_profile_count("spawn_ready_probe_reused")
+	else:
+		probe = {
+			"placement_id": "__rebuild_pressure_launch_probe:%s" % roster_hero_id,
+			"encounter_id": encounter_id,
+			"x": int(candidate.get("x", 0)),
+			"y": int(candidate.get("y", 0)),
+			"difficulty": "pressure",
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+		}
+		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+			probe,
+			roster_hero_id,
+			faction_id,
+			session,
+			occupied_commander_ids,
+			state.get("commander_roster", [])
+		)
+		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+		probe_cache[probe_key] = probe.duplicate(true)
+		spawn_scan_context["ready_probe_by_commander"] = probe_cache
+		_spawn_profile_count("spawn_ready_probe_loaded")
+	probe["x"] = int(candidate.get("x", 0))
+	probe["y"] = int(candidate.get("y", 0))
+	probe["goal_distance"] = int(candidate.get("spawn_plan_goal_distance", 9999))
+	probe["target_kind"] = target_kind
+	probe["target_placement_id"] = target_id
+	probe["target_label"] = String(candidate.get("spawn_plan_target_label", target_id))
+	probe["target_x"] = int(candidate.get("spawn_plan_target_x", candidate.get("x", 0)))
+	probe["target_y"] = int(candidate.get("spawn_plan_target_y", candidate.get("y", 0)))
+	probe["goal_x"] = int(candidate.get("spawn_plan_goal_x", candidate.get("spawn_plan_target_x", candidate.get("x", 0))))
+	probe["goal_y"] = int(candidate.get("spawn_plan_goal_y", candidate.get("spawn_plan_target_y", candidate.get("y", 0))))
+	probe["target_reason_codes"] = candidate.get("spawn_plan_reason_codes", [])
 	if not EnemyAdventureRulesScript._raid_target_valid(session, probe):
 		return false
 	if target_kind == "explore" \
@@ -5608,7 +5638,8 @@ static func _rebuild_pressure_frontier_sweep_plan(
 	config: Dictionary,
 	faction_id: String,
 	point: Dictionary,
-	commander_source: Variant = {}
+	commander_source: Variant = {},
+	path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5626,7 +5657,7 @@ static func _rebuild_pressure_frontier_sweep_plan(
 			var direct_distance: int = abs(tile.x - origin.x) + abs(tile.y - origin.y)
 			if direct_distance < 1 or direct_distance > 90:
 				continue
-			var route_distance := EnemyAdventureRulesScript._path_distance(session, origin, [tile], "", faction_id)
+			var route_distance := EnemyAdventureRulesScript._path_distance_with_context(path_context, origin, [tile])
 			if route_distance < 1 or route_distance > 90 or route_distance >= 9999:
 				continue
 			var center_score: int = 18 - abs(int(map_size.x / 2) - tile.x) - abs(int(map_size.y / 2) - tile.y)
@@ -5673,7 +5704,8 @@ static func _exploration_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5717,7 +5749,7 @@ static func _exploration_spawn_candidate_for_point(
 		)
 		candidate["spawn_plan_score"] = int(candidate.get("spawn_plan_score", 0)) + _exploration_commander_spawn_bonus(session, faction_id, roster_hero_id)
 		candidate["spawn_plan_public_importance"] = "medium"
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
@@ -5791,7 +5823,7 @@ static func _ready_saved_task_spawn_candidate_for_point(
 			"saved_task",
 			spawn_order
 		)
-		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
+		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate, spawn_scan_context)
 		var ready_report := _spawn_point_candidate_ready_launch_report(
 			session,
 			config,
@@ -6084,7 +6116,8 @@ static func _apply_spawn_plan_adventure_spell_projection(
 	config: Dictionary,
 	state: Dictionary,
 	faction_id: String,
-	candidate: Dictionary
+	candidate: Dictionary,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or candidate.is_empty() or faction_id == "":
 		return candidate
@@ -6094,28 +6127,40 @@ static func _apply_spawn_plan_adventure_spell_projection(
 	var actor_id := String(candidate.get("roster_hero_id", ""))
 	if actor_id == "":
 		return candidate
-	var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
-	var commander_state: Dictionary = commander.get("commander_state", {}) if commander.get("commander_state", {}) is Dictionary else {}
-	if commander_state.is_empty():
-		commander_state = EnemyAdventureRulesScript.build_roster_commander_state(actor_id, faction_id, {}, commander)
-	if commander_state.is_empty():
-		return candidate
-	var movement := {
-		"current": EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS,
-		"max": clampi(
-			goal_distance,
-			EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS + 1,
-			EnemyAdventureRulesScript.RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS
-		),
-	}
-	var context := {
-		"target_kind": String(candidate.get("spawn_plan_target_kind", "")),
-		"target_label": String(candidate.get("spawn_plan_target_label", candidate.get("spawn_plan_target_id", ""))),
-		"objective_steps_remaining": goal_distance,
-		"route_pressure": true,
-	}
-	var report := EnemyAdventureRulesScript.adventure_spell_valuation_report(commander_state, movement, context)
-	var selected := _spawn_plan_selected_adventure_spell_candidate(report, "restore_movement")
+	var target_kind := String(candidate.get("spawn_plan_target_kind", ""))
+	var target_label := String(candidate.get("spawn_plan_target_label", candidate.get("spawn_plan_target_id", "")))
+	var projection_key := JSON.stringify([actor_id, goal_distance, target_kind, target_label])
+	var projection_cache: Dictionary = spawn_scan_context.get("spell_projection_by_candidate", {}) if spawn_scan_context.get("spell_projection_by_candidate", {}) is Dictionary else {}
+	var selected := {}
+	if projection_cache.has(projection_key):
+		selected = projection_cache[projection_key]
+		_spawn_profile_count("spawn_spell_projection_reused")
+	else:
+		var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
+		var commander_state: Dictionary = commander.get("commander_state", {}) if commander.get("commander_state", {}) is Dictionary else {}
+		if commander_state.is_empty():
+			commander_state = EnemyAdventureRulesScript.build_roster_commander_state(actor_id, faction_id, {}, commander)
+		if commander_state.is_empty():
+			return candidate
+		var movement := {
+			"current": EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS,
+			"max": clampi(
+				goal_distance,
+				EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS + 1,
+				EnemyAdventureRulesScript.RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS
+			),
+		}
+		var context := {
+			"target_kind": target_kind,
+			"target_label": target_label,
+			"objective_steps_remaining": goal_distance,
+			"route_pressure": true,
+		}
+		var report := EnemyAdventureRulesScript.adventure_spell_valuation_report(commander_state, movement, context)
+		selected = _spawn_plan_selected_adventure_spell_candidate(report, "restore_movement")
+		projection_cache[projection_key] = selected.duplicate(true)
+		spawn_scan_context["spell_projection_by_candidate"] = projection_cache
+		_spawn_profile_count("spawn_spell_projection_loaded")
 	if selected.is_empty():
 		return candidate
 	var movement_after := int(selected.get("movement_after", EnemyAdventureRulesScript.RAID_BASE_MOVEMENT_STEPS))
