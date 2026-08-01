@@ -8124,7 +8124,8 @@ static func _no_known_target_exploration_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	origin_pos: Vector2i,
-	commander_source: Variant = {}
+	commander_source: Variant = {},
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null:
 		return {}
@@ -8138,6 +8139,9 @@ static func _no_known_target_exploration_plan(
 	var best := {}
 	var best_score := -999999
 	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
+	var path_context := preloaded_path_context
+	if path_context.is_empty():
+		path_context = _path_distance_surface_context(session, "", faction_id)
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			var tile := Vector2i(x, y)
@@ -8146,7 +8150,7 @@ static func _no_known_target_exploration_plan(
 				continue
 			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
 				continue
-			var route_distance := _path_distance(session, origin_pos, [tile], "", faction_id)
+			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
 				continue
 			var frontier_score := _enemy_exploration_frontier_score(sources, tile)
@@ -8212,7 +8216,8 @@ static func _no_known_target_frontier_sweep_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	origin_pos: Vector2i,
-	commander_source: Variant = {}
+	commander_source: Variant = {},
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null:
 		return {}
@@ -8225,6 +8230,9 @@ static func _no_known_target_frontier_sweep_plan(
 	var best := {}
 	var best_score := -999999
 	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
+	var path_context := preloaded_path_context
+	if path_context.is_empty():
+		path_context = _path_distance_surface_context(session, "", faction_id)
 	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
 	for y in range(0, map_size.y, step):
 		for x in range(0, map_size.x, step):
@@ -8234,7 +8242,7 @@ static func _no_known_target_frontier_sweep_plan(
 				continue
 			if _enemy_target_currently_visible(session, config, faction_id, tile.x, tile.y):
 				continue
-			var route_distance := _path_distance(session, origin_pos, [tile], "", faction_id)
+			var route_distance := _path_distance_with_context(path_context, origin_pos, [tile])
 			if route_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or route_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE or route_distance >= 9999:
 				continue
 			var center_score := _enemy_exploration_center_score(map_size, tile)
@@ -9523,24 +9531,28 @@ static func _target_candidates(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	origin_pos: Vector2i,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	preloaded_path_context: Dictionary = {}
 ) -> Array:
 	var seen = {}
 	var candidates = []
 	var faction_id = String(config.get("faction_id", ""))
+	var path_context := preloaded_path_context
+	if path_context.is_empty():
+		path_context = _path_distance_surface_context(session, "", faction_id)
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var siege_target_id = String(config.get("siege_target_placement_id", ""))
 	if siege_target_id != "":
-		_append_town_candidate(session, candidates, seen, siege_target_id, origin_pos, 320, config, faction_id, include_unscouted)
+		_append_town_candidate(session, candidates, seen, siege_target_id, origin_pos, 320, config, faction_id, include_unscouted, path_context)
 
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 260, config, faction_id, include_unscouted)
+				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 260, config, faction_id, include_unscouted, path_context)
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 220, config, faction_id, include_unscouted)
+				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 220, config, faction_id, include_unscouted, path_context)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -9552,7 +9564,7 @@ static func _target_candidates(
 			base_priority += 50
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 20
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted)
+		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted, path_context)
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
 			continue
@@ -9563,7 +9575,7 @@ static func _target_candidates(
 			base_priority += 25
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 45
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted)
+		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted, path_context)
 
 	for node in session.overworld.get("resource_nodes", []):
 		_append_resource_candidate(
@@ -9574,7 +9586,8 @@ static func _target_candidates(
 			origin_pos,
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			path_context
 		)
 
 	for node in session.overworld.get("artifact_nodes", []):
@@ -9587,7 +9600,8 @@ static func _target_candidates(
 			_artifact_target_priority(session, node),
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			path_context
 		)
 
 	for encounter in session.overworld.get("encounters", []):
@@ -9600,7 +9614,8 @@ static func _target_candidates(
 			_encounter_target_priority(session, encounter),
 			config,
 			faction_id,
-			include_unscouted
+			include_unscouted,
+			path_context
 		)
 
 	_append_delivery_interception_candidates(session, candidates, seen, origin_pos, config, faction_id)
@@ -9620,7 +9635,8 @@ static func _append_town_candidate(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	path_context: Dictionary = {}
 ) -> void:
 	var seen_key = "town:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
@@ -9649,8 +9665,8 @@ static func _append_town_candidate(
 
 	seen[seen_key] = true
 	var staging_tiles = _town_staging_tiles(session, town)
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
+	var goal_tile = _best_goal_tile_with_path_context(path_context, origin_pos, staging_tiles)
+	var goal_distance = _path_distance_with_context(path_context, origin_pos, staging_tiles)
 	if goal_distance >= 9999:
 		return
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
@@ -9713,7 +9729,8 @@ static func _append_resource_candidate(
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	path_context: Dictionary = {}
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -9737,22 +9754,16 @@ static func _append_resource_candidate(
 	):
 		return
 	seen[seen_key] = true
-	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
+	var goal_distance = _path_distance_with_context(path_context, origin_pos, [goal_tile])
 	if goal_distance >= 9999:
 		return
 	var guard := _resource_guard_encounter_for_node(session, node, site)
 	if not guard.is_empty():
-		var guard_distance := _path_distance(
-			session,
-			origin_pos,
-			_encounter_staging_tiles(session, guard),
-			"",
-			faction_id
-		)
+		var guard_distance := _path_distance_with_context(path_context, origin_pos, _encounter_staging_tiles(session, guard))
 		if guard_distance >= 9999:
 			return
 	var anchor_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-	var anchor_distance := _path_distance(session, origin_pos, [anchor_tile], "", faction_id)
+	var anchor_distance := _path_distance_with_context(path_context, origin_pos, [anchor_tile])
 	var score_distance: int = anchor_distance if anchor_distance < 9999 else goal_distance
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id, score_distance)
 	var scouting_bonus := _enemy_scouted_target_priority_bonus(session, faction_id, "resource", placement_id)
@@ -9788,7 +9799,8 @@ static func _append_artifact_candidate(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	path_context: Dictionary = {}
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -9811,18 +9823,12 @@ static func _append_artifact_candidate(
 	):
 		return
 	seen[seen_key] = true
-	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "", faction_id)
+	var goal_distance = _path_distance_with_context(path_context, origin_pos, [goal_tile])
 	if goal_distance >= 9999:
 		return
 	var guard := _artifact_guard_encounter_for_node(session, node)
 	if not guard.is_empty():
-		var guard_distance := _path_distance(
-			session,
-			origin_pos,
-			_encounter_staging_tiles(session, guard),
-			"",
-			faction_id
-		)
+		var guard_distance := _path_distance_with_context(path_context, origin_pos, _encounter_staging_tiles(session, guard))
 		if guard_distance >= 9999:
 			return
 	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id, goal_distance)
@@ -9867,7 +9873,8 @@ static func _append_encounter_candidate(
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false
+	include_unscouted: bool = false,
+	path_context: Dictionary = {}
 ) -> void:
 	if not (encounter is Dictionary):
 		return
@@ -9895,8 +9902,8 @@ static func _append_encounter_candidate(
 		return
 	seen[seen_key] = true
 	var staging_tiles = _encounter_staging_tiles(session, encounter)
-	var goal_distance = _path_distance(session, origin_pos, staging_tiles, "", faction_id)
-	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles, faction_id)
+	var goal_distance = _path_distance_with_context(path_context, origin_pos, staging_tiles)
+	var goal_tile = _best_goal_tile_with_path_context(path_context, origin_pos, staging_tiles)
 	if goal_distance >= 9999 and priority_bonus > 0:
 		var encounter_tile := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var direct_distance: int = abs(origin_pos.x - encounter_tile.x) + abs(origin_pos.y - encounter_tile.y)
