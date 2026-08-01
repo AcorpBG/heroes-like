@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Strategic AI commander rebuilds now consume real transferred units, retain a fixed authored baseline, and stop after meeting their fixed target. Enemy economy/pressure survives commander-state reconciliation, repeat-target memory is recorded, and live hero-intercept battles restore correctly. Exact-current-code Medium ordinal 100 passes 56/56 turns with no rebuild churn, behavior bugs, integrity violations, or unreachable targets; 99 target rows remain.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Strategic AI commander rebuild continuity remains green, and exact-current-code Medium ordinals 1-5 now join ordinal 100 as passing target rows. All six rows have zero behavior bugs, integrity violations, and unreachable active targets; 94 target rows remain. Ordinal 2 remains battle-free with a topology/contact caveat, while a same-code probe confirms its off-screen raids continue moving.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact-current-code Medium ordinal 100 completes 56/56 turns with row signature 253c0956, report signature b3f00cd0, 166 activity events, 25 assignments, one valid town-defense autoresolution, nine stalled turns, zero commander-rebuilt events, zero behavior bugs, zero integrity violations, and zero unreachable targets. Fixed-baseline rebuild continuity, economy/pressure reconciliation, repeat-target memory, and hero-intercept restore behavior are green in focused and core regression coverage. Ordinal 99 and all earlier rows are historical after these behavior changes; one exact-current-code row passes and 99 target rows remain.",
+  "currentSliceNotes": "Exact-current-code Medium ordinals 1-5 pass against the ordinal-100 commander-rebuild correction. Ordinals 1, 3, 4, and 5 reach correct player defeat after 44, 27, 46, and 50 turns with 3, 3, 4, and 3 valid battle handoffs and no health failures. Ordinal 2 completes 56/56 turns with one site seizure, four final active reachable raids, and 30 public-event-idle turns; a same-code probe confirms its off-screen raids still move, leaving tactical contact/topology as the explicit caveat. Together with ordinal 100, six exact-current-code rows pass and 94 remain; ordinal 6 is next.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-01T01:04:42Z",
+  "currentSliceUpdatedAt": "2026-08-01T01:59:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61076,7 +61076,8 @@
         "Ordinal 96 reaches correct player defeat on turn 22 after three valid autoresolutions with row signature 0f4766ab, 94 activity events, 13 assignments, zero stalls, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 238490ms with a 14603ms maximum turn. It predates the saved-resource-task visit-tile correction and is retained as historical evidence rather than current-code matrix credit.",
         "Saved strategic resource-task snapshots now use authoritative visit tiles, and planned-recruitment scoring reuses one reconciled live-task array plus one saved plan per actor during each scoring pass. Exact-current-code ordinal 97 reaches correct defeat on turn 29 with row signature 73d51b81, report signature e3078ba9, 127 activity events, 18 assignments, three valid autoresolutions, one site seizure, zero stalls, zero behavior bugs, zero integrity violations, and zero unreachable targets. Behavior is identical to the pre-optimization row while total runtime falls from 301479ms to 298946ms and maximum turn runtime from 23781ms to 23423ms. Planned-task scoring on the hot turn falls from 1286ms to 1058ms and reinforcement work from 6685ms to 6379ms; reinforcement and spawn candidate evaluation remain a performance gap. Ordinals 95 and 96 are historical after this correction, leaving ordinal 97 as one exact-current-code row and 99 remaining.",
         "A completed inaccessible-player-town frontier now records the raid's best town gap and suppresses only equal-or-worse frontier waypoints for that same town while the anchor remains in the reachable component. Closer waypoints and newly direct town routes remain valid. Focused assault coverage proves terminal-frontier exhaustion, stable no-recycle behavior, and direct town-pressure restoration after opening the route. Exact-current-code ordinal 98 completes 56/56 turns with row signature 02b1e939 and report signature 5c4ae598, 94 activity events, 80 assignments, three regroups, seven site contests, four sites seized, 14 stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable targets. Same-host Riverwatch Hold frontier recycling is removed and no player-town frontier remains active at row end. Runtime is 492600ms with a 12461ms maximum turn. The row remains battle-free because no player or defended-neutral route opens, so tactical topology/contact remains an explicit gap. Ordinal 97 is historical after this behavior correction, leaving ordinal 98 as one exact-current-code row and 99 remaining.",
-        "Commander rebuild continuity now keeps the authored army strength as a fixed historical baseline and transfers only real recruited or garrison units into an empty army; reinforcement no longer materializes free base stacks or advances the rebuild target forever. Enemy turn reconciliation preserves empire-owned economy and pressure while adopting session-owned commander/task fields, preplanned returning raids record repeat-target memory, and live hero-intercept battles remain resumable after their map host is retired. Exact-current-code Medium ordinal 100 completes 56/56 turns with row signature 253c0956 and report signature b3f00cd0, 166 activity events, 25 assignments, one successful town-defense autoresolution, nine stalled turns, zero commander-rebuilt events, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 552372ms. These behavior changes supersede ordinal 99 and all earlier row credit; ordinal 100 is the sole exact-current-code row and 99 remain."
+        "Commander rebuild continuity now keeps the authored army strength as a fixed historical baseline and transfers only real recruited or garrison units into an empty army; reinforcement no longer materializes free base stacks or advances the rebuild target forever. Enemy turn reconciliation preserves empire-owned economy and pressure while adopting session-owned commander/task fields, preplanned returning raids record repeat-target memory, and live hero-intercept battles remain resumable after their map host is retired. Exact-current-code Medium ordinal 100 completes 56/56 turns with row signature 253c0956 and report signature b3f00cd0, 166 activity events, 25 assignments, one successful town-defense autoresolution, nine stalled turns, zero commander-rebuilt events, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 552372ms. These behavior changes supersede ordinal 99 and all earlier row credit; ordinal 100 is the sole exact-current-code row and 99 remain.",
+        "Exact-current-code Medium ordinals 1-5 pass against the unchanged ordinal-100 commander-rebuild correction. Ordinals 1, 3, 4, and 5 reach correct player defeat after 44, 27, 46, and 50 completed turns with 283, 78, 178, and 223 activity events and 3, 3, 4, and 3 valid battle handoffs. Ordinal 2 completes 56/56 turns with 52 public events, one site seizure, four final active reachable raids, and 30 public-event-idle turns; a temporary same-code probe confirmed that its off-screen raids move every turn and that compact public telemetry intentionally omits hidden-debug movement. All five rows have zero behavior bugs, integrity violations, and unreachable active targets. Together with ordinal 100, six exact-current-code rows pass, 94 remain, ordinal 6 is next, and ordinal 2 retains an explicit tactical-contact/topology caveat."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61089,9 +61090,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Commander rebuilds now consume only real transferred units, retain a fixed authored baseline, and terminate when their fixed pressure target is met. Empire economy/pressure survives commander-state reconciliation, repeat-target memory is recorded for preplanned returning raids, and live hero-intercept battles resume after save/restore. Exact-current-code Medium ordinal 100 passes 56/56 turns with zero rebuild churn, behavior bugs, integrity violations, or unreachable targets. It is the sole current-code row; 99 target rows remain.",
+      "summary": "Commander rebuild continuity remains green, and exact-current-code Medium ordinals 1-5 now join ordinal 100 as passing matrix rows. All six have zero behavior bugs, integrity violations, and unreachable active targets. Ordinal 2 remains battle-free with a topology/contact caveat despite confirmed off-screen raid movement. The slice remains in progress with 94 target rows remaining.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-01T01:04:42Z",
+      "updatedAt": "2026-08-01T01:59:40Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61572,6 +61573,31 @@
           "command": "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=99 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 100 completes 56/56 turns with row signature 253c0956 and report signature b3f00cd0. It records 166 activity events, 25 assignments, one valid town-defense autoresolution, nine stalled turns, six final active raids, zero commander-rebuilt events, zero behavior bugs, zero integrity violations, and zero unreachable targets. Runtime is 552372ms. One exact-current-code row passes and 99 remain.",
           "status": "pass_with_remaining_99_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=0 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 1 reaches correct player defeat after 44 completed turns with row signature f4c5c4bf and report signature 85f42575. It records 283 activity events, 21 assignments, three valid battle handoffs, zero stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. Runtime is 448606ms with a 22910ms maximum turn.",
+          "status": "pass_with_remaining_98_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 2 completes 56/56 turns with row signature e7510fa6 and report signature 07e2c31b. It records 52 public activity events, 45 assignments, one site seizure, four final active reachable raids, 30 public-event-idle turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. A temporary same-code movement probe confirmed that raids move every turn and off-screen movement is intentionally hidden from compact public telemetry. The row remains battle-free with an explicit tactical-contact/topology caveat.",
+          "status": "pass_with_remaining_97_row_production_gap_and_tactical_contact_caveat"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=2 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 3 reaches correct player defeat after 27 completed turns with row signature eefadbe9 and report signature 40fa9dc9. It records 78 activity events, 26 assignments, three valid battle handoffs, zero stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. Runtime is 250592ms with a 12973ms maximum turn.",
+          "status": "pass_with_remaining_96_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=3 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 4 reaches correct player defeat after 46 completed turns with report signature 6682a06c. It records 178 activity events, 33 assignments, four valid battle handoffs, one commander rebuild, zero stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. Runtime is 408666ms with a 13896ms maximum turn.",
+          "status": "pass_with_remaining_95_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=4 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1200 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 5 reaches correct player defeat after 50 completed turns with report signature c8e6095c. It records 223 activity events, 40 assignments, three valid battle handoffs, two commander rebuilds, zero stalled turns, zero behavior bugs, zero integrity violations, and zero unreachable active targets. Runtime is 484070ms with a 21805ms maximum turn. Together with ordinal 100 and ordinals 1-4, six exact-current-code rows pass and 94 remain.",
+          "status": "pass_with_remaining_94_row_production_gap"
         }
       ]
     },
@@ -62478,9 +62504,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Strategic AI commander rebuilds now consume only real transferred units, retain a fixed authored baseline, preserve empire economy/pressure through runtime reconciliation, record repeat-target memory, and restore live hero-intercept battles. Exact-current-code Medium ordinal 100 passes 56/56 turns with no rebuild churn or health failures. It is the sole current-code row; 99 target rows and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Strategic AI commander rebuild continuity remains green, and exact-current-code Medium ordinals 1-5 now join ordinal 100 as passing target rows with zero behavior bugs, integrity violations, or unreachable active targets. Six rows pass, 94 remain, and the strategic AI matrix and overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-01T01:04:42Z",
+  "updatedAt": "2026-08-01T01:59:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
