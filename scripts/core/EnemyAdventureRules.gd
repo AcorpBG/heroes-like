@@ -6583,13 +6583,10 @@ static func reinforce_commander_roster_army(
 				return 0
 			var continuity: Dictionary = _normalized_commander_army_continuity(entry, commander_state)
 			var continuity_stacks: Array = continuity.get("stacks", []) if continuity.get("stacks", []) is Array else []
-			var resolved_encounter_id := String(continuity.get("encounter_id", base_encounter_id))
-			var base_strength: int = max(0, int(continuity.get("base_strength", 0)))
-			if continuity_stacks.is_empty() and base_encounter_id != "":
-				var base_army := _base_enemy_army(base_encounter_id)
-				continuity_stacks = base_army.get("stacks", []) if base_army.get("stacks", []) is Array else []
-				base_strength = max(base_strength, _army_strength(continuity_stacks))
+			var resolved_encounter_id := String(continuity.get("encounter_id", ""))
+			if resolved_encounter_id == "":
 				resolved_encounter_id = base_encounter_id
+			var base_strength: int = max(0, int(continuity.get("base_strength", 0)))
 			var current_strength: int = _army_strength(continuity_stacks)
 			var desired_strength: int = max(base_strength, int(target_strength))
 			var rebuild_need: int = max(0, desired_strength - current_strength)
@@ -7744,9 +7741,10 @@ static func sync_commander_army_continuity(
 	var resolved_encounter_id := encounter_id if encounter_id != "" else String(continuity.get("encounter_id", ""))
 	var base_strength: int = max(
 		int(continuity.get("base_strength", 0)),
-		_army_strength(_base_enemy_army(resolved_encounter_id).get("stacks", [])),
-		_army_strength(stacks)
+		_army_strength(_base_enemy_army(resolved_encounter_id).get("stacks", []))
 	)
+	if base_strength <= 0:
+		base_strength = _army_strength(stacks)
 	if base_strength <= 0 and stacks.is_empty():
 		return _apply_commander_army_metadata(updated, {})
 	var current_strength: int = _army_strength(stacks)

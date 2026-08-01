@@ -34,18 +34,107 @@ func _run() -> void:
 	var rebuild_launch_readiness_case := _rebuild_launch_waits_for_viable_commander_case()
 	if rebuild_launch_readiness_case.is_empty():
 		return
+	var rebuild_target_completion_case := _commander_rebuild_target_stays_fixed_until_complete_case()
+	if rebuild_target_completion_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_and_rebuild_launch_readiness",
 		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_adventure_spell_route_tempo_generated_multi_town_front_distribution_and_rebuilds_wait_for_viable_commanders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _commander_rebuild_target_stays_fixed_until_complete_case() -> Dictionary:
+	var session = _base_session()
+	var state := _enemy_state(session)
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	for index in range(roster.size()):
+		var entry: Dictionary = roster[index] if roster[index] is Dictionary else {}
+		var commander_state: Dictionary = entry.get("commander_state", {}) if entry.get("commander_state", {}) is Dictionary else {}
+		commander_state = EnemyAdventureRules.sync_commander_army_continuity(
+			commander_state,
+			{"stacks": []},
+			"encounter_mire_raid"
+		)
+		entry["commander_state"] = commander_state
+		entry["army_continuity"] = EnemyAdventureRules.commander_army_continuity(commander_state)
+		if String(entry.get("roster_hero_id", "")) == "hero_tarn":
+			entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+			entry["recovery_day"] = 0
+		else:
+			entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_RECOVERING
+			entry["recovery_day"] = int(session.day) + 100
+		roster[index] = entry
+	state["commander_roster"] = roster
+	_update_enemy_state(session, state)
+
+	var target := EnemyTurnRules._best_commander_rebuild_target(session, _enemy_config(), MIRECLAW)
+	if String(target.get("roster_hero_id", "")) != "hero_tarn" or int(target.get("target_strength", 0)) <= 0:
+		_fail("Commander rebuild completion fixture did not select Tarn: %s" % JSON.stringify(target))
+		return {}
+	var baseline_strength: int = int(
+		EnemyAdventureRules.commander_army_continuity(
+			_commander_entry(session, "hero_tarn")
+		).get("base_strength", 0)
+	)
+	var first_accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		MIRECLAW,
+		"hero_tarn",
+		"unit_mire_slinger",
+		1,
+		String(target.get("base_encounter_id", "")),
+		int(target.get("target_strength", 0))
+	)
+	var partial_continuity := EnemyAdventureRules.commander_army_continuity(
+		_commander_entry(session, "hero_tarn")
+	)
+	if (
+		first_accepted != 1
+		or int(partial_continuity.get("current_strength", 0)) <= 0
+		or int(partial_continuity.get("current_strength", 0)) >= baseline_strength
+	):
+		_fail("Single-unit commander rebuild restored untransferred base forces: %s" % JSON.stringify(partial_continuity))
+		return {}
+	var remaining_accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		MIRECLAW,
+		"hero_tarn",
+		"unit_mire_slinger",
+		999,
+		String(target.get("base_encounter_id", "")),
+		int(target.get("target_strength", 0))
+	)
+	var rebuilt_continuity := EnemyAdventureRules.commander_army_continuity(
+		_commander_entry(session, "hero_tarn")
+	)
+	if remaining_accepted <= 0 or int(rebuilt_continuity.get("current_strength", 0)) < int(target.get("target_strength", 0)):
+		_fail("Commander rebuild did not reach its fixed pressure target: target=%s continuity=%s" % [JSON.stringify(target), JSON.stringify(rebuilt_continuity)])
+		return {}
+	if int(rebuilt_continuity.get("base_strength", 0)) != baseline_strength:
+		_fail("Commander rebuild moved its historical baseline after reinforcement: before=%d after=%s" % [baseline_strength, JSON.stringify(rebuilt_continuity)])
+		return {}
+	var next_target := EnemyTurnRules._best_commander_rebuild_target(session, _enemy_config(), MIRECLAW)
+	if not next_target.is_empty():
+		_fail("Completed commander rebuild immediately created another moving target: %s" % JSON.stringify(next_target))
+		return {}
+	return {
+		"case_id": "commander_rebuild_pressure_target_stays_fixed_until_complete",
+		"roster_hero_id": "hero_tarn",
+		"base_strength": baseline_strength,
+		"target_strength": int(target.get("target_strength", 0)),
+		"partial_strength": int(partial_continuity.get("current_strength", 0)),
+		"rebuilt_strength": int(rebuilt_continuity.get("current_strength", 0)),
+		"accepted_units": first_accepted + remaining_accepted,
+		"next_target_empty": true,
+		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
 
 func _saved_task_commander_beats_rotation_case() -> Dictionary:
 	var session = _base_session()
@@ -595,6 +684,12 @@ func _enemy_state(session) -> Dictionary:
 		if state is Dictionary and String(state.get("faction_id", "")) == MIRECLAW:
 			return state
 	_fail("Could not find enemy state for %s" % MIRECLAW)
+	return {}
+
+func _commander_entry(session, roster_hero_id: String) -> Dictionary:
+	for entry_value in _enemy_state(session).get("commander_roster", []):
+		if entry_value is Dictionary and String(entry_value.get("roster_hero_id", "")) == roster_hero_id:
+			return entry_value
 	return {}
 
 func _update_enemy_state(session, replacement: Dictionary) -> void:
