@@ -50,6 +50,9 @@ func _run() -> void:
 	var personality_regroup_case := _faction_personality_changes_regroup_threshold()
 	if personality_regroup_case.is_empty():
 		return
+	var assignment_reconciliation_case := _assignment_events_match_final_or_acted_on_targets()
+	if assignment_reconciliation_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -68,11 +71,94 @@ func _run() -> void:
 		"failed_regroup_case": failed_regroup_case,
 		"commander_risk_case": commander_risk_case,
 		"personality_regroup_case": personality_regroup_case,
+		"assignment_reconciliation_case": assignment_reconciliation_case,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _assignment_events_match_final_or_acted_on_targets() -> Dictionary:
+	var events := [
+		_assignment_event("stale_host", "explore", "explore:36:30"),
+		_action_event("ai_raid_moved", "stale_host", "explore", "explore:36:30"),
+		_assignment_event("current_host", "explore", "explore:40:24"),
+		_assignment_event("current_host", "explore", "explore:40:24"),
+		_assignment_event("resolved_host", "resource", "ridge_quarry"),
+		_action_event("ai_site_seized", "resolved_host", "resource", "ridge_quarry"),
+		_assignment_event("regroup_host", "regroup", "prismhearth"),
+		_action_event("ai_raid_regrouped", "regroup_host", "town", "prismhearth"),
+	]
+	var encounters := [
+		_active_host("stale_host", "resource", "ridge_quarry"),
+		_active_host("current_host", "explore", "explore:40:24"),
+	]
+	var reconciled := EnemyAdventureRules._reconcile_raid_assignment_events(
+		events,
+		encounters,
+		MIRECLAW,
+		["resolved_host"]
+	)
+	if _event_count(reconciled, "ai_target_assigned", "stale_host", "explore:36:30") != 0:
+		_fail("Reconciliation retained an assignment superseded before action: %s" % JSON.stringify(reconciled))
+		return {}
+	if _event_count(reconciled, "ai_target_assigned", "current_host", "explore:40:24") != 1:
+		_fail("Reconciliation did not retain exactly one final-current assignment: %s" % JSON.stringify(reconciled))
+		return {}
+	if _event_count(reconciled, "ai_target_assigned", "resolved_host", "ridge_quarry") != 1:
+		_fail("Reconciliation removed an assignment followed by same-turn target resolution: %s" % JSON.stringify(reconciled))
+		return {}
+	if _event_count(reconciled, "ai_site_seized", "resolved_host", "ridge_quarry") != 1:
+		_fail("Reconciliation removed a non-assignment action event: %s" % JSON.stringify(reconciled))
+		return {}
+	if _event_count(reconciled, "ai_target_assigned", "regroup_host", "prismhearth") != 1:
+		_fail("Reconciliation removed a regroup assignment followed by same-turn completion: %s" % JSON.stringify(reconciled))
+		return {}
+	return {
+		"case_id": "assignment_events_match_final_or_acted_on_targets",
+		"input_event_count": events.size(),
+		"reconciled_event_count": reconciled.size(),
+		"stale_assignment_count": 0,
+		"current_assignment_count": 1,
+		"resolved_assignment_count": 1,
+	}
+
+func _assignment_event(actor_id: String, target_kind: String, target_id: String) -> Dictionary:
+	return {
+		"event_type": "ai_target_assigned",
+		"actor_id": actor_id,
+		"target_kind": target_kind,
+		"target_id": target_id,
+	}
+
+func _action_event(event_type: String, actor_id: String, target_kind: String, target_id: String) -> Dictionary:
+	return {
+		"event_type": event_type,
+		"actor_id": actor_id,
+		"target_kind": target_kind,
+		"target_id": target_id,
+	}
+
+func _active_host(actor_id: String, target_kind: String, target_id: String) -> Dictionary:
+	return {
+		"placement_id": actor_id,
+		"encounter_id": "encounter_mire_raid",
+		"spawned_by_faction_id": MIRECLAW,
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+	}
+
+func _event_count(events: Array, event_type: String, actor_id: String, target_id: String) -> int:
+	var count := 0
+	for event_value in events:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		if String(event.get("event_type", "")) == event_type \
+			and String(event.get("actor_id", "")) == actor_id \
+			and String(event.get("target_id", "")) == target_id:
+			count += 1
+	return count
 
 func _river_pass_understrength_raid_regroups() -> Dictionary:
 	var session = _base_session()

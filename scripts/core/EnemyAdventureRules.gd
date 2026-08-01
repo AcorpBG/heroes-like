@@ -2373,6 +2373,12 @@ static func advance_raids(
 		_advance_profile_add_ms(profile, "deferred_post_move_memory_ms", phase_started)
 
 	session.overworld["encounters"] = encounters
+	event_records = _reconcile_raid_assignment_events(
+		event_records,
+		encounters,
+		faction_id,
+		resolved_encounters
+	)
 
 	var messages = []
 	var marching_message = _describe_count_map("march on", marching_counts)
@@ -2403,6 +2409,86 @@ static func advance_raids(
 		profile["event_count"] = event_records.size()
 		result["profile"] = profile
 	return result
+
+static func _reconcile_raid_assignment_events(
+	events: Array,
+	encounters: Array,
+	faction_id: String,
+	resolved_encounters: Array = []
+) -> Array:
+	var final_target_by_actor := {}
+	for encounter_value in encounters:
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		var actor_id := String(encounter.get("placement_id", ""))
+		var target_signature := _target_signature(_current_target_snapshot(encounter))
+		if actor_id != "" and target_signature != "":
+			final_target_by_actor[actor_id] = target_signature
+
+	var reconciled := []
+	var retained_assignment_keys := {}
+	for event_index in range(events.size()):
+		var event_value = events[event_index]
+		if not (event_value is Dictionary):
+			reconciled.append(event_value)
+			continue
+		var event: Dictionary = event_value
+		if String(event.get("event_type", "")) != "ai_target_assigned":
+			reconciled.append(event)
+			continue
+		var actor_id := String(event.get("actor_id", ""))
+		var target_signature := _ai_event_target_signature(event)
+		if actor_id == "" or target_signature == "":
+			continue
+		var assignment_key := "%s:%s" % [actor_id, target_signature]
+		if retained_assignment_keys.has(assignment_key):
+			continue
+		var remains_current := String(final_target_by_actor.get(actor_id, "")) == target_signature
+		if not remains_current and not _assignment_has_later_target_action(events, event_index, actor_id, target_signature):
+			continue
+		retained_assignment_keys[assignment_key] = true
+		reconciled.append(event)
+	return reconciled
+
+static func _assignment_has_later_target_action(
+	events: Array,
+	assignment_index: int,
+	actor_id: String,
+	target_signature: String
+) -> bool:
+	for event_index in range(assignment_index + 1, events.size()):
+		var event_value = events[event_index]
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		if String(event.get("actor_id", "")) != actor_id:
+			continue
+		if String(event.get("event_type", "")) == "ai_raid_regrouped" \
+			and target_signature.begins_with("regroup:") \
+			and String(event.get("target_id", "")) == target_signature.trim_prefix("regroup:"):
+			return true
+		if _ai_event_target_signature(event) != target_signature:
+			continue
+		if String(event.get("event_type", "")) in [
+			"ai_raid_grouped",
+			"ai_raid_regrouped",
+			"ai_site_seized",
+			"ai_site_contested",
+			"ai_site_defended",
+			"ai_town_captured",
+			"ai_town_defended",
+			"ai_artifact_secured",
+		]:
+			return true
+	return false
+
+static func _ai_event_target_signature(event: Dictionary) -> String:
+	var target_kind := String(event.get("target_kind", ""))
+	var target_id := String(event.get("target_id", ""))
+	if target_kind == "" or target_id == "":
+		return ""
+	return "%s:%s" % [target_kind, target_id]
 
 static func _advance_profile_timer(enabled: bool) -> int:
 	return Time.get_ticks_usec() if enabled else 0
