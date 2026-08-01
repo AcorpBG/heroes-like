@@ -3269,6 +3269,7 @@ static func _planned_task_launch_ready_report(
 	if points.is_empty():
 		return {}
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var spawn_scan_context := {}
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -3281,11 +3282,20 @@ static func _planned_task_launch_ready_report(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			index
+			index,
+			spawn_scan_context
 		)
 		if candidate.is_empty():
 			continue
-		var report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
+		var report := _spawn_point_candidate_ready_launch_report(
+			session,
+			config,
+			state,
+			faction_id,
+			candidate,
+			_spawn_scan_live_tasks(session, faction_id, spawn_scan_context),
+			_spawn_scan_commander_roster(session, faction_id, state, spawn_scan_context)
+		)
 		if report.is_empty():
 			continue
 		if best.is_empty() or int(report.get("spawn_plan_score", 0)) > int(best.get("spawn_plan_score", 0)):
@@ -3329,14 +3339,23 @@ static func _spawn_point_candidate_ready_launch_report(
 	config: Dictionary,
 	state: Dictionary,
 	faction_id: String,
-	candidate: Dictionary
+	candidate: Dictionary,
+	preloaded_tasks: Variant = null,
+	preloaded_roster: Variant = null
 ) -> Dictionary:
 	var actor_id := String(candidate.get("roster_hero_id", ""))
 	var target_kind := String(candidate.get("spawn_plan_target_kind", ""))
 	var target_id := String(candidate.get("spawn_plan_target_id", ""))
 	if actor_id == "" or target_kind == "" or target_id == "":
 		return {}
-	var task := _planned_task_for_ready_launch(session, faction_id, actor_id, target_kind, target_id)
+	var task := _planned_task_for_ready_launch(
+		session,
+		faction_id,
+		actor_id,
+		target_kind,
+		target_id,
+		preloaded_tasks
+	)
 	if task.is_empty():
 		return {}
 	var base_encounter_id := _primary_raid_encounter_id(config)
@@ -3348,7 +3367,7 @@ static func _spawn_point_candidate_ready_launch_report(
 		target_kind,
 		String(task.get("task_class", ""))
 	)
-	var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
+	var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state, preloaded_roster)
 	if commander.is_empty():
 		return {}
 	if String(commander.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) != EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE:
@@ -3378,9 +3397,11 @@ static func _planned_task_for_ready_launch(
 	faction_id: String,
 	actor_id: String,
 	target_kind: String,
-	target_id: String
+	target_id: String,
+	preloaded_tasks: Variant = null
 ) -> Dictionary:
-	for task_value in EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id):
+	var tasks: Array = preloaded_tasks if preloaded_tasks is Array else EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
+	for task_value in tasks:
 		if not (task_value is Dictionary):
 			continue
 		var task: Dictionary = task_value
@@ -3401,9 +3422,10 @@ static func _commander_roster_entry_for_launch(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	actor_id: String,
-	state: Dictionary
+	state: Dictionary,
+	preloaded_roster: Variant = null
 ) -> Dictionary:
-	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+	var roster: Array = preloaded_roster if preloaded_roster is Array else EnemyAdventureRulesScript.normalize_commander_roster(
 		session,
 		faction_id,
 		state.get("commander_roster", EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id))
@@ -4678,6 +4700,7 @@ static func _best_open_spawn_point(
 	started_usec = _spawn_profile_timer()
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
 	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
+	var spawn_scan_context := {}
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -4693,7 +4716,8 @@ static func _best_open_spawn_point(
 			point,
 			occupied_commander_ids,
 			index,
-			skip_emergency_defense_scan
+			skip_emergency_defense_scan,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("spawn_point_candidate_total_ms", started_usec)
 		if candidate.is_empty():
@@ -4764,7 +4788,8 @@ static func _spawn_point_candidate(
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
 	spawn_order: int,
-	skip_emergency_defense_scan: bool = false
+	skip_emergency_defense_scan: bool = false,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if faction_id == "" or point.is_empty():
 		return {}
@@ -4797,7 +4822,8 @@ static func _spawn_point_candidate(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("ready_saved_task_spawn_candidate_ms", started_usec)
 		if not ready_saved_candidate.is_empty():
@@ -4825,7 +4851,8 @@ static func _spawn_point_candidate(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("saved_task_spawn_candidate_ms", started_usec)
 		if not saved_candidate.is_empty():
@@ -4846,6 +4873,71 @@ static func _spawn_point_candidate(
 		_spawn_profile_count("fresh_spawn_target_candidate_selected")
 	return fresh_candidate
 
+static func _spawn_scan_commander_roster(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary,
+	spawn_scan_context: Dictionary
+) -> Array:
+	if spawn_scan_context.get("commander_roster", null) is Array:
+		_spawn_profile_count("spawn_scan_commander_roster_reused")
+		return spawn_scan_context["commander_roster"]
+	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		state.get("commander_roster", EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id))
+	)
+	spawn_scan_context["commander_roster"] = roster
+	_spawn_profile_count("spawn_scan_commander_roster_loaded")
+	return roster
+
+static func _spawn_scan_commander_candidates(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	occupied_commander_ids: Dictionary,
+	state: Dictionary,
+	spawn_scan_context: Dictionary
+) -> Array:
+	if spawn_scan_context.get("commander_candidates", null) is Array:
+		_spawn_profile_count("spawn_scan_commander_candidates_reused")
+		return spawn_scan_context["commander_candidates"]
+	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		_spawn_scan_commander_roster(session, faction_id, state, spawn_scan_context)
+	)
+	spawn_scan_context["commander_candidates"] = candidates
+	_spawn_profile_count("spawn_scan_commander_candidates_loaded")
+	return candidates
+
+static func _spawn_scan_live_tasks(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	spawn_scan_context: Dictionary
+) -> Array:
+	if spawn_scan_context.get("live_tasks", null) is Array:
+		_spawn_profile_count("spawn_scan_live_tasks_reused")
+		return spawn_scan_context["live_tasks"]
+	var tasks := EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
+	spawn_scan_context["live_tasks"] = tasks
+	_spawn_profile_count("spawn_scan_live_tasks_loaded")
+	return tasks
+
+static func _spawn_scan_path_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	spawn_scan_context: Dictionary
+) -> Dictionary:
+	if spawn_scan_context.get("path_context", null) is Dictionary:
+		_spawn_profile_count("spawn_scan_path_context_reused")
+		return spawn_scan_context["path_context"]
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
+	spawn_scan_context["path_context"] = path_context
+	_spawn_profile_count("spawn_scan_path_context_loaded")
+	return path_context
+
 static func _saved_task_spawn_candidate_for_point(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -4853,16 +4945,19 @@ static func _saved_task_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	var best := {}
-	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+	var candidates := _spawn_scan_commander_candidates(
 		session,
 		faction_id,
-		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
-		state.get("commander_roster", [])
+		state,
+		spawn_scan_context
 	)
+	var live_tasks := _spawn_scan_live_tasks(session, faction_id, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -4873,7 +4968,9 @@ static func _saved_task_spawn_candidate_for_point(
 			session,
 			faction_id,
 			roster_hero_id,
-			point
+			point,
+			live_tasks,
+			path_context
 		)
 		if plan.is_empty():
 			continue
@@ -5604,16 +5701,20 @@ static func _ready_saved_task_spawn_candidate_for_point(
 	faction_id: String,
 	point: Dictionary,
 	occupied_commander_ids: Dictionary,
-	spawn_order: int
+	spawn_order: int,
+	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	var best := {}
-	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+	var candidates := _spawn_scan_commander_candidates(
 		session,
 		faction_id,
-		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
-		state.get("commander_roster", [])
+		state,
+		spawn_scan_context
 	)
+	var live_tasks := _spawn_scan_live_tasks(session, faction_id, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
+	var normalized_roster := _spawn_scan_commander_roster(session, faction_id, state, spawn_scan_context)
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
@@ -5624,7 +5725,9 @@ static func _ready_saved_task_spawn_candidate_for_point(
 			session,
 			faction_id,
 			roster_hero_id,
-			point
+			point,
+			live_tasks,
+			path_context
 		)
 		if plan.is_empty():
 			continue
@@ -5636,7 +5739,15 @@ static func _ready_saved_task_spawn_candidate_for_point(
 			spawn_order
 		)
 		candidate = _apply_spawn_plan_adventure_spell_projection(session, config, state, faction_id, candidate)
-		var ready_report := _spawn_point_candidate_ready_launch_report(session, config, state, faction_id, candidate)
+		var ready_report := _spawn_point_candidate_ready_launch_report(
+			session,
+			config,
+			state,
+			faction_id,
+			candidate,
+			live_tasks,
+			normalized_roster
+		)
 		if ready_report.is_empty():
 			continue
 		candidate["spawn_plan_ready_launch"] = true
