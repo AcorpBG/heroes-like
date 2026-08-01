@@ -35,6 +35,9 @@ func _run() -> void:
 	var persistent_exploration_case := _persistent_exploration_tasks_launch_and_complete()
 	if persistent_exploration_case.is_empty():
 		return
+	var rebuild_relaunch_case := _rebuild_relaunch_preserves_frontier_history()
+	if rebuild_relaunch_case.is_empty():
+		return
 	var exploration_case := _exploration_arrival_reassigns_visible_resource()
 	if exploration_case.is_empty():
 		return
@@ -56,7 +59,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy_for_movement_and_assignment",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -496,6 +499,64 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 		"recent_exploration_target_ids": recent_exploration_target_ids,
 		"planner_target_sequence": [first_plan_id, second_plan_id, third_plan_id],
 		"event_types": _event_types(arrival_result.get("events", [])),
+	}
+
+func _rebuild_relaunch_preserves_frontier_history() -> Dictionary:
+	var session = _base_session()
+	session.day = 2
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 12)
+	_make_no_known_targets_session(session)
+	var spawn_point := {"placement_id": "rebuild_frontier_origin", "x": 7, "y": 2}
+	var first_plan := EnemyTurnRules._rebuild_pressure_exploration_plan(
+		session,
+		config,
+		MIRECLAW,
+		spawn_point
+	)
+	var first_target_id := String(first_plan.get("target_placement_id", ""))
+	if first_plan.is_empty() or not first_target_id.begins_with("explore:"):
+		_fail("Rebuild relaunch fixture did not produce an initial frontier target: %s" % JSON.stringify(first_plan))
+		return {}
+	var state := _enemy_state(session)
+	state["recent_rebuild_exploration_target_ids"] = [first_target_id]
+	state["rebuild_pressure_request"] = {
+		"requested_day": int(session.day),
+		"origin_town_id": "duskfen_bastion",
+		"commander_id": "hero_vaska",
+		"reason": "no_spare_garrison_after_regroup",
+		"recent_exploration_target_ids": [],
+	}
+	_update_enemy_state(session, state)
+	var second_plan := EnemyTurnRules._rebuild_pressure_exploration_plan(
+		session,
+		config,
+		MIRECLAW,
+		spawn_point
+	)
+	var second_target_id := String(second_plan.get("target_placement_id", ""))
+	if second_plan.is_empty() or second_target_id == first_target_id:
+		_fail("Rebuild relaunch repeated the exhausted faction frontier target: first=%s second=%s" % [JSON.stringify(first_plan), JSON.stringify(second_plan)])
+		return {}
+	var carried_history := _normalize_string_array(second_plan.get("recent_exploration_target_ids", []))
+	if first_target_id not in carried_history:
+		_fail("Rebuild relaunch plan dropped faction frontier history: %s" % JSON.stringify(second_plan))
+		return {}
+	var candidate := EnemyTurnRules._spawn_point_candidate_from_plan(
+		spawn_point,
+		second_plan,
+		"hero_vaska",
+		"rebuild_pressure_recon",
+		0
+	)
+	if first_target_id not in _normalize_string_array(candidate.get("recent_exploration_target_ids", [])):
+		_fail("Rebuild spawn candidate dropped faction frontier history: %s" % JSON.stringify(candidate))
+		return {}
+	return {
+		"case_id": "rebuild_relaunch_preserves_faction_frontier_history",
+		"first_target_id": first_target_id,
+		"second_target_id": second_target_id,
+		"carried_history": carried_history,
 	}
 
 func _exploration_arrival_reassigns_visible_resource() -> Dictionary:

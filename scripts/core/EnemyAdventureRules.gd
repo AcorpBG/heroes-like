@@ -17857,11 +17857,21 @@ static func _regroup_raid_at_town(
 		raid = _retire_failed_regroup_to_rebuild(session, raid, faction_id, town)
 	if bool(raid.get("raid_retired_to_rebuild", false)):
 		var retired_commander_state = raid.get("enemy_commander_state", {})
+		var recent_rebuild_targets := _normalize_string_array(
+			state.get("recent_rebuild_exploration_target_ids", [])
+		)
+		for target_id in _normalize_string_array(raid.get("recent_exploration_target_ids", [])):
+			recent_rebuild_targets.erase(target_id)
+			recent_rebuild_targets.append(target_id)
+		while recent_rebuild_targets.size() > RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+			recent_rebuild_targets.pop_front()
+		state["recent_rebuild_exploration_target_ids"] = recent_rebuild_targets
 		state["rebuild_pressure_request"] = {
 			"requested_day": int(session.day),
 			"origin_town_id": String(raid.get("retired_to_rebuild_town_id", town.get("placement_id", ""))),
 			"commander_id": String(retired_commander_state.get("roster_hero_id", "")) if retired_commander_state is Dictionary else "",
 			"reason": String(raid.get("retired_to_rebuild_reason", "no_spare_garrison_after_regroup")),
+			"recent_exploration_target_ids": recent_rebuild_targets,
 		}
 
 	var message := ""
@@ -18173,7 +18183,8 @@ static func _retire_failed_regroup_to_rebuild(
 		faction_id,
 		String(town.get("placement_id", "")),
 		roster_hero_id,
-		"no_spare_garrison_after_regroup"
+		"no_spare_garrison_after_regroup",
+		retired.get("recent_exploration_target_ids", [])
 	)
 	var resolved = session.overworld.get("resolved_encounters", [])
 	if not (resolved is Array):
@@ -18191,7 +18202,8 @@ static func _mark_rebuild_pressure_request(
 	faction_id: String,
 	origin_town_id: String,
 	commander_id: String,
-	reason: String
+	reason: String,
+	recent_exploration_target_ids: Variant = []
 ) -> void:
 	if session == null or faction_id == "":
 		return
@@ -18204,11 +18216,21 @@ static func _mark_rebuild_pressure_request(
 		var state: Dictionary = states[index]
 		if String(state.get("faction_id", "")) != faction_id:
 			continue
+		var recent_target_ids := _normalize_string_array(
+			state.get("recent_rebuild_exploration_target_ids", [])
+		)
+		for target_id in _normalize_string_array(recent_exploration_target_ids):
+			recent_target_ids.erase(target_id)
+			recent_target_ids.append(target_id)
+		while recent_target_ids.size() > RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+			recent_target_ids.pop_front()
+		state["recent_rebuild_exploration_target_ids"] = recent_target_ids
 		state["rebuild_pressure_request"] = {
 			"requested_day": int(session.day),
 			"origin_town_id": origin_town_id,
 			"commander_id": commander_id,
 			"reason": reason,
+			"recent_exploration_target_ids": recent_target_ids,
 		}
 		states[index] = state
 		session.overworld["enemy_states"] = states

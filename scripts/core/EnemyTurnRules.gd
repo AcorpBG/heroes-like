@@ -92,6 +92,13 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 			)
 			if not rebuild_pressure_request.is_empty():
 				normalized_state["rebuild_pressure_request"] = rebuild_pressure_request
+			var recent_rebuild_targets := _normalize_string_array(
+				existing_state.get("recent_rebuild_exploration_target_ids", [])
+			)
+			while recent_rebuild_targets.size() > EnemyAdventureRulesScript.RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+				recent_rebuild_targets.pop_front()
+			if not recent_rebuild_targets.is_empty():
+				normalized_state["recent_rebuild_exploration_target_ids"] = recent_rebuild_targets
 			var known_world_memory := EnemyAdventureRulesScript.normalize_enemy_known_world_memory(
 				existing_state.get("known_world_memory", {}),
 				int(session.day)
@@ -117,11 +124,17 @@ static func _normalize_rebuild_pressure_request(value: Variant, current_day: int
 		return {}
 	if current_day > 0 and current_day - requested_day > REBUILD_PRESSURE_LAUNCH_WINDOW_DAYS:
 		return {}
+	var recent_exploration_target_ids := _normalize_string_array(
+		source.get("recent_exploration_target_ids", [])
+	)
+	while recent_exploration_target_ids.size() > EnemyAdventureRulesScript.RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+		recent_exploration_target_ids.pop_front()
 	return {
 		"requested_day": requested_day,
 		"origin_town_id": String(source.get("origin_town_id", "")),
 		"commander_id": String(source.get("commander_id", "")),
 		"reason": String(source.get("reason", "command_rebuild")),
+		"recent_exploration_target_ids": recent_exploration_target_ids,
 	}
 
 static func _recent_rebuild_pressure_request(
@@ -3521,6 +3534,10 @@ static func _spawn_raid(
 		]:
 			if spawn_point.has(support_key):
 				raid_seed[support_key] = spawn_point.get(support_key)
+	if spawn_point.has("recent_exploration_target_ids"):
+		raid_seed["recent_exploration_target_ids"] = _normalize_string_array(
+			spawn_point.get("recent_exploration_target_ids", [])
+		)
 	raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
 		raid_seed,
 		roster_hero_id,
@@ -5420,13 +5437,34 @@ static func _rebuild_pressure_exploration_plan(
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
 	var origin := Vector2i(int(point.get("x", 0)), int(point.get("y", 0)))
-	var plan := EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(session, config, origin)
+	var latest_state := _latest_enemy_state(session, faction_id, {})
+	var rebuild_request := _recent_rebuild_pressure_request(session, faction_id, latest_state)
+	var recent_target_ids := _normalize_string_array(
+		latest_state.get("recent_rebuild_exploration_target_ids", [])
+	)
+	for target_id in _normalize_string_array(rebuild_request.get("recent_exploration_target_ids", [])):
+		recent_target_ids.erase(target_id)
+		recent_target_ids.append(target_id)
+	while recent_target_ids.size() > EnemyAdventureRulesScript.RAID_RECENT_EXPLORATION_TARGET_LIMIT:
+		recent_target_ids.pop_front()
+	var rebuild_memory := {"recent_exploration_target_ids": recent_target_ids}
+	var plan := EnemyAdventureRulesScript._no_known_target_frontier_sweep_plan(
+		session,
+		config,
+		origin,
+		rebuild_memory
+	)
 	if plan.is_empty():
-		plan = EnemyAdventureRulesScript._no_known_target_exploration_plan(session, config, origin)
+		plan = EnemyAdventureRulesScript._no_known_target_exploration_plan(
+			session,
+			config,
+			origin,
+			rebuild_memory
+		)
 	if plan.is_empty():
-		plan = _rebuild_pressure_frontier_sweep_plan(session, config, faction_id, point)
+		plan = _rebuild_pressure_frontier_sweep_plan(session, config, faction_id, point, rebuild_memory)
 	if plan.is_empty():
-		plan = _rebuild_pressure_local_patrol_plan(session, config, faction_id, point)
+		plan = _rebuild_pressure_local_patrol_plan(session, config, faction_id, point, rebuild_memory)
 	if plan.is_empty():
 		return {}
 	var updated := plan.duplicate(true)
@@ -5438,13 +5476,15 @@ static func _rebuild_pressure_exploration_plan(
 	updated["target_public_reason"] = "reopening frontier pressure"
 	updated["target_public_importance"] = "medium"
 	updated["target_debug_reason"] = "rebuild pressure relaunch rejected passive regroup and selected reachable frontier scouting"
+	updated["recent_exploration_target_ids"] = recent_target_ids
 	return updated
 
 static func _rebuild_pressure_local_patrol_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	point: Dictionary
+	point: Dictionary,
+	commander_source: Variant = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5454,6 +5494,7 @@ static func _rebuild_pressure_local_patrol_plan(
 		return {}
 	var best := {}
 	var best_score := -999999
+	var recent_target_lookup := EnemyAdventureRulesScript._raid_recent_exploration_target_lookup(commander_source)
 	for radius in range(1, 9):
 		for dy in range(-radius, radius + 1):
 			for dx in range(-radius, radius + 1):
@@ -5467,6 +5508,8 @@ static func _rebuild_pressure_local_patrol_plan(
 					continue
 				var score: int = 90 - (route_distance * 6) - abs(dx)
 				var target_id := "explore:%d:%d" % [tile.x, tile.y]
+				if recent_target_lookup.has(target_id):
+					continue
 				if (
 					best.is_empty()
 					or score > best_score
@@ -5558,7 +5601,8 @@ static func _rebuild_pressure_frontier_sweep_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	point: Dictionary
+	point: Dictionary,
+	commander_source: Variant = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
@@ -5568,6 +5612,7 @@ static func _rebuild_pressure_frontier_sweep_plan(
 		return {}
 	var best := {}
 	var best_score := -999999
+	var recent_target_lookup := EnemyAdventureRulesScript._raid_recent_exploration_target_lookup(commander_source)
 	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
 	for y in range(0, map_size.y, step):
 		for x in range(0, map_size.x, step):
@@ -5582,6 +5627,8 @@ static func _rebuild_pressure_frontier_sweep_plan(
 			var distance_score: int = 28 - abs(route_distance - 8)
 			var score: int = 160 + center_score + distance_score - int(floor(float(direct_distance) / 2.0))
 			var target_id := "explore:%d:%d" % [tile.x, tile.y]
+			if recent_target_lookup.has(target_id):
+				continue
 			if (
 				best.is_empty()
 				or score > best_score
@@ -5801,6 +5848,10 @@ static func _spawn_point_candidate_from_plan(
 	]:
 		if plan.has(support_key):
 			candidate[support_key] = plan.get(support_key)
+	if plan.has("recent_exploration_target_ids"):
+		candidate["recent_exploration_target_ids"] = _normalize_string_array(
+			plan.get("recent_exploration_target_ids", [])
+		)
 	return candidate
 
 static func _emergency_defense_spawn_candidate_for_point(
