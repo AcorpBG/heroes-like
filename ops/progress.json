@@ -61115,7 +61115,9 @@
         "Exact-current-code Medium ordinal 43 reaches correct player defeat after 47 completed turns with row signature 085a32e2 and report signature d8fe6ddb. It records 193 activity events, 56 movement events, 32 assignments, one grouping, four regroups, two commander preparations, two commander rebuilds, one site contest, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 417589ms with a 16360ms maximum turn. Together with ordinals 12-42, thirty-two exact-current-code rows pass, 68 remain, and ordinal 44 is next.",
         "Exact-current-code Medium ordinal 44 completes 56/56 turns with row signature 1fa2483a and report signature 8bef57c0. It records 239 activity events, 14 movement events, 44 assignments, seven groupings, eight regroups, one reinforcement, four commander rebuilds, four site contests, and one valid town-loss autoresolution, with zero stalled turns, behavior bugs, integrity violations, or unreachable active targets. The player correctly remains in progress with no towns but a live hero; six reachable raids remain, but no direct hero pressure remains at the horizon, retaining an explicit contact caveat. Runtime is 565674ms with a 17912ms maximum turn. Together with ordinals 12-43, thirty-three exact-current-code rows pass, 67 remain, and ordinal 45 is next.",
         "Exact-current-code Medium ordinal 45 completes 56/56 turns with row signature 0a748621 and report signature aca495be. It records 77 activity events, 59 assignments, three groupings, eight regroups, four site contests, and three site seizures, with 21 stalled turns (38%) and zero behavior bugs, integrity violations, or unreachable active targets. Six reachable raids remain, but the player retains one town and no tactical battle occurs; this is an explicit generated-topology/contact caveat, not battle-readiness evidence. Runtime is 439856ms with a 12347ms maximum turn. Together with ordinals 12-44, thirty-four exact-current-code rows pass, 66 remain, and ordinal 46 is next.",
-        "Exact-current-code Medium ordinal 46 reaches correct player defeat after 35 completed turns with row signature 5636f126 and report signature cb095335. It records 205 activity events, 129 movement events, 23 assignments, one grouping, four regroups, two site contests, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 309644ms with a 17744ms maximum turn. Together with ordinals 12-45, thirty-five exact-current-code rows pass, 65 remain, and ordinal 47 is next."
+        "Exact-current-code Medium ordinal 46 reaches correct player defeat after 35 completed turns with row signature 5636f126 and report signature cb095335. It records 205 activity events, 129 movement events, 23 assignments, one grouping, four regroups, two site contests, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 309644ms with a 17744ms maximum turn. Together with ordinals 12-45, thirty-five exact-current-code rows pass, 65 remain, and ordinal 47 is next.",
+        "Ordinal 47 exposed an alternating-commander rebuild loop that repeatedly reopened the same exhausted Frontier sweep 60,60 after the short-lived rebuild request expired or was overwritten. Completed rebuild-frontier targets now persist as bounded faction-level enemy state, merge through failed regroup, and seed the next commander so relaunch planning excludes exhausted targets while alternatives exist.",
+        "Exact-current-code Medium ordinal 47 completes 56/56 turns with row signature 28967678 and report signature b20f183e. It records 59 activity events, 39 assignments, 14 regroups, five site contests, one site seizure, and 25 stalled turns (45%), with zero behavior bugs, integrity violations, or unreachable active targets. Frontier sweep 60,60 appears once instead of repeating and later sweeps use distinct coordinates. The player retains one town, three reachable raids remain, and no tactical battle occurs; topology/contact remains an explicit caveat. Runtime is 470815ms with a 9484ms maximum turn. Together with ordinals 12-46, thirty-six exact-current-code rows pass, 64 remain, and ordinal 48 is next."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61128,9 +61130,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Active exploration hosts avoid their 12 most recently completed scout targets. Exact-current-code ordinals 12-46 pass with zero behavior bugs, integrity violations, and unreachable active targets. Ordinal 46 reaches correct player defeat after three valid battles. Thirty-five target rows pass, 65 remain, and ordinal 47 is next. The matrix slice and overall game remain in progress.",
+      "summary": "Active exploration hosts and alternating rebuild commanders share bounded completed-frontier history and avoid exhausted scout targets while alternatives exist. Exact-current-code ordinals 12-47 pass with zero behavior bugs, integrity violations, and unreachable active targets. Ordinal 47 no longer repeats Frontier sweep 60,60 across rebuild cycles. Thirty-six target rows pass, 64 remain, and ordinal 48 is next. The matrix slice and overall game remain in progress.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-01T16:50:53Z",
+      "updatedAt": "2026-08-01T17:32:02Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -61851,6 +61853,26 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=45 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 46 reaches correct player defeat after 35 completed turns with row signature 5636f126 and report signature cb095335. It records 205 activity events, 129 movement events, 23 assignments, one grouping, four regroups, two site contests, and three valid autoresolutions with zero stalled turns, invalid player orders, behavior bugs, integrity violations, or unreachable active targets. Runtime is 309644ms with a 17744ms maximum turn. The report remains needs_attention only because the other 65 exact-current-code rows have not run.",
           "status": "pass_with_remaining_65_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 timeout 240 godot --headless --path . --scene tests/ai_raid_regroup_retreat_report.tscn",
+          "notes": "Live failed-regroup coverage proves completed frontier target history is merged into both the faction enemy state and rebuild pressure request before the exhausted commander is retired.",
+          "status": "pass"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 timeout 240 godot --headless --path . --scene tests/ai_known_world_memory_report.tscn",
+          "notes": "Live rebuild relaunch coverage proves faction-level history survives an empty short-lived request and advances the next plan from explore:0:0 to explore:0:4 while carrying history into the spawn candidate.",
+          "status": "pass"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 timeout 900 godot --headless --path . --scene tests/strategic_ai_baseline_kpi_report.tscn",
+          "notes": "Strategic AI baseline remains green with harness_ok=true, all 14 expected subsystems covered, five generated-map probes passing, and zero behavior bugs. Production readiness remains false only because the selected Medium long-run matrix is incomplete.",
+          "status": "pass_with_medium_long_run_matrix_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=46 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 47 completes 56/56 turns with row signature 28967678 and report signature b20f183e. It records 59 activity events, 39 assignments, 14 regroups, five site contests, one site seizure, and 25 stalled turns (45%), with zero behavior bugs, integrity violations, or unreachable active targets. Frontier sweep 60,60 occurs once instead of repeating and later frontier sweeps use distinct coordinates. The player retains one town, three reachable raids remain, and no tactical battle occurs; topology/contact remains an explicit caveat. Runtime is 470815ms with a 9484ms maximum turn. The report remains needs_attention only because the other 64 exact-current-code rows have not run.",
+          "status": "pass_with_remaining_64_row_production_gap"
         }
       ]
     },

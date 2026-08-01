@@ -842,6 +842,7 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_town_garrison(session, "duskfen_bastion", [])
 	var raid := _understrength_raid(session, config)
+	raid["recent_exploration_target_ids"] = ["explore:7:2", "explore:7:3"]
 	var before_strength := EnemyAdventureRules.raid_strength(raid)
 	if not EnemyAdventureRules.raid_regroup_needed(raid):
 		_fail("Empty-garrison fixture raid should require regroup before release: %s" % JSON.stringify(raid))
@@ -876,6 +877,15 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 			or String(rebuild_request.get("commander_id", "")) != "hero_vaska" \
 			or int(rebuild_request.get("requested_day", 0)) != int(session.day):
 		_fail("Failed-regroup rebuild request was not returned through live empire state: %s" % JSON.stringify(rebuild_request))
+		return {}
+	var rebuild_recent_targets := _string_array(rebuild_request.get("recent_exploration_target_ids", []))
+	var expected_rebuild_recent_targets := ["explore:7:2", "explore:7:3"]
+	if rebuild_recent_targets != expected_rebuild_recent_targets:
+		_fail("Failed-regroup rebuild request lost completed frontier history: %s" % JSON.stringify(rebuild_request))
+		return {}
+	var rebuilt_state := _enemy_state(session)
+	if _string_array(rebuilt_state.get("recent_rebuild_exploration_target_ids", [])) != expected_rebuild_recent_targets:
+		_fail("Failed-regroup enemy state lost faction frontier history: %s" % JSON.stringify(rebuilt_state))
 		return {}
 	if String(after_raid.get("target_kind", "")) != "" or bool(after_raid.get("arrived", false)):
 		_fail("Retired failed-regroup raid should clear target and stop applying pressure: %s" % JSON.stringify(after_raid))
@@ -926,6 +936,7 @@ func _empty_garrison_regroup_releases_to_rebuild() -> Dictionary:
 		"commander_deployable_after": EnemyAdventureRules.commander_can_deploy(roster_entry),
 		"commander_rebuild_need": int(continuity.get("rebuild_need", 0)),
 		"rebuild_request": rebuild_request,
+		"rebuild_recent_exploration_target_ids": rebuild_recent_targets,
 		"task_status_counts": _task_status_counts(_task_state(session)),
 	}
 
