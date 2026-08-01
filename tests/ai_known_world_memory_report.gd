@@ -401,7 +401,7 @@ func _neutral_towns_require_visibility_or_memory() -> Dictionary:
 func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
-	_set_primary_hero_position(session, 0, 4)
+	_set_primary_hero_position(session, 0, 12)
 	_make_no_known_targets_session(session)
 	var state := _enemy_state(session)
 	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
@@ -445,12 +445,43 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 	if String(reservation.get("reservation_status", "")) != "released":
 		_fail("Completed exploration task did not release its reservation: %s" % JSON.stringify(completed_task))
 		return {}
-	var continued_raid := _first_enemy_raid_for_kind(session, "explore")
+	var continued_raid := _encounter_by_id(session, String(exploration_raid.get("placement_id", "")))
 	if continued_raid.is_empty():
-		_fail("Exploration commander should continue to another frontier target after completing an empty scout tile: %s" % JSON.stringify(session.overworld.get("encounters", [])))
+		_fail("Exploration commander disappeared after completing an empty scout tile: %s" % JSON.stringify(session.overworld.get("encounters", [])))
 		return {}
-	if String(continued_raid.get("target_placement_id", "")) == task_target_id:
+	if String(continued_raid.get("target_kind", "")) == "explore" and String(continued_raid.get("target_placement_id", "")) == task_target_id:
 		_fail("Exploration commander stayed on the completed scout tile instead of continuing: %s" % JSON.stringify(continued_raid))
+		return {}
+	var recent_exploration_target_ids: Array = continued_raid.get("recent_exploration_target_ids", []) if continued_raid.get("recent_exploration_target_ids", []) is Array else []
+	if task_target_id not in recent_exploration_target_ids:
+		_fail("Exploration host did not retain its completed frontier target: %s" % JSON.stringify(continued_raid))
+		return {}
+
+	var planner_session = _base_session()
+	_set_primary_hero_position(planner_session, 0, 12)
+	_make_no_known_targets_session(planner_session)
+	var planner_origin := Vector2i(7, 2)
+	var first_plan := EnemyAdventureRules._no_known_target_frontier_sweep_plan(planner_session, config, planner_origin)
+	var first_plan_id := String(first_plan.get("target_placement_id", ""))
+	var second_plan := EnemyAdventureRules._no_known_target_frontier_sweep_plan(
+		planner_session,
+		config,
+		planner_origin,
+		{"recent_exploration_target_ids": [first_plan_id]}
+	)
+	var second_plan_id := String(second_plan.get("target_placement_id", ""))
+	if first_plan.is_empty() or second_plan.is_empty() or second_plan_id == first_plan_id:
+		_fail("Frontier planner did not advance beyond its most recent completed target: first=%s second=%s" % [JSON.stringify(first_plan), JSON.stringify(second_plan)])
+		return {}
+	var third_plan := EnemyAdventureRules._no_known_target_frontier_sweep_plan(
+		planner_session,
+		config,
+		planner_origin,
+		{"recent_exploration_target_ids": [first_plan_id, second_plan_id]}
+	)
+	var third_plan_id := String(third_plan.get("target_placement_id", ""))
+	if not third_plan.is_empty() and third_plan_id in [first_plan_id, second_plan_id]:
+		_fail("Frontier planner alternated back to a completed target: first=%s second=%s third=%s" % [first_plan_id, second_plan_id, third_plan_id])
 		return {}
 	return {
 		"case_id": "persistent_exploration_tasks_launch_and_complete",
@@ -462,6 +493,8 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 		"spawned_target_y": int(exploration_raid.get("target_y", -1)),
 		"completed_task_status": String(completed_task.get("task_status", "")),
 		"continued_target_id": String(continued_raid.get("target_placement_id", "")),
+		"recent_exploration_target_ids": recent_exploration_target_ids,
+		"planner_target_sequence": [first_plan_id, second_plan_id, third_plan_id],
 		"event_types": _event_types(arrival_result.get("events", [])),
 	}
 
