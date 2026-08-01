@@ -6807,7 +6807,8 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 	faction_id: String,
 	actor_id: String,
 	spawn_point: Dictionary,
-	preloaded_tasks: Variant = null
+	preloaded_tasks: Variant = null,
+	preloaded_path_context: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "" or actor_id == "" or spawn_point.is_empty():
 		return {}
@@ -6833,7 +6834,15 @@ static func _ai_hero_task_spawn_saved_plan_for_actor(
 			continue
 		if int(task.get("expires_day", 0)) > 0 and int(task.get("expires_day", 0)) < int(session.day):
 			continue
-		var plan := _ai_hero_task_plan_from_saved_task(session, config, probe_raid, task, origin_pos, probe_placement_id)
+		var plan := _ai_hero_task_plan_from_saved_task(
+			session,
+			config,
+			probe_raid,
+			task,
+			origin_pos,
+			probe_placement_id,
+			preloaded_path_context
+		)
 		if plan.is_empty():
 			continue
 		if best.is_empty() or _saved_task_plan_beats(plan, best):
@@ -13426,7 +13435,8 @@ static func _ai_hero_task_plan_from_saved_task(
 	raid: Dictionary,
 	task: Dictionary,
 	origin_pos: Vector2i,
-	current_placement_id: String
+	current_placement_id: String,
+	preloaded_path_context: Variant = null
 ) -> Dictionary:
 	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
 	var target_kind := String(task.get("target_kind", ""))
@@ -13441,10 +13451,14 @@ static func _ai_hero_task_plan_from_saved_task(
 	var goal_tiles: Array = target.get("goal_tiles", []) if target.get("goal_tiles", []) is Array else []
 	if goal_tiles.is_empty():
 		return {}
-	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
+	var goal_distance := _path_distance_with_context(preloaded_path_context, origin_pos, goal_tiles) \
+		if preloaded_path_context is Dictionary \
+		else _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile: Vector2i = _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
+	var goal_tile: Vector2i = _best_goal_tile_with_path_context(preloaded_path_context, origin_pos, goal_tiles) \
+		if preloaded_path_context is Dictionary \
+		else _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
 	if "saved_hero_task" not in reason_codes:
 		reason_codes.append("saved_hero_task")
@@ -15967,6 +15981,24 @@ static func _best_goal_tile(
 			best_tile = tile
 	return best_tile
 
+static func _best_goal_tile_with_path_context(
+	path_context: Dictionary,
+	origin_pos: Vector2i,
+	goal_tiles: Array
+) -> Vector2i:
+	if goal_tiles.is_empty():
+		return origin_pos
+	var best_tile: Vector2i = goal_tiles[0]
+	var best_distance := _path_distance_with_context(path_context, origin_pos, goal_tiles)
+	for tile in goal_tiles:
+		if not (tile is Vector2i):
+			continue
+		var distance := _path_distance_with_context(path_context, origin_pos, [tile])
+		if distance < best_distance:
+			best_distance = distance
+			best_tile = tile
+	return best_tile
+
 static func _resolve_opportunistic_route_objective(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -18415,7 +18447,18 @@ static func _path_distance(
 	if start in goal_tiles:
 		return 0
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
-	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
+	return _path_distance_with_context(path_context, start, goal_tiles)
+
+static func _path_distance_with_context(
+	path_context: Dictionary,
+	start: Vector2i,
+	goal_tiles: Array
+) -> int:
+	if goal_tiles.is_empty():
+		return 9999
+	if start in goal_tiles:
+		return 0
+	var map_size: Vector2i = path_context.get("map_size", Vector2i.ZERO)
 	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
 	var resource_blocked: Dictionary = path_context.get("resource_blocked_indices", {})
 	var hero_blocked: Dictionary = path_context.get("hero_blocked_indices", {})

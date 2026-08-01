@@ -255,7 +255,23 @@ func _target_aware_spawn_point_case() -> Dictionary:
 	if int(first_open.get("x", 0)) != 7 or int(first_open.get("y", 0)) != 1:
 		_fail("Fixture expected first open spawn point 7,1 before target-aware selection, got %s" % JSON.stringify(first_open))
 		return {}
+	EnemyTurnRules._spawn_profile_begin(true)
 	var best_open := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	var spawn_scan_profile := EnemyTurnRules._spawn_profile_finish()
+	var spawn_scan_counts: Dictionary = spawn_scan_profile.get("counts", {}) if spawn_scan_profile.get("counts", {}) is Dictionary else {}
+	for loaded_key in [
+		"spawn_scan_commander_roster_loaded",
+		"spawn_scan_commander_candidates_loaded",
+		"spawn_scan_live_tasks_loaded",
+		"spawn_scan_path_context_loaded",
+	]:
+		if int(spawn_scan_counts.get(loaded_key, 0)) != 1:
+			_fail("Target-aware multi-point scan should load %s exactly once: %s" % [loaded_key, JSON.stringify(spawn_scan_profile)])
+			return {}
+	if int(spawn_scan_counts.get("spawn_scan_live_tasks_reused", 0)) <= 0 \
+		or int(spawn_scan_counts.get("spawn_scan_path_context_reused", 0)) <= 0:
+		_fail("Target-aware multi-point scan did not reuse task and path context: %s" % JSON.stringify(spawn_scan_profile))
+		return {}
 	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
 		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
 		return {}
@@ -291,6 +307,7 @@ func _target_aware_spawn_point_case() -> Dictionary:
 		"spawn_plan_goal_distance": int(best_open.get("spawn_plan_goal_distance", 0)),
 		"spawned_commander_id": String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")),
 		"target_id": String(raid.get("target_placement_id", "")),
+		"spawn_scan_context_counts": spawn_scan_counts,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
