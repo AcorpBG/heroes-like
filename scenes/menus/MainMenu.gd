@@ -96,6 +96,7 @@ const TAB_HELP_TOPIC := {
 @onready var _vsync_toggle: CheckButton = %VSyncToggle
 @onready var _frame_rate_picker: OptionButton = %FrameRatePicker
 @onready var _battle_playback_speed_picker: OptionButton = %BattlePlaybackSpeedPicker
+@onready var _keyboard_navigation_layout_picker: OptionButton = %KeyboardNavigationLayoutPicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
@@ -511,6 +512,12 @@ func _on_battle_playback_speed_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _battle_playback_speed_picker.get_item_count():
 		return
 	SettingsService.set_battle_playback_speed_id(String(_battle_playback_speed_picker.get_item_metadata(index)))
+	_refresh_settings_panel()
+
+func _on_keyboard_navigation_layout_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _keyboard_navigation_layout_picker.get_item_count():
+		return
+	SettingsService.set_keyboard_navigation_layout_id(String(_keyboard_navigation_layout_picker.get_item_metadata(index)))
 	_refresh_settings_panel()
 
 func _on_master_volume_changed(value: float) -> void:
@@ -932,6 +939,19 @@ func _refresh_settings_panel() -> void:
 	if selected_battle_speed_index >= 0:
 		_battle_playback_speed_picker.select(selected_battle_speed_index)
 	_battle_playback_speed_picker.tooltip_text = "Sets the default playback pace for every new or resumed battle without changing combat results.\n%s" % settings_check
+
+	_keyboard_navigation_layout_picker.clear()
+	var keyboard_layout_options := SettingsService.build_keyboard_navigation_layout_options()
+	var selected_keyboard_layout_index := -1
+	for index in range(keyboard_layout_options.size()):
+		var option: Dictionary = keyboard_layout_options[index]
+		_keyboard_navigation_layout_picker.add_item(String(option.get("label", "WASD + Arrows")), index)
+		_keyboard_navigation_layout_picker.set_item_metadata(index, String(option.get("id", "wasd")))
+		if bool(option.get("selected", false)):
+			selected_keyboard_layout_index = index
+	if selected_keyboard_layout_index >= 0:
+		_keyboard_navigation_layout_picker.select(selected_keyboard_layout_index)
+	_keyboard_navigation_layout_picker.tooltip_text = "Directional keyboard navigation applies immediately across menus and active play; controller input remains unchanged.\n%s" % settings_check
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check
@@ -2059,6 +2079,9 @@ func validation_snapshot() -> Dictionary:
 		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"battle_playback_speed_picker_items": _picker_item_labels(_battle_playback_speed_picker),
 		"battle_playback_speed_tooltip": _battle_playback_speed_picker.tooltip_text,
+		"keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
+		"keyboard_navigation_layout_picker_items": _picker_item_labels(_keyboard_navigation_layout_picker),
+		"keyboard_navigation_layout_tooltip": _keyboard_navigation_layout_picker.tooltip_text,
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
 		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
@@ -2498,6 +2521,16 @@ func validation_select_battle_playback_speed(speed_id: String) -> bool:
 		return SettingsService.battle_playback_speed_id() == speed_id
 	return false
 
+func validation_select_keyboard_navigation_layout(layout_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_keyboard_navigation_layout_picker.get_item_count()):
+		if String(_keyboard_navigation_layout_picker.get_item_metadata(index)) != layout_id:
+			continue
+		_keyboard_navigation_layout_picker.select(index)
+		_on_keyboard_navigation_layout_selected(index)
+		return SettingsService.keyboard_navigation_layout_id() == layout_id
+	return false
+
 func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 	validation_open_saves_stage()
 	var requested_key := "%s:%s" % [slot_type, slot_id]
@@ -2750,6 +2783,8 @@ func _apply_visual_theme() -> void:
 		_resolution_picker,
 		_render_quality_picker,
 		_frame_rate_picker,
+		_battle_playback_speed_picker,
+		_keyboard_navigation_layout_picker,
 		_ui_scale_picker,
 		_color_cue_picker,
 	]:

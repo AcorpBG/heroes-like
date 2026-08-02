@@ -289,31 +289,35 @@ func _input(event: InputEvent) -> void:
 		return
 	if not (event is InputEventKey) or not event.pressed or event.echo:
 		return
+	if event.is_action_pressed("hero_move_up"):
+		if event.shift_pressed:
+			_pan_map(Vector2i(0, -3))
+		else:
+			_move_north()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("hero_move_down"):
+		if event.shift_pressed:
+			_pan_map(Vector2i(0, 3))
+		else:
+			_move_south()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("hero_move_left"):
+		if event.shift_pressed:
+			_pan_map(Vector2i(-3, 0))
+		else:
+			_move_west()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("hero_move_right"):
+		if event.shift_pressed:
+			_pan_map(Vector2i(3, 0))
+		else:
+			_move_east()
+		get_viewport().set_input_as_handled()
+		return
 	match event.keycode:
-		KEY_W:
-			if event.shift_pressed:
-				_pan_map(Vector2i(0, -3))
-			else:
-				_move_north()
-			get_viewport().set_input_as_handled()
-		KEY_S:
-			if event.shift_pressed:
-				_pan_map(Vector2i(0, 3))
-			else:
-				_move_south()
-			get_viewport().set_input_as_handled()
-		KEY_A:
-			if event.shift_pressed:
-				_pan_map(Vector2i(-3, 0))
-			else:
-				_move_west()
-			get_viewport().set_input_as_handled()
-		KEY_D:
-			if event.shift_pressed:
-				_pan_map(Vector2i(3, 0))
-			else:
-				_move_east()
-			get_viewport().set_input_as_handled()
 		KEY_Q, KEY_KP_7:
 			if event.shift_pressed:
 				_pan_map(Vector2i(-3, -3))

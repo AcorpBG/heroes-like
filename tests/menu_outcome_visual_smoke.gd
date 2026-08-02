@@ -18,6 +18,7 @@ func _run_main_menu_smoke() -> bool:
 	var original_ui_scale := SettingsService.ui_scale_percent()
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var original_color_cue_mode := SettingsService.color_cue_mode_id()
+	var original_keyboard_navigation_layout := SettingsService.keyboard_navigation_layout_id()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -529,7 +530,8 @@ func _run_main_menu_smoke() -> bool:
 	var ui_scale_picker = shell.get_node_or_null("%UIScalePicker")
 	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
 	var color_cue_picker = shell.get_node_or_null("%ColorCuePicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton):
+	var keyboard_navigation_layout_picker = shell.get_node_or_null("%KeyboardNavigationLayoutPicker")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (keyboard_navigation_layout_picker is OptionButton):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -537,6 +539,12 @@ func _run_main_menu_smoke() -> bool:
 	for expected_label in ["Low", "Balanced", "High"]:
 		if not render_quality_items.has(expected_label):
 			push_error("Main menu smoke: renderer-quality picker omitted %s: %s." % [expected_label, render_quality_items])
+			get_tree().quit(1)
+			return false
+	var keyboard_layout_items: Array = settings_snapshot.get("keyboard_navigation_layout_picker_items", []) if settings_snapshot.get("keyboard_navigation_layout_picker_items", []) is Array else []
+	for expected_label in ["WASD + Arrows", "IJKL + Arrows", "Arrows Only"]:
+		if not keyboard_layout_items.has(expected_label):
+			push_error("Main menu smoke: keyboard-navigation picker omitted %s: %s." % [expected_label, keyboard_layout_items])
 			get_tree().quit(1)
 			return false
 	var ui_scale_items: Array = settings_snapshot.get("ui_scale_picker_items", []) if settings_snapshot.get("ui_scale_picker_items", []) is Array else []
@@ -573,6 +581,19 @@ func _run_main_menu_smoke() -> bool:
 			push_error("Main menu smoke: settings resolution picker omitted %s: %s." % [expected_id, resolution_ids])
 			get_tree().quit(1)
 			return false
+	if not bool(shell.call("validation_select_keyboard_navigation_layout", "ijkl")):
+		push_error("Main menu smoke: keyboard-navigation picker could not select IJKL + Arrows.")
+		get_tree().quit(1)
+		return false
+	settings_snapshot = shell.call("validation_snapshot")
+	if String(settings_snapshot.get("keyboard_navigation_layout", "")) != "ijkl" or not String(settings_snapshot.get("settings_summary_full", "")).contains("Navigation IJKL + Arrows"):
+		push_error("Main menu smoke: settings summary did not reflect the selected keyboard-navigation layout: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	if original_keyboard_navigation_layout != "ijkl" and not bool(shell.call("validation_select_keyboard_navigation_layout", original_keyboard_navigation_layout)):
+		push_error("Main menu smoke: keyboard-navigation picker could not restore %s." % original_keyboard_navigation_layout)
+		get_tree().quit(1)
+		return false
 
 	if not bool(shell.call("validation_select_resolution", "1600x900")):
 		push_error("Main menu smoke: settings resolution picker could not select 1600x900.")
@@ -622,6 +643,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
+			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
@@ -649,6 +671,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
+			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
 		]
 	):
 		if original_resolution != "1600x900":

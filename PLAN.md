@@ -662,6 +662,22 @@ Non-goals:
 - do not make controller focus auto-select an irreversible action;
 - do not redesign the battle shell or add visible instruction panels.
 
+## Keyboard Navigation Layout Settings
+
+The completed Phase 6 accessibility slice makes keyboard navigation handedness a durable device preference instead of forcing one letter-key arrangement.
+
+Target shape:
+- Settings offers compact WASD + Arrows, IJKL + Arrows, and Arrows Only navigation layouts;
+- selecting a layout immediately updates the authoritative directional UI and hero-movement InputMap actions used by menus, overworld movement, town controls, and battle-board navigation;
+- controller D-pad bindings and non-navigation keyboard bindings remain unchanged;
+- the selected layout persists in device settings and is restored before the first interactive screen;
+- active-play input and packaged-settings validation prove live application and persistence on the existing cross-platform settings path.
+
+Non-goals:
+- do not claim full arbitrary key rebinding or controller/hardware certification;
+- do not change gameplay movement rules, focus ownership, combat rules, save data, or Native RMG behavior;
+- do not add a separate input dispatch path per scene or expand the settings panel with instruction text.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.
