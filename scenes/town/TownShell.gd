@@ -2192,7 +2192,8 @@ func _town_action_button_tooltip(action: Dictionary, lane: String) -> String:
 	var summary := String(action.get("summary", "")).strip_edges()
 	if lane == "build":
 		return _join_tooltip_sections([
-			"Select this construction plan to compare its cost, readiness, and town impact. Selection does not spend resources.",
+			_town_action_button_cue_text(action, lane),
+			"Selection previews the construction plan and does not spend resources.",
 			summary,
 		])
 	return _join_tooltip_sections([
@@ -2208,13 +2209,24 @@ func _town_action_button_cue_text(action: Dictionary, lane: String) -> String:
 	var surface := _town_action_surface_label(lane)
 	var readiness := _town_action_button_readiness(action, lane)
 	var impact := _town_action_button_impact(action, lane)
-	var next_step := _town_action_button_next_step(action, lane, label, surface, readiness)
+	var next_step := (
+		_town_build_plan_next_step(action, label, readiness)
+		if lane == "build"
+		else _town_action_button_next_step(action, lane, label, surface, readiness)
+	)
 	return "Command cue: %s | %s | %s | Next: %s" % [
 		lane_label,
 		_short_text(readiness, 46),
 		_short_text(impact, 54),
 		_short_text(next_step, 72),
 	]
+
+func _town_build_plan_next_step(action: Dictionary, label: String, readiness: String) -> String:
+	if bool(action.get("disabled", false)):
+		return "Review %s in Build tab to inspect the missing requirements." % label
+	if readiness.begins_with("Needs exchange"):
+		return "Select %s in Build tab, then use Trade before confirming." % label
+	return "Select %s in Build tab, then review and confirm the plan." % label
 
 func _town_action_button_readiness(action: Dictionary, lane: String) -> String:
 	if bool(action.get("disabled", false)):

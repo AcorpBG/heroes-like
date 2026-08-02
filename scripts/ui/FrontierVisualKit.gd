@@ -195,7 +195,7 @@ static func apply_badge(panel: PanelContainer, tone: String) -> void:
 
 static func apply_button(button: BaseButton, role: String = "secondary", width: float = 160.0, height: float = 34.0, font_size: int = 14) -> void:
 	button.custom_minimum_size = Vector2(width, height)
-	button.focus_mode = Control.FOCUS_NONE
+	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size", font_size)
 	_apply_button_theme(button, role)
 
@@ -223,8 +223,18 @@ static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	button.add_theme_stylebox_override("hover", _button_art_style(art_role, "hover", hover))
 	button.add_theme_stylebox_override("pressed", _button_art_style(art_role, "pressed", pressed))
 	button.add_theme_stylebox_override("disabled", _button_art_style(art_role, "disabled", disabled))
+	button.add_theme_stylebox_override("focus", _button_focus_style())
 	button.add_theme_color_override("font_color", TEXT_TONES["title"])
 	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
+
+static func _button_focus_style(corner_radius: int = 10) -> StyleBoxFlat:
+	var focus := StyleBoxFlat.new()
+	focus.bg_color = Color(0.0, 0.0, 0.0, 0.0)
+	focus.border_color = Color(1.0, 0.84, 0.40, 1.0)
+	focus.set_border_width_all(3)
+	focus.set_corner_radius_all(corner_radius)
+	focus.set_expand_margin_all(2.0)
+	return focus
 
 static func _button_art_role(role: String) -> String:
 	if role == "primary" or role == "spine_active":
