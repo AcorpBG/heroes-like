@@ -32,6 +32,8 @@ GLOBAL_SCRIPT_CLASS_CACHE_PATH = ROOT / ".godot" / "global_script_class_cache.cf
 DIFFICULTY_RULES_PATH = ROOT / "scripts" / "core" / "DifficultyRules.gd"
 HERO_PROGRESSION_RULES_PATH = ROOT / "scripts" / "core" / "HeroProgressionRules.gd"
 HERO_COMMAND_RULES_PATH = ROOT / "scripts" / "core" / "HeroCommandRules.gd"
+HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvous_army_transfer_report.gd"
+HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_army_transfer_report.tscn"
 SCENARIO_FACTORY_PATH = ROOT / "scripts" / "core" / "ScenarioFactory.gd"
 SCENARIO_SELECT_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioSelectRules.gd"
 SCENARIO_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioRules.gd"
@@ -12752,6 +12754,8 @@ def validate_hero_progression(errors: list[str]) -> None:
         SCENARIO_SELECT_RULES_PATH,
         OVERWORLD_SCENE_PATH,
         OVERWORLD_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH,
         TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
     )
@@ -12916,6 +12920,9 @@ def validate_hero_command(errors: list[str]) -> None:
             "recruit_hero_at_town",
             "get_town_transfer_actions",
             "transfer_town_stack",
+            "field_rendezvous_heroes",
+            "get_field_transfer_actions",
+            "transfer_field_stack",
             "remove_active_hero_after_defeat",
             "stationed_heroes",
             "describe_tavern",
@@ -12935,6 +12942,9 @@ def validate_hero_command(errors: list[str]) -> None:
         "func describe_heroes",
         "func get_hero_actions",
         "func switch_active_hero",
+        "func get_rendezvous_transfer_actions",
+        "func perform_rendezvous_transfer_action",
+        '"route": "rendezvous"',
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero-command token: {required_token}")
 
@@ -12965,7 +12975,14 @@ def validate_hero_command(errors: list[str]) -> None:
         overworld_scene_text,
         errors,
         "OverworldShell.tscn",
-        [("Heroes", "Label"), ("HeroActions", "VBoxContainer")],
+        [
+            ("Heroes", "Label"),
+            ("HeroActions", "VBoxContainer"),
+            ("Rendezvous", "Label"),
+            ("RendezvousControls", "HBoxContainer"),
+            ("RendezvousOrders", "OptionButton"),
+            ("RendezvousTransfer", "Button"),
+        ],
     )
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
@@ -12990,6 +13007,9 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.describe_heroes",
         "OverworldRules.get_hero_actions",
         "OverworldRules.switch_active_hero",
+        "func _rebuild_rendezvous_actions",
+        "func _on_rendezvous_transfer_pressed",
+        'route == "rendezvous"',
         "_hero_actions",
         "_heroes_label",
     ):
@@ -13011,6 +13031,19 @@ def validate_hero_command(errors: list[str]) -> None:
         "TownRules.get_transfer_actions",
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required hero-command token: {required_token}")
+
+    rendezvous_report_text = HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HERO_FIELD_RENDEZVOUS_ARMY_TRANSFER_REPORT",
+        "remote_transfer_rejected",
+        "matching_stack_merge",
+        "cached_prevalidated",
+        "destination_interaction_fast_path",
+        "command_selector_focusable",
+        "save_resume_preserved",
+        "SessionStateStore.SAVE_VERSION",
+    ):
+        ensure(required_token in rendezvous_report_text, errors, f"Hero field rendezvous report is missing required token: {required_token}")
 
 
 def validate_overworld_fog(errors: list[str]) -> None:

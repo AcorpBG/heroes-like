@@ -1121,15 +1121,19 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 
 	var town_result := _find_active_town(session)
 	var town: Dictionary = town_result.get("town", {})
-	if town.is_empty():
-		return {"ok": true, "message": "", "route": ""}
-	if String(town.get("owner", "neutral")) == "player":
-		return {
-			"ok": true,
-			"message": "%s opens its gates." % _town_name(town),
-			"route": "town",
-		}
-	return capture_active_town(session)
+	if not town.is_empty():
+		if String(town.get("owner", "neutral")) == "player":
+			return {
+				"ok": true,
+				"message": "%s opens its gates." % _town_name(town),
+				"route": "town",
+			}
+		return capture_active_town(session)
+
+	var rendezvous := _field_rendezvous_hero_at_tile(session, hero_position(session))
+	if not rendezvous.is_empty():
+		return _field_rendezvous_result(session, rendezvous)
+	return {"ok": true, "message": "", "route": ""}
 
 static func _resolve_destination_descriptor_interaction(
 	session: SessionStateStoreScript.SessionData,
@@ -1186,6 +1190,16 @@ static func _resolve_destination_descriptor_interaction(
 					"interaction_result": _interactable_result_payload("town", town, town_facts, {"blocks_changed": false, "body_tiles_changed": false}),
 				}
 			return capture_active_town(session)
+		"hero":
+			var target_hero_id := String(descriptor.get("hero_id", ""))
+			var target := HeroCommandRulesScript.hero_by_id(session, target_hero_id)
+			if target.is_empty() or target_hero_id == String(session.overworld.get("active_hero_id", "")):
+				return {"ok": true, "message": "", "route": ""}
+			var active_position := hero_position(session)
+			var target_position: Dictionary = target.get("position", {}) if target.get("position", {}) is Dictionary else {}
+			if int(target_position.get("x", -999)) != active_position.x or int(target_position.get("y", -999)) != active_position.y:
+				return {"ok": false, "message": "The reserve commander is no longer at the rendezvous point.", "route": ""}
+			return _field_rendezvous_result(session, target)
 		_:
 			return {"ok": true, "message": "", "route": ""}
 
@@ -1661,7 +1675,34 @@ static func get_active_context(session: SessionStateStoreScript.SessionData) -> 
 	if not encounter.is_empty():
 		return {"type": "encounter", "encounter": encounter}
 
+	var rendezvous := _field_rendezvous_hero_at_tile(session, pos)
+	if not rendezvous.is_empty():
+		return {"type": "rendezvous", "hero": rendezvous}
+
 	return {"type": "empty"}
+
+static func _field_rendezvous_hero_at_tile(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> Dictionary:
+	if session == null:
+		return {}
+	for hero_value in HeroCommandRulesScript.field_rendezvous_heroes(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
+		if int(position.get("x", -999)) == tile.x and int(position.get("y", -999)) == tile.y:
+			return hero
+	return {}
+
+static func _field_rendezvous_result(session: SessionStateStoreScript.SessionData, reserve: Dictionary) -> Dictionary:
+	var reserve_name := String(reserve.get("name", "the reserve commander"))
+	return {
+		"ok": true,
+		"message": "Rendezvous with %s. Troop exchange is ready in Command." % reserve_name,
+		"route": "rendezvous",
+		"rendezvous_hero_id": String(reserve.get("id", "")),
+		"rendezvous_hero_name": reserve_name,
+		"scenario_status": session.scenario_status if session != null else "",
+	}
 
 static func get_active_encounter(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var pos := hero_position(session)
@@ -1878,7 +1919,7 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = hero_value
-		if bool(hero.get("is_active", false)):
+		if String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
 			continue
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
 		if int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
@@ -2865,6 +2906,11 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 				"" if object_surface == "" else " | %s" % object_surface,
 				describe_encounter_readability_surface(session, placement),
 				_encounter_pressure_summary(session, placement),
+			]
+		"rendezvous":
+			return "%s\nTerrain %s\nChoose a troop order in the Command drawer." % [
+				HeroCommandRulesScript.describe_field_rendezvous(session),
+				terrain,
 			]
 		_:
 			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept raids." % terrain
@@ -4810,7 +4856,38 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 					"summary": _context_action_summary(session, "enter_battle", context),
 				}
 			)
+		"rendezvous":
+			var hero: Dictionary = context.get("hero", {}) if context.get("hero", {}) is Dictionary else {}
+			actions.append({
+				"id": "open_rendezvous",
+				"label": "Exchange Troops",
+				"summary": "Open the Command drawer to exchange troops with %s without spending movement." % String(hero.get("name", "the reserve commander")),
+			})
 	return actions
+
+static func get_rendezvous_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_overworld_state_for_runtime(session)
+	return HeroCommandRulesScript.get_field_transfer_actions(session)
+
+static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	normalize_overworld_state_for_runtime(session)
+	var parts := action_id.split(":")
+	if parts.size() != 5 or String(parts[0]) != "field_transfer":
+		return {"ok": false, "message": "That field transfer order is invalid."}
+	var result := HeroCommandRulesScript.transfer_field_stack(
+		session,
+		String(parts[1]),
+		String(parts[2]),
+		String(parts[3]),
+		String(parts[4])
+	)
+	if not bool(result.get("ok", false)):
+		return result
+	var finalized := _finalize_action_result(session, true, String(result.get("message", "Troops transferred.")), false, false)
+	for key in ["source_hero_id", "target_hero_id", "unit_id", "transferred_count"]:
+		if result.has(key):
+			finalized[key] = result.get(key)
+	return finalized
 
 static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_overworld_state_for_runtime(session)

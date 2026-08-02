@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed verified per-user Linux and Windows archive install/uninstall workflows with installed-binary boot validation and user-data preservation. Overall release work remains active.",
+  "currentNotes": "Completed the player-hero field rendezvous and troop-exchange workflow with direct/cached route, compact UI, normalization, and save-resume proof. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-user-local-install-workflow-10184",
-  "currentSliceId": "packaging-user-local-install-workflow-10184",
-  "currentSliceNotes": "Verified per-user Linux and Windows archive install, installed boot, uninstall, launch integration removal, and user-data preservation.",
+  "currentSlice": "hero-field-rendezvous-army-transfer-10184",
+  "currentSliceId": "hero-field-rendezvous-army-transfer-10184",
+  "currentSliceNotes": "Owned reserve commanders now resolve as named direct/cached route interactions and exchange merged troop stacks through a compact bidirectional Command-drawer control.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Packaging User-Local Install Workflow",
-  "currentSliceUpdatedAt": "2026-08-02T22:36:02Z",
+  "currentSliceTitle": "Hero Field Rendezvous Army Transfer",
+  "currentSliceUpdatedAt": "2026-08-02T23:10:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65861,6 +65861,89 @@
         "status": "passed",
         "updatedAt": "2026-08-02T22:36:02Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/hero_field_rendezvous_army_transfer_report.tscn",
+        "godot4 --headless --path . tests/overworld_hero_actions_refresh_cache_regression.tscn",
+        "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A visible reserve player hero is a named route destination; both direct and cached route execution resolve a field rendezvous instead of silently overlapping; the overworld Command drawer exposes a compact keyboard/controller-reachable selector for one, half, or all troops in either direction; matching stacks merge and both hero armies persist through normalization/save boundaries; unrelated town, encounter, movement, scenario, and Native RMG behavior remains unchanged; focused and broad regressions pass.",
+      "id": "hero-field-rendezvous-army-transfer-10184",
+      "implementationTargets": [
+        "scripts/core/HeroCommandRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/hero_field_rendezvous_army_transfer_report.gd",
+        "tests/hero_field_rendezvous_army_transfer_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "artifact or spell trading, remote transfers, convoy automation, or enemy-hero diplomacy",
+        "changing town garrison transfer semantics, movement costs, encounter priority, save version, or scenario outcomes",
+        "changing Native RMG generation/package output or claiming army management or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-player-command-army-management-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Playable Alpha Baseline / player-readable live-loop improvements",
+      "purpose": "Turn friendly heroes from inert overlapping route blockers into usable field army-management interactions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "scripts/core/HeroCommandRules.gd",
+          "scripts/core/OverworldRules.gd",
+          "scenes/overworld/OverworldShell.gd",
+          "scenes/overworld/OverworldShell.tscn",
+          "tests/hero_field_rendezvous_army_transfer_report.gd",
+          "tests/hero_field_rendezvous_army_transfer_report.tscn",
+          "tests/validate_repo.py"
+        ],
+        "finding": "Owned reserve heroes are named route destinations and terminate both fully validated and cached routes as a rendezvous. Co-located commanders expose exact one, half, and all stack transfers in both directions through the live Command drawer; matching units merge, remote calls fail, and version-9 save/restore preserves both hero armies and the rendezvous context.",
+        "metrics": {
+          "route_execution_modes_proven": 2,
+          "transfer_directions_proven": 2,
+          "transfer_amount_modes_supported": 3,
+          "direct_route_movement_cost": 1,
+          "save_version": 9,
+          "focused_and_broad_validation_commands": 6,
+          "remote_transfer_rejected": true,
+          "matching_stack_merge_proven": true,
+          "keyboard_controller_focusable": true
+        }
+      },
+      "startedAt": "2026-08-02T22:50:20Z",
+      "status": "completed",
+      "title": "Hero Field Rendezvous Army Transfer",
+      "updatedAt": "2026-08-02T23:10:09Z",
+      "completedAt": "2026-08-02T23:10:09Z",
+      "notes": "Implemented real owned-hero field rendezvous, bidirectional stack transfer, compact Command-drawer controls, exact direct/cached route handoff, and version-9 persistence. Artifact/spell trade, remote logistics, enemy diplomacy, Native RMG, and overall release completion remain open.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/hero_field_rendezvous_army_transfer_report.tscn",
+          "godot4 --headless --path . tests/overworld_hero_actions_refresh_cache_regression.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T23:10:09Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66302,7 +66385,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "packaging_user_local_install_workflow_complete_overall_release_in_progress",
+  "result": "hero_field_rendezvous_army_transfer_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66403,9 +66486,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Verified Linux and Windows portable archives now provide reversible per-user installs with launch integration, installed-binary boot validation, and user-data-preserving uninstall behavior. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Owned commanders now resolve direct and cached field rendezvous and exchange merged troop stacks through a compact accessible Command-drawer workflow that persists through save version 9. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T22:36:02Z",
+  "updatedAt": "2026-08-02T23:10:09Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

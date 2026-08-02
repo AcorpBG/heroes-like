@@ -553,6 +553,118 @@ static func get_town_transfer_actions(session: SessionStateStoreScript.SessionDa
 					)
 	return actions
 
+static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_session(session)
+	var rendezvous := []
+	if session == null:
+		return rendezvous
+	var active := active_hero(session)
+	if active.is_empty():
+		return rendezvous
+	var active_id := String(active.get("id", ""))
+	var active_position := _normalize_position(active.get("position", {}))
+	for hero_value in session.overworld.get("player_heroes", []):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		if String(hero.get("id", "")) == active_id:
+			continue
+		if _normalize_position(hero.get("position", {})) == active_position:
+			rendezvous.append(hero)
+	return rendezvous
+
+static func describe_field_rendezvous(session: SessionStateStoreScript.SessionData) -> String:
+	var active := active_hero(session)
+	var rendezvous := field_rendezvous_heroes(session)
+	if active.is_empty() or rendezvous.is_empty():
+		return "No friendly commander is present for a field rendezvous."
+	var lines := ["Field Rendezvous", "- Active: %s | %s" % [String(active.get("name", "Commander")), _army_summary(active.get("army", {}))]]
+	for hero_value in rendezvous:
+		var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+		lines.append("- Reserve: %s | %s" % [String(hero.get("name", "Commander")), _army_summary(hero.get("army", {}))])
+	return "\n".join(lines)
+
+static func get_field_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_session(session)
+	var actions := []
+	if session == null:
+		return actions
+	var active := active_hero(session)
+	if active.is_empty():
+		return actions
+	for reserve_value in field_rendezvous_heroes(session):
+		if not (reserve_value is Dictionary):
+			continue
+		var reserve: Dictionary = reserve_value
+		_append_field_transfer_actions(actions, active, reserve)
+		_append_field_transfer_actions(actions, reserve, active)
+	return actions
+
+static func transfer_field_stack(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String,
+	unit_id: String,
+	amount_token: String
+) -> Dictionary:
+	normalize_session(session)
+	if session == null:
+		return {"ok": false, "message": "No expedition is available for a field transfer."}
+	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
+		return {"ok": false, "message": "Choose two different controlled commanders."}
+	var source := hero_by_id(session, source_hero_id)
+	var target := hero_by_id(session, target_hero_id)
+	if source.is_empty() or target.is_empty():
+		return {"ok": false, "message": "Both commanders must remain under player control."}
+	var active_id := String(session.overworld.get("active_hero_id", ""))
+	if source_hero_id != active_id and target_hero_id != active_id:
+		return {"ok": false, "message": "Field transfers must include the active commander."}
+	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
+		return {"ok": false, "message": "The commanders must occupy the same field tile."}
+	if unit_id == "":
+		return {"ok": false, "message": "That transfer order is missing a unit id."}
+
+	var source_stacks := _holder_stacks(session, {}, source_hero_id)
+	var source_index := _stack_index_by_unit(source_stacks, unit_id)
+	if source_index < 0:
+		return {"ok": false, "message": "That stack is no longer available for transfer."}
+	var source_stack: Dictionary = source_stacks[source_index]
+	var available := int(source_stack.get("count", 0))
+	var transfer_count := _resolve_transfer_amount(amount_token, available)
+	if transfer_count <= 0:
+		return {"ok": false, "message": "No troops are available for transfer."}
+
+	source_stack["count"] = available - transfer_count
+	if int(source_stack.get("count", 0)) > 0:
+		source_stacks[source_index] = source_stack
+	else:
+		source_stacks.remove_at(source_index)
+	var target_stacks := _holder_stacks(session, {}, target_hero_id)
+	var target_index := _stack_index_by_unit(target_stacks, unit_id)
+	if target_index >= 0:
+		var target_stack: Dictionary = target_stacks[target_index]
+		target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
+		target_stacks[target_index] = target_stack
+	else:
+		target_stacks.append({"unit_id": unit_id, "count": transfer_count})
+
+	_set_holder_stacks(session, {}, source_hero_id, source_stacks)
+	_set_holder_stacks(session, {}, target_hero_id, target_stacks)
+	var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
+	return {
+		"ok": true,
+		"message": "Moved %d %s from %s to %s." % [
+			transfer_count,
+			unit_name,
+			String(source.get("name", source_hero_id)),
+			String(target.get("name", target_hero_id)),
+		],
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"unit_id": unit_id,
+		"transferred_count": transfer_count,
+	}
+
 static func transfer_town_stack(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
@@ -921,9 +1033,11 @@ static func _holder_stacks(session: SessionStateStoreScript.SessionData, town: D
 	return hero.get("army", {}).get("stacks", []).duplicate(true) if not hero.is_empty() and hero.get("army", {}).get("stacks", []) is Array else []
 
 static func _set_holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String, stacks: Array) -> void:
-	if session == null or town.is_empty():
+	if session == null:
 		return
 	if holder_id == HOLDER_GARRISON:
+		if town.is_empty():
+			return
 		var towns = session.overworld.get("towns", [])
 		for index in range(towns.size()):
 			var entry = towns[index]
@@ -950,6 +1064,46 @@ static func _set_holder_stacks(session: SessionStateStoreScript.SessionData, tow
 	session.overworld["player_heroes"] = heroes
 	if String(session.overworld.get("active_hero_id", "")) == holder_id:
 		_sync_active_hero_mirror(session)
+
+static func _append_field_transfer_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:
+	var source_id := String(source.get("id", ""))
+	var target_id := String(target.get("id", ""))
+	if source_id == "" or target_id == "":
+		return
+	var source_name := String(source.get("name", source_id))
+	var target_name := String(target.get("name", target_id))
+	for stack_value in source.get("army", {}).get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		var unit_id := String(stack.get("unit_id", ""))
+		var count := int(stack.get("count", 0))
+		if unit_id == "" or count <= 0:
+			continue
+		var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
+		var seen_transfer_counts := {}
+		for amount_token_value in _transfer_amount_tokens(count):
+			var amount_token := String(amount_token_value)
+			var transfer_count := _resolve_transfer_amount(amount_token, count)
+			if seen_transfer_counts.has(transfer_count):
+				continue
+			seen_transfer_counts[transfer_count] = true
+			actions.append({
+				"id": "field_transfer:%s:%s:%s:%s" % [source_id, target_id, unit_id, amount_token],
+				"label": "%s -> %s | %d %s" % [source_name, target_name, transfer_count, unit_name],
+				"summary": "Move %s of %d %s from %s to %s; both commanders remain on this tile." % [
+					_transfer_amount_label(amount_token, count),
+					count,
+					unit_name,
+					source_name,
+					target_name,
+				],
+				"source_hero_id": source_id,
+				"target_hero_id": target_id,
+				"unit_id": unit_id,
+				"amount_token": amount_token,
+				"transfer_count": transfer_count,
+			})
 
 static func _stack_index_by_unit(stacks: Array, unit_id: String) -> int:
 	for index in range(stacks.size()):
