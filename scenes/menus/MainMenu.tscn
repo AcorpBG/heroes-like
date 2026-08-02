@@ -1051,6 +1051,15 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="BattleCameraShakeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow"]
+layout_mode = 2
+text = "Battle Shake"
+
+[node name="BattleCameraShakePicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="AssistRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
 layout_mode = 2
 theme_override_constants/separation = 4
@@ -1204,6 +1213,7 @@ text = "Quit"
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/UIScalePicker" to="." method="_on_ui_scale_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/BattleCameraShakePicker" to="." method="_on_battle_camera_shake_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ColorCuePicker" to="." method="_on_color_cue_selected"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/HighContrastToggle" to="." method="_on_high_contrast_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]

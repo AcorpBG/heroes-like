@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 11
+const SETTINGS_VERSION := 12
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -20,6 +20,9 @@ const RENDER_QUALITY_BALANCED := "balanced"
 const RENDER_QUALITY_HIGH := "high"
 const COLOR_CUE_MODE_STANDARD := "standard"
 const COLOR_CUE_MODE_ASSISTED := "assisted"
+const BATTLE_CAMERA_SHAKE_FULL := "full"
+const BATTLE_CAMERA_SHAKE_REDUCED := "reduced"
+const BATTLE_CAMERA_SHAKE_OFF := "off"
 const BATTLE_PLAYBACK_SPEED_NORMAL := "normal"
 const BATTLE_PLAYBACK_SPEED_FAST := "fast"
 const BATTLE_PLAYBACK_SPEED_INSTANT := "instant"
@@ -104,6 +107,12 @@ const UI_SCALE_OPTIONS := [
 const COLOR_CUE_OPTIONS := [
 	{"id": COLOR_CUE_MODE_STANDARD, "label": "Standard"},
 	{"id": COLOR_CUE_MODE_ASSISTED, "label": "Shape + Palette"},
+]
+
+const BATTLE_CAMERA_SHAKE_OPTIONS := [
+	{"id": BATTLE_CAMERA_SHAKE_FULL, "label": "Full", "scale": 1.0},
+	{"id": BATTLE_CAMERA_SHAKE_REDUCED, "label": "Reduced", "scale": 0.35},
+	{"id": BATTLE_CAMERA_SHAKE_OFF, "label": "Off", "scale": 0.0},
 ]
 
 const BATTLE_PLAYBACK_SPEED_OPTIONS := [
@@ -271,6 +280,7 @@ func build_default_settings() -> Dictionary:
 			"large_ui_text": false,
 			"high_contrast_ui": false,
 			"color_cue_mode": COLOR_CUE_MODE_STANDARD,
+			"battle_camera_shake": BATTLE_CAMERA_SHAKE_FULL,
 			"reduce_motion": false,
 		},
 	}
@@ -300,6 +310,7 @@ func load_settings() -> void:
 		settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
 		settings["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
 		settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(String(config.get_value("accessibility", "color_cue_mode", defaults["accessibility"]["color_cue_mode"])))
+		settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(String(config.get_value("accessibility", "battle_camera_shake", defaults["accessibility"]["battle_camera_shake"])))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
 	apply_settings()
@@ -327,6 +338,7 @@ func save_settings() -> String:
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
 	config.set_value("accessibility", "color_cue_mode", color_cue_mode_id())
+	config.set_value("accessibility", "battle_camera_shake", battle_camera_shake_mode_id())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
 	if error != OK:
@@ -406,6 +418,18 @@ func build_color_cue_options() -> Array:
 			"id": String(option.get("id", COLOR_CUE_MODE_STANDARD)),
 			"label": String(option.get("label", "Standard")),
 			"selected": String(option.get("id", COLOR_CUE_MODE_STANDARD)) == selected_mode,
+		})
+	return options
+
+func build_battle_camera_shake_options() -> Array:
+	var selected_mode := battle_camera_shake_mode_id()
+	var options := []
+	for option in BATTLE_CAMERA_SHAKE_OPTIONS:
+		options.append({
+			"id": String(option.get("id", BATTLE_CAMERA_SHAKE_FULL)),
+			"label": String(option.get("label", "Full")),
+			"scale": float(option.get("scale", 1.0)),
+			"selected": String(option.get("id", BATTLE_CAMERA_SHAKE_FULL)) == selected_mode,
 		})
 	return options
 
@@ -587,6 +611,21 @@ func color_cue_mode_label() -> String:
 func color_cue_assist_enabled() -> bool:
 	return color_cue_mode_id() == COLOR_CUE_MODE_ASSISTED
 
+func battle_camera_shake_mode_id() -> String:
+	return _normalize_battle_camera_shake(String(ensure_settings().get("accessibility", {}).get("battle_camera_shake", BATTLE_CAMERA_SHAKE_FULL)))
+
+func battle_camera_shake_label() -> String:
+	for option in BATTLE_CAMERA_SHAKE_OPTIONS:
+		if String(option.get("id", "")) == battle_camera_shake_mode_id():
+			return String(option.get("label", "Full"))
+	return "Full"
+
+func battle_camera_shake_scale() -> float:
+	for option in BATTLE_CAMERA_SHAKE_OPTIONS:
+		if String(option.get("id", "")) == battle_camera_shake_mode_id():
+			return float(option.get("scale", 1.0))
+	return 1.0
+
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
 
@@ -719,6 +758,11 @@ func set_color_cue_mode_id(mode_id: String) -> void:
 	settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(mode_id)
 	_commit_settings()
 
+func set_battle_camera_shake_mode_id(mode_id: String) -> void:
+	ensure_settings()
+	settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(mode_id)
+	_commit_settings()
+
 func set_reduced_motion_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["accessibility"]["reduce_motion"] = enabled
@@ -729,6 +773,7 @@ func describe_settings() -> String:
 	accessibility_parts.append("UI scale %s" % ui_scale_label())
 	accessibility_parts.append("High contrast %s" % ("On" if high_contrast_ui_enabled() else "Off"))
 	accessibility_parts.append("Color cues %s" % color_cue_mode_label())
+	accessibility_parts.append("Battle shake %s" % battle_camera_shake_label())
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
@@ -942,6 +987,13 @@ func _normalize_color_cue_mode(mode_id: String) -> String:
 		if String(option.get("id", COLOR_CUE_MODE_STANDARD)) == mode_id:
 			return mode_id
 	return COLOR_CUE_MODE_STANDARD
+
+func _normalize_battle_camera_shake(mode_id: String) -> String:
+	var normalized := mode_id.strip_edges().to_lower()
+	for option in BATTLE_CAMERA_SHAKE_OPTIONS:
+		if String(option.get("id", BATTLE_CAMERA_SHAKE_FULL)) == normalized:
+			return normalized
+	return BATTLE_CAMERA_SHAKE_FULL
 
 func _normalize_battle_playback_speed(speed_id: String) -> String:
 	var normalized := speed_id.strip_edges().to_lower()

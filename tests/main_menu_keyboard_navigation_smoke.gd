@@ -79,6 +79,15 @@ func _run() -> void:
 		_fail("Battle playback setting did not explain its presentation-only boundary: %s" % settings_snapshot)
 		return
 	await _capture_if_requested("settings_entry_focus")
+	if OS.get_environment("MAIN_MENU_KEYBOARD_CAPTURE") == "1":
+		var original_ui_scale := SettingsService.ui_scale_percent()
+		var original_shake_mode := SettingsService.battle_camera_shake_mode_id()
+		if not bool(shell.call("validation_select_ui_scale", 130)) or not bool(shell.call("validation_select_battle_camera_shake", "reduced")):
+			_fail("Could not prepare the 130 percent Reduced battle-shake settings capture.")
+			return
+		await _capture_if_requested("settings_130_reduced_shake")
+		shell.call("validation_select_ui_scale", original_ui_scale)
+		shell.call("validation_select_battle_camera_shake", original_shake_mode)
 
 	await _press_action("ui_cancel")
 	await get_tree().process_frame
