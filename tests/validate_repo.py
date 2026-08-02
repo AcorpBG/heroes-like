@@ -9153,7 +9153,7 @@ def artifact_source_table_issues(
         live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
         if metadata_only == live_drop_execution:
             issues.append("source_table_runtime_mode_invalid")
-        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "dwelling", "battle_salvage"}:
+        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "dwelling", "town", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
         for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
@@ -10801,9 +10801,9 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, dwelling, and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 4, errors, "Exactly four artifact source/reward tables must execute live")
-    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "dwelling", "battle_salvage"], errors, "Only guarded-site, shrine, dwelling, and battle-salvage artifact rewards may execute live in this slice")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, dwelling, town, and battle-salvage source tables must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 5, errors, "Exactly five artifact source/reward tables must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "dwelling", "town", "battle_salvage"], errors, "Only guarded-site, shrine, dwelling, town, and battle-salvage artifact rewards may execute live in this slice")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     starlens = resource_sites.get("site_starlens_sanctum", {})
     starlens_contract = starlens.get("artifact_reward_contract", {}) if isinstance(starlens.get("artifact_reward_contract"), dict) else {}
@@ -10816,6 +10816,39 @@ def validate_content(errors: list[str]) -> None:
         ensure(str(dwelling_contract.get("source_tag", "")) == "dwelling", errors, f"{dwelling_site_id} must opt into the dwelling artifact source")
         ensure(str(dwelling_contract.get("artifact_reward_table_id", "")) == "artifact_source_dwelling_support_rare", errors, f"{dwelling_site_id} must use the authored dwelling artifact table")
         ensure(bool((dwelling_site.get("runtime_boundary", {}) if isinstance(dwelling_site.get("runtime_boundary"), dict) else {}).get("artifact_reward_execution", False)), errors, f"{dwelling_site_id} must explicitly opt into artifact reward execution")
+    town_artifact_cases = {
+        "building_embercourt_lockhouse_tally": {
+            "faction_id": "faction_embercourt",
+            "artifact_id": "artifact_tollstone_ring",
+            "cost": {"gold": 1200, "wood": 1},
+        },
+        "building_brasshollow_scalehouse": {
+            "faction_id": "faction_brasshollow",
+            "artifact_id": "artifact_pressure_gauge_reliquary",
+            "cost": {"gold": 1400, "ore": 2},
+        },
+    }
+    artifact_tables = {
+        str(table.get("id", "")): table
+        for table in payloads["artifacts"].get("source_reward_tables", [])
+        if isinstance(table, dict)
+    }
+    town_artifact_table = artifact_tables.get("artifact_source_town_landmark_services", {})
+    town_artifact_mappings = town_artifact_table.get("artifact_ids_by_faction", {}) if isinstance(town_artifact_table.get("artifact_ids_by_faction"), dict) else {}
+    for building_id, expected in town_artifact_cases.items():
+        building = buildings.get(building_id, {})
+        contract = building.get("artifact_reward_contract", {}) if isinstance(building.get("artifact_reward_contract"), dict) else {}
+        boundary = building.get("runtime_boundary", {}) if isinstance(building.get("runtime_boundary"), dict) else {}
+        service_cost = contract.get("service_cost", {}) if isinstance(contract.get("service_cost"), dict) else {}
+        ensure(str(building.get("family", "")) == "repeatable_service", errors, f"{building_id} must remain a town artifact service family")
+        ensure(str(contract.get("source_tag", "")) == "town", errors, f"{building_id} must opt into the town artifact source")
+        ensure(str(contract.get("artifact_reward_table_id", "")) == "artifact_source_town_landmark_services", errors, f"{building_id} must use the town landmark artifact table")
+        ensure(bool(contract.get("one_time_reward", False)), errors, f"{building_id} artifact commission must remain one-time")
+        ensure(not bool(contract.get("metadata_only", True)), errors, f"{building_id} artifact commission must remain live")
+        ensure(bool(boundary.get("artifact_reward_execution", False)), errors, f"{building_id} must explicitly execute its artifact commission")
+        ensure({key: int(value) for key, value in service_cost.items()} == expected["cost"], errors, f"{building_id} must keep its exact authored commission cost")
+        ensure(set(service_cost).issubset({"gold", "wood", "ore"}), errors, f"{building_id} artifact commission must remain common-resource-only")
+        ensure(string_list(town_artifact_mappings.get(expected["faction_id"], [])) == [expected["artifact_id"]], errors, f"{building_id} must map its faction to the expected artifact")
     mireford = scenarios.get("mireford-skirmish", {})
     mireford_resource_nodes = mireford.get("resource_nodes", []) if isinstance(mireford.get("resource_nodes"), list) else []
     ensure(
@@ -23026,7 +23059,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, and Bellwake player battle salvage while pickup, town-service, and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, Embercourt and Brasshollow one-time town commissions, and Bellwake player battle salvage while pickup and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

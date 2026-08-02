@@ -266,13 +266,21 @@
         "faction_embercourt",
         "faction_brasshollow"
       ],
+      "artifact_ids_by_faction": {
+        "faction_embercourt": [
+          "artifact_tollstone_ring"
+        ],
+        "faction_brasshollow": [
+          "artifact_pressure_gauge_reliquary"
+        ]
+      },
       "set_constraints": {
         "allowed_set_ids": [],
         "piece_limit_per_table": 0
       },
       "runtime_policy": {
-        "metadata_only": true,
-        "live_drop_execution": false,
+        "metadata_only": false,
+        "live_drop_execution": true,
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,

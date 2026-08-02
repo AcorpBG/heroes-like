@@ -629,6 +629,7 @@ static func town_action_consequence_signature(session: SessionStateStoreScript.S
 		"recruit_action_count": get_recruit_actions(session).size(),
 		"market_action_count": get_market_actions(session).size(),
 		"response_action_count": get_response_actions(session).size(),
+		"artifact_ids": ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {})),
 	}
 
 static func build_town_action_recap(
@@ -1171,6 +1172,7 @@ static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -
 	if _read_cache_has(session, "artifact_actions"):
 		return _read_cache_get(session, "artifact_actions")
 	var actions: Array = ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
+	actions.append_array(_town_artifact_service_actions(session, get_active_town(session)))
 	_read_cache_store(session, "artifact_actions", actions)
 	return actions
 
@@ -1255,7 +1257,135 @@ static func learn_spell_at_active_town(session: SessionStateStoreScript.SessionD
 	return _finalize_town_result(session, true, message)
 
 static func manage_artifact_at_active_town(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	if action_id.begins_with("commission_artifact:"):
+		return _commission_town_artifact(session, action_id.trim_prefix("commission_artifact:"))
 	return OverworldRulesScript.perform_artifact_action(session, action_id)
+
+static func _town_artifact_service_actions(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary
+) -> Array:
+	var actions := []
+	if session == null or town.is_empty() or String(town.get("owner", "neutral")) != "player":
+		return actions
+	if String(town.get("artifact_reward_id", "")) != "":
+		return actions
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var faction_id := String(town_template.get("faction_id", town.get("faction_id", "")))
+	var owned_artifact_ids := ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	for building_id_value in town.get("built_buildings", []):
+		var building_id := String(building_id_value)
+		var building := ContentService.get_building(building_id)
+		var contract_value = building.get("artifact_reward_contract", {})
+		var boundary_value = building.get("runtime_boundary", {})
+		if not (contract_value is Dictionary) or not (boundary_value is Dictionary):
+			continue
+		var contract: Dictionary = contract_value
+		var boundary: Dictionary = boundary_value
+		if String(contract.get("source_tag", "")) != "town" or not bool(boundary.get("artifact_reward_execution", false)):
+			continue
+		var source_key := "%s:%s:%s" % [session.scenario_id, String(town.get("placement_id", "")), building_id]
+		var selection := ArtifactRulesScript.select_live_source_reward(
+			"town",
+			building,
+			source_key,
+			faction_id,
+			owned_artifact_ids
+		)
+		if not bool(selection.get("ok", false)):
+			continue
+		var cost_value = contract.get("service_cost", {})
+		var cost: Dictionary = cost_value.duplicate(true) if cost_value is Dictionary else {}
+		var affordable := _can_afford(session, cost)
+		var artifact_id := String(selection.get("artifact_id", ""))
+		var artifact_name := ArtifactRulesScript.artifact_name(artifact_id)
+		var shortfall := _resource_shortfall(session, cost)
+		actions.append({
+			"id": "commission_artifact:%s" % building_id,
+			"label": "Commission %s" % artifact_name,
+			"summary": "%s commissions %s for %s." % [
+				String(building.get("name", building_id)),
+				artifact_name,
+				_describe_resources(cost),
+			],
+			"impact": "The artifact is equipped when a compatible slot is open; the town service can be used once.",
+			"artifact_id": artifact_id,
+			"artifact_reward_table_id": String(selection.get("table_id", "")),
+			"source_key": source_key,
+			"building_id": building_id,
+			"cost": cost,
+			"shortfall_summary": shortfall,
+			"disabled": not affordable,
+		})
+	return actions
+
+static func _commission_town_artifact(
+	session: SessionStateStoreScript.SessionData,
+	building_id: String
+) -> Dictionary:
+	var town_result := _find_active_town_result(session)
+	var town: Dictionary = town_result.get("town", {})
+	var town_index := int(town_result.get("index", -1))
+	if town_index < 0 or town.is_empty() or String(town.get("owner", "neutral")) != "player":
+		return {"ok": false, "message": "No player town is available for that commission."}
+	if String(town.get("artifact_reward_id", "")) != "":
+		return {"ok": false, "message": "This town has already completed its artifact commission."}
+	if building_id not in town.get("built_buildings", []):
+		return {"ok": false, "message": "That artifact service has not been built in this town."}
+	var selected_action := {}
+	for action_value in _town_artifact_service_actions(session, town):
+		if action_value is Dictionary and String(action_value.get("building_id", "")) == building_id:
+			selected_action = action_value
+			break
+	if selected_action.is_empty():
+		return {"ok": false, "message": "That building cannot provide an artifact commission here."}
+	var cost: Dictionary = selected_action.get("cost", {})
+	if not _can_afford(session, cost):
+		return {
+			"ok": false,
+			"message": "The commission requires %s; shortfall: %s." % [
+				_describe_resources(cost),
+				_resource_shortfall(session, cost),
+			],
+		}
+	var artifact_id := String(selected_action.get("artifact_id", ""))
+	var building := ContentService.get_building(building_id)
+	var claim: Dictionary = OverworldRulesScript.claim_artifact_for_session(
+		session,
+		artifact_id,
+		"%s commissions" % String(building.get("name", building_id)),
+		true
+	)
+	if not bool(claim.get("ok", false)) or bool(claim.get("duplicate", false)):
+		return {"ok": false, "message": String(claim.get("message", "The artifact commission failed."))}
+	_spend_resources(session, cost)
+	var towns_value = session.overworld.get("towns", [])
+	if not (towns_value is Array) or town_index >= towns_value.size() or not (towns_value[town_index] is Dictionary):
+		return {"ok": false, "message": "The commissioned artifact was granted, but the town record could not be updated."}
+	var updated_town: Dictionary = towns_value[town_index]
+	var town_template := ContentService.get_town(String(updated_town.get("town_id", "")))
+	updated_town["artifact_reward_id"] = artifact_id
+	updated_town["artifact_reward_table_id"] = String(selected_action.get("artifact_reward_table_id", ""))
+	updated_town["artifact_reward_source_key"] = String(selected_action.get("source_key", ""))
+	updated_town["artifact_reward_claimed_by_owner"] = String(updated_town.get("owner", "player"))
+	updated_town["artifact_reward_claimed_by_faction_id"] = String(town_template.get("faction_id", updated_town.get("faction_id", "")))
+	updated_town["artifact_reward_claimed_day"] = int(session.day)
+	updated_town["artifact_reward_service_building_id"] = building_id
+	towns_value[town_index] = updated_town
+	session.overworld["towns"] = towns_value
+	var result := _finalize_town_result(
+		session,
+		true,
+		"%s commissioned %s for %s." % [
+			String(building.get("name", building_id)),
+			ArtifactRulesScript.artifact_name(artifact_id),
+			_describe_resources(cost),
+		]
+	)
+	result["artifact_id"] = artifact_id
+	result["artifact_reward_table_id"] = String(selected_action.get("artifact_reward_table_id", ""))
+	result["cost"] = cost.duplicate(true)
+	return result
 
 static func choose_specialty_at_active_town(session: SessionStateStoreScript.SessionData, specialty_id: String) -> Dictionary:
 	return OverworldRulesScript.choose_specialty(session, specialty_id)
@@ -2008,6 +2138,9 @@ static func _town_action_affected_line(
 	var resource_delta := _signed_resource_delta_summary(before.get("resources", {}), after.get("resources", {}))
 	if resource_delta != "":
 		parts.append(resource_delta)
+	var artifact_delta := _artifact_delta_summary(before.get("artifact_ids", []), after.get("artifact_ids", []))
+	if artifact_delta != "":
+		parts.append(artifact_delta)
 	var reserve_delta := _signed_recruit_delta_summary(before.get("available_recruits", {}), after.get("available_recruits", {}), "Reserve")
 	if reserve_delta != "":
 		parts.append(reserve_delta)
@@ -2108,6 +2241,15 @@ static func _signed_resource_delta_summary(before_value: Variant, after_value: V
 			continue
 		parts.append("%s %s" % [resource_key, _signed_int(delta)])
 	return "%s %s" % [label, ", ".join(parts)] if not parts.is_empty() else ""
+
+static func _artifact_delta_summary(before_value: Variant, after_value: Variant) -> String:
+	var before := _normalize_string_array(before_value)
+	var after := _normalize_string_array(after_value)
+	var added := []
+	for artifact_id in after:
+		if artifact_id not in before:
+			added.append(ArtifactRulesScript.artifact_name(artifact_id))
+	return "Artifact %s" % ", ".join(added) if not added.is_empty() else ""
 
 static func _signed_recruit_delta_summary(before_value: Variant, after_value: Variant, label: String) -> String:
 	var before := _duplicate_dictionary(before_value)
@@ -2986,6 +3128,26 @@ static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Vari
 		if int(resources.get(String(key), 0)) < int(cost[key]):
 			return false
 	return true
+
+static func _resource_shortfall(session: SessionStateStoreScript.SessionData, cost: Variant) -> String:
+	if not (cost is Dictionary):
+		return "none"
+	var resources = session.overworld.get("resources", {})
+	var missing := {}
+	for key_value in cost.keys():
+		var key := String(key_value)
+		var amount: int = max(0, int(cost.get(key_value, 0)) - int(resources.get(key, 0)))
+		if amount > 0:
+			missing[key] = amount
+	return _describe_resources(missing)
+
+static func _spend_resources(session: SessionStateStoreScript.SessionData, cost: Dictionary) -> void:
+	var resources_value = session.overworld.get("resources", {})
+	var resources: Dictionary = resources_value if resources_value is Dictionary else {}
+	for key_value in cost.keys():
+		var key := String(key_value)
+		resources[key] = max(0, int(resources.get(key, 0)) - int(cost.get(key_value, 0)))
+	session.overworld["resources"] = resources
 
 static func _max_affordable_count(session: SessionStateStoreScript.SessionData, unit_cost: Variant) -> int:
 	if not (unit_cost is Dictionary) or unit_cost.is_empty():

@@ -4945,6 +4945,13 @@ static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) 
 		"ai_defense_reinforced_strength",
 		"ai_defender_commander_state",
 		"ai_defender_roster_hero_id",
+		"artifact_reward_id",
+		"artifact_reward_table_id",
+		"artifact_reward_source_key",
+		"artifact_reward_claimed_by_owner",
+		"artifact_reward_claimed_by_faction_id",
+		"artifact_reward_claimed_day",
+		"artifact_reward_service_building_id",
 	]:
 		if source.has(key):
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
@@ -11003,6 +11010,14 @@ static func _apply_artifact_claim(
 	session.overworld["hero"] = result.get("hero", session.overworld.get("hero", {}))
 	_sync_movement_to_hero(session, previous_max)
 	return result
+
+static func claim_artifact_for_session(
+	session: SessionStateStoreScript.SessionData,
+	artifact_id: String,
+	source_verb: String,
+	auto_equip: bool = true
+) -> Dictionary:
+	return _apply_artifact_claim(session, artifact_id, source_verb, auto_equip)
 
 static func _grant_resource_site_artifact_reward(
 	session: SessionStateStoreScript.SessionData,
