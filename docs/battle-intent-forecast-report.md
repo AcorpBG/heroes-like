@@ -16,7 +16,7 @@ This slice adds a compact, testable battle intent forecast for the active order 
 
 ## UI Surface
 
-`BattleShell` keeps the existing compact action-guide visible contract intact, then adds the intent forecast to the action-guide tooltip and validation snapshot. The battle screen remains scenery/board-first; the forecast is contextual detail rather than another permanent panel.
+`BattleShell` uses the existing compact action guide to show the scored suggested order and its expected consequence, while target handoff, risk, confidence, and deeper reasoning remain in the tooltip and validation snapshot. The battle screen remains board-first; no additional panel is introduced.
 
 ## Validation
 

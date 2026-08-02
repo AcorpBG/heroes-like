@@ -13119,7 +13119,7 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
         "func _intent_forecast_expected_result",
         "func _intent_forecast_confidence_line",
         "BattleAiRulesScript.choose_stack_tactical_order",
-        "Intent Forecast",
+        "Order Preview",
         "Expected result:",
         "Confidence:",
     ):
@@ -13137,11 +13137,11 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
     report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "BATTLE_INTENT_FORECAST_REPORT",
-        "Intent forecast:",
+        "Suggested order:",
         "Expected result:",
         "Confidence:",
         "does not spend an action",
-        "enemy initiative",
+        "Incoming order:",
     ):
         ensure(required_token in report_text, errors, f"battle_intent_forecast_report.gd is missing required token: {required_token}")
 

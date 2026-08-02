@@ -21,11 +21,11 @@ func _run() -> void:
 		return
 	var visible := String(forecast.get("visible_text", ""))
 	var tooltip := String(forecast.get("tooltip_text", ""))
-	for token in ["Intent forecast:", "Strike", "enemy_front"]:
+	for token in ["Suggested order:", "Strike", "enemy_front"]:
 		if not visible.contains(token):
 			_fail("Intent forecast visible text is missing %s: %s" % [token, visible])
 			return
-	for token in ["Intent Forecast", "Preferred order:", "Expected result:", "Why:", "Risk:", "Confidence:", "does not spend an action"]:
+	for token in ["Order Preview", "Preferred order:", "Expected result:", "Why:", "Risk:", "Confidence:", "does not spend an action"]:
 		if not tooltip.contains(token):
 			_fail("Intent forecast tooltip is missing %s: %s" % [token, tooltip])
 			return
@@ -47,7 +47,7 @@ func _run() -> void:
 	var enemy_session := _adjacent_ranged_session()
 	enemy_session.battle["active_stack_id"] = "enemy_front"
 	var enemy_forecast: Dictionary = BattleRulesScript.intent_forecast_payload(enemy_session)
-	if String(enemy_forecast.get("readiness", "")) != "locked" or not String(enemy_forecast.get("visible_text", "")).contains("enemy initiative"):
+	if String(enemy_forecast.get("readiness", "")) != "locked" or not String(enemy_forecast.get("visible_text", "")).contains("Incoming order:"):
 		_fail("Intent forecast did not truthfully lock during enemy initiative: %s" % JSON.stringify(enemy_forecast))
 		return
 
