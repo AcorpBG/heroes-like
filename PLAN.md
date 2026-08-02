@@ -605,6 +605,21 @@ Non-goals:
 - do not alter combat simulation, save schema, or battle outcome behavior;
 - do not redesign the battle command rail or main settings composition.
 
+## Overworld Controller Cardinal Movement
+
+The completed Phase 6 input/accessibility slice makes the primary overworld movement loop reachable from a standard controller D-pad.
+
+Target shape:
+- OverworldShell registers stable north, south, west, and east movement actions with standard D-pad buttons;
+- D-pad presses use the existing movement methods and therefore retain all movement cost, collision, encounter, and routing behavior;
+- WASD, arrow-key movement, keyboard diagonals, shifted map panning, debug keys, and focused command navigation remain unchanged;
+- active-play input validation proves a real D-pad event moves the active hero and preserves focused UI state.
+
+Non-goals:
+- do not claim full controller/hardware certification;
+- do not add analog-stick movement, diagonal controller chords, vibration, or button rebinding;
+- do not change overworld movement rules or redesign on-screen controls.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

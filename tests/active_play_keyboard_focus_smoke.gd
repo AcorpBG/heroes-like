@@ -11,6 +11,8 @@ func _ready() -> void:
 func _run() -> void:
 	if not await _check_overworld_focus_and_wasd():
 		return
+	if not await _check_overworld_controller_movement():
+		return
 	if not await _check_town_keyboard_build():
 		return
 	if not await _check_narrow_town_keyboard_entry():
@@ -89,6 +91,41 @@ func _check_town_keyboard_build() -> bool:
 		return _fail("Keyboard-confirmed town construction did not spend resources.")
 	if get_viewport().gui_get_focus_owner() == null:
 		return _fail("Town construction refresh did not restore keyboard focus.")
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _check_overworld_controller_movement() -> bool:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	for delta in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+		var registered_action := _controller_action_for_delta(delta)
+		var registered_button := _controller_button_for_delta(delta)
+		if not InputMap.has_action(registered_action):
+			return _fail("Overworld shell did not register controller movement action %s." % registered_action)
+		var action_has_button := false
+		for input_event in InputMap.action_get_events(registered_action):
+			if input_event is InputEventJoypadButton and int(input_event.button_index) == registered_button:
+				action_has_button = true
+				break
+		if not action_has_button:
+			return _fail("Overworld controller action %s does not include D-pad button %d." % [registered_action, registered_button])
+	var move := _legal_cardinal_move(session)
+	if move.is_empty():
+		return _fail("Overworld fixture has no legal cardinal move for controller validation.")
+	var button_index := _controller_button_for_delta(move.get("delta", Vector2i.ZERO))
+	if button_index < 0:
+		return _fail("Controller validation could not map cardinal move %s to a D-pad button." % move)
+	var before := OverworldRules.hero_position(session)
+	await _press_joypad_button(button_index)
+	var after := OverworldRules.hero_position(session)
+	if after != before + move.get("delta", Vector2i.ZERO):
+		return _fail("Focused overworld UI swallowed D-pad movement: before=%s after=%s move=%s." % [before, after, move])
+	if get_viewport().gui_get_focus_owner() == null:
+		return _fail("Overworld D-pad movement discarded focused UI state.")
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -227,6 +264,34 @@ func _press_key(keycode: Key) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await _settle()
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _controller_button_for_delta(delta: Vector2i) -> int:
+	return {
+		Vector2i.UP: JOY_BUTTON_DPAD_UP,
+		Vector2i.DOWN: JOY_BUTTON_DPAD_DOWN,
+		Vector2i.LEFT: JOY_BUTTON_DPAD_LEFT,
+		Vector2i.RIGHT: JOY_BUTTON_DPAD_RIGHT,
+	}.get(delta, -1)
+
+func _controller_action_for_delta(delta: Vector2i) -> StringName:
+	return {
+		Vector2i.UP: &"overworld_move_north",
+		Vector2i.DOWN: &"overworld_move_south",
+		Vector2i.LEFT: &"overworld_move_west",
+		Vector2i.RIGHT: &"overworld_move_east",
+	}.get(delta, &"")
 
 func _settle() -> void:
 	await get_tree().process_frame

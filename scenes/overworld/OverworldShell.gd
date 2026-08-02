@@ -91,6 +91,12 @@ const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
 const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
+const CONTROLLER_MOVE_ACTIONS := {
+	&"overworld_move_north": JOY_BUTTON_DPAD_UP,
+	&"overworld_move_south": JOY_BUTTON_DPAD_DOWN,
+	&"overworld_move_west": JOY_BUTTON_DPAD_LEFT,
+	&"overworld_move_east": JOY_BUTTON_DPAD_RIGHT,
+}
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
@@ -166,6 +172,7 @@ var _last_save_surface_compact_reason := ""
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
+	_ensure_controller_move_actions()
 	_apply_visual_theme()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
@@ -270,6 +277,9 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if _handle_controller_move_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	match event.keycode:
@@ -321,6 +331,39 @@ func _input(event: InputEvent) -> void:
 			else:
 				_try_move(1, 1)
 			get_viewport().set_input_as_handled()
+
+func _ensure_controller_move_actions() -> void:
+	for action in CONTROLLER_MOVE_ACTIONS:
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		var button_index := int(CONTROLLER_MOVE_ACTIONS[action])
+		var has_button := false
+		for input_event in InputMap.action_get_events(action):
+			if input_event is InputEventJoypadButton and int(input_event.button_index) == button_index:
+				has_button = true
+				break
+		if has_button:
+			continue
+		var joypad_event := InputEventJoypadButton.new()
+		joypad_event.button_index = button_index
+		InputMap.action_add_event(action, joypad_event)
+
+func _handle_controller_move_input(event: InputEvent) -> bool:
+	if not (event is InputEventJoypadButton) or not event.pressed:
+		return false
+	if event.is_action_pressed(&"overworld_move_north"):
+		_move_north()
+		return true
+	if event.is_action_pressed(&"overworld_move_south"):
+		_move_south()
+		return true
+	if event.is_action_pressed(&"overworld_move_west"):
+		_move_west()
+		return true
+	if event.is_action_pressed(&"overworld_move_east"):
+		_move_east()
+		return true
+	return false
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
