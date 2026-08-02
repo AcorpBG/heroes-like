@@ -55,6 +55,9 @@ func _run_persistence_check() -> void:
 
 	SettingsService.load_settings()
 	SettingsService.set_master_volume_percent(int(TEST_VALUES["master_volume_percent"]))
+	SettingsService.set_music_volume_percent(0)
+	var muted_music_record := MusicAudio.sync_context("menu", "packaged_settings_zero_music_check")
+	_expect(bool(muted_music_record.get("muted", false)), "Zero Music volume must mute live music playback.")
 	SettingsService.set_music_volume_percent(int(TEST_VALUES["music_volume_percent"]))
 	SettingsService.set_presentation_mode(String(TEST_VALUES["presentation_mode"]))
 	SettingsService.set_presentation_resolution(String(TEST_VALUES["presentation_resolution"]))
@@ -69,6 +72,19 @@ func _run_persistence_check() -> void:
 	_report["direct_config_values"] = direct_values
 	_expect(int(direct_values.get("master_volume_percent", -1)) == int(TEST_VALUES["master_volume_percent"]), "Direct config master volume mismatch.")
 	_expect(int(direct_values.get("music_volume_percent", -1)) == int(TEST_VALUES["music_volume_percent"]), "Direct config music volume mismatch.")
+	var music_bus_index := AudioServer.get_bus_index(SettingsService.MUSIC_AUDIO_BUS)
+	_expect(music_bus_index >= 0, "SettingsService must create an independent Music audio bus.")
+	if music_bus_index >= 0:
+		var expected_music_db := linear_to_db(float(TEST_VALUES["music_volume_percent"]) / 100.0)
+		var applied_music_db := AudioServer.get_bus_volume_db(music_bus_index)
+		_report["music_bus"] = {
+			"name": AudioServer.get_bus_name(music_bus_index),
+			"send": AudioServer.get_bus_send(music_bus_index),
+			"expected_volume_db": expected_music_db,
+			"applied_volume_db": applied_music_db,
+		}
+		_expect(is_equal_approx(applied_music_db, expected_music_db), "Music bus gain does not match the configured Music volume.")
+	_expect(SettingsService.music_audio_bus_name() == SettingsService.MUSIC_AUDIO_BUS, "Music playback must target the independent Music audio bus.")
 	_expect(String(direct_values.get("presentation_mode", "")) == String(TEST_VALUES["presentation_mode"]), "Direct config presentation mode mismatch.")
 	_expect(String(direct_values.get("presentation_resolution", "")) == String(TEST_VALUES["presentation_resolution"]), "Direct config presentation resolution mismatch.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")

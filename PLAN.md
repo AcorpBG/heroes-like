@@ -661,7 +661,7 @@ Exit criteria remain:
 
 Goal: expand alpha into a production-shaped game slice.
 
-Do not enter broadly until Phase 5 playable-alpha evidence is stable and owner-approved.
+Owner direction has reopened narrow Phase 6 product fixes while Phase 5 debt remains. Select bounded live settings, accessibility, packaging, or performance defects with direct runtime validation; do not claim the broad phase complete until Phase 5 playable-alpha evidence and all Phase 6 release criteria are stable.
 
 ### Phase 7 - Broad Production Breadth
 
