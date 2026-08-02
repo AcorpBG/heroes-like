@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The bounded player-comprehension and keyboard active-play increments are complete. Shared focus cycles now cover the scenic menu plus Overworld, Town, and Battle; Overworld preserves routed WASD movement while controls own focus; Town confirms construction and restores focus across dynamic rebuilds and narrow-layout handoff; Battle enters and re-homes on the scored suggested order after keyboard-confirmed actions. Broader controller certification, screen-reader integration, remaining strategic AI, balance, content, performance, packaging, and release work remain open.",
+  "currentNotes": "The bounded player-comprehension, keyboard active-play, and Ghoul Grove balance increments are complete. River Pass Ghoul Grove now sustains ranged pressure across normal and hard samples while preserving a bounded victory; its normal terminal margin fell from 95% to 73%, enemy damage per round rose from 2 to 6, and the normal tuning queue no longer has high-priority items. The full balance suite still exposes unrelated scenario breadth, hard-mode watch, headless aggregate, strategic AI, content, performance, packaging, accessibility, and release work; no full-game completion is claimed.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "accessibility-active-play-focus-navigation-10184",
-  "currentSliceId": "accessibility-active-play-focus-navigation-10184",
-  "currentSliceNotes": "Completed deterministic active-play focus cycles. Routed validation proves focused Overworld controls preserve WASD movement, Town Orders opens keyboard-first on narrow layouts, Enter selects and confirms live construction without premature spend, and Enter executes Battle Defend before focus re-homes to the next scored suggested order.",
+  "currentSlice": "headless-balance-harness-next-10184",
+  "currentSliceId": "headless-balance-harness-next-10184",
+  "currentSliceNotes": "Completed a placement-local Ghoul Grove roster correction and dual-mode regression. Normal remains a victory at 73% terminal margin with 6 enemy damage per round; hard remains a victory at 77% with 5 enemy damage per round. The 12-sample normal queue improved from 9 items/2 high to 6/0 high, while the 51-sample breadth queue improved from 44 items/14 high to 41/12 high. Remaining balance debt is explicitly unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility Active Play Focus Navigation",
-  "currentSliceUpdatedAt": "2026-08-02T06:23:19Z",
+  "currentSliceTitle": "Headless Balance Harness Next",
+  "currentSliceUpdatedAt": "2026-08-02T06:48:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -55795,7 +55795,7 @@
         "git diff --check"
       ],
       "classification": "implementation_slice",
-      "completionCriteria": "Implementation and validation evidence are recorded in ops/progress.json; no broad production claims beyond the slice scope.",
+      "completionCriteria": "The current full headless balance suite identifies a concrete player-facing combat, economy, or scenario outlier; a bounded live rule or content correction improves that measured result; focused and regression validation pass; no broad production claims exceed the slice scope.",
       "id": "headless-balance-harness-next-10184",
       "implementationTargets": [
         "headless harness rules",
@@ -55815,16 +55815,31 @@
         "project.md",
         "PLAN.md"
       ],
-      "status": "pending",
-      "summary": "Pending. Expand automated balance harness depth before scaling content.",
+      "completedAt": "2026-08-02T06:48:59Z",
+      "startedAt": "2026-08-02T06:27:00Z",
+      "status": "completed",
+      "summary": "Completed a bounded player-facing balance correction. River Pass Ghoul Grove now fields 8 Blackbranch Cutthroats, 16 Mire Slingers, and 2 Bog Brutes, replacing an oversized melee-heavy watch that could not pressure the opening player army. Normal autoplay remains a victory while terminal margin improves from 95% to 73% and enemy damage per round from 2 to 6; hard remains a victory at 77% and 5 enemy damage per round. Full-suite residual failures remain open and are not claimed by this slice.",
       "title": "Headless Balance Harness Next",
-      "updatedAt": "2026-05-26T09:44:34Z",
+      "updatedAt": "2026-08-02T06:48:59Z",
       "validation": {
-        "commands": [],
-        "evidence": {},
+        "commands": [
+          "python3 tools/run_headless_balance_harness.py --suite full --godot godot4 --out .artifacts/headless_balance_harness_next_baseline --keep-going",
+          "godot4 --headless --path . --scene res://tests/battle_ghoul_grove_balance_regression.tscn",
+          "python3 tools/run_headless_balance_harness.py --suite full --godot godot4 --out .artifacts/headless_balance_harness_next_post --keep-going",
+          "python3 tests/validate_repo.py",
+          "jq empty content/scenarios.json ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "active_scenario_breadth": "The 51-sample queue improved from 44 items with 14 high-priority items to 41 items with 12 high-priority items; unrelated authored scenario outliers remain.",
+          "focused_runtime": "Normal victory: round 6, 73% player health, 6 enemy damage per round, 31 player damage per round, five distinct actions. Hard victory: round 6, 77% player health, 5 enemy damage per round, 31 player damage per round, five distinct actions.",
+          "full_suite": "Three of seven aggregate cases pass both before and after. Combat balance, runtime consequence matrix, and balance regression suite remain passing; active scenario breadth, difficulty watch budgets, tuning queue watch budget, and headless aggregate remain non-green and unclaimed.",
+          "normal_queue": "The 12-sample queue improved from action_required signature 966c9f95 with 9 items/2 high/7 medium to watch signature 9c39276e with 6 items/0 high/6 medium.",
+          "player_facing_change": "River Pass placement-local enemy roster changed from 13 cutthroats/7 slingers/2 brutes to 8 cutthroats/16 slingers/2 brutes; shared unit stats, shared army groups, combat rules, rewards, and other scenarios are unchanged."
+        },
         "sliceId": "headless-balance-harness-next-10184",
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z"
+        "status": "pass_with_remaining_balance_queue",
+        "updatedAt": "2026-08-02T06:48:59Z"
       }
     },
     {
@@ -63190,7 +63205,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "accessibility_active_play_focus_navigation_completed_overall_release_in_progress",
+  "result": "headless_balance_ghoul_grove_correction_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63291,9 +63306,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. The bounded packaging follow-up produces lean synchronized Linux/Windows exports and reproducible checksum-manifested archives; packaged Linux startup is clean and Windows PE/DLL/PCK output validates, while clean Windows-machine execution, signing, and installer/channel work remain open. The strategic-AI matrix is paused at 39 exact-current-code rows so passing-row accumulation does not replace implementation. Player-comprehension and keyboard active-play focus slices are complete; broader accessibility and the overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove balance correction are complete within their scopes. Ghoul Grove now applies sustained pressure and the normal queue has no high-priority items, while the full breadth queue, strategic AI, broader accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T06:23:19Z",
+  "updatedAt": "2026-08-02T06:48:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

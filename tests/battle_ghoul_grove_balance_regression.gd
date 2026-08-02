@@ -1,0 +1,75 @@
+extends Node
+
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const REPORT_ID := "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION"
+const SCENARIO_ID := "river-pass"
+const PLACEMENT_ID := "river_pass_ghoul_grove"
+const MAX_TERMINAL_MARGIN_PCT_BY_DIFFICULTY := {
+	"normal": 75,
+	"hard": 80,
+}
+
+func _ready() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	var encounter := _encounter()
+	if encounter.is_empty():
+		_fail("River Pass is missing the Ghoul Grove encounter placement.", {})
+		return
+	var payload := {
+		"ok": true,
+		"report_id": REPORT_ID,
+		"scenario_id": SCENARIO_ID,
+		"placement_id": PLACEMENT_ID,
+		"samples": {},
+	}
+	for launch_difficulty in ["normal", "hard"]:
+		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(
+			SCENARIO_ID,
+			encounter,
+			72,
+			launch_difficulty
+		)
+		payload["samples"][launch_difficulty] = _compact_sample(sample)
+		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
+			_fail_sample("Ghoul Grove no longer resolves as a bounded opening victory on %s." % launch_difficulty, payload, launch_difficulty, sample)
+			return
+		if int(sample.get("terminal_health_margin_pct", 100)) > int(MAX_TERMINAL_MARGIN_PCT_BY_DIFFICULTY[launch_difficulty]):
+			_fail_sample("Ghoul Grove remains above the terminal-margin watch target on %s." % launch_difficulty, payload, launch_difficulty, sample)
+			return
+		if int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
+			_fail_sample("Ghoul Grove still fails to apply meaningful enemy pressure on %s." % launch_difficulty, payload, launch_difficulty, sample)
+			return
+	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
+	get_tree().quit(0)
+
+func _compact_sample(sample: Dictionary) -> Dictionary:
+	return {
+		"outcome_state": String(sample.get("outcome_state", "")),
+		"round_reached": int(sample.get("round_reached", 0)),
+		"player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)),
+		"enemy_health_remaining_pct": int(sample.get("enemy_health_remaining_pct", 0)),
+		"terminal_health_margin_pct": int(sample.get("terminal_health_margin_pct", 0)),
+		"damage_per_round": sample.get("damage_per_round", {}),
+		"action_mix": sample.get("action_mix", {}),
+		"initial_stack_profile": sample.get("initial_stack_profile", {}),
+	}
+
+func _fail_sample(message: String, payload: Dictionary, launch_difficulty: String, sample: Dictionary) -> void:
+	payload["samples"][launch_difficulty]["turn_log"] = sample.get("turn_log", [])
+	_fail(message, payload)
+
+func _encounter() -> Dictionary:
+	var scenario := ContentService.get_scenario(SCENARIO_ID)
+	for encounter in scenario.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == PLACEMENT_ID:
+			return encounter
+	return {}
+
+func _fail(message: String, payload: Dictionary) -> void:
+	payload["ok"] = false
+	payload["error"] = message
+	push_error("%s failed: %s" % [REPORT_ID, message])
+	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
+	get_tree().quit(1)
