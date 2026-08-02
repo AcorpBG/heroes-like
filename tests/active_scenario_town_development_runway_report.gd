@@ -131,15 +131,17 @@ func _run() -> void:
 					String(authored_town.get("placement_id", "")),
 					String(row.get("error", "unknown runway failure")),
 				])
-	if campaign_scenario_count < MIN_CAMPAIGN_SCENARIO_COUNT:
-		_errors.append("player town runway covered only %d campaign scenarios" % campaign_scenario_count)
-	if skirmish_scenario_count < MIN_SKIRMISH_SCENARIO_COUNT:
-		_errors.append("player town runway covered only %d skirmish scenarios" % skirmish_scenario_count)
+	if only_scenario == "":
+		if campaign_scenario_count < MIN_CAMPAIGN_SCENARIO_COUNT:
+			_errors.append("player town runway covered only %d campaign scenarios" % campaign_scenario_count)
+		if skirmish_scenario_count < MIN_SKIRMISH_SCENARIO_COUNT:
+			_errors.append("player town runway covered only %d skirmish scenarios" % skirmish_scenario_count)
 	var report := {
 		"ok": _errors.is_empty(),
 		"schema": REPORT_SCHEMA,
 		"target_turns": TARGET_TURNS,
 		"min_completion_day": MIN_COMPLETION_DAY,
+		"only_scenario": only_scenario,
 		"active_scenario_count": scenario_count,
 		"campaign_scenario_count": campaign_scenario_count,
 		"skirmish_scenario_count": skirmish_scenario_count,

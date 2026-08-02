@@ -29,7 +29,7 @@ The delayed-source replay now also saves and restores each case after route-deri
 - Current focused evidence completes 18/18 delayed-source replay cases after route-derived source acquisition delays, with delayed completion days ranging from day 21 to day 25.
 - Current focused evidence completes 18/18 delayed-source save/resume checkpoints after source acquisition and rare-resource construction, then continues construction from the restored active scenario session.
 - Secured sources must come from the active scenario's authored `resource_nodes`; no synthetic resource sites are added.
-- Highwater bridgehead starts in `ironbridge-stand` and `mireford-skirmish` include the authored `bridge_ore_reserve` ore source so their full development runway can still afford sequential tier 4-7 recruitment by turn 30.
+- The Highwater bridgehead in `ironbridge-stand` and Graftroot Caravan in `mireford-skirmish` include the authored `bridge_ore_reserve` ore source so their full development runway can still afford sequential tier 4-7 recruitment by turn 30.
 - Construction preserves the active scenario's authored overworld state, including map, resource nodes, encounters, and enemy state data.
 - Focused economy-day advancement is intentional report scope; it proves town/resource-income runway without treating strategic AI turns as part of this gate.
 - The secured-source runway remains as an isolation proof, while the delayed-source replay adds route/guard timing pressure. This is still not final scenario-wide route balance; full encounter pacing and manual-play campaign approval remain separate scenario-balance concerns.

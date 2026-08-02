@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed guarded idle post-plan skipping: enemy turns avoid a duplicate full commander-task pass only with no active raid and an unchanged deployable commander set; active fronts and deployability transitions retain full replanning.",
+  "currentNotes": "Completed Thornwake's first authored player skirmish on the existing skirmish-only Mireford front with live launch, town, save/resume, battle, outcome, and economy-runway proof. The broader game-completion goal remains active.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "strategic-ai-idle-post-plan-skip-10184",
-  "currentSliceId": "strategic-ai-idle-post-plan-skip-10184",
-  "currentSliceNotes": "Completed. Medium first-turn behavior signature stayed dc323d0d while duplicate post-plan phases fell from 176/97 ms to 0/0 ms and runtime improved 8272->8092 ms; turn two proved active raids force full replanning, and focused strategic/core regressions passed.",
+  "currentSlice": "thornwake-mireford-player-skirmish-10184",
+  "currentSliceId": "thornwake-mireford-player-skirmish-10184",
+  "currentSliceNotes": "Completed. Rootbound Mireford now provides Thornwake's first authored player skirmish with Silsa, Graftroot, a tuned local army, Day 24 town runway, save/resume, battle entry, reachable outcomes, and campaign isolation; this does not complete the faction or game.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Idle Post-Plan Skip",
-  "currentSliceUpdatedAt": "2026-08-02T17:40:43Z",
+  "currentSliceTitle": "Thornwake Mireford Player Skirmish",
+  "currentSliceUpdatedAt": "2026-08-02T18:21:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -64925,6 +64925,63 @@
       "status": "completed",
       "title": "Native RMG Medium H3MapEd Land Public UI",
       "updatedAt": "2026-06-02T18:25:00Z"
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/thornwake_mireford_player_skirmish_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/player_facing_skirmish_browser_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_ford_reavers_balance_regression.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_mireford_silt_hunters_balance_regression.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T18:21:12Z",
+      "completionSummary": "Rootbound Mireford now launches as a skirmish-only Thornwake scenario with Silsa, Graftroot Caravan, a scenario-local four-stack opening army, Verdant Graft route, Thornwake reinforcement hooks, and a Day 24 town-development runway. Live-rule coverage proves recruitment, save/resume, battle entry, both outcomes, and campaign-progression isolation while retained Mireclaw encounter balance remains bounded.",
+      "completionCriteria": "Mireford Skirmish launches from the live skirmish browser as Thornwake with Silsa, Graftroot Caravan, a Thornwake army and faction resource route; save/resume preserves that state; town development and battle entry work; victory/defeat remain reachable; campaign progression stays untouched; tuned Mireclaw encounter regressions and repository validation pass.",
+      "id": "thornwake-mireford-player-skirmish-10184",
+      "implementationTargets": [
+        "content/army_groups.json",
+        "content/scenarios.json",
+        "content/factions.json",
+        "content/towns.json",
+        "docs/economy-active-scenario-development-runway-report.md",
+        "tests/active_scenario_town_development_runway_report.gd",
+        "tests/thornwake_mireford_player_skirmish_report.gd",
+        "tests/thornwake_mireford_player_skirmish_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "a complete Thornwake campaign",
+        "Brasshollow or Veilmourn player scenarios",
+        "global unit-stat tuning",
+        "Native RMG or save-schema changes",
+        "six-faction or release-completion claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Current product focus / Selectable Near-Term Work bounded campaign-content direction",
+      "purpose": "Replace a redundant Embercourt skirmish-only setup with the first authored player-facing Thornwake front and validate it through the real game loop.",
+      "source": "project.md playable-alpha faction breadth and live-flow requirements",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T17:57:17Z",
+      "status": "completed",
+      "title": "Thornwake Mireford Player Skirmish",
+      "updatedAt": "2026-08-02T18:21:12Z",
+      "validationEvidence": [
+        "THORNWAKE_MIREFORD_PLAYER_SKIRMISH_REPORT passed live skirmish setup, Silsa and the four-stack Rootbound army, Graftroot build/recruit surfaces, Seedcutter recruitment, exact save/resume to town, Ford Reavers battle entry, victory and Day 10 defeat reachability, and unchanged campaign progression.",
+        "The targeted active-scenario town runway passed at Day 24 with all 22 buildings, seven-tier recruitment, rare spend, delayed source acquisition, and save/resume; filter mode now skips only full-suite scenario-count floors while retaining every selected-town assertion.",
+        "Ford Reavers and Silt Hunters balance regressions passed with Mireford victories at 63% and 54% player health respectively; the authored enemy armies and combat seeds remain unchanged.",
+        "Player-facing skirmish browser, scenario deadline variety, campaign/skirmish replayability breadth, core systems regression, Godot editor parse, and tests/validate_repo.py passed.",
+        "The unfiltered active-scenario runway still reports 12 pre-existing early-completion cases outside Mireford; Rootbound Mireford is not among them and this slice does not claim that broader balance debt complete.",
+        "jq parsing, progress helper inspection, and git diff --check passed."
+      ]
     }
   ],
   "project": "heroes-like",
@@ -65469,7 +65526,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T16:23:05Z",
+  "updatedAt": "2026-08-02T18:21:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
