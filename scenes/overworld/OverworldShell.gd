@@ -241,6 +241,7 @@ func _ready() -> void:
 	_apply_responsive_layout()
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_done")
 	_sync_overworld_ambient_audio("ready")
+	call_deferred("_configure_overworld_keyboard_focus", true)
 	call_deferred("_complete_deferred_generated_overworld_autosave")
 
 func _apply_responsive_layout() -> void:
@@ -264,6 +265,59 @@ func _apply_responsive_layout() -> void:
 	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
 	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
 
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventKey) or not event.pressed or event.echo:
+		return
+	match event.keycode:
+		KEY_W:
+			if event.shift_pressed:
+				_pan_map(Vector2i(0, -3))
+			else:
+				_move_north()
+			get_viewport().set_input_as_handled()
+		KEY_S:
+			if event.shift_pressed:
+				_pan_map(Vector2i(0, 3))
+			else:
+				_move_south()
+			get_viewport().set_input_as_handled()
+		KEY_A:
+			if event.shift_pressed:
+				_pan_map(Vector2i(-3, 0))
+			else:
+				_move_west()
+			get_viewport().set_input_as_handled()
+		KEY_D:
+			if event.shift_pressed:
+				_pan_map(Vector2i(3, 0))
+			else:
+				_move_east()
+			get_viewport().set_input_as_handled()
+		KEY_Q, KEY_KP_7:
+			if event.shift_pressed:
+				_pan_map(Vector2i(-3, -3))
+			else:
+				_try_move(-1, -1)
+			get_viewport().set_input_as_handled()
+		KEY_E, KEY_KP_9:
+			if event.shift_pressed:
+				_pan_map(Vector2i(3, -3))
+			else:
+				_try_move(1, -1)
+			get_viewport().set_input_as_handled()
+		KEY_Z, KEY_KP_1:
+			if event.shift_pressed:
+				_pan_map(Vector2i(-3, 3))
+			else:
+				_try_move(-1, 1)
+			get_viewport().set_input_as_handled()
+		KEY_C, KEY_KP_3:
+			if event.shift_pressed:
+				_pan_map(Vector2i(3, 3))
+			else:
+				_try_move(1, 1)
+			get_viewport().set_input_as_handled()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
@@ -279,53 +333,29 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
 				if _activate_primary_action():
 					get_viewport().set_input_as_handled()
-			KEY_UP, KEY_W:
+			KEY_UP:
 				if event.shift_pressed:
 					_pan_map(Vector2i(0, -3))
 				else:
 					_move_north()
 				get_viewport().set_input_as_handled()
-			KEY_DOWN, KEY_S:
+			KEY_DOWN:
 				if event.shift_pressed:
 					_pan_map(Vector2i(0, 3))
 				else:
 					_move_south()
 				get_viewport().set_input_as_handled()
-			KEY_LEFT, KEY_A:
+			KEY_LEFT:
 				if event.shift_pressed:
 					_pan_map(Vector2i(-3, 0))
 				else:
 					_move_west()
 				get_viewport().set_input_as_handled()
-			KEY_RIGHT, KEY_D:
+			KEY_RIGHT:
 				if event.shift_pressed:
 					_pan_map(Vector2i(3, 0))
 				else:
 					_move_east()
-				get_viewport().set_input_as_handled()
-			KEY_Q, KEY_KP_7:
-				if event.shift_pressed:
-					_pan_map(Vector2i(-3, -3))
-				else:
-					_try_move(-1, -1)
-				get_viewport().set_input_as_handled()
-			KEY_E, KEY_KP_9:
-				if event.shift_pressed:
-					_pan_map(Vector2i(3, -3))
-				else:
-					_try_move(1, -1)
-				get_viewport().set_input_as_handled()
-			KEY_Z, KEY_KP_1:
-				if event.shift_pressed:
-					_pan_map(Vector2i(-3, 3))
-				else:
-					_try_move(-1, 1)
-				get_viewport().set_input_as_handled()
-			KEY_C, KEY_KP_3:
-				if event.shift_pressed:
-					_pan_map(Vector2i(3, 3))
-				else:
-					_try_move(1, 1)
 				get_viewport().set_input_as_handled()
 
 func _move_north() -> void:
@@ -427,16 +457,19 @@ func _on_primary_action_pressed() -> void:
 func _on_open_command_pressed() -> void:
 	_active_drawer = "" if _active_drawer == "command" else "command"
 	_sync_context_drawers()
+	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_open_frontier_pressed() -> void:
 	_active_drawer = "" if _active_drawer == "frontier" else "frontier"
 	if _active_drawer == "frontier":
 		_refresh_frontier_drawer()
 	_sync_context_drawers()
+	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_close_drawers_pressed() -> void:
 	_active_drawer = ""
 	_sync_context_drawers()
+	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_context_action_pressed(action_id: String) -> void:
 	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
@@ -900,6 +933,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 		"compact_generated": compact_generated,
 		"request": request.duplicate(true),
 	})
+	call_deferred("_configure_overworld_keyboard_focus", false)
 
 func _sync_overworld_ambient_audio(source: String) -> void:
 	if _session == null:
@@ -4823,6 +4857,33 @@ func _sync_context_drawers() -> void:
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
 	_refresh_drawer_handoff_cues()
+
+func _configure_overworld_keyboard_focus(force: bool = false) -> void:
+	if not is_inside_tree():
+		return
+	var surfaces := [
+		_primary_action_button,
+		_context_actions,
+		_open_command_button,
+		_open_frontier_button,
+		_close_command_button,
+		_close_frontier_button,
+		_hero_actions,
+		_spell_actions,
+		_specialty_actions,
+		_artifact_actions,
+		_end_turn_button,
+		_save_slot_picker,
+		_save_button,
+		_menu_button,
+	]
+	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
+	var preferred := _primary_action_button
+	if _active_drawer == "command":
+		preferred = _close_command_button
+	elif _active_drawer == "frontier":
+		preferred = _close_frontier_button
+	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
 
 func _should_show_tile_context() -> bool:
 	if not _tile_in_bounds(_selected_tile):

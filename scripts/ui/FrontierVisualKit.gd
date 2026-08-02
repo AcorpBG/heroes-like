@@ -202,6 +202,53 @@ static func apply_button(button: BaseButton, role: String = "secondary", width: 
 static func apply_option_button(button: OptionButton, role: String = "secondary", width: float = 150.0, height: float = 36.0, font_size: int = 14) -> void:
 	apply_button(button, role, width, height, font_size)
 
+static func configure_focus_cycle(surfaces: Array) -> Array:
+	var controls: Array = []
+	for surface in surfaces:
+		_collect_keyboard_focus_controls(surface, controls)
+	if controls.size() < 2:
+		return controls
+	for index in range(controls.size()):
+		var control: Control = controls[index]
+		var next_control: Control = controls[(index + 1) % controls.size()]
+		var previous_control: Control = controls[(index - 1 + controls.size()) % controls.size()]
+		control.focus_next = control.get_path_to(next_control)
+		control.focus_previous = control.get_path_to(previous_control)
+	return controls
+
+static func grab_keyboard_focus(root: Control, preferred: Control, controls: Array, force: bool = false) -> Control:
+	if root == null or not is_instance_valid(root) or not root.is_inside_tree():
+		return null
+	var owner := root.get_viewport().gui_get_focus_owner()
+	if not force and owner is Control and (owner == root or root.is_ancestor_of(owner)) and is_keyboard_focusable(owner):
+		return owner
+	var target := preferred if is_keyboard_focusable(preferred) else null
+	if target == null:
+		for value in controls:
+			if value is Control and is_keyboard_focusable(value):
+				target = value
+				break
+	if target != null:
+		target.grab_focus()
+	return target
+
+static func is_keyboard_focusable(control: Control) -> bool:
+	if control == null or not is_instance_valid(control) or control.is_queued_for_deletion():
+		return false
+	if not control.is_inside_tree() or not control.is_visible_in_tree() or control.focus_mode == Control.FOCUS_NONE:
+		return false
+	return not (control is BaseButton and control.disabled)
+
+static func _collect_keyboard_focus_controls(node: Node, controls: Array) -> void:
+	if node == null or not is_instance_valid(node) or node.is_queued_for_deletion():
+		return
+	if node is CanvasItem and node.is_inside_tree() and not node.is_visible_in_tree():
+		return
+	if node is Control and is_keyboard_focusable(node) and not controls.has(node):
+		controls.append(node)
+	for child in node.get_children():
+		_collect_keyboard_focus_controls(child, controls)
+
 static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	var palette: Dictionary = BUTTON_ROLES.get(role, BUTTON_ROLES.secondary)
 	var normal := StyleBoxFlat.new()

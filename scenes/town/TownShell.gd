@@ -123,6 +123,7 @@ func _ready() -> void:
 	_refresh(true)
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
+	call_deferred("_configure_town_keyboard_focus", true)
 
 func _apply_responsive_layout() -> void:
 	if _sidebar_shell_panel == null:
@@ -157,6 +158,7 @@ func _on_town_orders_toggle_pressed() -> void:
 		return
 	_narrow_orders_open = not _narrow_orders_open
 	_apply_responsive_layout()
+	call_deferred("_configure_town_keyboard_focus", true)
 
 func _on_confirm_build_pressed() -> void:
 	var action := _selected_build_action()
@@ -189,6 +191,7 @@ func _select_build_action(action_id: String) -> void:
 		return
 	_selected_build_action_id = action_id
 	_rebuild_build_actions(TownRules.get_build_actions(_session))
+	call_deferred("_configure_town_keyboard_focus", false)
 
 func _on_recruit_action_pressed(action_id: String) -> void:
 	var full_action_id := "recruit:%s" % action_id
@@ -447,6 +450,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	ProfileLogScript.emit_general("town", "refresh", "town_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
+	call_deferred("_configure_town_keyboard_focus", false)
 
 func _complete_town_first_render_full_refresh() -> void:
 	if not is_inside_tree():
@@ -460,6 +464,44 @@ func _on_management_tab_changed(_tab: int) -> void:
 	if _session == null:
 		return
 	_refresh(true)
+	call_deferred("_configure_town_keyboard_focus", true)
+
+func _configure_town_keyboard_focus(force: bool = false) -> void:
+	if not is_inside_tree():
+		return
+	var tab_surfaces := _town_keyboard_focus_surfaces()
+	var surfaces := tab_surfaces.duplicate()
+	surfaces.append_array([
+		_hero_actions,
+		_specialty_actions,
+		_town_orders_toggle_button,
+		_save_slot_picker,
+		_save_button,
+		_leave_button,
+		_menu_button,
+	])
+	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
+	var preferred: Control = _town_orders_toggle_button if _narrow_layout_active and not _narrow_orders_open else null
+	if preferred == null:
+		var tab_controls := FrontierVisualKit.configure_focus_cycle(tab_surfaces)
+		if not tab_controls.is_empty():
+			preferred = tab_controls[0]
+	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
+
+func _town_keyboard_focus_surfaces() -> Array:
+	match _management_tabs.current_tab:
+		0:
+			return [_build_actions, _confirm_build_button]
+		1:
+			return [_recruit_actions]
+		2:
+			return [_study_actions]
+		3:
+			return [_market_actions]
+		4:
+			return [_tavern_actions, _transfer_actions, _response_actions, _artifact_actions]
+		_:
+			return [_build_actions, _confirm_build_button]
 
 func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> void:
 	if not minimal:

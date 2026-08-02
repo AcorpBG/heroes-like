@@ -143,6 +143,7 @@ func _ready() -> void:
 	_refresh()
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
+	call_deferred("_configure_battle_keyboard_focus", true)
 
 func _battle_music_metadata() -> Dictionary:
 	if _session == null:
@@ -334,6 +335,7 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _handle_battle_resolution(result):
 		return _movement_click_response(result, movement_intent, q, r, true)
 	_refresh()
+	call_deferred("_configure_battle_keyboard_focus", true)
 	return _movement_click_response(result, movement_intent, q, r, false)
 
 func _on_advance_pressed() -> void:
@@ -391,6 +393,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 		return
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	call_deferred("_configure_battle_keyboard_focus", true)
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("battle", "action", "spell", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
 		"action_id": action_id,
@@ -439,6 +442,7 @@ func _perform_action(action: String) -> void:
 		return
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	call_deferred("_configure_battle_keyboard_focus", true)
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("battle", "action", action, ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
 		"action_id": action,
@@ -690,6 +694,52 @@ func _refresh() -> void:
 	_set_compact_label(_enemy_roster, "\n".join(enemy_lines) if not enemy_lines.is_empty() else "Enemy resistance has collapsed.", 6)
 	buckets["rosters"] = ProfileLogScript.elapsed_ms(section_started)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
+	call_deferred("_configure_battle_keyboard_focus", false)
+
+func _configure_battle_keyboard_focus(force: bool = false) -> void:
+	if not is_inside_tree() or _session == null or _session.battle.is_empty():
+		return
+	var surfaces := [
+		_prev_target_button,
+		_next_target_button,
+		_advance_button,
+		_strike_button,
+		_shoot_button,
+		_defend_button,
+		_spell_actions,
+		_retreat_button,
+		_surrender_button,
+		_speed_normal_button,
+		_speed_fast_button,
+		_speed_instant_button,
+		_save_slot_picker,
+		_save_button,
+		_menu_button,
+	]
+	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
+	FrontierVisualKit.grab_keyboard_focus(self, _preferred_battle_keyboard_focus(), controls, force)
+
+func _preferred_battle_keyboard_focus() -> Control:
+	var action_id := String(BattleRules.intent_forecast_payload(_session).get("action_id", ""))
+	match action_id:
+		"advance":
+			return _advance_button
+		"strike":
+			return _strike_button
+		"shoot":
+			return _shoot_button
+		"defend":
+			return _defend_button
+		"retreat":
+			return _retreat_button
+		"surrender":
+			return _surrender_button
+		_:
+			if action_id.begins_with("cast_spell:"):
+				for child in _spell_actions.get_children():
+					if child is Control and FrontierVisualKit.is_keyboard_focusable(child):
+						return child
+	return _defend_button
 
 func _rebuild_spell_actions() -> void:
 	for child in _spell_actions.get_children():
