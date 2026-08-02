@@ -11970,7 +11970,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func describe_help_topic",
         "func set_master_volume_percent",
         "func set_music_volume_percent",
+        "func set_effects_volume_percent",
         "func music_audio_bus_name",
+        "func effects_audio_bus_name",
+        "func effects_audio_muted",
         "func set_presentation_mode",
         "func set_presentation_resolution",
         "func set_large_ui_text_enabled",
@@ -12007,6 +12010,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("ResolutionPicker", "OptionButton"),
         ("MasterVolumeSlider", "HSlider"),
         ("MusicVolumeSlider", "HSlider"),
+        ("EffectsVolumeSlider", "HSlider"),
         ("LargeTextToggle", "CheckButton"),
         ("ReduceMotionToggle", "CheckButton"),
     ):
@@ -12023,6 +12027,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.build_resolution_options",
         "SettingsService.set_master_volume_percent",
         "SettingsService.set_music_volume_percent",
+        "SettingsService.set_effects_volume_percent",
         "SettingsService.set_presentation_mode",
         "SettingsService.set_presentation_resolution",
         "SettingsService.set_large_ui_text_enabled",
@@ -12032,6 +12037,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func _on_resolution_selected",
         "func _on_master_volume_changed",
         "func _on_music_volume_changed",
+        "func _on_effects_volume_changed",
         "func _on_large_text_toggled",
         "func _on_reduce_motion_toggled",
         "func _refresh_settings_panel",
@@ -17735,7 +17741,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         battle_sfx_manifest = json.loads(BATTLE_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(battle_sfx_manifest.get("schema") == "battle_runtime_sfx_manifest_v1", errors, "battle_sfx_manifest.json has the wrong schema")
         ensure(battle_sfx_manifest.get("final_sound_design") is False, errors, "battle_sfx_manifest.json must not claim final sound design")
-        ensure(battle_sfx_manifest.get("audio_bus") == "Master", errors, "battle_sfx_manifest.json must route battle SFX through Master")
+        ensure(battle_sfx_manifest.get("audio_bus") == "Effects", errors, "battle_sfx_manifest.json must route battle SFX through Effects")
         battle_sfx_cues = battle_sfx_manifest.get("cues", {})
         ensure(isinstance(battle_sfx_cues, dict), errors, "battle_sfx_manifest.json cues must be an object")
         for audio_id in required_battle_audio_ids:
@@ -20883,7 +20889,8 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
-            "SettingsService.master_volume_percent",
+            "SettingsService.effects_audio_muted",
+            "SettingsService.effects_audio_bus_name",
             "func attach_control",
             "func play_cue",
             "func play_confirm",
@@ -20897,7 +20904,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "ui_invalid",
             "MAX_ACTIVE_PLAYERS",
             "audio_bus",
-            "Master",
+            "Effects",
             "imported_asset_count",
             "generated_fallback_count",
             "node_added",
@@ -20909,7 +20916,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
         ui_sfx_manifest = json.loads(UI_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(ui_sfx_manifest.get("schema") == "ui_runtime_sfx_manifest_v1", errors, "ui_sfx_manifest.json has the wrong schema")
         ensure(ui_sfx_manifest.get("final_sound_design") is False, errors, "ui_sfx_manifest.json must not claim final sound design")
-        ensure(ui_sfx_manifest.get("audio_bus") == "Master", errors, "ui_sfx_manifest.json must route UI SFX through Master")
+        ensure(ui_sfx_manifest.get("audio_bus") == "Effects", errors, "ui_sfx_manifest.json must route UI SFX through Effects")
         ui_sfx_cues = ui_sfx_manifest.get("cues", {})
         ensure(isinstance(ui_sfx_cues, dict), errors, "ui_sfx_manifest.json cues must be an object")
         for cue_id in required_ui_cue_ids:
@@ -20966,7 +20973,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "content/ui_sfx_manifest.json",
             "art/audio/runtime/ui/",
             "AudioStreamGenerator",
-            "Master",
+            "Effects",
             "Button",
             "OptionButton",
             "HSlider",
@@ -21012,7 +21019,8 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "AudioStreamGenerator",
             "AudioStreamGeneratorPlayback",
             "AudioStreamPlayer",
-            "SettingsService.master_volume_percent",
+            "SettingsService.effects_audio_muted",
+            "SettingsService.effects_audio_bus_name",
             "func sync_overworld_session",
             "func stop_overworld_ambient",
             "func validation_summary",
@@ -21024,7 +21032,7 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "PRESSURE_SPEC",
             "MAX_ACTIVE_PLAYERS",
             "audio_bus",
-            "Master",
+            "Effects",
             "imported_asset_count",
             "generated_fallback_count",
         ):
@@ -21047,7 +21055,7 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
         ambient_sfx_manifest = json.loads(AMBIENT_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(ambient_sfx_manifest.get("schema") == "overworld_ambient_runtime_sfx_manifest_v1", errors, "ambient_sfx_manifest.json has the wrong schema")
         ensure(ambient_sfx_manifest.get("final_sound_design") is False, errors, "ambient_sfx_manifest.json must not claim final sound design")
-        ensure(ambient_sfx_manifest.get("audio_bus") == "Master", errors, "ambient_sfx_manifest.json must route ambient SFX through Master")
+        ensure(ambient_sfx_manifest.get("audio_bus") == "Effects", errors, "ambient_sfx_manifest.json must route ambient SFX through Effects")
         ambient_sfx_cues = ambient_sfx_manifest.get("cues", {})
         ensure(isinstance(ambient_sfx_cues, dict), errors, "ambient_sfx_manifest.json cues must be an object")
         for cue_id in required_ambient_cue_ids:
@@ -21096,7 +21104,7 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "overworld_ambient_pressure",
             "overworld_ambient_day_pulse",
             "pressure_layer_count",
-            "Master",
+            "Effects",
             "res://content/ambient_sfx_manifest.json",
             "imported_asset_count",
             "generated_fallback_count",
@@ -21115,7 +21123,7 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "AudioStreamGenerator",
             "overworld_ambient_pressure",
             "OverworldShell",
-            "Master",
+            "Effects",
             "not final sound design",
             "No final ambient stems",
             "No save migration",
@@ -22775,8 +22783,8 @@ def main() -> int:
     print("- Linux and Windows post-export release bundle manifests now reject dev/import/debug artifacts and require exact executable/PCK/native sidecar contents")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
-    print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the Master bus")
-    print("- generated overworld ambient audio now syncs terrain, day, and enemy-pressure layers from live overworld sessions on the Master bus")
+    print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the persisted Effects bus")
+    print("- generated overworld ambient audio now syncs terrain, day, and enemy-pressure layers from live overworld sessions on the persisted Effects bus")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:

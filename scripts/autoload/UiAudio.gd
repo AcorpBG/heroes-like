@@ -5,6 +5,7 @@ const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 8
 const MAX_RECORDS := 24
 const UI_SFX_MANIFEST_PATH := "res://content/ui_sfx_manifest.json"
+const EFFECTS_AUDIO_BUS := "Effects"
 const CUE_SPECS := {
 	"ui_click": {"frequency": 520.0, "duration": 0.055, "gain": 0.10},
 	"ui_select": {"frequency": 660.0, "duration": 0.06, "gain": 0.09},
@@ -28,12 +29,12 @@ func _ready() -> void:
 func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) -> Dictionary:
 	var normalized := cue_id if CUE_SPECS.has(cue_id) else "ui_click"
 	var spec: Dictionary = CUE_SPECS[normalized]
-	var muted := SettingsService.master_volume_percent() <= 0
+	var muted := SettingsService.effects_audio_muted()
 	var record := {
 		"cue_id": normalized,
 		"source": source,
 		"metadata": metadata.duplicate(true),
-		"audio_bus": "Master",
+		"audio_bus": EFFECTS_AUDIO_BUS,
 		"sfx_manifest_path": UI_SFX_MANIFEST_PATH,
 		"frequency": float(spec.get("frequency", 440.0)),
 		"duration_sec": float(spec.get("duration", 0.05)),
@@ -116,7 +117,7 @@ func validation_summary() -> Dictionary:
 		"cue_counts": cue_counts,
 		"active_player_count": _active_players.size(),
 		"connected_control_count": _connected_control_ids.size(),
-		"audio_bus": "Master",
+		"audio_bus": EFFECTS_AUDIO_BUS,
 		"max_active_players": MAX_ACTIVE_PLAYERS,
 		"sfx_manifest_path": UI_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ui_sfx_manifest_loaded,
@@ -195,7 +196,7 @@ func _play_imported_audio_cue(cue_id: String) -> Dictionary:
 	if stream_length > 0.0:
 		duration_msec = maxi(1, int(ceil(stream_length * 1000.0)))
 	var player := AudioStreamPlayer.new()
-	player.bus = "Master"
+	player.bus = SettingsService.effects_audio_bus_name()
 	player.stream = stream
 	player.volume_db = float(cue.get("volume_db", -18.0))
 	add_child(player)
@@ -221,7 +222,7 @@ func _play_generated_waveform(record: Dictionary) -> Dictionary:
 	stream.mix_rate = SAMPLE_RATE
 	stream.buffer_length = maxf(0.02, duration)
 	var player := AudioStreamPlayer.new()
-	player.bus = "Master"
+	player.bus = SettingsService.effects_audio_bus_name()
 	player.stream = stream
 	add_child(player)
 	player.play()

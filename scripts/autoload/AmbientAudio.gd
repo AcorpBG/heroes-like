@@ -7,6 +7,7 @@ const MAX_RECORDS := 24
 const DEFAULT_SEGMENT_DURATION := 0.85
 const REPORT_SCHEMA := "overworld_ambient_audio_runtime_v1"
 const AMBIENT_SFX_MANIFEST_PATH := "res://content/ambient_sfx_manifest.json"
+const EFFECTS_AUDIO_BUS := "Effects"
 const TERRAIN_SPECS := {
 	"grass": {"frequency": 176.0, "gain": 0.035, "label": "grassland air"},
 	"water": {"frequency": 132.0, "gain": 0.032, "label": "river wash"},
@@ -37,11 +38,11 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"source": source,
 			"changed": true,
 			"played": false,
-			"muted": SettingsService.master_volume_percent() <= 0,
+			"muted": SettingsService.effects_audio_muted(),
 			"reason": "missing_session",
 			"layer_count": 0,
 			"layers": [],
-			"audio_bus": "Master",
+			"audio_bus": EFFECTS_AUDIO_BUS,
 			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
@@ -63,18 +64,18 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"threat_level": String(context.get("threat_level", "")),
 			"layer_count": _current_layers.size(),
 			"layers": _current_layers.duplicate(true),
-			"audio_bus": "Master",
+			"audio_bus": EFFECTS_AUDIO_BUS,
 			"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 			"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 			"active_player_count": _active_players.size(),
-			"muted": SettingsService.master_volume_percent() <= 0,
-			"played": SettingsService.master_volume_percent() > 0,
+			"muted": SettingsService.effects_audio_muted(),
+			"played": not SettingsService.effects_audio_muted(),
 			"timestamp_msec": Time.get_ticks_msec(),
 		}
 	stop_overworld_ambient("signature_changed")
 	_current_signature = signature
 	_current_layers = _ambient_layers_for_context(context)
-	var muted := SettingsService.master_volume_percent() <= 0
+	var muted := SettingsService.effects_audio_muted()
 	if not muted:
 		_play_layers(_current_layers)
 	return _append_record({
@@ -90,7 +91,7 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		"threat_level": String(context.get("threat_level", "")),
 		"layer_count": _current_layers.size(),
 		"layers": _current_layers.duplicate(true),
-		"audio_bus": "Master",
+		"audio_bus": EFFECTS_AUDIO_BUS,
 		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"active_player_count": _active_players.size(),
@@ -136,7 +137,7 @@ func validation_summary() -> Dictionary:
 		"active_player_count": _active_players.size(),
 		"current_signature": _current_signature,
 		"current_layers": _current_layers.duplicate(true),
-		"audio_bus": "Master",
+		"audio_bus": EFFECTS_AUDIO_BUS,
 		"max_active_players": MAX_ACTIVE_PLAYERS,
 		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
@@ -184,7 +185,7 @@ func _layer_payload(layer_id: String, cue_id: String, spec: Dictionary, phase_of
 		"gain": float(spec.get("gain", 0.03)),
 		"duration_sec": DEFAULT_SEGMENT_DURATION,
 		"phase_offset": phase_offset,
-		"audio_bus": "Master",
+		"audio_bus": EFFECTS_AUDIO_BUS,
 		"sfx_manifest_path": AMBIENT_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ambient_sfx_manifest_loaded,
 		"asset_path": String(manifest_cue.get("path", "")),
@@ -207,7 +208,7 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 		stream.mix_rate = SAMPLE_RATE
 		stream.buffer_length = maxf(0.08, float(layer.get("duration_sec", DEFAULT_SEGMENT_DURATION)))
 		var player := AudioStreamPlayer.new()
-		player.bus = "Master"
+		player.bus = SettingsService.effects_audio_bus_name()
 		player.stream = stream
 		add_child(player)
 		player.play()
@@ -241,7 +242,7 @@ func _play_imported_layer(layer: Dictionary) -> bool:
 	if stream == null:
 		return false
 	var player := AudioStreamPlayer.new()
-	player.bus = "Master"
+	player.bus = SettingsService.effects_audio_bus_name()
 	player.stream = stream
 	player.volume_db = float(cue.get("volume_db", -27.0))
 	add_child(player)

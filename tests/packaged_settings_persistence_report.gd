@@ -5,6 +5,7 @@ const SCHEMA_ID := "packaged_settings_persistence_v1"
 const TEST_VALUES := {
 	"master_volume_percent": 37,
 	"music_volume_percent": 42,
+	"effects_volume_percent": 48,
 	"presentation_mode": "windowed",
 	"presentation_resolution": "1600x900",
 	"large_ui_text": true,
@@ -59,6 +60,9 @@ func _run_persistence_check() -> void:
 	var muted_music_record := MusicAudio.sync_context("menu", "packaged_settings_zero_music_check")
 	_expect(bool(muted_music_record.get("muted", false)), "Zero Music volume must mute live music playback.")
 	SettingsService.set_music_volume_percent(int(TEST_VALUES["music_volume_percent"]))
+	SettingsService.set_effects_volume_percent(0)
+	_expect(SettingsService.effects_audio_muted(), "Zero Effects volume must mute live effects playback.")
+	SettingsService.set_effects_volume_percent(int(TEST_VALUES["effects_volume_percent"]))
 	SettingsService.set_presentation_mode(String(TEST_VALUES["presentation_mode"]))
 	SettingsService.set_presentation_resolution(String(TEST_VALUES["presentation_resolution"]))
 	SettingsService.set_large_ui_text_enabled(bool(TEST_VALUES["large_ui_text"]))
@@ -72,6 +76,7 @@ func _run_persistence_check() -> void:
 	_report["direct_config_values"] = direct_values
 	_expect(int(direct_values.get("master_volume_percent", -1)) == int(TEST_VALUES["master_volume_percent"]), "Direct config master volume mismatch.")
 	_expect(int(direct_values.get("music_volume_percent", -1)) == int(TEST_VALUES["music_volume_percent"]), "Direct config music volume mismatch.")
+	_expect(int(direct_values.get("effects_volume_percent", -1)) == int(TEST_VALUES["effects_volume_percent"]), "Direct config effects volume mismatch.")
 	var music_bus_index := AudioServer.get_bus_index(SettingsService.MUSIC_AUDIO_BUS)
 	_expect(music_bus_index >= 0, "SettingsService must create an independent Music audio bus.")
 	if music_bus_index >= 0:
@@ -85,6 +90,19 @@ func _run_persistence_check() -> void:
 		}
 		_expect(is_equal_approx(applied_music_db, expected_music_db), "Music bus gain does not match the configured Music volume.")
 	_expect(SettingsService.music_audio_bus_name() == SettingsService.MUSIC_AUDIO_BUS, "Music playback must target the independent Music audio bus.")
+	var effects_bus_index := AudioServer.get_bus_index(SettingsService.EFFECTS_AUDIO_BUS)
+	_expect(effects_bus_index >= 0, "SettingsService must create an independent Effects audio bus.")
+	if effects_bus_index >= 0:
+		var expected_effects_db := linear_to_db(float(TEST_VALUES["effects_volume_percent"]) / 100.0)
+		var applied_effects_db := AudioServer.get_bus_volume_db(effects_bus_index)
+		_report["effects_bus"] = {
+			"name": AudioServer.get_bus_name(effects_bus_index),
+			"send": AudioServer.get_bus_send(effects_bus_index),
+			"expected_volume_db": expected_effects_db,
+			"applied_volume_db": applied_effects_db,
+		}
+		_expect(is_equal_approx(applied_effects_db, expected_effects_db), "Effects bus gain does not match the configured Effects volume.")
+	_expect(SettingsService.effects_audio_bus_name() == SettingsService.EFFECTS_AUDIO_BUS, "Effects playback must target the independent Effects audio bus.")
 	_expect(String(direct_values.get("presentation_mode", "")) == String(TEST_VALUES["presentation_mode"]), "Direct config presentation mode mismatch.")
 	_expect(String(direct_values.get("presentation_resolution", "")) == String(TEST_VALUES["presentation_resolution"]), "Direct config presentation resolution mismatch.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
@@ -95,6 +113,7 @@ func _run_persistence_check() -> void:
 	var reloaded := {
 		"master_volume_percent": SettingsService.master_volume_percent(),
 		"music_volume_percent": SettingsService.music_volume_percent(),
+		"effects_volume_percent": SettingsService.effects_volume_percent(),
 		"presentation_mode": SettingsService.presentation_mode_id(),
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
@@ -104,6 +123,7 @@ func _run_persistence_check() -> void:
 	_report["reloaded_values"] = reloaded
 	_expect(int(reloaded["master_volume_percent"]) == int(TEST_VALUES["master_volume_percent"]), "Reloaded master volume mismatch.")
 	_expect(int(reloaded["music_volume_percent"]) == int(TEST_VALUES["music_volume_percent"]), "Reloaded music volume mismatch.")
+	_expect(int(reloaded["effects_volume_percent"]) == int(TEST_VALUES["effects_volume_percent"]), "Reloaded effects volume mismatch.")
 	_expect(String(reloaded["presentation_mode"]) == String(TEST_VALUES["presentation_mode"]), "Reloaded presentation mode mismatch.")
 	_expect(String(reloaded["presentation_resolution"]) == String(TEST_VALUES["presentation_resolution"]), "Reloaded presentation resolution mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
@@ -120,6 +140,7 @@ func _read_settings_config_values() -> Dictionary:
 		"version": int(config.get_value("meta", "version", 0)),
 		"master_volume_percent": int(config.get_value("audio", "master_volume_percent", -1)),
 		"music_volume_percent": int(config.get_value("audio", "music_volume_percent", -1)),
+		"effects_volume_percent": int(config.get_value("audio", "effects_volume_percent", -1)),
 		"presentation_mode": String(config.get_value("presentation", "mode", "")),
 		"presentation_resolution": String(config.get_value("presentation", "resolution", "")),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),

@@ -3,7 +3,7 @@ extends Node
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 2
+const SETTINGS_VERSION := 3
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -12,6 +12,7 @@ const PRESENTATION_BORDERLESS := "borderless"
 const PRESENTATION_FULLSCREEN := "fullscreen"
 const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
 const MUSIC_AUDIO_BUS := "Music"
+const EFFECTS_AUDIO_BUS := "Effects"
 
 const PRESENTATION_OPTIONS := [
 	{
@@ -123,6 +124,7 @@ func build_default_settings() -> Dictionary:
 		"audio": {
 			"master_volume_percent": 80,
 			"music_volume_percent": 65,
+			"effects_volume_percent": 75,
 		},
 		"presentation": {
 			"mode": PRESENTATION_WINDOWED,
@@ -143,6 +145,7 @@ func load_settings() -> void:
 		settings["version"] = max(int(config.get_value("meta", "version", SETTINGS_VERSION)), SETTINGS_VERSION)
 		settings["audio"]["master_volume_percent"] = clampi(int(config.get_value("audio", "master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100)
 		settings["audio"]["music_volume_percent"] = clampi(int(config.get_value("audio", "music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100)
+		settings["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
 		settings["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
 		settings["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
 		settings["accessibility"]["large_ui_text"] = bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
@@ -160,6 +163,7 @@ func save_settings() -> String:
 	config.set_value("meta", "version", int(settings.get("version", SETTINGS_VERSION)))
 	config.set_value("audio", "master_volume_percent", master_volume_percent())
 	config.set_value("audio", "music_volume_percent", music_volume_percent())
+	config.set_value("audio", "effects_volume_percent", effects_volume_percent())
 	config.set_value("presentation", "mode", presentation_mode_id())
 	config.set_value("presentation", "resolution", presentation_resolution_id())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
@@ -226,10 +230,21 @@ func master_volume_percent() -> int:
 func music_volume_percent() -> int:
 	return int(ensure_settings().get("audio", {}).get("music_volume_percent", 65))
 
+func effects_volume_percent() -> int:
+	return int(ensure_settings().get("audio", {}).get("effects_volume_percent", 75))
+
 func music_audio_bus_name() -> String:
 	var bus_index := _ensure_audio_bus(MUSIC_AUDIO_BUS, "Master")
 	AudioServer.set_bus_volume_db(bus_index, _percent_to_db(music_volume_percent()))
 	return MUSIC_AUDIO_BUS
+
+func effects_audio_bus_name() -> String:
+	var bus_index := _ensure_audio_bus(EFFECTS_AUDIO_BUS, "Master")
+	AudioServer.set_bus_volume_db(bus_index, _percent_to_db(effects_volume_percent()))
+	return EFFECTS_AUDIO_BUS
+
+func effects_audio_muted() -> bool:
+	return master_volume_percent() <= 0 or effects_volume_percent() <= 0
 
 func large_ui_text_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("large_ui_text", false))
@@ -261,6 +276,11 @@ func set_music_volume_percent(value: int) -> void:
 	settings["audio"]["music_volume_percent"] = clampi(value, 0, 100)
 	_commit_settings()
 
+func set_effects_volume_percent(value: int) -> void:
+	ensure_settings()
+	settings["audio"]["effects_volume_percent"] = clampi(value, 0, 100)
+	_commit_settings()
+
 func set_presentation_mode(mode_id: String) -> void:
 	ensure_settings()
 	settings["presentation"]["mode"] = _normalize_presentation_mode(mode_id)
@@ -288,7 +308,7 @@ func describe_settings() -> String:
 	return "\n".join(
 		[
 			"Presentation: %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id())],
-			"Audio: Master %d%% | Music %d%%" % [master_volume_percent(), music_volume_percent()],
+			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
 		]
@@ -368,6 +388,7 @@ func _apply_presentation_settings() -> void:
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
 	music_audio_bus_name()
+	effects_audio_bus_name()
 
 func _ensure_audio_bus(bus_name: String, send_bus_name: String) -> int:
 	var bus_index := AudioServer.get_bus_index(bus_name)

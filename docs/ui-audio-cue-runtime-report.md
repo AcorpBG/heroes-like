@@ -13,7 +13,7 @@ This slice adds a generated runtime UI audio baseline and a follow-up manifest-b
 - Added `scripts/autoload/UiAudio.gd` and registered it in `project.godot`.
 - `UiAudio` scans the scene tree and attaches to common Godot UI controls without per-screen wiring.
 - Supported cues include `ui_click`, `ui_select`, `ui_adjust`, `ui_tab`, `ui_confirm`, and `ui_invalid`.
-- Runtime playback prefers committed original WAV assets from `content/ui_sfx_manifest.json` under `art/audio/runtime/ui/` on the `Master` bus, with generated `AudioStreamGenerator` waveforms preserved as fallback.
+- Runtime playback prefers committed original WAV assets from `content/ui_sfx_manifest.json` under `art/audio/runtime/ui/` on the `Effects` bus routed through `Master`, with generated `AudioStreamGenerator` waveforms preserved as fallback.
 - Playback records expose cue id, source, metadata, frequency, duration, gain, mute state, played state, active player count, player cap, manifest path, imported-asset count, generated-fallback count, and selected asset path.
 - Added `tests/ui_audio_cue_runtime_report.tscn` to exercise `Button`, `OptionButton`, `HSlider`, `TabContainer`, `ItemList`, confirm, and invalid-action cues.
 

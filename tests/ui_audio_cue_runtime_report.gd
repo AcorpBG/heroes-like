@@ -18,6 +18,14 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
 	UiAudio.validation_reset()
 	_exercise_controls()
+	var original_effects_volume := SettingsService.effects_volume_percent()
+	SettingsService.settings["audio"]["effects_volume_percent"] = 0
+	SettingsService.apply_settings()
+	var muted_record := UiAudio.play_confirm("validation_effects_muted", {"fixture": "ui_audio_cue_runtime"})
+	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.apply_settings()
+	_report["muted_record"] = muted_record
+	_expect(bool(muted_record.get("muted", false)) and not bool(muted_record.get("played", true)), "Zero Effects volume must mute UI cue playback: %s" % muted_record)
 	await get_tree().process_frame
 	_validate_summary()
 	_report["ok"] = _errors.is_empty()
@@ -82,7 +90,7 @@ func _validate_summary() -> void:
 	_report["records"] = records
 	_expect_equal("schema", String(summary.get("schema", "")), "ui_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 7, "Expected at least seven UI audio records.")
-	_expect(String(summary.get("audio_bus", "")) == "Master", "UI audio must route through the Master bus.")
+	_expect(String(summary.get("audio_bus", "")) == "Effects", "UI audio must route through the Effects bus.")
 	_expect(int(summary.get("max_active_players", 0)) == UiAudio.MAX_ACTIVE_PLAYERS, "UI audio summary must expose max active player cap.")
 	_expect(String(summary.get("sfx_manifest_path", "")) == "res://content/ui_sfx_manifest.json", "UI audio summary must expose the UI SFX manifest path.")
 	_expect(bool(summary.get("sfx_manifest_loaded", false)), "UI audio runtime should load the UI SFX manifest.")
@@ -92,10 +100,13 @@ func _validate_summary() -> void:
 	_expect(int(counts.get("ui_select", 0)) >= 2, "Expected both option and item-list select cues in %s." % counts)
 	for record in records:
 		var entry: Dictionary = record
-		_expect(String(entry.get("audio_bus", "")) == "Master", "UI audio record must route through Master: %s" % entry)
+		_expect(String(entry.get("audio_bus", "")) == "Effects", "UI audio record must route through Effects: %s" % entry)
 		_expect(float(entry.get("duration_sec", 0.0)) > 0.0, "UI audio record must include positive duration: %s" % entry)
 		_expect(float(entry.get("frequency", 0.0)) > 0.0, "UI audio record must include positive frequency: %s" % entry)
 		_expect(entry.has("played"), "UI audio record must expose played/muted state: %s" % entry)
+		if bool(entry.get("muted", false)):
+			_expect(not bool(entry.get("played", true)), "Muted UI audio records must not report playback: %s" % entry)
+			continue
 		_expect(String(entry.get("playback_source", "")) == "imported_wav", "UI audio record should prefer imported runtime SFX assets: %s" % entry)
 		_expect(String(entry.get("asset_path", "")).begins_with("res://art/audio/runtime/ui/"), "UI audio record must expose runtime UI SFX asset path: %s" % entry)
 		_expect(int(entry.get("imported_asset_count", 0)) == 1, "UI audio record should count the imported asset playback: %s" % entry)
