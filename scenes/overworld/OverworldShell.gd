@@ -76,6 +76,10 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _spell_actions: Container = %SpellActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _artifact_actions: Container = %ArtifactActions
+@onready var _rendezvous_label: Label = %Rendezvous
+@onready var _rendezvous_controls: Container = %RendezvousControls
+@onready var _rendezvous_orders: OptionButton = %RendezvousOrders
+@onready var _rendezvous_transfer_button: Button = %RendezvousTransfer
 @onready var _open_command_button: Button = %OpenCommand
 @onready var _open_frontier_button: Button = %OpenFrontier
 @onready var _close_command_button: Button = %CloseCommand
@@ -544,6 +548,12 @@ func _on_close_drawers_pressed() -> void:
 
 func _on_context_action_pressed(action_id: String) -> void:
 	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
+	if action_id == "open_rendezvous":
+		_active_drawer = "command"
+		_sync_context_drawers()
+		call_deferred("_configure_overworld_keyboard_focus", true)
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
+		return
 	if action_id == "advance_route":
 		_move_toward_selected_tile()
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
@@ -625,6 +635,35 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
+	if _handle_session_resolution():
+		return
+	_refresh()
+
+func _on_rendezvous_order_selected(index: int) -> void:
+	if index < 0 or index >= _rendezvous_orders.item_count:
+		_rendezvous_transfer_button.disabled = true
+		_rendezvous_transfer_button.tooltip_text = "No field transfer order is selected."
+		return
+	var action = _rendezvous_orders.get_item_metadata(index)
+	_rendezvous_transfer_button.disabled = not (action is Dictionary) or String(action.get("id", "")) == ""
+	_rendezvous_transfer_button.tooltip_text = String(action.get("summary", "Transfer the selected troop stack.")) if action is Dictionary else "No field transfer order is selected."
+
+func _on_rendezvous_transfer_pressed() -> void:
+	var selected := _rendezvous_orders.selected
+	if selected < 0 or selected >= _rendezvous_orders.item_count:
+		return
+	var action = _rendezvous_orders.get_item_metadata(selected)
+	if not (action is Dictionary):
+		return
+	var result := OverworldRules.perform_rendezvous_transfer_action(_session, String(action.get("id", "")))
+	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
+	_record_result_feedback("transfer", result, "Troops transferred.")
+	if bool(result.get("ok", false)):
+		_dismiss_command_briefing()
+		_select_hero_tile()
+	_active_drawer = "command"
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -741,6 +780,8 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		_session.flags["last_action"] = "entered_battle"
 	elif route == "town":
 		_session.flags["last_action"] = "visited_town"
+	elif route == "rendezvous":
+		_session.flags["last_action"] = "hero_rendezvous"
 	else:
 		_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
 	_last_message = String(result.get("message", ""))
@@ -764,6 +805,14 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		if debug_started:
 			_debug_finish_path_command()
 		AppRouter.go_to_town()
+		return
+	if route == "rendezvous":
+		_active_drawer = "command"
+		_select_hero_tile()
+		_refresh()
+		call_deferred("_configure_overworld_keyboard_focus", true)
+		if debug_started:
+			_debug_finish_path_command()
 		return
 	if preserve_selection and _last_route_execution.has("reached_destination"):
 		_post_route_execution_compact_context = _should_use_post_route_execution_compact_context()
@@ -877,7 +926,7 @@ func _selected_route_destination_descriptor_fallback_reason(descriptor: Dictiona
 	if descriptor.is_empty():
 		return "missing_destination_descriptor"
 	var kind := String(descriptor.get("kind", ""))
-	if kind not in ["open", "resource", "artifact", "encounter", "town", "current"]:
+	if kind not in ["open", "resource", "artifact", "encounter", "town", "hero", "current"]:
 		return "unknown_destination_descriptor"
 	if int(descriptor.get("x", -999)) != destination.x or int(descriptor.get("y", -999)) != destination.y:
 		return "destination_descriptor_tile_stale"
@@ -1163,6 +1212,7 @@ func _refresh_action_rails(request: Dictionary = {}) -> void:
 	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_HERO_ACTIONS):
 		var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
 		_rebuild_hero_actions()
+		_rebuild_rendezvous_actions()
 		_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
 	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ACTIONS):
 		var context_actions_profile_start := _debug_refresh_profile_begin("refresh_context_actions")
@@ -1541,6 +1591,39 @@ func _rebuild_hero_actions() -> void:
 		_style_rail_action_button(button)
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
+
+func _rebuild_rendezvous_actions() -> void:
+	_rendezvous_orders.clear()
+	var reserve_heroes := HeroCommandRules.field_rendezvous_heroes(_session)
+	var actions := OverworldRules.get_rendezvous_transfer_actions(_session)
+	var has_rendezvous := not reserve_heroes.is_empty()
+	_rendezvous_label.visible = has_rendezvous
+	_rendezvous_controls.visible = has_rendezvous and not actions.is_empty()
+	if not has_rendezvous:
+		_rendezvous_label.text = "Rendezvous"
+		_rendezvous_label.tooltip_text = ""
+		_rendezvous_transfer_button.disabled = true
+		return
+	var names := []
+	for hero_value in reserve_heroes:
+		if hero_value is Dictionary:
+			names.append(String(hero_value.get("name", "Commander")))
+	_rendezvous_label.text = "Rendezvous | %s" % ", ".join(names)
+	_rendezvous_label.tooltip_text = HeroCommandRules.describe_field_rendezvous(_session)
+	if actions.is_empty():
+		_rendezvous_label.text += " | No troops to exchange"
+		_rendezvous_transfer_button.disabled = true
+		return
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		_rendezvous_orders.add_item(String(action.get("label", "Transfer troops")))
+		var index := _rendezvous_orders.item_count - 1
+		_rendezvous_orders.set_item_metadata(index, action.duplicate(true))
+		_rendezvous_orders.set_item_tooltip(index, String(action.get("summary", "")))
+	_rendezvous_orders.select(0)
+	_on_rendezvous_order_selected(0)
 
 func _rebuild_context_actions() -> void:
 	var actions := _current_context_actions()
@@ -2778,7 +2861,7 @@ func _selected_route_compact_destination_surface() -> Dictionary:
 	var descriptor_kind := String(descriptor.get("kind", "open"))
 	if _selected_tile == hero_pos:
 		descriptor_kind = "current"
-	if descriptor_kind not in ["open", "current", "resource", "artifact", "encounter", "town"]:
+	if descriptor_kind not in ["open", "current", "resource", "artifact", "encounter", "town", "hero"]:
 		return {}
 	var route_decision := _selected_route_compact_decision_surface(
 		route_state,
@@ -2803,7 +2886,7 @@ func _selected_route_compact_destination_surface() -> Dictionary:
 		"rich_route_surface_skipped": true,
 		"interaction_signature": String(descriptor.get("interaction_signature", "")),
 	}
-	for key in ["placement_id", "site_id", "artifact_id", "encounter_id", "town_id", "owner"]:
+	for key in ["placement_id", "site_id", "artifact_id", "encounter_id", "town_id", "owner", "hero_id", "hero_name"]:
 		if descriptor.has(key):
 			destination[key] = descriptor.get(key)
 	if descriptor_kind == "resource":
@@ -2944,6 +3027,8 @@ func _selected_route_compact_destination_name(descriptor: Dictionary, destinatio
 			var encounter_id := String(descriptor.get("encounter_id", ""))
 			var encounter_data := ContentService.get_encounter(encounter_id)
 			return String(encounter_data.get("name", descriptor.get("placement_id", "Encounter")))
+		"hero":
+			return String(descriptor.get("hero_name", descriptor.get("hero_id", "Commander")))
 		_:
 			return "%d,%d" % [_selected_tile.x, _selected_tile.y]
 
@@ -2961,6 +3046,8 @@ func _selected_route_compact_action_kind(descriptor: Dictionary, destination_kin
 			return "collect" if adjacent else "move/collect"
 		"encounter":
 			return "enter" if adjacent else "move/enter"
+		"hero":
+			return "rendezvous" if adjacent else "move/rendezvous"
 		_:
 			return "move"
 
@@ -2981,6 +3068,8 @@ func _selected_route_compact_action_label(descriptor: Dictionary, destination_ki
 			return "Recover Artifact" if adjacent else "Advance to Artifact"
 		"encounter":
 			return "Enter Battle" if adjacent else "Advance to Battle"
+		"hero":
+			return "Rendezvous" if adjacent else "Advance to Rendezvous"
 		_:
 			return "March" if adjacent else "Advance"
 
@@ -3005,6 +3094,8 @@ func _selected_route_compact_destination_summary(destination: Dictionary) -> Str
 			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
 		"encounter":
 			return "%s %s." % [_selected_route_destination_action_label(destination, adjacent), target]
+		"hero":
+			return "%s with %s; troop exchange opens on arrival." % [_selected_route_destination_action_label(destination, adjacent), target]
 		_:
 			return _selected_route_simple_action_summary(destination)
 
@@ -3053,6 +3144,8 @@ func _selected_route_destination_action_label(destination: Dictionary, adjacent:
 			return "Recover Artifact" if adjacent else "Advance to Artifact"
 		"encounter":
 			return "Enter Battle" if adjacent else "Advance to Battle"
+		"hero":
+			return "Rendezvous" if adjacent else "Advance to Rendezvous"
 		_:
 			return "March" if adjacent else "Advance"
 
@@ -3123,6 +3216,13 @@ func _selected_route_destination_interaction_surface() -> Dictionary:
 		destination["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
 		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
 		return destination
+	var reserve_hero := _reserve_hero_entry_at(_selected_tile.x, _selected_tile.y)
+	if not reserve_hero.is_empty():
+		destination["kind"] = "hero"
+		destination["hero_id"] = String(reserve_hero.get("id", ""))
+		destination["hero_name"] = String(reserve_hero.get("name", "Commander"))
+		destination["summary"] = _selected_tile_order_summary(bool(destination.get("adjacent", false)))
+		return destination
 	return destination
 
 func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Dictionary:
@@ -3160,6 +3260,12 @@ func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Diction
 		descriptor["kind"] = "encounter"
 		descriptor["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
 		descriptor["encounter_id"] = String(encounter.get("encounter_id", encounter.get("id", "")))
+		return descriptor
+	var reserve_hero := _reserve_hero_entry_at(tile.x, tile.y)
+	if not reserve_hero.is_empty():
+		descriptor["kind"] = "hero"
+		descriptor["hero_id"] = String(reserve_hero.get("id", ""))
+		descriptor["hero_name"] = String(reserve_hero.get("name", "Commander"))
 		return descriptor
 	return descriptor
 
@@ -3744,6 +3850,9 @@ func _selected_tile_order_label(adjacent: bool) -> String:
 	if not _encounter_at(_selected_tile.x, _selected_tile.y).is_empty():
 		return "Enter Battle" if adjacent else "Advance to Battle"
 
+	if not _reserve_hero_entry_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "Rendezvous" if adjacent else "Advance to Rendezvous"
+
 	return "March" if adjacent else "Advance"
 
 func _selected_tile_order_summary(adjacent: bool) -> String:
@@ -3786,6 +3895,12 @@ func _selected_tile_order_summary(adjacent: bool) -> String:
 			site_name,
 			"" if control_summary == "" else ". %s" % control_summary,
 		]
+	var reserve_hero := _reserve_hero_entry_at(_selected_tile.x, _selected_tile.y)
+	if not reserve_hero.is_empty():
+		var reserve_name := String(reserve_hero.get("name", "the reserve commander"))
+		if adjacent:
+			return "Rendezvous with %s and open field troop exchange." % reserve_name
+		return "Take the next step toward %s for a field troop exchange." % reserve_name
 	var destination := _selected_tile_destination_name()
 	var target := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	if destination != "":
@@ -3812,6 +3927,10 @@ func _selected_tile_destination_name() -> String:
 	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		return OverworldRules.encounter_display_name(encounter)
+
+	var reserve_hero := _reserve_hero_entry_at(_selected_tile.x, _selected_tile.y)
+	if not reserve_hero.is_empty():
+		return String(reserve_hero.get("name", "Commander"))
 
 	return ""
 
@@ -3904,6 +4023,8 @@ func _feedback_kind_label(kind: String) -> String:
 			return "System"
 		"town":
 			return "Town"
+		"transfer":
+			return "Transfer"
 		"turn":
 			return "Turn"
 		_:
@@ -4027,6 +4148,8 @@ func _feedback_kind_for_move(result: Dictionary, route: String) -> String:
 		return "battle"
 	if route == "town":
 		return "town"
+	if route == "rendezvous":
+		return "hero"
 	var message := String(result.get("message", ""))
 	if message.find("Recovered ") >= 0 or message.find("Equipped in ") >= 0:
 		return "artifact"
@@ -4943,6 +5066,8 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		_close_command_button,
 		_close_frontier_button,
 		_hero_actions,
+		_rendezvous_orders,
+		_rendezvous_transfer_button,
 		_spell_actions,
 		_specialty_actions,
 		_artifact_actions,
@@ -5429,6 +5554,12 @@ func _selected_route_destination_interaction_signature(tile: Vector2i) -> String
 			String(encounter.get("encounter_id", "")),
 			"1" if bool(encounter.get("resolved", false)) else "0",
 		]
+	var reserve_hero := _reserve_hero_entry_at(tile.x, tile.y)
+	if not reserve_hero.is_empty():
+		return "hero:%s:%s" % [
+			String(reserve_hero.get("id", "")),
+			String(reserve_hero.get("name", "Commander")),
+		]
 	return "open"
 
 func _selected_route_session_signature() -> String:
@@ -5870,6 +6001,15 @@ func _hero_entries_at(x: int, y: int) -> Array:
 		if entry is Dictionary and int(entry.get("x", -1)) == x and int(entry.get("y", -1)) == y:
 			entries.append(entry)
 	return entries
+
+func _reserve_hero_entry_at(x: int, y: int) -> Dictionary:
+	for entry_value in _hero_entries_at(x, y):
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		if not bool(entry.get("is_active", false)):
+			return entry
+	return {}
 
 func _terrain_name_at(x: int, y: int) -> String:
 	if y < 0 or y >= _map_data.size():
@@ -7042,6 +7182,7 @@ func validation_snapshot() -> Dictionary:
 		"primary_action_button_tooltip_text": _primary_action_button.tooltip_text,
 		"primary_order_commit_check": primary_order_commit_check,
 		"context_action_ids": _validation_context_action_ids(),
+		"rendezvous": _validation_rendezvous_surface(),
 		"spell_actions": _validation_spell_action_payloads(),
 		"artifact_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
@@ -7194,6 +7335,26 @@ func _validation_control_surfaces(container: Node) -> Array:
 			surface["tooltip"] = control.tooltip_text
 		surfaces.append(surface)
 	return surfaces
+
+func _validation_rendezvous_surface() -> Dictionary:
+	var action_ids := []
+	for index in range(_rendezvous_orders.item_count):
+		var metadata = _rendezvous_orders.get_item_metadata(index)
+		if metadata is Dictionary:
+			action_ids.append(String(metadata.get("id", "")))
+	return {
+		"label_visible": _rendezvous_label.visible,
+		"label_visible_in_tree": _rendezvous_label.is_visible_in_tree(),
+		"label_text": _rendezvous_label.text,
+		"controls_visible": _rendezvous_controls.visible,
+		"controls_visible_in_tree": _rendezvous_controls.is_visible_in_tree(),
+		"order_count": _rendezvous_orders.item_count,
+		"action_ids": action_ids,
+		"selected_action_id": String(_rendezvous_orders.get_item_metadata(_rendezvous_orders.selected).get("id", "")) if _rendezvous_orders.selected >= 0 and _rendezvous_orders.get_item_metadata(_rendezvous_orders.selected) is Dictionary else "",
+		"order_focusable": _rendezvous_orders.focus_mode != Control.FOCUS_NONE,
+		"transfer_focusable": _rendezvous_transfer_button.focus_mode != Control.FOCUS_NONE,
+		"transfer_disabled": _rendezvous_transfer_button.disabled,
+	}
 
 func validation_open_command_drawer() -> Dictionary:
 	_active_drawer = "command"

@@ -440,6 +440,33 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
+[node name="Rendezvous" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Rendezvous"
+
+[node name="RendezvousControls" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="RendezvousOrders" type="OptionButton" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/RendezvousControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(174, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="RendezvousTransfer" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/RendezvousControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 36)
+layout_mode = 2
+text = "Transfer"
+
 [node name="FrontierPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
 unique_name_in_owner = true
 visible = false
@@ -632,6 +659,8 @@ text = "Menu"
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons/OpenCommand" to="." method="_on_open_command_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons/OpenFrontier" to="." method="_on_open_frontier_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/CloseCommand" to="." method="_on_close_drawers_pressed"]
+[connection signal="item_selected" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/RendezvousControls/RendezvousOrders" to="." method="_on_rendezvous_order_selected"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/RendezvousControls/RendezvousTransfer" to="." method="_on_rendezvous_transfer_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox/CloseFrontier" to="." method="_on_close_drawers_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox/PrimaryAction" to="." method="_on_primary_action_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/EndTurn" to="." method="_on_end_turn_pressed"]
