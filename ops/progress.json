@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Thornwake's first authored player skirmish on the existing skirmish-only Mireford front with live launch, town, save/resume, battle, outcome, and economy-runway proof. The broader game-completion goal remains active.",
+  "currentNotes": "Completed Brasshollow's first authored player skirmish as an Orevein contract front with live launch, town, save/resume, battle, outcome, and economy-runway proof. The broader production game goal remains active.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "thornwake-mireford-player-skirmish-10184",
-  "currentSliceId": "thornwake-mireford-player-skirmish-10184",
-  "currentSliceNotes": "Completed. Rootbound Mireford now provides Thornwake's first authored player skirmish with Silsa, Graftroot, a tuned local army, Day 24 town runway, save/resume, battle entry, reachable outcomes, and campaign isolation; this does not complete the faction or game.",
+  "currentSlice": "brasshollow-orevein-player-skirmish-10184",
+  "currentSliceId": "brasshollow-orevein-player-skirmish-10184",
+  "currentSliceNotes": "Completed. Orevein Contract provides Brasshollow's first authored player skirmish with Marka, Orevein Gantry, a tuned local army, reachable all-resource assay route, Day 26 town runway, bounded battles, save/resume, reachable outcomes, and campaign isolation; this does not complete the faction or game.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Mireford Player Skirmish",
-  "currentSliceUpdatedAt": "2026-08-02T18:21:12Z",
+  "currentSliceTitle": "Brasshollow Orevein Player Skirmish",
+  "currentSliceUpdatedAt": "2026-08-02T18:43:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -64982,6 +64982,66 @@
         "The unfiltered active-scenario runway still reports 12 pre-existing early-completion cases outside Mireford; Rootbound Mireford is not among them and this slice does not claim that broader balance debt complete.",
         "jq parsing, progress helper inspection, and git diff --check passed."
       ]
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/brasshollow_orevein_player_skirmish_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_orevein_contract_balance_regression.tscn",
+        "ACTIVE_SCENARIO_TOWN_RUNWAY_ONLY=orevein-contract GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/active_scenario_town_development_runway_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/player_facing_skirmish_browser_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Orevein Contract launches from the live skirmish browser as Brasshollow with Marka, Orevein Gantry, a coherent Brasshollow army and Brass Scrip route; town recruitment/development and save/resume preserve live state; authored Embercourt battles remain bounded and both outcomes are reachable; campaign progression remains untouched; repository validation passes.",
+      "id": "brasshollow-orevein-player-skirmish-10184",
+      "implementationTargets": [
+        "content/army_groups.json",
+        "content/resource_sites.json",
+        "content/scenarios.json",
+        "content/factions.json",
+        "content/towns.json",
+        "tests/brasshollow_orevein_player_skirmish_report.gd",
+        "tests/brasshollow_orevein_player_skirmish_report.tscn",
+        "tests/battle_orevein_contract_balance_regression.gd",
+        "tests/battle_orevein_contract_balance_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "a complete Brasshollow campaign",
+        "Veilmourn player-scenario implementation",
+        "global unit-stat or shared encounter retuning",
+        "Native RMG or save-schema changes",
+        "six-faction or release-completion claims"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Current product focus / bounded campaign-content direction",
+      "purpose": "Turn Brasshollow's existing town, roster, hero, spell, and economy content into its first complete player-facing scenario through the established skirmish flow.",
+      "source": "project.md playable-alpha faction breadth and live-flow requirements",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "startedAt": "2026-08-02T18:23:43Z",
+      "status": "completed",
+      "title": "Brasshollow Orevein Player Skirmish",
+      "updatedAt": "2026-08-02T18:43:19Z",
+      "validationEvidence": [
+        "BRASSHOLLOW_OREVEIN_PLAYER_SKIRMISH_REPORT passed live skirmish setup, Marka and the four-stack contract army, Orevein build/recruit surfaces, Scrip Hauler recruitment, exact save/resume to town, Archive Wardens battle entry, victory and Day 12 defeat reachability, and unchanged campaign progression.",
+        "BATTLE_OREVEIN_CONTRACT_BALANCE_REGRESSION passed all three fixed-seed local matchups as player victories at 90%, 88%, and 62% player health with meaningful enemy damage; no shared encounter roster or global unit stat changed.",
+        "The targeted active-scenario town runway passed at Day 26 with all 20 buildings, seven-tier recruitment, rare spend, complete authored source coverage, delayed source acquisition, and source-state save/resume.",
+        "The player-facing browser exposed 17 authored entries without generated-package leakage, and the deadline report proved Orevein's Day 12 defeat boundary while preserving campaign/skirmish counts.",
+        "Core systems regression, Godot editor parse/import, tests/validate_repo.py, jq parsing, progress helper inspection, and git diff --check passed.",
+        "The unfiltered active-scenario runway was not rerun; its previously recorded 12 unrelated early-completion cases remain broader balance debt and are not claimed complete by this slice."
+      ]
     }
   ],
   "project": "heroes-like",
@@ -65526,7 +65586,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T18:21:12Z",
+  "updatedAt": "2026-08-02T18:43:19Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
