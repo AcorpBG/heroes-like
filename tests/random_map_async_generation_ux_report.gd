@@ -86,10 +86,10 @@ func _assert_stage_snapshots(result: Dictionary) -> bool:
 		_fail("Staged generated launch did not record enough stage snapshots: %s" % JSON.stringify(result))
 		return false
 	var expected_stages := [
-		"Preparing generated map",
-		"Validating seed and template",
-		"Generation validation complete",
-		"Materializing playable session",
+		"Preparing map choices",
+		"Checking map routes",
+		"Map checks complete",
+		"Preparing Day 1",
 		"Opening generated map",
 	]
 	var last_progress := -1
@@ -124,7 +124,7 @@ func _assert_active_generated_session(result: Dictionary) -> bool:
 		_fail("Staged launch did not preserve Small 36x36 materialization: %s" % JSON.stringify(map_size))
 		return false
 	var provenance: Dictionary = session.flags.get("generated_random_map_provenance", {}) if session.flags.get("generated_random_map_provenance", {}) is Dictionary else {}
-	var config: Dictionary = provenance.get("generator_config", {}) if provenance.get("generator_config", {}) is Dictionary else {}
+	var config: Dictionary = provenance.get("input_config", provenance.get("generator_config", {})) if provenance.get("input_config", provenance.get("generator_config", {})) is Dictionary else {}
 	var size: Dictionary = config.get("size", {}) if config.get("size", {}) is Dictionary else {}
 	var runtime_policy: Dictionary = size.get("runtime_size_policy", {}) if size.get("runtime_size_policy", {}) is Dictionary else {}
 	if String(size.get("size_class_id", "")) != "homm3_small" or bool(runtime_policy.get("hidden_downscale", true)):

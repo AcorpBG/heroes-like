@@ -193,12 +193,16 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	for token in ["Generated setup ready", "pending on launch", "Seed", "Size", "Small 36x36", "Internal profile", "Players", "Water", "Underground", "Launch handoff", "campaign progress", "authored content"]:
+	for token in ["Ready to build", "checked before Day 1", "Seed", "Small 36x36", "3 players", "Land", "Surface only", "Builds this map", "no save is changed"]:
 		if combined_text.find(token) < 0:
-			_fail("Generated setup visible/provenance text missed token %s: %s" % [token, combined_text])
+			_fail("Generated setup player-facing text missed token %s: %s" % [token, combined_text])
 			return false
-	if String(snapshot.get("start_text", "")) != "Validate & Launch":
-		_fail("Generated pending setup did not label the command as validation plus launch: %s" % JSON.stringify(snapshot))
+	for forbidden in ["internal", "provenance", "template", "profile", "bounded retry", "authored content", "validation"]:
+		if combined_text.to_lower().find(forbidden) >= 0:
+			_fail("Generated setup exposed internal term %s: %s" % [forbidden, combined_text])
+			return false
+	if String(snapshot.get("start_text", "")) != "Build & Play":
+		_fail("Generated pending setup did not expose the player command: %s" % JSON.stringify(snapshot))
 		return false
 	if not bool(snapshot.get("start_enabled", false)):
 		_fail("Generated launch button was disabled for a valid generated setup.")
@@ -218,8 +222,8 @@ func _assert_strict_h3maped_scope_surface(snapshot: Dictionary) -> bool:
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	if combined_text.find("Underground off") < 0:
-		_fail("Generated strict H3MapEd scope did not reflect surface-only provenance: %s" % combined_text)
+	if combined_text.find("Surface only") < 0:
+		_fail("Generated strict H3MapEd scope did not explain the surface-only setup: %s" % combined_text)
 		return false
 	return true
 
@@ -238,18 +242,21 @@ func _assert_failure_surface(shell: Node, setup: Dictionary) -> bool:
 	if bool(snapshot.get("start_enabled", true)):
 		_fail("Generated launch button stayed enabled after forced validation failure.")
 		return false
-	if String(snapshot.get("start_text", "")) != "Launch Generated":
+	if String(snapshot.get("start_text", "")) != "Setup Unavailable":
 		_fail("Generated blocked setup did not return to the blocked launch command label: %s" % JSON.stringify(snapshot))
 		return false
 	var failure_text := "\n".join([
-		String(setup.get("failure_handoff", "")),
-		String(setup.get("setup_summary", "")),
 		String(snapshot.get("status_full", "")),
 		String(snapshot.get("provenance_full", "")),
+		String(snapshot.get("start_tooltip", "")),
 	])
-	for token in ["blocked", "validation", "attempt", "retry", "no session", "campaign", "authored"]:
-		if failure_text.to_lower().find(token) < 0:
+	for token in ["Map build stopped", "change the seed or setup", "This setup is unavailable", "No game starts", "no save is changed"]:
+		if failure_text.find(token) < 0:
 			_fail("Generated failure surface missed token %s: %s" % [token, failure_text])
+			return false
+	for forbidden in ["internal", "provenance", "template", "profile", "retry", "validation", "authored"]:
+		if failure_text.to_lower().find(forbidden) >= 0:
+			_fail("Generated failure surface exposed internal term %s: %s" % [forbidden, failure_text])
 			return false
 	return true
 
@@ -333,11 +340,16 @@ func _assert_legacy_compact_launch_normalized(setup: Dictionary) -> bool:
 	if not bool(setup.get("ok", false)):
 		_fail("Public Small/Land setup did not override stale compact template/profile into native h3maped generation: %s" % JSON.stringify(setup))
 		return false
-	if not String(setup.get("template_id", "")).begins_with("h3maped_template_"):
-		_fail("Public Small/Land setup did not resolve an h3maped template after stale compact override: %s" % JSON.stringify(setup))
+	var native_generation: Dictionary = setup.get("native_generation", {}) if setup.get("native_generation", {}) is Dictionary else {}
+	var provenance: Dictionary = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	var normalized: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
+	if String(native_generation.get("status", "")) != "complete" or not bool(native_generation.get("supported_parity_config", false)):
+		_fail("Public Small/Land setup did not use the completed native runtime after stale compact override: %s" % JSON.stringify(native_generation))
 		return false
-	if String(setup.get("profile_id", "")) != "h3maped_exe_rng_profile":
-		_fail("Public Small/Land setup did not resolve the h3maped executable profile after stale compact override: %s" % JSON.stringify(setup))
+	if String(normalized.get("template_selection_authority", "")) != "recovered_h3maped_exe_source_order" \
+			or String(normalized.get("template_selection_mode", "")) != "recovered_h3maped_exe_rng_exact_state_chain" \
+			or bool(normalized.get("translated_template_authority_used", true)):
+		_fail("Public Small/Land setup did not preserve recovered executable source-order authority: %s" % JSON.stringify(normalized))
 		return false
 	return true
 
@@ -351,29 +363,23 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 			_fail("Generated UI launch provenance missed %s: %s" % [key, JSON.stringify(provenance)])
 			return false
 	var normalized: Dictionary = provenance.get("normalized_config", {}) if provenance.get("normalized_config", {}) is Dictionary else {}
-	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
-	var normalized_template_id := String(normalized.get("template_id", identity.get("template_id", "")))
-	var normalized_profile_id := String(normalized.get("profile_id", "")).strip_edges()
-	if normalized_profile_id == "":
-		normalized_profile_id = String(identity.get("profile_id", "")).strip_edges()
-	if normalized_template_id == "" or normalized_profile_id == "" or normalized_template_id == AUTO_TEMPLATE_ID or normalized_profile_id == AUTO_TEMPLATE_ID:
-		_fail("Generated UI launch provenance did not resolve native catalog template/profile: %s" % JSON.stringify(provenance))
+	if String(normalized.get("template_id", "")) == AUTO_TEMPLATE_ID or String(normalized.get("profile_id", "")) == AUTO_TEMPLATE_ID:
+		_fail("Generated UI launch provenance retained the pre-launch auto-selection sentinel: %s" % JSON.stringify(normalized))
 		return false
-	if not normalized_template_id.begins_with("h3maped_template_"):
-		_fail("Generated UI launch provenance did not resolve an H3MapEd source template: %s" % JSON.stringify(provenance))
-		return false
-	if normalized_profile_id != "h3maped_exe_rng_profile":
-		_fail("Generated UI launch provenance did not record H3MapEd executable profile authority: %s" % JSON.stringify(provenance))
-		return false
-	if String(normalized.get("template_selection_mode", "")) != "h3maped_exe_rng" \
-			or String(normalized.get("template_selection_authority", "")) != "h3maped_exe_rng_original_catalog":
+	if String(normalized.get("template_selection_mode", "")) != "recovered_h3maped_exe_rng_exact_state_chain" \
+			or String(normalized.get("template_selection_authority", "")) != "recovered_h3maped_exe_source_order" \
+			or not bool(normalized.get("template_selection_runtime_generation_allowed", false)) \
+			or bool(normalized.get("translated_template_authority_used", true)):
 		_fail("Generated UI launch provenance did not record H3MapEd executable selection authority: %s" % JSON.stringify(normalized))
 		return false
 	var boundaries: Dictionary = provenance.get("boundaries", {}) if provenance.get("boundaries", {}) is Dictionary else {}
 	if bool(boundaries.get("authored_content_writeback", true)) or bool(boundaries.get("content_scenarios_json", true)) or bool(boundaries.get("generated_scenario_draft_registry", true)) or bool(boundaries.get("legacy_json_scenario_record", true)):
 		_fail("Generated UI launch provenance crossed forbidden boundary: %s" % JSON.stringify(provenance))
 		return false
-	if String(normalized.get("size_class_id", "")) != "homm3_small" or int(normalized.get("width", 0)) != 36 or int(normalized.get("height", 0)) != 36:
+	if String(normalized.get("size_class_id", "")) != "small" \
+			or String(normalized.get("h3maped_strict_scope", "")) != "strict_small_36x36_one_level_land_only" \
+			or int(normalized.get("width", 0)) != 36 \
+			or int(normalized.get("height", 0)) != 36:
 		_fail("Generated UI launch provenance missed HoMM3 Small source size: %s" % JSON.stringify(normalized))
 		return false
 	return true

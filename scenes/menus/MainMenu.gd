@@ -1016,8 +1016,8 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_profile_picker()
 	_generated_template_picker.visible = false
 	_generated_profile_picker.visible = false
-	_generated_template_picker.tooltip_text = "Internal provenance: native generation selects a supported catalog template from seed and size."
-	_generated_profile_picker.tooltip_text = "Internal provenance: native generation resolves the catalog profile for the selected template."
+	_generated_template_picker.tooltip_text = "Map layout is chosen automatically from the selected size and seed."
+	_generated_profile_picker.tooltip_text = "Map rules are chosen automatically for this setup."
 
 	_rebuild_generated_player_count_picker()
 
@@ -1039,7 +1039,7 @@ func _configure_generated_random_map_controls() -> void:
 				break
 	if water_selected >= 0:
 		_generated_water_picker.select(water_selected)
-	_generated_water_picker.tooltip_text = "Water policy."
+	_generated_water_picker.tooltip_text = "Only land maps are available for generated skirmishes in this release."
 
 	_rebuild_generated_level_picker()
 	var underground_supported := _generated_underground_supported()
@@ -1064,7 +1064,7 @@ func _rebuild_generated_option_picker(picker: OptionButton, options: Array, sele
 			selected_index = index
 	if selected_index >= 0:
 		picker.select(selected_index)
-	picker.tooltip_text = "%s: generated map setup provenance records this id." % label_key.capitalize()
+	picker.tooltip_text = "Choose the generated map %s." % label_key
 
 func _rebuild_skirmish_browser() -> void:
 	_skirmish_entries = ScenarioSelectRulesScript.build_skirmish_browser_entries()
@@ -1154,52 +1154,34 @@ func _refresh_generated_random_map_setup() -> void:
 func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 	var retry: Dictionary = setup.get("retry_status", {}) if setup.get("retry_status", {}) is Dictionary else {}
 	var status_text := ""
-	var provenance_text := ""
+	var plan_text := ""
 	var pending_launch_validation := _generated_setup_pending_launch_validation(setup, retry)
-	_start_generated_skirmish_button.text = "Validate & Launch" if pending_launch_validation else "Launch Generated"
+	_start_generated_skirmish_button.text = "Build & Play"
 	if bool(setup.get("ok", false)):
 		var seed_source := String(setup.get("seed_source", "explicit"))
 		var seed_label := String(setup.get("normalized_seed", ""))
 		if seed_source == "auto_on_launch":
-			seed_label = "auto on launch"
+			seed_label = "Auto seed"
 		if pending_launch_validation:
-			status_text = "Generated setup ready | validation pending on launch."
+			status_text = "Ready to build | checked before Day 1"
 		else:
-			status_text = "Generated validation %s | %d attempt(s), %d retry." % [
-				String(retry.get("validation_status", "pass")),
-				int(retry.get("attempt_count", 1)),
-				int(retry.get("retry_count", 0)),
-			]
-		provenance_text = "Seed %s | Size %s | Players %d | Water %s | Levels %s | Underground %s | Internal profile %s/%s" % [
+			var attempt_count := int(retry.get("attempt_count", 1))
+			status_text = "Map ready | built in %d attempt%s" % [attempt_count, "" if attempt_count == 1 else "s"]
+		plan_text = "Seed: %s | %s | %d players | Land | Surface only" % [
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,
-			_generated_water_mode,
-			"Surface + Underground (2 Levels)" if _generated_underground else "Surface Only (1 Level)",
-			"on" if _generated_underground else "off",
-			String(setup.get("template_id", "")),
-			String(setup.get("profile_id", "")),
 		]
 		_start_generated_skirmish_button.disabled = false
-		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
-			"Launch check: setup is configured; native H3MapEd validation and bounded retry run only after this command." if pending_launch_validation else "",
-			String(setup.get("launch_handoff", "")),
-			String(setup.get("failure_handoff", "")),
-			String(setup.get("setup_summary", "")),
-		])
+		_start_generated_skirmish_button.tooltip_text = "Builds this map, checks that routes and starting positions are playable, and then starts Day 1. If map creation fails, you stay here and no save is changed."
 	else:
-		status_text = "Generated validation blocked | %d attempt(s), %d retry." % [
-			int(retry.get("attempt_count", 0)),
-			int(retry.get("retry_count", 0)),
-		]
-		provenance_text = String(setup.get("failure_handoff", "Generated setup failed validation."))
+		status_text = "Map build stopped | change the seed or setup"
+		plan_text = "This setup is unavailable. Choose Small or Medium, Land, and Surface only."
+		_start_generated_skirmish_button.text = "Setup Unavailable"
 		_start_generated_skirmish_button.disabled = true
-		_start_generated_skirmish_button.tooltip_text = _join_nonempty_lines([
-			String(setup.get("failure_handoff", "")),
-			String(setup.get("setup_summary", "")),
-		])
+		_start_generated_skirmish_button.tooltip_text = "Change the seed or choose another available setup. No game starts and no save is changed."
 	_set_compact_label(_generated_status_label, status_text, 2, 72)
-	_set_compact_label(_generated_provenance_label, provenance_text, 2, 118)
+	_set_compact_label(_generated_provenance_label, plan_text, 2, 118)
 	_generated_progress_bar.visible = false
 
 func _generated_setup_pending_launch_validation(setup: Dictionary, retry: Dictionary) -> bool:
@@ -1229,9 +1211,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	_generated_generation_snapshots = []
 	_set_generated_random_map_inputs_disabled(true)
 	_set_generated_generation_stage(
-		"Preparing generated map",
+		"Preparing map choices",
 		10,
-		"Preparing generated map launch; seed, size, player count, water, underground, and internal size-default profile are locked for this run."
+		"Locking the selected seed, size, player count, and land layout for this map."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1239,9 +1221,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	var config := _generated_random_map_config()
 	profile_buckets["config"] = ProfileLogScript.elapsed_ms(phase_started)
 	_set_generated_generation_stage(
-		"Validating generated setup",
+		"Checking map routes",
 		25,
-		"Validating generated map seed/config with bounded retry. Map size, internal size-default profile, player-count, and density rules are unchanged."
+		"Checking starting positions, travel routes, guards, and required map objects before play."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1254,9 +1236,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 	profile_buckets["build_setup_with_retry"] = ProfileLogScript.elapsed_ms(phase_started)
 	_generated_last_setup = setup.duplicate(true)
 	_set_generated_generation_stage(
-		"Generation validation complete" if bool(setup.get("ok", false)) else "Generation blocked",
+		"Map checks complete" if bool(setup.get("ok", false)) else "Map build stopped",
 		62,
-		String(setup.get("setup_summary", setup.get("failure_handoff", "Generated map validation finished.")))
+		"The map is playable and ready for Day 1." if bool(setup.get("ok", false)) else "This map could not be built. Change the seed or setup and try again."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1280,9 +1262,9 @@ func _start_generated_skirmish_staged(route_to_overworld: bool) -> Dictionary:
 		}
 
 	_set_generated_generation_stage(
-		"Materializing playable session",
+		"Preparing Day 1",
 		82,
-		"Loading the generated map package from disk and normalizing the playable overworld without authored writeback."
+		"Preparing commanders, towns, objectives, and starting resources."
 	)
 	await _yield_generated_generation_frame()
 
@@ -1380,7 +1362,7 @@ func _set_generated_generation_stage(stage_label: String, progress_value: int, d
 	}
 	_generated_progress_bar.visible = true
 	_generated_progress_bar.value = float(_generated_generation_stage.get("progress", 0))
-	_start_generated_skirmish_button.text = "Generating..."
+	_start_generated_skirmish_button.text = "Building..."
 	_start_generated_skirmish_button.disabled = true
 	_start_generated_skirmish_button.tooltip_text = detail
 	_set_compact_label(_generated_status_label, "%s | %d%%" % [stage_label, int(_generated_generation_stage.get("progress", 0))], 2, 72)
@@ -1452,9 +1434,9 @@ func _generated_random_map_preview_setup() -> Dictionary:
 		},
 		"launch_validation_status": "pending_launch_validation",
 		"preview_only": true,
-		"setup_summary": "Generated Skirmish setup configured; native validation has not run yet. Launch validates the map with bounded retry before creating a session.",
-		"launch_handoff": "Launch handoff: validate generated Skirmish from seed/config provenance with bounded retry, then start a fresh Day 1 Skirmish expedition only if validation passes.",
-		"failure_handoff": "Validation failures stay in this setup surface; no session, save, campaign progress, or authored content changes occur when generation is blocked.",
+		"setup_summary": "Map choices are ready. Build & Play checks the map before starting Day 1.",
+		"launch_handoff": "Build the selected map and start a fresh Day 1 skirmish only after its routes and starting positions pass the playability check.",
+		"failure_handoff": "If the map cannot be built, remain on this setup screen without changing any save.",
 		"campaign_adoption": false,
 		"alpha_parity_claim": false,
 	}

@@ -485,7 +485,7 @@ theme_override_constants/separation = 6
 
 [node name="GeneratedMapTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
 layout_mode = 2
-text = "Generated Map"
+text = "Build a New Map"
 
 [node name="GeneratedMapControls" type="GridContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
 layout_mode = 2
@@ -535,14 +535,14 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 34)
 layout_mode = 2
-text = "Launch Generated"
+text = "Build & Play"
 
 [node name="GeneratedMapStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(220, 34)
 layout_mode = 2
 autowrap_mode = 3
-text = "Generated setup status"
+text = "Map setup status"
 
 [node name="GeneratedMapProgress" type="ProgressBar" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox"]
 unique_name_in_owner = true
@@ -555,7 +555,7 @@ show_percentage = false
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
-text = "Generated provenance"
+text = "Map plan"
 
 [node name="ModeSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
 layout_mode = 2

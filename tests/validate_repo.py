@@ -19475,11 +19475,12 @@ def validate_random_map_generated_setup_pending_retry_surface(errors: list[str])
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "Validate & Launch",
+        "Build & Play",
         "_generated_setup_pending_launch_validation",
         "launch_validation_status",
         "pending_launch_validation",
-        "Launch check: setup is configured",
+        "Ready to build | checked before Day 1",
+        "If map creation fails, you stay here and no save is changed.",
         "_apply_generated_random_map_setup_surface(setup)",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing generated-map pending/retry surface token: {required_token}")
@@ -19488,10 +19489,11 @@ def validate_random_map_generated_setup_pending_retry_surface(errors: list[str])
         report_text = RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "pending_launch_validation",
-            "Validate & Launch",
+            "Build & Play",
             "RANDOM_MAP_PLAYER_RETRY_POLICY.get(\"max_attempts\"",
             "Generated setup preview did not stay pending launch validation",
             "Generated launch button stayed enabled after forced validation failure",
+            "Generated setup exposed internal term",
         ):
             ensure(required_token in report_text, errors, f"random_map_player_setup_retry_ux_report.gd is missing generated-map pending/retry token: {required_token}")
 
