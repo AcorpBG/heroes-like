@@ -20386,10 +20386,45 @@ def validate_packaging_platform_readiness(errors: list[str]) -> None:
             'platform="Windows Desktop"',
             'export_path="build/windows/heroes-like.exe"',
             'export_filter="all_resources"',
-            'exclude_filter=".git/*,.godot/*,.artifacts/*,tmp/*,*.dll.a"',
             'binary_format/embed_pck=false',
         ):
             ensure(required_text in preset_text, errors, f"export_presets.cfg is missing required packaging token: {required_text}")
+        exclusion_lines = [
+            line.strip()
+            for line in preset_text.splitlines()
+            if line.strip().startswith('exclude_filter="')
+        ]
+        ensure(len(exclusion_lines) == 2, errors, "Linux and Windows release presets must each define one exclusion filter")
+        exclusion_sets = [
+            set(line.removeprefix('exclude_filter="').removesuffix('"').split(","))
+            for line in exclusion_lines
+        ]
+        for required_exclusion in (
+            ".git/*",
+            ".godot/*",
+            ".artifacts/*",
+            "build/*",
+            "tmp/*",
+            "docs/*",
+            "tests/*",
+            "tools/*",
+            "third_party/*",
+            "ops/*",
+            "maps/*",
+            "art/overworld/source/*",
+            "src/gdextension/build/*",
+            "src/gdextension/include/*",
+            "src/gdextension/src/*",
+            "bin/*template_debug*",
+            "bin/h3maped_rmg_core_selftest*",
+            "bin/rmg_native_batch_export_cli*",
+            "*.dll.a",
+        ):
+            ensure(
+                len(exclusion_sets) == 2 and all(required_exclusion in exclusions for exclusions in exclusion_sets),
+                errors,
+                f"Both release presets must exclude development payload token: {required_exclusion}",
+            )
 
     if GDEXTENSION_MANIFEST_PATH.exists():
         manifest_text = GDEXTENSION_MANIFEST_PATH.read_text(encoding="utf-8")

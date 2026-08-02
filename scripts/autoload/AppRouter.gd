@@ -351,7 +351,7 @@ func _change_scene(scene_path: String) -> void:
 		if packed_error != OK:
 			push_error("Failed to change scene to %s (error %d)." % [scene_path, packed_error])
 		return
-	if not FileAccess.file_exists(scene_path):
+	if not ResourceLoader.exists(scene_path):
 		push_error("Scene file is missing: %s" % scene_path)
 		return
 
