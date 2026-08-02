@@ -2623,24 +2623,24 @@ static func describe_action_readiness_confirmation(session: SessionStateStoreScr
 static func intent_forecast_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
-			"visible_text": "Intent forecast: no battle is loaded.",
-			"tooltip_text": "Intent Forecast\n- No battle is loaded.",
+			"visible_text": "Suggested order unavailable.",
+			"tooltip_text": "Order Preview\n- No battle is loaded.",
 			"readiness": "unavailable",
 		}
 	var battle = session.battle
 	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		return {
-			"visible_text": "Intent forecast: wait for the next stack.",
-			"tooltip_text": "Intent Forecast\n- No stack is queued to act.",
+			"visible_text": "Suggested order: wait for the next stack.",
+			"tooltip_text": "Order Preview\n- No stack is queued to act.",
 			"readiness": "waiting",
 		}
 	if String(active_stack.get("side", "")) != "player":
 		var enemy_action := BattleAiRulesScript.choose_enemy_action(battle, active_stack, battle.get("enemy_hero", {}))
 		var enemy_reply := _enemy_action_preview_summary(battle, active_stack, enemy_action)
 		return {
-			"visible_text": "Intent forecast: enemy initiative; %s" % _intent_forecast_sentence(enemy_reply),
-			"tooltip_text": "Intent Forecast\n- Active: %s\n- Incoming: %s\n- Readiness: player input is locked until command returns." % [
+			"visible_text": "Incoming order: %s" % _intent_forecast_sentence(enemy_reply),
+			"tooltip_text": "Order Preview\n- Active: %s\n- Incoming: %s\n- Readiness: player input is locked until command returns." % [
 				_stack_label(active_stack),
 				enemy_reply,
 			],
@@ -2658,8 +2658,8 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 	var action_id := _intent_forecast_action_id(surface, tactical_order, active_stack)
 	if action_id == "":
 		return {
-			"visible_text": "Intent forecast: no legal order is open.",
-			"tooltip_text": "Intent Forecast\n- Active: %s\n- No ready action is available from the current posture.\n- Next: retarget, move, or wait for initiative to change." % _stack_label(active_stack),
+			"visible_text": "Suggested order: no legal action is open.",
+			"tooltip_text": "Order Preview\n- Active: %s\n- No ready action is available from the current posture.\n- Next: retarget, move, or wait for initiative to change." % _stack_label(active_stack),
 			"readiness": "blocked",
 		}
 	var action: Dictionary = surface.get(action_id, {}) if surface.get(action_id, {}) is Dictionary else {}
@@ -2680,13 +2680,13 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 	var retarget_line := ""
 	if tactical_target_id != "" and tactical_target_id != String(get_selected_target(battle).get("battle_id", "")) and action_id in ["strike", "shoot"]:
 		retarget_line = "Retarget first: %s." % target_label
-	var visible := "Intent forecast: %s%s; %s." % [
+	var visible := "Suggested order: %s%s; %s." % [
 		action_label,
 		" -> %s" % target_label if target_label != "" else "",
 		_intent_forecast_sentence(expected_result),
 	]
 	var tooltip_lines := [
-		"Intent Forecast",
+		"Order Preview",
 		"- Active: %s" % _stack_label(active_stack),
 		"- Preferred order: %s%s" % [action_label, " -> %s" % target_label if target_label != "" else ""],
 		"- Expected result: %s" % expected_result,
@@ -2714,7 +2714,7 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 	}
 
 static func describe_intent_forecast(session: SessionStateStoreScript.SessionData) -> String:
-	return String(intent_forecast_payload(session).get("visible_text", "Intent forecast unavailable."))
+	return String(intent_forecast_payload(session).get("visible_text", "Suggested order unavailable."))
 
 static func _intent_forecast_action_id(surface: Dictionary, tactical_order: Dictionary, active_stack: Dictionary) -> String:
 	var tactical_action := String(tactical_order.get("action", ""))
@@ -2747,7 +2747,7 @@ static func _intent_forecast_expected_result(
 	if action_id in ["strike", "shoot"] and not active_stack.is_empty() and not target.is_empty():
 		return _attack_action_summary(active_stack, target, battle, action_id == "shoot").trim_suffix(".")
 	if action_id == "advance":
-		return _advance_action_summary(battle, active_stack).trim_suffix(".")
+		return _intent_forecast_advance_result(battle, active_stack)
 	if action_id == "defend":
 		return _defend_action_summary(battle, active_stack).trim_suffix(".")
 	if action_id == "retreat":
@@ -2756,6 +2756,19 @@ static func _intent_forecast_expected_result(
 		return _surrender_action_summary(session).trim_suffix(".")
 	var consequence := String(action.get("consequence", action.get("summary", ""))).strip_edges()
 	return consequence if consequence != "" else "initiative advances after the order resolves"
+
+static func _intent_forecast_advance_result(battle: Dictionary, active_stack: Dictionary) -> String:
+	var summary := _advance_action_summary(battle, active_stack).trim_suffix(".")
+	if int(battle.get("distance", 1)) <= 0:
+		return String(summary.split(";", false)[0]).strip_edges()
+	var consequence_clauses := []
+	for clause_value in summary.split(" | ", false):
+		var clause := String(clause_value).strip_edges()
+		if clause.to_lower().contains("click"):
+			continue
+		if clause != "":
+			consequence_clauses.append(clause)
+	return " | ".join(consequence_clauses) if not consequence_clauses.is_empty() else "Advance changes the active stack's battle position"
 
 static func _intent_forecast_sentence(text: String) -> String:
 	var cleaned := text.strip_edges()

@@ -1928,8 +1928,11 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 	if not manual_cue_text.contains("Try:") or not manual_cue_text.contains("click"):
 		push_error("Battle smoke: battle order rail lost the compact manual-play action cue: %s." % snapshot)
 		return false
-	if not visible_action_guidance.contains("Try:"):
-		push_error("Battle smoke: manual-play action cue is not visible in the order rail: %s." % snapshot)
+	if not visible_action_guidance.contains("Suggested order:"):
+		push_error("Battle smoke: scored order consequence is not visible in the order rail: %s." % snapshot)
+		return false
+	if visible_action_guidance.contains("Try:") or visible_action_guidance.contains("click green"):
+		push_error("Battle smoke: visible order rail regressed to tutorial instructions instead of live consequence feedback: %s." % snapshot)
 		return false
 	var target_handoff: Dictionary = snapshot.get("target_handoff", {}) if snapshot.get("target_handoff", {}) is Dictionary else {}
 	var target_handoff_text := "\n".join([
@@ -1948,8 +1951,9 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 	if String(target_handoff.get("focus", "")) == "" or String(target_handoff.get("board_click", "")) == "" or String(target_handoff.get("cycle", "")) == "":
 		push_error("Battle smoke: target handoff payload is missing focus, board-click, or cycle context: %s." % target_handoff)
 		return false
-	if not visible_action_guidance.contains("Target handoff:"):
-		push_error("Battle smoke: target handoff cue is not visible in the footer action guide: %s." % snapshot)
+	var intent_visible_text := String(snapshot.get("intent_forecast_visible_text", ""))
+	if intent_visible_text == "" or not visible_action_guidance.contains(intent_visible_text):
+		push_error("Battle smoke: visible suggested order omits its live expected consequence: %s." % snapshot)
 		return false
 	var confirmation: Dictionary = snapshot.get("action_confirmation", {}) if snapshot.get("action_confirmation", {}) is Dictionary else {}
 	var confirmation_text := "\n".join([

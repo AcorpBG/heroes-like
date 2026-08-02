@@ -55540,9 +55540,9 @@
       ],
       "startedAt": "2026-08-02T03:26:25Z",
       "status": "in_progress",
-      "summary": "In progress. Overworld and town use responsive compact layouts at 1280x720; at 1024x600 the town opens scenery-first and a footer switch exposes the full-width order board without losing management access. Generated-skirmish setup presents a player-readable Build & Play flow without recovery internals. The Load board uses concise expedition rows and resume previews and re-reads the selected file before routing. Fresh expeditions open on a deterministic visible, reachable, non-combat route target with an enabled primary order while preserving game state. Town construction is now a two-step plan/confirm workflow that exposes exact cost, readiness, strategic impact, trade handoff, and non-mutating selection before resources are spent. Continue the remaining broader UX polish before completing this slice.",
+      "summary": "In progress. Overworld and town use responsive compact layouts at 1280x720; at 1024x600 the town opens scenery-first and a footer switch exposes the full-width order board without losing management access. Generated-skirmish setup and Load use player-readable workflows without recovery or file-integrity internals. Fresh expeditions open on a safe suggested route with an enabled order. Town construction uses a two-step plan/confirm workflow with exact cost, readiness, impact, trade handoff, and non-mutating selection. Battle now places the scored suggested order and expected damage, retaliation, range, momentum, or posture consequence directly in the existing command rail instead of hiding it behind a tooltip or leading with click instructions. Continue the remaining broader UX polish before completing this slice.",
       "title": "UX Polish Player Comprehension",
-      "updatedAt": "2026-08-02T05:12:48Z",
+      "updatedAt": "2026-08-02T05:20:17Z",
       "validation": {
         "commands": [
           "godot4 --headless --path /root/dev/heroes-like --scene res://tests/player_comprehension_layout_smoke.tscn",
@@ -55562,6 +55562,7 @@
           "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/random_map_generated_visual_path_regression_report.tscn",
           "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_entity_cache_active_refresh_regression.tscn",
           "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_intent_forecast_report.tscn",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
@@ -55598,13 +55599,17 @@
             "Build options now select a construction plan instead of committing immediately; ready, trade-coverable, and blocked options remain inspectable from the same list.",
             "The selected build preview exposes exact cost, readiness, strategic impact, and a non-mutating selection guarantee; a separate primary Build command performs the irreversible spend, while market-coverable plans route to Trade.",
             "Focused multi-size coverage proves selection preserves buildings and resources, confirmation adds exactly the chosen building and spends resources, and the 1024x600 Town Orders switch keeps both management and scenic return commands inside the frame.",
-            "Existing town entity-cache automation and the broader town/battle visual smoke continue to execute and validate the direct construction commit path."
+            "Existing town entity-cache automation and the broader town/battle visual smoke continue to execute and validate the direct construction commit path.",
+            "The battle action guide now renders the scored Suggested order and expected consequence from the existing read-only intent payload as its first line, while retaining position and objective checks below it.",
+            "Advance previews omit green-hex tutorial wording from the visible consequence so range, momentum, obstruction, cover, contact, and objective effects receive the limited command-rail space; deeper interaction guidance remains in tooltips.",
+            "Strike and Shoot previews surface live damage, unit-loss, and retaliation ranges; enemy initiative surfaces the incoming order without implying player control.",
+            "The focused intent test preserves scored tactical-order selection, target identity, expected damage, risk, confidence, and non-mutation, while the broader town/battle smoke rejects visible Try/click instructions and requires the exact forecast line on-screen."
           ],
-          "battleLayoutMatrix": "Stopped after more than four minutes with no output; no completion claim. Battle was unchanged and its fresh 1280x720 visual capture passed through the existing report."
+          "battleLayoutMatrix": "The earlier broad battle-layout matrix stopped after more than four minutes with no output and remains unclaimed. This increment passed the focused intent gate, the broader town/battle visual smoke, repository validation, and refreshed 1280x720 runtime capture."
         },
         "sliceId": "ux-polish-player-comprehension-10184",
-        "status": "passed_compact_layout_setup_save_load_first_turn_and_town_planning_increments_slice_remains_in_progress",
-        "updatedAt": "2026-08-02T05:12:48Z"
+        "status": "passed_compact_setup_save_load_first_turn_town_planning_and_visible_battle_intent_increments_slice_remains_in_progress",
+        "updatedAt": "2026-08-02T05:20:17Z"
       }
     },
     {

@@ -665,7 +665,7 @@ func _refresh() -> void:
 	_set_compact_label(
 		_action_guide,
 		"%s\n%s\n%s" % [
-			String(target_handoff.get("visible_text", BattleRules.describe_action_surface(_session))),
+			String(intent_forecast.get("visible_text", BattleRules.describe_action_surface(_session))),
 			String(position_check.get("visible_text", "")),
 			String(objective_check.get("visible_text", "")),
 		],
