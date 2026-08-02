@@ -103,6 +103,7 @@ const TAB_HELP_TOPIC := {
 @onready var _effects_volume_value: Label = %EffectsVolumeValue
 @onready var _ui_scale_picker: OptionButton = %UIScalePicker
 @onready var _high_contrast_toggle: CheckButton = %HighContrastToggle
+@onready var _color_cue_picker: OptionButton = %ColorCuePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
@@ -538,6 +539,15 @@ func _on_high_contrast_toggled(enabled: bool) -> void:
 	_apply_visual_theme()
 	_refresh_settings_panel()
 
+func _on_color_cue_selected(index: int) -> void:
+	if _syncing_settings_ui:
+		return
+	if index < 0 or index >= _color_cue_picker.get_item_count():
+		return
+	SettingsService.set_color_cue_mode_id(String(_color_cue_picker.get_item_metadata(index)))
+	_apply_visual_theme()
+	_refresh_settings_panel()
+
 func _on_reduce_motion_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
@@ -926,6 +936,18 @@ func _refresh_settings_panel() -> void:
 	_ui_scale_picker.tooltip_text = "Whole-interface scale applies immediately.\n%s" % settings_check
 	_high_contrast_toggle.button_pressed = SettingsService.high_contrast_ui_enabled()
 	_high_contrast_toggle.tooltip_text = "High contrast applies immediately across shared interface surfaces.\n%s" % settings_check
+	_color_cue_picker.clear()
+	var color_cue_options := SettingsService.build_color_cue_options()
+	var selected_color_cue_index := -1
+	for index in range(color_cue_options.size()):
+		var option: Dictionary = color_cue_options[index]
+		_color_cue_picker.add_item(String(option.get("label", "Standard")), index)
+		_color_cue_picker.set_item_metadata(index, String(option.get("id", "standard")))
+		if bool(option.get("selected", false)):
+			selected_color_cue_index = index
+	if selected_color_cue_index >= 0:
+		_color_cue_picker.select(selected_color_cue_index)
+	_color_cue_picker.tooltip_text = "Shape and palette assistance applies immediately to semantic controls and gameplay ownership cues.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
 	_syncing_settings_ui = false
@@ -2022,6 +2044,9 @@ func validation_snapshot() -> Dictionary:
 		"ui_scale_tooltip": _ui_scale_picker.tooltip_text,
 		"high_contrast_enabled": SettingsService.high_contrast_ui_enabled(),
 		"high_contrast_tooltip": _high_contrast_toggle.tooltip_text,
+		"color_cue_mode": SettingsService.color_cue_mode_id(),
+		"color_cue_picker_items": _picker_item_labels(_color_cue_picker),
+		"color_cue_tooltip": _color_cue_picker.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
@@ -2420,6 +2445,16 @@ func validation_set_high_contrast(enabled: bool) -> bool:
 	_on_high_contrast_toggled(enabled)
 	return SettingsService.high_contrast_ui_enabled() == enabled
 
+func validation_select_color_cue_mode(mode_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_color_cue_picker.get_item_count()):
+		if String(_color_cue_picker.get_item_metadata(index)) != mode_id:
+			continue
+		_color_cue_picker.select(index)
+		_on_color_cue_selected(index)
+		return SettingsService.color_cue_mode_id() == mode_id
+	return false
+
 func validation_select_frame_rate_limit(value: int) -> bool:
 	validation_open_settings_stage()
 	for index in range(_frame_rate_picker.get_item_count()):
@@ -2683,6 +2718,7 @@ func _apply_visual_theme() -> void:
 		_render_quality_picker,
 		_frame_rate_picker,
 		_ui_scale_picker,
+		_color_cue_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 

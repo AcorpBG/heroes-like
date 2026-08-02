@@ -5,6 +5,7 @@ signal hex_destination_requested(q: int, r: int)
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const HEX_COLUMNS := 11
 const HEX_ROWS := 7
@@ -105,7 +106,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620.0, 320.0)
-	tooltip_text = "Green hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
+	tooltip_text = "Outlined hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
 	_load_terrain_textures()
 
 func _notification(what: int) -> void:
@@ -418,6 +419,19 @@ func validation_hex_layout_summary() -> Dictionary:
 
 func validation_terrain_backdrop_summary() -> Dictionary:
 	return validation_terrain_rendering_summary()
+
+func validation_color_cue_summary() -> Dictionary:
+	return {
+		"mode": FrontierVisualKitScript.color_cue_mode(),
+		"assisted": FrontierVisualKitScript.color_cue_assist_enabled(),
+		"player_color": _side_color("player"),
+		"enemy_color": _side_color("enemy"),
+		"neutral_color": _controller_color("neutral"),
+		"player_side_mark": "circle_P" if FrontierVisualKitScript.color_cue_assist_enabled() else "none",
+		"enemy_side_mark": "triangle_E" if FrontierVisualKitScript.color_cue_assist_enabled() else "none",
+		"side_marks_drawn_with_stack_tokens": FrontierVisualKitScript.color_cue_assist_enabled(),
+		"board_tooltip_uses_color_independent_move_wording": "outlined hex" in tooltip_text.to_lower() and "green" not in tooltip_text.to_lower(),
+	}
 
 func validation_unit_art_summary() -> Dictionary:
 	var stack_entries := []
@@ -1570,6 +1584,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.96))
 			else:
 				_draw_unit_glyph(center, token_radius, stack)
+		_draw_stack_side_cue(center, token_radius, side)
 		_draw_stack_health_bar(center, radius, stack)
 		_draw_count_badge(center, token_radius, stack)
 		_draw_stack_caption(center, radius, stack)
@@ -2548,6 +2563,27 @@ func _draw_unit_glyph(center: Vector2, radius: float, stack: Dictionary) -> void
 		])
 		draw_polyline(_closed_points(shield), Color(0.98, 0.93, 0.74, 0.80), 1.6, true)
 
+func _draw_stack_side_cue(center: Vector2, token_radius: float, side: String) -> void:
+	if not FrontierVisualKitScript.color_cue_assist_enabled():
+		return
+	var marker_center := center + Vector2(-token_radius * 0.72, -token_radius * 0.70)
+	var marker_radius := maxf(7.0, token_radius * 0.34)
+	var outline := Color(0.98, 0.98, 0.94, 0.96)
+	var fill := _side_color(side).darkened(0.18)
+	if side == "player":
+		draw_circle(marker_center, marker_radius, fill)
+		draw_circle(marker_center, marker_radius, outline, false, 1.6)
+		_draw_centered_text("P", marker_center + Vector2(0.0, 3.4), outline, 9)
+		return
+	var triangle := PackedVector2Array([
+		marker_center + Vector2(0.0, -marker_radius),
+		marker_center + Vector2(marker_radius * 0.92, marker_radius * 0.78),
+		marker_center + Vector2(-marker_radius * 0.92, marker_radius * 0.78),
+	])
+	draw_colored_polygon(triangle, fill)
+	draw_polyline(PackedVector2Array([triangle[0], triangle[1], triangle[2], triangle[0]]), outline, 1.6, true)
+	_draw_centered_text("E", marker_center + Vector2(0.0, 3.8), outline, 9)
+
 func _draw_stack_health_bar(center: Vector2, radius: float, stack: Dictionary) -> void:
 	var bar_size := Vector2(radius * 0.96, 5.0)
 	var bar_rect := Rect2(center + Vector2(-bar_size.x * 0.5, radius * 0.54), bar_size)
@@ -3166,18 +3202,18 @@ func _movement_state_label() -> String:
 		var detail := String(hovered_preview.get("destination_detail", ""))
 		var setup_label := String(hovered_preview.get("selected_target_setup_label", ""))
 		if bool(hovered_preview.get("sets_up_selected_target_attack", false)) and setup_label != "":
-			return "Green: %s -> later %s" % [detail, setup_label]
+			return "Move: %s -> later %s" % [detail, setup_label]
 		if bool(hovered_preview.get("closes_on_selected_target", false)):
-			return "Green: %s -> close target" % detail
+			return "Move: %s -> close target" % detail
 		if detail != "":
-			return "Green: %s" % detail
+			return "Move: %s" % detail
 	var movement_intent := BattleRulesScript.active_movement_board_click_intent(_battle)
 	if String(movement_intent.get("action", "")) == "move":
 		if bool(movement_intent.get("selected_target_blocked", false)):
-			return "Green: Move first"
-		return "Green: Move"
+			return "Move: choose destination"
+		return "Move: available"
 	if bool(movement_intent.get("blocked", false)) and bool(movement_intent.get("selected_target_blocked", false)):
-		return "Green: no move"
+		return "Move: unavailable"
 	return ""
 
 func _hover_destination_preview() -> Dictionary:
@@ -3210,7 +3246,7 @@ func _stack_board_tooltip(battle_id: String) -> String:
 		if message != "":
 			return message
 	if battle_id == String(_battle.get("active_stack_id", "")):
-		return "Active: %s. Click green hexes to move; highlighted enemies show attacks." % String(stack.get("name", "Stack"))
+		return "Active: %s. Click outlined move hexes to reposition; highlighted enemies show attacks." % String(stack.get("name", "Stack"))
 	if side == "player":
 		return "%s is a friendly stack." % String(stack.get("name", "Stack"))
 	return "%s is an enemy stack." % String(stack.get("name", "Stack"))
@@ -3495,16 +3531,17 @@ func _stack_short_label(stack: Dictionary) -> String:
 	return name.left(13)
 
 func _side_color(side: String) -> Color:
-	return PLAYER_COLOR if side == "player" else ENEMY_COLOR
+	var fallback := PLAYER_COLOR if side == "player" else ENEMY_COLOR
+	return FrontierVisualKitScript.semantic_color(side, fallback)
 
 func _controller_color(controller: String) -> Color:
 	match controller:
 		"player":
-			return PLAYER_COLOR
+			return FrontierVisualKitScript.semantic_color("player", PLAYER_COLOR)
 		"enemy":
-			return ENEMY_COLOR
+			return FrontierVisualKitScript.semantic_color("enemy", ENEMY_COLOR)
 		_:
-			return NEUTRAL_COLOR
+			return FrontierVisualKitScript.semantic_color("neutral", NEUTRAL_COLOR)
 
 func _distance_label(distance: int) -> String:
 	match clampi(distance, 0, 2):

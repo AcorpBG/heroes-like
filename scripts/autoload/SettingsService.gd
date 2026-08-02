@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 7
+const SETTINGS_VERSION := 8
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -18,6 +18,8 @@ const EFFECTS_AUDIO_BUS := "Effects"
 const RENDER_QUALITY_LOW := "low"
 const RENDER_QUALITY_BALANCED := "balanced"
 const RENDER_QUALITY_HIGH := "high"
+const COLOR_CUE_MODE_STANDARD := "standard"
+const COLOR_CUE_MODE_ASSISTED := "assisted"
 
 const RENDER_QUALITY_OPTIONS := [
 	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
@@ -29,6 +31,11 @@ const UI_SCALE_OPTIONS := [
 	{"value": 100, "label": "100%"},
 	{"value": 115, "label": "115%"},
 	{"value": 130, "label": "130%"},
+]
+
+const COLOR_CUE_OPTIONS := [
+	{"id": COLOR_CUE_MODE_STANDARD, "label": "Standard"},
+	{"id": COLOR_CUE_MODE_ASSISTED, "label": "Shape + Palette"},
 ]
 
 const FRAME_RATE_OPTIONS := [
@@ -161,6 +168,7 @@ func build_default_settings() -> Dictionary:
 			"ui_scale_percent": 100,
 			"large_ui_text": false,
 			"high_contrast_ui": false,
+			"color_cue_mode": COLOR_CUE_MODE_STANDARD,
 			"reduce_motion": false,
 		},
 	}
@@ -186,6 +194,7 @@ func load_settings() -> void:
 		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
 		settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
 		settings["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
+		settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(String(config.get_value("accessibility", "color_cue_mode", defaults["accessibility"]["color_cue_mode"])))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
 	apply_settings()
@@ -209,6 +218,7 @@ func save_settings() -> String:
 	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
+	config.set_value("accessibility", "color_cue_mode", color_cue_mode_id())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
 	if error != OK:
@@ -277,6 +287,17 @@ func build_ui_scale_options() -> Array:
 			"value": int(option.get("value", 100)),
 			"label": String(option.get("label", "100%")),
 			"selected": int(option.get("value", 100)) == selected_scale,
+		})
+	return options
+
+func build_color_cue_options() -> Array:
+	var selected_mode := color_cue_mode_id()
+	var options := []
+	for option in COLOR_CUE_OPTIONS:
+		options.append({
+			"id": String(option.get("id", COLOR_CUE_MODE_STANDARD)),
+			"label": String(option.get("label", "Standard")),
+			"selected": String(option.get("id", COLOR_CUE_MODE_STANDARD)) == selected_mode,
 		})
 	return options
 
@@ -355,6 +376,18 @@ func large_ui_text_enabled() -> bool:
 func high_contrast_ui_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("high_contrast_ui", false))
 
+func color_cue_mode_id() -> String:
+	return _normalize_color_cue_mode(String(ensure_settings().get("accessibility", {}).get("color_cue_mode", COLOR_CUE_MODE_STANDARD)))
+
+func color_cue_mode_label() -> String:
+	for option in COLOR_CUE_OPTIONS:
+		if String(option.get("id", "")) == color_cue_mode_id():
+			return String(option.get("label", "Standard"))
+	return "Standard"
+
+func color_cue_assist_enabled() -> bool:
+	return color_cue_mode_id() == COLOR_CUE_MODE_ASSISTED
+
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
 
@@ -426,6 +459,11 @@ func set_high_contrast_ui_enabled(enabled: bool) -> void:
 	settings["accessibility"]["high_contrast_ui"] = enabled
 	_commit_settings()
 
+func set_color_cue_mode_id(mode_id: String) -> void:
+	ensure_settings()
+	settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(mode_id)
+	_commit_settings()
+
 func set_reduced_motion_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["accessibility"]["reduce_motion"] = enabled
@@ -435,6 +473,7 @@ func describe_settings() -> String:
 	var accessibility_parts := []
 	accessibility_parts.append("UI scale %s" % ui_scale_label())
 	accessibility_parts.append("High contrast %s" % ("On" if high_contrast_ui_enabled() else "Off"))
+	accessibility_parts.append("Color cues %s" % color_cue_mode_label())
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
@@ -499,6 +538,7 @@ func _apply_accessibility_settings() -> void:
 	if root != null:
 		root.content_scale_factor = float(ui_scale_percent()) / 100.0
 	FrontierVisualKitScript.set_high_contrast_enabled(high_contrast_ui_enabled())
+	FrontierVisualKitScript.set_color_cue_mode(color_cue_mode_id())
 
 func _apply_presentation_settings() -> void:
 	var resolution := presentation_resolution_size()
@@ -587,6 +627,12 @@ func _normalize_ui_scale_percent(value: int) -> int:
 		if int(option.get("value", 100)) == value:
 			return value
 	return 100
+
+func _normalize_color_cue_mode(mode_id: String) -> String:
+	for option in COLOR_CUE_OPTIONS:
+		if String(option.get("id", COLOR_CUE_MODE_STANDARD)) == mode_id:
+			return mode_id
+	return COLOR_CUE_MODE_STANDARD
 
 func _render_quality_option(quality_id: String) -> Dictionary:
 	var normalized := _normalize_render_quality(quality_id)

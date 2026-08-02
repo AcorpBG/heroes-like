@@ -1163,7 +1163,7 @@ func _battle_position_check_cue_surface() -> Dictionary:
 			next_step = "Click the highlighted target or use %s." % click_label
 		elif bool(click_intent.get("blocked", false)) and int(movement_intent.get("destination_count", 0)) > 0:
 			readiness = "Move"
-			reach_line = "%s needs a green hex move" % target_label
+			reach_line = "%s needs a move before attacking" % target_label
 			next_step = _battle_position_move_next_step(movement_options, target_label)
 		elif legal_target_ids.size() > 0:
 			readiness = "Retarget"
@@ -1171,17 +1171,17 @@ func _battle_position_check_cue_surface() -> Dictionary:
 			next_step = "Cycle target focus or click a highlighted enemy."
 		elif int(movement_intent.get("destination_count", 0)) > 0:
 			readiness = "Move"
-			reach_line = "%d green hex move%s open" % [
+			reach_line = "%d move destination%s open" % [
 				int(movement_intent.get("destination_count", 0)),
 				"" if int(movement_intent.get("destination_count", 0)) == 1 else "s",
 			]
 			next_step = _battle_position_move_next_step(movement_options, target_label)
 		else:
 			readiness = "Hold"
-			reach_line = "no attack or green hex move is open"
+			reach_line = "no attack or move destination is open"
 			next_step = "Use Defend, retarget, or wait for the next initiative handoff."
 	if movement_line == "":
-		movement_line = "Green hex movement is not currently available."
+		movement_line = "No move destination is currently available."
 	var visible := "Position check: %s; %s" % [
 		_short_text(reach_line, 54),
 		_short_text(_strip_sentence(next_step).trim_suffix("."), 46),
@@ -1214,9 +1214,9 @@ func _battle_position_move_next_step(movement_options: Array, target_label: Stri
 		var option_dict: Dictionary = option
 		if bool(option_dict.get("sets_up_selected_target_attack", false)):
 			var setup_label := String(option_dict.get("selected_target_setup_label", "attack")).strip_edges()
-			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a green hex"))).strip_edges()
+			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a move hex"))).strip_edges()
 			return "Click %s to set up %s on %s." % [
-				destination if destination != "" else "a green hex",
+				destination if destination != "" else "a move hex",
 				setup_label.to_lower(),
 				target_label,
 			]
@@ -1225,13 +1225,13 @@ func _battle_position_move_next_step(movement_options: Array, target_label: Stri
 			continue
 		var option_dict: Dictionary = option
 		if bool(option_dict.get("closes_on_selected_target", false)):
-			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a green hex"))).strip_edges()
+			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a move hex"))).strip_edges()
 			return "Click %s to close on %s." % [
-				destination if destination != "" else "a green hex",
+				destination if destination != "" else "a move hex",
 				target_label,
 			]
 	if not movement_options.is_empty():
-		return "Click a green hex to reposition before choosing the next order."
+		return "Click a move hex to reposition before choosing the next order."
 	return "Use Defend, retarget, or wait for the next initiative handoff."
 
 func _battle_position_stack_label(stack: Dictionary) -> String:

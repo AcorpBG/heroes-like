@@ -6,6 +6,7 @@ signal tile_hovered(tile: Vector2i)
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
 const TERRAIN_GRAMMAR_PATH := "res://content/terrain_grammar.json"
@@ -1236,7 +1237,7 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction("town", footprint))
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
 	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
-	_draw_town_owner_pennant(rect, _town_color(tile), remembered)
+	_draw_town_owner_pennant(rect, _town_color(tile), remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
@@ -1325,7 +1326,7 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	return true
 
-func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> void:
+func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner: String) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var pole_top := rect.position + rect.size * Vector2(0.74, 0.18)
 	var pole_bottom := rect.position + rect.size * Vector2(0.74, 0.42)
@@ -1333,13 +1334,49 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> vo
 	var flag_color := _remembered_marker_color(color) if remembered else color
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	_canvas_draw_line(pole_bottom, pole_top, pole_color, maxf(1.6, extent * 0.024))
-	var flag := PackedVector2Array([
-		pole_top,
-		pole_top + Vector2(extent * 0.16, extent * 0.045),
-		pole_top + Vector2(extent * 0.02, extent * 0.12),
-	])
+	var flag := PackedVector2Array()
+	if not FrontierVisualKitScript.color_cue_assist_enabled():
+		flag = PackedVector2Array([
+			pole_top,
+			pole_top + Vector2(extent * 0.16, extent * 0.045),
+			pole_top + Vector2(extent * 0.02, extent * 0.12),
+		])
+	elif owner == "player":
+		flag = PackedVector2Array([
+			pole_top,
+			pole_top + Vector2(extent * 0.15, 0.0),
+			pole_top + Vector2(extent * 0.15, extent * 0.10),
+			pole_top + Vector2(0.0, extent * 0.10),
+		])
+	elif owner == "enemy":
+		flag = PackedVector2Array([
+			pole_top,
+			pole_top + Vector2(extent * 0.17, extent * 0.05),
+			pole_top + Vector2(0.0, extent * 0.11),
+		])
+	else:
+		flag = PackedVector2Array([
+			pole_top + Vector2(0.0, extent * 0.05),
+			pole_top + Vector2(extent * 0.075, 0.0),
+			pole_top + Vector2(extent * 0.15, extent * 0.05),
+			pole_top + Vector2(extent * 0.075, extent * 0.10),
+		])
 	_canvas_draw_colored_polygon(flag, flag_color)
-	_canvas_draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
+	var outline_points := flag.duplicate()
+	outline_points.append(flag[0])
+	_canvas_draw_polyline(outline_points, outline_color, maxf(1.0, extent * 0.014))
+	if FrontierVisualKitScript.color_cue_assist_enabled():
+		_draw_town_owner_flag_mark(pole_top + Vector2(extent * 0.075, extent * 0.05), extent, owner, outline_color)
+
+func _draw_town_owner_flag_mark(center: Vector2, extent: float, owner: String, color: Color) -> void:
+	var mark_radius := maxf(1.8, extent * 0.022)
+	if owner == "player":
+		_canvas_draw_circle(center, mark_radius, color)
+	elif owner == "enemy":
+		_canvas_draw_line(center + Vector2(-mark_radius, -mark_radius), center + Vector2(mark_radius, mark_radius), color, maxf(1.0, extent * 0.012))
+		_canvas_draw_line(center + Vector2(mark_radius, -mark_radius), center + Vector2(-mark_radius, mark_radius), color, maxf(1.0, extent * 0.012))
+	else:
+		_canvas_draw_line(center + Vector2(-mark_radius, 0.0), center + Vector2(mark_radius, 0.0), color, maxf(1.0, extent * 0.012))
 
 func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
@@ -1362,15 +1399,7 @@ func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered:
 		_canvas_draw_rect(battlement, outline_color, false, maxf(1.4, outline_width * 0.65))
 	var gate := Rect2(rect.position + rect.size * Vector2(0.44, 0.56), rect.size * Vector2(0.12, 0.17))
 	_canvas_draw_rect(gate, Color(0.16, 0.10, 0.06, 0.48 if remembered else 0.78), true)
-	var flag_start = rect.position + rect.size * Vector2(0.70, 0.13)
-	var flag_end = rect.position + rect.size * Vector2(0.70, 0.43)
-	_canvas_draw_line(flag_end, flag_start, Color(0.97, 0.94, 0.82, 0.62 if remembered else 0.96), maxf(2.0, extent * 0.032))
-	var flag = PackedVector2Array([
-		flag_start,
-		flag_start + rect.size * Vector2(0.13, 0.04),
-		flag_start + rect.size * Vector2(0.00, 0.11),
-	])
-	_canvas_draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
+	_draw_town_owner_pennant(rect, color, remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, color, remembered)
 
@@ -2645,6 +2674,20 @@ func validation_view_metrics() -> Dictionary:
 			"hero_tiles": _heroes_by_tile.size(),
 		},
 		"unit_art": validation_unit_art_summary(),
+	}
+
+func validation_color_cue_summary() -> Dictionary:
+	return {
+		"mode": FrontierVisualKitScript.color_cue_mode(),
+		"assisted": FrontierVisualKitScript.color_cue_assist_enabled(),
+		"player_town_color": _town_owner_color({"owner": "player"}),
+		"enemy_town_color": _town_owner_color({"owner": "enemy"}),
+		"neutral_town_color": _town_owner_color({"owner": "neutral"}),
+		"player_owner_mark": "rectangle_dot" if FrontierVisualKitScript.color_cue_assist_enabled() else "triangle_color",
+		"enemy_owner_mark": "triangle_cross" if FrontierVisualKitScript.color_cue_assist_enabled() else "triangle_color",
+		"neutral_owner_mark": "diamond_bar" if FrontierVisualKitScript.color_cue_assist_enabled() else "triangle_color",
+		"owner_marks_drawn_with_town_pennants": FrontierVisualKitScript.color_cue_assist_enabled(),
+		"terrain_palette_unchanged": true,
 	}
 
 func validation_unit_art_summary() -> Dictionary:
@@ -5770,13 +5813,18 @@ func _town_color(tile: Vector2i) -> Color:
 	return _town_owner_color(town)
 
 func _town_owner_color(town: Dictionary) -> Color:
-	match String(town.get("owner", "neutral")):
+	var owner := _town_owner_id(town)
+	match owner:
 		"player":
-			return PLAYER_TOWN_COLOR
+			return FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR)
 		"enemy":
-			return ENEMY_TOWN_COLOR
+			return FrontierVisualKitScript.semantic_color("enemy", ENEMY_TOWN_COLOR)
 		_:
-			return NEUTRAL_TOWN_COLOR
+			return FrontierVisualKitScript.semantic_color("neutral", NEUTRAL_TOWN_COLOR)
+
+func _town_owner_id(town: Dictionary) -> String:
+	var owner := String(town.get("owner", "neutral"))
+	return owner if owner in ["player", "enemy"] else "neutral"
 
 func _town_presentation_at(tile: Vector2i) -> Dictionary:
 	if _session == null:
