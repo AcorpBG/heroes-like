@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the player-hero field rendezvous and troop-exchange workflow with direct/cached route, compact UI, normalization, and save-resume proof. Overall release work remains active.",
+  "currentNotes": "Completed atomic artifact handoff between co-located owned commanders with compact UI, set-aware bonus updates, and save-resume proof. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "hero-field-rendezvous-army-transfer-10184",
-  "currentSliceId": "hero-field-rendezvous-army-transfer-10184",
-  "currentSliceNotes": "Owned reserve commanders now resolve as named direct/cached route interactions and exchange merged troop stacks through a compact bidirectional Command-drawer control.",
+  "currentSlice": "hero-field-rendezvous-artifact-transfer-10184",
+  "currentSliceId": "hero-field-rendezvous-artifact-transfer-10184",
+  "currentSliceNotes": "Owned commanders now hand off equipped or packed artifacts atomically through the existing compact rendezvous selector, with exact loadout and movement persistence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Hero Field Rendezvous Army Transfer",
-  "currentSliceUpdatedAt": "2026-08-02T23:10:09Z",
+  "currentSliceTitle": "Hero Field Rendezvous Artifact Transfer",
+  "currentSliceUpdatedAt": "2026-08-02T23:25:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65944,6 +65944,91 @@
         "status": "passed",
         "updatedAt": "2026-08-02T23:10:09Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/hero_field_rendezvous_artifact_transfer_report.tscn",
+        "godot4 --headless --path . tests/hero_field_rendezvous_army_transfer_report.tscn",
+        "godot4 --headless --path . tests/artifact_equip_runtime_effects_report.tscn",
+        "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Co-located owned commanders expose named artifact handoffs in both directions through the existing compact keyboard/controller-reachable rendezvous selector; equipped and packed artifacts transfer atomically without duplication or loss; empty compatible target slots auto-equip while occupied slots preserve their current item and receive the handoff in inventory; movement and other equipped bonuses update immediately; remote, stale, duplicate-target, and invalid calls fail without mutation; both hero loadouts persist through normalization and save version 9; troop transfer, normal loadout management, movement cost, scenario, and Native RMG behavior remain unchanged; focused and broad regressions pass.",
+      "id": "hero-field-rendezvous-artifact-transfer-10184",
+      "implementationTargets": [
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/HeroCommandRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/hero_field_rendezvous_artifact_transfer_report.gd",
+        "tests/hero_field_rendezvous_artifact_transfer_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "spellbook sharing, remote logistics, artifact duplication, enemy diplomacy, or automatic multi-item loadout optimization",
+        "changing ordinary single-hero equip/stow semantics, troop-transfer amount semantics, movement route costs, save version, or scenario outcomes",
+        "changing artifact reward tables, Native RMG generation/package output, or claiming complete hero management or overall release completion"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Playable Alpha Baseline / player-readable live-loop improvements",
+      "purpose": "Make acquired artifacts usable across the owned commander roster through a real field meeting instead of permanently binding rewards to their first collector.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "scripts/core/ArtifactRules.gd",
+          "scripts/core/HeroCommandRules.gd",
+          "scripts/core/OverworldRules.gd",
+          "scenes/overworld/OverworldShell.gd",
+          "tests/hero_field_rendezvous_artifact_transfer_report.gd",
+          "tests/hero_field_rendezvous_artifact_transfer_report.tscn",
+          "tests/validate_repo.py"
+        ],
+        "finding": "The live field-rendezvous selector now combines troop and artifact orders. Equipped and packed artifacts hand off atomically in either direction, empty compatible slots auto-equip, occupied slot families preserve their equipment and receive the item in inventory, direct and set bonuses migrate immediately while each hero's spent-movement deficit stays exact, and version-9 save/restore preserves both loadouts. Remote, stale, duplicate-target, and malformed orders reject without mutation.",
+        "metrics": {
+          "artifact_transfer_directions_proven": 2,
+          "target_placement_outcomes_proven": 2,
+          "rejection_boundaries_proven": 4,
+          "save_version": 9,
+          "movement_deficit_preserved": true,
+          "set_aware_bonus_migration_proven": true,
+          "troop_orders_preserved": true,
+          "keyboard_controller_focusable": true,
+          "focused_and_broad_validation_commands": 7
+        }
+      },
+      "startedAt": "2026-08-02T23:14:40Z",
+      "status": "completed",
+      "title": "Hero Field Rendezvous Artifact Transfer",
+      "updatedAt": "2026-08-02T23:25:20Z",
+      "completedAt": "2026-08-02T23:25:20Z",
+      "notes": "Implemented atomic bidirectional field artifact handoff through the existing rendezvous selector, including equipped/inventory placement, immediate set-aware movement and bonus updates, mutation-safe rejection boundaries, and save-version-9 persistence. Spell sharing, remote logistics, enemy diplomacy, automatic loadout optimization, Native RMG, and overall release completion remain open.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/hero_field_rendezvous_artifact_transfer_report.tscn",
+          "godot4 --headless --path . tests/hero_field_rendezvous_army_transfer_report.tscn",
+          "godot4 --headless --path . tests/artifact_equip_runtime_effects_report.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T23:25:20Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66385,7 +66470,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "hero_field_rendezvous_army_transfer_complete_overall_release_in_progress",
+  "result": "hero_field_rendezvous_artifact_transfer_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66486,9 +66571,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Owned commanders now resolve direct and cached field rendezvous and exchange merged troop stacks through a compact accessible Command-drawer workflow that persists through save version 9. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Owned commanders now exchange troops and artifacts through a compact field-rendezvous workflow with atomic ownership, immediate set-aware bonus updates, and save-version-9 persistence. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T23:10:09Z",
+  "updatedAt": "2026-08-02T23:25:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

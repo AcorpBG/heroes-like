@@ -1697,7 +1697,7 @@ static func _field_rendezvous_result(session: SessionStateStoreScript.SessionDat
 	var reserve_name := String(reserve.get("name", "the reserve commander"))
 	return {
 		"ok": true,
-		"message": "Rendezvous with %s. Troop exchange is ready in Command." % reserve_name,
+		"message": "Rendezvous with %s. Army and artifact exchange is ready in Command." % reserve_name,
 		"route": "rendezvous",
 		"rendezvous_hero_id": String(reserve.get("id", "")),
 		"rendezvous_hero_name": reserve_name,
@@ -2908,7 +2908,7 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 				_encounter_pressure_summary(session, placement),
 			]
 		"rendezvous":
-			return "%s\nTerrain %s\nChoose a troop order in the Command drawer." % [
+			return "%s\nTerrain %s\nChoose an exchange order in the Command drawer." % [
 				HeroCommandRulesScript.describe_field_rendezvous(session),
 				terrain,
 			]
@@ -4860,14 +4860,20 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 			var hero: Dictionary = context.get("hero", {}) if context.get("hero", {}) is Dictionary else {}
 			actions.append({
 				"id": "open_rendezvous",
-				"label": "Exchange Troops",
-				"summary": "Open the Command drawer to exchange troops with %s without spending movement." % String(hero.get("name", "the reserve commander")),
+				"label": "Exchange Assets",
+				"summary": "Open the Command drawer to exchange troops or artifacts with %s without spending movement." % String(hero.get("name", "the reserve commander")),
 			})
 	return actions
 
 static func get_rendezvous_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_overworld_state_for_runtime(session)
 	return HeroCommandRulesScript.get_field_transfer_actions(session)
+
+static func get_rendezvous_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_overworld_state_for_runtime(session)
+	var actions := HeroCommandRulesScript.get_field_transfer_actions(session)
+	actions.append_array(HeroCommandRulesScript.get_field_artifact_transfer_actions(session))
+	return actions
 
 static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)
@@ -4888,6 +4894,29 @@ static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.
 		if result.has(key):
 			finalized[key] = result.get(key)
 	return finalized
+
+static func perform_rendezvous_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	if action_id.begins_with("field_transfer:"):
+		return perform_rendezvous_transfer_action(session, action_id)
+	if action_id.begins_with("field_artifact_transfer:"):
+		normalize_overworld_state_for_runtime(session)
+		var parts := action_id.split(":")
+		if parts.size() != 4:
+			return {"ok": false, "message": "That artifact handoff order is invalid."}
+		var result := HeroCommandRulesScript.transfer_field_artifact(
+			session,
+			String(parts[1]),
+			String(parts[2]),
+			String(parts[3])
+		)
+		if not bool(result.get("ok", false)):
+			return result
+		var finalized := _finalize_action_result(session, true, String(result.get("message", "Artifact transferred.")), false, false)
+		for key in ["source_hero_id", "target_hero_id", "artifact_id", "source_previous_location", "source_previous_slot", "target_location", "target_slot", "auto_equipped"]:
+			if result.has(key):
+				finalized[key] = result.get(key)
+		return finalized
+	return {"ok": false, "message": "That rendezvous order is invalid."}
 
 static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_overworld_state_for_runtime(session)

@@ -578,10 +578,18 @@ static func describe_field_rendezvous(session: SessionStateStoreScript.SessionDa
 	var rendezvous := field_rendezvous_heroes(session)
 	if active.is_empty() or rendezvous.is_empty():
 		return "No friendly commander is present for a field rendezvous."
-	var lines := ["Field Rendezvous", "- Active: %s | %s" % [String(active.get("name", "Commander")), _army_summary(active.get("army", {}))]]
+	var lines := ["Field Rendezvous", "- Active: %s | %s | Gear %d" % [
+		String(active.get("name", "Commander")),
+		_army_summary(active.get("army", {})),
+		ArtifactRulesScript.owned_artifact_ids(active).size(),
+	]]
 	for hero_value in rendezvous:
 		var hero: Dictionary = hero_value if hero_value is Dictionary else {}
-		lines.append("- Reserve: %s | %s" % [String(hero.get("name", "Commander")), _army_summary(hero.get("army", {}))])
+		lines.append("- Reserve: %s | %s | Gear %d" % [
+			String(hero.get("name", "Commander")),
+			_army_summary(hero.get("army", {})),
+			ArtifactRulesScript.owned_artifact_ids(hero).size(),
+		])
 	return "\n".join(lines)
 
 static func get_field_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
@@ -598,6 +606,22 @@ static func get_field_transfer_actions(session: SessionStateStoreScript.SessionD
 		var reserve: Dictionary = reserve_value
 		_append_field_transfer_actions(actions, active, reserve)
 		_append_field_transfer_actions(actions, reserve, active)
+	return actions
+
+static func get_field_artifact_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_session(session)
+	var actions := []
+	if session == null:
+		return actions
+	var active := active_hero(session)
+	if active.is_empty():
+		return actions
+	for reserve_value in field_rendezvous_heroes(session):
+		if not (reserve_value is Dictionary):
+			continue
+		var reserve: Dictionary = reserve_value
+		_append_field_artifact_transfer_actions(actions, active, reserve)
+		_append_field_artifact_transfer_actions(actions, reserve, active)
 	return actions
 
 static func transfer_field_stack(
@@ -663,6 +687,69 @@ static func transfer_field_stack(
 		"target_hero_id": target_hero_id,
 		"unit_id": unit_id,
 		"transferred_count": transfer_count,
+	}
+
+static func transfer_field_artifact(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String,
+	artifact_id: String
+) -> Dictionary:
+	normalize_session(session)
+	if session == null:
+		return {"ok": false, "message": "No expedition is available for an artifact handoff."}
+	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
+		return {"ok": false, "message": "Choose two different controlled commanders."}
+	var source := hero_by_id(session, source_hero_id)
+	var target := hero_by_id(session, target_hero_id)
+	if source.is_empty() or target.is_empty():
+		return {"ok": false, "message": "Both commanders must remain under player control."}
+	var active_id := String(session.overworld.get("active_hero_id", ""))
+	if source_hero_id != active_id and target_hero_id != active_id:
+		return {"ok": false, "message": "Field handoffs must include the active commander."}
+	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
+		return {"ok": false, "message": "The commanders must occupy the same field tile."}
+	if artifact_id == "" or ContentService.get_artifact(artifact_id).is_empty():
+		return {"ok": false, "message": "That artifact handoff is invalid."}
+	if not ArtifactRulesScript.has_artifact(source, artifact_id):
+		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(source.get("name", source_hero_id))}
+	if ArtifactRulesScript.has_artifact(target, artifact_id):
+		return {"ok": false, "message": "%s already owns %s." % [String(target.get("name", target_hero_id)), ArtifactRulesScript.artifact_name(artifact_id)]}
+
+	var source_previous_max := movement_max_for_hero(source, session)
+	var target_previous_max := movement_max_for_hero(target, session)
+	var removal := ArtifactRulesScript.remove_owned_artifact(source, artifact_id)
+	if not bool(removal.get("ok", false)):
+		return {"ok": false, "message": String(removal.get("message", "Artifact handoff failed."))}
+	var claim := ArtifactRulesScript.claim_artifact(target, artifact_id, "Received", true)
+	if not bool(claim.get("ok", false)) or bool(claim.get("duplicate", false)):
+		return {"ok": false, "message": String(claim.get("message", "Artifact handoff failed."))}
+	var source_updated: Dictionary = removal.get("hero", source)
+	var target_updated: Dictionary = claim.get("hero", target)
+	source_updated = _preserve_movement_deficit_after_artifact_change(source_updated, source_previous_max, session)
+	target_updated = _preserve_movement_deficit_after_artifact_change(target_updated, target_previous_max, session)
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	_replace_hero_in_array(heroes, source_updated)
+	_replace_hero_in_array(heroes, target_updated)
+	session.overworld["player_heroes"] = heroes
+	_sync_active_hero_mirror(session)
+	var target_location := ArtifactRulesScript.locate_artifact(target_updated, artifact_id)
+	return {
+		"ok": true,
+		"message": "Passed %s from %s to %s. %s." % [
+			ArtifactRulesScript.artifact_name(artifact_id),
+			String(source.get("name", source_hero_id)),
+			String(target.get("name", target_hero_id)),
+			ArtifactRulesScript.artifact_collection_state(target_updated, artifact_id),
+		],
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"artifact_id": artifact_id,
+		"source_previous_location": String(removal.get("previous_location", "")),
+		"source_previous_slot": String(removal.get("previous_slot", "")),
+		"target_location": String(target_location.get("location", "")),
+		"target_slot": String(target_location.get("slot", "")),
+		"auto_equipped": bool(claim.get("auto_equipped", false)),
 	}
 
 static func transfer_town_stack(
@@ -1104,6 +1191,48 @@ static func _append_field_transfer_actions(actions: Array, source: Dictionary, t
 				"amount_token": amount_token,
 				"transfer_count": transfer_count,
 			})
+
+static func _append_field_artifact_transfer_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:
+	var source_id := String(source.get("id", ""))
+	var target_id := String(target.get("id", ""))
+	if source_id == "" or target_id == "":
+		return
+	var source_name := String(source.get("name", source_id))
+	var target_name := String(target.get("name", target_id))
+	for artifact_id_value in ArtifactRulesScript.owned_artifact_ids(source):
+		var artifact_id := String(artifact_id_value)
+		if artifact_id == "" or ArtifactRulesScript.has_artifact(target, artifact_id):
+			continue
+		var source_location := ArtifactRulesScript.locate_artifact(source, artifact_id)
+		actions.append({
+			"id": "field_artifact_transfer:%s:%s:%s" % [source_id, target_id, artifact_id],
+			"label": "%s -> %s | %s" % [source_name, target_name, ArtifactRulesScript.artifact_name(artifact_id)],
+			"summary": "%s | From %s in %s | To %s: %s" % [
+				ArtifactRulesScript.artifact_effect_summary(artifact_id),
+				source_name,
+				String(source_location.get("slot", "pack")).capitalize() if String(source_location.get("location", "")) == "equipped" else "pack",
+				target_name,
+				ArtifactRulesScript.artifact_collection_state(target, artifact_id),
+			],
+			"source_hero_id": source_id,
+			"target_hero_id": target_id,
+			"artifact_id": artifact_id,
+			"kind": "artifact",
+		})
+
+static func _preserve_movement_deficit_after_artifact_change(
+	hero: Dictionary,
+	previous_max: int,
+	session: SessionStateStoreScript.SessionData
+) -> Dictionary:
+	var updated := hero.duplicate(true)
+	var movement: Dictionary = updated.get("movement", {}) if updated.get("movement", {}) is Dictionary else {}
+	var new_max := movement_max_for_hero(updated, session)
+	var current := int(movement.get("current", previous_max))
+	movement["current"] = clamp(current + (new_max - previous_max), 0, new_max)
+	movement["max"] = new_max
+	updated["movement"] = movement
+	return updated
 
 static func _stack_index_by_unit(stacks: Array, unit_id: String) -> int:
 	for index in range(stacks.size()):
