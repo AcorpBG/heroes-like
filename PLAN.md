@@ -572,6 +572,22 @@ Non-goals:
 - do not add caster-unit spellbooks, rare-resource spell-cast costs, or school mastery;
 - do not add broad new report gates beyond one focused resistance/counter-control runtime report.
 
+## Strategic AI Exclusive Frontier Target
+
+The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.
+
+Target shape:
+- fallback exploration and frontier-sweep selection reject cells already assigned to another active same-faction host or exclusively reserved by another live task;
+- the selecting host may keep its own current assignment and reservation;
+- two same-faction hosts with no known strategic objective choose distinct reachable frontier cells and advance without assignment collision churn;
+- player-town, hero, resource, encounter, regroup, and battle-pressure selection remain unchanged;
+- Native RMG output and supported-input policy remain unchanged.
+
+Non-goals:
+- do not claim that every generated topology produces tactical contact within eight weeks;
+- do not tune Native RMG object placement or final-map payloads from strategic AI outcomes;
+- do not add diagnostic-only progress or treat the long-run matrix as implementation.
+
 ## Artifact Set Runtime Target
 
 The current artifact slice closes the gap between the authored two-trinket/set schema and live hero equipment behavior.
