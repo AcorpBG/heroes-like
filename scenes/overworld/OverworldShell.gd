@@ -165,6 +165,8 @@ var _last_save_surface_compact_reason := ""
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_apply_visual_theme()
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
 	AppRouter.note_overworld_handoff_step("overworld_ready_theme_done")
 	_build_debug_overlay()
 	AppRouter.note_overworld_handoff_step("overworld_ready_debug_overlay_done")
@@ -231,9 +233,31 @@ func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_select_hero_done")
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
 	_render_state()
+	_apply_responsive_layout()
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_done")
 	_sync_overworld_ambient_audio("ready")
 	call_deferred("_complete_deferred_generated_overworld_autosave")
+
+func _apply_responsive_layout() -> void:
+	if _sidebar_shell_panel == null:
+		return
+	var available_size := size
+	var parent_control := get_parent() as Control
+	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
+		available_size = parent_control.size
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	var narrow_layout := available_size.x < 1100.0
+	_sidebar_shell_panel.visible = not narrow_layout
+	_sidebar_shell_panel.custom_minimum_size.x = 284.0 if compact_layout else 320.0
+	_briefing_panel.visible = not compact_layout
+	_commitment_panel.visible = not compact_layout
+	_cue_chip_panel.visible = not compact_layout
+	_resource_chip_panel.visible = not compact_layout
+	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.text] if compact_layout else _status_label.text
+	_save_status_label.visible = not narrow_layout
+	_save_slot_picker.visible = not narrow_layout
+	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
+	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -864,6 +888,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 	_sync_overworld_music_audio("refresh")
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 	_complete_refresh_request(request)
+	_apply_responsive_layout()
 	_profile_end("refresh", profile_start, {
 		"compact_generated": compact_generated,
 		"request": request.duplicate(true),
