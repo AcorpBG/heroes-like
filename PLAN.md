@@ -404,6 +404,7 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 - Previous completed slice: `combat-sunvault-t6-melee-balance-10184`.
 - Latest completed slice: `balance-charter-granary-levies-pressure-10184`, a placement-local authored encounter correction that keeps the player victory bounded while removing the current Granary Levies high-margin outlier.
 - Latest completed slice: `balance-ford-reavers-pressure-10184`, with separate authored Ironbridge and Mireford rosters that remove both duplicated Ford Reavers high-margin outliers without changing their shared dynamic raid group.
+- Latest completed slice: `balance-glassroad-archive-wardens-pressure-10184`, adding one placement-local Ember Archer to remove the Glassroad Archive Wardens high-margin outlier without changing the shared encounter army.
 - Previous completed slice: `magic-resistance-countercontrol-10184`.
 - Previous completed slice: `battle-spell-valuation-counterplay-followup-10184`.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.
