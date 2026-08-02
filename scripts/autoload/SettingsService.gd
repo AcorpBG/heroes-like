@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 9
+const SETTINGS_VERSION := 10
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -23,6 +23,9 @@ const COLOR_CUE_MODE_ASSISTED := "assisted"
 const BATTLE_PLAYBACK_SPEED_NORMAL := "normal"
 const BATTLE_PLAYBACK_SPEED_FAST := "fast"
 const BATTLE_PLAYBACK_SPEED_INSTANT := "instant"
+const KEYBOARD_NAVIGATION_LAYOUT_WASD := "wasd"
+const KEYBOARD_NAVIGATION_LAYOUT_IJKL := "ijkl"
+const KEYBOARD_NAVIGATION_LAYOUT_ARROWS := "arrows"
 const CONTROLLER_UI_BUTTON_ACTIONS := {
 	&"ui_up": JOY_BUTTON_DPAD_UP,
 	&"ui_down": JOY_BUTTON_DPAD_DOWN,
@@ -32,6 +35,18 @@ const CONTROLLER_UI_BUTTON_ACTIONS := {
 	&"ui_cancel": JOY_BUTTON_B,
 	&"ui_focus_next": JOY_BUTTON_RIGHT_SHOULDER,
 	&"ui_focus_prev": JOY_BUTTON_LEFT_SHOULDER,
+}
+const KEYBOARD_NAVIGATION_ACTIONS := {
+	&"ui_up": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_W, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_I},
+	&"ui_down": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_S, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_K},
+	&"ui_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_A, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_J},
+	&"ui_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L},
+}
+const KEYBOARD_HERO_MOVEMENT_ACTIONS := {
+	&"hero_move_up": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_W, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_I},
+	&"hero_move_down": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_S, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_K},
+	&"hero_move_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_A, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_J},
+	&"hero_move_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L},
 }
 
 const RENDER_QUALITY_OPTIONS := [
@@ -55,6 +70,12 @@ const BATTLE_PLAYBACK_SPEED_OPTIONS := [
 	{"id": BATTLE_PLAYBACK_SPEED_NORMAL, "label": "Normal"},
 	{"id": BATTLE_PLAYBACK_SPEED_FAST, "label": "Fast"},
 	{"id": BATTLE_PLAYBACK_SPEED_INSTANT, "label": "Instant"},
+]
+
+const KEYBOARD_NAVIGATION_LAYOUT_OPTIONS := [
+	{"id": KEYBOARD_NAVIGATION_LAYOUT_WASD, "label": "WASD + Arrows"},
+	{"id": KEYBOARD_NAVIGATION_LAYOUT_IJKL, "label": "IJKL + Arrows"},
+	{"id": KEYBOARD_NAVIGATION_LAYOUT_ARROWS, "label": "Arrows Only"},
 ]
 
 const FRAME_RATE_OPTIONS := [
@@ -202,6 +223,7 @@ func build_default_settings() -> Dictionary:
 		},
 		"gameplay": {
 			"battle_playback_speed": BATTLE_PLAYBACK_SPEED_NORMAL,
+			"keyboard_navigation_layout": KEYBOARD_NAVIGATION_LAYOUT_WASD,
 		},
 		"accessibility": {
 			"ui_scale_percent": 100,
@@ -229,6 +251,7 @@ func load_settings() -> void:
 		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
 		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
 		settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
+		settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(String(config.get_value("gameplay", "keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"])))
 		var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
 		var migrated_scale := 115 if legacy_large_text else 100
 		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
@@ -256,6 +279,7 @@ func save_settings() -> String:
 	config.set_value("presentation", "vsync_enabled", vsync_enabled())
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
 	config.set_value("gameplay", "battle_playback_speed", battle_playback_speed_id())
+	config.set_value("gameplay", "keyboard_navigation_layout", keyboard_navigation_layout_id())
 	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
@@ -353,6 +377,17 @@ func build_battle_playback_speed_options() -> Array:
 		})
 	return options
 
+func build_keyboard_navigation_layout_options() -> Array:
+	var selected_layout := keyboard_navigation_layout_id()
+	var options := []
+	for option in KEYBOARD_NAVIGATION_LAYOUT_OPTIONS:
+		options.append({
+			"id": String(option.get("id", KEYBOARD_NAVIGATION_LAYOUT_WASD)),
+			"label": String(option.get("label", "WASD + Arrows")),
+			"selected": String(option.get("id", KEYBOARD_NAVIGATION_LAYOUT_WASD)) == selected_layout,
+		})
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
 
@@ -392,6 +427,15 @@ func battle_playback_speed_label() -> String:
 		if String(option.get("id", "")) == battle_playback_speed_id():
 			return String(option.get("label", "Normal"))
 	return "Normal"
+
+func keyboard_navigation_layout_id() -> String:
+	return _normalize_keyboard_navigation_layout(String(ensure_settings().get("gameplay", {}).get("keyboard_navigation_layout", KEYBOARD_NAVIGATION_LAYOUT_WASD)))
+
+func keyboard_navigation_layout_label() -> String:
+	for option in KEYBOARD_NAVIGATION_LAYOUT_OPTIONS:
+		if String(option.get("id", "")) == keyboard_navigation_layout_id():
+			return String(option.get("label", "WASD + Arrows"))
+	return "WASD + Arrows"
 
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
@@ -511,6 +555,11 @@ func set_battle_playback_speed_id(speed_id: String) -> void:
 	settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(speed_id)
 	_commit_settings()
 
+func set_keyboard_navigation_layout_id(layout_id: String) -> void:
+	ensure_settings()
+	settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(layout_id)
+	_commit_settings()
+
 func set_large_ui_text_enabled(enabled: bool) -> void:
 	set_ui_scale_percent(115 if enabled else 100)
 
@@ -545,7 +594,7 @@ func describe_settings() -> String:
 		[
 			"Presentation: %s | %s | %s quality | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), render_quality_label(), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
 			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
-			"Gameplay: Battle playback %s" % battle_playback_speed_label(),
+			"Gameplay: Battle playback %s | Navigation %s" % [battle_playback_speed_label(), keyboard_navigation_layout_label()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
 		]
@@ -591,6 +640,7 @@ func describe_help_topic(topic_id: String) -> String:
 	return "Select a guide topic to review its mode summary and controls."
 
 func apply_settings() -> void:
+	_apply_keyboard_navigation_layout()
 	_apply_accessibility_settings()
 	_apply_presentation_settings()
 	_apply_audio_settings()
@@ -606,6 +656,32 @@ func _apply_accessibility_settings() -> void:
 		root.content_scale_factor = float(ui_scale_percent()) / 100.0
 	FrontierVisualKitScript.set_high_contrast_enabled(high_contrast_ui_enabled())
 	FrontierVisualKitScript.set_color_cue_mode(color_cue_mode_id())
+
+func _apply_keyboard_navigation_layout() -> void:
+	var managed_keycodes := [KEY_W, KEY_A, KEY_S, KEY_D, KEY_I, KEY_J, KEY_K, KEY_L]
+	var managed_actions := KEYBOARD_NAVIGATION_ACTIONS.keys() + KEYBOARD_HERO_MOVEMENT_ACTIONS.keys()
+	for action_value in managed_actions:
+		var action := StringName(action_value)
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		for input_event in InputMap.action_get_events(action):
+			if not (input_event is InputEventKey):
+				continue
+			var key_event := input_event as InputEventKey
+			if int(key_event.physical_keycode) in managed_keycodes or int(key_event.keycode) in managed_keycodes:
+				InputMap.action_erase_event(action, input_event)
+	var layout_id := keyboard_navigation_layout_id()
+	if layout_id == KEYBOARD_NAVIGATION_LAYOUT_ARROWS:
+		return
+	for action_map in [KEYBOARD_NAVIGATION_ACTIONS, KEYBOARD_HERO_MOVEMENT_ACTIONS]:
+		for action_value in action_map:
+			var action := StringName(action_value)
+			var keycode := int(action_map[action].get(layout_id, 0))
+			if keycode <= 0:
+				continue
+			var key_event := InputEventKey.new()
+			key_event.physical_keycode = keycode
+			InputMap.action_add_event(action, key_event)
 
 func _apply_presentation_settings() -> void:
 	var resolution := presentation_resolution_size()
@@ -707,6 +783,13 @@ func _normalize_battle_playback_speed(speed_id: String) -> String:
 		if String(option.get("id", BATTLE_PLAYBACK_SPEED_NORMAL)) == normalized:
 			return normalized
 	return BATTLE_PLAYBACK_SPEED_NORMAL
+
+func _normalize_keyboard_navigation_layout(layout_id: String) -> String:
+	var normalized := layout_id.strip_edges().to_lower()
+	for option in KEYBOARD_NAVIGATION_LAYOUT_OPTIONS:
+		if String(option.get("id", KEYBOARD_NAVIGATION_LAYOUT_WASD)) == normalized:
+			return normalized
+	return KEYBOARD_NAVIGATION_LAYOUT_WASD
 
 func _render_quality_option(quality_id: String) -> Dictionary:
 	var normalized := _normalize_render_quality(quality_id)

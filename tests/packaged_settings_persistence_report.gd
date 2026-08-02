@@ -14,6 +14,7 @@ const TEST_VALUES := {
 	"vsync_enabled": false,
 	"frame_rate_limit": 120,
 	"battle_playback_speed": "fast",
+	"keyboard_navigation_layout": "ijkl",
 	"ui_scale_percent": 130,
 	"large_ui_text": true,
 	"high_contrast_ui": true,
@@ -72,11 +73,13 @@ func _run_persistence_check() -> void:
 		"migrated_ui_scale_percent": SettingsService.ui_scale_percent(),
 		"migrated_color_cue_mode": SettingsService.color_cue_mode_id(),
 		"migrated_battle_playback_speed": SettingsService.battle_playback_speed_id(),
+		"migrated_keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"runtime_content_scale_factor": get_tree().root.content_scale_factor,
 	}
 	_expect(SettingsService.ui_scale_percent() == 115, "Legacy Large Text must migrate to 115% UI scale.")
 	_expect(SettingsService.color_cue_mode_id() == SettingsService.COLOR_CUE_MODE_STANDARD, "Legacy settings must default to standard color cues.")
 	_expect(SettingsService.battle_playback_speed_id() == SettingsService.BATTLE_PLAYBACK_SPEED_NORMAL, "Legacy settings must default to Normal battle playback.")
+	_expect(SettingsService.keyboard_navigation_layout_id() == SettingsService.KEYBOARD_NAVIGATION_LAYOUT_WASD, "Legacy settings must default to WASD + Arrows navigation.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.15), "Legacy Large Text migration must apply 115% to the root window.")
 
 	SettingsService.load_settings()
@@ -96,6 +99,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
 	SettingsService.set_battle_playback_speed_id(String(TEST_VALUES["battle_playback_speed"]))
+	SettingsService.set_keyboard_navigation_layout_id(String(TEST_VALUES["keyboard_navigation_layout"]))
 	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
 	SettingsService.set_high_contrast_ui_enabled(bool(TEST_VALUES["high_contrast_ui"]))
 	SettingsService.set_color_cue_mode_id(String(TEST_VALUES["color_cue_mode"]))
@@ -151,6 +155,19 @@ func _run_persistence_check() -> void:
 	_expect(bool(direct_values.get("vsync_enabled", true)) == bool(TEST_VALUES["vsync_enabled"]), "Direct config VSync mismatch.")
 	_expect(int(direct_values.get("frame_rate_limit", -1)) == int(TEST_VALUES["frame_rate_limit"]), "Direct config frame-rate limit mismatch.")
 	_expect(String(direct_values.get("battle_playback_speed", "")) == String(TEST_VALUES["battle_playback_speed"]), "Direct config battle playback speed mismatch.")
+	_expect(String(direct_values.get("keyboard_navigation_layout", "")) == String(TEST_VALUES["keyboard_navigation_layout"]), "Direct config keyboard navigation layout mismatch.")
+	_report["keyboard_navigation"] = {
+		"layout": SettingsService.keyboard_navigation_layout_id(),
+		"options": SettingsService.build_keyboard_navigation_layout_options(),
+		"up_has_i": _action_has_key(&"ui_up", KEY_I),
+		"up_has_w": _action_has_key(&"ui_up", KEY_W),
+		"hero_move_up_has_i": _action_has_key(&"hero_move_up", KEY_I),
+		"controller_up_preserved": _action_has_joypad_button(&"ui_up", JOY_BUTTON_DPAD_UP),
+	}
+	_expect(SettingsService.build_keyboard_navigation_layout_options().size() == 3, "Keyboard navigation must expose all three layout options.")
+	_expect(_action_has_key(&"ui_up", KEY_I) and not _action_has_key(&"ui_up", KEY_W), "IJKL layout must apply I and remove managed W from ui_up immediately.")
+	_expect(_action_has_key(&"hero_move_up", KEY_I) and not _action_has_key(&"hero_move_up", KEY_W), "IJKL layout must apply I and remove managed W from hero movement immediately.")
+	_expect(_action_has_joypad_button(&"ui_up", JOY_BUTTON_DPAD_UP), "Keyboard layout changes must preserve controller D-pad navigation.")
 	var display_driver := DisplayServer.get_name()
 	var runtime_vsync_verifiable := display_driver != "headless"
 	_report["display_pacing"] = {
@@ -160,6 +177,7 @@ func _run_persistence_check() -> void:
 		"runtime_vsync_verifiable": runtime_vsync_verifiable,
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
+		"keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"runtime_max_fps": Engine.max_fps,
 	}
 	if runtime_vsync_verifiable:
@@ -223,6 +241,7 @@ func _run_persistence_check() -> void:
 		"vsync_enabled": SettingsService.vsync_enabled(),
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
+		"keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"high_contrast_ui": SettingsService.high_contrast_ui_enabled(),
@@ -241,6 +260,9 @@ func _run_persistence_check() -> void:
 	_expect(bool(reloaded["vsync_enabled"]) == bool(TEST_VALUES["vsync_enabled"]), "Reloaded VSync mismatch.")
 	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
 	_expect(String(reloaded["battle_playback_speed"]) == String(TEST_VALUES["battle_playback_speed"]), "Reloaded battle playback speed mismatch.")
+	_expect(String(reloaded["keyboard_navigation_layout"]) == String(TEST_VALUES["keyboard_navigation_layout"]), "Reloaded keyboard navigation layout mismatch.")
+	_expect(_action_has_key(&"ui_up", KEY_I) and not _action_has_key(&"ui_up", KEY_W), "Reloaded IJKL layout must remain applied to InputMap.")
+	_expect(_action_has_key(&"hero_move_up", KEY_I) and not _action_has_key(&"hero_move_up", KEY_W), "Reloaded IJKL layout must remain applied to hero movement.")
 	_expect(int(reloaded["ui_scale_percent"]) == int(TEST_VALUES["ui_scale_percent"]), "Reloaded UI scale mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
 	_expect(bool(reloaded["high_contrast_ui"]) == bool(TEST_VALUES["high_contrast_ui"]), "Reloaded high-contrast UI mismatch.")
@@ -268,12 +290,27 @@ func _read_settings_config_values() -> Dictionary:
 		"vsync_enabled": bool(config.get_value("presentation", "vsync_enabled", true)),
 		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
 		"battle_playback_speed": String(config.get_value("gameplay", "battle_playback_speed", "")),
+		"keyboard_navigation_layout": String(config.get_value("gameplay", "keyboard_navigation_layout", "")),
 		"ui_scale_percent": int(config.get_value("accessibility", "ui_scale_percent", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"high_contrast_ui": bool(config.get_value("accessibility", "high_contrast_ui", false)),
 		"color_cue_mode": String(config.get_value("accessibility", "color_cue_mode", "")),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}
+
+func _action_has_key(action: StringName, keycode: Key) -> bool:
+	for input_event in InputMap.action_get_events(action):
+		if input_event is InputEventKey:
+			var key_event := input_event as InputEventKey
+			if int(key_event.physical_keycode) == int(keycode) or int(key_event.keycode) == int(keycode):
+				return true
+	return false
+
+func _action_has_joypad_button(action: StringName, button_index: int) -> bool:
+	for input_event in InputMap.action_get_events(action):
+		if input_event is InputEventJoypadButton and int(input_event.button_index) == button_index:
+			return true
+	return false
 
 func _write_legacy_large_text_config() -> void:
 	var absolute_dir := ProjectSettings.globalize_path(SettingsService.SETTINGS_DIR)
