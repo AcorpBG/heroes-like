@@ -25,6 +25,22 @@ func _run() -> void:
 		_fail("Campaign command has no visible focus style.")
 		return
 	await _capture_if_requested("first_view_campaign_focus")
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	_expect_focus("OpenSkirmish", "first-view controller D-pad navigation")
+	await _press_joypad_button(JOY_BUTTON_DPAD_UP)
+	_expect_focus("OpenCampaign", "first-view controller D-pad return")
+	await _press_joypad_button(JOY_BUTTON_A)
+	await get_tree().process_frame
+	var controller_campaign_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not bool(controller_campaign_snapshot.get("stage_dock_visible", false)) or int(controller_campaign_snapshot.get("current_tab", -1)) != 0:
+		_fail("Controller accept did not open the focused Campaign board: %s" % controller_campaign_snapshot)
+		return
+	await _press_joypad_button(JOY_BUTTON_B)
+	await get_tree().process_frame
+	if bool(shell.call("validation_snapshot").get("stage_dock_visible", true)):
+		_fail("Controller cancel did not close the Campaign board.")
+		return
+	_expect_focus("OpenCampaign", "controller board focus return")
 
 	await _press_action("ui_down")
 	_expect_focus("OpenSkirmish", "first-view down navigation")
@@ -81,6 +97,18 @@ func _press_action(action: StringName) -> void:
 	await get_tree().process_frame
 	var released := InputEventAction.new()
 	released.action = action
+	released.pressed = false
+	Input.parse_input_event(released)
+	await get_tree().process_frame
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
 	released.pressed = false
 	Input.parse_input_event(released)
 	await get_tree().process_frame

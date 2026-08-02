@@ -91,12 +91,10 @@ const RAIL_LINE_CHARS := 42
 const ACTION_FEEDBACK_CHARS := 40
 const DEBUG_OVERLAY_TOGGLE_KEY := KEY_F3
 const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
-const CONTROLLER_MOVE_ACTIONS := {
-	&"overworld_move_north": JOY_BUTTON_DPAD_UP,
-	&"overworld_move_south": JOY_BUTTON_DPAD_DOWN,
-	&"overworld_move_west": JOY_BUTTON_DPAD_LEFT,
-	&"overworld_move_east": JOY_BUTTON_DPAD_RIGHT,
-}
+const CONTROLLER_MOVE_DEAD_ZONE := 0.62
+const CONTROLLER_MOVE_RELEASE_ZONE := 0.34
+const CONTROLLER_MOVE_INITIAL_REPEAT_MSEC := 360
+const CONTROLLER_MOVE_REPEAT_MSEC := 180
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
@@ -169,10 +167,13 @@ var _refresh_dirty_phases: Dictionary = {}
 var _refresh_request_sequence := 0
 var _compact_town_return_save_surface_pending := false
 var _last_save_surface_compact_reason := ""
+var _controller_move_axis := Vector2.ZERO
+var _controller_move_direction := Vector2i.ZERO
+var _controller_move_repeat_timer: Timer = null
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
-	_ensure_controller_move_actions()
+	_configure_controller_move_repeat_timer()
 	_apply_visual_theme()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
@@ -277,7 +278,7 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
-	if _handle_controller_move_input(event):
+	if _handle_controller_move_axis_input(event):
 		get_viewport().set_input_as_handled()
 		return
 	if not (event is InputEventKey) or not event.pressed or event.echo:
@@ -332,38 +333,80 @@ func _input(event: InputEvent) -> void:
 				_try_move(1, 1)
 			get_viewport().set_input_as_handled()
 
-func _ensure_controller_move_actions() -> void:
-	for action in CONTROLLER_MOVE_ACTIONS:
-		if not InputMap.has_action(action):
-			InputMap.add_action(action)
-		var button_index := int(CONTROLLER_MOVE_ACTIONS[action])
-		var has_button := false
-		for input_event in InputMap.action_get_events(action):
-			if input_event is InputEventJoypadButton and int(input_event.button_index) == button_index:
-				has_button = true
-				break
-		if has_button:
-			continue
-		var joypad_event := InputEventJoypadButton.new()
-		joypad_event.button_index = button_index
-		InputMap.action_add_event(action, joypad_event)
-
-func _handle_controller_move_input(event: InputEvent) -> bool:
-	if not (event is InputEventJoypadButton) or not event.pressed:
+func _handle_controller_move_axis_input(event: InputEvent) -> bool:
+	if not (event is InputEventJoypadMotion):
 		return false
-	if event.is_action_pressed(&"overworld_move_north"):
-		_move_north()
+	var axis := int(event.axis)
+	if axis != JOY_AXIS_LEFT_X and axis != JOY_AXIS_LEFT_Y:
+		return false
+	if axis == JOY_AXIS_LEFT_X:
+		_controller_move_axis.x = event.axis_value
+	else:
+		_controller_move_axis.y = event.axis_value
+	var next_direction := _controller_direction_from_axis(_controller_move_axis)
+	if next_direction == _controller_move_direction:
 		return true
-	if event.is_action_pressed(&"overworld_move_south"):
-		_move_south()
+	_controller_move_direction = next_direction
+	_controller_move_repeat_timer.stop()
+	if next_direction == Vector2i.ZERO:
 		return true
-	if event.is_action_pressed(&"overworld_move_west"):
-		_move_west()
+	if not _controller_hero_movement_available():
+		_clear_controller_move_state()
 		return true
-	if event.is_action_pressed(&"overworld_move_east"):
-		_move_east()
-		return true
-	return false
+	_move_from_controller_direction(next_direction)
+	_controller_move_repeat_timer.start(float(CONTROLLER_MOVE_INITIAL_REPEAT_MSEC) / 1000.0)
+	return true
+
+func _configure_controller_move_repeat_timer() -> void:
+	_controller_move_repeat_timer = Timer.new()
+	_controller_move_repeat_timer.name = "ControllerMoveRepeatTimer"
+	_controller_move_repeat_timer.one_shot = true
+	_controller_move_repeat_timer.timeout.connect(_on_controller_move_repeat_timeout)
+	add_child(_controller_move_repeat_timer)
+
+func _on_controller_move_repeat_timeout() -> void:
+	if _controller_move_direction == Vector2i.ZERO:
+		return
+	if not _controller_hero_movement_available():
+		_clear_controller_move_state()
+		return
+	_move_from_controller_direction(_controller_move_direction)
+	_controller_move_repeat_timer.start(float(CONTROLLER_MOVE_REPEAT_MSEC) / 1000.0)
+
+func _controller_direction_from_axis(axis: Vector2) -> Vector2i:
+	var strongest := maxf(absf(axis.x), absf(axis.y))
+	if strongest <= CONTROLLER_MOVE_RELEASE_ZONE:
+		return Vector2i.ZERO
+	if strongest < CONTROLLER_MOVE_DEAD_ZONE:
+		return _controller_move_direction
+	if absf(axis.x) > absf(axis.y):
+		return Vector2i.RIGHT if axis.x > 0.0 else Vector2i.LEFT
+	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
+
+func _controller_hero_movement_available() -> bool:
+	return (
+		_session != null
+		and _session.game_state == "overworld"
+		and _active_drawer == ""
+		and not _debug_command_in_progress
+	)
+
+func _move_from_controller_direction(direction: Vector2i) -> void:
+	match direction:
+		Vector2i.UP:
+			_move_north()
+		Vector2i.DOWN:
+			_move_south()
+		Vector2i.LEFT:
+			_move_west()
+		Vector2i.RIGHT:
+			_move_east()
+
+func _clear_controller_move_state() -> void:
+	_controller_move_axis = Vector2.ZERO
+	_controller_move_direction = Vector2i.ZERO
+	if _controller_move_repeat_timer != null:
+		_controller_move_repeat_timer.stop()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:

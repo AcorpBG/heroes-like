@@ -335,6 +335,8 @@ static func configure_focus_cycle(surfaces: Array) -> Array:
 		var previous_control: Control = controls[(index - 1 + controls.size()) % controls.size()]
 		control.focus_next = control.get_path_to(next_control)
 		control.focus_previous = control.get_path_to(previous_control)
+		control.focus_neighbor_bottom = control.get_path_to(next_control)
+		control.focus_neighbor_top = control.get_path_to(previous_control)
 	return controls
 
 static func grab_keyboard_focus(root: Control, preferred: Control, controls: Array, force: bool = false) -> Control:
