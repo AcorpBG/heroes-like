@@ -402,12 +402,13 @@ Current phase: **Phase 5 - Playable Alpha Baseline**.
 - Previous completed slice: `combat-thornwake-week2-buff-10184`.
 - Previous completed slice: `combat-thornwake-t6-ranged-balance-10184`.
 - Previous completed slice: `combat-sunvault-t6-melee-balance-10184`.
+- Latest completed slice: `balance-charter-granary-levies-pressure-10184`, a placement-local authored encounter correction that keeps the player victory bounded while removing the current Granary Levies high-margin outlier.
 - Previous completed slice: `magic-resistance-countercontrol-10184`.
 - Previous completed slice: `battle-spell-valuation-counterplay-followup-10184`.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.
 - Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
-- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; broad stat tuning is paused while the owner-selected battle presentation runtime slice improves player-readable combat flow.
+- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; fresh current-code global Thornwake candidates were rejected and reverted because they did not materially reduce the full outlier set.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
