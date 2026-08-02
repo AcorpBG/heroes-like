@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Starlens Sanctum now grants the authored shrine artifact reward through eligible player, direct strategic-AI, and opportunistic route claims with faction-correct selection, one-time provenance, and save continuity. Overall release work remains active.",
+  "currentNotes": "Completed final-archive verification in the release packager: real Linux and Windows bundles pass exact structure/hash/header/mode checks, reproducibility is preserved, and tampered, traversing, linked, or duplicate archive members are rejected. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "artifact-shrine-reward-execution-10184",
-  "currentSliceId": "artifact-shrine-reward-execution-10184",
-  "currentSliceNotes": "Completed: eligible Sunvault player and AI Starlens claims deterministically grant and auto-equip Choir Tuning Fork while preserving Beacon Path, one-time provenance, faction gating, AI tracking, public event boundaries, and save version 9.",
+  "currentSlice": "packaging-release-artifact-verification-10184",
+  "currentSliceId": "packaging-release-artifact-verification-10184",
+  "currentSliceNotes": "Completed: package creation automatically verifies final archives, --verify-only rechecks distributed outputs, destructive fixtures reject tampering/path traversal/links/duplicates, and real reproducible Linux/Windows alpha bundles pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Shrine Reward Execution",
-  "currentSliceUpdatedAt": "2026-08-02T21:11:03Z",
+  "currentSliceTitle": "Packaging Release Artifact Verification",
+  "currentSliceUpdatedAt": "2026-08-02T21:24:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65432,6 +65432,79 @@
       "status": "completed",
       "title": "Artifact Shrine Reward Execution",
       "updatedAt": "2026-08-02T21:11:03Z"
+    },
+    {
+      "baselineChecks": [
+        "python3 tools/package_release.py --output-dir <release-dir>",
+        "python3 tools/package_release.py --verify-only --output-dir <release-dir>",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/package_release.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The release packager can verify final Linux and Windows archives without extracting unsafe paths; it requires exactly the expected bundle root and payload, rejects duplicate/path-traversal/link entries, verifies SHA256SUMS plus release-index archive hashes, verifies embedded platform manifests and every payload size/hash, validates Linux ELF/executable mode and Windows PE headers, rejects a tampered artifact, and passes against real exported release archives.",
+      "id": "packaging-release-artifact-verification-10184",
+      "implementationTargets": [
+        "tools/package_release.py",
+        "tests/packaging_release_artifact_verification_test.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "code signing or package signing",
+        "installer or distribution-channel integration",
+        "clean native Windows-machine certification",
+        "changing gameplay, save data, or Native RMG behavior",
+        "claiming overall release readiness"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 packaging follow-up / tools/package_release.py",
+      "purpose": "Make generated cross-platform release archives self-checkable as final artifacts instead of trusting only write-time manifests and checksums.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-release-bundle-manifest-gate-report.md"
+      ],
+      "completionEvidence": {
+        "destructive_cases": "Five focused tests pass: ordinary archive tampering, traversal after recomputed outer hashes, link-type members after recomputed outer hashes, duplicate members after recomputed outer hashes, and stale release-output entries are all rejected; the next package run removes stale managed outputs.",
+        "linux_archive": {
+          "archive": "heroes-like-0.1.0-alpha.1-linux-x86_64.tar.gz",
+          "archive_size_bytes": 205717167,
+          "payload_bytes": 260350615,
+          "sha256": "e7fe68181c91064ac163906ec9abe67989c81298696995e4c1de12b757732ccf",
+          "verified_file_count": 5
+        },
+        "reproducibility": "A second package run over the same real exports reproduced both archive SHA-256 hashes exactly.",
+        "windows_archive": {
+          "archive": "heroes-like-0.1.0-alpha.1-windows-x86_64.zip",
+          "archive_size_bytes": 214616272,
+          "payload_bytes": 294023028,
+          "sha256": "98568ac46694bfcb8fe9a47bc1ece25bb0584a8db4e002345ae869a5e616f792",
+          "verified_file_count": 5
+        }
+      },
+      "startedAt": "2026-08-02T21:16:22Z",
+      "status": "completed",
+      "title": "Packaging Release Artifact Verification",
+      "updatedAt": "2026-08-02T21:24:18Z",
+      "validation": {
+        "commands": [
+          "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/validate_repo.py",
+          "python3 tests/packaging_release_artifact_verification_test.py -v",
+          "python3 tools/package_release.py --version 0.1.0-alpha.1 --output-dir /tmp/heroes-release-verify-20260802 --skip-export",
+          "python3 tools/package_release.py --output-dir /tmp/heroes-release-verify-20260802 --verify-only",
+          "repeat package run plus identical SHA256SUMS diff",
+          "python3 tests/packaging_release_bundle_manifest_report.py",
+          "python3 tests/packaging_release_payload_hygiene.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T21:24:18Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65974,9 +66047,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Starlens Sanctum now executes its authored shrine artifact table for eligible player and strategic-AI claims, including opportunistic route pickup, while preserving faction gating, spell rewards, one-time provenance, and save version 9. Pickup, dwelling, town-service, broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Final Linux and Windows release archives are now automatically and independently verifiable for safe structure, checksum/index/manifest agreement, payload hashes, binary headers, and executable modes, with tamper rejection and reproducibility proof. Signing, installers, clean native Windows certification, strategic AI, balance, accessibility, content, performance, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T21:11:03Z",
+  "updatedAt": "2026-08-02T21:24:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

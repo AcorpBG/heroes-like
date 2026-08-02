@@ -262,6 +262,8 @@ PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaging_windows
 PACKAGING_WINDOWS_EXPORT_SMOKE_DOC_PATH = ROOT / "docs" / "packaging-windows-export-smoke-report.md"
 PACKAGING_RELEASE_BUNDLE_MANIFEST_SCRIPT_PATH = ROOT / "tests" / "packaging_release_bundle_manifest_report.py"
 PACKAGING_RELEASE_BUNDLE_MANIFEST_DOC_PATH = ROOT / "docs" / "packaging-release-bundle-manifest-gate-report.md"
+PACKAGE_RELEASE_TOOL_PATH = ROOT / "tools" / "package_release.py"
+PACKAGE_RELEASE_VERIFICATION_TEST_PATH = ROOT / "tests" / "packaging_release_artifact_verification_test.py"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_report.gd"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
@@ -20873,6 +20875,41 @@ def validate_packaging_release_bundle_manifest(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"Packaging release bundle manifest doc is missing required text: {required_text}")
 
 
+def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
+    for path in (PACKAGE_RELEASE_TOOL_PATH, PACKAGE_RELEASE_VERIFICATION_TEST_PATH):
+        ensure(path.exists(), errors, f"Missing release artifact verification file: {path.relative_to(ROOT)}")
+
+    if PACKAGE_RELEASE_TOOL_PATH.exists():
+        tool_text = PACKAGE_RELEASE_TOOL_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "--verify-only",
+            "verify_release_archives",
+            "verify_platform_archive",
+            "validate_archive_member_path",
+            "duplicate archive member",
+            "non-regular payload",
+            "SHA256SUMS archive hash mismatch",
+            "embedded and indexed platform manifests differ",
+            "Linux release payload is not x86_64 ELF",
+            "Windows release payload is not x86_64 PE",
+            "archive payload mode mismatch",
+            "release output directory contains unsafe, missing, or unexpected entries",
+        ):
+            ensure(required_token in tool_text, errors, f"Release packager verification is missing required token: {required_token}")
+
+    if PACKAGE_RELEASE_VERIFICATION_TEST_PATH.exists():
+        test_text = PACKAGE_RELEASE_VERIFICATION_TEST_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "test_generated_archives_verify_and_tampering_is_rejected",
+            "test_path_traversal_is_rejected_even_with_updated_outer_hashes",
+            "test_link_member_is_rejected_even_with_updated_outer_hashes",
+            "test_duplicate_member_is_rejected_even_with_updated_outer_hashes",
+            "test_stale_release_output_is_rejected_and_next_package_cleans_it",
+            "--verify-only",
+        ):
+            ensure(required_token in test_text, errors, f"Release artifact verification test is missing required token: {required_token}")
+
+
 def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
     required_paths = (
         PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH,
@@ -22814,6 +22851,7 @@ def main() -> int:
     validate_packaging_linux_export_smoke(errors)
     validate_packaging_windows_export_smoke(errors)
     validate_packaging_release_bundle_manifest(errors)
+    validate_packaging_release_artifact_verification(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
@@ -22950,6 +22988,7 @@ def main() -> int:
     print("- the packaging smoke gate now exports a real Linux Release PCK, boots it with --main-pack, and keeps binary export/install/release readiness as explicit non-claims")
     print("- Linux binary export smoke now exports a real Linux Release executable, checks ELF/PCK/native library placement, and boots it headlessly as local artifact evidence")
     print("- Linux and Windows post-export release bundle manifests now reject dev/import/debug artifacts and require exact executable/PCK/native sidecar contents")
+    print("- final Linux and Windows release archives now self-verify safe entry structure, checksums, embedded payload manifests, file hashes, binary headers, and executable modes")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the persisted Effects bus")
