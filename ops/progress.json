@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the live artifact set runtime gap. Hero state now preserves two trinket slots across old-save normalization and save-version-9 resume; compatible equip paths fill empties before deterministic primary-slot replacement; equipped Wayfarer Compact pieces activate cumulative thresholds that produce +4 movement and +5 scouting including piece bonuses. Existing management and town surfaces expose set progress. Source reward execution, rare-resource artifact income, additional sets, broad UI redesign, and final artifact balance remain incomplete.",
+  "currentNotes": "Completed exclusive live frontier destinations for strategic AI. Both no-known-target planners now build one reservation lookup per selection and reject exploration cells assigned to another active same-faction host or exclusively reserved by another live task. Exact-current-code Medium ordinal 87 separately proved that the earlier no-movement claim was diagnostic-only: host coordinates advance through quiet turns even though the long-run report emits no movement records. Native RMG output and non-exploration targeting are unchanged.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "artifact-dual-trinket-set-bonus-runtime-10184",
-  "currentSliceId": "artifact-dual-trinket-set-bonus-runtime-10184",
-  "currentSliceNotes": "Completed. Two live trinket slots, cumulative equipped-piece thresholds, live movement/scouting consumption, management text, and save-resume pass focused, core, town visual, layout, and repository validation. The broad overworld visual suite advances past the fixed drawer/count regressions but retains an unrelated stale terrain-prototype expectation.",
+  "currentSlice": "strategic-ai-exclusive-frontier-reservations-10184",
+  "currentSliceId": "strategic-ai-exclusive-frontier-reservations-10184",
+  "currentSliceNotes": "Completed. General exploration and frontier sweep fallback selection precompute other-host/live-task reservations; a live two-host fixture selects explore:0:0 and explore:1:4 and advances both hosts in one turn. Focused known-world, planned-task recruitment, task-state reservation, core regression, and repository validation pass. The broader live-turn execution fixture retains an unrelated stale Vaska north_wood completion expectation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Dual Trinket And Set Bonus Runtime",
-  "currentSliceUpdatedAt": "2026-08-02T11:45:17Z",
+  "currentSliceTitle": "Strategic AI Exclusive Frontier Reservations",
+  "currentSliceUpdatedAt": "2026-08-02T12:07:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,56 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Both live fallback frontier planners reject exploration cells assigned to another active same-faction host or exclusively reserved by another live task while preserving the selecting host's own assignment; a focused live fixture proves two hosts choose distinct reachable cells and advance; adjacent AI and repository regressions pass.",
+      "id": "strategic-ai-exclusive-frontier-reservations-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_known_world_memory_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing Native RMG generation or payloads",
+        "forcing tactical contact across disconnected generated topology",
+        "changing town, hero, resource, encounter, regroup, or battle-pressure targeting",
+        "claiming full strategic AI or game completion"
+      ],
+      "parentSliceId": "strategic-ai-production-ready-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Strategic AI Exclusive Frontier Target",
+      "purpose": "Prevent live strategic AI scout hosts from colliding on fallback frontier assignments that the task schema already declares exclusive.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-02T12:00:37Z",
+      "completedAt": "2026-08-02T12:07:51Z",
+      "completionSummary": "Both no-known-target exploration planners now precompute exclusive exploration reservations from active same-faction hosts and planned/reserved/active live tasks, while excluding the selecting host and its actor. A focused live fixture proves two hosts select distinct targets (explore:0:0 and explore:1:4), both move in the same advance, and movement behavior is emitted. Existing task reservation checks, planned-task recruitment, core systems, repository validation, JSON validation, and diff checks pass. The broader live-turn execution report fails on an unrelated current-runtime Vaska north_wood task completion expectation; this slice changes only explore target selection.",
+      "status": "completed",
+      "title": "Strategic AI Exclusive Frontier Reservations",
+      "updatedAt": "2026-08-02T12:07:51Z",
+      "validationEvidence": {
+        "first_frontier_target_id": "explore:0:0",
+        "second_frontier_target_id": "explore:1:4",
+        "both_hosts_moved_same_advance": true,
+        "focused_known_world_memory_report": "passed",
+        "planned_task_recruitment_prep_report": "passed",
+        "hero_task_state_boundary_report": "passed",
+        "core_systems_regression_smoke": "passed",
+        "repository_validator": "passed",
+        "live_turn_execution_report": "unrelated_stale_vaska_north_wood_completion_expectation"
+      }
+    },
     {
       "baselineChecks": [
         "godot --headless --path . --scene res://tests/artifact_set_runtime_effects_report.tscn",

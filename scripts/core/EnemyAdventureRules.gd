@@ -8147,6 +8147,14 @@ static func _no_known_target_exploration_plan(
 	var best := {}
 	var best_score := -999999
 	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
+	var source: Dictionary = commander_source if commander_source is Dictionary else {}
+	var reserved_target_lookup := _ai_hero_task_live_reserved_target_lookup(
+		session,
+		faction_id,
+		"explore",
+		String(source.get("placement_id", "")),
+		_ai_hero_task_actor_id_from_raid(source)
+	)
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
 		path_context = _path_distance_surface_context(session, "", faction_id)
@@ -8166,6 +8174,8 @@ static func _no_known_target_exploration_plan(
 			var score: int = 280 + frontier_score + center_score - (route_distance * 7) - direct_distance
 			var target_id := "explore:%d:%d" % [tile.x, tile.y]
 			if recent_target_lookup.has(target_id):
+				continue
+			if reserved_target_lookup.has(target_id):
 				continue
 			if (
 				best.is_empty()
@@ -8238,6 +8248,14 @@ static func _no_known_target_frontier_sweep_plan(
 	var best := {}
 	var best_score := -999999
 	var recent_target_lookup := _raid_recent_exploration_target_lookup(commander_source)
+	var source: Dictionary = commander_source if commander_source is Dictionary else {}
+	var reserved_target_lookup := _ai_hero_task_live_reserved_target_lookup(
+		session,
+		faction_id,
+		"explore",
+		String(source.get("placement_id", "")),
+		_ai_hero_task_actor_id_from_raid(source)
+	)
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
 		path_context = _path_distance_surface_context(session, "", faction_id)
@@ -8258,6 +8276,8 @@ static func _no_known_target_frontier_sweep_plan(
 			var score: int = 220 + center_score + distance_band_score - direct_distance
 			var target_id := "explore:%d:%d" % [tile.x, tile.y]
 			if recent_target_lookup.has(target_id):
+				continue
+			if reserved_target_lookup.has(target_id):
 				continue
 			if (
 				best.is_empty()
@@ -13516,6 +13536,54 @@ static func _ai_hero_task_live_target_reserved(
 			if String(reservation.get("reservation_scope", "")) == "exclusive_target":
 				return true
 	return false
+
+static func _ai_hero_task_live_reserved_target_lookup(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	target_kind: String,
+	current_placement_id: String = "",
+	current_actor_id: String = "",
+	ignore_task_reservations: bool = false
+) -> Dictionary:
+	var reserved := {}
+	if session == null or target_kind == "":
+		return reserved
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("placement_id", "")) == current_placement_id:
+			continue
+		if String(encounter.get("target_kind", "")) != target_kind:
+			continue
+		var reason_codes := _normalize_string_array(encounter.get("target_reason_codes", []))
+		if "active_front_support" in reason_codes or String(encounter.get("supporting_front_placement_id", "")) != "":
+			continue
+		var encounter_target_id := String(encounter.get("target_placement_id", ""))
+		if encounter_target_id != "":
+			reserved[encounter_target_id] = true
+	if ignore_task_reservations:
+		return reserved
+	for task in _ai_hero_task_live_tasks_for_faction(session, faction_id):
+		if not (task is Dictionary):
+			continue
+		var task_status := String(task.get("task_status", ""))
+		if task_status not in ["planned", "reserved", "active"]:
+			continue
+		if current_actor_id != "" and String(task.get("actor_id", "")) == current_actor_id:
+			continue
+		if String(task.get("actor_active_placement_id", "")) == current_placement_id:
+			continue
+		if String(task.get("target_kind", "")) != target_kind:
+			continue
+		var reservation: Dictionary = task.get("reservation", {}) if task.get("reservation", {}) is Dictionary else {}
+		if String(reservation.get("reservation_scope", "")) != "exclusive_target":
+			continue
+		var task_target_id := String(task.get("target_id", ""))
+		if task_target_id != "":
+			reserved[task_target_id] = true
+	return reserved
 
 static func ai_hero_task_saved_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,

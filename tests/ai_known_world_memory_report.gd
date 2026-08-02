@@ -35,6 +35,9 @@ func _run() -> void:
 	var persistent_exploration_case := _persistent_exploration_tasks_launch_and_complete()
 	if persistent_exploration_case.is_empty():
 		return
+	var exclusive_frontier_case := _exclusive_frontier_reservations_diversify_live_hosts()
+	if exclusive_frontier_case.is_empty():
+		return
 	var rebuild_relaunch_case := _rebuild_relaunch_preserves_frontier_history()
 	if rebuild_relaunch_case.is_empty():
 		return
@@ -59,7 +62,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy_for_movement_and_assignment",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
+		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exclusive_frontier_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -501,6 +504,61 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 		"event_types": _event_types(arrival_result.get("events", [])),
 	}
 
+func _exclusive_frontier_reservations_diversify_live_hosts() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_set_primary_hero_position(session, 0, 12)
+	_make_no_known_targets_session(session)
+	var first_plan := EnemyAdventureRules._no_known_target_frontier_sweep_plan(session, config, Vector2i(7, 2))
+	if first_plan.is_empty():
+		_fail("Exclusive frontier fixture could not produce its first reachable target.")
+		return {}
+	var first_raid := _frontier_reservation_raid(session, "frontier_reservation_host_1", "hero_vaska", 7, 2, first_plan)
+	var second_raid := _frontier_reservation_raid(session, "frontier_reservation_host_2", "hero_zhorra", 8, 2, {})
+	session.overworld["encounters"] = [first_raid, second_raid]
+	var same_origin_frontier_plan := EnemyAdventureRules._no_known_target_frontier_sweep_plan(
+		session,
+		config,
+		Vector2i(7, 2),
+		second_raid
+	)
+	if same_origin_frontier_plan.is_empty() or String(same_origin_frontier_plan.get("target_placement_id", "")) == String(first_plan.get("target_placement_id", "")):
+		_fail("Frontier fallback reused another live host's exclusive target: first=%s second=%s" % [JSON.stringify(first_plan), JSON.stringify(same_origin_frontier_plan)])
+		return {}
+	second_raid = EnemyAdventureRules.assign_target(session, config, second_raid)
+	if String(second_raid.get("target_kind", "")) != "explore":
+		_fail("Second no-objective host did not receive a frontier assignment: %s" % JSON.stringify(second_raid))
+		return {}
+	if String(second_raid.get("target_placement_id", "")) == String(first_raid.get("target_placement_id", "")):
+		_fail("Live frontier hosts received the same exclusive target: %s" % JSON.stringify([first_raid, second_raid]))
+		return {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters[1] = second_raid
+	session.overworld["encounters"] = encounters
+	var starts := {
+		String(first_raid.get("placement_id", "")): Vector2i(int(first_raid.get("x", 0)), int(first_raid.get("y", 0))),
+		String(second_raid.get("placement_id", "")): Vector2i(int(second_raid.get("x", 0)), int(second_raid.get("y", 0))),
+	}
+	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
+	_update_enemy_state(session, result.get("state", _enemy_state(session)))
+	var first_after := _encounter_by_id(session, String(first_raid.get("placement_id", "")))
+	var second_after := _encounter_by_id(session, String(second_raid.get("placement_id", "")))
+	for moved_raid in [first_after, second_after]:
+		var placement_id := String(moved_raid.get("placement_id", ""))
+		var start: Vector2i = starts.get(placement_id, Vector2i(-1, -1))
+		var finish := Vector2i(int(moved_raid.get("x", -1)), int(moved_raid.get("y", -1)))
+		if moved_raid.is_empty() or finish == start:
+			_fail("Exclusive frontier host did not advance toward its distinct target: %s" % JSON.stringify(moved_raid))
+			return {}
+	return {
+		"case_id": "exclusive_frontier_reservations_diversify_live_hosts",
+		"first_target_id": String(first_raid.get("target_placement_id", "")),
+		"second_target_id": String(second_raid.get("target_placement_id", "")),
+		"first_after": {"x": int(first_after.get("x", -1)), "y": int(first_after.get("y", -1))},
+		"second_after": {"x": int(second_after.get("x", -1)), "y": int(second_after.get("y", -1))},
+		"event_types": _event_types(result.get("events", [])),
+	}
+
 func _rebuild_relaunch_preserves_frontier_history() -> Dictionary:
 	var session = _base_session()
 	session.day = 2
@@ -921,6 +979,34 @@ func _add_exploration_raid(session, x: int, y: int) -> void:
 	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
 	session.overworld["encounters"] = [raid]
 	session.overworld["resolved_encounters"] = []
+
+func _frontier_reservation_raid(
+	session,
+	placement_id: String,
+	hero_id: String,
+	x: int,
+	y: int,
+	target_plan: Dictionary
+) -> Dictionary:
+	var raid := {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": x,
+		"y": y,
+		"difficulty": "pressure",
+		"spawned_by_faction_id": MIRECLAW,
+		"days_active": 0,
+		"arrived": false,
+	}
+	if not target_plan.is_empty():
+		raid.merge(target_plan, true)
+	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+		raid,
+		hero_id,
+		MIRECLAW,
+		session
+	)
+	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
 func _add_moving_exploration_raid(session, x: int, y: int, target_x: int, target_y: int) -> void:
 	var raid := {
