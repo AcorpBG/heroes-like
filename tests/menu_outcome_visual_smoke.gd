@@ -513,6 +513,18 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: settings board is missing the Effects volume slider.")
 		get_tree().quit(1)
 		return false
+	var vsync_toggle = shell.get_node_or_null("%VSyncToggle")
+	var frame_rate_picker = shell.get_node_or_null("%FrameRatePicker")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton):
+		push_error("Main menu smoke: settings board is missing VSync or frame-limit controls.")
+		get_tree().quit(1)
+		return false
+	var frame_rate_items: Array = settings_snapshot.get("frame_rate_picker_items", []) if settings_snapshot.get("frame_rate_picker_items", []) is Array else []
+	for expected_label in ["Unlimited", "30 FPS", "60 FPS", "120 FPS"]:
+		if not frame_rate_items.has(expected_label):
+			push_error("Main menu smoke: frame-limit picker omitted %s: %s." % [expected_label, frame_rate_items])
+			get_tree().quit(1)
+			return false
 	var resolution_ids := _resolution_ids_from_snapshot(settings_snapshot)
 	if not _assert_text_contains_all(
 		"Main menu settings handoff cue",
@@ -537,7 +549,7 @@ func _run_main_menu_smoke() -> bool:
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("Effects"):
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		push_error("Main menu smoke: settings summary did not reflect selected 1600x900 resolution: %s." % settings_snapshot)
@@ -552,6 +564,8 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("settings_handoff_tooltip", "")),
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("vsync_tooltip", "")),
+			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),
@@ -570,6 +584,8 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("settings_handoff_tooltip", "")),
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("vsync_tooltip", "")),
+			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),

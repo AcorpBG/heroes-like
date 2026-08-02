@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The independent Effects mix is complete. Settings version 3 persists the player-selected percentage, the Effects bus routes through Master, and UI, battle, and ambient playback all use it. Direct mute probes, rendered 1280x720 large-text settings coverage, and the exported PCK smoke pass. Broader Phase 5/6 product and release work remains open.",
+  "currentNotes": "Display pacing controls are implemented and validated. Settings version 4 now persists VSync plus unlimited/30/60/120 FPS preferences, applies them immediately through DisplayServer and Engine, and keeps the existing settings board compact at 1280x720 with large UI text. The broader packaging, performance, accessibility, and production-release baseline remains incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-effects-volume-runtime-bus-10184",
-  "currentSliceId": "settings-effects-volume-runtime-bus-10184",
-  "currentSliceNotes": "Completed. The settings board exposes Master, Music, and Effects sliders; Effects independently controls UI cues, battle impacts, and overworld ambience, persists through version-3 config, and remains usable at 1280x720 with large UI text.",
+  "currentSlice": "settings-display-pacing-controls-10184",
+  "currentSliceId": "settings-display-pacing-controls-10184",
+  "currentSliceNotes": "Completed. VSync and unlimited/30/60/120 FPS controls persist through settings version 4, apply immediately on live X11 and packaged headless runtime paths, and fit the existing compact settings board without overlap.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Effects Volume Runtime Bus",
-  "currentSliceUpdatedAt": "2026-08-02T08:41:10Z",
+  "currentSliceTitle": "Display Pacing Controls",
+  "currentSliceUpdatedAt": "2026-08-02T08:56:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56424,6 +56424,91 @@
         "sliceId": "settings-effects-volume-runtime-bus-10184",
         "status": "passed_runtime_rendered_and_packaged_effects_mix",
         "updatedAt": "2026-08-02T08:41:10Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "VSync and 30/60/120/unlimited frame limits are selectable in the settings board, persist across version-4 config save/reload, apply immediately to DisplayServer and Engine, retain compact and large-text layout integrity, and pass the exported PCK settings smoke.",
+      "id": "settings-display-pacing-controls-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "existing settings and packaging validation"
+      ],
+      "nonGoals": [
+        "changing renderer backend or quality presets",
+        "adding platform-specific display code outside Godot cross-platform APIs",
+        "claiming broad performance or release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Give Windows and Linux players direct control over tearing and frame pacing while limiting unnecessary GPU/CPU load when desired.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T08:46:32Z",
+      "status": "completed",
+      "summary": "Completed. Settings version 4 persists VSync and unlimited/30/60/120 FPS preferences; the compact settings board exposes both controls; and live X11 plus exported-PCK validation proves DisplayServer and Engine application across save/reload.",
+      "title": "Display Pacing Controls",
+      "updatedAt": "2026-08-02T08:56:42Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed)",
+          "xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/packaged_settings_persistence_report.tscn -- --report-json=res://.artifacts/display_pacing_x11_report.json (passed on X11)",
+          "python3 tests/packaged_settings_persistence_smoke.py (passed; Linux Release PCK exported and scene booted through --main-pack)",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed)",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn (passed at 1280x720 with large UI text; capture inspected)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "settings_version": 4,
+          "frame_rate_options": [
+            0,
+            30,
+            60,
+            120
+          ],
+          "x11_display_pacing": {
+            "display_driver": "X11",
+            "requested_vsync_enabled": false,
+            "runtime_vsync_mode": 0,
+            "configured_frame_rate_limit": 120,
+            "runtime_max_fps": 120
+          },
+          "packaged_smoke": {
+            "ok": true,
+            "export_returncode": 0,
+            "scene_returncode": 0,
+            "pack_size_bytes": 185200160,
+            "settings_version": 4,
+            "reloaded_vsync_enabled": false,
+            "reloaded_frame_rate_limit": 120,
+            "runtime_max_fps": 120,
+            "restored_original_settings": true
+          },
+          "visual_check": "The 1280x720 large-UI-text settings capture keeps window mode, VSync, resolution, frame limit, all three audio sliders, Large Text, and Reduce Motion visible without overlap or clipping.",
+          "player_facing_change": "Players can now control display tearing and choose an unlimited, 30, 60, or 120 FPS runtime cap from the existing settings board.",
+          "remaining_debt": "Renderer quality presets, broad performance profiling, final accessibility coverage, binary release/install validation, the parent production baseline, and the overall game release remain incomplete."
+        },
+        "sliceId": "settings-display-pacing-controls-10184",
+        "status": "passed_direct_x11_rendered_and_packaged_display_pacing",
+        "updatedAt": "2026-08-02T08:56:42Z"
       }
     },
     {

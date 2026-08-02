@@ -3,7 +3,7 @@ extends Node
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 3
+const SETTINGS_VERSION := 4
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -13,6 +13,13 @@ const PRESENTATION_FULLSCREEN := "fullscreen"
 const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
 const MUSIC_AUDIO_BUS := "Music"
 const EFFECTS_AUDIO_BUS := "Effects"
+
+const FRAME_RATE_OPTIONS := [
+	{"value": 0, "label": "Unlimited"},
+	{"value": 30, "label": "30 FPS"},
+	{"value": 60, "label": "60 FPS"},
+	{"value": 120, "label": "120 FPS"},
+]
 
 const PRESENTATION_OPTIONS := [
 	{
@@ -129,6 +136,8 @@ func build_default_settings() -> Dictionary:
 		"presentation": {
 			"mode": PRESENTATION_WINDOWED,
 			"resolution": PRESENTATION_RESOLUTION_DEFAULT,
+			"vsync_enabled": true,
+			"frame_rate_limit": 0,
 		},
 		"accessibility": {
 			"large_ui_text": false,
@@ -148,6 +157,8 @@ func load_settings() -> void:
 		settings["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
 		settings["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
 		settings["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
+		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
+		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
 		settings["accessibility"]["large_ui_text"] = bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
@@ -166,6 +177,8 @@ func save_settings() -> String:
 	config.set_value("audio", "effects_volume_percent", effects_volume_percent())
 	config.set_value("presentation", "mode", presentation_mode_id())
 	config.set_value("presentation", "resolution", presentation_resolution_id())
+	config.set_value("presentation", "vsync_enabled", vsync_enabled())
+	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
@@ -204,6 +217,17 @@ func build_resolution_options() -> Array:
 		)
 	return options
 
+func build_frame_rate_options() -> Array:
+	var selected_limit := frame_rate_limit()
+	var options := []
+	for option in FRAME_RATE_OPTIONS:
+		options.append({
+			"value": int(option.get("value", 0)),
+			"label": String(option.get("label", "Unlimited")),
+			"selected": int(option.get("value", 0)) == selected_limit,
+		})
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
 
@@ -213,6 +237,18 @@ func presentation_resolution_id() -> String:
 func presentation_resolution_size() -> Vector2i:
 	var option := _presentation_resolution_option(presentation_resolution_id())
 	return Vector2i(int(option.get("width", 1920)), int(option.get("height", 1080)))
+
+func vsync_enabled() -> bool:
+	return bool(ensure_settings().get("presentation", {}).get("vsync_enabled", true))
+
+func frame_rate_limit() -> int:
+	return _normalize_frame_rate_limit(int(ensure_settings().get("presentation", {}).get("frame_rate_limit", 0)))
+
+func frame_rate_limit_label() -> String:
+	for option in FRAME_RATE_OPTIONS:
+		if int(option.get("value", 0)) == frame_rate_limit():
+			return String(option.get("label", "Unlimited"))
+	return "Unlimited"
 
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
@@ -291,6 +327,16 @@ func set_presentation_resolution(resolution_id: String) -> void:
 	settings["presentation"]["resolution"] = _normalize_presentation_resolution(resolution_id)
 	_commit_settings()
 
+func set_vsync_enabled(enabled: bool) -> void:
+	ensure_settings()
+	settings["presentation"]["vsync_enabled"] = enabled
+	_commit_settings()
+
+func set_frame_rate_limit(value: int) -> void:
+	ensure_settings()
+	settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(value)
+	_commit_settings()
+
 func set_large_ui_text_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["accessibility"]["large_ui_text"] = enabled
@@ -307,7 +353,7 @@ func describe_settings() -> String:
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
-			"Presentation: %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id())],
+			"Presentation: %s | %s | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
 			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
@@ -384,6 +430,8 @@ func _apply_presentation_settings() -> void:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 			DisplayServer.window_set_size(resolution)
 			_center_window(resolution)
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled() else DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = frame_rate_limit()
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -426,6 +474,12 @@ func _normalize_presentation_resolution(resolution_id: String) -> String:
 		if String(option.get("id", "")) == resolution_id:
 			return resolution_id
 	return PRESENTATION_RESOLUTION_DEFAULT
+
+func _normalize_frame_rate_limit(value: int) -> int:
+	for option in FRAME_RATE_OPTIONS:
+		if int(option.get("value", 0)) == value:
+			return value
+	return 0
 
 func _presentation_resolution_option(resolution_id: String) -> Dictionary:
 	var normalized := _normalize_presentation_resolution(resolution_id)
