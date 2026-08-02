@@ -3564,13 +3564,13 @@
     },
     {
       "id": "mireford-skirmish",
-      "name": "Mireford Skirmish",
+      "name": "Rootbound Mireford",
       "selection": {
-        "summary": "A skirmish-only Murkward ford setup focused on retaking the road without campaign carryover or progression records.",
+        "summary": "Lead a Thornwake root caravan through Mireford, reclaim Murkward, and keep a living road open without campaign carryover or progression records.",
         "recommended_difficulty": "normal",
-        "map_size_label": "Skirmish Ford (10x6)",
-        "player_summary": "Mira Flintmere commands a compact Embercourt bridge column for a standalone ford fight.",
-        "enemy_summary": "The Mireclaw raiders hold Murkward with ford reavers, silt hunters, and ambush pressure tuned for skirmish launch.",
+        "map_size_label": "Rootway Ford (10x6)",
+        "player_summary": "Silsa Bramble-Hound leads Graftroot Caravan and its Thornwake wardens across a flooded standalone front.",
+        "enemy_summary": "Mireclaw raiders hold Murkward with ford reavers, silt hunters, and ambush pressure that punishes a slow root-road advance.",
         "availability": {
           "campaign": false,
           "skirmish": true
@@ -3580,13 +3580,14 @@
         "width": 10,
         "height": 6
       },
-      "player_faction_id": "faction_embercourt",
-      "player_army_id": "army_flintmere_column",
-      "hero_id": "hero_mira",
+      "player_faction_id": "faction_thornwake",
+      "player_army_id": "army_rootbound_mireford_wardens",
+      "hero_id": "hero_thornwake_silsa_bramblehound",
       "starting_resources": {
-        "gold": 1250,
-        "wood": 3,
-        "ore": 2
+        "gold": 400,
+        "wood": 4,
+        "ore": 1,
+        "verdant_grafts": 2
       },
       "map": [
         [
@@ -3667,11 +3668,11 @@
         "y": 3
       },
       "hero_starts": [
-        "hero_mira"
+        "hero_thornwake_silsa_bramblehound"
       ],
       "objectives": {
-        "victory_text": "Mira wins the standalone ford fight and keeps the road open for skirmish scoring only.",
-        "defeat_text": "The standalone ford push fails and Murkward remains a skirmish raider gate.",
+        "victory_text": "Silsa roots a living road through Mireford and keeps Murkward open for skirmish scoring only.",
+        "defeat_text": "Graftroot Caravan is cut away from the ford and Murkward remains a Mireclaw raider gate.",
         "victory": [
           {
             "id": "claim_murkward",
@@ -3695,19 +3696,19 @@
             "id": "clear_reed_totemists",
             "label": "Clear the reed totemists",
             "type": "encounter_resolved",
-            "placement_id": "ironbridge_reed_totemists"
+            "placement_id": "mireford_reed_totemists"
           }
         ],
         "defeat": [
           {
-            "id": "hold_highwater",
-            "label": "Keep Highwater Keep under your banner",
+            "id": "hold_graftroot",
+            "label": "Keep Graftroot Caravan under your banner",
             "type": "town_not_owned_by_player",
-            "placement_id": "highwater_bridgehead"
+            "placement_id": "graftroot_bridgehead"
           },
           {
-            "id": "mira_survives",
-            "label": "Mira must survive the expedition",
+            "id": "silsa_survives",
+            "label": "Silsa must survive the expedition",
             "type": "session_flag_equals",
             "flag": "campaign",
             "value": "defeat"
@@ -3729,7 +3730,7 @@
       },
       "script_hooks": [
         {
-          "id": "bridge_sappers_return",
+          "id": "rootwrights_recover_cache",
           "priority": 120,
           "conditions": [
             {
@@ -3741,7 +3742,7 @@
             {
               "type": "spawn_resource_node",
               "placement": {
-                "placement_id": "bridge_sappers_cache",
+                "placement_id": "rootwrights_cache",
                 "site_id": "site_waystone_cache",
                 "x": 4,
                 "y": 0
@@ -3749,12 +3750,12 @@
             },
             {
               "type": "message",
-              "text": "Once the Silt Hunters are cleared, Mira's bridge sappers recover a reserve cache above the flooded road."
+              "text": "Once the Silt Hunters are cleared, Silsa's rootwrights lift a sealed reserve cache above the flooded road."
             }
           ]
         },
         {
-          "id": "highwater_reserve_train",
+          "id": "graftroot_seed_train",
           "priority": 110,
           "conditions": [
             {
@@ -3763,7 +3764,7 @@
             },
             {
               "type": "town_owned_by_player",
-              "placement_id": "highwater_bridgehead"
+              "placement_id": "graftroot_bridgehead"
             }
           ],
           "effects": [
@@ -3776,15 +3777,15 @@
             },
             {
               "type": "town_add_recruits",
-              "placement_id": "highwater_bridgehead",
+              "placement_id": "graftroot_bridgehead",
               "recruits": {
-                "unit_river_guard": 2,
-                "unit_ember_archer": 2
+                "unit_thornwake_seedcutters": 3,
+                "unit_thornwake_thornwhip_carriers": 2
               }
             },
             {
               "type": "message",
-              "text": "A reserve train from Highwater reaches the bridgehead with pay chests, pikes, and fresh archers."
+              "text": "A seed train reaches Graftroot with fresh cutters, thornwhip crews, and a wagon of living roadstock."
             }
           ]
         },
@@ -3824,7 +3825,7 @@
           ]
         },
         {
-          "id": "bridgehorn_recall",
+          "id": "rootcall_recall",
           "priority": 85,
           "conditions": [
             {
@@ -3833,7 +3834,7 @@
             },
             {
               "type": "town_owned_by_player",
-              "placement_id": "highwater_bridgehead"
+              "placement_id": "graftroot_bridgehead"
             },
             {
               "type": "active_raid_count_at_least",
@@ -3844,15 +3845,15 @@
           "effects": [
             {
               "type": "town_add_recruits",
-              "placement_id": "highwater_bridgehead",
+              "placement_id": "graftroot_bridgehead",
               "recruits": {
-                "unit_river_guard": 2,
-                "unit_ember_archer": 1
+                "unit_thornwake_seedcutters": 2,
+                "unit_thornwake_sporeglass_menders": 1
               }
             },
             {
               "type": "message",
-              "text": "Mira blows the bridgehorn and reserve line wardens sprint back toward Highwater's battered bridgehead."
+              "text": "Silsa sounds the rootcall and reserve wardens follow the living road back toward Graftroot's battered line."
             }
           ]
         },
@@ -3891,21 +3892,21 @@
             },
             {
               "type": "message",
-              "text": "Reed totemists keep the flooded channels marked, and another marsh raid spills toward Mira's bridge line."
+              "text": "Reed totemists keep the flooded channels marked, and another marsh raid spills toward Silsa's root line."
             }
           ]
         }
       ],
       "towns": [
         {
-          "placement_id": "highwater_bridgehead",
-          "town_id": "town_highwater_keep",
+          "placement_id": "graftroot_bridgehead",
+          "town_id": "town_thornwake_graftroot_caravan",
           "x": 0,
           "y": 3,
           "owner": "player",
           "recovery": {
             "pressure": 1,
-            "source": "bridgehead attrition"
+            "source": "rootway attrition"
           }
         },
         {
@@ -3943,7 +3944,7 @@
               "y": 4
             }
           ],
-          "siege_target_placement_id": "highwater_bridgehead",
+          "siege_target_placement_id": "graftroot_bridgehead",
           "siege_active_raid_threshold": 2,
           "siege_capture_progress": 2
         }
@@ -3980,8 +3981,8 @@
           "y": 1
         },
         {
-          "placement_id": "highwater_embergrain_granary",
-          "site_id": "site_embergrain_warm_granary",
+          "placement_id": "graftroot_verdant_nursery",
+          "site_id": "site_verdant_graft_nursery",
           "x": 0,
           "y": 2
         }
@@ -4044,7 +4045,7 @@
           }
         },
         {
-          "placement_id": "ironbridge_reed_totemists",
+          "placement_id": "mireford_reed_totemists",
           "encounter_id": "encounter_reed_totemists",
           "x": 6,
           "y": 0,
