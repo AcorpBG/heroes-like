@@ -122,8 +122,8 @@
         "piece_limit_per_table": 2
       },
       "runtime_policy": {
-        "metadata_only": true,
-        "live_drop_execution": false,
+        "metadata_only": false,
+        "live_drop_execution": true,
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,

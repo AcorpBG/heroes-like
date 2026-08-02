@@ -11809,6 +11809,8 @@ static func _resource_target_priority(session: SessionStateStoreScript.SessionDa
 	if not (node is Dictionary):
 		return 0
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
+		return 0
 	if not _resource_node_contestable_by_faction(node, site, faction_id):
 		return 0
 	var priority = 85 + int(min(110, _resource_site_strategic_value(site) / 120))
@@ -16875,6 +16877,8 @@ static func _secure_resource_target(
 	if int(node_result.get("index", -1)) < 0:
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
+		return {"encounter": raid, "state": state, "event_message": ""}
 	if not _resource_node_contestable_by_faction(node, site, faction_id):
 		if String(node.get("collected_by_faction_id", "")) == faction_id:
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
@@ -16934,6 +16938,28 @@ static func _secure_resource_target(
 		site
 	)
 	updated_raid = spell_reward.get("raid", updated_raid)
+	var artifact_reward := _apply_guarded_site_artifact_reward_to_raid(
+		session,
+		faction_id,
+		updated_raid,
+		node,
+		site
+	)
+	updated_raid = artifact_reward.get("raid", updated_raid)
+	if bool(artifact_reward.get("applied", false)):
+		var artifact_id := String(artifact_reward.get("artifact_id", ""))
+		var captured_artifacts := _normalize_string_array(state.get("captured_artifact_ids", []))
+		if artifact_id not in captured_artifacts:
+			captured_artifacts.append(artifact_id)
+		state["captured_artifact_ids"] = captured_artifacts
+		state["pressure"] = max(0, int(state.get("pressure", 0))) + _artifact_pressure_value(artifact_id)
+		node["artifact_reward_id"] = artifact_id
+		node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
+		node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
+		node["artifact_reward_claimed_by_faction_id"] = faction_id
+		node["artifact_reward_claimed_day"] = session.day
+		nodes[int(node_result.get("index", -1))] = node
+		session.overworld["resource_nodes"] = nodes
 	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
 	if not spoils.is_empty():
 		message = "%s seizes %s and strips %s." % [
@@ -16964,6 +16990,12 @@ static func _secure_resource_target(
 			message,
 			raid_commander_display_name(updated_raid),
 			_describe_recruit_set(recruit_reward.get("recruits", {})),
+		]
+	if bool(artifact_reward.get("applied", false)):
+		message = "%s %s secures and equips %s." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			ArtifactRulesScript.describe_artifact(String(artifact_reward.get("artifact_id", ""))),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -17009,6 +17041,8 @@ static func _secure_resource_target(
 			"target_controller_after": faction_id,
 			"learned_spell_id": String(spell_reward.get("spell_id", "")),
 			"learned_spell_name": String(spell_reward.get("spell_name", "")),
+			"artifact_reward_id": String(artifact_reward.get("artifact_id", "")),
+			"artifact_reward_table_id": String(artifact_reward.get("table_id", "")),
 		}
 	)
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
@@ -17020,7 +17054,7 @@ static func _secure_resource_target(
 		faction_id
 	)
 	var final_raid: Dictionary = continuation.get("encounter", updated_raid)
-	if bool(spell_reward.get("learned", false)):
+	if bool(spell_reward.get("learned", false)) or bool(artifact_reward.get("applied", false)):
 		var final_commander = final_raid.get("enemy_commander_state", {})
 		if final_commander is Dictionary and not final_commander.is_empty():
 			sync_commander_state_to_roster(
@@ -17035,7 +17069,54 @@ static func _secure_resource_target(
 	var events := [event]
 	if not continuation.get("ai_event", {}).is_empty():
 		events.append(continuation.get("ai_event", {}))
-	return {"encounter": final_raid, "state": state, "event_message": message, "ai_events": events}
+	return {
+		"encounter": final_raid,
+		"state": state,
+		"event_message": message,
+		"ai_events": events,
+		"artifact_reward": artifact_reward,
+	}
+
+static func _apply_guarded_site_artifact_reward_to_raid(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var commander_state = raid.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return {"raid": raid, "applied": false, "reason": "commander_unavailable"}
+	var source_key := "%s:%s:%s" % [
+		session.scenario_id,
+		String(node.get("placement_id", "")),
+		String(node.get("site_id", "")),
+	]
+	var selection := ArtifactRulesScript.select_live_source_reward(
+		"guarded_site",
+		site,
+		source_key,
+		faction_id,
+		ArtifactRulesScript.owned_artifact_ids(commander_state)
+	)
+	if not bool(selection.get("ok", false)):
+		selection["raid"] = raid
+		selection["applied"] = false
+		return selection
+	var artifact_id := String(selection.get("artifact_id", ""))
+	var claim := ArtifactRulesScript.claim_artifact(
+		commander_state,
+		artifact_id,
+		"Secured from %s" % String(site.get("name", "the guarded site")),
+		true
+	)
+	var updated_raid := raid.duplicate(true)
+	if bool(claim.get("ok", false)):
+		updated_raid["enemy_commander_state"] = claim.get("hero", commander_state)
+	selection["raid"] = updated_raid
+	selection["claim"] = claim
+	selection["applied"] = bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false))
+	return selection
 
 static func _apply_resource_site_claim_recruits_to_raid(
 	session: SessionStateStoreScript.SessionData,

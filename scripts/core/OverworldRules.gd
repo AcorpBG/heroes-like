@@ -858,7 +858,7 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return {"ok": false, "message": "This site has no authored payload."}
-	var guard_encounter := _resource_site_guard_encounter(session, node, site)
+	var guard_encounter := resource_site_blocking_guard(session, node, site)
 	if not guard_encounter.is_empty():
 		var guard_link := _resource_site_guard_link_for_encounter(guard_encounter)
 		if bool(guard_link.get("clear_required_for_target", false)):
@@ -942,8 +942,21 @@ static func _collect_resource_node_result(
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
+	var artifact_reward := _grant_guarded_site_artifact_reward(session, node, site)
+	if bool(artifact_reward.get("applied", false)):
+		messages.append(String(artifact_reward.get("message", "")))
+		node["artifact_reward_id"] = String(artifact_reward.get("artifact_id", ""))
+		node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
+		node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
+		node["artifact_reward_claimed_by_faction_id"] = "player"
+		node["artifact_reward_claimed_day"] = session.day
+		nodes[int(node_result.get("index", -1))] = node
+		session.overworld["resource_nodes"] = nodes
 	_rules_profile_add_ms("resource_recruits_spells_xp_ms", recruits_spells_xp_started_usec)
 	var mutation_facts := _resource_interaction_event_facts(node, site, previous_controller, rewards, visit_cost, topology_facts)
+	if bool(artifact_reward.get("applied", false)):
+		mutation_facts["artifact_ids"] = [String(artifact_reward.get("artifact_id", ""))]
+		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, mutation_facts)
 	if not refresh_fog_after_action:
 		result["descriptor_route_fog_reused"] = true
@@ -959,6 +972,7 @@ static func _collect_resource_node_result(
 			"y": int(node.get("y", 0)),
 			"previous_controller": previous_controller,
 			"rewards": rewards,
+			"artifact_reward": artifact_reward,
 			"mutation_facts": mutation_facts,
 		}
 	)
@@ -5015,6 +5029,11 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"source_support_town_placement_id",
 		"source_support_faction_id",
 		"source_support_missing_resource_ids",
+		"artifact_reward_id",
+		"artifact_reward_table_id",
+		"artifact_reward_source_key",
+		"artifact_reward_claimed_by_faction_id",
+		"artifact_reward_claimed_day",
 	]:
 		if source.has(key):
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
@@ -5862,6 +5881,17 @@ static func _resource_site_guard_encounter(
 		if _resource_site_guard_targets_node(guard, node, site):
 			return encounter
 	return {}
+
+static func resource_site_blocking_guard(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var encounter := _resource_site_guard_encounter(session, node, site)
+	if encounter.is_empty():
+		return {}
+	var guard_link := _resource_site_guard_link_for_encounter(encounter)
+	return encounter if bool(guard_link.get("clear_required_for_target", false)) else {}
 
 static func _resource_site_contest_encounter(
 	session: SessionStateStoreScript.SessionData,
@@ -10973,6 +11003,39 @@ static func _apply_artifact_claim(
 	session.overworld["hero"] = result.get("hero", session.overworld.get("hero", {}))
 	_sync_movement_to_hero(session, previous_max)
 	return result
+
+static func _grant_guarded_site_artifact_reward(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var faction_id := String(scenario.get("player_faction_id", ""))
+	var source_key := "%s:%s:%s" % [
+		session.scenario_id,
+		String(node.get("placement_id", "")),
+		String(node.get("site_id", "")),
+	]
+	var selection := ArtifactRulesScript.select_live_source_reward(
+		"guarded_site",
+		site,
+		source_key,
+		faction_id,
+		ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	)
+	if not bool(selection.get("ok", false)):
+		return selection
+	var artifact_id := String(selection.get("artifact_id", ""))
+	var claim := _apply_artifact_claim(
+		session,
+		artifact_id,
+		"Recovered from %s" % String(site.get("name", "the guarded site")),
+		true
+	)
+	selection["claim"] = claim
+	selection["applied"] = bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false))
+	selection["message"] = String(claim.get("message", ""))
+	return selection
 
 static func _begin_town_assault(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var town_name := _town_name(town)

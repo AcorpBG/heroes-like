@@ -27,6 +27,9 @@ func _run() -> void:
 	if int(report.get("guarded_context_match_count", 0)) <= 0:
 		_fail("Source/reward tables did not connect to guarded reward contexts: %s" % report)
 		return
+	if int(report.get("live_table_count", 0)) != 1 or report.get("live_source_tags", []) != ["guarded_site"]:
+		_fail("Expected only the guarded-site source table to execute live: %s" % report)
+		return
 
 	var source_tag_counts: Dictionary = report.get("source_tag_counts", {}) if report.get("source_tag_counts", {}) is Dictionary else {}
 	for source_tag in ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
@@ -40,7 +43,7 @@ func _run() -> void:
 			return
 
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
-	if not bool(policy.get("source_reward_metadata_authored", false)) or bool(policy.get("live_drop_execution", true)) or bool(policy.get("equipment_runtime_effects", true)) or bool(policy.get("save_version_bump", true)) or bool(policy.get("ai_valuation_behavior", true)) or bool(policy.get("rare_resource_activation", true)):
+	if not bool(policy.get("source_reward_metadata_authored", false)) or not bool(policy.get("live_drop_execution", false)) or bool(policy.get("equipment_runtime_effects", true)) or bool(policy.get("save_version_bump", true)) or bool(policy.get("ai_valuation_behavior", true)) or bool(policy.get("rare_resource_activation", true)):
 		_fail("Artifact source/reward report crossed slice runtime boundaries: %s" % policy)
 		return
 	if not _assert_public_payload("artifact source/reward report", report):
@@ -51,6 +54,8 @@ func _run() -> void:
 		"report_id": REPORT_ID,
 		"schema_id": String(report.get("schema_id", "")),
 		"table_count": int(report.get("table_count", 0)),
+		"live_table_count": int(report.get("live_table_count", 0)),
+		"live_source_tags": report.get("live_source_tags", []),
 		"eligible_artifact_count": int(report.get("eligible_artifact_count", 0)),
 		"artifact_count": int(report.get("artifact_count", 0)),
 		"source_tag_counts": source_tag_counts,
@@ -60,7 +65,7 @@ func _run() -> void:
 		"guarded_context_match_count": int(report.get("guarded_context_match_count", 0)),
 		"runtime_policy": policy,
 		"caveats": [
-			"This report proves bounded artifact source/reward metadata and map object/site report hooks only; live drop execution, equipment effects, save migration, AI valuation behavior, and rare-resource activation remain outside this slice.",
+			"Only explicitly opted-in guarded sites execute source-table rewards; pickup, shrine, dwelling, town, battle-salvage, save migration, AI valuation changes, and rare-resource activation remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
