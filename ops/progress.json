@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The Glassroad Archive Wardens placement-local pressure correction is complete. One additional Ember Archer changes the four-round victory from 92% player health and 3 enemy damage per round to 77% and 8, while the active breadth queue improves from 32 items/6 high to 31/4. The remaining high-priority authored rows are Mireford Silt Hunters and Lockmarsh Road Chaplains; broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
+  "currentNotes": "The Mireford Silt Hunters placement-local correction is complete. Reducing its oversized host from 8 brutes/12 cutthroats/6 slingers to 5/9/5 changes a round-two defeat with 91% enemy health into a four-round victory at 33% player health with 26 enemy damage per round. The active breadth queue improves from 31 items/4 high to 28/2; Lockmarsh Road Chaplains is the sole remaining high-priority authored row. Broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-glassroad-archive-wardens-pressure-10184",
-  "currentSliceId": "balance-glassroad-archive-wardens-pressure-10184",
-  "currentSliceNotes": "Completed with the smallest passing local correction: Ember Archers increase from 6 to 7, preserving a four-round victory at 77% terminal margin with 8 enemy damage per round. The 51-sample queue improves to 31 items/4 high; remaining balance debt is explicitly unclaimed.",
+  "currentSlice": "balance-mireford-silt-hunters-pressure-10184",
+  "currentSliceId": "balance-mireford-silt-hunters-pressure-10184",
+  "currentSliceNotes": "Completed with a placement-local 5-brute/9-cutthroat/5-slinger roster. The sample is now a four-round player victory at 33% terminal margin with 26 enemy damage per round, and the breadth queue improves to 28 items/2 high. Ironbridge and shared dynamic raid content remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Glassroad Archive Wardens Pressure",
-  "currentSliceUpdatedAt": "2026-08-02T07:54:29Z",
+  "currentSliceTitle": "Mireford Silt Hunters Pressure",
+  "currentSliceUpdatedAt": "2026-08-02T08:01:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56121,6 +56121,93 @@
     },
     {
       "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_mireford_silt_hunters_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T08:01:57Z",
+      "completionCriteria": "The Mireford Silt Hunters sample becomes a bounded player victory below the 90% matrix terminal-margin threshold, retains meaningful enemy pressure, and improves the active-scenario breadth queue through its placement-local roster only.",
+      "id": "balance-mireford-silt-hunters-pressure-10184",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_mireford_silt_hunters_balance_regression.gd",
+        "existing active-scenario balance breadth reports"
+      ],
+      "nonGoals": [
+        "changing Ironbridge Silt Hunters or the shared army_silt_hunters group",
+        "global unit, spell, or combat-rule tuning",
+        "full combat-balance or release-readiness claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
+      "purpose": "Correct the current 91% enemy-health Mireford Silt Hunters defeat without weakening the encounter on other maps or in dynamic raids.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T07:56:30Z",
+      "status": "completed",
+      "summary": "Completed. The Mireford-only roster reduction from 8 brutes/12 cutthroats/6 slingers to 5/9/5 changes a round-two defeat with 91% enemy health into a four-round player victory at 33% health with 26 enemy damage per round. The active breadth queue improves from 31 items/4 high to 28/2 without changing Ironbridge Silt Hunters, the shared army, units, spells, or combat rules.",
+      "title": "Mireford Silt Hunters Pressure",
+      "updatedAt": "2026-08-02T08:01:57Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_mireford_silt_hunters_balance_regression.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active balance queue remains; queue improved)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_breadth_after": {
+            "high_priority_count": 2,
+            "item_count": 28,
+            "medium_priority_count": 26,
+            "sample_count": 51
+          },
+          "active_breadth_before": {
+            "high_priority_count": 4,
+            "item_count": 31,
+            "medium_priority_count": 27,
+            "sample_count": 51
+          },
+          "baseline_sample": {
+            "enemy_damage_per_round": 77,
+            "enemy_health_remaining_pct": 91,
+            "enemy_power_score": 2168,
+            "outcome_state": "defeat",
+            "player_enemy_power_ratio_pct": 77,
+            "player_health_remaining_pct": 0,
+            "player_power_score": 1662,
+            "round_reached": 2
+          },
+          "implemented_sample": {
+            "enemy_damage_per_round": 26,
+            "enemy_health_remaining_pct": 0,
+            "enemy_power_score": 1565,
+            "outcome_state": "victory",
+            "player_enemy_power_ratio_pct": 106,
+            "player_health_remaining_pct": 33,
+            "player_power_score": 1662,
+            "round_reached": 4
+          },
+          "player_facing_change": "Only the Mireford bridge_silt_hunters roster changes to 5 brutes/9 cutthroats/5 slingers. Ironbridge remains 8/12/6 and the shared army_silt_hunters group remains 4 brutes/7 cutthroats.",
+          "rejected_adjacent_candidates": {
+            "5_8_5": "Rejected: deterministic targeting produced an eight-round player defeat with 19% enemy health despite lower enemy power.",
+            "5_10_5": "Passed at 25% player health, but 5/9/5 provided a safer 33% victory while retaining stronger 26 enemy damage per round."
+          },
+          "remaining_debt": "The active breadth suite remains action_required with 28 items, including two high-priority items belonging only to Lockmarsh Road Chaplains. This slice does not claim broad combat-balance completion."
+        },
+        "sliceId": "balance-mireford-silt-hunters-pressure-10184",
+        "status": "passed_with_unrelated_breadth_debt",
+        "updatedAt": "2026-08-02T08:01:57Z"
+      }
+    },
+    {
+      "baselineChecks": [
         "python3 tests/town_development_balance_report.py",
         "python3 tests/town_development_cost_curve_report.py",
         "python3 tests/economy_town_goal_scorecard_report.py",
@@ -63483,7 +63570,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "glassroad_archive_wardens_pressure_correction_completed_overall_release_in_progress",
+  "result": "mireford_silt_hunters_pressure_correction_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63584,9 +63671,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, Ford Reavers, and Glassroad Archive Wardens corrections are complete within their scopes. Archive Wardens now applies sustained pressure and no longer contributes high-priority breadth rows, while Silt Hunters, Road Chaplains, and unrelated balance debt remain explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, Ford Reavers, Archive Wardens, and Mireford Silt Hunters corrections are complete within their scopes. Mireford Silt Hunters now resolves as a demanding but bounded victory and no longer contributes high-priority breadth rows, while Road Chaplains and unrelated balance debt remain explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T07:54:29Z",
+  "updatedAt": "2026-08-02T08:01:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
