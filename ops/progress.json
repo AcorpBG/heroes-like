@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The Mireford Silt Hunters placement-local correction is complete. Reducing its oversized host from 8 brutes/12 cutthroats/6 slingers to 5/9/5 changes a round-two defeat with 91% enemy health into a four-round victory at 33% player health with 26 enemy damage per round. The active breadth queue improves from 31 items/4 high to 28/2; Lockmarsh Road Chaplains is the sole remaining high-priority authored row. Broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
+  "currentNotes": "The Lockmarsh Road Chaplains placement-local correction is complete. Reinforcing the host from the shared 8 guards/6 archers to 9/8 changes a round-two 100% no-damage victory into a bounded 70% victory with 28 enemy damage per round. The active breadth queue improves from 28 items/2 high to 25/0 and the balance-matrix gate now passes. Medium-priority balance, strategic AI, content, performance, packaging, accessibility, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-mireford-silt-hunters-pressure-10184",
-  "currentSliceId": "balance-mireford-silt-hunters-pressure-10184",
-  "currentSliceNotes": "Completed with a placement-local 5-brute/9-cutthroat/5-slinger roster. The sample is now a four-round player victory at 33% terminal margin with 26 enemy damage per round, and the breadth queue improves to 28 items/2 high. Ironbridge and shared dynamic raid content remain unchanged.",
+  "currentSlice": "balance-lockmarsh-road-chaplains-pressure-10184",
+  "currentSliceId": "balance-lockmarsh-road-chaplains-pressure-10184",
+  "currentSliceNotes": "Completed with a placement-local 9-guard/8-archer roster. The sample remains a victory at 70% terminal margin with 28 enemy damage per round, the 51-sample queue has zero high-priority items, and the balance-matrix gate passes. Remaining medium-priority debt is explicitly unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireford Silt Hunters Pressure",
-  "currentSliceUpdatedAt": "2026-08-02T08:01:57Z",
+  "currentSliceTitle": "Lockmarsh Road Chaplains Pressure",
+  "currentSliceUpdatedAt": "2026-08-02T08:07:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56208,6 +56208,59 @@
     },
     {
       "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_lockmarsh_road_chaplains_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T08:07:43Z",
+      "completionCriteria": "The Lockmarsh Road Chaplains sample remains a bounded player victory, falls below the 90% matrix terminal-margin threshold, applies meaningful enemy pressure, and leaves no high-priority active-scenario breadth items through a placement-local roster only.",
+      "id": "balance-lockmarsh-road-chaplains-pressure-10184",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_lockmarsh_road_chaplains_balance_regression.gd",
+        "existing active-scenario balance breadth reports"
+      ],
+      "nonGoals": [
+        "changing the shared army_riverwatch_relief group",
+        "global unit, spell, or combat-rule tuning",
+        "claiming the medium-priority balance queue or full release is complete"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
+      "purpose": "Correct the 100% Lockmarsh Road Chaplains victory and clear the last high-priority authored breadth row without affecting dynamic relief armies.",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "startedAt": "2026-08-02T08:04:06Z",
+      "status": "completed",
+      "summary": "Completed. A placement-local 9-guard/8-archer host survives the exact opening stack deletions, converting the 100% no-damage burst victory into a 70% victory with 28 enemy damage per round. The active breadth queue improves from 28 items/2 high to 25/0 and its balance-matrix gate moves from warning to pass without changing the shared relief group or combat rules.",
+      "title": "Lockmarsh Road Chaplains Pressure",
+      "updatedAt": "2026-08-02T08:07:43Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_lockmarsh_road_chaplains_balance_regression.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: medium-priority watch queue remains; high-priority count is zero)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_breadth_after": {"item_count": 25, "high_priority_count": 0, "medium_priority_count": 25, "balance_matrix_gate_status": "pass", "sample_count": 51},
+          "active_breadth_before": {"item_count": 28, "high_priority_count": 2, "medium_priority_count": 26, "balance_matrix_gate_status": "warning", "sample_count": 51},
+          "baseline_sample": {"outcome_state": "victory", "round_reached": 2, "player_health_remaining_pct": 100, "enemy_damage_per_round": 0, "enemy_power_score": 1308, "player_power_score": 1762},
+          "implemented_sample": {"outcome_state": "victory", "round_reached": 2, "player_health_remaining_pct": 70, "enemy_damage_per_round": 28, "enemy_power_score": 1594, "player_power_score": 1762},
+          "player_facing_change": "Only surge_road_chaplains gains a 9 River Guard/8 Ember Archer local host. The shared army_riverwatch_relief group remains 8/6.",
+          "rejected_adjacent_candidates": {"9_7": "Cleared the 90% matrix threshold at 89% but retained the sample-level high-priority watch targeting 75%."},
+          "remaining_debt": "The active breadth queue remains watch with 25 medium-priority cohort and sample pacing/margin items. High-priority authored balance is clear, but broad combat balance and release completion are not claimed."
+        },
+        "sliceId": "balance-lockmarsh-road-chaplains-pressure-10184",
+        "status": "passed_high_priority_breadth_clear_medium_watch_remaining",
+        "updatedAt": "2026-08-02T08:07:43Z"
+      }
+    },
+    {
+      "baselineChecks": [
         "python3 tests/town_development_balance_report.py",
         "python3 tests/town_development_cost_curve_report.py",
         "python3 tests/economy_town_goal_scorecard_report.py",
@@ -63570,7 +63623,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "mireford_silt_hunters_pressure_correction_completed_overall_release_in_progress",
+  "result": "lockmarsh_road_chaplains_pressure_correction_completed_high_priority_breadth_clear_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63671,9 +63724,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, Ford Reavers, Archive Wardens, and Mireford Silt Hunters corrections are complete within their scopes. Mireford Silt Hunters now resolves as a demanding but bounded victory and no longer contributes high-priority breadth rows, while Road Chaplains and unrelated balance debt remain explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T08:01:57Z",
+  "updatedAt": "2026-08-02T08:07:43Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

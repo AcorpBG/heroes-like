@@ -2394,7 +2394,7 @@
         {"placement_id": "surge_gorget", "artifact_id": "artifact_bastion_gorget", "x": 9, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "surge_road_chaplains", "encounter_id": "encounter_road_chaplains", "x": 5, "y": 1, "difficulty": "high", "combat_seed": 9201},
+        {"placement_id": "surge_road_chaplains", "encounter_id": "encounter_road_chaplains", "x": 5, "y": 1, "difficulty": "high", "combat_seed": 9201, "enemy_army": {"id": "army_lockmarsh_road_chaplains_watch", "name": "Lockmarsh Road Chaplains Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 9}, {"unit_id": "unit_ember_archer", "count": 8}]}},
         {"placement_id": "surge_charter_guard", "encounter_id": "encounter_charter_guard", "x": 8, "y": 4, "difficulty": "high", "combat_seed": 9202},
         {"placement_id": "lockmarsh_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 9203}
       ]
