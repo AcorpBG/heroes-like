@@ -322,19 +322,20 @@ static func _spawn_artifact_node(session: SessionStateStoreScript.SessionData, p
 		return {"messages": []}
 
 	var nodes = session.overworld.get("artifact_nodes", [])
-	var built_nodes: Array = ArtifactRulesScript.build_artifact_nodes([placement])
+	var built_nodes: Array = ArtifactRulesScript.build_artifact_nodes([placement], session.scenario_id)
 	if built_nodes.is_empty():
 		return {"messages": []}
-	nodes.append(built_nodes[0])
+	var built_node: Dictionary = built_nodes[0]
+	nodes.append(built_node)
 	session.overworld["artifact_nodes"] = nodes
 
-	var artifact = ContentService.get_artifact(String(placement.get("artifact_id", "")))
+	var artifact = ContentService.get_artifact(String(built_node.get("artifact_id", "")))
 	if not _placement_is_visible(session, placement):
 		return {"messages": ["A relic cache has been reported beyond current scouting."]}
 	return {
 		"messages": [
 			"%s is revealed at %d,%d." % [
-				String(artifact.get("name", placement.get("artifact_id", "an artifact"))),
+				String(artifact.get("name", built_node.get("artifact_id", "an artifact"))),
 				int(placement.get("x", 0)),
 				int(placement.get("y", 0)),
 			]

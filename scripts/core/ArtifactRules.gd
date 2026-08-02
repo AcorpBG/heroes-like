@@ -46,7 +46,7 @@ static func ensure_hero_artifacts(hero_state: Dictionary) -> Dictionary:
 	hero_state["artifacts"] = artifacts
 	return hero_state
 
-static func build_artifact_nodes(placements: Variant) -> Array:
+static func build_artifact_nodes(placements: Variant, scenario_id: String = "") -> Array:
 	var nodes := []
 	if not (placements is Array):
 		return nodes
@@ -54,21 +54,45 @@ static func build_artifact_nodes(placements: Variant) -> Array:
 	for placement in placements:
 		if not (placement is Dictionary):
 			continue
-		nodes.append(
-			{
-				"placement_id": String(placement.get("placement_id", "")),
-				"artifact_id": String(placement.get("artifact_id", "")),
-				"x": int(placement.get("x", 0)),
-				"y": int(placement.get("y", 0)),
-				"collected": bool(placement.get("collected", false)),
-				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
-				"collected_day": max(0, int(placement.get("collected_day", 0))),
+		var placement_id := String(placement.get("placement_id", ""))
+		var artifact_id := String(placement.get("artifact_id", ""))
+		var table_id := String(placement.get("artifact_reward_table_id", "")).strip_edges()
+		var source_key := String(placement.get("artifact_reward_source_key", "")).strip_edges()
+		var materialized := bool(placement.get("artifact_source_materialized", false))
+		if table_id != "" and not materialized:
+			if source_key == "":
+				source_key = "%s:%s:pickup" % [scenario_id, placement_id]
+			var source_record := {
+				"family": "one_shot_pickup",
+				"artifact_reward_contract": {
+					"source_tag": "pickup",
+					"artifact_reward_table_id": table_id,
+				},
+				"runtime_boundary": {"artifact_reward_execution": true},
 			}
-		)
+			var selection := select_live_source_reward("pickup", source_record, source_key)
+			if bool(selection.get("ok", false)):
+				artifact_id = String(selection.get("artifact_id", artifact_id))
+				materialized = true
+
+		var node := {
+			"placement_id": placement_id,
+			"artifact_id": artifact_id,
+			"x": int(placement.get("x", 0)),
+			"y": int(placement.get("y", 0)),
+			"collected": bool(placement.get("collected", false)),
+			"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
+			"collected_day": max(0, int(placement.get("collected_day", 0))),
+		}
+		if table_id != "":
+			node["artifact_reward_table_id"] = table_id
+			node["artifact_reward_source_key"] = source_key
+			node["artifact_source_materialized"] = materialized
+		nodes.append(node)
 	return nodes
 
-static func normalize_artifact_nodes(nodes: Variant) -> Array:
-	return build_artifact_nodes(nodes)
+static func normalize_artifact_nodes(nodes: Variant, scenario_id: String = "") -> Array:
+	return build_artifact_nodes(nodes, scenario_id)
 
 static func normalize_hero_artifacts(value: Variant) -> Dictionary:
 	var equipped := _blank_equipped_slots()
@@ -1887,7 +1911,7 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 	var live_drop_execution := bool(runtime_policy.get("live_drop_execution", false))
 	if metadata_only == live_drop_execution:
 		issues.append("source_table_runtime_mode_invalid")
-	if live_drop_execution and source_tag not in ["guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
+	if live_drop_execution and source_tag not in ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
 		issues.append("unsupported_live_source_tag:%s" % source_tag)
 	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
 		if bool(runtime_policy.get(blocked_flag, false)):

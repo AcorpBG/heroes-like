@@ -71,7 +71,7 @@ static func create_session(
 		"resolved_encounters": [],
 		"towns": town_states,
 		"resource_nodes": resource_states,
-		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", [])),
+		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []), scenario_id),
 		"enemy_states": enemy_states,
 		"scenario_script_state": ScenarioScriptRulesScript.build_script_state(),
 	}

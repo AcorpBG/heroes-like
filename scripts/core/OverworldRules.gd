@@ -253,9 +253,9 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 		session.overworld["resource_nodes"] = _normalize_resource_nodes(session.overworld.get("resource_nodes", []))
 
 	if not session.overworld.has("artifact_nodes") or not (session.overworld.get("artifact_nodes") is Array):
-		session.overworld["artifact_nodes"] = ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []))
+		session.overworld["artifact_nodes"] = ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []), session.scenario_id)
 	else:
-		session.overworld["artifact_nodes"] = _normalize_artifact_nodes(session.overworld.get("artifact_nodes", []))
+		session.overworld["artifact_nodes"] = _normalize_artifact_nodes(session.overworld.get("artifact_nodes", []), session.scenario_id)
 
 	if not session.overworld.has("encounters") or not (session.overworld.get("encounters") is Array):
 		session.overworld["encounters"] = scenario.get("encounters", [])
@@ -5045,8 +5045,8 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		if source.has(key):
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
-static func _normalize_artifact_nodes(nodes: Array) -> Array:
-	return ArtifactRulesScript.normalize_artifact_nodes(nodes)
+static func _normalize_artifact_nodes(nodes: Array, scenario_id: String = "") -> Array:
+	return ArtifactRulesScript.normalize_artifact_nodes(nodes, scenario_id)
 
 static func _find_resource_node_at(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var pos := hero_position(session)
