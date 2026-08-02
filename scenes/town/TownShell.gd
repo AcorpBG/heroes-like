@@ -466,6 +466,19 @@ func _on_management_tab_changed(_tab: int) -> void:
 	_refresh(true)
 	call_deferred("_configure_town_keyboard_focus", true)
 
+func _input(event: InputEvent) -> void:
+	if _session == null or not event.is_action_pressed("ui_cancel"):
+		return
+	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
+		return
+	get_viewport().set_input_as_handled()
+	if _narrow_layout_active and _narrow_orders_open:
+		_narrow_orders_open = false
+		_apply_responsive_layout()
+		call_deferred("_configure_town_keyboard_focus", true)
+		return
+	_on_leave_pressed()
+
 func _configure_town_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree():
 		return

@@ -625,6 +625,24 @@ Non-goals:
 - do not add diagonal stick movement, vibration, or button rebinding;
 - do not change overworld movement rules or redesign on-screen controls.
 
+## Controller Active-Play Traversal
+
+The completed Phase 6 accessibility slice extends controller ownership from menu/overworld basics into the existing active-play command surfaces.
+
+Target shape:
+- standard right/left shoulder buttons traverse the shared next/previous focus cycle without replacing D-pad directional navigation;
+- B closes an open overworld command/frontier drawer and restores focus to the overworld command surface;
+- in a narrow town, B returns from town orders to the scenic town view before any town exit; from the scenic/wide town surface, B follows the existing Leave handoff;
+- real controller A events select and confirm a town construction order and execute a legal battle command through the existing button paths;
+- real shoulder, D-pad, A, and B events preserve visible focus across overworld, town, and battle refreshes;
+- keyboard focus, keyboard activation, movement rules, town rules, combat simulation, and Native RMG behavior remain unchanged.
+
+Non-goals:
+- do not claim full controller or hardware certification;
+- do not add rebinding, vibration, diagonal stick movement, or controller-driven battle-board hex selection;
+- do not make B trigger retreat, surrender, or another irreversible battle action;
+- do not redesign active-play screens or add visible instruction panels.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

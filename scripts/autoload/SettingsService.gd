@@ -30,6 +30,8 @@ const CONTROLLER_UI_BUTTON_ACTIONS := {
 	&"ui_right": JOY_BUTTON_DPAD_RIGHT,
 	&"ui_accept": JOY_BUTTON_A,
 	&"ui_cancel": JOY_BUTTON_B,
+	&"ui_focus_next": JOY_BUTTON_RIGHT_SHOULDER,
+	&"ui_focus_prev": JOY_BUTTON_LEFT_SHOULDER,
 }
 
 const RENDER_QUALITY_OPTIONS := [
