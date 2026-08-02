@@ -2593,7 +2593,7 @@
         {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201},
+        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201, "enemy_army": {"id": "army_ironbridge_ford_reavers_watch", "name": "Ironbridge Ford Reavers Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 10}, {"unit_id": "unit_mire_slinger", "count": 12}]}},
         {"placement_id": "bridge_silt_hunters", "encounter_id": "encounter_silt_hunters", "x": 7, "y": 4, "difficulty": "medium", "combat_seed": 10202, "enemy_army": {"id": "army_ironbridge_silt_hunters_watch", "name": "Ironbridge Silt Hunters Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 8}, {"unit_id": "unit_blackbranch_cutthroat", "count": 12}, {"unit_id": "unit_mire_slinger", "count": 6}]}},
         {"placement_id": "ironbridge_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 0, "difficulty": "medium", "combat_seed": 10203}
       ]
@@ -4014,7 +4014,16 @@
           "x": 4,
           "y": 1,
           "difficulty": "medium",
-          "combat_seed": 10201
+          "combat_seed": 10201,
+          "enemy_army": {
+            "id": "army_mireford_ford_reavers_watch",
+            "name": "Mireford Ford Reavers Watch",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {"unit_id": "unit_blackbranch_cutthroat", "count": 13},
+              {"unit_id": "unit_mire_slinger", "count": 11}
+            ]
+          }
         },
         {
           "placement_id": "bridge_silt_hunters",
