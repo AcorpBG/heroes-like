@@ -3566,13 +3566,13 @@
       "id": "mireford-skirmish",
       "name": "Rootbound Mireford",
       "selection": {
-        "summary": "Lead a Thornwake root caravan through Mireford, reclaim Murkward, and keep a living road open without campaign carryover or progression records.",
+        "summary": "Lead a Thornwake root caravan through Mireford, reclaim Murkward, and open the first claim road in campaign or standalone skirmish play.",
         "recommended_difficulty": "normal",
         "map_size_label": "Rootway Ford (10x6)",
         "player_summary": "Silsa Bramble-Hound leads Graftroot Caravan and its Thornwake wardens across a flooded standalone front.",
         "enemy_summary": "Mireclaw raiders hold Murkward with ford reavers, silt hunters, and ambush pressure that punishes a slow root-road advance.",
         "availability": {
-          "campaign": false,
+          "campaign": true,
           "skirmish": true
         }
       },
@@ -3671,7 +3671,7 @@
         "hero_thornwake_silsa_bramblehound"
       ],
       "objectives": {
-        "victory_text": "Silsa roots a living road through Mireford and keeps Murkward open for skirmish scoring only.",
+        "victory_text": "Silsa roots a living road through Mireford and opens the first route in the shared frontier claim.",
         "defeat_text": "Graftroot Caravan is cut away from the ford and Murkward remains a Mireclaw raider gate.",
         "victory": [
           {
@@ -4058,12 +4058,12 @@
       "id": "orevein-contract",
       "name": "Orevein Contract",
       "selection": {
-        "summary": "Hold Orevein Gantry, break Embercourt's archive line, and stamp a live contract across the Riverwatch crossing without campaign carryover.",
+        "summary": "Hold Orevein Gantry, break Embercourt's archive line, and stamp the second frontier claim in campaign or standalone skirmish play.",
         "recommended_difficulty": "normal",
         "map_size_label": "Contract Road (11x6)",
         "player_summary": "Marka Ironclause leads a plated Brasshollow column from Orevein Gantry and must turn quarry claims into a sustained crossing force.",
         "enemy_summary": "Embercourt archive wardens, bridge levies, and beacon batteries defend Riverwatch while charter pressure closes the road.",
-        "availability": {"campaign": false, "skirmish": true}
+        "availability": {"campaign": true, "skirmish": true}
       },
       "map_size": {"width": 11, "height": 6},
       "player_faction_id": "faction_brasshollow",
@@ -4081,7 +4081,7 @@
       "start": {"x": 0, "y": 2},
       "hero_starts": ["hero_brasshollow_marka_ironclause"],
       "objectives": {
-        "victory_text": "The Riverwatch crossing accepts Orevein's stamped writ, and the Combine opens a guarded contract road for skirmish scoring only.",
+        "victory_text": "The Riverwatch crossing accepts Orevein's stamped writ, and the Combine opens a guarded contract road toward the Bellwake claim.",
         "defeat_text": "Embercourt voids the Orevein writ and closes the gantry road before Marka can force the crossing.",
         "victory": [
           {"id": "claim_riverwatch_crossing", "label": "Claim the Riverwatch crossing", "type": "town_owned_by_player", "placement_id": "riverwatch_contract_crossing"},
@@ -4220,12 +4220,12 @@
       "id": "bellwake-wreck-claim",
       "name": "Bellwake Wreck Claim",
       "selection": {
-        "summary": "Hold Bellwake Harbor, recover a drowned mirror chart, and silence Sunvault's wreck registry before daylight fixes the salvage lane in place.",
+        "summary": "Hold Bellwake Harbor, recover a drowned mirror chart, and close the Frontier Claims arc or fight the wreck lane as a standalone skirmish.",
         "recommended_difficulty": "normal",
         "map_size_label": "Fogbound Wreck Lane (11x6)",
         "player_summary": "Ivara Blacktide leads a four-stack Veilmourn claim crew from Bellwake Harbor and must turn memory salt and mixed wreck cargo into a fighting fleet.",
         "enemy_summary": "Sunvault relay pickets, mirror lancers, and an aurora battery defend Prismhearth's wreck registry while array pressure reveals the fog road.",
-        "availability": {"campaign": false, "skirmish": true}
+        "availability": {"campaign": true, "skirmish": true}
       },
       "map_size": {"width": 11, "height": 6},
       "player_faction_id": "faction_veilmourn",
@@ -4243,7 +4243,7 @@
       "start": {"x": 0, "y": 3},
       "hero_starts": ["hero_veilmourn_ivara_blacktide"],
       "objectives": {
-        "victory_text": "The drowned chart is entered in Bellwake's obituary vault, and Prismhearth's wreck registry becomes a Veilmourn salvage claim for skirmish scoring only.",
+        "victory_text": "The drowned chart is entered in Bellwake's obituary vault, and Prismhearth's wreck registry closes the three frontier claims.",
         "defeat_text": "Sunvault fixes the wreck lane beneath its arrays and strips Bellwake's claim from every surviving chart.",
         "victory": [
           {"id": "claim_prismhearth_registry", "label": "Claim Prismhearth's wreck registry", "type": "town_owned_by_player", "placement_id": "prismhearth_wreck_registry"},

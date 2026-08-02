@@ -12,7 +12,7 @@ const CAMPAIGN_ID := "campaign_ninefold_survey"
 const START_SCENARIO_ID := "ironbridge-stand"
 const MID_SCENARIO_ID := "glassfen-breakers"
 const SCENARIO_ID := "ninefold-confluence"
-const SKIRMISH_ONLY_SCENARIO_ID := "mireford-skirmish"
+const DUAL_MODE_ISOLATION_SCENARIO_ID := "mireford-skirmish"
 const CAMPAIGN_SCENARIO_IDS := [START_SCENARIO_ID, MID_SCENARIO_ID, SCENARIO_ID]
 const REQUIRED_CAMPAIGN_DOMAIN_STATUS := ""
 const FORBIDDEN_CLAIM_TOKENS := [
@@ -57,15 +57,15 @@ func _run() -> void:
 	)
 	if not _assert_authored_session(skirmish_session, false):
 		return
-	var skirmish_only_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SKIRMISH_ONLY_SCENARIO_ID, "normal")
-	if not _assert_skirmish_only_setup(skirmish_only_setup):
+	var isolation_setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(DUAL_MODE_ISOLATION_SCENARIO_ID, "normal")
+	if not _assert_dual_mode_skirmish_setup(isolation_setup):
 		return
-	var skirmish_only_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
-		SKIRMISH_ONLY_SCENARIO_ID,
+	var isolation_session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		DUAL_MODE_ISOLATION_SCENARIO_ID,
 		"normal",
 		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 	)
-	if not _assert_skirmish_only_session(skirmish_only_session):
+	if not _assert_dual_mode_skirmish_session(isolation_session):
 		return
 	var replay_profile := _profile_after_recorded_victory(final_ready_profile, campaign_session)
 	if not _assert_recorded_replay(final_ready_profile, replay_profile):
@@ -91,7 +91,7 @@ func _run() -> void:
 			"scenario_id": skirmish_setup.get("scenario_id", ""),
 			"difficulty": skirmish_setup.get("difficulty", ""),
 			"recommended_difficulty": skirmish_setup.get("recommended_difficulty", ""),
-			"skirmish_only_scenario_id": skirmish_only_setup.get("scenario_id", ""),
+			"dual_mode_isolation_scenario_id": isolation_setup.get("scenario_id", ""),
 		},
 		"campaign_replay": {
 			"campaign_domain_status": _campaign_domain_status(),
@@ -241,37 +241,37 @@ func _assert_skirmish_setup(setup: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_skirmish_only_setup(setup: Dictionary) -> bool:
-	if setup.is_empty() or String(setup.get("scenario_id", "")) != SKIRMISH_ONLY_SCENARIO_ID:
-		_fail("Skirmish-only setup did not expose %s: %s" % [SKIRMISH_ONLY_SCENARIO_ID, JSON.stringify(setup)])
+func _assert_dual_mode_skirmish_setup(setup: Dictionary) -> bool:
+	if setup.is_empty() or String(setup.get("scenario_id", "")) != DUAL_MODE_ISOLATION_SCENARIO_ID:
+		_fail("Dual-mode skirmish setup did not expose %s: %s" % [DUAL_MODE_ISOLATION_SCENARIO_ID, JSON.stringify(setup)])
 		return false
 	if String(setup.get("difficulty", "")) != "normal" or String(setup.get("recommended_difficulty", "")) != "normal":
-		_fail("Skirmish-only setup difficulty metadata changed: %s" % JSON.stringify(setup))
+		_fail("Dual-mode skirmish setup difficulty metadata changed: %s" % JSON.stringify(setup))
 		return false
-	var scenario := ContentService.get_scenario(SKIRMISH_ONLY_SCENARIO_ID)
+	var scenario := ContentService.get_scenario(DUAL_MODE_ISOLATION_SCENARIO_ID)
 	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
 	var availability: Dictionary = selection.get("availability", {}) if selection.get("availability", {}) is Dictionary else {}
-	if bool(availability.get("campaign", true)) or not bool(availability.get("skirmish", false)):
-		_fail("Skirmish-only scenario crossed campaign availability: %s" % JSON.stringify(availability))
+	if not bool(availability.get("campaign", false)) or not bool(availability.get("skirmish", false)):
+		_fail("Dual-mode scenario missed campaign/skirmish availability: %s" % JSON.stringify(availability))
 		return false
-	if _archived_campaign_id_for_scenario(SKIRMISH_ONLY_SCENARIO_ID) != "":
-		_fail("Skirmish-only scenario was wired into campaign content.")
+	if _archived_campaign_id_for_scenario(DUAL_MODE_ISOLATION_SCENARIO_ID) != "campaign_frontier_claims":
+		_fail("Dual-mode scenario was not wired into Frontier Claims campaign content.")
 		return false
 	return true
 
-func _assert_skirmish_only_session(session: SessionStateStoreScript.SessionData) -> bool:
-	if session == null or session.scenario_id != SKIRMISH_ONLY_SCENARIO_ID:
-		_fail("Skirmish-only session did not boot %s." % SKIRMISH_ONLY_SCENARIO_ID)
+func _assert_dual_mode_skirmish_session(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null or session.scenario_id != DUAL_MODE_ISOLATION_SCENARIO_ID:
+		_fail("Dual-mode skirmish session did not boot %s." % DUAL_MODE_ISOLATION_SCENARIO_ID)
 		return false
 	if session.launch_mode != SessionStateStoreScript.LAUNCH_MODE_SKIRMISH or session.flags.has("campaign_id"):
-		_fail("Skirmish-only session crossed into campaign flags: %s / %s." % [session.launch_mode, JSON.stringify(session.flags)])
+		_fail("Dual-mode skirmish session crossed into campaign flags: %s / %s." % [session.launch_mode, JSON.stringify(session.flags)])
 		return false
 	OverworldRules.normalize_overworld_state(session)
 	if OverworldRules.derive_map_size(session) != Vector2i(10, 6):
-		_fail("Skirmish-only map size changed.")
+		_fail("Dual-mode skirmish map size changed.")
 		return false
 	if session.overworld.get("towns", []).size() < 2 or session.overworld.get("enemy_states", []).size() < 1:
-		_fail("Skirmish-only session missed town or enemy state coverage.")
+		_fail("Dual-mode skirmish session missed town or enemy state coverage.")
 		return false
 	return true
 

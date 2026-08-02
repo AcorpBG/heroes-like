@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Veilmourn's first authored player skirmish as a Bellwake wreck claim with live launch, town, save/resume, battle, outcome, and economy-runway proof. The broader production game goal remains active.",
+  "currentNotes": "Completed Frontier Claims as a live three-chapter campaign joining the validated Thornwake, Brasshollow, and Veilmourn fronts with bounded cross-faction continuity and standalone skirmish isolation. The broader production game goal remains active.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "veilmourn-bellwake-wreck-player-skirmish-10184",
-  "currentSliceId": "veilmourn-bellwake-wreck-player-skirmish-10184",
-  "currentSliceNotes": "Implemented Bellwake Wreck Claim as a live Veilmourn skirmish with Ivara, a four-stack claim army, Bellwake Harbor development and recruitment, mixed salvage plus Memory Salt routes, Sunvault strategic pressure, three tuned encounter fronts, skirmish-only save/resume and reachable outcomes. Focused workflow and battle regressions pass; full town development completes Day 26 with seven-tier recruitment; browser exposes 18 authored fronts; deadline, route, repo, JSON, and diff checks pass.",
+  "currentSlice": "frontier-claims-three-faction-campaign-10184",
+  "currentSliceId": "frontier-claims-three-faction-campaign-10184",
+  "currentSliceNotes": "Implemented Frontier Claims as the sixth player-facing campaign with three ordered dual-mode chapters, live difficulty-aware launch, unlocks, bounded resource/objective carryover, faction-specific hero/spell/artifact isolation, save/resume metadata, completion/replay, and unchanged skirmish progression. Focused campaign, three faction workflows, menu, map breadth, deadlines, rare routes, repository, JSON, and diff checks pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Bellwake Wreck Player Skirmish",
-  "currentSliceUpdatedAt": "2026-08-02T19:00:57Z",
+  "currentSliceTitle": "Frontier Claims Three-Faction Campaign",
+  "currentSliceUpdatedAt": "2026-08-02T19:20:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65093,6 +65093,58 @@
       "updatedAt": "2026-08-02T19:00:57Z",
       "completedAt": "2026-08-02T19:00:57Z",
       "notes": "Implemented Bellwake Wreck Claim as a live Veilmourn skirmish with Ivara, a four-stack claim army, Bellwake Harbor development and recruitment, mixed salvage plus Memory Salt routes, Sunvault strategic pressure, three tuned encounter fronts, skirmish-only save/resume and reachable outcomes. Focused workflow and battle regressions pass; full town development completes Day 26 with seven-tier recruitment; browser exposes 18 authored fronts; deadline, route, repo, JSON, and diff checks pass."
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/frontier_claims_campaign_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/scenario_deadline_loss_variety_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/campaigns.json content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A sixth player-facing campaign exposes Mireford, Orevein, and Bellwake as three ordered dual-mode chapters; campaign launch, selected difficulty, unlocks, bounded cross-faction carryover, save/progression recording, completion, replay, and skirmish-mode isolation all execute through live rules and validation passes.",
+      "id": "frontier-claims-three-faction-campaign-10184",
+      "implementationTargets": [
+        "content/campaigns.json",
+        "content/scenarios.json",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/frontier_claims_campaign_report.tscn",
+        "tests/thornwake_mireford_player_skirmish_report.gd",
+        "tests/brasshollow_orevein_player_skirmish_report.gd",
+        "tests/veilmourn_bellwake_wreck_player_skirmish_report.gd",
+        "tests/map_campaign_replayability_breadth_report.gd",
+        "tests/scenario_deadline_loss_variety_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "three separate full faction campaigns",
+        "cross-faction hero or spell progression carryover",
+        "new scenario maps or global encounter retuning",
+        "save-version changes",
+        "Native RMG changes",
+        "manual-play or release-completion claims"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Current Tactical State / bounded campaign-content direction",
+      "purpose": "Turn the three newly completed faction skirmishes into a coherent playable campaign progression path for Thornwake, Brasshollow, and Veilmourn.",
+      "source": "project.md campaign/content breadth and playable-alpha workflow requirements",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "startedAt": "2026-08-02T19:07:40Z",
+      "status": "completed",
+      "title": "Frontier Claims Three-Faction Campaign",
+      "updatedAt": "2026-08-02T19:20:47Z",
+      "completedAt": "2026-08-02T19:20:47Z",
+      "notes": "Implemented Frontier Claims as the sixth player-facing campaign with Mireford, Orevein, and Bellwake as three ordered dual-mode chapters. Focused runtime proof covers campaign browser exposure, selected difficulty, locks/unlocks, capped resource and objective carryover, faction-specific hero/spell/artifact isolation, campaign save/restore metadata, completion/replay, and unchanged skirmish progression. All 18 authored scenarios remain campaign and skirmish selectable; focused campaign, faction workflows, menu, map breadth, deadlines, rare routes, repository, JSON, and diff checks pass."
     }
   ],
   "project": "heroes-like",
