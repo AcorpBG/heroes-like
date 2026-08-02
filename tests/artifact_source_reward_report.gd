@@ -27,8 +27,8 @@ func _run() -> void:
 	if int(report.get("guarded_context_match_count", 0)) <= 0:
 		_fail("Source/reward tables did not connect to guarded reward contexts: %s" % report)
 		return
-	if int(report.get("live_table_count", 0)) != 3 or report.get("live_source_tags", []) != ["guarded_site", "shrine", "battle_salvage"]:
-		_fail("Expected guarded-site, shrine, and battle-salvage source tables to execute live: %s" % report)
+	if int(report.get("live_table_count", 0)) != 4 or report.get("live_source_tags", []) != ["guarded_site", "shrine", "dwelling", "battle_salvage"]:
+		_fail("Expected guarded-site, shrine, dwelling, and battle-salvage source tables to execute live: %s" % report)
 		return
 
 	var source_tag_counts: Dictionary = report.get("source_tag_counts", {}) if report.get("source_tag_counts", {}) is Dictionary else {}
@@ -65,7 +65,7 @@ func _run() -> void:
 		"guarded_context_match_count": int(report.get("guarded_context_match_count", 0)),
 		"runtime_policy": policy,
 		"caveats": [
-			"Only explicitly opted-in guarded sites, Starlens Sanctum, and Bellwake battle salvage execute source-table rewards; pickup, other shrines, dwelling, town, save migration, AI valuation changes, and rare-resource activation remain outside this slice.",
+			"Only explicitly opted-in guarded sites, Starlens Sanctum, Rootwatch Hollow, Greenbranch Copse, and Bellwake battle salvage execute source-table rewards; pickup, other shrines or dwellings, town, save migration, AI valuation changes, and rare-resource activation remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

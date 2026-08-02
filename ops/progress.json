@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed final-archive verification in the release packager: real Linux and Windows bundles pass exact structure/hash/header/mode checks, reproducibility is preserved, and tampered, traversing, linked, or duplicate archive members are rejected. Overall release work remains active.",
+  "currentNotes": "Completed the Thornwake dwelling artifact reward path through Rootwatch Hollow and Greenbranch Copse for eligible player, direct AI, and route AI claims while preserving recruits, persistent control, provenance, faction gating, public events, and save version 9. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-release-artifact-verification-10184",
-  "currentSliceId": "packaging-release-artifact-verification-10184",
-  "currentSliceNotes": "Completed: package creation automatically verifies final archives, --verify-only rechecks distributed outputs, destructive fixtures reject tampering/path traversal/links/duplicates, and real reproducible Linux/Windows alpha bundles pass.",
+  "currentSlice": "artifact-dwelling-reward-execution-10184",
+  "currentSliceId": "artifact-dwelling-reward-execution-10184",
+  "currentSliceNotes": "Completed: Rootwatch Hollow and Greenbranch Copse now execute the dwelling support table for eligible Thornwake player and AI claims with recruits, persistent control, one-time provenance, route pickup, faction gating, public events, and save version 9 preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Packaging Release Artifact Verification",
-  "currentSliceUpdatedAt": "2026-08-02T21:24:18Z",
+  "currentSliceTitle": "Artifact Dwelling Reward Execution",
+  "currentSliceUpdatedAt": "2026-08-02T21:39:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65505,6 +65505,83 @@
         "status": "passed",
         "updatedAt": "2026-08-02T21:24:18Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_dwelling_reward_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/thornwake_mireford_player_skirmish_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_source_reward_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_site_control_proof_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/resource_sites.json content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Rootwatch Hollow is a live Rootbound Mireford dwelling placement; Rootwatch Hollow and Greenbranch Copse opt into the live dwelling table; eligible Thornwake player, direct strategic-AI, and opportunistic route claims deterministically grant and auto-equip Living Bridge Knot while preserving claim recruits, persistent control, one-time node provenance, AI empire tracking, public event boundaries, and save-version-9 resume; ineligible Embercourt receives normal dwelling recruits/control without an artifact; focused and broad regressions pass.",
+      "id": "artifact-dwelling-reward-execution-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/resource_sites.json",
+        "content/scenarios.json",
+        "scripts/core/ArtifactRules.gd",
+        "tests/artifact_dwelling_reward_execution_report.gd",
+        "tests/artifact_dwelling_reward_execution_report.tscn",
+        "tests/artifact_source_reward_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "activating pickup, town-service, campaign, market, or broad random artifact drops",
+        "changing artifact bonuses, neutral-unit balance, or rare-resource income",
+        "changing expedition save version",
+        "Native RMG changes",
+        "claiming artifact-system or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md artifact runtime follow-ups and docs/artifact-system-expansion-foundation.md source rules",
+      "purpose": "Turn the authored Thornwake dwelling-support table into a placement-backed exploration and neutral-recruitment reward through existing player and strategic-AI claim workflows.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "completedAt": "2026-08-02T21:39:36Z",
+      "completionEvidence": {
+        "ai_direct_claim": "Ninefold Thornwake AI receives and auto-equips Living Bridge Knot, keeps Greenbranch Copse control and recruits, persists node provenance and captured_artifact_ids, and passes the public-event boundary.",
+        "ai_opportunistic_route_claim": "Ninefold Thornwake opportunistic route capture grants the same artifact and dwelling recruits while persisting commander, node, and control state.",
+        "faction_gate": "Ninefold Embercourt captures Greenbranch Copse and receives its two Greenbranch Cudgels plus one Sapwhistle Caller without receiving the Thornwake artifact.",
+        "player_claim": "Rootbound Mireford Thornwake captures the newly placed Rootwatch Hollow, receives and auto-equips Living Bridge Knot plus three Greenbranch Cudgels and one Sapwhistle Caller, resumes from save version 9, and cannot receive a second artifact after recapture.",
+        "source_table": "The dwelling source table is the fourth live source tag, alongside guarded_site, shrine, and battle_salvage.",
+        "validation_boundary": "Batch 005 retains 31 metadata-only dwelling pairs and permits exactly two approved live dwelling-artifact site boundaries."
+      },
+      "startedAt": "2026-08-02T21:29:42Z",
+      "status": "completed",
+      "title": "Artifact Dwelling Reward Execution",
+      "updatedAt": "2026-08-02T21:39:36Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/artifact_dwelling_reward_execution_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_source_reward_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_shrine_reward_execution_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_guarded_site_reward_execution_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_battle_salvage_execution_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_equip_runtime_effects_report.tscn",
+          "godot4 --headless --path . --scene res://tests/artifact_set_runtime_effects_report.tscn",
+          "godot4 --headless --path . --scene res://tests/thornwake_mireford_player_skirmish_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_site_control_proof_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty content/artifacts.json content/resource_sites.json content/scenarios.json ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T21:39:36Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65514,8 +65591,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The full 100-seed, 56-turn Medium generated-map strategic-AI matrix has not run, so strategic AI and the overall game are not production-ready.",
-  "remainingWork": "Continue reducing Medium turn cost where profiling identifies repeated exact work, then run the complete Medium matrix and fix every behavior, integrity, reachability, stall, or runtime failure before selecting the next release slice.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and the still-inactive artifact pickup and town-service source paths.",
+  "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed Native RMG matrix or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -66047,9 +66124,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Final Linux and Windows release archives are now automatically and independently verifiable for safe structure, checksum/index/manifest agreement, payload hashes, binary headers, and executable modes, with tamper rejection and reproducibility proof. Signing, installers, clean native Windows certification, strategic AI, balance, accessibility, content, performance, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Thornwake dwelling artifact rewards now execute through Rootwatch Hollow and Greenbranch Copse for eligible player and AI claims with recruits, control, provenance, faction gating, public events, and save continuity preserved. Pickup, town-service, strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T21:24:18Z",
+  "updatedAt": "2026-08-02T21:39:36Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

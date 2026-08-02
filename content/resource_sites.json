@@ -1483,6 +1483,19 @@
         "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": false
       },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_greenbranch_copse",
+        "resource_site_id": "site_greenbranch_copse",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_dwelling_support_rare",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "metadata_only": false
+      },
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "local watch metadata identifies expected dwelling defenders",
@@ -1493,8 +1506,9 @@
         "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_and_artifact_rewards_live",
         "neutral_dwelling_site_runtime_supported": true,
+        "artifact_reward_execution": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
         "save_payload_required": false,
@@ -6739,6 +6753,19 @@
         "metadata_only_guard_contract": false,
         "requires_visible_guard_cue": false
       },
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_rootwatch_hollow",
+        "resource_site_id": "site_rootwatch_hollow",
+        "source_tag": "dwelling",
+        "artifact_reward_table_id": "artifact_source_dwelling_support_rare",
+        "reward_categories": [
+          "recruit",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "metadata_only": false
+      },
       "guard_expectation": {
         "tier": "standard",
         "visible_cue": "local watch metadata identifies expected dwelling defenders",
@@ -6749,8 +6776,9 @@
         "event_expectation": "existing neutral dwelling guard metadata normalized for Batch 005"
       },
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "neutral_dwelling_and_artifact_rewards_live",
         "neutral_dwelling_site_runtime_supported": true,
+        "artifact_reward_execution": true,
         "guarded_variant_runtime_migration": false,
         "recruitment_ui_overhaul": false,
         "save_payload_required": false,
