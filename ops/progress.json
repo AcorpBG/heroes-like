@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The bounded player-comprehension, keyboard active-play, and Ghoul Grove balance increments are complete. River Pass Ghoul Grove now sustains ranged pressure across normal and hard samples while preserving a bounded victory; its normal terminal margin fell from 95% to 73%, enemy damage per round rose from 2 to 6, and the normal tuning queue no longer has high-priority items. The full balance suite still exposes unrelated scenario breadth, hard-mode watch, headless aggregate, strategic AI, content, performance, packaging, accessibility, and release work; no full-game completion is claimed.",
+  "currentNotes": "The Charter Granary Levies placement-local pressure correction is complete. Six Ember Archers are the minimum roster that survives the player's 28-damage opener and sustains the authored firing line: terminal margin fell from 94% to 58%, enemy damage per round rose from 6 to 20, and the active-scenario breadth queue improved from 41 items/12 high to 37/10. The breadth queue still contains unrelated outliers, and broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "headless-balance-harness-next-10184",
-  "currentSliceId": "headless-balance-harness-next-10184",
-  "currentSliceNotes": "Completed a placement-local Ghoul Grove roster correction and dual-mode regression. Normal remains a victory at 73% terminal margin with 6 enemy damage per round; hard remains a victory at 77% with 5 enemy damage per round. The 12-sample normal queue improved from 9 items/2 high to 6/0 high, while the 51-sample breadth queue improved from 44 items/14 high to 41/12 high. Remaining balance debt is explicitly unclaimed.",
+  "currentSlice": "balance-charter-granary-levies-pressure-10184",
+  "currentSliceId": "balance-charter-granary-levies-pressure-10184",
+  "currentSliceNotes": "Completed with a placement-local 11 River Guard / 6 Ember Archer / 1 Citadel Pikeward roster. The focused sample remains a victory at 58% terminal margin over four rounds with 20 enemy damage per round, while the active breadth queue improves to 37 items/10 high. Remaining balance debt is explicitly unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Headless Balance Harness Next",
-  "currentSliceUpdatedAt": "2026-08-02T06:48:59Z",
+  "currentSliceTitle": "Charter Granary Levies Pressure",
+  "currentSliceUpdatedAt": "2026-08-02T07:41:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -55844,6 +55844,99 @@
     },
     {
       "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_charter_granary_levies_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T07:41:07Z",
+      "completionCriteria": "The current Charter Granary Levies sample remains a bounded player victory, falls below the existing 90% matrix terminal-margin outlier threshold, applies more than trivial enemy pressure, and improves the active-scenario breadth queue without changing shared unit stats or combat rules.",
+      "id": "balance-charter-granary-levies-pressure-10184",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_charter_granary_levies_balance_regression.gd",
+        "existing active-scenario balance breadth reports"
+      ],
+      "nonGoals": [
+        "global unit or spell stat tuning",
+        "automatic tuning or report-threshold changes",
+        "full combat-balance or release-readiness claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
+      "purpose": "Correct the current 94% terminal-margin Charter Granary Levies authored encounter outlier through a placement-local live roster change.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T07:32:51Z",
+      "status": "completed",
+      "summary": "Completed. The placement-local roster now uses six Ember Archers, the minimum count that survives the deterministic 28-damage opener and turns the two-round 94% victory into a bounded four-round victory at 58% terminal margin. Enemy damage per round rises from 6 to 20, and the 51-sample active breadth queue improves from 41 items/12 high to 37/10 without shared unit, encounter, or combat-rule changes.",
+      "title": "Charter Granary Levies Pressure",
+      "updatedAt": "2026-08-02T07:41:07Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_charter_granary_levies_balance_regression.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active balance queue remains; queue improved)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_breadth_after": {
+            "high_priority_count": 10,
+            "item_count": 37,
+            "medium_priority_count": 27,
+            "sample_count": 51
+          },
+          "active_breadth_before": {
+            "high_priority_count": 12,
+            "item_count": 41,
+            "medium_priority_count": 29,
+            "sample_count": 51
+          },
+          "baseline_sample": {
+            "damage_per_round": {
+              "enemy": 6,
+              "player": 72,
+              "total": 78
+            },
+            "outcome_state": "victory",
+            "player_health_remaining_pct": 94,
+            "round_reached": 2,
+            "terminal_health_margin_pct": 94
+          },
+          "implemented_sample": {
+            "damage_per_round": {
+              "enemy": 20,
+              "player": 39,
+              "total": 59
+            },
+            "enemy_power_score": 1706,
+            "outcome_state": "victory",
+            "player_enemy_power_ratio_pct": 103,
+            "player_health_remaining_pct": 58,
+            "player_power_score": 1762,
+            "round_reached": 4,
+            "terminal_health_margin_pct": 58
+          },
+          "rejected_adjacent_candidates": {
+            "five_archers": "Rejected: still a 94% terminal-margin victory with only 4 enemy damage per round.",
+            "seven_archers": "Rejected as stronger than necessary: 42% terminal margin and 27 enemy damage per round.",
+            "eight_archers": "Rejected as stronger than necessary: 41% terminal margin and 37 enemy damage per round."
+          },
+          "remaining_debt": "The active breadth suite remains action_required because 37 unrelated queue items, including 10 high-priority items, remain. This slice does not claim broad combat-balance completion."
+        },
+        "sliceId": "balance-charter-granary-levies-pressure-10184",
+        "status": "passed_with_unrelated_breadth_debt",
+        "updatedAt": "2026-08-02T07:41:07Z"
+      }
+    },
+    {
+      "baselineChecks": [
         "python3 tests/town_development_balance_report.py",
         "python3 tests/town_development_cost_curve_report.py",
         "python3 tests/economy_town_goal_scorecard_report.py",
@@ -55959,10 +56052,11 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "notes": "Targeted Thornwake vs Veilmourn W2 tuning: final artifact tmp/battle_balance_100_all_live_thorn_veil_w2_60_unit_late_comp.json has ok=true, W2 Thornwake over Veilmourn 59.0% (down from 71.5%), severity 179 vs prior 187.5, and only one 65+ severe row remains (W1 Thornwake over Veilmourn 67.0). Implemented via unit-only content tuning: Thornwake Barkmantle Rams HP 25->22, Thornwake Graft Matriarchs HP 41->44 and max damage 13->14, Thornwake Worldroot Bastion HP 96->102 and max damage 23->25, Veilmourn Undertow Harpooners max damage 6->7, Veilmourn Obituary Scribes attack 9->10 and max damage 8->9, Veilmourn Mirror-Keel Reavers HP 52->49 and max damage 14->13, Veilmourn Fogbound Leviathan HP 105->100 and max damage 26->24. Spell route was rejected because validation requires Graft Mend base_restore=18. Paused after owner accepted the current decent balance state and selected battle presentation runtime as the next slice.",
+      "notes": "Paused after a 2026-08-02 current-code rerun rejected further global tuning. The 100-seed all-live baseline has 45 outliers, severity 503.5, 23 rows at or above 65%, and low 0.33-1.87 side bias. Sporeglass 4-5 alone worsened severity to 516; paired T5 compensation improved severity only to 489 with unchanged outlier/severe-row counts and mixed late regressions; paired T6 compensation improved matched 30-seed severity only 508.25->494.69 while adding one outlier. All candidates were reverted. Resume only from a stronger systemic rule/ability diagnosis, not more isolated stat nudges.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
+      "summary": "Paused on current code. Fresh default/all-live matrices reproduce broad faction-pair imbalance, but tested Thornwake timing packages fail the material-improvement criterion and were fully reverted.",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "sourceDocs": [
         "GOALS.md",
@@ -55972,7 +56066,7 @@
       "startedAt": "2026-05-26T19:02:51Z",
       "status": "paused",
       "title": "Combat Faction Pair Stat Tuning",
-      "updatedAt": "2026-05-30T10:07:18Z",
+      "updatedAt": "2026-08-02T07:32:51Z",
       "validation": {
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -56193,8 +56287,8 @@
           }
         },
         "sliceId": "combat-faction-pair-stat-tuning-10184",
-        "status": "partial_paused",
-        "updatedAt": "2026-05-27T22:25:00Z"
+        "status": "current_baseline_rejected_candidates_paused",
+        "updatedAt": "2026-08-02T07:32:51Z"
       }
     },
     {
@@ -63205,7 +63299,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "headless_balance_ghoul_grove_correction_completed_overall_release_in_progress",
+  "result": "charter_granary_levies_pressure_correction_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63306,9 +63400,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove balance correction are complete within their scopes. Ghoul Grove now applies sustained pressure and the normal queue has no high-priority items, while the full breadth queue, strategic AI, broader accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove and Charter Granary corrections are complete within their scopes. Granary Levies now survives the opening spell and applies sustained pressure, improving the active breadth queue while leaving unrelated debt explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T06:48:59Z",
+  "updatedAt": "2026-08-02T07:41:07Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

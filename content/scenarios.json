@@ -2134,7 +2134,7 @@
       ],
       "encounters": [
         {"placement_id": "charter_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 8201},
-        {"placement_id": "charter_granary_levies", "encounter_id": "encounter_mill_levies", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 8202},
+        {"placement_id": "charter_granary_levies", "encounter_id": "encounter_mill_levies", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 8202, "enemy_army": {"id": "army_charter_granary_levies_watch", "name": "Charter Granary Levies Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 11}, {"unit_id": "unit_ember_archer", "count": 6}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
         {"placement_id": "charter_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 5, "y": 5, "difficulty": "medium", "combat_seed": 8203}
       ]
     },
