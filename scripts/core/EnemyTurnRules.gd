@@ -1080,6 +1080,9 @@ static func _run_empire_cycle(
 	var pre_build_task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
 	state = pre_build_task_plan_result.get("state", state)
 	_append_event_records(events, pre_build_task_plan_result.get("events", []))
+	var deployable_commander_ids_after_prebuild := EnemyAdventureRulesScript.deployable_commander_actor_ids(
+		state.get("commander_roster", [])
+	)
 	_profile_add_ms(profile, "pre_build_task_plan_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -1156,6 +1159,7 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "pressure_summary_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
+	var active_raid_count_before_advance := active_raid_count(session, faction_id)
 	var raid_result = EnemyAdventureRulesScript.advance_raids(
 		session,
 		config,
@@ -1179,9 +1183,20 @@ static func _run_empire_cycle(
 	_profile_add_ms(profile, "advance_raids_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
-	var task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
-	state = task_plan_result.get("state", state)
-	_append_event_records(events, task_plan_result.get("events", []))
+	var deployable_commander_ids_after_advance := EnemyAdventureRulesScript.deployable_commander_actor_ids(
+		state.get("commander_roster", [])
+	)
+	var post_raid_replan_required := _post_raid_task_replan_required(
+		active_raid_count_before_advance,
+		deployable_commander_ids_after_prebuild,
+		deployable_commander_ids_after_advance
+	)
+	if post_raid_replan_required:
+		var task_plan_result := EnemyAdventureRulesScript.plan_enemy_hero_task_board(session, config, state)
+		state = task_plan_result.get("state", state)
+		_append_event_records(events, task_plan_result.get("events", []))
+	if profile_enabled:
+		profile["post_raid_task_plan_policy"] = "full_replan" if post_raid_replan_required else "skipped_no_task_validity_change"
 	_profile_add_ms(profile, "post_raid_task_plan_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -1317,6 +1332,15 @@ static func _pressure_summary_target(
 		"target": EnemyAdventureRulesScript.choose_target(session, config, origin),
 		"source": "fresh_target_scan",
 	}
+
+static func _post_raid_task_replan_required(
+	active_raid_count_before_advance: int,
+	deployable_commander_ids_before: Array,
+	deployable_commander_ids_after: Array
+) -> bool:
+	if active_raid_count_before_advance > 0:
+		return true
+	return deployable_commander_ids_before != deployable_commander_ids_after
 
 static func _empire_cycle_result(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"state": state, "messages": messages, "events": events}
