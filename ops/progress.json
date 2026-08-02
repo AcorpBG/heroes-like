@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinal 98 completes 56/56 turns with row signature 5a9c729b, 73 events, three site seizures, 18 stalled turns, and zero invalid orders, behavior bugs, integrity violations, or unreachable targets. It remains battle-free with no movement events, while terminal player-town frontier recycling remains absent. Thirty-eight current-code rows pass, 62 remain, and ordinal 99 is next.",
+  "currentNotes": "Packaging readiness now has real Linux/Windows release artifact implementation: lean synchronized presets, alpha version metadata, reproducible archives, manifests and checksums, clean packaged Linux startup, and valid Windows PE/DLL/PCK output. Clean Windows-machine execution, signing, and installer/channel integration remain open. The strategic-AI matrix is paused at 39 exact-current-code rows because additional passing rows are release-gate evidence, not implementation. Player-comprehension UX is the next active product slice.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact-current-code Medium ordinal 98 completes 56/56 turns with row signature 5a9c729b, 73 events, three site seizures, 18 stalled turns, and zero invalid orders, behavior, integrity, or reachability failures. Six reachable raids remain and no player-town frontier is active, but no movement events or battles occur. Runtime is 417675ms with an 8684ms maximum turn. Thirty-eight rows pass, 62 remain, and ordinal 99 is next.",
+  "currentSlice": "ux-polish-player-comprehension-10184",
+  "currentSliceId": "ux-polish-player-comprehension-10184",
+  "currentSliceNotes": "Started after completing the bounded packaging follow-up. Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and debug-like seams through live player-facing behavior.",
   "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-02T02:55:33Z",
+  "currentSliceTitle": "UX Polish Player Comprehension",
+  "currentSliceUpdatedAt": "2026-08-02T03:26:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -55538,16 +55538,17 @@
         "project.md",
         "PLAN.md"
       ],
-      "status": "pending",
-      "summary": "Pending. Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and reduce debug-like seams.",
+      "startedAt": "2026-08-02T03:26:25Z",
+      "status": "in_progress",
+      "summary": "In progress after completing the bounded packaging follow-up. Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and reduce debug-like seams through live player-facing behavior.",
       "title": "UX Polish Player Comprehension",
-      "updatedAt": "2026-05-26T09:44:34Z",
+      "updatedAt": "2026-08-02T03:26:25Z",
       "validation": {
         "commands": [],
         "evidence": {},
         "sliceId": "ux-polish-player-comprehension-10184",
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z"
+        "status": "pending_implementation",
+        "updatedAt": "2026-08-02T03:26:25Z"
       }
     },
     {
@@ -55577,16 +55578,29 @@
         "project.md",
         "PLAN.md"
       ],
-      "status": "pending",
-      "summary": "Pending. Continue clean Windows/Linux packaging and smoke-test hardening.",
+      "completedAt": "2026-08-02T03:26:25Z",
+      "status": "completed",
+      "summary": "Completed the bounded local packaging follow-up: synchronized lean Linux/Windows release presets, alpha version metadata, reproducible platform archives with payload manifests/checksums, packaging-safe imported-resource lookup, clean packaged Linux startup, and valid Windows PE/DLL/PCK export. Clean Windows-machine execution, signing, installers, and channel integration remain later release gaps.",
       "title": "Packaging Platform Readiness Followup",
-      "updatedAt": "2026-05-26T09:44:34Z",
+      "updatedAt": "2026-08-02T03:26:25Z",
       "validation": {
-        "commands": [],
-        "evidence": {},
+        "commands": [
+          "HEROES_PACKAGING_ARTIFACT_DIR=/dev/shm/heroes-like-payload-hygiene python3 tests/packaging_release_payload_hygiene.py",
+          "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/dev/shm/heroes-like-linux-smoke python3 tests/packaging_linux_export_smoke.py",
+          "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/dev/shm/heroes-like-windows-smoke python3 tests/packaging_windows_export_smoke.py",
+          "python3 tools/package_release.py --output-dir /dev/shm/heroes-like-release",
+          "python3 tools/package_release.py --output-dir /dev/shm/heroes-like-release --skip-export",
+          "sha256sum -c SHA256SUMS"
+        ],
+        "evidence": {
+          "archive_reproducibility": "Two consecutive archive assemblies from identical exports retained Linux SHA-256 e5e343fb3dc20774a073654f9957715c29bdbdb4dcffee77382681cd3e229e63 and Windows SHA-256 c7866016060eb054b16341a3cac9b5b31b851745388b63d3c4d80cbfc266afb7.",
+          "linux": "Release export passed with 71071768-byte ELF executable, 185175392-byte PCK, release GDExtension SO, checksum-valid 205670323-byte tar.gz, and clean packaged headless boot with no missing-resource or fatal warnings.",
+          "payload_hygiene": "Release resource ZIP contains 3930 runtime files, zero forbidden development paths, representative dynamically referenced terrain/unit imports, and the native extension manifest; compressed resource size is 178077205 bytes versus the prior approximately 288 MB baseline.",
+          "windows": "Release export passed with 104539648-byte PE executable, 185175392-byte PCK, release GDExtension DLL, and checksum-valid 214567172-byte ZIP. Fresh-prefix Wine execution crashes inside Wine before Godot initialization, so clean Windows-machine runtime remains unclaimed."
+        },
         "sliceId": "packaging-platform-readiness-followup-10184",
-        "status": "pending",
-        "updatedAt": "2026-05-26T09:44:34Z"
+        "status": "pass_with_clean_windows_runtime_remaining_outside_bounded_slice",
+        "updatedAt": "2026-08-02T03:26:25Z"
       }
     },
     {
@@ -61168,7 +61182,8 @@
         "Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6 and report signature 9a4ef92d. It records 94 activity events, 74 assignments, two groupings, 12 regroups, three site contests, and three site seizures, with 12 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on exploration targets, but no movement events or battles occur because the permanent Brightwood Sawmill body closes the only player-region corridor; generated topology/object placement remains an explicit production gap. Runtime is 373386ms with a 9128ms maximum turn. This is validation coverage, not a new implementation or tactical-parity claim. Together with ordinals 61-94, 35 exact-current-code rows pass, 65 remain, and ordinal 96 is next.",
         "Exact-current-code Medium ordinal 96 reaches correct player defeat after 23 completed turns with row signature 258261c2 and report signature 4af5ce62. It records 99 activity events, 30 movements, 14 assignments, three groupings, one regroup, 15 garrison reinforcements, one commander rebuild, four commander-task plans, 12 town builds, 17 town recruitments, two adventure-spell casts, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 228828ms with a 13036ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-95, 36 exact-current-code rows pass, 64 remain, and ordinal 97 is next.",
         "Exact-current-code Medium ordinal 97 reaches correct player defeat after 29 completed turns with row signature fb7e712d and report signature a50e54c7. It records 128 activity events, 49 movements, 17 assignments, one grouping, three regroups, two raid reinforcements, 16 garrison reinforcements, two commander rebuilds, two commander-task plans, 13 town builds, 19 town recruitments, one adventure-spell cast, one site contest, one site seizure, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 271388ms with a 14970ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-96, 37 exact-current-code rows pass, 63 remain, and ordinal 98 is next.",
-        "Exact-current-code Medium ordinal 98 completes 56/56 turns with row signature 5a9c729b and report signature 06422e2c. It records 73 activity events, 62 assignments, three regroups, five site contests, and three site seizures, with 18 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on encounter, exploration, and regroup targets; no player-town frontier remains active, so the former same-host terminal-frontier recycling is absent. No movement events or battles occur because no direct player or defended-neutral route opens; topology/contact and pacing remain explicit production gaps. Runtime is 417675ms with an 8684ms maximum turn. This is validation coverage, not a new implementation or tactical-parity claim. Together with ordinals 61-97, 38 exact-current-code rows pass, 62 remain, and ordinal 99 is next."
+        "Exact-current-code Medium ordinal 98 completes 56/56 turns with row signature 5a9c729b and report signature 06422e2c. It records 73 activity events, 62 assignments, three regroups, five site contests, and three site seizures, with 18 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on encounter, exploration, and regroup targets; no player-town frontier remains active, so the former same-host terminal-frontier recycling is absent. No movement events or battles occur because no direct player or defended-neutral route opens; topology/contact and pacing remain explicit production gaps. Runtime is 417675ms with an 8684ms maximum turn. This is validation coverage, not a new implementation or tactical-parity claim. Together with ordinals 61-97, 38 exact-current-code rows pass, 62 remain, and ordinal 99 is next.",
+        "Exact-current-code Medium ordinal 99 reaches correct player defeat after 35 completed turns with row signature 437fc4a9 and report signature f2e97bd5. It records 93 activity events, 33 movements, 25 assignments, one grouping, five regroups, seven garrison reinforcements, one commander preparation, five commander-task plans, six town builds, eight town recruitments, two adventure-spell casts, and two valid autoresolutions (town loss and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 296491ms with a 13149ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-98, 39 exact-current-code rows pass, 61 remain, and ordinal 100 is next."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61180,10 +61195,11 @@
         "ops/progress.json"
       ],
       "startedAt": "2026-06-01T15:46:12Z",
-      "status": "in_progress",
-      "summary": "Exact-current-code Medium ordinal 98 completes 56/56 turns with 73 events, three site seizures, 18 stalled turns, and zero invalid orders, behavior, integrity, or reachability failures. It remains battle-free with no movement events while terminal player-town frontier recycling remains absent. Together with ordinals 61-97, 38 rows pass, 62 remain, and ordinal 99 is next. The matrix slice and overall game remain in progress.",
+      "pauseReason": "Thirty-nine exact-current-code rows are preserved. Additional passing rows are validation coverage rather than implementation and are deferred until a defect-driven targeted run or required final release gate.",
+      "status": "paused",
+      "summary": "Paused at 39 exact-current-code Medium rows after ordinal 99. Existing rows preserve zero behavior, integrity, and reachability failures, while 61 rows remain for the required final release matrix. Resume only for a surfaced defect or the final release gate; do not consume implementation turns on passing-row accumulation.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-02T02:55:33Z",
+      "updatedAt": "2026-08-02T03:26:25Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -62179,6 +62195,11 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=97 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 98 completes 56/56 turns with row signature 5a9c729b and report signature 06422e2c. It records 73 activity events, 62 assignments, three regroups, five site contests, and three site seizures, with 18 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on encounter, exploration, and regroup targets; no player-town frontier remains active, so the former same-host terminal-frontier recycling is absent. No movement events or battles occur because no direct player or defended-neutral route opens; topology/contact and pacing remain explicit production gaps. Runtime is 417675ms with an 8684ms maximum turn. The report remains needs_attention because the other 62 current-code rows have not run and topology/contact plus pacing remain open.",
           "status": "pass_with_remaining_62_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 99 reaches correct player defeat after 35 completed turns with row signature 437fc4a9 and report signature f2e97bd5. It records 93 activity events, 33 movements, 25 assignments, one grouping, five regroups, seven garrison reinforcements, one commander preparation, five commander-task plans, six town builds, eight town recruitments, two adventure-spell casts, and two valid autoresolutions (town loss and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 296491ms with a 13149ms maximum turn. The report remains needs_attention only because the other 61 current-code rows have not run.",
+          "status": "pass_with_remaining_61_row_production_gap"
         }
       ]
     },
@@ -62984,7 +63005,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "strategic_ai_medium_matrix_runtime_optimization_in_progress",
+  "result": "ux_player_comprehension_implementation_in_progress_after_packaging_followup",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63085,9 +63106,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 61-98 pass with zero behavior bugs, integrity violations, and unreachable active targets. Thirty-eight current-code rows pass and 62 remain; low-activity and battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. The bounded packaging follow-up now produces lean synchronized Linux/Windows exports and reproducible checksum-manifested archives; packaged Linux startup is clean and Windows PE/DLL/PCK output validates, while clean Windows-machine execution, signing, and installer/channel work remain open. The strategic-AI matrix is paused at 39 exact-current-code rows so passing-row accumulation does not replace implementation. Player-comprehension UX is active and the overall game remains in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T02:55:33Z",
+  "updatedAt": "2026-08-02T03:26:25Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

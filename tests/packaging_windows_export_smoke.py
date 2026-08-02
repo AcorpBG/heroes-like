@@ -11,7 +11,12 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT_DIR = ROOT / ".artifacts" / "packaging_windows_export_smoke"
+ARTIFACT_DIR = Path(
+    os.environ.get(
+        "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR",
+        ROOT / ".artifacts" / "packaging_windows_export_smoke",
+    )
+).resolve()
 EXPORT_DIR = ARTIFACT_DIR / "export"
 REPORT_PATH = ARTIFACT_DIR / "report.json"
 EXE_PATH = EXPORT_DIR / "heroes-like.exe"
@@ -39,6 +44,13 @@ FATAL_EXPORT_PATTERNS = (
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def relative(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def output_summary(output: str) -> dict:
@@ -102,7 +114,7 @@ def file_summary(path: Path, min_size_bytes: int) -> dict:
     exists = path.exists()
     size = path.stat().st_size if exists else 0
     return {
-        "path": str(path.relative_to(ROOT)),
+        "path": relative(path),
         "exists": exists,
         "size_bytes": size,
         "min_size_bytes": min_size_bytes,
@@ -132,8 +144,8 @@ def dll_summary() -> dict:
         rows.append(
             {
                 "name": dll_name,
-                "export_path": str(path.relative_to(ROOT)),
-                "source_path": str(source_path.relative_to(ROOT)),
+                "export_path": relative(path),
+                "source_path": relative(source_path),
                 "export_exists": path.exists(),
                 "export_size_bytes": path.stat().st_size if path.exists() else 0,
                 "source_exists": source_path.exists(),
@@ -207,7 +219,7 @@ def main() -> int:
         "ok": bool(ok),
         "scope": {
             "preset": PRESET_NAME,
-            "export_exe": str(EXE_PATH.relative_to(ROOT)),
+            "export_exe": relative(EXE_PATH),
             "claims": [
                 "The Windows Release preset can export a real executable artifact in this local Godot environment.",
                 "The exported executable has a Windows MZ/PE header.",
@@ -240,11 +252,11 @@ def main() -> int:
         "pe_header": header.get("pe_header", False),
         "windows_dlls_exported": dlls["all_exported"],
         "fatal_export_matches": fatal_matches,
-        "report": str(REPORT_PATH.relative_to(ROOT)),
+        "report": relative(REPORT_PATH),
     }
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")
     if not report["ok"]:
-        print(f"Report written to {REPORT_PATH.relative_to(ROOT)}", file=sys.stderr)
+        print(f"Report written to {relative(REPORT_PATH)}", file=sys.stderr)
     return 0 if report["ok"] else 1
 
 

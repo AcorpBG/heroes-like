@@ -593,7 +593,7 @@ func _validate_art_path(path: String, label: String) -> void:
 	if not path.begins_with("res://"):
 		push_warning("%s path %s must be a res:// path." % [label, path])
 		return
-	if not FileAccess.file_exists(path):
+	if not ResourceLoader.exists(path):
 		push_warning("%s path %s does not exist." % [label, path])
 
 func _validate_terrain_layer(layer: Dictionary, scenario_index: Dictionary, grammar: Dictionary) -> void:
@@ -988,7 +988,7 @@ func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Diction
 			var path := String(record.get(surface, ""))
 			if path == "" or not path.begins_with("res://"):
 				push_warning("Unit art %s must define %s as a res:// path." % [unit_id, surface])
-			elif not FileAccess.file_exists(path):
+			elif not ResourceLoader.exists(path):
 				push_warning("Unit art %s %s file is missing: %s." % [unit_id, surface, path])
 	for unit_id in unit_art_index.keys():
 		if not unit_index.has(unit_id):
@@ -1010,7 +1010,7 @@ func _validate_unit_animation_manifest(unit_index: Dictionary, manifest: Diction
 		var path := String(record.get("sprite_sheet", ""))
 		if path == "" or not path.begins_with("res://"):
 			push_warning("Unit animation %s must define sprite_sheet as a res:// path." % unit_id)
-		elif not FileAccess.file_exists(path):
+		elif not ResourceLoader.exists(path):
 			push_warning("Unit animation %s sprite sheet file is missing: %s." % [unit_id, path])
 		var record_states: Array = record.get("states", []) if record.get("states", []) is Array else []
 		if record_states.size() != states.size():

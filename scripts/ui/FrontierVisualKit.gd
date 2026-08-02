@@ -152,7 +152,7 @@ static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	return style
 
 static func texture_panel_style(path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> StyleBox:
-	if path == "" or not FileAccess.file_exists(path):
+	if path == "" or not ResourceLoader.exists(path):
 		return panel_style(fallback_tone)
 	var texture := load(path)
 	if not texture is Texture2D:
@@ -235,7 +235,7 @@ static func _button_art_role(role: String) -> String:
 
 static func _button_art_style(art_role: String, state: String, fallback: StyleBox) -> StyleBox:
 	var path := "%s/button_%s_%s.png" % [BUTTON_ART_ROOT, art_role, state]
-	if not FileAccess.file_exists(path):
+	if not ResourceLoader.exists(path):
 		return fallback
 	return texture_panel_style(path, "ink", 12, 8)
 
