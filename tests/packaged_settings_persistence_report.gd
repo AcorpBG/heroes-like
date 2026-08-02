@@ -1,5 +1,7 @@
 extends Node
 
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 const REPORT_ID := "PACKAGED_SETTINGS_PERSISTENCE_REPORT"
 const SCHEMA_ID := "packaged_settings_persistence_v1"
 const TEST_VALUES := {
@@ -13,6 +15,7 @@ const TEST_VALUES := {
 	"frame_rate_limit": 120,
 	"ui_scale_percent": 130,
 	"large_ui_text": true,
+	"high_contrast_ui": true,
 	"reduce_motion": true,
 }
 
@@ -87,6 +90,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
 	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
+	SettingsService.set_high_contrast_ui_enabled(bool(TEST_VALUES["high_contrast_ui"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
 	var saved_path := SettingsService.save_settings()
 	_report["saved_path"] = saved_path
@@ -152,6 +156,7 @@ func _run_persistence_check() -> void:
 	_expect(Engine.max_fps == int(TEST_VALUES["frame_rate_limit"]), "Runtime max FPS must match the configured frame-rate limit.")
 	_expect(int(direct_values.get("ui_scale_percent", -1)) == int(TEST_VALUES["ui_scale_percent"]), "Direct config UI scale mismatch.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
+	_expect(bool(direct_values.get("high_contrast_ui", false)) == bool(TEST_VALUES["high_contrast_ui"]), "Direct config high-contrast UI mismatch.")
 	_report["accessibility_scaling"] = {
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"compatibility_large_ui_text": SettingsService.large_ui_text_enabled(),
@@ -159,6 +164,22 @@ func _run_persistence_check() -> void:
 		"options": SettingsService.build_ui_scale_options(),
 	}
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Runtime root window must apply the configured 130% UI scale.")
+	var contrast_panel := FrontierVisualKitScript.panel_style("ink")
+	var contrast_focus := FrontierVisualKitScript._button_focus_style()
+	var contrast_body: Color = FrontierVisualKitScript.text_color("body")
+	_report["high_contrast_ui"] = {
+		"enabled": FrontierVisualKitScript.high_contrast_enabled(),
+		"body_text_color": contrast_body,
+		"panel_background_color": contrast_panel.bg_color,
+		"panel_border_color": contrast_panel.border_color,
+		"focus_border_color": contrast_focus.border_color,
+		"focus_border_width": contrast_focus.border_width_left,
+	}
+	_expect(FrontierVisualKitScript.high_contrast_enabled(), "Shared visual kit must receive the high-contrast setting.")
+	_expect(contrast_body.r >= 0.95 and contrast_body.g >= 0.95 and contrast_body.b >= 0.95, "High-contrast body text must be near white.")
+	_expect(contrast_panel.bg_color.get_luminance() <= 0.03, "High-contrast panels must use a near-black solid background.")
+	_expect(contrast_panel.border_color.get_luminance() >= 0.80, "High-contrast panel borders must remain strongly visible.")
+	_expect(contrast_focus.border_width_left >= 4, "High-contrast focus rings must be at least four pixels wide.")
 	_expect(bool(direct_values.get("reduce_motion", false)) == bool(TEST_VALUES["reduce_motion"]), "Direct config reduce motion mismatch.")
 
 	SettingsService.settings = {}
@@ -174,6 +195,7 @@ func _run_persistence_check() -> void:
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
+		"high_contrast_ui": SettingsService.high_contrast_ui_enabled(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
 	}
@@ -189,6 +211,8 @@ func _run_persistence_check() -> void:
 	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
 	_expect(int(reloaded["ui_scale_percent"]) == int(TEST_VALUES["ui_scale_percent"]), "Reloaded UI scale mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
+	_expect(bool(reloaded["high_contrast_ui"]) == bool(TEST_VALUES["high_contrast_ui"]), "Reloaded high-contrast UI mismatch.")
+	_expect(FrontierVisualKitScript.high_contrast_enabled(), "Reloaded high-contrast UI must remain applied to the shared visual kit.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Reloaded 130% UI scale must remain applied to the root window.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
@@ -211,6 +235,7 @@ func _read_settings_config_values() -> Dictionary:
 		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
 		"ui_scale_percent": int(config.get_value("accessibility", "ui_scale_percent", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
+		"high_contrast_ui": bool(config.get_value("accessibility", "high_contrast_ui", false)),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}
 

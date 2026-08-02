@@ -11,6 +11,31 @@ const TEXT_TONES := {
 	"blue": Color(0.80, 0.86, 0.96, 1.0),
 }
 
+const HIGH_CONTRAST_TEXT_TONES := {
+	"title": Color(1.0, 1.0, 1.0, 1.0),
+	"body": Color(0.96, 0.98, 1.0, 1.0),
+	"muted": Color(0.86, 0.90, 0.94, 1.0),
+	"gold": Color(1.0, 0.91, 0.32, 1.0),
+	"teal": Color(0.45, 0.95, 1.0, 1.0),
+	"green": Color(0.68, 1.0, 0.55, 1.0),
+	"red": Color(1.0, 0.58, 0.52, 1.0),
+	"blue": Color(0.65, 0.80, 1.0, 1.0),
+}
+
+const HIGH_CONTRAST_PANEL_BORDERS := {
+	"banner": Color(1.0, 0.88, 0.36, 1.0),
+	"gold": Color(1.0, 0.88, 0.36, 1.0),
+	"earth": Color(1.0, 0.70, 0.32, 1.0),
+	"teal": Color(0.40, 0.92, 1.0, 1.0),
+	"green": Color(0.62, 0.96, 0.48, 1.0),
+	"blue": Color(0.62, 0.76, 1.0, 1.0),
+	"red": Color(1.0, 0.48, 0.42, 1.0),
+	"ink": Color(0.88, 0.94, 1.0, 1.0),
+	"frame": Color(0.88, 0.94, 1.0, 1.0),
+	"smoke": Color(1.0, 0.88, 0.36, 1.0),
+	"clear": Color(0.0, 0.0, 0.0, 0.0),
+}
+
 const PANEL_TONES := {
 	"banner": {
 		"bg": Color(0.13, 0.16, 0.16, 0.97),
@@ -91,6 +116,29 @@ const BUTTON_ROLES := {
 	},
 }
 
+const HIGH_CONTRAST_BUTTON_ROLES := {
+	"primary": {
+		"fill": Color(0.16, 0.12, 0.02, 1.0),
+		"hover": Color(0.30, 0.23, 0.03, 1.0),
+		"pressed": Color(0.08, 0.06, 0.01, 1.0),
+		"border": Color(1.0, 0.88, 0.32, 1.0),
+	},
+	"secondary": {
+		"fill": Color(0.025, 0.035, 0.045, 1.0),
+		"hover": Color(0.11, 0.16, 0.20, 1.0),
+		"pressed": Color(0.0, 0.0, 0.0, 1.0),
+		"border": Color(0.88, 0.94, 1.0, 1.0),
+	},
+	"danger": {
+		"fill": Color(0.20, 0.02, 0.01, 1.0),
+		"hover": Color(0.36, 0.05, 0.03, 1.0),
+		"pressed": Color(0.10, 0.0, 0.0, 1.0),
+		"border": Color(1.0, 0.48, 0.42, 1.0),
+	},
+}
+
+static var _high_contrast_enabled := false
+
 const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
 
 static func set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
@@ -136,11 +184,23 @@ static func apply_labels(labels: Array, tone: String, font_size: int = -1) -> vo
 		if label is Label:
 			apply_label(label, tone, font_size)
 
+static func set_high_contrast_enabled(enabled: bool) -> void:
+	_high_contrast_enabled = enabled
+
+static func high_contrast_enabled() -> bool:
+	return _high_contrast_enabled
+
 static func text_color(tone: String) -> Color:
-	return TEXT_TONES.get(tone, TEXT_TONES["body"])
+	var palette := HIGH_CONTRAST_TEXT_TONES if high_contrast_enabled() else TEXT_TONES
+	return palette.get(tone, palette["body"])
 
 static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	var palette: Dictionary = PANEL_TONES.get(tone, PANEL_TONES.ink)
+	if high_contrast_enabled():
+		palette = {
+			"bg": Color(0.012, 0.016, 0.022, 0.995) if tone != "clear" else Color(0.0, 0.0, 0.0, 0.0),
+			"border": HIGH_CONTRAST_PANEL_BORDERS.get(tone, HIGH_CONTRAST_PANEL_BORDERS["ink"]),
+		}
 	var style := StyleBoxFlat.new()
 	style.bg_color = palette.get("bg", Color(0.10, 0.12, 0.15, 0.97))
 	style.border_color = palette.get("border", Color(0.50, 0.60, 0.68, 0.96))
@@ -152,6 +212,8 @@ static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	return style
 
 static func texture_panel_style(path: String, fallback_tone: String = "ink", texture_margin: int = 32, content_margin: int = 10, modulate: Color = Color(1.0, 1.0, 1.0, 1.0)) -> StyleBox:
+	if high_contrast_enabled():
+		return panel_style(fallback_tone)
 	if path == "" or not ResourceLoader.exists(path):
 		return panel_style(fallback_tone)
 	var texture := load(path)
@@ -251,6 +313,9 @@ static func _collect_keyboard_focus_controls(node: Node, controls: Array) -> voi
 
 static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	var palette: Dictionary = BUTTON_ROLES.get(role, BUTTON_ROLES.secondary)
+	if high_contrast_enabled():
+		var contrast_role := role if HIGH_CONTRAST_BUTTON_ROLES.has(role) else ("primary" if role == "spine_active" else "secondary")
+		palette = HIGH_CONTRAST_BUTTON_ROLES.get(contrast_role, HIGH_CONTRAST_BUTTON_ROLES.secondary)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = palette.get("fill", Color(0.18, 0.22, 0.25, 0.98))
 	normal.border_color = palette.get("border", Color(0.52, 0.62, 0.68, 0.96))
@@ -271,14 +336,14 @@ static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	button.add_theme_stylebox_override("pressed", _button_art_style(art_role, "pressed", pressed))
 	button.add_theme_stylebox_override("disabled", _button_art_style(art_role, "disabled", disabled))
 	button.add_theme_stylebox_override("focus", _button_focus_style())
-	button.add_theme_color_override("font_color", TEXT_TONES["title"])
-	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
+	button.add_theme_color_override("font_color", text_color("title"))
+	button.add_theme_color_override("font_disabled_color", Color(0.68, 0.72, 0.76) if high_contrast_enabled() else Color(0.48, 0.50, 0.53))
 
 static func _button_focus_style(corner_radius: int = 10) -> StyleBoxFlat:
 	var focus := StyleBoxFlat.new()
 	focus.bg_color = Color(0.0, 0.0, 0.0, 0.0)
-	focus.border_color = Color(1.0, 0.84, 0.40, 1.0)
-	focus.set_border_width_all(3)
+	focus.border_color = Color(1.0, 0.92, 0.20, 1.0) if high_contrast_enabled() else Color(1.0, 0.84, 0.40, 1.0)
+	focus.set_border_width_all(4 if high_contrast_enabled() else 3)
 	focus.set_corner_radius_all(corner_radius)
 	focus.set_expand_margin_all(2.0)
 	return focus
@@ -291,6 +356,8 @@ static func _button_art_role(role: String) -> String:
 	return "secondary"
 
 static func _button_art_style(art_role: String, state: String, fallback: StyleBox) -> StyleBox:
+	if high_contrast_enabled():
+		return fallback
 	var path := "%s/button_%s_%s.png" % [BUTTON_ART_ROOT, art_role, state]
 	if not ResourceLoader.exists(path):
 		return fallback
@@ -298,8 +365,8 @@ static func _button_art_style(art_role: String, state: String, fallback: StyleBo
 
 static func apply_item_list(item_list: ItemList, tone: String = "ink") -> void:
 	item_list.add_theme_stylebox_override("panel", panel_style(tone, 14))
-	item_list.add_theme_color_override("font_color", TEXT_TONES["body"])
-	item_list.add_theme_color_override("font_selected_color", TEXT_TONES["title"])
+	item_list.add_theme_color_override("font_color", text_color("body"))
+	item_list.add_theme_color_override("font_selected_color", text_color("title"))
 	item_list.add_theme_color_override("guide_color", Color(0.28, 0.34, 0.39, 0.70))
 	item_list.add_theme_color_override("selection_fill", text_color("gold").darkened(0.58))
 	item_list.add_theme_color_override("selection_color", text_color("gold"))
@@ -309,9 +376,9 @@ static func apply_tab_container(tabs: TabContainer, tone: String = "ink") -> voi
 	tabs.add_theme_stylebox_override("tab_selected", badge_style("gold"))
 	tabs.add_theme_stylebox_override("tab_hovered", badge_style("teal"))
 	tabs.add_theme_stylebox_override("tab_unselected", badge_style("ink"))
-	tabs.add_theme_color_override("font_selected_color", TEXT_TONES["title"])
-	tabs.add_theme_color_override("font_unselected_color", TEXT_TONES["muted"])
-	tabs.add_theme_color_override("font_hovered_color", TEXT_TONES["body"])
+	tabs.add_theme_color_override("font_selected_color", text_color("title"))
+	tabs.add_theme_color_override("font_unselected_color", text_color("muted"))
+	tabs.add_theme_color_override("font_hovered_color", text_color("body"))
 
 static func apply_range(range_control: Range, tone: String = "gold") -> void:
 	range_control.add_theme_color_override("font_color", text_color("body"))

@@ -14,6 +14,7 @@ func _run_main_menu_smoke() -> bool:
 	var original_resolution := SettingsService.presentation_resolution_id()
 	var original_render_quality := SettingsService.render_quality_id()
 	var original_ui_scale := SettingsService.ui_scale_percent()
+	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -523,7 +524,8 @@ func _run_main_menu_smoke() -> bool:
 	var frame_rate_picker = shell.get_node_or_null("%FrameRatePicker")
 	var render_quality_picker = shell.get_node_or_null("%RenderQualityPicker")
 	var ui_scale_picker = shell.get_node_or_null("%UIScalePicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton):
+	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -608,6 +610,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
+			String(settings_snapshot.get("high_contrast_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
@@ -633,6 +636,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
+			String(settings_snapshot.get("high_contrast_tooltip", "")),
 		]
 	):
 		if original_resolution != "1600x900":
@@ -641,6 +645,24 @@ func _run_main_menu_smoke() -> bool:
 			shell.call("validation_select_render_quality", original_render_quality)
 		if original_ui_scale != 130:
 			shell.call("validation_select_ui_scale", original_ui_scale)
+		return false
+
+	if not bool(shell.call("validation_set_high_contrast", true)):
+		push_error("Main menu smoke: high-contrast toggle could not enable the shared palette.")
+		get_tree().quit(1)
+		return false
+	settings_snapshot = shell.call("validation_snapshot")
+	var contrast_normal = (close_stage_button as Button).get_theme_stylebox("normal")
+	var contrast_focus = (close_stage_button as Button).get_theme_stylebox("focus")
+	if not bool(settings_snapshot.get("high_contrast_enabled", false)) or not String(settings_snapshot.get("settings_summary_full", "")).contains("High contrast On") or not (contrast_normal is StyleBoxFlat) or not (contrast_focus is StyleBoxFlat) or (contrast_normal as StyleBoxFlat).bg_color.get_luminance() > 0.08 or (contrast_normal as StyleBoxFlat).border_color.get_luminance() < 0.80 or (contrast_focus as StyleBoxFlat).border_width_left < 4:
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: high-contrast mode did not apply solid dark controls, bright borders, and a strong focus ring: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	if not original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):
+		push_error("Main menu smoke: high-contrast toggle could not restore the original setting.")
+		get_tree().quit(1)
 		return false
 
 	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
