@@ -64,6 +64,7 @@ const TAB_HELP_TOPIC := {
 @onready var _campaign_commander_preview_label: Label = %CampaignCommanderPreview
 @onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
 @onready var _campaign_journal_label: Label = %CampaignJournal
+@onready var _campaign_difficulty_picker: OptionButton = %CampaignDifficultyPicker
 @onready var _campaign_primary_button: Button = %CampaignPrimaryAction
 @onready var _start_chapter_button: Button = %StartChapter
 @onready var _skirmish_list: ItemList = %SkirmishList
@@ -183,10 +184,10 @@ func _refresh_menu() -> void:
 		_reset_save_browser_placeholder()
 	buckets["save_browser"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
+	_configure_difficulty_pickers()
 	_rebuild_campaign_browser()
 	buckets["campaign_browser"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	_configure_difficulty_picker()
 	_configure_generated_random_map_controls()
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
@@ -262,6 +263,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 		ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch_blocked", ProfileLogScript.elapsed_ms(started), buckets, {
 			"scenario_id": String(action.get("scenario_id", "")),
 			"campaign_id": String(action.get("campaign_id", _selected_campaign_id)),
+			"difficulty": _selected_difficulty,
 		}, SessionState.ensure_active_session())
 		return
 	var scenario_id := String(action.get("scenario_id", ""))
@@ -269,7 +271,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 	var start_started := ProfileLogScript.begin_usec()
 	var session := CampaignProgression.start_scenario(
 		scenario_id,
-		ScenarioSelectRulesScript.default_difficulty_id(),
+		_selected_difficulty,
 		campaign_id
 	)
 	buckets["scenario_start"] = ProfileLogScript.elapsed_ms(start_started)
@@ -280,6 +282,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 		ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch_failed", ProfileLogScript.elapsed_ms(started), buckets, {
 			"scenario_id": scenario_id,
 			"campaign_id": campaign_id,
+			"difficulty": _selected_difficulty,
 		}, SessionState.ensure_active_session())
 		return
 	var refresh_started := ProfileLogScript.begin_usec()
@@ -288,6 +291,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 	ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch", ProfileLogScript.elapsed_ms(started), buckets, {
 		"scenario_id": scenario_id,
 		"campaign_id": campaign_id,
+		"difficulty": _selected_difficulty,
 	}, session)
 	AppRouter.go_to_overworld()
 
@@ -358,10 +362,17 @@ func _on_skirmish_selected(index: int) -> void:
 	_refresh_skirmish_setup()
 
 func _on_difficulty_selected(index: int) -> void:
-	if index < 0 or index >= _difficulty_picker.get_item_count():
+	_set_selected_difficulty_from_picker(_difficulty_picker, index)
+
+func _on_campaign_difficulty_selected(index: int) -> void:
+	_set_selected_difficulty_from_picker(_campaign_difficulty_picker, index)
+
+func _set_selected_difficulty_from_picker(picker: OptionButton, index: int) -> void:
+	if index < 0 or index >= picker.get_item_count():
 		return
-	var metadata = _difficulty_picker.get_item_metadata(index)
-	_selected_difficulty = ScenarioSelectRulesScript.normalize_difficulty(metadata)
+	_selected_difficulty = ScenarioSelectRulesScript.normalize_difficulty(picker.get_item_metadata(index))
+	_sync_difficulty_picker_selection()
+	_refresh_campaign_browser()
 	_refresh_skirmish_setup()
 	_refresh_generated_random_map_setup()
 
@@ -657,6 +668,8 @@ func _refresh_campaign_browser() -> void:
 		_campaign_primary_button.text = "No Campaign"
 		_campaign_primary_button.disabled = true
 		_campaign_primary_button.tooltip_text = "Campaign board is intentionally disabled by the archived campaign-domain reset; open Skirmish for playable fronts."
+		_campaign_difficulty_picker.disabled = true
+		_campaign_difficulty_picker.tooltip_text = "Campaign difficulty is unavailable while no campaign arcs are active."
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
 		_start_chapter_button.tooltip_text = "No campaign chapter is selectable while the campaign domain is archived."
@@ -665,6 +678,11 @@ func _refresh_campaign_browser() -> void:
 	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 4, 86)
 	_set_compact_label(_campaign_arc_status_label, CampaignProgression.campaign_arc_status(_selected_campaign_id), 3, 86)
 	_set_compact_label(_campaign_journal_label, CampaignProgression.campaign_journal(_selected_campaign_id), 3, 86)
+	_campaign_difficulty_picker.disabled = false
+	_campaign_difficulty_picker.tooltip_text = "Campaign difficulty: %s\n%s" % [
+		ScenarioSelectRulesScript.difficulty_label(_selected_difficulty),
+		ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
+	]
 
 	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
 	_campaign_primary_button.text = String(primary_action.get("label", "Advance Campaign"))
@@ -1144,19 +1162,30 @@ func _join_nonempty_lines(lines: Array) -> String:
 			clean_lines.append(text)
 	return "\n".join(clean_lines)
 
-func _configure_difficulty_picker() -> void:
-	_difficulty_picker.clear()
+func _configure_difficulty_pickers() -> void:
+	_populate_difficulty_picker(_campaign_difficulty_picker)
+	_populate_difficulty_picker(_difficulty_picker)
+
+func _populate_difficulty_picker(picker: OptionButton) -> void:
+	picker.clear()
 	var options := ScenarioSelectRulesScript.build_difficulty_options(_selected_difficulty)
 	var selected_index := -1
 	for index in range(options.size()):
 		var option = options[index]
 		var label := String(option.get("label", option.get("id", "Difficulty")))
-		_difficulty_picker.add_item(label, index)
-		_difficulty_picker.set_item_metadata(index, String(option.get("id", ScenarioSelectRulesScript.default_difficulty_id())))
+		picker.add_item(label, index)
+		picker.set_item_metadata(index, String(option.get("id", ScenarioSelectRulesScript.default_difficulty_id())))
 		if bool(option.get("selected", false)):
 			selected_index = index
 	if selected_index >= 0:
-		_difficulty_picker.select(selected_index)
+		picker.select(selected_index)
+
+func _sync_difficulty_picker_selection() -> void:
+	for picker in [_campaign_difficulty_picker, _difficulty_picker]:
+		for index in range(picker.get_item_count()):
+			if String(picker.get_item_metadata(index)) == _selected_difficulty:
+				picker.select(index)
+				break
 
 func _configure_generated_random_map_controls() -> void:
 	var options := ScenarioSelectRulesScript.random_map_player_setup_options()
@@ -1998,6 +2027,10 @@ func validation_snapshot() -> Dictionary:
 		"campaign_empty_state_tooltip": _campaign_details_label.tooltip_text,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
+		"selected_campaign_difficulty": _selected_difficulty,
+		"campaign_difficulty_text": _campaign_difficulty_picker.get_item_text(_campaign_difficulty_picker.selected) if _campaign_difficulty_picker.selected >= 0 else "",
+		"campaign_difficulty_tooltip": _campaign_difficulty_picker.tooltip_text,
+		"campaign_difficulty_disabled": _campaign_difficulty_picker.disabled,
 		"primary_campaign_action": primary_campaign_action.duplicate(true),
 		"selected_chapter_action": selected_chapter_action.duplicate(true),
 		"campaign_chapter_check": campaign_chapter_check.duplicate(true),
@@ -2337,6 +2370,16 @@ func validation_set_difficulty(difficulty_id: String) -> bool:
 			continue
 		_difficulty_picker.select(index)
 		_on_difficulty_selected(index)
+		return true
+	return false
+
+func validation_set_campaign_difficulty(difficulty_id: String) -> bool:
+	var normalized := ScenarioSelectRulesScript.normalize_difficulty(difficulty_id)
+	for index in range(_campaign_difficulty_picker.get_item_count()):
+		if String(_campaign_difficulty_picker.get_item_metadata(index)) != normalized:
+			continue
+		_campaign_difficulty_picker.select(index)
+		_on_campaign_difficulty_selected(index)
 		return true
 	return false
 
@@ -2682,6 +2725,7 @@ func validation_start_selected_skirmish() -> Dictionary:
 func validation_start_selected_campaign_chapter() -> Dictionary:
 	var requested_campaign_id := _selected_campaign_id
 	var requested_scenario_id := _selected_campaign_scenario_id
+	var requested_difficulty := _selected_difficulty
 	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id)
 	var action_disabled := _start_chapter_button.disabled or bool(action.get("disabled", false))
 	_on_start_chapter_pressed()
@@ -2690,9 +2734,11 @@ func validation_start_selected_campaign_chapter() -> Dictionary:
 	return {
 		"requested_campaign_id": requested_campaign_id,
 		"requested_scenario_id": requested_scenario_id,
+		"requested_difficulty": requested_difficulty,
 		"action_disabled": action_disabled,
 		"started": not action_disabled
 			and active_session.scenario_id == requested_scenario_id
+			and active_session.difficulty == requested_difficulty
 			and active_session.launch_mode == SessionState.LAUNCH_MODE_CAMPAIGN
 			and active_campaign_id == requested_campaign_id,
 		"active_scenario_id": active_session.scenario_id,
@@ -2834,6 +2880,7 @@ func _apply_visual_theme() -> void:
 	_sync_system_command_buttons()
 
 	for picker in [
+		_campaign_difficulty_picker,
 		_difficulty_picker,
 		_generated_template_picker,
 		_generated_profile_picker,

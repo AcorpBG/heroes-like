@@ -3,6 +3,7 @@ extends Node
 const REPORT_ID := "PLAYER_FACING_CAMPAIGN_MENU_SMOKE"
 const CAMPAIGN_ID := "campaign_reedfall"
 const START_SCENARIO_ID := "river-pass"
+const CAMPAIGN_DIFFICULTY := "hard"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -32,6 +33,9 @@ func _run() -> void:
 	if not bool(shell.call("validation_select_campaign_chapter", START_SCENARIO_ID)):
 		_fail("Main menu could not select the reactivated opening chapter.")
 		return
+	if not shell.has_method("validation_set_campaign_difficulty") or not bool(shell.call("validation_set_campaign_difficulty", CAMPAIGN_DIFFICULTY)):
+		_fail("Main menu could not select campaign difficulty %s." % CAMPAIGN_DIFFICULTY)
+		return
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var primary_action: Dictionary = snapshot.get("primary_campaign_action", {}) if snapshot.get("primary_campaign_action", {}) is Dictionary else {}
@@ -47,6 +51,12 @@ func _run() -> void:
 		return
 	if String(snapshot.get("selected_campaign_scenario_id", "")) != START_SCENARIO_ID:
 		_fail("Chapter selection did not persist in snapshot: %s." % JSON.stringify(snapshot))
+		return
+	if String(snapshot.get("selected_campaign_difficulty", "")) != CAMPAIGN_DIFFICULTY or String(snapshot.get("campaign_difficulty_text", "")) != "Warlord":
+		_fail("Campaign difficulty selection did not persist in the campaign board: %s." % JSON.stringify(snapshot))
+		return
+	if bool(snapshot.get("campaign_difficulty_disabled", true)) or String(snapshot.get("campaign_difficulty_tooltip", "")).find("Reduced movement and income") < 0:
+		_fail("Campaign difficulty control did not expose the selected pressure consequence: %s." % JSON.stringify(snapshot))
 		return
 	if bool(primary_action.get("disabled", true)) or String(primary_action.get("scenario_id", "")) != START_SCENARIO_ID:
 		_fail("Primary campaign action did not target the opening chapter: %s." % JSON.stringify(primary_action))
@@ -71,6 +81,9 @@ func _run() -> void:
 	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_CAMPAIGN:
 		_fail("Started campaign session did not use Campaign launch mode: %s." % JSON.stringify(launch_result))
 		return
+	if String(launch_result.get("requested_difficulty", "")) != CAMPAIGN_DIFFICULTY or String(launch_result.get("active_difficulty", "")) != CAMPAIGN_DIFFICULTY:
+		_fail("Started campaign session did not preserve selected difficulty: %s." % JSON.stringify(launch_result))
+		return
 	if String(launch_result.get("active_campaign_name", "")) == "" or String(launch_result.get("active_campaign_chapter_label", "")) == "":
 		_fail("Started campaign session missed campaign name or chapter label: %s." % JSON.stringify(launch_result))
 		return
@@ -83,6 +96,7 @@ func _run() -> void:
 		"campaign_count": int(snapshot.get("campaign_count", 0)),
 		"campaign_id": CAMPAIGN_ID,
 		"scenario_id": START_SCENARIO_ID,
+		"difficulty": String(launch_result.get("active_difficulty", "")),
 		"campaign_board_status": String(snapshot.get("campaign_board_status", "")),
 		"primary_action_label": String(primary_action.get("label", "")),
 		"chapter_action_label": String(chapter_action.get("label", "")),
@@ -112,6 +126,9 @@ func _autosave_started_campaign_session() -> Dictionary:
 		return {}
 	if String(summary.get("launch_mode", "")) != SessionState.LAUNCH_MODE_CAMPAIGN or String(summary.get("saved_from_launch_mode", "")) != SessionState.LAUNCH_MODE_CAMPAIGN:
 		_fail("Campaign autosave summary did not preserve Campaign launch mode: %s." % JSON.stringify(summary))
+		return {}
+	if String(summary.get("difficulty", "")) != CAMPAIGN_DIFFICULTY or String(latest_summary.get("difficulty", "")) != CAMPAIGN_DIFFICULTY:
+		_fail("Campaign autosave summary did not preserve selected difficulty: %s / %s." % [JSON.stringify(summary), JSON.stringify(latest_summary)])
 		return {}
 	if String(summary.get("resume_target", "")) != "overworld" or String(summary.get("scenario_status", "")) != "in_progress":
 		_fail("Campaign autosave summary did not advertise in-progress overworld resume: %s." % JSON.stringify(summary))
