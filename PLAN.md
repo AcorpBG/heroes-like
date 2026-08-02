@@ -457,6 +457,7 @@ Current product focus:
 - Latest magic follow-up: resistance and counter-control mechanics now run in live battle and in the fast benchmark before remaining spell-enabled benchmark outliers are treated as pure faction/unit imbalance.
 - Owner direction has selected bounded campaign/content implementation. Current campaign target: expose a real difficulty choice in the campaign board and carry that choice through primary/chapter launch, session state, and save/resume evidence instead of silently forcing the default difficulty.
 - Latest campaign completed slice: `campaign-difficulty-selection-10184` adds a compact campaign-board difficulty selector, synchronizes it with the existing difficulty model, and carries the selected value through live campaign launch and autosave summary state.
+- Latest campaign follow-up: `campaign-difficulty-preview-alignment-10184` makes commander, operational, readiness, action-consequence, and launch-handoff previews use the same selected difficulty as the eventual campaign session.
 
 ## Selectable Near-Term Work
 

@@ -294,7 +294,7 @@ static func describe_campaign_details(profile: Dictionary, campaign_id: String) 
 static func describe_campaign_arc_status(profile: Dictionary, campaign_id: String) -> String:
 	return "\n".join(_campaign_arc_status_lines(normalize_profile(profile), campaign_id))
 
-static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, scenario_id: String) -> String:
+static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
@@ -303,7 +303,7 @@ static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, 
 
 	var record := get_scenario_record(normalized, campaign_id, scenario_id)
 	var unlocked := is_scenario_unlocked(normalized, campaign_id, scenario_id)
-	var context := _chapter_action_context(normalized, campaign_id, scenario_entry, unlocked, record)
+	var context := _chapter_action_context(normalized, campaign_id, scenario_entry, unlocked, record, difficulty)
 	var lines := [
 		"%s | %s" % [_chapter_heading(scenario_entry, scenario_id), _scenario_status_label(unlocked, record)],
 	]
@@ -340,7 +340,7 @@ static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, 
 	var import_bundle_summary := describe_carryover_bundle(_carryover_bundle_for_node(normalized, campaign_id, scenario_entry))
 	if import_bundle_summary != "":
 		lines.append("Imported carryover: %s" % import_bundle_summary)
-	var action := build_chapter_action(normalized, campaign_id, scenario_id)
+	var action := build_chapter_action(normalized, campaign_id, scenario_id, difficulty)
 	if String(action.get("summary", "")) != "":
 		lines.append(String(action.get("summary", "")))
 	return "\n".join(lines)
@@ -348,7 +348,7 @@ static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, 
 static func describe_campaign_journal(profile: Dictionary, campaign_id: String) -> String:
 	return "\n".join(_campaign_journal_lines(normalize_profile(profile), campaign_id))
 
-static func describe_campaign_commander_preview(profile: Dictionary, campaign_id: String, scenario_id: String) -> String:
+static func describe_campaign_commander_preview(profile: Dictionary, campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
@@ -357,18 +357,22 @@ static func describe_campaign_commander_preview(profile: Dictionary, campaign_id
 	var session := build_session(
 		normalized,
 		scenario_id,
-		_scenario_select_rules().default_difficulty_id(),
+		difficulty,
 		campaign_id
 	)
 	if session.scenario_id == "":
 		return "Commander preview unavailable."
 	var lines := [_scenario_select_rules().describe_session_commander_preview(session)]
+	lines.append("Campaign difficulty: %s | %s" % [
+		_scenario_select_rules().difficulty_label(session.difficulty),
+		_scenario_select_rules().difficulty_summary(session.difficulty),
+	])
 	var import_bundle_summary := describe_carryover_bundle(_carryover_bundle_for_node(normalized, campaign_id, scenario_entry))
 	if import_bundle_summary != "":
 		lines.append("Carryover import: %s" % import_bundle_summary)
 	return "\n".join(lines)
 
-static func describe_campaign_operational_board(profile: Dictionary, campaign_id: String, scenario_id: String) -> String:
+static func describe_campaign_operational_board(profile: Dictionary, campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
@@ -377,14 +381,18 @@ static func describe_campaign_operational_board(profile: Dictionary, campaign_id
 	var session := build_session(
 		normalized,
 		scenario_id,
-		_scenario_select_rules().default_difficulty_id(),
+		difficulty,
 		campaign_id
 	)
 	if session.scenario_id == "":
 		return "Operational board unavailable."
-	return _describe_session_operational_board(session)
+	return "%s\nCampaign difficulty: %s | %s" % [
+		_describe_session_operational_board(session),
+		_scenario_select_rules().difficulty_label(session.difficulty),
+		_scenario_select_rules().difficulty_summary(session.difficulty),
+	]
 
-static func build_chapter_action(profile: Dictionary, campaign_id: String, scenario_id: String) -> Dictionary:
+static func build_chapter_action(profile: Dictionary, campaign_id: String, scenario_id: String, difficulty: String = "normal") -> Dictionary:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_entry := _find_scenario_entry(campaign, scenario_id)
@@ -400,10 +408,10 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 	var record := get_scenario_record(normalized, campaign_id, scenario_id)
 	var unlocked := is_scenario_unlocked(normalized, campaign_id, scenario_id)
 	if not unlocked:
-		var locked_context := _chapter_action_context(normalized, campaign_id, scenario_entry, false, record)
+		var locked_context := _chapter_action_context(normalized, campaign_id, scenario_entry, false, record, difficulty)
 		return {
 			"label": "Locked Chapter",
-			"summary": _menu_action_summary(normalized, campaign_id, scenario_entry, false, record),
+			"summary": _menu_action_summary(normalized, campaign_id, scenario_entry, false, record, difficulty),
 			"disabled": true,
 			"scenario_id": scenario_id,
 			"campaign_id": campaign_id,
@@ -421,10 +429,10 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 			label_prefix = "Replay"
 		"defeat":
 			label_prefix = "Retry"
-	var context := _chapter_action_context(normalized, campaign_id, scenario_entry, true, record)
+	var context := _chapter_action_context(normalized, campaign_id, scenario_entry, true, record, difficulty)
 	return {
 		"label": "%s %s" % [label_prefix, _chapter_heading(scenario_entry, scenario_id)],
-		"summary": _menu_action_summary(normalized, campaign_id, scenario_entry, true, record),
+		"summary": _menu_action_summary(normalized, campaign_id, scenario_entry, true, record, difficulty),
 		"disabled": false,
 		"scenario_id": scenario_id,
 		"campaign_id": campaign_id,
@@ -439,7 +447,7 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 static func describe_campaign(profile: Dictionary, campaign_id: String) -> String:
 	return describe_campaign_details(profile, campaign_id)
 
-static func build_start_action(profile: Dictionary, campaign_id: String) -> Dictionary:
+static func build_start_action(profile: Dictionary, campaign_id: String, difficulty: String = "normal") -> Dictionary:
 	var normalized := normalize_profile(profile)
 	var campaign := ContentService.get_campaign(campaign_id)
 	if not _campaign_is_player_facing(campaign):
@@ -454,7 +462,7 @@ static func build_start_action(profile: Dictionary, campaign_id: String) -> Dict
 		var final_entry := _final_scenario_entry(campaign)
 		var final_scenario_id := String(final_entry.get("scenario_id", ""))
 		if final_scenario_id != "":
-			return build_chapter_action(normalized, campaign_id, final_scenario_id)
+			return build_chapter_action(normalized, campaign_id, final_scenario_id, difficulty)
 
 	var scenario_id := first_available_scenario(normalized, campaign_id)
 	if scenario_id == "":
@@ -465,7 +473,7 @@ static func build_start_action(profile: Dictionary, campaign_id: String) -> Dict
 			"scenario_id": "",
 		}
 
-	return build_chapter_action(normalized, campaign_id, scenario_id)
+	return build_chapter_action(normalized, campaign_id, scenario_id, difficulty)
 
 static func campaign_id_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	return _campaign_id_for_session(session)
@@ -1207,13 +1215,14 @@ static func _menu_action_summary(
 	campaign_id: String,
 	scenario_entry: Dictionary,
 	unlocked: bool,
-	record: Dictionary
+	record: Dictionary,
+	difficulty: String = "normal"
 ) -> String:
 	var scenario_id := String(scenario_entry.get("scenario_id", ""))
 	var scenario := ContentService.get_scenario(scenario_id)
 	var parts := []
 	parts.append(String(scenario_entry.get("description", scenario.get("name", scenario_id))))
-	var context := _chapter_action_context(profile, campaign_id, scenario_entry, unlocked, record)
+	var context := _chapter_action_context(profile, campaign_id, scenario_entry, unlocked, record, difficulty)
 	for key in ["chapter_position", "campaign_framing", "continuity_summary"]:
 		var context_line := String(context.get(key, ""))
 		if context_line != "":
@@ -1248,21 +1257,22 @@ static func _chapter_action_context(
 	campaign_id: String,
 	scenario_entry: Dictionary,
 	unlocked: bool,
-	record: Dictionary
+	record: Dictionary,
+	difficulty: String = "normal"
 ) -> Dictionary:
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_id := String(scenario_entry.get("scenario_id", ""))
 	var chapter_position := _chapter_position_summary(campaign, scenario_entry, scenario_id)
 	var campaign_framing := _chapter_campaign_framing(profile, campaign_id, campaign, scenario_entry, scenario_id)
 	var continuity_summary := _chapter_continuity_summary(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record)
-	var readiness_summary := _chapter_readiness_summary(profile, campaign_id, scenario_entry, scenario_id, unlocked)
-	var action_consequence := _chapter_action_consequence(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record)
+	var readiness_summary := _chapter_readiness_summary(profile, campaign_id, scenario_entry, scenario_id, unlocked, difficulty)
+	var action_consequence := _chapter_action_consequence(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record, difficulty)
 	return {
 		"chapter_position": chapter_position,
 		"campaign_framing": campaign_framing,
 		"continuity_summary": continuity_summary,
 		"readiness_summary": readiness_summary,
-		"launch_handoff": _chapter_launch_handoff(campaign_id, scenario_entry, scenario_id, unlocked, record, continuity_summary, action_consequence),
+		"launch_handoff": _chapter_launch_handoff(campaign_id, scenario_entry, scenario_id, unlocked, record, continuity_summary, action_consequence, difficulty),
 		"action_consequence": action_consequence,
 	}
 
@@ -1339,14 +1349,15 @@ static func _chapter_readiness_summary(
 	campaign_id: String,
 	scenario_entry: Dictionary,
 	scenario_id: String,
-	unlocked: bool
+	unlocked: bool,
+	difficulty: String
 ) -> String:
 	if not unlocked or scenario_id == "":
 		return ""
 	var session := build_session(
 		profile,
 		scenario_id,
-		_scenario_select_rules().default_difficulty_id(),
+		difficulty,
 		campaign_id
 	)
 	if session.scenario_id == "":
@@ -1377,7 +1388,8 @@ static func _chapter_action_consequence(
 	scenario_entry: Dictionary,
 	scenario_id: String,
 	unlocked: bool,
-	record: Dictionary
+	record: Dictionary,
+	difficulty: String
 ) -> String:
 	if campaign.is_empty() or scenario_id == "":
 		return ""
@@ -1391,8 +1403,9 @@ static func _chapter_action_consequence(
 			verb = "Retrying"
 	var carryover_summary := describe_carryover_bundle(_carryover_bundle_for_node(profile, campaign_id, scenario_entry))
 	var carryover_text := "imports %s" % carryover_summary if carryover_summary != "" else "uses authored opening forces"
-	return "Action consequence: %s creates a fresh Campaign expedition on Day 1, %s, updates campaign selection, and does not load or overwrite an expedition save." % [
+	return "Action consequence: %s creates a fresh Campaign expedition on Day 1 at %s difficulty, %s, updates campaign selection, and does not load or overwrite an expedition save." % [
 		verb,
+		_scenario_select_rules().difficulty_label(difficulty),
 		carryover_text,
 	]
 
@@ -1403,7 +1416,8 @@ static func _chapter_launch_handoff(
 	unlocked: bool,
 	record: Dictionary,
 	continuity_summary: String,
-	action_consequence: String
+	action_consequence: String,
+	difficulty: String
 ) -> String:
 	if scenario_id == "":
 		return ""
@@ -1420,8 +1434,9 @@ static func _chapter_launch_handoff(
 	var consequence_text := "fresh expedition, no save load or overwrite"
 	if action_consequence.find("updates campaign selection") >= 0:
 		consequence_text = "fresh expedition, updates campaign selection, no save load or overwrite"
-	return "Launch handoff: %s starts Day 1 in Campaign mode; %s; continuity %s; %s." % [
+	return "Launch handoff: %s starts Day 1 in Campaign mode at %s difficulty; %s; continuity %s; %s." % [
 		chapter_heading,
+		_scenario_select_rules().difficulty_label(difficulty),
 		objective_line,
 		continuity_text,
 		consequence_text,

@@ -64,9 +64,20 @@ func _run() -> void:
 	if bool(chapter_action.get("disabled", true)) or String(chapter_action.get("scenario_id", "")) != START_SCENARIO_ID:
 		_fail("Selected chapter action did not target the opening chapter: %s." % JSON.stringify(chapter_action))
 		return
-	var launch_text := String(chapter_action.get("launch_handoff", "")) + "\n" + String(snapshot.get("start_chapter_tooltip", ""))
-	if launch_text.find("Campaign mode") < 0 or launch_text.find("Day 1") < 0:
-		_fail("Campaign launch handoff is missing mode/day evidence: %s." % launch_text)
+	var commander_preview := String(snapshot.get("campaign_commander_preview_full", ""))
+	var operational_board := String(snapshot.get("campaign_operational_board_full", ""))
+	for preview in [commander_preview, operational_board]:
+		if preview.find("Campaign difficulty: Warlord") < 0 or preview.find("Reduced movement and income") < 0:
+			_fail("Campaign preview did not reflect the selected Warlord pressure: %s." % preview)
+			return
+	var launch_text := "\n".join([
+		String(primary_action.get("summary", "")),
+		String(chapter_action.get("summary", "")),
+		String(snapshot.get("chapter_details_full", "")),
+		String(snapshot.get("start_chapter_tooltip", "")),
+	])
+	if launch_text.find("Campaign mode at Warlord difficulty") < 0 or launch_text.find("Day 1 at Warlord difficulty") < 0:
+		_fail("Campaign launch preview did not reflect the selected Warlord mode/day consequence: %s." % launch_text)
 		return
 	if not shell.has_method("validation_start_selected_campaign_chapter"):
 		_fail("Main menu is missing selected campaign launch validation hook.")
