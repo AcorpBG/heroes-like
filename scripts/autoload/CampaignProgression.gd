@@ -55,21 +55,21 @@ func campaign_chapter_entries(campaign_id: String = "") -> Array:
 	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
 	return CampaignRulesScript.build_campaign_chapter_entries(ensure_profile(), resolved_campaign_id)
 
-func chapter_details(campaign_id: String, scenario_id: String) -> String:
-	return CampaignRulesScript.describe_campaign_chapter(ensure_profile(), campaign_id, scenario_id)
+func chapter_details(campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
+	return CampaignRulesScript.describe_campaign_chapter(ensure_profile(), campaign_id, scenario_id, difficulty)
 
-func chapter_commander_preview(campaign_id: String, scenario_id: String) -> String:
-	return CampaignRulesScript.describe_campaign_commander_preview(ensure_profile(), campaign_id, scenario_id)
+func chapter_commander_preview(campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
+	return CampaignRulesScript.describe_campaign_commander_preview(ensure_profile(), campaign_id, scenario_id, difficulty)
 
-func chapter_operational_board(campaign_id: String, scenario_id: String) -> String:
-	return CampaignRulesScript.describe_campaign_operational_board(ensure_profile(), campaign_id, scenario_id)
+func chapter_operational_board(campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
+	return CampaignRulesScript.describe_campaign_operational_board(ensure_profile(), campaign_id, scenario_id, difficulty)
 
-func primary_campaign_action(campaign_id: String = "") -> Dictionary:
+func primary_campaign_action(campaign_id: String = "", difficulty: String = "normal") -> Dictionary:
 	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
-	return CampaignRulesScript.build_start_action(ensure_profile(), resolved_campaign_id)
+	return CampaignRulesScript.build_start_action(ensure_profile(), resolved_campaign_id, difficulty)
 
-func chapter_action(campaign_id: String, scenario_id: String) -> Dictionary:
-	return CampaignRulesScript.build_chapter_action(ensure_profile(), campaign_id, scenario_id)
+func chapter_action(campaign_id: String, scenario_id: String, difficulty: String = "normal") -> Dictionary:
+	return CampaignRulesScript.build_chapter_action(ensure_profile(), campaign_id, scenario_id, difficulty)
 
 func campaign_id_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	return CampaignRulesScript.campaign_id_for_session_bridge(session)

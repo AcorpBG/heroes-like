@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed a live campaign-flow fix: players can select campaign difficulty from the campaign board, and both campaign launch commands now carry it into runtime session and autosave summary state.",
+  "currentNotes": "Completed campaign preview alignment: commander, operational, readiness, consequence, primary/chapter action, and launch-handoff surfaces now describe the same selected difficulty used by the launched session.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-difficulty-selection-10184",
-  "currentSliceId": "campaign-difficulty-selection-10184",
-  "currentSliceNotes": "Completed. Focused campaign menu smoke selected Warlord, launched river-pass at hard difficulty in Campaign mode, and verified the runtime autosave and latest loadable summaries preserved hard difficulty; visual, campaign breadth, core, and repository regressions passed.",
+  "currentSlice": "campaign-difficulty-preview-alignment-10184",
+  "currentSliceId": "campaign-difficulty-preview-alignment-10184",
+  "currentSliceNotes": "Completed. Focused campaign smoke selected Warlord and proved all pre-launch previews/actions reflected hard pressure before launching and autosaving the matching hard Campaign session; menu visual, campaign breadth, core, and repository regressions passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Difficulty Selection",
-  "currentSliceUpdatedAt": "2026-08-02T17:12:21Z",
+  "currentSliceTitle": "Campaign Difficulty Preview Alignment",
+  "currentSliceUpdatedAt": "2026-08-02T17:23:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,53 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T17:23:01Z",
+      "completionSummary": "Campaign commander, operational, readiness, action-consequence, primary/chapter action, and launch-handoff previews now derive from the selected normalized difficulty. The focused live menu flow proves Warlord pressure text before launch and the same hard difficulty in runtime and autosave state.",
+      "completionCriteria": "Campaign commander, operational, readiness, consequence, primary-action, selected-chapter, and launch-handoff previews all derive from the selected normalized difficulty and agree with the launched session; compatibility-default callers and focused/broad regressions pass.",
+      "id": "campaign-difficulty-preview-alignment-10184",
+      "implementationTargets": [
+        "scripts/core/CampaignRules.gd",
+        "scripts/autoload/CampaignProgression.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "difficulty balance or rule changes",
+        "campaign content, chapter, encounter, or AI changes",
+        "save schema changes",
+        "generated-map campaign adoption or release-readiness claims"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md campaign difficulty preview alignment",
+      "purpose": "Make campaign pre-launch information describe the selected difficulty rather than a hidden default-difficulty session.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T17:14:37Z",
+      "status": "completed",
+      "title": "Campaign Difficulty Preview Alignment",
+      "updatedAt": "2026-08-02T17:23:01Z",
+      "validationEvidence": [
+        "PLAYER_FACING_CAMPAIGN_MENU_SMOKE selected Warlord/hard and proved commander and operational previews exposed Warlord pressure while chapter, primary-action, selected-chapter, and launch-handoff text exposed Warlord mode/day consequences before launch; runtime and autosave state retained hard difficulty.",
+        "MAP_CAMPAIGN_REPLAYABILITY_BREADTH_REPORT passed with five player-facing campaigns, chapter replay/unlock behavior, authored/skirmish separation, and generated-map non-adoption intact.",
+        "menu_outcome_visual_smoke and core_systems_regression_smoke exited 0; tests/validate_repo.py passed the repository contract suite.",
+        "Godot editor parse, jq empty ops/progress.json, and git diff --check passed."
+      ]
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",

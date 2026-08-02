@@ -251,10 +251,10 @@ func _on_chapter_selected(index: int) -> void:
 	_refresh_campaign_browser()
 
 func _on_campaign_primary_pressed() -> void:
-	_launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id))
+	_launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
 
 func _on_start_chapter_pressed() -> void:
-	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id))
+	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
 
 func _launch_campaign_action(action: Dictionary) -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -641,7 +641,7 @@ func _rebuild_campaign_chapter_browser() -> void:
 			selected_index = index
 
 	if selected_index < 0:
-		var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
+		var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
 		var primary_scenario_id := String(primary_action.get("scenario_id", ""))
 		for index in range(_campaign_chapter_entries.size()):
 			if String(_campaign_chapter_entries[index].get("scenario_id", "")) == primary_scenario_id:
@@ -684,7 +684,7 @@ func _refresh_campaign_browser() -> void:
 		ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
 	]
 
-	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
+	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
 	_campaign_primary_button.text = String(primary_action.get("label", "Advance Campaign"))
 	_campaign_primary_button.disabled = bool(primary_action.get("disabled", false))
 	_campaign_primary_button.tooltip_text = String(primary_action.get("summary", ""))
@@ -698,12 +698,12 @@ func _refresh_campaign_browser() -> void:
 		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
 		return
 
-	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
 	var chapter_check := _campaign_chapter_check_payload(chapter_action, primary_action)
 	_set_compact_label(
 		_chapter_details_label,
 		_chapter_details_with_campaign_check(
-			CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id),
+			CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty),
 			chapter_check
 		),
 		4,
@@ -711,13 +711,13 @@ func _refresh_campaign_browser() -> void:
 	)
 	_set_compact_label(
 		_campaign_commander_preview_label,
-		CampaignProgression.chapter_commander_preview(_selected_campaign_id, _selected_campaign_scenario_id),
+		CampaignProgression.chapter_commander_preview(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty),
 		4,
 		86
 	)
 	_set_compact_label(
 		_campaign_operational_board_label,
-		CampaignProgression.chapter_operational_board(_selected_campaign_id, _selected_campaign_scenario_id),
+		CampaignProgression.chapter_operational_board(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty),
 		4,
 		86
 	)
@@ -1996,8 +1996,8 @@ func _close_stage_dock_tooltip() -> String:
 	return "Dismiss this secondary board and return to the clean scenic first view."
 
 func validation_snapshot() -> Dictionary:
-	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
-	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
+	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
 	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var skirmish_front_check := _skirmish_front_check_payload(selected_skirmish_setup)
@@ -2726,7 +2726,7 @@ func validation_start_selected_campaign_chapter() -> Dictionary:
 	var requested_campaign_id := _selected_campaign_id
 	var requested_scenario_id := _selected_campaign_scenario_id
 	var requested_difficulty := _selected_difficulty
-	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id)
+	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id, requested_difficulty)
 	var action_disabled := _start_chapter_button.disabled or bool(action.get("disabled", false))
 	_on_start_chapter_pressed()
 	var active_session := SessionState.ensure_active_session()
