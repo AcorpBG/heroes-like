@@ -13,6 +13,7 @@ const TEST_VALUES := {
 	"render_quality": "low",
 	"vsync_enabled": false,
 	"frame_rate_limit": 120,
+	"battle_playback_speed": "fast",
 	"ui_scale_percent": 130,
 	"large_ui_text": true,
 	"high_contrast_ui": true,
@@ -70,10 +71,12 @@ func _run_persistence_check() -> void:
 		"source_large_ui_text": true,
 		"migrated_ui_scale_percent": SettingsService.ui_scale_percent(),
 		"migrated_color_cue_mode": SettingsService.color_cue_mode_id(),
+		"migrated_battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"runtime_content_scale_factor": get_tree().root.content_scale_factor,
 	}
 	_expect(SettingsService.ui_scale_percent() == 115, "Legacy Large Text must migrate to 115% UI scale.")
 	_expect(SettingsService.color_cue_mode_id() == SettingsService.COLOR_CUE_MODE_STANDARD, "Legacy settings must default to standard color cues.")
+	_expect(SettingsService.battle_playback_speed_id() == SettingsService.BATTLE_PLAYBACK_SPEED_NORMAL, "Legacy settings must default to Normal battle playback.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.15), "Legacy Large Text migration must apply 115% to the root window.")
 
 	SettingsService.load_settings()
@@ -92,6 +95,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_render_quality_id(String(TEST_VALUES["render_quality"]))
 	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
+	SettingsService.set_battle_playback_speed_id(String(TEST_VALUES["battle_playback_speed"]))
 	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
 	SettingsService.set_high_contrast_ui_enabled(bool(TEST_VALUES["high_contrast_ui"]))
 	SettingsService.set_color_cue_mode_id(String(TEST_VALUES["color_cue_mode"]))
@@ -146,6 +150,7 @@ func _run_persistence_check() -> void:
 	_expect(get_tree().root.msaa_2d == Viewport.MSAA_DISABLED, "Low renderer quality must disable 2D MSAA immediately.")
 	_expect(bool(direct_values.get("vsync_enabled", true)) == bool(TEST_VALUES["vsync_enabled"]), "Direct config VSync mismatch.")
 	_expect(int(direct_values.get("frame_rate_limit", -1)) == int(TEST_VALUES["frame_rate_limit"]), "Direct config frame-rate limit mismatch.")
+	_expect(String(direct_values.get("battle_playback_speed", "")) == String(TEST_VALUES["battle_playback_speed"]), "Direct config battle playback speed mismatch.")
 	var display_driver := DisplayServer.get_name()
 	var runtime_vsync_verifiable := display_driver != "headless"
 	_report["display_pacing"] = {
@@ -154,6 +159,7 @@ func _run_persistence_check() -> void:
 		"runtime_vsync_mode": DisplayServer.window_get_vsync_mode(),
 		"runtime_vsync_verifiable": runtime_vsync_verifiable,
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
+		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"runtime_max_fps": Engine.max_fps,
 	}
 	if runtime_vsync_verifiable:
@@ -216,6 +222,7 @@ func _run_persistence_check() -> void:
 		"render_quality": SettingsService.render_quality_id(),
 		"vsync_enabled": SettingsService.vsync_enabled(),
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
+		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"high_contrast_ui": SettingsService.high_contrast_ui_enabled(),
@@ -233,6 +240,7 @@ func _run_persistence_check() -> void:
 	_expect(get_tree().root.msaa_2d == Viewport.MSAA_DISABLED, "Reloaded low renderer quality must retain disabled 2D MSAA.")
 	_expect(bool(reloaded["vsync_enabled"]) == bool(TEST_VALUES["vsync_enabled"]), "Reloaded VSync mismatch.")
 	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
+	_expect(String(reloaded["battle_playback_speed"]) == String(TEST_VALUES["battle_playback_speed"]), "Reloaded battle playback speed mismatch.")
 	_expect(int(reloaded["ui_scale_percent"]) == int(TEST_VALUES["ui_scale_percent"]), "Reloaded UI scale mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
 	_expect(bool(reloaded["high_contrast_ui"]) == bool(TEST_VALUES["high_contrast_ui"]), "Reloaded high-contrast UI mismatch.")
@@ -259,6 +267,7 @@ func _read_settings_config_values() -> Dictionary:
 		"render_quality": String(config.get_value("presentation", "render_quality", "")),
 		"vsync_enabled": bool(config.get_value("presentation", "vsync_enabled", true)),
 		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
+		"battle_playback_speed": String(config.get_value("gameplay", "battle_playback_speed", "")),
 		"ui_scale_percent": int(config.get_value("accessibility", "ui_scale_percent", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"high_contrast_ui": bool(config.get_value("accessibility", "high_contrast_ui", false)),

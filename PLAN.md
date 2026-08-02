@@ -589,6 +589,22 @@ Non-goals:
 - do not change guarded-resource battle requirements;
 - do not tune strategic priorities or generated-map placement.
 
+## Persistent Battle Playback Speed
+
+The completed Phase 6 UX/accessibility slice makes battle playback speed a durable device preference instead of a per-encounter reset.
+
+Target shape:
+- Settings exposes Normal, Fast, and Instant battle playback defaults;
+- the preference persists in the device settings file and migrates older settings to Normal;
+- every opened or resumed battle adopts the device preference without changing combat math, turn order, or outcome state;
+- changing speed from the battle controls immediately updates both the active battle and the stored preference;
+- settings and battle validation prove persistence and live shell adoption.
+
+Non-goals:
+- do not change animation durations for any speed mode;
+- do not alter combat simulation, save schema, or battle outcome behavior;
+- do not redesign the battle command rail or main settings composition.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 8
+const SETTINGS_VERSION := 9
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -20,6 +20,9 @@ const RENDER_QUALITY_BALANCED := "balanced"
 const RENDER_QUALITY_HIGH := "high"
 const COLOR_CUE_MODE_STANDARD := "standard"
 const COLOR_CUE_MODE_ASSISTED := "assisted"
+const BATTLE_PLAYBACK_SPEED_NORMAL := "normal"
+const BATTLE_PLAYBACK_SPEED_FAST := "fast"
+const BATTLE_PLAYBACK_SPEED_INSTANT := "instant"
 
 const RENDER_QUALITY_OPTIONS := [
 	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
@@ -36,6 +39,12 @@ const UI_SCALE_OPTIONS := [
 const COLOR_CUE_OPTIONS := [
 	{"id": COLOR_CUE_MODE_STANDARD, "label": "Standard"},
 	{"id": COLOR_CUE_MODE_ASSISTED, "label": "Shape + Palette"},
+]
+
+const BATTLE_PLAYBACK_SPEED_OPTIONS := [
+	{"id": BATTLE_PLAYBACK_SPEED_NORMAL, "label": "Normal"},
+	{"id": BATTLE_PLAYBACK_SPEED_FAST, "label": "Fast"},
+	{"id": BATTLE_PLAYBACK_SPEED_INSTANT, "label": "Instant"},
 ]
 
 const FRAME_RATE_OPTIONS := [
@@ -164,6 +173,9 @@ func build_default_settings() -> Dictionary:
 			"vsync_enabled": true,
 			"frame_rate_limit": 0,
 		},
+		"gameplay": {
+			"battle_playback_speed": BATTLE_PLAYBACK_SPEED_NORMAL,
+		},
 		"accessibility": {
 			"ui_scale_percent": 100,
 			"large_ui_text": false,
@@ -189,6 +201,7 @@ func load_settings() -> void:
 		settings["presentation"]["render_quality"] = _normalize_render_quality(String(config.get_value("presentation", "render_quality", defaults["presentation"]["render_quality"])))
 		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
 		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
+		settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
 		var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
 		var migrated_scale := 115 if legacy_large_text else 100
 		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
@@ -215,6 +228,7 @@ func save_settings() -> String:
 	config.set_value("presentation", "render_quality", render_quality_id())
 	config.set_value("presentation", "vsync_enabled", vsync_enabled())
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
+	config.set_value("gameplay", "battle_playback_speed", battle_playback_speed_id())
 	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
@@ -301,6 +315,17 @@ func build_color_cue_options() -> Array:
 		})
 	return options
 
+func build_battle_playback_speed_options() -> Array:
+	var selected_speed := battle_playback_speed_id()
+	var options := []
+	for option in BATTLE_PLAYBACK_SPEED_OPTIONS:
+		options.append({
+			"id": String(option.get("id", BATTLE_PLAYBACK_SPEED_NORMAL)),
+			"label": String(option.get("label", "Normal")),
+			"selected": String(option.get("id", BATTLE_PLAYBACK_SPEED_NORMAL)) == selected_speed,
+		})
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
 
@@ -331,6 +356,15 @@ func frame_rate_limit_label() -> String:
 		if int(option.get("value", 0)) == frame_rate_limit():
 			return String(option.get("label", "Unlimited"))
 	return "Unlimited"
+
+func battle_playback_speed_id() -> String:
+	return _normalize_battle_playback_speed(String(ensure_settings().get("gameplay", {}).get("battle_playback_speed", BATTLE_PLAYBACK_SPEED_NORMAL)))
+
+func battle_playback_speed_label() -> String:
+	for option in BATTLE_PLAYBACK_SPEED_OPTIONS:
+		if String(option.get("id", "")) == battle_playback_speed_id():
+			return String(option.get("label", "Normal"))
+	return "Normal"
 
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
@@ -445,6 +479,11 @@ func set_frame_rate_limit(value: int) -> void:
 	settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(value)
 	_commit_settings()
 
+func set_battle_playback_speed_id(speed_id: String) -> void:
+	ensure_settings()
+	settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(speed_id)
+	_commit_settings()
+
 func set_large_ui_text_enabled(enabled: bool) -> void:
 	set_ui_scale_percent(115 if enabled else 100)
 
@@ -479,6 +518,7 @@ func describe_settings() -> String:
 		[
 			"Presentation: %s | %s | %s quality | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), render_quality_label(), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
 			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
+			"Gameplay: Battle playback %s" % battle_playback_speed_label(),
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
 		]
@@ -633,6 +673,13 @@ func _normalize_color_cue_mode(mode_id: String) -> String:
 		if String(option.get("id", COLOR_CUE_MODE_STANDARD)) == mode_id:
 			return mode_id
 	return COLOR_CUE_MODE_STANDARD
+
+func _normalize_battle_playback_speed(speed_id: String) -> String:
+	var normalized := speed_id.strip_edges().to_lower()
+	for option in BATTLE_PLAYBACK_SPEED_OPTIONS:
+		if String(option.get("id", BATTLE_PLAYBACK_SPEED_NORMAL)) == normalized:
+			return normalized
+	return BATTLE_PLAYBACK_SPEED_NORMAL
 
 func _render_quality_option(quality_id: String) -> Dictionary:
 	var normalized := _normalize_render_quality(quality_id)

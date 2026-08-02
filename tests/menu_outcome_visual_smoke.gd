@@ -565,7 +565,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("settings_handoff_tooltip", "")),
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 		],
-		["Settings handoff:", "changes apply now", "Settings Handoff", "presentation, sound, and readability", "device config", "campaign progress", "expedition saves", "Close:", "scenic first view"]
+		["Settings handoff:", "changes apply now", "Settings Handoff", "presentation, sound, gameplay, and readability", "device config", "campaign progress", "expedition saves", "Close:", "scenic first view"]
 	):
 		return false
 	for expected_id in ["1280x720", "1600x900", "1920x1080", "2560x1440"]:

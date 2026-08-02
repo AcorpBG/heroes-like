@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed current-tile strategic AI objective assignment. Idle hosts now assign an immediately claimable current-tile resource before distant saved/live plans, and bounded task-board retention prioritizes active/suspended work and recent completions ahead of regenerable planned or invalid history. The live-turn fixture proves Vaska and Sable both persist their completed resource tasks, continue to new objectives, and preserve valid-route opportunistic pickup behavior.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "strategic-ai-current-tile-resource-assignment-10184",
-  "currentSliceId": "strategic-ai-current-tile-resource-assignment-10184",
-  "currentSliceNotes": "Completed. Current-tile resource assignment runs before distant saved/live adoption for idle hosts, and status-aware board pruning retains recent completions over regenerable planned tasks at the 12-record cap. Live-turn, task lifecycle/resumption, known-world, planned-recruitment, task-boundary, core-regression, and repository validation pass.",
+  "currentNotes": "Completed durable battle playback speed preferences. Normal, Fast, and Instant now persist in device settings, the main-menu Settings board exposes the choice, every opened or resumed battle adopts it, and battle speed controls update it without changing combat simulation.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "settings-battle-playback-speed-persistence-10184",
+  "currentSliceId": "settings-battle-playback-speed-persistence-10184",
+  "currentSliceNotes": "Completed. Settings schema 9 migrates older configs to Normal and persists Normal/Fast/Instant under gameplay. Battle shells adopt the device value after battle normalization, and live speed controls persist their selected value. Focused settings, battle, menu, active-play, core, PCK, visual, and repository checks pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Current-Tile Resource Assignment",
-  "currentSliceUpdatedAt": "2026-08-02T12:25:09Z",
+  "currentSliceTitle": "Persistent Battle Playback Speed",
+  "currentSliceUpdatedAt": "2026-08-02T12:44:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,72 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/packaged_settings_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Normal, Fast, and Instant battle playback defaults persist in device settings; new and resumed battle shells adopt the configured value; battle speed controls update the stored preference immediately; focused settings, battle, menu, and repository regressions pass.",
+      "id": "settings-battle-playback-speed-persistence-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scenes/battle/BattleShell.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing combat simulation, turn order, or outcomes",
+        "changing existing playback durations",
+        "changing expedition save schema",
+        "redesigning the settings panel or battle command rail"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Persistent Battle Playback Speed",
+      "purpose": "Stop battle playback pacing from resetting every encounter and make the accessibility/tempo choice durable across launches and resumed battles.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-02T12:33:23Z",
+      "completedAt": "2026-08-02T12:44:35Z",
+      "completionSummary": "Device settings schema 9 now persists a Normal/Fast/Instant battle playback preference and migrates older configs to Normal. The existing Settings board exposes the three choices in a compact picker. New and resumed BattleShell instances synchronize their presentation-only battle field from the device preference, while live battle speed controls update both the active shell and stored preference. Focused tests prove config reload, stale battle-state override, live control persistence, menu exposure, and exported-PCK behavior without changing BattleRules timing values or simulation behavior.",
+      "status": "completed",
+      "title": "Persistent Battle Playback Speed",
+      "updatedAt": "2026-08-02T12:44:35Z",
+      "validationEvidence": {
+        "settings_schema_version": 9,
+        "legacy_default_speed": "normal",
+        "persisted_speed": "fast",
+        "menu_options": [
+          "Normal",
+          "Fast",
+          "Instant"
+        ],
+        "battle_shell_stale_state_overridden": true,
+        "battle_control_updates_device_preference": true,
+        "packaged_settings_persistence_report": "passed",
+        "battle_event_animation_state_report": "passed",
+        "main_menu_keyboard_navigation_smoke": "passed",
+        "active_play_keyboard_focus_smoke": "passed",
+        "core_systems_regression_smoke": "passed",
+        "menu_outcome_visual_smoke": "passed",
+        "packaged_settings_persistence_smoke": "passed",
+        "repository_validator": "passed",
+        "settings_board_visual_inspection_1920x1080": "passed"
+      }
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
