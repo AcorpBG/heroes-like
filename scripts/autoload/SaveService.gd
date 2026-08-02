@@ -304,11 +304,18 @@ func load_action_tooltip(summary: Dictionary) -> String:
 		return "No loadable saves are available."
 	if not can_load_summary(summary):
 		return String(summary.get("status_text", "This save cannot be resumed."))
-	return "%s\n%s\n%s\n%s" % [
-		describe_summary_next_play_action(summary),
-		describe_summary_resume_handoff(summary),
-		describe_resume_brief(summary),
-		describe_slot_details(summary),
+	var scenario_name := _safe_player_text(
+		String(summary.get("scenario_name", summary.get("scenario_id", "this expedition"))),
+		48
+	)
+	var day := int(summary.get("day", 0))
+	var timing := ""
+	if day > 0:
+		timing = " on Day %d" % day
+	return "%s%s at %s. Loading does not change any saved slot." % [
+		"Open %s" % scenario_name,
+		timing,
+		_load_destination_label(summary),
 	]
 
 func describe_session_save_recap(session: SessionStateStoreScript.SessionData) -> String:
@@ -520,22 +527,74 @@ func describe_slot(summary: Dictionary) -> String:
 func describe_slot_browser_row(summary: Dictionary) -> String:
 	var slot_label := _slot_label(summary)
 	if not bool(summary.get("valid", false)):
-		return "%s | Blocked | %s" % [slot_label, String(summary.get("status_text", "Unavailable"))]
+		return "%s | Unavailable" % slot_label
 
-	var parts := [slot_label, _summary_status_badge(summary)]
-	var cue := describe_slot_continuity_cue(summary)
-	if cue != "":
-		parts.append(cue)
+	var parts := [slot_label]
 	var scenario_name := _safe_player_text(String(summary.get("scenario_name", summary.get("scenario_id", "Unknown Scenario"))), 34)
-	var day := int(summary.get("day", 0))
-	if scenario_name != "" and day > 0:
-		parts.append("%s Day %d" % [scenario_name, day])
-	elif scenario_name != "":
+	if scenario_name != "":
 		parts.append(scenario_name)
-	elif day > 0:
+	var day := int(summary.get("day", 0))
+	if day > 0:
 		parts.append("Day %d" % day)
-	parts.append(ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))))
+	parts.append(_load_destination_label(summary))
 	return " | ".join(parts)
+
+func describe_load_preview(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "No saved expedition selected."
+	if not can_load_summary(summary):
+		return "%s\nUnavailable\n%s" % [
+			_slot_label(summary),
+			String(summary.get("status_text", "This save cannot be opened.")),
+		]
+
+	var scenario_name := _safe_player_text(
+		String(summary.get("scenario_name", summary.get("scenario_id", "Saved Expedition"))),
+		64
+	)
+	var mode_label := ScenarioSelectRulesScript.launch_mode_label(
+		String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	)
+	var difficulty_label := ScenarioSelectRulesScript.difficulty_label(
+		String(summary.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
+	)
+	var lines := [scenario_name]
+	var expedition_parts := [mode_label, difficulty_label]
+	var day := int(summary.get("day", 0))
+	if day > 0:
+		expedition_parts.append("Day %d" % day)
+	lines.append(" | ".join(expedition_parts))
+
+	var hero_name := _safe_player_text(String(summary.get("hero_name", "")), 48)
+	if hero_name != "":
+		lines.append("Commander: %s" % hero_name)
+	var modified_label := format_modified_timestamp(_summary_sort_timestamp(summary))
+	if modified_label != "":
+		lines.append("Saved: %s" % modified_label)
+	lines.append("Returns to: %s" % _load_destination_label(summary))
+
+	var session := _session_from_payload(_summary_payload(summary))
+	var next_decision := _safe_player_text(_session_next_decision_line(session, summary), 96)
+	if next_decision == "":
+		next_decision = _fallback_resume_decision(String(summary.get("resume_target", "blocked")))
+	if next_decision != "":
+		lines.append("Next: %s" % next_decision)
+	return "\n".join(lines)
+
+func _load_destination_label(summary: Dictionary) -> String:
+	var location := _safe_player_text(String(summary.get("resume_location", "")).strip_edges(), 48)
+	match String(summary.get("resume_target", "blocked")):
+		"battle":
+			return location if location != "" else "Active Battle"
+		"town":
+			return location if location != "" else "Town"
+		"outcome":
+			var result := _humanize_label(String(summary.get("scenario_status", "outcome")))
+			return "%s Review" % result if result != "" else "Result Review"
+		"overworld":
+			return "Adventure Map"
+		_:
+			return "Unavailable"
 
 func describe_slot_continuity_cue(summary: Dictionary) -> String:
 	if summary.is_empty():

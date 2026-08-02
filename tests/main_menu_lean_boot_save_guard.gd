@@ -22,7 +22,7 @@ func _run() -> void:
 	if bool(first_snapshot.get("save_browser_loaded", true)):
 		_fail("First-view boot marked the hidden save browser loaded.")
 		return
-	if not String(first_snapshot.get("active_expedition_full", first_snapshot.get("active_expedition", ""))).contains("open Load to inspect"):
+	if not String(first_snapshot.get("active_expedition_full", first_snapshot.get("active_expedition", ""))).contains("Load: choose a saved expedition"):
 		_fail("First-view footer did not use cheap Load inspection copy: %s" % String(first_snapshot.get("active_expedition_full", "")))
 		return
 	if String(first_snapshot.get("save_pulse_full", first_snapshot.get("save_pulse", ""))).contains("Latest save"):

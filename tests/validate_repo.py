@@ -11554,7 +11554,7 @@ def validate_save_management(errors: list[str]) -> None:
         "func _ensure_save_browser_loaded",
         "func _reset_save_browser_placeholder",
         "func _latest_loaded_save_summary",
-        "open Load to inspect saved expeditions",
+        "Open Load to choose a saved expedition",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing lazy save-browser boot boundary token: {required_token}")
     ensure(MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH.exists(), errors, "Missing focused main-menu lean boot save guard scene")

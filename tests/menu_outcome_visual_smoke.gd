@@ -128,12 +128,12 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_tooltips.get("Editor", "")),
 			String(first_view_tooltips.get("Quit", "")),
 		],
-		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "inspects save slots only after this command is chosen", "Load Selected", "Load Check", "Boot boundary:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
+		["Command cue:", "Campaign opens", "Skirmish opens", "Open saved expeditions", "does not overwrite any saved slot", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
 	):
 		return false
 	var continue_check: Dictionary = first_view_snapshot.get("continue_check", {}) if first_view_snapshot.get("continue_check", {}) is Dictionary else {}
 	if not _assert_text_contains_all(
-		"Main menu Load check cue",
+		"Main menu Load cue",
 		[
 			String(first_view_snapshot.get("continue_check_text", "")),
 			String(first_view_snapshot.get("continue_check_tooltip", "")),
@@ -143,7 +143,7 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("active_expedition", "")),
 			String(first_view_snapshot.get("active_expedition_full", "")),
 		],
-		["Load check:", "open Load to inspect", "Load Check", "Resume point:", "not inspected", "Boot boundary:", "does not inspect save slots", "load, save, route, or change campaign progression"]
+		["Load: choose a saved expedition", "Open saved expeditions", "Previewing", "does not change it", "does not overwrite any saved slot"]
 	):
 		return false
 	var quit_check: Dictionary = first_view_snapshot.get("quit_check", {}) if first_view_snapshot.get("quit_check", {}) is Dictionary else {}
@@ -164,13 +164,13 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu lazy save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
-		["Load board:", "open Load", "manual slots", "autosave"]
+		["Open Load", "choose a saved expedition"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu footer lazy save target",
 		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
-		["Load check:", "open Load to inspect", "Quit check:", "save first"]
+		["Load: choose a saved expedition", "Quit check:", "save first"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -371,13 +371,13 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_skirmish_setup.get("action_consequence", "")),
 			"\n".join(skirmish_browser_tooltips),
 		],
-		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Opening briefing:", "First decision:", "Skirmish", "Warlord", "Generated package", "selected generated map", "maps/", ".amap", ".ascenario", "native MapPackageService", "package-backed skirmish session", "Front context:", "Package objective:", "defeat generated rivals", "Readiness:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action boundary:", "authored JSON content"]
+		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Opening briefing:", "First decision:", "Skirmish", "Warlord", "Generated package", "Front context:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action boundary:"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu visible skirmish launch handoff",
 		[String(skirmish_snapshot.get("skirmish_setup", ""))],
-		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "Opening briefing:", "First decision:", "Generated package"]
+		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "Skirmish", "Warlord", "River Pass"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -411,27 +411,27 @@ func _run_main_menu_smoke() -> bool:
 		"Main menu selected save details",
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
+			String(save_snapshot.get("load_selected_text", "")),
 			String(save_snapshot.get("load_selected_tooltip", "")),
 			String(save_snapshot.get("selected_save_command_tooltip", "")),
-			String(save_snapshot.get("selected_save_play_check", "")),
-			String(save_snapshot.get("selected_save_resume_handoff", "")),
-			String(save_snapshot.get("selected_save_browser_cue", "")),
 			"\n".join(save_browser_item_texts),
 			"\n".join(save_browser_item_tooltips),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Overworld Resume", "Command cue:", "selected save row", "Load Selected:", "Cue:", "->", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Commander:", "Saved:", "Returns to: Adventure Map", "Next:", "Resume Expedition", "Loading does not change any saved slot"]
 	):
 		return false
-	if not _assert_text_contains_all(
-		"Main menu save command tooltip cues",
-		[
-			String(save_snapshot.get("load_selected_tooltip", "")),
-			String(save_snapshot.get("selected_save_command_tooltip", "")),
-			"\n".join(save_browser_item_tooltips),
-		],
-		["Command cue:", "selecting this row only changes", "Load Selected:", "Resume Expedition", "Play check:", "Resume handoff:"]
-	):
-		return false
+	var save_visible_copy := "\n".join([
+		String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
+		String(save_snapshot.get("load_selected_tooltip", "")),
+		String(save_snapshot.get("selected_save_command_tooltip", "")),
+		"\n".join(save_browser_item_texts),
+		"\n".join(save_browser_item_tooltips),
+	]).to_lower()
+	for forbidden in ["play check", "resume handoff", "command cue", "integrity:", "resume target:", "load state:", "cue:", "river-pass", "overworld 0,0"]:
+		if save_visible_copy.contains(forbidden):
+			push_error("Main menu save workflow exposes diagnostic copy %s: %s" % [forbidden, save_visible_copy])
+			get_tree().quit(1)
+			return false
 	if not _assert_no_score_leak(
 		"Main menu save play check",
 		[
@@ -469,7 +469,7 @@ func _run_main_menu_smoke() -> bool:
 			String(save_guide_snapshot.get("help_details_full", save_guide_snapshot.get("help_details", ""))),
 			"\n".join(save_help_item_tooltips),
 		],
-		["Back", "Return to war ledger", "saves", "Campaign unlocks and carryover live in progression data", "manual slots plus autosave", "Help handoff:", "reference only", "Topic cue:", "Selection:", "no campaign progress", "expedition save", "device setting"]
+		["Back", "Return to load expedition", "saves", "Campaign unlocks and carryover live in progression data", "manual slots plus autosave", "Help handoff:", "reference only", "Topic cue:", "Selection:", "no campaign progress", "expedition save", "device setting"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -869,7 +869,7 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter import ready:", "This victory exports:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "starts a fresh campaign chapter from recorded campaign progress", "Save first:", "Return keeps review", "Retry check:", "Outcome Retry Check", "replays this chapter from its authored opening state", "save keeps review", "current campaign record stays as recorded", "Carryover check:", "Outcome Carryover Check", "Campaign export", "next chapter ready", "Replay/new run:", "recorded campaign progress", "Manual save:", "Slot check:", "Outcome Slot Check", "Selected slot:", "Saving now:", "Outcome save check:", "Outcome Save Check", "Save target:", "Save action:", "Follow-up boundary:", "review preserved", "Manual", "Continue Latest and Load Selected can review this outcome", "State change:", "Inspection:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "still locked", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "campaign board", "Replays this chapter fresh", "Next Chapter Blocked", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter import ready:", "This victory exports:", "Follow-up check:", "Outcome Follow-up Check", "Primary follow-up:", "starts a fresh campaign chapter from recorded campaign progress", "Save first:", "Return keeps review", "Retry check:", "Outcome Retry Check", "replays this chapter from its authored opening state", "save keeps review", "current campaign record stays as recorded", "Carryover check:", "Outcome Carryover Check", "Campaign export", "next chapter ready", "Replay/new run:", "recorded campaign progress", "Manual save:", "Slot check:", "Outcome Slot Check", "Selected slot:", "Saving now:", "Outcome save check:", "Outcome Save Check", "Save target:", "Save action:", "Follow-up boundary:", "review preserved", "Manual", "Continue Latest and Load Selected can review this outcome", "State change:", "Inspection:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Post-result handoff:", "campaign progression is already recorded", "Save Outcome", "fresh campaign chapter", "Action cue:", "save first", "campaign board", "Replays this chapter fresh", "Start Chapter 2", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(

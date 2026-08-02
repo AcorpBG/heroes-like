@@ -19,8 +19,8 @@ const TAB_STAGE_COPY := {
 		"hint": "Review a single-front plan, set difficulty, and launch a fresh expedition.",
 	},
 	TAB_SAVES: {
-		"title": "War ledger",
-		"hint": "Manual slots and autosave stay in this compact load board.",
+		"title": "Load expedition",
+		"hint": "Choose a saved expedition and review exactly where play will resume.",
 	},
 	TAB_GUIDE: {
 		"title": "Field manual",
@@ -104,6 +104,7 @@ const TAB_HELP_TOPIC := {
 var _save_summaries: Array = []
 var _selected_save_key := ""
 var _save_browser_loaded := false
+var _save_load_notice := ""
 var _campaign_entries: Array = []
 var _selected_campaign_id := ""
 var _campaign_chapter_entries: Array = []
@@ -197,7 +198,7 @@ func _latest_continue_surface() -> Dictionary:
 		return {
 			"text": "Continue Latest",
 			"enabled": false,
-			"tooltip": "Open Load to inspect saved expeditions. Continue Latest resolves save metadata only when a resume action is chosen.",
+			"tooltip": "Open Load to choose a saved expedition.",
 		}
 	return {
 		"text": SaveService.continue_action_label(latest_summary),
@@ -318,12 +319,21 @@ func _on_menu_pressed() -> void:
 func _on_save_selected(index: int) -> void:
 	if index < 0 or index >= _save_summaries.size():
 		return
+	_save_load_notice = ""
 	_selected_save_key = _summary_key(_save_summaries[index])
 	_refresh_selected_save()
 
 func _on_load_selected_pressed() -> void:
-	if not AppRouter.resume_summary(_selected_summary()):
-		_refresh_menu()
+	var live_summary := SaveService.refresh_summary(_selected_summary())
+	if not SaveService.can_load_summary(live_summary):
+		_save_load_notice = "This save is no longer available. Choose another saved expedition."
+		_rebuild_save_browser()
+		_refresh_selected_save()
+		return
+	if not AppRouter.resume_summary(live_summary):
+		_save_load_notice = "This save could not be opened. Your saved slots were not changed."
+		_rebuild_save_browser()
+		_refresh_selected_save()
 
 func _on_skirmish_selected(index: int) -> void:
 	if index < 0 or index >= _skirmish_entries.size():
@@ -845,7 +855,7 @@ func _rebuild_save_browser() -> void:
 		var summary: Dictionary = _save_summaries[index]
 		var label := SaveService.describe_slot_browser_row(summary)
 		if _summary_key(summary) == latest_key and SaveService.can_load_summary(summary):
-			label = "%s | Latest" % label
+			label = "Latest | %s" % label
 		_save_list.add_item(label)
 		_save_list.set_item_tooltip(index, _save_browser_row_tooltip(summary))
 		if _summary_key(summary) == _selected_save_key:
@@ -865,22 +875,16 @@ func _rebuild_save_browser() -> void:
 func _refresh_selected_save() -> void:
 	var summary := _selected_summary()
 	if summary.is_empty():
-		_set_compact_label(_save_details_label, "No loadable expeditions are stored.", 3, 84)
+		var empty_text := _save_load_notice if _save_load_notice != "" else "No saved expeditions are available."
+		_set_compact_label(_save_details_label, empty_text, 3, 84)
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
 		return
 
-	var next_play_action := SaveService.describe_summary_next_play_action(summary)
-	var play_check := SaveService.describe_summary_play_check(summary)
-	var resume_handoff := SaveService.describe_summary_resume_handoff(summary)
-	var details := SaveService.describe_slot_details(summary)
-	if resume_handoff != "":
-		details = "%s\n%s" % [resume_handoff, details]
-	if play_check != "":
-		details = "%s\n%s" % [play_check, details]
-	if next_play_action != "":
-		details = "%s\n%s" % [next_play_action, details]
+	var details := SaveService.describe_load_preview(summary)
+	if _save_load_notice != "":
+		details = "%s\n\n%s" % [_save_load_notice, details]
 	_set_compact_label(_save_details_label, details, 6, 88)
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
@@ -888,31 +892,13 @@ func _refresh_selected_save() -> void:
 
 func _save_browser_row_tooltip(summary: Dictionary) -> String:
 	if summary.is_empty():
-		return "Command cue: select a save row to inspect its resume target before loading."
-	var lines := [
-		"Command cue: selecting this row only changes the inspected save.",
-		SaveService.describe_slot_continuity_cue(summary),
-		SaveService.describe_summary_play_check(summary),
-		SaveService.describe_summary_resume_handoff(summary),
-	]
-	if SaveService.can_load_summary(summary):
-		lines.append("Load Selected: %s opens this saved state." % SaveService.load_action_label(summary))
-	else:
-		lines.append("Load Selected: unavailable until a loadable save row is selected.")
-	return _join_nonempty_lines(lines)
+		return "Select a saved expedition to preview it."
+	return SaveService.load_action_tooltip(summary)
 
 func _selected_save_command_tooltip(summary: Dictionary) -> String:
 	if summary.is_empty():
-		return "Command cue: select a loadable save row before loading."
-	var lines := [
-		"Command cue: %s acts on the selected save row only." % SaveService.load_action_label(summary),
-		SaveService.describe_summary_play_check(summary),
-		SaveService.describe_summary_resume_handoff(summary),
-	]
-	var load_tooltip := SaveService.load_action_tooltip(summary).strip_edges()
-	if load_tooltip != "":
-		lines.append(load_tooltip)
-	return _join_nonempty_lines(lines)
+		return "Select an available saved expedition first."
+	return SaveService.load_action_tooltip(summary)
 
 func _default_selected_save_index() -> int:
 	var latest_key := _summary_key(_latest_loaded_save_summary())
@@ -957,7 +943,7 @@ func _reset_save_browser_placeholder() -> void:
 	if _save_list != null:
 		_save_list.clear()
 	if _save_details_label != null:
-		_set_compact_label(_save_details_label, "Open Load to inspect saved expeditions.", 3, 84)
+		_set_compact_label(_save_details_label, "Open Load to choose a saved expedition.", 3, 84)
 	if _load_selected_button != null:
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
@@ -1624,26 +1610,13 @@ func _build_campaign_pulse() -> String:
 func _build_save_pulse() -> String:
 	var latest_summary := _active_save_board_latest_summary()
 	if latest_summary.is_empty():
-		return "Load board: open Load to inspect manual slots and autosave."
-	var latest_line := "No active resume point."
-	var play_check := ""
-	if SaveService.can_load_summary(latest_summary):
-		latest_line = "Continue Latest: %s | %s" % [
-			SaveService.describe_resume_brief(latest_summary),
-			SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
-		]
-		play_check = SaveService.describe_summary_play_check(latest_summary)
-	var resume_handoff := SaveService.describe_summary_resume_handoff(latest_summary) if SaveService.can_load_summary(latest_summary) else ""
-
-	var lines := [
-		"Manual %d + autosave" % SaveService.get_manual_slot_ids().size(),
-		latest_line,
+		return "Open Load to choose a saved expedition."
+	if not SaveService.can_load_summary(latest_summary):
+		return "No saved expedition is ready to resume."
+	return "Latest: %s | %s" % [
+		SaveService.describe_resume_brief(latest_summary),
+		SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
 	]
-	if play_check != "":
-		lines.append(play_check)
-	if resume_handoff != "":
-		lines.append(resume_handoff)
-	return "\n".join(lines)
 
 func _build_footer_expedition_summary() -> String:
 	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
@@ -1652,8 +1625,6 @@ func _build_footer_expedition_summary() -> String:
 	var latest_summary := _active_save_board_latest_summary()
 	if SaveService.can_load_summary(latest_summary):
 		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
-		lines.append(SaveService.describe_summary_play_check(latest_summary))
-		lines.append(SaveService.describe_summary_resume_handoff(latest_summary))
 	return "\n".join(lines)
 
 func _select_menu_tab(index: int) -> void:
@@ -1720,18 +1691,12 @@ func _continue_check_surface() -> Dictionary:
 	var latest_summary := _active_save_board_latest_summary()
 	if not SaveService.can_load_summary(latest_summary):
 		return {
-			"visible_text": "Load check: open Load to inspect saved expeditions.",
-			"tooltip_text": "Load Check\n- Resume point: not inspected on the first-view menu.\n- Next: open Load to inspect saves, or start Campaign or Skirmish for a fresh expedition.\n- Boot boundary: reading this cue does not inspect save slots, load, save, route, or change campaign progression.",
+			"visible_text": "Load: choose a saved expedition.",
+			"tooltip_text": "Open saved expeditions. Previewing a save does not change it.",
 		}
 	var resume_label := SaveService.describe_resume_brief(latest_summary)
-	var play_check := SaveService.describe_summary_play_check(latest_summary)
-	var resume_handoff := SaveService.describe_summary_resume_handoff(latest_summary)
-	var visible := "Continue check: Continue Latest opens %s." % resume_label
-	var tooltip := "Continue Check\n- Action: Continue Latest loads %s.\n- %s\n- %s\n- Inspection: reading this cue or opening the menu does not load, save, route, or change campaign progression." % [
-		resume_label,
-		play_check,
-		resume_handoff,
-	]
+	var visible := "Latest: %s." % resume_label
+	var tooltip := SaveService.load_action_tooltip(latest_summary)
 	return {
 		"visible_text": visible,
 		"tooltip_text": tooltip,
@@ -2405,13 +2370,7 @@ func _sync_first_view_command_tooltips() -> void:
 	)
 
 func _first_view_load_tooltip() -> String:
-	var lines := [
-		"Command cue: Load opens the war ledger and inspects save slots only after this command is chosen.",
-		"Load Selected stays unavailable until a save row is inspected and selected.",
-	]
-	lines.append(String(_continue_check_surface().get("tooltip_text", "")))
-	lines.append("No save summary is read for this first-view tooltip.")
-	return "\n".join(lines)
+	return "Open saved expeditions. Previewing or loading from this menu does not overwrite any saved slot."
 
 func _help_topic_for_tab(tab_index: int) -> String:
 	return String(TAB_HELP_TOPIC.get(tab_index, SettingsService.default_help_topic_id()))
