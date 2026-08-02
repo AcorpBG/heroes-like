@@ -1441,7 +1441,7 @@ func _run_battle_hex_occupancy_legality_regression() -> bool:
 		get_tree().quit(1)
 		return false
 	var blocked_target_context := BattleRules.describe_target_context(session).to_lower()
-	if "selected target blocked" not in blocked_target_context or "highlighted enemy" not in blocked_target_context or "green hex click" not in blocked_target_context:
+	if "selected target blocked" not in blocked_target_context or "highlighted enemy" not in blocked_target_context or "move hex" not in blocked_target_context:
 		push_error("Core systems smoke: blocked selected target context was not explicit: %s." % blocked_target_context)
 		get_tree().quit(1)
 		return false
@@ -1453,13 +1453,13 @@ func _run_battle_hex_occupancy_legality_regression() -> bool:
 		return false
 	var blocked_action_surface: Dictionary = BattleRules.get_action_surface(session)
 	var strike_summary := String(blocked_action_surface.get("strike", {}).get("summary", "")).to_lower()
-	if "blocked" not in strike_summary or "highlighted enemy" not in strike_summary or "green hex click" not in strike_summary:
+	if "blocked" not in strike_summary or "highlighted enemy" not in strike_summary or "move hex" not in strike_summary:
 		push_error("Core systems smoke: blocked selected target strike guidance was not explicit: %s." % strike_summary)
 		get_tree().quit(1)
 		return false
 	var blocked_action_text := BattleRules.describe_action_surface(session).to_lower()
-	if "green hex click: move" not in blocked_action_text:
-		push_error("Core systems smoke: action context did not expose green-hex Move intent while target was blocked: %s." % blocked_action_text)
+	if "move hex click: move" not in blocked_action_text:
+		push_error("Core systems smoke: action context did not expose move-hex Move intent while target was blocked: %s." % blocked_action_text)
 		get_tree().quit(1)
 		return false
 	BattleRules.cycle_target(session, 1)
@@ -1491,13 +1491,13 @@ func _run_battle_hex_occupancy_legality_regression() -> bool:
 		return false
 	var setup_case := _stage_later_attack_destination_for_test(session.battle, player_id, enemy_id)
 	if setup_case.is_empty():
-		push_error("Core systems smoke: could not stage a green-hex destination that truthfully sets up a later attack.")
+		push_error("Core systems smoke: could not stage a move-hex destination that truthfully sets up a later attack.")
 		get_tree().quit(1)
 		return false
 	var destination: Dictionary = setup_case.get("destination", {})
 	var movement_intent: Dictionary = setup_case.get("intent", {})
 	var movement_message := String(movement_intent.get("message", "")).to_lower()
-	if String(movement_intent.get("action", "")) != "move" or String(movement_intent.get("label", "")) != "Move" or "green hex click: move" not in movement_message:
+	if String(movement_intent.get("action", "")) != "move" or String(movement_intent.get("label", "")) != "Move" or "move hex click: move" not in movement_message:
 		push_error("Core systems smoke: legal movement destination did not expose Move board-click intent: %s." % movement_intent)
 		get_tree().quit(1)
 		return false

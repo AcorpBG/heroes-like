@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the shared high-contrast UI implementation: SettingsService v7 persists the preference, FrontierVisualKit supplies solid near-black surfaces with bright text, borders, selections, and focus treatment, the menu reapplies it immediately, and active gameplay shells inherit it. Color-vision coverage, clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete.",
+  "currentNotes": "Completed the color-cue assist implementation. SettingsService v8 persists Standard or Shape + Palette; assisted mode applies a blue/cyan versus orange semantic palette, battle stack side marks, overworld town pennant shapes, and color-independent move-hex wording while preserving terrain and faction art. Clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-accessibility-high-contrast-ui-10184",
-  "currentSliceId": "settings-accessibility-high-contrast-ui-10184",
-  "currentSliceNotes": "Completed. Version-7 persistence, shared VisualKit high-contrast behavior, immediate live menu restyling, 130-percent scaling compatibility, active-shell inheritance, and exported-PCK persistence all passed.",
+  "currentSlice": "settings-accessibility-color-cue-assist-10184",
+  "currentSliceId": "settings-accessibility-color-cue-assist-10184",
+  "currentSliceNotes": "Completed. Schema-v8 persistence, live menu selection, shared semantic styling, redundant battle/overworld ownership marks, color-independent tactical wording, 130-percent high-contrast layout, active shells, and exported-PCK persistence all passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility High Contrast UI",
-  "currentSliceUpdatedAt": "2026-08-02T09:48:19Z",
+  "currentSliceTitle": "Accessibility Color Cue Assist",
+  "currentSliceUpdatedAt": "2026-08-02T10:18:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -37266,6 +37266,106 @@
         "sliceId": "accessibility-active-play-focus-navigation-10184",
         "status": "passed",
         "updatedAt": "2026-08-02T06:23:19Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+        "MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A version-8 color-cue preference persists and reloads, switches shared semantic success/danger styling to a red/green-safe palette, adds redundant side marks to battle stacks and ownership marks to overworld towns, reapplies the live menu immediately, remains usable at 130-percent UI scaling and with high contrast, and passes active-shell plus exported-PCK validation.",
+      "id": "settings-accessibility-color-cue-assist-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/battle_layout_smoke.gd"
+      ],
+      "nonGoals": [
+        "recoloring terrain or faction art",
+        "claiming medical color-vision simulation certification",
+        "claiming final accessibility or release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Keep ownership, side, success, and danger cues readable without depending on red/green discrimination while preserving the original world-art palette.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T09:52:07Z",
+      "status": "completed",
+      "summary": "Completed. Players can persist Standard or Shape + Palette cues; assisted mode uses a blue/cyan versus orange semantic palette, distinct battle-stack side marks, distinct overworld-town pennants, and color-independent movement wording without recoloring terrain or faction art.",
+      "title": "Accessibility Color Cue Assist",
+      "updatedAt": "2026-08-02T10:18:21Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+          "python3 tests/packaged_settings_persistence_smoke.py",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/battle_layout_smoke.tscn",
+          "COLOR_CUE_CAPTURE=1 godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact godot4 --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "settings_schema_version": 8,
+          "legacy_version_5_color_cue_default": "standard",
+          "persisted_and_reloaded_mode": "assisted",
+          "menu_options": [
+            "Standard",
+            "Shape + Palette"
+          ],
+          "live_menu_restyle_passed": true,
+          "assisted_success_color": "(0.42, 0.92, 1.0, 1.0)",
+          "assisted_danger_color": "(1.0, 0.72, 0.24, 1.0)",
+          "assisted_player_color": "(0.0, 0.45, 0.7, 1.0)",
+          "assisted_enemy_color": "(0.9, 0.36, 0.0, 1.0)",
+          "battle_side_marks": [
+            "player_circle_P",
+            "enemy_triangle_E"
+          ],
+          "overworld_town_owner_marks": [
+            "player_rectangle_dot",
+            "enemy_triangle_cross",
+            "neutral_diamond_bar"
+          ],
+          "battle_green_hex_player_wording_remaining": 0,
+          "terrain_and_faction_art_palette_unchanged": true,
+          "ui_scale_percent": 130,
+          "high_contrast_combination_passed": true,
+          "main_menu_capture": ".artifacts/main_menu_keyboard_navigation_smoke/settings_entry_focus.png",
+          "battle_capture": ".artifacts/color_cue_accessibility/battle_color_cues.png",
+          "overworld_capture": ".artifacts/color_cue_accessibility/overworld_color_cues.png",
+          "visual_check": "The inspected 1280x720 settings capture shows two clean readability rows at 130-percent scaling; active battle and overworld captures show distinct shape marks, blue/orange ownership colors, and color-independent movement guidance without overlap.",
+          "exported_pack_size_bytes": 185227072,
+          "remaining_debt": "Medical color-vision simulation certification is not claimed. Clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete."
+        },
+        "sliceId": "settings-accessibility-color-cue-assist-10184",
+        "status": "passed_runtime_rendered_active_shell_and_packaged_color_cue_assist",
+        "updatedAt": "2026-08-02T10:18:21Z"
       }
     },
     {

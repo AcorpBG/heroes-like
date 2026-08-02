@@ -1393,7 +1393,7 @@ static func selected_target_continuity_context(battle: Dictionary) -> Dictionary
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
 			blocked_message = "Preserved setup target: %s is still blocked from this hex; highlighted enemies can attack now, or move again to keep setting it up." % target_label
 		else:
-			blocked_message = "Preserved setup target: %s is still blocked from this hex; green hex movement is still needed." % target_label
+			blocked_message = "Preserved setup target: %s is still blocked from this hex; movement is still needed." % target_label
 		context["emphasis"] = "blocked"
 		context["footer_label"] = "Setup: blocked"
 		context["message"] = blocked_message
@@ -1462,7 +1462,7 @@ static func selected_target_closing_context(battle: Dictionary) -> Dictionary:
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
 			blocked_message = "Closing on target: %s moved closer to %s; target is still blocked here, but highlighted enemies can attack now." % [mover_label, target_label]
 		else:
-			blocked_message = "Closing on target: %s moved closer to %s; target is still blocked here, so green hex movement continues the approach." % [mover_label, target_label]
+			blocked_message = "Closing on target: %s moved closer to %s; target is still blocked here, so another move continues the approach." % [mover_label, target_label]
 		context["emphasis"] = "blocked"
 		context["footer_label"] = "Closing: blocked"
 		context["message"] = blocked_message
@@ -1482,10 +1482,10 @@ static func active_movement_board_click_intent(battle: Dictionary) -> Dictionary
 	var intent := _movement_intent_skeleton(battle, active_stack, {})
 	intent["destination_count"] = destinations.size()
 	if battle.is_empty():
-		intent["message"] = "Green hex click: no battle is active."
+		intent["message"] = "Move hex click: no battle is active."
 		return intent
 	if active_stack.is_empty():
-		intent["message"] = "Green hex click: no stack is ready to move."
+		intent["message"] = "Move hex click: no stack is ready to move."
 		return intent
 	if String(active_stack.get("side", "")) != "player":
 		intent["message"] = "It is not the player's turn."
@@ -1506,22 +1506,22 @@ static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) 
 	var destination := _hex_cell(q, r) if _hex_in_bounds(q, r) else {}
 	var intent := _movement_intent_skeleton(battle, active_stack, destination)
 	if battle.is_empty():
-		intent["message"] = "Green hex click: no battle is active."
+		intent["message"] = "Move hex click: no battle is active."
 		return intent
 	if active_stack.is_empty():
-		intent["message"] = "Green hex click: no stack is ready to move."
+		intent["message"] = "Move hex click: no stack is ready to move."
 		return intent
 	if String(active_stack.get("side", "")) != "player":
 		intent["message"] = "It is not the player's turn."
 		return intent
 	if destination.is_empty():
 		intent["blocked"] = true
-		intent["message"] = "Green hex click blocked: that hex is outside the battlefield."
+		intent["message"] = "Move hex click blocked: that hex is outside the battlefield."
 		return intent
 	var legal_destination := _legal_destination_for_stack(battle, active_stack, destination)
 	if legal_destination.is_empty():
 		intent["blocked"] = true
-		intent["message"] = "Green hex click blocked: %s is not a legal move destination for %s." % [
+		intent["message"] = "Move hex click blocked: %s is not a legal move destination for %s." % [
 			_hex_label(destination),
 			_stack_label(active_stack),
 		]
@@ -1701,8 +1701,8 @@ static func _movement_intent_message(
 	var legal_attack_count := _legal_attack_target_ids_for_active_stack(battle).size()
 	if destination_count <= 0:
 		if selected_blocked:
-			return "Green hex click blocked: no legal move is available; %s stays blocked from this hex." % _stack_label(selected_target)
-		return "Green hex click blocked: no legal movement hex is available for %s." % active_label
+			return "Move hex click blocked: no legal move is available; %s stays blocked from this hex." % _stack_label(selected_target)
+		return "Move hex click blocked: no legal movement hex is available for %s." % active_label
 
 	var destination_phrase := "a highlighted hex"
 	if not destination.is_empty():
@@ -1711,35 +1711,35 @@ static func _movement_intent_message(
 	if selected_blocked:
 		var target_setup := _movement_target_setup_for_destination(battle, active_stack, destination)
 		if not destination.is_empty() and bool(target_setup.get("sets_up_attack", false)):
-			return "Green hex click: Move %s to %s; sets up a later %s on %s." % [
+			return "Move hex click: Move %s to %s; sets up a later %s on %s." % [
 				active_label,
 				destination_phrase,
 				String(target_setup.get("label", "attack")),
 				_stack_label(selected_target),
 			]
 		if not destination.is_empty() and bool(target_setup.get("closes_on_target", false)):
-			return "Green hex click: Move %s to %s; closes toward blocked %s." % [
+			return "Move hex click: Move %s to %s; closes toward blocked %s." % [
 				active_label,
 				destination_phrase,
 				_stack_label(selected_target),
 			]
 		if not destination.is_empty():
-			return "Green hex click: Move %s to %s; %s remains blocked from there." % [
+			return "Move hex click: Move %s to %s; %s remains blocked from there." % [
 				active_label,
 				destination_phrase,
 				_stack_label(selected_target),
 			]
 		if legal_attack_count > 0:
-			return "Green hex click: Move %s to %s; highlighted enemies attack now, blocked targets need movement." % [
+			return "Move hex click: Move %s to %s; highlighted enemies attack now, blocked targets need movement." % [
 				active_label,
 				destination_phrase,
 			]
-		return "Green hex click: Move %s to %s toward %s." % [
+		return "Move hex click: Move %s to %s toward %s." % [
 			active_label,
 			destination_phrase,
 			_stack_label(selected_target),
 		]
-	return "Green hex click: Move %s to %s." % [active_label, destination_phrase]
+	return "Move hex click: Move %s to %s." % [active_label, destination_phrase]
 
 static func _attack_legality_for_target(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or target.is_empty():
@@ -2369,7 +2369,7 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 	var closing_context := selected_target_closing_context(battle)
 	var board_click_line := String(click_intent.get("message", ""))
 	if board_click_line == "":
-		board_click_line = "Board click: highlighted enemy attacks now; green hex moves."
+		board_click_line = "Board click: highlighted enemy attacks now; outlined move hexes reposition."
 	if not continuity_context.is_empty():
 		board_click_line = String(continuity_context.get("message", board_click_line))
 	elif not closing_context.is_empty():
@@ -2441,7 +2441,7 @@ static func target_handoff_cue_payload(session: SessionStateStoreScript.SessionD
 		elif not closing_context.is_empty():
 			board_line = String(closing_context.get("message", board_line))
 		if board_line == "":
-			board_line = "Board click: highlighted enemy attacks now; green hex moves."
+			board_line = "Board click: highlighted enemy attacks now; outlined move hexes reposition."
 		move_line = String(movement_intent.get("message", ""))
 		var click_action := String(click_intent.get("action", ""))
 		var click_label := String(click_intent.get("label", "")).strip_edges()
@@ -2451,7 +2451,7 @@ static func target_handoff_cue_payload(session: SessionStateStoreScript.SessionD
 				click_label.to_lower(),
 			]
 		elif String(movement_intent.get("action", "")) == "move":
-			visible = "Target handoff: %s | Try: click green hex to move." % target_label
+			visible = "Target handoff: %s | Try: click move hex to move." % target_label
 		else:
 			visible = "Target handoff: %s | Try: cycle or use a ready order." % target_label
 
@@ -2836,8 +2836,8 @@ static func _manual_battle_action_cue(actions: Dictionary, click_intent: Diction
 	if String(movement_intent.get("action", "")) == "move":
 		var ready_after_move := _first_ready_action_label(actions, ["strike", "shoot", "advance", "defend"])
 		if ready_after_move != "":
-			return "Try: click a green hex to move, or click %s." % ready_after_move
-		return "Try: click a green hex to move this stack."
+			return "Try: click a move hex to move, or click %s." % ready_after_move
+		return "Try: click a move hex to move this stack."
 
 	var ready_action := _first_ready_action_label(actions, ["strike", "shoot", "advance", "defend", "retreat", "surrender"])
 	if ready_action != "":
@@ -3522,8 +3522,8 @@ static func _attack_unavailable_summary(attacker: Dictionary, target: Dictionary
 		return "%s is outside melee reach; Shoot is the legal order from this hex." % target_label
 	if bool(legality.get("blocked", false)):
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
-			return "%s is blocked for Strike from this hex; click a highlighted enemy to attack now, or green hex click moves for later reach." % target_label
-		return "%s is blocked for Strike from this hex; green hex click moves toward attack range." % target_label
+			return "%s is blocked for Strike from this hex; click a highlighted enemy to attack now, or click a move hex for later reach." % target_label
+		return "%s is blocked for Strike from this hex; click a move hex to approach attack range." % target_label
 	return "Close the distance or secure a target before striking."
 
 static func _target_focus_action_line(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
@@ -3566,19 +3566,19 @@ static func _target_legality_line(active_stack: Dictionary, target: Dictionary, 
 		return "Target legality: board click will %s %s now." % [action_label, _stack_label(target)]
 	if bool(legality.get("blocked", false)):
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
-			return "Selected target blocked: this hex cannot attack %s; click a highlighted enemy to attack now, or green hex click moves for later reach." % _stack_label(target)
-		return "Selected target blocked: this hex cannot attack %s; green hex click moves toward attack range." % _stack_label(target)
+			return "Selected target blocked: this hex cannot attack %s; click a highlighted enemy to attack now, or click a move hex for later reach." % _stack_label(target)
+		return "Selected target blocked: this hex cannot attack %s; click a move hex to approach attack range." % _stack_label(target)
 	return ""
 
 static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> String:
 	var distance = int(battle.get("distance", 1))
 	if distance <= 0:
-		return "Reposition on the engaged line; green hex clicks choose the exact Move destination."
+		return "Reposition on the engaged line; move hex clicks choose the exact Move destination."
 	var distance_delta = _advance_distance_delta(stack, battle)
 	var next_distance = max(0, distance - distance_delta)
 	var clauses = []
 	if not legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))).is_empty():
-		clauses.append("green hex clicks choose exact movement")
+		clauses.append("move hex clicks choose exact movement")
 	if distance_delta > 0:
 		clauses.append("Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)])
 	else:
@@ -4854,7 +4854,7 @@ static func _action_range_line(action_id: String, active_stack: Dictionary, targ
 			var destinations := legal_destinations_for_active_stack(battle)
 			if destinations.is_empty() and int(battle.get("distance", 1)) <= 0:
 				return "No move lane"
-			return "%s | %d green hex%s" % [
+			return "%s | %d move hex%s" % [
 				_distance_label(int(battle.get("distance", 1))),
 				destinations.size(),
 				"" if destinations.size() == 1 else "es",
@@ -9914,8 +9914,8 @@ static func _engagement_preview(active_stack: Dictionary, target: Dictionary, ba
 		if action_label != "":
 			return "Board click will %s %s now." % [action_label, _stack_label(target)]
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
-			return "%s is blocked from this hex; click a highlighted enemy to attack, or green hex click moves." % _stack_label(target)
-		return "Green hex movement is needed before %s can be reached." % _stack_label(target)
+			return "%s is blocked from this hex; click a highlighted enemy to attack, or click a move hex to reposition." % _stack_label(target)
+		return "Movement is needed before %s can be reached." % _stack_label(target)
 	return "%s is threatening %s." % [_stack_label(active_stack), _stack_label(target)]
 
 static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_active: bool) -> String:

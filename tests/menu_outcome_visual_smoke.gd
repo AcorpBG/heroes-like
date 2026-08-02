@@ -1,5 +1,7 @@
 extends Node
 
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 func _ready() -> void:
 	call_deferred("_run")
 
@@ -15,6 +17,7 @@ func _run_main_menu_smoke() -> bool:
 	var original_render_quality := SettingsService.render_quality_id()
 	var original_ui_scale := SettingsService.ui_scale_percent()
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
+	var original_color_cue_mode := SettingsService.color_cue_mode_id()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -525,7 +528,8 @@ func _run_main_menu_smoke() -> bool:
 	var render_quality_picker = shell.get_node_or_null("%RenderQualityPicker")
 	var ui_scale_picker = shell.get_node_or_null("%UIScalePicker")
 	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton):
+	var color_cue_picker = shell.get_node_or_null("%ColorCuePicker")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -539,6 +543,12 @@ func _run_main_menu_smoke() -> bool:
 	for expected_label in ["100%", "115%", "130%"]:
 		if not ui_scale_items.has(expected_label):
 			push_error("Main menu smoke: UI-scale picker omitted %s: %s." % [expected_label, ui_scale_items])
+			get_tree().quit(1)
+			return false
+	var color_cue_items: Array = settings_snapshot.get("color_cue_picker_items", []) if settings_snapshot.get("color_cue_picker_items", []) is Array else []
+	for expected_label in ["Standard", "Shape + Palette"]:
+		if not color_cue_items.has(expected_label):
+			push_error("Main menu smoke: color-cue picker omitted %s: %s." % [expected_label, color_cue_items])
 			get_tree().quit(1)
 			return false
 	var frame_rate_items: Array = settings_snapshot.get("frame_rate_picker_items", []) if settings_snapshot.get("frame_rate_picker_items", []) is Array else []
@@ -611,6 +621,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
+			String(settings_snapshot.get("color_cue_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
@@ -637,6 +648,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
+			String(settings_snapshot.get("color_cue_tooltip", "")),
 		]
 	):
 		if original_resolution != "1600x900":
@@ -658,6 +670,27 @@ func _run_main_menu_smoke() -> bool:
 		if not original_high_contrast:
 			shell.call("validation_set_high_contrast", false)
 		push_error("Main menu smoke: high-contrast mode did not apply solid dark controls, bright borders, and a strong focus ring: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	if not bool(shell.call("validation_select_color_cue_mode", "assisted")):
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: color-cue picker could not enable shape and palette assistance.")
+		get_tree().quit(1)
+		return false
+	settings_snapshot = shell.call("validation_snapshot")
+	var assisted_green: Color = FrontierVisualKitScript.text_color("green")
+	var assisted_red: Color = FrontierVisualKitScript.text_color("red")
+	if String(settings_snapshot.get("color_cue_mode", "")) != "assisted" or not String(settings_snapshot.get("settings_summary_full", "")).contains("Color cues Shape + Palette") or assisted_green.b <= assisted_green.r or assisted_red.r <= assisted_red.g or assisted_red.g <= assisted_red.b:
+		if original_color_cue_mode != "assisted":
+			shell.call("validation_select_color_cue_mode", original_color_cue_mode)
+		if not original_high_contrast:
+			shell.call("validation_set_high_contrast", false)
+		push_error("Main menu smoke: assisted color cues did not apply blue/cyan success and orange danger styling: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	if original_color_cue_mode != "assisted" and not bool(shell.call("validation_select_color_cue_mode", original_color_cue_mode)):
+		push_error("Main menu smoke: color-cue picker could not restore %s." % original_color_cue_mode)
 		get_tree().quit(1)
 		return false
 	if not original_high_contrast and not bool(shell.call("validation_set_high_contrast", false)):

@@ -16,6 +16,7 @@ const TEST_VALUES := {
 	"ui_scale_percent": 130,
 	"large_ui_text": true,
 	"high_contrast_ui": true,
+	"color_cue_mode": "assisted",
 	"reduce_motion": true,
 }
 
@@ -68,9 +69,11 @@ func _run_persistence_check() -> void:
 		"source_version": 5,
 		"source_large_ui_text": true,
 		"migrated_ui_scale_percent": SettingsService.ui_scale_percent(),
+		"migrated_color_cue_mode": SettingsService.color_cue_mode_id(),
 		"runtime_content_scale_factor": get_tree().root.content_scale_factor,
 	}
 	_expect(SettingsService.ui_scale_percent() == 115, "Legacy Large Text must migrate to 115% UI scale.")
+	_expect(SettingsService.color_cue_mode_id() == SettingsService.COLOR_CUE_MODE_STANDARD, "Legacy settings must default to standard color cues.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.15), "Legacy Large Text migration must apply 115% to the root window.")
 
 	SettingsService.load_settings()
@@ -91,6 +94,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
 	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
 	SettingsService.set_high_contrast_ui_enabled(bool(TEST_VALUES["high_contrast_ui"]))
+	SettingsService.set_color_cue_mode_id(String(TEST_VALUES["color_cue_mode"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
 	var saved_path := SettingsService.save_settings()
 	_report["saved_path"] = saved_path
@@ -99,6 +103,7 @@ func _run_persistence_check() -> void:
 
 	var direct_values := _read_settings_config_values()
 	_report["direct_config_values"] = direct_values
+	_expect(int(direct_values.get("version", 0)) == SettingsService.SETTINGS_VERSION, "Direct config settings version mismatch.")
 	_expect(int(direct_values.get("master_volume_percent", -1)) == int(TEST_VALUES["master_volume_percent"]), "Direct config master volume mismatch.")
 	_expect(int(direct_values.get("music_volume_percent", -1)) == int(TEST_VALUES["music_volume_percent"]), "Direct config music volume mismatch.")
 	_expect(int(direct_values.get("effects_volume_percent", -1)) == int(TEST_VALUES["effects_volume_percent"]), "Direct config effects volume mismatch.")
@@ -157,6 +162,7 @@ func _run_persistence_check() -> void:
 	_expect(int(direct_values.get("ui_scale_percent", -1)) == int(TEST_VALUES["ui_scale_percent"]), "Direct config UI scale mismatch.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
 	_expect(bool(direct_values.get("high_contrast_ui", false)) == bool(TEST_VALUES["high_contrast_ui"]), "Direct config high-contrast UI mismatch.")
+	_expect(String(direct_values.get("color_cue_mode", "")) == String(TEST_VALUES["color_cue_mode"]), "Direct config color-cue mode mismatch.")
 	_report["accessibility_scaling"] = {
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"compatibility_large_ui_text": SettingsService.large_ui_text_enabled(),
@@ -180,6 +186,23 @@ func _run_persistence_check() -> void:
 	_expect(contrast_panel.bg_color.get_luminance() <= 0.03, "High-contrast panels must use a near-black solid background.")
 	_expect(contrast_panel.border_color.get_luminance() >= 0.80, "High-contrast panel borders must remain strongly visible.")
 	_expect(contrast_focus.border_width_left >= 4, "High-contrast focus rings must be at least four pixels wide.")
+	var assisted_green: Color = FrontierVisualKitScript.text_color("green")
+	var assisted_red: Color = FrontierVisualKitScript.text_color("red")
+	var assisted_player: Color = FrontierVisualKitScript.semantic_color("player", Color.RED)
+	var assisted_enemy: Color = FrontierVisualKitScript.semantic_color("enemy", Color.GREEN)
+	_report["color_cue_assist"] = {
+		"mode": FrontierVisualKitScript.color_cue_mode(),
+		"enabled": FrontierVisualKitScript.color_cue_assist_enabled(),
+		"green_semantic_color": assisted_green,
+		"red_semantic_color": assisted_red,
+		"player_ownership_color": assisted_player,
+		"enemy_ownership_color": assisted_enemy,
+		"options": SettingsService.build_color_cue_options(),
+	}
+	_expect(FrontierVisualKitScript.color_cue_assist_enabled(), "Shared visual kit must receive the assisted color-cue setting.")
+	_expect(assisted_green.b > assisted_green.r, "Assisted success styling must use a blue/cyan-biased cue instead of green.")
+	_expect(assisted_red.r > assisted_red.g and assisted_red.g > assisted_red.b, "Assisted danger styling must use an orange-biased cue instead of red.")
+	_expect(assisted_player.b > assisted_player.r and assisted_enemy.r > assisted_enemy.b, "Assisted ownership colors must separate player blue from enemy orange.")
 	_expect(bool(direct_values.get("reduce_motion", false)) == bool(TEST_VALUES["reduce_motion"]), "Direct config reduce motion mismatch.")
 
 	SettingsService.settings = {}
@@ -196,6 +219,7 @@ func _run_persistence_check() -> void:
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"high_contrast_ui": SettingsService.high_contrast_ui_enabled(),
+		"color_cue_mode": SettingsService.color_cue_mode_id(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
 	}
@@ -213,6 +237,8 @@ func _run_persistence_check() -> void:
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
 	_expect(bool(reloaded["high_contrast_ui"]) == bool(TEST_VALUES["high_contrast_ui"]), "Reloaded high-contrast UI mismatch.")
 	_expect(FrontierVisualKitScript.high_contrast_enabled(), "Reloaded high-contrast UI must remain applied to the shared visual kit.")
+	_expect(String(reloaded["color_cue_mode"]) == String(TEST_VALUES["color_cue_mode"]), "Reloaded color-cue mode mismatch.")
+	_expect(FrontierVisualKitScript.color_cue_assist_enabled(), "Reloaded color-cue mode must remain applied to the shared visual kit.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Reloaded 130% UI scale must remain applied to the root window.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
@@ -236,6 +262,7 @@ func _read_settings_config_values() -> Dictionary:
 		"ui_scale_percent": int(config.get_value("accessibility", "ui_scale_percent", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"high_contrast_ui": bool(config.get_value("accessibility", "high_contrast_ui", false)),
+		"color_cue_mode": String(config.get_value("accessibility", "color_cue_mode", "")),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}
 

@@ -159,7 +159,7 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 	var movement_click_label := String(hex_summary.get("active_movement_board_click_label", ""))
 	var movement_click_intent: Dictionary = hex_summary.get("active_movement_board_click_intent", {})
 	var movement_click_message := String(movement_click_intent.get("message", "")).to_lower()
-	if movement_click_action != "move" or movement_click_label != "Move" or "green hex click: move" not in movement_click_message:
+	if movement_click_action != "move" or movement_click_label != "Move" or "move hex click: move" not in movement_click_message:
 		push_error("Battle layout smoke: legal movement hexes did not expose compact Move intent at %s: %s." % [viewport_size, hex_summary])
 		get_tree().quit(1)
 		return false
@@ -448,11 +448,11 @@ func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Ve
 	var enemy_movement_intent: Dictionary = BattleRules.active_movement_board_click_intent(session.battle)
 	if (
 		"not the player's turn" not in String(enemy_destination_intent.get("message", "")).to_lower()
-		or "green hex" in String(enemy_destination_intent.get("message", "")).to_lower()
+		or "move hex" in String(enemy_destination_intent.get("message", "")).to_lower()
 		or "not the player's turn" not in String(enemy_movement_intent.get("message", "")).to_lower()
-		or "green hex" in String(enemy_movement_intent.get("message", "")).to_lower()
+		or "move hex" in String(enemy_movement_intent.get("message", "")).to_lower()
 	):
-		push_error("Battle layout smoke: enemy-turn movement intents advertised green-hex input instead of locked initiative at %s: destination=%s active=%s." % [viewport_size, enemy_destination_intent, enemy_movement_intent])
+		push_error("Battle layout smoke: enemy-turn movement intents advertised move-hex input instead of locked initiative at %s: destination=%s active=%s." % [viewport_size, enemy_destination_intent, enemy_movement_intent])
 		get_tree().quit(1)
 		return false
 
@@ -622,7 +622,7 @@ func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Ve
 		or enemy_hover_footer != ""
 		or "green" in enemy_hover_footer.to_lower()
 	):
-		push_error("Battle layout smoke: enemy-turn hover footer still advertised green movement while input was locked at %s: preview=%s footer=%s board=%s." % [viewport_size, enemy_hover_preview, enemy_hover_footer, enemy_turn_board])
+		push_error("Battle layout smoke: enemy-turn hover footer still advertised movement while input was locked at %s: preview=%s footer=%s board=%s." % [viewport_size, enemy_hover_preview, enemy_hover_footer, enemy_turn_board])
 		get_tree().quit(1)
 		return false
 	var click: Dictionary = board.call(
@@ -638,7 +638,7 @@ func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Ve
 		not bool(click.get("accepted", false))
 		or String(click.get("battle_id", "")) != enemy_id
 		or "not the player's turn" not in tooltip_lower
-		or "green hex" in tooltip_lower
+		or "move hex" in tooltip_lower
 		or "highlighted enemies" in tooltip_lower
 		or "not the player's turn" not in event_text.to_lower()
 		or String(session.battle.get("active_stack_id", "")) != enemy_id
@@ -659,12 +659,12 @@ func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Ve
 		not bool(empty_click.get("accepted", false))
 		or String(empty_click.get("dispatch", "")) != "destination"
 		or "not the player's turn" not in empty_tooltip_lower
-		or "green hex" in empty_tooltip_lower
+		or "move hex" in empty_tooltip_lower
 		or "not the player's turn" not in event_text.to_lower()
-		or "green hex" in event_text.to_lower()
+		or "move hex" in event_text.to_lower()
 		or String(session.battle.get("active_stack_id", "")) != enemy_id
 	):
-		push_error("Battle layout smoke: enemy-turn empty hex hover/click advertised green-hex movement or failed to surface locked initiative at %s: click=%s tooltip=%s event=%s battle=%s." % [viewport_size, empty_click, empty_tooltip_before, event_text, session.battle])
+		push_error("Battle layout smoke: enemy-turn empty hex hover/click advertised move-hex movement or failed to surface locked initiative at %s: click=%s tooltip=%s event=%s battle=%s." % [viewport_size, empty_click, empty_tooltip_before, event_text, session.battle])
 		get_tree().quit(1)
 		return false
 	var fallback_tooltip_result: Dictionary = board.call("validation_board_fallback_tooltip")
@@ -675,7 +675,7 @@ func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Ve
 		or int(fallback_tooltip_result.get("resolved_q", 0)) >= 0
 		or String(fallback_tooltip_result.get("shape_target", "")) != ""
 		or "not the player's turn" not in fallback_tooltip_lower
-		or "green hex" in fallback_tooltip_lower
+		or "move hex" in fallback_tooltip_lower
 		or "highlighted enemies" in fallback_tooltip_lower
 	):
 		push_error("Battle layout smoke: enemy-turn board fallback tooltip advertised player actions while input was locked at %s: fallback=%s battle=%s." % [viewport_size, fallback_tooltip_result, session.battle])
@@ -753,7 +753,7 @@ func _run_invalid_empty_board_hex_click_feedback_case(shell, session, viewport_s
 		or String(click.get("dispatch", "")) != "destination_blocked"
 		or String(click.get("message", "")) != expected_message
 		or String(click.get("tooltip_before", "")) != expected_message
-		or "green hex click blocked" not in event_text.to_lower()
+		or "move hex click blocked" not in event_text.to_lower()
 		or "not a legal move destination" not in event_text.to_lower()
 		or String(shell.get("_tactical_briefing_text")) == ""
 		or _hex_key_for_test(active_after_hex) != _hex_key_for_test(active_before_hex)
@@ -1066,27 +1066,27 @@ func _run_board_hex_click_movement_case(shell, session, movement_preview: Dictio
 	var click_message := String(click_result.get("message", ""))
 	var preview_message := String(movement_preview.get("message", ""))
 	if not bool(click_result.get("ok", false)) or String(click_result.get("action", "")) != "move":
-		push_error("Battle layout smoke: legal green-hex click did not execute a move at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: legal move-hex click did not execute a move at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	if not click_message.begins_with(preview_message):
-		push_error("Battle layout smoke: green-hex click result did not preserve preview language at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: move-hex click result did not preserve preview language at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	if String(click_result.get("preview_message", "")) != preview_message:
-		push_error("Battle layout smoke: green-hex click validation did not retain preview message at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: move-hex click validation did not retain preview message at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	if String(click_result.get("destination_detail", "")) != String(movement_preview.get("destination_detail", "")) or int(click_result.get("steps", -1)) != int(movement_preview.get("steps", -2)):
-		push_error("Battle layout smoke: green-hex click validation lost destination detail at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: move-hex click validation lost destination detail at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	if bool(click_result.get("sets_up_selected_target_attack", false)) != bool(movement_preview.get("sets_up_selected_target_attack", false)) or String(click_result.get("selected_target_setup_label", "")) != String(movement_preview.get("selected_target_setup_label", "")):
-		push_error("Battle layout smoke: green-hex click validation lost later-attack setup truth at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: move-hex click validation lost later-attack setup truth at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	if moved_stack_id != "" and _hex_key_for_test(_stack_hex_for_test(_battle_stack_by_id(session.battle, moved_stack_id))) != _hex_key_for_test(movement_preview):
-		push_error("Battle layout smoke: green-hex click result did not place the active stack on the previewed destination at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
+		push_error("Battle layout smoke: move-hex click result did not place the active stack on the previewed destination at %s: preview=%s result=%s." % [viewport_size, movement_preview, click_result])
 		get_tree().quit(1)
 		return false
 	return true
@@ -3523,7 +3523,7 @@ func _run_overlapped_friendly_shape_movement_click_case(shell, session, viewport
 		or int(player_hex_after.get("q", -1)) != destination_q
 		or int(player_hex_after.get("r", -1)) != destination_r
 	):
-		push_error("Battle layout smoke: overlapped friendly hit shape swallowed a visible green movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
+		push_error("Battle layout smoke: overlapped friendly hit shape swallowed a visible movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
 		get_tree().quit(1)
 		return false
 	return true
@@ -3565,7 +3565,7 @@ func _run_overlapped_enemy_shape_movement_click_case(shell, session, viewport_si
 		or String(click.get("shape_target_before", "")) != enemy_id
 		or String(click.get("shape_target_side_before", "")) != "enemy"
 		or tooltip_before != movement_tooltip_before
-		or "green hex click" not in tooltip_before.to_lower()
+		or "move hex click" not in tooltip_before.to_lower()
 		or String(click.get("shape_battle_id", "")) != enemy_id
 		or String(click.get("dispatch", "")) != "destination"
 		or not bool(click.get("accepted", false))
@@ -3574,7 +3574,7 @@ func _run_overlapped_enemy_shape_movement_click_case(shell, session, viewport_si
 		or int(player_hex_after.get("q", -1)) != destination_q
 		or int(player_hex_after.get("r", -1)) != destination_r
 	):
-		push_error("Battle layout smoke: overlapped enemy hit shape swallowed a visible green movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
+		push_error("Battle layout smoke: overlapped enemy hit shape swallowed a visible movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
 		get_tree().quit(1)
 		return false
 	return true

@@ -22,6 +22,39 @@ const HIGH_CONTRAST_TEXT_TONES := {
 	"blue": Color(0.65, 0.80, 1.0, 1.0),
 }
 
+const COLOR_CUE_MODE_STANDARD := "standard"
+const COLOR_CUE_MODE_ASSISTED := "assisted"
+
+const ASSISTED_TEXT_TONES := {
+	"green": Color(0.48, 0.82, 1.0, 1.0),
+	"red": Color(1.0, 0.68, 0.30, 1.0),
+}
+
+const ASSISTED_HIGH_CONTRAST_TEXT_TONES := {
+	"green": Color(0.42, 0.92, 1.0, 1.0),
+	"red": Color(1.0, 0.72, 0.24, 1.0),
+}
+
+const ASSISTED_PANEL_TONES := {
+	"green": {
+		"bg": Color(0.08, 0.14, 0.19, 0.97),
+		"border": Color(0.30, 0.72, 0.96, 0.98),
+	},
+	"red": {
+		"bg": Color(0.20, 0.13, 0.06, 0.97),
+		"border": Color(0.94, 0.58, 0.20, 0.98),
+	},
+}
+
+const ASSISTED_SEMANTIC_COLORS := {
+	"player": Color(0.0, 0.45, 0.70, 1.0),
+	"enemy": Color(0.90, 0.36, 0.0, 1.0),
+	"neutral": Color(0.66, 0.70, 0.76, 1.0),
+	"move": Color(0.20, 0.76, 0.88, 1.0),
+	"target": Color(0.95, 0.55, 0.12, 1.0),
+	"blocked": Color(0.78, 0.28, 0.68, 1.0),
+}
+
 const HIGH_CONTRAST_PANEL_BORDERS := {
 	"banner": Color(1.0, 0.88, 0.36, 1.0),
 	"gold": Color(1.0, 0.88, 0.36, 1.0),
@@ -138,6 +171,7 @@ const HIGH_CONTRAST_BUTTON_ROLES := {
 }
 
 static var _high_contrast_enabled := false
+static var _color_cue_mode := COLOR_CUE_MODE_STANDARD
 
 const BUTTON_ART_ROOT := "res://art/ui/runtime/shared"
 
@@ -190,16 +224,41 @@ static func set_high_contrast_enabled(enabled: bool) -> void:
 static func high_contrast_enabled() -> bool:
 	return _high_contrast_enabled
 
+static func set_color_cue_mode(mode: String) -> void:
+	_color_cue_mode = COLOR_CUE_MODE_ASSISTED if mode == COLOR_CUE_MODE_ASSISTED else COLOR_CUE_MODE_STANDARD
+
+static func color_cue_mode() -> String:
+	return _color_cue_mode
+
+static func color_cue_assist_enabled() -> bool:
+	return color_cue_mode() == COLOR_CUE_MODE_ASSISTED
+
+static func semantic_color(role: String, fallback: Color) -> Color:
+	if not color_cue_assist_enabled():
+		return fallback
+	return ASSISTED_SEMANTIC_COLORS.get(role, fallback)
+
 static func text_color(tone: String) -> Color:
 	var palette := HIGH_CONTRAST_TEXT_TONES if high_contrast_enabled() else TEXT_TONES
+	if color_cue_assist_enabled():
+		var assisted_palette := ASSISTED_HIGH_CONTRAST_TEXT_TONES if high_contrast_enabled() else ASSISTED_TEXT_TONES
+		if assisted_palette.has(tone):
+			return assisted_palette[tone]
 	return palette.get(tone, palette["body"])
 
 static func panel_style(tone: String, corner_radius: int = 16) -> StyleBoxFlat:
 	var palette: Dictionary = PANEL_TONES.get(tone, PANEL_TONES.ink)
+	if color_cue_assist_enabled() and ASSISTED_PANEL_TONES.has(tone):
+		palette = ASSISTED_PANEL_TONES[tone]
 	if high_contrast_enabled():
+		var border: Color = HIGH_CONTRAST_PANEL_BORDERS.get(tone, HIGH_CONTRAST_PANEL_BORDERS["ink"])
+		if color_cue_assist_enabled() and tone == "green":
+			border = ASSISTED_HIGH_CONTRAST_TEXT_TONES["green"]
+		elif color_cue_assist_enabled() and tone == "red":
+			border = ASSISTED_HIGH_CONTRAST_TEXT_TONES["red"]
 		palette = {
 			"bg": Color(0.012, 0.016, 0.022, 0.995) if tone != "clear" else Color(0.0, 0.0, 0.0, 0.0),
-			"border": HIGH_CONTRAST_PANEL_BORDERS.get(tone, HIGH_CONTRAST_PANEL_BORDERS["ink"]),
+			"border": border,
 		}
 	var style := StyleBoxFlat.new()
 	style.bg_color = palette.get("bg", Color(0.10, 0.12, 0.15, 0.97))
@@ -316,6 +375,12 @@ static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	if high_contrast_enabled():
 		var contrast_role := role if HIGH_CONTRAST_BUTTON_ROLES.has(role) else ("primary" if role == "spine_active" else "secondary")
 		palette = HIGH_CONTRAST_BUTTON_ROLES.get(contrast_role, HIGH_CONTRAST_BUTTON_ROLES.secondary)
+	if color_cue_assist_enabled() and role == "danger":
+		palette = palette.duplicate(true)
+		palette["fill"] = Color(0.24, 0.11, 0.02, 1.0)
+		palette["hover"] = Color(0.39, 0.20, 0.03, 1.0)
+		palette["pressed"] = Color(0.13, 0.055, 0.01, 1.0)
+		palette["border"] = ASSISTED_HIGH_CONTRAST_TEXT_TONES["red"] if high_contrast_enabled() else ASSISTED_TEXT_TONES["red"]
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = palette.get("fill", Color(0.18, 0.22, 0.25, 0.98))
 	normal.border_color = palette.get("border", Color(0.52, 0.62, 0.68, 0.96))

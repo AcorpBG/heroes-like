@@ -11979,6 +11979,9 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func set_render_quality_id",
         "func set_ui_scale_percent",
         "func set_high_contrast_ui_enabled",
+        "func set_color_cue_mode_id",
+        "func build_color_cue_options",
+        "func color_cue_assist_enabled",
         "func music_audio_bus_name",
         "func effects_audio_bus_name",
         "func effects_audio_muted",
@@ -12030,6 +12033,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("EffectsVolumeSlider", "HSlider"),
         ("UIScalePicker", "OptionButton"),
         ("HighContrastToggle", "CheckButton"),
+        ("ColorCuePicker", "OptionButton"),
         ("ReduceMotionToggle", "CheckButton"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for settings/onboarding")
@@ -12046,6 +12050,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.build_frame_rate_options",
         "SettingsService.build_render_quality_options",
         "SettingsService.build_ui_scale_options",
+        "SettingsService.build_color_cue_options",
         "SettingsService.set_master_volume_percent",
         "SettingsService.set_music_volume_percent",
         "SettingsService.set_effects_volume_percent",
@@ -12054,6 +12059,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.set_render_quality_id",
         "SettingsService.set_ui_scale_percent",
         "SettingsService.set_high_contrast_ui_enabled",
+        "SettingsService.set_color_cue_mode_id",
         "SettingsService.set_presentation_mode",
         "SettingsService.set_presentation_resolution",
         "SettingsService.set_reduced_motion_enabled",
@@ -12068,6 +12074,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func _on_effects_volume_changed",
         "func _on_ui_scale_selected",
         "func _on_high_contrast_toggled",
+        "func _on_color_cue_selected",
         "func _on_reduce_motion_toggled",
         "func _refresh_settings_panel",
         "func _rebuild_help_browser",
@@ -12076,10 +12083,23 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func validation_select_render_quality",
         "func validation_select_ui_scale",
         "func validation_set_high_contrast",
+        "func validation_select_color_cue_mode",
         "func validation_set_vsync",
         "func validation_select_frame_rate_limit",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required settings/onboarding token: {required_token}")
+
+    visual_kit_text = (ROOT / "scripts" / "ui" / "FrontierVisualKit.gd").read_text(encoding="utf-8")
+    battle_board_text = (ROOT / "scenes" / "battle" / "BattleBoardView.gd").read_text(encoding="utf-8")
+    battle_shell_text = (ROOT / "scenes" / "battle" / "BattleShell.gd").read_text(encoding="utf-8")
+    battle_rules_text = (ROOT / "scripts" / "core" / "BattleRules.gd").read_text(encoding="utf-8")
+    overworld_map_text = (ROOT / "scenes" / "overworld" / "OverworldMapView.gd").read_text(encoding="utf-8")
+    for required_token in ("func set_color_cue_mode", "func semantic_color", "ASSISTED_SEMANTIC_COLORS"):
+        ensure(required_token in visual_kit_text, errors, f"FrontierVisualKit.gd is missing color-cue runtime token: {required_token}")
+    for source_name, source_text in (("BattleBoardView.gd", battle_board_text), ("OverworldMapView.gd", overworld_map_text)):
+        ensure("func validation_color_cue_summary" in source_text, errors, f"{source_name} must expose active color-cue validation")
+    for source_name, source_text in (("BattleRules.gd", battle_rules_text), ("BattleShell.gd", battle_shell_text), ("BattleBoardView.gd", battle_board_text)):
+        ensure("green hex" not in source_text.lower(), errors, f"{source_name} must use color-independent move-hex guidance")
 
 
 def validate_main_menu_first_view(errors: list[str]) -> None:

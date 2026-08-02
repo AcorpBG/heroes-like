@@ -1,13 +1,18 @@
 extends Node
 
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var original_color_cue_mode := FrontierVisualKitScript.color_cue_mode()
+	FrontierVisualKitScript.set_color_cue_mode("assisted")
 	if not await _run_town_smoke():
 		return
 	if not await _run_battle_smoke():
 		return
+	FrontierVisualKitScript.set_color_cue_mode(original_color_cue_mode)
 	get_tree().quit(0)
 
 func _run_town_smoke() -> bool:
@@ -35,7 +40,6 @@ func _run_town_smoke() -> bool:
 		push_error("Town smoke: town stage board did not load.")
 		get_tree().quit(1)
 		return false
-
 	var build_actions = shell.get_node_or_null("%BuildActions")
 	if build_actions == null or build_actions.get_child_count() <= 0:
 		push_error("Town smoke: construction action surface did not populate.")
@@ -147,6 +151,24 @@ func _run_battle_smoke() -> bool:
 	var board = shell.get_node_or_null("%BattleBoard")
 	if board == null:
 		push_error("Battle smoke: battle board did not load.")
+		get_tree().quit(1)
+		return false
+	if not board.has_method("validation_color_cue_summary"):
+		push_error("Battle smoke: battle board does not expose color-cue validation.")
+		get_tree().quit(1)
+		return false
+	var battle_color_cues: Dictionary = board.call("validation_color_cue_summary")
+	if not bool(battle_color_cues.get("assisted", false)) or String(battle_color_cues.get("player_side_mark", "")) != "circle_P" or String(battle_color_cues.get("enemy_side_mark", "")) != "triangle_E" or not bool(battle_color_cues.get("side_marks_drawn_with_stack_tokens", false)) or not bool(battle_color_cues.get("board_tooltip_uses_color_independent_move_wording", false)):
+		push_error("Battle smoke: assisted battle ownership cues are incomplete: %s." % battle_color_cues)
+		get_tree().quit(1)
+		return false
+	var battle_player_color: Color = battle_color_cues.get("player_color", Color.RED)
+	var battle_enemy_color: Color = battle_color_cues.get("enemy_color", Color.GREEN)
+	if battle_player_color.b <= battle_player_color.r or battle_enemy_color.r <= battle_enemy_color.b:
+		push_error("Battle smoke: assisted player/enemy palette is not blue/orange separated: %s." % battle_color_cues)
+		get_tree().quit(1)
+		return false
+	if not await _capture_color_cue_frame("battle_color_cues"):
 		get_tree().quit(1)
 		return false
 	if not _assert_battle_entry_context(shell):
@@ -1191,6 +1213,29 @@ func _assert_battle_aftermath_transition(source_session) -> bool:
 		await get_tree().process_frame
 		return false
 	var snapshot: Dictionary = overworld_shell.call("validation_snapshot")
+	var map_view = overworld_shell.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_color_cue_summary"):
+		push_error("Battle smoke: overworld map does not expose color-cue validation.")
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
+	var overworld_color_cues: Dictionary = map_view.call("validation_color_cue_summary")
+	if not bool(overworld_color_cues.get("assisted", false)) or String(overworld_color_cues.get("player_owner_mark", "")) != "rectangle_dot" or String(overworld_color_cues.get("enemy_owner_mark", "")) != "triangle_cross" or String(overworld_color_cues.get("neutral_owner_mark", "")) != "diamond_bar" or not bool(overworld_color_cues.get("owner_marks_drawn_with_town_pennants", false)) or not bool(overworld_color_cues.get("terrain_palette_unchanged", false)):
+		push_error("Battle smoke: assisted overworld ownership cues are incomplete: %s." % overworld_color_cues)
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
+	var overworld_player_color: Color = overworld_color_cues.get("player_town_color", Color.RED)
+	var overworld_enemy_color: Color = overworld_color_cues.get("enemy_town_color", Color.GREEN)
+	if overworld_player_color.b <= overworld_player_color.r or overworld_enemy_color.r <= overworld_enemy_color.b:
+		push_error("Battle smoke: assisted overworld ownership palette is not blue/orange separated: %s." % overworld_color_cues)
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
+	if not await _capture_color_cue_frame("overworld_color_cues"):
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
 	var event_tooltip := String(snapshot.get("event_tooltip_text", ""))
 	var feedback: Dictionary = snapshot.get("action_feedback", {})
 	var feedback_text := String(feedback.get("full_text", feedback.get("text", "")))
@@ -1211,6 +1256,23 @@ func _assert_battle_aftermath_transition(source_session) -> bool:
 		if return_recap_text.contains(leak_token):
 			push_error("Battle smoke: battle handoff recap leaked internal token %s." % leak_token)
 			return false
+	return true
+
+func _capture_color_cue_frame(stem: String) -> bool:
+	if OS.get_environment("COLOR_CUE_CAPTURE") != "1":
+		return true
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var output_dir := "res://.artifacts/color_cue_accessibility"
+	var error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
+	if error != OK and error != ERR_ALREADY_EXISTS:
+		push_error("Color-cue smoke: could not create capture directory: %s." % error)
+		return false
+	var path := "%s/%s.png" % [output_dir, stem]
+	error = get_viewport().get_texture().get_image().save_png(path)
+	if error != OK:
+		push_error("Color-cue smoke: could not save %s: %s." % [path, error])
+		return false
 	return true
 
 func _clone_session(session):
