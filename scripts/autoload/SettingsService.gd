@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 10
+const SETTINGS_VERSION := 11
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -43,10 +43,10 @@ const KEYBOARD_NAVIGATION_ACTIONS := {
 	&"ui_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L},
 }
 const KEYBOARD_HERO_MOVEMENT_ACTIONS := {
-	&"hero_move_up": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_W, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_I},
-	&"hero_move_down": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_S, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_K},
-	&"hero_move_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_A, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_J},
-	&"hero_move_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L},
+	&"hero_move_up": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_W, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_I, KEYBOARD_NAVIGATION_LAYOUT_ARROWS: KEY_UP},
+	&"hero_move_down": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_S, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_K, KEYBOARD_NAVIGATION_LAYOUT_ARROWS: KEY_DOWN},
+	&"hero_move_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_A, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_J, KEYBOARD_NAVIGATION_LAYOUT_ARROWS: KEY_LEFT},
+	&"hero_move_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L, KEYBOARD_NAVIGATION_LAYOUT_ARROWS: KEY_RIGHT},
 	&"hero_move_up_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_Q, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_U},
 	&"hero_move_up_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_E, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_O},
 	&"hero_move_down_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_Z, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_M},
@@ -58,6 +58,36 @@ const HERO_DIAGONAL_NUMPAD_ACTIONS := {
 	&"hero_move_down_left": KEY_KP_1,
 	&"hero_move_down_right": KEY_KP_3,
 }
+const HERO_MOVEMENT_BINDING_OPTIONS := [
+	{"action": &"hero_move_up_left", "label": "Up Left"},
+	{"action": &"hero_move_up", "label": "Up"},
+	{"action": &"hero_move_up_right", "label": "Up Right"},
+	{"action": &"hero_move_left", "label": "Left"},
+	{"action": &"hero_move_right", "label": "Right"},
+	{"action": &"hero_move_down_left", "label": "Down Left"},
+	{"action": &"hero_move_down", "label": "Down"},
+	{"action": &"hero_move_down_right", "label": "Down Right"},
+]
+const HERO_MOVEMENT_RESERVED_KEYCODES := [
+	KEY_ESCAPE,
+	KEY_TAB,
+	KEY_BACKTAB,
+	KEY_ENTER,
+	KEY_KP_ENTER,
+	KEY_SPACE,
+	KEY_SHIFT,
+	KEY_CTRL,
+	KEY_ALT,
+	KEY_META,
+	KEY_UP,
+	KEY_DOWN,
+	KEY_LEFT,
+	KEY_RIGHT,
+	KEY_KP_1,
+	KEY_KP_3,
+	KEY_KP_7,
+	KEY_KP_9,
+]
 
 const RENDER_QUALITY_OPTIONS := [
 	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
@@ -234,6 +264,7 @@ func build_default_settings() -> Dictionary:
 		"gameplay": {
 			"battle_playback_speed": BATTLE_PLAYBACK_SPEED_NORMAL,
 			"keyboard_navigation_layout": KEYBOARD_NAVIGATION_LAYOUT_WASD,
+			"hero_movement_bindings": {},
 		},
 		"accessibility": {
 			"ui_scale_percent": 100,
@@ -262,6 +293,7 @@ func load_settings() -> void:
 		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
 		settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
 		settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(String(config.get_value("gameplay", "keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"])))
+		settings["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(config.get_value("gameplay", "hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"]))
 		var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
 		var migrated_scale := 115 if legacy_large_text else 100
 		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
@@ -290,6 +322,7 @@ func save_settings() -> String:
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
 	config.set_value("gameplay", "battle_playback_speed", battle_playback_speed_id())
 	config.set_value("gameplay", "keyboard_navigation_layout", keyboard_navigation_layout_id())
+	config.set_value("gameplay", "hero_movement_bindings", custom_hero_movement_bindings())
 	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
@@ -398,6 +431,22 @@ func build_keyboard_navigation_layout_options() -> Array:
 		})
 	return options
 
+func build_hero_movement_binding_options() -> Array:
+	var bindings := _effective_hero_movement_bindings()
+	var custom_bindings := custom_hero_movement_bindings()
+	var options := []
+	for option in HERO_MOVEMENT_BINDING_OPTIONS:
+		var action := StringName(option.get("action", &""))
+		var keycode := int(bindings.get(String(action), 0))
+		options.append({
+			"action": String(action),
+			"label": String(option.get("label", String(action))),
+			"keycode": keycode,
+			"key_label": hero_movement_key_label(keycode),
+			"custom": custom_bindings.has(String(action)),
+		})
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
 
@@ -448,6 +497,8 @@ func keyboard_navigation_layout_label() -> String:
 	return "WASD + Arrows"
 
 func keyboard_navigation_layout_summary() -> String:
+	if has_custom_hero_movement_bindings():
+		return "Custom hero movement keys are active from the %s preset. Arrows retain interface navigation, and numpad diagonals remain available." % keyboard_navigation_layout_label()
 	match keyboard_navigation_layout_id():
 		KEYBOARD_NAVIGATION_LAYOUT_IJKL:
 			return "I/J/K/L move cardinally; U/O/M/Period move diagonally. Arrows retain interface navigation, and numpad diagonals remain available."
@@ -455,6 +506,30 @@ func keyboard_navigation_layout_summary() -> String:
 			return "Arrow keys retain interface navigation and available cardinal movement; numpad 7/9/1/3 provide diagonal movement."
 		_:
 			return "W/A/S/D move cardinally; Q/E/Z/C move diagonally. Arrows retain interface navigation, and numpad diagonals remain available."
+
+func custom_hero_movement_bindings() -> Dictionary:
+	return _normalize_hero_movement_bindings(ensure_settings().get("gameplay", {}).get("hero_movement_bindings", {}))
+
+func has_custom_hero_movement_bindings() -> bool:
+	return not custom_hero_movement_bindings().is_empty()
+
+func hero_movement_keycode(action: StringName) -> int:
+	return int(_effective_hero_movement_bindings().get(String(action), 0))
+
+func hero_movement_key_label(keycode: int) -> String:
+	if keycode <= 0:
+		return "Unbound"
+	var label := OS.get_keycode_string(keycode)
+	return label if label != "" else "Key %d" % keycode
+
+func hero_movement_action_label(action: StringName) -> String:
+	for option in HERO_MOVEMENT_BINDING_OPTIONS:
+		if StringName(option.get("action", &"")) == action:
+			return String(option.get("label", String(action)))
+	return String(action)
+
+func is_hero_movement_key_allowed(keycode: int) -> bool:
+	return keycode > 0 and keycode not in HERO_MOVEMENT_RESERVED_KEYCODES
 
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
@@ -577,6 +652,52 @@ func set_battle_playback_speed_id(speed_id: String) -> void:
 func set_keyboard_navigation_layout_id(layout_id: String) -> void:
 	ensure_settings()
 	settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(layout_id)
+	settings["gameplay"]["hero_movement_bindings"] = {}
+	_commit_settings()
+
+func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
+	ensure_settings()
+	if not KEYBOARD_HERO_MOVEMENT_ACTIONS.has(action):
+		return {"ok": false, "reason": "unknown_action"}
+	if not is_hero_movement_key_allowed(keycode):
+		return {"ok": false, "reason": "reserved_key"}
+	var bindings := _effective_hero_movement_bindings()
+	var action_id := String(action)
+	var previous_keycode := int(bindings.get(action_id, 0))
+	if keycode == previous_keycode:
+		return {
+			"ok": true,
+			"action": action_id,
+			"keycode": keycode,
+			"swapped_action": "",
+			"previous_keycode": previous_keycode,
+			"unchanged": true,
+		}
+	var swapped_action := ""
+	for option in HERO_MOVEMENT_BINDING_OPTIONS:
+		var candidate_action := String(option.get("action", ""))
+		if candidate_action == action_id or int(bindings.get(candidate_action, 0)) != keycode:
+			continue
+		swapped_action = candidate_action
+		if previous_keycode > 0 and is_hero_movement_key_allowed(previous_keycode):
+			bindings[candidate_action] = previous_keycode
+		else:
+			bindings.erase(candidate_action)
+		break
+	bindings[action_id] = keycode
+	settings["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(bindings)
+	_commit_settings()
+	return {
+		"ok": true,
+		"action": action_id,
+		"keycode": keycode,
+		"swapped_action": swapped_action,
+		"previous_keycode": previous_keycode,
+	}
+
+func reset_hero_movement_bindings() -> void:
+	ensure_settings()
+	settings["gameplay"]["hero_movement_bindings"] = {}
 	_commit_settings()
 
 func set_large_ui_text_enabled(enabled: bool) -> void:
@@ -678,8 +799,7 @@ func _apply_accessibility_settings() -> void:
 
 func _apply_keyboard_navigation_layout() -> void:
 	var managed_keycodes := [KEY_W, KEY_A, KEY_S, KEY_D, KEY_Q, KEY_E, KEY_Z, KEY_C, KEY_I, KEY_J, KEY_K, KEY_L, KEY_U, KEY_O, KEY_M, KEY_PERIOD]
-	var managed_actions := KEYBOARD_NAVIGATION_ACTIONS.keys() + KEYBOARD_HERO_MOVEMENT_ACTIONS.keys()
-	for action_value in managed_actions:
+	for action_value in KEYBOARD_NAVIGATION_ACTIONS:
 		var action := StringName(action_value)
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
@@ -689,19 +809,30 @@ func _apply_keyboard_navigation_layout() -> void:
 			var key_event := input_event as InputEventKey
 			if int(key_event.physical_keycode) in managed_keycodes or int(key_event.keycode) in managed_keycodes:
 				InputMap.action_erase_event(action, input_event)
-	_ensure_hero_diagonal_numpad_actions()
+	for action_value in KEYBOARD_HERO_MOVEMENT_ACTIONS:
+		var action := StringName(action_value)
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		for input_event in InputMap.action_get_events(action):
+			if input_event is InputEventKey:
+				InputMap.action_erase_event(action, input_event)
 	var layout_id := keyboard_navigation_layout_id()
-	if layout_id == KEYBOARD_NAVIGATION_LAYOUT_ARROWS:
-		return
-	for action_map in [KEYBOARD_NAVIGATION_ACTIONS, KEYBOARD_HERO_MOVEMENT_ACTIONS]:
-		for action_value in action_map:
+	if layout_id != KEYBOARD_NAVIGATION_LAYOUT_ARROWS:
+		for action_value in KEYBOARD_NAVIGATION_ACTIONS:
 			var action := StringName(action_value)
-			var keycode := int(action_map[action].get(layout_id, 0))
-			if keycode <= 0:
-				continue
-			var key_event := InputEventKey.new()
-			key_event.physical_keycode = keycode
-			InputMap.action_add_event(action, key_event)
+			var keycode := int(KEYBOARD_NAVIGATION_ACTIONS[action].get(layout_id, 0))
+			_add_physical_key_event(action, keycode)
+	for action_value in KEYBOARD_HERO_MOVEMENT_ACTIONS:
+		var action := StringName(action_value)
+		_add_physical_key_event(action, hero_movement_keycode(action))
+	_ensure_hero_diagonal_numpad_actions()
+
+func _add_physical_key_event(action: StringName, keycode: int) -> void:
+	if keycode <= 0:
+		return
+	var key_event := InputEventKey.new()
+	key_event.physical_keycode = keycode
+	InputMap.action_add_event(action, key_event)
 
 func _ensure_hero_diagonal_numpad_actions() -> void:
 	for action_value in HERO_DIAGONAL_NUMPAD_ACTIONS:
@@ -825,6 +956,34 @@ func _normalize_keyboard_navigation_layout(layout_id: String) -> String:
 		if String(option.get("id", KEYBOARD_NAVIGATION_LAYOUT_WASD)) == normalized:
 			return normalized
 	return KEYBOARD_NAVIGATION_LAYOUT_WASD
+
+func _normalize_hero_movement_bindings(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {}
+	var source := value as Dictionary
+	var normalized := {}
+	var used_keycodes := {}
+	for option in HERO_MOVEMENT_BINDING_OPTIONS:
+		var action := String(option.get("action", ""))
+		var keycode := int(source.get(action, 0))
+		if not is_hero_movement_key_allowed(keycode) or used_keycodes.has(keycode):
+			continue
+		normalized[action] = keycode
+		used_keycodes[keycode] = true
+	return normalized
+
+func _effective_hero_movement_bindings() -> Dictionary:
+	var layout_id := keyboard_navigation_layout_id()
+	var bindings := {}
+	for action_value in KEYBOARD_HERO_MOVEMENT_ACTIONS:
+		var action := StringName(action_value)
+		var keycode := int(KEYBOARD_HERO_MOVEMENT_ACTIONS[action].get(layout_id, 0))
+		if keycode > 0:
+			bindings[String(action)] = keycode
+	var custom_bindings := custom_hero_movement_bindings()
+	for action in custom_bindings:
+		bindings[String(action)] = int(custom_bindings[action])
+	return bindings
 
 func _render_quality_option(quality_id: String) -> Dictionary:
 	var normalized := _normalize_render_quality(quality_id)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://main_menu"]
+[gd_scene load_steps=5 format=3 uid="uid://main_menu"]
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/menus/MainMenuHeroView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/menus/HeroKeybindingsDialog.tscn" id="4_keybindings"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -927,6 +928,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CustomizeMovementKeys" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/GameplayRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 34)
+layout_mode = 2
+text = "Customize Keys"
+
 [node name="MasterVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 
@@ -1139,6 +1146,8 @@ anchor_right = 0.975
 anchor_bottom = 0.66
 text = "Settings"
 
+[node name="HeroKeybindingsDialog" parent="." instance=ExtResource("4_keybindings")]
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1190,6 +1199,7 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ResolutionRow/FrameRatePicker" to="." method="_on_frame_rate_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/BattlePlaybackSpeedPicker" to="." method="_on_battle_playback_speed_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/KeyboardNavigationLayoutPicker" to="." method="_on_keyboard_navigation_layout_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/GameplayRow/CustomizeMovementKeys" to="." method="_on_customize_movement_keys_pressed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
@@ -1197,3 +1207,4 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ColorCuePicker" to="." method="_on_color_cue_selected"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/HighContrastToggle" to="." method="_on_high_contrast_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[connection signal="dismissed" from="HeroKeybindingsDialog" to="." method="_on_hero_keybindings_dialog_dismissed"]
