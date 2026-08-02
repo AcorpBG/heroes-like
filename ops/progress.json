@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed standard controller D-pad reachability for cardinal overworld hero movement. All four actions route through the existing movement methods, while WASD, arrows, diagonals, shifted panning, and focused UI behavior remain intact.",
+  "currentNotes": "Completed the controller input correction. Left-stick cardinal travel now uses existing movement rules with dead-zone and bounded repeat behavior, while D-pad/A/B remain available for focused UI navigation, accept, and cancel.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-controller-cardinal-movement-10184",
-  "currentSliceId": "overworld-controller-cardinal-movement-10184",
-  "currentSliceNotes": "Completed. OverworldShell idempotently registers four standard D-pad actions and consumes real joypad-button presses through the existing cardinal movement methods. Active-play validation proves all mappings, live hero movement, preserved focus, and unchanged WASD behavior; core and repository regressions pass.",
+  "currentSlice": "overworld-controller-movement-navigation-correction-10184",
+  "currentSliceId": "overworld-controller-movement-navigation-correction-10184",
+  "currentSliceNotes": "Completed. Real controller events prove D-pad/A/B menu navigation, D-pad overworld focus navigation, left-stick dead-zone behavior, immediate movement, bounded repeat, and neutral release while keyboard paths remain green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Controller Cardinal Movement",
-  "currentSliceUpdatedAt": "2026-08-02T12:54:02Z",
+  "currentSliceTitle": "Overworld Controller Movement And Navigation",
+  "currentSliceUpdatedAt": "2026-08-02T13:28:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20673,6 +20673,62 @@
         "git diff --check"
       ],
       "classification": "implementation_slice",
+      "completionCriteria": "A real left-stick axis event moves the active hero through existing cardinal movement with dead-zone and bounded repeat behavior; global D-pad/A/B mappings navigate, accept, and cancel real menu/overworld controls; keyboard input remains intact; focused/core/repository regressions pass.",
+      "id": "overworld-controller-movement-navigation-correction-10184",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/autoload/SettingsService.gd",
+        "scripts/ui/FrontierVisualKit.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "full controller or hardware certification",
+        "diagonal stick movement, vibration, or input rebinding",
+        "overworld movement-rule or UI composition changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Overworld Controller Movement And Navigation",
+      "purpose": "Resolve the conflict between controller hero movement and D-pad command navigation while keeping the primary overworld loop controller-reachable.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-02T12:56:26Z",
+      "completedAt": "2026-08-02T13:28:27Z",
+      "completionSummary": "Overworld hero movement now uses dominant-cardinal left-stick input with hysteresis, an immediate step, and an owned repeat timer that stops at neutral or when movement is unavailable. Standard D-pad, A, and B buttons are registered idempotently as global Godot UI actions, and shared focus cycles expose explicit vertical neighbors. Real joypad-event tests prove menu navigation/accept/cancel, overworld command navigation, stick dead-zone/immediate/repeat behavior, and preserved keyboard behavior. The earlier D-pad hero-movement slice remains superseded because it consumed the navigation control required by focused UI.",
+      "status": "completed",
+      "title": "Overworld Controller Movement And Navigation",
+      "updatedAt": "2026-08-02T13:28:27Z",
+      "validationEvidence": {
+        "global_dpad_ui_navigation_registered": true,
+        "global_accept_cancel_registered": true,
+        "main_menu_dpad_accept_cancel": true,
+        "overworld_dpad_focus_navigation": true,
+        "left_stick_dead_zone": true,
+        "left_stick_immediate_step": true,
+        "left_stick_bounded_repeat": true,
+        "left_stick_neutral_release": true,
+        "active_play_keyboard_focus_smoke": "passed",
+        "main_menu_keyboard_navigation_smoke": "passed",
+        "packaged_settings_persistence_report": "passed",
+        "packaged_settings_persistence_smoke": "passed",
+        "core_systems_regression_smoke": "passed",
+        "repository_validator": "passed"
+      }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
       "completionCriteria": "A standard controller D-pad cardinal press moves the active overworld hero through the existing movement path while preserving focused UI state; keyboard movement, diagonals, panning, and adjacent core behavior remain intact; focused and repository regressions pass.",
       "id": "overworld-controller-cardinal-movement-10184",
       "implementationTargets": [
@@ -20697,8 +20753,10 @@
       ],
       "startedAt": "2026-08-02T12:49:04Z",
       "completedAt": "2026-08-02T12:54:02Z",
-      "completionSummary": "OverworldShell now idempotently registers north, south, west, and east movement actions against Godot's standard D-pad button constants. Real joypad button events are consumed in the shell input adapter and delegated to the same cardinal movement methods used by keyboard input, preserving all OverworldRules legality, movement cost, route, encounter, and refresh behavior. The active-play smoke verifies all four bindings, executes a legal real D-pad move, preserves focused UI state, and continues to pass the existing WASD, town, narrow-layout, and battle keyboard checks.",
-      "status": "completed",
+      "completionSummary": "Superseded after live input-path review: consuming D-pad events in OverworldShell._input routes hero movement correctly but prevents the same controller from using D-pad focus navigation across overworld commands. The corrective slice moves hero travel to the left stick and restores D-pad UI ownership.",
+      "status": "superseded",
+      "supersededAt": "2026-08-02T12:56:26Z",
+      "supersededBy": "overworld-controller-movement-navigation-correction-10184",
       "title": "Overworld Controller Cardinal Movement",
       "updatedAt": "2026-08-02T12:54:02Z",
       "validationEvidence": {
@@ -64777,7 +64835,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T11:45:17Z",
+  "updatedAt": "2026-08-02T13:28:27Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -23,6 +23,14 @@ const COLOR_CUE_MODE_ASSISTED := "assisted"
 const BATTLE_PLAYBACK_SPEED_NORMAL := "normal"
 const BATTLE_PLAYBACK_SPEED_FAST := "fast"
 const BATTLE_PLAYBACK_SPEED_INSTANT := "instant"
+const CONTROLLER_UI_BUTTON_ACTIONS := {
+	&"ui_up": JOY_BUTTON_DPAD_UP,
+	&"ui_down": JOY_BUTTON_DPAD_DOWN,
+	&"ui_left": JOY_BUTTON_DPAD_LEFT,
+	&"ui_right": JOY_BUTTON_DPAD_RIGHT,
+	&"ui_accept": JOY_BUTTON_A,
+	&"ui_cancel": JOY_BUTTON_B,
+}
 
 const RENDER_QUALITY_OPTIONS := [
 	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
@@ -151,7 +159,24 @@ const HELP_TOPICS := [
 var settings: Dictionary = {}
 
 func _ready() -> void:
+	ensure_controller_ui_actions()
 	load_settings()
+
+func ensure_controller_ui_actions() -> void:
+	for action in CONTROLLER_UI_BUTTON_ACTIONS:
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		var button_index := int(CONTROLLER_UI_BUTTON_ACTIONS[action])
+		var has_button := false
+		for input_event in InputMap.action_get_events(action):
+			if input_event is InputEventJoypadButton and int(input_event.button_index) == button_index:
+				has_button = true
+				break
+		if has_button:
+			continue
+		var joypad_event := InputEventJoypadButton.new()
+		joypad_event.button_index = button_index
+		InputMap.action_add_event(action, joypad_event)
 
 func ensure_settings() -> Dictionary:
 	if settings.is_empty():

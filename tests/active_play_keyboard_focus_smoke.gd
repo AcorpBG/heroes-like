@@ -101,31 +101,33 @@ func _check_overworld_controller_movement() -> bool:
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
 	await _settle()
-	for delta in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
-		var registered_action := _controller_action_for_delta(delta)
-		var registered_button := _controller_button_for_delta(delta)
-		if not InputMap.has_action(registered_action):
-			return _fail("Overworld shell did not register controller movement action %s." % registered_action)
-		var action_has_button := false
-		for input_event in InputMap.action_get_events(registered_action):
-			if input_event is InputEventJoypadButton and int(input_event.button_index) == registered_button:
-				action_has_button = true
-				break
-		if not action_has_button:
-			return _fail("Overworld controller action %s does not include D-pad button %d." % [registered_action, registered_button])
-	var move := _legal_cardinal_move(session)
+	var focus_before_dpad := get_viewport().gui_get_focus_owner()
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	var focus_after_dpad := get_viewport().gui_get_focus_owner()
+	if focus_before_dpad == null or focus_after_dpad == null or focus_after_dpad == focus_before_dpad or not shell.is_ancestor_of(focus_after_dpad):
+		return _fail("Overworld D-pad did not remain available for command focus navigation: before=%s after=%s." % [focus_before_dpad, focus_after_dpad])
+	var move := _legal_cardinal_move(session, 2)
 	if move.is_empty():
-		return _fail("Overworld fixture has no legal cardinal move for controller validation.")
-	var button_index := _controller_button_for_delta(move.get("delta", Vector2i.ZERO))
-	if button_index < 0:
-		return _fail("Controller validation could not map cardinal move %s to a D-pad button." % move)
+		return _fail("Overworld fixture has no two-step legal cardinal route for controller repeat validation.")
 	var before := OverworldRules.hero_position(session)
-	await _press_joypad_button(button_index)
+	var axis_input := _controller_axis_for_delta(move.get("delta", Vector2i.ZERO))
+	var axis := int(axis_input.get("axis", -1))
+	var axis_value := float(axis_input.get("value", 0.0))
+	await _send_joypad_axis(axis, axis_value * 0.2)
+	await _send_joypad_axis(axis, 0.0)
+	if OverworldRules.hero_position(session) != before:
+		return _fail("Overworld left-stick dead zone moved the hero: before=%s after=%s." % [before, OverworldRules.hero_position(session)])
+	await _send_joypad_axis(axis, axis_value)
+	var immediate := OverworldRules.hero_position(session)
+	if immediate != before + move.get("delta", Vector2i.ZERO):
+		return _fail("Overworld left-stick deflection did not move immediately: before=%s immediate=%s move=%s." % [before, immediate, move])
+	await get_tree().create_timer(0.42).timeout
 	var after := OverworldRules.hero_position(session)
-	if after != before + move.get("delta", Vector2i.ZERO):
-		return _fail("Focused overworld UI swallowed D-pad movement: before=%s after=%s move=%s." % [before, after, move])
+	if after != before + move.get("delta", Vector2i.ZERO) * 2:
+		return _fail("Overworld left-stick initial/repeat cadence did not move exactly two steps: before=%s after=%s move=%s." % [before, after, move])
+	await _send_joypad_axis(axis, 0.0)
 	if get_viewport().gui_get_focus_owner() == null:
-		return _fail("Overworld D-pad movement discarded focused UI state.")
+		return _fail("Overworld left-stick movement discarded focused UI state.")
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -214,7 +216,7 @@ func _check_battle_keyboard_defend() -> bool:
 	await get_tree().process_frame
 	return true
 
-func _legal_cardinal_move(session) -> Dictionary:
+func _legal_cardinal_move(session, minimum_steps: int = 1) -> Dictionary:
 	for candidate in [
 		{"keycode": KEY_W, "delta": Vector2i.UP},
 		{"keycode": KEY_S, "delta": Vector2i.DOWN},
@@ -224,8 +226,13 @@ func _legal_cardinal_move(session) -> Dictionary:
 		var probe = SessionState.new_session_data()
 		probe.from_dict(session.to_dict())
 		var delta: Vector2i = candidate.delta
-		var result: Dictionary = OverworldRules.try_move(probe, delta.x, delta.y)
-		if bool(result.get("ok", false)) and String(result.get("route", "")) == "":
+		var route_is_legal := true
+		for _step in range(maxi(1, minimum_steps)):
+			var result: Dictionary = OverworldRules.try_move(probe, delta.x, delta.y)
+			if not bool(result.get("ok", false)) or String(result.get("route", "")) != "":
+				route_is_legal = false
+				break
+		if route_is_legal:
 			return candidate
 	return {}
 
@@ -277,21 +284,20 @@ func _press_joypad_button(button_index: int) -> void:
 	Input.parse_input_event(released)
 	await _settle()
 
-func _controller_button_for_delta(delta: Vector2i) -> int:
-	return {
-		Vector2i.UP: JOY_BUTTON_DPAD_UP,
-		Vector2i.DOWN: JOY_BUTTON_DPAD_DOWN,
-		Vector2i.LEFT: JOY_BUTTON_DPAD_LEFT,
-		Vector2i.RIGHT: JOY_BUTTON_DPAD_RIGHT,
-	}.get(delta, -1)
+func _send_joypad_axis(axis: int, value: float) -> void:
+	var motion := InputEventJoypadMotion.new()
+	motion.axis = axis
+	motion.axis_value = value
+	Input.parse_input_event(motion)
+	await get_tree().process_frame
 
-func _controller_action_for_delta(delta: Vector2i) -> StringName:
+func _controller_axis_for_delta(delta: Vector2i) -> Dictionary:
 	return {
-		Vector2i.UP: &"overworld_move_north",
-		Vector2i.DOWN: &"overworld_move_south",
-		Vector2i.LEFT: &"overworld_move_west",
-		Vector2i.RIGHT: &"overworld_move_east",
-	}.get(delta, &"")
+		Vector2i.UP: {"axis": JOY_AXIS_LEFT_Y, "value": -1.0},
+		Vector2i.DOWN: {"axis": JOY_AXIS_LEFT_Y, "value": 1.0},
+		Vector2i.LEFT: {"axis": JOY_AXIS_LEFT_X, "value": -1.0},
+		Vector2i.RIGHT: {"axis": JOY_AXIS_LEFT_X, "value": 1.0},
+	}.get(delta, {})
 
 func _settle() -> void:
 	await get_tree().process_frame

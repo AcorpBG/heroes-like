@@ -605,19 +605,24 @@ Non-goals:
 - do not alter combat simulation, save schema, or battle outcome behavior;
 - do not redesign the battle command rail or main settings composition.
 
-## Overworld Controller Cardinal Movement
+## Overworld Controller Movement And Navigation
 
-The completed Phase 6 input/accessibility slice makes the primary overworld movement loop reachable from a standard controller D-pad.
+The completed corrective Phase 6 input/accessibility slice makes the primary overworld loop controller-reachable without stealing D-pad focus navigation from command controls.
 
 Target shape:
-- OverworldShell registers stable north, south, west, and east movement actions with standard D-pad buttons;
-- D-pad presses use the existing movement methods and therefore retain all movement cost, collision, encounter, and routing behavior;
-- WASD, arrow-key movement, keyboard diagonals, shifted map panning, debug keys, and focused command navigation remain unchanged;
-- active-play input validation proves a real D-pad event moves the active hero and preserves focused UI state.
+- the left stick moves the active hero in the dominant cardinal direction through the existing movement methods;
+- the stick uses a dead zone, one immediate step, and a bounded held-direction repeat cadence suitable for grid travel;
+- returning the stick to neutral clears movement state;
+- global controller UI mappings bind the standard D-pad to directional focus, A to accept, and B to cancel;
+- D-pad buttons remain owned by Godot UI navigation and can move focus through both the main menu and overworld commands;
+- WASD, arrow-key movement, keyboard diagonals, shifted map panning, debug keys, and focused command activation remain unchanged;
+- menu and active-play validation prove real D-pad and face-button events navigate/activate UI while a real stick-axis event moves the active hero.
+
+The earlier D-pad-as-hero-movement slice is superseded because consuming D-pad input in `_input` prevented controller users from navigating the focused command UI.
 
 Non-goals:
 - do not claim full controller/hardware certification;
-- do not add analog-stick movement, diagonal controller chords, vibration, or button rebinding;
+- do not add diagonal stick movement, vibration, or button rebinding;
 - do not change overworld movement rules or redesign on-screen controls.
 
 ## Strategic AI Exclusive Frontier Target
