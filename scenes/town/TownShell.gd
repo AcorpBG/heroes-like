@@ -86,6 +86,8 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	_management_tabs.current_tab = 0
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
@@ -113,6 +115,22 @@ func _ready() -> void:
 	_refresh(true)
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("town", "entry", "town_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(true), _session)
+
+func _apply_responsive_layout() -> void:
+	if _sidebar_shell_panel == null:
+		return
+	var available_size := size
+	var parent_control := get_parent() as Control
+	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
+		available_size = parent_control.size
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	var narrow_layout := available_size.x < 1100.0
+	_sidebar_shell_panel.visible = not narrow_layout
+	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 292.0
+	_command_panel.visible = not compact_layout
+	_event_label.visible = not compact_layout
+	_status_label.visible = not compact_layout
+	_town_stage_view.custom_minimum_size = Vector2(520.0, 280.0) if compact_layout else Vector2(620.0, 320.0)
 
 func _on_build_action_pressed(action_id: String) -> void:
 	var full_action_id := "build:%s" % action_id

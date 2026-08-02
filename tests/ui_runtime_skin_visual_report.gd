@@ -79,13 +79,13 @@ func _ready() -> void:
 func _run() -> void:
 	_ensure_output_dir()
 	_report["viewports"] = []
-	for viewport_size in VIEWPORT_SIZES:
+	for viewport_size in _selected_viewport_sizes():
 		var viewport_key := _viewport_key(viewport_size)
 		var viewport_report := {
 			"size": {"width": viewport_size.x, "height": viewport_size.y},
 			"shells": {},
 		}
-		for shell_id in ["overworld", "battle", "town"]:
+		for shell_id in _selected_shell_ids():
 			var shell_report := await _run_shell(shell_id, EXPECTED_PANELS[shell_id], viewport_size)
 			viewport_report["shells"][shell_id] = shell_report
 			if not _report["shells"].has(shell_id):
@@ -95,6 +95,25 @@ func _run() -> void:
 	_report["ok"] = _report["errors"].is_empty()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
 	get_tree().quit(0 if bool(_report["ok"]) else 1)
+
+func _selected_viewport_sizes() -> Array:
+	var viewport_index := OS.get_environment("UI_RUNTIME_VISUAL_VIEWPORT_INDEX").strip_edges()
+	if viewport_index == "":
+		return VIEWPORT_SIZES
+	var index := int(viewport_index)
+	if index < 0 or index >= VIEWPORT_SIZES.size():
+		_error("UI_RUNTIME_VISUAL_VIEWPORT_INDEX is outside the supported range: %s" % viewport_index)
+		return []
+	return [VIEWPORT_SIZES[index]]
+
+func _selected_shell_ids() -> Array:
+	var shell_id := OS.get_environment("UI_RUNTIME_VISUAL_SHELL").strip_edges().to_lower()
+	if shell_id == "":
+		return ["overworld", "battle", "town"]
+	if not EXPECTED_PANELS.has(shell_id):
+		_error("UI_RUNTIME_VISUAL_SHELL is unsupported: %s" % shell_id)
+		return []
+	return [shell_id]
 
 func _run_shell(shell_id: String, spec: Dictionary, viewport_size: Vector2i) -> Dictionary:
 	_prepare_session(shell_id)
