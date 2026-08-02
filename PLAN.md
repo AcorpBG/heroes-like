@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 5 - Playable Alpha Baseline**.
 
+- Completed implementation slice: `artifact-dual-trinket-set-bonus-runtime-10184`. Hero artifact state now exposes two backward-compatible trinket keys, compatible equip paths fill empty slots before deterministic primary-slot replacement, and the three equipped Wayfarer Compact pieces activate cumulative 2-piece movement and 3-piece scouting thresholds. Focused runtime proof measures +4 movement and +5 scouting including piece bonuses, preserves both trinkets and thresholds through save-version-9 resume, and surfaces active set progress on existing management/town paths. A responsive-shell regression uncovered during validation now hides the wide-screen Order panel while contextual drawers are open and restores it when they close. Source reward execution, rare-resource artifact income, additional sets, broad UI redesign, final artifact balance, and the unrelated stale terrain assertion in `overworld_visual_smoke` remain outside this slice.
 - Completed implementation slice: `packaging-platform-readiness-followup-10184`. Linux and Windows release presets now exclude generated developer maps, tests, reports, source art, build/native-source trees, operational metadata, and debug utilities while preserving runtime assets and the native extension manifest. `project.godot` carries alpha version `0.1.0-alpha.1`; `tools/package_release.py` exports both platforms and emits reproducible tar/ZIP bundles, per-platform payload manifests, a release index, and SHA-256 checksums. The packaged Linux binary boots cleanly with imported resources resolved through `ResourceLoader.exists`; Windows export produces a valid PE executable, release DLL, and matching PCK. This does not claim clean Windows-machine execution, signing, installer/channel integration, or overall release readiness.
 - Completed implementation slice: `packaging-windows-wine-runtime-smoke-10184`. The Windows Release v2 gate now exports the PE/PCK/DLL set, recreates an isolated Wine prefix, boots the packaged executable headlessly, and requires Godot, Boot, MainMenu, and release GDExtension DLL loader markers with no fatal runtime output. Wine 9's crashing DirectInput path is disabled only for this harness; clean native Windows execution, controller/hardware validation, signing, installer/channel integration, and overall release readiness remain incomplete.
 - Completed implementation slice: `strategic-ai-recruitment-path-cache-10184`. One faction recruitment phase now retains immutable raid route contexts, live-task/path state, and per-town saved plans while continuing to rebuild commander/raid strength, reinforcement need, and destination scores after every transfer. Focused coverage loads 10 saved plans once and reuses them 28 times, proves live strength changes can switch the best task and final destination, and reuses a raid route context without changing its decision payload. Exact Medium ordinal 99 preserves row signature `437fc4a9` and all behavior counts while local row runtime falls from `296491ms` to `265400ms` and maximum turn runtime from `13149ms` to `11665ms`. This does not complete all strategic-AI performance work, the paused release matrix, or the game release.
@@ -570,6 +571,24 @@ Non-goals:
 - do not claim final magic-vs-might or faction battle balance from this slice;
 - do not add caster-unit spellbooks, rare-resource spell-cast costs, or school mastery;
 - do not add broad new report gates beyond one focused resistance/counter-control runtime report.
+
+## Artifact Set Runtime Target
+
+The current artifact slice closes the gap between the authored two-trinket/set schema and live hero equipment behavior.
+
+Target shape:
+- hero artifact state exposes two stable trinket equipment keys while continuing to normalize old saves that contain only the original `trinket` key;
+- equipping or auto-equipping trinkets fills an empty compatible slot before replacing existing gear;
+- artifact set thresholds carry concrete data-driven bonuses and activate cumulatively from equipped pieces only;
+- Wayfarer Compact grants a route-tempo bonus at two pieces and an additional scouting bonus at three pieces;
+- active set names, threshold progress, and granted bonuses appear on the existing artifact management/runtime surfaces;
+- live movement and scouting hooks consume the set bonuses through `ArtifactRules.aggregate_bonuses`;
+- save/resume preserves both trinkets and recomputes the same active set thresholds without a save-version bump.
+
+Non-goals:
+- do not activate artifact source/reward tables, rare-resource income, or new random drop rules;
+- do not add more artifact sets or claim final artifact balance;
+- do not redesign the full town/overworld artifact UI.
 
 ## Slice Status Model
 

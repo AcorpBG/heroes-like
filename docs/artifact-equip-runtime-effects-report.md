@@ -31,3 +31,7 @@ Still outside this slice:
 - broad equipment or artifact UI overhaul.
 
 `wood` remains the canonical common resource id.
+
+## Runtime Follow-Up
+
+As of 2026-08-02, slice `artifact-dual-trinket-set-bonus-runtime-10184` supersedes the one-trinket and inactive-set boundaries above. Hero artifact state now exposes two live trinket slots, old one-trinket saves normalize additively, and equipped Wayfarer Compact pieces activate cumulative movement and scouting thresholds through the existing runtime bonus path. Source/reward execution, rare-resource artifact income, and broad artifact UI work remain outside that follow-up slice.

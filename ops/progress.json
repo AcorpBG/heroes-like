@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the strategic-AI recruitment path-cache correction. One faction recruitment phase now reuses immutable raid route contexts, live-task/path state, and per-town saved plans while live commander/raid strength and destination scores continue to refresh after every transfer. Exact Medium ordinal 99 preserves row signature 437fc4a9 while local row runtime falls from 296491ms to 265400ms and maximum turn runtime from 13149ms to 11665ms. The remaining 61-row matrix, broader AI performance work, and overall release remain incomplete.",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-recruitment-path-cache-10184",
-  "currentSliceId": "strategic-ai-recruitment-path-cache-10184",
-  "currentSliceNotes": "Completed. Phase-scoped route/task path reuse eliminates repeated invariant path work, focused coverage proves live strength and destination rescoring remain active, adjacent AI regressions pass, and exact Medium ordinal 99 preserves its deterministic behavior with lower local runtime.",
+  "currentNotes": "Completed the live artifact set runtime gap. Hero state now preserves two trinket slots across old-save normalization and save-version-9 resume; compatible equip paths fill empties before deterministic primary-slot replacement; equipped Wayfarer Compact pieces activate cumulative thresholds that produce +4 movement and +5 scouting including piece bonuses. Existing management and town surfaces expose set progress. Source reward execution, rare-resource artifact income, additional sets, broad UI redesign, and final artifact balance remain incomplete.",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSlice": "artifact-dual-trinket-set-bonus-runtime-10184",
+  "currentSliceId": "artifact-dual-trinket-set-bonus-runtime-10184",
+  "currentSliceNotes": "Completed. Two live trinket slots, cumulative equipped-piece thresholds, live movement/scouting consumption, management text, and save-resume pass focused, core, town visual, layout, and repository validation. The broad overworld visual suite advances past the fixed drawer/count regressions but retains an unrelated stale terrain-prototype expectation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Recruitment Path Cache",
-  "currentSliceUpdatedAt": "2026-08-02T10:54:45Z",
+  "currentSliceTitle": "Artifact Dual Trinket And Set Bonus Runtime",
+  "currentSliceUpdatedAt": "2026-08-02T11:45:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,72 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "godot --headless --path . --scene res://tests/artifact_set_runtime_effects_report.tscn",
+        "godot --headless --path . --scene res://tests/artifact_equip_runtime_effects_report.tscn",
+        "godot --headless --path . --scene res://tests/artifact_set_faction_content_report.tscn",
+        "godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Hero artifact state supports two live trinket slots with old-save normalization; compatible equip and auto-equip fill empty slots before swapping; cumulative equipped-piece set thresholds alter live movement/scouting; existing artifact surfaces expose active set progress; save-resume preserves both trinkets and the same set bonuses; focused and repository regressions pass.",
+      "id": "artifact-dual-trinket-set-bonus-runtime-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "docs/artifact-ai-valuation-report.md",
+        "docs/artifact-equip-runtime-effects-report.md",
+        "docs/artifact-sets-faction-specific-content-report.md",
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/core/ArtifactRules.gd",
+        "tests/artifact_set_runtime_effects_report.gd",
+        "tests/artifact_set_runtime_effects_report.tscn",
+        "tests/artifact_equip_runtime_effects_report.gd",
+        "tests/artifact_set_faction_content_report.gd",
+        "tests/artifact_taxonomy_schema_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py"
+      ],
+      "nonGoals": [
+        "activating artifact source reward tables or random drops",
+        "activating rare-resource artifact income",
+        "adding additional artifact sets",
+        "broad artifact UI redesign",
+        "claiming final artifact or game balance"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Artifact Set Runtime Target",
+      "purpose": "Turn the existing authored two-trinket and artifact-set schema into reachable live equipment and gameplay behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/artifact-sets-faction-specific-content-report.md",
+        "docs/artifact-equip-runtime-effects-report.md"
+      ],
+      "startedAt": "2026-08-02T11:11:38Z",
+      "completedAt": "2026-08-02T11:45:17Z",
+      "completionSummary": "Added backward-compatible trinket_2 state, compatible-slot equip and merge behavior, cumulative equipped-piece set threshold aggregation, live Wayfarer Compact movement/scouting bonuses, active-set management text, and save-version-9 round-trip proof. Focused runtime reports, core regression, responsive layout, town/battle visual, repository validation, JSON validation, and diff checks pass. Validation also repaired a wide-screen contextual-drawer visibility regression and a stale River Pass defeat-risk count. The optional broad overworld visual smoke still stops later on an unrelated stale forest-degradation assertion against current native grass prototype output.",
+      "status": "completed",
+      "title": "Artifact Dual Trinket And Set Bonus Runtime",
+      "updatedAt": "2026-08-02T11:45:17Z",
+      "validationEvidence": {
+        "active_threshold_count": 2,
+        "active_trinket_slots": 2,
+        "movement_delta": 4,
+        "scouting_delta": 5,
+        "save_version": 9,
+        "focused_artifact_reports": "passed",
+        "core_systems_regression_smoke": "passed",
+        "player_comprehension_layout_smoke": "passed",
+        "town_battle_visual_smoke": "passed",
+        "repository_validator": "passed",
+        "overworld_visual_smoke": "residual_unrelated_stale_terrain_prototype_expectation"
+      }
+    },
     {
       "baselineChecks": [
         "HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=73 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=5 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 7200 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn or split into smaller seed-count shards if runtime remains too high",
@@ -64488,7 +64554,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T08:07:43Z",
+  "updatedAt": "2026-08-02T11:45:17Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

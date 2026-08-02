@@ -29,3 +29,7 @@ Focused validation:
 - `godot4 --headless --path /root/dev/heroes-like tests/artifact_ai_valuation_report.tscn`
 
 Required completion validation is recorded in the run summary and tracker once complete.
+
+## Runtime Follow-Up
+
+As of 2026-08-02, slice `artifact-dual-trinket-set-bonus-runtime-10184` activates cumulative Wayfarer Compact movement and scouting thresholds for equipped heroes. The AI valuation slice above remains unchanged: it can value existing set metadata, but this follow-up does not add set-completion planning or a new enemy artifact executor.

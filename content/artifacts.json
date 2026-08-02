@@ -9,19 +9,25 @@
         "artifact_waymark_compass",
         "artifact_milepost_lantern"
       ],
-      "source_hint": "Region reward chain or guarded road caches; current source tables author metadata only and do not execute live drops.",
+      "source_hint": "Guarded road caches and authored region reward chains; source tables remain metadata-only and do not execute live drops.",
       "piece_thresholds": [
         {
           "count": 2,
-          "summary": "Metadata-only route-readiness bonus for future set UI and reward planning."
+          "summary": "The paired road tools keep the expedition moving between established waymarks.",
+          "bonuses": {
+            "overworld_movement": 1
+          }
         },
         {
           "count": 3,
-          "summary": "Metadata-only compact completion hook for future encounter preview rules."
+          "summary": "The complete compact reveals one additional ring of nearby terrain.",
+          "bonuses": {
+            "scouting_radius": 1
+          }
         }
       ],
       "runtime_policy": {
-        "set_bonuses_active": false,
+        "set_bonuses_active": true,
         "source_reward_tables_active": false,
         "derived_from_equipped_pieces": true
       }

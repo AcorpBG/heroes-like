@@ -64,8 +64,8 @@ func _run() -> void:
 		_fail("Artifact runtime report did not aggregate spell modifiers: %s" % runtime_report)
 		return
 	var slot_surface: Dictionary = runtime_report.get("slot_surface", {}) if runtime_report.get("slot_surface", {}) is Dictionary else {}
-	if int(slot_surface.get("active_trinket_slots", 0)) != 1 or bool(slot_surface.get("second_trinket_slot_live", true)):
-		_fail("Artifact runtime report did not truthfully expose the current trinket slot boundary: %s" % runtime_report)
+	if int(slot_surface.get("active_trinket_slots", 0)) != 2 or not bool(slot_surface.get("second_trinket_slot_live", false)):
+		_fail("Artifact runtime report did not expose both live trinket slots: %s" % runtime_report)
 		return
 
 	var base_movement := HeroCommandRules.movement_max_for_hero(base_hero, DIFFICULTY_ID)
@@ -140,7 +140,7 @@ func _run() -> void:
 		"slot_surface": slot_surface,
 		"runtime_policy": runtime_report.get("runtime_policy", {}),
 		"caveats": [
-			"This report proves equipped artifact effects on current equipment management, adventure, battle, economy, and spell hooks only; set bonuses, source reward execution, save migration, AI valuation, rare-resource activation, and broad UI overhaul remain outside this slice.",
+			"This report proves equipped artifact effects on current equipment management, adventure, battle, economy, and spell hooks; source reward execution, save-version migration, rare-resource activation, and broad UI overhaul remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

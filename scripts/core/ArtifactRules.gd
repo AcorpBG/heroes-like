@@ -1,7 +1,8 @@
 class_name ArtifactRules
 extends RefCounted
 
-const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket"]
+const ARTIFACT_SLOTS := ["boots", "banner", "armor", "trinket"]
+const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket", "trinket_2"]
 const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
@@ -76,7 +77,7 @@ static func normalize_hero_artifacts(value: Variant) -> Dictionary:
 		var raw_equipped = value.get("equipped", {})
 		if raw_equipped is Dictionary:
 			for slot in EQUIPMENT_SLOTS:
-				_register_equipped_candidate(String(raw_equipped.get(slot, "")), equipped, inventory)
+				_register_equipped_candidate(String(raw_equipped.get(slot, "")), equipped, inventory, slot)
 
 		var raw_inventory = value.get("inventory", [])
 		if raw_inventory is Array:
@@ -118,18 +119,7 @@ static func locate_artifact(hero_state: Dictionary, artifact_id: String) -> Dict
 
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	hero_state = ensure_hero_artifacts(hero_state)
-	var totals := {
-		"overworld_movement": 0,
-		"scouting_radius": 0,
-		"battle_attack": 0,
-		"battle_defense": 0,
-		"battle_initiative": 0,
-		"battle_spell_resistance_pct": 0,
-		"battle_control_resistance_pct": 0,
-		"battle_school_resistance_pct": {},
-		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
-		"spell_modifiers": [],
-	}
+	var totals := _blank_bonus_totals()
 
 	var equipped = hero_state.get("artifacts", {}).get("equipped", {})
 	for slot in EQUIPMENT_SLOTS:
@@ -137,19 +127,73 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		if artifact_id == "":
 			continue
 		var artifact := ContentService.get_artifact(artifact_id)
-		var bonuses = artifact.get("bonuses", {})
-		totals["overworld_movement"] = int(totals.get("overworld_movement", 0)) + int(bonuses.get("overworld_movement", 0))
-		totals["scouting_radius"] = int(totals.get("scouting_radius", 0)) + int(bonuses.get("scouting_radius", 0))
-		totals["battle_attack"] = int(totals.get("battle_attack", 0)) + int(bonuses.get("battle_attack", 0))
-		totals["battle_defense"] = int(totals.get("battle_defense", 0)) + int(bonuses.get("battle_defense", 0))
-		totals["battle_initiative"] = int(totals.get("battle_initiative", 0)) + int(bonuses.get("battle_initiative", 0))
-		totals["battle_spell_resistance_pct"] = int(totals.get("battle_spell_resistance_pct", 0)) + int(bonuses.get("battle_spell_resistance_pct", 0))
-		totals["battle_control_resistance_pct"] = int(totals.get("battle_control_resistance_pct", 0)) + int(bonuses.get("battle_control_resistance_pct", 0))
-		totals["battle_school_resistance_pct"] = _merge_school_resistance(totals.get("battle_school_resistance_pct", {}), bonuses.get("battle_school_resistance_pct", {}))
-		totals["daily_income"] = _merge_resources(totals.get("daily_income", {}), bonuses.get("daily_income", {}))
-		totals["spell_modifiers"].append_array(_artifact_spell_modifier_records(artifact, artifact_id))
+		_apply_bonus_payload(totals, artifact.get("bonuses", {}), artifact, artifact_id)
+
+	var active_sets := artifact_set_runtime_state(hero_state)
+	for set_state_value in active_sets:
+		if not (set_state_value is Dictionary):
+			continue
+		var set_state: Dictionary = set_state_value
+		for threshold_value in set_state.get("active_thresholds", []):
+			if not (threshold_value is Dictionary):
+				continue
+			var threshold: Dictionary = threshold_value
+			var threshold_id := "%s:%d" % [String(set_state.get("set_id", "set")), int(threshold.get("count", 0))]
+			_apply_bonus_payload(totals, threshold.get("bonuses", {}), {"bonuses": threshold.get("bonuses", {})}, threshold_id)
+	totals["active_sets"] = active_sets
 
 	return totals
+
+static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
+	var hero := ensure_hero_artifacts(hero_state.duplicate(true))
+	var equipped_ids := []
+	var equipped = hero.get("artifacts", {}).get("equipped", {})
+	for slot in EQUIPMENT_SLOTS:
+		var artifact_id := String(equipped.get(slot, ""))
+		if artifact_id != "" and artifact_id not in equipped_ids:
+			equipped_ids.append(artifact_id)
+
+	var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+	var sets = raw.get("sets", [])
+	var result := []
+	if not (sets is Array):
+		return result
+	for set_value in sets:
+		if not (set_value is Dictionary):
+			continue
+		var artifact_set: Dictionary = set_value
+		var runtime_policy = artifact_set.get("runtime_policy", {})
+		if not (runtime_policy is Dictionary) or not bool(runtime_policy.get("set_bonuses_active", false)):
+			continue
+		var piece_ids := _string_array(artifact_set.get("piece_ids", []))
+		var equipped_piece_ids := []
+		for piece_id in piece_ids:
+			if piece_id in equipped_ids:
+				equipped_piece_ids.append(piece_id)
+		if equipped_piece_ids.is_empty():
+			continue
+		var active_thresholds := []
+		var next_threshold_count := 0
+		for threshold_value in artifact_set.get("piece_thresholds", []):
+			if not (threshold_value is Dictionary):
+				continue
+			var threshold: Dictionary = threshold_value
+			var required_count := int(threshold.get("count", 0))
+			if required_count > 0 and required_count <= equipped_piece_ids.size():
+				active_thresholds.append(threshold.duplicate(true))
+			elif required_count > equipped_piece_ids.size() and (next_threshold_count == 0 or required_count < next_threshold_count):
+				next_threshold_count = required_count
+		result.append({
+			"set_id": String(artifact_set.get("id", "")),
+			"name": String(artifact_set.get("name", artifact_set.get("id", "Artifact Set"))),
+			"piece_count": piece_ids.size(),
+			"equipped_piece_count": equipped_piece_ids.size(),
+			"equipped_piece_ids": equipped_piece_ids,
+			"active_thresholds": active_thresholds,
+			"next_threshold_count": next_threshold_count,
+			"complete": not piece_ids.is_empty() and equipped_piece_ids.size() == piece_ids.size(),
+		})
+	return result
 
 static func spell_affinity_records(hero_state: Dictionary, spell: Dictionary = {}) -> Array:
 	var records := []
@@ -247,7 +291,7 @@ static func artifact_schema_report(artifact_records: Array = [], set_records: Ar
 			"equipment_runtime_migration": false,
 			"source_reward_tables_active": false,
 			"rare_resource_activation": false,
-			"set_bonuses_active": false,
+			"set_bonuses_active": true,
 		},
 	}
 	var slot_counts: Dictionary = report["slot_counts"]
@@ -389,14 +433,16 @@ static func artifact_set_faction_report(artifact_records: Array = [], set_record
 			set_issues.append("missing_source_hint")
 		if not (artifact_set.get("piece_thresholds", []) is Array) or artifact_set.get("piece_thresholds", []).is_empty():
 			set_issues.append("missing_piece_thresholds")
+		else:
+			set_issues.append_array(_artifact_set_threshold_validation_errors(artifact_set, piece_ids.size()))
 		if not missing_pieces.is_empty():
 			set_issues.append("missing_pieces:%s" % ",".join(missing_pieces))
 		if not mismatched_pieces.is_empty():
 			set_issues.append("piece_set_mismatch:%s" % ",".join(mismatched_pieces))
 		if not slot_conflicts.is_empty():
 			set_issues.append("slot_conflicts:%s" % ",".join(slot_conflicts))
-		if set_bonuses_active:
-			set_issues.append("set_bonuses_active")
+		if not set_bonuses_active:
+			set_issues.append("set_bonuses_inactive")
 		if source_tables_active:
 			set_issues.append("source_reward_tables_active")
 		if not set_issues.is_empty():
@@ -460,7 +506,7 @@ static func artifact_set_faction_report(artifact_records: Array = [], set_record
 			"equipment_runtime_migration": false,
 			"source_reward_tables_active": false,
 			"rare_resource_activation": false,
-			"set_bonuses_active": false,
+			"set_bonuses_active": true,
 			"ai_valuation_behavior": false,
 		},
 	}
@@ -656,15 +702,14 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 			"spell_modifier_count": spell_modifiers.size() if spell_modifiers is Array else 0,
 		},
 		"live_contexts": live_contexts,
+		"active_sets": bonuses.get("active_sets", []),
 		"slot_surface": {
 			"active_slots": EQUIPMENT_SLOTS.duplicate(),
-			"active_trinket_slots": 1,
+			"active_trinket_slots": 2,
 			"target_trinket_slots": int(SLOT_LIMITS.get("trinket", 1)),
-			"second_trinket_slot_live": false,
+			"second_trinket_slot_live": true,
 		},
 		"not_live_contexts": [
-			"set_bonus_activation",
-			"second_trinket_equipment_slot",
 			"source_reward_drop_execution",
 			"rare_resource_income",
 			"ai_valuation_behavior",
@@ -672,7 +717,7 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 		"runtime_policy": {
 			"save_version_bump": false,
 			"source_reward_execution": false,
-			"set_bonuses_active": false,
+			"set_bonuses_active": true,
 			"ai_valuation_behavior": false,
 			"rare_resource_activation": false,
 			"broad_ui_overhaul": false,
@@ -707,10 +752,11 @@ static func claim_artifact(
 	hero["artifacts"] = normalize_hero_artifacts(artifacts)
 
 	var message := "%s %s." % [source_verb, artifact_name(artifact_id)]
-	var slot := artifact_slot(artifact_id)
-	if auto_equip and slot != "" and String(hero.get("artifacts", {}).get("equipped", {}).get(slot, "")) == "":
+	var slot := _first_empty_compatible_slot(hero.get("artifacts", {}).get("equipped", {}), artifact_id)
+	if auto_equip and slot != "":
 		var equip_result := equip_artifact(hero, artifact_id)
 		hero = equip_result.get("hero", hero)
+		slot = String(equip_result.get("slot", slot))
 		message = "%s %s" % [
 			source_verb,
 			String(equip_result.get("suffix_message", artifact_name(artifact_id) + "."))
@@ -753,10 +799,7 @@ static func merge_hero_artifacts(base_artifacts: Variant, imported_artifacts: Va
 		var imported_id := String(imported.get("equipped", {}).get(slot, ""))
 		if imported_id == "" or _artifact_is_owned(equipped, inventory, imported_id):
 			continue
-		if String(equipped.get(slot, "")) == "":
-			equipped[slot] = imported_id
-		else:
-			inventory.append(imported_id)
+		_register_equipped_candidate(imported_id, equipped, inventory, slot)
 
 	for artifact_id_value in imported.get("inventory", []):
 		_append_inventory_artifact(String(artifact_id_value), equipped, inventory)
@@ -782,8 +825,8 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 	if artifact.is_empty():
 		return {"ok": false, "hero": hero, "message": "That artifact is not known."}
 
-	var slot := artifact_slot(artifact_id)
-	if slot == "" or slot not in EQUIPMENT_SLOTS:
+	var artifact_slot_type := artifact_slot(artifact_id)
+	if artifact_slot_type == "" or artifact_slot_type not in ARTIFACT_SLOTS:
 		return {"ok": false, "hero": hero, "message": "That artifact cannot be equipped."}
 
 	var location := locate_artifact(hero, artifact_id)
@@ -791,7 +834,7 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 		return {
 			"ok": false,
 			"hero": hero,
-			"message": "%s is already equipped in the %s slot." % [artifact_name(artifact_id), slot],
+			"message": "%s is already equipped in the %s slot." % [artifact_name(artifact_id), _equipment_slot_label(String(location.get("slot", artifact_slot_type)))],
 		}
 	if String(location.get("location", "missing")) != "inventory":
 		return {"ok": false, "hero": hero, "message": "That artifact is not in the pack."}
@@ -800,6 +843,9 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 	var equipped = artifacts.get("equipped", {})
 	var inventory = artifacts.get("inventory", [])
 	_remove_artifact_from_inventory(inventory, artifact_id)
+	var slot := _first_empty_compatible_slot(equipped, artifact_id)
+	if slot == "":
+		slot = _compatible_equipment_slots(artifact_slot_type)[0]
 
 	var swapped_out_id := String(equipped.get(slot, ""))
 	if swapped_out_id != "":
@@ -814,13 +860,13 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 	var suffix_message := "%s. %s" % [artifact_name(artifact_id), _artifact_equipped_note(artifact_id, slot)]
 	var message := "Equipped %s from pack into %s. %s" % [
 		artifact_name(artifact_id),
-		artifact_slot_label(artifact_id),
+		_equipment_slot_label(slot),
 		_artifact_effect_line(artifact_id),
 	]
 	if swapped_out_id != "":
 		message = "Swapped %s into %s and stowed %s in pack." % [
 			artifact_name(artifact_id),
-			artifact_slot_label(artifact_id),
+			_equipment_slot_label(slot),
 			artifact_name(swapped_out_id),
 		]
 		message += " New: %s Was: %s." % [
@@ -829,7 +875,7 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 		]
 		suffix_message = "%s. Swapped into %s; stowed %s. New: %s Was: %s." % [
 			artifact_name(artifact_id),
-			artifact_slot_label(artifact_id),
+			_equipment_slot_label(slot),
 			artifact_name(swapped_out_id),
 			artifact_effect_summary(artifact_id),
 			artifact_effect_summary(swapped_out_id),
@@ -868,7 +914,7 @@ static func unequip_artifact(hero_state: Dictionary, slot: String) -> Dictionary
 		"slot": slot,
 		"message": "Stowed %s from %s into pack. Removed: %s." % [
 			artifact_name(artifact_id),
-			artifact_slot_label(artifact_id),
+			_equipment_slot_label(slot),
 			artifact_effect_summary(artifact_id),
 		],
 	}
@@ -881,17 +927,18 @@ static func describe_loadout(hero_state: Dictionary) -> String:
 		var artifact_id := String(equipped.get(slot, ""))
 		parts.append(
 			"%s %s" % [
-				slot.capitalize(),
+				_equipment_slot_label(slot),
 				artifact_name(artifact_id) if artifact_id != "" else "empty",
 			]
 		)
 
 	var inventory = hero_state.get("artifacts", {}).get("inventory", [])
 	var inventory_count: int = inventory.size() if inventory is Array else 0
-	return "Artifacts: %s | Pack %d\n%s\n%s" % [
+	return "Artifacts: %s | Pack %d\n%s\n%s\n%s" % [
 		", ".join(parts),
 		inventory_count,
 		describe_impact_summary(hero_state),
+		describe_set_bonus_summary(hero_state),
 		describe_collection_summary(hero_state),
 	]
 
@@ -905,11 +952,11 @@ static func describe_management(hero_state: Dictionary) -> String:
 	for slot in EQUIPMENT_SLOTS:
 		var artifact_id := String(equipped.get(slot, ""))
 		if artifact_id == "":
-			lines.append("- %s: empty | Ready for %s" % [slot.capitalize(), slot.capitalize()])
+			lines.append("- %s: empty | Ready for %s" % [_equipment_slot_label(slot), _equipment_slot_label(slot)])
 			continue
 		lines.append(
 			"- %s: %s | Equipped | %s | %s | %s" % [
-				slot.capitalize(),
+				_equipment_slot_label(slot),
 				artifact_name(artifact_id),
 				artifact_taxonomy_summary(artifact_id),
 				artifact_effect_summary(artifact_id),
@@ -938,6 +985,7 @@ static func describe_management(hero_state: Dictionary) -> String:
 		lines.append("- Empty")
 
 	lines.append(describe_bonus_summary(hero_state))
+	lines.append(describe_set_bonus_summary(hero_state))
 	lines.append(describe_impact_summary(hero_state))
 	lines.append(describe_collection_summary(hero_state))
 	return "\n".join(lines)
@@ -967,6 +1015,36 @@ static func describe_bonus_summary(hero_state: Dictionary) -> String:
 		parts.append("+%s/day" % ", ".join(income_parts))
 
 	return "Bonuses: %s" % (", ".join(parts) if not parts.is_empty() else "none")
+
+static func describe_set_bonus_summary(hero_state: Dictionary) -> String:
+	var parts := []
+	for set_state_value in artifact_set_runtime_state(hero_state):
+		if not (set_state_value is Dictionary):
+			continue
+		var set_state: Dictionary = set_state_value
+		var equipped_count := int(set_state.get("equipped_piece_count", 0))
+		if equipped_count <= 0:
+			continue
+		var threshold_parts := []
+		for threshold_value in set_state.get("active_thresholds", []):
+			if not (threshold_value is Dictionary):
+				continue
+			var threshold: Dictionary = threshold_value
+			threshold_parts.append("%dpc %s" % [
+				int(threshold.get("count", 0)),
+				_artifact_effect_summary({"bonuses": threshold.get("bonuses", {})}),
+			])
+		var status := "%s %d/%d" % [
+			String(set_state.get("name", "Artifact Set")),
+			equipped_count,
+			int(set_state.get("piece_count", 0)),
+		]
+		if not threshold_parts.is_empty():
+			status += " | %s" % "; ".join(threshold_parts)
+		elif int(set_state.get("next_threshold_count", 0)) > 0:
+			status += " | next bonus at %d pieces" % int(set_state.get("next_threshold_count", 0))
+		parts.append(status)
+	return "Sets: %s" % ("; ".join(parts) if not parts.is_empty() else "none active")
 
 static func describe_impact_summary(hero_state: Dictionary) -> String:
 	var sections := _bonus_impact_sections(aggregate_bonuses(hero_state), false)
@@ -1011,7 +1089,9 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 			var artifact := ContentService.get_artifact(artifact_id)
 			if artifact.is_empty():
 				continue
-			var slot := artifact_slot(artifact_id)
+			var slot := _first_empty_compatible_slot(equipped, artifact_id)
+			if slot == "":
+				slot = _compatible_equipment_slots(artifact_slot(artifact_id))[0]
 			var equipped_id := String(equipped.get(slot, ""))
 			var label_prefix := "Equip"
 			var summary := "%s | %s | %s | %s | %s" % [
@@ -1068,7 +1148,7 @@ static func artifact_slot(artifact_id: String) -> String:
 		return ""
 	var artifact := ContentService.get_artifact(artifact_id)
 	var slot := String(artifact.get("slot", ""))
-	return slot if slot in EQUIPMENT_SLOTS else ""
+	return slot if slot in ARTIFACT_SLOTS else ""
 
 static func artifact_slot_label(artifact_id: String) -> String:
 	var slot := artifact_slot(artifact_id)
@@ -1133,17 +1213,20 @@ static func artifact_decision_summary(hero_state: Dictionary, artifact_id: Strin
 		return "Pack only"
 	var location := locate_artifact(hero_state, artifact_id)
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
-	var equipped_id := String(artifacts.get("equipped", {}).get(slot, ""))
+	var target_slot := _first_empty_compatible_slot(artifacts.get("equipped", {}), artifact_id)
+	if target_slot == "":
+		target_slot = _compatible_equipment_slots(slot)[0]
+	var equipped_id := String(artifacts.get("equipped", {}).get(target_slot, ""))
 	match String(location.get("location", "missing")):
 		"equipped":
-			return "Equipped in %s; can stow to pack" % artifact_slot_label(artifact_id)
+			return "Equipped in %s; can stow to pack" % _equipment_slot_label(String(location.get("slot", slot)))
 		"inventory":
 			if equipped_id == "":
-				return "Can equip to empty %s" % artifact_slot_label(artifact_id)
+				return "Can equip to empty %s" % _equipment_slot_label(target_slot)
 			return "Can swap with %s" % artifact_name(equipped_id)
 		_:
 			if equipped_id == "":
-				return "Will auto-equip to empty %s" % artifact_slot_label(artifact_id)
+				return "Will auto-equip to empty %s" % _equipment_slot_label(target_slot)
 			return "Will enter pack; can swap with %s" % artifact_name(equipped_id)
 
 static func describe_artifact_short(artifact_id: String) -> String:
@@ -1197,9 +1280,11 @@ static func artifact_collection_state(
 		return _owned_location_label(artifact_id, location)
 	var slot := artifact_slot(artifact_id)
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
-	var equipped_id := String(artifacts.get("equipped", {}).get(slot, ""))
-	if slot != "" and equipped_id == "":
-		return "Will auto-equip to empty %s slot" % artifact_slot_label(artifact_id)
+	var target_slot := _first_empty_compatible_slot(artifacts.get("equipped", {}), artifact_id)
+	var replacement_slot: String = String(_compatible_equipment_slots(slot)[0]) if slot != "" else ""
+	var equipped_id := String(artifacts.get("equipped", {}).get(replacement_slot, ""))
+	if slot != "" and target_slot != "":
+		return "Will auto-equip to empty %s slot" % _equipment_slot_label(target_slot)
 	if slot != "" and equipped_id != "":
 		return "Will enter pack; %s holds %s" % [artifact_slot_label(artifact_id), artifact_name(equipped_id)]
 	return "Will enter pack"
@@ -1218,7 +1303,7 @@ static func describe_artifact(artifact_id: String) -> String:
 static func _owned_location_label(artifact_id: String, location: Dictionary) -> String:
 	match String(location.get("location", "missing")):
 		"equipped":
-			return "Equipped in %s slot" % artifact_slot_label(artifact_id)
+			return "Equipped in %s slot" % _equipment_slot_label(String(location.get("slot", artifact_slot(artifact_id))))
 		"inventory":
 			return "Stored in pack"
 		_:
@@ -1228,7 +1313,7 @@ static func _artifact_effect_line(artifact_id: String) -> String:
 	return "%s | %s." % [artifact_reward_role(artifact_id), artifact_effect_summary(artifact_id)]
 
 static func _artifact_equipped_note(artifact_id: String, slot: String) -> String:
-	return "Equipped in %s slot. %s" % [slot.capitalize(), _artifact_effect_line(artifact_id)]
+	return "Equipped in %s slot. %s" % [_equipment_slot_label(slot), _artifact_effect_line(artifact_id)]
 
 static func _artifact_collection_note(hero_state: Dictionary, artifact_id: String) -> String:
 	return "%s | %s | %s." % [
@@ -1243,16 +1328,45 @@ static func _blank_equipped_slots() -> Dictionary:
 		equipped[slot] = ""
 	return equipped
 
-static func _register_equipped_candidate(artifact_id: String, equipped: Dictionary, inventory: Array) -> void:
+static func _compatible_equipment_slots(slot_type: String) -> Array:
+	match slot_type:
+		"trinket":
+			return ["trinket", "trinket_2"]
+		"boots", "banner", "armor":
+			return [slot_type]
+		_:
+			return []
+
+static func _first_empty_compatible_slot(equipped: Variant, artifact_id: String) -> String:
+	if not (equipped is Dictionary):
+		return ""
+	return _first_empty_slot_from_candidates(equipped, _compatible_equipment_slots(artifact_slot(artifact_id)))
+
+static func _first_empty_slot_from_candidates(equipped: Dictionary, candidates: Array) -> String:
+	for slot_value in candidates:
+		var slot := String(slot_value)
+		if String(equipped.get(slot, "")) == "":
+			return slot
+	return ""
+
+static func _equipment_slot_label(slot: String) -> String:
+	if slot == "trinket_2":
+		return "Trinket II"
+	return slot.capitalize()
+
+static func _register_equipped_candidate(artifact_id: String, equipped: Dictionary, inventory: Array, preferred_slot: String = "") -> void:
 	if artifact_id == "" or not _artifact_exists(artifact_id) or _artifact_is_owned(equipped, inventory, artifact_id):
 		return
-	var slot := artifact_slot(artifact_id)
-	if slot == "":
+	var compatible_slots := _compatible_equipment_slots(artifact_slot(artifact_id))
+	if compatible_slots.is_empty():
 		return
-	if String(equipped.get(slot, "")) == "":
-		equipped[slot] = artifact_id
-	else:
+	var slot := preferred_slot if preferred_slot in compatible_slots else ""
+	if slot == "" or String(equipped.get(slot, "")) != "":
+		slot = _first_empty_slot_from_candidates(equipped, compatible_slots)
+	if slot == "":
 		inventory.append(artifact_id)
+		return
+	equipped[slot] = artifact_id
 
 static func _append_inventory_artifact(artifact_id: String, equipped: Dictionary, inventory: Array) -> void:
 	if artifact_id == "" or not _artifact_exists(artifact_id) or _artifact_is_owned(equipped, inventory, artifact_id):
@@ -1286,7 +1400,7 @@ static func _already_owned_message(artifact_id: String, location: Dictionary, so
 		return "%s %s, but it is already equipped in the %s slot." % [
 			source_verb,
 			artifact_name(artifact_id),
-			String(location.get("slot", "equipment")),
+			_equipment_slot_label(String(location.get("slot", "equipment"))),
 		]
 	if location_name == "inventory":
 		return "%s %s, but it is already in the pack." % [source_verb, artifact_name(artifact_id)]
@@ -1333,9 +1447,8 @@ static func _artifact_effect_summary(artifact: Dictionary) -> String:
 
 	return ", ".join(parts) if not parts.is_empty() else "No bonuses"
 
-static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
-	var bonuses = artifact.get("bonuses", {}) if artifact is Dictionary else {}
-	var totals := {
+static func _blank_bonus_totals() -> Dictionary:
+	return {
 		"overworld_movement": 0,
 		"scouting_radius": 0,
 		"battle_attack": 0,
@@ -1346,19 +1459,42 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 		"battle_school_resistance_pct": {},
 		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
 		"spell_modifiers": [],
+		"active_sets": [],
 	}
+
+static func _apply_bonus_payload(
+	totals: Dictionary,
+	bonuses_value: Variant,
+	modifier_source: Dictionary = {},
+	modifier_source_id: String = ""
+) -> void:
+	if not (bonuses_value is Dictionary):
+		return
+	var bonuses: Dictionary = bonuses_value
+	for key in [
+		"overworld_movement",
+		"scouting_radius",
+		"battle_attack",
+		"battle_defense",
+		"battle_initiative",
+		"battle_spell_resistance_pct",
+		"battle_control_resistance_pct",
+	]:
+		totals[key] = int(totals.get(key, 0)) + int(bonuses.get(key, 0))
+	totals["battle_school_resistance_pct"] = _merge_school_resistance(
+		totals.get("battle_school_resistance_pct", {}),
+		bonuses.get("battle_school_resistance_pct", {})
+	)
+	totals["daily_income"] = _merge_resources(totals.get("daily_income", {}), bonuses.get("daily_income", {}))
+	if not modifier_source.is_empty():
+		totals["spell_modifiers"].append_array(_artifact_spell_modifier_records(modifier_source, modifier_source_id))
+
+static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
+	var bonuses = artifact.get("bonuses", {}) if artifact is Dictionary else {}
+	var totals := _blank_bonus_totals()
 	if not (bonuses is Dictionary):
 		return totals
-	totals["overworld_movement"] = int(bonuses.get("overworld_movement", 0))
-	totals["scouting_radius"] = int(bonuses.get("scouting_radius", 0))
-	totals["battle_attack"] = int(bonuses.get("battle_attack", 0))
-	totals["battle_defense"] = int(bonuses.get("battle_defense", 0))
-	totals["battle_initiative"] = int(bonuses.get("battle_initiative", 0))
-	totals["battle_spell_resistance_pct"] = int(bonuses.get("battle_spell_resistance_pct", 0))
-	totals["battle_control_resistance_pct"] = int(bonuses.get("battle_control_resistance_pct", 0))
-	totals["battle_school_resistance_pct"] = _merge_school_resistance({}, bonuses.get("battle_school_resistance_pct", {}))
-	totals["daily_income"] = _merge_resources({}, bonuses.get("daily_income", {}))
-	totals["spell_modifiers"] = _artifact_spell_modifier_records(artifact, String(artifact.get("id", "")))
+	_apply_bonus_payload(totals, bonuses, artifact, String(artifact.get("id", "")))
 	return totals
 
 static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: bool) -> Array:
@@ -1455,6 +1591,31 @@ static func _artifact_set_id(artifact: Dictionary) -> String:
 	if validation_tags is Dictionary:
 		return String(validation_tags.get("set_id", "")).strip_edges()
 	return ""
+
+static func _artifact_set_threshold_validation_errors(artifact_set: Dictionary, piece_count: int) -> Array:
+	var issues := []
+	var seen_counts := []
+	var previous_count := 0
+	for threshold_value in artifact_set.get("piece_thresholds", []):
+		if not (threshold_value is Dictionary):
+			issues.append("threshold_not_object")
+			continue
+		var threshold: Dictionary = threshold_value
+		var count := int(threshold.get("count", 0))
+		if count <= 0 or count > piece_count:
+			issues.append("threshold_count_outside_piece_count:%d" % count)
+		if count in seen_counts:
+			issues.append("duplicate_threshold_count:%d" % count)
+		if count <= previous_count:
+			issues.append("threshold_counts_not_ascending")
+		seen_counts.append(count)
+		previous_count = count
+		if String(threshold.get("summary", "")).strip_edges() == "":
+			issues.append("threshold_missing_summary:%d" % count)
+		var bonuses = threshold.get("bonuses", {})
+		if not (bonuses is Dictionary) or bonuses.is_empty():
+			issues.append("threshold_missing_bonuses:%d" % count)
+	return issues
 
 static func _artifact_spell_modifier_records(artifact: Dictionary, artifact_id: String) -> Array:
 	var records := []
@@ -1732,7 +1893,7 @@ static func _artifact_taxonomy_validation_errors(artifact: Dictionary) -> Array:
 	if artifact_id == "":
 		errors.append("missing_id")
 	var slot := String(artifact.get("slot", "")).strip_edges()
-	if slot not in EQUIPMENT_SLOTS:
+	if slot not in ARTIFACT_SLOTS:
 		errors.append("unsupported_slot")
 	var artifact_class := String(artifact.get("artifact_class", "")).strip_edges()
 	if artifact_class not in ARTIFACT_CLASSES:
@@ -1788,7 +1949,7 @@ static func _equip_constraints_complete(artifact: Dictionary) -> bool:
 	if not (constraints is Dictionary):
 		return false
 	var slot := String(artifact.get("slot", "")).strip_edges()
-	if slot == "" or slot not in EQUIPMENT_SLOTS:
+	if slot == "" or slot not in ARTIFACT_SLOTS:
 		return false
 	var expected_limit := int(SLOT_LIMITS.get(slot, 1))
 	if int(constraints.get("slot_limit", 0)) != expected_limit:
