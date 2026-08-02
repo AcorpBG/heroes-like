@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected deterministic artifact pickup source slice is complete. The overall release remains active; select the next pending implementation slice from unresolved product gaps.",
+  "currentNotes": "Completed verified per-user Linux and Windows archive install/uninstall workflows with installed-binary boot validation and user-data preservation. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "",
-  "currentSliceId": "",
-  "currentSliceNotes": "No operational slice is selected after completing artifact pickup source execution.",
-  "currentSliceStatus": "unassigned",
-  "currentSliceTitle": "",
-  "currentSliceUpdatedAt": "2026-08-02T22:22:28Z",
+  "currentSlice": "packaging-user-local-install-workflow-10184",
+  "currentSliceId": "packaging-user-local-install-workflow-10184",
+  "currentSliceNotes": "Verified per-user Linux and Windows archive install, installed boot, uninstall, launch integration removal, and user-data preservation.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Packaging User-Local Install Workflow",
+  "currentSliceUpdatedAt": "2026-08-02T22:36:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65776,6 +65776,91 @@
         "status": "passed_with_known_unrelated_visual_failure",
         "updatedAt": "2026-08-02T22:22:28Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "python3 tests/packaging_release_artifact_verification_test.py",
+        "python3 tests/packaging_user_local_installer_smoke.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/packaging_user_local_installer_smoke.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Verified Linux and Windows release archives include platform-native per-user install and uninstall scripts; Linux installs the runtime payload, command launcher, and desktop entry; Windows installs the runtime payload and Start Menu launcher; isolated Linux and Wine workflows install, boot the installed executable, and uninstall while user data outside the install root survives; release manifests, archive verification, existing packaging tests, and repository validation pass.",
+      "id": "packaging-user-local-install-workflow-10184",
+      "implementationTargets": [
+        "packaging/installers/linux/install.sh",
+        "packaging/installers/linux/uninstall.sh",
+        "packaging/installers/windows/install.cmd",
+        "packaging/installers/windows/uninstall.cmd",
+        "tools/package_release.py",
+        "tests/packaging_release_artifact_verification_test.py",
+        "tests/packaging_user_local_installer_smoke.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "code signing, package signing, MSI, NSIS, AppImage, or system-wide installation",
+        "native Windows hardware, controller, graphics, or audio certification",
+        "distribution-channel upload or automatic update services",
+        "changing gameplay, save format, Native RMG, or claiming overall release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Turn verified portable archives into usable per-user installs with reversible launch integration on both mandatory platforms.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md",
+        "docs/packaging-release-bundle-manifest-gate-report.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "packaging/installers/linux/install.sh",
+          "packaging/installers/linux/uninstall.sh",
+          "packaging/installers/windows/install.cmd",
+          "packaging/installers/windows/uninstall.cmd",
+          "tools/package_release.py",
+          "tests/packaging_release_artifact_verification_test.py",
+          "tests/packaging_user_local_installer_smoke.py",
+          "tests/validate_repo.py"
+        ],
+        "finding": "Both final release archives contain verified per-user installer payloads. The extracted Linux archive installed and booted through its command launcher before removing the program, launcher, and desktop entry. The extracted Windows archive installed and booted under a fresh Wine prefix, reached Boot.scn and MainMenu.scn with the release native DLL loaded, then removed the program and Start Menu launcher. External user-data sentinels survived both uninstall workflows, and an unowned Linux target without the installation marker was refused without deletion.",
+        "metrics": {
+          "platform_archive_count": 2,
+          "installer_template_count": 4,
+          "verified_manifest_payload_file_count_per_platform": 6,
+          "linux_archive_size_bytes": 205789453,
+          "windows_archive_size_bytes": 214684634,
+          "linux_installed_boot_passed": true,
+          "windows_wine_installed_boot_passed": true,
+          "linux_user_data_preserved": true,
+          "windows_user_data_preserved": true,
+          "unowned_target_deletion_refused": true,
+          "focused_packaging_test_count": 6
+        }
+      },
+      "startedAt": "2026-08-02T22:26:57Z",
+      "status": "completed",
+      "title": "Packaging User-Local Install Workflow",
+      "updatedAt": "2026-08-02T22:36:02Z",
+      "completedAt": "2026-08-02T22:36:02Z",
+      "notes": "Verified per-user Linux and Windows archive install, installed boot, uninstall, launch integration removal, and user-data preservation. Signing, native Windows hardware certification, platform installers such as MSI/AppImage, channel integration, and overall release completion remain open.",
+      "validation": {
+        "commands": [
+          "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/packaging_user_local_installer_smoke.py tests/validate_repo.py",
+          "python3 tests/packaging_release_artifact_verification_test.py",
+          "python3 tests/packaging_user_local_installer_smoke.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T22:36:02Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66217,7 +66302,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "artifact_pickup_source_execution_complete_overall_release_in_progress",
+  "result": "packaging_user_local_install_workflow_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66318,9 +66403,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Selected authored artifact caches now execute the final pickup source table deterministically for player and strategic-AI claims with save-backed source identity, while non-opted fixed caches remain unchanged. Strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Verified Linux and Windows portable archives now provide reversible per-user installs with launch integration, installed-binary boot validation, and user-data-preserving uninstall behavior. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T22:22:28Z",
+  "updatedAt": "2026-08-02T22:36:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

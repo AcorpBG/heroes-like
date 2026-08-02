@@ -27,6 +27,7 @@ SCHEMA_ID = "heroes_like_release_index_v1"
 PLATFORM_MANIFEST_SCHEMA_ID = "heroes_like_platform_release_manifest_v1"
 MAX_ARCHIVE_MEMBER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_ARCHIVE_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
+INSTALLER_ROOT = ROOT / "packaging" / "installers"
 
 
 @dataclass(frozen=True)
@@ -36,10 +37,15 @@ class PlatformSpec:
     binary_name: str
     native_name: str
     archive_suffix: str
+    installer_names: tuple[str, str]
 
     @property
     def required_names(self) -> tuple[str, ...]:
         return self.binary_name, f"{PRODUCT_ID}.pck", self.native_name
+
+    @property
+    def staged_names(self) -> tuple[str, ...]:
+        return (*self.required_names, "README.txt", *self.installer_names)
 
 
 PLATFORMS = (
@@ -49,6 +55,7 @@ PLATFORMS = (
         binary_name="heroes-like.x86_64",
         native_name="libaurelion_map_persistence.linux.template_release.x86_64.so",
         archive_suffix="tar.gz",
+        installer_names=("install.sh", "uninstall.sh"),
     ),
     PlatformSpec(
         platform_id="windows-x86_64",
@@ -56,6 +63,7 @@ PLATFORMS = (
         binary_name="heroes-like.exe",
         native_name="aurelion_map_persistence.windows.template_release.x86_64.dll",
         archive_suffix="zip",
+        installer_names=("install.cmd", "uninstall.cmd"),
     ),
 )
 
@@ -124,11 +132,16 @@ def validate_platform_files(spec: PlatformSpec, export_dir: Path) -> list[Path]:
 
 def release_readme(spec: PlatformSpec, version: str) -> str:
     launch = "./heroes-like.x86_64" if spec.platform_id.startswith("linux") else "heroes-like.exe"
+    install = "./install.sh" if spec.platform_id.startswith("linux") else "install.cmd"
+    uninstall = "./uninstall.sh" if spec.platform_id.startswith("linux") else "uninstall.cmd"
     return (
         f"heroes-like {version}\n"
         f"Platform: {spec.platform_id}\n\n"
         f"Keep every file in this directory together and launch with: {launch}\n"
+        f"Install for the current user with: {install}\n"
+        f"Remove installed program files with: {uninstall}\n"
         "Settings, saves, generated maps, and runtime issue logs are stored in the platform user-data directory.\n"
+        "Uninstalling program files does not remove that user data.\n"
     )
 
 
@@ -140,6 +153,12 @@ def stage_platform(spec: PlatformSpec, export_dir: Path, stage_dir: Path, versio
     for source in source_files:
         shutil.copy2(source, bundle_root / source.name)
     (bundle_root / "README.txt").write_text(release_readme(spec, version), encoding="utf-8", newline="\n")
+    installer_dir = INSTALLER_ROOT / ("linux" if spec.platform_id.startswith("linux") else "windows")
+    for installer_name in spec.installer_names:
+        source = installer_dir / installer_name
+        if not source.is_file() or source.stat().st_size <= 0:
+            raise RuntimeError(f"missing installer payload for {spec.platform_id}: {source}")
+        shutil.copy2(source, bundle_root / installer_name)
     payload_files = sorted(path for path in bundle_root.iterdir() if path.is_file())
     manifest = {
         "schema_id": PLATFORM_MANIFEST_SCHEMA_ID,
@@ -161,7 +180,8 @@ def stage_platform(spec: PlatformSpec, export_dir: Path, stage_dir: Path, versio
 
 
 def normalized_mode(path: Path, spec: PlatformSpec) -> int:
-    return 0o755 if path.name == spec.binary_name and spec.platform_id.startswith("linux") else 0o644
+    executable = path.name == spec.binary_name or path.name in spec.installer_names
+    return 0o755 if executable and spec.platform_id.startswith("linux") else 0o644
 
 
 def create_tar_gz(bundle_root: Path, destination: Path, spec: PlatformSpec, epoch: int) -> None:
@@ -340,7 +360,7 @@ def verified_manifest_rows(manifest: dict, spec: PlatformSpec, version: str) -> 
         if not re.fullmatch(r"[0-9a-f]{64}", digest) or size <= 0:
             raise RuntimeError(f"platform manifest contains invalid file identity: {name!r}")
         rows[name] = value
-    expected = {*spec.required_names, "README.txt"}
+    expected = set(spec.staged_names)
     if set(rows) != expected:
         raise RuntimeError(f"platform manifest payload differs from required files for {spec.platform_id}: {sorted(rows)}")
     return rows
@@ -350,7 +370,7 @@ def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str
     bundle_root = f"{PRODUCT_ID}-{version}-{spec.platform_id}"
     archive_summary = archive_file_summaries(spec, archive_path, bundle_root)
     archive_rows = archive_summary["files"]
-    expected_archive_files = {*spec.required_names, "README.txt", "release-manifest.json"}
+    expected_archive_files = {*spec.staged_names, "release-manifest.json"}
     if set(archive_rows) != expected_archive_files:
         raise RuntimeError(f"{spec.platform_id} archive payload differs from required files: {sorted(archive_rows)}")
 
