@@ -55540,15 +55540,19 @@
       ],
       "startedAt": "2026-08-02T03:26:25Z",
       "status": "in_progress",
-      "summary": "In progress. Overworld and town now use responsive compact layouts at 1280x720 and collapse their secondary rails at the established 1024x600 minimum, preserving the dominant map/stage and command actions without clipping. Fresh Xvfb captures confirm the three primary play screens fit at 1280x720. Continue with onboarding, player-language tooltips, and save/load confidence before completing this broader UX slice.",
+      "summary": "In progress. Overworld and town now use responsive compact layouts at 1280x720 and collapse secondary rails at 1024x600. Generated-skirmish setup now presents a player-readable map plan, supported scope, Build & Play command, playability-check progress, actionable failure recovery, and explicit save safety without exposing internal template/profile/provenance terminology. Continue with onboarding and save/load confidence before completing this broader UX slice.",
       "title": "UX Polish Player Comprehension",
-      "updatedAt": "2026-08-02T03:57:23Z",
+      "updatedAt": "2026-08-02T04:12:19Z",
       "validation": {
         "commands": [
           "godot4 --headless --path /root/dev/heroes-like --scene res://tests/player_comprehension_layout_smoke.tscn",
           "UI_RUNTIME_VISUAL_VIEWPORT_INDEX=0 UI_RUNTIME_VISUAL_SHELL=overworld xvfb-run -a godot4 --path /root/dev/heroes-like --scene res://tests/ui_runtime_skin_visual_report.tscn",
           "UI_RUNTIME_VISUAL_VIEWPORT_INDEX=0 UI_RUNTIME_VISUAL_SHELL=town xvfb-run -a godot4 --path /root/dev/heroes-like --scene res://tests/ui_runtime_skin_visual_report.tscn",
           "UI_RUNTIME_VISUAL_VIEWPORT_INDEX=0 UI_RUNTIME_VISUAL_SHELL=battle xvfb-run -a godot4 --path /root/dev/heroes-like --scene res://tests/ui_runtime_skin_visual_report.tscn",
+          "godot4 --headless --path /root/dev/heroes-like --scene res://tests/random_map_player_setup_retry_ux_report.tscn",
+          "godot4 --headless --path /root/dev/heroes-like --scene res://tests/random_map_async_generation_ux_report.tscn",
+          "godot4 --headless --path /root/dev/heroes-like --scene res://tests/random_map_all_template_menu_wiring_report.tscn",
+          "GENERATED_MAP_SETUP_VISUAL_CAPTURE=1 xvfb-run -a godot4 --path /root/dev/heroes-like --scene res://tests/generated_map_setup_visual_smoke.tscn",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
@@ -55562,18 +55566,21 @@
           "freshCaptures": [
             ".artifacts/ui_runtime_skin_visual_report/overworld_1280x720.png",
             ".artifacts/ui_runtime_skin_visual_report/town_1280x720.png",
-            ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png"
+            ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
+            ".artifacts/generated_map_setup_visual_smoke/generated_map_setup_1280x720.png"
           ],
           "implementation": [
             "Overworld compact mode removes duplicate briefing, commitment, route-cue, and resource rails while retaining resources in the status tooltip; narrow mode preserves map, order, end-turn, save, and menu actions.",
             "Town compact mode prioritizes the authored town stage and selected management tab; narrow mode gives the stage the full play width.",
-            "Responsive state is reapplied after overworld refresh so hidden secondary rails do not reappear during play."
+            "Responsive state is reapplied after overworld refresh so hidden secondary rails do not reappear during play.",
+            "Generated-skirmish setup replaces recovery/debug vocabulary with a map plan, supported Land/Surface scope, Build & Play action, readable build/check stages, actionable setup failure recovery, and an explicit no-save-change guarantee.",
+            "Generated-map UI tests now reject internal/provenance/template/profile/retry/validation terms in visible setup and failure copy while retaining hidden native authority metadata for runtime validation."
           ],
           "battleLayoutMatrix": "Stopped after more than four minutes with no output; no completion claim. Battle was unchanged and its fresh 1280x720 visual capture passed through the existing report."
         },
         "sliceId": "ux-polish-player-comprehension-10184",
-        "status": "passed_compact_layout_increment_slice_remains_in_progress",
-        "updatedAt": "2026-08-02T03:57:23Z"
+        "status": "passed_compact_layout_and_generated_setup_player_language_increments_slice_remains_in_progress",
+        "updatedAt": "2026-08-02T04:12:19Z"
       }
     },
     {
