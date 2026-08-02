@@ -802,6 +802,17 @@
       ]
     },
     {
+      "id": "army_orevein_contract_column",
+      "name": "Orevein Contract Column",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 12},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 8},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 5},
+        {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 2}
+      ]
+    },
+    {
       "id": "army_bellwake_privateers",
       "name": "Bellwake Privateers",
       "faction_id": "faction_veilmourn",

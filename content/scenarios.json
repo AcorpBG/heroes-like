@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 16,
+  "player_facing_active_scenario_count": 17,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -4052,6 +4052,168 @@
           "difficulty": "medium",
           "combat_seed": 10203
         }
+      ]
+    },
+    {
+      "id": "orevein-contract",
+      "name": "Orevein Contract",
+      "selection": {
+        "summary": "Hold Orevein Gantry, break Embercourt's archive line, and stamp a live contract across the Riverwatch crossing without campaign carryover.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Contract Road (11x6)",
+        "player_summary": "Marka Ironclause leads a plated Brasshollow column from Orevein Gantry and must turn quarry claims into a sustained crossing force.",
+        "enemy_summary": "Embercourt archive wardens, bridge levies, and beacon batteries defend Riverwatch while charter pressure closes the road.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_orevein_contract_column",
+      "hero_id": "hero_brasshollow_marka_ironclause",
+      "starting_resources": {"gold": 400, "wood": 4, "ore": 1, "brass_scrip": 2},
+      "map": [
+        ["rough", "rough", "rough", "rough", "water", "rough", "rough", "rough", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "rough", "water", "rough", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "rough", "grass", "water", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "grass", "grass", "water", "grass", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_brasshollow_marka_ironclause"],
+      "objectives": {
+        "victory_text": "The Riverwatch crossing accepts Orevein's stamped writ, and the Combine opens a guarded contract road for skirmish scoring only.",
+        "defeat_text": "Embercourt voids the Orevein writ and closes the gantry road before Marka can force the crossing.",
+        "victory": [
+          {"id": "claim_riverwatch_crossing", "label": "Claim the Riverwatch crossing", "type": "town_owned_by_player", "placement_id": "riverwatch_contract_crossing"},
+          {"id": "break_archive_wardens", "label": "Break the Archive Wardens", "type": "flag_true", "flag": "archive_wardens_broken"},
+          {"id": "break_bridgeward", "label": "Break the Bridgeward Levies", "type": "flag_true", "flag": "bridgeward_levies_broken"},
+          {"id": "clear_beacon_line", "label": "Clear the Beacon Wardens", "type": "encounter_resolved", "placement_id": "orevein_beacon_wardens"}
+        ],
+        "defeat": [
+          {"id": "hold_orevein", "label": "Keep Orevein Gantry under contract", "type": "town_not_owned_by_player", "placement_id": "orevein_gantry"},
+          {"id": "marka_survives", "label": "Marka must survive the contract", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10},
+          {"id": "stamp_crossing_before_daybreak", "label": "Stamp the crossing before Day 12", "type": "day_at_least", "day": 12}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "orevein_clause_train",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "orevein_gantry"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "orevein_gantry", "recruits": {"unit_brasshollow_scrip_haulers": 3, "unit_brasshollow_rivet_hounds": 2}},
+            {"type": "message", "text": "A stamped clause train reaches Orevein with replacement haulers, rivet hounds, and a sealed ore allotment."}
+          ]
+        },
+        {
+          "id": "riverwatch_ledgers_seized",
+          "priority": 110,
+          "conditions": [{"type": "objective_met", "objective_id": "claim_riverwatch_crossing"}],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "riverwatch_contract_crossing", "building_id": "building_lantern_archive"},
+            {"type": "award_artifact", "artifact_id": "artifact_quarry_tally_rod"},
+            {"type": "set_flag", "flag": "riverwatch_writ_recorded", "value": true},
+            {"type": "message", "text": "Marka enters the seized Riverwatch ledgers into Orevein's tally and binds the crossing to the new writ."}
+          ]
+        },
+        {
+          "id": "charter_counterbattery",
+          "priority": 94,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "orevein_gantry"}
+          ],
+          "effects": [
+            {"type": "spawn_encounter", "placement": {"placement_id": "orevein_charter_counterbattery", "encounter_id": "encounter_lantern_patrol", "x": 9, "y": 0, "difficulty": "scripted", "spawned_by_faction_id": "faction_embercourt", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "Riverwatch rolls a lantern counterbattery onto the north rise as soon as Orevein's first clause train clears the gantry."}
+          ]
+        },
+        {
+          "id": "archive_beacons_hold",
+          "priority": 88,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_archive_wardens"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {"type": "spawn_encounter", "placement": {"placement_id": "orevein_archive_beacons_hold", "encounter_id": "encounter_road_chaplains", "x": 10, "y": 5, "difficulty": "scripted", "spawned_by_faction_id": "faction_embercourt", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "Unbroken archive beacons keep the charter road legible and draw fresh chaplains onto Marka's southern rail."}
+          ]
+        },
+        {
+          "id": "beacon_scrap_ledger",
+          "priority": 84,
+          "conditions": [{"type": "encounter_resolved", "placement_id": "orevein_beacon_wardens"}],
+          "effects": [
+            {"type": "add_resources", "resources": {"brass_scrip": 2}},
+            {"type": "award_experience", "amount": 120},
+            {"type": "set_flag", "flag": "beacon_scrap_recorded", "value": true},
+            {"type": "message", "text": "Orevein auditors weigh the broken beacon plates, credit the column two scrip, and record the battery's weak seams."}
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "orevein_gantry", "town_id": "town_brasshollow_orevein_gantry", "x": 0, "y": 2, "owner": "player", "recovery": {"pressure": 1, "source": "contract-road attrition"}},
+        {"placement_id": "riverwatch_contract_crossing", "town_id": "town_riverwatch", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Riverwatch Charter Wardens",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "ore": 1},
+          "raid_encounter_ids": ["encounter_lantern_patrol", "encounter_bridgeward_levies"],
+          "spawn_points": [{"x": 9, "y": 1}, {"x": 9, "y": 4}],
+          "siege_target_placement_id": "orevein_gantry",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": ["orevein_gantry", "orevein_ridge_quarry", "orevein_gauge_shrine", "orevein_beacon_wardens"],
+          "strategy_overrides": {
+            "site_family_weights": {"faction_outpost": 1.4, "frontier_shrine": 1.2},
+            "raid_target_weights": {"town": 1.35, "resource": 1.1, "encounter": 1.2},
+            "raid": {"town_siege_weight": 1.45, "site_denial_weight": 1.2}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "orevein_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
+        {"placement_id": "orevein_assay_depot", "site_id": "site_orevein_assay_depot", "x": 2, "y": 5},
+        {"placement_id": "orevein_scout_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "orevein_ridge_quarry", "site_id": "site_ridge_quarry", "x": 3, "y": 5},
+        {"placement_id": "orevein_ore_reserve", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "orevein_contract_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "orevein_brass_scrip_mint", "site_id": "site_brass_scrip_mint", "x": 0, "y": 1},
+        {"placement_id": "orevein_gauge_shrine", "site_id": "site_brasshollow_gauge_shrine", "x": 3, "y": 3},
+        {"placement_id": "riverwatch_embergrain_front", "site_id": "site_embergrain_warm_granary", "x": 10, "y": 1, "collected_by_faction_id": "faction_embercourt"}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "riverwatch_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {
+          "placement_id": "orevein_archive_wardens",
+          "encounter_id": "encounter_archive_wardens",
+          "x": 4,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 17201,
+          "enemy_army": {"id": "army_orevein_archive_wardens_watch", "name": "Orevein Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_ember_archer", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}
+        },
+        {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 3}, {"unit_id": "unit_ember_archer", "count": 6}]}},
+        {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}}
       ]
     },
     {

@@ -11375,6 +11375,7 @@ def validate_six_faction_content_scaffold(errors: list[str]) -> None:
     ensure(SIX_FACTION_BIBLE_IDS.issubset(factions.keys()), errors, "Six-faction implementation loop must author all bible faction records")
 
     ladder_fingerprints: set[str] = set()
+    integrated_player_skirmish_faction_ids = {"faction_thornwake", "faction_brasshollow"}
     for faction_id in sorted(SIX_FACTION_BIBLE_IDS):
         faction = factions.get(faction_id, {})
         design = faction.get("design_pillars", {})
@@ -11390,7 +11391,7 @@ def validate_six_faction_content_scaffold(errors: list[str]) -> None:
         status = faction.get("content_status", {})
         ensure(isinstance(status, dict) and bool(status), errors, f"Faction {faction_id} must define content_status for six-faction implementation truthfulness")
         if isinstance(status, dict):
-            expected_loop_status = "authored_player_skirmish_started" if faction_id == "faction_thornwake" else "scaffold_started"
+            expected_loop_status = "authored_player_skirmish_started" if faction_id in integrated_player_skirmish_faction_ids else "scaffold_started"
             ensure(str(status.get("six_faction_loop", "")) == expected_loop_status, errors, f"Faction {faction_id} must be marked {expected_loop_status} in the six-faction loop")
             ensure(str(status.get("manual_play", "")) == "not_verified_for_six_faction_bundle", errors, f"Faction {faction_id} must not claim six-faction manual play verification")
             ensure(str(status.get("playability", "")) != "fully_playable", errors, f"Faction {faction_id} must not claim fully_playable during the scaffold slice")
@@ -11444,7 +11445,7 @@ def validate_six_faction_content_scaffold(errors: list[str]) -> None:
             seed_town = towns.get(seed_town_id, {})
             ensure(bool(seed_town), errors, f"New bible faction {faction_id} seed town {seed_town_id} must be authored")
             if seed_town:
-                expected_town_status = "authored_player_skirmish_integrated" if faction_id == "faction_thornwake" else "six_faction_seed_town_not_scenario_integrated"
+                expected_town_status = "authored_player_skirmish_integrated" if faction_id in integrated_player_skirmish_faction_ids else "six_faction_seed_town_not_scenario_integrated"
                 ensure(str(seed_town.get("content_status", "")) == expected_town_status, errors, f"New bible faction {faction_id} seed town must be marked {expected_town_status}")
                 town_buildings = [str(value) for value in seed_town.get("starting_building_ids", [])] + [str(value) for value in seed_town.get("buildable_building_ids", [])]
                 ensure(set(signature_building_ids).issubset(set(town_buildings)), errors, f"New bible faction {faction_id} seed town must carry all signature buildings")
