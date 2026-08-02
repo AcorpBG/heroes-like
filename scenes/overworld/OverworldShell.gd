@@ -642,11 +642,11 @@ func _on_hero_action_pressed(action_id: String) -> void:
 func _on_rendezvous_order_selected(index: int) -> void:
 	if index < 0 or index >= _rendezvous_orders.item_count:
 		_rendezvous_transfer_button.disabled = true
-		_rendezvous_transfer_button.tooltip_text = "No field transfer order is selected."
+		_rendezvous_transfer_button.tooltip_text = "No rendezvous order is selected."
 		return
 	var action = _rendezvous_orders.get_item_metadata(index)
 	_rendezvous_transfer_button.disabled = not (action is Dictionary) or String(action.get("id", "")) == ""
-	_rendezvous_transfer_button.tooltip_text = String(action.get("summary", "Transfer the selected troop stack.")) if action is Dictionary else "No field transfer order is selected."
+	_rendezvous_transfer_button.tooltip_text = String(action.get("summary", "Apply the selected rendezvous order.")) if action is Dictionary else "No rendezvous order is selected."
 
 func _on_rendezvous_transfer_pressed() -> void:
 	var selected := _rendezvous_orders.selected
@@ -1618,7 +1618,7 @@ func _rebuild_rendezvous_actions() -> void:
 		if not (action_value is Dictionary):
 			continue
 		var action: Dictionary = action_value
-		_rendezvous_orders.add_item(String(action.get("label", "Transfer troops")))
+		_rendezvous_orders.add_item(String(action.get("label", "Exchange assets")))
 		var index := _rendezvous_orders.item_count - 1
 		_rendezvous_orders.set_item_metadata(index, action.duplicate(true))
 		_rendezvous_orders.set_item_tooltip(index, String(action.get("summary", "")))

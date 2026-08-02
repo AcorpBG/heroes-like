@@ -36,6 +36,8 @@ HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvo
 HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_army_transfer_report.tscn"
 HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvous_artifact_transfer_report.gd"
 HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_artifact_transfer_report.tscn"
+HERO_FIELD_RENDEZVOUS_SPELL_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvous_spell_sharing_report.gd"
+HERO_FIELD_RENDEZVOUS_SPELL_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_spell_sharing_report.tscn"
 SCENARIO_FACTORY_PATH = ROOT / "scripts" / "core" / "ScenarioFactory.gd"
 SCENARIO_SELECT_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioSelectRules.gd"
 SCENARIO_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioRules.gd"
@@ -12898,6 +12900,8 @@ def validate_hero_command(errors: list[str]) -> None:
         HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH,
         HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCRIPT_PATH,
         HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCENE_PATH,
+        HERO_FIELD_RENDEZVOUS_SPELL_REPORT_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_SPELL_REPORT_SCENE_PATH,
         TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
     )
@@ -12929,6 +12933,8 @@ def validate_hero_command(errors: list[str]) -> None:
             "transfer_field_stack",
             "get_field_artifact_transfer_actions",
             "transfer_field_artifact",
+            "get_field_spell_share_actions",
+            "teach_field_spell",
             "remove_active_hero_after_defeat",
             "stationed_heroes",
             "describe_tavern",
@@ -12952,6 +12958,9 @@ def validate_hero_command(errors: list[str]) -> None:
         "func perform_rendezvous_transfer_action",
         "func get_rendezvous_actions",
         "func perform_rendezvous_action",
+        "HeroCommandRulesScript.get_field_spell_share_actions",
+        "HeroCommandRulesScript.teach_field_spell",
+        'action_id.begins_with("field_spell_share:")',
         '"route": "rendezvous"',
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero-command token: {required_token}")
@@ -13074,6 +13083,23 @@ def validate_hero_command(errors: list[str]) -> None:
         "SessionStateStore.SAVE_VERSION",
     ):
         ensure(required_token in artifact_rendezvous_report_text, errors, f"Hero field artifact rendezvous report is missing required token: {required_token}")
+
+    spell_rendezvous_report_text = HERO_FIELD_RENDEZVOUS_SPELL_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HERO_FIELD_RENDEZVOUS_SPELL_SHARING_REPORT",
+        "bidirectional_teaching",
+        "source_knowledge_preserved",
+        "mana_preserved",
+        "movement_preserved",
+        "remote_rejected_without_mutation",
+        "stale_duplicate_rejected",
+        "invalid_orders_rejected",
+        "troop_and_artifact_orders_preserved",
+        "compact_selector_focusable",
+        "save_resume_preserved",
+        "SessionStateStore.SAVE_VERSION",
+    ):
+        ensure(required_token in spell_rendezvous_report_text, errors, f"Hero field spell rendezvous report is missing required token: {required_token}")
 
 
 def validate_overworld_fog(errors: list[str]) -> None:

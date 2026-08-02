@@ -578,17 +578,19 @@ static func describe_field_rendezvous(session: SessionStateStoreScript.SessionDa
 	var rendezvous := field_rendezvous_heroes(session)
 	if active.is_empty() or rendezvous.is_empty():
 		return "No friendly commander is present for a field rendezvous."
-	var lines := ["Field Rendezvous", "- Active: %s | %s | Gear %d" % [
+	var lines := ["Field Rendezvous", "- Active: %s | %s | Gear %d | Spells %d" % [
 		String(active.get("name", "Commander")),
 		_army_summary(active.get("army", {})),
 		ArtifactRulesScript.owned_artifact_ids(active).size(),
+		SpellRulesScript.known_spells(active).size(),
 	]]
 	for hero_value in rendezvous:
 		var hero: Dictionary = hero_value if hero_value is Dictionary else {}
-		lines.append("- Reserve: %s | %s | Gear %d" % [
+		lines.append("- Reserve: %s | %s | Gear %d | Spells %d" % [
 			String(hero.get("name", "Commander")),
 			_army_summary(hero.get("army", {})),
 			ArtifactRulesScript.owned_artifact_ids(hero).size(),
+			SpellRulesScript.known_spells(hero).size(),
 		])
 	return "\n".join(lines)
 
@@ -622,6 +624,22 @@ static func get_field_artifact_transfer_actions(session: SessionStateStoreScript
 		var reserve: Dictionary = reserve_value
 		_append_field_artifact_transfer_actions(actions, active, reserve)
 		_append_field_artifact_transfer_actions(actions, reserve, active)
+	return actions
+
+static func get_field_spell_share_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	normalize_session(session)
+	var actions := []
+	if session == null:
+		return actions
+	var active := active_hero(session)
+	if active.is_empty():
+		return actions
+	for reserve_value in field_rendezvous_heroes(session):
+		if not (reserve_value is Dictionary):
+			continue
+		var reserve: Dictionary = reserve_value
+		_append_field_spell_share_actions(actions, active, reserve)
+		_append_field_spell_share_actions(actions, reserve, active)
 	return actions
 
 static func transfer_field_stack(
@@ -750,6 +768,54 @@ static func transfer_field_artifact(
 		"target_location": String(target_location.get("location", "")),
 		"target_slot": String(target_location.get("slot", "")),
 		"auto_equipped": bool(claim.get("auto_equipped", false)),
+	}
+
+static func teach_field_spell(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String,
+	spell_id: String
+) -> Dictionary:
+	normalize_session(session)
+	if session == null:
+		return {"ok": false, "message": "No expedition is available for spell teaching."}
+	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
+		return {"ok": false, "message": "Choose two different controlled commanders."}
+	var source := hero_by_id(session, source_hero_id)
+	var target := hero_by_id(session, target_hero_id)
+	if source.is_empty() or target.is_empty():
+		return {"ok": false, "message": "Both commanders must remain under player control."}
+	var active_id := String(session.overworld.get("active_hero_id", ""))
+	if source_hero_id != active_id and target_hero_id != active_id:
+		return {"ok": false, "message": "Field teaching must include the active commander."}
+	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
+		return {"ok": false, "message": "The commanders must occupy the same field tile."}
+	var spell := ContentService.get_spell(spell_id)
+	if spell_id == "" or spell.is_empty():
+		return {"ok": false, "message": "That spell teaching order is invalid."}
+	if not SpellRulesScript.knows_spell(source, spell_id):
+		return {"ok": false, "message": "%s no longer knows %s." % [String(source.get("name", source_hero_id)), String(spell.get("name", spell_id))]}
+	if SpellRulesScript.knows_spell(target, spell_id):
+		return {"ok": false, "message": "%s already knows %s." % [String(target.get("name", target_hero_id)), String(spell.get("name", spell_id))]}
+
+	var learning := SpellRulesScript.learn_spell(target, spell_id)
+	if not bool(learning.get("ok", false)):
+		return {"ok": false, "message": String(learning.get("message", "Spell teaching failed."))}
+	var target_updated: Dictionary = learning.get("hero", target)
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	_replace_hero_in_array(heroes, target_updated)
+	session.overworld["player_heroes"] = heroes
+	_sync_active_hero_mirror(session)
+	return {
+		"ok": true,
+		"message": "%s teaches %s to %s." % [
+			String(source.get("name", source_hero_id)),
+			String(spell.get("name", spell_id)),
+			String(target.get("name", target_hero_id)),
+		],
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"spell_id": spell_id,
 	}
 
 static func transfer_town_stack(
@@ -1218,6 +1284,36 @@ static func _append_field_artifact_transfer_actions(actions: Array, source: Dict
 			"target_hero_id": target_id,
 			"artifact_id": artifact_id,
 			"kind": "artifact",
+		})
+
+static func _append_field_spell_share_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:
+	var source_id := String(source.get("id", ""))
+	var target_id := String(target.get("id", ""))
+	if source_id == "" or target_id == "":
+		return
+	var source_name := String(source.get("name", source_id))
+	var target_name := String(target.get("name", target_id))
+	for spell_value in SpellRulesScript.known_spells(source):
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		var spell_id := String(spell.get("id", ""))
+		if spell_id == "" or SpellRulesScript.knows_spell(target, spell_id):
+			continue
+		actions.append({
+			"id": "field_spell_share:%s:%s:%s" % [source_id, target_id, spell_id],
+			"label": "%s -> %s | Teach %s" % [source_name, target_name, String(spell.get("name", spell_id))],
+			"summary": "Tier %d %s spell | %d mana to cast | %s keeps it; %s learns it." % [
+				int(spell.get("tier", 1)),
+				String(spell.get("context", "battle")).capitalize(),
+				int(spell.get("mana_cost", 0)),
+				source_name,
+				target_name,
+			],
+			"source_hero_id": source_id,
+			"target_hero_id": target_id,
+			"spell_id": spell_id,
+			"kind": "spell",
 		})
 
 static func _preserve_movement_deficit_after_artifact_change(

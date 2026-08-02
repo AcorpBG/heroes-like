@@ -4861,7 +4861,7 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 			actions.append({
 				"id": "open_rendezvous",
 				"label": "Exchange Assets",
-				"summary": "Open the Command drawer to exchange troops or artifacts with %s without spending movement." % String(hero.get("name", "the reserve commander")),
+				"summary": "Open the Command drawer to exchange troops, artifacts, or spell knowledge with %s without spending movement." % String(hero.get("name", "the reserve commander")),
 			})
 	return actions
 
@@ -4873,6 +4873,7 @@ static func get_rendezvous_actions(session: SessionStateStoreScript.SessionData)
 	normalize_overworld_state_for_runtime(session)
 	var actions := HeroCommandRulesScript.get_field_transfer_actions(session)
 	actions.append_array(HeroCommandRulesScript.get_field_artifact_transfer_actions(session))
+	actions.append_array(HeroCommandRulesScript.get_field_spell_share_actions(session))
 	return actions
 
 static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
@@ -4913,6 +4914,24 @@ static func perform_rendezvous_action(session: SessionStateStoreScript.SessionDa
 			return result
 		var finalized := _finalize_action_result(session, true, String(result.get("message", "Artifact transferred.")), false, false)
 		for key in ["source_hero_id", "target_hero_id", "artifact_id", "source_previous_location", "source_previous_slot", "target_location", "target_slot", "auto_equipped"]:
+			if result.has(key):
+				finalized[key] = result.get(key)
+		return finalized
+	if action_id.begins_with("field_spell_share:"):
+		normalize_overworld_state_for_runtime(session)
+		var parts := action_id.split(":")
+		if parts.size() != 4:
+			return {"ok": false, "message": "That spell teaching order is invalid."}
+		var result := HeroCommandRulesScript.teach_field_spell(
+			session,
+			String(parts[1]),
+			String(parts[2]),
+			String(parts[3])
+		)
+		if not bool(result.get("ok", false)):
+			return result
+		var finalized := _finalize_action_result(session, true, String(result.get("message", "Spell taught.")), false, false)
+		for key in ["source_hero_id", "target_hero_id", "spell_id"]:
 			if result.has(key):
 				finalized[key] = result.get(key)
 		return finalized
