@@ -112,6 +112,7 @@ func _ready() -> void:
 		push_warning("Battle payload could not be normalized.")
 		AppRouter.go_to_overworld()
 		return
+	BattleRules.set_battle_presentation_speed(_session, SettingsService.battle_playback_speed_id())
 	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(phase_started)
 	_session.game_state = "battle"
 	phase_started = ProfileLogScript.begin_usec()
@@ -368,6 +369,7 @@ func _on_speed_instant_pressed() -> void:
 func _set_battle_presentation_speed(speed: String) -> void:
 	var result := BattleRules.set_battle_presentation_speed(_session, speed)
 	if bool(result.get("ok", false)):
+		SettingsService.set_battle_playback_speed_id(String(result.get("speed", speed)))
 		_last_message = String(result.get("message", ""))
 	_refresh()
 

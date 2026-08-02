@@ -28,7 +28,7 @@ const TAB_STAGE_COPY := {
 	},
 	TAB_SETTINGS: {
 		"title": "Cabinet",
-		"hint": "Presentation, sound, and readability controls live in a secondary board.",
+		"hint": "Presentation, sound, gameplay, and readability controls live in a secondary board.",
 	},
 }
 const TAB_HELP_TOPIC := {
@@ -95,6 +95,7 @@ const TAB_HELP_TOPIC := {
 @onready var _render_quality_picker: OptionButton = %RenderQualityPicker
 @onready var _vsync_toggle: CheckButton = %VSyncToggle
 @onready var _frame_rate_picker: OptionButton = %FrameRatePicker
+@onready var _battle_playback_speed_picker: OptionButton = %BattlePlaybackSpeedPicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
@@ -506,6 +507,12 @@ func _on_frame_rate_selected(index: int) -> void:
 	SettingsService.set_frame_rate_limit(int(_frame_rate_picker.get_item_metadata(index)))
 	_refresh_settings_panel()
 
+func _on_battle_playback_speed_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _battle_playback_speed_picker.get_item_count():
+		return
+	SettingsService.set_battle_playback_speed_id(String(_battle_playback_speed_picker.get_item_metadata(index)))
+	_refresh_settings_panel()
+
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
@@ -912,6 +919,19 @@ func _refresh_settings_panel() -> void:
 	if selected_frame_rate_index >= 0:
 		_frame_rate_picker.select(selected_frame_rate_index)
 	_frame_rate_picker.tooltip_text = "Frame limiting applies immediately; Unlimited leaves pacing to VSync or the display.\n%s" % settings_check
+
+	_battle_playback_speed_picker.clear()
+	var battle_speed_options := SettingsService.build_battle_playback_speed_options()
+	var selected_battle_speed_index := -1
+	for index in range(battle_speed_options.size()):
+		var option: Dictionary = battle_speed_options[index]
+		_battle_playback_speed_picker.add_item(String(option.get("label", "Normal")), index)
+		_battle_playback_speed_picker.set_item_metadata(index, String(option.get("id", "normal")))
+		if bool(option.get("selected", false)):
+			selected_battle_speed_index = index
+	if selected_battle_speed_index >= 0:
+		_battle_playback_speed_picker.select(selected_battle_speed_index)
+	_battle_playback_speed_picker.tooltip_text = "Sets the default playback pace for every new or resumed battle without changing combat results.\n%s" % settings_check
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check
@@ -1881,7 +1901,7 @@ func _continue_check_surface() -> Dictionary:
 
 func _settings_handoff_surface() -> Dictionary:
 	var visible := "Settings handoff: changes apply now; close returns to the scenic menu."
-	var tooltip := "Settings Handoff\n- Applies: presentation, sound, and readability changes take effect immediately.\n- Saved to: device config.\n- Not changed: campaign progress and expedition saves.\n- Close: returns to the scenic first view with these settings still active."
+	var tooltip := "Settings Handoff\n- Applies: presentation, sound, gameplay, and readability changes take effect immediately.\n- Saved to: device config.\n- Not changed: campaign progress and expedition saves.\n- Close: returns to the scenic first view with these settings still active."
 	return {
 		"visible_text": visible,
 		"tooltip_text": tooltip,
@@ -2036,6 +2056,9 @@ func validation_snapshot() -> Dictionary:
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"frame_rate_picker_items": _picker_item_labels(_frame_rate_picker),
 		"frame_rate_tooltip": _frame_rate_picker.tooltip_text,
+		"battle_playback_speed": SettingsService.battle_playback_speed_id(),
+		"battle_playback_speed_picker_items": _picker_item_labels(_battle_playback_speed_picker),
+		"battle_playback_speed_tooltip": _battle_playback_speed_picker.tooltip_text,
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
 		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
@@ -2465,6 +2488,16 @@ func validation_select_frame_rate_limit(value: int) -> bool:
 		return SettingsService.frame_rate_limit() == value
 	return false
 
+func validation_select_battle_playback_speed(speed_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_battle_playback_speed_picker.get_item_count()):
+		if String(_battle_playback_speed_picker.get_item_metadata(index)) != speed_id:
+			continue
+		_battle_playback_speed_picker.select(index)
+		_on_battle_playback_speed_selected(index)
+		return SettingsService.battle_playback_speed_id() == speed_id
+	return false
+
 func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 	validation_open_saves_stage()
 	var requested_key := "%s:%s" % [slot_type, slot_id]
@@ -2604,7 +2637,7 @@ func _sync_first_view_command_tooltips() -> void:
 	)
 	_open_saves_button.tooltip_text = _first_view_load_tooltip()
 	_open_settings_button.tooltip_text = (
-		"Command cue: Settings opens presentation, sound, and readability controls. "
+		"Command cue: Settings opens presentation, sound, gameplay, and readability controls. "
 		+ "Changes apply to device config; expedition saves and campaign progress stay unchanged."
 	)
 	_open_editor_button.tooltip_text = (

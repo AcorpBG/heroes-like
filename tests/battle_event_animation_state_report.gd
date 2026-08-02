@@ -780,6 +780,9 @@ func _validate_presentation_event_stream_contract() -> void:
 	}
 
 func _validate_real_faction_matchup_presentation_smoke() -> void:
+	var original_speed := SettingsService.battle_playback_speed_id()
+	SettingsService.ensure_settings()
+	SettingsService.settings["gameplay"]["battle_playback_speed"] = SettingsService.BATTLE_PLAYBACK_SPEED_FAST
 	var cases := [
 		{
 			"id": "thornwake_veilmourn",
@@ -800,7 +803,7 @@ func _validate_real_faction_matchup_presentation_smoke() -> void:
 		_set_stack_field(session.battle, "player_0", "total_health", 999)
 		_set_stack_field(session.battle, "enemy_0", "total_health", 999)
 		_set_stack_field(session.battle, "enemy_0", "retaliations_left", 0)
-		var speed_result := BattleRulesScript.set_battle_presentation_speed(session, BattleRulesScript.PRESENTATION_SPEED_FAST)
+		var speed_result := BattleRulesScript.set_battle_presentation_speed(session, BattleRulesScript.PRESENTATION_SPEED_INSTANT)
 		_expect_ok("%s speed set" % case_id, speed_result)
 		var result := BattleRulesScript.perform_player_action(session, "strike")
 		_expect_ok("%s strike" % case_id, result)
@@ -830,6 +833,13 @@ func _validate_real_faction_matchup_presentation_smoke() -> void:
 		if shell_stream == "" or not shell_stream.to_lower().contains("damage"):
 			_error("%s shell did not consume the real-faction presentation stream: %s." % [case_id, snapshot])
 		_expect_equal("%s shell speed" % case_id, String(snapshot.get("battle_presentation_speed", "")), BattleRulesScript.PRESENTATION_SPEED_FAST)
+		if case_id == "thornwake_veilmourn":
+			shell.call("_set_battle_presentation_speed", BattleRulesScript.PRESENTATION_SPEED_INSTANT)
+			await get_tree().process_frame
+			var changed_snapshot: Dictionary = shell.call("validation_snapshot")
+			_expect_equal("battle control live speed", String(changed_snapshot.get("battle_presentation_speed", "")), BattleRulesScript.PRESENTATION_SPEED_INSTANT)
+			_expect_equal("battle control stored speed", SettingsService.battle_playback_speed_id(), SettingsService.BATTLE_PLAYBACK_SPEED_INSTANT)
+			SettingsService.set_battle_playback_speed_id(SettingsService.BATTLE_PLAYBACK_SPEED_FAST)
 		results[case_id] = {
 			"event_types": event_types,
 			"stream_text": stream_text,
@@ -838,6 +848,7 @@ func _validate_real_faction_matchup_presentation_smoke() -> void:
 		}
 		frame.queue_free()
 		await get_tree().process_frame
+	SettingsService.set_battle_playback_speed_id(original_speed)
 	_report["cases"]["real_faction_presentation_smoke"] = results
 
 func _basic_session(player_unit_id: String, enemy_unit_id: String, player_q: int, player_r: int, enemy_q: int, enemy_r: int) -> SessionStateStoreScript.SessionData:

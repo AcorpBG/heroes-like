@@ -55,6 +55,13 @@ func _run() -> void:
 		_fail("Accept did not open the focused Settings board: %s" % settings_snapshot)
 		return
 	_expect_focus("PresentationModePicker", "settings board entry")
+	var speed_items: Array = settings_snapshot.get("battle_playback_speed_picker_items", []) if settings_snapshot.get("battle_playback_speed_picker_items", []) is Array else []
+	if speed_items != ["Normal", "Fast", "Instant"]:
+		_fail("Settings board did not expose all battle playback choices: %s" % speed_items)
+		return
+	if not String(settings_snapshot.get("battle_playback_speed_tooltip", "")).contains("without changing combat results"):
+		_fail("Battle playback setting did not explain its presentation-only boundary: %s" % settings_snapshot)
+		return
 	await _capture_if_requested("settings_entry_focus")
 
 	await _press_action("ui_cancel")
