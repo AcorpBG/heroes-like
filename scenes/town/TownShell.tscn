@@ -118,6 +118,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 6
 
 [node name="StageColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -399,6 +400,18 @@ layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 
+[node name="BuildPlan" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Select a construction plan"
+
+[node name="ConfirmBuild" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Select Construction"
+
 [node name="RecruitPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -581,6 +594,12 @@ theme_override_constants/margin_bottom = 6
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="TownOrdersToggle" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Town Orders"
+
 [node name="SaveStatus" type="Label" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
 unique_name_in_owner = true
 visible = false
@@ -609,6 +628,7 @@ layout_mode = 2
 text = "Menu"
 
 [connection signal="item_selected" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/TownOrdersToggle" to="." method="_on_town_orders_toggle_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Leave" to="." method="_on_leave_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Menu" to="." method="_on_menu_pressed"]

@@ -55540,9 +55540,9 @@
       ],
       "startedAt": "2026-08-02T03:26:25Z",
       "status": "in_progress",
-      "summary": "In progress. Overworld and town now use responsive compact layouts at 1280x720 and collapse secondary rails at 1024x600. Generated-skirmish setup presents a player-readable Build & Play flow without recovery internals. The Load board now uses concise expedition rows and resume previews with scenario, mode, difficulty, day, commander, timestamp, destination, and next decision; it keeps Latest visible at compact width, re-reads the selected file before routing, and reports a disappeared or failed save without changing slots. Fresh expeditions now open on a deterministic visible, reachable, non-combat route target with an enabled primary order while preserving hero position, movement, day, and resources; the contextual drawer remains collapsed until player input. Continue the remaining broader UX polish before completing this slice.",
+      "summary": "In progress. Overworld and town use responsive compact layouts at 1280x720; at 1024x600 the town opens scenery-first and a footer switch exposes the full-width order board without losing management access. Generated-skirmish setup presents a player-readable Build & Play flow without recovery internals. The Load board uses concise expedition rows and resume previews and re-reads the selected file before routing. Fresh expeditions open on a deterministic visible, reachable, non-combat route target with an enabled primary order while preserving game state. Town construction is now a two-step plan/confirm workflow that exposes exact cost, readiness, strategic impact, trade handoff, and non-mutating selection before resources are spent. Continue the remaining broader UX polish before completing this slice.",
       "title": "UX Polish Player Comprehension",
-      "updatedAt": "2026-08-02T04:59:09Z",
+      "updatedAt": "2026-08-02T05:12:48Z",
       "validation": {
         "commands": [
           "godot4 --headless --path /root/dev/heroes-like --scene res://tests/player_comprehension_layout_smoke.tscn",
@@ -55560,6 +55560,8 @@
           "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
           "GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a -s '-screen 0 2560x1440x24' godot --path . --scene res://tests/ui_runtime_skin_visual_report.tscn",
           "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/random_map_generated_visual_path_regression_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_entity_cache_active_refresh_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
@@ -55574,6 +55576,7 @@
             ".artifacts/ui_runtime_skin_visual_report/overworld_1280x720.png",
             ".artifacts/ui_runtime_skin_visual_report/overworld_1600x900.png",
             ".artifacts/ui_runtime_skin_visual_report/town_1280x720.png",
+            ".artifacts/ui_runtime_skin_visual_report/town_1600x900.png",
             ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
             ".artifacts/generated_map_setup_visual_smoke/generated_map_setup_1280x720.png",
             ".artifacts/save_load_confidence_visual_smoke/load_1280x720.png",
@@ -55581,7 +55584,7 @@
           ],
           "implementation": [
             "Overworld compact mode removes duplicate briefing, commitment, route-cue, and resource rails while retaining resources in the status tooltip; narrow mode preserves map, order, end-turn, save, and menu actions.",
-            "Town compact mode prioritizes the authored town stage and selected management tab; narrow mode gives the stage the full play width.",
+            "Town compact mode prioritizes the authored town stage and selected management tab; narrow mode opens scenery-first and exposes a Town Orders/View Town footer switch between the full-width stage and full-width management surface.",
             "Responsive state is reapplied after overworld refresh so hidden secondary rails do not reappear during play.",
             "Generated-skirmish setup replaces recovery/debug vocabulary with a map plan, supported Land/Surface scope, Build & Play action, readable build/check stages, actionable setup failure recovery, and an explicit no-save-change guarantee.",
             "Generated-map UI tests now reject internal/provenance/template/profile/retry/validation terms in visible setup and failure copy while retaining hidden native authority metadata for runtime validation.",
@@ -55591,13 +55594,17 @@
             "Fresh first-turn sessions select the nearest reachable visible player town, then an uncollected resource or artifact as deterministic non-combat fallbacks, and immediately expose the destination-specific primary order.",
             "Opening route suggestion is UI-only: focused coverage proves day, hero position, movement, and resources remain unchanged, while map clicks or committed actions clear the suggestion state.",
             "The suggested destination does not auto-open the contextual Tile drawer; 1280x720 capture keeps the right rail compact with Visit Town enabled, while 1600x900 pairs the same order with the one-shot briefing.",
-            "Responsive breakpoints use the containing viewport when the shell has no parent Control, preventing drawer content from changing its own layout mode."
+            "Responsive breakpoints use the containing viewport when the shell has no parent Control, preventing drawer content from changing its own layout mode.",
+            "Build options now select a construction plan instead of committing immediately; ready, trade-coverable, and blocked options remain inspectable from the same list.",
+            "The selected build preview exposes exact cost, readiness, strategic impact, and a non-mutating selection guarantee; a separate primary Build command performs the irreversible spend, while market-coverable plans route to Trade.",
+            "Focused multi-size coverage proves selection preserves buildings and resources, confirmation adds exactly the chosen building and spends resources, and the 1024x600 Town Orders switch keeps both management and scenic return commands inside the frame.",
+            "Existing town entity-cache automation and the broader town/battle visual smoke continue to execute and validate the direct construction commit path."
           ],
           "battleLayoutMatrix": "Stopped after more than four minutes with no output; no completion claim. Battle was unchanged and its fresh 1280x720 visual capture passed through the existing report."
         },
         "sliceId": "ux-polish-player-comprehension-10184",
-        "status": "passed_compact_layout_generated_setup_save_load_confidence_and_first_turn_onboarding_increments_slice_remains_in_progress",
-        "updatedAt": "2026-08-02T04:59:09Z"
+        "status": "passed_compact_layout_setup_save_load_first_turn_and_town_planning_increments_slice_remains_in_progress",
+        "updatedAt": "2026-08-02T05:12:48Z"
       }
     },
     {
