@@ -1424,7 +1424,7 @@
           "frontier_shrine": 1
         },
         "recovery_relief": 1,
-        "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
+        "vulnerability_summary": "Bellwake depends on its wreck ledger, memory-salt pan, and fog-buoy approaches; losing those routes exposes the harbor's long build chain."
       },
       "economy": {
         "base_income": {
@@ -1507,7 +1507,7 @@
           "count": 3
         }
       ],
-      "content_status": "six_faction_seed_town_not_scenario_integrated",
+      "content_status": "authored_player_skirmish_integrated",
       "development_balance": {
         "profile_id": "authored_town_30_turn_full_development_v1",
         "target_complete_turns": 30,

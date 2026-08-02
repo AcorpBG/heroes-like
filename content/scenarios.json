@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 17,
+  "player_facing_active_scenario_count": 18,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -4214,6 +4214,148 @@
         },
         {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 3}, {"unit_id": "unit_ember_archer", "count": 6}]}},
         {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}}
+      ]
+    },
+    {
+      "id": "bellwake-wreck-claim",
+      "name": "Bellwake Wreck Claim",
+      "selection": {
+        "summary": "Hold Bellwake Harbor, recover a drowned mirror chart, and silence Sunvault's wreck registry before daylight fixes the salvage lane in place.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Fogbound Wreck Lane (11x6)",
+        "player_summary": "Ivara Blacktide leads a four-stack Veilmourn claim crew from Bellwake Harbor and must turn memory salt and mixed wreck cargo into a fighting fleet.",
+        "enemy_summary": "Sunvault relay pickets, mirror lancers, and an aurora battery defend Prismhearth's wreck registry while array pressure reveals the fog road.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_veilmourn",
+      "player_army_id": "army_bellwake_wreck_claimants",
+      "hero_id": "hero_veilmourn_ivara_blacktide",
+      "starting_resources": {"gold": 400, "wood": 4, "ore": 1, "memory_salt": 2},
+      "map": [
+        ["rough", "rough", "rough", "rough", "water", "rough", "rough", "rough", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "rough", "water", "rough", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "rough", "grass", "water", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "grass", "grass", "water", "grass", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_veilmourn_ivara_blacktide"],
+      "objectives": {
+        "victory_text": "The drowned chart is entered in Bellwake's obituary vault, and Prismhearth's wreck registry becomes a Veilmourn salvage claim for skirmish scoring only.",
+        "defeat_text": "Sunvault fixes the wreck lane beneath its arrays and strips Bellwake's claim from every surviving chart.",
+        "victory": [
+          {"id": "claim_prismhearth_registry", "label": "Claim Prismhearth's wreck registry", "type": "town_owned_by_player", "placement_id": "prismhearth_wreck_registry"},
+          {"id": "break_relay_pickets", "label": "Break the Relay Pickets", "type": "flag_true", "flag": "relay_pickets_broken"},
+          {"id": "break_mirror_lancers", "label": "Break the Mirror Lancers", "type": "flag_true", "flag": "mirror_lancers_broken"},
+          {"id": "silence_aurora_battery", "label": "Silence the Aurora Battery", "type": "encounter_resolved", "placement_id": "bellwake_aurora_battery"}
+        ],
+        "defeat": [
+          {"id": "hold_bellwake", "label": "Keep Bellwake Harbor under black sail", "type": "town_not_owned_by_player", "placement_id": "bellwake_harbor"},
+          {"id": "ivara_survives", "label": "Ivara must survive the wreck claim", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_array_pressure", "label": "Do not let Sunvault pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 10},
+          {"id": "recover_chart_before_daybreak", "label": "Recover the chart before Day 13", "type": "day_at_least", "day": 13}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "bellwake_salvage_muster",
+          "priority": 120,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "bellwake_harbor"}],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "bellwake_harbor", "recruits": {"unit_veilmourn_bellwake_oars": 3, "unit_veilmourn_mourning_lanterns": 2}},
+            {"type": "message", "text": "Bellwake tolls the salvage muster and sends replacement oars, mourning lanterns, and a sealed pay chest into Ivara's fog lane."}
+          ]
+        },
+        {
+          "id": "prismhearth_registry_seized",
+          "priority": 110,
+          "conditions": [{"type": "objective_met", "objective_id": "claim_prismhearth_registry"}],
+          "effects": [
+            {"type": "award_artifact", "artifact_id": "artifact_black_sail_compass"},
+            {"type": "set_flag", "flag": "drowned_chart_recorded", "value": true},
+            {"type": "message", "text": "Ivara seals the drowned mirror chart in Bellwake's name and takes the Black-Sail Compass from Prismhearth's registry desk."}
+          ]
+        },
+        {
+          "id": "sunvault_counter_sortie",
+          "priority": 94,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "bellwake_harbor"}],
+          "effects": [
+            {"type": "spawn_encounter", "placement": {"placement_id": "bellwake_sunvault_counter_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 9, "y": 0, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "Prismhearth launches a glasswing counter-sortie above the north shoals as Bellwake's first salvage crew clears the fog."}
+          ]
+        },
+        {
+          "id": "relay_charting_holds",
+          "priority": 88,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "objective_not_met", "objective_id": "break_relay_pickets"}],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 2},
+            {"type": "spawn_encounter", "placement": {"placement_id": "bellwake_relay_charting_hold", "encounter_id": "encounter_daybreak_matrix", "x": 10, "y": 5, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "Unbroken relay pickets keep the wreck reflections aligned and draw a fresh daybreak matrix onto Ivara's southern wake."}
+          ]
+        },
+        {
+          "id": "aurora_wreck_salvage",
+          "priority": 84,
+          "conditions": [{"type": "encounter_resolved", "placement_id": "bellwake_aurora_battery"}],
+          "effects": [
+            {"type": "add_resources", "resources": {"memory_salt": 2}},
+            {"type": "award_experience", "amount": 120},
+            {"type": "set_flag", "flag": "aurora_wreck_salted", "value": true},
+            {"type": "message", "text": "Bellwake mourners salt the broken aurora lenses, preserve the names reflected there, and carry the usable memory back to Ivara."}
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "bellwake_harbor", "town_id": "town_veilmourn_bellwake_harbor", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "fog-lane attrition"}},
+        {"placement_id": "prismhearth_wreck_registry", "town_id": "town_prismhearth", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Prismhearth Wreck Registry",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "memory_salt": 1},
+          "raid_encounter_ids": ["encounter_aurora_battery", "encounter_daybreak_matrix"],
+          "spawn_points": [{"x": 9, "y": 1}, {"x": 9, "y": 4}],
+          "siege_target_placement_id": "bellwake_harbor",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": ["bellwake_harbor", "bellwake_memory_salt_pan", "bellwake_wreck_ledger", "bellwake_aurora_battery"],
+          "strategy_overrides": {
+            "site_family_weights": {"faction_outpost": 1.5, "frontier_shrine": 1.4, "neutral_dwelling": 0.8},
+            "raid_target_weights": {"artifact": 1.3, "resource": 1.2, "town": 1.15},
+            "raid": {"objective_weight": 1.4, "site_denial_weight": 1.25}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "bellwake_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
+        {"placement_id": "bellwake_memory_salt_pan", "site_id": "site_memory_salt_pan", "x": 0, "y": 2},
+        {"placement_id": "bellwake_wreck_ledger", "site_id": "site_bellwake_wreck_ledger", "x": 2, "y": 5},
+        {"placement_id": "bellwake_scout_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "bellwake_ore_reserve", "site_id": "site_ore_crates", "x": 3, "y": 5},
+        {"placement_id": "bellwake_chart_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "prismhearth_wreck_aetherglass_front", "site_id": "site_aetherglass_lens_house", "x": 10, "y": 1, "collected_by_faction_id": "faction_sunvault"}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "bellwake_waymark_compass", "artifact_id": "artifact_waymark_compass", "x": 3, "y": 1},
+        {"placement_id": "bellwake_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 6, "y": 3},
+        {"placement_id": "prismhearth_black_sail_compass", "artifact_id": "artifact_black_sail_compass", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "bellwake_relay_pickets", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 18201, "enemy_army": {"id": "army_bellwake_relay_pickets_watch", "name": "Bellwake Relay Pickets Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 4}]}},
+        {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_mirror_duelist", "count": 5}]}},
+        {"placement_id": "bellwake_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 18203, "enemy_army": {"id": "army_bellwake_aurora_battery_watch", "name": "Bellwake Aurora Battery Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_aurora_ballista", "count": 3}]}}
       ]
     },
     {
