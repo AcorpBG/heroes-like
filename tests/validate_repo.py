@@ -11375,7 +11375,7 @@ def validate_six_faction_content_scaffold(errors: list[str]) -> None:
     ensure(SIX_FACTION_BIBLE_IDS.issubset(factions.keys()), errors, "Six-faction implementation loop must author all bible faction records")
 
     ladder_fingerprints: set[str] = set()
-    integrated_player_skirmish_faction_ids = {"faction_thornwake", "faction_brasshollow"}
+    integrated_player_skirmish_faction_ids = {"faction_thornwake", "faction_brasshollow", "faction_veilmourn"}
     for faction_id in sorted(SIX_FACTION_BIBLE_IDS):
         faction = factions.get(faction_id, {})
         design = faction.get("design_pillars", {})

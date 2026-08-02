@@ -821,6 +821,17 @@
         {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 7},
         {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 4}
       ]
+    },
+    {
+      "id": "army_bellwake_wreck_claimants",
+      "name": "Bellwake Wreck Claimants",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 14},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 8},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 5},
+        {"unit_id": "unit_veilmourn_undertow_harpooners", "count": 2}
+      ]
     }
   ]
 }
