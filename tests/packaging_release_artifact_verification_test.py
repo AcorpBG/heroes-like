@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import stat
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 import warnings
@@ -147,6 +149,84 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         self._package()
         self.assertFalse(stale.exists())
         self.assertTrue(json.loads(self._run("--verify-only").stdout)["ok"])
+
+    def test_installer_payloads_are_verified_and_linux_lifecycle_is_reversible(self) -> None:
+        self._package()
+        archives = self.output / "archives"
+        linux_archive = archives / f"heroes-like-{VERSION}-linux-x86_64.tar.gz"
+        windows_archive = archives / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        extract_root = Path(self.temp.name) / "extracted"
+        with tarfile.open(linux_archive, "r:gz") as archive:
+            archive.extractall(extract_root, filter="data")
+        linux_bundle = extract_root / f"heroes-like-{VERSION}-linux-x86_64"
+
+        install_root = Path(self.temp.name) / "installed-linux"
+        bin_root = Path(self.temp.name) / "bin"
+        applications_root = Path(self.temp.name) / "applications"
+        user_data = Path(self.temp.name) / "user-data"
+        user_data.mkdir()
+        sentinel = user_data / "save.json"
+        sentinel.write_text("preserve", encoding="utf-8")
+        env = os.environ.copy()
+        env.update(
+            {
+                "HEROES_LIKE_INSTALL_DIR": str(install_root),
+                "HEROES_LIKE_BIN_DIR": str(bin_root),
+                "HEROES_LIKE_APPLICATIONS_DIR": str(applications_root),
+            }
+        )
+        unowned_root = Path(self.temp.name) / "unowned"
+        unowned_root.mkdir()
+        unowned_sentinel = unowned_root / "keep.txt"
+        unowned_sentinel.write_text("keep", encoding="utf-8")
+        unowned_env = dict(env)
+        unowned_env["HEROES_LIKE_INSTALL_DIR"] = str(unowned_root)
+        refused_uninstall = subprocess.run(
+            ["sh", str(linux_bundle / "uninstall.sh")],
+            env=unowned_env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(refused_uninstall.returncode, 0, msg=refused_uninstall.stdout)
+        self.assertEqual(unowned_sentinel.read_text(encoding="utf-8"), "keep")
+
+        install = subprocess.run(
+            ["sh", str(linux_bundle / "install.sh")],
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(install.returncode, 0, msg=install.stdout)
+        self.assertTrue((install_root / "heroes-like.x86_64").is_file())
+        self.assertTrue(os.access(install_root / "heroes-like.x86_64", os.X_OK))
+        self.assertTrue((bin_root / "heroes-like").is_file())
+        self.assertTrue((applications_root / "heroes-like.desktop").is_file())
+
+        uninstall = subprocess.run(
+            ["sh", str(linux_bundle / "uninstall.sh")],
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(uninstall.returncode, 0, msg=uninstall.stdout)
+        self.assertFalse(install_root.exists())
+        self.assertFalse((bin_root / "heroes-like").exists())
+        self.assertFalse((applications_root / "heroes-like.desktop").exists())
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "preserve")
+
+        with zipfile.ZipFile(windows_archive, "r") as archive:
+            names = {Path(name).name for name in archive.namelist()}
+            install_cmd = archive.read(f"heroes-like-{VERSION}-windows-x86_64/install.cmd").decode("ascii")
+        self.assertIn("install.cmd", names)
+        self.assertIn("uninstall.cmd", names)
+        self.assertIn("HEROES_LIKE_INSTALL_DIR", install_cmd)
+        self.assertIn("Heroes Like.cmd", install_cmd)
 
 
 if __name__ == "__main__":

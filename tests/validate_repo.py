@@ -264,6 +264,11 @@ PACKAGING_RELEASE_BUNDLE_MANIFEST_SCRIPT_PATH = ROOT / "tests" / "packaging_rele
 PACKAGING_RELEASE_BUNDLE_MANIFEST_DOC_PATH = ROOT / "docs" / "packaging-release-bundle-manifest-gate-report.md"
 PACKAGE_RELEASE_TOOL_PATH = ROOT / "tools" / "package_release.py"
 PACKAGE_RELEASE_VERIFICATION_TEST_PATH = ROOT / "tests" / "packaging_release_artifact_verification_test.py"
+PACKAGE_INSTALLER_SMOKE_PATH = ROOT / "tests" / "packaging_user_local_installer_smoke.py"
+PACKAGE_LINUX_INSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "install.sh"
+PACKAGE_LINUX_UNINSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "uninstall.sh"
+PACKAGE_WINDOWS_INSTALL_PATH = ROOT / "packaging" / "installers" / "windows" / "install.cmd"
+PACKAGE_WINDOWS_UNINSTALL_PATH = ROOT / "packaging" / "installers" / "windows" / "uninstall.cmd"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_report.gd"
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
@@ -20976,7 +20981,15 @@ def validate_packaging_release_bundle_manifest(errors: list[str]) -> None:
 
 
 def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
-    for path in (PACKAGE_RELEASE_TOOL_PATH, PACKAGE_RELEASE_VERIFICATION_TEST_PATH):
+    for path in (
+        PACKAGE_RELEASE_TOOL_PATH,
+        PACKAGE_RELEASE_VERIFICATION_TEST_PATH,
+        PACKAGE_INSTALLER_SMOKE_PATH,
+        PACKAGE_LINUX_INSTALL_PATH,
+        PACKAGE_LINUX_UNINSTALL_PATH,
+        PACKAGE_WINDOWS_INSTALL_PATH,
+        PACKAGE_WINDOWS_UNINSTALL_PATH,
+    ):
         ensure(path.exists(), errors, f"Missing release artifact verification file: {path.relative_to(ROOT)}")
 
     if PACKAGE_RELEASE_TOOL_PATH.exists():
@@ -20994,6 +21007,12 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "Windows release payload is not x86_64 PE",
             "archive payload mode mismatch",
             "release output directory contains unsafe, missing, or unexpected entries",
+            "installer_names",
+            "INSTALLER_ROOT",
+            "install.sh",
+            "uninstall.sh",
+            "install.cmd",
+            "uninstall.cmd",
         ):
             ensure(required_token in tool_text, errors, f"Release packager verification is missing required token: {required_token}")
 
@@ -21005,9 +21024,35 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "test_link_member_is_rejected_even_with_updated_outer_hashes",
             "test_duplicate_member_is_rejected_even_with_updated_outer_hashes",
             "test_stale_release_output_is_rejected_and_next_package_cleans_it",
+            "test_installer_payloads_are_verified_and_linux_lifecycle_is_reversible",
             "--verify-only",
         ):
             ensure(required_token in test_text, errors, f"Release artifact verification test is missing required token: {required_token}")
+
+    if PACKAGE_INSTALLER_SMOKE_PATH.exists():
+        smoke_text = PACKAGE_INSTALLER_SMOKE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGING_USER_LOCAL_INSTALLER_SMOKE",
+            "packaging_user_local_installer_smoke_v1",
+            "linux_lifecycle",
+            "windows_lifecycle",
+            "user_data_preserved",
+            "Boot.scn",
+            "MainMenu.scn",
+            "clean native Windows hardware certification",
+        ):
+            ensure(required_token in smoke_text, errors, f"Installer lifecycle smoke is missing required token: {required_token}")
+
+    for path, required_tokens in (
+        (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install")),
+        (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rm -rf", "were preserved")),
+        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install")),
+        (PACKAGE_WINDOWS_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rmdir /S /Q", "were preserved")),
+    ):
+        if path.exists():
+            installer_text = path.read_text(encoding="utf-8")
+            for required_token in required_tokens:
+                ensure(required_token in installer_text, errors, f"Installer template {path.relative_to(ROOT)} is missing required token: {required_token}")
 
 
 def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
