@@ -1138,13 +1138,21 @@ static func _run_empire_cycle(
 	var pressure_gain = DifficultyRulesScript.adjust_enemy_pressure_gain(session, base_pressure_gain)
 	state["pressure"] = max(0, int(state.get("pressure", 0)) + pressure_gain)
 	if pressure_gain > 0:
+		var pressure_target_result := _pressure_summary_target(
+			session,
+			config,
+			state,
+			_enemy_activity_origin(town_entries, config)
+		)
 		var pressure_event := EnemyAdventureRulesScript.ai_pressure_summary_event(
 			session,
 			config,
-			EnemyAdventureRulesScript.choose_target(session, config, _enemy_activity_origin(town_entries, config)),
+			pressure_target_result.get("target", {}),
 			state
 		)
 		_append_event_records(events, [pressure_event])
+		if profile_enabled:
+			profile["pressure_target_source"] = String(pressure_target_result.get("source", ""))
 	_profile_add_ms(profile, "pressure_summary_ms", phase_started)
 
 	phase_started = _profile_timer(profile_enabled)
@@ -1294,6 +1302,21 @@ static func _run_empire_cycle(
 	state["posture"] = _determine_posture(session, config, state, faction_id, towns)
 	_profile_add_ms(profile, "posture_ms", phase_started)
 	return _empire_cycle_result(state, messages, events, profile_enabled, profile)
+
+static func _pressure_summary_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	state: Dictionary,
+	origin: Dictionary
+) -> Dictionary:
+	var faction_id := String(config.get("faction_id", state.get("faction_id", "")))
+	var task_target := EnemyAdventureRulesScript.ai_pressure_summary_target_from_task_board(session, faction_id, state)
+	if not task_target.is_empty():
+		return {"target": task_target, "source": "hero_task_state"}
+	return {
+		"target": EnemyAdventureRulesScript.choose_target(session, config, origin),
+		"source": "fresh_target_scan",
+	}
 
 static func _empire_cycle_result(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"state": state, "messages": messages, "events": events}

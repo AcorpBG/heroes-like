@@ -8557,6 +8557,43 @@ static func plan_enemy_hero_task_board(
 		"events": events,
 	}
 
+static func ai_pressure_summary_target_from_task_board(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> Dictionary:
+	if session == null or faction_id == "" or state.is_empty():
+		return {}
+	var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
+	var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
+	for task_status in ["active", "planned"]:
+		for task_value in tasks:
+			if not (task_value is Dictionary):
+				continue
+			var task: Dictionary = task_value
+			if String(task.get("owner_faction_id", faction_id)) != faction_id \
+					or String(task.get("task_status", "")) != task_status:
+				continue
+			var target_kind := String(task.get("target_kind", ""))
+			var target_id := String(task.get("target_id", ""))
+			var snapshot := _ai_hero_task_target_snapshot_for_plan(session, target_kind, target_id, faction_id)
+			if snapshot.is_empty():
+				continue
+			var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
+			return {
+				"target_kind": target_kind,
+				"target_placement_id": target_id,
+				"target_label": String(snapshot.get("target_label", target_id)),
+				"target_x": int(snapshot.get("target_x", 0)),
+				"target_y": int(snapshot.get("target_y", 0)),
+				"target_reason_codes": reason_codes,
+				"target_public_reason": _public_reason_from_codes(reason_codes),
+				"target_public_importance": "high" if String(task.get("task_class", "")) in ["retake_site", "raid_town", "contest_site"] else "medium",
+				"target_debug_reason": "durable %s commander task %s" % [task_status, String(task.get("task_id", ""))],
+				"hero_task_id": String(task.get("task_id", "")),
+			}
+	return {}
+
 static func _ai_hero_task_planner_task_for_actor(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
