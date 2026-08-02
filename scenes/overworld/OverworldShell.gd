@@ -131,6 +131,8 @@ var _last_route_execution: Dictionary = {}
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
+var _opening_route_suggested := false
+var _opening_route_suggestion_kind := ""
 var _active_drawer := ""
 var _refresh_cache: Dictionary = {}
 var _hero_actions_cache: Array = []
@@ -230,6 +232,9 @@ func _ready() -> void:
 	else:
 		AppRouter.note_overworld_handoff_step("overworld_ready_no_command_briefing")
 	_select_hero_tile()
+	if command_briefing_text != "":
+		_map_size = OverworldRules.derive_map_size(_session)
+		_select_opening_route_target()
 	AppRouter.note_overworld_handoff_step("overworld_ready_select_hero_done")
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
 	_render_state()
@@ -241,7 +246,7 @@ func _ready() -> void:
 func _apply_responsive_layout() -> void:
 	if _sidebar_shell_panel == null:
 		return
-	var available_size := size
+	var available_size := get_viewport_rect().size
 	var parent_control := get_parent() as Control
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
@@ -542,6 +547,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	var handler_started_usec := Time.get_ticks_usec()
 	if not _tile_in_bounds(tile):
 		return
+	_opening_route_suggested = false
+	_opening_route_suggestion_kind = ""
 	var debug_started := _debug_begin_path_command("click", tile)
 	_debug_record_phase_usec("input_handler_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "map_tile_pressed"})
 	var route_tile := _selection_route_tile(tile)
@@ -4822,6 +4829,8 @@ func _should_show_tile_context() -> bool:
 		return false
 	if _selected_tile == OverworldRules.hero_position(_session):
 		return false
+	if _opening_route_suggested:
+		return false
 	return true
 
 func _frontier_indicator_text(threat_text: String, forecast_text: String) -> String:
@@ -5449,6 +5458,104 @@ func _ensure_selected_tile() -> void:
 
 func _select_hero_tile() -> void:
 	_set_selected_tile(OverworldRules.hero_position(_session))
+
+func _select_opening_route_target() -> bool:
+	_opening_route_suggested = false
+	_opening_route_suggestion_kind = ""
+	if _command_briefing_text == "" or _session.day != 1:
+		return false
+	if not OverworldRules.get_context_actions(_session).is_empty():
+		return false
+
+	var hero_pos := OverworldRules.hero_position(_session)
+	var best := {}
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "player":
+			continue
+		best = _prefer_opening_route_candidate(
+			best,
+			_opening_route_candidate(
+				hero_pos,
+				Vector2i(int(town.get("x", -1)), int(town.get("y", -1))),
+				0,
+				"town",
+				String(town.get("placement_id", town.get("id", "")))
+			)
+		)
+	for node_value in _active_resource_nodes():
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if bool(node.get("collected", false)):
+			continue
+		var fallback := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		best = _prefer_opening_route_candidate(
+			best,
+			_opening_route_candidate(
+				hero_pos,
+				_resource_node_route_tile(node, fallback),
+				1,
+				"resource",
+				String(node.get("placement_id", ""))
+			)
+		)
+	for artifact_value in _session.overworld.get("artifact_nodes", []):
+		if not (artifact_value is Dictionary):
+			continue
+		var artifact: Dictionary = artifact_value
+		if bool(artifact.get("collected", false)):
+			continue
+		best = _prefer_opening_route_candidate(
+			best,
+			_opening_route_candidate(
+				hero_pos,
+				Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1))),
+				2,
+				"artifact",
+				String(artifact.get("placement_id", ""))
+			)
+		)
+
+	if best.is_empty():
+		return false
+	_set_selected_tile(best.get("tile", hero_pos))
+	_opening_route_suggested = _selected_tile != hero_pos
+	_opening_route_suggestion_kind = String(best.get("kind", "")) if _opening_route_suggested else ""
+	return _opening_route_suggested
+
+func _opening_route_candidate(hero_pos: Vector2i, target: Vector2i, priority: int, kind: String, stable_id: String) -> Dictionary:
+	if target == hero_pos or not _tile_in_bounds(target):
+		return {}
+	if not OverworldRules.is_tile_visible(_session, target.x, target.y):
+		return {}
+	var path := _build_path(hero_pos, target)
+	if path.is_empty():
+		return {}
+	return {
+		"tile": target,
+		"priority": priority,
+		"path_length": path.size(),
+		"kind": kind,
+		"stable_key": "%s|%05d|%05d" % [stable_id, target.y, target.x],
+	}
+
+func _prefer_opening_route_candidate(current: Dictionary, candidate: Dictionary) -> Dictionary:
+	if candidate.is_empty():
+		return current
+	if current.is_empty():
+		return candidate
+	var candidate_priority := int(candidate.get("priority", 999))
+	var current_priority := int(current.get("priority", 999))
+	if candidate_priority != current_priority:
+		return candidate if candidate_priority < current_priority else current
+	var candidate_path_length := int(candidate.get("path_length", 999999))
+	var current_path_length := int(current.get("path_length", 999999))
+	if candidate_path_length != current_path_length:
+		return candidate if candidate_path_length < current_path_length else current
+	return candidate if String(candidate.get("stable_key", "")) < String(current.get("stable_key", "")) else current
 
 func _set_selected_tile(tile: Vector2i) -> void:
 	var route_tile := _selection_route_tile(tile)
@@ -6713,6 +6820,9 @@ func validation_snapshot() -> Dictionary:
 			"x": _selected_tile.x,
 			"y": _selected_tile.y,
 		},
+		"opening_route_suggested": _opening_route_suggested,
+		"opening_route_suggestion_kind": _opening_route_suggestion_kind,
+		"command_briefing_active": _command_briefing_text != "",
 		"context_summary": _cached_focus_tile_text(),
 		"context_visible_text": _context_label.text,
 		"hero_text": OverworldRules.describe_hero(_session),
@@ -8254,6 +8364,8 @@ func _set_command_briefing(title: String, text: String) -> void:
 func _dismiss_command_briefing() -> void:
 	_briefing_title_text = "Command Briefing"
 	_command_briefing_text = ""
+	_opening_route_suggested = false
+	_opening_route_suggestion_kind = ""
 
 func _handle_session_resolution() -> bool:
 	if _session.scenario_status == "in_progress" and not _session.battle.is_empty():

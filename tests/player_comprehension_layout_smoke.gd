@@ -18,31 +18,66 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _check_overworld(viewport_size: Vector2) -> bool:
-	SessionState.set_active_session(ScenarioFactory.create_session(
+	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
 		SessionState.LAUNCH_MODE_SKIRMISH
-	))
+	)
+	var initial_position: Dictionary = session.overworld.get("hero_position", {}).duplicate(true)
+	var initial_movement: Dictionary = session.overworld.get("movement", {}).duplicate(true)
+	var initial_resources: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	SessionState.set_active_session(session)
 	var frame := _new_frame("OverworldFrame", viewport_size)
 	var shell = OVERWORLD_SCENE.instantiate()
 	frame.add_child(shell)
 	await _settle_layout()
 	var compact := viewport_size.x < 1360.0 or viewport_size.y < 760.0
 	var narrow := viewport_size.x < 1100.0
+	var snapshot: Dictionary = shell.call("validation_snapshot")
 	if compact:
 		shell.call("_refresh")
 		await _settle_layout()
+		snapshot = shell.call("validation_snapshot")
 	var ok := _inside(frame, shell.get_node("%Map"), "overworld map", viewport_size)
 	ok = _inside(frame, shell.get_node("%CommandBand"), "overworld command band", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SidebarShell"), not narrow, "overworld sidebar", viewport_size) and ok
+	ok = _expect_visibility(shell.get_node("%CommandSpine"), false, "overworld opening context drawer", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%BriefingPanel"), not compact, "overworld briefing", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%CommitmentPanel"), not compact, "overworld commitment", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%CueChip"), not compact, "overworld duplicate cue", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SaveStatus"), not narrow, "overworld save detail", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SaveSlot"), not narrow, "overworld save slot picker", viewport_size) and ok
+	ok = _expect_opening_order(snapshot, viewport_size) and ok
+	ok = _expect_unchanged_opening_session(session, initial_position, initial_movement, initial_resources, viewport_size) and ok
 	frame.queue_free()
 	await get_tree().process_frame
 	return ok
+
+func _expect_opening_order(snapshot: Dictionary, viewport_size: Vector2) -> bool:
+	if not bool(snapshot.get("command_briefing_active", false)):
+		return _fail("first-turn briefing is not active at %s" % viewport_size)
+	if not bool(snapshot.get("opening_route_suggested", false)):
+		return _fail("first-turn route was not suggested at %s" % viewport_size)
+	if String(snapshot.get("opening_route_suggestion_kind", "")) not in ["town", "resource", "artifact"]:
+		return _fail("first-turn route kind is invalid at %s: %s" % [viewport_size, snapshot.get("opening_route_suggestion_kind", "")])
+	if String(snapshot.get("primary_action_id", "")) == "":
+		return _fail("first-turn primary order is missing at %s" % viewport_size)
+	if bool(snapshot.get("primary_action_button_disabled", true)):
+		return _fail("first-turn primary order is disabled at %s: %s" % [viewport_size, snapshot.get("primary_action_button_text", "")])
+	if snapshot.get("selected_tile", {}) == snapshot.get("hero_position", {}):
+		return _fail("first-turn route still selects the hero tile at %s" % viewport_size)
+	return true
+
+func _expect_unchanged_opening_session(session, initial_position: Dictionary, initial_movement: Dictionary, initial_resources: Dictionary, viewport_size: Vector2) -> bool:
+	if session.day != 1:
+		return _fail("first-turn suggestion advanced the day at %s" % viewport_size)
+	if session.overworld.get("hero_position", {}) != initial_position:
+		return _fail("first-turn suggestion moved the hero at %s" % viewport_size)
+	if session.overworld.get("movement", {}) != initial_movement:
+		return _fail("first-turn suggestion spent movement at %s" % viewport_size)
+	if session.overworld.get("resources", {}) != initial_resources:
+		return _fail("first-turn suggestion changed resources at %s" % viewport_size)
+	return true
 
 func _check_town(viewport_size: Vector2) -> bool:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
