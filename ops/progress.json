@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6, 94 events, three site seizures, 12 stalled turns, and zero invalid orders, behavior bugs, integrity violations, or unreachable targets. It remains battle-free because the Brightwood Sawmill body closes the player-region corridor. Thirty-five current-code rows pass, 65 remain, and ordinal 96 is next.",
+  "currentNotes": "The selected Native RMG release matrix remains complete. Exact-current-code Medium ordinal 96 reaches correct defeat after 23 turns with row signature 258261c2, 99 events, 30 movements, three valid battles, and zero stalls, invalid orders, behavior bugs, integrity violations, or unreachable targets. Thirty-six current-code rows pass, 64 remain, and ordinal 97 is next.",
   "currentPhase": "phase-5-playable-alpha-baseline",
   "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
   "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6, 94 events, three site seizures, 12 stalled turns, and zero invalid orders, behavior, integrity, or reachability failures. Six reachable raids remain, but no movement events or battles occur because the Brightwood Sawmill body closes the player-region corridor. Runtime is 373386ms with a 9128ms maximum turn. Thirty-five rows pass, 65 remain, and ordinal 96 is next.",
+  "currentSliceNotes": "Exact-current-code Medium ordinal 96 reaches correct defeat after 23 turns with row signature 258261c2, 99 events, 30 movements, three valid battles, and zero stalls, invalid orders, behavior, integrity, or reachability failures. Runtime is 228828ms with a 13036ms maximum turn. Thirty-six rows pass, 64 remain, and ordinal 97 is next.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-02T02:34:25Z",
+  "currentSliceUpdatedAt": "2026-08-02T02:39:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -61165,7 +61165,8 @@
         "Exact-current-code Medium ordinal 92 reaches correct player defeat after 26 completed turns with row signature ba590063 and report signature 0b7738bd. It records 115 activity events, 47 movements, 17 assignments, three regroups, 11 garrison reinforcements, one commander-task plan, 11 town builds, 11 town recruitments, one adventure-spell cast, two site contests, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 197441ms with a 9443ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-91, 32 exact-current-code rows pass, 68 remain, and ordinal 93 is next.",
         "Exact-current-code Medium ordinal 93 completes 56/56 turns with row signature c43e6244 and report signature 845d80a1. It records 194 activity events, 18 movements, 43 assignments, one grouping, two regroups, 36 garrison reinforcements, one commander-task plan, 17 town builds, 41 town recruitments, two site contests, one site seizure, and one valid town-loss autoresolution, with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. The player has no towns but correctly remains in progress with live heroes; six reachable raids remain. Runtime is 444413ms with a 12855ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-92, 33 exact-current-code rows pass, 67 remain, and ordinal 94 is next.",
         "Exact-current-code Medium ordinal 94 reaches correct player defeat after 27 completed turns with row signature c381a01d and report signature e812cf98. It records 75 activity events, 20 movements, 25 assignments, one grouping, five regroups, four garrison reinforcements, one commander rebuild, one commander preparation, one commander-task plan, six town builds, six town recruitments, one adventure-spell cast, two site contests, two site seizures, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with two stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 231182ms with a 12899ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-93, 34 exact-current-code rows pass, 66 remain, and ordinal 95 is next.",
-        "Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6 and report signature 9a4ef92d. It records 94 activity events, 74 assignments, two groupings, 12 regroups, three site contests, and three site seizures, with 12 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on exploration targets, but no movement events or battles occur because the permanent Brightwood Sawmill body closes the only player-region corridor; generated topology/object placement remains an explicit production gap. Runtime is 373386ms with a 9128ms maximum turn. This is validation coverage, not a new implementation or tactical-parity claim. Together with ordinals 61-94, 35 exact-current-code rows pass, 65 remain, and ordinal 96 is next."
+        "Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6 and report signature 9a4ef92d. It records 94 activity events, 74 assignments, two groupings, 12 regroups, three site contests, and three site seizures, with 12 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on exploration targets, but no movement events or battles occur because the permanent Brightwood Sawmill body closes the only player-region corridor; generated topology/object placement remains an explicit production gap. Runtime is 373386ms with a 9128ms maximum turn. This is validation coverage, not a new implementation or tactical-parity claim. Together with ordinals 61-94, 35 exact-current-code rows pass, 65 remain, and ordinal 96 is next.",
+        "Exact-current-code Medium ordinal 96 reaches correct player defeat after 23 completed turns with row signature 258261c2 and report signature 4af5ce62. It records 99 activity events, 30 movements, 14 assignments, three groupings, one regroup, 15 garrison reinforcements, one commander rebuild, four commander-task plans, 12 town builds, 17 town recruitments, two adventure-spell casts, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 228828ms with a 13036ms maximum turn. This is validation coverage, not a new implementation claim. Together with ordinals 61-95, 36 exact-current-code rows pass, 64 remain, and ordinal 97 is next."
       ],
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Current Tactical State",
@@ -61178,9 +61179,9 @@
       ],
       "startedAt": "2026-06-01T15:46:12Z",
       "status": "in_progress",
-      "summary": "Exact-current-code Medium ordinal 95 completes 56/56 turns with 94 events, three site seizures, 12 stalled turns, and zero invalid orders, behavior, integrity, or reachability failures. It remains battle-free because the Brightwood Sawmill body closes the player-region corridor. Together with ordinals 61-94, 35 rows pass, 65 remain, and ordinal 96 is next. The matrix slice and overall game remain in progress.",
+      "summary": "Exact-current-code Medium ordinal 96 reaches correct defeat after 23 turns with 99 events, 30 movements, three valid battles, and zero stalls, invalid orders, behavior, integrity, or reachability failures. Together with ordinals 61-95, 36 rows pass, 64 remain, and ordinal 97 is next. The matrix slice and overall game remain in progress.",
       "title": "Strategic AI Medium Long-Run Seed Matrix",
-      "updatedAt": "2026-08-02T02:34:25Z",
+      "updatedAt": "2026-08-02T02:39:52Z",
       "validation": [
         {
           "command": "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
@@ -62161,6 +62162,11 @@
           "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=94 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
           "notes": "Exact-current-code Medium ordinal 95 completes 56/56 turns with row signature b18d8de6 and report signature 9a4ef92d. It records 94 activity events, 74 assignments, two groupings, 12 regroups, three site contests, and three site seizures, with 12 stalled turns and zero invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Six reachable raids remain on exploration targets, but no movement events or battles occur because the permanent Brightwood Sawmill body closes the only player-region corridor; generated topology/object placement remains an explicit production gap. Runtime is 373386ms with a 9128ms maximum turn. The report remains needs_attention because the other 65 current-code rows have not run and topology/object placement remains open.",
           "status": "pass_with_remaining_65_row_production_gap"
+        },
+        {
+          "command": "GODOT_SILENCE_ROOT_WARNING=1 HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=95 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 timeout 1500 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "notes": "Exact-current-code Medium ordinal 96 reaches correct player defeat after 23 completed turns with row signature 258261c2 and report signature 4af5ce62. It records 99 activity events, 30 movements, 14 assignments, three groupings, one regroup, 15 garrison reinforcements, one commander rebuild, four commander-task plans, 12 town builds, 17 town recruitments, two adventure-spell casts, and three valid autoresolutions (town loss, player hero victory, and final hero defeat), with zero stalled turns, invalid player orders, behavior bugs, target-integrity violations, or unreachable active targets. Runtime is 228828ms with a 13036ms maximum turn. The report remains needs_attention only because the other 64 current-code rows have not run.",
+          "status": "pass_with_remaining_64_row_production_gap"
         }
       ]
     },
@@ -63067,9 +63073,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 61-95 pass with zero behavior bugs, integrity violations, and unreachable active targets. Thirty-five current-code rows pass and 65 remain; low-activity and battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Exact-current-code Medium strategic-AI ordinals 61-96 pass with zero behavior bugs, integrity violations, and unreachable active targets. Thirty-six current-code rows pass and 64 remain; low-activity and battle-free topology/contact caveats remain explicit, and the strategic-AI matrix and overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T02:34:25Z",
+  "updatedAt": "2026-08-02T02:39:52Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
