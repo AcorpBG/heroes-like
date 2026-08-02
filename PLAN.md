@@ -694,6 +694,23 @@ Non-goals:
 - do not remap non-movement shortcuts or change route/pathing rules;
 - do not add settings controls or explanatory panels beyond the existing layout picker.
 
+## Custom Hero Movement Keybindings
+
+The completed Phase 6 accessibility slice extends the shared eight-direction hero movement actions from fixed presets into complete device-persisted keyboard customization.
+
+Target shape:
+- Settings exposes all eight hero movement directions in a compact modal binding surface;
+- selecting a binding captures one physical key, applies it immediately through the existing InputMap actions, and keeps controller input unchanged;
+- assigning an already-used movement key swaps the two directions instead of leaving an ambiguous duplicate;
+- Escape, interface-confirmation keys, arrow navigation, and layout-independent diagonal numpad keys remain reserved;
+- changing the navigation layout or choosing Reset restores the selected preset and clears custom movement bindings;
+- schema-11 device settings preserve custom bindings across normal and packaged reloads without changing expedition saves.
+
+Non-goals:
+- do not add arbitrary command-shortcut, mouse-button, modifier-chord, or controller rebinding;
+- do not change menu focus navigation, movement/pathing rules, save-game schema, battle behavior, or Native RMG;
+- do not replace the existing preset picker or add a full-screen settings dashboard.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

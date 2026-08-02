@@ -97,6 +97,8 @@ const TAB_HELP_TOPIC := {
 @onready var _frame_rate_picker: OptionButton = %FrameRatePicker
 @onready var _battle_playback_speed_picker: OptionButton = %BattlePlaybackSpeedPicker
 @onready var _keyboard_navigation_layout_picker: OptionButton = %KeyboardNavigationLayoutPicker
+@onready var _customize_movement_keys_button: Button = %CustomizeMovementKeys
+@onready var _hero_keybindings_dialog: HeroKeybindingsDialog = $HeroKeybindingsDialog
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
@@ -518,6 +520,13 @@ func _on_keyboard_navigation_layout_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _keyboard_navigation_layout_picker.get_item_count():
 		return
 	SettingsService.set_keyboard_navigation_layout_id(String(_keyboard_navigation_layout_picker.get_item_metadata(index)))
+	_hero_keybindings_dialog.refresh_dialog()
+	_refresh_settings_panel()
+
+func _on_customize_movement_keys_pressed() -> void:
+	_hero_keybindings_dialog.open_dialog(_customize_movement_keys_button)
+
+func _on_hero_keybindings_dialog_dismissed() -> void:
 	_refresh_settings_panel()
 
 func _on_master_volume_changed(value: float) -> void:
@@ -952,6 +961,8 @@ func _refresh_settings_panel() -> void:
 	if selected_keyboard_layout_index >= 0:
 		_keyboard_navigation_layout_picker.select(selected_keyboard_layout_index)
 	_keyboard_navigation_layout_picker.tooltip_text = "%s\nDirectional keyboard navigation applies immediately across menus and active play; controller input remains unchanged.\n%s" % [SettingsService.keyboard_navigation_layout_summary(), settings_check]
+	_customize_movement_keys_button.text = "Keys: Custom" if SettingsService.has_custom_hero_movement_bindings() else "Customize Keys"
+	_customize_movement_keys_button.tooltip_text = "Change all eight hero movement directions. Reserved interface and numpad keys remain available.\n%s" % settings_check
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check
@@ -2082,6 +2093,9 @@ func validation_snapshot() -> Dictionary:
 		"keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"keyboard_navigation_layout_picker_items": _picker_item_labels(_keyboard_navigation_layout_picker),
 		"keyboard_navigation_layout_tooltip": _keyboard_navigation_layout_picker.tooltip_text,
+		"custom_movement_keys_text": _customize_movement_keys_button.text,
+		"custom_movement_keys_tooltip": _customize_movement_keys_button.tooltip_text,
+		"hero_keybindings_dialog": _hero_keybindings_dialog.validation_snapshot(),
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
 		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
@@ -2531,6 +2545,19 @@ func validation_select_keyboard_navigation_layout(layout_id: String) -> bool:
 		return SettingsService.keyboard_navigation_layout_id() == layout_id
 	return false
 
+func validation_open_hero_keybindings_dialog() -> Dictionary:
+	_hero_keybindings_dialog.open_dialog(_customize_movement_keys_button)
+	return _hero_keybindings_dialog.validation_snapshot()
+
+func validation_begin_hero_key_capture(action: StringName) -> bool:
+	return _hero_keybindings_dialog.validation_begin_capture(action)
+
+func validation_capture_hero_key(keycode: int) -> Dictionary:
+	return _hero_keybindings_dialog.validation_capture_key(keycode)
+
+func validation_reset_hero_keybindings() -> void:
+	_hero_keybindings_dialog.validation_reset()
+
 func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 	validation_open_saves_stage()
 	var requested_key := "%s:%s" % [slot_type, slot_id]
@@ -2769,6 +2796,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
+	FrontierVisualKit.apply_button(_customize_movement_keys_button, "secondary", 140.0, 34.0, 13)
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 
@@ -2803,6 +2831,7 @@ func _apply_visual_theme() -> void:
 	for title_label in find_children("*Title", "Label", true, false):
 		if title_label is Label:
 			FrontierVisualKit.apply_label(title_label, "title", 14)
+	_hero_keybindings_dialog.refresh_theme()
 
 	for node_name in ["CampaignTitle", "SkirmishTitle"]:
 		var feature_title = find_child(node_name, true, false)

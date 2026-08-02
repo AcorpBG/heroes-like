@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/menus/HeroKeybindingsDialog.gd" id="1_script"]
+
+[node name="HeroKeybindingsDialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_script")
+
+[node name="Scrim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.015, 0.02, 0.025, 0.82)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="BindingPanel" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+
+[node name="Pad" type="MarginContainer" parent="Center/BindingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="Box" type="VBoxContainer" parent="Center/BindingPanel/Pad"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BindingTitle" type="Label" parent="Center/BindingPanel/Pad/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hero Movement Keys"
+horizontal_alignment = 1
+
+[node name="BindingPreset" type="Label" parent="Center/BindingPanel/Pad/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "WASD + Arrows preset"
+horizontal_alignment = 1
+
+[node name="Rule" type="HSeparator" parent="Center/BindingPanel/Pad/Box"]
+layout_mode = 2
+
+[node name="BindingGrid" type="GridContainer" parent="Center/BindingPanel/Pad/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 7
+columns = 2
+
+[node name="BindingStatus" type="Label" parent="Center/BindingPanel/Pad/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Select a direction to change its key."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="Center/BindingPanel/Pad/Box"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ResetBindings" type="Button" parent="Center/BindingPanel/Pad/Box/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset Preset"
+
+[node name="Spacer" type="Control" parent="Center/BindingPanel/Pad/Box/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseBindings" type="Button" parent="Center/BindingPanel/Pad/Box/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[connection signal="pressed" from="Center/BindingPanel/Pad/Box/Actions/ResetBindings" to="." method="_on_reset_bindings_pressed"]
+[connection signal="pressed" from="Center/BindingPanel/Pad/Box/Actions/CloseBindings" to="." method="_on_close_bindings_pressed"]
