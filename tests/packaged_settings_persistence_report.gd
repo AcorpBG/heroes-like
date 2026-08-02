@@ -8,6 +8,7 @@ const TEST_VALUES := {
 	"effects_volume_percent": 48,
 	"presentation_mode": "windowed",
 	"presentation_resolution": "1600x900",
+	"render_quality": "low",
 	"vsync_enabled": false,
 	"frame_rate_limit": 120,
 	"large_ui_text": true,
@@ -67,6 +68,9 @@ func _run_persistence_check() -> void:
 	SettingsService.set_effects_volume_percent(int(TEST_VALUES["effects_volume_percent"]))
 	SettingsService.set_presentation_mode(String(TEST_VALUES["presentation_mode"]))
 	SettingsService.set_presentation_resolution(String(TEST_VALUES["presentation_resolution"]))
+	SettingsService.set_render_quality_id("high")
+	_expect(get_tree().root.msaa_2d == Viewport.MSAA_4X, "High renderer quality must apply 4x 2D MSAA immediately.")
+	SettingsService.set_render_quality_id(String(TEST_VALUES["render_quality"]))
 	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
 	SettingsService.set_large_ui_text_enabled(bool(TEST_VALUES["large_ui_text"]))
@@ -109,6 +113,15 @@ func _run_persistence_check() -> void:
 	_expect(SettingsService.effects_audio_bus_name() == SettingsService.EFFECTS_AUDIO_BUS, "Effects playback must target the independent Effects audio bus.")
 	_expect(String(direct_values.get("presentation_mode", "")) == String(TEST_VALUES["presentation_mode"]), "Direct config presentation mode mismatch.")
 	_expect(String(direct_values.get("presentation_resolution", "")) == String(TEST_VALUES["presentation_resolution"]), "Direct config presentation resolution mismatch.")
+	_expect(String(direct_values.get("render_quality", "")) == String(TEST_VALUES["render_quality"]), "Direct config renderer quality mismatch.")
+	_report["renderer_quality"] = {
+		"quality_id": SettingsService.render_quality_id(),
+		"quality_label": SettingsService.render_quality_label(),
+		"configured_msaa_2d": SettingsService.render_quality_msaa_2d(),
+		"runtime_msaa_2d": get_tree().root.msaa_2d,
+		"options": SettingsService.build_render_quality_options(),
+	}
+	_expect(get_tree().root.msaa_2d == Viewport.MSAA_DISABLED, "Low renderer quality must disable 2D MSAA immediately.")
 	_expect(bool(direct_values.get("vsync_enabled", true)) == bool(TEST_VALUES["vsync_enabled"]), "Direct config VSync mismatch.")
 	_expect(int(direct_values.get("frame_rate_limit", -1)) == int(TEST_VALUES["frame_rate_limit"]), "Direct config frame-rate limit mismatch.")
 	var display_driver := DisplayServer.get_name()
@@ -135,6 +148,7 @@ func _run_persistence_check() -> void:
 		"effects_volume_percent": SettingsService.effects_volume_percent(),
 		"presentation_mode": SettingsService.presentation_mode_id(),
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
+		"render_quality": SettingsService.render_quality_id(),
 		"vsync_enabled": SettingsService.vsync_enabled(),
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
@@ -147,6 +161,8 @@ func _run_persistence_check() -> void:
 	_expect(int(reloaded["effects_volume_percent"]) == int(TEST_VALUES["effects_volume_percent"]), "Reloaded effects volume mismatch.")
 	_expect(String(reloaded["presentation_mode"]) == String(TEST_VALUES["presentation_mode"]), "Reloaded presentation mode mismatch.")
 	_expect(String(reloaded["presentation_resolution"]) == String(TEST_VALUES["presentation_resolution"]), "Reloaded presentation resolution mismatch.")
+	_expect(String(reloaded["render_quality"]) == String(TEST_VALUES["render_quality"]), "Reloaded renderer quality mismatch.")
+	_expect(get_tree().root.msaa_2d == Viewport.MSAA_DISABLED, "Reloaded low renderer quality must retain disabled 2D MSAA.")
 	_expect(bool(reloaded["vsync_enabled"]) == bool(TEST_VALUES["vsync_enabled"]), "Reloaded VSync mismatch.")
 	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
@@ -166,6 +182,7 @@ func _read_settings_config_values() -> Dictionary:
 		"effects_volume_percent": int(config.get_value("audio", "effects_volume_percent", -1)),
 		"presentation_mode": String(config.get_value("presentation", "mode", "")),
 		"presentation_resolution": String(config.get_value("presentation", "resolution", "")),
+		"render_quality": String(config.get_value("presentation", "render_quality", "")),
 		"vsync_enabled": bool(config.get_value("presentation", "vsync_enabled", true)),
 		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),

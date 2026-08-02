@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Display pacing controls are implemented and validated. Settings version 4 now persists VSync plus unlimited/30/60/120 FPS preferences, applies them immediately through DisplayServer and Engine, and keeps the existing settings board compact at 1280x720 with large UI text. The broader packaging, performance, accessibility, and production-release baseline remains incomplete.",
+  "currentNotes": "Renderer quality control is implemented and validated. Settings version 5 now persists Low, Balanced, and High quality, maps them to disabled, 2x, and 4x root-viewport 2D MSAA, and keeps the 1280x720 large-text settings board compact. Broad performance profiling and the production-release baseline remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-display-pacing-controls-10184",
-  "currentSliceId": "settings-display-pacing-controls-10184",
-  "currentSliceNotes": "Completed. VSync and unlimited/30/60/120 FPS controls persist through settings version 4, apply immediately on live X11 and packaged headless runtime paths, and fit the existing compact settings board without overlap.",
+  "currentSlice": "settings-render-quality-runtime-control-10184",
+  "currentSliceId": "settings-render-quality-runtime-control-10184",
+  "currentSliceNotes": "Completed. Low, Balanced, and High quality persist through settings version 5, apply disabled, 2x, and 4x 2D MSAA immediately to the root viewport, and pass direct X11, compact rendered, and exported-PCK validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Display Pacing Controls",
-  "currentSliceUpdatedAt": "2026-08-02T08:56:42Z",
+  "currentSliceTitle": "Renderer Quality Runtime Control",
+  "currentSliceUpdatedAt": "2026-08-02T09:07:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56509,6 +56509,88 @@
         "sliceId": "settings-display-pacing-controls-10184",
         "status": "passed_direct_x11_rendered_and_packaged_display_pacing",
         "updatedAt": "2026-08-02T08:56:42Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Low, balanced, and high 2D renderer-quality presets are selectable in the settings board, persist across version-5 config save/reload, apply immediately to the root viewport's 2D MSAA state, retain compact and large-text layout integrity, and pass the exported PCK settings smoke.",
+      "id": "settings-render-quality-runtime-control-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "existing settings and packaging validation"
+      ],
+      "nonGoals": [
+        "changing renderer backend",
+        "adding unsupported platform-specific rendering code",
+        "claiming broad performance profiling or release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Let Windows and Linux players choose an explicit 2D edge-quality versus rendering-cost tradeoff using Godot's cross-platform root-viewport MSAA control.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T08:59:51Z",
+      "status": "completed",
+      "summary": "Completed. Settings version 5 persists Low, Balanced, and High renderer quality; the compact settings board exposes the preference; and live root-viewport, X11, and exported-PCK validation proves immediate disabled, 2x, and 4x 2D MSAA policy application.",
+      "title": "Renderer Quality Runtime Control",
+      "updatedAt": "2026-08-02T09:07:43Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed; High 4x then Low disabled MSAA transition applied immediately)",
+          "xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/packaged_settings_persistence_report.tscn -- --report-json=res://.artifacts/render_quality_x11_report.json (passed on X11)",
+          "python3 tests/packaged_settings_persistence_smoke.py (passed; Linux Release PCK exported and scene booted through --main-pack)",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed; High selected through the live picker and original value restored)",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn (passed at 1280x720 with large UI text; capture inspected)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "settings_version": 5,
+          "quality_presets": {
+            "low_msaa_2d": 0,
+            "balanced_msaa_2d": 1,
+            "high_msaa_2d": 2
+          },
+          "runtime_transition": "The direct persistence scene selected High and observed Viewport.MSAA_4X, then selected Low and observed Viewport.MSAA_DISABLED before save/reload.",
+          "x11_renderer_quality": {
+            "quality_id": "low",
+            "configured_msaa_2d": 0,
+            "runtime_msaa_2d": 0
+          },
+          "packaged_smoke": {
+            "ok": true,
+            "export_returncode": 0,
+            "scene_returncode": 0,
+            "pack_size_bytes": 185202752,
+            "settings_version": 5,
+            "reloaded_render_quality": "low",
+            "runtime_msaa_2d": 0,
+            "restored_original_settings": true
+          },
+          "visual_check": "The 1280x720 large-UI-text settings capture keeps Window, Quality, VSync, Resolution, Frame Limit, all audio controls, Large Text, and Reduce Motion visible without overlap or clipping.",
+          "player_facing_change": "Players can now lower 2D multisampling cost or raise edge quality without editing project configuration or restarting the game.",
+          "remaining_debt": "Broad performance profiling, renderer-backend benchmarking, final accessibility coverage, binary release/install validation, the parent production baseline, and the overall game release remain incomplete."
+        },
+        "sliceId": "settings-render-quality-runtime-control-10184",
+        "status": "passed_direct_x11_rendered_and_packaged_renderer_quality",
+        "updatedAt": "2026-08-02T09:07:43Z"
       }
     },
     {

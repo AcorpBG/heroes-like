@@ -869,6 +869,15 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="RenderQualityTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
+layout_mode = 2
+text = "Quality"
+
+[node name="RenderQualityPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="VSyncToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -1127,6 +1136,7 @@ text = "Quit"
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/LoadSelected" to="." method="_on_load_selected_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/HelpList" to="." method="_on_help_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/RenderQualityPicker" to="." method="_on_render_quality_selected"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/VSyncToggle" to="." method="_on_vsync_toggled"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ResolutionRow/ResolutionPicker" to="." method="_on_resolution_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ResolutionRow/FrameRatePicker" to="." method="_on_frame_rate_selected"]

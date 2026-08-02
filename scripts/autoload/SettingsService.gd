@@ -3,7 +3,7 @@ extends Node
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 4
+const SETTINGS_VERSION := 5
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -13,6 +13,15 @@ const PRESENTATION_FULLSCREEN := "fullscreen"
 const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
 const MUSIC_AUDIO_BUS := "Music"
 const EFFECTS_AUDIO_BUS := "Effects"
+const RENDER_QUALITY_LOW := "low"
+const RENDER_QUALITY_BALANCED := "balanced"
+const RENDER_QUALITY_HIGH := "high"
+
+const RENDER_QUALITY_OPTIONS := [
+	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
+	{"id": RENDER_QUALITY_BALANCED, "label": "Balanced", "msaa_2d": Viewport.MSAA_2X},
+	{"id": RENDER_QUALITY_HIGH, "label": "High", "msaa_2d": Viewport.MSAA_4X},
+]
 
 const FRAME_RATE_OPTIONS := [
 	{"value": 0, "label": "Unlimited"},
@@ -136,6 +145,7 @@ func build_default_settings() -> Dictionary:
 		"presentation": {
 			"mode": PRESENTATION_WINDOWED,
 			"resolution": PRESENTATION_RESOLUTION_DEFAULT,
+			"render_quality": RENDER_QUALITY_BALANCED,
 			"vsync_enabled": true,
 			"frame_rate_limit": 0,
 		},
@@ -157,6 +167,7 @@ func load_settings() -> void:
 		settings["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
 		settings["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
 		settings["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
+		settings["presentation"]["render_quality"] = _normalize_render_quality(String(config.get_value("presentation", "render_quality", defaults["presentation"]["render_quality"])))
 		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
 		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
 		settings["accessibility"]["large_ui_text"] = bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
@@ -177,6 +188,7 @@ func save_settings() -> String:
 	config.set_value("audio", "effects_volume_percent", effects_volume_percent())
 	config.set_value("presentation", "mode", presentation_mode_id())
 	config.set_value("presentation", "resolution", presentation_resolution_id())
+	config.set_value("presentation", "render_quality", render_quality_id())
 	config.set_value("presentation", "vsync_enabled", vsync_enabled())
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
@@ -228,6 +240,18 @@ func build_frame_rate_options() -> Array:
 		})
 	return options
 
+func build_render_quality_options() -> Array:
+	var selected_quality := render_quality_id()
+	var options := []
+	for option in RENDER_QUALITY_OPTIONS:
+		options.append({
+			"id": String(option.get("id", RENDER_QUALITY_BALANCED)),
+			"label": String(option.get("label", "Balanced")),
+			"msaa_2d": int(option.get("msaa_2d", Viewport.MSAA_2X)),
+			"selected": String(option.get("id", "")) == selected_quality,
+		})
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
 
@@ -237,6 +261,15 @@ func presentation_resolution_id() -> String:
 func presentation_resolution_size() -> Vector2i:
 	var option := _presentation_resolution_option(presentation_resolution_id())
 	return Vector2i(int(option.get("width", 1920)), int(option.get("height", 1080)))
+
+func render_quality_id() -> String:
+	return _normalize_render_quality(String(ensure_settings().get("presentation", {}).get("render_quality", RENDER_QUALITY_BALANCED)))
+
+func render_quality_label() -> String:
+	return String(_render_quality_option(render_quality_id()).get("label", "Balanced"))
+
+func render_quality_msaa_2d() -> int:
+	return int(_render_quality_option(render_quality_id()).get("msaa_2d", Viewport.MSAA_2X))
 
 func vsync_enabled() -> bool:
 	return bool(ensure_settings().get("presentation", {}).get("vsync_enabled", true))
@@ -327,6 +360,11 @@ func set_presentation_resolution(resolution_id: String) -> void:
 	settings["presentation"]["resolution"] = _normalize_presentation_resolution(resolution_id)
 	_commit_settings()
 
+func set_render_quality_id(quality_id: String) -> void:
+	ensure_settings()
+	settings["presentation"]["render_quality"] = _normalize_render_quality(quality_id)
+	_commit_settings()
+
 func set_vsync_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["presentation"]["vsync_enabled"] = enabled
@@ -353,7 +391,7 @@ func describe_settings() -> String:
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
-			"Presentation: %s | %s | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
+			"Presentation: %s | %s | %s quality | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), render_quality_label(), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
 			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
@@ -432,6 +470,15 @@ func _apply_presentation_settings() -> void:
 			_center_window(resolution)
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled() else DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = frame_rate_limit()
+	var root := get_tree().root
+	if root != null:
+		match render_quality_id():
+			RENDER_QUALITY_LOW:
+				root.msaa_2d = Viewport.MSAA_DISABLED
+			RENDER_QUALITY_HIGH:
+				root.msaa_2d = Viewport.MSAA_4X
+			_:
+				root.msaa_2d = Viewport.MSAA_2X
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -480,6 +527,19 @@ func _normalize_frame_rate_limit(value: int) -> int:
 		if int(option.get("value", 0)) == value:
 			return value
 	return 0
+
+func _normalize_render_quality(quality_id: String) -> String:
+	for option in RENDER_QUALITY_OPTIONS:
+		if String(option.get("id", "")) == quality_id:
+			return quality_id
+	return RENDER_QUALITY_BALANCED
+
+func _render_quality_option(quality_id: String) -> Dictionary:
+	var normalized := _normalize_render_quality(quality_id)
+	for option in RENDER_QUALITY_OPTIONS:
+		if String(option.get("id", "")) == normalized:
+			return option
+	return RENDER_QUALITY_OPTIONS[1]
 
 func _presentation_resolution_option(resolution_id: String) -> Dictionary:
 	var normalized := _normalize_presentation_resolution(resolution_id)

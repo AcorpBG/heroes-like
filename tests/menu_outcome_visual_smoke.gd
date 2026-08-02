@@ -12,6 +12,7 @@ func _run() -> void:
 
 func _run_main_menu_smoke() -> bool:
 	var original_resolution := SettingsService.presentation_resolution_id()
+	var original_render_quality := SettingsService.render_quality_id()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -515,10 +516,17 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	var vsync_toggle = shell.get_node_or_null("%VSyncToggle")
 	var frame_rate_picker = shell.get_node_or_null("%FrameRatePicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton):
-		push_error("Main menu smoke: settings board is missing VSync or frame-limit controls.")
+	var render_quality_picker = shell.get_node_or_null("%RenderQualityPicker")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton):
+		push_error("Main menu smoke: settings board is missing quality, VSync, or frame-limit controls.")
 		get_tree().quit(1)
 		return false
+	var render_quality_items: Array = settings_snapshot.get("render_quality_picker_items", []) if settings_snapshot.get("render_quality_picker_items", []) is Array else []
+	for expected_label in ["Low", "Balanced", "High"]:
+		if not render_quality_items.has(expected_label):
+			push_error("Main menu smoke: renderer-quality picker omitted %s: %s." % [expected_label, render_quality_items])
+			get_tree().quit(1)
+			return false
 	var frame_rate_items: Array = settings_snapshot.get("frame_rate_picker_items", []) if settings_snapshot.get("frame_rate_picker_items", []) is Array else []
 	for expected_label in ["Unlimited", "30 FPS", "60 FPS", "120 FPS"]:
 		if not frame_rate_items.has(expected_label):
@@ -546,13 +554,21 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: settings resolution picker could not select 1600x900.")
 		get_tree().quit(1)
 		return false
+	if not bool(shell.call("validation_select_render_quality", "high")):
+		if original_resolution != "1600x900":
+			shell.call("validation_select_resolution", original_resolution)
+		push_error("Main menu smoke: renderer-quality picker could not select High.")
+		get_tree().quit(1)
+		return false
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
-		push_error("Main menu smoke: settings summary did not reflect selected 1600x900 resolution: %s." % settings_snapshot)
+		if original_render_quality != "high":
+			shell.call("validation_select_render_quality", original_render_quality)
+		push_error("Main menu smoke: settings summary did not reflect selected resolution and quality: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
 	if not _assert_text_contains_all(
@@ -564,6 +580,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("settings_handoff_tooltip", "")),
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("render_quality_tooltip", "")),
 			String(settings_snapshot.get("vsync_tooltip", "")),
 			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
@@ -574,6 +591,8 @@ func _run_main_menu_smoke() -> bool:
 	):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
+		if original_render_quality != "high":
+			shell.call("validation_select_render_quality", original_render_quality)
 		return false
 	if not _assert_no_score_leak(
 		"Main menu settings persistence check",
@@ -584,6 +603,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("settings_handoff_tooltip", "")),
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("render_quality_tooltip", "")),
 			String(settings_snapshot.get("vsync_tooltip", "")),
 			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
@@ -593,10 +613,16 @@ func _run_main_menu_smoke() -> bool:
 	):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
+		if original_render_quality != "high":
+			shell.call("validation_select_render_quality", original_render_quality)
 		return false
 
 	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
 		push_error("Main menu smoke: settings resolution picker could not restore %s." % original_resolution)
+		get_tree().quit(1)
+		return false
+	if original_render_quality != "high" and not bool(shell.call("validation_select_render_quality", original_render_quality)):
+		push_error("Main menu smoke: renderer-quality picker could not restore %s." % original_render_quality)
 		get_tree().quit(1)
 		return false
 
