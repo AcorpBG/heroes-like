@@ -158,6 +158,14 @@
         "artifact_mudglass_beads",
         "artifact_choir_tuning_fork"
       ],
+      "artifact_ids_by_faction": {
+        "faction_mireclaw": [
+          "artifact_mudglass_beads"
+        ],
+        "faction_sunvault": [
+          "artifact_choir_tuning_fork"
+        ]
+      },
       "faction_constraints": [
         "faction_mireclaw",
         "faction_sunvault"
@@ -167,8 +175,8 @@
         "piece_limit_per_table": 0
       },
       "runtime_policy": {
-        "metadata_only": true,
-        "live_drop_execution": false,
+        "metadata_only": false,
+        "live_drop_execution": true,
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,

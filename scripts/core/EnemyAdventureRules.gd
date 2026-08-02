@@ -16414,6 +16414,28 @@ static func _secure_opportunistic_route_resource(
 		site
 	)
 	updated_raid = spell_reward.get("raid", updated_raid)
+	var artifact_reward := _apply_resource_site_artifact_reward_to_raid(
+		session,
+		faction_id,
+		updated_raid,
+		route_node,
+		site
+	)
+	updated_raid = artifact_reward.get("raid", updated_raid)
+	if bool(artifact_reward.get("applied", false)):
+		var artifact_id := String(artifact_reward.get("artifact_id", ""))
+		var captured_artifacts := _normalize_string_array(state.get("captured_artifact_ids", []))
+		if artifact_id not in captured_artifacts:
+			captured_artifacts.append(artifact_id)
+		state["captured_artifact_ids"] = captured_artifacts
+		state["pressure"] = max(0, int(state.get("pressure", 0))) + _artifact_pressure_value(artifact_id)
+		route_node["artifact_reward_id"] = artifact_id
+		route_node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
+		route_node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
+		route_node["artifact_reward_claimed_by_faction_id"] = faction_id
+		route_node["artifact_reward_claimed_day"] = session.day
+		nodes[node_index] = route_node
+		session.overworld["resource_nodes"] = nodes
 	updated_raid["last_opportunistic_pickup_kind"] = "resource"
 	updated_raid["last_opportunistic_pickup_placement_id"] = String(route_node.get("placement_id", ""))
 	updated_raid["last_opportunistic_pickup_day"] = int(session.day)
@@ -16447,6 +16469,12 @@ static func _secure_opportunistic_route_resource(
 			message,
 			raid_commander_display_name(updated_raid),
 			_describe_recruit_set(recruit_reward.get("recruits", {})),
+		]
+	if bool(artifact_reward.get("applied", false)):
+		message = "%s %s secures and equips %s." % [
+			message,
+			raid_commander_display_name(updated_raid),
+			ArtifactRulesScript.describe_artifact(String(artifact_reward.get("artifact_id", ""))),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -16493,9 +16521,11 @@ static func _secure_opportunistic_route_resource(
 			"target_controller_after": faction_id,
 			"learned_spell_id": String(spell_reward.get("spell_id", "")),
 			"learned_spell_name": String(spell_reward.get("spell_name", "")),
+			"artifact_reward_id": String(artifact_reward.get("artifact_id", "")),
+			"artifact_reward_table_id": String(artifact_reward.get("table_id", "")),
 		}
 	)
-	return {"resolved": true, "encounter": updated_raid, "state": state, "event_message": message, "ai_events": [event]}
+	return {"resolved": true, "encounter": updated_raid, "state": state, "event_message": message, "ai_events": [event], "artifact_reward": artifact_reward}
 
 static func _secure_opportunistic_route_artifact(
 	session: SessionStateStoreScript.SessionData,
@@ -16930,7 +16960,7 @@ static func _secure_resource_target(
 		site
 	)
 	updated_raid = spell_reward.get("raid", updated_raid)
-	var artifact_reward := _apply_guarded_site_artifact_reward_to_raid(
+	var artifact_reward := _apply_resource_site_artifact_reward_to_raid(
 		session,
 		faction_id,
 		updated_raid,
@@ -17069,13 +17099,18 @@ static func _secure_resource_target(
 		"artifact_reward": artifact_reward,
 	}
 
-static func _apply_guarded_site_artifact_reward_to_raid(
+static func _apply_resource_site_artifact_reward_to_raid(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	raid: Dictionary,
 	node: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
+	var source_tag := ArtifactRulesScript.live_source_reward_tag(site)
+	if source_tag == "":
+		return {"raid": raid, "applied": false, "reason": "source_not_opted_in"}
+	if String(node.get("artifact_reward_id", "")) != "":
+		return {"raid": raid, "applied": false, "reason": "source_reward_already_claimed"}
 	var commander_state = raid.get("enemy_commander_state", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return {"raid": raid, "applied": false, "reason": "commander_unavailable"}
@@ -17085,7 +17120,7 @@ static func _apply_guarded_site_artifact_reward_to_raid(
 		String(node.get("site_id", "")),
 	]
 	var selection := ArtifactRulesScript.select_live_source_reward(
-		"guarded_site",
+		source_tag,
 		site,
 		source_key,
 		faction_id,
@@ -17099,7 +17134,7 @@ static func _apply_guarded_site_artifact_reward_to_raid(
 	var claim := ArtifactRulesScript.claim_artifact(
 		commander_state,
 		artifact_id,
-		"Secured from %s" % String(site.get("name", "the guarded site")),
+		"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Secured from %s" % String(site.get("name", "the reward site")),
 		true
 	)
 	var updated_raid := raid.duplicate(true)

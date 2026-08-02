@@ -942,7 +942,7 @@ static func _collect_resource_node_result(
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
-	var artifact_reward := _grant_guarded_site_artifact_reward(session, node, site)
+	var artifact_reward := _grant_resource_site_artifact_reward(session, node, site)
 	if bool(artifact_reward.get("applied", false)):
 		messages.append(String(artifact_reward.get("message", "")))
 		node["artifact_reward_id"] = String(artifact_reward.get("artifact_id", ""))
@@ -11004,11 +11004,16 @@ static func _apply_artifact_claim(
 	_sync_movement_to_hero(session, previous_max)
 	return result
 
-static func _grant_guarded_site_artifact_reward(
+static func _grant_resource_site_artifact_reward(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
+	var source_tag := ArtifactRulesScript.live_source_reward_tag(site)
+	if source_tag == "":
+		return {"applied": false, "reason": "source_not_opted_in"}
+	if String(node.get("artifact_reward_id", "")) != "":
+		return {"applied": false, "reason": "source_reward_already_claimed"}
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var faction_id := String(scenario.get("player_faction_id", ""))
 	var source_key := "%s:%s:%s" % [
@@ -11017,7 +11022,7 @@ static func _grant_guarded_site_artifact_reward(
 		String(node.get("site_id", "")),
 	]
 	var selection := ArtifactRulesScript.select_live_source_reward(
-		"guarded_site",
+		source_tag,
 		site,
 		source_key,
 		faction_id,
@@ -11029,7 +11034,7 @@ static func _grant_guarded_site_artifact_reward(
 	var claim := _apply_artifact_claim(
 		session,
 		artifact_id,
-		"Recovered from %s" % String(site.get("name", "the guarded site")),
+		"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Recovered from %s" % String(site.get("name", "the reward site")),
 		true
 	)
 	selection["claim"] = claim

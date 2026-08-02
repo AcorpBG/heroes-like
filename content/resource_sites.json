@@ -2357,6 +2357,28 @@
         "experience": 140
       },
       "learn_spell_id": "spell_beacon_path",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_starlens_sanctum",
+        "resource_site_id": "site_starlens_sanctum",
+        "source_tag": "shrine",
+        "artifact_reward_table_id": "artifact_source_shrine_accord_rare",
+        "reward_categories": [
+          "spell_access",
+          "artifact"
+        ],
+        "reward_tier": "unguarded",
+        "one_time_reward": true,
+        "metadata_only": false
+      },
+      "runtime_boundary": {
+        "status": "spell_and_artifact_rewards_live",
+        "live_reward_grants": true,
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false
+      },
       "response_profile": {
         "action_label": "Relight Shrine",
         "summary": "Sanctum keepers relight the lenses and realign the reserve routes under the array.",
