@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The bounded player-comprehension slice and first keyboard-accessibility increment are complete. Shared styled buttons now expose visible focus, the scenic main menu has deterministic standard-UI-action traversal, secondary boards receive meaningful entry focus, and closing returns focus to the originating command. Focused validation also corrected build-plan command cues and bounded battle consequence text to the live command-rail width. Broader controller certification, screen-reader integration, remaining strategic AI, balance, content, performance, packaging, and release work remain open.",
+  "currentNotes": "The bounded player-comprehension and keyboard active-play increments are complete. Shared focus cycles now cover the scenic menu plus Overworld, Town, and Battle; Overworld preserves routed WASD movement while controls own focus; Town confirms construction and restores focus across dynamic rebuilds and narrow-layout handoff; Battle enters and re-homes on the scored suggested order after keyboard-confirmed actions. Broader controller certification, screen-reader integration, remaining strategic AI, balance, content, performance, packaging, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "accessibility-keyboard-focus-navigation-10184",
-  "currentSliceId": "accessibility-keyboard-focus-navigation-10184",
-  "currentSliceNotes": "Completed the mouse-only main-menu boundary: visible shared focus, deterministic first-view traversal, board-entry focus, and focus return all pass through standard UI actions. Broader controller certification remains outside this slice.",
+  "currentSlice": "accessibility-active-play-focus-navigation-10184",
+  "currentSliceId": "accessibility-active-play-focus-navigation-10184",
+  "currentSliceNotes": "Completed deterministic active-play focus cycles. Routed validation proves focused Overworld controls preserve WASD movement, Town Orders opens keyboard-first on narrow layouts, Enter selects and confirms live construction without premature spend, and Enter executes Battle Defend before focus re-homes to the next scored suggested order.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility Keyboard Focus Navigation",
-  "currentSliceUpdatedAt": "2026-08-02T05:54:08Z",
+  "currentSliceTitle": "Accessibility Active Play Focus Navigation",
+  "currentSliceUpdatedAt": "2026-08-02T06:23:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -37209,6 +37209,64 @@
       "startedAt": "2026-05-05T00:00:00Z",
       "status": "completed",
       "title": "Decorative Blocker Sprite Asset Foundation"
+    },
+    {
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Overworld, Town, and Battle expose deterministic keyboard entry focus and focus cycles; keyboard confirmation executes a town build and a battle order through live buttons; focused and regression validation pass.",
+      "id": "accessibility-active-play-focus-navigation-10184",
+      "implementationTargets": [
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/active_play_keyboard_focus_smoke.gd"
+      ],
+      "nonGoals": [
+        "keyboard hex-cursor movement on the battle board",
+        "screen-reader integration",
+        "full controller certification"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "Active release goal accessibility and manual-playability gap",
+      "purpose": "Carry visible standard keyboard focus into each live-play shell and prove irreversible town and battle commands can be confirmed without a mouse.",
+      "source": "Active release goal accessibility and manual-playability gap",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "completedAt": "2026-08-02T06:23:19Z",
+      "startedAt": "2026-08-02T05:59:30Z",
+      "status": "completed",
+      "summary": "Completed deterministic active-play keyboard focus. The shared visual kit builds live focus cycles and restores valid focus; Overworld assigns entry and drawer focus while processing WASD ahead of focused controls; Town follows visible management surfaces across dynamic rebuilds and narrow Town Orders handoff; Battle focuses the scored suggested legal order after entry and action refresh. Routed input validation confirms a town construction and Battle Defend execute through focused live buttons.",
+      "title": "Accessibility Active Play Focus Navigation",
+      "updatedAt": "2026-08-02T06:23:19Z",
+      "validation": {
+        "artifacts": [
+          ".artifacts/active_play_keyboard_focus_smoke/town_build_order_focus.png",
+          ".artifacts/active_play_keyboard_focus_smoke/town_build_confirmation_focus.png",
+          ".artifacts/active_play_keyboard_focus_smoke/battle_suggested_order_focus.png",
+          ".artifacts/active_play_keyboard_focus_smoke/battle_defend_focus.png"
+        ],
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "ACTIVE_PLAY_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/battle_intent_forecast_report.tscn",
+          "godot4 --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "sliceId": "accessibility-active-play-focus-navigation-10184",
+        "status": "passed",
+        "updatedAt": "2026-08-02T06:23:19Z"
+      }
     },
     {
       "baselineChecks": [
@@ -63132,7 +63190,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_player_comprehension_implementation_in_progress_after_packaging_followup",
+  "result": "accessibility_active_play_focus_navigation_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63233,9 +63291,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. The bounded packaging follow-up now produces lean synchronized Linux/Windows exports and reproducible checksum-manifested archives; packaged Linux startup is clean and Windows PE/DLL/PCK output validates, while clean Windows-machine execution, signing, and installer/channel work remain open. The strategic-AI matrix is paused at 39 exact-current-code rows so passing-row accumulation does not replace implementation. Player-comprehension UX is active and the overall game remains in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. The bounded packaging follow-up produces lean synchronized Linux/Windows exports and reproducible checksum-manifested archives; packaged Linux startup is clean and Windows PE/DLL/PCK output validates, while clean Windows-machine execution, signing, and installer/channel work remain open. The strategic-AI matrix is paused at 39 exact-current-code rows so passing-row accumulation does not replace implementation. Player-comprehension and keyboard active-play focus slices are complete; broader accessibility and the overall game remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T03:26:25Z",
+  "updatedAt": "2026-08-02T06:23:19Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
