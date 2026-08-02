@@ -70,8 +70,16 @@ func _check_town_keyboard_build() -> bool:
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	if focus_owner == null or not build_actions.is_ancestor_of(focus_owner) or not (focus_owner is BaseButton) or focus_owner.disabled:
 		return _fail("Town entry focus did not land on a ready construction order: %s." % _focus_name())
+	var first_build_focus := focus_owner
+	await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+	var next_town_focus := get_viewport().gui_get_focus_owner()
+	if next_town_focus == null or next_town_focus == first_build_focus or not shell.is_ancestor_of(next_town_focus):
+		return _fail("Town right shoulder did not advance the active-play focus cycle: before=%s after=%s." % [first_build_focus, next_town_focus])
+	await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
+	if get_viewport().gui_get_focus_owner() != first_build_focus:
+		return _fail("Town left shoulder did not return to the original construction order: expected=%s got=%s." % [first_build_focus, get_viewport().gui_get_focus_owner()])
 	await _capture_if_requested("town_build_order_focus")
-	await _press_action("ui_accept")
+	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	if town.get("built_buildings", []) != built_before or session.overworld.get("resources", {}) != resources_before:
 		return _fail("Selecting a focused town order spent resources before confirmation.")
@@ -82,13 +90,13 @@ func _check_town_keyboard_build() -> bool:
 	confirm.grab_focus()
 	await get_tree().process_frame
 	await _capture_if_requested("town_build_confirmation_focus")
-	await _press_action("ui_accept")
+	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	var built_after: Array = _first_player_town(session).get("built_buildings", [])
 	if built_after.size() != built_before.size() + 1:
-		return _fail("Keyboard-confirmed town construction did not add one building: before=%s after=%s." % [built_before, built_after])
+		return _fail("Controller-confirmed town construction did not add one building: before=%s after=%s." % [built_before, built_after])
 	if session.overworld.get("resources", {}) == resources_before:
-		return _fail("Keyboard-confirmed town construction did not spend resources.")
+		return _fail("Controller-confirmed town construction did not spend resources.")
 	if get_viewport().gui_get_focus_owner() == null:
 		return _fail("Town construction refresh did not restore keyboard focus.")
 	shell.queue_free()
@@ -106,6 +114,19 @@ func _check_overworld_controller_movement() -> bool:
 	var focus_after_dpad := get_viewport().gui_get_focus_owner()
 	if focus_before_dpad == null or focus_after_dpad == null or focus_after_dpad == focus_before_dpad or not shell.is_ancestor_of(focus_after_dpad):
 		return _fail("Overworld D-pad did not remain available for command focus navigation: before=%s after=%s." % [focus_before_dpad, focus_after_dpad])
+	await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+	var focus_after_right_shoulder := get_viewport().gui_get_focus_owner()
+	if focus_after_right_shoulder == null or focus_after_right_shoulder == focus_after_dpad or not shell.is_ancestor_of(focus_after_right_shoulder):
+		return _fail("Overworld right shoulder did not advance the command focus cycle: before=%s after=%s." % [focus_after_dpad, focus_after_right_shoulder])
+	await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
+	if get_viewport().gui_get_focus_owner() != focus_after_dpad:
+		return _fail("Overworld left shoulder did not reverse the command focus cycle: expected=%s got=%s." % [focus_after_dpad, get_viewport().gui_get_focus_owner()])
+	var drawer_snapshot: Dictionary = shell.call("validation_open_command_drawer")
+	if String(drawer_snapshot.get("active_drawer", "")) != "command":
+		return _fail("Overworld controller-back fixture could not open the Command drawer: %s." % drawer_snapshot)
+	await _press_joypad_button(JOY_BUTTON_B)
+	if shell.get_node("%CommandPanel").visible or shell.get_node("%FrontierPanel").visible:
+		return _fail("Overworld controller B did not close the open Command drawer.")
 	var move := _legal_cardinal_move(session, 2)
 	if move.is_empty():
 		return _fail("Overworld fixture has no two-step legal cardinal route for controller repeat validation.")
@@ -148,14 +169,20 @@ func _check_narrow_town_keyboard_entry() -> bool:
 	await _settle()
 	if _focus_name() != "TownOrdersToggle":
 		return _fail("Narrow town entry focus expected TownOrdersToggle, got %s." % _focus_name())
-	await _press_action("ui_accept")
+	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	if not shell.get_node("%SidebarShell").visible or shell.get_node("%StageColumn").visible:
-		return _fail("Keyboard-confirmed Town Orders did not open narrow management.")
+		return _fail("Controller-confirmed Town Orders did not open narrow management.")
 	var build_actions: Control = shell.get_node("%BuildActions")
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	if focus_owner == null or not build_actions.is_ancestor_of(focus_owner) or not (focus_owner is BaseButton) or focus_owner.disabled:
 		return _fail("Narrow town management did not move focus into a ready construction order: %s." % _focus_name())
+	await _press_joypad_button(JOY_BUTTON_B)
+	await _settle()
+	if shell.get_node("%SidebarShell").visible or not shell.get_node("%StageColumn").visible:
+		return _fail("Controller B did not return from narrow town orders to the scenic town view.")
+	if _focus_name() != "TownOrdersToggle":
+		return _fail("Narrow town controller back did not restore TownOrdersToggle focus: %s." % _focus_name())
 	frame.queue_free()
 	await get_tree().process_frame
 	return true
@@ -183,11 +210,19 @@ func _check_battle_keyboard_defend() -> bool:
 	var expected_name := _battle_button_name(action_id)
 	if expected_name == "" or _focus_name() != expected_name:
 		return _fail("Battle entry focus did not match suggested order %s: expected=%s got=%s." % [action_id, expected_name, _focus_name()])
+	var battle_entry_focus := get_viewport().gui_get_focus_owner()
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	var battle_dpad_focus := get_viewport().gui_get_focus_owner()
+	if battle_dpad_focus == null or battle_dpad_focus == battle_entry_focus or not shell.is_ancestor_of(battle_dpad_focus):
+		return _fail("Battle D-pad did not advance the active command focus: before=%s after=%s." % [battle_entry_focus, battle_dpad_focus])
+	await _press_joypad_button(JOY_BUTTON_DPAD_UP)
+	if get_viewport().gui_get_focus_owner() != battle_entry_focus:
+		return _fail("Battle D-pad did not return to the suggested order: expected=%s got=%s." % [battle_entry_focus, get_viewport().gui_get_focus_owner()])
 	await _capture_if_requested("battle_suggested_order_focus")
 	var previous_target: Button = shell.get_node("%PrevTarget")
 	if not previous_target.disabled:
 		previous_target.grab_focus()
-		await _press_action("ui_accept")
+		await _press_joypad_button(JOY_BUTTON_A)
 		await _settle()
 		if _focus_name() != "PrevTarget":
 			return _fail("Battle target cycling did not preserve focus on the target command: %s." % _focus_name())
@@ -200,10 +235,10 @@ func _check_battle_keyboard_defend() -> bool:
 	defend.grab_focus()
 	await get_tree().process_frame
 	await _capture_if_requested("battle_defend_focus")
-	await _press_action("ui_accept")
+	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	if JSON.stringify(session.battle) == battle_before or int(session.battle.get("recent_events", []).size()) <= recent_before:
-		return _fail("Keyboard-confirmed Battle Defend did not mutate battle state and advance the event stream.")
+		return _fail("Controller-confirmed Battle Defend did not mutate battle state and advance the event stream.")
 	var post_owner := get_viewport().gui_get_focus_owner()
 	if post_owner == null or not shell.is_ancestor_of(post_owner) or (post_owner is BaseButton and post_owner.disabled):
 		return _fail("Battle action refresh did not restore focus to a legal command: %s." % _focus_name())

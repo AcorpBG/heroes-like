@@ -278,6 +278,12 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
+		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
+			return
+		_on_close_drawers_pressed()
+		get_viewport().set_input_as_handled()
+		return
 	if _handle_controller_move_axis_input(event):
 		get_viewport().set_input_as_handled()
 		return
