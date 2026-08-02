@@ -374,7 +374,7 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass objective drawer",
 		[String(frontier_snapshot.get("objective_summary", ""))],
-		["Objective Board", "Victory 0/4", "Defeat risks 0/3 triggered", "Claim Duskfen Bastion", "Avoid Defeat", "Current progress:", "Next step:"]
+		["Objective Board", "Victory 0/4", "Defeat risks 0/4 triggered", "Claim Duskfen Bastion", "Avoid Defeat", "Current progress:", "Next step:"]
 	):
 		return false
 	shell.call("_on_close_drawers_pressed")

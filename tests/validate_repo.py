@@ -8719,7 +8719,7 @@ def build_artifact_taxonomy_report() -> dict:
             "equipment_runtime_migration": False,
             "source_reward_tables_active": False,
             "rare_resource_activation": False,
-            "set_bonuses_active": False,
+            "set_bonuses_active": True,
         },
     }
     for artifact_id, artifact in artifacts.items():
@@ -8856,16 +8856,37 @@ def build_artifact_set_faction_report(
             issues.append("piece_count_outside_3_to_5")
         if not str(artifact_set.get("source_hint", "")).strip():
             issues.append("missing_source_hint")
-        if not isinstance(artifact_set.get("piece_thresholds", []), list) or not artifact_set.get("piece_thresholds", []):
+        thresholds = artifact_set.get("piece_thresholds", [])
+        if not isinstance(thresholds, list) or not thresholds:
             issues.append("missing_piece_thresholds")
+        else:
+            seen_thresholds: set[int] = set()
+            previous_count = 0
+            for threshold in thresholds:
+                if not isinstance(threshold, dict):
+                    issues.append("threshold_not_object")
+                    continue
+                threshold_count = int(threshold.get("count", 0))
+                if threshold_count <= 0 or threshold_count > len(piece_ids):
+                    issues.append(f"threshold_count_outside_piece_count:{threshold_count}")
+                if threshold_count in seen_thresholds:
+                    issues.append(f"duplicate_threshold_count:{threshold_count}")
+                if threshold_count <= previous_count:
+                    issues.append("threshold_counts_not_ascending")
+                seen_thresholds.add(threshold_count)
+                previous_count = threshold_count
+                if not str(threshold.get("summary", "")).strip():
+                    issues.append(f"threshold_missing_summary:{threshold_count}")
+                if not isinstance(threshold.get("bonuses"), dict) or not threshold.get("bonuses"):
+                    issues.append(f"threshold_missing_bonuses:{threshold_count}")
         if missing_pieces:
             issues.append(f"missing_pieces:{','.join(missing_pieces)}")
         if mismatched_pieces:
             issues.append(f"piece_set_mismatch:{','.join(mismatched_pieces)}")
         if slot_conflicts:
             issues.append(f"slot_conflicts:{','.join(slot_conflicts)}")
-        if set_bonuses_active:
-            issues.append("set_bonuses_active")
+        if not set_bonuses_active:
+            issues.append("set_bonuses_inactive")
         if source_reward_tables_active:
             issues.append("source_reward_tables_active")
         if issues:
@@ -8905,7 +8926,7 @@ def build_artifact_set_faction_report(
             "equipment_runtime_migration": False,
             "source_reward_tables_active": False,
             "rare_resource_activation": False,
-            "set_bonuses_active": False,
+            "set_bonuses_active": True,
             "ai_valuation_behavior": False,
         },
     }
@@ -22842,7 +22863,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
+    print("- artifact runtime now supports two live trinket slots, old-save normalization, and cumulative equipped-piece set bonuses while source/reward execution and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

@@ -21,3 +21,7 @@ Implemented bounded artifact set and faction-affinity content on top of the arti
 - No runtime set bonuses or equipment effect changes beyond existing safe stat/common-resource metadata.
 - No AI valuation behavior.
 - No rare-resource activation, market migration, economy rebalance, or scenario migration.
+
+## Runtime Follow-Up
+
+As of 2026-08-02, slice `artifact-dual-trinket-set-bonus-runtime-10184` activates the authored Wayfarer Compact thresholds from equipped pieces and makes both trinket slots reachable. The original content slice and its boundaries above remain the historical record; source/reward execution, rare-resource artifact income, additional sets, and broad UI work are still inactive.

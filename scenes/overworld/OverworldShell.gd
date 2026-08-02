@@ -247,16 +247,13 @@ func _ready() -> void:
 func _apply_responsive_layout() -> void:
 	if _sidebar_shell_panel == null:
 		return
-	var available_size := get_viewport_rect().size
-	var parent_control := get_parent() as Control
-	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
-		available_size = parent_control.size
+	var available_size := _responsive_available_size()
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
 	_sidebar_shell_panel.visible = not narrow_layout
 	_sidebar_shell_panel.custom_minimum_size.x = 284.0 if compact_layout else 320.0
 	_briefing_panel.visible = not compact_layout
-	_commitment_panel.visible = not compact_layout
+	_commitment_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = not compact_layout
 	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.text] if compact_layout else _status_label.text
@@ -264,6 +261,13 @@ func _apply_responsive_layout() -> void:
 	_save_slot_picker.visible = not narrow_layout
 	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
 	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
+
+func _responsive_available_size() -> Vector2:
+	var available_size := get_viewport_rect().size
+	var parent_control := get_parent() as Control
+	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
+		available_size = parent_control.size
+	return available_size
 
 func _input(event: InputEvent) -> void:
 	if not (event is InputEventKey) or not event.pressed or event.echo:
@@ -4850,10 +4854,13 @@ func _sync_context_drawers() -> void:
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
 	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
+	var available_size := _responsive_available_size()
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	_command_panel.visible = show_command
 	_frontier_panel.visible = show_frontier
 	_context_panel.visible = show_tile
 	_command_spine.visible = show_command or show_frontier or show_tile
+	_commitment_panel.visible = not compact_layout and not show_command and not show_frontier
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
 	_refresh_drawer_handoff_cues()

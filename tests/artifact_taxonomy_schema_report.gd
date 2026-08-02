@@ -54,7 +54,7 @@ func _run() -> void:
 		_fail("Artifact short description did not expose compact taxonomy: %s" % boots_summary)
 		return
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
-	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or bool(policy.get("set_bonuses_active", true)) or bool(policy.get("rare_resource_activation", true)):
+	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or not bool(policy.get("set_bonuses_active", false)) or bool(policy.get("rare_resource_activation", true)):
 		_fail("Artifact taxonomy report crossed slice runtime boundaries: %s" % policy)
 		return
 	if not _assert_public_payload("artifact report", report):
@@ -76,7 +76,7 @@ func _run() -> void:
 		"source_tag_counts": report.get("source_tag_counts", {}),
 		"runtime_policy": policy,
 		"caveats": [
-			"This report proves additive artifact taxonomy/schema metadata and ArtifactRules report helpers only; set bonuses, live source execution, runtime equipment migration, AI valuation behavior, save migration, and rare-resource activation remain outside this slice.",
+			"This report proves additive artifact taxonomy/schema metadata and active set-threshold validation; live source execution, save-version migration, and rare-resource activation remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
