@@ -554,6 +554,8 @@ static func artifact_source_reward_report(
 		"schema_id": ARTIFACT_SOURCE_REWARD_SCHEMA_ID,
 		"table_count": 0,
 		"table_ready_count": 0,
+		"live_table_count": 0,
+		"live_source_tags": [],
 		"artifact_count": artifact_by_id.size(),
 		"eligible_artifact_count": 0,
 		"artifact_reference_count": 0,
@@ -585,6 +587,7 @@ static func artifact_source_reward_report(
 	var table_reports: Array = report["table_reports"]
 	var eligible_artifact_ids := []
 	var seen_table_ids := []
+	var live_source_tags := []
 
 	for table_value in tables:
 		if not (table_value is Dictionary):
@@ -596,6 +599,11 @@ static func artifact_source_reward_report(
 		if table_id != "":
 			seen_table_ids.append(table_id)
 		var source_tag := String(table.get("source_tag", "")).strip_edges()
+		var runtime_policy := _artifact_source_runtime_policy(table)
+		if bool(runtime_policy.get("live_drop_execution", false)):
+			report["live_table_count"] = int(report.get("live_table_count", 0)) + 1
+			if source_tag not in live_source_tags:
+				live_source_tags.append(source_tag)
 		_increment_count(source_tag_counts, source_tag)
 		for rarity in _string_array(table.get("rarity_bands", [])):
 			_increment_count(rarity_band_counts, rarity)
@@ -634,11 +642,13 @@ static func artifact_source_reward_report(
 				"guard_tiers": _string_array(table.get("guard_tiers", [])),
 				"matching_object_count": matching_objects.size(),
 				"matching_site_count": matching_sites.size(),
-				"runtime_policy": _artifact_source_runtime_policy(table),
+				"runtime_policy": runtime_policy,
 			}
 		)
 
 	report["eligible_artifact_count"] = eligible_artifact_ids.size()
+	report["live_source_tags"] = live_source_tags
+	report["runtime_policy"]["live_drop_execution"] = int(report.get("live_table_count", 0)) > 0
 	report["ok"] = (
 		int(report.get("table_count", 0)) >= 5
 		and int(report.get("table_ready_count", 0)) == int(report.get("table_count", 0))
@@ -648,6 +658,74 @@ static func artifact_source_reward_report(
 		and int(report.get("guarded_context_match_count", 0)) > 0
 	)
 	return report
+
+static func select_live_source_reward(
+	source_tag: String,
+	source_record: Dictionary,
+	source_key: String,
+	faction_id: String = "",
+	excluded_artifact_ids: Array = []
+) -> Dictionary:
+	var contract = source_record.get("guarded_reward_contract", {})
+	var runtime_boundary = source_record.get("runtime_boundary", {})
+	if not (contract is Dictionary) or not (runtime_boundary is Dictionary):
+		return {"ok": false, "reason": "source_not_opted_in"}
+	var table_id := String(contract.get("artifact_reward_table_id", "")).strip_edges()
+	if table_id == "" or not bool(runtime_boundary.get("artifact_reward_execution", false)):
+		return {"ok": false, "reason": "source_not_opted_in"}
+
+	var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+	var tables = raw.get("source_reward_tables", [])
+	var artifact_records = raw.get("items", [])
+	if not (tables is Array) or not (artifact_records is Array):
+		return {"ok": false, "reason": "source_content_unavailable", "table_id": table_id}
+	var table := {}
+	for table_value in tables:
+		if table_value is Dictionary and String(table_value.get("id", "")) == table_id:
+			table = table_value
+			break
+	if table.is_empty() or String(table.get("source_tag", "")) != source_tag:
+		return {"ok": false, "reason": "source_table_mismatch", "table_id": table_id}
+	var policy := _artifact_source_runtime_policy(table)
+	if bool(policy.get("metadata_only", true)) or not bool(policy.get("live_drop_execution", false)):
+		return {"ok": false, "reason": "source_table_not_live", "table_id": table_id}
+	if _matching_artifact_source_contexts(table, [source_record], false).is_empty():
+		return {"ok": false, "reason": "source_context_ineligible", "table_id": table_id}
+	var faction_constraints := _string_array(table.get("faction_constraints", []))
+	if not faction_constraints.is_empty() and faction_id not in faction_constraints:
+		return {"ok": false, "reason": "faction_ineligible", "table_id": table_id}
+
+	var known_artifact_ids := {}
+	for artifact_value in artifact_records:
+		if artifact_value is Dictionary:
+			var artifact_id := String(artifact_value.get("id", "")).strip_edges()
+			if artifact_id != "":
+				known_artifact_ids[artifact_id] = true
+	var excluded := {}
+	for artifact_id_value in excluded_artifact_ids:
+		excluded[String(artifact_id_value)] = true
+	var candidates := []
+	for artifact_id in _string_array(table.get("artifact_ids", [])):
+		if artifact_id in known_artifact_ids and artifact_id not in excluded:
+			candidates.append(artifact_id)
+	if candidates.is_empty():
+		return {
+			"ok": false,
+			"reason": "source_table_exhausted",
+			"exhausted": true,
+			"table_id": table_id,
+			"source_tag": source_tag,
+			"source_key": source_key,
+		}
+	var index := _stable_source_reward_index(source_key, candidates.size())
+	return {
+		"ok": true,
+		"artifact_id": String(candidates[index]),
+		"candidate_count": candidates.size(),
+		"table_id": table_id,
+		"source_tag": source_tag,
+		"source_key": source_key,
+	}
 
 static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_artifacts(hero_state.duplicate(true))
@@ -1768,12 +1846,24 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 			issues.append("artifact_faction_outside_table:%s" % artifact_id)
 
 	var runtime_policy := _artifact_source_runtime_policy(table)
-	if not bool(runtime_policy.get("metadata_only", false)):
-		issues.append("source_table_not_metadata_only")
-	for blocked_flag in ["live_drop_execution", "save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
+	var metadata_only := bool(runtime_policy.get("metadata_only", false))
+	var live_drop_execution := bool(runtime_policy.get("live_drop_execution", false))
+	if metadata_only == live_drop_execution:
+		issues.append("source_table_runtime_mode_invalid")
+	if live_drop_execution and source_tag != "guarded_site":
+		issues.append("unsupported_live_source_tag:%s" % source_tag)
+	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
 		if bool(runtime_policy.get(blocked_flag, false)):
 			issues.append("blocked_runtime_flag:%s" % blocked_flag)
 	return issues
+
+static func _stable_source_reward_index(source_key: String, candidate_count: int) -> int:
+	if candidate_count <= 1:
+		return 0
+	var value: int = 0
+	for index in range(source_key.length()):
+		value = (value * 131 + source_key.unicode_at(index)) % 2147483647
+	return value % candidate_count
 
 static func _artifact_source_runtime_policy(table: Dictionary) -> Dictionary:
 	var policy = table.get("runtime_policy", {})

@@ -6025,6 +6025,7 @@ def build_overworld_object_content_batch_006_section(
         "reward_contract_ready_count": 0,
         "route_hybrid_count": 0,
         "metadata_only_boundary_count": 0,
+        "live_artifact_boundary_count": 0,
         "no_rare_resource_activation_count": 0,
         "normalized_existing_count": 0,
         "errors": [],
@@ -6062,6 +6063,28 @@ def build_overworld_object_content_batch_006_section(
             and not bool(boundary.get("rare_resource_activation", True))
             and not bool(boundary.get("market_changes", True))
             and not bool(boundary.get("scenario_placement_migration", True))
+        )
+
+    def live_guarded_artifact_boundary_is_safe(site: dict) -> bool:
+        boundary = site.get("runtime_boundary", {}) if isinstance(site.get("runtime_boundary", {}), dict) else {}
+        contract = site.get("guarded_reward_contract", {}) if isinstance(site.get("guarded_reward_contract", {}), dict) else {}
+        return (
+            str(boundary.get("status", "")) == "resource_and_artifact_rewards_live"
+            and bool(boundary.get("live_reward_grants", False))
+            and bool(boundary.get("artifact_reward_execution", False))
+            and bool(boundary.get("guard_resolution_runtime_adopted", False))
+            and not bool(boundary.get("broad_reward_runtime_migration", True))
+            and not bool(boundary.get("neutral_encounter_migration", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and not bool(boundary.get("renderer_sprite_required", True))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("route_effect_runtime_adopted", True))
+            and not bool(boundary.get("rare_resource_activation", True))
+            and not bool(boundary.get("market_changes", True))
+            and not bool(boundary.get("scenario_placement_migration", True))
+            and str(contract.get("artifact_reward_table_id", "")) == "artifact_source_guarded_sites_standard"
+            and not bool(contract.get("metadata_only_guard_contract", True))
+            and bool(contract.get("runtime_guard_resolution_adopted", False))
         )
 
     def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
@@ -6113,7 +6136,7 @@ def build_overworld_object_content_batch_006_section(
             ready = False
         return ready
 
-    def guard_ready(object_id: str, guard: dict, guard_link: dict, site_guard: dict) -> bool:
+    def guard_ready(object_id: str, guard: dict, guard_link: dict, site_guard: dict, site_live_artifact: bool) -> bool:
         ready = True
         guard_group_id = str(guard.get("guard_army_group_id", ""))
         guard_encounter_id = str(guard.get("guard_encounter_id", ""))
@@ -6142,8 +6165,10 @@ def build_overworld_object_content_batch_006_section(
         if str(site_guard.get("guard_army_group_id", "")) != guard_group_id or str(site_guard.get("guard_encounter_id", "")) != guard_encounter_id:
             add_error(f"{object_id}: Batch 006 site guard_profile must match object guard expectation")
             ready = False
-        if not bool(site_guard.get("metadata_only", False)) or bool(site_guard.get("runtime_guard_resolution_adopted", True)):
-            add_error(f"{object_id}: Batch 006 site guard_profile must remain metadata-only")
+        site_guard_metadata_only = bool(site_guard.get("metadata_only", False)) and not bool(site_guard.get("runtime_guard_resolution_adopted", True))
+        site_guard_live = not bool(site_guard.get("metadata_only", True)) and bool(site_guard.get("runtime_guard_resolution_adopted", False))
+        if not site_guard_metadata_only and not (site_live_artifact and site_guard_live):
+            add_error(f"{object_id}: Batch 006 site guard_profile must be metadata-only or explicitly live for guarded artifact execution")
             ready = False
         return ready
 
@@ -6224,7 +6249,8 @@ def build_overworld_object_content_batch_006_section(
         increment_count(section["risk_tier_counts"], risk_tier)
         if risk_tier not in NEUTRAL_ENCOUNTER_RISK_TIERS:
             add_error(f"{object_id}: Batch 006 guard tier is missing or unsupported")
-        if guard_ready(object_id, guard, guard_link, site_guard):
+        site_live_artifact = live_guarded_artifact_boundary_is_safe(site)
+        if guard_ready(object_id, guard, guard_link, site_guard, site_live_artifact):
             section["guard_contract_ready_count"] += 1
         if guard_link:
             section["guard_link_count"] += 1
@@ -6240,8 +6266,10 @@ def build_overworld_object_content_batch_006_section(
             add_error(f"{object_id}: Batch 006 objects must author editor_placement")
         if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
             section["metadata_only_boundary_count"] += 1
+        elif metadata_boundary_is_safe(obj) and site_live_artifact:
+            section["live_artifact_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 006 object and site must keep explicit metadata-only runtime boundaries")
+            add_error(f"{object_id}: Batch 006 object and site must keep an explicit metadata-only or guarded-artifact runtime boundary")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 006 must not activate rare resources in live site fields")
         else:
@@ -6260,9 +6288,13 @@ def build_overworld_object_content_batch_006_section(
         for role, expected_count in expected_role_counts.items():
             if int(section["role_counts"].get(role, 0)) != expected_count:
                 add_error(f"Batch 006 must include {expected_count} {role} objects")
-        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "guard_link_count", "guard_contract_ready_count", "reward_contract_ready_count", "metadata_only_boundary_count", "no_rare_resource_activation_count"):
+        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "guard_link_count", "guard_contract_ready_count", "reward_contract_ready_count", "no_rare_resource_activation_count"):
             if int(section[counter_key]) != len(batch_objects):
                 add_error(f"Batch 006 {counter_key} must match object count")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - 2:
+            add_error("Batch 006 metadata_only_boundary_count must retain the 30 inactive object/site pairs")
+        if section["live_artifact_boundary_count"] != 2:
+            add_error("Batch 006 live_artifact_boundary_count must cover Barrow Vault and Drowned Reliquary")
         if section["normalized_existing_count"] != 2:
             add_error("Batch 006 must normalize the two existing guarded reward site records")
         if section["route_hybrid_count"] != expected_role_counts["guarded_route_reward_hybrid"]:
@@ -9074,9 +9106,13 @@ def artifact_source_table_issues(
     if not isinstance(runtime_policy, dict):
         issues.append("missing_runtime_policy")
     else:
-        if not bool(runtime_policy.get("metadata_only", False)):
-            issues.append("source_table_not_metadata_only")
-        for blocked_flag in ("live_drop_execution", "save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
+        metadata_only = bool(runtime_policy.get("metadata_only", False))
+        live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
+        if metadata_only == live_drop_execution:
+            issues.append("source_table_runtime_mode_invalid")
+        if live_drop_execution and source_tag != "guarded_site":
+            issues.append(f"unsupported_live_source_tag:{source_tag}")
+        for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
                 issues.append(f"blocked_runtime_flag:{blocked_flag}")
     return issues
@@ -9095,6 +9131,8 @@ def build_artifact_source_reward_report() -> dict:
         "schema": ARTIFACT_SOURCE_REWARD_SCHEMA_ID,
         "table_count": 0,
         "table_ready_count": 0,
+        "live_table_count": 0,
+        "live_source_tags": [],
         "artifact_count": len(artifacts),
         "eligible_artifact_count": 0,
         "artifact_reference_count": 0,
@@ -9128,6 +9166,11 @@ def build_artifact_source_reward_report() -> dict:
         if table_id:
             seen_table_ids.add(table_id)
         source_tag = str(table.get("source_tag", "")).strip()
+        policy = table.get("runtime_policy", {}) if isinstance(table.get("runtime_policy", {}), dict) else {}
+        if bool(policy.get("live_drop_execution", False)):
+            report["live_table_count"] += 1
+            if source_tag not in report["live_source_tags"]:
+                report["live_source_tags"].append(source_tag)
         increment_count(report["source_tag_counts"], source_tag)
         for rarity in string_list(table.get("rarity_bands", [])):
             increment_count(report["rarity_band_counts"], rarity)
@@ -9156,7 +9199,6 @@ def build_artifact_source_reward_report() -> dict:
             report["table_validation_issues"].append({"table_id": table_id, "issues": issues})
         else:
             report["table_ready_count"] += 1
-        policy = table.get("runtime_policy", {}) if isinstance(table.get("runtime_policy", {}), dict) else {}
         report["table_reports"].append(
             {
                 "table_id": table_id,
@@ -9178,6 +9220,7 @@ def build_artifact_source_reward_report() -> dict:
             }
         )
     report["eligible_artifact_count"] = len(eligible_artifact_ids)
+    report["runtime_policy"]["live_drop_execution"] = report["live_table_count"] > 0
     report["ok"] = (
         report["table_count"] >= 5
         and report["table_ready_count"] == report["table_count"]
@@ -10715,7 +10758,9 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", True)), errors, "Artifact source/reward tables must not enable live drop execution")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site source table must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 1, errors, "Exactly one artifact source/reward table must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site"], errors, "Only guarded-site artifact rewards may execute live in this slice")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
     ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
@@ -22865,7 +22910,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime now supports two live trinket slots, old-save normalization, and cumulative equipped-piece set bonuses while source/reward execution and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, and guarded-site source rewards for player and AI commanders while other source tags and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

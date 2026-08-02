@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Frontier Claims as a live three-chapter campaign joining the validated Thornwake, Brasshollow, and Veilmourn fronts with bounded cross-faction continuity and standalone skirmish isolation. The broader production game goal remains active.",
+  "currentNotes": "Completed live guarded-site artifact rewards on the two Ninefold vaults for both player and strategic-AI commanders, with linked guard enforcement, deterministic source selection, provenance, and save continuity. Overall release work remains active.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "frontier-claims-three-faction-campaign-10184",
-  "currentSliceId": "frontier-claims-three-faction-campaign-10184",
-  "currentSliceNotes": "Implemented Frontier Claims as the sixth player-facing campaign with three ordered dual-mode chapters, live difficulty-aware launch, unlocks, bounded resource/objective carryover, faction-specific hero/spell/artifact isolation, save/resume metadata, completion/replay, and unchanged skirmish progression. Focused campaign, three faction workflows, menu, map breadth, deadlines, rare routes, repository, JSON, and diff checks pass.",
+  "currentSlice": "artifact-guarded-site-reward-execution-10184",
+  "currentSliceId": "artifact-guarded-site-reward-execution-10184",
+  "currentSliceNotes": "Barrow Vault and Drowned Reliquary now require live linked guard clearance and grant deterministic one-time artifacts to player or AI commanders, with auto-equip, provenance, empire tracking, and save/resume validated.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Frontier Claims Three-Faction Campaign",
-  "currentSliceUpdatedAt": "2026-08-02T19:20:47Z",
+  "currentSliceTitle": "Artifact Guarded-Site Reward Execution",
+  "currentSliceUpdatedAt": "2026-08-02T19:41:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65145,6 +65145,84 @@
       "updatedAt": "2026-08-02T19:20:47Z",
       "completedAt": "2026-08-02T19:20:47Z",
       "notes": "Implemented Frontier Claims as the sixth player-facing campaign with Mireford, Orevein, and Bellwake as three ordered dual-mode chapters. Focused runtime proof covers campaign browser exposure, selected difficulty, locks/unlocks, capped resource and objective carryover, faction-specific hero/spell/artifact isolation, campaign save/restore metadata, completion/replay, and unchanged skirmish progression. All 18 authored scenarios remain campaign and skirmish selectable; focused campaign, faction workflows, menu, map breadth, deadlines, rare routes, repository, JSON, and diff checks pass."
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/artifact_guarded_site_reward_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_source_reward_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_equip_runtime_effects_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_artifact_objective_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/resource_sites.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Barrow Vault and Drowned Reliquary require their authored guards to be cleared, then deterministically grant one eligible guarded-site artifact on first player or AI claim, auto-equip through existing artifact rules, record source provenance, persist through save/resume, and pass focused and repository validation without changing save version 9.",
+      "id": "artifact-guarded-site-reward-execution-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/resource_sites.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/artifact_guarded_site_reward_execution_report.gd",
+        "tests/artifact_guarded_site_reward_execution_report.tscn",
+        "tests/artifact_source_reward_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "activating pickup, shrine, dwelling, town-service, or battle-salvage source tables",
+        "rare-resource artifact income",
+        "new artifact equipment slots or set rules",
+        "save-version changes",
+        "Native RMG generation changes",
+        "release-completion claims"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "project.md artifact progression and PLAN.md production content breadth",
+      "purpose": "Turn existing guarded artifact reward metadata into a live, fair player-and-AI acquisition path on an authored map.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "completedAt": "2026-08-02T19:41:01Z",
+      "completionSummary": "Activated the guarded-site source table only; placed live linked guards for Barrow Vault and Drowned Reliquary; implemented deterministic eligible artifact selection, player and AI commander auto-equip, AI empire capture tracking, node provenance, and save-version-9 persistence. Other artifact source tags remain inactive.",
+      "startedAt": "2026-08-02T19:27:05Z",
+      "status": "completed",
+      "title": "Artifact Guarded-Site Reward Execution",
+      "updatedAt": "2026-08-02T19:41:01Z",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/artifact_guarded_site_reward_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 60 --scene res://tests/artifact_source_reward_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_equip_runtime_effects_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_artifact_objective_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ninefold_scenario_smoke.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_site_control_proof_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/artifacts.json content/resource_sites.json content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_source_table_count": 1,
+          "active_source_tags": ["guarded_site"],
+          "ai_commander_claim_and_auto_equip": true,
+          "ai_empire_capture_tracking": true,
+          "guarded_site_count": 2,
+          "player_distinct_artifact_count": 2,
+          "provenance_save_resume": true,
+          "repeat_claim_blocked": true,
+          "save_version": 9
+        },
+        "sliceId": "artifact-guarded-site-reward-execution-10184",
+        "status": "pass",
+        "updatedAt": "2026-08-02T19:41:01Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65586,7 +65664,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "lockmarsh_road_chaplains_pressure_correction_completed_high_priority_breadth_clear_overall_release_in_progress",
+  "result": "guarded_site_artifact_reward_execution_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -65687,9 +65765,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Barrow Vault and Drowned Reliquary now execute live guarded-site artifact rewards for player and strategic-AI commanders with guard enforcement, deterministic selection, auto-equip, provenance, and save continuity. Other artifact source tags and broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T19:00:57Z",
+  "updatedAt": "2026-08-02T19:41:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
