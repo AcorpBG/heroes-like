@@ -6,7 +6,7 @@ Slice: `packaging-release-bundle-manifest-gate-20260524-10184`
 
 This slice adds a deterministic post-export release-bundle manifest gate for the current local Linux and Windows smoke artifacts. It inspects the output folders produced by `tests/packaging_linux_export_smoke.py` and `tests/packaging_windows_export_smoke.py`, requires their JSON reports to be successful, and then validates the exact distributable sidecar files.
 
-This does not claim installer readiness, clean-machine smoke coverage, Windows runtime execution, code signing, package signing, distribution channel metadata, or release readiness.
+This does not claim installer readiness, clean-machine smoke coverage, clean native Windows execution, code signing, package signing, distribution channel metadata, or release readiness. The required Windows v2 smoke separately proves a headless packaged boot under Wine, not native Windows certification.
 
 ## Implementation
 
@@ -20,6 +20,7 @@ This does not claim installer readiness, clean-machine smoke coverage, Windows r
   - `heroes-like.exe`
   - `heroes-like.pck`
   - `aurelion_map_persistence.windows.template_release.x86_64.dll`
+- The Windows smoke report must use `packaging_windows_export_smoke_v2`, which includes the isolated Wine runtime boot in addition to static artifact checks.
 - The gate fails if bundle folders contain unexpected files or forbidden release-bundle content such as `.git`, `.godot`, `.artifacts`, `tmp`, `*.dll.a`, `.import`, `.pdb`, debug native artifacts, or import/library sidecars.
 - The report writes `.artifacts/packaging_release_bundle_manifest_report/report.json`.
 
