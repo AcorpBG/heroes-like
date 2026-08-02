@@ -4813,6 +4813,9 @@ static func _best_open_spawn_point(
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
 	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
 	var spawn_scan_context := preloaded_spawn_scan_context
+	# A successful launch mutates commander occupancy before the next sweep.
+	spawn_scan_context.erase("active_front_support_commander_candidates")
+	spawn_scan_context.erase("active_front_support_probe_payload_by_commander")
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -4960,7 +4963,8 @@ static func _spawn_point_candidate(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			spawn_order
+			spawn_order,
+			spawn_scan_context
 		)
 		_spawn_profile_add_ms("active_front_support_spawn_candidate_ms", started_usec)
 		if not active_front_support_candidate.is_empty():
@@ -5125,13 +5129,14 @@ static func _active_front_support_spawn_candidate_for_point(
 	var base_encounter_id := _primary_raid_encounter_id(config)
 	if base_encounter_id == "":
 		return {}
-	var roster: Variant = state.get("commander_roster", [])
-	var candidates: Array = EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	var candidates := _active_front_support_commander_candidates(
 		session,
 		faction_id,
-		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
-		roster
+		state,
+		roster,
+		spawn_scan_context
 	)
 	var best := {}
 	var support_plan := {}
@@ -5142,26 +5147,17 @@ static func _active_front_support_spawn_candidate_for_point(
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
-		var probe := {
-			"placement_id": "__active_front_support_probe:%s:%d" % [roster_hero_id, spawn_order],
-			"encounter_id": base_encounter_id,
-			"x": int(point.get("x", 0)),
-			"y": int(point.get("y", 0)),
-			"difficulty": "pressure",
-			"spawned_by_faction_id": faction_id,
-			"days_active": 0,
-			"arrived": false,
-			"goal_distance": 9999,
-		}
-		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
-			probe,
-			roster_hero_id,
-			faction_id,
+		var probe := _active_front_support_prepared_probe(
 			session,
+			faction_id,
+			base_encounter_id,
+			roster_hero_id,
+			point,
+			spawn_order,
 			occupied_commander_ids,
-			roster
+			roster,
+			spawn_scan_context
 		)
-		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
 		# Route geometry is identical at one spawn point; commander strength and fit stay candidate-specific below.
 		if not support_plan_resolved:
 			support_plan = EnemyAdventureRulesScript.ai_active_front_support_target_selection_plan(
@@ -5187,6 +5183,76 @@ static func _active_front_support_spawn_candidate_for_point(
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _active_front_support_commander_candidates(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	occupied_commander_ids: Dictionary,
+	state: Dictionary,
+	roster: Array,
+	spawn_scan_context: Dictionary
+) -> Array:
+	var cached = spawn_scan_context.get("active_front_support_commander_candidates", null)
+	if cached is Array:
+		_spawn_profile_count("active_front_support_commander_candidates_reused")
+		return cached
+	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		roster
+	)
+	spawn_scan_context["active_front_support_commander_candidates"] = candidates
+	_spawn_profile_count("active_front_support_commander_candidates_loaded")
+	return candidates
+
+static func _active_front_support_prepared_probe(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	base_encounter_id: String,
+	roster_hero_id: String,
+	point: Dictionary,
+	spawn_order: int,
+	occupied_commander_ids: Dictionary,
+	roster: Array,
+	spawn_scan_context: Dictionary
+) -> Dictionary:
+	var cache: Dictionary = spawn_scan_context.get("active_front_support_probe_payload_by_commander", {}) \
+		if spawn_scan_context.get("active_front_support_probe_payload_by_commander", {}) is Dictionary else {}
+	var payload = cache.get(roster_hero_id, null)
+	var probe := {
+		"placement_id": "__active_front_support_probe:%s:%d" % [roster_hero_id, spawn_order],
+		"encounter_id": base_encounter_id,
+		"x": int(point.get("x", 0)),
+		"y": int(point.get("y", 0)),
+		"difficulty": "pressure",
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	if payload is Dictionary:
+		_spawn_profile_count("active_front_support_probe_reused")
+		probe["enemy_commander_state"] = payload.get("enemy_commander_state", {}).duplicate(true)
+		probe["enemy_army"] = payload.get("enemy_army", {}).duplicate(true)
+		return probe
+	probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+		probe,
+		roster_hero_id,
+		faction_id,
+		session,
+		occupied_commander_ids,
+		roster
+	)
+	probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+	cache[roster_hero_id] = {
+		"enemy_commander_state": probe.get("enemy_commander_state", {}).duplicate(true),
+		"enemy_army": probe.get("enemy_army", {}).duplicate(true),
+	}
+	spawn_scan_context["active_front_support_probe_payload_by_commander"] = cache
+	_spawn_profile_count("active_front_support_probe_loaded")
+	return probe
 
 static func _fresh_spawn_target_candidate_for_point(
 	session: SessionStateStoreScript.SessionData,
