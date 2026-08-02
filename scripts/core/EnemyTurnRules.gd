@@ -1789,6 +1789,7 @@ static func _reinforce_enemy_forces(
 	var emergency_batches = 0
 	var mobilized_batches = 0
 	var events = []
+	# Route/task topology is stable until this faction finishes recruiting; army needs are rescored separately.
 	var faction_recruitment_context := {}
 	for index in range(towns.size()):
 		var town = towns[index]
@@ -2302,13 +2303,25 @@ static func _choose_recruit_destination_breakdown(
 	started_usec = _reinforcement_profile_timer()
 	var best_raid = context.get("best_raid", null)
 	if best_raid == null:
-		best_raid = _best_raid_reinforcement_target(session, config, faction_id, town)
+		best_raid = _best_raid_reinforcement_target(
+			session,
+			config,
+			faction_id,
+			town,
+			context.get("faction_recruitment_context", {})
+		)
 		context["best_raid"] = best_raid
 	_reinforcement_profile_add_ms("best_raid_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
 	var best_planned = context.get("best_planned", null)
 	if best_planned == null:
-		best_planned = _best_planned_task_recruitment_target(session, config, faction_id, town)
+		best_planned = _best_planned_task_recruitment_target(
+			session,
+			config,
+			faction_id,
+			town,
+			context.get("faction_recruitment_context", {})
+		)
 		context["best_planned"] = best_planned
 	_reinforcement_profile_add_ms("best_planned_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
@@ -2757,7 +2770,8 @@ static func _best_planned_task_recruitment_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	support_town: Dictionary
+	support_town: Dictionary,
+	faction_recruitment_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "" or support_town.is_empty():
 		return {}
@@ -2782,8 +2796,13 @@ static func _best_planned_task_recruitment_target(
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best := {}
 	var best_score := -1.0
-	var live_tasks := EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
-	var saved_plans_by_actor := {}
+	var live_tasks := _planned_recruitment_live_tasks(session, faction_id, faction_recruitment_context)
+	var path_context := _planned_recruitment_path_context(session, faction_id, faction_recruitment_context)
+	var town_cache_key := String(support_town.get("placement_id", ""))
+	if town_cache_key == "":
+		town_cache_key = "%d:%d" % [int(support_town.get("x", 0)), int(support_town.get("y", 0))]
+	var saved_plans_by_town: Dictionary = faction_recruitment_context.get("planned_saved_plans_by_town", {})
+	var saved_plans_by_actor: Dictionary = saved_plans_by_town.get(town_cache_key, {})
 	for task_value in live_tasks:
 		if not (task_value is Dictionary):
 			continue
@@ -2800,14 +2819,18 @@ static func _best_planned_task_recruitment_target(
 			continue
 		if not EnemyAdventureRulesScript.commander_can_deploy(entry):
 			continue
-		if not saved_plans_by_actor.has(actor_id):
+		if saved_plans_by_actor.has(actor_id):
+			_reinforcement_profile_count("planned_saved_plan_reused")
+		else:
 			saved_plans_by_actor[actor_id] = EnemyAdventureRulesScript._ai_hero_task_spawn_saved_plan_for_actor(
 				session,
 				faction_id,
 				actor_id,
 				{"x": int(support_town.get("x", 0)), "y": int(support_town.get("y", 0))},
-				live_tasks
+				live_tasks,
+				path_context
 			)
+			_reinforcement_profile_count("planned_saved_plan_loaded")
 		var saved_plan: Dictionary = saved_plans_by_actor.get(actor_id, {})
 		if saved_plan.is_empty():
 			continue
@@ -2847,7 +2870,36 @@ static func _best_planned_task_recruitment_target(
 				"commander_fit_bonus": int(task.get("commander_fit_bonus", 0)),
 				"commander_fit_profile": String(task.get("commander_fit_profile", "")),
 			}
+	saved_plans_by_town[town_cache_key] = saved_plans_by_actor
+	faction_recruitment_context["planned_saved_plans_by_town"] = saved_plans_by_town
 	return best
+
+static func _planned_recruitment_live_tasks(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	faction_recruitment_context: Dictionary
+) -> Array:
+	if faction_recruitment_context.get("planned_live_tasks", null) is Array:
+		_reinforcement_profile_count("planned_live_tasks_reused")
+		return faction_recruitment_context["planned_live_tasks"]
+	var live_tasks := EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
+	faction_recruitment_context["planned_live_tasks"] = live_tasks
+	_reinforcement_profile_count("planned_live_tasks_loaded")
+	return live_tasks
+
+static func _planned_recruitment_path_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	faction_recruitment_context: Dictionary
+) -> Dictionary:
+	var cached = faction_recruitment_context.get("planned_path_context", null)
+	if cached is Dictionary and not cached.is_empty():
+		_reinforcement_profile_count("planned_path_context_reused")
+		return cached
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
+	faction_recruitment_context["planned_path_context"] = path_context
+	_reinforcement_profile_count("planned_path_context_loaded")
+	return path_context
 
 static func _planned_task_prep_strength(base_strength: int, target_kind: String, task_class: String) -> int:
 	var floor_strength := 35
@@ -2886,12 +2938,14 @@ static func _best_raid_reinforcement_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	support_town: Dictionary = {}
+	support_town: Dictionary = {},
+	faction_recruitment_context: Dictionary = {}
 ) -> Dictionary:
 	var best = {}
 	var best_score = -1.0
 	var best_distance = 9999
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var route_context_cache: Dictionary = faction_recruitment_context.get("raid_route_contexts", {})
 	for index in range(session.overworld.get("encounters", []).size()):
 		var encounter = session.overworld.get("encounters", [])[index]
 		if not (encounter is Dictionary):
@@ -2907,11 +2961,17 @@ static func _best_raid_reinforcement_target(
 			continue
 		var supply_distance := 0
 		if not support_town.is_empty():
+			var placement_id := String(encounter.get("placement_id", ""))
+			var route_context_reused := placement_id != "" and route_context_cache.has(placement_id)
 			supply_distance = EnemyAdventureRulesScript.raid_reinforcement_route_distance(
 				session,
 				support_town,
 				encounter,
-				faction_id
+				faction_id,
+				route_context_cache
+			)
+			_reinforcement_profile_count(
+				"raid_route_context_reused" if route_context_reused else "raid_route_context_loaded"
 			)
 			if supply_distance >= 9999:
 				continue
@@ -2964,6 +3024,7 @@ static func _best_raid_reinforcement_target(
 				"supply_distance": supply_distance,
 				"score": score,
 			}
+	faction_recruitment_context["raid_route_contexts"] = route_context_cache
 	return best
 
 static func _raid_reinforcement_target_strength(encounter: Dictionary, current_strength: int) -> int:

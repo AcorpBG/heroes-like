@@ -15947,7 +15947,10 @@ def validate_ai_local_recruitment_support(errors: list[str]) -> None:
     town_governor_report_text = (ROOT / "tests" / "ai_town_governor_pressure_report.gd").read_text(encoding="utf-8")
     for required_token in (
         "raid_reinforcement_route_distance",
-        "_best_raid_reinforcement_target(session, config, faction_id, town)",
+        "phase_route_context_cache",
+        "raid_route_contexts",
+        "planned_saved_plans_by_town",
+        "planned_path_context",
         "supply_distance",
         "supply_distance >= 9999",
         "score -= float(supply_distance * 10)",

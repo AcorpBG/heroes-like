@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Windows packaged-runtime v2 gate. A fresh isolated Wine prefix now boots the exported release executable and proves Godot, Boot/MainMenu resources, the PCK-backed project, and the Windows release GDExtension load without fatal runtime output. Native Windows clean-machine execution, DirectInput/controller validation, hardware graphics/audio, signing, installers, and overall release readiness remain incomplete.",
+  "currentNotes": "Completed the strategic-AI recruitment path-cache correction. One faction recruitment phase now reuses immutable raid route contexts, live-task/path state, and per-town saved plans while live commander/raid strength and destination scores continue to refresh after every transfer. Exact Medium ordinal 99 preserves row signature 437fc4a9 while local row runtime falls from 296491ms to 265400ms and maximum turn runtime from 13149ms to 11665ms. The remaining 61-row matrix, broader AI performance work, and overall release remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-windows-wine-runtime-smoke-10184",
-  "currentSliceId": "packaging-windows-wine-runtime-smoke-10184",
-  "currentSliceNotes": "Completed. The v2 Windows gate exports PE/PCK/DLL artifacts, boots them in a fresh isolated Wine prefix, observes Godot, Boot, MainMenu, and release DLL markers, rejects fatal runtime output, and preserves explicit native-Windows and DirectInput non-claims.",
+  "currentSlice": "strategic-ai-recruitment-path-cache-10184",
+  "currentSliceId": "strategic-ai-recruitment-path-cache-10184",
+  "currentSliceNotes": "Completed. Phase-scoped route/task path reuse eliminates repeated invariant path work, focused coverage proves live strength and destination rescoring remain active, adjacent AI regressions pass, and exact Medium ordinal 99 preserves its deterministic behavior with lower local runtime.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Windows Packaged Runtime Smoke",
-  "currentSliceUpdatedAt": "2026-08-02T10:35:47Z",
+  "currentSliceTitle": "Strategic AI Recruitment Path Cache",
+  "currentSliceUpdatedAt": "2026-08-02T10:54:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -37209,6 +37209,94 @@
       "startedAt": "2026-05-05T00:00:00Z",
       "status": "completed",
       "title": "Decorative Blocker Sprite Asset Foundation"
+    },
+    {
+      "baselineChecks": [
+        "godot --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "godot --headless --path . --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
+        "godot --headless --path . --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+        "godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "One faction recruitment phase reuses immutable raid route contexts, planned-task live-task/path state, and per-town saved plans across repeated destination rescoring; live roster/raid strength and destination scores still refresh after each transfer; focused AI behavior, cache-reuse, and repository regressions pass.",
+      "id": "strategic-ai-recruitment-path-cache-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_planned_task_recruitment_prep_report.gd"
+      ],
+      "nonGoals": [
+        "accumulating additional long-run matrix rows",
+        "caching mutable army strengths or destination scores",
+        "claiming all strategic-AI performance work complete",
+        "claiming overall release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md strategic AI performance gap and Phase 6 performance baseline",
+      "purpose": "Reduce live enemy-turn latency caused by rebuilding the same path surfaces after every recruitment transfer without changing strategic decisions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "completedAt": "2026-08-02T10:54:45Z",
+      "startedAt": "2026-08-02T10:40:40Z",
+      "status": "completed",
+      "summary": "Completed. Faction recruitment now caches only immutable raid route contexts, task/path state, and per-town saved plans; mutable roster/raid strength, need, and destination arbitration remain live after every transfer. Exact Medium ordinal 99 preserves its row signature with lower local runtime.",
+      "title": "Strategic AI Recruitment Path Cache",
+      "updatedAt": "2026-08-02T10:54:45Z",
+      "validation": {
+        "commands": [
+          "godot --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "godot --headless --path . --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
+          "godot --headless --path . --scene res://tests/ai_multi_scenario_recruitment_delivery_report.tscn",
+          "godot --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 godot --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "planned_live_tasks_loaded": 1,
+          "planned_live_tasks_reused": 3,
+          "planned_path_context_loaded": 1,
+          "planned_path_context_reused": 3,
+          "planned_saved_plan_loaded": 10,
+          "planned_saved_plan_reused": 28,
+          "raid_route_context_loaded": 1,
+          "raid_route_context_reused": 1,
+          "focused_actor_strength_before": 0,
+          "focused_actor_strength_after": 13,
+          "focused_best_planned_actor_switched": true,
+          "focused_destination_after_live_reinforcement": "rebuild",
+          "emergency_defense_signature": "3308e0ea",
+          "multi_scenario_delivery_faction_count": 5,
+          "multi_scenario_raid_reinforcement_event_count": 14,
+          "medium_ordinal": 99,
+          "medium_row_signature": "437fc4a9",
+          "medium_focused_report_signature": "318a3f57",
+          "medium_turns_completed": 35,
+          "medium_enemy_activity_event_count": 93,
+          "medium_movement_event_count": 33,
+          "medium_target_assignment_count": 25,
+          "medium_behavior_bug_count": 0,
+          "medium_target_integrity_violation_count": 0,
+          "medium_unreachable_active_target_total": 0,
+          "medium_previous_row_runtime_msec": 296491,
+          "medium_current_row_runtime_msec": 265400,
+          "medium_previous_max_turn_runtime_msec": 13149,
+          "medium_current_max_turn_runtime_msec": 11665,
+          "save_version": 9,
+          "remaining_debt": "The other 61 exact-current-code Medium rows remain paused until the final release gate or a surfaced defect. Spawn, town-build, raid-advance, and other AI hot paths still need broader production performance work; overall release is incomplete."
+        },
+        "sliceId": "strategic-ai-recruitment-path-cache-10184",
+        "status": "passed_live_recruitment_path_reuse_behavior_equivalence_and_exact_medium_ordinal_99",
+        "updatedAt": "2026-08-02T10:54:45Z"
+      }
     },
     {
       "baselineChecks": [

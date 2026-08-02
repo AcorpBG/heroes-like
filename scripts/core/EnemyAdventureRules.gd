@@ -18752,13 +18752,20 @@ static func raid_reinforcement_route_distance(
 	session: SessionStateStoreScript.SessionData,
 	support_town: Dictionary,
 	raid: Dictionary,
-	observer_faction_id: String = ""
+	observer_faction_id: String = "",
+	phase_route_context_cache: Dictionary = {}
 ) -> int:
 	if session == null or support_town.is_empty() or raid.is_empty():
 		return 9999
 	var start := Vector2i(int(support_town.get("x", 0)), int(support_town.get("y", 0)))
 	var goal := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
-	return _path_distance(session, start, [goal], String(raid.get("placement_id", "")), observer_faction_id)
+	var placement_id := String(raid.get("placement_id", ""))
+	var path_context = phase_route_context_cache.get(placement_id, null) if placement_id != "" else null
+	if not (path_context is Dictionary):
+		path_context = _path_distance_surface_context(session, placement_id, observer_faction_id)
+		if placement_id != "":
+			phase_route_context_cache[placement_id] = path_context
+	return _path_distance_with_context(path_context, start, [goal])
 
 static func _tile_lookup(tiles: Array) -> Dictionary:
 	var lookup = {}

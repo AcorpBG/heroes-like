@@ -36,6 +36,9 @@ func _run() -> void:
 	var template_role_fallback_case := _spell_study_uses_template_role_fallback()
 	if template_role_fallback_case.is_empty():
 		return
+	var path_cache_case := _recruitment_path_cache_preserves_live_rescoring()
+	if path_cache_case.is_empty():
+		return
 	var planned_case := _planned_task_recruitment_prepares_commander()
 	if planned_case.is_empty():
 		return
@@ -70,9 +73,9 @@ func _run() -> void:
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
-		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_and_surplus_mobilization_after_recruitment",
+		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_surplus_mobilization_and_phase_scoped_path_reuse",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -357,6 +360,168 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 		"after_strength": after_strength,
 		"planned_batches": int(recruit_result.get("planned_batches", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
+	}
+
+func _recruitment_path_cache_preserves_live_rescoring() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_safe_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Path-cache fixture could not create planned tasks: %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	var faction_context := {}
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	var destination_context := EnemyTurnRules._recruit_destination_static_context(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		faction_context
+	)
+	var first_planned := EnemyTurnRules._choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		destination_context
+	)
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	var second_planned := EnemyTurnRules._choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		destination_context
+	)
+	if String(first_planned.get("type", "")) != "planned":
+		_fail("Path-cache fixture did not select planned recruitment: %s" % JSON.stringify(first_planned))
+		return {}
+	if JSON.stringify(first_planned) != JSON.stringify(second_planned):
+		_fail("Planned destination changed when immutable path state was reused: first=%s second=%s" % [JSON.stringify(first_planned), JSON.stringify(second_planned)])
+		return {}
+	var actor_id := String(first_planned.get("roster_hero_id", ""))
+	var cached_plans_by_town: Dictionary = faction_context.get("planned_saved_plans_by_town", {})
+	var cached_plans_by_actor: Dictionary = cached_plans_by_town.get(DUSKFEN, {})
+	var actor_plan_before: Dictionary = cached_plans_by_actor.get(actor_id, {}).duplicate(true)
+	var actor_strength_before := _commander_strength(session, actor_id)
+	var accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		FACTION_ID,
+		actor_id,
+		"unit_mire_slinger",
+		1,
+		String(first_planned.get("base_encounter_id", "")),
+		int(first_planned.get("target_strength", 0))
+	)
+	if accepted != 1:
+		_fail("Path-cache fixture could not apply one live commander reinforcement: actor=%s accepted=%d" % [actor_id, accepted])
+		return {}
+	var actor_strength_after := _commander_strength(session, actor_id)
+	if actor_strength_after <= actor_strength_before:
+		_fail("Live commander reinforcement did not update roster strength: before=%d after=%d" % [actor_strength_before, actor_strength_after])
+		return {}
+	var rescored_planned_target := EnemyTurnRules._best_planned_task_recruitment_target(
+		session,
+		config,
+		FACTION_ID,
+		town,
+		faction_context
+	)
+	cached_plans_by_town = faction_context.get("planned_saved_plans_by_town", {})
+	cached_plans_by_actor = cached_plans_by_town.get(DUSKFEN, {})
+	var actor_plan_after: Dictionary = cached_plans_by_actor.get(actor_id, {})
+	if actor_plan_before.is_empty() or JSON.stringify(actor_plan_before) != JSON.stringify(actor_plan_after):
+		_fail("Live strength rescore changed Brakka's immutable cached route: before=%s after=%s" % [JSON.stringify(actor_plan_before), JSON.stringify(actor_plan_after)])
+		return {}
+	if String(rescored_planned_target.get("roster_hero_id", "")) == actor_id:
+		_fail("Live planned-task scoring did not react to Brakka's changed strength: %s" % JSON.stringify(rescored_planned_target))
+		return {}
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	var rescored_destination := EnemyTurnRules._choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		destination_context
+	)
+	if String(rescored_destination.get("type", "")) != "rebuild":
+		_fail("Live destination arbitration did not react to changed commander strength: %s" % JSON.stringify(rescored_destination))
+		return {}
+	var spawn_points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
+	if spawn_points.is_empty() or not (spawn_points[0] is Dictionary):
+		_fail("Path-cache fixture has no authored spawn point.")
+		return {}
+	var spawn_point: Dictionary = spawn_points[0]
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append({
+		"placement_id": "recruitment_path_cache_probe_raid",
+		"encounter_id": "encounter_mire_raid",
+		"spawned_by_faction_id": FACTION_ID,
+		"x": int(spawn_point.get("x", 0)),
+		"y": int(spawn_point.get("y", 0)),
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"enemy_army": {
+			"id": "recruitment_path_cache_probe_army",
+			"name": "Path Cache Probe",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 1}],
+		},
+	})
+	session.overworld["encounters"] = encounters
+	var first_raid := EnemyTurnRules._best_raid_reinforcement_target(
+		session,
+		config,
+		FACTION_ID,
+		town,
+		faction_context
+	)
+	var second_raid := EnemyTurnRules._best_raid_reinforcement_target(
+		session,
+		config,
+		FACTION_ID,
+		town,
+		faction_context
+	)
+	var reinforcement_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var counts: Dictionary = reinforcement_profile.get("counts", {})
+	if String(first_raid.get("encounter", {}).get("placement_id", "")) != "recruitment_path_cache_probe_raid":
+		_fail("Path-cache fixture did not select the understrength raid: %s" % JSON.stringify(first_raid))
+		return {}
+	if JSON.stringify(first_raid) != JSON.stringify(second_raid):
+		_fail("Raid reinforcement destination changed when route context was reused: first=%s second=%s" % [JSON.stringify(first_raid), JSON.stringify(second_raid)])
+		return {}
+	for loaded_key in ["planned_live_tasks_loaded", "planned_path_context_loaded", "planned_saved_plan_loaded", "raid_route_context_loaded"]:
+		if int(counts.get(loaded_key, 0)) < 1:
+			_fail("Path-cache profile did not load %s: %s" % [loaded_key, JSON.stringify(reinforcement_profile)])
+			return {}
+	for reused_key in ["planned_live_tasks_reused", "planned_path_context_reused", "planned_saved_plan_reused", "raid_route_context_reused"]:
+		if int(counts.get(reused_key, 0)) < 1:
+			_fail("Path-cache profile did not reuse %s: %s" % [reused_key, JSON.stringify(reinforcement_profile)])
+			return {}
+	return {
+		"case_id": "recruitment_path_cache_preserves_live_rescoring",
+		"planned_actor_id": String(first_planned.get("roster_hero_id", "")),
+		"planned_target_id": String(first_planned.get("target_id", "")),
+		"planned_score": float(first_planned.get("planned_score", 0.0)),
+		"actor_strength_before": actor_strength_before,
+		"actor_strength_after": actor_strength_after,
+		"best_planned_actor_after_live_reinforcement": String(rescored_planned_target.get("roster_hero_id", "")),
+		"best_planned_target_after_live_reinforcement": String(rescored_planned_target.get("target_id", "")),
+		"destination_after_live_reinforcement": String(rescored_destination.get("type", "")),
+		"raid_placement_id": String(first_raid.get("encounter", {}).get("placement_id", "")),
+		"raid_need": int(first_raid.get("need", 0)),
+		"raid_supply_distance": int(first_raid.get("supply_distance", 0)),
+		"profile_counts": counts,
 	}
 
 func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictionary:
