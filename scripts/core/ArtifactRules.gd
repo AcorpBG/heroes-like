@@ -666,7 +666,7 @@ static func select_live_source_reward(
 	faction_id: String = "",
 	excluded_artifact_ids: Array = []
 ) -> Dictionary:
-	var contract = source_record.get("guarded_reward_contract", {})
+	var contract := _artifact_source_contract(source_record)
 	var runtime_boundary = source_record.get("runtime_boundary", {})
 	if not (contract is Dictionary) or not (runtime_boundary is Dictionary):
 		return {"ok": false, "reason": "source_not_opted_in"}
@@ -705,8 +705,12 @@ static func select_live_source_reward(
 	var excluded := {}
 	for artifact_id_value in excluded_artifact_ids:
 		excluded[String(artifact_id_value)] = true
+	var table_artifact_ids := _string_array(table.get("artifact_ids", []))
+	var faction_artifact_ids = table.get("artifact_ids_by_faction", {})
+	if faction_id != "" and faction_artifact_ids is Dictionary and faction_artifact_ids.has(faction_id):
+		table_artifact_ids = _string_array(faction_artifact_ids.get(faction_id, []))
 	var candidates := []
-	for artifact_id in _string_array(table.get("artifact_ids", [])):
+	for artifact_id in table_artifact_ids:
 		if artifact_id in known_artifact_ids and artifact_id not in excluded:
 			candidates.append(artifact_id)
 	if candidates.is_empty():
@@ -727,6 +731,27 @@ static func select_live_source_reward(
 		"source_tag": source_tag,
 		"source_key": source_key,
 	}
+
+static func live_source_reward_tag(source_record: Dictionary) -> String:
+	var contract := _artifact_source_contract(source_record)
+	var explicit_tag := String(contract.get("source_tag", "")).strip_edges()
+	if explicit_tag != "":
+		return explicit_tag
+	match String(source_record.get("family", "")):
+		"guarded_reward_site":
+			return "guarded_site"
+		"shrine", "frontier_shrine":
+			return "shrine"
+		"neutral_dwelling":
+			return "dwelling"
+	return ""
+
+static func _artifact_source_contract(source_record: Dictionary) -> Dictionary:
+	var contract = source_record.get("artifact_reward_contract", {})
+	if contract is Dictionary and not contract.is_empty():
+		return contract
+	contract = source_record.get("guarded_reward_contract", {})
+	return contract if contract is Dictionary else {}
 
 static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_artifacts(hero_state.duplicate(true))
@@ -1845,13 +1870,24 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 		var artifact_factions := _string_array(artifact.get("faction_affinity", []))
 		if not artifact_factions.is_empty() and not faction_constraints.is_empty() and _array_intersection(artifact_factions, faction_constraints).is_empty():
 			issues.append("artifact_faction_outside_table:%s" % artifact_id)
+	var artifact_ids_by_faction = table.get("artifact_ids_by_faction", {})
+	if not (artifact_ids_by_faction is Dictionary):
+		issues.append("invalid_artifact_ids_by_faction")
+	else:
+		for faction_id_value in artifact_ids_by_faction.keys():
+			var faction_id := String(faction_id_value)
+			if faction_id not in faction_constraints:
+				issues.append("mapped_faction_outside_table:%s" % faction_id)
+			for mapped_artifact_id in _string_array(artifact_ids_by_faction.get(faction_id_value, [])):
+				if mapped_artifact_id not in artifact_ids:
+					issues.append("mapped_artifact_outside_table:%s" % mapped_artifact_id)
 
 	var runtime_policy := _artifact_source_runtime_policy(table)
 	var metadata_only := bool(runtime_policy.get("metadata_only", false))
 	var live_drop_execution := bool(runtime_policy.get("live_drop_execution", false))
 	if metadata_only == live_drop_execution:
 		issues.append("source_table_runtime_mode_invalid")
-	if live_drop_execution and source_tag not in ["guarded_site", "battle_salvage"]:
+	if live_drop_execution and source_tag not in ["guarded_site", "shrine", "battle_salvage"]:
 		issues.append("unsupported_live_source_tag:%s" % source_tag)
 	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
 		if bool(runtime_policy.get(blocked_flag, false)):
@@ -1942,7 +1978,7 @@ static func _source_record_has_required_categories(record: Dictionary, required_
 
 static func _source_record_reward_categories(record: Dictionary) -> Array:
 	var categories := []
-	for container_key in ["guarded_reward_contract", "reward_preview"]:
+	for container_key in ["artifact_reward_contract", "guarded_reward_contract", "reward_preview"]:
 		var container = record.get(container_key, {})
 		if not (container is Dictionary):
 			continue
@@ -1964,7 +2000,7 @@ static func _source_record_guard_tier(record: Dictionary) -> String:
 			var tier := String(container.get("tier", container.get("risk_tier", ""))).strip_edges()
 			if tier != "":
 				return tier
-	var contract = record.get("guarded_reward_contract", {})
+	var contract := _artifact_source_contract(record)
 	if contract is Dictionary:
 		var reward_tier := String(contract.get("reward_tier", "")).strip_edges()
 		if reward_tier != "":

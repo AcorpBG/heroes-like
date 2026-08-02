@@ -9102,6 +9102,17 @@ def artifact_source_table_issues(
         if artifact_factions and faction_constraints and not artifact_factions.intersection(faction_constraints):
             issues.append(f"artifact_faction_outside_table:{artifact_id}")
 
+    artifact_ids_by_faction = table.get("artifact_ids_by_faction", {})
+    if not isinstance(artifact_ids_by_faction, dict):
+        issues.append("invalid_artifact_ids_by_faction")
+    else:
+        for faction_id, mapped_values in artifact_ids_by_faction.items():
+            if str(faction_id) not in faction_constraints:
+                issues.append(f"mapped_faction_outside_table:{faction_id}")
+            for mapped_artifact_id in string_list(mapped_values):
+                if mapped_artifact_id not in artifact_ids:
+                    issues.append(f"mapped_artifact_outside_table:{mapped_artifact_id}")
+
     runtime_policy = table.get("runtime_policy", {})
     if not isinstance(runtime_policy, dict):
         issues.append("missing_runtime_policy")
@@ -9110,7 +9121,7 @@ def artifact_source_table_issues(
         live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
         if metadata_only == live_drop_execution:
             issues.append("source_table_runtime_mode_invalid")
-        if live_drop_execution and source_tag not in {"guarded_site", "battle_salvage"}:
+        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
         for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
@@ -10758,10 +10769,15 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 2, errors, "Exactly two artifact source/reward tables must execute live")
-    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "battle_salvage"], errors, "Only guarded-site and battle-salvage artifact rewards may execute live in this slice")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, and battle-salvage source tables must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 3, errors, "Exactly three artifact source/reward tables must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "battle_salvage"], errors, "Only guarded-site, shrine, and battle-salvage artifact rewards may execute live in this slice")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
+    starlens = resource_sites.get("site_starlens_sanctum", {})
+    starlens_contract = starlens.get("artifact_reward_contract", {}) if isinstance(starlens.get("artifact_reward_contract"), dict) else {}
+    ensure(str(starlens_contract.get("source_tag", "")) == "shrine", errors, "Starlens Sanctum must opt into the shrine artifact source")
+    ensure(str(starlens_contract.get("artifact_reward_table_id", "")) == "artifact_source_shrine_accord_rare", errors, "Starlens Sanctum must use the authored shrine artifact table")
+    ensure(bool((starlens.get("runtime_boundary", {}) if isinstance(starlens.get("runtime_boundary"), dict) else {}).get("artifact_reward_execution", False)), errors, "Starlens Sanctum must explicitly opt into artifact reward execution")
     bellwake = scenarios.get("bellwake-wreck-claim", {})
     bellwake_salvage_encounters = [
         encounter
@@ -22924,7 +22940,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards for player and AI commanders, and Bellwake player battle salvage while other source tags and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards for eligible player and AI commanders, and Bellwake player battle salvage while pickup, dwelling, town-service, and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

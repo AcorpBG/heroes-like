@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed a narrow strategic-AI redundant-work cleanup by reusing one normalized commander-roster snapshot per live task-reconciliation pass. Exact current-HEAD Medium behavior is preserved; no meaningful aggregate runtime speedup is claimed. Overall release work remains active.",
+  "currentNotes": "Starlens Sanctum now grants the authored shrine artifact reward through eligible player, direct strategic-AI, and opportunistic route claims with faction-correct selection, one-time provenance, and save continuity. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-task-reconcile-roster-reuse-10184",
-  "currentSliceId": "strategic-ai-task-reconcile-roster-reuse-10184",
-  "currentSliceNotes": "Live task reconciliation now reuses one normalized faction commander-roster snapshot across actor checks while preserving the full planner. Current-HEAD control and final code match row signature ffa259b1 over the 43-turn terminal trajectory.",
+  "currentSlice": "artifact-shrine-reward-execution-10184",
+  "currentSliceId": "artifact-shrine-reward-execution-10184",
+  "currentSliceNotes": "Completed: eligible Sunvault player and AI Starlens claims deterministically grant and auto-equip Choir Tuning Fork while preserving Beacon Path, one-time provenance, faction gating, AI tracking, public event boundaries, and save version 9.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Task-Reconciliation Roster Reuse",
-  "currentSliceUpdatedAt": "2026-08-02T20:52:08Z",
+  "currentSliceTitle": "Artifact Shrine Reward Execution",
+  "currentSliceUpdatedAt": "2026-08-02T21:11:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65378,6 +65378,60 @@
       "status": "completed",
       "title": "Strategic AI Task-Reconciliation Roster Reuse",
       "updatedAt": "2026-08-02T20:52:08Z"
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_shrine_reward_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_guarded_site_reward_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_source_reward_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/resource_sites.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Starlens Sanctum opts into the live shrine artifact table; eligible Sunvault player and strategic-AI claims deterministically grant and auto-equip Choir Tuning Fork while preserving the existing spell reward, one-time node provenance, AI empire tracking, public event boundaries, and save-version-9 resume; ineligible factions receive the normal shrine claim without an artifact; focused and broad regressions pass.",
+      "id": "artifact-shrine-reward-execution-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/resource_sites.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/artifact_shrine_reward_execution_report.gd",
+        "tests/artifact_shrine_reward_execution_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "activating pickup, dwelling, town-service, campaign, market, or broad random artifact drops",
+        "changing artifact bonuses, set thresholds, rare-resource income, or combat balance",
+        "changing expedition save version",
+        "Native RMG changes",
+        "claiming artifact-system or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md artifact runtime follow-ups and docs/artifact-system-expansion-foundation.md source rules",
+      "purpose": "Turn an authored but inactive shrine reward table into a live, faction-readable exploration reward through existing resource-site and AI workflows.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "completionEvidence": {
+        "ai_direct_claim": "Ninefold Sunvault AI receives and auto-equips Choir Tuning Fork, persists source provenance, records captured_artifact_ids, and passes the public event boundary.",
+        "ai_opportunistic_route_claim": "Ninefold Sunvault opportunistic route pickup grants the same source reward and persists commander plus node state.",
+        "faction_gate": "Glassfen Embercourt receives the normal Starlens claim and Beacon Path without an artifact.",
+        "player_claim": "Prismhearth Sunvault receives and auto-equips Choir Tuning Fork, still learns Beacon Path, resumes from save version 9, and cannot receive a second reward after recapture.",
+        "source_table": "The shrine source table is the third live source tag, alongside guarded_site and battle_salvage."
+      },
+      "startedAt": "2026-08-02T20:58:53Z",
+      "status": "completed",
+      "title": "Artifact Shrine Reward Execution",
+      "updatedAt": "2026-08-02T21:11:03Z"
     }
   ],
   "project": "heroes-like",
@@ -65920,9 +65974,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Strategic-AI live task reconciliation now reuses one normalized commander-roster snapshot per faction pass with exact current-HEAD Medium trajectory equivalence. Broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Starlens Sanctum now executes its authored shrine artifact table for eligible player and strategic-AI claims, including opportunistic route pickup, while preserving faction gating, spell rewards, one-time provenance, and save version 9. Pickup, dwelling, town-service, broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T20:52:08Z",
+  "updatedAt": "2026-08-02T21:11:03Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
