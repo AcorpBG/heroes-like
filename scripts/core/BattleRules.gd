@@ -2680,11 +2680,13 @@ static func intent_forecast_payload(session: SessionStateStoreScript.SessionData
 	var retarget_line := ""
 	if tactical_target_id != "" and tactical_target_id != String(get_selected_target(battle).get("battle_id", "")) and action_id in ["strike", "shoot"]:
 		retarget_line = "Retarget first: %s." % target_label
-	var visible := "Suggested order: %s%s; %s." % [
+	var visible_order := "%s%s" % [
 		action_label,
 		" -> %s" % target_label if target_label != "" else "",
-		_intent_forecast_sentence(expected_result),
 	]
+	var visible_prefix := "Suggested order: %s; " % visible_order
+	var visible_result := _intent_forecast_compact_result(expected_result, maxi(24, 95 - visible_prefix.length()))
+	var visible := "%s%s." % [visible_prefix, visible_result]
 	var tooltip_lines := [
 		"Order Preview",
 		"- Active: %s" % _stack_label(active_stack),
@@ -2778,6 +2780,24 @@ static func _intent_forecast_sentence(text: String) -> String:
 	if split.is_empty():
 		return cleaned.trim_suffix(".")
 	return String(split[0]).strip_edges().trim_suffix(".")
+
+static func _intent_forecast_compact_result(text: String, max_chars: int) -> String:
+	var sentence := _intent_forecast_sentence(text)
+	if sentence.length() <= max_chars:
+		return sentence
+	var selected_clauses: Array[String] = []
+	for clause_value in sentence.split(" | ", false):
+		var clause := String(clause_value).strip_edges()
+		if clause == "":
+			continue
+		var candidate := " | ".join(selected_clauses + [clause])
+		if candidate.length() <= max_chars:
+			selected_clauses.append(clause)
+			continue
+		if selected_clauses.is_empty():
+			return "%s..." % clause.left(maxi(1, max_chars - 3))
+		break
+	return " | ".join(selected_clauses)
 
 static func _intent_forecast_confidence_line(tactical_order: Dictionary, action_id: String) -> String:
 	var scores: Dictionary = tactical_order.get("candidate_scores", {}) if tactical_order.get("candidate_scores", {}) is Dictionary else {}

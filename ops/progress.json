@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Packaging readiness now has real Linux/Windows release artifact implementation: lean synchronized presets, alpha version metadata, reproducible archives, manifests and checksums, clean packaged Linux startup, and valid Windows PE/DLL/PCK output. Clean Windows-machine execution, signing, and installer/channel integration remain open. The strategic-AI matrix is paused at 39 exact-current-code rows because additional passing rows are release-gate evidence, not implementation. Player-comprehension UX is the next active product slice.",
+  "currentNotes": "The bounded player-comprehension slice and first keyboard-accessibility increment are complete. Shared styled buttons now expose visible focus, the scenic main menu has deterministic standard-UI-action traversal, secondary boards receive meaningful entry focus, and closing returns focus to the originating command. Focused validation also corrected build-plan command cues and bounded battle consequence text to the live command-rail width. Broader controller certification, screen-reader integration, remaining strategic AI, balance, content, performance, packaging, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "ux-polish-player-comprehension-10184",
-  "currentSliceId": "ux-polish-player-comprehension-10184",
-  "currentSliceNotes": "Started after completing the bounded packaging follow-up. Improve onboarding, tooltips, town planning clarity, battle intent feedback, save/load confidence, and debug-like seams through live player-facing behavior.",
-  "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "UX Polish Player Comprehension",
-  "currentSliceUpdatedAt": "2026-08-02T03:26:25Z",
+  "currentSlice": "accessibility-keyboard-focus-navigation-10184",
+  "currentSliceId": "accessibility-keyboard-focus-navigation-10184",
+  "currentSliceNotes": "Completed the mouse-only main-menu boundary: visible shared focus, deterministic first-view traversal, board-entry focus, and focus return all pass through standard UI actions. Broader controller certification remains outside this slice.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Accessibility Keyboard Focus Navigation",
+  "currentSliceUpdatedAt": "2026-08-02T05:54:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -37213,6 +37213,71 @@
     {
       "baselineChecks": [
         "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The main menu can be entered, traversed, opened, closed, and resumed with keyboard UI actions; focused commands have a visible shared style; focused validation and repository checks pass.",
+      "id": "accessibility-keyboard-focus-navigation-10184",
+      "implementationTargets": [
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd"
+      ],
+      "nonGoals": [
+        "screen-reader integration",
+        "full controller certification across every gameplay shell",
+        "broad release completion claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "Active release goal accessibility gap",
+      "purpose": "Remove the mouse-only main-menu boundary by restoring visible keyboard focus and deterministic command-board focus handoff.",
+      "source": "Active release goal accessibility gap",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "completedAt": "2026-08-02T05:54:08Z",
+      "startedAt": "2026-08-02T05:35:34Z",
+      "status": "completed",
+      "summary": "Completed the first keyboard-accessibility runtime increment. Shared styled buttons use visible focus, scenic first-view commands traverse deterministically through standard UI actions, Campaign and Settings receive meaningful board-entry focus, and Cancel/Close returns focus to the originating command. Xvfb captures verify the focus outline preserves the scenery-first composition. Regression validation also restored truthful two-step Build-tab cues and bounds visible battle consequence text while retaining full forecast detail in structured data and tooltips.",
+      "title": "Accessibility Keyboard Focus Navigation",
+      "updatedAt": "2026-08-02T05:54:08Z",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "MAIN_MENU_KEYBOARD_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 xvfb-run -a -s '-screen 0 1600x900x24' godot --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/main_menu_lean_boot_save_guard.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_intent_forecast_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "captures": [
+            ".artifacts/main_menu_keyboard_navigation_smoke/first_view_campaign_focus.png",
+            ".artifacts/main_menu_keyboard_navigation_smoke/settings_entry_focus.png"
+          ],
+          "implementation": [
+            "Shared FrontierVisualKit buttons use FOCUS_ALL and a visible gold focus outline without changing their layout dimensions.",
+            "The scenic first-view Campaign, Skirmish, Load, Settings, Editor, and Quit commands form a deterministic vertical focus loop.",
+            "Campaign, Skirmish, Saves, Guide, and Settings boards place focus on their first meaningful visible control when opened.",
+            "Closing a board or pressing ui_cancel restores focus to the scenic command that opened it.",
+            "The focused smoke drives ui_up, ui_down, ui_accept, and ui_cancel through the live MainMenu scene and verifies focus entry and return.",
+            "Build-plan tooltips retain non-mutating selection semantics while exposing readiness and a truthful Build-tab review/confirm handoff.",
+            "Battle forecast visible text is clause-aware and bounded to the command rail while full expected-result detail remains in the payload and tooltip."
+          ]
+        },
+        "sliceId": "accessibility-keyboard-focus-navigation-10184",
+        "status": "passed_keyboard_focus_navigation_and_shared_ui_regression_scope_completed",
+        "updatedAt": "2026-08-02T05:54:08Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
         "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py sync-plan /root/dev/heroes-like --dry-run",
         "python3 -m json.tool ops/progress.json",
         "focused generated-map save/load, scenario-load, and RMG validation smokes selected at kickoff"
@@ -55538,11 +55603,12 @@
         "project.md",
         "PLAN.md"
       ],
+      "completedAt": "2026-08-02T05:33:37Z",
       "startedAt": "2026-08-02T03:26:25Z",
-      "status": "in_progress",
-      "summary": "In progress. Overworld and town use responsive compact layouts at 1280x720; at 1024x600 the town opens scenery-first and a footer switch exposes the full-width order board without losing management access. Generated-skirmish setup and Load use player-readable workflows without recovery or file-integrity internals. Fresh expeditions open on a safe suggested route with an enabled order. Town construction uses a two-step plan/confirm workflow with exact cost, readiness, impact, trade handoff, and non-mutating selection. Battle now places the scored suggested order and expected damage, retaliation, range, momentum, or posture consequence directly in the existing command rail instead of hiding it behind a tooltip or leading with click instructions. Continue the remaining broader UX polish before completing this slice.",
+      "status": "completed",
+      "summary": "Completed bounded player-comprehension polish. Overworld and town use responsive compact layouts at 1280x720; at 1024x600 the town opens scenery-first and a footer switch exposes the full-width order board without losing management access. Generated-skirmish setup and Load use player-readable workflows without recovery or file-integrity internals. Fresh expeditions open on a safe suggested route with an enabled order. Town construction uses a two-step plan/confirm workflow with exact cost, readiness, impact, trade handoff, and non-mutating selection. Battle places the scored suggested order and expected damage, retaliation, range, momentum, or posture consequence directly in the existing command rail. Focused generated-setup, save/load, lean-boot save, first-turn, town-planning, and battle-intent validation passed; the earlier broad battle-layout matrix remains explicitly unclaimed.",
       "title": "UX Polish Player Comprehension",
-      "updatedAt": "2026-08-02T05:20:17Z",
+      "updatedAt": "2026-08-02T05:33:37Z",
       "validation": {
         "commands": [
           "godot4 --headless --path /root/dev/heroes-like --scene res://tests/player_comprehension_layout_smoke.tscn",
@@ -55608,8 +55674,8 @@
           "battleLayoutMatrix": "The earlier broad battle-layout matrix stopped after more than four minutes with no output and remains unclaimed. This increment passed the focused intent gate, the broader town/battle visual smoke, repository validation, and refreshed 1280x720 runtime capture."
         },
         "sliceId": "ux-polish-player-comprehension-10184",
-        "status": "passed_compact_setup_save_load_first_turn_town_planning_and_visible_battle_intent_increments_slice_remains_in_progress",
-        "updatedAt": "2026-08-02T05:20:17Z"
+        "status": "passed_bounded_player_comprehension_scope_completed_broad_battle_layout_matrix_unclaimed",
+        "updatedAt": "2026-08-02T05:33:37Z"
       }
     },
     {

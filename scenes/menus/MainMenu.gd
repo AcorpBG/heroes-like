@@ -129,6 +129,7 @@ var _selected_help_topic_id := ""
 var _last_context_tab := TAB_CAMPAIGN
 var _syncing_settings_ui := false
 var _menu_notice := ""
+var _stage_return_focus: Control
 
 func _ready() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -151,6 +152,8 @@ func _ready() -> void:
 	buckets["initial_layout"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_refresh_menu()
+	_configure_first_view_focus_navigation()
+	call_deferred("_focus_first_view_command")
 	buckets["refresh_menu"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("menu", "ready", "main_menu_ready", ProfileLogScript.elapsed_ms(started), buckets, {
 		"current_tab": _menu_tabs.current_tab,
@@ -1641,6 +1644,7 @@ func _toggle_stage_dock(index: int) -> void:
 	if _stage_dock_panel.visible and _menu_tabs.current_tab == clamped_index:
 		_hide_stage_dock()
 		return
+	_stage_return_focus = _first_view_button_for_tab(clamped_index)
 	_select_menu_tab(clamped_index)
 	_show_stage_dock()
 
@@ -1652,12 +1656,78 @@ func _show_stage_dock() -> void:
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
+	call_deferred("_focus_stage_entry")
 
 func _hide_stage_dock() -> void:
 	_stage_dock_panel.visible = false
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
+	call_deferred("_restore_first_view_focus")
+
+func _first_view_buttons() -> Array[BaseButton]:
+	return [
+		_open_campaign_button,
+		_open_skirmish_button,
+		_open_saves_button,
+		_open_settings_button,
+		_open_editor_button,
+		_quit_button,
+	]
+
+func _first_view_button_for_tab(tab_index: int) -> BaseButton:
+	match tab_index:
+		TAB_SKIRMISH:
+			return _open_skirmish_button
+		TAB_SAVES:
+			return _open_saves_button
+		TAB_SETTINGS:
+			return _open_settings_button
+		_:
+			return _open_campaign_button
+
+func _configure_first_view_focus_navigation() -> void:
+	var buttons := _first_view_buttons()
+	for index in range(buttons.size()):
+		var button: BaseButton = buttons[index]
+		var previous: BaseButton = buttons[(index - 1 + buttons.size()) % buttons.size()]
+		var next: BaseButton = buttons[(index + 1) % buttons.size()]
+		button.focus_neighbor_top = button.get_path_to(previous)
+		button.focus_neighbor_bottom = button.get_path_to(next)
+		button.focus_previous = button.get_path_to(previous)
+		button.focus_next = button.get_path_to(next)
+
+func _focus_first_view_command() -> void:
+	if _stage_dock_panel.visible or not is_inside_tree():
+		return
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if focus_owner == null or not is_ancestor_of(focus_owner):
+		_open_campaign_button.grab_focus()
+
+func _focus_stage_entry() -> void:
+	if not _stage_dock_panel.visible or not is_inside_tree():
+		return
+	var target: Control
+	match _menu_tabs.current_tab:
+		TAB_CAMPAIGN:
+			target = _campaign_list if _campaign_list.item_count > 0 else _campaign_primary_button
+		TAB_SKIRMISH:
+			target = _skirmish_list if _skirmish_list.item_count > 0 else _difficulty_picker
+		TAB_SAVES:
+			target = _save_list if _save_list.item_count > 0 else _close_stage_dock_button
+		TAB_GUIDE:
+			target = _help_list if _help_list.item_count > 0 else _stage_help_button
+		TAB_SETTINGS:
+			target = _presentation_mode_picker
+	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
+		target.grab_focus()
+
+func _restore_first_view_focus() -> void:
+	if _stage_dock_panel.visible or not is_inside_tree():
+		return
+	var target := _stage_return_focus if is_instance_valid(_stage_return_focus) else _open_campaign_button
+	if target != null and target.is_visible_in_tree():
+		target.grab_focus()
 
 func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
@@ -2376,7 +2446,7 @@ func _help_topic_for_tab(tab_index: int) -> String:
 	return String(TAB_HELP_TOPIC.get(tab_index, SettingsService.default_help_topic_id()))
 
 func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: bool) -> void:
-	button.focus_mode = Control.FOCUS_NONE
+	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size", 19 if not danger else 18)
 	var normal_color := Color(0.95, 0.94, 0.88, 1.0)
 	var highlight_color := Color(1.0, 0.91, 0.60, 1.0)
@@ -2395,6 +2465,7 @@ func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: boo
 	button.add_theme_stylebox_override("hover", transparent_style.duplicate())
 	button.add_theme_stylebox_override("pressed", transparent_style.duplicate())
 	button.add_theme_stylebox_override("disabled", transparent_style.duplicate())
+	button.add_theme_stylebox_override("focus", FrontierVisualKit._button_focus_style(6))
 
 func _plaque_button_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
