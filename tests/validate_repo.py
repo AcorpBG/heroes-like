@@ -9110,7 +9110,7 @@ def artifact_source_table_issues(
         live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
         if metadata_only == live_drop_execution:
             issues.append("source_table_runtime_mode_invalid")
-        if live_drop_execution and source_tag != "guarded_site":
+        if live_drop_execution and source_tag not in {"guarded_site", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
         for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
@@ -10758,10 +10758,24 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site source table must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 1, errors, "Exactly one artifact source/reward table must execute live")
-    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site"], errors, "Only guarded-site artifact rewards may execute live in this slice")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site and battle-salvage source tables must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 2, errors, "Exactly two artifact source/reward tables must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "battle_salvage"], errors, "Only guarded-site and battle-salvage artifact rewards may execute live in this slice")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
+    bellwake = scenarios.get("bellwake-wreck-claim", {})
+    bellwake_salvage_encounters = [
+        encounter
+        for encounter in bellwake.get("encounters", [])
+        if isinstance(encounter, dict) and isinstance(encounter.get("artifact_source_context"), dict)
+    ]
+    ensure(len(bellwake_salvage_encounters) == 1, errors, "Bellwake Wreck Claim must opt exactly one encounter into battle-salvage rewards")
+    if bellwake_salvage_encounters:
+        salvage_encounter = bellwake_salvage_encounters[0]
+        salvage_context = salvage_encounter.get("artifact_source_context", {})
+        salvage_contract = salvage_context.get("guarded_reward_contract", {}) if isinstance(salvage_context.get("guarded_reward_contract"), dict) else {}
+        ensure(str(salvage_encounter.get("placement_id", "")) == "bellwake_aurora_battery", errors, "Bellwake battle salvage must remain attached to Aurora Battery")
+        ensure(str(salvage_contract.get("battle_salvage_reward_table_id", "")) == "artifact_source_battle_salvage_heavy", errors, "Aurora Battery must use the authored heavy battle-salvage table")
+        ensure(bool((salvage_context.get("runtime_boundary", {}) if isinstance(salvage_context.get("runtime_boundary"), dict) else {}).get("artifact_reward_execution", False)), errors, "Aurora Battery battle salvage must explicitly opt into runtime reward execution")
     ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
     ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
     ensure(ADVANCED_SUNVAULT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Sunvault building set authored")
@@ -22910,7 +22924,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, and guarded-site source rewards for player and AI commanders while other source tags and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards for player and AI commanders, and Bellwake player battle salvage while other source tags and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

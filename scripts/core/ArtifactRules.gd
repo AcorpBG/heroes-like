@@ -670,7 +670,8 @@ static func select_live_source_reward(
 	var runtime_boundary = source_record.get("runtime_boundary", {})
 	if not (contract is Dictionary) or not (runtime_boundary is Dictionary):
 		return {"ok": false, "reason": "source_not_opted_in"}
-	var table_id := String(contract.get("artifact_reward_table_id", "")).strip_edges()
+	var table_contract_key := "battle_salvage_reward_table_id" if source_tag == "battle_salvage" else "artifact_reward_table_id"
+	var table_id := String(contract.get(table_contract_key, "")).strip_edges()
 	if table_id == "" or not bool(runtime_boundary.get("artifact_reward_execution", false)):
 		return {"ok": false, "reason": "source_not_opted_in"}
 
@@ -1850,7 +1851,7 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 	var live_drop_execution := bool(runtime_policy.get("live_drop_execution", false))
 	if metadata_only == live_drop_execution:
 		issues.append("source_table_runtime_mode_invalid")
-	if live_drop_execution and source_tag != "guarded_site":
+	if live_drop_execution and source_tag not in ["guarded_site", "battle_salvage"]:
 		issues.append("unsupported_live_source_tag:%s" % source_tag)
 	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
 		if bool(runtime_policy.get(blocked_flag, false)):

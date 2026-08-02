@@ -6319,6 +6319,8 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		messages.append("%s gains %d experience." % [hero_name, experience_amount])
 	messages.append_array(_award_commander_experience(session, experience_amount))
 	_sync_player_force_from_battle(session)
+	var artifact_salvage := _apply_player_battle_salvage_reward(session)
+	_append_nonempty_message(messages, String(artifact_salvage.get("message", "")))
 	var front_result := _apply_victory_front_aftermath(session)
 	_append_nonempty_message(messages, String(front_result.get("summary", "")))
 	var commander_aftermath := _resolve_enemy_commander_aftermath(
@@ -6346,6 +6348,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		{
 			"resource_summary": "Battle rewards %s." % reward_summary if reward_summary != "" else "",
 			"reward_summary": "Rewards: %s." % reward_detail if reward_detail != "" else "",
+			"artifact_summary": String(artifact_salvage.get("message", "")),
 			"pressure_summary": String(front_result.get("summary", "")),
 			"recovery_summary": commander_aftermath,
 			"logistics_summary": delivery_summary,
@@ -6358,6 +6361,68 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "victory", "message": final_message}
+
+static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "reason": "no_active_battle"}
+	var commander_source = session.battle.get("player_commander_source", {})
+	if not (commander_source is Dictionary) or String(commander_source.get("type", "")) != "active_hero":
+		return {"ok": false, "reason": "ineligible_commander"}
+	var encounter := _current_battle_encounter_placement(session)
+	var source_record = encounter.get("artifact_source_context", {})
+	if not (source_record is Dictionary) or source_record.is_empty():
+		return {"ok": false, "reason": "source_not_opted_in"}
+	var encounter_key := String(session.battle.get("resolved_key", encounter.get("placement_id", ""))).strip_edges()
+	if encounter_key == "":
+		return {"ok": false, "reason": "missing_source_key"}
+	var source_key := "%s:%s:battle_salvage" % [session.scenario_id, encounter_key]
+	var raw_claims = session.flags.get("artifact_source_claims", {})
+	var claims: Dictionary = raw_claims if raw_claims is Dictionary else {}
+	if claims.has(source_key):
+		return {"ok": false, "reason": "already_claimed", "duplicate": true, "source_key": source_key}
+
+	var excluded_artifact_ids := ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary) or bool(node_value.get("collected", false)):
+			continue
+		var reserved_artifact_id := String(node_value.get("artifact_id", "")).strip_edges()
+		if reserved_artifact_id != "" and reserved_artifact_id not in excluded_artifact_ids:
+			excluded_artifact_ids.append(reserved_artifact_id)
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var faction_id := String(scenario.get("player_faction_id", ""))
+	var selection := ArtifactRulesScript.select_live_source_reward(
+		"battle_salvage",
+		source_record,
+		source_key,
+		faction_id,
+		excluded_artifact_ids
+	)
+	if not bool(selection.get("ok", false)):
+		return selection
+	var encounter_name := String(session.battle.get("encounter_name", encounter.get("placement_id", "the enemy host")))
+	var claim := OverworldRulesScript._apply_artifact_claim(
+		session,
+		String(selection.get("artifact_id", "")),
+		"Salvaged after defeating %s" % encounter_name,
+		true
+	)
+	selection["claim"] = claim
+	selection["applied"] = bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false))
+	selection["message"] = String(claim.get("message", ""))
+	if not bool(selection.get("applied", false)):
+		return selection
+	claims[source_key] = {
+		"artifact_id": String(selection.get("artifact_id", "")),
+		"table_id": String(selection.get("table_id", "")),
+		"source_key": source_key,
+		"encounter_id": String(encounter.get("encounter_id", session.battle.get("encounter_id", ""))),
+		"placement_id": encounter_key,
+		"claimed_day": session.day,
+		"claimed_by": "player",
+		"claimed_by_faction_id": faction_id,
+	}
+	session.flags["artifact_source_claims"] = claims
+	return selection
 
 static func _finalize_player_battle_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
