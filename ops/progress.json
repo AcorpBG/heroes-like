@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Thornwake dwelling artifact reward path through Rootwatch Hollow and Greenbranch Copse for eligible player, direct AI, and route AI claims while preserving recruits, persistent control, provenance, faction gating, public events, and save version 9. Overall release work remains active.",
+  "currentNotes": "Completed one-time Embercourt and Brasshollow artifact commissions through existing town buildings and the compact gear lane, with exact common-resource payment, faction eligibility, town provenance, auto-equip, and save version 9 continuity. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "artifact-dwelling-reward-execution-10184",
-  "currentSliceId": "artifact-dwelling-reward-execution-10184",
-  "currentSliceNotes": "Completed: Rootwatch Hollow and Greenbranch Copse now execute the dwelling support table for eligible Thornwake player and AI claims with recruits, persistent control, one-time provenance, route pickup, faction gating, public events, and save version 9 preserved.",
+  "currentSlice": "artifact-town-commission-service-10184",
+  "currentSliceId": "artifact-town-commission-service-10184",
+  "currentSliceNotes": "Lockhouse Tally and Scalehouse now provide validated one-time player artifact commissions with exact common-resource payment, faction gating, auto-equip, existing compact town UI, persisted provenance, and save version 9 continuity.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Dwelling Reward Execution",
-  "currentSliceUpdatedAt": "2026-08-02T21:39:36Z",
+  "currentSliceTitle": "Artifact Town Commission Service",
+  "currentSliceUpdatedAt": "2026-08-02T22:01:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65582,6 +65582,101 @@
         "status": "passed",
         "updatedAt": "2026-08-02T21:39:36Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_town_commission_service_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_source_reward_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/artifact_equip_runtime_effects_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/buildings.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Lockhouse Tally and Scalehouse opt into the live town artifact table; eligible Embercourt and Brasshollow player towns expose one compact commission action after the building is constructed; commissioning spends authored common resources, grants and auto-equips the faction-mapped artifact, records one-time town table/source/owner/day provenance, survives save version 9 resume, and cannot charge or reward again; ineligible factions and unbuilt services expose no claim; existing artifact management and town UI paths remain intact; focused and broad regressions pass.",
+      "id": "artifact-town-commission-service-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/buildings.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/TownRules.gd",
+        "tests/artifact_town_commission_service_report.gd",
+        "tests/artifact_town_commission_service_report.tscn",
+        "tests/artifact_source_reward_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "activating randomized pickup, campaign grants, markets, or broad random artifact drops",
+        "adding strategic-AI artifact purchasing or valuation",
+        "using rare resources for commissions or changing artifact bonuses",
+        "changing expedition save version or redesigning the town shell",
+        "Native RMG changes or claiming artifact-system or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md artifact runtime follow-ups and docs/artifact-system-expansion-foundation.md town-service rules",
+      "purpose": "Turn the authored town source table into a real player economy and equipment decision through existing town buildings and artifact controls.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "completedAt": "2026-08-02T22:01:16Z",
+      "evidence": {
+        "artifacts": [
+          "content/artifacts.json",
+          "content/buildings.json",
+          "scripts/core/ArtifactRules.gd",
+          "scripts/core/OverworldRules.gd",
+          "scripts/core/TownRules.gd",
+          "tests/artifact_town_commission_service_report.gd",
+          "tests/artifact_town_commission_service_report.tscn",
+          "tests/artifact_source_reward_report.gd",
+          "tests/validate_repo.py"
+        ],
+        "finding": "Lockhouse Tally and Scalehouse expose one-time faction-mapped commissions only after construction. Successful commissions spend exact common resources, auto-equip the artifact, and persist town provenance through save version 9; repeated, unaffordable, unbuilt, and faction-ineligible attempts do not charge or reward.",
+        "metrics": {
+          "eligible_faction_case_count": 2,
+          "live_artifact_source_table_count": 5,
+          "save_resume_case_count": 1,
+          "unique_town_building_payoff_case_count": 165,
+          "unaffordable_no_mutation_case_count": 1,
+          "ineligible_no_mutation_case_count": 1,
+          "save_version": 9
+        }
+      },
+      "startedAt": "2026-08-02T21:44:51Z",
+      "status": "completed",
+      "title": "Artifact Town Commission Service",
+      "updatedAt": "2026-08-02T22:01:16Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/artifact_town_commission_service_report.tscn",
+          "godot4 --headless --path . tests/artifact_source_reward_report.tscn",
+          "godot4 --headless --path . tests/artifact_guarded_site_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_shrine_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_dwelling_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_battle_salvage_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_equip_runtime_effects_report.tscn",
+          "godot4 --headless --path . tests/artifact_set_runtime_effects_report.tscn",
+          "godot4 --headless --path . tests/town_unique_building_runtime_payoff_report.tscn",
+          "godot4 --headless --path . tests/town_build_per_town_turn_limit_report.tscn",
+          "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty content/artifacts.json content/buildings.json ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-02T22:01:16Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65591,7 +65686,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and the still-inactive artifact pickup and town-service source paths.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and the still-inactive artifact pickup source path.",
   "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed Native RMG matrix or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
@@ -66023,7 +66118,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "guarded_site_artifact_reward_execution_completed_overall_release_in_progress",
+  "result": "artifact_town_commission_service_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66124,9 +66219,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Thornwake dwelling artifact rewards now execute through Rootwatch Hollow and Greenbranch Copse for eligible player and AI claims with recruits, control, provenance, faction gating, public events, and save continuity preserved. Pickup, town-service, strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. One-time Embercourt and Brasshollow town artifact commissions now execute through existing buildings, common-resource economy state, compact artifact controls, and save-backed town provenance. Pickup randomization, strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T21:39:36Z",
+  "updatedAt": "2026-08-02T22:01:16Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

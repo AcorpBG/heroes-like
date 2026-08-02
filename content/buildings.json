@@ -1862,6 +1862,31 @@
       },
       "content_status": "six_faction_town_breadth_parity",
       "faction_id": "faction_brasshollow",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_brasshollow_scalehouse",
+        "building_id": "building_brasshollow_scalehouse",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_town_landmark_services",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "service_cost": {
+          "gold": 1400,
+          "ore": 2
+        },
+        "metadata_only": false
+      },
+      "runtime_boundary": {
+        "status": "town_artifact_service_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      },
       "requires": [
         "building_town_hall"
       ],
@@ -2766,6 +2791,31 @@
       },
       "content_status": "six_faction_unique_town_parity",
       "faction_id": "faction_embercourt",
+      "family": "repeatable_service",
+      "artifact_reward_contract": {
+        "contract_id": "artifact_reward_contract_embercourt_lockhouse_tally",
+        "building_id": "building_embercourt_lockhouse_tally",
+        "source_tag": "town",
+        "artifact_reward_table_id": "artifact_source_town_landmark_services",
+        "reward_categories": [
+          "town_support",
+          "artifact"
+        ],
+        "reward_tier": "standard",
+        "one_time_reward": true,
+        "service_cost": {
+          "gold": 1200,
+          "wood": 1
+        },
+        "metadata_only": false
+      },
+      "runtime_boundary": {
+        "status": "town_artifact_service_live",
+        "artifact_reward_execution": true,
+        "save_payload_required": false,
+        "ai_valuation_behavior": false,
+        "rare_resource_activation": false
+      },
       "requires": [
         "building_town_hall"
       ],
