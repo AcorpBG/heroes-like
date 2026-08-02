@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed live guarded-site artifact rewards on the two Ninefold vaults for both player and strategic-AI commanders, with linked guard enforcement, deterministic source selection, provenance, and save continuity. Overall release work remains active.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "artifact-guarded-site-reward-execution-10184",
-  "currentSliceId": "artifact-guarded-site-reward-execution-10184",
-  "currentSliceNotes": "Barrow Vault and Drowned Reliquary now require live linked guard clearance and grant deterministic one-time artifacts to player or AI commanders, with auto-equip, provenance, empire tracking, and save/resume validated.",
+  "currentNotes": "Completed Bellwake Aurora Battery battle salvage through the live victory workflow with deterministic reward selection, auto-equip, aftermath messaging, one-time provenance, and save continuity. Overall release work remains active.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "artifact-battle-salvage-execution-10184",
+  "currentSliceId": "artifact-battle-salvage-execution-10184",
+  "currentSliceNotes": "Aurora Battery now grants Warcrest Pennon through the real victory path while preserving Black-Sail Compass as a map pickup; aftermath, provenance, save/resume, duplicate rejection, and faction gating are validated.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Guarded-Site Reward Execution",
-  "currentSliceUpdatedAt": "2026-08-02T19:41:01Z",
+  "currentSliceTitle": "Artifact Battle-Salvage Reward Execution",
+  "currentSliceUpdatedAt": "2026-08-02T19:58:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65223,6 +65223,84 @@
         "status": "pass",
         "updatedAt": "2026-08-02T19:41:01Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/artifact_battle_salvage_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_source_reward_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/veilmourn_bellwake_wreck_player_skirmish_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A player victory at Bellwake's Aurora Battery deterministically grants and auto-equips one eligible Veilmourn battle-salvage artifact, reports it in battle aftermath, records one-time source provenance, survives save-version-9 resume, rejects duplicate and faction-ineligible claims, and passes focused and repository validation.",
+      "id": "artifact-battle-salvage-execution-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/artifact_battle_salvage_execution_report.gd",
+        "tests/artifact_battle_salvage_execution_report.tscn",
+        "tests/artifact_source_reward_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "activating pickup, shrine, dwelling, town-service, or additional battle-salvage source tables",
+        "strategic-AI battle-salvage ownership",
+        "new artifact equipment slots or set rules",
+        "save-version changes",
+        "Native RMG generation changes",
+        "release-completion claims"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "project.md artifact progression and PLAN.md production content breadth",
+      "purpose": "Turn Bellwake's authored battle-salvage metadata into a live player acquisition path through the real battle-victory workflow.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "startedAt": "2026-08-02T19:49:08Z",
+      "status": "completed",
+      "title": "Artifact Battle-Salvage Reward Execution",
+      "updatedAt": "2026-08-02T19:58:49Z",
+      "completedAt": "2026-08-02T19:58:49Z",
+      "completionSummary": "Activated only the heavy battle-salvage table and Bellwake Aurora Battery source context. The live player-victory path deterministically grants and auto-equips Warcrest Pennon, reserves Black-Sail Compass for its map node, exposes battle-aftermath text, stores table/source/faction/day provenance, persists through save version 9, and rejects duplicate and faction-ineligible claims.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/artifact_battle_salvage_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_source_reward_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/artifact_equip_runtime_effects_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/veilmourn_bellwake_wreck_player_skirmish_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/artifact_guarded_site_reward_execution_report.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/town_battle_visual_smoke.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/artifacts.json content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_source_table_count": 2,
+          "active_source_tags": ["guarded_site", "battle_salvage"],
+          "battle_salvage_encounter_count": 1,
+          "deterministic_artifact_id": "artifact_warcrest_pennon",
+          "reserved_map_artifact_id": "artifact_black_sail_compass",
+          "player_auto_equip": true,
+          "aftermath_visible": true,
+          "provenance_save_resume": true,
+          "repeat_claim_blocked": true,
+          "faction_ineligible_claim_blocked": true,
+          "save_version": 9
+        },
+        "sliceId": "artifact-battle-salvage-execution-10184",
+        "status": "pass",
+        "updatedAt": "2026-08-02T19:58:49Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65767,7 +65845,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Ninefold Barrow Vault and Drowned Reliquary now execute live guarded-site artifact rewards for player and strategic-AI commanders with guard enforcement, deterministic selection, auto-equip, provenance, and save continuity. Other artifact source tags and broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T19:41:01Z",
+  "updatedAt": "2026-08-02T19:58:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
