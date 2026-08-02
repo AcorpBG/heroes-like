@@ -50,7 +50,7 @@ BUNDLE_SPECS = (
         preset_name="Windows Release",
         export_dir=ROOT / ".artifacts" / "packaging_windows_export_smoke" / "export",
         smoke_report=ROOT / ".artifacts" / "packaging_windows_export_smoke" / "report.json",
-        expected_schema_id="packaging_windows_export_smoke_v1",
+        expected_schema_id="packaging_windows_export_smoke_v2",
         required_files={
             "heroes-like.exe": MIN_BINARY_BYTES,
             "heroes-like.pck": MIN_PCK_BYTES,
@@ -194,7 +194,7 @@ def main() -> int:
             "does_not_claim": [
                 "installer readiness",
                 "clean-machine smoke coverage",
-                "Windows runtime execution",
+                "clean native Windows execution",
                 "code signing",
                 "package signing",
                 "distribution channel metadata",

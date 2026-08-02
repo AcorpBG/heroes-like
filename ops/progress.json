@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the color-cue assist implementation. SettingsService v8 persists Standard or Shape + Palette; assisted mode applies a blue/cyan versus orange semantic palette, battle stack side marks, overworld town pennant shapes, and color-independent move-hex wording while preserving terrain and faction art. Clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete.",
+  "currentNotes": "Completed the Windows packaged-runtime v2 gate. A fresh isolated Wine prefix now boots the exported release executable and proves Godot, Boot/MainMenu resources, the PCK-backed project, and the Windows release GDExtension load without fatal runtime output. Native Windows clean-machine execution, DirectInput/controller validation, hardware graphics/audio, signing, installers, and overall release readiness remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-accessibility-color-cue-assist-10184",
-  "currentSliceId": "settings-accessibility-color-cue-assist-10184",
-  "currentSliceNotes": "Completed. Schema-v8 persistence, live menu selection, shared semantic styling, redundant battle/overworld ownership marks, color-independent tactical wording, 130-percent high-contrast layout, active shells, and exported-PCK persistence all passed.",
+  "currentSlice": "packaging-windows-wine-runtime-smoke-10184",
+  "currentSliceId": "packaging-windows-wine-runtime-smoke-10184",
+  "currentSliceNotes": "Completed. The v2 Windows gate exports PE/PCK/DLL artifacts, boots them in a fresh isolated Wine prefix, observes Godot, Boot, MainMenu, and release DLL markers, rejects fatal runtime output, and preserves explicit native-Windows and DirectInput non-claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility Color Cue Assist",
-  "currentSliceUpdatedAt": "2026-08-02T10:18:21Z",
+  "currentSliceTitle": "Windows Packaged Runtime Smoke",
+  "currentSliceUpdatedAt": "2026-08-02T10:35:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -37209,6 +37209,84 @@
       "startedAt": "2026-05-05T00:00:00Z",
       "status": "completed",
       "title": "Decorative Blocker Sprite Asset Foundation"
+    },
+    {
+      "baselineChecks": [
+        "python3 tests/packaging_windows_export_smoke.py",
+        "python3 tests/packaging_release_bundle_manifest_report.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The Windows Release export launches successfully from a fresh isolated Wine prefix, initializes Godot plus Boot/MainMenu resources, loads the packaged Windows release GDExtension DLL, fails on fatal runtime output, and records the Wine DirectInput workaround and clean-native-Windows non-claims.",
+      "id": "packaging-windows-wine-runtime-smoke-10184",
+      "implementationTargets": [
+        "tests/packaging_windows_export_smoke.py",
+        "tests/packaging_release_bundle_manifest_report.py",
+        "tests/validate_repo.py",
+        "docs/packaging-windows-export-smoke-report.md"
+      ],
+      "nonGoals": [
+        "claiming clean native Windows execution from a Wine run",
+        "DirectInput or controller validation while Wine dinput8 is disabled",
+        "hardware graphics or audio certification in a headless dummy-audio run",
+        "installer, signing, release-channel, or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Catch Windows packaged-runtime, PCK, scene-initialization, and native-DLL failures that static PE and sidecar checks cannot detect.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-windows-export-smoke-report.md"
+      ],
+      "completedAt": "2026-08-02T10:35:47Z",
+      "startedAt": "2026-08-02T10:30:48Z",
+      "status": "completed",
+      "summary": "Completed. The Windows smoke schema v2 now exports and launches the packaged release from a fresh isolated Wine prefix, requires Godot plus Boot/MainMenu and native release DLL loader markers, fails on fatal runtime output, and shuts down its isolated Wine server.",
+      "title": "Windows Packaged Runtime Smoke",
+      "updatedAt": "2026-08-02T10:35:47Z",
+      "validation": {
+        "commands": [
+          "python3 tests/packaging_windows_export_smoke.py",
+          "python3 tests/packaging_linux_export_smoke.py",
+          "python3 tests/packaging_release_bundle_manifest_report.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "schema_id": "packaging_windows_export_smoke_v2",
+          "wine_version": "wine-9.0 (Ubuntu 9.0~repack-4build3)",
+          "wine_prefix_recreated": true,
+          "directinput_override": "dinput8=",
+          "export_returncode": 0,
+          "runtime_returncode": 0,
+          "runtime_timed_out": false,
+          "fatal_export_matches": [],
+          "fatal_runtime_matches": [],
+          "runtime_markers": {
+            "godot_started": true,
+            "boot_scene_loaded": true,
+            "main_menu_loaded": true,
+            "native_dll_loaded": true
+          },
+          "exe_size_bytes": 104539648,
+          "pck_size_bytes": 185227072,
+          "windows_release_dll_size_bytes": 4255232,
+          "windows_runtime_processes_remaining_after_gate": 0,
+          "release_bundle_manifest_platforms": {
+            "linux": true,
+            "windows": true
+          },
+          "remaining_debt": "This is Wine packaged-runtime proof, not clean native Windows execution or DirectInput/controller, hardware graphics/audio, installer, signing, channel, or overall release completion."
+        },
+        "sliceId": "packaging-windows-wine-runtime-smoke-10184",
+        "status": "passed_fresh_prefix_windows_packaged_runtime_and_cross_platform_bundle_manifest",
+        "updatedAt": "2026-08-02T10:35:47Z"
+      }
     },
     {
       "baselineChecks": [

@@ -22,11 +22,16 @@ REPORT_PATH = ARTIFACT_DIR / "report.json"
 EXE_PATH = EXPORT_DIR / "heroes-like.exe"
 PCK_PATH = EXPORT_DIR / "heroes-like.pck"
 REPORT_ID = "PACKAGING_WINDOWS_EXPORT_SMOKE"
-SCHEMA_ID = "packaging_windows_export_smoke_v1"
+SCHEMA_ID = "packaging_windows_export_smoke_v2"
 PRESET_NAME = "Windows Release"
 MIN_EXE_BYTES = 500_000
 MIN_PCK_BYTES = 10_000_000
 EXPORT_TIMEOUT_SECONDS = 360
+RUNTIME_TIMEOUT_SECONDS = 180
+WINE_CLEANUP_TIMEOUT_SECONDS = 30
+WINE_PREFIX = ARTIFACT_DIR / "wine-prefix"
+WINE_BINARY = os.environ.get("WINE", shutil.which("wine") or "")
+WINESERVER_BINARY = shutil.which("wineserver") or ""
 REQUIRED_WINDOWS_DLLS = (
     "aurelion_map_persistence.windows.template_release.x86_64.dll",
 )
@@ -40,6 +45,24 @@ FATAL_EXPORT_PATTERNS = (
     "No export template",
     "Template file not found",
 )
+FATAL_RUNTIME_PATTERNS = (
+    "SCRIPT ERROR",
+    "Parse Error",
+    "ERROR:",
+    "Failed loading resource",
+    "No loader found",
+    "Cannot open file",
+    "GDExtension library not found",
+    "Failed to open GDExtension library",
+    "Error loading GDExtension",
+    "Unhandled page fault",
+)
+RUNTIME_MARKERS = {
+    "godot_started": "Godot Engine v",
+    "boot_scene_loaded": "Boot.scn",
+    "main_menu_loaded": "MainMenu.scn",
+    "native_dll_loaded": REQUIRED_WINDOWS_DLLS[0],
+}
 
 
 def utc_now() -> str:
@@ -53,23 +76,39 @@ def relative(path: Path) -> str:
         return str(path)
 
 
-def output_summary(output: str) -> dict:
+def output_summary(
+    output: str,
+    fatal_patterns: tuple[str, ...] = FATAL_EXPORT_PATTERNS,
+    markers: dict[str, str] | None = None,
+) -> dict:
     lines = output.splitlines()
     error_like = [line for line in lines if "ERROR:" in line or "SCRIPT ERROR" in line or "Parse Error" in line]
-    return {
+    summary = {
         "line_count": len(lines),
         "warning_count": sum(1 for line in lines if "WARNING:" in line),
         "error_like_count": len(error_like),
-        "fatal_pattern_matches": [pattern for pattern in FATAL_EXPORT_PATTERNS if pattern in output],
+        "fatal_pattern_matches": [pattern for pattern in fatal_patterns if pattern in output],
         "head": lines[:20],
         "tail": lines[-80:],
         "error_like_tail": error_like[-20:],
     }
+    if markers:
+        summary["markers"] = {name: token in output for name, token in markers.items()}
+    return summary
 
 
-def run_command(args: list[str], timeout_seconds: int) -> dict:
+def run_command(
+    args: list[str],
+    timeout_seconds: int,
+    *,
+    env_overrides: dict[str, str] | None = None,
+    fatal_patterns: tuple[str, ...] = FATAL_EXPORT_PATTERNS,
+    markers: dict[str, str] | None = None,
+) -> dict:
     env = os.environ.copy()
     env["GODOT_SILENCE_ROOT_WARNING"] = "1"
+    if env_overrides:
+        env.update(env_overrides)
     started = utc_now()
     try:
         completed = subprocess.run(
@@ -91,7 +130,18 @@ def run_command(args: list[str], timeout_seconds: int) -> dict:
             "timeout_seconds": timeout_seconds,
             "timed_out": False,
             "returncode": completed.returncode,
-            "output_summary": output_summary(output),
+            "output_summary": output_summary(output, fatal_patterns, markers),
+        }
+    except FileNotFoundError as exc:
+        return {
+            "args": args,
+            "started_at": started,
+            "finished_at": utc_now(),
+            "timeout_seconds": timeout_seconds,
+            "timed_out": False,
+            "returncode": None,
+            "launch_error": str(exc),
+            "output_summary": output_summary(str(exc), fatal_patterns, markers),
         }
     except subprocess.TimeoutExpired as exc:
         output = ""
@@ -106,8 +156,21 @@ def run_command(args: list[str], timeout_seconds: int) -> dict:
             "timeout_seconds": timeout_seconds,
             "timed_out": True,
             "returncode": None,
-            "output_summary": output_summary(output),
+            "output_summary": output_summary(output, fatal_patterns, markers),
         }
+
+
+def unavailable_runtime_result(reason: str) -> dict:
+    return {
+        "args": [],
+        "started_at": utc_now(),
+        "finished_at": utc_now(),
+        "timeout_seconds": RUNTIME_TIMEOUT_SECONDS,
+        "timed_out": False,
+        "returncode": None,
+        "launch_error": reason,
+        "output_summary": output_summary(reason, FATAL_RUNTIME_PATTERNS, RUNTIME_MARKERS),
+    }
 
 
 def file_summary(path: Path, min_size_bytes: int) -> dict:
@@ -183,6 +246,8 @@ def main() -> int:
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
     if REPORT_PATH.exists():
         REPORT_PATH.unlink()
+    if WINE_PREFIX.exists():
+        shutil.rmtree(WINE_PREFIX)
 
     export_command = [
         "godot",
@@ -199,7 +264,7 @@ def main() -> int:
     header = exe_header_summary()
     dlls = dll_summary()
     fatal_matches = list(export_result.get("output_summary", {}).get("fatal_pattern_matches", []))
-    ok = (
+    export_ok = (
         export_result["returncode"] == 0
         and not export_result["timed_out"]
         and not fatal_matches
@@ -211,6 +276,63 @@ def main() -> int:
         and bool(pck["large_enough"])
         and bool(dlls["all_exported"])
     )
+
+    wine_version_result = (
+        run_command([WINE_BINARY, "--version"], 30, env_overrides={"WINEDEBUG": "-all"})
+        if WINE_BINARY
+        else unavailable_runtime_result("wine executable not found")
+    )
+    runtime_env = {
+        "WINEPREFIX": str(WINE_PREFIX),
+        "WINEARCH": "win64",
+        "WINEDEBUG": "-all,+loaddll",
+        # Wine 9's builtin DirectInput crashes this Godot executable before project startup.
+        "WINEDLLOVERRIDES": "dinput8=",
+    }
+    runtime_command = [
+        WINE_BINARY,
+        str(EXE_PATH),
+        "--headless",
+        "--audio-driver",
+        "Dummy",
+        "--rendering-method",
+        "gl_compatibility",
+        "--quit-after",
+        "30",
+        "--verbose",
+    ]
+    runtime_result = (
+        run_command(
+            runtime_command,
+            RUNTIME_TIMEOUT_SECONDS,
+            env_overrides=runtime_env,
+            fatal_patterns=FATAL_RUNTIME_PATTERNS,
+            markers=RUNTIME_MARKERS,
+        )
+        if export_ok and WINE_BINARY
+        else unavailable_runtime_result(
+            "Windows export failed before runtime launch" if not export_ok else "wine executable not found"
+        )
+    )
+    cleanup_result = (
+        run_command(
+            [WINESERVER_BINARY, "-k"],
+            WINE_CLEANUP_TIMEOUT_SECONDS,
+            env_overrides={"WINEPREFIX": str(WINE_PREFIX), "WINEDEBUG": "-all"},
+        )
+        if WINESERVER_BINARY and WINE_PREFIX.exists()
+        else None
+    )
+    runtime_summary = runtime_result.get("output_summary", {})
+    runtime_markers = runtime_summary.get("markers", {})
+    runtime_fatal_matches = list(runtime_summary.get("fatal_pattern_matches", []))
+    runtime_ok = (
+        runtime_result["returncode"] == 0
+        and not runtime_result["timed_out"]
+        and not runtime_fatal_matches
+        and all(runtime_markers.get(name, False) for name in RUNTIME_MARKERS)
+    )
+    ok = export_ok and runtime_ok
 
     report = {
         "schema_id": SCHEMA_ID,
@@ -224,10 +346,13 @@ def main() -> int:
                 "The Windows Release preset can export a real executable artifact in this local Godot environment.",
                 "The exported executable has a Windows MZ/PE header.",
                 "The sidecar PCK and required Windows native GDExtension DLLs are present beside the executable.",
+                "The packaged executable starts under Wine in a fresh isolated prefix and initializes Godot plus Boot and MainMenu resources.",
+                "Wine loader output proves the packaged Windows release GDExtension DLL is loaded during startup.",
             ],
             "does_not_claim": [
-                "Windows runtime execution",
-                "Wine runtime execution",
+                "clean native Windows execution",
+                "DirectInput or controller behavior because Wine dinput8 is disabled for this harness",
+                "hardware graphics or audio behavior because the run is headless with dummy audio",
                 "installer readiness",
                 "clean-machine smoke coverage",
                 "release readiness",
@@ -241,6 +366,21 @@ def main() -> int:
         "artifact_listing": artifact_listing(),
         "fatal_export_patterns": list(FATAL_EXPORT_PATTERNS),
         "fatal_export_matches": fatal_matches,
+        "windows_runtime": {
+            "runner": "wine",
+            "wine_binary": WINE_BINARY,
+            "wine_version": wine_version_result,
+            "fresh_prefix": relative(WINE_PREFIX),
+            "directinput_override": "dinput8=",
+            "headless": True,
+            "dummy_audio": True,
+            "result": runtime_result,
+            "markers": runtime_markers,
+            "fatal_runtime_patterns": list(FATAL_RUNTIME_PATTERNS),
+            "fatal_runtime_matches": runtime_fatal_matches,
+            "cleanup": cleanup_result,
+            "ok": runtime_ok,
+        },
     }
     REPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     summary = {
@@ -252,6 +392,9 @@ def main() -> int:
         "pe_header": header.get("pe_header", False),
         "windows_dlls_exported": dlls["all_exported"],
         "fatal_export_matches": fatal_matches,
+        "wine_runtime_returncode": runtime_result["returncode"],
+        "wine_runtime_markers": runtime_markers,
+        "fatal_runtime_matches": runtime_fatal_matches,
         "report": relative(REPORT_PATH),
     }
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")
