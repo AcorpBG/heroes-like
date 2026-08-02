@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The Music volume runtime defect is fixed. SettingsService now owns an independent Music bus routed through Master, applies the persisted nonzero gain immediately, and preserves zero-volume mute behavior. The packaged PCK smoke proves 42% maps to the expected -7.535 dB. Broader Phase 5/6 product and release work remains open.",
+  "currentNotes": "The independent Effects mix is complete. Settings version 3 persists the player-selected percentage, the Effects bus routes through Master, and UI, battle, and ambient playback all use it. Direct mute probes, rendered 1280x720 large-text settings coverage, and the exported PCK smoke pass. Broader Phase 5/6 product and release work remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-music-volume-runtime-bus-10184",
-  "currentSliceId": "settings-music-volume-runtime-bus-10184",
-  "currentSliceNotes": "Completed. Music playback now always targets a runtime-owned Music bus, nonzero slider values apply independent gain through that bus, zero still mutes, and both direct and PCK-launched settings persistence paths pass.",
+  "currentSlice": "settings-effects-volume-runtime-bus-10184",
+  "currentSliceId": "settings-effects-volume-runtime-bus-10184",
+  "currentSliceNotes": "Completed. The settings board exposes Master, Music, and Effects sliders; Effects independently controls UI cues, battle impacts, and overworld ambience, persists through version-3 config, and remains usable at 1280x720 with large UI text.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Music Volume Runtime Bus",
-  "currentSliceUpdatedAt": "2026-08-02T08:22:07Z",
+  "currentSliceTitle": "Effects Volume Runtime Bus",
+  "currentSliceUpdatedAt": "2026-08-02T08:41:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56331,6 +56331,99 @@
         "sliceId": "settings-music-volume-runtime-bus-10184",
         "status": "passed_runtime_and_packaged_music_gain",
         "updatedAt": "2026-08-02T08:22:07Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/ui_audio_cue_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_ambient_audio_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/ui_sfx_manifest.json content/ambient_sfx_manifest.json content/battle_sfx_manifest.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T08:41:10Z",
+      "completionCriteria": "The settings screen persists an Effects percentage, SettingsService applies it to an Effects bus routed through Master, UI/battle/ambient playback targets that bus, zero mutes all three effects domains, and direct plus packaged validations pass.",
+      "id": "settings-effects-volume-runtime-bus-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scripts/autoload/UiAudio.gd",
+        "scripts/autoload/AmbientAudio.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "content/ui_sfx_manifest.json",
+        "content/ambient_sfx_manifest.json",
+        "content/battle_sfx_manifest.json",
+        "existing settings and audio runtime validation"
+      ],
+      "nonGoals": [
+        "changing authored audio assets or cue composition",
+        "adding per-cue or per-domain sliders beyond the single Effects mix",
+        "claiming final sound design or the broad production-release baseline complete"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Give players independent control over live UI, battle, and ambient effects without muting music.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T08:25:03Z",
+      "status": "completed",
+      "summary": "Completed. Settings version 3 persists Effects volume, the settings board exposes the live slider, and UI, battle, and ambient playback route through an Effects bus under Master. Zero-volume probes mute all three domains; direct, rendered, repository, and exported-PCK validations pass.",
+      "title": "Effects Volume Runtime Bus",
+      "updatedAt": "2026-08-02T08:41:10Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed)",
+          "python3 tests/packaged_settings_persistence_smoke.py (passed; Linux Release PCK exported and scene booted through --main-pack)",
+          "godot4 --headless --path . --scene res://tests/ui_audio_cue_runtime_report.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/overworld_ambient_audio_runtime_report.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_event_animation_state_report.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed)",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn (passed at 1280x720 with large UI text; capture inspected)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/ui_sfx_manifest.json content/ambient_sfx_manifest.json content/battle_sfx_manifest.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "applied_effects_bus": {
+            "name": "Effects",
+            "send": "Master",
+            "configured_volume_percent": 48,
+            "expected_volume_db": -6.37517525248826,
+            "applied_volume_db": -6.37517547607422
+          },
+          "runtime_domains": {
+            "ui_audio_bus": "Effects",
+            "ui_record_count": 8,
+            "ui_zero_volume_muted": true,
+            "ambient_audio_bus": "Effects",
+            "ambient_record_count": 3,
+            "ambient_zero_volume_muted": true,
+            "battle_audio_bus": "Effects",
+            "battle_zero_volume_muted": true
+          },
+          "packaged_smoke": {
+            "ok": true,
+            "export_returncode": 0,
+            "scene_returncode": 0,
+            "pack_size_bytes": 185196960,
+            "settings_version": 3,
+            "restored_original_settings": true
+          },
+          "visual_check": "The 1280x720 large-UI-text settings capture keeps Master, Music, Effects, Large Text, and Reduce Motion controls visible without overlap or clipping.",
+          "player_facing_change": "Players can now balance UI, battle, and ambient effects independently from music while Master remains the global gain.",
+          "remaining_debt": "Final audio assets, the parent packaging/settings/accessibility/performance baseline, and overall release remain incomplete."
+        },
+        "sliceId": "settings-effects-volume-runtime-bus-10184",
+        "status": "passed_runtime_rendered_and_packaged_effects_mix",
+        "updatedAt": "2026-08-02T08:41:10Z"
       }
     },
     {

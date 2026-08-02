@@ -35,6 +35,15 @@ func _run() -> void:
 	var day_record: Dictionary = AmbientAudio.sync_overworld_session(session, "validation_day_pulse")
 	var direct_summary := AmbientAudio.validation_summary()
 	AmbientAudio.validation_reset()
+	var original_effects_volume := SettingsService.effects_volume_percent()
+	SettingsService.settings["audio"]["effects_volume_percent"] = 0
+	SettingsService.apply_settings()
+	var muted_record: Dictionary = AmbientAudio.sync_overworld_session(session, "validation_effects_muted")
+	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.apply_settings()
+	AmbientAudio.validation_reset()
+	_report["muted_record"] = muted_record
+	_expect(bool(muted_record.get("muted", false)) and not bool(muted_record.get("played", true)), "Zero Effects volume must mute ambient playback: %s" % muted_record)
 
 	SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
@@ -69,7 +78,7 @@ func _validate_record(label: String, record: Dictionary, expected_changed: bool,
 	_expect_equal("%s threat" % label, String(record.get("threat_level", "")), expected_threat)
 	_expect(String(record.get("terrain_id", "")) != "", "%s record must expose terrain id: %s" % [label, record])
 	_expect(int(record.get("layer_count", 0)) >= 1, "%s record must expose at least one ambient layer: %s" % [label, record])
-	_expect(String(record.get("audio_bus", "")) == "Master", "%s record must route through Master: %s" % [label, record])
+	_expect(String(record.get("audio_bus", "")) == "Effects", "%s record must route through Effects: %s" % [label, record])
 	_expect(String(record.get("sfx_manifest_path", "")) == "res://content/ambient_sfx_manifest.json", "%s record must expose ambient SFX manifest path: %s" % [label, record])
 	_expect(bool(record.get("sfx_manifest_loaded", false)), "%s record must load ambient SFX manifest: %s" % [label, record])
 	for layer in record.get("layers", []):
@@ -85,7 +94,7 @@ func _validate_record(label: String, record: Dictionary, expected_changed: bool,
 func _validate_direct_summary(summary: Dictionary) -> void:
 	_expect_equal("direct schema", String(summary.get("schema", "")), "overworld_ambient_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 3, "Ambient direct summary must keep changed records: %s" % summary)
-	_expect(String(summary.get("audio_bus", "")) == "Master", "Ambient direct summary must route through Master: %s" % summary)
+	_expect(String(summary.get("audio_bus", "")) == "Effects", "Ambient direct summary must route through Effects: %s" % summary)
 	_expect(String(summary.get("sfx_manifest_path", "")) == "res://content/ambient_sfx_manifest.json", "Ambient direct summary must expose the ambient SFX manifest path: %s" % summary)
 	_expect(bool(summary.get("sfx_manifest_loaded", false)), "Ambient direct summary must load the ambient SFX manifest: %s" % summary)
 	_expect(int(summary.get("max_active_players", 0)) == AmbientAudio.MAX_ACTIVE_PLAYERS, "Ambient direct summary must expose player cap: %s" % summary)
@@ -98,7 +107,7 @@ func _validate_direct_summary(summary: Dictionary) -> void:
 func _validate_shell_summary(summary: Dictionary, snapshot: Dictionary) -> void:
 	_expect_equal("shell schema", String(summary.get("schema", "")), "overworld_ambient_audio_runtime_v1")
 	_expect(int(summary.get("record_count", 0)) >= 1, "OverworldShell must sync AmbientAudio at runtime: %s" % summary)
-	_expect(String(summary.get("audio_bus", "")) == "Master", "Shell ambient summary must route through Master: %s" % summary)
+	_expect(String(summary.get("audio_bus", "")) == "Effects", "Shell ambient summary must route through Effects: %s" % summary)
 	var snapshot_summary: Dictionary = snapshot.get("ambient_audio", {}) if snapshot.get("ambient_audio", {}) is Dictionary else {}
 	_expect_equal("snapshot ambient schema", String(snapshot_summary.get("schema", "")), "overworld_ambient_audio_runtime_v1")
 	_expect(int(snapshot_summary.get("record_count", 0)) >= 1, "Overworld validation snapshot must expose ambient audio summary: %s" % snapshot_summary)

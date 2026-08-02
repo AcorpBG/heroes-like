@@ -508,6 +508,11 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	var settings_snapshot: Dictionary = shell.call("validation_snapshot")
+	var effects_slider = shell.get_node_or_null("%EffectsVolumeSlider")
+	if not (effects_slider is HSlider):
+		push_error("Main menu smoke: settings board is missing the Effects volume slider.")
+		get_tree().quit(1)
+		return false
 	var resolution_ids := _resolution_ids_from_snapshot(settings_snapshot)
 	if not _assert_text_contains_all(
 		"Main menu settings handoff cue",
@@ -532,7 +537,7 @@ func _run_main_menu_smoke() -> bool:
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900"):
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		push_error("Main menu smoke: settings summary did not reflect selected 1600x900 resolution: %s." % settings_snapshot)
@@ -548,6 +553,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
+			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
@@ -565,6 +571,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("close_stage_dock_tooltip", "")),
 			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
+			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("large_text_tooltip", "")),
 		]
 	):

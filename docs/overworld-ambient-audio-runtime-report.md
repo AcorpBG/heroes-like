@@ -8,7 +8,7 @@ Runtime asset follow-up: `overworld-ambient-runtime-sfx-asset-layer-20260524-101
 
 Implemented behavior:
 - `scripts/autoload/AmbientAudio.gd` is registered as the `AmbientAudio` autoload in `project.godot`.
-- The service prefers committed original WAV ambience from `content/ambient_sfx_manifest.json` under `art/audio/runtime/ambient/` on the `Master` bus, with bounded generated `AudioStreamGenerator` fallback.
+- The service prefers committed original WAV ambience from `content/ambient_sfx_manifest.json` under `art/audio/runtime/ambient/` on the `Effects` bus routed through `Master`, with bounded generated `AudioStreamGenerator` fallback.
 - `AmbientAudio.sync_overworld_session(...)` derives layers from live session terrain, dominant map terrain, day, hero position, and enemy pressure.
 - Terrain layers use `overworld_ambient_<terrain>` cue ids, pressure adds `overworld_ambient_pressure`, and later days add `overworld_ambient_day_pulse`.
 - The service keeps signature-based restart behavior so identical context does not restart the ambient segment every refresh.
@@ -22,7 +22,7 @@ Validation evidence:
 - `overworld_ambient_day_pulse`
 - `AmbientAudio.sync_overworld_session`
 - `OverworldShell.validation_ambient_audio_summary`
-- `Master`
+- `Effects` routed through `Master`
 - `content/ambient_sfx_manifest.json`
 - `art/audio/runtime/ambient/`
 

@@ -95,6 +95,8 @@ const TAB_HELP_TOPIC := {
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
 @onready var _music_volume_value: Label = %MusicVolumeValue
+@onready var _effects_volume_slider: HSlider = %EffectsVolumeSlider
+@onready var _effects_volume_value: Label = %EffectsVolumeValue
 @onready var _large_text_toggle: CheckButton = %LargeTextToggle
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
 @onready var _save_list: ItemList = %SaveList
@@ -492,6 +494,12 @@ func _on_music_volume_changed(value: float) -> void:
 	SettingsService.set_music_volume_percent(int(round(value)))
 	_refresh_settings_panel()
 
+func _on_effects_volume_changed(value: float) -> void:
+	if _syncing_settings_ui:
+		return
+	SettingsService.set_effects_volume_percent(int(round(value)))
+	_refresh_settings_panel()
+
 func _on_large_text_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
@@ -841,6 +849,9 @@ func _refresh_settings_panel() -> void:
 	_music_volume_slider.value = SettingsService.music_volume_percent()
 	_music_volume_slider.tooltip_text = "Music volume applies immediately.\n%s" % settings_check
 	_music_volume_value.text = "%d%%" % SettingsService.music_volume_percent()
+	_effects_volume_slider.value = SettingsService.effects_volume_percent()
+	_effects_volume_slider.tooltip_text = "UI, battle, and ambient effects volume applies immediately.\n%s" % settings_check
+	_effects_volume_value.text = "%d%%" % SettingsService.effects_volume_percent()
 	_large_text_toggle.button_pressed = SettingsService.large_ui_text_enabled()
 	_large_text_toggle.tooltip_text = "Large UI text applies immediately.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
@@ -1922,6 +1933,7 @@ func validation_snapshot() -> Dictionary:
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
+		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
 		"large_text_tooltip": _large_text_toggle.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"summary": _summary_label.text,
@@ -2509,6 +2521,7 @@ func _apply_visual_theme() -> void:
 		"SettingsPanel": "smoke",
 		"MasterVolumePanel": "teal",
 		"MusicVolumePanel": "blue",
+		"EffectsVolumePanel": "earth",
 	}
 	for panel in find_children("*", "PanelContainer", true, false):
 		if panel is PanelContainer and panel.name.ends_with("Panel"):
@@ -2544,7 +2557,7 @@ func _apply_visual_theme() -> void:
 	for toggle in [_large_text_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
-	for slider in [_master_volume_slider, _music_volume_slider]:
+	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:
 		FrontierVisualKit.apply_range(slider, "gold")
 
 	for label in find_children("*", "Label", true, false):
@@ -2583,3 +2596,4 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)
 	FrontierVisualKit.apply_label(_master_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_music_volume_value, "gold", 13)
+	FrontierVisualKit.apply_label(_effects_volume_value, "gold", 13)

@@ -480,6 +480,12 @@ func _validate_board_runtime_summary() -> void:
 	await get_tree().process_frame
 	await get_tree().create_timer(0.16).timeout
 	var summary: Dictionary = view.validation_unit_art_summary()
+	var original_effects_volume := SettingsService.effects_volume_percent()
+	SettingsService.settings["audio"]["effects_volume_percent"] = 0
+	SettingsService.apply_settings()
+	var muted_audio_summary: Dictionary = view.validation_audio_playback_summary()
+	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.apply_settings()
 	view.queue_free()
 	await get_tree().process_frame
 	var observed_states := {}
@@ -491,6 +497,8 @@ func _validate_board_runtime_summary() -> void:
 	var cue_playback := _validate_active_cue_dispatch(summary)
 	var vfx_playback := _validate_active_vfx_presentation(summary)
 	var audio_playback := _validate_active_audio_playback(summary)
+	if not bool(muted_audio_summary.get("muted", false)):
+		_error("Zero Effects volume must mute battle audio playback: %s" % muted_audio_summary)
 	var camera_playback := _validate_active_camera_presentation(summary)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
 	_report["cases"]["board_cue_dispatch"] = {
@@ -501,6 +509,7 @@ func _validate_board_runtime_summary() -> void:
 	}
 	_report["cases"]["board_audio_playback"] = {
 		"active_audio_playback": audio_playback,
+		"muted_audio_playback": muted_audio_summary,
 	}
 	_report["cases"]["board_camera_presentation"] = {
 		"active_camera_playback": camera_playback,
@@ -635,8 +644,8 @@ func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
 		_error("Target audio cue should load a committed runtime SFX asset after sequencing delay: %s" % enemy_audio)
 	if bool(enemy_audio.get("scheduled", false)) and int(enemy_audio.get("sequence_delay_msec", 0)) <= 0:
 		_error("Scheduled target audio cue should carry a positive sequence delay: %s" % enemy_audio)
-	if String(audio_playback.get("audio_bus", "")) != "Master":
-		_error("Audio playback should route battle cues through Master bus: %s" % audio_playback)
+	if String(audio_playback.get("audio_bus", "")) != "Effects":
+		_error("Audio playback should route battle cues through Effects bus: %s" % audio_playback)
 	if String(audio_playback.get("sfx_manifest_path", "")) != "res://content/battle_sfx_manifest.json":
 		_error("Audio playback did not report the battle SFX manifest path: %s" % audio_playback)
 	return audio_playback

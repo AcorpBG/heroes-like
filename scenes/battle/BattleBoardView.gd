@@ -72,7 +72,7 @@ const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
 const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
 const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
 const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
-const BATTLE_AUDIO_BUS := "Master"
+const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_CAMERA_MAX_OFFSET_PX := 8.0
 
@@ -615,7 +615,7 @@ func validation_audio_playback_summary() -> Dictionary:
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"sfx_manifest_path": BATTLE_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _battle_sfx_manifest_loaded,
-		"muted": SettingsService.master_volume_percent() <= 0,
+		"muted": SettingsService.effects_audio_muted(),
 		"active_records": records,
 	}
 
@@ -2171,7 +2171,7 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 			"expires_at_msec": int(cue_record.get("expires_at_msec", started_at + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 			"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
 			"audio_bus": BATTLE_AUDIO_BUS,
-			"muted": SettingsService.master_volume_percent() <= 0,
+			"muted": SettingsService.effects_audio_muted(),
 			"scheduled": true,
 		}
 		return
@@ -2207,7 +2207,7 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 		"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
 		"audio_bus": BATTLE_AUDIO_BUS,
-		"muted": SettingsService.master_volume_percent() <= 0,
+		"muted": SettingsService.effects_audio_muted(),
 		"scheduled": false,
 	}
 
@@ -2244,7 +2244,7 @@ func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int) 
 		duration_msec = maxi(1, int(ceil(stream_length * 1000.0)))
 	var player := AudioStreamPlayer.new()
 	player.stream = stream
-	player.bus = BATTLE_AUDIO_BUS
+	player.bus = SettingsService.effects_audio_bus_name()
 	player.volume_db = float(cue.get("volume_db", -12.0))
 	add_child(player)
 	_active_audio_players.append({
@@ -2279,7 +2279,7 @@ func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int)
 	stream.buffer_length = maxf(0.05, float(duration_msec) / 1000.0 + 0.04)
 	var player := AudioStreamPlayer.new()
 	player.stream = stream
-	player.bus = BATTLE_AUDIO_BUS
+	player.bus = SettingsService.effects_audio_bus_name()
 	player.volume_db = float(spec.get("volume_db", -12.0))
 	add_child(player)
 	_active_audio_players.append({
