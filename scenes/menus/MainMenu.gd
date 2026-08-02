@@ -106,6 +106,7 @@ const TAB_HELP_TOPIC := {
 @onready var _effects_volume_slider: HSlider = %EffectsVolumeSlider
 @onready var _effects_volume_value: Label = %EffectsVolumeValue
 @onready var _ui_scale_picker: OptionButton = %UIScalePicker
+@onready var _battle_camera_shake_picker: OptionButton = %BattleCameraShakePicker
 @onready var _high_contrast_toggle: CheckButton = %HighContrastToggle
 @onready var _color_cue_picker: OptionButton = %ColorCuePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
@@ -555,6 +556,12 @@ func _on_ui_scale_selected(index: int) -> void:
 	SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
 	_refresh_settings_panel()
 
+func _on_battle_camera_shake_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _battle_camera_shake_picker.get_item_count():
+		return
+	SettingsService.set_battle_camera_shake_mode_id(String(_battle_camera_shake_picker.get_item_metadata(index)))
+	_refresh_settings_panel()
+
 func _on_high_contrast_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
@@ -985,6 +992,18 @@ func _refresh_settings_panel() -> void:
 	if selected_ui_scale_index >= 0:
 		_ui_scale_picker.select(selected_ui_scale_index)
 	_ui_scale_picker.tooltip_text = "Whole-interface scale applies immediately.\n%s" % settings_check
+	_battle_camera_shake_picker.clear()
+	var battle_shake_options := SettingsService.build_battle_camera_shake_options()
+	var selected_battle_shake_index := -1
+	for index in range(battle_shake_options.size()):
+		var option: Dictionary = battle_shake_options[index]
+		_battle_camera_shake_picker.add_item(String(option.get("label", "Full")), index)
+		_battle_camera_shake_picker.set_item_metadata(index, String(option.get("id", "full")))
+		if bool(option.get("selected", false)):
+			selected_battle_shake_index = index
+	if selected_battle_shake_index >= 0:
+		_battle_camera_shake_picker.select(selected_battle_shake_index)
+	_battle_camera_shake_picker.tooltip_text = "Battle camera displacement applies immediately without changing animation timing.\n%s" % settings_check
 	_high_contrast_toggle.button_pressed = SettingsService.high_contrast_ui_enabled()
 	_high_contrast_toggle.tooltip_text = "High contrast applies immediately across shared interface surfaces.\n%s" % settings_check
 	_color_cue_picker.clear()
@@ -2102,6 +2121,10 @@ func validation_snapshot() -> Dictionary:
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"ui_scale_picker_items": _picker_item_labels(_ui_scale_picker),
 		"ui_scale_tooltip": _ui_scale_picker.tooltip_text,
+		"battle_camera_shake": SettingsService.battle_camera_shake_mode_id(),
+		"battle_camera_shake_scale": SettingsService.battle_camera_shake_scale(),
+		"battle_camera_shake_picker_items": _picker_item_labels(_battle_camera_shake_picker),
+		"battle_camera_shake_tooltip": _battle_camera_shake_picker.tooltip_text,
 		"high_contrast_enabled": SettingsService.high_contrast_ui_enabled(),
 		"high_contrast_tooltip": _high_contrast_toggle.tooltip_text,
 		"color_cue_mode": SettingsService.color_cue_mode_id(),
@@ -2497,6 +2520,16 @@ func validation_select_ui_scale(value: int) -> bool:
 		_ui_scale_picker.select(index)
 		_on_ui_scale_selected(index)
 		return SettingsService.ui_scale_percent() == value
+	return false
+
+func validation_select_battle_camera_shake(mode_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_battle_camera_shake_picker.get_item_count()):
+		if String(_battle_camera_shake_picker.get_item_metadata(index)) != mode_id:
+			continue
+		_battle_camera_shake_picker.select(index)
+		_on_battle_camera_shake_selected(index)
+		return SettingsService.battle_camera_shake_mode_id() == mode_id
 	return false
 
 func validation_set_high_contrast(enabled: bool) -> bool:

@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed live strategic AI emergency-defense scan reuse: commander candidates and prepared probes are cached per scan, and final launch selection reuses the exact launch-readiness candidate surface.",
+  "currentNotes": "Completed independent Full, Reduced, and Off battle-camera shake control through schema-12 device settings, the compact Readability row, and live battle camera displacement.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-emergency-defense-scan-reuse-10184",
-  "currentSliceId": "strategic-ai-emergency-defense-scan-reuse-10184",
-  "currentSliceNotes": "Completed. Emergency recruitment prepares two commander probes once and reuses them six times in the focused repeated scan; launch selection reuses both precomputed spawn candidates while preserving hero_sable and exact plan payloads.",
+  "currentSlice": "settings-battle-camera-shake-control-10184",
+  "currentSliceId": "settings-battle-camera-shake-control-10184",
+  "currentSliceNotes": "Completed. Normal battle camera impulses now apply 100, 35, or 0 percent displacement from the persisted setting; reduced-motion and fast playback still suppress shake, and the 1280x720 settings board remains clean at 130 percent UI scale.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Emergency Defense Scan Reuse",
-  "currentSliceUpdatedAt": "2026-08-02T16:05:58Z",
+  "currentSliceTitle": "Battle Camera Shake Accessibility",
+  "currentSliceUpdatedAt": "2026-08-02T16:23:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,60 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T16:23:05Z",
+      "completionSummary": "Schema-12 device settings now persist Full, Reduced, or Off battle camera shake. The compact Readability row applies the choice immediately, and normal live battle camera records scale displacement to 1.00, 0.35, or 0.00 without changing combat, event order, animation timing, VFX, or audio.",
+      "completionCriteria": "Schema-12 device settings persist Full, Reduced, and Off battle shake with old-config Full fallback; the compact settings UI applies the preference immediately; normal live battle playback scales camera displacement to 100, 35, or 0 percent while reduced-motion and fast modes remain zero; focused, packaged, rendered-menu, and core regressions pass.",
+      "id": "settings-battle-camera-shake-control-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "combat math, event ordering, animation duration, VFX, audio, or authored content changes",
+        "non-battle camera controls or camera pan/zoom settings",
+        "expedition-save, packaging-payload, or Native RMG changes",
+        "final accessibility or release-completion claims"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Battle Camera Shake Accessibility",
+      "purpose": "Let players reduce or disable battle camera displacement independently from the broader reduced-motion animation policy.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T16:10:10Z",
+      "status": "completed",
+      "title": "Battle Camera Shake Accessibility",
+      "updatedAt": "2026-08-02T16:23:05Z",
+      "validationEvidence": [
+        "Battle event animation state report passed and measured the same live ranged/status camera records at Full, Reduced, and Off: strongest shake scales exactly 1.00, 0.35, and 0.00, with Off producing zero displacement.",
+        "Packaged settings persistence report passed schema-12 direct config and reload checks, legacy version-5 settings defaulted to Full, and Reduced reloaded with scale 0.35.",
+        "Linux Release PCK export and --main-pack settings smoke passed with the schema-12 value and restored the original device config.",
+        "Main menu outcome smoke passed all three picker choices, immediate Reduced selection, summary/tooltip state, and original-setting restoration.",
+        "Real-render Xvfb 1280x720 capture at 130 percent UI scale showed UI Scale, Battle Shake, Color Cues, High Contrast, and Reduce Motion fully visible without overlap or clipping.",
+        "Core systems regression smoke exited 0; Godot editor parse, tests/validate_repo.py, jq empty, and git diff --check passed."
+      ]
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
@@ -65178,7 +65232,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T16:05:58Z",
+  "updatedAt": "2026-08-02T16:23:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

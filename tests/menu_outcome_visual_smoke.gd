@@ -16,6 +16,7 @@ func _run_main_menu_smoke() -> bool:
 	var original_resolution := SettingsService.presentation_resolution_id()
 	var original_render_quality := SettingsService.render_quality_id()
 	var original_ui_scale := SettingsService.ui_scale_percent()
+	var original_battle_camera_shake := SettingsService.battle_camera_shake_mode_id()
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var original_color_cue_mode := SettingsService.color_cue_mode_id()
 	var original_keyboard_navigation_layout := SettingsService.keyboard_navigation_layout_id()
@@ -528,10 +529,11 @@ func _run_main_menu_smoke() -> bool:
 	var frame_rate_picker = shell.get_node_or_null("%FrameRatePicker")
 	var render_quality_picker = shell.get_node_or_null("%RenderQualityPicker")
 	var ui_scale_picker = shell.get_node_or_null("%UIScalePicker")
+	var battle_camera_shake_picker = shell.get_node_or_null("%BattleCameraShakePicker")
 	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
 	var color_cue_picker = shell.get_node_or_null("%ColorCuePicker")
 	var keyboard_navigation_layout_picker = shell.get_node_or_null("%KeyboardNavigationLayoutPicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (keyboard_navigation_layout_picker is OptionButton):
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (battle_camera_shake_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (keyboard_navigation_layout_picker is OptionButton):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -557,6 +559,12 @@ func _run_main_menu_smoke() -> bool:
 	for expected_label in ["Standard", "Shape + Palette"]:
 		if not color_cue_items.has(expected_label):
 			push_error("Main menu smoke: color-cue picker omitted %s: %s." % [expected_label, color_cue_items])
+			get_tree().quit(1)
+			return false
+	var battle_shake_items: Array = settings_snapshot.get("battle_camera_shake_picker_items", []) if settings_snapshot.get("battle_camera_shake_picker_items", []) is Array else []
+	for expected_label in ["Full", "Reduced", "Off"]:
+		if not battle_shake_items.has(expected_label):
+			push_error("Main menu smoke: battle-shake picker omitted %s: %s." % [expected_label, battle_shake_items])
 			get_tree().quit(1)
 			return false
 	var frame_rate_items: Array = settings_snapshot.get("frame_rate_picker_items", []) if settings_snapshot.get("frame_rate_picker_items", []) is Array else []
@@ -613,10 +621,14 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: UI-scale picker could not select 130%.")
 		get_tree().quit(1)
 		return false
+	if not bool(shell.call("validation_select_battle_camera_shake", "reduced")):
+		push_error("Main menu smoke: battle-shake picker could not select Reduced.")
+		get_tree().quit(1)
+		return false
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or String(settings_snapshot.get("battle_camera_shake", "")) != "reduced" or not is_equal_approx(float(settings_snapshot.get("battle_camera_shake_scale", -1.0)), 0.35) or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("Battle shake Reduced") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		if original_render_quality != "high":
@@ -641,6 +653,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
+			String(settings_snapshot.get("battle_camera_shake_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
 			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
@@ -669,6 +682,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
 			String(settings_snapshot.get("ui_scale_tooltip", "")),
+			String(settings_snapshot.get("battle_camera_shake_tooltip", "")),
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
 			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
@@ -731,6 +745,10 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	if original_ui_scale != 130 and not bool(shell.call("validation_select_ui_scale", original_ui_scale)):
 		push_error("Main menu smoke: UI-scale picker could not restore %d%%." % original_ui_scale)
+		get_tree().quit(1)
+		return false
+	if original_battle_camera_shake != "reduced" and not bool(shell.call("validation_select_battle_camera_shake", original_battle_camera_shake)):
+		push_error("Main menu smoke: battle-shake picker could not restore %s." % original_battle_camera_shake)
 		get_tree().quit(1)
 		return false
 

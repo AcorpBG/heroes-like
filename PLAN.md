@@ -711,6 +711,23 @@ Non-goals:
 - do not change menu focus navigation, movement/pathing rules, save-game schema, battle behavior, or Native RMG;
 - do not replace the existing preset picker or add a full-screen settings dashboard.
 
+## Battle Camera Shake Accessibility
+
+The completed Phase 6 accessibility slice gives players direct control over battle camera motion without forcing reduced animation timing or changing combat behavior.
+
+Target shape:
+- device settings persist Full, Reduced, or Off battle shake while older settings default to Full;
+- the existing compact Readability row exposes the option without adding another panel or obscuring the scenic menu;
+- normal battle playback multiplies camera shake by the selected scale, with Reduced capped at 35 percent and Off producing no camera displacement;
+- the existing Reduce Motion and fast/instant playback policies continue to suppress shake completely;
+- direct settings reload, exported-PCK persistence, live battle camera playback, compact settings layout, and core regressions pass.
+
+Non-goals:
+- do not change combat math, battle event ordering, animation duration, VFX, audio, or authored content;
+- do not add camera pan/zoom controls or alter non-battle camera behavior;
+- do not change expedition saves, packaging payloads, or Native RMG;
+- do not claim final accessibility or release completion.
+
 ## Strategic AI Emergency Defense Scan Reuse
 
 The completed Phase 5 strategic-AI performance slice removes repeated defender preparation inside one enemy turn without changing emergency-defense priorities or outcomes.

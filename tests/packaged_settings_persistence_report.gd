@@ -20,6 +20,7 @@ const TEST_VALUES := {
 	"large_ui_text": true,
 	"high_contrast_ui": true,
 	"color_cue_mode": "assisted",
+	"battle_camera_shake": "reduced",
 	"reduce_motion": true,
 }
 
@@ -73,6 +74,7 @@ func _run_persistence_check() -> void:
 		"source_large_ui_text": true,
 		"migrated_ui_scale_percent": SettingsService.ui_scale_percent(),
 		"migrated_color_cue_mode": SettingsService.color_cue_mode_id(),
+		"migrated_battle_camera_shake": SettingsService.battle_camera_shake_mode_id(),
 		"migrated_battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"migrated_keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"migrated_custom_hero_movement_bindings": SettingsService.custom_hero_movement_bindings(),
@@ -80,6 +82,7 @@ func _run_persistence_check() -> void:
 	}
 	_expect(SettingsService.ui_scale_percent() == 115, "Legacy Large Text must migrate to 115% UI scale.")
 	_expect(SettingsService.color_cue_mode_id() == SettingsService.COLOR_CUE_MODE_STANDARD, "Legacy settings must default to standard color cues.")
+	_expect(SettingsService.battle_camera_shake_mode_id() == SettingsService.BATTLE_CAMERA_SHAKE_FULL, "Legacy settings must default to Full battle shake.")
 	_expect(SettingsService.battle_playback_speed_id() == SettingsService.BATTLE_PLAYBACK_SPEED_NORMAL, "Legacy settings must default to Normal battle playback.")
 	_expect(SettingsService.keyboard_navigation_layout_id() == SettingsService.KEYBOARD_NAVIGATION_LAYOUT_WASD, "Legacy settings must default to WASD + Arrows navigation.")
 	_expect(not SettingsService.has_custom_hero_movement_bindings(), "Legacy settings must default to preset hero movement bindings.")
@@ -108,6 +111,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
 	SettingsService.set_high_contrast_ui_enabled(bool(TEST_VALUES["high_contrast_ui"]))
 	SettingsService.set_color_cue_mode_id(String(TEST_VALUES["color_cue_mode"]))
+	SettingsService.set_battle_camera_shake_mode_id(String(TEST_VALUES["battle_camera_shake"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
 	var saved_path := SettingsService.save_settings()
 	_report["saved_path"] = saved_path
@@ -201,6 +205,8 @@ func _run_persistence_check() -> void:
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
 	_expect(bool(direct_values.get("high_contrast_ui", false)) == bool(TEST_VALUES["high_contrast_ui"]), "Direct config high-contrast UI mismatch.")
 	_expect(String(direct_values.get("color_cue_mode", "")) == String(TEST_VALUES["color_cue_mode"]), "Direct config color-cue mode mismatch.")
+	_expect(String(direct_values.get("battle_camera_shake", "")) == String(TEST_VALUES["battle_camera_shake"]), "Direct config battle-camera shake mismatch.")
+	_expect(is_equal_approx(SettingsService.battle_camera_shake_scale(), 0.35), "Reduced battle-camera shake must apply a 35 percent scale.")
 	_report["accessibility_scaling"] = {
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"compatibility_large_ui_text": SettingsService.large_ui_text_enabled(),
@@ -261,6 +267,8 @@ func _run_persistence_check() -> void:
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"high_contrast_ui": SettingsService.high_contrast_ui_enabled(),
 		"color_cue_mode": SettingsService.color_cue_mode_id(),
+		"battle_camera_shake": SettingsService.battle_camera_shake_mode_id(),
+		"battle_camera_shake_scale": SettingsService.battle_camera_shake_scale(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
 	}
@@ -286,6 +294,8 @@ func _run_persistence_check() -> void:
 	_expect(FrontierVisualKitScript.high_contrast_enabled(), "Reloaded high-contrast UI must remain applied to the shared visual kit.")
 	_expect(String(reloaded["color_cue_mode"]) == String(TEST_VALUES["color_cue_mode"]), "Reloaded color-cue mode mismatch.")
 	_expect(FrontierVisualKitScript.color_cue_assist_enabled(), "Reloaded color-cue mode must remain applied to the shared visual kit.")
+	_expect(String(reloaded["battle_camera_shake"]) == String(TEST_VALUES["battle_camera_shake"]), "Reloaded battle-camera shake mismatch.")
+	_expect(is_equal_approx(float(reloaded["battle_camera_shake_scale"]), 0.35), "Reloaded Reduced battle shake must retain its 35 percent scale.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Reloaded 130% UI scale must remain applied to the root window.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
@@ -313,6 +323,7 @@ func _read_settings_config_values() -> Dictionary:
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"high_contrast_ui": bool(config.get_value("accessibility", "high_contrast_ui", false)),
 		"color_cue_mode": String(config.get_value("accessibility", "color_cue_mode", "")),
+		"battle_camera_shake": String(config.get_value("accessibility", "battle_camera_shake", "")),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}
 

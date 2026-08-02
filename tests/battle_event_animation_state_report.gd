@@ -479,7 +479,18 @@ func _validate_board_runtime_summary() -> void:
 	view.set_battle_state(session)
 	await get_tree().process_frame
 	await get_tree().create_timer(0.16).timeout
+	var original_shake_mode := SettingsService.battle_camera_shake_mode_id()
+	SettingsService.settings["accessibility"]["battle_camera_shake"] = SettingsService.BATTLE_CAMERA_SHAKE_FULL
 	var summary: Dictionary = view.validation_unit_art_summary()
+	var camera_mode_summaries := {}
+	for shake_mode in [
+		SettingsService.BATTLE_CAMERA_SHAKE_FULL,
+		SettingsService.BATTLE_CAMERA_SHAKE_REDUCED,
+		SettingsService.BATTLE_CAMERA_SHAKE_OFF,
+	]:
+		SettingsService.settings["accessibility"]["battle_camera_shake"] = shake_mode
+		camera_mode_summaries[shake_mode] = view.validation_camera_playback_summary()
+	SettingsService.settings["accessibility"]["battle_camera_shake"] = original_shake_mode
 	var original_effects_volume := SettingsService.effects_volume_percent()
 	SettingsService.settings["audio"]["effects_volume_percent"] = 0
 	SettingsService.apply_settings()
@@ -500,6 +511,7 @@ func _validate_board_runtime_summary() -> void:
 	if not bool(muted_audio_summary.get("muted", false)):
 		_error("Zero Effects volume must mute battle audio playback: %s" % muted_audio_summary)
 	var camera_playback := _validate_active_camera_presentation(summary)
+	_validate_camera_shake_accessibility(camera_mode_summaries)
 	_report["cases"]["board_runtime"] = {"observed_states": observed_states, "summary": summary}
 	_report["cases"]["board_cue_dispatch"] = {
 		"active_cue_playback": cue_playback,
@@ -513,6 +525,7 @@ func _validate_board_runtime_summary() -> void:
 	}
 	_report["cases"]["board_camera_presentation"] = {
 		"active_camera_playback": camera_playback,
+		"shake_modes": camera_mode_summaries,
 	}
 
 func _validate_board_playback_lifecycle() -> void:
@@ -669,6 +682,25 @@ func _validate_active_camera_presentation(summary: Dictionary) -> Dictionary:
 	if absf(float(camera_playback.get("offset_x", 0.0))) > max_offset + 0.01 or absf(float(camera_playback.get("offset_y", 0.0))) > max_offset + 0.01:
 		_error("Camera presentation offset exceeded its bounded max: %s" % camera_playback)
 	return camera_playback
+
+func _validate_camera_shake_accessibility(mode_summaries: Dictionary) -> void:
+	var full: Dictionary = mode_summaries.get(SettingsService.BATTLE_CAMERA_SHAKE_FULL, {})
+	var reduced: Dictionary = mode_summaries.get(SettingsService.BATTLE_CAMERA_SHAKE_REDUCED, {})
+	var off: Dictionary = mode_summaries.get(SettingsService.BATTLE_CAMERA_SHAKE_OFF, {})
+	var full_strength := float(full.get("strongest_shake_strength", 0.0))
+	var reduced_strength := float(reduced.get("strongest_shake_strength", 0.0))
+	if String(full.get("configured_shake_mode", "")) != SettingsService.BATTLE_CAMERA_SHAKE_FULL or not is_equal_approx(float(full.get("configured_shake_scale", -1.0)), 1.0):
+		_error("Full battle-shake mode did not expose its live scale: %s" % full)
+	if full_strength <= 0.0:
+		_error("Full battle-shake mode did not retain positive camera motion: %s" % full)
+	if String(reduced.get("configured_shake_mode", "")) != SettingsService.BATTLE_CAMERA_SHAKE_REDUCED or not is_equal_approx(float(reduced.get("configured_shake_scale", -1.0)), 0.35):
+		_error("Reduced battle-shake mode did not expose its live scale: %s" % reduced)
+	if not is_equal_approx(reduced_strength, snappedf(full_strength * 0.35, 0.001)):
+		_error("Reduced battle shake %.3f did not equal 35 percent of Full %.3f." % [reduced_strength, full_strength])
+	if String(off.get("configured_shake_mode", "")) != SettingsService.BATTLE_CAMERA_SHAKE_OFF or float(off.get("configured_shake_scale", -1.0)) != 0.0:
+		_error("Off battle-shake mode did not expose zero scale: %s" % off)
+	if int(off.get("shake_record_count", -1)) != 0 or float(off.get("strongest_shake_strength", -1.0)) != 0.0 or float(off.get("offset_x", -1.0)) != 0.0 or float(off.get("offset_y", -1.0)) != 0.0:
+		_error("Off battle-shake mode still displaced the live board: %s" % off)
 
 func _validate_shell_presentation_event_surface() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)

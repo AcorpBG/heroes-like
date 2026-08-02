@@ -751,6 +751,8 @@ func validation_camera_playback_summary() -> Dictionary:
 		"strongest_event_id": String(strongest_record.get("event_id", "")),
 		"strongest_focus_kind": String(strongest_record.get("focus_kind", "")),
 		"strongest_shake_strength": snappedf(float(strongest_record.get("shake_strength", 0.0)), 0.001),
+		"configured_shake_mode": SettingsService.battle_camera_shake_mode_id(),
+		"configured_shake_scale": SettingsService.battle_camera_shake_scale(),
 		"offset_x": snappedf(offset.x, 0.01),
 		"offset_y": snappedf(offset.y, 0.01),
 		"max_offset_px": BATTLE_CAMERA_MAX_OFFSET_PX,
@@ -3200,6 +3202,8 @@ func _camera_playback_record_for_cue(cue_record: Dictionary, hex_layout: Diction
 	var mode := String(cue_record.get("mode", AnimationCueCatalogScript.MODE_NORMAL))
 	if mode == AnimationCueCatalogScript.MODE_FAST or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION or mode == AnimationCueCatalogScript.MODE_REDUCED_MOTION_FAST:
 		shake_strength = 0.0
+	else:
+		shake_strength *= SettingsService.battle_camera_shake_scale()
 	return {
 		"battle_id": battle_id,
 		"event_id": event_id,
