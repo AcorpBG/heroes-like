@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exclusive live frontier destinations for strategic AI. Both no-known-target planners now build one reservation lookup per selection and reject exploration cells assigned to another active same-faction host or exclusively reserved by another live task. Exact-current-code Medium ordinal 87 separately proved that the earlier no-movement claim was diagnostic-only: host coordinates advance through quiet turns even though the long-run report emits no movement records. Native RMG output and non-exploration targeting are unchanged.",
+  "currentNotes": "Completed current-tile strategic AI objective assignment. Idle hosts now assign an immediately claimable current-tile resource before distant saved/live plans, and bounded task-board retention prioritizes active/suspended work and recent completions ahead of regenerable planned or invalid history. The live-turn fixture proves Vaska and Sable both persist their completed resource tasks, continue to new objectives, and preserve valid-route opportunistic pickup behavior.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "strategic-ai-exclusive-frontier-reservations-10184",
-  "currentSliceId": "strategic-ai-exclusive-frontier-reservations-10184",
-  "currentSliceNotes": "Completed. General exploration and frontier sweep fallback selection precompute other-host/live-task reservations; a live two-host fixture selects explore:0:0 and explore:1:4 and advances both hosts in one turn. Focused known-world, planned-task recruitment, task-state reservation, core regression, and repository validation pass. The broader live-turn execution fixture retains an unrelated stale Vaska north_wood completion expectation.",
+  "currentSlice": "strategic-ai-current-tile-resource-assignment-10184",
+  "currentSliceId": "strategic-ai-current-tile-resource-assignment-10184",
+  "currentSliceNotes": "Completed. Current-tile resource assignment runs before distant saved/live adoption for idle hosts, and status-aware board pruning retains recent completions over regenerable planned tasks at the 12-record cap. Live-turn, task lifecycle/resumption, known-world, planned-recruitment, task-boundary, core-regression, and repository validation pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Exclusive Frontier Reservations",
-  "currentSliceUpdatedAt": "2026-08-02T12:07:51Z",
+  "currentSliceTitle": "Strategic AI Current-Tile Resource Assignment",
+  "currentSliceUpdatedAt": "2026-08-02T12:25:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,60 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "An idle host on a contestable current-tile resource assigns and completes that resource as a real live task before adopting its next objective; a host with an already-valid route target preserves that target while making an opportunistic pickup; focused and adjacent regressions pass.",
+      "id": "strategic-ai-current-tile-resource-assignment-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing Native RMG generation or payloads",
+        "changing resource rewards or guarded-resource requirements",
+        "changing valid in-route target preservation",
+        "broad strategic priority tuning or claiming full strategic AI completion"
+      ],
+      "parentSliceId": "strategic-ai-production-ready-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Strategic AI Current-Tile Objective Target",
+      "purpose": "Make immediate current-tile resource captures complete a real durable commander task instead of being incidental to a distant saved assignment.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-02T12:13:23Z",
+      "completedAt": "2026-08-02T12:25:09Z",
+      "completionSummary": "Idle strategic AI hosts now assign a contestable resource on their current tile before adopting distant saved/live plans. The bounded task board now retains active, reserved, and suspended work first, then recent completed records, then regenerable planned records, instead of evicting same-day completions by lexical task id. The live-turn fixture proves both Vaska's river_free_company and Sable's river_signal_post completions persist at the 12-record cap, both hosts continue to new objectives, and an already-valid route target survives an opportunistic pickup. Adjacent task lifecycle, resumption, memory, recruitment, task-boundary, core, and repository regressions pass.",
+      "status": "completed",
+      "title": "Strategic AI Current-Tile Resource Assignment",
+      "updatedAt": "2026-08-02T12:25:09Z",
+      "validationEvidence": {
+        "vaska_completed_target_id": "river_free_company",
+        "sable_completed_target_id": "river_signal_post",
+        "bounded_task_count": 12,
+        "valid_route_pickup_preserved": true,
+        "live_turn_execution_report": "passed",
+        "planned_task_recruitment_prep_report": "passed",
+        "known_world_memory_report": "passed",
+        "hero_task_state_boundary_report": "passed",
+        "hero_task_lifecycle_reconciliation_report": "passed",
+        "hero_task_resumption_report": "passed",
+        "core_systems_regression_smoke": "passed",
+        "repository_validator": "passed"
+      }
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_known_world_memory_report.tscn",
