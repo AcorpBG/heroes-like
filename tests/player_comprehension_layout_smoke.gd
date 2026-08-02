@@ -84,6 +84,8 @@ func _check_town(viewport_size: Vector2) -> bool:
 	var town := _first_player_town(session)
 	if town.is_empty():
 		return _fail("Town layout smoke could not find a player town.")
+	var initial_built_buildings: Array = town.get("built_buildings", []).duplicate()
+	var initial_resources: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	_move_active_hero_to_town(session, town)
 	SessionState.set_active_session(session)
 	var frame := _new_frame("TownFrame", viewport_size)
@@ -98,9 +100,66 @@ func _check_town(viewport_size: Vector2) -> bool:
 	ok = _expect_visibility(shell.get_node("%CommandPanel"), not compact, "town command summary", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%Event"), not compact, "town dispatch", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%Status"), not compact, "town duplicate status", viewport_size) and ok
+	ok = _expect_visibility(shell.get_node("%TownOrdersToggle"), narrow, "town narrow orders switch", viewport_size) and ok
+	if narrow:
+		var toggle_result: Dictionary = shell.call("validation_toggle_narrow_town_orders")
+		await _settle_layout()
+		if not bool(toggle_result.get("ok", false)) or not bool(toggle_result.get("narrow_orders_open", false)):
+			return _fail("town narrow orders switch did not open management at %s: %s" % [viewport_size, toggle_result])
+		ok = _expect_visibility(shell.get_node("%SidebarShell"), true, "town narrow management surface", viewport_size) and ok
+		ok = _expect_visibility(shell.get_node("%StageColumn"), false, "town stage while narrow orders are open", viewport_size) and ok
+		ok = _inside(frame, shell.get_node("%SidebarShell"), "town narrow management surface", viewport_size) and ok
+		if String(toggle_result.get("toggle_text", "")) != "View Town":
+			return _fail("town narrow orders switch does not expose the return command at %s" % viewport_size)
+	ok = (await _expect_town_build_plan(shell, session, initial_built_buildings, initial_resources, viewport_size)) and ok
 	frame.queue_free()
 	await get_tree().process_frame
 	return ok
+
+func _expect_town_build_plan(shell: Node, session, initial_built_buildings: Array, initial_resources: Dictionary, viewport_size: Vector2) -> bool:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected_id := String(snapshot.get("selected_build_action_id", ""))
+	if not selected_id.begins_with("build:"):
+		return _fail("town build planner has no selected construction at %s" % viewport_size)
+	if String(snapshot.get("build_plan_visible_text", "")).find("Cost ") < 0:
+		return _fail("town build planner omits selected cost at %s: %s" % [viewport_size, snapshot.get("build_plan_visible_text", "")])
+	if String(snapshot.get("build_plan_tooltip_text", "")).find("Selection does not spend resources") < 0:
+		return _fail("town build planner omits its non-mutating selection guarantee at %s" % viewport_size)
+	if bool(snapshot.get("confirm_build_button_disabled", true)):
+		return _fail("town build planner has no ready confirm command at %s: %s" % [viewport_size, snapshot.get("confirm_build_button_text", "")])
+	if session.overworld.get("resources", {}) != initial_resources:
+		return _fail("town build planner spent resources during initial selection at %s" % viewport_size)
+	if _first_player_town(session).get("built_buildings", []) != initial_built_buildings:
+		return _fail("town build planner constructed during initial selection at %s" % viewport_size)
+
+	var candidate_id := selected_id
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	for action_value in catalog.get("build", []):
+		if not (action_value is Dictionary):
+			continue
+		var action_id := String(action_value.get("id", ""))
+		if action_id != selected_id and not bool(action_value.get("disabled", false)):
+			candidate_id = action_id
+			break
+	var selection_result: Dictionary = shell.call("validation_select_build_plan", candidate_id)
+	if not bool(selection_result.get("ok", false)) or not bool(selection_result.get("state_unchanged", false)):
+		return _fail("town build selection mutated or failed at %s: %s" % [viewport_size, selection_result])
+	if session.overworld.get("resources", {}) != initial_resources:
+		return _fail("town build selection spent resources at %s" % viewport_size)
+	if _first_player_town(session).get("built_buildings", []) != initial_built_buildings:
+		return _fail("town build selection constructed before confirmation at %s" % viewport_size)
+
+	var commit_result: Dictionary = shell.call("validation_confirm_build_plan")
+	await _settle_layout()
+	if not bool(commit_result.get("ok", false)) or not bool(commit_result.get("state_changed", false)):
+		return _fail("town build confirmation did not commit at %s: %s" % [viewport_size, commit_result])
+	var committed_id := String(commit_result.get("committed_action_id", "")).trim_prefix("build:")
+	var built_after: Array = _first_player_town(session).get("built_buildings", [])
+	if built_after.size() != initial_built_buildings.size() + 1 or committed_id not in built_after:
+		return _fail("town build confirmation committed the wrong construction at %s: %s" % [viewport_size, built_after])
+	if session.overworld.get("resources", {}) == initial_resources:
+		return _fail("town build confirmation did not spend resources at %s" % viewport_size)
+	return true
 
 func _new_frame(frame_name: String, viewport_size: Vector2) -> Control:
 	var frame := Control.new()

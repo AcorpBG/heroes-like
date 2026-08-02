@@ -14,6 +14,7 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 @onready var _crest_panel: PanelContainer = %CrestFrame
 @onready var _town_stage_panel: PanelContainer = %TownStagePanel
 @onready var _town_stage_frame_panel: PanelContainer = %TownStageFrame
+@onready var _stage_column: VBoxContainer = %StageColumn
 @onready var _town_panel: PanelContainer = %TownPanel
 @onready var _outlook_panel: PanelContainer = %OutlookPanel
 @onready var _command_ledger_panel: PanelContainer = %CommandLedgerPanel
@@ -47,6 +48,8 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 @onready var _pressure_label: Label = %Pressure
 @onready var _building_label: Label = %Buildings
 @onready var _build_actions: Container = %BuildActions
+@onready var _build_plan_label: Label = %BuildPlan
+@onready var _confirm_build_button: Button = %ConfirmBuild
 @onready var _market_label: Label = %Market
 @onready var _market_actions: Container = %MarketActions
 @onready var _recruit_label: Label = %Recruitment
@@ -63,6 +66,7 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 @onready var _artifact_label: Label = %Artifacts
 @onready var _artifact_actions: Container = %ArtifactActions
 @onready var _save_status_label: Label = %SaveStatus
+@onready var _town_orders_toggle_button: Button = %TownOrdersToggle
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _leave_button: Button = %Leave
@@ -76,6 +80,9 @@ var _last_save_surface_profile := {}
 var _last_refresh_minimal := false
 var _last_town_stage_signature := ""
 var _last_departure_confirmation := {}
+var _selected_build_action_id := ""
+var _narrow_layout_active := false
+var _narrow_orders_open := false
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
 
@@ -90,6 +97,7 @@ func _ready() -> void:
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	_management_tabs.current_tab = 0
+	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
 	_session = SessionState.ensure_active_session()
@@ -119,20 +127,52 @@ func _ready() -> void:
 func _apply_responsive_layout() -> void:
 	if _sidebar_shell_panel == null:
 		return
-	var available_size := size
+	var available_size := get_viewport_rect().size
 	var parent_control := get_parent() as Control
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
-	_sidebar_shell_panel.visible = not narrow_layout
+	_narrow_layout_active = narrow_layout
+	if not narrow_layout:
+		_narrow_orders_open = false
+	_stage_column.visible = not narrow_layout or not _narrow_orders_open
+	_sidebar_shell_panel.visible = not narrow_layout or _narrow_orders_open
+	_sidebar_shell_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if narrow_layout and _narrow_orders_open else Control.SIZE_FILL
 	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 292.0
+	_town_orders_toggle_button.visible = narrow_layout
+	_town_orders_toggle_button.text = "View Town" if _narrow_orders_open else "Town Orders"
+	_town_orders_toggle_button.tooltip_text = "Return to the scenic town view." if _narrow_orders_open else "Open construction, muster, spells, trade, and town-log orders."
 	_command_panel.visible = not compact_layout
 	_event_label.visible = not compact_layout
 	_status_label.visible = not compact_layout
+	_building_label.visible = not compact_layout
 	_town_stage_view.custom_minimum_size = Vector2(520.0, 280.0) if compact_layout else Vector2(620.0, 320.0)
 
 func _on_build_action_pressed(action_id: String) -> void:
+	_select_build_action("build:%s" % action_id)
+
+func _on_town_orders_toggle_pressed() -> void:
+	if not _narrow_layout_active:
+		return
+	_narrow_orders_open = not _narrow_orders_open
+	_apply_responsive_layout()
+
+func _on_confirm_build_pressed() -> void:
+	var action := _selected_build_action()
+	if action.is_empty():
+		return
+	if bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
+		if _management_tabs.current_tab != 3:
+			_management_tabs.current_tab = 3
+		else:
+			_refresh(true)
+		return
+	if bool(action.get("disabled", false)):
+		return
+	_commit_build_action(String(action.get("id", "")).trim_prefix("build:"))
+
+func _commit_build_action(action_id: String) -> void:
 	var full_action_id := "build:%s" % action_id
 	var before := TownRules.town_action_consequence_signature(_session)
 	var action := _validation_action_for_id(full_action_id)
@@ -142,6 +182,13 @@ func _on_build_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+
+func _select_build_action(action_id: String) -> void:
+	var action := _build_action_for_id(action_id)
+	if action.is_empty():
+		return
+	_selected_build_action_id = action_id
+	_rebuild_build_actions(TownRules.get_build_actions(_session))
 
 func _on_recruit_action_pressed(action_id: String) -> void:
 	var full_action_id := "recruit:%s" % action_id
@@ -1469,6 +1516,17 @@ func validation_snapshot() -> Dictionary:
 		"build_readiness": build_readiness,
 		"build_readiness_visible_text": String(build_readiness.get("visible_text", "")),
 		"build_readiness_tooltip_text": String(build_readiness.get("tooltip_text", "")),
+		"selected_build_action_id": _selected_build_action_id,
+		"selected_build_action": _duplicate_dictionary(_selected_build_action()),
+		"build_plan_visible_text": _build_plan_label.text,
+		"build_plan_tooltip_text": _build_plan_label.tooltip_text,
+		"confirm_build_button_text": _confirm_build_button.text,
+		"confirm_build_button_tooltip_text": _confirm_build_button.tooltip_text,
+		"confirm_build_button_disabled": _confirm_build_button.disabled,
+		"narrow_layout_active": _narrow_layout_active,
+		"narrow_orders_open": _narrow_orders_open,
+		"town_orders_toggle_visible": _town_orders_toggle_button.visible,
+		"town_orders_toggle_text": _town_orders_toggle_button.text,
 		"market_text": TownRules.describe_market(_session),
 		"market_visible_text": _market_label.text if _market_label.text.strip_edges() != "" else String(market_readiness.get("visible_text", "")),
 		"market_tooltip_text": _market_label.tooltip_text if _market_label.tooltip_text.strip_edges() != "" else String(market_readiness.get("tooltip_text", "")),
@@ -1586,7 +1644,7 @@ func validation_try_progress_action() -> Dictionary:
 			"recruit":
 				_on_recruit_action_pressed(action_id.trim_prefix("recruit:"))
 			"build":
-				_on_build_action_pressed(action_id.trim_prefix("build:"))
+				_commit_build_action(action_id.trim_prefix("build:"))
 			"study":
 				_on_study_action_pressed(action_id.trim_prefix("learn_spell:"))
 			"market":
@@ -1637,6 +1695,40 @@ func validation_action_catalog() -> Dictionary:
 		"artifact": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
 		"specialty": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
 		"hero": _duplicate_action_array(TownRules.get_hero_actions(_session)),
+	}
+
+func validation_select_build_plan(action_id: String) -> Dictionary:
+	var normalized_id := action_id if action_id.begins_with("build:") else "build:%s" % action_id
+	var before := TownRules.town_action_consequence_signature(_session)
+	_select_build_action(normalized_id)
+	return {
+		"ok": _selected_build_action_id == normalized_id,
+		"selected_build_action_id": _selected_build_action_id,
+		"state_unchanged": before == TownRules.town_action_consequence_signature(_session),
+		"snapshot": validation_snapshot(),
+	}
+
+func validation_confirm_build_plan() -> Dictionary:
+	var selected_id := _selected_build_action_id
+	var before := TownRules.town_action_consequence_signature(_session)
+	_on_confirm_build_pressed()
+	var after := TownRules.town_action_consequence_signature(_session)
+	return {
+		"ok": before != after,
+		"committed_action_id": selected_id,
+		"state_changed": before != after,
+		"snapshot": validation_snapshot(),
+	}
+
+func validation_toggle_narrow_town_orders() -> Dictionary:
+	_on_town_orders_toggle_pressed()
+	return {
+		"ok": _narrow_layout_active,
+		"narrow_layout_active": _narrow_layout_active,
+		"narrow_orders_open": _narrow_orders_open,
+		"sidebar_visible": _sidebar_shell_panel.visible,
+		"stage_visible": _stage_column.visible,
+		"toggle_text": _town_orders_toggle_button.text,
 	}
 
 func validation_resource_ledger_snapshot() -> Dictionary:
@@ -1718,7 +1810,7 @@ func validation_perform_town_action(action_id: String) -> Dictionary:
 		"recruit":
 			_on_recruit_action_pressed(action_id.trim_prefix("recruit:"))
 		"build":
-			_on_build_action_pressed(action_id.trim_prefix("build:"))
+			_commit_build_action(action_id.trim_prefix("build:"))
 		"study":
 			_on_study_action_pressed(action_id.trim_prefix("learn_spell:"))
 		"market":
@@ -1822,19 +1914,103 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 
 	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
 	if actions.is_empty():
+		_selected_build_action_id = ""
 		_build_actions.add_child(_make_placeholder_label("No construction orders"))
+		_refresh_build_plan_surface([])
 		return
+	_ensure_selected_build_action(actions)
 
 	for action in actions:
 		if not (action is Dictionary):
 			continue
 		var button := Button.new()
-		button.text = String(action.get("button_label", action.get("label", action.get("id", "Build"))))
-		button.disabled = bool(action.get("disabled", false))
+		var action_id := String(action.get("id", ""))
+		button.text = _build_plan_option_label(action)
+		button.toggle_mode = true
+		button.button_pressed = action_id == _selected_build_action_id
+		button.disabled = action_id == ""
 		button.tooltip_text = _town_action_button_tooltip(action, "build")
-		_style_action_button(button)
+		_style_action_button(button, button.button_pressed)
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
 		_build_actions.add_child(button)
+	_refresh_build_plan_surface(actions)
+
+func _ensure_selected_build_action(actions: Array) -> void:
+	if not _build_action_for_id(_selected_build_action_id, actions).is_empty():
+		return
+	_selected_build_action_id = ""
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if not bool(action.get("disabled", false)):
+			_selected_build_action_id = String(action.get("id", ""))
+			break
+	if _selected_build_action_id == "" and not actions.is_empty() and actions[0] is Dictionary:
+		_selected_build_action_id = String(actions[0].get("id", ""))
+
+func _selected_build_action(actions_override: Variant = null) -> Dictionary:
+	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
+	return _build_action_for_id(_selected_build_action_id, actions)
+
+func _build_action_for_id(action_id: String, actions_override: Variant = null) -> Dictionary:
+	if action_id == "":
+		return {}
+	var actions = actions_override if actions_override is Array else TownRules.get_build_actions(_session)
+	for action_value in actions:
+		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
+			return action_value
+	return {}
+
+func _build_plan_option_label(action: Dictionary) -> String:
+	var name := String(action.get("label", action.get("id", "Construction"))).trim_prefix("Build ")
+	var readiness := "Blocked"
+	if bool(action.get("direct_affordable", false)):
+		readiness = "Ready"
+	elif bool(action.get("market_coverable", false)):
+		readiness = "Trade"
+	return "%s | %s" % [_short_text(name, 24), readiness]
+
+func _refresh_build_plan_surface(actions: Array) -> void:
+	var action := _selected_build_action(actions)
+	if action.is_empty():
+		_set_compact_label(_build_plan_label, "No construction plan is available.", 2)
+		_build_plan_label.tooltip_text = ""
+		_confirm_build_button.text = "No Construction"
+		_confirm_build_button.tooltip_text = "No construction order is currently available."
+		_confirm_build_button.disabled = true
+		return
+	var name := String(action.get("label", "Construction")).trim_prefix("Build ")
+	var cost := TownRules._describe_resources(action.get("cost", {}))
+	var readiness := _town_action_button_readiness(action, "build")
+	var impact := String(action.get("impact_line", "")).trim_prefix("Defense/frontier: ").trim_suffix(".")
+	_set_compact_label(
+		_build_plan_label,
+		"%s | Cost %s\n%s | %s" % [name, cost, readiness, impact],
+		2
+	)
+	_build_plan_label.tooltip_text = _join_tooltip_sections([
+		"Selected construction: %s" % name,
+		String(action.get("summary", "")),
+		"Selection does not spend resources. Use the command below to commit this plan.",
+	])
+	var direct_affordable := bool(action.get("direct_affordable", false))
+	var market_coverable := bool(action.get("market_coverable", false)) and not direct_affordable
+	if direct_affordable:
+		_confirm_build_button.text = "Build %s" % _short_text(name, 22)
+		_confirm_build_button.tooltip_text = "Commit %s now for %s. This spends resources and uses today's construction order." % [name, cost]
+		_confirm_build_button.disabled = false
+	elif market_coverable:
+		_confirm_build_button.text = "Open Trade for %s" % _short_text(name, 17)
+		_confirm_build_button.tooltip_text = _join_tooltip_sections([
+			String(action.get("market_summary", "Trade can cover the missing common resources.")),
+			"Open the Trade tab without spending resources.",
+		])
+		_confirm_build_button.disabled = false
+	else:
+		_confirm_build_button.text = "Resources Missing"
+		_confirm_build_button.tooltip_text = String(action.get("disabled_reason", "Current stores cannot fund this plan."))
+		_confirm_build_button.disabled = true
 
 func _rebuild_market_actions(actions_override: Variant = null) -> void:
 	for child in _market_actions.get_children():
@@ -2014,6 +2190,11 @@ func _rebuild_specialty_actions(actions_override: Variant = null) -> void:
 
 func _town_action_button_tooltip(action: Dictionary, lane: String) -> String:
 	var summary := String(action.get("summary", "")).strip_edges()
+	if lane == "build":
+		return _join_tooltip_sections([
+			"Select this construction plan to compare its cost, readiness, and town impact. Selection does not spend resources.",
+			summary,
+		])
 	return _join_tooltip_sections([
 		_town_action_button_cue_text(action, lane),
 		summary,
@@ -3659,7 +3840,7 @@ func _apply_visual_theme() -> void:
 	_management_tabs.set_tab_title(3, "Trade")
 	_management_tabs.set_tab_title(4, "Log")
 
-	for button in [_save_button, _leave_button, _menu_button]:
+	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _menu_button]:
 		_style_action_button(button, true)
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 112.0, 32.0, 12)
 
@@ -3686,6 +3867,7 @@ func _apply_visual_theme() -> void:
 		_defense_label,
 		_pressure_label,
 		_building_label,
+		_build_plan_label,
 		_market_label,
 		_recruit_label,
 		_study_label,
