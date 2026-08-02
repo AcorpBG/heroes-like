@@ -313,7 +313,7 @@ func load_action_tooltip(summary: Dictionary) -> String:
 	if day > 0:
 		timing = " on Day %d" % day
 	return "%s%s at %s. Loading does not change any saved slot." % [
-		"Open %s" % scenario_name,
+		"Resume the saved expedition in %s" % scenario_name,
 		timing,
 		_load_destination_label(summary),
 	]

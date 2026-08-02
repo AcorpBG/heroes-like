@@ -2,6 +2,7 @@ extends Control
 
 signal stack_focus_requested(battle_id: String)
 signal hex_destination_requested(q: int, r: int)
+signal controller_navigation_cancelled
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
@@ -28,6 +29,8 @@ const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.76)
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
+const CONTROLLER_CURSOR_COLOR := Color(1.0, 0.92, 0.58, 1.0)
+const CONTROLLER_CURSOR_BLOCKED_COLOR := Color(0.94, 0.48, 0.32, 1.0)
 const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.72)
 const TERRAIN_COLORS := {
 	"grass": Color(0.31, 0.40, 0.24, 1.0),
@@ -86,6 +89,7 @@ var _target_stack: Dictionary = {}
 var _field_objectives: Array = []
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
+var _controller_cursor_cell := Vector2i(-1, -1)
 var _terrain_textures: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
 var _unit_battle_icon_textures: Dictionary = {}
@@ -104,9 +108,11 @@ var _presentation_speed := BattleRulesScript.PRESENTATION_SPEED_NORMAL
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	focus_mode = Control.FOCUS_NONE
+	focus_mode = Control.FOCUS_ALL
 	custom_minimum_size = Vector2(620.0, 320.0)
 	tooltip_text = "Outlined hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
+	focus_entered.connect(_on_controller_focus_entered)
+	focus_exited.connect(_on_controller_focus_exited)
 	_load_terrain_textures()
 
 func _notification(what: int) -> void:
@@ -121,6 +127,9 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
+	if _handle_controller_navigation_input(event):
+		accept_event()
+		return
 	if event is InputEventMouseMotion:
 		var motion_event := event as InputEventMouseMotion
 		var hovered_cell := _hex_cell_at_position(motion_event.position)
@@ -138,6 +147,78 @@ func _gui_input(event: InputEvent) -> void:
 	var dispatch := _dispatch_board_click_at_position(mouse_event.position)
 	if bool(dispatch.get("accepted", false)):
 		accept_event()
+
+func _handle_controller_navigation_input(event: InputEvent) -> bool:
+	if not has_focus():
+		return false
+	if event.is_action_pressed("ui_up"):
+		_move_controller_cursor(Vector2i.UP)
+		return true
+	if event.is_action_pressed("ui_down"):
+		_move_controller_cursor(Vector2i.DOWN)
+		return true
+	if event.is_action_pressed("ui_left"):
+		_move_controller_cursor(Vector2i.LEFT)
+		return true
+	if event.is_action_pressed("ui_right"):
+		_move_controller_cursor(Vector2i.RIGHT)
+		return true
+	if event.is_action_pressed("ui_accept"):
+		return _dispatch_controller_cursor()
+	if event.is_action_pressed("ui_cancel"):
+		release_focus()
+		controller_navigation_cancelled.emit()
+		return true
+	return false
+
+func _on_controller_focus_entered() -> void:
+	_ensure_controller_cursor()
+	_sync_controller_cursor_preview()
+	queue_redraw()
+
+func _on_controller_focus_exited() -> void:
+	_hover_destination_cell = Vector2i(-1, -1)
+	queue_redraw()
+
+func _ensure_controller_cursor() -> void:
+	if _cell_in_bounds(_controller_cursor_cell):
+		return
+	var selected_id := String(_battle.get("selected_target_id", ""))
+	var selected_cell := _stack_cell_for_battle_id(selected_id)
+	if _cell_in_bounds(selected_cell):
+		_controller_cursor_cell = selected_cell
+		return
+	for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):
+		if destination is Dictionary:
+			var destination_cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
+			if _cell_in_bounds(destination_cell):
+				_controller_cursor_cell = destination_cell
+				return
+	var active_cell := _stack_cell_for_battle_id(String(_battle.get("active_stack_id", "")))
+	_controller_cursor_cell = active_cell if _cell_in_bounds(active_cell) else Vector2i(int(HEX_COLUMNS / 2), int(HEX_ROWS / 2))
+
+func _move_controller_cursor(delta: Vector2i) -> void:
+	_ensure_controller_cursor()
+	_controller_cursor_cell = Vector2i(
+		clampi(_controller_cursor_cell.x + delta.x, 0, HEX_COLUMNS - 1),
+		clampi(_controller_cursor_cell.y + delta.y, 0, HEX_ROWS - 1)
+	)
+	_sync_controller_cursor_preview()
+	queue_redraw()
+
+func _sync_controller_cursor_preview() -> void:
+	_hover_destination_cell = _controller_cursor_cell if has_focus() and _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
+
+func _dispatch_controller_cursor() -> bool:
+	_ensure_controller_cursor()
+	if _battle.is_empty() or not _cell_in_bounds(_controller_cursor_cell):
+		return false
+	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	if battle_id != "":
+		stack_focus_requested.emit(battle_id)
+	else:
+		hex_destination_requested.emit(_controller_cursor_cell.x, _controller_cursor_cell.y)
+	return true
 
 func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
@@ -253,6 +334,8 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_target_stack = {}
 	_field_objectives = []
 	_stack_hit_shapes = []
+	if battle.is_empty():
+		_controller_cursor_cell = Vector2i(-1, -1)
 	if not _is_legal_destination_cell(_hover_destination_cell):
 		_hover_destination_cell = Vector2i(-1, -1)
 	if not battle.is_empty():
@@ -269,6 +352,9 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 				_player_stacks.append(stack)
 			elif String(stack.get("side", "")) == "enemy":
 				_enemy_stacks.append(stack)
+	if has_focus():
+		_ensure_controller_cursor()
+		_sync_controller_cursor_preview()
 	queue_redraw()
 
 func validation_hex_layout_summary() -> Dictionary:
@@ -392,6 +478,12 @@ func validation_hex_layout_summary() -> Dictionary:
 		"hovered_destination_detail": String(hovered_destination_preview.get("destination_detail", "")),
 		"hovered_destination_sets_up_selected_target_attack": bool(hovered_destination_preview.get("sets_up_selected_target_attack", false)),
 		"hovered_destination_closes_on_selected_target": bool(hovered_destination_preview.get("closes_on_selected_target", false)),
+		"controller_board_focused": has_focus(),
+		"controller_cursor_q": _controller_cursor_cell.x,
+		"controller_cursor_r": _controller_cursor_cell.y,
+		"controller_cursor_cell_role": _controller_cursor_cell_role(),
+		"controller_cursor_battle_id": _stack_id_at_cell(_controller_cursor_cell),
+		"controller_cursor_legal_destination": _is_legal_destination_cell(_controller_cursor_cell),
 		"active_movement_board_click_intent": movement_click_intent,
 		"active_movement_board_click_action": String(movement_click_intent.get("action", "")),
 		"active_movement_board_click_label": String(movement_click_intent.get("label", "")),
@@ -1002,6 +1094,7 @@ func _draw() -> void:
 	_draw_field_objectives(hex_layout)
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
+	_draw_controller_cursor(hex_layout)
 	_draw_stack_tokens(hex_layout, stack_cells)
 	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_turn_strip(field_rect)
@@ -1549,6 +1642,18 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 					_draw_hex_outline(target_center, radius * 1.12, setup_color, 2.4)
 				_draw_hex_outline(target_center, radius * 1.02, TARGET_COLOR, 3.2)
 				_draw_focus_link(active_center, target_center, String(_active_stack.get("side", "")))
+
+func _draw_controller_cursor(hex_layout: Dictionary) -> void:
+	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):
+		return
+	var radius := float(hex_layout.get("radius", 1.0))
+	var color := CONTROLLER_CURSOR_COLOR
+	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	if battle_id == "" and not _is_legal_destination_cell(_controller_cursor_cell):
+		color = CONTROLLER_CURSOR_BLOCKED_COLOR
+	var center := _hex_center(_controller_cursor_cell, hex_layout)
+	_draw_hex_outline(center, radius * 1.13, color, 3.6)
+	draw_circle(center, clampf(radius * 0.09, 2.5, 4.5), color)
 
 func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
@@ -2505,7 +2610,31 @@ func _draw_footer_line(field_rect: Rect2) -> void:
 	var movement_state := _movement_state_label()
 	if movement_state != "":
 		summary = "%s | %s" % [summary, movement_state]
+	var cursor_state := _controller_cursor_state_label()
+	if cursor_state != "":
+		summary = "%s | %s" % [summary, cursor_state]
 	_draw_text(summary.left(84), footer_rect.position + Vector2(9.0, 15.0), SUBTEXT_COLOR, 11)
+
+func _controller_cursor_state_label() -> String:
+	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):
+		return ""
+	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	if battle_id != "":
+		return "Cursor: %s" % _stack_short_label(_stack_by_id(battle_id))
+	return "Cursor: %d,%d %s" % [
+		_controller_cursor_cell.x,
+		_controller_cursor_cell.y,
+		"move" if _is_legal_destination_cell(_controller_cursor_cell) else "blocked",
+	]
+
+func _controller_cursor_cell_role() -> String:
+	if not _cell_in_bounds(_controller_cursor_cell):
+		return ""
+	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	if battle_id != "":
+		var stack := _stack_by_id(battle_id)
+		return "%s_stack" % String(stack.get("side", "unknown"))
+	return "legal_destination" if _is_legal_destination_cell(_controller_cursor_cell) else "blocked_hex"
 
 func _draw_objective_marker(center: Vector2, objective: Dictionary, color: Color, radius: float) -> void:
 	var objective_type := String(objective.get("type", ""))

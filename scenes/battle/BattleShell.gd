@@ -89,6 +89,8 @@ func _ready() -> void:
 		_battle_board_view.stack_focus_requested.connect(_on_board_stack_focus_requested)
 	if _battle_board_view.has_signal("hex_destination_requested"):
 		_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
+	if _battle_board_view.has_signal("controller_navigation_cancelled"):
+		_battle_board_view.controller_navigation_cancelled.connect(_on_board_controller_navigation_cancelled)
 	buckets["connect_board_signals"] = ProfileLogScript.elapsed_ms(phase_started)
 	_battle_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
@@ -338,6 +340,9 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	_refresh()
 	call_deferred("_configure_battle_keyboard_focus", true)
 	return _movement_click_response(result, movement_intent, q, r, false)
+
+func _on_board_controller_navigation_cancelled() -> void:
+	call_deferred("_configure_battle_keyboard_focus", true)
 
 func _on_advance_pressed() -> void:
 	_perform_action("advance")
@@ -702,6 +707,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or _session == null or _session.battle.is_empty():
 		return
 	var surfaces := [
+		_battle_board_view,
 		_prev_target_button,
 		_next_target_button,
 		_advance_button,
