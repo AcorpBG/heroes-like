@@ -3985,9 +3985,21 @@
           "site_id": "site_verdant_graft_nursery",
           "x": 0,
           "y": 2
+        },
+        {
+          "placement_id": "graftroot_rootwatch_hollow",
+          "site_id": "site_rootwatch_hollow",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "placement_id": "murkward_ford_peatwax_front",
+          "site_id": "site_peatwax_reed_yard",
+          "x": 9,
+          "y": 1,
+          "collected_by_faction_id": "faction_mireclaw"
         }
-      ,
-        {"placement_id": "murkward_ford_peatwax_front", "site_id": "site_peatwax_reed_yard", "x": 9, "y": 1, "collected_by_faction_id": "faction_mireclaw"}],
+      ],
       "artifact_nodes": [
         {
           "placement_id": "bridge_boots",

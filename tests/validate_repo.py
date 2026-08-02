@@ -5709,6 +5709,7 @@ def build_overworld_object_content_batch_005_section(
         "guard_contract_ready_count": 0,
         "guarded_variant_count": 0,
         "metadata_only_boundary_count": 0,
+        "live_artifact_boundary_count": 0,
         "no_rare_resource_activation_count": 0,
         "normalized_existing_count": 0,
         "new_basic_count": 0,
@@ -5748,6 +5749,29 @@ def build_overworld_object_content_batch_005_section(
         if guarded:
             safe = safe and not bool(boundary.get("guard_resolution_runtime_adopted", True))
         return safe
+
+    def live_dwelling_artifact_boundary_is_safe(site_id: str, site: dict) -> bool:
+        boundary = site.get("runtime_boundary", {}) if isinstance(site.get("runtime_boundary", {}), dict) else {}
+        contract = site.get("artifact_reward_contract", {}) if isinstance(site.get("artifact_reward_contract", {}), dict) else {}
+        return (
+            site_id in {"site_greenbranch_copse", "site_rootwatch_hollow"}
+            and str(boundary.get("status", "")) == "neutral_dwelling_and_artifact_rewards_live"
+            and bool(boundary.get("neutral_dwelling_site_runtime_supported", False))
+            and bool(boundary.get("artifact_reward_execution", False))
+            and bool(boundary.get("guard_resolution_runtime_adopted", False))
+            and not bool(boundary.get("guarded_variant_runtime_migration", True))
+            and not bool(boundary.get("recruitment_ui_overhaul", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and not bool(boundary.get("renderer_sprite_required", True))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("rare_resource_activation", True))
+            and not bool(boundary.get("scenario_placement_migration", True))
+            and str(contract.get("resource_site_id", "")) == site_id
+            and str(contract.get("source_tag", "")) == "dwelling"
+            and str(contract.get("artifact_reward_table_id", "")) == "artifact_source_dwelling_support_rare"
+            and bool(contract.get("one_time_reward", False))
+            and not bool(contract.get("metadata_only", True))
+        )
 
     def check_public_text(object_id: str, obj: dict, site: dict) -> None:
         public_text_values = [
@@ -5951,8 +5975,10 @@ def build_overworld_object_content_batch_005_section(
             add_error(f"{object_id}: Batch 005 objects must author editor_placement")
         if metadata_boundary_is_safe(obj, guarded) and metadata_boundary_is_safe(site, guarded):
             section["metadata_only_boundary_count"] += 1
+        elif metadata_boundary_is_safe(obj, guarded) and live_dwelling_artifact_boundary_is_safe(site_id, site):
+            section["live_artifact_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 005 object and site must keep explicit metadata-only runtime boundaries")
+            add_error(f"{object_id}: Batch 005 object and site must keep an explicit metadata-only or approved dwelling-artifact runtime boundary")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 005 must not activate rare resources in live site fields")
         else:
@@ -5970,9 +5996,13 @@ def build_overworld_object_content_batch_005_section(
         for role, expected_count in expected_role_counts.items():
             if int(section["role_counts"].get(role, 0)) != expected_count:
                 add_error(f"Batch 005 must include {expected_count} {role} objects")
-        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "roster_contract_ready_count", "guard_contract_ready_count", "metadata_only_boundary_count", "no_rare_resource_activation_count"):
+        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "roster_contract_ready_count", "guard_contract_ready_count", "no_rare_resource_activation_count"):
             if int(section[counter_key]) != len(batch_objects):
                 add_error(f"Batch 005 {counter_key} must match object count")
+        if section["metadata_only_boundary_count"] != len(batch_objects) - 2:
+            add_error("Batch 005 metadata_only_boundary_count must retain the 31 inactive object/site pairs")
+        if section["live_artifact_boundary_count"] != 2:
+            add_error("Batch 005 live_artifact_boundary_count must cover Greenbranch Copse and Rootwatch Hollow")
         if section["guarded_variant_count"] != 4:
             add_error("Batch 005 must include exactly 4 guarded high-value dwelling variants")
         for biome_id in sorted(biomes.keys()):
@@ -7044,7 +7074,7 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- objects: {batch_005.get('object_count', 0)}; sites={batch_005.get('site_count', 0)}; normalized={role_counts.get('existing_dwelling_normalization', 0)}; new_basic={role_counts.get('new_basic_dwelling', 0)}; guarded_high_value={role_counts.get('guarded_high_value_dwelling', 0)}")
         print(f"- shape contracts={batch_005.get('shape_contract_ready_count', 0)}; linked site contracts={batch_005.get('linked_site_contract_count', 0)}; roster contracts={batch_005.get('roster_contract_ready_count', 0)}; guard contracts={batch_005.get('guard_contract_ready_count', 0)}")
         print(f"- biomes covered={len(batch_005.get('biome_counts', {}))}; footprints={','.join(batch_005.get('footprints', {}).keys())}; guarded variants={batch_005.get('guarded_variant_count', 0)}")
-        print(f"- metadata-only boundaries={batch_005.get('metadata_only_boundary_count', 0)}; no rare-resource activation={batch_005.get('no_rare_resource_activation_count', 0)}; errors={len(batch_005.get('errors', []))}; warnings={len(batch_005.get('warnings', []))}")
+        print(f"- metadata-only boundaries={batch_005.get('metadata_only_boundary_count', 0)}; live artifact boundaries={batch_005.get('live_artifact_boundary_count', 0)}; no rare-resource activation={batch_005.get('no_rare_resource_activation_count', 0)}; errors={len(batch_005.get('errors', []))}; warnings={len(batch_005.get('warnings', []))}")
     batch_006 = report.get("content_batches", {}).get("batch_006_guarded_rewards_elite_sites", {})
     if batch_006:
         print("Content Batch 006:")
@@ -9123,7 +9153,7 @@ def artifact_source_table_issues(
         live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
         if metadata_only == live_drop_execution:
             issues.append("source_table_runtime_mode_invalid")
-        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "battle_salvage"}:
+        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "dwelling", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
         for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
@@ -10771,15 +10801,33 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 3, errors, "Exactly three artifact source/reward tables must execute live")
-    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "battle_salvage"], errors, "Only guarded-site, shrine, and battle-salvage artifact rewards may execute live in this slice")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, dwelling, and battle-salvage source tables must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 4, errors, "Exactly four artifact source/reward tables must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "dwelling", "battle_salvage"], errors, "Only guarded-site, shrine, dwelling, and battle-salvage artifact rewards may execute live in this slice")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     starlens = resource_sites.get("site_starlens_sanctum", {})
     starlens_contract = starlens.get("artifact_reward_contract", {}) if isinstance(starlens.get("artifact_reward_contract"), dict) else {}
     ensure(str(starlens_contract.get("source_tag", "")) == "shrine", errors, "Starlens Sanctum must opt into the shrine artifact source")
     ensure(str(starlens_contract.get("artifact_reward_table_id", "")) == "artifact_source_shrine_accord_rare", errors, "Starlens Sanctum must use the authored shrine artifact table")
     ensure(bool((starlens.get("runtime_boundary", {}) if isinstance(starlens.get("runtime_boundary"), dict) else {}).get("artifact_reward_execution", False)), errors, "Starlens Sanctum must explicitly opt into artifact reward execution")
+    for dwelling_site_id in ("site_rootwatch_hollow", "site_greenbranch_copse"):
+        dwelling_site = resource_sites.get(dwelling_site_id, {})
+        dwelling_contract = dwelling_site.get("artifact_reward_contract", {}) if isinstance(dwelling_site.get("artifact_reward_contract"), dict) else {}
+        ensure(str(dwelling_contract.get("source_tag", "")) == "dwelling", errors, f"{dwelling_site_id} must opt into the dwelling artifact source")
+        ensure(str(dwelling_contract.get("artifact_reward_table_id", "")) == "artifact_source_dwelling_support_rare", errors, f"{dwelling_site_id} must use the authored dwelling artifact table")
+        ensure(bool((dwelling_site.get("runtime_boundary", {}) if isinstance(dwelling_site.get("runtime_boundary"), dict) else {}).get("artifact_reward_execution", False)), errors, f"{dwelling_site_id} must explicitly opt into artifact reward execution")
+    mireford = scenarios.get("mireford-skirmish", {})
+    mireford_resource_nodes = mireford.get("resource_nodes", []) if isinstance(mireford.get("resource_nodes"), list) else []
+    ensure(
+        any(
+            isinstance(node, dict)
+            and str(node.get("placement_id", "")) == "graftroot_rootwatch_hollow"
+            and str(node.get("site_id", "")) == "site_rootwatch_hollow"
+            for node in mireford_resource_nodes
+        ),
+        errors,
+        "Rootbound Mireford must place Rootwatch Hollow for the Thornwake dwelling artifact reward",
+    )
     bellwake = scenarios.get("bellwake-wreck-claim", {})
     bellwake_salvage_encounters = [
         encounter
@@ -22978,7 +23026,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards for eligible player and AI commanders, and Bellwake player battle salvage while pickup, dwelling, town-service, and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, and Bellwake player battle salvage while pickup, town-service, and rare-resource artifact income remain inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")
