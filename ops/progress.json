@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Bellwake Aurora Battery battle salvage through the live victory workflow with deterministic reward selection, auto-equip, aftermath messaging, one-time provenance, and save continuity. Overall release work remains active.",
+  "currentNotes": "Completed a narrow strategic-AI redundant-work cleanup by reusing one normalized commander-roster snapshot per live task-reconciliation pass. Exact current-HEAD Medium behavior is preserved; no meaningful aggregate runtime speedup is claimed. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "artifact-battle-salvage-execution-10184",
-  "currentSliceId": "artifact-battle-salvage-execution-10184",
-  "currentSliceNotes": "Aurora Battery now grants Warcrest Pennon through the real victory path while preserving Black-Sail Compass as a map pickup; aftermath, provenance, save/resume, duplicate rejection, and faction gating are validated.",
+  "currentSlice": "strategic-ai-task-reconcile-roster-reuse-10184",
+  "currentSliceId": "strategic-ai-task-reconcile-roster-reuse-10184",
+  "currentSliceNotes": "Live task reconciliation now reuses one normalized faction commander-roster snapshot across actor checks while preserving the full planner. Current-HEAD control and final code match row signature ffa259b1 over the 43-turn terminal trajectory.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Battle-Salvage Reward Execution",
-  "currentSliceUpdatedAt": "2026-08-02T19:58:49Z",
+  "currentSliceTitle": "Strategic AI Task-Reconciliation Roster Reuse",
+  "currentSliceUpdatedAt": "2026-08-02T20:52:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65301,6 +65301,83 @@
         "status": "pass",
         "updatedAt": "2026-08-02T19:58:49Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 godot --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Each live-task reconciliation pass loads and normalizes the faction commander roster once, all actor lifecycle and resume checks consume that same immutable pass snapshot, and focused behavior, broad regressions, plus a matched full Medium trajectory prove reduced reconciliation work without changing strategic outcomes.",
+      "id": "strategic-ai-task-reconcile-roster-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_lifecycle_reconciliation_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "accumulating additional full-length Medium matrix rows",
+        "skipping task reconciliation, reservation repair, pruning, or planner writes",
+        "caching a commander roster across factions or turn/reconciliation boundaries",
+        "changing task lifecycle, target scoring, or commander behavior",
+        "Native RMG changes",
+        "claiming strategic-AI or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md strategic AI performance gap and Phase 6 performance baseline",
+      "purpose": "Remove repeated commander-roster reconstruction from per-task live lifecycle reconciliation while preserving the complete planner and exact strategic behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "completedAt": "2026-08-02T20:52:08Z",
+      "completionNotes": "Completed as a narrow redundant-work cleanup. Live task reconciliation now loads one normalized faction commander roster per pass and shares it across all actor lifecycle and resume checks without skipping reconciliation, reservation repair, pruning, or planner writes. The initially investigated post-raid planner skip was rejected and removed after a partial run appeared to disagree with an outdated stored baseline. A fresh unmodified-HEAD control established the actual current trajectory, and final code exactly matches it: both terminate after 43 turns with row signature ffa259b1, 209 activity events, 30 target assignments, five planned commander tasks, terminal defeat, and zero behavior bugs, target-integrity violations, unreachable targets, or stalled turns. The matched three-turn post-raid planning total fell from 514ms to 463ms; the full-run affected phase changed from 15937ms to 15928ms and whole-row runtime from 309613ms to 310029ms, so no meaningful aggregate speedup is claimed.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_hero_task_lifecycle_reconciliation_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_hero_task_live_turn_execution_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/ai_raid_regroup_retreat_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 360 --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 godot --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (passed; row signature 140dbc3e)",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 godot --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn (HEAD control and final implementation passed; row signature ffa259b1)",
+        "python3 tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "evidence": {
+        "commander_roster_load_policy": "once_per_faction_reconciliation_pass",
+        "head_control_turns_completed": 43,
+        "final_turns_completed": 43,
+        "head_control_row_signature": "ffa259b1",
+        "final_row_signature": "ffa259b1",
+        "enemy_activity_event_count": 209,
+        "target_assignment_count": 30,
+        "commander_task_planned_count": 5,
+        "behavior_bug_count": 0,
+        "target_integrity_violation_count": 0,
+        "unreachable_active_target_total": 0,
+        "stalled_turn_count": 0,
+        "terminal_status": "defeat",
+        "three_turn_post_raid_plan_ms_before": 514,
+        "three_turn_post_raid_plan_ms_after": 463,
+        "full_run_post_raid_plan_ms_before": 15937,
+        "full_run_post_raid_plan_ms_after": 15928,
+        "head_control_row_runtime_msec": 309613,
+        "final_row_runtime_msec": 310029,
+        "aggregate_speedup_claimed": false,
+        "save_version": 9
+      },
+      "startedAt": "2026-08-02T20:02:57Z",
+      "status": "completed",
+      "title": "Strategic AI Task-Reconciliation Roster Reuse",
+      "updatedAt": "2026-08-02T20:52:08Z"
     }
   ],
   "project": "heroes-like",
@@ -65843,9 +65920,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Barrow Vault and Drowned Reliquary now execute live guarded-site artifact rewards for player and strategic-AI commanders with guard enforcement, deterministic selection, auto-equip, provenance, and save continuity. Other artifact source tags and broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Strategic-AI live task reconciliation now reuses one normalized commander-roster snapshot per faction pass with exact current-HEAD Medium trajectory equivalence. Broader strategic AI, balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T19:58:49Z",
+  "updatedAt": "2026-08-02T20:52:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
