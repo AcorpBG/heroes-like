@@ -711,6 +711,22 @@ Non-goals:
 - do not change menu focus navigation, movement/pathing rules, save-game schema, battle behavior, or Native RMG;
 - do not replace the existing preset picker or add a full-screen settings dashboard.
 
+## Strategic AI Emergency Defense Scan Reuse
+
+The completed Phase 5 strategic-AI performance slice removes repeated defender preparation inside one enemy turn without changing emergency-defense priorities or outcomes.
+
+Target shape:
+- one emergency scan context normalizes the available commander candidates once and prepares each commander army probe once;
+- recruitment scans reuse those commander/probe payloads across every open spawn point and support town;
+- launch-readiness stores the exact per-spawn emergency candidate surface and final launch selection reuses it instead of recomputing the same defense scan;
+- town defense remains preferred over resource defense, commander-fit scoring and deterministic tie-breaking remain unchanged, and candidate payloads stay behaviorally identical;
+- focused River Pass behavior and scan-work counters, strategic AI baseline, hero-task spawn selection, and core regressions pass.
+
+Non-goals:
+- do not tune AI priorities, recruitment strength, commander fit, pathing, or authored content;
+- do not broaden the long-run seed matrix or add a report-only timing gate;
+- do not change save schema, player-facing event text, combat, or Native RMG.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

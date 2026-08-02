@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed custom keyboard bindings for all eight hero movement directions through the existing shared InputMap path, with conflict-safe swaps, reserved-key protection, preset reset, and schema-11 device persistence.",
+  "currentNotes": "Completed live strategic AI emergency-defense scan reuse: commander candidates and prepared probes are cached per scan, and final launch selection reuses the exact launch-readiness candidate surface.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-custom-hero-keybindings-10184",
-  "currentSliceId": "settings-custom-hero-keybindings-10184",
-  "currentSliceNotes": "Completed. Settings exposes a compact eight-direction binding modal; physical-key changes apply immediately, duplicate keys swap, reserved keys reject, presets reset customization, and normal plus packaged reload preserve schema-11 bindings.",
+  "currentSlice": "strategic-ai-emergency-defense-scan-reuse-10184",
+  "currentSliceId": "strategic-ai-emergency-defense-scan-reuse-10184",
+  "currentSliceNotes": "Completed. Emergency recruitment prepares two commander probes once and reuses them six times in the focused repeated scan; launch selection reuses both precomputed spawn candidates while preserving hero_sable and exact plan payloads.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Custom Hero Movement Keybindings",
-  "currentSliceUpdatedAt": "2026-08-02T15:47:03Z",
+  "currentSliceTitle": "Strategic AI Emergency Defense Scan Reuse",
+  "currentSliceUpdatedAt": "2026-08-02T16:05:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,53 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T16:05:58Z",
+      "completionSummary": "Emergency-defense recruitment now loads available commander candidates once and prepares each commander army probe once per scan context. Launch readiness retains the exact per-spawn emergency candidate surface for final launch selection, eliminating the duplicate scan while preserving defender selection, score, ordering, and payload behavior.",
+      "completionCriteria": "Emergency recruitment loads commander candidates once and prepares each commander probe once per scan context; subsequent spawn points/support-town scans reuse both; launch readiness and final launch selection share exact per-point emergency candidates; River Pass still selects hero_sable with unchanged candidate payloads; focused strategic AI and core regressions pass.",
+      "id": "strategic-ai-emergency-defense-scan-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_emergency_defense_commander_fit_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "AI priority, recruitment strength, commander-fit, pathing, or content tuning",
+        "long-run seed-matrix expansion or report-only timing gates",
+        "save schema, public event text, combat, or Native RMG changes"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Strategic AI Emergency Defense Scan Reuse",
+      "purpose": "Reduce the measured multi-second emergency defender-selection hotspot by eliminating repeated live commander/probe work while preserving exact selection behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T15:51:30Z",
+      "status": "completed",
+      "title": "Strategic AI Emergency Defense Scan Reuse",
+      "updatedAt": "2026-08-02T16:05:58Z",
+      "validationEvidence": [
+        "Focused River Pass emergency-defense report preserved hero_sable, both per-spawn candidate payloads, score 23492, source emergency_resource_defense, and commander-fit bonus 64.",
+        "Repeated recruitment scans loaded commander candidates once and reused them three times; prepared two commander probes once and reused them six times; retained path context loaded once and reused three times.",
+        "Launch readiness loaded one candidate surface and final launch selection reused both precomputed spawn candidates; the resulting launch candidate exactly matched the emergency plan.",
+        "AI hero-task spawn commander selection report passed saved-task, ordinary-launch, generated multi-town, rebuild-pressure, and fresh commander-fit cases.",
+        "Strategic AI baseline exited 0 with all 14 expected subsystems passing and five generated-map probes healthy; its pre-existing Medium long-run coverage blocker remains outside this slice.",
+        "Core systems regression smoke exited 0; Godot editor parse, tests/validate_repo.py, jq empty, and git diff --check passed."
+      ]
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/custom_hero_keybindings_smoke.tscn",
@@ -65131,7 +65178,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T15:47:03Z",
+  "updatedAt": "2026-08-02T16:05:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

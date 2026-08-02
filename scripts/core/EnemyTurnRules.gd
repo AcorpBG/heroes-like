@@ -2277,7 +2277,12 @@ static func _invalidate_recruit_destination_field_cache(destination_context: Dic
 		destination_context.erase(key)
 	var faction_context = destination_context.get("faction_recruitment_context", {})
 	if faction_context is Dictionary:
-		faction_context.erase("emergency_defense_recruitment_candidates")
+		for key in [
+			"emergency_defense_recruitment_candidates",
+			"emergency_defense_commander_candidates",
+			"emergency_defense_probe_by_commander",
+		]:
+			faction_context.erase(key)
 
 static func _choose_recruit_destination_breakdown(
 	session: SessionStateStoreScript.SessionData,
@@ -3230,7 +3235,13 @@ static func _launchable_spawn_candidate(
 		_spawn_profile_count("emergency_defense_launch_ready_precomputed_empty")
 	else:
 		started_usec = _spawn_profile_timer()
-		emergency_defense_plan = _emergency_defense_launch_ready_report(session, config, state, faction_id)
+		emergency_defense_plan = _emergency_defense_launch_ready_report(
+			session,
+			config,
+			state,
+			faction_id,
+			launch_scan_cache
+		)
 		_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
 		if emergency_defense_plan.is_empty():
 			launch_scan_cache["emergency_defense_empty"] = true
@@ -3261,7 +3272,8 @@ static func _launchable_spawn_candidate(
 		config,
 		state,
 		faction_id,
-		skip_emergency_defense_scan
+		skip_emergency_defense_scan,
+		launch_scan_cache
 	)
 	_spawn_profile_add_ms("best_open_spawn_point_ms", started_usec)
 	if candidate.is_empty():
@@ -3314,7 +3326,8 @@ static func _emergency_defense_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	emergency_scan_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "":
 		return {}
@@ -3324,7 +3337,8 @@ static func _emergency_defense_launch_ready_report(
 	if points.is_empty():
 		return {}
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
-	var emergency_scan_context := {}
+	var candidate_surface := []
+	candidate_surface.resize(points.size())
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -3340,10 +3354,14 @@ static func _emergency_defense_launch_ready_report(
 			index,
 			emergency_scan_context
 		)
+		candidate_surface[index] = candidate.duplicate(true)
 		if candidate.is_empty():
 			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
+	emergency_scan_context["emergency_defense_candidate_surface"] = candidate_surface
+	emergency_scan_context["emergency_defense_candidate_surface_complete"] = true
+	_spawn_profile_count("emergency_candidate_surface_loaded")
 	return best
 
 static func _planned_task_launch_ready_report(
@@ -4779,7 +4797,8 @@ static func _best_open_spawn_point(
 	config: Dictionary,
 	state: Dictionary = {},
 	faction_id: String = "",
-	skip_emergency_defense_scan: bool = false
+	skip_emergency_defense_scan: bool = false,
+	preloaded_spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
 	var started_usec := _spawn_profile_timer()
 	var points := _open_spawn_points(session, config)
@@ -4793,7 +4812,7 @@ static func _best_open_spawn_point(
 	started_usec = _spawn_profile_timer()
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
 	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
-	var spawn_scan_context := {}
+	var spawn_scan_context := preloaded_spawn_scan_context
 	var best := {}
 	for index in range(points.size()):
 		var point = points[index]
@@ -4889,8 +4908,18 @@ static func _spawn_point_candidate(
 	var started_usec := _spawn_profile_timer()
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
 	_spawn_profile_add_ms("spawn_point_recent_rebuild_pressure_ms", started_usec)
+	var emergency_surface_complete := bool(spawn_scan_context.get("emergency_defense_candidate_surface_complete", false))
 	if skip_emergency_defense_scan:
 		_spawn_profile_count("emergency_defense_spawn_candidate_precomputed_empty")
+	elif emergency_surface_complete:
+		var surface_value = spawn_scan_context.get("emergency_defense_candidate_surface", [])
+		var candidate_surface: Array = surface_value if surface_value is Array else []
+		var precomputed_candidate: Dictionary = candidate_surface[spawn_order] if spawn_order >= 0 and spawn_order < candidate_surface.size() and candidate_surface[spawn_order] is Dictionary else {}
+		if precomputed_candidate.is_empty():
+			_spawn_profile_count("emergency_candidate_surface_point_empty")
+		else:
+			_spawn_profile_count("emergency_candidate_surface_point_reused")
+			return precomputed_candidate.duplicate(true)
 	else:
 		started_usec = _spawn_profile_timer()
 		var emergency_defense_candidate := _emergency_defense_spawn_candidate_for_point(
@@ -5979,12 +6008,13 @@ static func _emergency_defense_spawn_candidate_for_point(
 	if base_encounter_id == "":
 		return {}
 	var roster: Variant = state.get("commander_roster", [])
-	var candidates: Array = EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+	var candidates: Array = _emergency_defense_commander_candidates(
 		session,
 		faction_id,
 		int(state.get("commander_counter", 0)),
 		occupied_commander_ids,
-		roster
+		roster,
+		emergency_scan_context
 	)
 	if candidates.is_empty():
 		return {}
@@ -6004,26 +6034,17 @@ static func _emergency_defense_spawn_candidate_for_point(
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
-		var probe := {
-			"placement_id": "__emergency_defense_probe:%s:%d" % [roster_hero_id, spawn_order],
-			"encounter_id": base_encounter_id,
-			"x": int(point.get("x", 0)),
-			"y": int(point.get("y", 0)),
-			"difficulty": "pressure",
-			"spawned_by_faction_id": faction_id,
-			"days_active": 0,
-			"arrived": false,
-			"goal_distance": 9999,
-		}
-		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
-			probe,
-			roster_hero_id,
-			faction_id,
+		var probe := _emergency_defense_commander_probe(
 			session,
+			base_encounter_id,
+			faction_id,
+			roster_hero_id,
+			point,
+			spawn_order,
 			occupied_commander_ids,
-			roster
+			roster,
+			emergency_scan_context
 		)
-		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
 		if EnemyAdventureRulesScript.raid_regroup_needed(probe, config, faction_id):
 			continue
 		var town_defense := {}
@@ -6084,6 +6105,80 @@ static func _emergency_defense_spawn_candidate_for_point(
 			elif best_resource.is_empty() or _spawn_point_candidate_beats(candidate, best_resource):
 				best_resource = candidate
 	return best_town if not best_town.is_empty() else best_resource
+
+static func _emergency_defense_commander_candidates(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_counter: int,
+	occupied_commander_ids: Dictionary,
+	roster: Variant,
+	emergency_scan_context: Dictionary
+) -> Array:
+	var cached = emergency_scan_context.get("emergency_defense_commander_candidates", null)
+	if cached is Array:
+		_reinforcement_profile_count("emergency_commander_candidates_reused")
+		_spawn_profile_count("emergency_commander_candidates_reused")
+		return cached
+	var candidates := EnemyAdventureRulesScript._raid_commander_spawn_candidates(
+		session,
+		faction_id,
+		commander_counter,
+		occupied_commander_ids,
+		roster
+	)
+	emergency_scan_context["emergency_defense_commander_candidates"] = candidates
+	_reinforcement_profile_count("emergency_commander_candidates_loaded")
+	_spawn_profile_count("emergency_commander_candidates_loaded")
+	return candidates
+
+static func _emergency_defense_commander_probe(
+	session: SessionStateStoreScript.SessionData,
+	base_encounter_id: String,
+	faction_id: String,
+	roster_hero_id: String,
+	point: Dictionary,
+	spawn_order: int,
+	occupied_commander_ids: Dictionary,
+	roster: Variant,
+	emergency_scan_context: Dictionary
+) -> Dictionary:
+	var cache_value = emergency_scan_context.get("emergency_defense_probe_by_commander", {})
+	var probe_cache: Dictionary = cache_value if cache_value is Dictionary else {}
+	var cached = probe_cache.get(roster_hero_id, null)
+	var probe: Dictionary
+	if cached is Dictionary:
+		probe = cached.duplicate(true)
+		_reinforcement_profile_count("emergency_commander_probe_reused")
+		_spawn_profile_count("emergency_commander_probe_reused")
+	else:
+		probe = {
+			"placement_id": "__emergency_defense_probe:%s:%d" % [roster_hero_id, spawn_order],
+			"encounter_id": base_encounter_id,
+			"x": int(point.get("x", 0)),
+			"y": int(point.get("y", 0)),
+			"difficulty": "pressure",
+			"spawned_by_faction_id": faction_id,
+			"days_active": 0,
+			"arrived": false,
+			"goal_distance": 9999,
+		}
+		probe["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+			probe,
+			roster_hero_id,
+			faction_id,
+			session,
+			occupied_commander_ids,
+			roster
+		)
+		probe = EnemyAdventureRulesScript.ensure_raid_army(probe, session, occupied_commander_ids)
+		probe_cache[roster_hero_id] = probe.duplicate(true)
+		emergency_scan_context["emergency_defense_probe_by_commander"] = probe_cache
+		_reinforcement_profile_count("emergency_commander_probe_loaded")
+		_spawn_profile_count("emergency_commander_probe_loaded")
+	probe["placement_id"] = "__emergency_defense_probe:%s:%d" % [roster_hero_id, spawn_order]
+	probe["x"] = int(point.get("x", 0))
+	probe["y"] = int(point.get("y", 0))
+	return probe
 
 static func _emergency_defense_path_context(
 	session: SessionStateStoreScript.SessionData,
