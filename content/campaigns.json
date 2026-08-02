@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_campaign_count": 5,
+  "player_facing_active_campaign_count": 6,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -507,6 +507,108 @@
             "hero_progression": true,
             "spells": true,
             "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_frontier_claims",
+      "name": "Frontier Claims",
+      "description": "Three independent commanders follow one disputed survey chain from Mireford's root road through Orevein's contract crossing to Bellwake's drowned registry.",
+      "summary": "A three-chapter cross-faction campaign anthology linking the first authored Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
+      "region": "Mireford to Bellwake Coast",
+      "arc_goal": "Secure three rival frontier claims and expose the survey chain connecting Murkward, Riverwatch, and Prismhearth's wreck registry.",
+      "completion_title": "Claims Entered",
+      "completion_summary": "Silsa, Marka, and Ivara secure three independent claims, leaving a shared record of the frontier route without merging their commands.",
+      "starting_scenario_id": "mireford-skirmish",
+      "scenarios": [
+        {
+          "scenario_id": "mireford-skirmish",
+          "label": "Chapter I: Rootbound Mireford",
+          "description": "Reclaim Murkward, break the ford raiders, and mark a living Thornwake route toward the eastern claims.",
+          "chapter_index": 1,
+          "chapter_title": "Root the Ford",
+          "status_hint": "Open the claim route with Silsa's root caravan.",
+          "carryover_summary": "Exports a bounded share of Mireford stores and the secured-ford record; Silsa's personal progression remains with Thornwake.",
+          "briefing": "Silsa Bramble-Hound must bind Murkward into a living road before the river closes around the caravan.",
+          "intel": "Ford reavers and silt hunters are holding the crossing while distant survey marks point east toward Orevein.",
+          "stakes": "A rooted ford opens the first claim route; failure leaves the eastern contracts isolated behind Mireclaw pressure.",
+          "aftermath_victory": "Murkward takes root under Thornwake guard and a recovered survey mark points the docket toward Orevein.",
+          "aftermath_defeat": "The ford remains broken ground and the frontier docket cannot move beyond Mireford.",
+          "journal_victory": "Silsa rooted the Mireford crossing and released a bounded supply train toward Orevein.",
+          "journal_defeat": "Silsa failed to secure the first frontier claim.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
+            "flag_ids": ["ford_reavers_broken", "silt_hunters_broken"]
+          }
+        },
+        {
+          "scenario_id": "orevein-contract",
+          "label": "Chapter II: Orevein Contract",
+          "description": "Use the Mireford route to force a Brasshollow contract across Riverwatch and uncover the wreck-registry clause behind it.",
+          "chapter_index": 2,
+          "chapter_title": "Stamp the Crossing",
+          "status_hint": "Marka receives supplies and proof, not Silsa's personal command growth.",
+          "carryover_summary": "Imports bounded Mireford resources and flags, then exports Orevein stores and the broken archive record toward Bellwake.",
+          "briefing": "Marka Ironclause must turn the Mireford evidence into a binding Riverwatch claim before Embercourt voids the route.",
+          "intel": "Archive wardens and bridge levies defend a contract chain whose final clause names Prismhearth's drowned registry.",
+          "stakes": "A stamped crossing exposes the coastal claim; failure lets Embercourt bury the shared survey record.",
+          "aftermath_victory": "Riverwatch accepts Orevein's writ and the seized archive clause sends the final docket to Bellwake.",
+          "aftermath_defeat": "The archive line holds and the Bellwake clause remains sealed behind Embercourt authority.",
+          "journal_victory": "Marka stamped the Riverwatch crossing and forwarded the wreck-registry clause to Veilmourn.",
+          "journal_defeat": "Marka failed to bind the second frontier claim.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "mireford-skirmish", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "mireford-skirmish", "flag": "ford_reavers_broken"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "mireford-skirmish",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3, "brass_scrip": 2},
+            "flag_ids": ["archive_wardens_broken", "bridgeward_levies_broken"]
+          }
+        },
+        {
+          "scenario_id": "bellwake-wreck-claim",
+          "label": "Chapter III: Bellwake Wreck Claim",
+          "description": "Follow the seized clause into Bellwake fog, recover the drowned chart, and close the shared frontier docket.",
+          "chapter_index": 3,
+          "chapter_title": "Enter the Wreck Claim",
+          "status_hint": "Ivara receives Orevein supplies and evidence while retaining her own Veilmourn command state.",
+          "carryover_summary": "Imports the bounded Orevein bundle and resolves the anthology without cross-faction hero, spell, or artifact transfer.",
+          "briefing": "Ivara Blacktide must recover the drowned mirror chart before Sunvault fixes every wreck beneath its daylight registry.",
+          "intel": "Relay pickets and mirror lancers protect the final survey record; Orevein's clause proves Bellwake has standing to claim it.",
+          "stakes": "Enter the wreck claim and all three routes become one frontier record; fail and Sunvault erases the chain in daylight.",
+          "aftermath_victory": "The drowned chart enters Bellwake's vault beside the Mireford mark and Orevein writ, completing the frontier docket.",
+          "aftermath_defeat": "Sunvault strips the chart from the wreck lane and leaves the three claims legally and strategically divided.",
+          "journal_victory": "Ivara entered the final wreck claim and closed the three-command frontier record.",
+          "journal_defeat": "Ivara failed to recover the final frontier record.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "orevein-contract", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "orevein-contract", "flag": "archive_wardens_broken"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "orevein-contract",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
             "flags_prefix": "carryover_"
           }
         }

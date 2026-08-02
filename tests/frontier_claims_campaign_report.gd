@@ -1,0 +1,279 @@
+extends Node
+
+const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
+const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+
+const REPORT_ID := "FRONTIER_CLAIMS_CAMPAIGN_REPORT"
+const CAMPAIGN_ID := "campaign_frontier_claims"
+const MIREFORD_ID := "mireford-skirmish"
+const OREVEIN_ID := "orevein-contract"
+const BELLWAKE_ID := "bellwake-wreck-claim"
+const MIREFORD_HERO_ID := "hero_thornwake_silsa_bramblehound"
+const OREVEIN_HERO_ID := "hero_brasshollow_marka_ironclause"
+const BELLWAKE_HERO_ID := "hero_veilmourn_ivara_blacktide"
+const SAVE_SLOT := 2
+
+func _ready() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	ContentService.clear_cache()
+	var profile := CampaignRulesScript.normalize_profile({})
+	if not _assert_campaign_browser(profile):
+		return
+
+	var mireford_session: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(
+		profile, MIREFORD_ID, "hard", CAMPAIGN_ID
+	)
+	if not _assert_campaign_session(mireford_session, MIREFORD_ID, MIREFORD_HERO_ID, "hard"):
+		return
+	var save_evidence := _save_restore_evidence(mireford_session)
+	if save_evidence.is_empty():
+		return
+
+	mireford_session.overworld["resources"] = {
+		"gold": 4000,
+		"wood": 20,
+		"ore": 20,
+		"verdant_grafts": 10,
+	}
+	mireford_session.flags["ford_reavers_broken"] = true
+	mireford_session.flags["silt_hunters_broken"] = true
+	_mark_victory(mireford_session, "Silsa rooted the first frontier claim.")
+	var after_mireford := CampaignRulesScript.record_session_completion(profile, mireford_session)
+	if not _assert_unlocked(after_mireford, OREVEIN_ID):
+		return
+
+	var orevein_baseline := ScenarioFactoryScript.create_session(
+		OREVEIN_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	var orevein_session: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(
+		after_mireford, OREVEIN_ID, "normal", CAMPAIGN_ID
+	)
+	if not _assert_campaign_session(orevein_session, OREVEIN_ID, OREVEIN_HERO_ID, "normal"):
+		return
+	if not _assert_cross_faction_import(
+		orevein_session,
+		orevein_baseline,
+		{"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
+		"carryover_ford_reavers_broken",
+		MIREFORD_ID
+	):
+		return
+	if String(orevein_session.overworld.get("active_hero_id", "")) == MIREFORD_HERO_ID:
+		_fail("Mireford commander leaked into the Brasshollow chapter.")
+		return
+	if not _assert_skirmish_isolation(after_mireford, OREVEIN_ID):
+		return
+
+	orevein_session.overworld["resources"] = {
+		"gold": 5000,
+		"wood": 20,
+		"ore": 20,
+		"brass_scrip": 10,
+	}
+	orevein_session.flags["archive_wardens_broken"] = true
+	orevein_session.flags["bridgeward_levies_broken"] = true
+	_mark_victory(orevein_session, "Marka stamped the second frontier claim.")
+	var after_orevein := CampaignRulesScript.record_session_completion(after_mireford, orevein_session)
+	if not _assert_unlocked(after_orevein, BELLWAKE_ID):
+		return
+
+	var bellwake_baseline := ScenarioFactoryScript.create_session(
+		BELLWAKE_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	var bellwake_session: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(
+		after_orevein, BELLWAKE_ID, "normal", CAMPAIGN_ID
+	)
+	if not _assert_campaign_session(bellwake_session, BELLWAKE_ID, BELLWAKE_HERO_ID, "normal"):
+		return
+	if not _assert_cross_faction_import(
+		bellwake_session,
+		bellwake_baseline,
+		{"gold": 1200, "wood": 3, "ore": 3, "brass_scrip": 2},
+		"carryover_archive_wardens_broken",
+		OREVEIN_ID
+	):
+		return
+	if String(bellwake_session.overworld.get("active_hero_id", "")) == OREVEIN_HERO_ID:
+		_fail("Orevein commander leaked into the Veilmourn chapter.")
+		return
+
+	bellwake_session.flags["relay_pickets_broken"] = true
+	bellwake_session.flags["mirror_lancers_broken"] = true
+	_mark_victory(bellwake_session, "Ivara entered the final wreck claim.")
+	var completed_profile := CampaignRulesScript.record_session_completion(after_orevein, bellwake_session)
+	if not _assert_completion_and_replay(completed_profile, bellwake_session):
+		return
+
+	print("%s %s" % [REPORT_ID, JSON.stringify({
+		"ok": true,
+		"campaign_id": CAMPAIGN_ID,
+		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID],
+		"campaign_count": CampaignRulesScript.campaign_ids().size(),
+		"save_resume": save_evidence,
+		"mireford_to_orevein_resources": {"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
+		"orevein_to_bellwake_resources": {"gold": 1200, "wood": 3, "ore": 3, "brass_scrip": 2},
+		"cross_faction_hero_progression": false,
+		"cross_faction_spell_progression": false,
+		"cross_faction_artifact_progression": false,
+		"skirmish_progression_isolated": true,
+		"campaign_completed": true,
+		"replay_available": true,
+	})])
+	get_tree().quit(0)
+
+func _assert_campaign_browser(profile: Dictionary) -> bool:
+	if CAMPAIGN_ID not in CampaignRulesScript.campaign_ids():
+		_fail("Frontier Claims is missing from the live campaign roster.")
+		return false
+	if CampaignRulesScript.campaign_ids().size() != 6:
+		_fail("Campaign roster did not expose six player-facing arcs.")
+		return false
+	var campaign := ContentService.get_campaign(CAMPAIGN_ID)
+	if String(campaign.get("starting_scenario_id", "")) != MIREFORD_ID:
+		_fail("Frontier Claims did not start at Mireford.")
+		return false
+	var entries := CampaignRulesScript.build_campaign_chapter_entries(profile, CAMPAIGN_ID)
+	if entries.size() != 3:
+		_fail("Frontier Claims did not expose three chapters: %s" % JSON.stringify(entries))
+		return false
+	if bool(entries[0].get("disabled", true)) or not bool(entries[1].get("disabled", false)) or not bool(entries[2].get("disabled", false)):
+		_fail("Initial Frontier Claims locks are wrong: %s" % JSON.stringify(entries))
+		return false
+	var action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID, "hard")
+	if bool(action.get("disabled", true)) or String(action.get("scenario_id", "")) != MIREFORD_ID:
+		_fail("Frontier Claims start action did not target Mireford: %s" % JSON.stringify(action))
+		return false
+	return true
+
+func _assert_campaign_session(
+	session: SessionStateStoreScript.SessionData,
+	scenario_id: String,
+	hero_id: String,
+	difficulty: String
+) -> bool:
+	if session == null or session.scenario_id != scenario_id:
+		_fail("Campaign session did not boot %s." % scenario_id)
+		return false
+	if session.launch_mode != SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		_fail("%s did not launch in campaign mode." % scenario_id)
+		return false
+	if session.difficulty != difficulty or String(session.flags.get("campaign_id", "")) != CAMPAIGN_ID:
+		_fail("%s missed campaign identity or selected difficulty." % scenario_id)
+		return false
+	if String(session.flags.get("campaign_name", "")) != "Frontier Claims" or String(session.flags.get("campaign_chapter_label", "")) == "":
+		_fail("%s missed campaign display metadata." % scenario_id)
+		return false
+	if String(session.overworld.get("active_hero_id", "")) != hero_id:
+		_fail("%s did not retain its authored faction commander." % scenario_id)
+		return false
+	return true
+
+func _save_restore_evidence(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var save_result: Dictionary = SaveService.save_runtime_manual_session(session, SAVE_SLOT)
+	if not bool(save_result.get("ok", false)):
+		_fail("Frontier Claims campaign session did not save: %s" % JSON.stringify(save_result))
+		return {}
+	var summary: Dictionary = SaveService.inspect_manual_slot(SAVE_SLOT)
+	var restored = SaveService.restore_manual_session(SAVE_SLOT)
+	if restored == null:
+		_fail("Frontier Claims campaign session did not restore.")
+		return {}
+	if String(summary.get("campaign_id", "")) != CAMPAIGN_ID or String(summary.get("launch_mode", "")) != SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		_fail("Saved Frontier Claims summary missed campaign metadata: %s" % JSON.stringify(summary))
+		return {}
+	if restored.scenario_id != MIREFORD_ID or String(restored.flags.get("campaign_id", "")) != CAMPAIGN_ID:
+		_fail("Restored Frontier Claims session lost campaign identity.")
+		return {}
+	return {
+		"slot": SAVE_SLOT,
+		"scenario_id": restored.scenario_id,
+		"campaign_id": String(restored.flags.get("campaign_id", "")),
+		"difficulty": restored.difficulty,
+		"resume_target": String(summary.get("resume_target", "")),
+	}
+
+func _assert_unlocked(profile: Dictionary, scenario_id: String) -> bool:
+	var action := CampaignRulesScript.build_chapter_action(profile, CAMPAIGN_ID, scenario_id)
+	if bool(action.get("disabled", true)) or String(action.get("scenario_id", "")) != scenario_id:
+		_fail("Recorded campaign victory did not unlock %s: %s" % [scenario_id, JSON.stringify(action)])
+		return false
+	return true
+
+func _assert_cross_faction_import(
+	campaign_session: SessionStateStoreScript.SessionData,
+	baseline_session: SessionStateStoreScript.SessionData,
+	expected_resources: Dictionary,
+	expected_flag: String,
+	previous_scenario_id: String
+) -> bool:
+	var campaign_resources: Dictionary = campaign_session.overworld.get("resources", {})
+	var baseline_resources: Dictionary = baseline_session.overworld.get("resources", {})
+	for resource_id in expected_resources.keys():
+		var delta := int(campaign_resources.get(resource_id, 0)) - int(baseline_resources.get(resource_id, 0))
+		if delta != int(expected_resources.get(resource_id, 0)):
+			_fail("Carryover resource %s changed by %d instead of %d." % [resource_id, delta, int(expected_resources.get(resource_id, 0))])
+			return false
+	if not bool(campaign_session.flags.get(expected_flag, false)):
+		_fail("Campaign objective evidence %s was not imported." % expected_flag)
+		return false
+	if String(campaign_session.flags.get("campaign_previous_scenario_id", "")) != previous_scenario_id:
+		_fail("Campaign carryover source scenario was not preserved.")
+		return false
+	var campaign_hero: Dictionary = campaign_session.overworld.get("hero", {})
+	var baseline_hero: Dictionary = baseline_session.overworld.get("hero", {})
+	if int(campaign_hero.get("level", 0)) != int(baseline_hero.get("level", 0)):
+		_fail("Cross-faction hero level leaked into %s." % campaign_session.scenario_id)
+		return false
+	if JSON.stringify(campaign_hero.get("spellbook", {})) != JSON.stringify(baseline_hero.get("spellbook", {})):
+		_fail("Cross-faction spellbook leaked into %s." % campaign_session.scenario_id)
+		return false
+	if JSON.stringify(campaign_hero.get("artifacts", {})) != JSON.stringify(baseline_hero.get("artifacts", {})):
+		_fail("Cross-faction artifacts leaked into %s." % campaign_session.scenario_id)
+		return false
+	return true
+
+func _assert_skirmish_isolation(profile: Dictionary, scenario_id: String) -> bool:
+	var before := JSON.stringify(profile)
+	var setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(scenario_id, "hard")
+	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+		scenario_id, "hard", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	if setup.is_empty() or session == null or session.launch_mode != SessionStateStoreScript.LAUNCH_MODE_SKIRMISH:
+		_fail("Dual-mode scenario did not remain skirmish-launchable.")
+		return false
+	if session.flags.has("campaign_id") or session.flags.has("campaign_previous_scenario_id"):
+		_fail("Skirmish launch imported campaign state.")
+		return false
+	if before != JSON.stringify(profile):
+		_fail("Skirmish launch mutated campaign progression.")
+		return false
+	return true
+
+func _assert_completion_and_replay(profile: Dictionary, final_session: SessionStateStoreScript.SessionData) -> bool:
+	for scenario_id in [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID]:
+		var record := CampaignRulesScript.get_scenario_record(profile, CAMPAIGN_ID, scenario_id)
+		if String(record.get("status", "")) != "victory":
+			_fail("Campaign completion missed victory record for %s." % scenario_id)
+			return false
+	var start_action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID)
+	if bool(start_action.get("disabled", true)) or String(start_action.get("scenario_id", "")) != BELLWAKE_ID or not String(start_action.get("label", "")).begins_with("Replay"):
+		_fail("Completed campaign did not expose finale replay: %s" % JSON.stringify(start_action))
+		return false
+	var outcome_actions := CampaignRulesScript.build_outcome_actions(profile, final_session)
+	if outcome_actions.is_empty() or String(outcome_actions[0].get("label", "")).find("Campaign Complete") < 0:
+		_fail("Final outcome did not expose campaign completion: %s" % JSON.stringify(outcome_actions))
+		return false
+	return true
+
+func _mark_victory(session: SessionStateStoreScript.SessionData, summary: String) -> void:
+	session.scenario_status = "victory"
+	session.scenario_summary = summary
+
+func _fail(message: String) -> void:
+	push_error("%s: %s" % [REPORT_ID, message])
+	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "error": message})])
+	get_tree().quit(1)

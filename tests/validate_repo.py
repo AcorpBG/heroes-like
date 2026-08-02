@@ -10285,7 +10285,6 @@ def validate_content(errors: list[str]) -> None:
         if isinstance(scenario_entry, dict) and str(scenario_entry.get("scenario_id", ""))
     }
     skirmish_scenario_ids: list[str] = []
-    skirmish_only_scenario_ids: list[str] = []
     deadline_loss_scenario_ids: set[str] = set()
     deadline_loss_skirmish_scenario_ids: set[str] = set()
     scenario_player_factions: set[str] = set()
@@ -11041,8 +11040,6 @@ def validate_content(errors: list[str]) -> None:
                 ensure(campaign_enabled == (scenario_id in campaign_scenario_ids), errors, f"Scenario {scenario_id} campaign availability must match campaign content wiring")
                 if skirmish_enabled:
                     skirmish_scenario_ids.append(scenario_id)
-                if skirmish_enabled and not campaign_enabled:
-                    skirmish_only_scenario_ids.append(scenario_id)
 
         start = scenario.get("start", {})
         start_x = int(start.get("x", -1))
@@ -11308,7 +11305,8 @@ def validate_content(errors: list[str]) -> None:
     validate_campaigns(errors, campaigns, scenarios)
     ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
     ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")
-    ensure(bool(skirmish_only_scenario_ids), errors, "Scenario roster should include at least one authored skirmish-only front")
+    ensure(set(skirmish_scenario_ids) == set(scenarios), errors, "Every active authored scenario must remain skirmish-selectable for replay")
+    ensure(campaign_scenario_ids == set(scenarios), errors, "Every active authored scenario must be wired into a player-facing campaign")
     required_deadline_loss_scenarios = set(skirmish_scenario_ids)
     ensure(required_deadline_loss_scenarios.issubset(deadline_loss_scenario_ids), errors, "Scenario deadline-loss breadth slice must keep deadline defeat objectives on every active skirmish-launchable scenario")
     ensure(len(deadline_loss_skirmish_scenario_ids) == len(skirmish_scenario_ids), errors, "Scenario deadline-loss breadth slice must cover the full active skirmish scenario set")
@@ -22812,7 +22810,7 @@ def main() -> int:
     print("- difficulty profiles are wired through core overworld and battle rules without a save-version bump")
     print("- hero specialties are normalized, surfaced, and carried through overworld/town/runtime progression")
     print("- hero-command roster, tavern recruitment, transfer flow, and thin UI wiring are present")
-    print("- authored hero metadata, multi-faction campaign starts, skirmish-only fronts, and lead-hero variety are present")
+    print("- authored hero metadata, multi-faction campaign starts, dual-mode scenario replay, and lead-hero variety are present")
     print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
     print("- retreat and surrender now preserve pre-resolution battle animation snapshots for board presentation before terminal routing")
     print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, initiative, and cohort matrix diagnostics")

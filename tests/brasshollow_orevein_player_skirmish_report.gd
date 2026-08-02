@@ -78,8 +78,8 @@ func _assert_setup(setup: Dictionary) -> void:
 		return
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
 	var availability: Dictionary = scenario.get("selection", {}).get("availability", {})
-	if bool(availability.get("campaign", true)) or not bool(availability.get("skirmish", false)):
-		_fail("Orevein Contract crossed its skirmish-only availability boundary: %s" % JSON.stringify(availability))
+	if not bool(availability.get("campaign", false)) or not bool(availability.get("skirmish", false)):
+		_fail("Orevein Contract missed dual-mode campaign/skirmish availability: %s" % JSON.stringify(availability))
 		return
 	if String(scenario.get("player_faction_id", "")) != "faction_brasshollow":
 		_fail("Orevein Contract is not authored for Brasshollow.")

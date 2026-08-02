@@ -6,7 +6,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 
 const REPORT_ID := "SCENARIO_DEADLINE_LOSS_VARIETY_REPORT"
 const MIN_ACTIVE_DEADLINE_SCENARIO_COUNT := 16
-const SKIRMISH_ONLY_SCENARIO_ID := "mireford-skirmish"
+const DUAL_MODE_ISOLATION_SCENARIO_ID := "mireford-skirmish"
 const FINALE_SCENARIO_ID := "ninefold-confluence"
 const FORBIDDEN_CLAIM_TOKENS := [
 	"alpha_or_parity_claim\":true",
@@ -54,13 +54,13 @@ func _run() -> void:
 		"campaign_deadline_count": campaign_deadline_count,
 		"skirmish_deadline_count": skirmish_deadline_count,
 		"finale_deadline_count": finale_deadline_count,
-		"skirmish_only_scenario_id": SKIRMISH_ONLY_SCENARIO_ID,
+		"dual_mode_isolation_scenario_id": DUAL_MODE_ISOLATION_SCENARIO_ID,
 		"finale_scenario_id": FINALE_SCENARIO_ID,
 		"rows": rows,
 		"boundary": {
 			"authored_deadline_loss_objectives": true,
 			"final_scenario_balance": false,
-			"new_campaign_arc": false,
+			"new_campaign_arc": true,
 			"campaign_breadth_complete": false,
 			"alpha_or_parity_claim": false,
 		},
