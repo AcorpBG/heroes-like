@@ -3629,7 +3629,30 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 	var profile_counts: Dictionary = reinforcement_profile.get("counts", {})
 	var path_context_loaded := int(profile_counts.get("emergency_path_context_loaded", 0))
 	var path_context_reused := int(profile_counts.get("emergency_path_context_reused", 0))
-	var emergency_plan := EnemyTurnRules._emergency_defense_launch_ready_report(session, config, state, faction_id)
+	var commander_candidates_loaded := int(profile_counts.get("emergency_commander_candidates_loaded", 0))
+	var commander_candidates_reused := int(profile_counts.get("emergency_commander_candidates_reused", 0))
+	var commander_probes_loaded := int(profile_counts.get("emergency_commander_probe_loaded", 0))
+	var commander_probes_reused := int(profile_counts.get("emergency_commander_probe_reused", 0))
+	var launch_scan_context := {}
+	EnemyTurnRules._spawn_profile_begin(true)
+	var emergency_plan := EnemyTurnRules._emergency_defense_launch_ready_report(
+		session,
+		config,
+		state,
+		faction_id,
+		launch_scan_context
+	)
+	var launch_candidate := EnemyTurnRules._best_open_spawn_point(
+		session,
+		config,
+		state,
+		faction_id,
+		false,
+		launch_scan_context
+	)
+	var spawn_profile := EnemyTurnRules._spawn_profile_finish()
+	var spawn_profile_counts: Dictionary = spawn_profile.get("counts", {})
+	var launch_candidate_matches_plan := JSON.stringify(launch_candidate) == JSON.stringify(emergency_plan)
 	var selected_hero_id := String(emergency_plan.get("roster_hero_id", ""))
 	var selected_fit_bonus := int(emergency_plan.get("spawn_plan_commander_fit_bonus", 0))
 	var selected_source := String(emergency_plan.get("spawn_plan_source", ""))
@@ -3649,6 +3672,20 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 		failures.append("Emergency defense recruitment rescans loaded %d path contexts instead of one." % path_context_loaded)
 	if path_context_reused <= 0:
 		failures.append("Emergency defense recruitment rescans did not reuse the retained path context.")
+	if commander_candidates_loaded != 1 or commander_candidates_reused != 3:
+		failures.append("Emergency defense recruitment loaded/reused commander candidates %d/%d instead of 1/3." % [commander_candidates_loaded, commander_candidates_reused])
+	if commander_probes_loaded != 2 or commander_probes_reused != 6:
+		failures.append("Emergency defense recruitment loaded/reused commander probes %d/%d instead of 2/6." % [commander_probes_loaded, commander_probes_reused])
+	if not launch_candidate_matches_plan:
+		failures.append("Final launch selection changed the precomputed emergency-defense plan.")
+	if int(spawn_profile_counts.get("emergency_candidate_surface_loaded", 0)) != 1:
+		failures.append("Emergency launch readiness did not load exactly one candidate surface.")
+	if int(spawn_profile_counts.get("emergency_candidate_surface_point_reused", 0)) != first_recruitment_candidates.size():
+		failures.append("Final launch selection did not reuse every precomputed emergency spawn candidate.")
+	if int(spawn_profile_counts.get("emergency_commander_candidates_loaded", 0)) != 1 or int(spawn_profile_counts.get("emergency_commander_candidates_reused", 0)) != 1:
+		failures.append("Emergency launch scan did not load/reuse commander candidates exactly once.")
+	if int(spawn_profile_counts.get("emergency_commander_probe_loaded", 0)) != 2 or int(spawn_profile_counts.get("emergency_commander_probe_reused", 0)) != 2:
+		failures.append("Emergency launch scan did not prepare/reuse the two commander probes exactly once per point.")
 	var status := _status_from(failures, warnings, deferred)
 	return _case(
 		"strategic_ai_emergency_defense_commander_fit",
@@ -3664,14 +3701,23 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"commander_fit_bonus": selected_fit_bonus,
 			"path_context_loaded": path_context_loaded,
 			"path_context_reused": path_context_reused,
+			"commander_candidates_loaded": commander_candidates_loaded,
+			"commander_candidates_reused": commander_candidates_reused,
+			"commander_probes_loaded": commander_probes_loaded,
+			"commander_probes_reused": commander_probes_reused,
+			"launch_candidate_matches_plan": launch_candidate_matches_plan,
+			"launch_surface_loaded": int(spawn_profile_counts.get("emergency_candidate_surface_loaded", 0)),
+			"launch_surface_points_reused": int(spawn_profile_counts.get("emergency_candidate_surface_point_reused", 0)),
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
 		},
 		{
 			"emergency_plan": emergency_plan,
+			"launch_candidate": launch_candidate,
 			"first_recruitment_candidates": first_recruitment_candidates,
 			"second_recruitment_candidates": second_recruitment_candidates,
 			"reinforcement_profile": reinforcement_profile,
+			"spawn_profile": spawn_profile,
 			"target_reason_codes": _string_array(emergency_plan.get("spawn_plan_reason_codes", [])),
 			"warnings": warnings,
 			"failures": failures,

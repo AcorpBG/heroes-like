@@ -30,6 +30,18 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(summary.get("commander_fit_bonus", 0)) <= 0:
 		_fail("Emergency defense commander-fit bonus missing: %s" % JSON.stringify(summary))
 		return false
+	if int(summary.get("commander_candidates_loaded", 0)) != 1 or int(summary.get("commander_candidates_reused", 0)) != 3:
+		_fail("Emergency defense commander candidate cache counts changed: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("commander_probes_loaded", 0)) != 2 or int(summary.get("commander_probes_reused", 0)) != 6:
+		_fail("Emergency defense commander probe cache counts changed: %s" % JSON.stringify(summary))
+		return false
+	if not bool(summary.get("launch_candidate_matches_plan", false)):
+		_fail("Final launch candidate did not match the precomputed emergency plan: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("launch_surface_loaded", 0)) != 1 or int(summary.get("launch_surface_points_reused", 0)) != 2:
+		_fail("Emergency defense launch surface was not fully reused: %s" % JSON.stringify(summary))
+		return false
 	return true
 
 func _fail(message: String) -> void:
