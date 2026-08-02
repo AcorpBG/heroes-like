@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The Lockmarsh Road Chaplains placement-local correction is complete. Reinforcing the host from the shared 8 guards/6 archers to 9/8 changes a round-two 100% no-damage victory into a bounded 70% victory with 28 enemy damage per round. The active breadth queue improves from 28 items/2 high to 25/0 and the balance-matrix gate now passes. Medium-priority balance, strategic AI, content, performance, packaging, accessibility, and release work remain open.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-lockmarsh-road-chaplains-pressure-10184",
-  "currentSliceId": "balance-lockmarsh-road-chaplains-pressure-10184",
-  "currentSliceNotes": "Completed with a placement-local 9-guard/8-archer roster. The sample remains a victory at 70% terminal margin with 28 enemy damage per round, the 51-sample queue has zero high-priority items, and the balance-matrix gate passes. Remaining medium-priority debt is explicitly unclaimed.",
+  "currentNotes": "The Music volume runtime defect is fixed. SettingsService now owns an independent Music bus routed through Master, applies the persisted nonzero gain immediately, and preserves zero-volume mute behavior. The packaged PCK smoke proves 42% maps to the expected -7.535 dB. Broader Phase 5/6 product and release work remains open.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "settings-music-volume-runtime-bus-10184",
+  "currentSliceId": "settings-music-volume-runtime-bus-10184",
+  "currentSliceNotes": "Completed. Music playback now always targets a runtime-owned Music bus, nonzero slider values apply independent gain through that bus, zero still mutes, and both direct and PCK-launched settings persistence paths pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Lockmarsh Road Chaplains Pressure",
-  "currentSliceUpdatedAt": "2026-08-02T08:07:43Z",
+  "currentSliceTitle": "Music Volume Runtime Bus",
+  "currentSliceUpdatedAt": "2026-08-02T08:22:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56257,6 +56257,80 @@
         "sliceId": "balance-lockmarsh-road-chaplains-pressure-10184",
         "status": "passed_high_priority_breadth_clear_medium_watch_remaining",
         "updatedAt": "2026-08-02T08:07:43Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T08:22:07Z",
+      "completionCriteria": "The persisted Music slider creates and targets an independent Music bus, applies every nonzero configured value as the expected bus gain, preserves zero-volume mute behavior, and passes the packaged settings persistence path.",
+      "id": "settings-music-volume-runtime-bus-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scripts/autoload/MusicAudio.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "existing settings and audio validation"
+      ],
+      "nonGoals": [
+        "adding a new settings panel",
+        "changing authored music assets or cue composition",
+        "claiming the broad packaging, accessibility, performance, or release baseline complete"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Make the existing player-facing Music volume control change live music gain independently from Master at all persisted values.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T08:13:00Z",
+      "status": "completed",
+      "summary": "Completed. SettingsService creates a Music bus routed through Master and applies the persisted percentage as bus gain; MusicAudio targets that bus without fallback. The packaged PCK smoke proves zero-volume mute and exact 42% gain after save/reload.",
+      "title": "Music Volume Runtime Bus",
+      "updatedAt": "2026-08-02T08:22:07Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed)",
+          "python3 tests/packaged_settings_persistence_smoke.py (passed; Linux Release PCK exported and scene booted through --main-pack)",
+          "godot4 --headless --path . --scene res://tests/music_audio_runtime_report.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "applied_music_bus": {
+            "name": "Music",
+            "send": "Master",
+            "configured_volume_percent": 42,
+            "expected_volume_db": -7.53501419204199,
+            "applied_volume_db": -7.53501415252686
+          },
+          "music_runtime_report": {
+            "audio_bus": "Music",
+            "record_count": 4,
+            "shell_record_count": 1
+          },
+          "packaged_smoke": {
+            "ok": true,
+            "export_returncode": 0,
+            "scene_returncode": 0,
+            "pack_size_bytes": 185195312,
+            "restored_original_settings": true
+          },
+          "player_facing_change": "Music volume values from 1 through 100 now scale music independently from Master; zero continues to mute music.",
+          "remaining_debt": "The parent packaging/settings/accessibility/performance baseline and overall release remain incomplete."
+        },
+        "sliceId": "settings-music-volume-runtime-bus-10184",
+        "status": "passed_runtime_and_packaged_music_gain",
+        "updatedAt": "2026-08-02T08:22:07Z"
       }
     },
     {

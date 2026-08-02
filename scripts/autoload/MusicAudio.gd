@@ -280,7 +280,7 @@ func _is_muted() -> bool:
 	return SettingsService.master_volume_percent() <= 0 or SettingsService.music_volume_percent() <= 0
 
 func _music_bus() -> String:
-	return "Music" if AudioServer.get_bus_index("Music") >= 0 else "Master"
+	return SettingsService.music_audio_bus_name()
 
 func _append_record(record: Dictionary) -> Dictionary:
 	_records.append(record.duplicate(true))

@@ -11970,6 +11970,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func describe_help_topic",
         "func set_master_volume_percent",
         "func set_music_volume_percent",
+        "func music_audio_bus_name",
         "func set_presentation_mode",
         "func set_presentation_resolution",
         "func set_large_ui_text_enabled",
@@ -11978,6 +11979,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "DisplayServer.window_set_mode",
         "DisplayServer.window_set_size",
         "AudioServer.set_bus_volume_db",
+        "AudioServer.add_bus",
         "content_scale_factor",
     ):
         ensure(required_token in settings_text, errors, f"SettingsService.gd is missing required settings/onboarding token: {required_token}")
@@ -21171,7 +21173,7 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "MAX_ACTIVE_PLAYERS",
             "audio_bus",
             "Music",
-            "Master",
+            "SettingsService.music_audio_bus_name",
             "signature == _current_signature",
             "imported_asset_count",
             "generated_fallback_count",

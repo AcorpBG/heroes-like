@@ -11,6 +11,7 @@ const PRESENTATION_WINDOWED := "windowed"
 const PRESENTATION_BORDERLESS := "borderless"
 const PRESENTATION_FULLSCREEN := "fullscreen"
 const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
+const MUSIC_AUDIO_BUS := "Music"
 
 const PRESENTATION_OPTIONS := [
 	{
@@ -225,6 +226,11 @@ func master_volume_percent() -> int:
 func music_volume_percent() -> int:
 	return int(ensure_settings().get("audio", {}).get("music_volume_percent", 65))
 
+func music_audio_bus_name() -> String:
+	var bus_index := _ensure_audio_bus(MUSIC_AUDIO_BUS, "Master")
+	AudioServer.set_bus_volume_db(bus_index, _percent_to_db(music_volume_percent()))
+	return MUSIC_AUDIO_BUS
+
 func large_ui_text_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("large_ui_text", false))
 
@@ -361,7 +367,18 @@ func _apply_presentation_settings() -> void:
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
-	_apply_audio_bus("Music", music_volume_percent(), -1)
+	music_audio_bus_name()
+
+func _ensure_audio_bus(bus_name: String, send_bus_name: String) -> int:
+	var bus_index := AudioServer.get_bus_index(bus_name)
+	if bus_index >= 0:
+		return bus_index
+	AudioServer.add_bus()
+	bus_index = AudioServer.get_bus_count() - 1
+	AudioServer.set_bus_name(bus_index, bus_name)
+	if send_bus_name != "" and AudioServer.get_bus_index(send_bus_name) >= 0:
+		AudioServer.set_bus_send(bus_index, send_bus_name)
+	return bus_index
 
 func _apply_audio_bus(bus_name: String, volume_percent: int, fallback_index: int) -> void:
 	var bus_index := AudioServer.get_bus_index(bus_name)
