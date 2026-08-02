@@ -91,6 +91,7 @@ const TAB_HELP_TOPIC := {
 @onready var _settings_handoff_label: Label = %SettingsHandoff
 @onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
 @onready var _resolution_picker: OptionButton = %ResolutionPicker
+@onready var _render_quality_picker: OptionButton = %RenderQualityPicker
 @onready var _vsync_toggle: CheckButton = %VSyncToggle
 @onready var _frame_rate_picker: OptionButton = %FrameRatePicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
@@ -484,6 +485,12 @@ func _on_resolution_selected(index: int) -> void:
 	SettingsService.set_presentation_resolution(resolution_id)
 	_refresh_settings_panel()
 
+func _on_render_quality_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _render_quality_picker.get_item_count():
+		return
+	SettingsService.set_render_quality_id(String(_render_quality_picker.get_item_metadata(index)))
+	_refresh_settings_panel()
+
 func _on_vsync_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
@@ -856,6 +863,19 @@ func _refresh_settings_panel() -> void:
 	if selected_resolution_index >= 0:
 		_resolution_picker.select(selected_resolution_index)
 		_resolution_picker.tooltip_text = "%s\n%s" % [String(resolution_options[selected_resolution_index].get("summary", "")), settings_check]
+
+	_render_quality_picker.clear()
+	var quality_options := SettingsService.build_render_quality_options()
+	var selected_quality_index := -1
+	for index in range(quality_options.size()):
+		var option: Dictionary = quality_options[index]
+		_render_quality_picker.add_item(String(option.get("label", "Balanced")), index)
+		_render_quality_picker.set_item_metadata(index, String(option.get("id", "balanced")))
+		if bool(option.get("selected", false)):
+			selected_quality_index = index
+	if selected_quality_index >= 0:
+		_render_quality_picker.select(selected_quality_index)
+	_render_quality_picker.tooltip_text = "2D edge quality applies immediately; lower quality reduces multisampling cost.\n%s" % settings_check
 
 	_vsync_toggle.button_pressed = SettingsService.vsync_enabled()
 	_vsync_toggle.tooltip_text = "VSync applies immediately and reduces visible tearing.\n%s" % settings_check
@@ -1960,6 +1980,9 @@ func validation_snapshot() -> Dictionary:
 		"presentation_resolution_options": SettingsService.build_resolution_options(),
 		"presentation_resolution_tooltip": _resolution_picker.tooltip_text,
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
+		"render_quality": SettingsService.render_quality_id(),
+		"render_quality_picker_items": _picker_item_labels(_render_quality_picker),
+		"render_quality_tooltip": _render_quality_picker.tooltip_text,
 		"vsync_enabled": SettingsService.vsync_enabled(),
 		"vsync_tooltip": _vsync_toggle.tooltip_text,
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
@@ -2341,6 +2364,16 @@ func validation_set_vsync(enabled: bool) -> bool:
 	_on_vsync_toggled(enabled)
 	return SettingsService.vsync_enabled() == enabled
 
+func validation_select_render_quality(quality_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_render_quality_picker.get_item_count()):
+		if String(_render_quality_picker.get_item_metadata(index)) != quality_id:
+			continue
+		_render_quality_picker.select(index)
+		_on_render_quality_selected(index)
+		return SettingsService.render_quality_id() == quality_id
+	return false
+
 func validation_select_frame_rate_limit(value: int) -> bool:
 	validation_open_settings_stage()
 	for index in range(_frame_rate_picker.get_item_count()):
@@ -2601,6 +2634,7 @@ func _apply_visual_theme() -> void:
 		_generated_underground_toggle,
 		_presentation_mode_picker,
 		_resolution_picker,
+		_render_quality_picker,
 		_frame_rate_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
