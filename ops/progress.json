@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The duplicated Bridge Ford Reavers correction is complete. Ironbridge now uses a placement-local 10-cutthroat/12-slinger host and resolves at 21% player health with 24 enemy damage per round; Mireford uses 13/11 and resolves at 66% with 13 enemy damage per round. The active breadth queue improved from 37 items/10 high to 32/6 while the shared dynamic raid group remains unchanged. Broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
+  "currentNotes": "The Glassroad Archive Wardens placement-local pressure correction is complete. One additional Ember Archer changes the four-round victory from 92% player health and 3 enemy damage per round to 77% and 8, while the active breadth queue improves from 32 items/6 high to 31/4. The remaining high-priority authored rows are Mireford Silt Hunters and Lockmarsh Road Chaplains; broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-ford-reavers-pressure-10184",
-  "currentSliceId": "balance-ford-reavers-pressure-10184",
-  "currentSliceNotes": "Completed with separate placement-local rosters because scenario identity changes deterministic combat. Both samples remain player victories below the 90% outlier threshold, enemy pressure is nontrivial, and the breadth queue improves to 32 items/6 high. Remaining balance debt is explicitly unclaimed.",
+  "currentSlice": "balance-glassroad-archive-wardens-pressure-10184",
+  "currentSliceId": "balance-glassroad-archive-wardens-pressure-10184",
+  "currentSliceNotes": "Completed with the smallest passing local correction: Ember Archers increase from 6 to 7, preserving a four-round victory at 77% terminal margin with 8 enemy damage per round. The 51-sample queue improves to 31 items/4 high; remaining balance debt is explicitly unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bridge Ford Reavers Pressure",
-  "currentSliceUpdatedAt": "2026-08-02T07:48:50Z",
+  "currentSliceTitle": "Glassroad Archive Wardens Pressure",
+  "currentSliceUpdatedAt": "2026-08-02T07:54:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56040,6 +56040,87 @@
     },
     {
       "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_glassroad_archive_wardens_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T07:54:29Z",
+      "completionCriteria": "The Glassroad Archive Wardens sample remains a bounded player victory, falls below the existing 90% matrix terminal-margin threshold, applies more than trivial enemy pressure, and improves the active-scenario breadth queue through its placement-local roster only.",
+      "id": "balance-glassroad-archive-wardens-pressure-10184",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_glassroad_archive_wardens_balance_regression.gd",
+        "existing active-scenario balance breadth reports"
+      ],
+      "nonGoals": [
+        "changing the shared army_archive_wardens group",
+        "global unit, spell, or combat-rule tuning",
+        "full combat-balance or release-readiness claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
+      "purpose": "Correct the current 92% Glassroad Archive Wardens authored encounter outlier without affecting the same encounter on other maps.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T07:51:29Z",
+      "status": "completed",
+      "summary": "Completed. The smallest placement-local correction adds one Ember Archer, preserving the four-round player victory while lowering terminal margin from 92% to 77% and raising enemy damage per round from 3 to 8. The active breadth queue improves from 32 items/6 high to 31/4 without changing the shared Archive Wardens group, units, spells, or combat rules.",
+      "title": "Glassroad Archive Wardens Pressure",
+      "updatedAt": "2026-08-02T07:54:29Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_glassroad_archive_wardens_balance_regression.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active balance queue remains; queue improved)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_breadth_after": {
+            "high_priority_count": 4,
+            "item_count": 31,
+            "medium_priority_count": 27,
+            "sample_count": 51
+          },
+          "active_breadth_before": {
+            "high_priority_count": 6,
+            "item_count": 32,
+            "medium_priority_count": 26,
+            "sample_count": 51
+          },
+          "baseline_sample": {
+            "enemy_damage_per_round": 3,
+            "enemy_power_score": 1076,
+            "outcome_state": "victory",
+            "player_enemy_power_ratio_pct": 143,
+            "player_health_remaining_pct": 92,
+            "player_power_score": 1544,
+            "round_reached": 4
+          },
+          "implemented_sample": {
+            "enemy_damage_per_round": 8,
+            "enemy_power_score": 1174,
+            "outcome_state": "victory",
+            "player_enemy_power_ratio_pct": 132,
+            "player_health_remaining_pct": 77,
+            "player_power_score": 1544,
+            "round_reached": 4
+          },
+          "player_facing_change": "Only glassroad_archive_wardens changes, from 4 River Guards/6 Ember Archers/1 Citadel Pikeward to 4/7/1. The shared army_archive_wardens group and other placements remain unchanged.",
+          "remaining_debt": "The active breadth suite remains action_required with 31 items, including four high-priority items belonging to Mireford Silt Hunters and Lockmarsh Road Chaplains. This slice does not claim broad combat-balance completion."
+        },
+        "sliceId": "balance-glassroad-archive-wardens-pressure-10184",
+        "status": "passed_with_unrelated_breadth_debt",
+        "updatedAt": "2026-08-02T07:54:29Z"
+      }
+    },
+    {
+      "baselineChecks": [
         "python3 tests/town_development_balance_report.py",
         "python3 tests/town_development_cost_curve_report.py",
         "python3 tests/economy_town_goal_scorecard_report.py",
@@ -63402,7 +63483,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ford_reavers_pressure_correction_completed_overall_release_in_progress",
+  "result": "glassroad_archive_wardens_pressure_correction_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63503,9 +63584,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, and duplicated Ford Reavers corrections are complete within their scopes. Both Ford Reavers authored placements now apply sustained pressure and no longer contribute high-margin outliers, while unrelated balance debt remains explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, Ford Reavers, and Glassroad Archive Wardens corrections are complete within their scopes. Archive Wardens now applies sustained pressure and no longer contributes high-priority breadth rows, while Silt Hunters, Road Chaplains, and unrelated balance debt remain explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T07:48:50Z",
+  "updatedAt": "2026-08-02T07:54:29Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

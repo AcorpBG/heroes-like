@@ -3039,7 +3039,7 @@
         {"placement_id": "market_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "glassroad_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 12201, "enemy_army": {"id": "army_glassroad_archive_line_watch", "name": "Glassroad Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 4}, {"unit_id": "unit_ember_archer", "count": 6}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
+        {"placement_id": "glassroad_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 12201, "enemy_army": {"id": "army_glassroad_archive_line_watch", "name": "Glassroad Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 4}, {"unit_id": "unit_ember_archer", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
         {"placement_id": "glassroad_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 12202},
         {"placement_id": "glassroad_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 12203}
       ]
