@@ -655,7 +655,7 @@ func _on_rendezvous_transfer_pressed() -> void:
 	var action = _rendezvous_orders.get_item_metadata(selected)
 	if not (action is Dictionary):
 		return
-	var result := OverworldRules.perform_rendezvous_transfer_action(_session, String(action.get("id", "")))
+	var result := OverworldRules.perform_rendezvous_action(_session, String(action.get("id", "")))
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
@@ -1595,7 +1595,7 @@ func _rebuild_hero_actions() -> void:
 func _rebuild_rendezvous_actions() -> void:
 	_rendezvous_orders.clear()
 	var reserve_heroes := HeroCommandRules.field_rendezvous_heroes(_session)
-	var actions := OverworldRules.get_rendezvous_transfer_actions(_session)
+	var actions := OverworldRules.get_rendezvous_actions(_session)
 	var has_rendezvous := not reserve_heroes.is_empty()
 	_rendezvous_label.visible = has_rendezvous
 	_rendezvous_controls.visible = has_rendezvous and not actions.is_empty()
@@ -1611,7 +1611,7 @@ func _rebuild_rendezvous_actions() -> void:
 	_rendezvous_label.text = "Rendezvous | %s" % ", ".join(names)
 	_rendezvous_label.tooltip_text = HeroCommandRules.describe_field_rendezvous(_session)
 	if actions.is_empty():
-		_rendezvous_label.text += " | No troops to exchange"
+		_rendezvous_label.text += " | No assets to exchange"
 		_rendezvous_transfer_button.disabled = true
 		return
 	for action_value in actions:

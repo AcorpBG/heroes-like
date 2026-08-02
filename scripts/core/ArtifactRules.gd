@@ -917,6 +917,31 @@ static func claim_artifact(
 static func pickup_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	return claim_artifact(hero_state, artifact_id, "Recovered", true)
 
+static func remove_owned_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
+	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
+	var location := locate_artifact(hero, artifact_id)
+	var location_name := String(location.get("location", "missing"))
+	if location_name == "missing":
+		return {"ok": false, "hero": hero, "message": "That artifact is no longer owned by this commander."}
+	var artifacts: Dictionary = hero.get("artifacts", {})
+	var equipped: Dictionary = artifacts.get("equipped", {})
+	var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
+	if location_name == "equipped":
+		equipped[String(location.get("slot", ""))] = ""
+	elif not _remove_artifact_from_inventory(inventory, artifact_id):
+		return {"ok": false, "hero": hero, "message": "That artifact is no longer in this commander's pack."}
+	artifacts["equipped"] = equipped
+	artifacts["inventory"] = inventory
+	hero["artifacts"] = normalize_hero_artifacts(artifacts)
+	return {
+		"ok": true,
+		"hero": hero,
+		"artifact_id": artifact_id,
+		"previous_location": location_name,
+		"previous_slot": String(location.get("slot", "")),
+		"message": "Released %s for transfer." % artifact_name(artifact_id),
+	}
+
 static func merge_hero_artifacts(base_artifacts: Variant, imported_artifacts: Variant) -> Dictionary:
 	var merged = normalize_hero_artifacts(base_artifacts)
 	var imported = normalize_hero_artifacts(imported_artifacts)

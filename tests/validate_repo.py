@@ -34,6 +34,8 @@ HERO_PROGRESSION_RULES_PATH = ROOT / "scripts" / "core" / "HeroProgressionRules.
 HERO_COMMAND_RULES_PATH = ROOT / "scripts" / "core" / "HeroCommandRules.gd"
 HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvous_army_transfer_report.gd"
 HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_army_transfer_report.tscn"
+HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_field_rendezvous_artifact_transfer_report.gd"
+HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCENE_PATH = ROOT / "tests" / "hero_field_rendezvous_artifact_transfer_report.tscn"
 SCENARIO_FACTORY_PATH = ROOT / "scripts" / "core" / "ScenarioFactory.gd"
 SCENARIO_SELECT_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioSelectRules.gd"
 SCENARIO_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioRules.gd"
@@ -12754,8 +12756,6 @@ def validate_hero_progression(errors: list[str]) -> None:
         SCENARIO_SELECT_RULES_PATH,
         OVERWORLD_SCENE_PATH,
         OVERWORLD_SCRIPT_PATH,
-        HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH,
-        HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH,
         TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
     )
@@ -12894,6 +12894,10 @@ def validate_hero_command(errors: list[str]) -> None:
         CAMPAIGN_RULES_PATH,
         OVERWORLD_SCENE_PATH,
         OVERWORLD_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_REPORT_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_REPORT_SCENE_PATH,
+        HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCRIPT_PATH,
+        HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCENE_PATH,
         TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
     )
@@ -12923,6 +12927,8 @@ def validate_hero_command(errors: list[str]) -> None:
             "field_rendezvous_heroes",
             "get_field_transfer_actions",
             "transfer_field_stack",
+            "get_field_artifact_transfer_actions",
+            "transfer_field_artifact",
             "remove_active_hero_after_defeat",
             "stationed_heroes",
             "describe_tavern",
@@ -12944,6 +12950,8 @@ def validate_hero_command(errors: list[str]) -> None:
         "func switch_active_hero",
         "func get_rendezvous_transfer_actions",
         "func perform_rendezvous_transfer_action",
+        "func get_rendezvous_actions",
+        "func perform_rendezvous_action",
         '"route": "rendezvous"',
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero-command token: {required_token}")
@@ -13009,6 +13017,8 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.switch_active_hero",
         "func _rebuild_rendezvous_actions",
         "func _on_rendezvous_transfer_pressed",
+        "OverworldRules.perform_rendezvous_action",
+        "OverworldRules.get_rendezvous_actions",
         'route == "rendezvous"',
         "_hero_actions",
         "_heroes_label",
@@ -13044,6 +13054,26 @@ def validate_hero_command(errors: list[str]) -> None:
         "SessionStateStore.SAVE_VERSION",
     ):
         ensure(required_token in rendezvous_report_text, errors, f"Hero field rendezvous report is missing required token: {required_token}")
+
+    artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
+    ensure("static func remove_owned_artifact" in artifact_rules_text, errors, "ArtifactRules.gd is missing atomic owned-artifact removal")
+    artifact_rendezvous_report_text = HERO_FIELD_RENDEZVOUS_ARTIFACT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HERO_FIELD_RENDEZVOUS_ARTIFACT_TRANSFER_REPORT",
+        "remote_rejected_without_mutation",
+        "bidirectional_handoffs",
+        "empty_slot_auto_equip",
+        "occupied_slot_inventory_fallback",
+        "movement_deficit_preserved",
+        "immediate_bonus_update",
+        "troop_orders_preserved",
+        "compact_selector_focusable",
+        "stale_order_rejected",
+        "invalid_order_rejected",
+        "save_resume_preserved",
+        "SessionStateStore.SAVE_VERSION",
+    ):
+        ensure(required_token in artifact_rendezvous_report_text, errors, f"Hero field artifact rendezvous report is missing required token: {required_token}")
 
 
 def validate_overworld_fog(errors: list[str]) -> None:
