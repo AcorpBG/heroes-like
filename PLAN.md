@@ -643,6 +643,25 @@ Non-goals:
 - do not make B trigger retreat, surrender, or another irreversible battle action;
 - do not redesign active-play screens or add visible instruction panels.
 
+## Battle Controller Hex-Board Navigation
+
+The completed Phase 6 accessibility slice makes exact tactical board selection available from a controller through the same target and movement dispatch used by mouse input.
+
+Target shape:
+- the battle board is a real focus-cycle control without replacing the preferred command-button focus on battle entry or after actions;
+- entering board focus exposes a visible hex cursor initialized from the selected target, an available move destination, or the active stack;
+- D-pad directions move the cursor across the bounded 11x7 hex board while preserving the existing command focus cycle outside board focus;
+- A dispatches the cursor cell through the existing enemy-stack focus/attack or exact legal-destination move signals;
+- B exits board focus and restores the current preferred legal battle command without triggering retreat or surrender;
+- battle-board state snapshots expose cursor position, cell role, and focus ownership for focused runtime validation;
+- mouse board input, combat rules, battle outcomes, keyboard command activation, save state, and Native RMG behavior remain unchanged.
+
+Non-goals:
+- do not claim full controller or hardware certification;
+- do not add diagonal stick movement, vibration, rebinding, or a second combat rules path;
+- do not make controller focus auto-select an irreversible action;
+- do not redesign the battle shell or add visible instruction panels.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

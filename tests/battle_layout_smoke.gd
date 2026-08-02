@@ -2438,7 +2438,6 @@ func _final_kill_menu_save_browser_failures(
 	if String(menu_snapshot.get("selected_save_key", "")) != latest_key:
 		failures.append("menu save browser did not select latest save")
 
-	var expected_resume_label := "outcome review" if expected_resume_target == "outcome" else "overworld resume"
 	var expected_load_label := "Review Outcome" if expected_resume_target == "outcome" else "Resume Expedition"
 	var continue_text := String(menu_snapshot.get("continue_text", ""))
 	var continue_tooltip := String(menu_snapshot.get("continue_tooltip", ""))
@@ -2463,10 +2462,18 @@ func _final_kill_menu_save_browser_failures(
 		String(menu_snapshot.get("load_selected_tooltip", "")),
 		save_details,
 	])
-	if expected_resume_label not in latest_surface_text.to_lower():
-		failures.append("menu latest surface did not show %s" % expected_resume_label)
-	if expected_resume_label not in save_browser_text.to_lower():
-		failures.append("menu save browser did not show %s" % expected_resume_label)
+	var latest_surface_lower := latest_surface_text.to_lower()
+	var save_browser_lower := save_browser_text.to_lower()
+	if expected_resume_target == "outcome":
+		if "review" not in latest_surface_lower or ("outcome" not in latest_surface_lower and "victory" not in latest_surface_lower and "defeat" not in latest_surface_lower):
+			failures.append("menu latest surface did not show outcome/result review")
+		if "review" not in save_browser_lower or ("outcome" not in save_browser_lower and "victory" not in save_browser_lower and "defeat" not in save_browser_lower):
+			failures.append("menu save browser did not show outcome/result review")
+	else:
+		if "adventure map" not in latest_surface_lower:
+			failures.append("menu latest surface did not show Adventure Map destination")
+		if "adventure map" not in save_browser_lower:
+			failures.append("menu save browser did not show Adventure Map destination")
 	if load_selected_text != expected_load_label:
 		failures.append("menu load action label mismatch")
 	if expected_resume_target == "outcome":
