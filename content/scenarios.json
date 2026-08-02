@@ -4004,6 +4004,7 @@
         {
           "placement_id": "bridge_boots",
           "artifact_id": "artifact_trailsinger_boots",
+          "artifact_reward_table_id": "artifact_source_pickup_caches_common",
           "x": 3,
           "y": 1
         },
@@ -4210,7 +4211,7 @@
         {"placement_id": "riverwatch_embergrain_front", "site_id": "site_embergrain_warm_granary", "x": 10, "y": 1, "collected_by_faction_id": "faction_embercourt"}
       ],
       "artifact_nodes": [
-        {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "orevein_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
         {"placement_id": "orevein_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
         {"placement_id": "riverwatch_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
       ],

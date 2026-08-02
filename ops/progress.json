@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed one-time Embercourt and Brasshollow artifact commissions through existing town buildings and the compact gear lane, with exact common-resource payment, faction eligibility, town provenance, auto-equip, and save version 9 continuity. Overall release work remains active.",
+  "currentNotes": "The selected deterministic artifact pickup source slice is complete. The overall release remains active; select the next pending implementation slice from unresolved product gaps.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "artifact-town-commission-service-10184",
-  "currentSliceId": "artifact-town-commission-service-10184",
-  "currentSliceNotes": "Lockhouse Tally and Scalehouse now provide validated one-time player artifact commissions with exact common-resource payment, faction gating, auto-equip, existing compact town UI, persisted provenance, and save version 9 continuity.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Artifact Town Commission Service",
-  "currentSliceUpdatedAt": "2026-08-02T22:01:16Z",
+  "currentSlice": "",
+  "currentSliceId": "",
+  "currentSliceNotes": "No operational slice is selected after completing artifact pickup source execution.",
+  "currentSliceStatus": "unassigned",
+  "currentSliceTitle": "",
+  "currentSliceUpdatedAt": "2026-08-02T22:22:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -65677,6 +65677,105 @@
         "status": "passed",
         "updatedAt": "2026-08-02T22:01:16Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/artifact_pickup_source_execution_report.tscn",
+        "godot4 --headless --path . tests/artifact_source_reward_report.tscn",
+        "godot4 --headless --path . tests/ai_hero_task_artifact_objective_report.tscn",
+        "godot4 --headless --path . tests/overworld_visual_smoke.tscn",
+        "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/artifacts.json content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The pickup source table is live with at least two common candidates; selected authored cache placements deterministically materialize a table artifact before presentation and AI valuation; player, assigned strategic-AI, and opportunistic-route claims grant and auto-equip the materialized item while preserving one-time collection and table/source metadata; normalization and save version 9 do not reroll it; non-opted fixed artifact placements remain unchanged; focused and broad regressions pass.",
+      "id": "artifact-pickup-source-execution-10184",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "content/scenarios.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/ScenarioFactory.gd",
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/EnemyAdventureRules.gd as needed",
+        "tests/artifact_pickup_source_execution_report.gd",
+        "tests/artifact_pickup_source_execution_report.tscn",
+        "tests/artifact_source_reward_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing non-opted fixed artifact placements or Wayfarer set thresholds",
+        "adding rare pickup candidates, broad random drops, markets, or campaign grants",
+        "changing strategic-AI valuation rules or expedition save version",
+        "changing Native RMG generation/package output or claiming artifact-system or overall release completion"
+      ],
+      "parentSliceId": "production-alpha-content-expansion-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md artifact runtime follow-ups and docs/artifact-system-expansion-foundation.md pickup-source rules",
+      "purpose": "Turn the final inactive artifact source table into deterministic, visible, save-stable common cache rewards used by both player and strategic AI.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/artifact-source-reward-rules-report.md"
+      ],
+      "completedAt": "2026-08-02T22:22:28Z",
+      "evidence": {
+        "artifacts": [
+          "content/artifacts.json",
+          "content/scenarios.json",
+          "scripts/core/ArtifactRules.gd",
+          "scripts/core/ScenarioFactory.gd",
+          "scripts/core/OverworldRules.gd",
+          "scripts/core/ScenarioScriptRules.gd",
+          "tests/artifact_pickup_source_execution_report.gd",
+          "tests/artifact_pickup_source_execution_report.tscn",
+          "tests/artifact_source_reward_report.gd",
+          "tests/validate_repo.py"
+        ],
+        "finding": "Selected Mireford and Orevein caches now deterministically materialize one of two common pickup-table artifacts before presentation and AI use. Player, assigned strategic-AI, and opportunistic-route claims equip the persisted item; repeated normalization, one-time collection, save version 9, and non-opted fixed caches remain stable.",
+        "metrics": {
+          "live_artifact_source_table_count": 6,
+          "pickup_candidate_count": 2,
+          "materialized_authored_cache_case_count": 2,
+          "player_claim_case_count": 1,
+          "assigned_ai_claim_case_count": 1,
+          "opportunistic_ai_claim_case_count": 1,
+          "fixed_pickup_compatibility_case_count": 1,
+          "save_resume_case_count": 1,
+          "save_version": 9
+        }
+      },
+      "startedAt": "2026-08-02T22:08:27Z",
+      "status": "completed",
+      "title": "Artifact Pickup Source Execution",
+      "updatedAt": "2026-08-02T22:22:28Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/artifact_pickup_source_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_source_reward_report.tscn",
+          "godot4 --headless --path . tests/artifact_taxonomy_schema_report.tscn",
+          "godot4 --headless --path . tests/ai_hero_task_artifact_objective_report.tscn",
+          "godot4 --headless --path . tests/artifact_guarded_site_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_shrine_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_dwelling_reward_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_town_commission_service_report.tscn",
+          "godot4 --headless --path . tests/artifact_battle_salvage_execution_report.tscn",
+          "godot4 --headless --path . tests/artifact_equip_runtime_effects_report.tscn",
+          "godot4 --headless --path . tests/artifact_set_runtime_effects_report.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty content/artifacts.json content/scenarios.json ops/progress.json",
+          "git diff --check"
+        ],
+        "knownUnrelatedFailure": "tests/overworld_visual_smoke.tscn retains the previously documented stale forest-degradation assertion at a tile presented as authored grass; artifact pickup code does not touch terrain or rendering.",
+        "status": "passed_with_known_unrelated_visual_failure",
+        "updatedAt": "2026-08-02T22:22:28Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -65686,7 +65785,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and the still-inactive artifact pickup source path.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
   "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed Native RMG matrix or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
@@ -66118,7 +66217,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "artifact_town_commission_service_completed_overall_release_in_progress",
+  "result": "artifact_pickup_source_execution_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66219,9 +66318,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. One-time Embercourt and Brasshollow town artifact commissions now execute through existing buildings, common-resource economy state, compact artifact controls, and save-backed town provenance. Pickup randomization, strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Selected authored artifact caches now execute the final pickup source table deterministically for player and strategic-AI claims with save-backed source identity, while non-opted fixed caches remain unchanged. Strategic AI breadth, balance, accessibility, content, performance, clean-machine packaging, release integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T22:01:16Z",
+  "updatedAt": "2026-08-02T22:22:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

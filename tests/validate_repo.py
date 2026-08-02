@@ -9153,7 +9153,7 @@ def artifact_source_table_issues(
         live_drop_execution = bool(runtime_policy.get("live_drop_execution", False))
         if metadata_only == live_drop_execution:
             issues.append("source_table_runtime_mode_invalid")
-        if live_drop_execution and source_tag not in {"guarded_site", "shrine", "dwelling", "town", "battle_salvage"}:
+        if live_drop_execution and source_tag not in {"pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
         for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
             if bool(runtime_policy.get(blocked_flag, False)):
@@ -10801,9 +10801,28 @@ def validate_content(errors: list[str]) -> None:
     artifact_source_report = build_artifact_source_reward_report()
     ensure(bool(artifact_source_report.get("ok", False)), errors, f"Artifact source/reward report must pass: {artifact_source_report.get('table_validation_issues', [])}")
     ensure(int(artifact_source_report.get("eligible_artifact_count", 0)) == len(artifacts), errors, "Artifact source/reward tables must cover every authored artifact")
-    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact guarded-site, shrine, dwelling, town, and battle-salvage source tables must enable live drop execution")
-    ensure(int(artifact_source_report.get("live_table_count", 0)) == 5, errors, "Exactly five artifact source/reward tables must execute live")
-    ensure(artifact_source_report.get("live_source_tags", []) == ["guarded_site", "shrine", "dwelling", "town", "battle_salvage"], errors, "Only guarded-site, shrine, dwelling, town, and battle-salvage artifact rewards may execute live in this slice")
+    ensure(bool(artifact_source_report.get("runtime_policy", {}).get("live_drop_execution", False)), errors, "Artifact pickup, guarded-site, shrine, dwelling, town, and battle-salvage source tables must enable live drop execution")
+    ensure(int(artifact_source_report.get("live_table_count", 0)) == 6, errors, "Exactly six artifact source/reward tables must execute live")
+    ensure(artifact_source_report.get("live_source_tags", []) == ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"], errors, "Only pickup, guarded-site, shrine, dwelling, town, and battle-salvage artifact rewards may execute live in this slice")
+
+    pickup_table_id = "artifact_source_pickup_caches_common"
+    pickup_table = next((table for table in payloads["artifacts"].get("source_reward_tables", []) if isinstance(table, dict) and str(table.get("id", "")) == pickup_table_id), {})
+    ensure(string_list(pickup_table.get("artifact_ids", [])) == ["artifact_trailsinger_boots", "artifact_quarry_tally_rod"], errors, "Common pickup source table must expose both bounded common candidates")
+    pickup_cases = {
+        "mireford-skirmish": ("bridge_boots", "artifact_trailsinger_boots"),
+        "orevein-contract": ("orevein_trailsinger_boots", "artifact_quarry_tally_rod"),
+    }
+    for scenario_id, (placement_id, expected_artifact_id) in pickup_cases.items():
+        artifact_nodes = scenarios.get(scenario_id, {}).get("artifact_nodes", [])
+        placement = next((node for node in artifact_nodes if isinstance(node, dict) and str(node.get("placement_id", "")) == placement_id), {}) if isinstance(artifact_nodes, list) else {}
+        ensure(str(placement.get("artifact_reward_table_id", "")) == pickup_table_id, errors, f"{scenario_id} {placement_id} must opt into the common pickup source table")
+        source_key = f"{scenario_id}:{placement_id}:pickup"
+        value = 0
+        for character in source_key:
+            value = (value * 131 + ord(character)) % 2147483647
+        candidates = string_list(pickup_table.get("artifact_ids", []))
+        materialized_artifact_id = candidates[value % len(candidates)] if candidates else ""
+        ensure(materialized_artifact_id == expected_artifact_id, errors, f"{scenario_id} {placement_id} must deterministically materialize {expected_artifact_id}")
     ensure(not bool(artifact_source_report.get("runtime_policy", {}).get("save_version_bump", True)), errors, "Artifact source/reward tables must not require a save-version bump")
     starlens = resource_sites.get("site_starlens_sanctum", {})
     starlens_contract = starlens.get("artifact_reward_contract", {}) if isinstance(starlens.get("artifact_reward_contract"), dict) else {}
@@ -23059,7 +23078,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, Embercourt and Brasshollow one-time town commissions, and Bellwake player battle salvage while pickup and rare-resource artifact income remain inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, selected deterministic pickup-cache rewards, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, Embercourt and Brasshollow one-time town commissions, and Bellwake player battle salvage while rare-resource artifact income remains inactive")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

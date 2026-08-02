@@ -9,7 +9,7 @@
         "artifact_waymark_compass",
         "artifact_milepost_lantern"
       ],
-      "source_hint": "Guarded road caches and authored region reward chains; source tables remain metadata-only and do not execute live drops.",
+      "source_hint": "Guarded road caches and authored region reward chains; explicitly opted-in common pickups execute their bounded source table.",
       "piece_thresholds": [
         {
           "count": 2,
@@ -57,7 +57,8 @@
         "common"
       ],
       "artifact_ids": [
-        "artifact_trailsinger_boots"
+        "artifact_trailsinger_boots",
+        "artifact_quarry_tally_rod"
       ],
       "faction_constraints": [],
       "set_constraints": {
@@ -67,8 +68,8 @@
         "piece_limit_per_table": 1
       },
       "runtime_policy": {
-        "metadata_only": true,
-        "live_drop_execution": false,
+        "metadata_only": false,
+        "live_drop_execution": true,
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
@@ -453,6 +454,7 @@
       "accord_affinity": "neutral",
       "faction_affinity": [],
       "source_tags": [
+        "pickup",
         "guarded_site",
         "artifact_cache",
         "town"
