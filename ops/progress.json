@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "The Charter Granary Levies placement-local pressure correction is complete. Six Ember Archers are the minimum roster that survives the player's 28-damage opener and sustains the authored firing line: terminal margin fell from 94% to 58%, enemy damage per round rose from 6 to 20, and the active-scenario breadth queue improved from 41 items/12 high to 37/10. The breadth queue still contains unrelated outliers, and broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
+  "currentNotes": "The duplicated Bridge Ford Reavers correction is complete. Ironbridge now uses a placement-local 10-cutthroat/12-slinger host and resolves at 21% player health with 24 enemy damage per round; Mireford uses 13/11 and resolves at 66% with 13 enemy damage per round. The active breadth queue improved from 37 items/10 high to 32/6 while the shared dynamic raid group remains unchanged. Broader strategic AI, balance, content, performance, packaging, accessibility, and release work remain open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-charter-granary-levies-pressure-10184",
-  "currentSliceId": "balance-charter-granary-levies-pressure-10184",
-  "currentSliceNotes": "Completed with a placement-local 11 River Guard / 6 Ember Archer / 1 Citadel Pikeward roster. The focused sample remains a victory at 58% terminal margin over four rounds with 20 enemy damage per round, while the active breadth queue improves to 37 items/10 high. Remaining balance debt is explicitly unclaimed.",
+  "currentSlice": "balance-ford-reavers-pressure-10184",
+  "currentSliceId": "balance-ford-reavers-pressure-10184",
+  "currentSliceNotes": "Completed with separate placement-local rosters because scenario identity changes deterministic combat. Both samples remain player victories below the 90% outlier threshold, enemy pressure is nontrivial, and the breadth queue improves to 32 items/6 high. Remaining balance debt is explicitly unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Charter Granary Levies Pressure",
-  "currentSliceUpdatedAt": "2026-08-02T07:41:07Z",
+  "currentSliceTitle": "Bridge Ford Reavers Pressure",
+  "currentSliceUpdatedAt": "2026-08-02T07:48:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -55937,6 +55937,109 @@
     },
     {
       "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_ford_reavers_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T07:48:50Z",
+      "completionCriteria": "Both current Bridge Ford Reavers samples remain bounded player victories, fall below the existing 90% matrix terminal-margin threshold, apply more than trivial enemy pressure, and improve the active-scenario breadth queue through placement-local content only.",
+      "id": "balance-ford-reavers-pressure-10184",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ford_reavers_balance_regression.gd",
+        "existing active-scenario balance breadth reports"
+      ],
+      "nonGoals": [
+        "changing the shared army_ford_reavers raid group",
+        "global unit, spell, or combat-rule tuning",
+        "full combat-balance or release-readiness claims"
+      ],
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
+      "purpose": "Correct the duplicated 95% Bridge Ford Reavers authored encounter outlier without changing dynamic raid composition.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T07:43:49Z",
+      "status": "completed",
+      "summary": "Completed. Separate placement-local rosters remove both duplicated 95% outliers without changing the shared dynamic raid group. Ironbridge uses 10 cutthroats/12 slingers and resolves as a five-round victory at 21% player health with 24 enemy damage per round; Mireford uses 13/11 and resolves as a four-round victory at 66% with 13 enemy damage per round. The active breadth queue improves from 37 items/10 high to 32/6.",
+      "title": "Bridge Ford Reavers Pressure",
+      "updatedAt": "2026-08-02T07:48:50Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_ford_reavers_balance_regression.tscn (passed)",
+          "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active balance queue remains; queue improved)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/scenarios.json ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "active_breadth_after": {
+            "high_priority_count": 6,
+            "item_count": 32,
+            "medium_priority_count": 26,
+            "sample_count": 51
+          },
+          "active_breadth_before": {
+            "high_priority_count": 10,
+            "item_count": 37,
+            "medium_priority_count": 27,
+            "sample_count": 51
+          },
+          "baseline_samples": {
+            "ironbridge-stand": {
+              "enemy_damage_per_round": 2,
+              "outcome_state": "victory",
+              "player_health_remaining_pct": 95,
+              "round_reached": 4
+            },
+            "mireford-skirmish": {
+              "enemy_damage_per_round": 2,
+              "outcome_state": "victory",
+              "player_health_remaining_pct": 95,
+              "round_reached": 4
+            }
+          },
+          "implemented_samples": {
+            "ironbridge-stand": {
+              "enemy_damage_per_round": 24,
+              "enemy_power_score": 1664,
+              "outcome_state": "victory",
+              "player_enemy_power_ratio_pct": 100,
+              "player_health_remaining_pct": 21,
+              "player_power_score": 1662,
+              "round_reached": 5
+            },
+            "mireford-skirmish": {
+              "enemy_damage_per_round": 13,
+              "enemy_power_score": 1832,
+              "outcome_state": "victory",
+              "player_enemy_power_ratio_pct": 91,
+              "player_health_remaining_pct": 66,
+              "player_power_score": 1662,
+              "round_reached": 4
+            }
+          },
+          "player_facing_change": "Only the two authored bridge_ford_reavers placement rosters changed. The shared army_ford_reavers group used by dynamic raids remains 13 cutthroats/8 slingers.",
+          "rejected_adjacent_candidates": {
+            "both_13_11": "Ironbridge remained a 92% margin outlier; Mireford passed at 66%.",
+            "both_13_12": "Mireford became a defeat with 36% enemy health; Ironbridge won at 17%.",
+            "ironbridge_9_12": "Ironbridge remained a 91% margin outlier.",
+            "ironbridge_14_11": "Ironbridge worsened to a 97% margin outlier."
+          },
+          "remaining_debt": "The active breadth suite remains action_required with 32 unrelated items, including 6 high-priority items. This slice does not claim broad combat-balance completion."
+        },
+        "sliceId": "balance-ford-reavers-pressure-10184",
+        "status": "passed_with_unrelated_breadth_debt",
+        "updatedAt": "2026-08-02T07:48:50Z"
+      }
+    },
+    {
+      "baselineChecks": [
         "python3 tests/town_development_balance_report.py",
         "python3 tests/town_development_cost_curve_report.py",
         "python3 tests/economy_town_goal_scorecard_report.py",
@@ -63299,7 +63402,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "charter_granary_levies_pressure_correction_completed_overall_release_in_progress",
+  "result": "ford_reavers_pressure_correction_completed_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -63400,9 +63503,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove and Charter Granary corrections are complete within their scopes. Granary Levies now survives the opening spell and applies sustained pressure, improving the active breadth queue while leaving unrelated debt explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaging, player-comprehension, keyboard active-play focus, and the bounded Ghoul Grove, Charter Granary, and duplicated Ford Reavers corrections are complete within their scopes. Both Ford Reavers authored placements now apply sustained pressure and no longer contribute high-margin outliers, while unrelated balance debt remains explicit. Strategic AI, broader balance, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T07:41:07Z",
+  "updatedAt": "2026-08-02T07:48:50Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
