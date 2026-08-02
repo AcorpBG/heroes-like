@@ -444,6 +444,9 @@ func _resource_front_support_launches_below_pressure() -> Dictionary:
 	encounters.append(leader)
 	session.overworld["encounters"] = encounters
 	state = _enemy_state(session)
+	var scan_report := _active_front_support_scan_reuse_report(session, config, state)
+	if scan_report.is_empty():
+		return {}
 	var can_launch := EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW)
 	if not can_launch:
 		_fail("Active-front support did not satisfy launch readiness below generic pressure.")
@@ -489,6 +492,67 @@ func _resource_front_support_launches_below_pressure() -> Dictionary:
 		"support_reason_codes": support_reason_codes,
 		"event_types": event_types,
 		"state_pressure_after_launch": int(state.get("pressure", 0)),
+		"scan_reuse": scan_report,
+	}
+
+func _active_front_support_scan_reuse_report(session, config: Dictionary, state: Dictionary) -> Dictionary:
+	var points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
+	if points.is_empty() or not (points[0] is Dictionary):
+		_fail("Active-front scan fixture has no spawn point.")
+		return {}
+	var point: Dictionary = points[0]
+	var occupied := EnemyAdventureRules.occupied_raid_commander_ids(session, MIRECLAW)
+	var fresh_candidates := []
+	for spawn_order in range(3):
+		fresh_candidates.append(EnemyTurnRules._active_front_support_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			MIRECLAW,
+			point,
+			occupied,
+			spawn_order,
+			{}
+		))
+	var shared_context := {}
+	var shared_candidates := []
+	EnemyTurnRules._spawn_profile_begin(true)
+	for spawn_order in range(3):
+		shared_candidates.append(EnemyTurnRules._active_front_support_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			MIRECLAW,
+			point,
+			occupied,
+			spawn_order,
+			shared_context
+		))
+	var profile := EnemyTurnRules._spawn_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	for candidate in fresh_candidates:
+		if not (candidate is Dictionary) or candidate.is_empty():
+			_fail("Active-front scan reuse fixture produced an empty candidate.")
+			return {}
+	if JSON.stringify(fresh_candidates) != JSON.stringify(shared_candidates):
+		_fail("Shared active-front probe payloads changed candidate behavior: fresh=%s shared=%s" % [JSON.stringify(fresh_candidates), JSON.stringify(shared_candidates)])
+		return {}
+	var probe_loaded := int(counts.get("active_front_support_probe_loaded", 0))
+	var probe_reused := int(counts.get("active_front_support_probe_reused", 0))
+	if probe_loaded <= 0 or probe_reused != probe_loaded * 2:
+		_fail("Active-front probe cache loaded/reused %d/%d instead of one load and two reuses per commander." % [probe_loaded, probe_reused])
+		return {}
+	if int(counts.get("active_front_support_commander_candidates_loaded", 0)) != 1 \
+			or int(counts.get("active_front_support_commander_candidates_reused", 0)) != 2:
+		_fail("Active-front commander candidates were not shared across three origin checks: %s" % JSON.stringify(counts))
+		return {}
+	return {
+		"candidate_count": shared_candidates.size(),
+		"candidate_payloads_match": true,
+		"commander_candidates_loaded": int(counts.get("active_front_support_commander_candidates_loaded", 0)),
+		"commander_candidates_reused": int(counts.get("active_front_support_commander_candidates_reused", 0)),
+		"commander_probes_loaded": probe_loaded,
+		"commander_probes_reused": probe_reused,
 	}
 
 func _resource_front_support_consolidates_into_capture_ready_host() -> Dictionary:

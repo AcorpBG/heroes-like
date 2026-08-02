@@ -744,6 +744,23 @@ Non-goals:
 - do not broaden the long-run seed matrix or add a report-only timing gate;
 - do not change save schema, player-facing event text, combat, or Native RMG.
 
+## Strategic AI Active-Front Probe Reuse
+
+The completed Phase 5 strategic-AI performance slice removes repeated commander army preparation while comparing the same active-front support opportunity from multiple open spawn origins.
+
+Target shape:
+- one launch scan normalizes available commander candidates and prepares each commander's immutable army/continuity payload once;
+- every open spawn origin keeps its own live route plan, goal distance, score, and deterministic tie-breaking;
+- commander fit and adventure-spell projection remain candidate-specific and use current session state;
+- focused active-front support behavior and scan-work counters prove identical selected payloads with one prepared probe per commander;
+- an exact deterministic long-run replay, strategic AI baseline, and core regressions pass.
+
+Non-goals:
+- do not tune strategic priorities, pressure, support readiness, commander fit, pathing, or authored content;
+- do not cache route geometry, target selection, or mutable post-launch state across origins or turns;
+- do not broaden the long-run matrix or add report-only timing gates;
+- do not change save schema, player-facing event text, combat, packaging, or Native RMG.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.
