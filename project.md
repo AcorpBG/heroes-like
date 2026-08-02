@@ -203,7 +203,7 @@ Current phase: Phase 5 — Playable Alpha Baseline.
 
 The strategic focus is now to turn the validated systems foundation into a coherent playable alpha that can be played repeatedly without developer interpretation. Economy/town development, save/load, generated-art loading, strict Small generated package adoption, active scenario source routes, battle presentation foundations, and strategic AI foundations all have meaningful evidence, but they are not product-completion claims.
 
-Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, packaging hardening, and balance harness depth. Campaign production remains deferred until explicitly selected in a later phase.
+Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, campaign flow hardening, packaging hardening, and balance harness depth. Owner direction has now selected bounded campaign/content implementation; each campaign slice still needs live flow and progression proof rather than a breadth-only claim.
 
 Random map generation remains strategically important, but the current proven scope is strict Small 36x36 one-level land package/session evidence. Larger sizes, water, underground, broad template families, final reward ecology, route safety, and full HoMM-style production parity remain incomplete and must not be inferred from Small-map validation.
 

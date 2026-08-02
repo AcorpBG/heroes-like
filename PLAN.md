@@ -455,7 +455,8 @@ Current product focus:
 - Use the fast battle-balance benchmark evidence to tune faction-pair combat spread now that fake round-cap outcomes have been removed, the public benchmark report uses side-neutral `side_a`/`side_b` terminology, and spell-enabled benchmark availability follows the same Native RMG week surface as army snapshots.
 - Before more broad unit-stat nudges, strengthen the magic system as a strategic layer: spell availability, school coverage, field-magic access, and player-readable town/generated-map spell study should improve before trying to balance magic-focused heroes against raw-combat heroes.
 - Latest magic follow-up: resistance and counter-control mechanics now run in live battle and in the fast benchmark before remaining spell-enabled benchmark outliers are treated as pure faction/unit imbalance.
-- Campaign production remains deferred until explicitly selected in a later phase.
+- Owner direction has selected bounded campaign/content implementation. Current campaign target: expose a real difficulty choice in the campaign board and carry that choice through primary/chapter launch, session state, and save/resume evidence instead of silently forcing the default difficulty.
+- Latest campaign completed slice: `campaign-difficulty-selection-10184` adds a compact campaign-board difficulty selector, synchronizes it with the existing difficulty model, and carries the selected value through live campaign launch and autosave summary state.
 
 ## Selectable Near-Term Work
 
@@ -476,7 +477,7 @@ Recommended next slices:
 - `headless-balance-harness-next-10184`: expand automated balance harness depth before scaling content.
 
 Do not select:
-- campaign/scenario production breadth unless the owner explicitly changes priority;
+- campaign/scenario breadth that only adds data or reports without a playable flow; owner direction now permits bounded campaign/content implementation with live validation;
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
