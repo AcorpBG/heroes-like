@@ -75,9 +75,36 @@ func _planner_seeds_distinct_tasks_before_spawn() -> Dictionary:
 	_assert_distinct_planned_tasks(planned_tasks)
 	if _failed:
 		return {}
+	var planned_keys := _task_keys(planned_tasks)
+	var pressure_target_result := EnemyTurnRules._pressure_summary_target(
+		session,
+		config,
+		planned_state,
+		{"x": 7, "y": 2}
+	)
+	var pressure_target: Dictionary = pressure_target_result.get("target", {}) if pressure_target_result.get("target", {}) is Dictionary else {}
+	var pressure_target_key := "%s:%s" % [String(pressure_target.get("target_kind", "")), String(pressure_target.get("target_placement_id", ""))]
+	if String(pressure_target_result.get("source", "")) != "hero_task_state" or pressure_target_key not in planned_keys:
+		_fail("Pressure summary did not reuse one of the durable planned commander targets: %s / %s" % [JSON.stringify(pressure_target_result), JSON.stringify(planned_keys)])
+		return {}
+	if String(pressure_target.get("target_label", "")) == "" or String(pressure_target.get("hero_task_id", "")) == "":
+		_fail("Pressure summary task target is missing player-facing label or task identity: %s" % JSON.stringify(pressure_target))
+		return {}
+	var fallback_state := planned_state.duplicate(true)
+	fallback_state.erase("hero_task_state")
+	var fallback_target_result := EnemyTurnRules._pressure_summary_target(
+		session,
+		config,
+		fallback_state,
+		{"x": 7, "y": 2}
+	)
+	if String(fallback_target_result.get("source", "")) != "fresh_target_scan" \
+			or not (fallback_target_result.get("target", {}) is Dictionary) \
+			or fallback_target_result.get("target", {}).is_empty():
+		_fail("Pressure summary did not retain a fresh target-scan fallback without a durable task board: %s" % JSON.stringify(fallback_target_result))
+		return {}
 	_update_enemy_state(session, planned_state)
 
-	var planned_keys := _task_keys(planned_tasks)
 	var spawn_result := EnemyTurnRules._spawn_raid(session, config, planned_state)
 	if not bool(spawn_result.get("ok", false)):
 		_fail("Spawn from planned task board failed: %s" % JSON.stringify(spawn_result))
@@ -96,6 +123,9 @@ func _planner_seeds_distinct_tasks_before_spawn() -> Dictionary:
 		"active_raids_before": active_raids_before,
 		"planned_count": int(plan_result.get("planned_count", 0)),
 		"planned_task_keys": planned_keys,
+		"pressure_target_key": pressure_target_key,
+		"pressure_target_source": String(pressure_target_result.get("source", "")),
+		"fallback_target_source": String(fallback_target_result.get("source", "")),
 		"spawned_commander_id": commander_id,
 		"spawned_target_key": spawned_key,
 		"spawn_message": String(spawn_result.get("message", "")),

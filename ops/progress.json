@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed campaign preview alignment: commander, operational, readiness, consequence, primary/chapter action, and launch-handoff surfaces now describe the same selected difficulty used by the launched session.",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-difficulty-preview-alignment-10184",
-  "currentSliceId": "campaign-difficulty-preview-alignment-10184",
-  "currentSliceNotes": "Completed. Focused campaign smoke selected Warlord and proved all pre-launch previews/actions reflected hard pressure before launching and autosaving the matching hard Campaign session; menu visual, campaign breadth, core, and repository regressions passed.",
+  "currentNotes": "Completed strategic AI pressure-target reuse: public pressure events now describe a valid durable active/planned commander objective and avoid an immediate duplicate whole-front scan, with a fresh-scan fallback for taskless states.",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSlice": "strategic-ai-pressure-summary-task-reuse-10184",
+  "currentSliceId": "strategic-ai-pressure-summary-task-reuse-10184",
+  "currentSliceNotes": "Completed. Focused planning proves durable-task reuse plus taskless fallback; strict-Small profiling reduced pressure phases from 61/35 ms to 18/18 ms and first-turn runtime from 1413 ms to 1355 ms, while a two-seed three-turn matrix and strategic/core regressions passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Difficulty Preview Alignment",
-  "currentSliceUpdatedAt": "2026-08-02T17:23:01Z",
+  "currentSliceTitle": "Strategic AI Pressure Summary Task Reuse",
+  "currentSliceUpdatedAt": "2026-08-02T17:32:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,53 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T17:32:46Z",
+      "completionSummary": "Strategic AI pressure events now reuse a valid active or planned durable commander-task target, making the public summary agree with the empire's actual objective and avoiding an immediate duplicate whole-front target scan. Taskless and legacy states retain the original fresh-scan fallback.",
+      "completionCriteria": "Player-facing pressure events reuse a valid durable active/planned commander-task target, retain a fresh target-scan fallback when the task board has no valid focus, preserve strategic task/launch behavior, and improve or hold the focused strict-Small enemy-turn runtime without behavior regressions.",
+      "id": "strategic-ai-pressure-summary-task-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "strategic AI decision or difficulty retuning",
+        "Native RMG generation or parity changes",
+        "broad 100-seed eight-week completion or release-readiness claims",
+        "save schema changes"
+      ],
+      "parentSliceId": "strategic-ai-quality-pass-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Current product focus strategic AI follow-up",
+      "purpose": "Make public strategic pressure describe the commander objective already selected by the live durable task planner while eliminating an immediate duplicate target scan.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T17:27:10Z",
+      "status": "completed",
+      "title": "Strategic AI Pressure Summary Task Reuse",
+      "updatedAt": "2026-08-02T17:32:46Z",
+      "validationEvidence": [
+        "AI_HERO_TASK_STRATEGIC_PLANNER_REPORT passed: the pressure target matched one of ten durable planned commander targets, exposed a player-facing label/task identity, and a taskless state retained fresh_target_scan fallback behavior with save version 9 unchanged.",
+        "Comparable strict-Small seed-001 profiling reduced Mireclaw/Sunvault pressure-summary phases from 61/35 ms to 18/18 ms and total first-turn runtime from 1413 ms to 1355 ms; both factions reported hero_task_state target reuse.",
+        "A two-seed, three-turn strict-Small matrix completed all six turns with 29 public AI events including nine ai_pressure_summary events, no behavior bugs, no target-integrity violations, and valid durable task/raid continuity.",
+        "STRATEGIC_AI_BASELINE_KPI_REPORT passed all 14 subsystems and five Small/Medium generated-map probes; core_systems_regression_smoke and tests/validate_repo.py passed.",
+        "Godot editor parse, jq empty ops/progress.json, progress plan sync dry-run, and git diff --check passed."
+      ]
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
