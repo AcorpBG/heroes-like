@@ -8,6 +8,8 @@ const TEST_VALUES := {
 	"effects_volume_percent": 48,
 	"presentation_mode": "windowed",
 	"presentation_resolution": "1600x900",
+	"vsync_enabled": false,
+	"frame_rate_limit": 120,
 	"large_ui_text": true,
 	"reduce_motion": true,
 }
@@ -65,6 +67,8 @@ func _run_persistence_check() -> void:
 	SettingsService.set_effects_volume_percent(int(TEST_VALUES["effects_volume_percent"]))
 	SettingsService.set_presentation_mode(String(TEST_VALUES["presentation_mode"]))
 	SettingsService.set_presentation_resolution(String(TEST_VALUES["presentation_resolution"]))
+	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
+	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
 	SettingsService.set_large_ui_text_enabled(bool(TEST_VALUES["large_ui_text"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
 	var saved_path := SettingsService.save_settings()
@@ -105,6 +109,21 @@ func _run_persistence_check() -> void:
 	_expect(SettingsService.effects_audio_bus_name() == SettingsService.EFFECTS_AUDIO_BUS, "Effects playback must target the independent Effects audio bus.")
 	_expect(String(direct_values.get("presentation_mode", "")) == String(TEST_VALUES["presentation_mode"]), "Direct config presentation mode mismatch.")
 	_expect(String(direct_values.get("presentation_resolution", "")) == String(TEST_VALUES["presentation_resolution"]), "Direct config presentation resolution mismatch.")
+	_expect(bool(direct_values.get("vsync_enabled", true)) == bool(TEST_VALUES["vsync_enabled"]), "Direct config VSync mismatch.")
+	_expect(int(direct_values.get("frame_rate_limit", -1)) == int(TEST_VALUES["frame_rate_limit"]), "Direct config frame-rate limit mismatch.")
+	var display_driver := DisplayServer.get_name()
+	var runtime_vsync_verifiable := display_driver != "headless"
+	_report["display_pacing"] = {
+		"display_driver": display_driver,
+		"vsync_enabled": SettingsService.vsync_enabled(),
+		"runtime_vsync_mode": DisplayServer.window_get_vsync_mode(),
+		"runtime_vsync_verifiable": runtime_vsync_verifiable,
+		"frame_rate_limit": SettingsService.frame_rate_limit(),
+		"runtime_max_fps": Engine.max_fps,
+	}
+	if runtime_vsync_verifiable:
+		_expect(DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_DISABLED, "Runtime VSync mode must apply the disabled setting.")
+	_expect(Engine.max_fps == int(TEST_VALUES["frame_rate_limit"]), "Runtime max FPS must match the configured frame-rate limit.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
 	_expect(bool(direct_values.get("reduce_motion", false)) == bool(TEST_VALUES["reduce_motion"]), "Direct config reduce motion mismatch.")
 
@@ -116,6 +135,8 @@ func _run_persistence_check() -> void:
 		"effects_volume_percent": SettingsService.effects_volume_percent(),
 		"presentation_mode": SettingsService.presentation_mode_id(),
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
+		"vsync_enabled": SettingsService.vsync_enabled(),
+		"frame_rate_limit": SettingsService.frame_rate_limit(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
@@ -126,6 +147,8 @@ func _run_persistence_check() -> void:
 	_expect(int(reloaded["effects_volume_percent"]) == int(TEST_VALUES["effects_volume_percent"]), "Reloaded effects volume mismatch.")
 	_expect(String(reloaded["presentation_mode"]) == String(TEST_VALUES["presentation_mode"]), "Reloaded presentation mode mismatch.")
 	_expect(String(reloaded["presentation_resolution"]) == String(TEST_VALUES["presentation_resolution"]), "Reloaded presentation resolution mismatch.")
+	_expect(bool(reloaded["vsync_enabled"]) == bool(TEST_VALUES["vsync_enabled"]), "Reloaded VSync mismatch.")
+	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
@@ -143,6 +166,8 @@ func _read_settings_config_values() -> Dictionary:
 		"effects_volume_percent": int(config.get_value("audio", "effects_volume_percent", -1)),
 		"presentation_mode": String(config.get_value("presentation", "mode", "")),
 		"presentation_resolution": String(config.get_value("presentation", "resolution", "")),
+		"vsync_enabled": bool(config.get_value("presentation", "vsync_enabled", true)),
+		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}

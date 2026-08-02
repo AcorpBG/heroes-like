@@ -91,6 +91,8 @@ const TAB_HELP_TOPIC := {
 @onready var _settings_handoff_label: Label = %SettingsHandoff
 @onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
 @onready var _resolution_picker: OptionButton = %ResolutionPicker
+@onready var _vsync_toggle: CheckButton = %VSyncToggle
+@onready var _frame_rate_picker: OptionButton = %FrameRatePicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
@@ -482,6 +484,18 @@ func _on_resolution_selected(index: int) -> void:
 	SettingsService.set_presentation_resolution(resolution_id)
 	_refresh_settings_panel()
 
+func _on_vsync_toggled(enabled: bool) -> void:
+	if _syncing_settings_ui:
+		return
+	SettingsService.set_vsync_enabled(enabled)
+	_refresh_settings_panel()
+
+func _on_frame_rate_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _frame_rate_picker.get_item_count():
+		return
+	SettingsService.set_frame_rate_limit(int(_frame_rate_picker.get_item_metadata(index)))
+	_refresh_settings_panel()
+
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
@@ -842,6 +856,21 @@ func _refresh_settings_panel() -> void:
 	if selected_resolution_index >= 0:
 		_resolution_picker.select(selected_resolution_index)
 		_resolution_picker.tooltip_text = "%s\n%s" % [String(resolution_options[selected_resolution_index].get("summary", "")), settings_check]
+
+	_vsync_toggle.button_pressed = SettingsService.vsync_enabled()
+	_vsync_toggle.tooltip_text = "VSync applies immediately and reduces visible tearing.\n%s" % settings_check
+	_frame_rate_picker.clear()
+	var frame_rate_options := SettingsService.build_frame_rate_options()
+	var selected_frame_rate_index := -1
+	for index in range(frame_rate_options.size()):
+		var option: Dictionary = frame_rate_options[index]
+		_frame_rate_picker.add_item(String(option.get("label", "Unlimited")), index)
+		_frame_rate_picker.set_item_metadata(index, int(option.get("value", 0)))
+		if bool(option.get("selected", false)):
+			selected_frame_rate_index = index
+	if selected_frame_rate_index >= 0:
+		_frame_rate_picker.select(selected_frame_rate_index)
+	_frame_rate_picker.tooltip_text = "Frame limiting applies immediately; Unlimited leaves pacing to VSync or the display.\n%s" % settings_check
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check
@@ -1931,6 +1960,11 @@ func validation_snapshot() -> Dictionary:
 		"presentation_resolution_options": SettingsService.build_resolution_options(),
 		"presentation_resolution_tooltip": _resolution_picker.tooltip_text,
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
+		"vsync_enabled": SettingsService.vsync_enabled(),
+		"vsync_tooltip": _vsync_toggle.tooltip_text,
+		"frame_rate_limit": SettingsService.frame_rate_limit(),
+		"frame_rate_picker_items": _picker_item_labels(_frame_rate_picker),
+		"frame_rate_tooltip": _frame_rate_picker.tooltip_text,
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
 		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
@@ -2301,6 +2335,22 @@ func validation_select_resolution(resolution_id: String) -> bool:
 		return SettingsService.presentation_resolution_id() == resolution_id
 	return false
 
+func validation_set_vsync(enabled: bool) -> bool:
+	validation_open_settings_stage()
+	_vsync_toggle.set_pressed_no_signal(enabled)
+	_on_vsync_toggled(enabled)
+	return SettingsService.vsync_enabled() == enabled
+
+func validation_select_frame_rate_limit(value: int) -> bool:
+	validation_open_settings_stage()
+	for index in range(_frame_rate_picker.get_item_count()):
+		if int(_frame_rate_picker.get_item_metadata(index)) != value:
+			continue
+		_frame_rate_picker.select(index)
+		_on_frame_rate_selected(index)
+		return SettingsService.frame_rate_limit() == value
+	return false
+
 func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 	validation_open_saves_stage()
 	var requested_key := "%s:%s" % [slot_type, slot_id]
@@ -2551,10 +2601,11 @@ func _apply_visual_theme() -> void:
 		_generated_underground_toggle,
 		_presentation_mode_picker,
 		_resolution_picker,
+		_frame_rate_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_large_text_toggle, _reduce_motion_toggle]:
+	for toggle in [_vsync_toggle, _large_text_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:
