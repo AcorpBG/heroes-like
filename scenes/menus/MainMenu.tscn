@@ -694,13 +694,13 @@ theme_override_constants/separation = 10
 
 [node name="SaveTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveHeader"]
 layout_mode = 2
-text = "Saved Fronts"
+text = "Expedition Saves"
 
 [node name="SaveLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
-text = "Manual slots and autosave details stay in the citadel ledger."
+text = "Autosave and three manual slots."
 
 [node name="SaveSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves"]
 layout_mode = 2
@@ -726,7 +726,7 @@ theme_override_constants/separation = 6
 
 [node name="SaveListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox"]
 layout_mode = 2
-text = "Slots"
+text = "Choose a Save"
 
 [node name="SaveList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox"]
 unique_name_in_owner = true
@@ -754,7 +754,7 @@ theme_override_constants/separation = 6
 
 [node name="SaveDetailTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 layout_mode = 2
-text = "Selected Save"
+text = "Resume Preview"
 
 [node name="SaveDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 unique_name_in_owner = true
