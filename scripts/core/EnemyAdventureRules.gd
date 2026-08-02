@@ -6103,6 +6103,22 @@ static func commander_can_deploy(source: Variant) -> bool:
 	var deploy_floor: int = max(45, int(round(float(base_strength) * 0.55)))
 	return current_strength >= deploy_floor
 
+static func deployable_commander_actor_ids(roster_value: Variant) -> Array:
+	var roster: Array = roster_value if roster_value is Array else []
+	var actor_ids := []
+	for commander_value in roster:
+		if not (commander_value is Dictionary):
+			continue
+		var commander: Dictionary = commander_value
+		if _normalize_commander_status(commander.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE \
+				or not commander_can_deploy(commander):
+			continue
+		var actor_id := String(commander.get("roster_hero_id", ""))
+		if actor_id != "" and actor_id not in actor_ids:
+			actor_ids.append(actor_id)
+	actor_ids.sort()
+	return actor_ids
+
 static func raid_commander_memory_summaries(encounters: Array, limit: int = 2) -> Array:
 	var summaries: Array = []
 	for encounter in encounters:

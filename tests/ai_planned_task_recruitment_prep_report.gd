@@ -133,11 +133,21 @@ func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 	if not _has_task_for_actor(_enemy_state(session), actor_id):
 		_fail("Prepared commander has no task-board record after live turn: actor=%s" % actor_id)
 		return {}
+	if EnemyTurnRules._post_raid_task_replan_required(0, ["hero_sable", "hero_vaska"], ["hero_sable", "hero_vaska"]):
+		_fail("No-active-raid turn with an unchanged deployable commander set should skip duplicate post-raid planning.")
+		return {}
+	if not EnemyTurnRules._post_raid_task_replan_required(1, ["hero_sable"], ["hero_sable"]):
+		_fail("An active raid must preserve full post-raid task reconciliation.")
+		return {}
+	if not EnemyTurnRules._post_raid_task_replan_required(0, ["hero_sable"], ["hero_sable", "hero_vaska"]):
+		_fail("A newly deployable commander must preserve post-raid task planning.")
+		return {}
 	return {
 		"case_id": "live_turn_plans_before_same_turn_recruitment",
 		"active_raids_before": active_before,
 		"prepared_actor_id": actor_id,
 		"prepared_strength": int(continuity.get("current_strength", 0)),
+		"idle_post_raid_plan_policy": "skip_when_no_active_raid_and_deployable_set_unchanged",
 		"planned_event_index": planned_index,
 		"build_event_index": build_index,
 		"prepared_event_index": prepared_index,
