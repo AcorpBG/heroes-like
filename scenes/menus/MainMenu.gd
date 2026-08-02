@@ -951,7 +951,7 @@ func _refresh_settings_panel() -> void:
 			selected_keyboard_layout_index = index
 	if selected_keyboard_layout_index >= 0:
 		_keyboard_navigation_layout_picker.select(selected_keyboard_layout_index)
-	_keyboard_navigation_layout_picker.tooltip_text = "Directional keyboard navigation applies immediately across menus and active play; controller input remains unchanged.\n%s" % settings_check
+	_keyboard_navigation_layout_picker.tooltip_text = "%s\nDirectional keyboard navigation applies immediately across menus and active play; controller input remains unchanged.\n%s" % [SettingsService.keyboard_navigation_layout_summary(), settings_check]
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check

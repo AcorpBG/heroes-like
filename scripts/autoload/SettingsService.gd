@@ -47,6 +47,16 @@ const KEYBOARD_HERO_MOVEMENT_ACTIONS := {
 	&"hero_move_down": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_S, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_K},
 	&"hero_move_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_A, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_J},
 	&"hero_move_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_D, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_L},
+	&"hero_move_up_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_Q, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_U},
+	&"hero_move_up_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_E, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_O},
+	&"hero_move_down_left": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_Z, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_M},
+	&"hero_move_down_right": {KEYBOARD_NAVIGATION_LAYOUT_WASD: KEY_C, KEYBOARD_NAVIGATION_LAYOUT_IJKL: KEY_PERIOD},
+}
+const HERO_DIAGONAL_NUMPAD_ACTIONS := {
+	&"hero_move_up_left": KEY_KP_7,
+	&"hero_move_up_right": KEY_KP_9,
+	&"hero_move_down_left": KEY_KP_1,
+	&"hero_move_down_right": KEY_KP_3,
 }
 
 const RENDER_QUALITY_OPTIONS := [
@@ -437,6 +447,15 @@ func keyboard_navigation_layout_label() -> String:
 			return String(option.get("label", "WASD + Arrows"))
 	return "WASD + Arrows"
 
+func keyboard_navigation_layout_summary() -> String:
+	match keyboard_navigation_layout_id():
+		KEYBOARD_NAVIGATION_LAYOUT_IJKL:
+			return "I/J/K/L move cardinally; U/O/M/Period move diagonally. Arrows retain interface navigation, and numpad diagonals remain available."
+		KEYBOARD_NAVIGATION_LAYOUT_ARROWS:
+			return "Arrow keys retain interface navigation and available cardinal movement; numpad 7/9/1/3 provide diagonal movement."
+		_:
+			return "W/A/S/D move cardinally; Q/E/Z/C move diagonally. Arrows retain interface navigation, and numpad diagonals remain available."
+
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
 		if String(option.get("id", "")) == mode_id:
@@ -658,7 +677,7 @@ func _apply_accessibility_settings() -> void:
 	FrontierVisualKitScript.set_color_cue_mode(color_cue_mode_id())
 
 func _apply_keyboard_navigation_layout() -> void:
-	var managed_keycodes := [KEY_W, KEY_A, KEY_S, KEY_D, KEY_I, KEY_J, KEY_K, KEY_L]
+	var managed_keycodes := [KEY_W, KEY_A, KEY_S, KEY_D, KEY_Q, KEY_E, KEY_Z, KEY_C, KEY_I, KEY_J, KEY_K, KEY_L, KEY_U, KEY_O, KEY_M, KEY_PERIOD]
 	var managed_actions := KEYBOARD_NAVIGATION_ACTIONS.keys() + KEYBOARD_HERO_MOVEMENT_ACTIONS.keys()
 	for action_value in managed_actions:
 		var action := StringName(action_value)
@@ -670,6 +689,7 @@ func _apply_keyboard_navigation_layout() -> void:
 			var key_event := input_event as InputEventKey
 			if int(key_event.physical_keycode) in managed_keycodes or int(key_event.keycode) in managed_keycodes:
 				InputMap.action_erase_event(action, input_event)
+	_ensure_hero_diagonal_numpad_actions()
 	var layout_id := keyboard_navigation_layout_id()
 	if layout_id == KEYBOARD_NAVIGATION_LAYOUT_ARROWS:
 		return
@@ -682,6 +702,21 @@ func _apply_keyboard_navigation_layout() -> void:
 			var key_event := InputEventKey.new()
 			key_event.physical_keycode = keycode
 			InputMap.action_add_event(action, key_event)
+
+func _ensure_hero_diagonal_numpad_actions() -> void:
+	for action_value in HERO_DIAGONAL_NUMPAD_ACTIONS:
+		var action := StringName(action_value)
+		var keycode := int(HERO_DIAGONAL_NUMPAD_ACTIONS[action])
+		var has_key := false
+		for input_event in InputMap.action_get_events(action):
+			if input_event is InputEventKey and int((input_event as InputEventKey).keycode) == keycode:
+				has_key = true
+				break
+		if has_key:
+			continue
+		var key_event := InputEventKey.new()
+		key_event.keycode = keycode
+		InputMap.action_add_event(action, key_event)
 
 func _apply_presentation_settings() -> void:
 	var resolution := presentation_resolution_size()

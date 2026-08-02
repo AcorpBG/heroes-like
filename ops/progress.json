@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed persisted keyboard navigation layouts. WASD, IJKL, and arrows-only choices now apply through shared UI and hero-movement InputMap actions while controller focus bindings remain intact.",
+  "currentNotes": "Completed keyboard layout ownership for diagonal overworld movement: IJKL and WASD cover all eight directions through shared InputMap actions, numpad diagonals remain available, and Shift plus a configured diagonal pans without moving the hero.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-keyboard-navigation-layout-10184",
-  "currentSliceId": "settings-keyboard-navigation-layout-10184",
-  "currentSliceNotes": "Completed. Schema-v10 device settings apply WASD, IJKL, or arrows-only navigation immediately; overworld cardinal movement no longer bypasses InputMap, and packaged reload preserves the choice.",
+  "currentSlice": "settings-keyboard-diagonal-movement-layout-10184",
+  "currentSliceId": "settings-keyboard-diagonal-movement-layout-10184",
+  "currentSliceNotes": "Completed. Replaced hard-coded diagonal letter checks with layout-owned hero actions, preserved numpad diagonals, exposed the active cluster in Settings, and proved raw IJKL movement plus shifted diagonal panning.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Keyboard Navigation Layout Settings",
-  "currentSliceUpdatedAt": "2026-08-02T14:55:32Z",
+  "currentSliceTitle": "Keyboard Diagonal Movement Layout Completion",
+  "currentSliceUpdatedAt": "2026-08-02T15:17:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,58 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/keyboard_navigation_layout_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 420 --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/packaged_settings_persistence_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-02T15:17:08Z",
+      "completionSummary": "The persisted keyboard layout now owns all eight overworld movement directions through shared InputMap actions. WASD uses Q/E/Z/C diagonals, IJKL uses U/O/M/Period, numpad 7/9/1/3 remains available in every layout, and Shift plus any configured direction pans by the existing three-tile delta without moving the hero.",
+      "completionCriteria": "WASD and IJKL layouts immediately own all eight letter-key hero directions through InputMap; IJKL diagonal input moves the live hero and Shift pans without movement; stale Q/E/Z/C input is disabled under IJKL; numpad diagonals remain layout-independent; focused active-play, packaged-settings, core, and repository regressions pass.",
+      "id": "settings-keyboard-diagonal-movement-layout-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/keyboard_navigation_layout_smoke.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "arbitrary per-key rebinding or controller-stick changes",
+        "non-movement shortcut or route/pathing changes",
+        "new settings controls or instruction panels",
+        "save-schema, combat, or Native RMG changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Keyboard Diagonal Movement Layout Completion",
+      "purpose": "Finish the persisted keyboard layout's live movement ownership by removing the remaining hard-coded diagonal letter keys.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T14:59:30Z",
+      "status": "completed",
+      "title": "Keyboard Diagonal Movement Layout Completion",
+      "updatedAt": "2026-08-02T15:17:08Z",
+      "validationEvidence": [
+        "SettingsService maps all eight hero movement directions for WASD and IJKL layouts and strips stale managed letter bindings when a layout changes.",
+        "OverworldShell dispatches cardinal and diagonal keyboard movement through shared InputMap actions with no direct Q/E/Z/C branches.",
+        "Focused raw-input smoke passed IJKL diagonal hero movement and rejected the corresponding stale WASD diagonal key.",
+        "Focused raw-input smoke proved numpad diagonal movement remains available under IJKL and Arrows Only removes all managed letter bindings.",
+        "Ninefold Confluence 64x64 smoke proved Shift plus IJKL diagonal pans exactly three tiles on each axis without moving the hero.",
+        "Settings tooltip exposes the selected diagonal cluster and packaged persistence preserves IJKL diagonal plus numpad bindings across reload.",
+        "active_play_keyboard_focus_smoke, packaged_settings_persistence_report, core_systems_regression_smoke, packaged_settings_persistence_smoke.py, and tests/validate_repo.py passed."
+      ]
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/keyboard_navigation_layout_smoke.tscn",
@@ -65026,7 +65078,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The recent authored encounter corrections are complete within scope, and Lockmarsh Road Chaplains now applies real pressure. The 51-sample active breadth queue has no high-priority items and its balance-matrix gate passes, while 25 medium-priority watches and broader strategic AI, accessibility, content, performance, packaging, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T14:55:32Z",
+  "updatedAt": "2026-08-02T15:17:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

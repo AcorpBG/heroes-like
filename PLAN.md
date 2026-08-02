@@ -678,6 +678,22 @@ Non-goals:
 - do not change gameplay movement rules, focus ownership, combat rules, save data, or Native RMG behavior;
 - do not add a separate input dispatch path per scene or expand the settings panel with instruction text.
 
+## Keyboard Diagonal Movement Layout Completion
+
+The completed corrective Phase 6 accessibility slice makes the persisted keyboard layout own the complete eight-direction overworld movement surface.
+
+Target shape:
+- WASD uses Q/E/Z/C for diagonals and IJKL uses U/O/M/Period for diagonals;
+- all eight letter-key directions flow through remappable hero-movement InputMap actions instead of direct keycode branches;
+- Numpad 7/9/1/3 remains available for diagonal movement in every layout, including Arrows Only;
+- Shift plus a configured diagonal pans the map by the existing three-tile delta without moving the hero;
+- cardinal movement, arrow/D-pad focus, controller stick movement, saves, combat, and Native RMG remain unchanged.
+
+Non-goals:
+- do not add arbitrary per-key rebinding or diagonal controller-stick changes;
+- do not remap non-movement shortcuts or change route/pathing rules;
+- do not add settings controls or explanatory panels beyond the existing layout picker.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.

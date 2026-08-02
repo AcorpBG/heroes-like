@@ -162,11 +162,16 @@ func _run_persistence_check() -> void:
 		"up_has_i": _action_has_key(&"ui_up", KEY_I),
 		"up_has_w": _action_has_key(&"ui_up", KEY_W),
 		"hero_move_up_has_i": _action_has_key(&"hero_move_up", KEY_I),
+		"hero_move_up_right_has_o": _action_has_key(&"hero_move_up_right", KEY_O),
+		"hero_move_up_right_has_e": _action_has_key(&"hero_move_up_right", KEY_E),
+		"hero_move_up_right_has_numpad9": _action_has_key(&"hero_move_up_right", KEY_KP_9),
 		"controller_up_preserved": _action_has_joypad_button(&"ui_up", JOY_BUTTON_DPAD_UP),
 	}
 	_expect(SettingsService.build_keyboard_navigation_layout_options().size() == 3, "Keyboard navigation must expose all three layout options.")
 	_expect(_action_has_key(&"ui_up", KEY_I) and not _action_has_key(&"ui_up", KEY_W), "IJKL layout must apply I and remove managed W from ui_up immediately.")
 	_expect(_action_has_key(&"hero_move_up", KEY_I) and not _action_has_key(&"hero_move_up", KEY_W), "IJKL layout must apply I and remove managed W from hero movement immediately.")
+	_expect(_action_has_key(&"hero_move_up_right", KEY_O) and not _action_has_key(&"hero_move_up_right", KEY_E), "IJKL layout must apply O and remove managed E from diagonal hero movement immediately.")
+	_expect(_action_has_key(&"hero_move_up_right", KEY_KP_9), "IJKL layout must preserve numpad diagonal hero movement.")
 	_expect(_action_has_joypad_button(&"ui_up", JOY_BUTTON_DPAD_UP), "Keyboard layout changes must preserve controller D-pad navigation.")
 	var display_driver := DisplayServer.get_name()
 	var runtime_vsync_verifiable := display_driver != "headless"
@@ -263,6 +268,7 @@ func _run_persistence_check() -> void:
 	_expect(String(reloaded["keyboard_navigation_layout"]) == String(TEST_VALUES["keyboard_navigation_layout"]), "Reloaded keyboard navigation layout mismatch.")
 	_expect(_action_has_key(&"ui_up", KEY_I) and not _action_has_key(&"ui_up", KEY_W), "Reloaded IJKL layout must remain applied to InputMap.")
 	_expect(_action_has_key(&"hero_move_up", KEY_I) and not _action_has_key(&"hero_move_up", KEY_W), "Reloaded IJKL layout must remain applied to hero movement.")
+	_expect(_action_has_key(&"hero_move_up_right", KEY_O) and not _action_has_key(&"hero_move_up_right", KEY_E) and _action_has_key(&"hero_move_up_right", KEY_KP_9), "Reloaded IJKL diagonal and numpad movement must remain applied.")
 	_expect(int(reloaded["ui_scale_percent"]) == int(TEST_VALUES["ui_scale_percent"]), "Reloaded UI scale mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
 	_expect(bool(reloaded["high_contrast_ui"]) == bool(TEST_VALUES["high_contrast_ui"]), "Reloaded high-contrast UI mismatch.")
