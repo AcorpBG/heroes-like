@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed durable battle playback speed preferences. Normal, Fast, and Instant now persist in device settings, the main-menu Settings board exposes the choice, every opened or resumed battle adopts it, and battle speed controls update it without changing combat simulation.",
+  "currentNotes": "Completed standard controller D-pad reachability for cardinal overworld hero movement. All four actions route through the existing movement methods, while WASD, arrows, diagonals, shifted panning, and focused UI behavior remain intact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-battle-playback-speed-persistence-10184",
-  "currentSliceId": "settings-battle-playback-speed-persistence-10184",
-  "currentSliceNotes": "Completed. Settings schema 9 migrates older configs to Normal and persists Normal/Fast/Instant under gameplay. Battle shells adopt the device value after battle normalization, and live speed controls persist their selected value. Focused settings, battle, menu, active-play, core, PCK, visual, and repository checks pass.",
+  "currentSlice": "overworld-controller-cardinal-movement-10184",
+  "currentSliceId": "overworld-controller-cardinal-movement-10184",
+  "currentSliceNotes": "Completed. OverworldShell idempotently registers four standard D-pad actions and consumes real joypad-button presses through the existing cardinal movement methods. Active-play validation proves all mappings, live hero movement, preserved focus, and unchanged WASD behavior; core and repository regressions pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Persistent Battle Playback Speed",
-  "currentSliceUpdatedAt": "2026-08-02T12:44:35Z",
+  "currentSliceTitle": "Overworld Controller Cardinal Movement",
+  "currentSliceUpdatedAt": "2026-08-02T12:54:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20664,6 +20664,59 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/core_systems_regression_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A standard controller D-pad cardinal press moves the active overworld hero through the existing movement path while preserving focused UI state; keyboard movement, diagonals, panning, and adjacent core behavior remain intact; focused and repository regressions pass.",
+      "id": "overworld-controller-cardinal-movement-10184",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "full controller or hardware certification",
+        "analog-stick or diagonal controller movement",
+        "input rebinding or vibration",
+        "overworld movement-rule or UI composition changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Overworld Controller Cardinal Movement",
+      "purpose": "Make the primary overworld movement loop operable from a standard controller instead of remaining keyboard-only.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-02T12:49:04Z",
+      "completedAt": "2026-08-02T12:54:02Z",
+      "completionSummary": "OverworldShell now idempotently registers north, south, west, and east movement actions against Godot's standard D-pad button constants. Real joypad button events are consumed in the shell input adapter and delegated to the same cardinal movement methods used by keyboard input, preserving all OverworldRules legality, movement cost, route, encounter, and refresh behavior. The active-play smoke verifies all four bindings, executes a legal real D-pad move, preserves focused UI state, and continues to pass the existing WASD, town, narrow-layout, and battle keyboard checks.",
+      "status": "completed",
+      "title": "Overworld Controller Cardinal Movement",
+      "updatedAt": "2026-08-02T12:54:02Z",
+      "validationEvidence": {
+        "registered_actions": [
+          "overworld_move_north",
+          "overworld_move_south",
+          "overworld_move_west",
+          "overworld_move_east"
+        ],
+        "standard_dpad_bindings_verified": 4,
+        "real_joypad_event_moved_hero": true,
+        "focused_ui_state_preserved": true,
+        "existing_wasd_movement_preserved": true,
+        "active_play_keyboard_focus_smoke": "passed",
+        "core_systems_regression_smoke": "passed",
+        "repository_validator": "passed"
+      }
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 180 --scene res://tests/packaged_settings_persistence_report.tscn",
