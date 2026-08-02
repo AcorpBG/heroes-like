@@ -11978,6 +11978,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func set_frame_rate_limit",
         "func set_render_quality_id",
         "func set_ui_scale_percent",
+        "func set_high_contrast_ui_enabled",
         "func music_audio_bus_name",
         "func effects_audio_bus_name",
         "func effects_audio_muted",
@@ -12028,6 +12029,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("MusicVolumeSlider", "HSlider"),
         ("EffectsVolumeSlider", "HSlider"),
         ("UIScalePicker", "OptionButton"),
+        ("HighContrastToggle", "CheckButton"),
         ("ReduceMotionToggle", "CheckButton"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for settings/onboarding")
@@ -12051,6 +12053,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.set_frame_rate_limit",
         "SettingsService.set_render_quality_id",
         "SettingsService.set_ui_scale_percent",
+        "SettingsService.set_high_contrast_ui_enabled",
         "SettingsService.set_presentation_mode",
         "SettingsService.set_presentation_resolution",
         "SettingsService.set_reduced_motion_enabled",
@@ -12064,6 +12067,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func _on_music_volume_changed",
         "func _on_effects_volume_changed",
         "func _on_ui_scale_selected",
+        "func _on_high_contrast_toggled",
         "func _on_reduce_motion_toggled",
         "func _refresh_settings_panel",
         "func _rebuild_help_browser",
@@ -12071,6 +12075,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func validation_select_resolution",
         "func validation_select_render_quality",
         "func validation_select_ui_scale",
+        "func validation_set_high_contrast",
         "func validation_set_vsync",
         "func validation_select_frame_rate_limit",
     ):

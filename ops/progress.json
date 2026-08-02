@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Graduated UI scaling is implemented and validated. Settings version 6 persists 100/115/130 percent, migrates old Large Text configs to 115 percent, applies the selected factor to the root window immediately, and keeps the 1280x720 settings board usable at 130 percent by collapsing the footer while secondary boards are open. Final accessibility and release coverage remain incomplete.",
+  "currentNotes": "Completed the shared high-contrast UI implementation: SettingsService v7 persists the preference, FrontierVisualKit supplies solid near-black surfaces with bright text, borders, selections, and focus treatment, the menu reapplies it immediately, and active gameplay shells inherit it. Color-vision coverage, clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-accessibility-ui-scale-control-10184",
-  "currentSliceId": "settings-accessibility-ui-scale-control-10184",
-  "currentSliceNotes": "Completed. Version 6 exposes 100/115/130 percent UI scaling, migrates legacy Large Text to 115 percent, preserves the compatibility API and field, applies scaling immediately, and passes direct, compact rendered, and exported-PCK validation.",
+  "currentSlice": "settings-accessibility-high-contrast-ui-10184",
+  "currentSliceId": "settings-accessibility-high-contrast-ui-10184",
+  "currentSliceNotes": "Completed. Version-7 persistence, shared VisualKit high-contrast behavior, immediate live menu restyling, 130-percent scaling compatibility, active-shell inheritance, and exported-PCK persistence all passed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility UI Scale Control",
-  "currentSliceUpdatedAt": "2026-08-02T09:29:30Z",
+  "currentSliceTitle": "Accessibility High Contrast UI",
+  "currentSliceUpdatedAt": "2026-08-02T09:48:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56674,6 +56674,85 @@
         "sliceId": "settings-accessibility-ui-scale-control-10184",
         "status": "passed_migration_runtime_rendered_and_packaged_ui_scaling",
         "updatedAt": "2026-08-02T09:29:30Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+        "MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A version-7 high-contrast preference persists and reloads, switches shared VisualKit text, panel, button, selection, and focus styling to high-contrast surfaces, reapplies the live menu immediately, remains usable with 130-percent UI scaling, is inherited by major active-play shells, and passes the exported PCK settings smoke.",
+      "id": "settings-accessibility-high-contrast-ui-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scripts/ui/FrontierVisualKit.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "existing active-shell visual and packaging validation"
+      ],
+      "nonGoals": [
+        "altering world-map faction or terrain identity colors",
+        "claiming color-blind simulation coverage",
+        "claiming final accessibility or release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Provide a readable high-contrast control and information palette across the shared Windows/Linux UI shell architecture without replacing gameplay-world colors.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T09:37:03Z",
+      "status": "completed",
+      "summary": "Completed. Players can persist and apply a shared high-contrast UI palette live; major shells use solid dark surfaces, bright text and borders, and a four-pixel focus ring while world-map identity colors remain unchanged.",
+      "title": "Accessibility High Contrast UI",
+      "updatedAt": "2026-08-02T09:48:19Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+          "python3 tests/packaged_settings_persistence_smoke.py",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact timeout 240 godot4 --headless --path . --scene res://tests/player_comprehension_layout_smoke.tscn",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact timeout 240 godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 timeout 180 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "settings_schema_version": 7,
+          "persisted_and_reloaded": true,
+          "live_menu_restyle_passed": true,
+          "body_text_color": "(0.96, 0.98, 1.0, 1.0)",
+          "panel_background_color": "(0.012, 0.016, 0.022, 0.995)",
+          "panel_border_color": "(0.88, 0.94, 1.0, 1.0)",
+          "focus_border_color": "(1.0, 0.92, 0.2, 1.0)",
+          "focus_border_width": 4,
+          "ui_scale_percent": 130,
+          "main_menu_capture": ".artifacts/main_menu_keyboard_navigation_smoke/settings_entry_focus.png",
+          "main_menu_visual_check": "The inspected 1280x720 capture at 130-percent scaling keeps the high-contrast controls visible without clipping or overlap and preserves the scenery-first main-menu composition.",
+          "active_shell_checks_passed": [
+            "player_comprehension_layout_smoke",
+            "town_battle_visual_smoke"
+          ],
+          "exported_pack_size_bytes": 185207504,
+          "world_identity_colors_unchanged": true,
+          "remaining_debt": "Color-vision support, clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete."
+        },
+        "sliceId": "settings-accessibility-high-contrast-ui-10184",
+        "status": "passed_shared_runtime_rendered_active_shell_and_packaged_high_contrast",
+        "updatedAt": "2026-08-02T09:48:19Z"
       }
     },
     {

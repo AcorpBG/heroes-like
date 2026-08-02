@@ -1,9 +1,11 @@
 class_name HeroesSettingsService
 extends Node
 
+const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 6
+const SETTINGS_VERSION := 7
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -158,6 +160,7 @@ func build_default_settings() -> Dictionary:
 		"accessibility": {
 			"ui_scale_percent": 100,
 			"large_ui_text": false,
+			"high_contrast_ui": false,
 			"reduce_motion": false,
 		},
 	}
@@ -182,6 +185,7 @@ func load_settings() -> void:
 		var migrated_scale := 115 if legacy_large_text else 100
 		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
 		settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
+		settings["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
 	apply_settings()
@@ -204,6 +208,7 @@ func save_settings() -> String:
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
 	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
+	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
 	if error != OK:
@@ -347,6 +352,9 @@ func ui_scale_label() -> String:
 func large_ui_text_enabled() -> bool:
 	return ui_scale_percent() > 100
 
+func high_contrast_ui_enabled() -> bool:
+	return bool(ensure_settings().get("accessibility", {}).get("high_contrast_ui", false))
+
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
 
@@ -413,6 +421,11 @@ func set_ui_scale_percent(value: int) -> void:
 	settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
 	_commit_settings()
 
+func set_high_contrast_ui_enabled(enabled: bool) -> void:
+	ensure_settings()
+	settings["accessibility"]["high_contrast_ui"] = enabled
+	_commit_settings()
+
 func set_reduced_motion_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["accessibility"]["reduce_motion"] = enabled
@@ -421,6 +434,7 @@ func set_reduced_motion_enabled(enabled: bool) -> void:
 func describe_settings() -> String:
 	var accessibility_parts := []
 	accessibility_parts.append("UI scale %s" % ui_scale_label())
+	accessibility_parts.append("High contrast %s" % ("On" if high_contrast_ui_enabled() else "Off"))
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
@@ -484,6 +498,7 @@ func _apply_accessibility_settings() -> void:
 	var root := get_tree().root
 	if root != null:
 		root.content_scale_factor = float(ui_scale_percent()) / 100.0
+	FrontierVisualKitScript.set_high_contrast_enabled(high_contrast_ui_enabled())
 
 func _apply_presentation_settings() -> void:
 	var resolution := presentation_resolution_size()

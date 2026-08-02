@@ -102,6 +102,7 @@ const TAB_HELP_TOPIC := {
 @onready var _effects_volume_slider: HSlider = %EffectsVolumeSlider
 @onready var _effects_volume_value: Label = %EffectsVolumeValue
 @onready var _ui_scale_picker: OptionButton = %UIScalePicker
+@onready var _high_contrast_toggle: CheckButton = %HighContrastToggle
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
@@ -530,6 +531,13 @@ func _on_ui_scale_selected(index: int) -> void:
 	SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
 	_refresh_settings_panel()
 
+func _on_high_contrast_toggled(enabled: bool) -> void:
+	if _syncing_settings_ui:
+		return
+	SettingsService.set_high_contrast_ui_enabled(enabled)
+	_apply_visual_theme()
+	_refresh_settings_panel()
+
 func _on_reduce_motion_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
@@ -916,6 +924,8 @@ func _refresh_settings_panel() -> void:
 	if selected_ui_scale_index >= 0:
 		_ui_scale_picker.select(selected_ui_scale_index)
 	_ui_scale_picker.tooltip_text = "Whole-interface scale applies immediately.\n%s" % settings_check
+	_high_contrast_toggle.button_pressed = SettingsService.high_contrast_ui_enabled()
+	_high_contrast_toggle.tooltip_text = "High contrast applies immediately across shared interface surfaces.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
 	_syncing_settings_ui = false
@@ -2010,6 +2020,8 @@ func validation_snapshot() -> Dictionary:
 		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"ui_scale_picker_items": _picker_item_labels(_ui_scale_picker),
 		"ui_scale_tooltip": _ui_scale_picker.tooltip_text,
+		"high_contrast_enabled": SettingsService.high_contrast_ui_enabled(),
+		"high_contrast_tooltip": _high_contrast_toggle.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
@@ -2402,6 +2414,12 @@ func validation_select_ui_scale(value: int) -> bool:
 		return SettingsService.ui_scale_percent() == value
 	return false
 
+func validation_set_high_contrast(enabled: bool) -> bool:
+	validation_open_settings_stage()
+	_high_contrast_toggle.set_pressed_no_signal(enabled)
+	_on_high_contrast_toggled(enabled)
+	return SettingsService.high_contrast_ui_enabled() == enabled
+
 func validation_select_frame_rate_limit(value: int) -> bool:
 	validation_open_settings_stage()
 	for index in range(_frame_rate_picker.get_item_count()):
@@ -2668,7 +2686,7 @@ func _apply_visual_theme() -> void:
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_vsync_toggle, _reduce_motion_toggle]:
+	for toggle in [_vsync_toggle, _high_contrast_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:
