@@ -816,6 +816,8 @@ static func _assignment_plan_for_raid_without_valid_target(
 	if plan.is_empty():
 		plan = ai_post_capture_town_support_target_selection_plan(session, config, raid)
 	if plan.is_empty():
+		plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
+	if plan.is_empty():
 		plan = ai_hero_task_saved_target_selection_plan(session, config, raid)
 	if plan.is_empty():
 		plan = ai_active_front_support_target_selection_plan(session, config, raid)
@@ -823,8 +825,6 @@ static func _assignment_plan_for_raid_without_valid_target(
 		var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid)
 		if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
 			plan = live_plan
-	if plan.is_empty():
-		plan = _current_tile_resource_target_selection_plan(session, config, raid, faction_id)
 	if plan.is_empty() and _config_has_explicit_objective_targets(config):
 		plan = choose_target(
 			session,
@@ -14549,6 +14549,10 @@ static func _ai_hero_task_prune_live_tasks(tasks: Array, day: int) -> Array:
 			continue
 		kept.append(task)
 	kept.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_priority := _ai_hero_task_retention_priority(a)
+		var b_priority := _ai_hero_task_retention_priority(b)
+		if a_priority != b_priority:
+			return a_priority > b_priority
 		if int(a.get("assigned_day", 0)) == int(b.get("assigned_day", 0)):
 			return String(a.get("task_id", "")) < String(b.get("task_id", ""))
 		return int(a.get("assigned_day", 0)) > int(b.get("assigned_day", 0))
@@ -14556,6 +14560,18 @@ static func _ai_hero_task_prune_live_tasks(tasks: Array, day: int) -> Array:
 	while kept.size() > 12:
 		kept.pop_back()
 	return kept
+
+static func _ai_hero_task_retention_priority(task: Dictionary) -> int:
+	match String(task.get("task_status", "")):
+		"active", "reserved", "suspended":
+			return 4
+		"completed":
+			return 3
+		"planned":
+			return 2
+		"failed", "cancelled", "invalid":
+			return 1
+	return 0
 
 static func _ai_hero_task_enemy_state_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	if session == null:

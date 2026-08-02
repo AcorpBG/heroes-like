@@ -572,6 +572,23 @@ Non-goals:
 - do not add caster-unit spellbooks, rare-resource spell-cast costs, or school mastery;
 - do not add broad new report gates beyond one focused resistance/counter-control runtime report.
 
+## Strategic AI Current-Tile Objective Target
+
+The completed strategic AI slice makes an idle host explicitly assign a contestable resource under its current tile before adopting a distant saved task.
+
+Target shape:
+- town-retake and immediate post-capture support orders retain priority;
+- an otherwise idle host standing on a contestable resource assigns that resource before saved-task, active-front, or general target selection;
+- the resource claim completes and persists a real live task before the same host adopts its next objective;
+- when the bounded task board is full, recent completed tasks survive ahead of regenerable planned tasks instead of being evicted by task-id ordering;
+- hosts already marching toward a valid target continue to use opportunistic route pickups without replacing that target;
+- Native RMG output, resource rewards, and non-resource target scoring remain unchanged.
+
+Non-goals:
+- do not synthesize completed task history for objectives that were never assigned;
+- do not change guarded-resource battle requirements;
+- do not tune strategic priorities or generated-map placement.
+
 ## Strategic AI Exclusive Frontier Target
 
 The completed strategic AI slice makes live frontier scouting honor the same exclusive-target contract already used by saved scout tasks.
