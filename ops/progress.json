@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Renderer quality control is implemented and validated. Settings version 5 now persists Low, Balanced, and High quality, maps them to disabled, 2x, and 4x root-viewport 2D MSAA, and keeps the 1280x720 large-text settings board compact. Broad performance profiling and the production-release baseline remain incomplete.",
+  "currentNotes": "Graduated UI scaling is implemented and validated. Settings version 6 persists 100/115/130 percent, migrates old Large Text configs to 115 percent, applies the selected factor to the root window immediately, and keeps the 1280x720 settings board usable at 130 percent by collapsing the footer while secondary boards are open. Final accessibility and release coverage remain incomplete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-render-quality-runtime-control-10184",
-  "currentSliceId": "settings-render-quality-runtime-control-10184",
-  "currentSliceNotes": "Completed. Low, Balanced, and High quality persist through settings version 5, apply disabled, 2x, and 4x 2D MSAA immediately to the root viewport, and pass direct X11, compact rendered, and exported-PCK validation.",
+  "currentSlice": "settings-accessibility-ui-scale-control-10184",
+  "currentSliceId": "settings-accessibility-ui-scale-control-10184",
+  "currentSliceNotes": "Completed. Version 6 exposes 100/115/130 percent UI scaling, migrates legacy Large Text to 115 percent, preserves the compatibility API and field, applies scaling immediately, and passes direct, compact rendered, and exported-PCK validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Renderer Quality Runtime Control",
-  "currentSliceUpdatedAt": "2026-08-02T09:07:43Z",
+  "currentSliceTitle": "Accessibility UI Scale Control",
+  "currentSliceUpdatedAt": "2026-08-02T09:29:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -56591,6 +56591,89 @@
         "sliceId": "settings-render-quality-runtime-control-10184",
         "status": "passed_direct_x11_rendered_and_packaged_renderer_quality",
         "updatedAt": "2026-08-02T09:07:43Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "python3 tests/packaged_settings_persistence_smoke.py",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "100, 115, and 130 percent UI scales are selectable in the settings board, old Large Text configs migrate to 115 percent, version-6 save/reload persists the authoritative scale while preserving the compatibility field, the root window applies the scale immediately, compact 130-percent layout remains usable, and the exported PCK settings smoke passes.",
+      "id": "settings-accessibility-ui-scale-control-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "existing settings and packaging validation"
+      ],
+      "nonGoals": [
+        "changing save-game or campaign schemas",
+        "removing the old large_ui_text compatibility API or config field",
+        "claiming final accessibility or release completion"
+      ],
+      "parentSliceId": "production-alpha-packaging-settings-performance-10184",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Packaging, Settings, Accessibility, And Performance Baseline",
+      "purpose": "Give Windows and Linux players graduated whole-interface scaling that reaches a more useful 130 percent while preserving existing 115-percent preferences.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-02T09:18:49Z",
+      "status": "completed",
+      "summary": "Completed. Settings version 6 replaces the binary menu toggle with 100/115/130 percent whole-interface scaling, migrates old Large Text users to 115 percent, preserves the compatibility field/API, and applies the selected root-window scale immediately across direct and packaged runtime paths.",
+      "title": "Accessibility UI Scale Control",
+      "updatedAt": "2026-08-02T09:29:30Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed; legacy migration and live 130-percent root scaling)",
+          "python3 tests/packaged_settings_persistence_smoke.py (passed; Linux Release PCK exported and scene booted through --main-pack)",
+          "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed; 130 percent selected through the live picker and original value restored)",
+          "XDG_DATA_HOME=/tmp/heroes-ui-compact MAIN_MENU_KEYBOARD_CAPTURE=1 xvfb-run -a godot4 --path . --audio-driver Dummy --scene res://tests/main_menu_keyboard_navigation_smoke.tscn (passed at 1280x720 and 130-percent UI scale; capture inspected)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty ops/progress.json (passed)",
+          "git diff --check (passed)"
+        ],
+        "evidence": {
+          "settings_version": 6,
+          "ui_scale_options": [
+            100,
+            115,
+            130
+          ],
+          "legacy_migration": {
+            "source_version": 5,
+            "source_large_ui_text": true,
+            "migrated_ui_scale_percent": 115,
+            "runtime_content_scale_factor": 1.15
+          },
+          "packaged_smoke": {
+            "ok": true,
+            "export_returncode": 0,
+            "scene_returncode": 0,
+            "pack_size_bytes": 185204528,
+            "settings_version": 6,
+            "reloaded_ui_scale_percent": 130,
+            "compatibility_large_ui_text": true,
+            "runtime_content_scale_factor": 1.30,
+            "restored_original_settings": true
+          },
+          "layout_behavior": "The footer pocket now collapses whenever a secondary board is open and returns on close, preserving scenery-first first view while preventing the 130-percent settings board from colliding with footer content.",
+          "visual_check": "The inspected 1280x720 capture at 130-percent scale keeps all presentation, audio, UI Scale, and Reduce Motion controls visible without clipping or overlap.",
+          "player_facing_change": "Players can now choose normal, large, or extra-large whole-interface scaling without restarting, while existing Large Text users retain their 115-percent preference.",
+          "remaining_debt": "High-contrast and color-vision support, broader active-play 130-percent inspection, clean Windows execution, final accessibility coverage, the parent production baseline, and the overall game release remain incomplete."
+        },
+        "sliceId": "settings-accessibility-ui-scale-control-10184",
+        "status": "passed_migration_runtime_rendered_and_packaged_ui_scaling",
+        "updatedAt": "2026-08-02T09:29:30Z"
       }
     },
     {
