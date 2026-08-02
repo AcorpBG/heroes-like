@@ -13,6 +13,7 @@ func _run() -> void:
 func _run_main_menu_smoke() -> bool:
 	var original_resolution := SettingsService.presentation_resolution_id()
 	var original_render_quality := SettingsService.render_quality_id()
+	var original_ui_scale := SettingsService.ui_scale_percent()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -509,6 +510,10 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	var settings_snapshot: Dictionary = shell.call("validation_snapshot")
+	if bool(settings_snapshot.get("footer_pocket_visible", true)):
+		push_error("Main menu smoke: footer pocket must collapse while the settings board is open.")
+		get_tree().quit(1)
+		return false
 	var effects_slider = shell.get_node_or_null("%EffectsVolumeSlider")
 	if not (effects_slider is HSlider):
 		push_error("Main menu smoke: settings board is missing the Effects volume slider.")
@@ -517,14 +522,21 @@ func _run_main_menu_smoke() -> bool:
 	var vsync_toggle = shell.get_node_or_null("%VSyncToggle")
 	var frame_rate_picker = shell.get_node_or_null("%FrameRatePicker")
 	var render_quality_picker = shell.get_node_or_null("%RenderQualityPicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton):
-		push_error("Main menu smoke: settings board is missing quality, VSync, or frame-limit controls.")
+	var ui_scale_picker = shell.get_node_or_null("%UIScalePicker")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton):
+		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
 	var render_quality_items: Array = settings_snapshot.get("render_quality_picker_items", []) if settings_snapshot.get("render_quality_picker_items", []) is Array else []
 	for expected_label in ["Low", "Balanced", "High"]:
 		if not render_quality_items.has(expected_label):
 			push_error("Main menu smoke: renderer-quality picker omitted %s: %s." % [expected_label, render_quality_items])
+			get_tree().quit(1)
+			return false
+	var ui_scale_items: Array = settings_snapshot.get("ui_scale_picker_items", []) if settings_snapshot.get("ui_scale_picker_items", []) is Array else []
+	for expected_label in ["100%", "115%", "130%"]:
+		if not ui_scale_items.has(expected_label):
+			push_error("Main menu smoke: UI-scale picker omitted %s: %s." % [expected_label, ui_scale_items])
 			get_tree().quit(1)
 			return false
 	var frame_rate_items: Array = settings_snapshot.get("frame_rate_picker_items", []) if settings_snapshot.get("frame_rate_picker_items", []) is Array else []
@@ -560,14 +572,24 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: renderer-quality picker could not select High.")
 		get_tree().quit(1)
 		return false
-
-	settings_snapshot = shell.call("validation_snapshot")
-	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
+	if not bool(shell.call("validation_select_ui_scale", 130)):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
+		push_error("Main menu smoke: UI-scale picker could not select 130%.")
+		get_tree().quit(1)
+		return false
+
+	settings_snapshot = shell.call("validation_snapshot")
+	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
+		if original_resolution != "1600x900":
+			shell.call("validation_select_resolution", original_resolution)
+		if original_render_quality != "high":
+			shell.call("validation_select_render_quality", original_render_quality)
+		if original_ui_scale != 130:
+			shell.call("validation_select_ui_scale", original_ui_scale)
 		push_error("Main menu smoke: settings summary did not reflect selected resolution and quality: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
@@ -585,7 +607,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
-			String(settings_snapshot.get("large_text_tooltip", "")),
+			String(settings_snapshot.get("ui_scale_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
@@ -593,6 +615,8 @@ func _run_main_menu_smoke() -> bool:
 			shell.call("validation_select_resolution", original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
+		if original_ui_scale != 130:
+			shell.call("validation_select_ui_scale", original_ui_scale)
 		return false
 	if not _assert_no_score_leak(
 		"Main menu settings persistence check",
@@ -608,13 +632,15 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("frame_rate_tooltip", "")),
 			String(settings_snapshot.get("master_volume_tooltip", "")),
 			String(settings_snapshot.get("effects_volume_tooltip", "")),
-			String(settings_snapshot.get("large_text_tooltip", "")),
+			String(settings_snapshot.get("ui_scale_tooltip", "")),
 		]
 	):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
+		if original_ui_scale != 130:
+			shell.call("validation_select_ui_scale", original_ui_scale)
 		return false
 
 	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
@@ -623,6 +649,10 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	if original_render_quality != "high" and not bool(shell.call("validation_select_render_quality", original_render_quality)):
 		push_error("Main menu smoke: renderer-quality picker could not restore %s." % original_render_quality)
+		get_tree().quit(1)
+		return false
+	if original_ui_scale != 130 and not bool(shell.call("validation_select_ui_scale", original_ui_scale)):
+		push_error("Main menu smoke: UI-scale picker could not restore %d%%." % original_ui_scale)
 		get_tree().quit(1)
 		return false
 

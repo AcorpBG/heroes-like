@@ -11,6 +11,7 @@ const TEST_VALUES := {
 	"render_quality": "low",
 	"vsync_enabled": false,
 	"frame_rate_limit": 120,
+	"ui_scale_percent": 130,
 	"large_ui_text": true,
 	"reduce_motion": true,
 }
@@ -57,6 +58,18 @@ func _run_persistence_check() -> void:
 	_expect(SettingsService.SETTINGS_DIR == "user://config", "Settings directory must stay user://config.")
 	_expect(bool(_report.get("ran_from_pack_scene", false)), "Packaged settings report scene must be loadable from res://.")
 
+	_write_legacy_large_text_config()
+	SettingsService.settings = {}
+	SettingsService.load_settings()
+	_report["legacy_large_text_migration"] = {
+		"source_version": 5,
+		"source_large_ui_text": true,
+		"migrated_ui_scale_percent": SettingsService.ui_scale_percent(),
+		"runtime_content_scale_factor": get_tree().root.content_scale_factor,
+	}
+	_expect(SettingsService.ui_scale_percent() == 115, "Legacy Large Text must migrate to 115% UI scale.")
+	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.15), "Legacy Large Text migration must apply 115% to the root window.")
+
 	SettingsService.load_settings()
 	SettingsService.set_master_volume_percent(int(TEST_VALUES["master_volume_percent"]))
 	SettingsService.set_music_volume_percent(0)
@@ -73,7 +86,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_render_quality_id(String(TEST_VALUES["render_quality"]))
 	SettingsService.set_vsync_enabled(bool(TEST_VALUES["vsync_enabled"]))
 	SettingsService.set_frame_rate_limit(int(TEST_VALUES["frame_rate_limit"]))
-	SettingsService.set_large_ui_text_enabled(bool(TEST_VALUES["large_ui_text"]))
+	SettingsService.set_ui_scale_percent(int(TEST_VALUES["ui_scale_percent"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
 	var saved_path := SettingsService.save_settings()
 	_report["saved_path"] = saved_path
@@ -137,7 +150,15 @@ func _run_persistence_check() -> void:
 	if runtime_vsync_verifiable:
 		_expect(DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_DISABLED, "Runtime VSync mode must apply the disabled setting.")
 	_expect(Engine.max_fps == int(TEST_VALUES["frame_rate_limit"]), "Runtime max FPS must match the configured frame-rate limit.")
+	_expect(int(direct_values.get("ui_scale_percent", -1)) == int(TEST_VALUES["ui_scale_percent"]), "Direct config UI scale mismatch.")
 	_expect(bool(direct_values.get("large_ui_text", false)) == bool(TEST_VALUES["large_ui_text"]), "Direct config large UI text mismatch.")
+	_report["accessibility_scaling"] = {
+		"ui_scale_percent": SettingsService.ui_scale_percent(),
+		"compatibility_large_ui_text": SettingsService.large_ui_text_enabled(),
+		"runtime_content_scale_factor": get_tree().root.content_scale_factor,
+		"options": SettingsService.build_ui_scale_options(),
+	}
+	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Runtime root window must apply the configured 130% UI scale.")
 	_expect(bool(direct_values.get("reduce_motion", false)) == bool(TEST_VALUES["reduce_motion"]), "Direct config reduce motion mismatch.")
 
 	SettingsService.settings = {}
@@ -151,6 +172,7 @@ func _run_persistence_check() -> void:
 		"render_quality": SettingsService.render_quality_id(),
 		"vsync_enabled": SettingsService.vsync_enabled(),
 		"frame_rate_limit": SettingsService.frame_rate_limit(),
+		"ui_scale_percent": SettingsService.ui_scale_percent(),
 		"large_ui_text": SettingsService.large_ui_text_enabled(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
@@ -165,7 +187,9 @@ func _run_persistence_check() -> void:
 	_expect(get_tree().root.msaa_2d == Viewport.MSAA_DISABLED, "Reloaded low renderer quality must retain disabled 2D MSAA.")
 	_expect(bool(reloaded["vsync_enabled"]) == bool(TEST_VALUES["vsync_enabled"]), "Reloaded VSync mismatch.")
 	_expect(int(reloaded["frame_rate_limit"]) == int(TEST_VALUES["frame_rate_limit"]), "Reloaded frame-rate limit mismatch.")
+	_expect(int(reloaded["ui_scale_percent"]) == int(TEST_VALUES["ui_scale_percent"]), "Reloaded UI scale mismatch.")
 	_expect(bool(reloaded["large_ui_text"]) == bool(TEST_VALUES["large_ui_text"]), "Reloaded large UI text mismatch.")
+	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Reloaded 130% UI scale must remain applied to the root window.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
 
@@ -185,9 +209,22 @@ func _read_settings_config_values() -> Dictionary:
 		"render_quality": String(config.get_value("presentation", "render_quality", "")),
 		"vsync_enabled": bool(config.get_value("presentation", "vsync_enabled", true)),
 		"frame_rate_limit": int(config.get_value("presentation", "frame_rate_limit", -1)),
+		"ui_scale_percent": int(config.get_value("accessibility", "ui_scale_percent", -1)),
 		"large_ui_text": bool(config.get_value("accessibility", "large_ui_text", false)),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
 	}
+
+func _write_legacy_large_text_config() -> void:
+	var absolute_dir := ProjectSettings.globalize_path(SettingsService.SETTINGS_DIR)
+	var dir_error := DirAccess.make_dir_recursive_absolute(absolute_dir)
+	if dir_error != OK and dir_error != ERR_ALREADY_EXISTS:
+		_error("Unable to create settings directory for legacy migration check: %s." % dir_error)
+		return
+	var config := ConfigFile.new()
+	config.set_value("meta", "version", 5)
+	config.set_value("accessibility", "large_ui_text", true)
+	var save_error := config.save(SettingsService.SETTINGS_FILE)
+	_expect(save_error == OK, "Legacy Large Text migration fixture could not be saved.")
 
 func _read_original_settings_file() -> Dictionary:
 	if not FileAccess.file_exists(SettingsService.SETTINGS_FILE):

@@ -1009,12 +1009,20 @@ text = "Readability"
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="LargeTextToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+[node name="UIScaleRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UIScaleTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow"]
+layout_mode = 2
+text = "UI Scale"
+
+[node name="UIScalePicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Large Text"
+size_flags_horizontal = 3
 
-[node name="ReduceMotionToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+[node name="ReduceMotionToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reduce Motion"
@@ -1143,5 +1151,5 @@ text = "Quit"
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
 [connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/EffectsVolumePanel/EffectsVolumePad/EffectsVolumeRow/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
-[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/LargeTextToggle" to="." method="_on_large_text_toggled"]
-[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/UIScalePicker" to="." method="_on_ui_scale_selected"]
+[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/UIScaleRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]

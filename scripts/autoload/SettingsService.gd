@@ -3,7 +3,7 @@ extends Node
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 5
+const SETTINGS_VERSION := 6
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -21,6 +21,12 @@ const RENDER_QUALITY_OPTIONS := [
 	{"id": RENDER_QUALITY_LOW, "label": "Low", "msaa_2d": Viewport.MSAA_DISABLED},
 	{"id": RENDER_QUALITY_BALANCED, "label": "Balanced", "msaa_2d": Viewport.MSAA_2X},
 	{"id": RENDER_QUALITY_HIGH, "label": "High", "msaa_2d": Viewport.MSAA_4X},
+]
+
+const UI_SCALE_OPTIONS := [
+	{"value": 100, "label": "100%"},
+	{"value": 115, "label": "115%"},
+	{"value": 130, "label": "130%"},
 ]
 
 const FRAME_RATE_OPTIONS := [
@@ -150,6 +156,7 @@ func build_default_settings() -> Dictionary:
 			"frame_rate_limit": 0,
 		},
 		"accessibility": {
+			"ui_scale_percent": 100,
 			"large_ui_text": false,
 			"reduce_motion": false,
 		},
@@ -161,7 +168,8 @@ func load_settings() -> void:
 
 	var config := ConfigFile.new()
 	if config.load(SETTINGS_FILE) == OK:
-		settings["version"] = max(int(config.get_value("meta", "version", SETTINGS_VERSION)), SETTINGS_VERSION)
+		var stored_version := int(config.get_value("meta", "version", SETTINGS_VERSION))
+		settings["version"] = max(stored_version, SETTINGS_VERSION)
 		settings["audio"]["master_volume_percent"] = clampi(int(config.get_value("audio", "master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100)
 		settings["audio"]["music_volume_percent"] = clampi(int(config.get_value("audio", "music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100)
 		settings["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
@@ -170,7 +178,10 @@ func load_settings() -> void:
 		settings["presentation"]["render_quality"] = _normalize_render_quality(String(config.get_value("presentation", "render_quality", defaults["presentation"]["render_quality"])))
 		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
 		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
-		settings["accessibility"]["large_ui_text"] = bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
+		var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
+		var migrated_scale := 115 if legacy_large_text else 100
+		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
+		settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
 	apply_settings()
@@ -191,6 +202,7 @@ func save_settings() -> String:
 	config.set_value("presentation", "render_quality", render_quality_id())
 	config.set_value("presentation", "vsync_enabled", vsync_enabled())
 	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
+	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
@@ -249,6 +261,17 @@ func build_render_quality_options() -> Array:
 			"label": String(option.get("label", "Balanced")),
 			"msaa_2d": int(option.get("msaa_2d", Viewport.MSAA_2X)),
 			"selected": String(option.get("id", "")) == selected_quality,
+		})
+	return options
+
+func build_ui_scale_options() -> Array:
+	var selected_scale := ui_scale_percent()
+	var options := []
+	for option in UI_SCALE_OPTIONS:
+		options.append({
+			"value": int(option.get("value", 100)),
+			"label": String(option.get("label", "100%")),
+			"selected": int(option.get("value", 100)) == selected_scale,
 		})
 	return options
 
@@ -315,8 +338,14 @@ func effects_audio_bus_name() -> String:
 func effects_audio_muted() -> bool:
 	return master_volume_percent() <= 0 or effects_volume_percent() <= 0
 
+func ui_scale_percent() -> int:
+	return _normalize_ui_scale_percent(int(ensure_settings().get("accessibility", {}).get("ui_scale_percent", 100)))
+
+func ui_scale_label() -> String:
+	return "%d%%" % ui_scale_percent()
+
 func large_ui_text_enabled() -> bool:
-	return bool(ensure_settings().get("accessibility", {}).get("large_ui_text", false))
+	return ui_scale_percent() > 100
 
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
@@ -376,8 +405,12 @@ func set_frame_rate_limit(value: int) -> void:
 	_commit_settings()
 
 func set_large_ui_text_enabled(enabled: bool) -> void:
+	set_ui_scale_percent(115 if enabled else 100)
+
+func set_ui_scale_percent(value: int) -> void:
 	ensure_settings()
-	settings["accessibility"]["large_ui_text"] = enabled
+	settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(value)
+	settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
 	_commit_settings()
 
 func set_reduced_motion_enabled(enabled: bool) -> void:
@@ -387,7 +420,7 @@ func set_reduced_motion_enabled(enabled: bool) -> void:
 
 func describe_settings() -> String:
 	var accessibility_parts := []
-	accessibility_parts.append("Large UI text %s" % ("On" if large_ui_text_enabled() else "Off"))
+	accessibility_parts.append("UI scale %s" % ui_scale_label())
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
@@ -450,7 +483,7 @@ func _commit_settings() -> void:
 func _apply_accessibility_settings() -> void:
 	var root := get_tree().root
 	if root != null:
-		root.content_scale_factor = 1.15 if large_ui_text_enabled() else 1.0
+		root.content_scale_factor = float(ui_scale_percent()) / 100.0
 
 func _apply_presentation_settings() -> void:
 	var resolution := presentation_resolution_size()
@@ -533,6 +566,12 @@ func _normalize_render_quality(quality_id: String) -> String:
 		if String(option.get("id", "")) == quality_id:
 			return quality_id
 	return RENDER_QUALITY_BALANCED
+
+func _normalize_ui_scale_percent(value: int) -> int:
+	for option in UI_SCALE_OPTIONS:
+		if int(option.get("value", 100)) == value:
+			return value
+	return 100
 
 func _render_quality_option(quality_id: String) -> Dictionary:
 	var normalized := _normalize_render_quality(quality_id)

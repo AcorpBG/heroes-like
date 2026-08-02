@@ -40,6 +40,7 @@ const TAB_HELP_TOPIC := {
 
 @onready var _menu_tabs: TabContainer = %MenuTabs
 @onready var _stage_dock_panel: PanelContainer = $StageDockPanel
+@onready var _footer_pocket_panel: PanelContainer = $FooterPocketPanel
 @onready var _stage_dock_title_label: Label = %ActionLead
 @onready var _stage_dock_hint_label: Label = %ActionHint
 @onready var _stage_help_button: Button = %StageHelp
@@ -100,7 +101,7 @@ const TAB_HELP_TOPIC := {
 @onready var _music_volume_value: Label = %MusicVolumeValue
 @onready var _effects_volume_slider: HSlider = %EffectsVolumeSlider
 @onready var _effects_volume_value: Label = %EffectsVolumeValue
-@onready var _large_text_toggle: CheckButton = %LargeTextToggle
+@onready var _ui_scale_picker: OptionButton = %UIScalePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
@@ -521,10 +522,12 @@ func _on_effects_volume_changed(value: float) -> void:
 	SettingsService.set_effects_volume_percent(int(round(value)))
 	_refresh_settings_panel()
 
-func _on_large_text_toggled(enabled: bool) -> void:
+func _on_ui_scale_selected(index: int) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_large_ui_text_enabled(enabled)
+	if index < 0 or index >= _ui_scale_picker.get_item_count():
+		return
+	SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
 	_refresh_settings_panel()
 
 func _on_reduce_motion_toggled(enabled: bool) -> void:
@@ -901,8 +904,18 @@ func _refresh_settings_panel() -> void:
 	_effects_volume_slider.value = SettingsService.effects_volume_percent()
 	_effects_volume_slider.tooltip_text = "UI, battle, and ambient effects volume applies immediately.\n%s" % settings_check
 	_effects_volume_value.text = "%d%%" % SettingsService.effects_volume_percent()
-	_large_text_toggle.button_pressed = SettingsService.large_ui_text_enabled()
-	_large_text_toggle.tooltip_text = "Large UI text applies immediately.\n%s" % settings_check
+	_ui_scale_picker.clear()
+	var ui_scale_options := SettingsService.build_ui_scale_options()
+	var selected_ui_scale_index := -1
+	for index in range(ui_scale_options.size()):
+		var option: Dictionary = ui_scale_options[index]
+		_ui_scale_picker.add_item(String(option.get("label", "100%")), index)
+		_ui_scale_picker.set_item_metadata(index, int(option.get("value", 100)))
+		if bool(option.get("selected", false)):
+			selected_ui_scale_index = index
+	if selected_ui_scale_index >= 0:
+		_ui_scale_picker.select(selected_ui_scale_index)
+	_ui_scale_picker.tooltip_text = "Whole-interface scale applies immediately.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
 	_syncing_settings_ui = false
@@ -1710,6 +1723,7 @@ func _toggle_stage_dock(index: int) -> void:
 
 func _show_stage_dock() -> void:
 	_stage_dock_panel.visible = true
+	_footer_pocket_panel.visible = false
 	if _menu_tabs.current_tab == TAB_SAVES:
 		_ensure_save_browser_loaded()
 	_refresh_stage_dock_header()
@@ -1720,6 +1734,7 @@ func _show_stage_dock() -> void:
 
 func _hide_stage_dock() -> void:
 	_stage_dock_panel.visible = false
+	_footer_pocket_panel.visible = true
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
@@ -1864,6 +1879,7 @@ func validation_snapshot() -> Dictionary:
 		"scene_path": scene_file_path,
 		"music_audio": MusicAudio.validation_summary(),
 		"stage_dock_visible": _stage_dock_panel.visible,
+		"footer_pocket_visible": _footer_pocket_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",
 		"first_view_commands": _first_view_command_labels(),
@@ -1991,7 +2007,9 @@ func validation_snapshot() -> Dictionary:
 		"master_volume_tooltip": _master_volume_slider.tooltip_text,
 		"music_volume_tooltip": _music_volume_slider.tooltip_text,
 		"effects_volume_tooltip": _effects_volume_slider.tooltip_text,
-		"large_text_tooltip": _large_text_toggle.tooltip_text,
+		"ui_scale_percent": SettingsService.ui_scale_percent(),
+		"ui_scale_picker_items": _picker_item_labels(_ui_scale_picker),
+		"ui_scale_tooltip": _ui_scale_picker.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
@@ -2374,6 +2392,16 @@ func validation_select_render_quality(quality_id: String) -> bool:
 		return SettingsService.render_quality_id() == quality_id
 	return false
 
+func validation_select_ui_scale(value: int) -> bool:
+	validation_open_settings_stage()
+	for index in range(_ui_scale_picker.get_item_count()):
+		if int(_ui_scale_picker.get_item_metadata(index)) != value:
+			continue
+		_ui_scale_picker.select(index)
+		_on_ui_scale_selected(index)
+		return SettingsService.ui_scale_percent() == value
+	return false
+
 func validation_select_frame_rate_limit(value: int) -> bool:
 	validation_open_settings_stage()
 	for index in range(_frame_rate_picker.get_item_count()):
@@ -2636,10 +2664,11 @@ func _apply_visual_theme() -> void:
 		_resolution_picker,
 		_render_quality_picker,
 		_frame_rate_picker,
+		_ui_scale_picker,
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_vsync_toggle, _large_text_toggle, _reduce_motion_toggle]:
+	for toggle in [_vsync_toggle, _reduce_motion_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:
