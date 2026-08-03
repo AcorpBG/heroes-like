@@ -5465,16 +5465,14 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 					advance_message,
 					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
 				])
-			var advance_objective_messages = []
-			if distance_delta > 0:
-				advance_objective_messages = _apply_field_objective_action_pressure(
-					session.battle,
-					{
-						"action": "advance",
-						"side": "player",
-						"battle_id": String(active_stack.get("battle_id", "")),
-					}
-				)
+			var advance_objective_messages = _apply_field_objective_action_pressure(
+				session.battle,
+				{
+					"action": "advance",
+					"side": "player",
+					"battle_id": String(active_stack.get("battle_id", "")),
+				}
+			)
 			if not advance_objective_messages.is_empty():
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			return _complete_action(session, advance_message)
@@ -5941,16 +5939,14 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 					advance_message,
 					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
 				])
-			var advance_objective_messages = []
-			if distance_delta > 0:
-				advance_objective_messages = _apply_field_objective_action_pressure(
-					session.battle,
-					{
-						"action": "advance",
-						"side": "enemy",
-						"battle_id": String(active_stack.get("battle_id", "")),
-					}
-				)
+			var advance_objective_messages = _apply_field_objective_action_pressure(
+				session.battle,
+				{
+					"action": "advance",
+					"side": "enemy",
+					"battle_id": String(active_stack.get("battle_id", "")),
+				}
+			)
 			if not advance_objective_messages.is_empty():
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
