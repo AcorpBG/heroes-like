@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed placement-local Orevein Archive Wardens pressure at 6/8/2. Archive moves from round 3 at 83 percent margin/15 enemy damage per round to round 4 at 59 percent/29; Orevein's cohort falls from 70 to 62 percent and the active queue from 23 to 21 with zero high items. The unrelated rough-terrain cohort remains open.",
+  "currentNotes": "Completed placement-local Ninefold Orevein Exactors pressure at 9/6/6. Exactors move from a round-4 76 percent victory/9 enemy damage per round to a round-6 extended victory at 32 percent/17; exact Basalt Gatehouse keeps the rough cohort at a balanced 53 percent and the active queue falls from 21 to 19 with zero high items.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-orevein-archive-wardens-pressure-10184",
-  "currentSliceId": "balance-orevein-archive-wardens-pressure-10184",
-  "currentSliceNotes": "Completed local 6/8/2 Archive Wardens pressure with exact Bridgeward Levies, Beacon Wardens, and shared Embercourt invariants. Active queue is 21 medium/zero high with signature 723d6501; the unrelated rough-terrain watch remains open.",
+  "currentSlice": "balance-ninefold-rough-exactors-pressure-10184",
+  "currentSliceId": "balance-ninefold-rough-exactors-pressure-10184",
+  "currentSliceNotes": "Completed local 9/6/6 Exactors pressure with exact Basalt Gatehouse and shared Orevein Exactors invariants. The rough cohort averages 53 percent and the active queue is 19 medium/zero high with signature daf0f4d8.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Orevein Archive Wardens Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T22:00:18Z",
+  "currentSliceTitle": "Ninefold Rough-Terrain Exactors Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T22:17:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68176,6 +68176,99 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T22:00:18Z"
+    },
+    {
+      "id": "balance-ninefold-rough-exactors-pressure-10184",
+      "title": "Ninefold Rough-Terrain Exactors Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Ninefold Orevein Exactors' low-pressure rough-terrain victory with a bounded standard-paced battle through placement-local roster strength while preserving the Basalt Gatehouse control and shared Brasshollow content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ninefold_rough_exactors_balance_regression.gd",
+        "tests/battle_ninefold_rough_exactors_balance_regression.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 21,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "723d6501",
+        "exactors_stack_counts": {"unit_brasshollow_scrip_haulers": 8, "unit_brasshollow_rivet_hounds": 6, "unit_brasshollow_furnace_pavis_teams": 4},
+        "exactors_outcome_state": "victory",
+        "exactors_round_reached": 4,
+        "exactors_terminal_health_margin_pct": 76,
+        "exactors_enemy_damage_per_round": 9,
+        "basalt_gatehouse_outcome_state": "defeat",
+        "basalt_gatehouse_round_reached": 4,
+        "basalt_gatehouse_terminal_health_margin_pct": 74,
+        "basalt_gatehouse_enemy_damage_per_round": 38,
+        "rough_cohort_average_terminal_health_margin_pct": 75
+      },
+      "completionCriteria": [
+        "Orevein Exactors remains a bounded standard-or-extended player victory at no more than 64 percent terminal margin with more than 10 enemy damage per round",
+        "Basalt Gatehouse remains exact and the two-sample rough-terrain cohort averages below 70 percent terminal margin",
+        "Exactors owns a placement-local correction while the shared Orevein Exactors army remains exact",
+        "The active breadth queue decreases from 21 with zero high-priority items and both runtime-consequence gates remain passing",
+        "Focused Ninefold battle, Ninefold scenario smoke, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T22:17:11Z",
+      "startedAt": "2026-08-03T22:03:47Z",
+      "notes": "Completed a placement-local 9/6/6 Orevein Exactors roster. Exactors' sample-margin watch and the rough-terrain cohort watch are removed while Basalt Gatehouse and the shared Orevein Exactors army stay exact.",
+      "result": {
+        "exactors_stack_counts": {"unit_brasshollow_scrip_haulers": 9, "unit_brasshollow_rivet_hounds": 6, "unit_brasshollow_furnace_pavis_teams": 6},
+        "exactors_round_reached_before": 4,
+        "exactors_round_reached_after": 6,
+        "exactors_pacing_band_before": "standard",
+        "exactors_pacing_band_after": "extended",
+        "exactors_terminal_health_margin_pct_before": 76,
+        "exactors_terminal_health_margin_pct_after": 32,
+        "exactors_enemy_damage_per_round_before": 9,
+        "exactors_enemy_damage_per_round_after": 17,
+        "exactors_enemy_power_after": 1917,
+        "exactors_player_enemy_power_ratio_pct_after": 87,
+        "basalt_gatehouse_round_reached_after": 4,
+        "basalt_gatehouse_outcome_state_after": "defeat",
+        "basalt_gatehouse_terminal_health_margin_pct_after": 74,
+        "basalt_gatehouse_enemy_damage_per_round_after": 38,
+        "rough_cohort_average_terminal_health_margin_pct_before": 75,
+        "rough_cohort_average_terminal_health_margin_pct_after": 53,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 21,
+        "active_queue_item_count_after": 19,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "daf0f4d8",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "shared_orevein_exactors_army_changed": false,
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_ninefold_rough_exactors_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: 19 medium-priority watches remain; zero high-priority items; signature daf0f4d8)",
+        "godot4 --headless --path . --scene res://tests/ninefold_scenario_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T22:17:11Z"
     }
   ],
   "project": "heroes-like",
@@ -68186,7 +68279,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 21 medium-priority authored-encounter watches, including the unrelated 75 percent rough-terrain cohort, plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 19 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68718,9 +68811,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 21 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 19 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T22:00:18Z",
+  "updatedAt": "2026-08-03T22:17:11Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
