@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Bellwake placement-local guard correction. Relay Pickets now resolve at 87 percent terminal margin with 7 enemy damage per round and Mirror Lancers at 74 percent with 26; the active breadth queue improves from 40/10-high to 38/8-high while shared armies and the all-live faction matrix remain unchanged.",
+  "currentNotes": "Completed the Ninefold Barrow Vault placement-local guard. Its deterministic battle moves from a two-round victory at 92 percent terminal margin and 7 enemy damage per round to a three-round player-advantaged victory at 70 percent and 15; the active breadth queue improves from 38/8-high to 35/6-high.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-bellwake-mirror-lancers-pressure-10184",
-  "currentSliceId": "balance-bellwake-mirror-lancers-pressure-10184",
-  "currentSliceNotes": "Validated placement-local Bellwake guards: Relay Pickets 87 percent margin and 7 enemy damage per round; Mirror Lancers 74 percent and 26. Active breadth improved from 40/10-high to 38/8-high; shared armies and exact all-live faction matrix unchanged.",
+  "currentSlice": "balance-ninefold-barrow-vault-pressure-10184",
+  "currentSliceId": "balance-ninefold-barrow-vault-pressure-10184",
+  "currentSliceNotes": "Completed placement-local Barrow Vault guard: three-round player-advantaged victory at 70 percent terminal margin and 15 enemy damage per round. Active breadth improved from 38/8-high to 35/6-high; shared army and faction benchmark inputs remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bellwake Mirror Lancers Battle Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T20:15:40Z",
+  "currentSliceTitle": "Ninefold Barrow Vault Battle Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T20:28:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67574,6 +67574,78 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T20:15:40Z"
+    },
+    {
+      "id": "balance-ninefold-barrow-vault-pressure-10184",
+      "title": "Ninefold Barrow Vault Battle Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Ninefold Confluence's low-pressure shared Bramble Hedge roster with a bounded placement-local Barrow Vault guard while preserving shared neutral and faction balance inputs.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ninefold_barrow_vault_balance_regression.gd",
+        "tests/battle_ninefold_barrow_vault_balance_regression.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 38,
+        "active_queue_high_priority_count": 8,
+        "active_queue_signature": "8958533c",
+        "outcome_state": "victory",
+        "round_reached": 2,
+        "terminal_health_margin_pct": 92,
+        "enemy_damage_per_round": 7,
+        "player_enemy_power_ratio_pct": 176
+      },
+      "completionCriteria": [
+        "Barrow Vault resolves deterministically as a completed player victory at or below 90 percent terminal margin with meaningful enemy damage",
+        "The army override is placement-local and the shared Bramble Hedge army remains unchanged",
+        "The active breadth queue reduces its item and high-priority counts without creating new high-priority contributors",
+        "Ninefold smoke, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared neutral army, global unit stat, battle difficulty, reward, strategic AI, save, campaign, or Native RMG changes",
+        "queue threshold changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T20:28:59Z",
+      "startedAt": "2026-08-03T20:20:42Z",
+      "notes": "Completed placement-local Barrow Vault guard: three-round player-advantaged victory at 70 percent terminal margin and 15 enemy damage per round. Active breadth improved from 38/8-high to 35/6-high; shared army and faction benchmark inputs remain unchanged.",
+      "result": {
+        "focused_outcome_state": "victory",
+        "focused_round_reached": 3,
+        "focused_terminal_health_margin_pct": 70,
+        "focused_enemy_damage_per_round": 15,
+        "focused_matchup_band": "player_advantaged",
+        "focused_player_enemy_power_ratio_pct": 126,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 38,
+        "active_queue_item_count_after": 35,
+        "active_queue_high_priority_count_before": 8,
+        "active_queue_high_priority_count_after": 6,
+        "active_queue_signature_after": "b17034f9",
+        "runtime_consequence_status_after": "pass",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_ninefold_barrow_vault_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active queue remains; improved to 35 items / 6 high)",
+        "godot4 --headless --path . --scene res://tests/ninefold_scenario_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T20:28:59Z"
     }
   ],
   "project": "heroes-like",
@@ -67584,7 +67656,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 38 items / 8 high-priority items.",
+  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 35 items / 6 high-priority items.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68116,9 +68188,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Its Drowned Reliquary and Bellwake Wreck Claim's Relay Pickets and Mirror Lancers now apply meaningful battle pressure through placement-local armies. The active encounter queue improves from 44 items / 12 high to 38 / 8 across the two completed guard slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Its Drowned Reliquary and Barrow Vault guards plus Bellwake Wreck Claim's Relay Pickets and Mirror Lancers now apply meaningful battle pressure through placement-local armies. The active encounter queue improves from 44 items / 12 high to 35 / 6 across three completed guard slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T20:15:40Z",
+  "updatedAt": "2026-08-03T20:28:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

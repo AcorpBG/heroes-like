@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `balance-ninefold-barrow-vault-pressure-10184`. Ninefold Confluence's medium-difficulty Barrow Vault now owns a placement-local eight-Hedgehook/six-Thornbow guard instead of inheriting the shared 6/4 Bramble Hedge roster. Its deterministic battle moves from a two-round victory at 92% terminal margin and 7 enemy damage per round to a three-round player-advantaged victory at 70% and 15. The 59-sample active breadth queue improves from 38 items / 8 high to 35 / 6 with both runtime consequence gates passing. Shared neutral/faction inputs remain unchanged; focused battle, Ninefold smoke, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-bellwake-mirror-lancers-pressure-10184`. Bellwake Wreck Claim's placement-local Mirror Lancers now field nine Shard Guards, six Prism Adepts, and eight Mirror Duelists; the deterministic battle moves from a two-round victory at 98% terminal margin and 3 enemy damage per round to a three-round victory at 74% and 26. The adjacent zero-pressure Relay Pickets line now resolves at 87% margin and 7 enemy damage per round, while Aurora Battery remains unchanged. The 59-sample active breadth queue improves from 40 items / 10 high to 38 / 8. Shared Sunvault armies and the exact all-live faction matrix remain unchanged; focused battle, Bellwake skirmish, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-ninefold-drowned-reliquary-pressure-10184`. Ninefold Confluence's high-difficulty Drowned Reliquary now owns a placement-local five-Cutter/eight-Reefbolt guard instead of inheriting the shared Skiffyard roster. The deterministic battle remains player-advantaged but moves from a flawless two-round victory to a four-round victory at 71% terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves from 44 items / 12 high to 40 / 10, and its runtime-consequence matrix moves from fail to pass. The unchanged all-live faction matrix, guarded rewards, core systems, Ninefold smoke, project parse, repository, JSON, and diff gates pass; remaining encounter and faction balance debt stays open.
 - Completed implementation slice: `strategic-ai-ninefold-front-launch-retask-10184`. Ninefold Confluence now gives Brasshollow and Veilmourn open passable pressure origins, connects Bellwake Harbor to the badland road, and keeps Bellwake's common and rare development sources local without enclosing its raid host. The defense fixture preserves a real stabilization gap across faction rosters. All five Ninefold factions launch and retask correctly; the broader five-scenario harness records 9/9 pressure launches, 9/9 town-defense retasks, and 9/9 objective-front assignments with no failures. Ninefold smoke, core systems, full headless harness, project parse, repository, JSON, and diff validation pass. Overall game completion remains open.
@@ -718,6 +719,29 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
+
+## Ninefold Barrow Vault Battle Pressure
+
+id: `balance-ninefold-barrow-vault-pressure-10184`
+
+Completed Phase 6 authored-combat implementation slice. Repairs Ninefold
+Confluence's medium-difficulty Barrow Vault guard, which previously resolved at
+92% terminal margin and was the active breadth queue's largest outlier.
+
+Implementation target:
+- give `ninefold_barrow_vault_watch` a placement-local Hedgehook/Thornbow army without changing shared `army_neutral_bramble_hedge_watch` content;
+- retain a deterministic player victory while moving terminal margin below the active matrix outlier threshold and producing meaningful enemy damage;
+- add focused live regression coverage for outcome, pacing, pressure, exact local roster ownership, and shared-roster preservation.
+
+Completion evidence:
+- the focused battle resolves in three rounds as a player-advantaged victory at 70% terminal margin and 15 enemy damage per round, while exact assertions preserve the shared 6/4 army;
+- the 59-sample active-scenario breadth queue improves from 38 items / 8 high-priority items to 35 / 6 with signature `b17034f9`, zero stalls or invalid orders, and passing runtime consequence gates;
+- the diff changes no faction benchmark input, preserving the previously verified 36-outlier / 293.5-severity / 75.5%-maximum all-live matrix by construction;
+- focused battle, Ninefold smoke, core systems, project parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change shared neutral armies, global unit stats, battle difficulty, rewards, strategic AI, saves, campaigns, or Native RMG;
+- do not weaken queue thresholds or claim remaining encounter/faction balance debt or overall release completion.
 
 ## Bellwake Mirror Lancers Battle Pressure
 
