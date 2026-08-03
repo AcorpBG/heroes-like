@@ -20245,6 +20245,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     orevein_contract_scene_path = ROOT / "tests/battle_orevein_contract_balance_regression.tscn"
     reedbarrow_mireford_report_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd"
     reedbarrow_mireford_scene_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn"
+    reedbarrow_chain_report_path = ROOT / "tests/battle_reedbarrow_chain_balance_regression.gd"
+    reedbarrow_chain_scene_path = ROOT / "tests/battle_reedbarrow_chain_balance_regression.tscn"
     lockmarsh_surge_report_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.gd"
     lockmarsh_surge_scene_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.tscn"
     ghoul_grove_report_path = ROOT / "tests/battle_ghoul_grove_balance_regression.gd"
@@ -20292,6 +20294,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         active_breadth_report_path,
         active_breadth_scene_path,
+        reedbarrow_chain_report_path,
+        reedbarrow_chain_scene_path,
         ghoul_grove_report_path,
         ghoul_grove_scene_path,
         drowned_reliquary_report_path,
@@ -20720,6 +20724,30 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_reedbarrow_mireford_guard_pressure_regression.gd" in reedbarrow_mireford_scene_text,
             errors,
             "Reedbarrow/Mireford guard pressure regression scene is not wired to its script.",
+        )
+    if reedbarrow_chain_report_path.exists():
+        reedbarrow_chain_text = reedbarrow_chain_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_REEDBARROW_CHAIN_BALANCE_REGRESSION",
+            "barrow_pickets",
+            "reedbarrow_chain",
+            "reedbarrow_levee_totemists",
+            "army_reedbarrow_chain_watch",
+            "army_reedbarrow_chain",
+            "army_barrow_pickets",
+            "army_muckveil_harriers",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_ARMY_CONTRACTS",
+            "UNCHANGED_SAMPLE_CONTRACTS",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in reedbarrow_chain_text, errors, f"Reedbarrow Chain balance regression is missing token: {required_token}")
+    if reedbarrow_chain_scene_path.exists():
+        reedbarrow_chain_scene_text = reedbarrow_chain_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_reedbarrow_chain_balance_regression.gd" in reedbarrow_chain_scene_text,
+            errors,
+            "Reedbarrow Chain balance regression scene is not wired to its script.",
         )
     if lockmarsh_surge_report_path.exists():
         lockmarsh_surge_text = lockmarsh_surge_report_path.read_text(encoding="utf-8")
