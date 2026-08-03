@@ -1699,6 +1699,21 @@
         "wood": 1
       },
       "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Maskglass Slip",
+          "description": "Mirror-chart feints carry the corsairs through a disrupted line, cutting deepest into harried, staggered, or already-wounded crews.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.6,
+          "threshold_damage_multiplier": 1.1
+        }
+      ],
       "spell_resistance_pct": 0,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {

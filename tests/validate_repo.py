@@ -10647,6 +10647,14 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(cutthroat_backstab.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, "Blackbranch Cutthroat backstab must keep a wounded-threshold damage multiplier authored")
     ensure(int(cutthroat_backstab.get("momentum_gain", 0)) > 0, errors, "Blackbranch Cutthroat backstab must keep its momentum-gain payoff authored")
 
+    maskglass_corsairs = units.get("unit_veilmourn_maskglass_corsairs", {})
+    maskglass_backstab = next((ability for ability in maskglass_corsairs.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})
+    maskglass_status_ids = {str(value) for value in maskglass_backstab.get("status_ids", [])}
+    ensure({"status_harried", "status_staggered"}.issubset(maskglass_status_ids), errors, "Maskglass Corsairs must keep disrupted-target backstab payoff authored")
+    ensure(float(maskglass_backstab.get("damage_multiplier", 0.0)) > 1.0, errors, "Maskglass Corsairs must keep status-marked damage payoff authored")
+    ensure(float(maskglass_backstab.get("health_threshold_ratio", 0.0)) > 0.0, errors, "Maskglass Corsairs must keep wounded-target threshold authored")
+    ensure(float(maskglass_backstab.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, "Maskglass Corsairs must keep wounded-target damage payoff authored")
+
     mire_slinger = units.get("unit_mire_slinger", {})
     mire_slinger_harry = next((ability for ability in mire_slinger.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
     ensure(float(mire_slinger_harry.get("wounded_threshold_ratio", 0.0)) > 0.0, errors, "Mire Slinger harry must keep a wounded-threshold payoff authored")
