@@ -4,6 +4,7 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_BELLWAKE_WRECK_BALANCE_REGRESSION"
 const SCENARIO_ID := "bellwake-wreck-claim"
 const MAX_TERMINAL_MARGIN_PCT := 90
+const MAX_COHORT_TERMINAL_MARGIN_PCT := 69
 const PLACEMENT_IDS := [
 	"bellwake_relay_pickets",
 	"bellwake_mirror_lancers",
@@ -12,16 +13,25 @@ const PLACEMENT_IDS := [
 const LOCAL_ARMY_CONTRACTS := {
 	"bellwake_relay_pickets": {
 		"army_id": "army_bellwake_relay_pickets_watch",
-		"stack_counts": {"unit_shard_guard": 8, "unit_prism_adept": 6, "unit_mirror_duelist": 6},
+		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 7, "unit_mirror_duelist": 8},
 	},
 	"bellwake_mirror_lancers": {
 		"army_id": "army_bellwake_mirror_lancers_watch",
 		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 8},
 	},
+	"bellwake_aurora_battery": {
+		"army_id": "army_bellwake_aurora_battery_watch",
+		"stack_counts": {"unit_shard_guard": 8, "unit_prism_adept": 6, "unit_aurora_ballista": 3},
+	},
 }
 const SHARED_ARMY_CONTRACTS := {
 	"army_relay_pickets": {"unit_shard_guard": 5, "unit_prism_adept": 2},
 	"army_mirror_lancers": {"unit_mirror_duelist": 6, "unit_shard_guard": 4, "unit_prism_adept": 4},
+	"army_aurora_battery": {"unit_aurora_ballista": 1, "unit_prism_adept": 3, "unit_shard_guard": 3},
+}
+const UNCHANGED_SAMPLE_CONTRACTS := {
+	"bellwake_mirror_lancers": {"round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 26},
+	"bellwake_aurora_battery": {"round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25},
 }
 
 func _ready() -> void:
@@ -32,6 +42,7 @@ func _run() -> void:
 	var payload := {"ok": true, "report_id": REPORT_ID, "scenario_id": SCENARIO_ID, "samples": [], "shared_army_ids": SHARED_ARMY_CONTRACTS.keys()}
 	var failures := []
 	var failed_turn_logs := {}
+	var terminal_margin_total := 0
 	for army_id in SHARED_ARMY_CONTRACTS:
 		var shared_army := ContentService.get_army_group(String(army_id))
 		if String(shared_army.get("id", "")) != army_id or _stack_counts(shared_army) != SHARED_ARMY_CONTRACTS[army_id]:
@@ -48,6 +59,7 @@ func _run() -> void:
 				failures.append("%s placement-local army drifted from its bounded pressure roster" % placement_id)
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
+		terminal_margin_total += int(sample.get("terminal_health_margin_pct", 100))
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
 			failures.append("%s does not resolve as a bounded player victory" % placement_id)
 			failed_turn_logs[placement_id] = sample.get("turn_log", [])
@@ -57,6 +69,19 @@ func _run() -> void:
 		elif int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
 			failures.append("%s does not apply meaningful enemy pressure" % placement_id)
 			failed_turn_logs[placement_id] = sample.get("turn_log", [])
+		if placement_id == "bellwake_relay_pickets":
+			if int(sample.get("round_reached", 0)) < 3 or int(sample.get("terminal_health_margin_pct", 100)) >= 75 or int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 10:
+				failures.append("Relay Pickets remains outside its standard-paced pressure target")
+				failed_turn_logs[placement_id] = sample.get("turn_log", [])
+		elif UNCHANGED_SAMPLE_CONTRACTS.has(placement_id):
+			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
+			if int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
+				failures.append("%s changed outside the Relay Pickets correction" % placement_id)
+				failed_turn_logs[placement_id] = sample.get("turn_log", [])
+	var cohort_average := terminal_margin_total / PLACEMENT_IDS.size()
+	payload["cohort_average_terminal_health_margin_pct"] = cohort_average
+	if cohort_average > MAX_COHORT_TERMINAL_MARGIN_PCT:
+		failures.append("Bellwake encounter cohort remains above its terminal-margin target")
 	if not failures.is_empty():
 		payload["failures"] = failures
 		payload["turn_logs"] = failed_turn_logs
