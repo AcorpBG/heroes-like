@@ -20791,8 +20791,10 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "army_archive_wardens",
             "LOCAL_ARMY_CONTRACTS",
             "SHARED_ARMY_CONTRACTS",
-            "MAX_COHORT_TERMINAL_MARGIN_PCT",
-            "cohort_average_terminal_health_margin_pct",
+            "UNCHANGED_SAMPLE_CONTRACTS",
+            "Road Chaplains do not resolve as a bounded defeat",
+            "player_enemy_power_ratio_pct",
+            "pacing_band",
             "damage_per_round",
             "get_tree().quit(1)",
         ):

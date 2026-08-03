@@ -3,8 +3,6 @@ extends Node
 const BalanceHarness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_LOCKMARSH_ROAD_CHAPLAINS_BALANCE_REGRESSION"
 const SCENARIO_ID := "lockmarsh-surge"
-const MAX_COHORT_TERMINAL_MARGIN_PCT := 69
-const MAX_TERMINAL_MARGIN_PCT := 90
 const PLACEMENT_IDS := [
 	"surge_road_chaplains",
 	"surge_charter_guard",
@@ -13,7 +11,7 @@ const PLACEMENT_IDS := [
 const LOCAL_ARMY_CONTRACTS := {
 	"surge_road_chaplains": {
 		"army_id": "army_lockmarsh_road_chaplains_watch",
-		"stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 8},
+		"stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 10, "unit_citadel_pikeward": 6},
 	},
 	"surge_charter_guard": {
 		"army_id": "army_lockmarsh_charter_guard_watch",
@@ -23,6 +21,10 @@ const LOCAL_ARMY_CONTRACTS := {
 		"army_id": "army_lockmarsh_archive_wardens_watch",
 		"stack_counts": {"unit_river_guard": 7, "unit_ember_archer": 9, "unit_citadel_pikeward": 2},
 	},
+}
+const UNCHANGED_SAMPLE_CONTRACTS := {
+	"surge_charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
+	"lockmarsh_archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
 }
 const SHARED_ARMY_CONTRACTS := {
 	"army_riverwatch_relief": {"unit_river_guard": 8, "unit_ember_archer": 6},
@@ -37,8 +39,6 @@ func _run() -> void:
 	ContentService.clear_cache()
 	var payload := {"ok": true, "report_id": REPORT_ID, "scenario_id": SCENARIO_ID, "samples": []}
 	var failures := []
-	var failed_turn_logs := {}
-	var terminal_margin_total := 0
 	for army_id in SHARED_ARMY_CONTRACTS:
 		var shared_army := ContentService.get_army_group(String(army_id))
 		if String(shared_army.get("id", "")) != army_id or _stack_counts(shared_army) != SHARED_ARMY_CONTRACTS[army_id]:
@@ -55,23 +55,20 @@ func _run() -> void:
 				failures.append("%s placement-local army drifted from its bounded pressure roster" % placement_id)
 		var sample := BalanceHarness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
-		terminal_margin_total += int(sample.get("terminal_health_margin_pct", 100))
-		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
-			failures.append("%s does not resolve as a bounded player victory" % placement_id)
-			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		elif int(sample.get("terminal_health_margin_pct", 100)) > MAX_TERMINAL_MARGIN_PCT:
-			failures.append("%s remains above the matrix terminal-margin target" % placement_id)
-			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		elif int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
-			failures.append("%s still fails to apply meaningful enemy pressure" % placement_id)
-			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-	var cohort_average := terminal_margin_total / PLACEMENT_IDS.size()
-	payload["cohort_average_terminal_health_margin_pct"] = cohort_average
-	if cohort_average > MAX_COHORT_TERMINAL_MARGIN_PCT:
-		failures.append("Lockmarsh remains above its scenario cohort terminal-margin target")
+		if placement_id == "surge_road_chaplains":
+			var profile: Dictionary = sample.get("initial_stack_profile", {})
+			var round_reached := int(sample.get("round_reached", 0))
+			var enemy_dpr := int(sample.get("damage_per_round", {}).get("enemy", 0))
+			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "defeat" or not String(sample.get("pacing_band", "")) in ["standard", "extended"]:
+				failures.append("Road Chaplains do not resolve as a bounded defeat")
+			if int(profile.get("player_enemy_power_ratio_pct", 0)) < 60 or round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 65 or enemy_dpr > 50:
+				failures.append("Road Chaplains remain outside their matchup, pacing, or pressure target")
+		else:
+			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
+			if String(sample.get("outcome_state", "")) != String(expected.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(expected.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
+				failures.append("%s changed outside the Road Chaplains correction" % placement_id)
 	if not failures.is_empty():
 		payload["failures"] = failures
-		payload["turn_logs"] = failed_turn_logs
 		_fail("Lockmarsh Surge balance regression failed.", payload)
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
@@ -87,6 +84,7 @@ func _compact_sample(placement_id: String, sample: Dictionary) -> Dictionary:
 	return {
 		"placement_id": placement_id,
 		"outcome_state": String(sample.get("outcome_state", "")),
+		"pacing_band": String(sample.get("pacing_band", "")),
 		"round_reached": int(sample.get("round_reached", 0)),
 		"player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)),
 		"enemy_health_remaining_pct": int(sample.get("enemy_health_remaining_pct", 0)),

@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Bogbound Archive Wardens now own a placement-local 8/12/6 roster and resolve as a round-4 standard defeat at 43 percent terminal margin and 47 enemy damage per round. Lantern Patrol, Survey Guard, the shared 7/7/2 army, faction-matrix inputs, and runtime-consequence gates remain exact.",
+  "currentNotes": "Lockmarsh Road Chaplains now own a placement-local 9/10/6 roster and resolve as a round-6 extended defeat at 51 percent terminal margin and 31 enemy damage per round. Charter Guard, Archive Wardens, all three shared armies, faction-matrix inputs, and runtime-consequence gates remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-bogbound-archive-wardens-outcome-pressure-10184",
-  "currentSliceId": "balance-bogbound-archive-wardens-outcome-pressure-10184",
-  "currentSliceNotes": "Completed: Bogbound Archive Wardens' placement-local 8/12/6 roster converts the round-4 standard victory at 81 percent margin and 9 enemy damage per round into a round-4 standard defeat at 43 percent and 47. The active queue falls from 17 to 13 medium/zero high with signature 06dad95c.",
+  "currentSlice": "balance-lockmarsh-road-chaplains-outcome-pacing-10184",
+  "currentSliceId": "balance-lockmarsh-road-chaplains-outcome-pacing-10184",
+  "currentSliceNotes": "Completed: Lockmarsh Road Chaplains' placement-local 9/10/6 roster converts the round-2 burst victory at 70 percent margin and 28 enemy damage per round into a round-6 extended defeat at 51 percent and 31. The active queue falls from 13 to 11 medium/zero high with signature 29388bfe.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bogbound Archive Wardens Outcome Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T22:49:46Z",
+  "currentSliceTitle": "Lockmarsh Road Chaplains Outcome Pacing",
+  "currentSliceUpdatedAt": "2026-08-03T23:00:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68466,6 +68466,106 @@
         "jq empty content/scenarios.json ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "balance-lockmarsh-road-chaplains-outcome-pacing-10184",
+      "title": "Lockmarsh Road Chaplains Outcome Pacing",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Lockmarsh Road Chaplains' burst victory with a bounded standard-or-extended defeat through placement-local roster strength, removing its sample pacing watch and Lockmarsh's scenario outcome-bias watch without changing shared Embercourt content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_lockmarsh_road_chaplains_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 13,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "06dad95c",
+        "active_queue_sample_watch_count": 5,
+        "active_queue_cohort_watch_count": 8,
+        "road_chaplains_stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 8},
+        "road_chaplains_outcome_state": "victory",
+        "road_chaplains_pacing_band": "burst",
+        "road_chaplains_round_reached": 2,
+        "road_chaplains_terminal_health_margin_pct": 70,
+        "road_chaplains_enemy_damage_per_round": 28,
+        "road_chaplains_matchup_band": "even",
+        "road_chaplains_enemy_power": 1594,
+        "road_chaplains_player_power": 1762,
+        "charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
+        "archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
+        "lockmarsh_scenario_primary_outcome_pct": 100
+      },
+      "completionCriteria": [
+        "Lockmarsh Road Chaplains resolve as a standard or extended defeat in three to eight rounds, at no less than 60 percent player/enemy power, with no more than 65 percent terminal margin and no more than 50 enemy damage per round",
+        "Lockmarsh Charter Guard and Archive Wardens outcomes remain exact",
+        "Road Chaplains retain a placement-local correction while the shared Riverwatch Relief, Charter Bastion Reserve, and Archive Wardens armies remain exact",
+        "The Road Chaplains pacing watch and Lockmarsh scenario outcome-bias watch close, the active queue decreases by at least two from 13 with zero high-priority items, and both runtime-consequence gates remain passing",
+        "Focused Lockmarsh battle, active breadth, player-facing campaign menu, runtime consequence, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty label or multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T23:00:14Z",
+      "startedAt": "2026-08-03T22:52:27Z",
+      "completedAt": "2026-08-03T23:00:14Z",
+      "result": {
+        "road_chaplains_stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 10, "unit_citadel_pikeward": 6},
+        "road_chaplains_outcome_state_before": "victory",
+        "road_chaplains_outcome_state_after": "defeat",
+        "road_chaplains_pacing_band_before": "burst",
+        "road_chaplains_pacing_band_after": "extended",
+        "road_chaplains_round_before": 2,
+        "road_chaplains_round_after": 6,
+        "road_chaplains_terminal_health_margin_pct_before": 70,
+        "road_chaplains_terminal_health_margin_pct_after": 51,
+        "road_chaplains_enemy_damage_per_round_before": 28,
+        "road_chaplains_enemy_damage_per_round_after": 31,
+        "road_chaplains_enemy_power": 2558,
+        "road_chaplains_player_power": 1762,
+        "road_chaplains_player_enemy_power_ratio_pct": 69,
+        "charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
+        "archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
+        "lockmarsh_scenario_primary_outcome_pct_before": 100,
+        "lockmarsh_scenario_primary_outcome_pct_after": 67,
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count_before": 13,
+        "active_queue_item_count_after": 11,
+        "active_queue_sample_watch_count_before": 5,
+        "active_queue_sample_watch_count_after": 4,
+        "active_queue_cohort_watch_count_before": 8,
+        "active_queue_cohort_watch_count_after": 7,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature": "29388bfe",
+        "balance_matrix_gate": "pass",
+        "runtime_consequence_gate": "pass",
+        "runtime_consequence_matrix_gate": "pass",
+        "shared_embercourt_armies_changed": false,
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "battle_lockmarsh_road_chaplains_balance_regression",
+        "active_battle_balance_breadth_report: expected nonzero queue, 11 medium, zero high, signature 29388bfe",
+        "player_facing_campaign_menu_smoke",
+        "runtime_consequence_report",
+        "runtime_consequence_matrix_report",
+        "core_systems_regression_smoke",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "project": "heroes-like",
@@ -68476,7 +68576,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 13 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 11 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -69008,9 +69108,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Bogbound Archive, Reedbarrow Chain, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 13 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Bogbound Archive, Reedbarrow Chain, Mireford, and Lockmarsh Road Chaplains guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 11 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T22:49:46Z",
+  "updatedAt": "2026-08-03T23:00:14Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
