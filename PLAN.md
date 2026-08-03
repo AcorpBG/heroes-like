@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `strategic-ai-ninefold-front-launch-retask-10184`. Ninefold Confluence now gives Brasshollow and Veilmourn open passable pressure origins, connects Bellwake Harbor to the badland road, and keeps Bellwake's common and rare development sources local without enclosing its raid host. The defense fixture preserves a real stabilization gap across faction rosters. All five Ninefold factions launch and retask correctly; the broader five-scenario harness records 9/9 pressure launches, 9/9 town-defense retasks, and 9/9 objective-front assignments with no failures. Ninefold smoke, core systems, full headless harness, project parse, repository, JSON, and diff validation pass. Overall game completion remains open.
 - Completed implementation slice: `combat-brasshollow-foundry-saint-aura-10184`. Brasshollow's tier-7 Foundry Saint now projects Saint's Temper while alive: active Overheated Brasshollow machinery receives a bounded non-stacking defense bonus, and surviving allied stacks receive bounded non-resurrecting round-start repair with stronger Overheated repair. Readable healing events, tactical AI valuation, live summaries, focused runtime proof, and exact benchmark parity share the authored contract. The unchanged all-live matrix retains 36 outliers and 12 rows at or above 65%, improves severity from 300.0 to 293.5 and maximum dominance from 78.0% to 75.5%, and reduces excessive week-3 Brasshollow losses against Embercourt, Mireclaw, and Thornwake. Ability, focused autoplay balance/regression, town-development, core, parse, repository, JSON, and diff gates pass. The broader standard harness retains identical no-aura-control failures in the pre-existing 44-item active encounter queue and Ninefold Brasshollow/Veilmourn strategic-AI launch/retask cases; those remain overall-game debt rather than this slice's progress.
 - Completed implementation slice: `combat-brasshollow-debt-engine-overheat-10184`. Brasshollow's tier-5 Debt-Engine Exactors now open primary strikes at 1.16x damage, then run at 0.83x damage with -2 defense and initiative for a non-refreshing two-round Overheated cycle. Tactical AI, live summaries, runtime resolution, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 300.5 to 300.0 and maximum dominance from 78.5% to 78.0%, and reduces week-2 Brasshollow dominance versus Embercourt from 69% to 66% and Veilmourn from 71% to 68%. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-brasshollow-crucible-barrage-10184`. Brasshollow's tier-6 Crucible Crawlers now own a live setup-siege Volley that strengthens long-lane fire and punishes staggered lines. The unchanged all-live 100-seed matrix improves from 37 to 36 outliers and severity 304 to 300.5, keeps maximum dominance at 78.5%, and leaves every week-1/2 row exact. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -715,6 +716,30 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
+
+## Ninefold Strategic AI Front Launch And Retask
+
+id: `strategic-ai-ninefold-front-launch-retask-10184`
+
+Completed Phase 5 strategic-AI implementation slice. Repairs live launch and
+defense-priority failures exposed by the standard headless runtime harness in
+the shipped Ninefold Confluence scenario.
+
+Implementation target:
+- make each authored Ninefold enemy origin produce a reachable launch candidate when its faction owns a town, has an available commander, and exceeds its raid threshold;
+- ensure an active raid prioritizes its faction's owned stabilizing town defense gap over ordinary resource pressure, including Bellwake Harbor's authored local layout;
+- correct the shared runtime/content contract at its source and retain generic pathing, commander assignment, public AI events, and save-state behavior.
+
+Completion evidence:
+- the multi-scenario pressure case launches all five Ninefold factions and emits a target assignment for each launched raid;
+- the multi-scenario town-defense case retasks all five Ninefold factions to their own stabilizing town with `town_defense` and `front_stabilization` reasons;
+- focused strategic-AI reports prove all five Ninefold pressure launches and town-defense retasks, while the broader harness proves all nine covered faction/scenario cases also select objective fronts;
+- the 21-case standard headless harness exits successfully with 19 passes, one existing warning, one existing generated-map deferral, and no failures;
+- Ninefold smoke, core systems, project parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not weaken path passability, commander availability, defense commitment, or public-event contracts merely to satisfy fixtures;
+- do not change combat balance, economy, save version, Native RMG, or claim overall game completion.
 
 ## Canonical Terrain Visual Regression Gate
 

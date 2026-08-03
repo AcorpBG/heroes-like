@@ -23427,15 +23427,31 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         for node in ninefold_nodes
         if isinstance(node, dict)
     }
-    for placement_id, site_id in (
-        ("ninefold_bellwake_harbor_wood_reserve", "site_wood_wagon"),
-        ("ninefold_bellwake_harbor_ore_reserve", "site_ore_crates"),
+    for placement_id, site_id, expected_tile in (
+        ("ninefold_bellwake_harbor_wood_reserve", "site_wood_wagon", (47, 50)),
+        ("ninefold_bellwake_harbor_ore_reserve", "site_ore_crates", (48, 51)),
     ):
         node = ninefold_resource_nodes.get(placement_id, {})
         ensure(bool(node), errors, f"ninefold-confluence must keep {placement_id} for Bellwake Harbor AI delayed-source common-resource runway")
         ensure(str(node.get("site_id", "")) == site_id, errors, f"{placement_id} must use {site_id}")
-        ensure(int(node.get("x", -1)) == 52 and int(node.get("y", -1)) == 51, errors, f"{placement_id} must stay on Bellwake Harbor's reachable economy front tile")
+        ensure(
+            (int(node.get("x", -1)), int(node.get("y", -1))) == expected_tile,
+            errors,
+            f"{placement_id} must stay on its distinct Bellwake Harbor economy front tile",
+        )
         ensure(str(node.get("collected_by_faction_id", "")) == "faction_veilmourn", errors, f"{placement_id} must be authored for faction_veilmourn")
+    bellwake_exchange = ninefold_resource_nodes.get("ninefold_confluence_ninefold_bellwake_harbor_rare_exchange", {})
+    ensure(bool(bellwake_exchange), errors, "ninefold-confluence must keep Bellwake Harbor's authored rare exchange")
+    ensure(
+        (int(bellwake_exchange.get("x", -1)), int(bellwake_exchange.get("y", -1))) == (46, 51),
+        errors,
+        "Bellwake Harbor's rare exchange must stay within the two-tile development-source radius",
+    )
+    ensure(
+        str(bellwake_exchange.get("collected_by_faction_id", "")) == "faction_veilmourn",
+        errors,
+        "Bellwake Harbor's rare exchange must remain under Veilmourn control",
+    )
     ensure(active_scenario_count >= 16, errors, "Active scenario AI town development runway must cover the active authored scenario roster")
     ensure(campaign_scenario_count >= 15, errors, "Active scenario AI town development runway must cover campaign scenarios")
     ensure(skirmish_scenario_count >= 16, errors, "Active scenario AI town development runway must cover skirmish scenarios")
