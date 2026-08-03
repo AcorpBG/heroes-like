@@ -9,7 +9,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	if not await _check_overworld_focus_and_wasd():
+	if not await _check_overworld_focus_and_movement_key():
 		return
 	if not await _check_overworld_controller_movement():
 		return
@@ -22,7 +22,7 @@ func _run() -> void:
 	print("%s PASS" % REPORT_ID)
 	get_tree().quit(0)
 
-func _check_overworld_focus_and_wasd() -> bool:
+func _check_overworld_focus_and_movement_key() -> bool:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	session = SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
@@ -45,9 +45,11 @@ func _check_overworld_focus_and_wasd() -> bool:
 	await _press_key(int(move.get("keycode", 0)))
 	var after := OverworldRules.hero_position(session)
 	if after != before + move.get("delta", Vector2i.ZERO):
-		return _fail("Focused overworld UI swallowed WASD movement: before=%s after=%s move=%s." % [before, after, move])
+		return _fail("Focused overworld UI swallowed the configured movement key: before=%s after=%s move=%s focus=%s class=%s." % [before, after, move, _focus_name(), next_owner.get_class()])
 	if get_viewport().gui_get_focus_owner() == null:
-		return _fail("Overworld WASD movement discarded keyboard focus.")
+		return _fail("Configured overworld movement discarded keyboard focus.")
+	if not _assert_accessible_surface(shell, "overworld", 3):
+		return false
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -65,6 +67,8 @@ func _check_town_keyboard_build() -> bool:
 	var shell = load("res://scenes/town/TownShell.tscn").instantiate()
 	add_child(shell)
 	await _settle()
+	if not _assert_accessible_surface(shell, "town", 3):
+		return false
 
 	var build_actions: Control = shell.get_node("%BuildActions")
 	var focus_owner := get_viewport().gui_get_focus_owner()
@@ -203,6 +207,8 @@ func _check_battle_keyboard_defend() -> bool:
 	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
 	add_child(shell)
 	await _settle()
+	if not _assert_accessible_surface(shell, "battle", 2):
+		return false
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var forecast: Dictionary = snapshot.get("intent_forecast", {}) if snapshot.get("intent_forecast", {}) is Dictionary else {}
@@ -253,10 +259,10 @@ func _check_battle_keyboard_defend() -> bool:
 
 func _legal_cardinal_move(session, minimum_steps: int = 1) -> Dictionary:
 	for candidate in [
-		{"keycode": KEY_W, "delta": Vector2i.UP},
-		{"keycode": KEY_S, "delta": Vector2i.DOWN},
-		{"keycode": KEY_A, "delta": Vector2i.LEFT},
-		{"keycode": KEY_D, "delta": Vector2i.RIGHT},
+		{"keycode": SettingsService.hero_movement_keycode(&"hero_move_up"), "delta": Vector2i.UP},
+		{"keycode": SettingsService.hero_movement_keycode(&"hero_move_down"), "delta": Vector2i.DOWN},
+		{"keycode": SettingsService.hero_movement_keycode(&"hero_move_left"), "delta": Vector2i.LEFT},
+		{"keycode": SettingsService.hero_movement_keycode(&"hero_move_right"), "delta": Vector2i.RIGHT},
 	]:
 		var probe = SessionState.new_session_data()
 		probe.from_dict(session.to_dict())
@@ -380,6 +386,14 @@ func _first_encounter(session) -> Dictionary:
 func _focus_name() -> String:
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	return "none" if focus_owner == null else String(focus_owner.name)
+
+func _assert_accessible_surface(shell: Node, context: String, minimum_live_regions: int) -> bool:
+	var snapshot: Dictionary = UiAccessibility.validation_snapshot(shell)
+	if not bool(snapshot.get("ok", false)):
+		return _fail("%s visible focusable controls are missing native accessibility semantics: %s" % [context, snapshot])
+	if int(snapshot.get("live_region_count", 0)) < minimum_live_regions:
+		return _fail("%s exposes too few polite live regions: %s" % [context, snapshot])
+	return true
 
 func _fail(message: String) -> bool:
 	if _failed:

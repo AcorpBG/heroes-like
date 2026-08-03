@@ -802,6 +802,25 @@ Non-goals:
 - do not change combat rules, event order, animation duration, audio, camera shake settings, expedition saves, or Native RMG;
 - do not redesign the broader VFX catalog or claim medical certification, final accessibility, or release completion.
 
+## Native Screen Reader Semantics
+
+Selected slice: `accessibility-native-screen-reader-semantics-10184`.
+
+Implementation target:
+- keep Godot 4.6 accessibility support in automatic mode so native AccessKit integration activates when Windows or Linux detects a screen reader or Braille display;
+- assign stable human-readable accessibility names and descriptions to static and dynamically created focusable controls without replacing authored semantics;
+- mark changing menu, overworld, town, battle, outcome, and save status labels as polite live regions while preserving their current visual text and update timing;
+- cover controls added after scene startup and refresh derived semantics when a control becomes visible or receives focus.
+
+Completion evidence:
+- focused runtime proof covers authored-semantic preservation, text and node-name fallback, tooltip descriptions, dynamic control insertion, and polite live regions;
+- real main-menu and active-play control trees expose non-empty names and descriptions for visible focusable controls while existing keyboard/controller navigation remains green;
+- packaged startup, project parsing, core systems, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add a custom text-to-speech narrator, transmit accessibility data, or require game audio for screen-reader output;
+- do not claim NVDA/Orca certification, medical certification, final accessibility, Native RMG changes, or overall release completion.
+
 ## Confirmed Restore Settings Defaults
 
 Selected slice: `settings-confirmed-restore-defaults-10184`.
