@@ -20,6 +20,9 @@ NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
 SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
+UI_ACCESSIBILITY_PATH = ROOT / "scripts" / "autoload" / "UiAccessibility.gd"
+ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH = ROOT / "tests" / "accessibility_screen_reader_semantics_report.gd"
+ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH = ROOT / "tests" / "accessibility_screen_reader_semantics_report.tscn"
 RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
 UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
 AMBIENT_AUDIO_PATH = ROOT / "scripts" / "autoload" / "AmbientAudio.gd"
@@ -12451,6 +12454,79 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ensure("green hex" not in source_text.lower(), errors, f"{source_name} must use color-independent move-hex guidance")
 
 
+def validate_native_screen_reader_semantics(errors: list[str]) -> None:
+    required_paths = (
+        ROOT / "project.godot",
+        UI_ACCESSIBILITY_PATH,
+        ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH,
+        ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH,
+        ROOT / "tests" / "active_play_keyboard_focus_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing native screen-reader semantics file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    project_text = (ROOT / "project.godot").read_text(encoding="utf-8")
+    ensure(
+        "[accessibility]\ngeneral/accessibility_support=0" in project_text,
+        errors,
+        "project.godot must keep native accessibility support in automatic mode",
+    )
+    ensure(
+        'UiAccessibility="*res://scripts/autoload/UiAccessibility.gd"' in project_text,
+        errors,
+        "project.godot must register UiAccessibility as an autoload",
+    )
+
+    service_text = UI_ACCESSIBILITY_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "class_name HeroesUiAccessibility",
+        "get_tree().node_added.connect",
+        "func refresh_tree",
+        "func configure_control",
+        "func describe_control",
+        "func configure_live_region",
+        "func validation_snapshot",
+        "func semantic_name",
+        "DisplayServer.LIVE_POLITE",
+        "accessibility_name",
+        "accessibility_description",
+        "focus_entered.connect",
+        "visibility_changed.connect",
+        '"ui_accessibility_semantics_v1"',
+    ):
+        ensure(required_token in service_text, errors, f"UiAccessibility.gd is missing required native semantics token: {required_token}")
+
+    report_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "ACCESSIBILITY_SCREEN_READER_SEMANTICS_REPORT",
+        '"accessibility_screen_reader_semantics_report_v1"',
+        "authored_semantics_preserved",
+        "dynamic_control_named",
+        "DisplayServer.LIVE_POLITE",
+        "UiAccessibility.validation_snapshot",
+        "res://scenes/menus/MainMenu.tscn",
+    ):
+        ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
+    report_scene_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/accessibility_screen_reader_semantics_report.gd" in report_scene_text,
+        errors,
+        "Native screen-reader semantics report scene must load its script",
+    )
+
+    active_play_text = (ROOT / "tests" / "active_play_keyboard_focus_smoke.gd").read_text(encoding="utf-8")
+    for required_token in (
+        "UiAccessibility.validation_snapshot",
+        "SettingsService.hero_movement_keycode",
+        '"overworld", 3',
+        '"town", 3',
+        '"battle", 2',
+    ):
+        ensure(required_token in active_play_text, errors, f"active_play_keyboard_focus_smoke.gd is missing native accessibility coverage token: {required_token}")
+
+
 def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for first-view composition validation")
     ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, "Missing main menu script for first-view composition validation")
@@ -23292,6 +23368,7 @@ def main() -> int:
     validate_skirmish_setup(errors)
     validate_campaign_browser(errors)
     validate_settings_and_onboarding(errors)
+    validate_native_screen_reader_semantics(errors)
     validate_main_menu_first_view(errors)
     validate_map_editor_shell_slice(errors)
     validate_scenario_outcome_shell(errors)
