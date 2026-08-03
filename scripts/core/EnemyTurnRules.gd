@@ -6531,7 +6531,16 @@ static func _apply_spawn_plan_adventure_spell_projection(
 		selected = projection_cache[projection_key]
 		_spawn_profile_count("spawn_spell_projection_reused")
 	else:
-		var commander := _commander_roster_entry_for_launch(session, faction_id, actor_id, state)
+		var preloaded_roster: Variant = spawn_scan_context.get("commander_roster", null)
+		if preloaded_roster is Array:
+			_spawn_profile_count("spawn_spell_projection_roster_reused")
+		var commander := _commander_roster_entry_for_launch(
+			session,
+			faction_id,
+			actor_id,
+			state,
+			preloaded_roster
+		)
 		var commander_state: Dictionary = commander.get("commander_state", {}) if commander.get("commander_state", {}) is Dictionary else {}
 		if commander_state.is_empty():
 			commander_state = EnemyAdventureRulesScript.build_roster_commander_state(actor_id, faction_id, {}, commander)

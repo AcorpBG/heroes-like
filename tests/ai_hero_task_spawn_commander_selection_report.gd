@@ -280,6 +280,10 @@ func _target_aware_spawn_point_case() -> Dictionary:
 			or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) != 0:
 		_fail("Understrength saved-task scan retained redundant ready-path spell projections: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
+	if int(spawn_scan_counts.get("spawn_spell_projection_roster_reused", 0)) \
+			!= int(spawn_scan_counts.get("spawn_spell_projection_loaded", 0)):
+		_fail("Saved-task spell projections did not all reuse the normalized spawn roster: %s" % JSON.stringify(spawn_scan_profile))
+		return {}
 	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
 		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
 		return {}
