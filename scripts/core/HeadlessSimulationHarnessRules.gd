@@ -5020,6 +5020,7 @@ static func _set_town_stabilizing_front(
 		if String(town.get("placement_id", "")) != placement_id:
 			continue
 		town["garrison"] = []
+		town["available_recruits"] = {}
 		town["ai_defense_rating"] = 0
 		town["front"] = {
 			"state": "stabilizing",
