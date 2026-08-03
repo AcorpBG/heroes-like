@@ -617,6 +617,7 @@ MARKET_BUILDING_IDS = {
     "building_market_square",
     "building_river_granary_exchange",
     "building_resonant_exchange",
+    "building_smugglers_flotilla",
 }
 LOGISTICS_SITE_FAMILIES = {"neutral_dwelling", "faction_outpost", "frontier_shrine"}
 OVERWORLD_FOUNDATION_SITE_FAMILIES = {
@@ -2684,45 +2685,37 @@ def market_resource_abundance_score(faction_economy: object, town_economy: objec
     return score
 
 
-def market_profile_for_building(building_id: str) -> tuple[str, int, str]:
-    if building_id == "building_resonant_exchange":
-        return "resonant", 2, "ore"
-    if building_id == "building_river_granary_exchange":
-        return "river", 2, "wood"
-    if building_id == "building_market_square":
-        return "square", 1, ""
-    return "none", 0, ""
+def market_profile_for_building(building: dict) -> tuple[str, int, list[str]]:
+    profile = building.get("market_profile", {}) if isinstance(building, dict) else {}
+    if not isinstance(profile, dict):
+        return "none", 0, []
+    bulk_resources = [
+        str(value)
+        for value in profile.get("bulk_resources", [])
+        if str(value) in ECONOMY_NORMAL_MARKET_RESOURCE_IDS
+    ] if isinstance(profile.get("bulk_resources", []), list) else []
+    return str(profile.get("id", "none")), int(profile.get("tier", 0)), list(dict.fromkeys(bulk_resources))
 
 
-def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, building_id: str) -> dict:
-    profile_id, tier, bulk_resource = market_profile_for_building(building_id)
+def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, building_id: str, building: dict) -> dict:
+    profile_id, tier, bulk_resources = market_profile_for_building(building)
+    profile = building.get("market_profile", {}) if isinstance(building.get("market_profile", {}), dict) else {}
+    buy_adjustments = profile.get("buy_rate_adjustments", {}) if isinstance(profile.get("buy_rate_adjustments", {}), dict) else {}
+    sell_adjustments = profile.get("sell_rate_adjustments", {}) if isinstance(profile.get("sell_rate_adjustments", {}), dict) else {}
     buy_rates: dict[str, int] = {}
     sell_rates: dict[str, int] = {}
     for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS:
         abundance = market_resource_abundance_score(faction.get("economy", {}), town.get("economy", {}), resource_id)
-        buy_rate = 740 - (abundance * 35)
-        sell_rate = 280 + (abundance * 30)
-        if profile_id == "river":
-            if resource_id == "wood":
-                buy_rate -= 80
-                sell_rate += 90
-            else:
-                buy_rate -= 25
-                sell_rate += 25
-        elif profile_id == "resonant":
-            if resource_id == "ore":
-                buy_rate -= 80
-                sell_rate += 90
-            else:
-                buy_rate -= 25
-                sell_rate += 25
-        else:
-            buy_rate -= 20
-            sell_rate += 10
+        buy_rate = 740 - (abundance * 35) + int(buy_adjustments.get(resource_id, 0))
+        sell_rate = 280 + (abundance * 30) + int(sell_adjustments.get(resource_id, 0))
         buy_rate = max(500, min(760, buy_rate))
         sell_rate = max(260, min(max(260, buy_rate - 120), sell_rate))
         buy_rates[resource_id] = buy_rate
         sell_rates[resource_id] = sell_rate
+    buy_cap_bonus = profile.get("buy_cap_bonus", {}) if isinstance(profile.get("buy_cap_bonus", {}), dict) else {}
+    sell_cap_bonus = profile.get("sell_cap_bonus", {}) if isinstance(profile.get("sell_cap_bonus", {}), dict) else {}
+    buy_caps = {resource_id: 6 + max(0, int(buy_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS}
+    sell_caps = {resource_id: 8 + max(0, int(sell_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS}
     exchange_resources = sorted(set(buy_rates.keys()) | set(sell_rates.keys()))
     return {
         "town_id": town_id,
@@ -2732,7 +2725,12 @@ def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, bui
         "tier": tier,
         "buy_rates": buy_rates,
         "sell_rates": sell_rates,
-        "bulk_resource": bulk_resource,
+        "buy_rate_adjustments": {str(key): int(value) for key, value in buy_adjustments.items()},
+        "sell_rate_adjustments": {str(key): int(value) for key, value in sell_adjustments.items()},
+        "buy_caps": buy_caps,
+        "sell_caps": sell_caps,
+        "bulk_resource": bulk_resources[0] if bulk_resources else "",
+        "bulk_resources": bulk_resources,
         "exchange_resources": exchange_resources,
         "rare_resource_buying_enabled": bool(set(buy_rates.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS)),
         "normal_market_resource_ids_only": set(exchange_resources) == set(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
@@ -2757,6 +2755,8 @@ def build_market_faction_cost_report() -> dict:
             "normal_market_rare_buying_enabled": False,
             "runtime_market_cap_adoption": True,
             "market_cap_support": "weekly town.market_usage runtime state, cap-aware actions/readiness, and save-resume report",
+            "market_profile_source": "content/buildings.json market_profile",
+            "smuggler_flexible_common_liquidation": True,
             "faction_cost_hook": "live recruitment discounts from faction, town, and building profiles",
             "save_version_bump": False,
             "broad_rebalance": False,
@@ -2772,14 +2772,13 @@ def build_market_faction_cost_report() -> dict:
         faction_id = str(town.get("faction_id", ""))
         faction = factions.get(faction_id, {})
         buildable_ids = [str(value) for value in town.get("buildable_building_ids", []) if str(value) in buildings]
-        for building_id in ("building_market_square", "building_river_granary_exchange", "building_resonant_exchange"):
-            if building_id not in buildable_ids or building_id in seen_market_profiles:
+        for building_id in buildable_ids:
+            building = buildings.get(building_id, {})
+            profile_id, _, _ = market_profile_for_building(building)
+            if profile_id == "none" or profile_id in seen_market_profiles:
                 continue
-            profile_id, _, _ = market_profile_for_building(building_id)
-            if profile_id == "none":
-                continue
-            report["market_cases"].append(market_faction_cost_market_case(town_id, town, faction, building_id))
-            seen_market_profiles.add(building_id)
+            report["market_cases"].append(market_faction_cost_market_case(town_id, town, faction, building_id, building))
+            seen_market_profiles.add(profile_id)
     valid_cases = strict_cases.get("valid", {}) if isinstance(strict_cases, dict) else {}
     for profile in valid_cases.get("market_profiles", []) if isinstance(valid_cases.get("market_profiles", []), list) else []:
         if not isinstance(profile, dict):
@@ -2838,6 +2837,8 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
     ensure(policy.get("normal_market_resource_ids", []) == list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS), errors, "Normal market must remain bounded to wood and ore")
     ensure(bool(policy.get("normal_market_rare_buying_enabled", True)) is False, errors, "Normal market must not buy staged rare resources")
     ensure(bool(policy.get("runtime_market_cap_adoption", False)) is True, errors, "Market/faction-cost policy must adopt runtime weekly market caps")
+    ensure(str(policy.get("market_profile_source", "")) == "content/buildings.json market_profile", errors, "Market profiles must be sourced from authored building content")
+    ensure(bool(policy.get("smuggler_flexible_common_liquidation", False)) is True, errors, "Market policy must expose the Smuggler flexible common liquidation profile")
     ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Market/faction-cost slice must keep rare resources live but outside normal market buying")
     ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Market/faction-cost slice must not require a save-version bump")
     ensure(bool(policy.get("broad_rebalance", True)) is False, errors, "Market/faction-cost slice must not perform a broad rebalance")
@@ -2850,10 +2851,31 @@ def validate_market_faction_cost_policy(errors: list[str]) -> None:
 
     market_cases = report.get("market_cases", [])
     ensure(bool(market_cases), errors, "Market/faction-cost report must include at least one live market case")
+    cases_by_profile = {str(case.get("profile", "")): case for case in market_cases}
+    ensure({"square", "river", "resonant", "smugglers"}.issubset(cases_by_profile.keys()), errors, "Market/faction-cost report must cover every authored market profile")
     for case in market_cases:
         case_id = f"{case.get('town_id', '')}:{case.get('market_building_id', '')}"
         ensure(case.get("normal_market_resource_ids_only", False) is True, errors, f"{case_id} market case must exchange only wood and ore")
         ensure(case.get("rare_resource_buying_enabled", True) is False, errors, f"{case_id} market case must not buy rare resources")
+    square_case = cases_by_profile.get("square", {})
+    river_case = cases_by_profile.get("river", {})
+    resonant_case = cases_by_profile.get("resonant", {})
+    smuggler_case = cases_by_profile.get("smugglers", {})
+    ensure(square_case.get("buy_rate_adjustments", {}) == {"wood": -20, "ore": -20}, errors, "Market Square must preserve its authored common-resource buy rates")
+    ensure(square_case.get("sell_rate_adjustments", {}) == {"wood": 10, "ore": 10}, errors, "Market Square must preserve its authored common-resource sell rates")
+    ensure(square_case.get("bulk_resources", []) == [], errors, "Market Square must remain single-lot only")
+    ensure(river_case.get("buy_rate_adjustments", {}) == {"wood": -80, "ore": -25}, errors, "River exchange must preserve its authored buy-rate identity")
+    ensure(river_case.get("sell_rate_adjustments", {}) == {"wood": 90, "ore": 25}, errors, "River exchange must preserve its authored sell-rate identity")
+    ensure(river_case.get("bulk_resources", []) == ["wood"], errors, "River exchange must keep wood-only bulk orders")
+    ensure(river_case.get("buy_caps", {}) == {"wood": 8, "ore": 6} and river_case.get("sell_caps", {}) == {"wood": 10, "ore": 8}, errors, "River exchange must preserve its wood cap bonuses")
+    ensure(resonant_case.get("buy_rate_adjustments", {}) == {"wood": -25, "ore": -80}, errors, "Resonant exchange must preserve its authored buy-rate identity")
+    ensure(resonant_case.get("sell_rate_adjustments", {}) == {"wood": 25, "ore": 90}, errors, "Resonant exchange must preserve its authored sell-rate identity")
+    ensure(resonant_case.get("bulk_resources", []) == ["ore"], errors, "Resonant exchange must keep ore-only bulk orders")
+    ensure(resonant_case.get("buy_caps", {}) == {"wood": 6, "ore": 8} and resonant_case.get("sell_caps", {}) == {"wood": 8, "ore": 10}, errors, "Resonant exchange must preserve its ore cap bonuses")
+    ensure(smuggler_case.get("buy_rate_adjustments", {}) == {"wood": 0, "ore": 0}, errors, "Smuggler exchange must not discount purchases")
+    ensure(smuggler_case.get("sell_rate_adjustments", {}) == {"wood": 70, "ore": 70}, errors, "Smuggler exchange must improve both common-resource sale rates")
+    ensure(smuggler_case.get("bulk_resources", []) == ["wood", "ore"], errors, "Smuggler exchange must offer bulk wood and ore orders")
+    ensure(smuggler_case.get("buy_caps", {}) == {"wood": 8, "ore": 8} and smuggler_case.get("sell_caps", {}) == {"wood": 10, "ore": 10}, errors, "Smuggler exchange must increase both common-resource weekly caps")
     cap_fixtures = report.get("market_cap_fixtures", [])
     ensure(bool(cap_fixtures), errors, "Market/faction-cost report must include a bounded common-market cap fixture")
     for fixture in cap_fixtures:
@@ -21819,6 +21841,11 @@ def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
         "SaveService.save_runtime_manual_session",
         "SaveService.restore_manual_session",
         "rare_resource_buying_enabled",
+        "SMUGGLER_BUILDING",
+        "market:buy:wood:2",
+        "market:sell:ore:2",
+        "Smugglers Flotilla",
+        "expected_bulk_gold",
     ):
         ensure(required_token in script_text, errors, f"Runtime market cap report is missing token {required_token}")
     ensure("res://tests/runtime_market_cap_persistence_report.gd" in scene_text, errors, "Runtime market cap scene must load its report script")
@@ -21829,6 +21856,9 @@ def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
         "_normalize_town_market_usage_state",
         "_market_cap_state_for_quote",
         "_market_usage_summary",
+        'get("market_profile"',
+        "_market_bulk_resources",
+        '"bulk_resources"',
         '"market_usage": _normalize_town_market_usage_state',
         "cap_remaining",
         "Weekly market cap reached",

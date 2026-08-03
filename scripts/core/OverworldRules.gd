@@ -31,7 +31,6 @@ const LIVE_STOCKPILE_RESOURCE_KEYS := [
 const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]
 const MARKET_BASE_BUY_CAP := 6
 const MARKET_BASE_SELL_CAP := 8
-const MARKET_SPECIALTY_CAP_BONUS := 2
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
@@ -9788,8 +9787,10 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 	)
 	lines.append("- Weekly caps %s." % _market_usage_summary(state, usage))
 	var bulk_resource := String(state.get("bulk_resource", ""))
+	var bulk_resources := _market_bulk_resources(state)
 	var bulk_amount := int(state.get("bulk_amount", 0))
-	if bulk_resource != "" and bulk_amount > 1:
+	for bulk_resource_value in bulk_resources:
+		bulk_resource = String(bulk_resource_value)
 		var bulk_buy := _market_quote_from_state(state, "buy", bulk_resource, bulk_amount)
 		var bulk_sell := _market_quote_from_state(state, "sell", bulk_resource, bulk_amount)
 		lines.append(
@@ -9815,22 +9816,26 @@ static func _town_market_actions(session: SessionStateStoreScript.SessionData, t
 	if not bool(state.get("active", false)):
 		return actions
 	var resource_order := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
-	var bulk_resource := String(state.get("bulk_resource", ""))
-	if bulk_resource != "" and bulk_resource in resource_order:
-		resource_order.erase(bulk_resource)
-		resource_order.push_front(bulk_resource)
+	var bulk_resources := _market_bulk_resources(state)
+	for index in range(bulk_resources.size() - 1, -1, -1):
+		var bulk_resource := String(bulk_resources[index])
+		if bulk_resource in resource_order:
+			resource_order.erase(bulk_resource)
+			resource_order.push_front(bulk_resource)
 	for resource_key in resource_order:
 		for action_type in ["buy", "sell"]:
 			var quote := _market_quote_from_state(state, action_type, resource_key, 1)
 			if quote.is_empty():
 				continue
 			actions.append(_market_action_entry(session, town, state, quote))
-	if bulk_resource != "" and int(state.get("bulk_amount", 0)) > 1:
-		for action_type in ["buy", "sell"]:
-			var bulk_quote := _market_quote_from_state(state, action_type, bulk_resource, int(state.get("bulk_amount", 0)))
-			if bulk_quote.is_empty():
-				continue
-			actions.append(_market_action_entry(session, town, state, bulk_quote))
+	if int(state.get("bulk_amount", 0)) > 1:
+		for bulk_resource_value in bulk_resources:
+			var bulk_resource := String(bulk_resource_value)
+			for action_type in ["buy", "sell"]:
+				var bulk_quote := _market_quote_from_state(state, action_type, bulk_resource, int(state.get("bulk_amount", 0)))
+				if bulk_quote.is_empty():
+					continue
+				actions.append(_market_action_entry(session, town, state, bulk_quote))
 	return actions
 
 static func _market_action_entry(
@@ -9961,6 +9966,7 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"sell_caps": {"wood": 0, "ore": 0},
 		"refresh_cadence": "weekly",
 		"bulk_resource": "",
+		"bulk_resources": [],
 		"bulk_amount": 0,
 		"specialty_summary": "",
 		"exchange_value": 0,
@@ -9969,69 +9975,53 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		return inactive
 	var built_buildings := _normalize_built_buildings_for_town_state(town)
 	var market_building_id := ""
-	var profile_id := "none"
-	var tier := 0
-	if "building_resonant_exchange" in built_buildings:
-		market_building_id = "building_resonant_exchange"
-		profile_id = "resonant"
-		tier = 2
-	elif "building_river_granary_exchange" in built_buildings:
-		market_building_id = "building_river_granary_exchange"
-		profile_id = "river"
-		tier = 2
-	elif "building_market_square" in built_buildings:
-		market_building_id = "building_market_square"
-		profile_id = "square"
-		tier = 1
-	else:
+	var market_profile := {}
+	for building_id_value in built_buildings:
+		var candidate_id := String(building_id_value)
+		var candidate_profile_value: Variant = ContentService.get_building(candidate_id).get("market_profile", {})
+		if not (candidate_profile_value is Dictionary):
+			continue
+		var candidate_profile: Dictionary = candidate_profile_value
+		if String(candidate_profile.get("id", "")) == "":
+			continue
+		if market_profile.is_empty() or int(candidate_profile.get("tier", 0)) > int(market_profile.get("tier", 0)):
+			market_building_id = candidate_id
+			market_profile = candidate_profile.duplicate(true)
+	if market_profile.is_empty():
 		return inactive
+	var profile_id := String(market_profile.get("id", "none"))
+	var tier: int = maxi(1, int(market_profile.get("tier", 1)))
 
 	var market_building := ContentService.get_building(market_building_id)
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
 	var buy_rates := {}
 	var sell_rates := {}
+	var buy_adjustments: Dictionary = market_profile.get("buy_rate_adjustments", {}) if market_profile.get("buy_rate_adjustments", {}) is Dictionary else {}
+	var sell_adjustments: Dictionary = market_profile.get("sell_rate_adjustments", {}) if market_profile.get("sell_rate_adjustments", {}) is Dictionary else {}
 	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		var abundance := _market_resource_abundance_score(faction.get("economy", {}), town_template.get("economy", {}), resource_key)
 		var buy_rate := 740 - (abundance * 35)
 		var sell_rate := 280 + (abundance * 30)
-		match profile_id:
-			"river":
-				if resource_key == "wood":
-					buy_rate -= 80
-					sell_rate += 90
-				else:
-					buy_rate -= 25
-					sell_rate += 25
-			"resonant":
-				if resource_key == "ore":
-					buy_rate -= 80
-					sell_rate += 90
-				else:
-					buy_rate -= 25
-					sell_rate += 25
-			_:
-				buy_rate -= 20
-				sell_rate += 10
+		buy_rate += int(buy_adjustments.get(resource_key, 0))
+		sell_rate += int(sell_adjustments.get(resource_key, 0))
 		buy_rate = clampi(buy_rate, 500, 760)
 		sell_rate = clampi(sell_rate, 260, max(260, buy_rate - 120))
 		buy_rates[resource_key] = buy_rate
 		sell_rates[resource_key] = sell_rate
-	var bulk_resource := ""
-	var specialty_summary := "Standard brokers can move one crate at a time between raw stock and hard coin."
-	if profile_id == "river":
-		bulk_resource = "wood"
-		specialty_summary = "River barges tighten wood rates and open double-wood convoy trades for construction or levy recovery."
-	elif profile_id == "resonant":
-		bulk_resource = "ore"
-		specialty_summary = "Resonant relay brokers tighten ore rates and open double-ore lots for crystal feed and battery upkeep."
+	var bulk_resources := []
+	for resource_value in market_profile.get("bulk_resources", []):
+		var resource_id := String(resource_value)
+		if resource_id in NORMAL_MARKET_RESOURCE_KEYS and resource_id not in bulk_resources:
+			bulk_resources.append(resource_id)
+	var bulk_resource := String(bulk_resources[0]) if not bulk_resources.is_empty() else ""
+	var specialty_summary := String(market_profile.get("specialty_summary", ""))
 	var exchange_value := 0
 	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 		exchange_value += int(sell_rates.get(resource_key, 0))
 		exchange_value += max(0, 900 - int(buy_rates.get(resource_key, 0)))
-	if bulk_resource != "":
-		exchange_value += 120
-	var caps := _market_caps_for_profile(profile_id)
+	exchange_value += bulk_resources.size() * 120
+	var caps := _market_caps_for_profile(market_profile)
 	return {
 		"active": true,
 		"tier": tier,
@@ -10044,26 +10034,38 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"sell_caps": caps.get("sell_caps", {}),
 		"refresh_cadence": String(caps.get("refresh_cadence", "weekly")),
 		"bulk_resource": bulk_resource,
-		"bulk_amount": 2 if bulk_resource != "" else 0,
+		"bulk_resources": bulk_resources,
+		"bulk_amount": 2 if not bulk_resources.is_empty() else 0,
 		"specialty_summary": specialty_summary,
 		"exchange_value": exchange_value,
 	}
 
-static func _market_caps_for_profile(profile_id: String) -> Dictionary:
+static func _market_caps_for_profile(profile: Dictionary) -> Dictionary:
 	var buy_caps := _empty_market_usage_bucket(MARKET_BASE_BUY_CAP)
 	var sell_caps := _empty_market_usage_bucket(MARKET_BASE_SELL_CAP)
-	match profile_id:
-		"river":
-			buy_caps["wood"] = MARKET_BASE_BUY_CAP + MARKET_SPECIALTY_CAP_BONUS
-			sell_caps["wood"] = MARKET_BASE_SELL_CAP + MARKET_SPECIALTY_CAP_BONUS
-		"resonant":
-			buy_caps["ore"] = MARKET_BASE_BUY_CAP + MARKET_SPECIALTY_CAP_BONUS
-			sell_caps["ore"] = MARKET_BASE_SELL_CAP + MARKET_SPECIALTY_CAP_BONUS
+	var buy_bonus: Dictionary = profile.get("buy_cap_bonus", {}) if profile.get("buy_cap_bonus", {}) is Dictionary else {}
+	var sell_bonus: Dictionary = profile.get("sell_cap_bonus", {}) if profile.get("sell_cap_bonus", {}) is Dictionary else {}
+	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+		buy_caps[resource_key] += max(0, int(buy_bonus.get(resource_key, 0)))
+		sell_caps[resource_key] += max(0, int(sell_bonus.get(resource_key, 0)))
 	return {
 		"refresh_cadence": "weekly",
 		"buy_caps": buy_caps,
 		"sell_caps": sell_caps,
 	}
+
+static func _market_bulk_resources(state: Dictionary) -> Array:
+	var result := []
+	var authored = state.get("bulk_resources", [])
+	if authored is Array:
+		for resource_value in authored:
+			var resource_id := String(resource_value)
+			if resource_id in NORMAL_MARKET_RESOURCE_KEYS and resource_id not in result:
+				result.append(resource_id)
+	var legacy_resource := String(state.get("bulk_resource", ""))
+	if legacy_resource in NORMAL_MARKET_RESOURCE_KEYS and legacy_resource not in result:
+		result.append(legacy_resource)
+	return result
 
 static func _empty_market_usage_bucket(default_value: int = 0) -> Dictionary:
 	var bucket := {}
@@ -10158,7 +10160,8 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 	if unit_rate <= 0:
 		return {}
 	var total_value = unit_rate * normalized_amount
-	if normalized_amount > 1 and normalized_amount == int(state.get("bulk_amount", 0)) and String(state.get("bulk_resource", "")) == resource_key:
+	var is_bulk: bool = normalized_amount > 1 and normalized_amount == int(state.get("bulk_amount", 0)) and resource_key in _market_bulk_resources(state)
+	if is_bulk:
 		if action_type == "buy":
 			total_value = max(1, int(round(float(total_value) * 0.9)))
 		else:
@@ -10176,7 +10179,7 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 		int(round(float(total_value) / float(normalized_amount))),
 		resource_key,
 	]
-	if normalized_amount > 1 and normalized_amount == int(state.get("bulk_amount", 0)) and String(state.get("bulk_resource", "")) == resource_key:
+	if is_bulk:
 		rate_summary += " in bulk"
 	var summary := ""
 	if action_type == "buy":
