@@ -4,132 +4,184 @@
   "final_sound_design": false,
   "audio_bus": "Effects",
   "sample_rate_hz": 22050,
+  "mix_policy": {
+    "max_active_voices": 8,
+    "priority_values": {
+      "low": 1,
+      "normal": 2,
+      "high": 3,
+      "critical": 4
+    },
+    "full_budget_policy": "higher_priority_replaces_oldest_lowest_priority"
+  },
   "cues": {
     "audio_placeholder_ranged_release": {
       "path": "res://art/audio/runtime/battle/ranged_release.wav",
       "duration_msec": 150,
       "volume_db": -12.0,
-      "role": "ranged_release"
+      "role": "ranged_release",
+      "priority_class": "high",
+      "repeat_cooldown_msec": 90
     },
     "audio_placeholder_status_apply": {
       "path": "res://art/audio/runtime/battle/status_apply.wav",
       "duration_msec": 190,
       "volume_db": -13.5,
-      "role": "status_apply"
+      "role": "status_apply",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "audio_placeholder_melee_release": {
       "path": "res://art/audio/runtime/battle/melee_release.wav",
       "duration_msec": 120,
       "volume_db": -11.5,
-      "role": "melee_release"
+      "role": "melee_release",
+      "priority_class": "high",
+      "repeat_cooldown_msec": 90
     },
     "audio_placeholder_hit": {
       "path": "res://art/audio/runtime/battle/hit.wav",
       "duration_msec": 100,
       "volume_db": -12.5,
-      "role": "hit"
+      "role": "hit",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 85
     },
     "audio_placeholder_unit_rout": {
       "path": "res://art/audio/runtime/battle/unit_rout.wav",
       "duration_msec": 260,
       "volume_db": -13.5,
-      "role": "unit_rout"
+      "role": "unit_rout",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 250
     },
     "audio_placeholder_cast": {
       "path": "res://art/audio/runtime/battle/cast.wav",
       "duration_msec": 220,
       "volume_db": -13.0,
-      "role": "cast"
+      "role": "cast",
+      "priority_class": "high",
+      "repeat_cooldown_msec": 150
     },
     "audio_placeholder_unit_step": {
       "path": "res://art/audio/runtime/battle/unit_step.wav",
       "duration_msec": 80,
       "volume_db": -16.0,
-      "role": "unit_step"
+      "role": "unit_step",
+      "priority_class": "low",
+      "repeat_cooldown_msec": 120
     },
     "audio_placeholder_defend": {
       "path": "res://art/audio/runtime/battle/defend.wav",
       "duration_msec": 100,
       "volume_db": -15.0,
-      "role": "defend"
+      "role": "defend",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 180
     },
     "audio_placeholder_retaliation": {
       "path": "res://art/audio/runtime/battle/retaliation.wav",
       "duration_msec": 130,
       "volume_db": -12.5,
-      "role": "retaliation"
+      "role": "retaliation",
+      "priority_class": "high",
+      "repeat_cooldown_msec": 120
     },
     "audio_placeholder_retreat_order": {
       "path": "res://art/audio/runtime/battle/retreat_order.wav",
       "duration_msec": 210,
       "volume_db": -14.0,
-      "role": "retreat_order"
+      "role": "retreat_order",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 350
     },
     "audio_placeholder_surrender_order": {
       "path": "res://art/audio/runtime/battle/surrender_order.wav",
       "duration_msec": 210,
       "volume_db": -14.0,
-      "role": "surrender_order"
+      "role": "surrender_order",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 350
     },
     "audio_placeholder_turn_ready": {
       "path": "res://art/audio/runtime/battle/turn_ready.wav",
       "duration_msec": 110,
       "volume_db": -17.0,
-      "role": "turn_ready"
+      "role": "turn_ready",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 220
     },
     "audio_placeholder_status_clear": {
       "path": "res://art/audio/runtime/battle/status_clear.wav",
       "duration_msec": 150,
       "volume_db": -16.0,
-      "role": "status_clear"
+      "role": "status_clear",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "audio_placeholder_idle_soft": {
       "path": "res://art/audio/runtime/battle/idle_soft.wav",
       "duration_msec": 70,
       "volume_db": -23.0,
-      "role": "idle_soft"
+      "role": "idle_soft",
+      "priority_class": "low",
+      "repeat_cooldown_msec": 500
     },
     "audio_spell_cinder_burst": {
       "path": "res://art/audio/runtime/battle/spell_cinder_burst.wav",
       "duration_msec": 260,
       "volume_db": -12.0,
-      "role": "spell_damage_fire"
+      "role": "spell_damage_fire",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_coal_rain": {
       "path": "res://art/audio/runtime/battle/spell_coal_rain.wav",
       "duration_msec": 300,
       "volume_db": -12.5,
-      "role": "spell_damage_rain"
+      "role": "spell_damage_rain",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_sunlance_arc": {
       "path": "res://art/audio/runtime/battle/spell_sunlance_arc.wav",
       "duration_msec": 240,
       "volume_db": -12.0,
-      "role": "spell_damage_lance"
+      "role": "spell_damage_lance",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_briar_bind": {
       "path": "res://art/audio/runtime/battle/spell_briar_bind.wav",
       "duration_msec": 270,
       "volume_db": -13.0,
-      "role": "spell_control_bind"
+      "role": "spell_control_bind",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_graft_mend": {
       "path": "res://art/audio/runtime/battle/spell_graft_mend.wav",
       "duration_msec": 280,
       "volume_db": -13.5,
-      "role": "spell_recovery"
+      "role": "spell_recovery",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_prism_bastion": {
       "path": "res://art/audio/runtime/battle/spell_prism_bastion.wav",
       "duration_msec": 270,
       "volume_db": -13.5,
-      "role": "spell_cleanse"
+      "role": "spell_cleanse",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     },
     "audio_spell_command_ward": {
       "path": "res://art/audio/runtime/battle/spell_command_ward.wav",
       "duration_msec": 240,
       "volume_db": -14.0,
-      "role": "spell_buff"
+      "role": "spell_buff",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
     }
   }
 }

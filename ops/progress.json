@@ -15194,14 +15194,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded Stag-Knot Runner correction. The all-live matrix improved from 41 to 40 outliers and severity 389 to 356; it remains needs_tuning and overall release completion is not claimed.",
+  "currentNotes": "Completed manifest-backed battle SFX priority mixing and duplicate rate limiting. Dense event sequences now preserve decisive cues within the existing eight-voice Effects budget; overall game completion remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-veilmourn-maskglass-finisher-10184",
-  "currentSliceId": "combat-veilmourn-maskglass-finisher-10184",
-  "currentSliceNotes": "Implemented Maskglass Slip as the bible-defined Maskglass Corsair disrupted/wounded-target finisher through the existing live backstab engine. Runtime coverage proves 79/79 authored ability instances have consequences. The unchanged all-live 100-seed matrix improved from 40 to 38 outliers, severity 356 to 336, rows at or above 65 percent from 16 to 12, and maximum dominance from 83.5 to 80.5 percent. Week pacing and side bias remain bounded; Veilmourn retains clear week-2 Brasshollow and Thornwake weaknesses. Town development, core systems, project parse, repository validation, JSON, and diff gates pass. The matrix remains needs_tuning; no final balance or release claim is made.",
+  "currentSlice": "combat-battle-sfx-priority-mixing-10184",
+  "currentSliceId": "combat-battle-sfx-priority-mixing-10184",
+  "currentSliceNotes": "All 21 imported battle SFX cues now declare low/normal/high/critical priority and repeat cooldowns. BattleBoardView applies mute, cooldown, and voice-budget admission before player creation; the exact eight-voice test proves a critical Cinder Burst displaces the oldest low-priority idle cue, while a subsequent low-priority step is rejected. Immediate duplicate idle playback is suppressed, imported WAV playback remains preferred, and zero Effects volume creates zero voices. The exposed deferred UiAccessibility callback defect is fixed by passing an instance id and resolving only a still-live Control. The deterministic 23-case battle presentation report, native screen-reader semantics report, core systems, project parse, repository validation, JSON, Python syntax, and diff checks pass. Final sound design, platform audio certification, Native RMG changes, and overall release completion are not claimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Maskglass Finisher",
-  "currentSliceUpdatedAt": "2026-08-03T10:52:10Z",
+  "currentSliceTitle": "Battle SFX Priority Mixing",
+  "currentSliceUpdatedAt": "2026-08-03T11:11:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20718,6 +20718,47 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 300 --scene res://tests/battle_event_animation_state_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty content/battle_sfx_manifest.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Live battle audio applies valid manifest-backed priority classes and duplicate cooldowns before player creation; repeated low-priority cues are suppressed; high-priority cues displace the lowest-priority oldest voice when the eight-player budget is full; mute behavior creates no players; imported assets remain preferred; focused battle animation/audio, core, parse, repository, JSON, and diff gates pass.",
+      "id": "combat-battle-sfx-priority-mixing-10184",
+      "implementationTargets": [
+        "content/battle_sfx_manifest.json",
+        "scenes/battle/BattleBoardView.gd",
+        "scripts/autoload/UiAccessibility.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "new SFX assets, music changes, final sound design, loudness mastering, or platform audio certification",
+        "new settings, combat math, event ordering, animation timing, or save schema changes",
+        "Native RMG changes, final combat-balance claims, or overall release completion"
+      ],
+      "notes": "All 21 imported battle SFX cues now declare low/normal/high/critical priority and repeat cooldowns. BattleBoardView applies mute, cooldown, and voice-budget admission before player creation; the exact eight-voice test proves a critical Cinder Burst displaces the oldest low-priority idle cue, while a subsequent low-priority step is rejected. Immediate duplicate idle playback is suppressed, imported WAV playback remains preferred, and zero Effects volume creates zero voices. The exposed deferred UiAccessibility callback defect is fixed by passing an instance id and resolving only a still-live Control. The deterministic 23-case battle presentation report, native screen-reader semantics report, core systems, project parse, repository validation, JSON, Python syntax, and diff checks pass. Final sound design, platform audio certification, Native RMG changes, and overall release completion are not claimed.",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current Tactical State / docs/animation-systems-foundation.md Spell, VFX, And Audio Cue Requirements",
+      "purpose": "Keep dense battle event sequences readable by preventing repetitive low-value SFX from consuming the bounded voice budget ahead of decisive sounds.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md"
+      ],
+      "startedAt": "2026-08-03T11:01:43Z",
+      "status": "completed",
+      "title": "Battle SFX Priority Mixing",
+      "updatedAt": "2026-08-03T11:11:44Z",
+      "completedAt": "2026-08-03T11:11:44Z"
+    },
     {
       "baselineChecks": [
         "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",

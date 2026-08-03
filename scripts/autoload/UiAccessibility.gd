@@ -179,12 +179,13 @@ func _attach_control(control: Control) -> void:
 
 func _on_node_added(node: Node) -> void:
 	if node is Control:
-		call_deferred("_configure_added_control", node)
+		call_deferred("_configure_added_control", node.get_instance_id())
 
 
-func _configure_added_control(control: Control) -> void:
-	if is_instance_valid(control):
-		configure_control(control)
+func _configure_added_control(control_id: int) -> void:
+	var instance = instance_from_id(control_id)
+	if instance is Control and is_instance_valid(instance):
+		configure_control(instance as Control)
 
 
 func _on_control_refresh_requested(control: Control) -> void:

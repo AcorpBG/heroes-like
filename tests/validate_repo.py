@@ -18357,6 +18357,20 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(battle_sfx_manifest.get("schema") == "battle_runtime_sfx_manifest_v1", errors, "battle_sfx_manifest.json has the wrong schema")
         ensure(battle_sfx_manifest.get("final_sound_design") is False, errors, "battle_sfx_manifest.json must not claim final sound design")
         ensure(battle_sfx_manifest.get("audio_bus") == "Effects", errors, "battle_sfx_manifest.json must route battle SFX through Effects")
+        battle_mix_policy = battle_sfx_manifest.get("mix_policy", {})
+        ensure(isinstance(battle_mix_policy, dict), errors, "battle_sfx_manifest.json mix_policy must be an object")
+        if isinstance(battle_mix_policy, dict):
+            ensure(int(battle_mix_policy.get("max_active_voices", 0)) == 8, errors, "battle SFX mix policy must keep the eight-voice runtime budget")
+            ensure(
+                battle_mix_policy.get("priority_values") == {"low": 1, "normal": 2, "high": 3, "critical": 4},
+                errors,
+                "battle SFX mix policy must define ordered low/normal/high/critical priorities",
+            )
+            ensure(
+                battle_mix_policy.get("full_budget_policy") == "higher_priority_replaces_oldest_lowest_priority",
+                errors,
+                "battle SFX mix policy must preserve higher-priority cues under saturation",
+            )
         battle_sfx_cues = battle_sfx_manifest.get("cues", {})
         ensure(isinstance(battle_sfx_cues, dict), errors, "battle_sfx_manifest.json cues must be an object")
         for audio_id in required_battle_audio_ids:
@@ -18371,6 +18385,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"battle SFX asset is not a WAV file: {path_value}")
             ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs duration_msec")
             ensure("volume_db" in cue, errors, f"battle SFX cue {audio_id} needs volume_db")
+            ensure(cue.get("priority_class") in {"low", "normal", "high", "critical"}, errors, f"battle SFX cue {audio_id} needs a valid priority_class")
+            ensure(int(cue.get("repeat_cooldown_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs repeat_cooldown_msec")
     battle_sfx_generator_text = BATTLE_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if BATTLE_SFX_GENERATOR_PATH.exists() else ""
     for required_token in (
         "battle_sfx_manifest.json",
@@ -18399,9 +18415,16 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _play_imported_audio_cue",
         "func _play_generated_audio_cue",
         "func _battle_sfx_manifest_cue",
+        "func _audio_mix_admission",
+        "func _audio_eviction_candidate_index",
+        "func validation_reset_audio_mix",
+        "func validation_play_audio_cue",
         "BATTLE_SFX_MANIFEST_PATH",
+        "BATTLE_AUDIO_PRIORITY_VALUES",
         "imported_asset_count",
         "generated_fallback_count",
+        "suppressed_audio_cue_count",
+        "evicted_audio_id",
         "asset_playbacks",
         "STACK_ANIMATION_REACTION_DELAY_MSEC",
         "sequence_delay_msec",
