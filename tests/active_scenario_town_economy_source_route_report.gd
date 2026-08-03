@@ -46,13 +46,22 @@ func _run() -> void:
 			campaign_scenario_count += 1
 		if "skirmish" in launch_surfaces:
 			skirmish_scenario_count += 1
-		var session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
-		if session == null:
+		var guard_session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+		var route_session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+		if guard_session == null or route_session == null:
 			_errors.append("%s failed: ScenarioFactory.create_session returned null" % scenario_id)
 			continue
-		OverworldRules.normalize_overworld_state(session)
+		OverworldRules.normalize_overworld_state(guard_session)
+		OverworldRules.normalize_overworld_state(route_session)
+		var resolved_encounter_ids: Array = route_session.overworld.get("resolved_encounters", []).duplicate()
+		for encounter in route_session.overworld.get("encounters", []):
+			if encounter is Dictionary:
+				var encounter_id := String(encounter.get("placement_id", ""))
+				if encounter_id != "" and encounter_id not in resolved_encounter_ids:
+					resolved_encounter_ids.append(encounter_id)
+		route_session.overworld["resolved_encounters"] = resolved_encounter_ids
 		for authored_town in _player_towns(scenario):
-			var row := _run_town_case(session, scenario_id, authored_town, "player")
+			var row := _run_town_case(route_session, guard_session, scenario_id, authored_town, "player")
 			row["launch_surfaces"] = launch_surfaces
 			rows.append(row)
 			player_town_case_count += 1
@@ -69,7 +78,7 @@ func _run() -> void:
 					String(row.get("error", "unknown route failure")),
 				])
 		for authored_town in _enemy_towns(scenario):
-			var row := _run_town_case(session, scenario_id, authored_town, "enemy")
+			var row := _run_town_case(route_session, guard_session, scenario_id, authored_town, "enemy")
 			row["launch_surfaces"] = launch_surfaces
 			rows.append(row)
 			enemy_town_case_count += 1
@@ -113,29 +122,29 @@ func _run() -> void:
 		"cases": rows,
 		"errors": _errors,
 		"caveats": [
-			"This report verifies authored economy source reachability through live terrain, blocker, and route-interaction rules.",
-			"It does not auto-resolve battles or claim final encounter pacing; guarded sources remain combat/balance surfaces.",
+			"This report verifies authored economy source reachability through live terrain after route encounters are cleared, allowing legal multi-action stops at claimable objects.",
+			"It separately proves that every rare source is locked by a live authored encounter before that encounter is cleared.",
 			"The existing development runway reports still prove 30-turn construction after reachable sources are secured.",
 		],
 	}
 	print("ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT %s" % JSON.stringify(report))
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
-func _run_town_case(session, scenario_id: String, authored_town: Dictionary, owner: String) -> Dictionary:
+func _run_town_case(route_session, guard_session, scenario_id: String, authored_town: Dictionary, owner: String) -> Dictionary:
 	var placement_id := String(authored_town.get("placement_id", ""))
 	var town_id := String(authored_town.get("town_id", ""))
 	var town_template := ContentService.get_town(town_id)
 	var profile: Dictionary = town_template.get("development_balance", {}) if town_template.get("development_balance", {}) is Dictionary else {}
 	var rare_id := String(profile.get("rare_resource_id", ""))
 	var required_resource_ids := REQUIRED_COMMON_RESOURCE_IDS.duplicate()
-	required_resource_ids.append(rare_id)
+	required_resource_ids.append_array(RARE_RESOURCE_IDS)
 	var start_tile := Vector2i(int(authored_town.get("x", 0)), int(authored_town.get("y", 0)))
 	var route_rows := []
 	var errors := []
 	var reachable_count := 0
 	for resource_id_value in required_resource_ids:
 		var resource_id := String(resource_id_value)
-		var route_row := _best_resource_route(session, start_tile, resource_id)
+		var route_row := _best_resource_route(route_session, guard_session, start_tile, resource_id)
 		route_rows.append(route_row)
 		if bool(route_row.get("reachable", false)):
 			reachable_count += 1
@@ -145,7 +154,9 @@ func _run_town_case(session, scenario_id: String, authored_town: Dictionary, own
 		var max_steps := MAX_COMMON_ROUTE_STEPS if resource_id in REQUIRED_COMMON_RESOURCE_IDS else MAX_RARE_ROUTE_STEPS
 		if route_steps > max_steps:
 			errors.append("%s source route too long: %d > %d" % [resource_id, route_steps, max_steps])
-	var ok: bool = errors.is_empty() and route_rows.size() == 3
+		if resource_id in RARE_RESOURCE_IDS and not bool(route_row.get("guarded", false)):
+			errors.append("%s source is not protected by a blocking encounter" % resource_id)
+	var ok: bool = errors.is_empty() and route_rows.size() == REQUIRED_COMMON_RESOURCE_IDS.size() + RARE_RESOURCE_IDS.size()
 	return {
 		"ok": ok,
 		"scenario_id": scenario_id,
@@ -161,16 +172,18 @@ func _run_town_case(session, scenario_id: String, authored_town: Dictionary, own
 		"error": "; ".join(errors),
 	}
 
-func _best_resource_route(session, start_tile: Vector2i, resource_id: String) -> Dictionary:
+func _best_resource_route(route_session, guard_session, start_tile: Vector2i, resource_id: String) -> Dictionary:
 	var candidates := []
-	for node in session.overworld.get("resource_nodes", []):
+	for node in route_session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
+			continue
+		if bool(node.get("development_source_support", false)):
 			continue
 		var output := _resource_node_output(node)
 		if int(output.get(resource_id, 0)) <= 0:
 			continue
 		var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
-		var route := _find_route(session, start_tile, target_tile)
+		var route := _find_route(route_session, start_tile, target_tile)
 		var row := {
 			"resource_id": resource_id,
 			"placement_id": String(node.get("placement_id", "")),
@@ -181,7 +194,8 @@ func _best_resource_route(session, start_tile: Vector2i, resource_id: String) ->
 			"reachable": not route.is_empty(),
 			"route_steps": max(0, route.size() - 1) if not route.is_empty() else 999999,
 			"route_tiles": _route_payload(route),
-			"guarded": _resource_source_has_guard(session, node),
+			"guard_front_id": String(node.get("guard_front_id", "")),
+			"guarded": _resource_source_has_guard(guard_session, node),
 		}
 		candidates.append(row)
 	if candidates.is_empty():
@@ -224,10 +238,8 @@ func _find_route(session, start_tile: Vector2i, target_tile: Vector2i) -> Array:
 				continue
 			if OverworldRules.tile_step_cuts_blocked_corner(session, current, neighbor):
 				continue
-			var is_destination: bool = neighbor == target_tile
-			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not (is_destination and OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)):
-				continue
-			if not is_destination and OverworldRules.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+			var is_actionable := OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)
+			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not is_actionable:
 				continue
 			visited[neighbor_key] = true
 			parent[neighbor_key] = current
@@ -273,19 +285,11 @@ func _resource_node_output(node: Dictionary) -> Dictionary:
 	return result
 
 func _resource_source_has_guard(session, node: Dictionary) -> bool:
-	var placement_id := String(node.get("placement_id", ""))
-	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary):
-			continue
-		if OverworldRules.is_encounter_resolved(session, encounter):
-			continue
-		if String(encounter.get("target_kind", "")) == "resource" and String(encounter.get("target_placement_id", "")) == placement_id:
-			return true
-		var dx: int = abs(int(encounter.get("x", 0)) - int(node.get("x", 0)))
-		var dy: int = abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
-		if max(dx, dy) <= 1:
-			return true
-	return false
+	var guard_front_id := String(node.get("guard_front_id", ""))
+	if guard_front_id == "":
+		return false
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	return not OverworldRules.resource_site_blocking_guard(session, node, site).is_empty()
 
 func _is_active_authored_scenario(scenario: Dictionary) -> bool:
 	return _is_launch_surface_available(scenario, "campaign") or _is_launch_surface_available(scenario, "skirmish")
