@@ -15197,10 +15197,10 @@
   "currentNotes": "Completed the bounded Stag-Knot Runner correction. The all-live matrix improved from 41 to 40 outliers and severity 389 to 356; it remains needs_tuning and overall release completion is not claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-faction-pair-stat-tuning-followup-10184",
-  "currentSliceId": "combat-faction-pair-stat-tuning-followup-10184",
-  "currentSliceNotes": "Stag-Knot Runner HP 34 -> 32 and maximum damage 13 -> 12 reduced authoritative all-live matrix outliers 41 -> 40, severity 389 -> 356, 65%+ rows 18 -> 16, and maximum dominance 85% -> 83.5% without structural failures.",
+  "currentSliceId": "packaging-release-source-provenance-10184",
+  "currentSliceNotes": "Completed deterministic build-info provenance and exact source identity verification for Linux/Windows archives and installers; all focused and real lifecycle gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Combat Faction Pair Stat Tuning Followup",
+  "currentSliceTitle": "Release Source Provenance",
   "currentSliceUpdatedAt": "2026-08-03T08:20:03Z",
   "deferredRiskRegister": [
     {
@@ -20720,6 +20720,97 @@
   "plannedSlices": [
     {
       "baselineChecks": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_release_artifact_verification_test.py",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_user_local_installer_smoke.py",
+        "python3 tools/package_release.py --verify-only --output-dir .artifacts/packaging_user_local_installer_smoke",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/packaging_user_local_installer_smoke.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Linux and Windows release archives and runnable installers contain deterministic build-info provenance bound to one validated source revision and source-date epoch; local dirty tracked source, invalid revisions, index/manifest/platform disagreement, and payload tampering fail closed; focused artifact and isolated installer lifecycle validation passes.",
+      "id": "packaging-release-source-provenance-10184",
+      "implementationTargets": [
+        "tools/package_release.py",
+        "packaging/installers/linux/install.sh",
+        "packaging/installers/windows/install.cmd",
+        "tests/packaging_release_artifact_verification_test.py",
+        "tests/packaging_user_local_installer_smoke.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "code signing, certificate acquisition, storefront publication, update channels, or native Windows hardware certification",
+        "project license selection or synthetic third-party legal notices",
+        "gameplay, content, save-schema, Native RMG, or overall release-completion changes"
+      ],
+      "notes": "Completed deterministic build-info provenance and exact source identity verification for Linux/Windows archives and installers; all focused and real lifecycle gates pass.",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Release Source Provenance / packaging hardening",
+      "purpose": "Make every shipped archive and installer identify the exact source revision that produced it and fail verification when that identity disagrees anywhere in the release chain.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "status": "completed",
+      "summary": "Bound Linux and Windows release archives and runnable installers to deterministic build-info provenance, with clean local Git revision derivation, explicit CI revision support, exact cross-manifest verification, and installed-payload validation.",
+      "title": "Release Source Provenance",
+      "updatedAt": "2026-08-03T08:37:08Z",
+      "startedAt": "2026-08-03T08:26:29Z",
+      "validation": {
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_release_artifact_verification_test.py (passed; 13 tests)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_user_local_installer_smoke.py (passed; Linux and Wine install/boot/uninstall)",
+          "python3 tools/package_release.py --verify-only --output-dir .artifacts/packaging_user_local_installer_smoke (passed)",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path . (passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py (passed)",
+          "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/packaging_user_local_installer_smoke.py tests/validate_repo.py (passed)",
+          "sh -n packaging/installers/linux/install.sh packaging/installers/linux/uninstall.sh (passed)",
+          "jq empty ops/progress.json; git diff --check (passed)"
+        ],
+        "evidence": {
+          "artifacts": [
+            ".artifacts/packaging_user_local_installer_smoke/report.json",
+            ".artifacts/packaging_user_local_installer_smoke/archives/release-index.json",
+            ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-linux-x86_64.tar.gz",
+            ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-linux-x86_64.run",
+            ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-windows-x86_64.zip",
+            ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-windows-x86_64.setup.exe"
+          ],
+          "finding": "Release-index v3, both platform-manifest v2 payloads, and both embedded build-info documents agree on one source revision and source-date epoch. Local clean/dirty Git resolution, invalid revisions, cross-contract disagreement, and build-info payload tampering are covered. Real Linux and Wine installers preserved and verified build-info after installation, booted, uninstalled owned files, and preserved external user data.",
+          "metrics": {
+            "focused_artifact_test_count": 13,
+            "release_index_schema": "heroes_like_release_index_v3",
+            "platform_manifest_schema": "heroes_like_platform_release_manifest_v2",
+            "build_info_schema": "heroes_like_build_info_v1",
+            "platform_build_info_verified_count": 2,
+            "installed_manifest_file_count_per_platform": 7,
+            "archive_file_count_per_platform": 8,
+            "local_clean_revision_resolution_passed": true,
+            "dirty_tracked_source_rejection_passed": true,
+            "invalid_revision_rejection_passed": true,
+            "index_manifest_revision_mismatch_rejection_passed": true,
+            "build_info_tamper_rejection_passed": true,
+            "isolated_installer_boots_passed": 2,
+            "user_data_preservation_cases_passed": 2,
+            "linux_installer_size_bytes": 205839706,
+            "linux_installer_sha256": "f04f256f1003076a10d612cff5288124c114f600ffbad58cbaffb7124d4852c9",
+            "windows_installer_size_bytes": 203814470,
+            "windows_installer_sha256": "4bb649d53511dda650288a38412025e77215cd707481a61382f922acb63ceb18"
+          }
+        },
+        "sliceId": "packaging-release-source-provenance-10184",
+        "status": "passed",
+        "updatedAt": "2026-08-03T08:36:19Z"
+      },
+      "completedAt": "2026-08-03T08:37:08Z"
+    },
+    {
+      "baselineChecks": [
         "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",
         "godot --headless --path . tests/unit_ability_runtime_report.tscn",
         "python3 tests/town_development_balance_report.py",
@@ -20784,8 +20875,18 @@
             "result_max_dominance_pct": 83.5,
             "rows_at_100_pct": 0,
             "structural_failures": [],
-            "week_average_rounds": [5.72, 6.33, 6.59, 7.59],
-            "week_side_bias_points": [0.07, 0.6, 3.13, 0.8],
+            "week_average_rounds": [
+              5.72,
+              6.33,
+              6.59,
+              7.59
+            ],
+            "week_side_bias_points": [
+              0.07,
+              0.6,
+              3.13,
+              0.8
+            ],
             "balance_status": "needs_tuning"
           },
           "implemented_changes": [
@@ -67828,7 +67929,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T07:20:27Z",
+  "updatedAt": "2026-08-03T08:37:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

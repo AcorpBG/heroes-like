@@ -13,11 +13,16 @@ import unittest
 import warnings
 import zipfile
 from pathlib import Path
-
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from tools import package_release as package_release_module
+
+
 PACKAGER = ROOT / "tools" / "package_release.py"
 VERSION = "9.9.9-test"
+SOURCE_REVISION = "a" * 40
 
 
 def sha256(path: Path) -> str:
@@ -58,9 +63,20 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         (windows / "aurelion_map_persistence.windows.template_release.x86_64.dll").write_bytes(pe)
 
     def _run(self, *args: str, expect_ok: bool = True) -> subprocess.CompletedProcess[str]:
+        env = os.environ.copy()
+        env["SOURCE_DATE_EPOCH"] = "315532800"
         result = subprocess.run(
-            [sys.executable, str(PACKAGER), "--output-dir", str(self.output), *args],
+            [
+                sys.executable,
+                str(PACKAGER),
+                "--output-dir",
+                str(self.output),
+                "--source-revision",
+                SOURCE_REVISION,
+                *args,
+            ],
             cwd=ROOT,
+            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -77,6 +93,7 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
             [row["platform"] for row in verification["installers"]],
             ["linux-x86_64", "windows-x86_64"],
         )
+        self.assertEqual(verification["source_revision"], SOURCE_REVISION)
 
     def _rewrite_checksums(self) -> None:
         archives = self.output / "archives"
@@ -114,6 +131,93 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
             handle.write(b"tampered")
         failure = self._run("--verify-only", expect_ok=False)
         self.assertIn("archive size mismatch", failure.stderr)
+
+    def test_build_info_is_deterministic_and_bound_to_each_platform(self) -> None:
+        self._package()
+        archives = self.output / "archives"
+        index = json.loads((archives / "release-index.json").read_text(encoding="utf-8"))
+        self.assertEqual(index["schema_id"], "heroes_like_release_index_v3")
+        self.assertEqual(index["source_revision"], SOURCE_REVISION)
+        expected_common = {
+            "schema_id": "heroes_like_build_info_v1",
+            "product_id": "heroes-like",
+            "version": VERSION,
+            "source_revision": SOURCE_REVISION,
+            "source_date_epoch": 315532800,
+        }
+
+        linux_archive = archives / f"heroes-like-{VERSION}-linux-x86_64.tar.gz"
+        with tarfile.open(linux_archive, "r:gz") as archive:
+            member = archive.extractfile(f"heroes-like-{VERSION}-linux-x86_64/build-info.json")
+            self.assertIsNotNone(member)
+            linux_info = json.loads(member.read().decode("utf-8"))
+        windows_archive = archives / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        with zipfile.ZipFile(windows_archive, "r") as archive:
+            windows_info = json.loads(
+                archive.read(f"heroes-like-{VERSION}-windows-x86_64/build-info.json").decode("utf-8")
+            )
+        self.assertEqual(linux_info, {**expected_common, "platform": "linux-x86_64"})
+        self.assertEqual(windows_info, {**expected_common, "platform": "windows-x86_64"})
+
+    def test_release_index_source_revision_disagreement_is_rejected(self) -> None:
+        self._package()
+        index_path = self.output / "archives" / "release-index.json"
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+        index["source_revision"] = "b" * 40
+        index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        failure = self._run("--verify-only", expect_ok=False)
+        self.assertIn("platform manifest source revision mismatch", failure.stderr)
+
+    def test_build_info_tampering_is_rejected_with_updated_outer_hashes(self) -> None:
+        self._package()
+        archive_path = self.output / "archives" / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        replacement_path = archive_path.with_suffix(".replacement.zip")
+        build_info_name = f"heroes-like-{VERSION}-windows-x86_64/build-info.json"
+        with zipfile.ZipFile(archive_path, "r") as source, zipfile.ZipFile(
+            replacement_path, "w"
+        ) as replacement:
+            for member in source.infolist():
+                payload = source.read(member.filename)
+                if member.filename == build_info_name:
+                    info = json.loads(payload.decode("utf-8"))
+                    info["source_revision"] = "b" * 40
+                    payload = (json.dumps(info, indent=2, sort_keys=True) + "\n").encode("utf-8")
+                replacement.writestr(member, payload)
+        replacement_path.replace(archive_path)
+        self._rewrite_checksums()
+        failure = self._run("--verify-only", expect_ok=False)
+        self.assertIn("archive payload hash mismatch for windows-x86_64/build-info.json", failure.stderr)
+
+    def test_source_revision_validation_and_dirty_local_source_rejection(self) -> None:
+        failure = self._run(
+            "--version",
+            VERSION,
+            "--skip-export",
+            "--source-revision",
+            "not-a-full-revision",
+            expect_ok=False,
+        )
+        self.assertIn("full lowercase Git object id", failure.stderr)
+
+        repo = Path(self.temp.name) / "source-repo"
+        repo.mkdir()
+        subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+        tracked = repo / "tracked.txt"
+        tracked.write_text("clean\n", encoding="utf-8")
+        subprocess.run(["git", "add", "tracked.txt"], cwd=repo, check=True)
+        subprocess.run(
+            ["git", "-c", "user.name=Package Test", "-c", "user.email=package@example.invalid", "commit", "-qm", "fixture"],
+            cwd=repo,
+            check=True,
+        )
+        expected_revision = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=repo, check=True, text=True, stdout=subprocess.PIPE
+        ).stdout.strip()
+        with mock.patch.object(package_release_module, "ROOT", repo):
+            self.assertEqual(package_release_module.resolve_source_revision(""), expected_revision)
+            tracked.write_text("dirty\n", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "tracked changes"):
+                package_release_module.resolve_source_revision("")
 
     def test_runnable_installer_tampering_is_rejected(self) -> None:
         self._package()

@@ -6,7 +6,7 @@ INSTALL_DIR=${HEROES_LIKE_INSTALL_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/hero
 BIN_DIR=${HEROES_LIKE_BIN_DIR:-$HOME/.local/bin}
 APPLICATIONS_DIR=${HEROES_LIKE_APPLICATIONS_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/applications}
 
-for name in heroes-like.x86_64 heroes-like.pck libaurelion_map_persistence.linux.template_release.x86_64.so README.txt release-manifest.json uninstall.sh; do
+for name in heroes-like.x86_64 heroes-like.pck libaurelion_map_persistence.linux.template_release.x86_64.so README.txt build-info.json release-manifest.json uninstall.sh; do
 	if [ ! -f "$SOURCE_DIR/$name" ]; then
 		echo "heroes-like installer: missing payload $name" >&2
 		exit 1
@@ -14,7 +14,7 @@ for name in heroes-like.x86_64 heroes-like.pck libaurelion_map_persistence.linux
 done
 
 mkdir -p "$INSTALL_DIR" "$BIN_DIR" "$APPLICATIONS_DIR"
-for name in heroes-like.x86_64 heroes-like.pck libaurelion_map_persistence.linux.template_release.x86_64.so README.txt release-manifest.json install.sh uninstall.sh; do
+for name in heroes-like.x86_64 heroes-like.pck libaurelion_map_persistence.linux.template_release.x86_64.so README.txt build-info.json release-manifest.json install.sh uninstall.sh; do
 	cp "$SOURCE_DIR/$name" "$INSTALL_DIR/$name"
 done
 chmod 0755 "$INSTALL_DIR/heroes-like.x86_64" "$INSTALL_DIR/install.sh" "$INSTALL_DIR/uninstall.sh"

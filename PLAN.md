@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `packaging-release-source-provenance-10184`. Release-index schema v3 now binds both platform-manifest v2 payloads to one validated full Git revision and source-date epoch, while deterministic `build-info.json` files identify each Linux/Windows build inside archives and installed programs. Local revision derivation rejects tracked worktree changes; CI may provide an exact revision explicitly. Verification rejects invalid revisions, index/manifest disagreement, and build-info tampering. Thirteen focused artifact cases plus isolated Linux and Wine install/boot/uninstall lifecycles pass with both installed provenance files verified and external user data preserved. Code signing, project-license selection, storefront publication, native Windows hardware certification, and overall release completion remain open.
 - Completed implementation slice: `combat-faction-pair-stat-tuning-followup-10184`. Reduced Stag-Knot Runner HP from 34 to 32 and maximum damage from 13 to 12, preserving Thornwake's fast reach role while lowering the unchanged all-live 100-seed matrix from 41 to 40 outliers, severity 389 to 356, rows at or above 65% from 18 to 16, and maximum dominance from 85% to 83.5%. Structural, pacing, side-bias, ability, town-development, core, parse, and repository gates pass. The matrix remains `needs_tuning`; final combat balance and overall release completion remain outside this slice.
 - Completed implementation slice: `economy-authored-rare-source-breadth-10184`. Added 42 local capturable rare exchanges across all 18 active authored scenarios, with explicit live encounter ownership on 82 guarded resource nodes. All 20 player towns and 22 enemy towns now have reachable authored wood, ore, and all-six-rare routes; weekly exchange income preserves the day-24-to-day-30 development window, and player/AI delayed-source save-resume gates pass 20/20 and 22/22. Common-only markets, generated-map support, save version 9, and Native RMG behavior remain unchanged. Overall release completion remains outside this slice.
 - Completed implementation slice: `combat-faction-pair-stat-tuning-10184`. Corrected the misplaced Thornwake `Root Brace` ownership, restored the authored Barkmantle/Pinning multipliers that predated compensation for that defect, and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%. Structural, side-bias, pacing, live battle, town-development, project-parse, and repository gates pass. The matrix remains `needs_tuning`; final faction balance, Native RMG, and overall release completion remain outside this slice.
@@ -855,6 +856,25 @@ Target shape:
 Non-goals:
 - do not claim code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, or overall release completion;
 - do not change game/runtime behavior, saves, authored content, or Native RMG.
+
+## Release Source Provenance
+
+Completed slice: `packaging-release-source-provenance-10184`.
+
+Implementation target:
+- derive one validated Git source revision for a release build, reject a dirty tracked worktree when deriving it locally, and allow CI to provide the exact revision explicitly;
+- embed deterministic `build-info.json` provenance in both Linux and Windows payloads with product, version, platform, source revision, and source-date epoch;
+- bind that provenance to the platform manifests and release index, and reject archive, manifest, index, or build-info disagreement during verification;
+- install and uninstall the provenance file with the existing per-user archives and runnable installers on both platforms.
+
+Completion evidence:
+- focused packaging tests prove reproducible source provenance plus invalid revision, dirty-source, cross-platform mismatch, and payload-tampering rejection;
+- isolated Linux and Wine installer lifecycles verify the installed provenance payload and preserve external user data;
+- release verification, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add code signing, certificate acquisition, storefront publication, update channels, or native Windows hardware certification;
+- do not choose or change the project license, synthesize third-party legal notices, change gameplay/content/save schemas, touch Native RMG, or claim overall release completion.
 
 ## Confirmed Save Slot Deletion
 

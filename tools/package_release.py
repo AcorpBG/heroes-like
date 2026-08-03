@@ -23,8 +23,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = ROOT / ".artifacts" / "release"
 DEFAULT_SOURCE_DATE_EPOCH = 315532800
 PRODUCT_ID = "heroes-like"
-SCHEMA_ID = "heroes_like_release_index_v2"
-PLATFORM_MANIFEST_SCHEMA_ID = "heroes_like_platform_release_manifest_v1"
+SCHEMA_ID = "heroes_like_release_index_v3"
+PLATFORM_MANIFEST_SCHEMA_ID = "heroes_like_platform_release_manifest_v2"
+BUILD_INFO_SCHEMA_ID = "heroes_like_build_info_v1"
 MAX_ARCHIVE_MEMBER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_ARCHIVE_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
 INSTALLER_ROOT = ROOT / "packaging" / "installers"
@@ -52,7 +53,7 @@ class PlatformSpec:
 
     @property
     def staged_names(self) -> tuple[str, ...]:
-        return (*self.required_names, "README.txt", *self.installer_names)
+        return (*self.required_names, "README.txt", "build-info.json", *self.installer_names)
 
 
 PLATFORMS = (
@@ -91,6 +92,52 @@ def safe_version(value: str) -> str:
     if not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z._+-]*", normalized):
         raise ValueError(f"invalid release version: {value!r}")
     return normalized
+
+
+def safe_source_revision(value: str) -> str:
+    normalized = value.strip()
+    if not re.fullmatch(r"(?:[0-9a-f]{40}|[0-9a-f]{64})", normalized):
+        raise ValueError("source revision must be a full lowercase Git object id")
+    return normalized
+
+
+def resolve_source_revision(explicit_revision: str) -> str:
+    if explicit_revision:
+        return safe_source_revision(explicit_revision)
+    status = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+    if status.returncode != 0:
+        raise RuntimeError(f"cannot inspect release source worktree: {status.stderr.strip()}")
+    if status.stdout.strip():
+        raise RuntimeError("release source has tracked changes; commit them or provide --source-revision from CI")
+    revision = subprocess.run(
+        ["git", "rev-parse", "--verify", "HEAD"],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+    if revision.returncode != 0:
+        raise RuntimeError(f"cannot resolve release source revision: {revision.stderr.strip()}")
+    return safe_source_revision(revision.stdout)
+
+
+def build_info(spec: PlatformSpec, version: str, source_revision: str, epoch: int) -> dict:
+    return {
+        "schema_id": BUILD_INFO_SCHEMA_ID,
+        "product_id": PRODUCT_ID,
+        "version": version,
+        "platform": spec.platform_id,
+        "source_revision": source_revision,
+        "source_date_epoch": epoch,
+    }
 
 
 def sha256(path: Path) -> str:
@@ -152,7 +199,14 @@ def release_readme(spec: PlatformSpec, version: str) -> str:
     )
 
 
-def stage_platform(spec: PlatformSpec, export_dir: Path, stage_dir: Path, version: str) -> tuple[Path, dict]:
+def stage_platform(
+    spec: PlatformSpec,
+    export_dir: Path,
+    stage_dir: Path,
+    version: str,
+    source_revision: str,
+    epoch: int,
+) -> tuple[Path, dict]:
     bundle_name = f"{PRODUCT_ID}-{version}-{spec.platform_id}"
     bundle_root = stage_dir / bundle_name
     bundle_root.mkdir(parents=True)
@@ -160,6 +214,10 @@ def stage_platform(spec: PlatformSpec, export_dir: Path, stage_dir: Path, versio
     for source in source_files:
         shutil.copy2(source, bundle_root / source.name)
     (bundle_root / "README.txt").write_text(release_readme(spec, version), encoding="utf-8", newline="\n")
+    (bundle_root / "build-info.json").write_text(
+        json.dumps(build_info(spec, version, source_revision, epoch), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     installer_dir = INSTALLER_ROOT / ("linux" if spec.platform_id.startswith("linux") else "windows")
     for installer_name in spec.installer_names:
         source = installer_dir / installer_name
@@ -172,6 +230,8 @@ def stage_platform(spec: PlatformSpec, export_dir: Path, stage_dir: Path, versio
         "product_id": PRODUCT_ID,
         "version": version,
         "platform": spec.platform_id,
+        "source_revision": source_revision,
+        "source_date_epoch": epoch,
         "files": [
             {
                 "path": path.name,
@@ -470,13 +530,23 @@ def verify_binary_header(spec: PlatformSpec, head: bytes, name: str) -> None:
         raise RuntimeError(f"Windows release payload is not x86_64 PE: {name}")
 
 
-def verified_manifest_rows(manifest: dict, spec: PlatformSpec, version: str) -> dict[str, dict]:
+def verified_manifest_rows(
+    manifest: dict,
+    spec: PlatformSpec,
+    version: str,
+    source_revision: str,
+    epoch: int,
+) -> dict[str, dict]:
     if manifest.get("schema_id") != PLATFORM_MANIFEST_SCHEMA_ID:
         raise RuntimeError(f"invalid platform manifest schema for {spec.platform_id}")
     if manifest.get("product_id") != PRODUCT_ID or manifest.get("version") != version:
         raise RuntimeError(f"platform manifest product/version mismatch for {spec.platform_id}")
     if manifest.get("platform") != spec.platform_id:
         raise RuntimeError(f"platform manifest target mismatch for {spec.platform_id}")
+    if manifest.get("source_revision") != source_revision:
+        raise RuntimeError(f"platform manifest source revision mismatch for {spec.platform_id}")
+    if manifest.get("source_date_epoch") != epoch:
+        raise RuntimeError(f"platform manifest source-date epoch mismatch for {spec.platform_id}")
     values = manifest.get("files")
     if not isinstance(values, list):
         raise RuntimeError(f"platform manifest files are invalid for {spec.platform_id}")
@@ -498,7 +568,14 @@ def verified_manifest_rows(manifest: dict, spec: PlatformSpec, version: str) -> 
     return rows
 
 
-def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str, indexed_manifest: dict) -> dict:
+def verify_platform_archive(
+    spec: PlatformSpec,
+    archive_path: Path,
+    version: str,
+    source_revision: str,
+    epoch: int,
+    indexed_manifest: dict,
+) -> dict:
     bundle_root = f"{PRODUCT_ID}-{version}-{spec.platform_id}"
     archive_summary = archive_file_summaries(spec, archive_path, bundle_root)
     archive_rows = archive_summary["files"]
@@ -516,7 +593,7 @@ def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str
         raise RuntimeError(f"invalid embedded platform manifest for {spec.platform_id}: {exc}") from exc
     if not isinstance(embedded_manifest, dict) or embedded_manifest != indexed_manifest:
         raise RuntimeError(f"embedded and indexed platform manifests differ for {spec.platform_id}")
-    manifest_rows = verified_manifest_rows(embedded_manifest, spec, version)
+    manifest_rows = verified_manifest_rows(embedded_manifest, spec, version, source_revision, epoch)
 
     for name, manifest_row in manifest_rows.items():
         archive_row = archive_rows[name]
@@ -524,6 +601,18 @@ def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str
             raise RuntimeError(f"archive payload size mismatch for {spec.platform_id}/{name}")
         if str(archive_row["sha256"]) != str(manifest_row["sha256"]):
             raise RuntimeError(f"archive payload hash mismatch for {spec.platform_id}/{name}")
+
+    build_info_head = archive_rows["build-info.json"]["head"]
+    build_info_size = int(archive_rows["build-info.json"]["size_bytes"])
+    if build_info_size > len(build_info_head):
+        raise RuntimeError("build-info.json exceeds the bounded manifest size")
+    try:
+        embedded_build_info = json.loads(bytes(build_info_head).decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"invalid embedded build info for {spec.platform_id}: {exc}") from exc
+    expected_build_info = build_info(spec, version, source_revision, epoch)
+    if embedded_build_info != expected_build_info:
+        raise RuntimeError(f"embedded build info identity mismatch for {spec.platform_id}")
 
     for name, row in archive_rows.items():
         expected_mode = normalized_mode(Path(name), spec)
@@ -536,6 +625,7 @@ def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str
         "archive": archive_path.name,
         "file_count": len(archive_rows),
         "payload_bytes": int(archive_summary["total_payload_bytes"]),
+        "source_revision": source_revision,
         "root_entry_present": bool(archive_summary["root_entry_present"]),
         "payload_verified": True,
     }
@@ -637,7 +727,9 @@ def verify_release_archives(output_dir: Path) -> dict:
     if release_index.get("product_id") != PRODUCT_ID:
         raise RuntimeError("release index product mismatch")
     version = safe_version(str(release_index.get("version", "")))
-    if not isinstance(release_index.get("source_date_epoch"), int):
+    source_revision = safe_source_revision(str(release_index.get("source_revision", "")))
+    epoch = release_index.get("source_date_epoch")
+    if not isinstance(epoch, int) or epoch < 0:
         raise RuntimeError("release index source_date_epoch is invalid")
     archive_values = release_index.get("archives")
     if not isinstance(archive_values, list) or len(archive_values) != len(PLATFORMS):
@@ -702,7 +794,9 @@ def verify_release_archives(output_dir: Path) -> dict:
         manifest = row.get("payload_manifest")
         if not isinstance(manifest, dict):
             raise RuntimeError(f"release index payload manifest is invalid for {spec.platform_id}")
-        verified_platforms.append(verify_platform_archive(spec, archive_path, version, manifest))
+        verified_platforms.append(
+            verify_platform_archive(spec, archive_path, version, source_revision, epoch, manifest)
+        )
         installer_row = indexed_installer_rows[spec.platform_id]
         installer_path = archives_dir / spec.runnable_installer_name(version)
         if not installer_path.is_file():
@@ -731,6 +825,7 @@ def verify_release_archives(output_dir: Path) -> dict:
         "schema_id": SCHEMA_ID,
         "product_id": PRODUCT_ID,
         "version": version,
+        "source_revision": source_revision,
         "archives_dir": str(archives_dir),
         "platforms": verified_platforms,
         "installers": verified_installers,
@@ -743,6 +838,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--godot", default=os.environ.get("GODOT", "godot"))
     parser.add_argument("--makensis", default=os.environ.get("MAKENSIS", shutil.which("makensis") or ""))
+    parser.add_argument(
+        "--source-revision",
+        default=os.environ.get("RELEASE_SOURCE_REVISION", ""),
+        help="Full Git object id supplied by CI; otherwise require and use a clean local HEAD.",
+    )
     parser.add_argument("--skip-export", action="store_true", help="Package existing files under <output-dir>/exports.")
     parser.add_argument("--verify-only", action="store_true", help="Verify existing final archives without exporting or packaging.")
     args = parser.parse_args()
@@ -758,12 +858,15 @@ def main() -> int:
         print(json.dumps(verify_release_archives(output_dir), sort_keys=True))
         return 0
     version = safe_version(args.version)
+    source_revision = resolve_source_revision(args.source_revision)
     exports_dir = output_dir / "exports"
     archives_dir = output_dir / "archives"
     if archives_dir.exists():
         shutil.rmtree(archives_dir)
     archives_dir.mkdir(parents=True, exist_ok=True)
     epoch = int(os.environ.get("SOURCE_DATE_EPOCH", DEFAULT_SOURCE_DATE_EPOCH))
+    if epoch < 0:
+        raise ValueError("SOURCE_DATE_EPOCH must be non-negative")
     os.environ["SOURCE_DATE_EPOCH"] = str(epoch)
 
     archive_rows = []
@@ -774,7 +877,14 @@ def main() -> int:
             export_dir = exports_dir / spec.platform_id
             if not args.skip_export:
                 export_platform(spec, export_dir, args.godot)
-            bundle_root, platform_manifest = stage_platform(spec, export_dir, stage_dir, version)
+            bundle_root, platform_manifest = stage_platform(
+                spec,
+                export_dir,
+                stage_dir,
+                version,
+                source_revision,
+                epoch,
+            )
             archive_name = f"{bundle_root.name}.{spec.archive_suffix}"
             archive_path = archives_dir / archive_name
             if archive_path.exists():
@@ -819,6 +929,7 @@ def main() -> int:
         "schema_id": SCHEMA_ID,
         "product_id": PRODUCT_ID,
         "version": version,
+        "source_revision": source_revision,
         "source_date_epoch": epoch,
         "archives": archive_rows,
         "installers": installer_rows,
