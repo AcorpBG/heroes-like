@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed placement-local Reedbarrow and Mireford guard pressure. Barrow Pickets now resolve in five rounds at 76 percent margin and 6 enemy damage per round; Reed Totemists resolve in three rounds at 74 percent and 25. The active breadth queue improves from 34/4-high to 29/0-high and its matrix gate passes.",
+  "currentNotes": "Completed Lockmarsh placement-local pressure. Road Chaplains remain exact at 70 percent margin/28 enemy damage per round; Charter Guard moves from 81/9 to 65/17 and Archive Wardens from 81/9 to 70/19. The cohort improves from 77 to 68 percent and the active queue from 29 to 26 with zero high items.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-reedbarrow-mireford-guard-pressure-10184",
-  "currentSliceId": "balance-reedbarrow-mireford-guard-pressure-10184",
-  "currentSliceNotes": "Completed both placement-local guard rosters with exact shared-army invariants. Active breadth now has zero high-priority items and its matrix gate passes.",
+  "currentSlice": "balance-lockmarsh-surge-cohort-pressure-10184",
+  "currentSliceId": "balance-lockmarsh-surge-cohort-pressure-10184",
+  "currentSliceNotes": "Completed placement-local Charter Guard and Archive Wardens pressure with exact Road and shared-army invariants. Lockmarsh's cohort watch is removed without reopening high-priority items.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Reedbarrow and Mireford Guard Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T20:59:34Z",
+  "currentSliceTitle": "Lockmarsh Surge Cohort Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T21:12:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67803,6 +67803,94 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T20:59:34Z"
+    },
+    {
+      "id": "balance-lockmarsh-surge-cohort-pressure-10184",
+      "title": "Lockmarsh Surge Cohort Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Bring Lockmarsh Surge's three-encounter terminal-margin cohort into target through placement-local Charter Guard and Archive Wardens pressure while preserving Road Chaplains and shared armies.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_lockmarsh_road_chaplains_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 29,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "e84018c6",
+        "lockmarsh_cohort_average_terminal_health_margin_pct": 77,
+        "road_chaplains_outcome_state": "victory",
+        "road_chaplains_round_reached": 2,
+        "road_chaplains_terminal_health_margin_pct": 70,
+        "road_chaplains_enemy_damage_per_round": 28,
+        "charter_guard_outcome_state": "victory",
+        "charter_guard_round_reached": 4,
+        "charter_guard_terminal_health_margin_pct": 81,
+        "charter_guard_enemy_damage_per_round": 9,
+        "archive_wardens_outcome_state": "victory",
+        "archive_wardens_round_reached": 4,
+        "archive_wardens_terminal_health_margin_pct": 81,
+        "archive_wardens_enemy_damage_per_round": 9
+      },
+      "completionCriteria": [
+        "Road Chaplains, Charter Guard, and Archive Wardens resolve deterministically as bounded player victories with meaningful enemy damage",
+        "The Lockmarsh scenario cohort averages below the 70 percent watch threshold and no high-priority queue item reopens",
+        "Road Chaplains stays exact, Charter and Archive corrections are placement-local, and all shared armies remain unchanged",
+        "Focused Lockmarsh battle, active breadth, scenario, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T21:12:30Z",
+      "startedAt": "2026-08-03T21:02:31Z",
+      "notes": "Completed local Charter Guard 7/6/2 and Archive Wardens 7/9/2 rosters while preserving Road Chaplains and all shared armies. The Lockmarsh cohort improves from 77 to 68 percent and its queue watch is removed.",
+      "result": {
+        "road_chaplains_outcome_state": "victory",
+        "road_chaplains_round_reached": 2,
+        "road_chaplains_terminal_health_margin_pct": 70,
+        "road_chaplains_enemy_damage_per_round": 28,
+        "charter_guard_outcome_state": "victory",
+        "charter_guard_round_reached": 4,
+        "charter_guard_terminal_health_margin_pct": 65,
+        "charter_guard_enemy_damage_per_round": 17,
+        "archive_wardens_outcome_state": "victory",
+        "archive_wardens_round_reached": 3,
+        "archive_wardens_terminal_health_margin_pct": 70,
+        "archive_wardens_enemy_damage_per_round": 19,
+        "lockmarsh_cohort_average_terminal_health_margin_pct_before": 77,
+        "lockmarsh_cohort_average_terminal_health_margin_pct_after": 68,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 29,
+        "active_queue_item_count_after": 26,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "8039155f",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_status_after": "pass",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_lockmarsh_road_chaplains_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: 26 unrelated medium-priority watches remain; zero high-priority items)",
+        "godot4 --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T21:12:30Z"
     }
   ],
   "project": "heroes-like",
@@ -67813,7 +67901,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 29 medium-priority authored-encounter watches plus the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 26 medium-priority authored-encounter watches plus the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68345,9 +68433,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, and Mireford guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 29 / 0 high across five completed combat slices, and its balance matrix gate passes. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 26 / 0 high across six completed combat slices, and its balance matrix gate passes. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T20:59:34Z",
+  "updatedAt": "2026-08-03T21:12:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
