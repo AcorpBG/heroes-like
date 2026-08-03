@@ -20241,6 +20241,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
     orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
     orevein_contract_scene_path = ROOT / "tests/battle_orevein_contract_balance_regression.tscn"
+    reedbarrow_mireford_report_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd"
+    reedbarrow_mireford_scene_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20651,6 +20653,29 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_orevein_contract_balance_regression.gd" in orevein_contract_scene_text,
             errors,
             "Orevein Contract balance regression scene is not wired to its script.",
+        )
+    if reedbarrow_mireford_report_path.exists():
+        reedbarrow_mireford_text = reedbarrow_mireford_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_REEDBARROW_MIREFORD_GUARD_PRESSURE_REGRESSION",
+            "barrow_pickets",
+            "mireford_reed_totemists",
+            "army_reedbarrow_barrow_pickets_watch",
+            "army_mireford_reed_totemists_watch",
+            "army_barrow_pickets",
+            "army_muckveil_harriers",
+            "ENCOUNTER_CONTRACTS",
+            "MAX_TERMINAL_MARGIN_PCT",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in reedbarrow_mireford_text, errors, f"Reedbarrow/Mireford guard pressure regression is missing token: {required_token}")
+    if reedbarrow_mireford_scene_path.exists():
+        reedbarrow_mireford_scene_text = reedbarrow_mireford_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_reedbarrow_mireford_guard_pressure_regression.gd" in reedbarrow_mireford_scene_text,
+            errors,
+            "Reedbarrow/Mireford guard pressure regression scene is not wired to its script.",
         )
     if tuning_queue_report_path.exists():
         tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")

@@ -1390,7 +1390,7 @@
         {"placement_id": "reedbarrow_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "barrow_pickets", "encounter_id": "encounter_barrow_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 5201},
+        {"placement_id": "barrow_pickets", "encounter_id": "encounter_barrow_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 5201, "enemy_army": {"id": "army_reedbarrow_barrow_pickets_watch", "name": "Reedbarrow Barrow Pickets Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 16}, {"unit_id": "unit_mire_slinger", "count": 11}]}},
         {
           "placement_id": "reedbarrow_chain",
           "encounter_id": "encounter_reedbarrow_chain",
@@ -4054,7 +4054,17 @@
           "x": 6,
           "y": 0,
           "difficulty": "medium",
-          "combat_seed": 10203
+          "combat_seed": 10203,
+          "enemy_army": {
+            "id": "army_mireford_reed_totemists_watch",
+            "name": "Mireford Reed Totemists Watch",
+            "faction_id": "faction_mireclaw",
+            "stacks": [
+              {"unit_id": "unit_mire_slinger", "count": 12},
+              {"unit_id": "unit_blackbranch_cutthroat", "count": 12},
+              {"unit_id": "unit_gorefen_ripper", "count": 3}
+            ]
+          }
         }
       ]
     },
