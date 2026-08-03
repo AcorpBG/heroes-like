@@ -33,6 +33,9 @@ func _run() -> void:
 	var enemy_engaged_case := _validate_enemy_engaged_melee_attack()
 	if not bool(enemy_engaged_case.get("ok", false)):
 		return
+	var decisive_attack_case := _validate_decisive_attack_pressure()
+	if not bool(decisive_attack_case.get("ok", false)):
+		return
 	var overkill_target_case := _validate_enemy_overkill_target_discipline()
 	if not bool(overkill_target_case.get("ok", false)):
 		return
@@ -62,6 +65,7 @@ func _run() -> void:
 		"initial_availability": initial_availability,
 		"decision": decision,
 		"enemy_engaged_melee": enemy_engaged_case,
+		"decisive_attack_pressure": decisive_attack_case,
 		"enemy_overkill_target_discipline": overkill_target_case,
 		"enemy_immediate_threat_targeting": immediate_threat_case,
 		"argument_commander_payload": commander_payload_case,
@@ -99,6 +103,54 @@ func _validate_enemy_engaged_melee_attack() -> Dictionary:
 		"defend_score": float(candidate_scores.get("defend", 0.0)),
 		"strike_score": float(candidate_scores.get("strike", 0.0)),
 		"tactical_order_action": String(tactical_order.get("action", "")),
+	}
+
+func _validate_decisive_attack_pressure() -> Dictionary:
+	var decisive_session := _decisive_attack_session(false)
+	var decisive_active := BattleRulesScript.get_active_stack(decisive_session.battle)
+	var decisive_order := BattleAiRules.choose_stack_tactical_order(decisive_session.battle, decisive_active, "enemy")
+	var decisive_scores: Dictionary = decisive_order.get("candidate_scores", {}) if decisive_order.get("candidate_scores", {}) is Dictionary else {}
+	var decisive_defend_score := float(decisive_scores.get("defend", -9999.0))
+	var decisive_strike_score := float(decisive_scores.get("strike", -9999.0))
+	var decisive_acting_ratio := BattleAiRules._side_health_ratio(decisive_session.battle, "player")
+	var decisive_target_ratio := BattleAiRules._side_health_ratio(decisive_session.battle, "enemy")
+	if String(decisive_order.get("action", "")) != "strike":
+		_fail("An engaged stack should press a close-scored strike against a critically depleted ranged side: %s" % JSON.stringify(decisive_order))
+		return {}
+	if decisive_acting_ratio < BattleAiRules.DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN or decisive_target_ratio > BattleAiRules.DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX:
+		_fail("Decisive attack fixture does not exercise the bounded side-health window: acting=%s target=%s" % [decisive_acting_ratio, decisive_target_ratio])
+		return {}
+	if decisive_strike_score >= decisive_defend_score or decisive_defend_score - decisive_strike_score > BattleAiRules.DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP:
+		_fail("Decisive attack fixture must exercise the bounded defend-score override: %s" % JSON.stringify(decisive_order))
+		return {}
+
+	var preserve_session := _decisive_attack_session(true)
+	var preserve_active := BattleRulesScript.get_active_stack(preserve_session.battle)
+	var preserve_order := BattleAiRules.choose_stack_tactical_order(preserve_session.battle, preserve_active, "enemy")
+	var preserve_scores: Dictionary = preserve_order.get("candidate_scores", {}) if preserve_order.get("candidate_scores", {}) is Dictionary else {}
+	var preserve_defend_score := float(preserve_scores.get("defend", -9999.0))
+	var preserve_strike_score := float(preserve_scores.get("strike", -9999.0))
+	var preserve_acting_ratio := BattleAiRules._side_health_ratio(preserve_session.battle, "player")
+	if String(preserve_order.get("action", "")) != "defend":
+		_fail("A materially superior defense must remain selected against a depleted side: %s" % JSON.stringify(preserve_order))
+		return {}
+	if preserve_acting_ratio < BattleAiRules.DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN:
+		_fail("Superior-defense control must remain inside the decisive acting-side health window: %s" % preserve_acting_ratio)
+		return {}
+	if preserve_defend_score - preserve_strike_score <= BattleAiRules.DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP:
+		_fail("Decisive attack control fixture does not clear the bounded override gap: %s" % JSON.stringify(preserve_order))
+		return {}
+	return {
+		"ok": true,
+		"decisive_action": String(decisive_order.get("action", "")),
+		"decisive_defend_score": decisive_defend_score,
+		"decisive_strike_score": decisive_strike_score,
+		"decisive_acting_side_health_ratio": decisive_acting_ratio,
+		"decisive_target_side_health_ratio": decisive_target_ratio,
+		"preserve_action": String(preserve_order.get("action", "")),
+		"preserve_defend_score": preserve_defend_score,
+		"preserve_strike_score": preserve_strike_score,
+		"preserve_acting_side_health_ratio": preserve_acting_ratio,
 	}
 
 func _validate_enemy_overkill_target_discipline() -> Dictionary:
@@ -592,6 +644,42 @@ func _engaged_enemy_melee_session() -> SessionStateStoreScript.SessionData:
 		"turn_index": 0,
 		"active_stack_id": "enemy_guard",
 		"selected_target_id": "player_wall",
+		"recent_events": [],
+		"retreat_allowed": true,
+		"surrender_allowed": true,
+		"player_commander_state": {},
+		"enemy_hero": {},
+		"field_objectives": [],
+	}
+	return session
+
+func _decisive_attack_session(preserve_defense: bool) -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.SessionData.new(
+		"battle-ai-decisive-attack-report",
+		"battle-ai-decisive-attack-report",
+		"hero_report",
+		1,
+		{},
+		"normal",
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	var active_health := 27
+	var active_max_damage := 1 if preserve_defense else 3
+	session.battle = {
+		"round": 5,
+		"max_rounds": 99,
+		"distance": 0,
+		"terrain": "plains",
+		"battlefield_tags": [],
+		"combat_seed": 97531,
+		"stacks": [
+			_stack("player_closer", "player", "player_closer", false, 6, 9, active_health, 1, active_max_damage, 4, 5, 0, 3, 3, ["brace"]),
+			_stack("enemy_depleted_ranged", "enemy", "enemy_depleted_ranged", true, 8, 6, 18, 1, 3, 3, 3, 8, 4, 3),
+		],
+		"turn_order": ["player_closer"],
+		"turn_index": 0,
+		"active_stack_id": "player_closer",
+		"selected_target_id": "enemy_depleted_ranged",
 		"recent_events": [],
 		"retreat_allowed": true,
 		"surrender_allowed": true,

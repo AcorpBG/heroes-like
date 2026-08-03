@@ -4,6 +4,10 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION"
 const SCENARIO_ID := "river-pass"
 const PLACEMENT_ID := "river_pass_ghoul_grove"
+const LOCAL_ARMY_ID := "army_river_pass_ghoul_grove_watch"
+const LOCAL_STACK_COUNTS := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2}
+const SHARED_ARMY_ID := "army_blackbranch_raiders"
+const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 11, "unit_mire_slinger": 6, "unit_bog_brute": 2}
 const MAX_TERMINAL_MARGIN_PCT_BY_DIFFICULTY := {
 	"normal": 75,
 	"hard": 80,
@@ -13,9 +17,18 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	ContentService.clear_cache()
 	var encounter := _encounter()
 	if encounter.is_empty():
 		_fail("River Pass is missing the Ghoul Grove encounter placement.", {})
+		return
+	var local_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+	if String(local_army.get("id", "")) != LOCAL_ARMY_ID or _stack_counts(local_army) != LOCAL_STACK_COUNTS:
+		_fail("Ghoul Grove placement-local army drifted from its bounded opening roster.", {})
+		return
+	var shared_army := ContentService.get_army_group(SHARED_ARMY_ID)
+	if String(shared_army.get("id", "")) != SHARED_ARMY_ID or _stack_counts(shared_army) != SHARED_STACK_COUNTS:
+		_fail("Shared Blackbranch Raiders changed with the placement-local Ghoul Grove correction.", {})
 		return
 	var payload := {
 		"ok": true,
@@ -66,6 +79,13 @@ func _encounter() -> Dictionary:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == PLACEMENT_ID:
 			return encounter
 	return {}
+
+func _stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack in army.get("stacks", []):
+		if stack is Dictionary:
+			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
+	return counts
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false
