@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Veilmourn Obituary Scribes' missing live morale-pressure role. Final Notice is a bounded one-use battle effect and the unchanged matrix improved to 37 outliers / 304 severity; overall game completion remains open.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "combat-veilmourn-obituary-pressure-10184",
-  "currentSliceId": "combat-veilmourn-obituary-pressure-10184",
-  "currentSliceNotes": "Completed. Final Notice applies one readable one-round cohesion/retaliation mark per battle, uses stronger pressure against veteran Brace, persists tier/use state through battle normalization, and matches live BattleRules, Battle AI, and the fast benchmark. The unchanged all-live matrix improved from 38 to 37 outliers and 336 to 304 severity; final balance and overall release completion remain open.",
+  "currentNotes": "Completed the nested hero-action signature runtime correction and canonical terrain visual regression gate. River Pass, Ninefold, cache, full-route, core, parse, repository, JSON, and diff validation pass; overall game completion remains open.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "terrain-taxonomy-visual-regression-gate-10184",
+  "currentSliceId": "terrain-taxonomy-visual-regression-gate-10184",
+  "currentSliceNotes": "Completed. Canonical authored terrain boundaries and controlled legacy degradation coverage pass, and stale River Pass expectations now match shipped content and full-route behavior without changing runtime renderer or map behavior.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Obituary Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T14:05:41Z",
+  "currentSliceTitle": "Canonical Terrain Visual Regression Gate",
+  "currentSliceUpdatedAt": "2026-08-03T15:18:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67013,6 +67013,115 @@
       },
       "notes": "Completed. Obituary Scribes now own a readable once-per-battle Final Notice mark with one-round cohesion and retaliation pressure, stronger veteran-Brace pressure, spent-state feedback, normalized tier/use state, AI valuation, and fast-benchmark parity. The unchanged full matrix improves every primary severity measure while retaining explicit needs_tuning status.",
       "completedAt": "2026-08-03T14:05:41Z"
+    },
+    {
+      "id": "terrain-taxonomy-visual-regression-gate-10184",
+      "title": "Canonical Terrain Visual Regression Gate",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "validation_and_adoption_gate",
+      "purpose": "Repair stale authored visual smoke coordinates left by the canonical terrain-taxonomy migration without changing renderer or generated-map behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "tests/overworld_visual_smoke.gd",
+        "tests/ninefold_scenario_smoke.gd"
+      ],
+      "baseline": {
+        "overworld_visual_smoke": "fails at removed River Pass forest cell 1,1 now occupied by the Riverwatch Hold grass footprint",
+        "ninefold_scenario_smoke": "fails at removed grass/plains boundary 23,23 after canonical terrain taxonomy migration",
+        "runtime_renderer_change_required": false,
+        "native_rmg_change_required": false
+      },
+      "completionCriteria": [
+        "River Pass legacy forest degradation coverage uses controlled input instead of obsolete authored terrain",
+        "Ninefold transition assertions use canonical authored terrain boundaries and retain exact renderer metadata checks",
+        "Focused visual suites, project parse, repository validation, JSON validation, and diff checks pass"
+      ],
+      "nonGoals": [
+        "terrain renderer, authored map, Native RMG, or recovered H3MapEd behavior changes",
+        "implementation-progress or overall-release-completion claims"
+      ],
+      "startedAt": "2026-08-03T14:20:47Z",
+      "updatedAt": "2026-08-03T15:18:13Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/overworld_visual_smoke.tscn",
+          "godot4 --headless --path . tests/ninefold_scenario_smoke.tscn",
+          "godot4 --headless --path . tests/overworld_full_route_movement_regression.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --path . --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "overworld_visual_smoke_passed": true,
+        "ninefold_scenario_smoke_passed": true,
+        "full_route_movement_regression_passed": true,
+        "core_systems_passed": true,
+        "project_parse_passed": true,
+        "repository_validation_passed": true,
+        "runtime_renderer_changed": false,
+        "authored_maps_changed": false,
+        "native_rmg_changed": false
+      },
+      "notes": "Completed. River Pass uses a controlled legacy forest fixture and canonical terrain aliases; Ninefold asserts current authored grass/dirt, dirt/sand, and water/land boundaries with exact renderer metadata. Stale River Pass assertions now follow current persistent-site, encounter, artifact-set, Waystride, full-route, and remote-town behavior. Runtime renderer, authored maps, and Native RMG remain unchanged.",
+      "completedAt": "2026-08-03T15:18:13Z"
+    },
+    {
+      "id": "overworld-hero-action-signature-reliability-10184",
+      "title": "Overworld Hero Action Signature Reliability",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Allow the live overworld hero-action cache signature to preserve nested pending specialty choice records without Godot 4.6 String-constructor crashes.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd"
+      ],
+      "baseline": {
+        "runtime_error": "Invalid call. Nonexistent String constructor.",
+        "failing_function": "OverworldShell._hero_actions_string_array",
+        "failing_field": "pending_specialty_choices",
+        "existing_cache_reuse_cases": 3
+      },
+      "completionCriteria": [
+        "Nested pending specialty choice dictionaries serialize structurally into the hero-action cache signature without script errors",
+        "Unchanged selection still reuses cached actions and active-hero, roster, and pending-choice changes still invalidate them",
+        "Focused cache, overworld specialty flow, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "progression, action-surface, save, renderer, or Native RMG redesign",
+        "broad performance, accessibility, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-03T14:39:58Z",
+      "updatedAt": "2026-08-03T14:44:09Z",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/overworld_hero_actions_refresh_cache_regression.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --path . --quit",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "focused_cache_regression_passed": true,
+        "core_systems_passed": true,
+        "project_parse_passed": true,
+        "nested_specialty_cache_misses": 1,
+        "unchanged_selection_cache_hits": 1,
+        "unchanged_selection_cache_misses": 0
+      },
+      "notes": "Completed. Hero-action cache signatures preserve nested plain-data arrays structurally, so real pending-specialty dictionaries no longer trigger the Godot 4.6 String-constructor error. Existing route reuse plus active-hero and roster invalidation remain intact, and pending-choice changes invalidate the cache and expose the live specialty action.",
+      "completedAt": "2026-08-03T14:44:09Z"
     }
   ],
   "project": "heroes-like",
@@ -67557,7 +67666,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T14:05:41Z",
+  "updatedAt": "2026-08-03T15:18:13Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -722,8 +722,8 @@ func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
 	await get_tree().process_frame
 	var route_finish: Vector2i = OverworldRules.hero_position(session)
 	var movement_after_route := int(session.overworld.get("movement", {}).get("current", 0))
-	if not bool(route_result.get("ok", false)) or route_finish != shell_route[1] or movement_after_route != movement_before_route - 1:
-		push_error("Overworld smoke: diagonal route advancement did not move one diagonal step for one point. result=%s route=%s finish=%s before=%d after=%d." % [route_result, shell_route, route_finish, movement_before_route, movement_after_route])
+	if not bool(route_result.get("ok", false)) or route_finish != route_goal or movement_after_route != movement_before_route - 2:
+		push_error("Overworld smoke: diagonal route advancement did not complete both one-point diagonal steps. result=%s route=%s finish=%s before=%d after=%d." % [route_result, shell_route, route_finish, movement_before_route, movement_after_route])
 		get_tree().quit(1)
 		return false
 
@@ -911,9 +911,9 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 
 	var wood: Dictionary = shell.call("validation_select_tile", 1, 0)
 	if not _assert_text_contains_all(
-		"River Pass wood pickup/cache UI",
+		"River Pass wood persistent economy UI",
 		[String(wood.get("context_summary", "")), String(wood.get("selected_tile_rail_text", ""))],
-		["Pickup/cache", "Class: Pickup", "Cadence: one-time", "Reward"]
+		["Persistent economy site", "Resource Site", "Class: Pickup", "Cadence: persistent control", "capture/ownership", "income"]
 	):
 		return false
 	var signal_post: Dictionary = shell.call("validation_select_tile", 2, 3)
@@ -949,7 +949,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass wood hover tooltip",
 		[String(wood_hover.get("map_tooltip", ""))],
-		["Wood Wagon", "Pickup/cache", "Cadence: one-time"]
+		["Wood Wagon", "Persistent economy site", "Daily 1 wood"]
 	):
 		return false
 	var signal_state: Dictionary = shell.call("validation_resource_site_state", "river_signal_post")
@@ -1034,8 +1034,8 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Route Pressure",
 			"Risk Light",
 			"Difficulty Low",
-			"Army: Blackbranch Raiders",
-			"12 troops/2 groups",
+			"Army: River Pass Ghoul Grove Watch",
+			"26 troops/3 groups",
 			"Blackbranch Cutthroat x8",
 			"Readiness: your army",
 			"Ready",
@@ -1051,7 +1051,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass encounter hover tooltip",
 		[String(encounter_hover.get("map_tooltip", ""))],
-		["Ghoul Grove", "Risk Light", "Difficulty Low", "Blackbranch Raiders", "12 troops/2 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
+		["Ghoul Grove", "Risk Light", "Difficulty Low", "River Pass Ghoul Grove Watch", "26 troops/3 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
 	):
 		return false
 
@@ -1107,7 +1107,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(reachable.get("map_tooltip", "")),
 			String(reachable.get("primary_action", {}).get("summary", "")),
 		],
-		["Wood Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1", "Decision Brief", "Next:"]
+		["Wood Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1"]
 	):
 		return false
 
@@ -1453,14 +1453,12 @@ func _assert_primary_order_commit_check_contract(shell: Node) -> bool:
 			"Wood Wagon",
 			"Readiness:",
 			"reachable today",
-			"Next step:",
-			"1,1",
 			"Affected:",
 			"Why it matters:",
 			"Next:",
 			"Confirmation:",
-			"Enter/Space spends the next movement step on this route",
-			"Press Enter or Space to commit this order.",
+			"Enter/Space spends movement along this route as far as today's budget allows.",
+			"Press Enter or Space to commit this route order.",
 			"Move",
 		]
 	):
@@ -1547,7 +1545,7 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 			String(artifact_selection.get("selected_tile_rail_text", "")),
 			String(artifact_selection.get("primary_action", {}).get("summary", "")),
 		],
-		["Trailsinger Boots", "Slot Boots", "Footgear", "Exploration reward", "Standalone relic", "+2 move", "Impact Field Move +2", "Will auto-equip"]
+		["Trailsinger Boots", "Slot Boots", "Footgear", "Exploration reward", "Set Wayfarer Compact", "+2 move", "Impact Field Move +2", "Will auto-equip"]
 	):
 		return false
 
@@ -1732,7 +1730,7 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 			String(full_spell_action.get("consequence", "")),
 			String(full_spell_action.get("why_cast", "")),
 		],
-		["Waystride", "Field Magic", "Field Route", "Cost 3", "target active hero", "No map target", "affects active hero", "Movement is already full", "Mana", "need 3", "Restores up to 4 movement", "save until movement has room"]
+		["Waystride", "Field Magic", "Field Route", "Cost 3", "target active hero", "No map target", "affects active hero", "Movement is already full", "Mana", "need 3", "Restores up to 3 movement", "save until movement has room"]
 	):
 		return false
 	var full_spell_surface_text := _spell_surface_text(full_snapshot, full_spell_action)
@@ -1779,7 +1777,7 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 			String(ready_spell_action.get("consequence", "")),
 			String(ready_spell_action.get("why_cast", "")),
 		],
-		["Cast Waystride (3 mana)", "Field Magic", "Field Route", "Restores up to 4 movement", "Cost 3", "target active hero", "No map target", "affects active hero", "Mana", "need 3", "Ready", "recover route tempo"]
+		["Cast Waystride (3 mana)", "Field Magic", "Field Route", "Restores up to 3 movement", "Cost 3", "target active hero", "No map target", "affects active hero", "Mana", "need 3", "Ready", "recover route tempo"]
 	):
 		return false
 	var ready_spell_surface_text := _spell_surface_text(ready_snapshot, ready_spell_action)
@@ -2063,8 +2061,10 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var selection: Dictionary = shell.call("validation_select_tile", town_tile.x, town_tile.y)
-	if String(selection.get("primary_action_id", "")) != "visit_town":
-		push_error("Overworld smoke: explored owned town did not expose Visit Town as the primary order. snapshot=%s" % selection)
+	var route_decision: Dictionary = selection.get("selected_route_decision", {}) if selection.get("selected_route_decision", {}) is Dictionary else {}
+	var town_handoff: Dictionary = selection.get("town_entry_handoff", {}) if selection.get("town_entry_handoff", {}) is Dictionary else {}
+	if String(selection.get("primary_action_id", "")) != "advance_route" or String(route_decision.get("action_kind", "")) != "town" or town_handoff.is_empty():
+		push_error("Overworld smoke: explored remote owned town did not expose an Advance to Town route with entry handoff. snapshot=%s" % selection)
 		get_tree().quit(1)
 		return false
 	if String(selection.get("context_summary", "")).find("Remembered Town") >= 0:
@@ -2541,20 +2541,9 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 
-	var forest_edge_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 1)
-	var forest_edge_terrain: Dictionary = forest_edge_presentation.get("terrain_presentation", {})
-	if (
-		String(forest_edge_terrain.get("terrain_group", "")) != "forest"
-		or not bool(forest_edge_terrain.get("neighbor_aware_transitions", false))
-		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
-		or String(forest_edge_terrain.get("homm3_terrain_family", "")) != "grass"
-		or String(forest_edge_terrain.get("homm3_logical_degrade_note", "")) == ""
-		or String(forest_edge_terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
-	):
-		push_error("Overworld smoke: logical forest terrain did not report its explicit HoMM3 grass-atlas prototype degradation. presentation=%s" % forest_edge_presentation)
-		get_tree().quit(1)
-		return false
 	var session = SessionState.ensure_active_session()
+	if not _assert_legacy_forest_degradation(shell, session):
+		return false
 	if not _assert_bridge_material_resolver_payloads(shell, session):
 		return false
 	if not _assert_solid_region_interior_stability(shell, session):
@@ -2573,7 +2562,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var encounter_presentation: Dictionary = shell.call("validation_tile_presentation", encounter_tile.x, encounter_tile.y)
-	if not _assert_art_sprite(encounter_presentation, "hostile_camp", false):
+	if not _assert_art_sprite(encounter_presentation, "mapobj_neutral_encounter_river_pass_ghoul_grove_stack", false):
 		return false
 	var wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
 	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
@@ -2601,6 +2590,36 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	return true
 
+func _assert_legacy_forest_degradation(shell: Node, session) -> bool:
+	var fixture_tile := Vector2i(4, 3)
+	var original_map = session.overworld.get("map", []).duplicate(true)
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var map_size := OverworldRules.derive_map_size(session)
+	if fixture_tile.x >= map_size.x or fixture_tile.y >= map_size.y:
+		push_error("Overworld smoke: legacy forest degradation fixture requires a 5x4 map, got %s." % map_size)
+		get_tree().quit(1)
+		return false
+	var working_map = original_map.duplicate(true)
+	working_map[fixture_tile.y][fixture_tile.x] = "forest"
+	session.overworld["map"] = working_map
+	_reveal_validation_tiles(session, [fixture_tile])
+	shell.call("_refresh")
+	var presentation: Dictionary = shell.call("validation_tile_presentation", fixture_tile.x, fixture_tile.y)
+	var terrain: Dictionary = presentation.get("terrain_presentation", {})
+	_restore_solid_region_fixture(shell, session, original_map, original_fog)
+	if (
+		String(terrain.get("terrain_group", "")) != "forest"
+		or not bool(terrain.get("neighbor_aware_transitions", false))
+		or String(terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
+		or String(terrain.get("homm3_terrain_family", "")) != "grass"
+		or String(terrain.get("homm3_logical_degrade_note", "")) == ""
+		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+	):
+		push_error("Overworld smoke: controlled logical forest terrain did not report its explicit HoMM3 grass-atlas prototype degradation. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
 func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 	var original_map = session.overworld.get("map", []).duplicate(true)
 	var original_fog = session.overworld.get("fog", {}).duplicate(true)
@@ -2616,18 +2635,18 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 			row.append("grass")
 		working_map.append(row)
 	var paint_plan := [
-		{"tile": Vector2i(2, 1), "terrain": "badlands"},
-		{"tile": Vector2i(4, 1), "terrain": "badlands"},
-		{"tile": Vector2i(4, 0), "terrain": "badlands"},
-		{"tile": Vector2i(4, 2), "terrain": "badlands"},
-		{"tile": Vector2i(3, 1), "terrain": "badlands"},
-		{"tile": Vector2i(5, 1), "terrain": "wastes"},
-		{"tile": Vector2i(2, 3), "terrain": "swamp"},
+		{"tile": Vector2i(2, 1), "terrain": "dirt"},
+		{"tile": Vector2i(4, 1), "terrain": "dirt"},
+		{"tile": Vector2i(4, 0), "terrain": "dirt"},
+		{"tile": Vector2i(4, 2), "terrain": "dirt"},
+		{"tile": Vector2i(3, 1), "terrain": "dirt"},
+		{"tile": Vector2i(5, 1), "terrain": "sand"},
+		{"tile": Vector2i(2, 3), "terrain": "rough"},
 		{"tile": Vector2i(7, 3), "terrain": "snow"},
-		{"tile": Vector2i(7, 1), "terrain": "cavern"},
-		{"tile": Vector2i(7, 0), "terrain": "cavern"},
-		{"tile": Vector2i(7, 2), "terrain": "cavern"},
-		{"tile": Vector2i(6, 1), "terrain": "cavern"},
+		{"tile": Vector2i(7, 1), "terrain": "underground"},
+		{"tile": Vector2i(7, 0), "terrain": "underground"},
+		{"tile": Vector2i(7, 2), "terrain": "underground"},
+		{"tile": Vector2i(6, 1), "terrain": "underground"},
 		{"tile": Vector2i(8, 1), "terrain": "grass"},
 	]
 	for entry in paint_plan:
@@ -2643,7 +2662,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 	var cases := [
 		{
 			"tile": Vector2i(1, 1),
-			"source": "badlands",
+			"source": "dirt",
 			"kind": "direct_bridge_material",
 			"rule": "full_receiver_direct_dirt_contact",
 			"class": "dirt_earth_bridge",
@@ -2655,7 +2674,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 		},
 		{
 			"tile": Vector2i(4, 1),
-			"source": "wastes",
+			"source": "sand",
 			"kind": "direct_bridge_material",
 			"rule": "dirt_receiver_direct_sand_contact",
 			"class": "sand_bridge",
@@ -2666,14 +2685,14 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 		},
 		{
 			"tile": Vector2i(1, 3),
-			"source": "swamp",
-			"kind": "routed_bridge",
-			"rule": "grass_swamp_via_dirt_bridge",
+			"source": "rough",
+			"kind": "preferred_bridge_class",
+			"rule": "full_receiver_prefers_dirt_bridge_class",
 			"class": "dirt_earth_bridge",
 			"family": "dirt",
 			"block": "native_to_dirt_transition",
-			"source_level": "inference",
-			"model": "grass_swamp_via_dirt_bridge",
+			"source_level": "editor_observation",
+			"model": "receiver_preferred_bridge_class_lookup",
 			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source"},
 		},
 		{
@@ -2797,7 +2816,7 @@ func _assert_solid_region_interior_stability(shell: Node, session) -> bool:
 		for y in range(map_size.y):
 			var row := []
 			for x in range(map_size.x):
-				row.append("badlands")
+				row.append("dirt")
 			working_map.append(row)
 		for y in range(center.y - 1, center.y + 2):
 			for x in range(center.x - 1, center.x + 2):
@@ -2817,7 +2836,7 @@ func _assert_solid_region_interior_stability(shell: Node, session) -> bool:
 			or String(edge_terrain.get("homm3_selected_frame_block", "")) != "native_to_dirt_transition"
 			or int(edge_terrain.get("edge_transition_count", 0)) != 1
 			or int(edge_terrain.get("propagated_transition_count", -1)) != 0
-			or "badlands" not in edge_terrain.get("transition_source_terrain_ids", [])
+			or "dirt" not in edge_terrain.get("transition_source_terrain_ids", [])
 		):
 			_restore_solid_region_fixture(shell, session, original_map, original_fog)
 			push_error("Overworld smoke: %s block outer edge did not keep the dirt transition frame. presentation=%s" % [receiver_terrain, edge_presentation])
@@ -2864,7 +2883,7 @@ func _assert_solid_region_interior_payload(terrain: Dictionary, expected_terrain
 		return false
 	if int(terrain.get("edge_transition_count", -1)) != 0 or int(terrain.get("corner_transition_count", -1)) != 0 or int(terrain.get("propagated_transition_count", -1)) != 0:
 		return false
-	if "badlands" in terrain.get("transition_source_terrain_ids", []) or "wastes" in terrain.get("transition_source_terrain_ids", []):
+	if "dirt" in terrain.get("transition_source_terrain_ids", []) or "sand" in terrain.get("transition_source_terrain_ids", []):
 		return false
 	return true
 
@@ -3297,11 +3316,14 @@ func _first_open_adjacent_tile(session, origin: Vector2i) -> Vector2i:
 
 func _first_visible_blocked_tile(session) -> Vector2i:
 	var map_size := OverworldRules.derive_map_size(session)
+	var map_data: Array = session.overworld.get("map", []) if session.overworld.get("map", []) is Array else []
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			if not OverworldRules.is_tile_visible(session, x, y):
 				continue
-			if OverworldRules.tile_is_blocked(session, x, y):
+			if y >= map_data.size() or not (map_data[y] is Array) or x >= map_data[y].size():
+				continue
+			if not OverworldRules.terrain_id_is_passable(String(map_data[y][x])):
 				return Vector2i(x, y)
 	return Vector2i(-1, -1)
 

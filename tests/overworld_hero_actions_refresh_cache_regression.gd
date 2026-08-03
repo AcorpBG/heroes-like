@@ -60,12 +60,27 @@ func _run() -> void:
 		_fail("Roster membership/order change did not reach hero action surfaces.", roster_snapshot)
 		return
 
+	shell.call("validation_reset_profile", true)
+	_set_active_pending_specialty_choices(session, [
+		{"level": 2, "options": ["spellwright", "drillmaster", "borderwarden"]},
+	])
+	shell.call("_refresh")
+	var specialty_profile: Dictionary = shell.call("validation_profile_snapshot")
+	var specialty_snapshot: Dictionary = shell.call("validation_snapshot")
+	if int(specialty_profile.get("hero_actions_cache_misses", 0)) <= 0:
+		_fail("Nested pending specialty choices did not invalidate cached hero actions.", specialty_profile)
+		return
+	if not _action_present(specialty_snapshot.get("specialty_actions", []), "choose_specialty:spellwright"):
+		_fail("Nested pending specialty choices did not reach the live specialty action surface.", specialty_snapshot)
+		return
+
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"selection_cache_hits": int(selection_profile.get("hero_actions_cache_hits", 0)),
 		"selection_cache_misses": int(selection_profile.get("hero_actions_cache_misses", 0)),
 		"active_switch_cache_misses": int(switch_profile.get("hero_actions_cache_misses", 0)),
 		"roster_cache_misses": int(roster_profile.get("hero_actions_cache_misses", 0)),
+		"nested_specialty_cache_misses": int(specialty_profile.get("hero_actions_cache_misses", 0)),
 		"hero_action_count_after_roster": _hero_action_count(roster_snapshot),
 	})])
 	shell.queue_free()
@@ -213,6 +228,24 @@ func _set_active_hero_movement(session, movement_points: int) -> void:
 			break
 	session.overworld["player_heroes"] = heroes
 
+func _set_active_pending_specialty_choices(session, choices: Array) -> void:
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	hero["level"] = 2
+	hero["pending_specialty_choices"] = choices.duplicate(true)
+	session.overworld["hero"] = hero
+	var active_hero_id := String(session.overworld.get("active_hero_id", hero.get("id", "")))
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		if not (heroes[index] is Dictionary):
+			continue
+		var entry: Dictionary = heroes[index]
+		if String(entry.get("id", "")) == active_hero_id:
+			entry["level"] = 2
+			entry["pending_specialty_choices"] = choices.duplicate(true)
+			heroes[index] = entry
+			break
+	session.overworld["player_heroes"] = heroes
+
 func _hero_action_count(snapshot: Dictionary) -> int:
 	var surfaces: Array = snapshot.get("hero_action_surfaces", []) if snapshot.get("hero_action_surfaces", []) is Array else []
 	return surfaces.size()
@@ -229,6 +262,14 @@ func _hero_action_disabled_for(snapshot: Dictionary, hero_id: String) -> bool:
 	for surface in _hero_action_surfaces(snapshot):
 		if String(surface.get("text", "")).contains(hero_name):
 			return bool(surface.get("disabled", false))
+	return false
+
+func _action_present(actions: Variant, action_id: String) -> bool:
+	if not (actions is Array):
+		return false
+	for action_value in actions:
+		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
+			return true
 	return false
 
 func _hero_action_surfaces(snapshot: Dictionary) -> Array:

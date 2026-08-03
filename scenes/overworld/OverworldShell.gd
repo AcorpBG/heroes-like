@@ -2004,16 +2004,16 @@ func _hero_actions_hero_signature(hero: Dictionary, index: int) -> Dictionary:
 		"level": int(hero.get("level", 1)),
 		"experience": int(hero.get("experience", 0)),
 		"next_level_experience": int(hero.get("next_level_experience", 0)),
-		"specialties": _hero_actions_string_array(hero.get("specialties", [])),
-		"pending_specialty_choices": _hero_actions_string_array(hero.get("pending_specialty_choices", [])),
-		"specialty_focus_ids": _hero_actions_string_array(hero.get("specialty_focus_ids", [])),
+		"specialties": _hero_actions_array_signature(hero.get("specialties", [])),
+		"pending_specialty_choices": _hero_actions_array_signature(hero.get("pending_specialty_choices", [])),
+		"specialty_focus_ids": _hero_actions_array_signature(hero.get("specialty_focus_ids", [])),
 		"base_movement": int(hero.get("base_movement", 0)),
 		"base_scouting_radius": int(hero.get("base_scouting_radius", 0)),
 		"mana": _hero_actions_mana_signature(mana),
 		"army": _hero_actions_army_signature(hero.get("army", {})),
 		"command": _hero_actions_command_signature(hero.get("command", {})),
 		"artifacts": var_to_str(hero.get("artifacts", {})),
-		"artifact_ids": _hero_actions_string_array(hero.get("artifact_ids", [])),
+		"artifact_ids": _hero_actions_array_signature(hero.get("artifact_ids", [])),
 	}
 
 func _hero_actions_position_signature(value: Variant) -> Dictionary:
@@ -2064,13 +2064,8 @@ func _hero_actions_command_signature(value: Variant) -> Dictionary:
 		}
 	return {"attack": 0, "defense": 0, "power": 0, "knowledge": 0}
 
-func _hero_actions_string_array(value: Variant) -> Array:
-	var items := []
-	if not (value is Array):
-		return items
-	for item in value:
-		items.append(String(item))
-	return items
+func _hero_actions_array_signature(value: Variant) -> Array:
+	return value.duplicate(true) if value is Array else []
 
 func _command_check_surface() -> Dictionary:
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
