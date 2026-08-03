@@ -21146,6 +21146,11 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "uninstall.sh",
             "install.cmd",
             "uninstall.cmd",
+            "create_linux_runnable_installer",
+            "create_windows_nsis_installer",
+            "verify_installer_artifact",
+            "source_archive_sha256",
+            "SHA256SUMS installer hash mismatch",
         ):
             ensure(required_token in tool_text, errors, f"Release packager verification is missing required token: {required_token}")
 
@@ -21153,6 +21158,9 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         test_text = PACKAGE_RELEASE_VERIFICATION_TEST_PATH.read_text(encoding="utf-8")
         for required_token in (
             "test_generated_archives_verify_and_tampering_is_rejected",
+            "test_runnable_installer_tampering_is_rejected",
+            "test_linux_embedded_archive_tampering_is_rejected_with_updated_outer_hash",
+            "test_runnable_installers_are_reproducible",
             "test_path_traversal_is_rejected_even_with_updated_outer_hashes",
             "test_link_member_is_rejected_even_with_updated_outer_hashes",
             "test_duplicate_member_is_rejected_even_with_updated_outer_hashes",
@@ -21166,10 +21174,12 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         smoke_text = PACKAGE_INSTALLER_SMOKE_PATH.read_text(encoding="utf-8")
         for required_token in (
             "PACKAGING_USER_LOCAL_INSTALLER_SMOKE",
-            "packaging_user_local_installer_smoke_v1",
+            "packaging_user_local_installer_smoke_v2",
             "linux_lifecycle",
             "windows_lifecycle",
             "user_data_preserved",
+            "linux-x86_64.run",
+            "windows-x86_64.setup.exe",
             "Boot.scn",
             "MainMenu.scn",
             "clean native Windows hardware certification",

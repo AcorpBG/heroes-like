@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import shutil
 import subprocess
 import sys
-import tarfile
-import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -21,7 +20,7 @@ ARTIFACT_DIR = Path(
 ).resolve()
 REPORT_PATH = ARTIFACT_DIR / "report.json"
 REPORT_ID = "PACKAGING_USER_LOCAL_INSTALLER_SMOKE"
-SCHEMA_ID = "packaging_user_local_installer_smoke_v1"
+SCHEMA_ID = "packaging_user_local_installer_smoke_v2"
 VERSION = "0.1.0-alpha.1-installer-smoke"
 PACKAGER = ROOT / "tools" / "package_release.py"
 WINE = os.environ.get("WINE", shutil.which("wine") or "")
@@ -104,7 +103,37 @@ def wine_path(path: Path) -> str:
     return "Z:" + str(path.resolve()).replace("/", "\\")
 
 
-def linux_lifecycle(bundle: Path) -> dict:
+def verify_installed_payload(install_dir: Path) -> dict:
+    manifest_path = install_dir / "release-manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return {"ok": False, "error": str(exc), "verified_file_count": 0}
+    rows = manifest.get("files")
+    if not isinstance(rows, list):
+        return {"ok": False, "error": "release manifest has no file rows", "verified_file_count": 0}
+    errors: list[str] = []
+    verified = 0
+    for row in rows:
+        name = str(row.get("path", "")) if isinstance(row, dict) else ""
+        path = install_dir / name
+        if not name or Path(name).name != name or not path.is_file():
+            errors.append(f"missing or unsafe payload path: {name!r}")
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if path.stat().st_size != int(row.get("size_bytes", -1)) or digest != str(row.get("sha256", "")):
+            errors.append(f"payload identity mismatch: {name}")
+            continue
+        verified += 1
+    return {
+        "ok": not errors and verified == len(rows),
+        "expected_file_count": len(rows),
+        "verified_file_count": verified,
+        "errors": errors,
+    }
+
+
+def linux_lifecycle(installer: Path) -> dict:
     root = ARTIFACT_DIR / "linux-installed"
     install_dir = root / "program"
     bin_dir = root / "bin"
@@ -117,9 +146,10 @@ def linux_lifecycle(bundle: Path) -> dict:
         "HEROES_LIKE_BIN_DIR": str(bin_dir),
         "HEROES_LIKE_APPLICATIONS_DIR": str(applications_dir),
     }
-    install = run(["sh", str(bundle / "install.sh")], env=env, timeout=60)
+    install = run([str(installer)], env=env, timeout=120)
     launcher = bin_dir / "heroes-like"
     payload_installed = (install_dir / "heroes-like.x86_64").is_file()
+    payload_verification = verify_installed_payload(install_dir)
     launcher_created = launcher.is_file()
     desktop_entry_created = (applications_dir / "heroes-like.desktop").is_file()
     boot = run(
@@ -132,42 +162,42 @@ def linux_lifecycle(bundle: Path) -> dict:
         "output": "installer failed",
         "output_tail": ["installer failed"],
     }
-    uninstall = run(["sh", str(bundle / "uninstall.sh")], env=env, timeout=60)
+    uninstall = run(["sh", str(install_dir / "uninstall.sh")], env=env, timeout=60)
     return {
         "install": install,
         "boot": boot,
         "uninstall": uninstall,
         "payload_installed_before_uninstall": payload_installed,
+        "payload_verification": payload_verification,
         "launcher_created_before_uninstall": launcher_created,
         "desktop_entry_created_before_uninstall": desktop_entry_created,
         "program_removed": not install_dir.exists(),
         "launcher_removed": not launcher.exists(),
         "desktop_entry_removed": not (applications_dir / "heroes-like.desktop").exists(),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-linux",
-        "ok": command_ok(install) and payload_installed and launcher_created and desktop_entry_created
+        "ok": command_ok(install) and payload_installed and payload_verification["ok"] and launcher_created and desktop_entry_created
             and command_ok(boot, reject_fatal=True) and command_ok(uninstall)
             and not install_dir.exists() and not launcher.exists() and user_data.is_file(),
     }
 
 
-def windows_lifecycle(bundle: Path) -> dict:
+def windows_lifecycle(installer: Path) -> dict:
     if not WINE:
         return {"ok": False, "error": "wine executable not found"}
     prefix = ARTIFACT_DIR / "wine-prefix"
     if prefix.exists():
         shutil.rmtree(prefix)
     install_dir = prefix / "drive_c" / "HeroesLikeInstall"
-    start_menu_dir = prefix / "drive_c" / "HeroesLikeMenu"
     user_data = prefix / "drive_c" / "users" / "root" / "AppData" / "Roaming" / "Godot" / "app_userdata" / "Heroes Like" / "save.json"
     env = {
         "WINEPREFIX": str(prefix),
         "WINEARCH": "win64",
         "WINEDEBUG": "-all",
         "WINEDLLOVERRIDES": "dinput8=",
-        "HEROES_LIKE_INSTALL_DIR": "C:\\HeroesLikeInstall",
-        "HEROES_LIKE_START_MENU_DIR": "C:\\HeroesLikeMenu",
     }
-    install = run([WINE, "cmd", "/c", wine_path(bundle / "install.cmd")], env=env, timeout=180)
+    install = run([WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240)
+    payload_verification = verify_installed_payload(install_dir)
+    start_menu_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
     user_data.parent.mkdir(parents=True, exist_ok=True)
     user_data.write_text("preserve-windows", encoding="utf-8")
     boot_env = dict(env)
@@ -188,7 +218,7 @@ def windows_lifecycle(bundle: Path) -> dict:
         env=boot_env,
         timeout=180,
     ) if command_ok(install) and (install_dir / "heroes-like.exe").is_file() else {"returncode": None, "output": "installer failed", "fatal_matches": []}
-    uninstall = run([WINE, "cmd", "/c", wine_path(bundle / "uninstall.cmd")], env=env, timeout=120)
+    uninstall = run([WINE, wine_path(install_dir / "uninstall.exe"), "/S"], env=env, timeout=180)
     if WINESERVER and prefix.exists():
         run([WINESERVER, "-k"], env={"WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}, timeout=30)
     output = str(boot.get("output", ""))
@@ -198,11 +228,14 @@ def windows_lifecycle(bundle: Path) -> dict:
         "boot": {key: value for key, value in boot.items() if key != "output"},
         "uninstall": uninstall,
         "boot_markers": markers,
+        "payload_verification": payload_verification,
         "program_removed": not install_dir.exists(),
-        "start_menu_removed": not start_menu_dir.exists(),
+        "start_menu_shortcut_created_before_uninstall": bool(start_menu_shortcuts),
+        "start_menu_shortcut_removed": not list(prefix.rglob("Heroes Like.lnk")),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-windows",
-        "ok": command_ok(install) and command_ok(boot, reject_fatal=True) and all(markers.values())
-            and command_ok(uninstall) and not install_dir.exists() and not start_menu_dir.exists() and user_data.is_file(),
+        "ok": command_ok(install) and payload_verification["ok"] and command_ok(boot, reject_fatal=True) and all(markers.values())
+            and bool(start_menu_shortcuts) and command_ok(uninstall) and not install_dir.exists()
+            and not list(prefix.rglob("Heroes Like.lnk")) and user_data.is_file(),
     }
 
 
@@ -228,15 +261,10 @@ def main() -> int:
         return 1
 
     archives = ARTIFACT_DIR / "archives"
-    extract_root = ARTIFACT_DIR / "extracted"
-    linux_archive = archives / f"heroes-like-{VERSION}-linux-x86_64.tar.gz"
-    windows_archive = archives / f"heroes-like-{VERSION}-windows-x86_64.zip"
-    with tarfile.open(linux_archive, "r:gz") as archive:
-        archive.extractall(extract_root, filter="data")
-    with zipfile.ZipFile(windows_archive, "r") as archive:
-        archive.extractall(extract_root)
-    linux = linux_lifecycle(extract_root / f"heroes-like-{VERSION}-linux-x86_64")
-    windows = windows_lifecycle(extract_root / f"heroes-like-{VERSION}-windows-x86_64")
+    linux_installer = archives / f"heroes-like-{VERSION}-linux-x86_64.run"
+    windows_installer = archives / f"heroes-like-{VERSION}-windows-x86_64.setup.exe"
+    linux = linux_lifecycle(linux_installer)
+    windows = windows_lifecycle(windows_installer)
     report = {
         "schema_id": SCHEMA_ID,
         "report_id": REPORT_ID,
@@ -248,7 +276,7 @@ def main() -> int:
         "user_data_policy": "program uninstall preserves Godot user-data directories",
         "does_not_claim": [
             "code signing or package signing",
-            "MSI, NSIS, AppImage, or system-wide installation",
+            "MSI, AppImage, or system-wide installation",
             "clean native Windows hardware certification",
             "distribution-channel upload or automatic update service",
             "overall release readiness",

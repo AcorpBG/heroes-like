@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the persisted reduced-flash accessibility preference: live battle VFX use static fallback cues and block spell-specific flash overlays while normal motion, timing, audio, camera shake, combat, saves, and Native RMG remain unchanged. Overall release work remains active.",
+  "currentNotes": "Completed player-runnable Linux and Windows installer artifacts from exact verified release payloads. Isolated Linux and Wine workflows install, boot, uninstall owned files, and preserve external user data. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-accessibility-reduced-flash-10184",
-  "currentSliceId": "settings-accessibility-reduced-flash-10184",
-  "currentSliceNotes": "Reduce Flashes is persisted independently and routes live battle VFX through non-flashing fallbacks without forcing reduced motion; direct, packaged, battle, menu, parse, core, and repository checks pass.",
+  "currentSlice": "packaging-platform-native-installers-10184",
+  "currentSliceId": "packaging-platform-native-installers-10184",
+  "currentSliceNotes": "Linux .run and Windows NSIS setup artifacts are reproducible, indexed, checksummed, source-archive linked, tamper checked, and proven through isolated install/boot/uninstall lifecycles that preserve saves and settings.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Reduced Flash Accessibility",
-  "currentSliceUpdatedAt": "2026-08-03T01:36:51Z",
+  "currentSliceTitle": "Platform Native Installers",
+  "currentSliceUpdatedAt": "2026-08-03T02:35:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66580,6 +66580,91 @@
         ],
         "status": "passed",
         "updatedAt": "2026-08-03T01:36:51Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "python3 tests/packaging_release_artifact_verification_test.py",
+        "python3 tests/packaging_user_local_installer_smoke.py",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The verified release pipeline emits one reproducible Linux self-installing .run and one Windows NSIS setup executable from exact release payloads. Both installers are indexed and checksummed, reject incomplete inputs, install and boot in isolated per-user roots, uninstall only owned program/launcher files, preserve external saves/settings, and pass packaging, parse, and repository validation.",
+      "id": "packaging-platform-native-installers-10184",
+      "implementationTargets": [
+        "tools/package_release.py",
+        "packaging/installers/linux",
+        "packaging/installers/windows",
+        "tests/packaging_release_artifact_verification_test.py",
+        "tests/packaging_user_local_installer_smoke.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "code signing, certificate acquisition, storefront or release-channel publication",
+        "system-wide installation, MSI/AppImage parity, or native Windows hardware certification",
+        "gameplay, content, save-schema, Native RMG, or overall release-completion changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Platform Native Installers / packaging and platform readiness",
+      "purpose": "Let players install verified Linux and Windows release payloads through one runnable artifact per platform instead of manually extracting an archive and invoking a script.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          ".artifacts/packaging_user_local_installer_smoke/report.json",
+          ".artifacts/packaging_user_local_installer_smoke/archives/release-index.json",
+          ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-linux-x86_64.run",
+          ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-installer-smoke-windows-x86_64.setup.exe"
+        ],
+        "finding": "Release-index schema v2 now represents two verified source archives and two runnable installers. The Linux self-extracting installer verifies its embedded archive before extraction; the NSIS setup installs the exact manifest-owned Windows payload and removes only owned files. Real isolated Linux and Wine lifecycles booted the packaged game and preserved external user data after uninstall.",
+        "metrics": {
+          "linux_runnable_installer_present": true,
+          "windows_setup_executable_present": true,
+          "installer_artifacts_indexed": true,
+          "release_index_schema": "heroes_like_release_index_v2",
+          "archive_artifact_count": 2,
+          "installer_artifact_count": 2,
+          "reproducible_installers": 2,
+          "outer_tamper_rejection": true,
+          "linux_embedded_tamper_rejection": true,
+          "isolated_installer_boots_passed": 2,
+          "user_data_preservation_cases_passed": 2,
+          "installed_payload_hashes_verified": 12,
+          "windows_boot_markers_passed": 4,
+          "linux_installer_size_bytes": 205813828,
+          "linux_installer_sha256": "f4eff1eb40d65f92c5703eac87dad11bfde4d8c2bdfbcd5d81dee15905dac433",
+          "windows_installer_size_bytes": 203789018,
+          "windows_installer_sha256": "7e9b1fba2c2eeeab6f1c53ed81651b4e23dbfb24bad0171781582aa320fccf8e",
+          "nsis_version": "3.09",
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T02:35:01Z",
+      "startedAt": "2026-08-03T01:56:57Z",
+      "status": "completed",
+      "title": "Platform Native Installers",
+      "updatedAt": "2026-08-03T02:35:01Z",
+      "notes": "Completed from the explicit packaging gap after archive verification and user-local script workflows. Installer identity derives from existing release manifests and exact source-archive hashes; signing, channels, MSI/AppImage, native Windows hardware certification, and overall release completion remain open.",
+      "validation": {
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_release_artifact_verification_test.py (9 tests passed)",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_user_local_installer_smoke.py",
+          "python3 tools/package_release.py --verify-only --output-dir .artifacts/packaging_user_local_installer_smoke",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tools/package_release.py tests/packaging_release_artifact_verification_test.py tests/packaging_user_local_installer_smoke.py tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T02:35:01Z"
       }
     }
   ],
