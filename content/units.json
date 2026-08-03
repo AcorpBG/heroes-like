@@ -1789,6 +1789,25 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 6,
+      "abilities": [
+        {
+          "id": "obituary",
+          "name": "Final Notice",
+          "description": "Once per battle, obituary ink names the next answer before it is made, draining the marked line's cohesion and weakening its retaliation.",
+          "status_id": "status_obituary_marked",
+          "status_label": "Obituary-Marked",
+          "duration_rounds": 1,
+          "uses_per_battle": 1,
+          "modifiers": {
+            "cohesion": -1,
+            "retaliation": -10
+          },
+          "braced_modifiers": {
+            "cohesion": -2,
+            "retaliation": -20
+          }
+        }
+      ],
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {

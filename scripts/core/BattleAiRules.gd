@@ -1122,6 +1122,13 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.5
 	if _has_ability(attacker, "harry") and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		score += 2.0
+	var ability_uses = attacker.get("ability_uses", {})
+	var obituary = _ability_by_id(attacker, "obituary")
+	var obituary_available := ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
+	if not obituary.is_empty() and obituary_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, "status_obituary_marked"):
+		score += 0.25
+		if _has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
+			score += 0.25
 	if _has_ability(attacker, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
 	if is_ranged and _side_defending_count(battle, side) > 0 and _side_has_ability(battle, side, "formation_guard"):
@@ -2272,6 +2279,10 @@ static func _ability_damage_modifier(
 	var brace := _ability_by_id(attacker, "brace")
 	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
+	if is_retaliation:
+		var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(attacker, battle, "retaliation")
+		if retaliation_pressure < 0:
+			modifier *= clampf(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
 
 	var backstab := _ability_by_id(attacker, "backstab")
 	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
