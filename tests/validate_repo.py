@@ -14,6 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content"
+PROGRESS_PATH = ROOT / "ops" / "progress.json"
 CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
 CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH = ROOT / "docs" / "content-runtime-overworld-family-allowlist-report.md"
 NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
@@ -23408,6 +23409,51 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
     ensure(skirmish_enemy_town_case_count >= 20, errors, "Active scenario AI town development runway must cover skirmish enemy-town cases")
 
 
+def validate_progress_tracker_state(errors: list[str]) -> None:
+    ensure(PROGRESS_PATH.exists(), errors, "Operational progress tracker is missing")
+    if not PROGRESS_PATH.exists():
+        return
+
+    try:
+        progress = load_json(PROGRESS_PATH)
+    except (OSError, json.JSONDecodeError) as error:
+        errors.append(f"Operational progress tracker is not valid JSON: {error}")
+        return
+
+    planned_slices = progress.get("plannedSlices", [])
+    ensure(isinstance(planned_slices, list), errors, "Operational progress tracker plannedSlices must be an array")
+    if not isinstance(planned_slices, list):
+        return
+
+    slices_by_id: dict[str, list[dict]] = {}
+    for index, planned_slice in enumerate(planned_slices):
+        ensure(isinstance(planned_slice, dict), errors, f"Operational progress slice {index} must be an object")
+        if not isinstance(planned_slice, dict):
+            continue
+        slice_id = str(planned_slice.get("id", "")).strip()
+        ensure(bool(slice_id), errors, f"Operational progress slice {index} must have an id")
+        if not slice_id:
+            continue
+        slices_by_id.setdefault(slice_id, []).append(planned_slice)
+
+        status = str(planned_slice.get("status", "")).strip()
+        completed_at = str(planned_slice.get("completedAt", "")).strip()
+        if completed_at and status == "in_progress":
+            errors.append(f"Operational progress slice {slice_id} has completedAt but status is in_progress")
+
+    current_slice_id = str(progress.get("currentSliceId", "")).strip()
+    current_slice_status = str(progress.get("currentSliceStatus", "")).strip()
+    selected_rows = slices_by_id.get(current_slice_id, [])
+    ensure(len(selected_rows) == 1, errors, f"Operational currentSliceId must resolve exactly once: {current_slice_id or 'missing'}")
+    if len(selected_rows) == 1:
+        selected_status = str(selected_rows[0].get("status", "")).strip()
+        ensure(
+            current_slice_status == selected_status,
+            errors,
+            f"Operational current slice status mismatch: top-level {current_slice_status or 'missing'}, row {selected_status or 'missing'}",
+        )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -23440,6 +23486,7 @@ def main() -> int:
     args = parser.parse_args()
 
     errors: list[str] = []
+    validate_progress_tracker_state(errors)
     validate_content(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)

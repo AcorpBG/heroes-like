@@ -66941,7 +66941,7 @@
     {
       "id": "combat-veilmourn-obituary-pressure-10184",
       "title": "Veilmourn Obituary Pressure",
-      "status": "in_progress",
+      "status": "completed",
       "source": "PLAN.md",
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
@@ -67557,7 +67557,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T12:56:02Z",
+  "updatedAt": "2026-08-03T14:05:41Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
