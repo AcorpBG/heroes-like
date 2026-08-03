@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed blocked-advance field-objective pressure and Orevein Archive Wardens tuning. Bridgeward Levies now resolve in five rounds at 64 percent terminal margin and 20 enemy damage per round instead of stalling at round 14; Archive Wardens resolve at 83 percent and 15. The active breadth queue improves from 35/6-high to 34/4-high.",
+  "currentNotes": "Completed placement-local Reedbarrow and Mireford guard pressure. Barrow Pickets now resolve in five rounds at 76 percent margin and 6 enemy damage per round; Reed Totemists resolve in three rounds at 74 percent and 25. The active breadth queue improves from 34/4-high to 29/0-high and its matrix gate passes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-orevein-contract-encounter-resolution-10184",
-  "currentSliceId": "balance-orevein-contract-encounter-resolution-10184",
-  "currentSliceNotes": "Completed blocked-advance objective pressure and Orevein Archive roster correction. Bridgeward now resolves in five rounds at 64 percent margin/20 enemy damage per round; Archive resolves in three rounds at 83 percent/15. Active breadth improves from 35/6-high to 34/4-high.",
+  "currentSlice": "balance-reedbarrow-mireford-guard-pressure-10184",
+  "currentSliceId": "balance-reedbarrow-mireford-guard-pressure-10184",
+  "currentSliceNotes": "Completed both placement-local guard rosters with exact shared-army invariants. Active breadth now has zero high-priority items and its matrix gate passes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Orevein Contract Encounter Resolution",
-  "currentSliceUpdatedAt": "2026-08-03T20:41:39Z",
+  "currentSliceTitle": "Reedbarrow and Mireford Guard Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T20:59:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67727,6 +67727,82 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T20:41:39Z"
+    },
+    {
+      "id": "balance-reedbarrow-mireford-guard-pressure-10184",
+      "title": "Reedbarrow and Mireford Guard Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Give Reedbarrow Ferry's Barrow Pickets and Rootbound Mireford's Reed Totemists meaningful placement-local guard pressure without changing shared encounter armies or faction-wide balance inputs.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 34,
+        "active_queue_high_priority_count": 4,
+        "active_queue_signature": "ec937a0e",
+        "barrow_pickets_outcome_state": "victory",
+        "barrow_pickets_terminal_health_margin_pct": 90,
+        "reed_totemists_outcome_state": "victory",
+        "reed_totemists_terminal_health_margin_pct": 90
+      },
+      "completionCriteria": [
+        "Barrow Pickets and Mireford Reed Totemists resolve deterministically as bounded player victories at or below 90 percent terminal margin with meaningful enemy damage",
+        "Both roster corrections are placement-local and the shared Barrow Pickets and Muckveil Harriers armies remain unchanged",
+        "The active breadth queue retains zero high-priority items without adding new queue contributors",
+        "Focused battle, Reedbarrow and Mireford scenario, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle difficulty, reward, strategic AI, save, campaign, faction matrix, or Native RMG changes",
+        "queue threshold changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T20:59:34Z",
+      "startedAt": "2026-08-03T20:50:45Z",
+      "notes": "Completed placement-local Barrow Pickets and Mireford Reed Totemists guard pressure. Both shared armies remain exact; active breadth improves from 34/4-high to 29/0-high and its matrix gate moves from warning to pass.",
+      "result": {
+        "barrow_pickets_outcome_state": "victory",
+        "barrow_pickets_round_reached": 5,
+        "barrow_pickets_terminal_health_margin_pct": 76,
+        "barrow_pickets_enemy_damage_per_round": 6,
+        "barrow_pickets_matchup_band": "player_disadvantaged",
+        "reed_totemists_outcome_state": "victory",
+        "reed_totemists_round_reached": 3,
+        "reed_totemists_terminal_health_margin_pct": 74,
+        "reed_totemists_enemy_damage_per_round": 25,
+        "reed_totemists_matchup_band": "even",
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 34,
+        "active_queue_item_count_after": 29,
+        "active_queue_high_priority_count_before": 4,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "e84018c6",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_status_after": "pass",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: 29 unrelated medium-priority watches remain; zero high-priority items)",
+        "godot4 --headless --path . --scene res://tests/thornwake_mireford_player_skirmish_report.tscn",
+        "godot4 --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T20:59:34Z"
     }
   ],
   "project": "heroes-like",
@@ -67737,7 +67813,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 34 items / 4 high-priority items.",
+  "remainingWork": "Continue the 29 medium-priority authored-encounter watches plus the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68269,9 +68345,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, and Orevein guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 34 / 4 across four completed combat slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, and Mireford guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 29 / 0 high across five completed combat slices, and its balance matrix gate passes. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T20:41:39Z",
+  "updatedAt": "2026-08-03T20:59:34Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
