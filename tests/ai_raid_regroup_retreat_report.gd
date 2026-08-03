@@ -20,6 +20,9 @@ func _run() -> void:
 	var resource_support_case := _resource_front_risk_requests_support()
 	if resource_support_case.is_empty():
 		return
+	var empty_front_scan_case := _active_front_support_skips_empty_front_scan()
+	if empty_front_scan_case.is_empty():
+		return
 	var resource_support_launch_case := _resource_front_support_launches_below_pressure()
 	if resource_support_launch_case.is_empty():
 		return
@@ -61,6 +64,7 @@ func _run() -> void:
 		"case": case_report,
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
+		"empty_front_scan_case": empty_front_scan_case,
 		"resource_support_launch_case": resource_support_launch_case,
 		"resource_consolidation_case": resource_consolidation_case,
 		"neutral_town_grouping_case": neutral_town_grouping_case,
@@ -493,6 +497,55 @@ func _resource_front_support_launches_below_pressure() -> Dictionary:
 		"event_types": event_types,
 		"state_pressure_after_launch": int(state.get("pressure", 0)),
 		"scan_reuse": scan_report,
+	}
+
+func _active_front_support_skips_empty_front_scan() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	var resolved_encounters: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var retained_encounters := []
+	for encounter_value in session.overworld.get("encounters", []):
+		if EnemyAdventureRules.is_active_pressure_host(encounter_value, MIRECLAW, resolved_encounters):
+			continue
+		retained_encounters.append(encounter_value)
+	session.overworld["encounters"] = retained_encounters
+	if EnemyTurnRules.active_raid_count(session, MIRECLAW) != 0:
+		_fail("Empty active-front scan fixture retained a live Mireclaw pressure host.")
+		return {}
+	var points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
+	if points.is_empty() or not (points[0] is Dictionary):
+		_fail("Empty active-front scan fixture has no spawn point.")
+		return {}
+	var occupied := EnemyAdventureRules.occupied_raid_commander_ids(session, MIRECLAW)
+	EnemyTurnRules._spawn_profile_begin(true)
+	var candidate := EnemyTurnRules._active_front_support_spawn_candidate_for_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		points[0],
+		occupied,
+		0,
+		{}
+	)
+	var profile := EnemyTurnRules._spawn_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	if not candidate.is_empty():
+		_fail("Empty active-front scan produced an impossible support candidate: %s" % JSON.stringify(candidate))
+		return {}
+	if int(counts.get("active_front_support_no_active_front_skip", 0)) != 1:
+		_fail("Empty active-front scan did not take the explicit no-front skip: %s" % JSON.stringify(profile))
+		return {}
+	if int(counts.get("active_front_support_commander_candidates_loaded", 0)) != 0 \
+			or int(counts.get("active_front_support_probe_loaded", 0)) != 0:
+		_fail("Empty active-front scan constructed commander or army probes: %s" % JSON.stringify(profile))
+		return {}
+	return {
+		"case_id": "active_front_support_skips_empty_front_probe_construction",
+		"no_active_front_skip_count": int(counts.get("active_front_support_no_active_front_skip", 0)),
+		"commander_candidates_loaded": int(counts.get("active_front_support_commander_candidates_loaded", 0)),
+		"commander_probes_loaded": int(counts.get("active_front_support_probe_loaded", 0)),
 	}
 
 func _active_front_support_scan_reuse_report(session, config: Dictionary, state: Dictionary) -> Dictionary:

@@ -5216,6 +5216,9 @@ static func _active_front_support_spawn_candidate_for_point(
 ) -> Dictionary:
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
+	if active_raid_count(session, faction_id) <= 0:
+		_spawn_profile_count("active_front_support_no_active_front_skip")
+		return {}
 	var base_encounter_id := _primary_raid_encounter_id(config)
 	if base_encounter_id == "":
 		return {}

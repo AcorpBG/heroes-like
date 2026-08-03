@@ -15197,10 +15197,10 @@
   "currentNotes": "Completed the bounded Stag-Knot Runner correction. The all-live matrix improved from 41 to 40 outliers and severity 389 to 356; it remains needs_tuning and overall release completion is not claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-faction-pair-stat-tuning-followup-10184",
-  "currentSliceId": "accessibility-native-screen-reader-semantics-10184",
-  "currentSliceNotes": "Implemented Godot 4.6 automatic AccessKit semantics through the UiAccessibility autoload: focusable static and dynamic controls receive stable effective names and descriptions without replacing authored semantics; changing menu, overworld, town, battle, outcome, save, RMG, support-bundle, and settings-restore status labels are polite live regions. Fixed active-play keyboard coverage to honor the persisted movement layout instead of hardcoding WASD. Focused semantics reported 60 main-menu controls and 4 live regions; main-menu keyboard, active-play keyboard/controller, menu/outcome, packaged PCK export/boot, core systems, editor parse, repository validation, tracker JSON, and diff checks passed. Manual NVDA/Orca/Braille certification and overall release remain non-claims.",
+  "currentSliceId": "strategic-ai-active-front-empty-scan-skip-10184",
+  "currentSliceNotes": "Implemented an early active-front support rejection when active_raid_count is zero, before commander and army probe construction. The identical one-seed fixture preserved row behavior signature 9fff0a26 and event counts while turn runtime fell from 1357 ms to 1105 ms and combined faction spawn-loop time fell from 574 ms to 381 ms; both factions recorded one no-front skip with zero support probes or commander candidate loads. The focused regroup/support report passed all existing live-front behavior plus the new empty-front case. A two-seed, three-turn matrix completed all 6 turns with 0 behavior bugs, integrity failures, stalls, or unreachable targets; support probing resumed on later turns with active fronts. validate_repo, core_systems_regression_smoke, Godot editor parse, jq, and diff checks passed. No Native RMG or save-schema behavior changed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Native Screen Reader Semantics",
+  "currentSliceTitle": "Strategic AI Empty Active-Front Scan Skip",
   "currentSliceUpdatedAt": "2026-08-03T08:20:03Z",
   "deferredRiskRegister": [
     {
@@ -20718,6 +20718,47 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 240 --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Active-front support spawn planning exits before commander candidate and army probe construction when the faction has no active pressure host; existing active-front launch, candidate-surface reuse, and consolidation behavior remain green; strict-Small ordinal-1 preserves row behavior signature 9fff0a26 and improves or holds first-turn runtime; core, parse, repository, JSON, and diff gates pass.",
+      "id": "strategic-ai-active-front-empty-scan-skip-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "strategic target priorities, risk thresholds, difficulty, or balance retuning",
+        "Native RMG generation, parity, or supported-scope changes",
+        "broad 100-seed eight-week matrix completion or production-readiness claims",
+        "save schema changes"
+      ],
+      "notes": "Implemented an early active-front support rejection when active_raid_count is zero, before commander and army probe construction. The identical one-seed fixture preserved row behavior signature 9fff0a26 and event counts while turn runtime fell from 1357 ms to 1105 ms and combined faction spawn-loop time fell from 574 ms to 381 ms; both factions recorded one no-front skip with zero support probes or commander candidate loads. The focused regroup/support report passed all existing live-front behavior plus the new empty-front case. A two-seed, three-turn matrix completed all 6 turns with 0 behavior bugs, integrity failures, stalls, or unreachable targets; support probing resumed on later turns with active fronts. validate_repo, core_systems_regression_smoke, Godot editor parse, jq, and diff checks passed. No Native RMG or save-schema behavior changed.",
+      "parentSliceId": "strategic-ai-quality-pass-10184",
+      "phase": "phase-5-playable-alpha-baseline",
+      "planRef": "PLAN.md Current product focus strategic AI performance follow-up",
+      "purpose": "Remove impossible active-front support probe work from live enemy turns without changing any target choice when a supportable front exists.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-03T09:22:50Z",
+      "status": "completed",
+      "title": "Strategic AI Empty Active-Front Scan Skip",
+      "updatedAt": "2026-08-03T09:29:45Z",
+      "completedAt": "2026-08-03T09:29:45Z"
+    },
     {
       "baselineChecks": [
         "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn",
@@ -55002,7 +55043,7 @@
         "market shortcuts or free stockpile seeding to hide missing rare-source placement",
         "broad release/parity claims"
       ],
-      "notes": "Started multi-rare town cost model implementation from GOALS.md: every authored town should use every rare resource with signature, secondary, and remaining rare pressure ratios.",
+      "notes": "Tracker reconciliation only; no new implementation progress claimed. Existing shipped content and tests already implement the slice exactly: all 15 authored towns use all six rare resources, signature pressure is 28-30, secondary pressure 14, remaining pressure 9, common gold/wood/ore remain dominant, and development completes on days 28-30. town_development_cost_curve_report.py, economy_town_goal_scorecard_report.py, and town_development_balance_report.py all passed on 2026-08-03.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work",
       "purpose": "Replace the one-signature-rare town cost model with a multi-rare pressure model: every town uses every rare resource; the faction-specific rare remains highest-pressure; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
@@ -55028,7 +55069,7 @@
       "status": "completed",
       "summary": "Pending. Replace the current one-signature-rare town cost model with a multi-rare pressure model: every authored town uses every rare resource; the faction-specific rare remains the highest-pressure bottleneck; one secondary rare carries about half that pressure; each remaining rare carries about one-third pressure; common gold/wood/ore remain dominant.",
       "title": "Economy Faction Identity Second Pass",
-      "updatedAt": "2026-05-26T14:12:31Z",
+      "updatedAt": "2026-08-03T09:20:22Z",
       "validation": {
         "commands": [],
         "evidence": {},
@@ -67977,7 +68018,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T09:18:01Z",
+  "updatedAt": "2026-08-03T09:29:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
