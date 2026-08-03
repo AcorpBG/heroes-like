@@ -472,6 +472,7 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"resource_id",
 		"neutral_dwelling_family_id",
 		"guard_pressure",
+		"guard_front_id",
 		"body_tiles",
 		"blocking_body",
 		"approach_tiles",

@@ -4275,16 +4275,30 @@ static func perform_town_response_action(
 ) -> Dictionary:
 	return _execute_town_response_action(session, town, action_id)
 
-static func controlled_resource_site_income(session: SessionStateStoreScript.SessionData, controller_id: String) -> Dictionary:
+static func controlled_resource_site_income(
+	session: SessionStateStoreScript.SessionData,
+	controller_id: String,
+	income_day: int = -1
+) -> Dictionary:
 	var income := _empty_live_resource_stockpile()
+	var resolved_income_day := int(session.day) if income_day < 0 else income_day
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _resource_site_is_persistent(site) or not _resource_node_matches_controller(node, controller_id):
 			continue
-		income = _add_resource_sets(income, site.get("control_income", {}))
+		income = _add_resource_sets(income, _resource_site_control_income_for_day(site, resolved_income_day))
 	return income
+
+static func _resource_site_control_income_for_day(site: Dictionary, day: int) -> Dictionary:
+	var income: Dictionary = site.get("control_income", {}) if site.get("control_income", {}) is Dictionary else {}
+	if String(site.get("control_income_cadence", "daily")) == "weekly" and not is_weekly_growth_day(day):
+		return {}
+	return income
+
+static func _resource_site_income_cadence_label(site: Dictionary) -> String:
+	return "Weekly" if String(site.get("control_income_cadence", "daily")) == "weekly" else "Daily"
 
 static func _player_daily_income_projection(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town_income := _empty_live_resource_stockpile()
@@ -4301,7 +4315,10 @@ static func _player_daily_income_projection(session: SessionStateStoreScript.Ses
 		ArtifactRulesScript.aggregate_bonuses(hero_state).get("daily_income", {})
 	)
 	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
-	var site_income = DifficultyRulesScript.scale_income_resources(session, controlled_resource_site_income(session, "player"))
+	var site_income = DifficultyRulesScript.scale_income_resources(
+		session,
+		controlled_resource_site_income(session, "player", int(session.day) + 1)
+	)
 	return _add_resource_sets(
 		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
 		site_income
@@ -5125,6 +5142,7 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"resource_id",
 		"neutral_dwelling_family_id",
 		"guard_pressure",
+		"guard_front_id",
 		"body_tiles",
 		"blocking_body",
 		"approach_tiles",
@@ -5356,10 +5374,8 @@ static func _resource_node_claimable_by_player(
 ) -> bool:
 	if session != null:
 		var guard_encounter := _resource_site_guard_encounter(session, node, site)
-		if not guard_encounter.is_empty():
-			var guard_link := _resource_site_guard_link_for_encounter(guard_encounter)
-			if bool(guard_link.get("clear_required_for_target", false)):
-				return false
+		if _resource_site_guard_blocks_node(guard_encounter, node):
+			return false
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
@@ -5615,7 +5631,7 @@ static func describe_resource_site_surface(
 		parts.append(control_label)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
 	if income_summary != "":
-		parts.append("Daily %s" % income_summary)
+		parts.append("%s %s" % [_resource_site_income_cadence_label(site), income_summary])
 	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
 	if weekly_summary != "":
 		parts.append("Weekly %s" % weekly_summary)
@@ -5920,7 +5936,7 @@ static func _resource_site_yield_line(
 		if claim_summary != "":
 			parts.append("claim %s" % claim_summary)
 		if income_summary != "":
-			parts.append("daily %s" % income_summary)
+			parts.append("%s %s" % [_resource_site_income_cadence_label(site).to_lower(), income_summary])
 		if weekly_summary != "":
 			parts.append("weekly %s" % weekly_summary)
 		if claim_recruits != "":
@@ -5981,7 +5997,7 @@ static func _resource_site_guard_or_contest_line(
 	if not guard_encounter.is_empty():
 		var guard := _resource_site_guard_link_for_encounter(guard_encounter)
 		var line := "Guarded by %s" % encounter_display_name(guard_encounter)
-		if bool(guard.get("clear_required_for_target", false)):
+		if _resource_site_guard_blocks_node(guard_encounter, node):
 			line += "; clear guard to use site"
 		elif bool(guard.get("blocks_approach", false)):
 			line += "; blocks approach"
@@ -6006,6 +6022,9 @@ static func _resource_site_guard_encounter(
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
 			continue
+		var guard_front_id := String(node.get("guard_front_id", ""))
+		if guard_front_id != "" and guard_front_id == String(encounter.get("placement_id", "")):
+			return encounter
 		var guard := _resource_site_guard_link_for_encounter(encounter)
 		if guard.is_empty():
 			continue
@@ -6013,16 +6032,22 @@ static func _resource_site_guard_encounter(
 			return encounter
 	return {}
 
+static func _resource_site_guard_blocks_node(encounter: Dictionary, node: Dictionary) -> bool:
+	if encounter.is_empty():
+		return false
+	var explicit_guard_front_id := String(node.get("guard_front_id", ""))
+	if explicit_guard_front_id != "" and explicit_guard_front_id == String(encounter.get("placement_id", "")):
+		return true
+	var guard_link := _resource_site_guard_link_for_encounter(encounter)
+	return bool(guard_link.get("clear_required_for_target", false))
+
 static func resource_site_blocking_guard(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
 	var encounter := _resource_site_guard_encounter(session, node, site)
-	if encounter.is_empty():
-		return {}
-	var guard_link := _resource_site_guard_link_for_encounter(encounter)
-	return encounter if bool(guard_link.get("clear_required_for_target", false)) else {}
+	return encounter if _resource_site_guard_blocks_node(encounter, node) else {}
 
 static func _resource_site_contest_encounter(
 	session: SessionStateStoreScript.SessionData,
@@ -7475,7 +7500,7 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 		parts.append("Neutral family %s" % neutral_dwelling_label)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
 	if income_summary != "":
-		parts.append("Daily %s" % income_summary)
+		parts.append("%s %s" % [_resource_site_income_cadence_label(site), income_summary])
 	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
 	if weekly_summary != "":
 		parts.append("Weekly %s" % weekly_summary)
@@ -11914,7 +11939,7 @@ static func _resource_site_post_action_why(site: Dictionary) -> String:
 	if _resource_site_is_persistent(site):
 		var income_summary := _describe_resource_delta(site.get("control_income", {}))
 		if income_summary != "":
-			reasons.append("adds daily %s" % income_summary)
+			reasons.append("adds %s %s" % [_resource_site_income_cadence_label(site).to_lower(), income_summary])
 		if not _resource_site_weekly_recruits(site).is_empty():
 			reasons.append("feeds weekly recruits")
 		if int(site.get("vision_radius", 0)) > 0:

@@ -22279,7 +22279,6 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "ScenarioFactory.create_session",
         "OverworldRules.tile_is_blocked",
         "OverworldRules.tile_is_actionable_route_destination",
-        "OverworldRules.tile_has_route_interaction",
         "OverworldRules.tile_step_cuts_blocked_corner",
         "MAX_COMMON_ROUTE_STEPS",
         "MAX_RARE_ROUTE_STEPS",
@@ -22304,15 +22303,14 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         "Economy Active Scenario Town Economy Source Route Report",
         "economy-active-scenario-town-economy-source-route-20260524-10184",
         "active_scenario_town_economy_source_route_report_v1",
-        "16 active scenarios",
-        "15 campaign scenarios",
-        "16 skirmish scenarios",
-        "18 player-town cases",
-        "54 player resource route cases",
-        "54 reachable player route cases",
-        "20 enemy-town cases",
-        "60 enemy resource route cases",
-        "60 reachable enemy route cases",
+        "18 active scenarios",
+        "20 player-town cases",
+        "160 player resource route cases",
+        "160 reachable player route cases",
+        "22 enemy-town cases",
+        "176 enemy resource route cases",
+        "176 reachable enemy route cases",
+        "all six rare-resource routes",
         "normal markets remain common-resource only",
         "not final encounter pacing",
         "No `SAVE_VERSION` bump",
@@ -22321,7 +22319,6 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
         ensure(required_text in doc_text, errors, f"Active scenario town economy source route doc is missing required text: {required_text}")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
-    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     active_scenario_count = 0
     campaign_scenario_count = 0
@@ -22385,28 +22382,26 @@ def validate_active_scenario_town_economy_source_route(errors: list[str]) -> Non
                     skirmish_player_town_case_count += 1
             town_placement_id = str(town.get("placement_id", "")).strip()
             town_id = str(town.get("town_id", "")).strip()
-            town_template = towns.get(town_id, {})
-            profile = town_template.get("development_balance", {}) if isinstance(town_template, dict) else {}
-            profile = profile if isinstance(profile, dict) else {}
-            rare_id = str(profile.get("rare_resource_id", "")).strip()
-            for resource_id in ("wood", "ore", rare_id):
+            required_route_resource_ids = ["wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS]
+            for resource_id in required_route_resource_ids:
                 if is_enemy_town:
                     enemy_resource_route_case_count += 1
                 else:
                     resource_route_case_count += 1
                 ensure(bool(resource_id), errors, f"{scenario_id}.{town_placement_id} needs a non-empty required resource id")
                 ensure(bool(resource_outputs.get(resource_id, [])), errors, f"{scenario_id}.{town_placement_id} town {town_id} needs an authored {resource_id} source route candidate")
-    ensure(active_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover the active authored scenario roster")
-    ensure(campaign_scenario_count >= 15, errors, "Active scenario town economy source route gate must cover campaign scenarios")
-    ensure(skirmish_scenario_count >= 16, errors, "Active scenario town economy source route gate must cover skirmish scenarios")
-    ensure(player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover every current active player-town case")
-    ensure(campaign_player_town_case_count >= 17, errors, "Active scenario town economy source route gate must cover campaign player-town cases")
-    ensure(skirmish_player_town_case_count >= 18, errors, "Active scenario town economy source route gate must cover skirmish player-town cases")
-    ensure(resource_route_case_count == player_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every player town")
-    ensure(enemy_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover every current active enemy-town case")
-    ensure(campaign_enemy_town_case_count >= 19, errors, "Active scenario town economy source route gate must cover campaign enemy-town cases")
-    ensure(skirmish_enemy_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover skirmish enemy-town cases")
-    ensure(enemy_resource_route_case_count == enemy_town_case_count * 3, errors, "Active scenario town economy source route gate must require wood, ore, and rare route cases for every enemy town")
+    ensure(active_scenario_count >= 18, errors, "Active scenario town economy source route gate must cover the active authored scenario roster")
+    ensure(campaign_scenario_count >= 18, errors, "Active scenario town economy source route gate must cover campaign scenarios")
+    ensure(skirmish_scenario_count >= 18, errors, "Active scenario town economy source route gate must cover skirmish scenarios")
+    ensure(player_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover every current active player-town case")
+    ensure(campaign_player_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover campaign player-town cases")
+    ensure(skirmish_player_town_case_count >= 20, errors, "Active scenario town economy source route gate must cover skirmish player-town cases")
+    required_route_count = 2 + len(ECONOMY_STAGED_RARE_RESOURCE_IDS)
+    ensure(resource_route_case_count == player_town_case_count * required_route_count, errors, "Active scenario town economy source route gate must require wood, ore, and all rare route cases for every player town")
+    ensure(enemy_town_case_count >= 22, errors, "Active scenario town economy source route gate must cover every current active enemy-town case")
+    ensure(campaign_enemy_town_case_count >= 22, errors, "Active scenario town economy source route gate must cover campaign enemy-town cases")
+    ensure(skirmish_enemy_town_case_count >= 22, errors, "Active scenario town economy source route gate must cover skirmish enemy-town cases")
+    ensure(enemy_resource_route_case_count == enemy_town_case_count * required_route_count, errors, "Active scenario town economy source route gate must require wood, ore, and all rare route cases for every enemy town")
 
 
 def validate_active_scenario_town_start_economy(errors: list[str]) -> None:
@@ -22868,7 +22863,6 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "OverworldRules.controlled_resource_site_income",
         "OverworldRules.tile_is_blocked",
         "OverworldRules.tile_is_actionable_route_destination",
-        "OverworldRules.tile_has_route_interaction",
         "OverworldRules.tile_step_cuts_blocked_corner",
         "DELAYED_SOURCE_ROUTE_STEPS_PER_DAY",
         "DELAYED_GUARDED_SOURCE_EXTRA_DAYS",
@@ -22926,19 +22920,18 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
         "Economy Active Scenario Development Runway Report",
         "economy-active-scenario-development-runway-20260524-10184",
         "active_scenario_town_development_runway_report_v1",
-        "18 active player-town cases",
-        "17 campaign player-town cases",
-        "18 skirmish player-town cases",
-        "18/18 active player-town recruitment cases",
-        "day 24 to day 26",
+        "20 active player-town cases",
+        "20 campaign player-town cases",
+        "20 skirmish player-town cases",
+        "20/20 active player-town recruitment cases",
+        "day 25 to day 30",
         "minimal_required_resource_coverage",
-        "126/126 tier recruitment cases",
-        "18/18 delayed-source replay cases",
-        "18/18 delayed-source save/resume checkpoints",
+        "140/140 tier recruitment cases",
+        "20/20 delayed-source replay cases",
+        "20/20 delayed-source save/resume checkpoints",
         "route-derived source acquisition delays",
         "SaveService.save_runtime_manual_session",
         "SaveService.restore_manual_session",
-        "day 21 to day 25",
         "seven-tier ladder",
         "scenario-authored economy sources",
         "full scenario session state",
@@ -23052,7 +23045,6 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "EnemyTurnRules.town_governor_pressure_report",
         "OverworldRules.tile_is_blocked",
         "OverworldRules.tile_is_actionable_route_destination",
-        "OverworldRules.tile_has_route_interaction",
         "OverworldRules.tile_step_cuts_blocked_corner",
         "DELAYED_SOURCE_ROUTE_STEPS_PER_DAY",
         "DELAYED_GUARDED_SOURCE_EXTRA_DAYS",
@@ -23119,16 +23111,16 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "Economy Active Scenario AI Town Development Runway Report",
         "economy-active-scenario-ai-town-development-runway-20260524-10184",
         "active_scenario_ai_town_development_runway_report_v1",
-        "20 active enemy-town cases",
-        "19 campaign enemy-town cases",
-        "20 skirmish enemy-town cases",
-        "day 24 to day 30",
+        "22 active enemy-town cases",
+        "22 campaign enemy-town cases",
+        "22 skirmish enemy-town cases",
+        "day 24 to day 28",
         "minimal_required_resource_coverage",
-        "20/20 delayed-source replay cases",
-        "20/20 delayed-source AI save/resume checkpoints",
+        "22/22 delayed-source replay cases",
+        "22/22 delayed-source AI save/resume checkpoints",
         "seven-tier AI recruitment candidates",
-        "140/140 expected tier candidates",
-        "20/20 affordable selected recruitment cases",
+        "154/154 expected tier candidates",
+        "22/22 affordable selected recruitment cases",
         "all six active AI controller factions",
         "all six native town-ladder factions",
         "unique_faction_count",
@@ -23137,7 +23129,6 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         "route-derived source acquisition delays",
         "SaveService.save_runtime_manual_session",
         "SaveService.restore_manual_session",
-        "day 20 to day 23",
         "Bellwake Harbor local authored wood and ore reserve nodes",
         "scenario-authored economy sources",
         "full scenario session state",

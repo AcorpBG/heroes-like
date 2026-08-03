@@ -1134,10 +1134,8 @@ func _find_route(session, start_tile: Vector2i, target_tile: Vector2i) -> Array:
 				continue
 			if OverworldRules.tile_step_cuts_blocked_corner(session, current, neighbor):
 				continue
-			var is_destination: bool = neighbor == target_tile
-			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not (is_destination and OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)):
-				continue
-			if not is_destination and OverworldRules.tile_has_route_interaction(session, neighbor.x, neighbor.y):
+			var is_actionable := OverworldRules.tile_is_actionable_route_destination(session, neighbor.x, neighbor.y)
+			if OverworldRules.tile_is_blocked(session, neighbor.x, neighbor.y) and not is_actionable:
 				continue
 			visited[neighbor_key] = true
 			parent[neighbor_key] = current
