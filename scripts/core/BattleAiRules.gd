@@ -6,6 +6,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
 const STATUS_ROOTED := "status_rooted"
+const STATUS_OVERHEATED := "status_overheated"
 const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
@@ -1142,6 +1143,9 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.5
 	if not bloodrush.is_empty() and int(battle.get("round", 1)) >= 3:
 		score += 0.75
+	var overheat := _ability_by_id(attacker, "overheat")
+	if not overheat.is_empty() and not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
+		score += 0.10
 	if _hero_has_trait(battle, side, "artillerist") and is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		score += 1.5
 	if _hero_has_trait(battle, side, "packhunter") and (_health_ratio(target) <= 0.75 or SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
@@ -1586,6 +1590,8 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 		score += 3.0
 	if _has_ability(active_stack, "formation_guard") and _allied_ranged_count(battle, String(active_stack.get("side", ""))) > 0:
 		score += 2.5
+	if _has_ability(active_stack, "overheat") and SpellRulesScript.has_effect_id(active_stack, battle, STATUS_OVERHEATED):
+		score += 0.25
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(active_stack.get("ranged", false)):
 		score += 1.5
 	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(active_stack, battle) and not bool(active_stack.get("ranged", false)):
@@ -2311,6 +2317,13 @@ static func _ability_damage_modifier(
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
 		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+
+	var overheat := _ability_by_id(attacker, "overheat")
+	if not overheat.is_empty():
+		if SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
+			modifier *= float(overheat.get("overheated_damage_multiplier", 1.0))
+		elif not is_retaliation:
+			modifier *= float(overheat.get("burst_damage_multiplier", 1.0))
 
 	var shielding := _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():

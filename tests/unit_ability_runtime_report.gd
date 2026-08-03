@@ -1,6 +1,7 @@
 extends Node
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
+const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const OUTPUT_DIR := "res://.artifacts/unit_ability_runtime_report"
@@ -14,6 +15,7 @@ const REQUIRED_ABILITY_IDS := [
 	"formation_guard",
 	"bloodrush",
 	"obituary",
+	"overheat",
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
 
@@ -111,6 +113,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_formation_guard(unit_id)
 		"bloodrush":
 			return _probe_bloodrush(unit_id)
+		"overheat":
+			return _probe_overheat(unit_id)
 		_:
 			return {"ok": false, "reason": "unsupported ability"}
 
@@ -362,6 +366,68 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
 		"reason": "" if ok else "bloodrush did not increase damage against a wounded target",
+	}
+
+func _probe_overheat(unit_id: String) -> Dictionary:
+	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var defender := _defender_stack()
+	var battle := _battle_for_stacks([attacker, defender], [], "plains", 3)
+	var defense_before := BattleRulesScript._stack_defense_total(attacker, battle)
+	var initiative_before := BattleRulesScript._stack_initiative_total(attacker, battle)
+	var fresh_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
+	var retaliation_before := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, true, 0)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, attacker, defender, false, 0)
+	var updated := BattleRulesScript._get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	var overheated := SpellRulesScript.has_effect_id(updated, battle, "status_overheated")
+	var active_modifier := BattleRulesScript._ability_damage_modifier(updated, defender, battle, false, false, 0)
+	var active_retaliation := BattleRulesScript._ability_damage_modifier(updated, defender, battle, false, true, 0)
+	var defense_active := BattleRulesScript._stack_defense_total(updated, battle)
+	var initiative_active := BattleRulesScript._stack_initiative_total(updated, battle)
+	var active_defend_score := BattleAiRulesScript._defend_score(battle, updated, [defender])
+	var effect_count: int = updated.get("effects", []).size()
+	var expires_after_round := int(updated.get("effects", [])[0].get("expires_after_round", 0)) if effect_count > 0 else 0
+	battle["round"] = 4
+	BattleRulesScript._apply_attack_ability_effects(battle, updated, defender, false, 0)
+	updated = BattleRulesScript._get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	var did_not_refresh: bool = updated.get("effects", []).size() == effect_count
+	if effect_count > 0:
+		did_not_refresh = did_not_refresh and int(updated.get("effects", [])[0].get("expires_after_round", 0)) == expires_after_round
+	battle["round"] = 5
+	SpellRulesScript.purge_expired_stack_effects(updated, 5)
+	var recovered := not SpellRulesScript.has_effect_id(updated, battle, "status_overheated")
+	var recovered_modifier := BattleRulesScript._ability_damage_modifier(updated, defender, battle, false, false, 0)
+	var recovered_defend_score := BattleAiRulesScript._defend_score(battle, updated, [defender])
+	var ok: bool = (
+		fresh_modifier > 1.0
+		and is_equal_approx(retaliation_before, 1.0)
+		and overheated
+		and active_modifier < 1.0
+		and active_retaliation < retaliation_before
+		and defense_active == defense_before - 2
+		and initiative_active == initiative_before - 2
+		and active_defend_score > recovered_defend_score
+		and did_not_refresh
+		and recovered
+		and is_equal_approx(recovered_modifier, fresh_modifier)
+		and not messages.is_empty()
+	)
+	return {
+		"ok": ok,
+		"probe": "overheat_burst_self_debuff_expiry_and_ai",
+		"fresh_modifier": fresh_modifier,
+		"active_modifier": active_modifier,
+		"retaliation_before": retaliation_before,
+		"active_retaliation": active_retaliation,
+		"defense_before": defense_before,
+		"defense_active": defense_active,
+		"initiative_before": initiative_before,
+		"initiative_active": initiative_active,
+		"active_defend_score": active_defend_score,
+		"recovered_defend_score": recovered_defend_score,
+		"did_not_refresh": did_not_refresh,
+		"recovered_modifier": recovered_modifier,
+		"message_count": messages.size(),
+		"reason": "" if ok else "overheat did not prove its complete burst, cooldown, expiry, and AI contract",
 	}
 
 func _defend_cohesion_delta(stack: Dictionary, label: String) -> int:

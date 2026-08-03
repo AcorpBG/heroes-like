@@ -19,7 +19,8 @@ CONTENT = ROOT / "content"
 STATUS_HARRIED = "status_harried"
 STATUS_STAGGERED = "status_staggered"
 STATUS_ROOTED = "status_rooted"
-STATUS_EFFECT_IDS = {STATUS_HARRIED, STATUS_STAGGERED, STATUS_ROOTED}
+STATUS_OVERHEATED = "status_overheated"
+STATUS_EFFECT_IDS = {STATUS_HARRIED, STATUS_STAGGERED, STATUS_ROOTED, STATUS_OVERHEATED}
 MAX_SPELL_RESISTANCE_PCT = 75
 MAX_CONTROL_RESISTANCE_PCT = 80
 COHESION_MIN = 0
@@ -1241,8 +1242,7 @@ class FastBattleBenchmark:
         self._apply_damage(target, damage)
         if is_ranged:
             active["shots_remaining"] = max(0, int(active.get("shots_remaining", 0)) - 1)
-        if self._alive_count(target) > 0:
-            self._apply_attack_ability_effects(battle, active, target, is_ranged, attack_distance, consequence_counts)
+        self._apply_attack_ability_effects(battle, active, target, is_ranged, attack_distance, consequence_counts)
         self._apply_damage_pressure(battle, active, before, target, is_ranged, "attack", consequence_counts)
         if (
             not is_ranged
@@ -1363,6 +1363,9 @@ class FastBattleBenchmark:
             score += 1.5
         if bloodrush and round_number >= 3:
             score += 0.75
+        overheat = self._ability_by_id(attacker, "overheat")
+        if overheat and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
+            score += 0.10
         if self._hero_has_trait(battle, side, "artillerist") and is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
             score += 1.5
         if self._hero_has_trait(battle, side, "packhunter") and (self._health_ratio(target) <= 0.75 or self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
@@ -1387,6 +1390,8 @@ class FastBattleBenchmark:
             score += 3.0
         if self._has_ability(active, "formation_guard") and self._allied_ranged_count(battle, str(active.get("side", ""))) > 0:
             score += 2.5
+        if self._has_effect_id(active, battle, STATUS_OVERHEATED):
+            score += 0.25
         if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(active.get("ranged", False)):
             score += 1.5
         if int(battle.get("distance", 1)) == 0 and self._has_hostile_ranged_pressure(targets):
@@ -1478,6 +1483,12 @@ class FastBattleBenchmark:
             modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
         if bloodrush and self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
             modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+        overheat = self._ability_by_id(attacker, "overheat")
+        if overheat:
+            if self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
+                modifier *= float(overheat.get("overheated_damage_multiplier", 1.0))
+            elif not is_retaliation:
+                modifier *= float(overheat.get("burst_damage_multiplier", 1.0))
         shielding = self._ability_by_id(defender, "shielding")
         if is_ranged and shielding:
             modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
@@ -1598,6 +1609,17 @@ class FastBattleBenchmark:
 
     def _apply_attack_ability_effects(self, battle: dict[str, Any], attacker: dict[str, Any], defender: dict[str, Any], is_ranged: bool, attack_distance: int, counts: Counter[str]) -> None:
         if not is_ranged and attack_distance > 1:
+            return
+        overheat = self._ability_by_id(attacker, "overheat")
+        if overheat and not is_ranged and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
+            self._apply_effect(attacker, {
+                "effect_id": str(overheat.get("status_id", STATUS_OVERHEATED)),
+                "label": str(overheat.get("status_label", "Overheated")),
+                "duration_rounds": int(overheat.get("duration_rounds", 2)),
+                "modifiers": overheat.get("modifiers", {}),
+            }, battle, "ability", "overheat")
+            counts["status_applied"] += 1
+        if self._alive_count(defender) <= 0:
             return
         harry = self._ability_by_id(attacker, "harry")
         if harry:

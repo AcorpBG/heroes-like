@@ -317,7 +317,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -353,7 +353,7 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
 }
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
 SUPPORTED_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"}
-SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted"}
+SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted", "status_overheated"}
 REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil"}
 SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
 SUPPORTED_SPELL_PRIMARY_ROLES = {
@@ -10624,11 +10624,23 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush momentum_gain must be > 0")
                     ensure(int(ability.get("kill_momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush kill_momentum_gain must be > 0")
                     ensure(int(ability.get("late_round_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be > 0")
+                elif ability_id == "overheat":
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} overheat must belong to a melee unit")
+                    ensure(float(ability.get("burst_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} overheat burst_damage_multiplier must be > 1")
+                    overheated_multiplier = float(ability.get("overheated_damage_multiplier", 0.0))
+                    ensure(0.0 < overheated_multiplier < 1.0, errors, f"Unit {unit_id} overheat overheated_damage_multiplier must be between 0 and 1")
+                    ensure(str(ability.get("status_id", "")) == "status_overheated", errors, f"Unit {unit_id} overheat must use status_overheated")
+                    ensure(int(ability.get("duration_rounds", 0)) == 2, errors, f"Unit {unit_id} overheat duration_rounds must equal 2")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} overheat modifiers must be a dictionary")
+                    if isinstance(modifiers, dict):
+                        ensure(int(modifiers.get("defense", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce defense")
+                        ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce initiative")
 
     ensure(
-        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary"}.issubset(authored_unit_ability_ids),
+        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, and obituary",
+        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, and overheat",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10701,6 +10713,13 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(ripper_bloodrush.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, "Gorefen Ripper must keep its bloodrush wounded-target payoff authored")
     ensure(int(ripper_bloodrush.get("max_initiative_bonus", 0)) > 0, errors, "Gorefen Ripper must keep its bloodrush initiative payoff authored")
     ensure(int(ripper_bloodrush.get("momentum_gain", 0)) > 0, errors, "Gorefen Ripper must keep its bloodrush momentum payoff authored")
+
+    overheat_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "overheat" for ability in unit.get("abilities", []))
+    )
+    ensure(overheat_owners == ["unit_brasshollow_debt_engine_exactors"], errors, "Debt Furnace overheat must remain exclusive to Brasshollow Debt-Engine Exactors")
 
     for group_id, group in army_groups.items():
         if is_neutral_army_group(group):
@@ -18593,6 +18612,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _probe_harry",
         "func _probe_obituary",
         "func _probe_bloodrush",
+        "func _probe_overheat",
         "runtime_consequence_count",
         "ability_family_consequence_counts",
     ):
