@@ -5,10 +5,10 @@ const REPORT_ID := "BATTLE_FORD_REAVERS_BALANCE_REGRESSION"
 const PLACEMENT_ID := "bridge_ford_reavers"
 const LOCAL_ARMY_CONTRACTS := {
 	"ironbridge-stand": {"army_id": "army_ironbridge_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12, "unit_bog_brute": 2}},
-	"mireford-skirmish": {"army_id": "army_mireford_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 11}},
+	"mireford-skirmish": {"army_id": "army_mireford_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2}},
 }
 const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 8}
-const UNCHANGED_MIREFORD_SAMPLE := {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 35}
+const MIREFORD_SAMPLE := {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 28, "enemy_damage_per_round": 42}
 const CASES := [
 	{"scenario_id": "ironbridge-stand"},
 	{"scenario_id": "mireford-skirmish"},
@@ -48,8 +48,8 @@ func _run() -> void:
 				failures.append("Ironbridge Ford Reavers remains outside its pacing and pressure target")
 				failed_turn_logs[scenario_id] = sample.get("turn_log", [])
 		else:
-			if String(sample.get("outcome_state", "")) != String(UNCHANGED_MIREFORD_SAMPLE.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(UNCHANGED_MIREFORD_SAMPLE.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(UNCHANGED_MIREFORD_SAMPLE.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(UNCHANGED_MIREFORD_SAMPLE.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(UNCHANGED_MIREFORD_SAMPLE.get("enemy_damage_per_round", -1)):
-				failures.append("Mireford Ford Reavers changed outside the Ironbridge correction")
+			if String(sample.get("outcome_state", "")) != String(MIREFORD_SAMPLE.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(MIREFORD_SAMPLE.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(MIREFORD_SAMPLE.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(MIREFORD_SAMPLE.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(MIREFORD_SAMPLE.get("enemy_damage_per_round", -1)):
+				failures.append("Mireford Ford Reavers drifted from its bounded cohort outcome")
 				failed_turn_logs[scenario_id] = sample.get("turn_log", [])
 	if not failures.is_empty():
 		payload["failures"] = failures

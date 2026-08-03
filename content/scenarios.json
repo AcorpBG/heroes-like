@@ -242,7 +242,8 @@
             "stacks": [
               {"unit_id": "unit_blackbranch_cutthroat", "count": 8},
               {"unit_id": "unit_mire_slinger", "count": 16},
-              {"unit_id": "unit_bog_brute", "count": 2}
+              {"unit_id": "unit_bog_brute", "count": 2},
+              {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 1}
             ]
           },
           "object_id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
@@ -456,6 +457,7 @@
           "y": 0,
           "difficulty": "medium",
           "combat_seed": 1203,
+          "enemy_army": {"id": "army_river_pass_reed_totemists_watch", "name": "River Pass Reed Totemists Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mire_slinger", "count": 11}, {"unit_id": "unit_blackbranch_cutthroat", "count": 7}, {"unit_id": "unit_gorefen_ripper", "count": 2}]},
           "object_id": "object_neutral_encounter_river_pass_reed_totemists_stack",
           "object_placement_id": "object_placement_river_pass_reed_totemists",
           "primary_class": "neutral_encounter",
@@ -927,7 +929,7 @@
         {"placement_id": "crown_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 3}
       ],
       "encounters": [
-        {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201, "enemy_army": {"id": "army_fen_crown_gate_watch", "name": "Fen Crown Gate Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 3}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_blackbranch_cutthroat", "count": 4}]}},
+        {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201, "enemy_army": {"id": "army_fen_crown_gate_watch", "name": "Fen Crown Gate Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 4}, {"unit_id": "unit_mire_slinger", "count": 5}, {"unit_id": "unit_blackbranch_cutthroat", "count": 5}]}},
         {"placement_id": "bone_ferry", "encounter_id": "encounter_hollow_mire", "x": 4, "y": 4, "difficulty": "medium", "combat_seed": 3202},
         {"placement_id": "fen_crown_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 3203, "enemy_army": {"id": "army_fen_crown_bone_ferry_watch", "name": "Fen Crown Bone Ferry Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 7}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_bog_brute", "count": 2}]}}
       ]
@@ -3580,8 +3582,8 @@
             "name": "Glassfen Relay Pickets Watch",
             "faction_id": "faction_sunvault",
             "stacks": [
-              {"unit_id": "unit_shard_guard", "count": 6},
-              {"unit_id": "unit_prism_adept", "count": 3}
+              {"unit_id": "unit_shard_guard", "count": 5},
+              {"unit_id": "unit_prism_adept", "count": 2}
             ]
           },
           "field_objectives": [
@@ -4036,7 +4038,8 @@
             "faction_id": "faction_mireclaw",
             "stacks": [
               {"unit_id": "unit_blackbranch_cutthroat", "count": 13},
-              {"unit_id": "unit_mire_slinger", "count": 11}
+              {"unit_id": "unit_mire_slinger", "count": 11},
+              {"unit_id": "unit_mireclaw_gorefen_rippers", "count": 2}
             ]
           }
         },
@@ -4236,7 +4239,7 @@
           "y": 1,
           "difficulty": "medium",
           "combat_seed": 17201,
-          "enemy_army": {"id": "army_orevein_archive_wardens_watch", "name": "Orevein Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 6}, {"unit_id": "unit_ember_archer", "count": 8}, {"unit_id": "unit_citadel_pikeward", "count": 2}]}
+          "enemy_army": {"id": "army_orevein_archive_wardens_watch", "name": "Orevein Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 11}, {"unit_id": "unit_ember_archer", "count": 11}, {"unit_id": "unit_citadel_pikeward", "count": 4}]}
         },
         {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 3}, {"unit_id": "unit_ember_archer", "count": 6}]}},
         {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}}
@@ -4382,7 +4385,7 @@
       ],
       "encounters": [
         {"placement_id": "bellwake_relay_pickets", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 18201, "enemy_army": {"id": "army_bellwake_relay_pickets_watch", "name": "Bellwake Relay Pickets Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 7}, {"unit_id": "unit_mirror_duelist", "count": 8}]}},
-        {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_mirror_duelist", "count": 8}]}},
+        {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_mirror_duelist", "count": 8}, {"unit_id": "unit_sunvault_resonant_choristers", "count": 4}]}},
         {"placement_id": "bellwake_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 18203, "artifact_source_context": {"family": "guarded_reward_site", "secondary_tags": ["guarded_reward"], "guard_profile": {"tier": "heavy"}, "reward_preview": {"reward_categories": ["artifact"]}, "guarded_reward_contract": {"battle_salvage_reward_table_id": "artifact_source_battle_salvage_heavy"}, "runtime_boundary": {"artifact_reward_execution": true}}, "enemy_army": {"id": "army_bellwake_aurora_battery_watch", "name": "Bellwake Aurora Battery Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_aurora_ballista", "count": 3}]}}
       ]
     },
