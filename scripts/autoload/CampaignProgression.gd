@@ -55,6 +55,38 @@ func campaign_chapter_entries(campaign_id: String = "") -> Array:
 	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
 	return CampaignRulesScript.build_campaign_chapter_entries(ensure_profile(), resolved_campaign_id)
 
+func campaign_restart_action(campaign_id: String = "") -> Dictionary:
+	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
+	return CampaignRulesScript.build_restart_action(ensure_profile(), resolved_campaign_id)
+
+func restart_campaign(campaign_id: String = "") -> Dictionary:
+	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
+	var action := CampaignRulesScript.build_restart_action(ensure_profile(), resolved_campaign_id)
+	if bool(action.get("disabled", true)):
+		return {
+			"ok": false,
+			"campaign_id": resolved_campaign_id,
+			"message": String(action.get("summary", "Campaign arc has no recorded progress.")),
+		}
+	var next_profile := CampaignRulesScript.reset_campaign(ensure_profile(), resolved_campaign_id)
+	var saved_path := SaveService.save_progression(next_profile)
+	if saved_path == "":
+		return {
+			"ok": false,
+			"campaign_id": resolved_campaign_id,
+			"message": "Campaign progression could not be saved; the arc was not restarted.",
+		}
+	profile = next_profile
+	return {
+		"ok": true,
+		"campaign_id": resolved_campaign_id,
+		"starting_scenario_id": CampaignRulesScript.selected_scenario_id(profile, resolved_campaign_id),
+		"message": "%s restarted from %s." % [
+			String(action.get("campaign_name", resolved_campaign_id)),
+			String(action.get("starting_label", "Chapter I")),
+		],
+	}
+
 func chapter_details(campaign_id: String, scenario_id: String, difficulty: String = "normal") -> String:
 	return CampaignRulesScript.describe_campaign_chapter(ensure_profile(), campaign_id, scenario_id, difficulty)
 

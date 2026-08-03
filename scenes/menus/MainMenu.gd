@@ -65,8 +65,10 @@ const TAB_HELP_TOPIC := {
 @onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
 @onready var _campaign_journal_label: Label = %CampaignJournal
 @onready var _campaign_difficulty_picker: OptionButton = %CampaignDifficultyPicker
+@onready var _campaign_restart_button: Button = %RestartCampaignArc
 @onready var _campaign_primary_button: Button = %CampaignPrimaryAction
 @onready var _start_chapter_button: Button = %StartChapter
+@onready var _campaign_restart_dialog: ConfirmationDialog = $CampaignRestartDialog
 @onready var _skirmish_list: ItemList = %SkirmishList
 @onready var _skirmish_details_label: Label = %SkirmishDetails
 @onready var _difficulty_picker: OptionButton = %DifficultyPicker
@@ -127,6 +129,8 @@ var _campaign_entries: Array = []
 var _selected_campaign_id := ""
 var _campaign_chapter_entries: Array = []
 var _selected_campaign_scenario_id := ""
+var _pending_campaign_restart_id := ""
+var _campaign_restart_notice := ""
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
@@ -245,6 +249,7 @@ func _on_campaign_selected(index: int) -> void:
 		return
 	_selected_campaign_id = String(_campaign_entries[index].get("campaign_id", ""))
 	_selected_campaign_scenario_id = ""
+	_campaign_restart_notice = ""
 	CampaignProgression.select_campaign(_selected_campaign_id)
 	_rebuild_campaign_chapter_browser()
 	_refresh_campaign_browser()
@@ -261,6 +266,38 @@ func _on_campaign_primary_pressed() -> void:
 
 func _on_start_chapter_pressed() -> void:
 	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
+
+func _on_campaign_restart_pressed() -> void:
+	var action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
+	if bool(action.get("disabled", true)):
+		return
+	_pending_campaign_restart_id = String(action.get("campaign_id", ""))
+	_campaign_restart_dialog.title = "Restart %s?" % String(action.get("campaign_name", "campaign arc"))
+	_campaign_restart_dialog.dialog_text = String(action.get("summary", ""))
+	var dialog_label := _campaign_restart_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(520.0, 72.0)
+	_campaign_restart_dialog.get_ok_button().text = "Restart Arc"
+	_campaign_restart_dialog.popup_centered(Vector2i(640, 210))
+
+func _on_campaign_restart_confirmed() -> void:
+	_campaign_restart_dialog.hide()
+	var campaign_id := _pending_campaign_restart_id
+	_pending_campaign_restart_id = ""
+	if campaign_id == "":
+		return
+	var result := CampaignProgression.restart_campaign(campaign_id)
+	_campaign_restart_notice = String(result.get("message", ""))
+	if not bool(result.get("ok", false)):
+		_refresh_campaign_browser()
+		return
+	_selected_campaign_id = campaign_id
+	_selected_campaign_scenario_id = ""
+	_rebuild_campaign_browser()
+
+func _on_campaign_restart_canceled() -> void:
+	_campaign_restart_dialog.hide()
+	_pending_campaign_restart_id = ""
 
 func _launch_campaign_action(action: Dictionary) -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -698,6 +735,8 @@ func _refresh_campaign_browser() -> void:
 		_campaign_primary_button.text = "No Campaign"
 		_campaign_primary_button.disabled = true
 		_campaign_primary_button.tooltip_text = "Campaign board is intentionally disabled by the archived campaign-domain reset; open Skirmish for playable fronts."
+		_campaign_restart_button.visible = false
+		_campaign_restart_button.disabled = true
 		_campaign_difficulty_picker.disabled = true
 		_campaign_difficulty_picker.tooltip_text = "Campaign difficulty is unavailable while no campaign arcs are active."
 		_start_chapter_button.text = "Select Chapter"
@@ -706,7 +745,10 @@ func _refresh_campaign_browser() -> void:
 		return
 
 	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 4, 86)
-	_set_compact_label(_campaign_arc_status_label, CampaignProgression.campaign_arc_status(_selected_campaign_id), 3, 86)
+	var arc_status := CampaignProgression.campaign_arc_status(_selected_campaign_id)
+	if _campaign_restart_notice != "":
+		arc_status = "%s\n%s" % [_campaign_restart_notice, arc_status]
+	_set_compact_label(_campaign_arc_status_label, arc_status, 3, 86)
 	_set_compact_label(_campaign_journal_label, CampaignProgression.campaign_journal(_selected_campaign_id), 3, 86)
 	_campaign_difficulty_picker.disabled = false
 	_campaign_difficulty_picker.tooltip_text = "Campaign difficulty: %s\n%s" % [
@@ -715,6 +757,11 @@ func _refresh_campaign_browser() -> void:
 	]
 
 	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
+	var restart_action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
+	_campaign_restart_button.text = String(restart_action.get("label", "Restart Arc"))
+	_campaign_restart_button.disabled = bool(restart_action.get("disabled", true))
+	_campaign_restart_button.visible = not _campaign_restart_button.disabled
+	_campaign_restart_button.tooltip_text = String(restart_action.get("summary", ""))
 	_campaign_primary_button.text = String(primary_action.get("label", "Advance Campaign"))
 	_campaign_primary_button.disabled = bool(primary_action.get("disabled", false))
 	_campaign_primary_button.tooltip_text = String(primary_action.get("summary", ""))
@@ -2042,6 +2089,7 @@ func _close_stage_dock_tooltip() -> String:
 func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
+	var campaign_restart_action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
 	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var skirmish_front_check := _skirmish_front_check_payload(selected_skirmish_setup)
@@ -2075,6 +2123,13 @@ func validation_snapshot() -> Dictionary:
 		"campaign_difficulty_text": _campaign_difficulty_picker.get_item_text(_campaign_difficulty_picker.selected) if _campaign_difficulty_picker.selected >= 0 else "",
 		"campaign_difficulty_tooltip": _campaign_difficulty_picker.tooltip_text,
 		"campaign_difficulty_disabled": _campaign_difficulty_picker.disabled,
+		"campaign_restart_action": campaign_restart_action.duplicate(true),
+		"campaign_restart_visible": _campaign_restart_button.visible,
+		"campaign_restart_disabled": _campaign_restart_button.disabled,
+		"campaign_restart_tooltip": _campaign_restart_button.tooltip_text,
+		"campaign_restart_dialog_visible": _campaign_restart_dialog.visible,
+		"campaign_restart_pending_id": _pending_campaign_restart_id,
+		"campaign_restart_notice": _campaign_restart_notice,
 		"primary_campaign_action": primary_campaign_action.duplicate(true),
 		"selected_chapter_action": selected_chapter_action.duplicate(true),
 		"campaign_chapter_check": campaign_chapter_check.duplicate(true),
@@ -2442,6 +2497,24 @@ func validation_set_campaign_difficulty(difficulty_id: String) -> bool:
 		_on_campaign_difficulty_selected(index)
 		return true
 	return false
+
+func validation_request_campaign_restart() -> Dictionary:
+	_on_campaign_restart_pressed()
+	return {
+		"pending_campaign_id": _pending_campaign_restart_id,
+		"dialog_visible": _campaign_restart_dialog.visible,
+		"title": _campaign_restart_dialog.title,
+		"text": _campaign_restart_dialog.dialog_text,
+	}
+
+func validation_confirm_campaign_restart() -> Dictionary:
+	_on_campaign_restart_confirmed()
+	return {
+		"pending_campaign_id": _pending_campaign_restart_id,
+		"selected_campaign_id": _selected_campaign_id,
+		"selected_scenario_id": _selected_campaign_scenario_id,
+		"notice": _campaign_restart_notice,
+	}
 
 func validation_set_generated_seed(seed: String) -> bool:
 	_generated_seed_edit.text = seed
@@ -2949,6 +3022,7 @@ func _apply_visual_theme() -> void:
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_campaign_restart_button, "secondary", 136.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)

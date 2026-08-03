@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `campaign-arc-restart-workflow-10184`. The live campaign board now exposes a compact Restart Arc command only for arcs with recorded progress and requires a campaign-bound confirmation that reports the exact attempts, victories, and carryover being cleared. Confirmation persists a normalized campaign-local reset, returns the selected arc to its authored Chapter I, hides the now-inapplicable command, and preserves other campaign progress, expedition saves, device settings, selected difficulty, and save version 9. Focused persistence, 1280x720 and 1920x1080 visual captures, player-facing campaign flow, six-campaign breadth, menu/outcome, core systems, project parsing, and repository validation pass. Campaign content, balance, chapter rules, broad menu redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `packaging-platform-native-installers-10184`. The verified Linux/Windows release pipeline now emits a reproducible Linux self-installing `.run` and Windows NSIS setup executable from the exact release payloads. Release-index schema v2 links and checksums both installers against their source archives; verification rejects outer and embedded-payload tampering. Isolated Linux and Wine lifecycles install and boot the packaged game, remove owned program and launcher files, and preserve external user data. Code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, and overall release completion remain open.
 - Completed implementation slice: `settings-accessibility-reduced-flash-10184`. Device settings now persist Reduce Flashes independently of reduced motion and battle shake. Normal motion, timing, audio, and combat remain unchanged while live battle event VFX use existing non-flashing fallback cues and spell-specific flash overlays are suppressed. The compact Readability settings surface remains reachable at 130% UI scale through a bounded scroll region, including the existing support-bundle command. Direct reload, exported-PCK persistence, menu control, live battle cue behavior, project parsing, core systems, and repository validation pass. Screen-reader integration, subtitles for nonexistent voiceover, broad VFX redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `strategic-ai-emergency-recruitment-surface-reuse-10184`. During one enemy faction recruitment phase, non-garrison recruit invalidation now retains the immutable emergency-defense commander rotation/availability candidate list while rebuilding army probes and final point/commander choices from live roster continuity. Focused proof records one retained list, one load/three reuses, four rebuilt probe loads/four reuses, one accepted Reedsnare reinforcement, and the required Sable-to-Vaska destination switch with the same target and 149-strength/22-need selection. Town-defense and planned-task recruitment, core systems, a deterministic three-turn native-generated row with unchanged `fdf8234a` behavior signature, project parsing, and repository validation pass. AI scoring changes, final point-surface reuse, broad cache lifetime, save-state changes, Native RMG behavior, full seed-matrix completion, broad performance claims, and overall release completion remain open.
@@ -784,6 +785,21 @@ Target shape:
 Non-goals:
 - do not claim code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, or overall release completion;
 - do not change game/runtime behavior, saves, authored content, or Native RMG.
+
+## Campaign Arc Restart Workflow
+
+The completed Phase 6 campaign slice lets players deliberately begin one authored arc from a clean Chapter I state without deleting unrelated progress.
+
+Target shape:
+- the campaign board exposes a compact Restart Arc command only when the selected arc has recorded attempts, victories, or carryover;
+- restart requires explicit confirmation that names the selected campaign and describes the deleted campaign-local state;
+- confirmation clears only that campaign's scenario records, carryover bundles, and chapter selection, then persists the normalized profile;
+- other campaign states, expedition save files, device settings, selected difficulty, and save version 9 remain unchanged;
+- the board refreshes to the selected arc's authored starting chapter with downstream chapters locked again.
+
+Non-goals:
+- do not change campaign content, unlock requirements, carryover formulas, difficulty rules, or scenario balance;
+- do not delete expedition saves, reset every campaign, redesign the campaign board, change Native RMG, or claim overall release completion.
 
 ## Strategic AI Emergency Defense Scan Reuse
 

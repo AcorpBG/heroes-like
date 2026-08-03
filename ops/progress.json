@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed player-runnable Linux and Windows installer artifacts from exact verified release payloads. Isolated Linux and Wine workflows install, boot, uninstall owned files, and preserve external user data. Overall release work remains active.",
+  "currentNotes": "Completed the confirmed campaign-local Restart Arc workflow. It clears only the selected campaign's records, carryover, and chapter pointers; returns to authored Chapter I; and preserves other campaign progress, expedition saves, device settings, difficulty selection, and save version 9. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-platform-native-installers-10184",
-  "currentSliceId": "packaging-platform-native-installers-10184",
-  "currentSliceNotes": "Linux .run and Windows NSIS setup artifacts are reproducible, indexed, checksummed, source-archive linked, tamper checked, and proven through isolated install/boot/uninstall lifecycles that preserve saves and settings.",
+  "currentSlice": "campaign-arc-restart-workflow-10184",
+  "currentSliceId": "campaign-arc-restart-workflow-10184",
+  "currentSliceNotes": "The live campaign board now offers Restart Arc only for recorded progress, requires exact campaign-bound confirmation, persists the isolated reset, and refreshes to authored Chapter I. Focused, visual, campaign, menu/outcome, core, parse, and repository validation pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Platform Native Installers",
-  "currentSliceUpdatedAt": "2026-08-03T02:35:01Z",
+  "currentSliceTitle": "Campaign Arc Restart Workflow",
+  "currentSliceUpdatedAt": "2026-08-03T03:11:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66665,6 +66665,88 @@
         ],
         "status": "passed",
         "updatedAt": "2026-08-03T02:35:01Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 120 --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The live campaign board exposes a confirmed Restart Arc command when the selected campaign has recorded progress; confirmation resets only that campaign to its authored starting chapter, persists the reset, preserves other campaign states and expedition saves, keeps difficulty selection and save version 9 unchanged, and passes focused and broad validation.",
+      "id": "campaign-arc-restart-workflow-10184",
+      "implementationTargets": [
+        "scripts/core/CampaignRules.gd",
+        "scripts/autoload/CampaignProgression.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/campaign_arc_restart_regression.gd",
+        "tests/campaign_arc_restart_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "campaign content, unlock, carryover-formula, difficulty, scenario-balance, or save-version changes",
+        "global campaign reset, expedition-save deletion, device-settings reset, or broad campaign-board redesign",
+        "Native RMG behavior or overall release-completion claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Campaign Arc Restart Workflow / campaign flow hardening",
+      "purpose": "Let a player deliberately start one campaign arc cleanly after replay or completion without manually deleting all progression or losing unrelated saves and campaign history.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          ".artifacts/campaign_arc_restart_regression/restart_confirmation_1280x720.png",
+          ".artifacts/campaign_arc_restart_regression/restart_complete_1280x720.png",
+          ".artifacts/campaign_arc_restart_regression/restart_confirmation_1920x1080.png",
+          ".artifacts/campaign_arc_restart_regression/restart_complete_1920x1080.png"
+        ],
+        "finding": "The campaign board exposes Restart Arc only when the selected campaign has recorded attempts, victories, or carryover. Confirmation reports exact campaign-local deletion counts; the persisted reset returns Reedfall to river-pass while preserving Stonewake state, four expedition save files, device settings, hard difficulty, and save version 9.",
+        "metrics": {
+          "campaign_restart_command_present": true,
+          "confirmation_required": true,
+          "campaign_states_preserved_outside_selection": 1,
+          "expedition_saves_preserved": 4,
+          "device_settings_preserved": true,
+          "attempts_cleared": 2,
+          "victories_cleared": 1,
+          "carryover_bundles_cleared": 1,
+          "selected_difficulty_preserved": true,
+          "authored_start_chapter_restored": true,
+          "viewport_capture_count": 4,
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T03:11:15Z",
+      "startedAt": "2026-08-03T02:39:08Z",
+      "status": "completed",
+      "title": "Campaign Arc Restart Workflow",
+      "updatedAt": "2026-08-03T03:11:15Z",
+      "notes": "Implemented after campaign difficulty flow completion exposed that completed/carryover-bearing arcs could be replayed but not deliberately restarted from a clean campaign-local state. No campaign content, unlock, carryover formula, difficulty, save-version, expedition-save, device-setting, or Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/campaign_arc_restart_regression.tscn",
+          "CAMPAIGN_ARC_RESTART_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1280x720 --scene res://tests/campaign_arc_restart_regression.tscn",
+          "CAMPAIGN_ARC_RESTART_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1920x1080 --scene res://tests/campaign_arc_restart_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/map_campaign_replayability_breadth_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 600 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T03:11:15Z"
       }
     }
   ],
