@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed placement-local Ninefold Orevein Exactors pressure at 9/6/6. Exactors move from a round-4 76 percent victory/9 enemy damage per round to a round-6 extended victory at 32 percent/17; exact Basalt Gatehouse keeps the rough cohort at a balanced 53 percent and the active queue falls from 21 to 19 with zero high items.",
+  "currentNotes": "Reedbarrow Chain now owns a placement-local 5/7/5 roster and resolves as a round-3 standard defeat at 50 percent terminal margin and 42 enemy damage per round. Barrow Pickets, Levee Totemists, the shared 6/7/5 army, faction-matrix inputs, and runtime-consequence gates remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-ninefold-rough-exactors-pressure-10184",
-  "currentSliceId": "balance-ninefold-rough-exactors-pressure-10184",
-  "currentSliceNotes": "Completed local 9/6/6 Exactors pressure with exact Basalt Gatehouse and shared Orevein Exactors invariants. The rough cohort averages 53 percent and the active queue is 19 medium/zero high with signature daf0f4d8.",
+  "currentSlice": "balance-reedbarrow-chain-burst-pressure-10184",
+  "currentSliceId": "balance-reedbarrow-chain-burst-pressure-10184",
+  "currentSliceNotes": "Completed: Reedbarrow Chain's placement-local 5/7/5 roster converts the round-2 burst defeat at 77 percent margin and 63 enemy damage per round into a round-3 standard defeat at 50 percent and 42. The active queue falls from 19 to 17 medium/zero high with signature 19a4e784.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Rough-Terrain Exactors Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T22:17:11Z",
+  "currentSliceTitle": "Reedbarrow Chain Burst Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T22:29:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17875,7 +17875,7 @@
       "phaseSnapshotArtifact": ".artifacts/rmg_native_medium_seed10_final_sweep_classfix_20260611/medium_4p_seed_10_controlled.phase_snapshot.json",
       "remainingWork": "Continue source-backed adoption of terrain/generated-cell private-state parity before 0x49b2b6. The next named blocker is the upstream 0x4a2777/0x4a325d owner/span/terrain-grid private state and 0x4a4c8e bit26/bit27 lanes. Use Linux .so plus Python parity compares as the inner loop. Run Windows debug/release .dll builds only once Linux/Python parity reaches a final validation boundary.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "completed",
+      "status": "in_progress",
       "summary": "Ported recovered 0x4bbfcc final-sweep scratch-mask and class-correction semantics; parity improved but remains incomplete upstream of 0x49b2b6.",
       "validatedAt": "2026-06-11T18:30:24Z"
     },
@@ -18384,7 +18384,7 @@
       "remainingWork": "Implement the exact recovered producer for 0x4a3a03 -> 0x4cca55 descriptor/source-cycle/seed ownership so it feeds materialize_boundary_source_handoffs_4a2777_4a325d as the native live owner-grid payload, then pass same-run after_boundary_span_fill_owner_words private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute SourceWalkPlain reconstruction, archived h3maped_small_rmg proxy artifacts, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
       "runtimeGenerationAllowed": false,
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Native RMG checkpoint 2 remains pending, but the shared H3MapEd core now preserves recovered source-node payload metadata through boundary_cycles_from_source_handoffs_4a2777 and applies the recovered 0x4a2777 descriptor owner gate before source-edge boundary writes. The shared materializer uses the recovered from_clip/to_clip source-edge shape and skips connector writes when next_pair_payload <= zone_word; bin/h3maped_rmg_core_selftest verifies payload preservation, owner-gated connector suppression, and continued span fill without Godot or map export. This is not parity and does not enable generation: the exact same-run 0x4a3a03 -> 0x4cca55 producer that feeds descriptor/source-cycle/seed ownership as the live payload, final payload ownership, and private-state comparison remain pending.",
       "validatedAt": "2026-06-18T20:08:15Z"
     },
@@ -68269,6 +68269,99 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T22:17:11Z"
+    },
+    {
+      "id": "balance-reedbarrow-chain-burst-pressure-10184",
+      "title": "Reedbarrow Chain Burst Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Reedbarrow Chain's burst, one-sided defeat with a bounded high-difficulty battle through placement-local roster strength while preserving adjacent encounters and shared Mireclaw content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_reedbarrow_chain_balance_regression.gd",
+        "tests/battle_reedbarrow_chain_balance_regression.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 19,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "daf0f4d8",
+        "chain_shared_stack_counts": {"unit_bog_brute": 6, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
+        "chain_outcome_state": "defeat",
+        "chain_pacing_band": "burst",
+        "chain_round_reached": 2,
+        "chain_terminal_health_margin_pct": 77,
+        "chain_enemy_damage_per_round": 63,
+        "barrow_pickets_outcome_state": "victory",
+        "barrow_pickets_round_reached": 5,
+        "barrow_pickets_terminal_health_margin_pct": 76,
+        "barrow_pickets_enemy_damage_per_round": 6,
+        "levee_totemists_outcome_state": "defeat",
+        "levee_totemists_round_reached": 6,
+        "levee_totemists_terminal_health_margin_pct": 36,
+        "levee_totemists_enemy_damage_per_round": 21
+      },
+      "completionCriteria": [
+        "Reedbarrow Chain remains a player defeat with standard or extended pacing, no more than 65 percent terminal margin, and no more than 50 enemy damage per round",
+        "Barrow Pickets and Levee Totemists outcomes remain exact",
+        "Chain owns a placement-local correction while the shared Reedbarrow Chain army remains exact",
+        "The active breadth queue decreases from 19 with zero high-priority items and both runtime-consequence gates remain passing",
+        "Focused Reedbarrow battle, active breadth, player-facing campaign menu, runtime consequence, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T22:29:38Z",
+      "startedAt": "2026-08-03T22:20:45Z",
+      "completedAt": "2026-08-03T22:29:38Z",
+      "result": {
+        "chain_stack_counts": {"unit_bog_brute": 5, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
+        "chain_outcome_state": "defeat",
+        "chain_round_before": 2,
+        "chain_round_after": 3,
+        "chain_pacing_before": "burst",
+        "chain_pacing_after": "standard",
+        "chain_terminal_health_margin_pct_before": 77,
+        "chain_terminal_health_margin_pct_after": 50,
+        "chain_enemy_damage_per_round_before": 63,
+        "chain_enemy_damage_per_round_after": 42,
+        "chain_enemy_power": 1389,
+        "chain_player_enemy_power_ratio_pct": 96,
+        "barrow_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 76, "enemy_damage_per_round": 6},
+        "levee_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 36, "enemy_damage_per_round": 21},
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count_before": 19,
+        "active_queue_item_count_after": 17,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature": "19a4e784",
+        "balance_matrix_gate": "pass",
+        "runtime_consequence_gate": "pass",
+        "runtime_consequence_matrix_gate": "pass",
+        "shared_reedbarrow_chain_army_changed": false,
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "battle_reedbarrow_chain_balance_regression",
+        "active_battle_balance_breadth_report: expected nonzero queue, 17 medium, zero high, signature 19a4e784",
+        "player_facing_campaign_menu_smoke",
+        "runtime_consequence_report",
+        "runtime_consequence_matrix_report",
+        "core_systems_regression_smoke",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ]
     }
   ],
   "project": "heroes-like",
@@ -68279,7 +68372,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 19 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 17 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68811,9 +68904,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 19 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Reedbarrow Chain, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 17 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T22:17:11Z",
+  "updatedAt": "2026-08-03T22:29:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

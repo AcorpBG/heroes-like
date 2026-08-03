@@ -1398,6 +1398,7 @@
           "y": 3,
           "difficulty": "high",
           "combat_seed": 5202,
+          "enemy_army": {"id": "army_reedbarrow_chain_watch", "name": "Reedbarrow Chain Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 5}, {"unit_id": "unit_mire_slinger", "count": 7}, {"unit_id": "unit_blackbranch_cutthroat", "count": 5}]},
           "field_objectives": [
             {
               "id": "chain_slinger_lane",
