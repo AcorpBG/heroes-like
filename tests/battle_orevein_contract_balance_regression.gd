@@ -4,6 +4,7 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_OREVEIN_CONTRACT_BALANCE_REGRESSION"
 const SCENARIO_ID := "orevein-contract"
 const MAX_TERMINAL_MARGIN_PCT := 90
+const MAX_COHORT_TERMINAL_MARGIN_PCT := 69
 const PLACEMENT_IDS := [
 	"orevein_archive_wardens",
 	"orevein_bridgeward_levies",
@@ -12,16 +13,24 @@ const PLACEMENT_IDS := [
 const LOCAL_ARMY_CONTRACTS := {
 	"orevein_archive_wardens": {
 		"army_id": "army_orevein_archive_wardens_watch",
-		"stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 1},
+		"stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 2},
 	},
 	"orevein_bridgeward_levies": {
 		"army_id": "army_orevein_bridgeward_levies",
 		"stack_counts": {"unit_river_guard": 5, "unit_citadel_pikeward": 3, "unit_ember_archer": 6},
 	},
+	"orevein_beacon_wardens": {
+		"army_id": "army_orevein_beacon_wardens",
+		"stack_counts": {"unit_ember_archer": 4, "unit_river_guard": 5, "unit_citadel_pikeward": 1},
+	},
 }
 const SHARED_ARMY_CONTRACTS := {
 	"army_archive_wardens": {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2},
 	"army_causeway_phalanx": {"unit_river_guard": 6, "unit_citadel_pikeward": 4, "unit_ember_archer": 4},
+}
+const UNCHANGED_SAMPLE_CONTRACTS := {
+	"orevein_bridgeward_levies": {"round_reached": 5, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 20},
+	"orevein_beacon_wardens": {"round_reached": 3, "terminal_health_margin_pct": 63, "enemy_damage_per_round": 28},
 }
 
 func _ready() -> void:
@@ -38,6 +47,7 @@ func _run() -> void:
 	}
 	var failures := []
 	var failed_turn_logs := {}
+	var terminal_margin_total := 0
 	for army_id in SHARED_ARMY_CONTRACTS:
 		var shared_army := ContentService.get_army_group(String(army_id))
 		if String(shared_army.get("id", "")) != army_id or _stack_counts(shared_army) != SHARED_ARMY_CONTRACTS[army_id]:
@@ -54,6 +64,7 @@ func _run() -> void:
 				failures.append("%s placement-local army drifted from its bounded roster" % placement_id)
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
+		terminal_margin_total += int(sample.get("terminal_health_margin_pct", 100))
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
 			failures.append("%s does not resolve as a bounded player victory" % placement_id)
 			failed_turn_logs[placement_id] = sample.get("turn_log", [])
@@ -63,6 +74,19 @@ func _run() -> void:
 		elif int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
 			failures.append("%s does not apply meaningful enemy pressure" % placement_id)
 			failed_turn_logs[placement_id] = sample.get("turn_log", [])
+		if placement_id == "orevein_archive_wardens":
+			if int(sample.get("round_reached", 0)) < 3 or int(sample.get("terminal_health_margin_pct", 100)) >= 80 or int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 10:
+				failures.append("Archive Wardens remains outside its bounded pressure target")
+				failed_turn_logs[placement_id] = sample.get("turn_log", [])
+		elif UNCHANGED_SAMPLE_CONTRACTS.has(placement_id):
+			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
+			if int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
+				failures.append("%s changed outside the Archive Wardens correction" % placement_id)
+				failed_turn_logs[placement_id] = sample.get("turn_log", [])
+	var cohort_average := terminal_margin_total / PLACEMENT_IDS.size()
+	payload["cohort_average_terminal_health_margin_pct"] = cohort_average
+	if cohort_average > MAX_COHORT_TERMINAL_MARGIN_PCT:
+		failures.append("Orevein encounter cohort remains above its terminal-margin target")
 	if not failures.is_empty():
 		payload["failures"] = failures
 		payload["turn_logs"] = failed_turn_logs
