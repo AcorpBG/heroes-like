@@ -248,9 +248,19 @@ func resume_latest_session() -> bool:
 	return resume_summary(SaveService.latest_loadable_summary())
 
 func save_active_session_to_selected_manual_slot() -> Dictionary:
+	return save_active_session_to_manual_slot(SaveService.get_selected_manual_slot())
+
+func save_active_session_to_manual_slot(manual_slot: int) -> Dictionary:
 	if not SessionState.has_playable_session():
 		return {"ok": false, "message": "No active expedition is available to save.", "summary": {}}
-	return SaveService.save_runtime_selected_manual_session(SessionState.ensure_active_session())
+	if not SaveService.get_manual_slot_ids().has(manual_slot):
+		return {"ok": false, "message": "Choose a valid manual save slot.", "summary": {}}
+	return SaveService.save_runtime_manual_session(SessionState.ensure_active_session(), manual_slot)
+
+func active_manual_save_action(manual_slot: int = -1) -> Dictionary:
+	var selected_slot := SaveService.get_selected_manual_slot() if manual_slot < 0 else manual_slot
+	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
+	return SaveService.build_manual_save_action(session, selected_slot)
 
 func active_save_surface() -> Dictionary:
 	if not SessionState.has_playable_session():

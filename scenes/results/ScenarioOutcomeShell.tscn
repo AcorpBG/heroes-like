@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://scenario_outcome_shell"]
+[gd_scene load_steps=5 format=3 uid="uid://scenario_outcome_shell"]
 
 [ext_resource type="Script" path="res://scenes/results/ScenarioOutcomeShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/results/OutcomeBannerView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/shared/ManualSaveOverwriteDialog.tscn" id="4_save_overwrite"]
 
 [node name="ScenarioOutcomeShell" type="Control"]
 layout_mode = 3
@@ -483,7 +484,11 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Outcome guide"
 
+[node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
+
 [connection signal="item_selected" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Menu" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Guide" to="." method="_on_guide_pressed"]
+[connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
+[connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]

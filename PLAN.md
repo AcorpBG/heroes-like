@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-manual-save-overwrite-confirmation-10184`. Manual saves from overworld, town, battle, and scenario outcome now require one shared exact slot-bound confirmation before replacing an occupied or unreadable manual slot, while empty slots remain one-step saves. Cancellation preserves exact bytes, invalid slots fail closed, and changing selection cannot redirect a pending overwrite. Focused four-route proof, 1280x720/1920x1080 captures, save/load confidence, menu/outcome, active-play keyboard, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, undo/history, autosave confirmation, broad save-browser redesign, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-save-slot-delete-workflow-10184`. The live Saves board now exposes a compact Delete Save command for any occupied autosave or manual slot, including corrupt/unloadable files, and requires exact slot-bound confirmation before removal. SaveService derives paths only from canonical autosave/manual identities, rejects unknown or invalid ids and forged paths, invalidates the selected summary cache after deletion, and refreshes the deleted row to Empty while recalculating latest save state. Focused proof covers cancellation, Manual Slot 2, autosave, corrupt-slot deletion, forged-path rejection, three preserved unrelated saves, campaign progression, device settings, active expedition state, and save version 9; 1280x720/1920x1080 captures, 1024x600 save-load confidence, lean boot, menu/outcome, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, bulk deletion, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `campaign-arc-restart-workflow-10184`. The live campaign board now exposes a compact Restart Arc command only for arcs with recorded progress and requires a campaign-bound confirmation that reports the exact attempts, victories, and carryover being cleared. Confirmation persists a normalized campaign-local reset, returns the selected arc to its authored Chapter I, hides the now-inapplicable command, and preserves other campaign progress, expedition saves, device settings, selected difficulty, and save version 9. Focused persistence, 1280x720 and 1920x1080 visual captures, player-facing campaign flow, six-campaign breadth, menu/outcome, core systems, project parsing, and repository validation pass. Campaign content, balance, chapter rules, broad menu redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `packaging-platform-native-installers-10184`. The verified Linux/Windows release pipeline now emits a reproducible Linux self-installing `.run` and Windows NSIS setup executable from the exact release payloads. Release-index schema v2 links and checksums both installers against their source archives; verification rejects outer and embedded-payload tampering. Isolated Linux and Wine lifecycles install and boot the packaged game, remove owned program and launcher files, and preserve external user data. Code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, and overall release completion remain open.
@@ -801,6 +802,28 @@ Target shape:
 Non-goals:
 - do not add save renaming, cloud synchronization, recycling/undo, bulk deletion, or automatic cleanup;
 - do not reset campaign progression, delete every save, change save schema, redesign the Saves board, change Native RMG, or claim overall release completion.
+
+## Confirmed Manual Save Overwrite
+
+Completed slice: `ux-manual-save-overwrite-confirmation-10184`.
+
+Implementation target:
+- build one trusted manual-save action from the active session and canonical manual slot id;
+- save immediately when the selected manual slot is empty;
+- require a shared exact slot-bound confirmation before replacing an occupied or unreadable slot from overworld, town, battle, or scenario outcome;
+- keep the pending overwrite bound to its original slot even if selection changes before confirmation;
+- preserve explicit validation-only direct-save helpers for established active-play smoke coverage.
+
+Completion evidence:
+- focused runtime proof covers empty-slot direct save, occupied cancel/confirm, unreadable-slot confirmation, pending-slot binding, and all four active-play shells;
+- cancellation preserves exact save bytes, confirmation changes only the bound manual slot, and unrelated manual slots plus autosave remain unchanged;
+- campaign progression, device settings, active expedition state, and save version 9 remain unchanged;
+- 1280x720 and 1920x1080 confirmation captures plus broad save, active-play, core-system, project-parse, and repository validation pass.
+
+Non-goals:
+- do not add save renaming, cloud synchronization, undo/history, bulk operations, or autosave confirmation;
+- do not alter save schema/version, campaign progression, settings, gameplay, balance, or Native RMG behavior;
+- do not redesign active-play save rails or claim overall release completion.
 
 ## Campaign Arc Restart Workflow
 

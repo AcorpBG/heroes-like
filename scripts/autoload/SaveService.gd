@@ -183,6 +183,54 @@ func build_delete_action(summary: Dictionary) -> Dictionary:
 		"summary": summary_text,
 	}
 
+func build_manual_save_action(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int
+) -> Dictionary:
+	if not MANUAL_SLOT_IDS.has(manual_slot):
+		return {
+			"slot": manual_slot,
+			"slot_label": "Manual Slot",
+			"disabled": true,
+			"requires_confirmation": false,
+			"summary": "Choose a valid manual save slot.",
+		}
+	if session == null or session.scenario_id == "":
+		return {
+			"slot": manual_slot,
+			"slot_label": "Manual Slot %d" % manual_slot,
+			"disabled": true,
+			"requires_confirmation": false,
+			"summary": "No active expedition is available to save.",
+		}
+
+	var existing_summary := inspect_manual_slot(manual_slot)
+	var current_summary := _manual_summary_for_session(session, manual_slot)
+	var occupied := FileAccess.file_exists(_slot_path(manual_slot))
+	var existing_context := "Empty"
+	if occupied:
+		existing_context = describe_resume_brief(existing_summary) if can_load_summary(existing_summary) else "Unreadable expedition save"
+	var current_context := describe_resume_brief(current_summary)
+	var slot_label := "Manual Slot %d" % manual_slot
+	var summary_text := "Save %s to %s." % [current_context, slot_label]
+	if occupied:
+		summary_text = "Replace %s?\n\nCurrently saved: %s\nNew snapshot: %s\n\nOnly %s will be replaced. Other manual saves, autosave, campaign progress, settings, and the active expedition are preserved." % [
+			slot_label,
+			existing_context,
+			current_context,
+			slot_label,
+		]
+	return {
+		"slot": manual_slot,
+		"slot_label": slot_label,
+		"disabled": false,
+		"occupied": occupied,
+		"requires_confirmation": occupied,
+		"existing_context": existing_context,
+		"current_context": current_context,
+		"summary": summary_text,
+	}
+
 func delete_session_from_summary(summary: Dictionary) -> Dictionary:
 	var identity := _deletable_slot_identity(summary)
 	var action := build_delete_action(summary)

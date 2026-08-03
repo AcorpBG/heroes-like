@@ -71,6 +71,7 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 @onready var _save_button: Button = %Save
 @onready var _leave_button: Button = %Leave
 @onready var _menu_button: Button = %Menu
+@onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
@@ -302,10 +303,21 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	_refresh()
 
 func _on_save_pressed() -> void:
+	var action := AppRouter.active_manual_save_action()
+	if bool(action.get("disabled", true)):
+		_last_message = String(action.get("summary", "The town visit could not be saved."))
+		_refresh()
+		return
+	if bool(action.get("requires_confirmation", false)):
+		_manual_save_overwrite_dialog.open_action(action)
+		return
+	_commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
+
+func _commit_manual_save(manual_slot: int) -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var save_started := ProfileLogScript.begin_usec()
-	var result := AppRouter.save_active_session_to_selected_manual_slot()
+	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
 	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = {}
@@ -316,6 +328,14 @@ func _on_save_pressed() -> void:
 	_refresh_save_slot_picker(true)
 	buckets["save_surface_force"] = ProfileLogScript.elapsed_ms(save_surface_started)
 	ProfileLogScript.emit_general("town", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
+
+func _on_manual_save_overwrite_confirmed() -> void:
+	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
+	if SaveService.get_manual_slot_ids().has(manual_slot):
+		_commit_manual_save(manual_slot)
+
+func _on_manual_save_overwrite_canceled() -> void:
+	_manual_save_overwrite_dialog.clear_pending()
 
 func _on_save_slot_selected(index: int) -> void:
 	if index < 0 or index >= _save_slot_picker.get_item_count():
@@ -1524,6 +1544,7 @@ func validation_snapshot() -> Dictionary:
 	var defense_check := _defense_check_surface()
 	return {
 		"scene_path": scene_file_path,
+		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
@@ -1913,7 +1934,7 @@ func validation_select_save_slot(slot: int) -> bool:
 
 func validation_save_to_selected_slot() -> Dictionary:
 	var selected_slot := SaveService.get_selected_manual_slot()
-	_on_save_pressed()
+	_commit_manual_save(selected_slot)
 	var summary := SaveService.inspect_manual_slot(selected_slot)
 	return {
 		"ok": SaveService.can_load_summary(summary),
@@ -1921,6 +1942,22 @@ func validation_save_to_selected_slot() -> Dictionary:
 		"summary": summary,
 		"message": _last_message,
 	}
+
+func validation_request_manual_save() -> Dictionary:
+	_on_save_pressed()
+	return _manual_save_overwrite_dialog.validation_snapshot()
+
+func validation_confirm_manual_save_overwrite() -> Dictionary:
+	var pending_slot := int(_manual_save_overwrite_dialog.validation_snapshot().get("pending_slot", 0))
+	_on_manual_save_overwrite_confirmed()
+	return {
+		"pending_slot": pending_slot,
+		"summary": SaveService.inspect_manual_slot(pending_slot) if SaveService.get_manual_slot_ids().has(pending_slot) else {},
+		"message": _last_message,
+	}
+
+func validation_cancel_manual_save_overwrite() -> void:
+	_on_manual_save_overwrite_canceled()
 
 func validation_return_to_menu() -> Dictionary:
 	var town := TownRules.get_active_town(_session)

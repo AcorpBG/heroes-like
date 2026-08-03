@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=5 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/shared/ManualSaveOverwriteDialog.tscn" id="4_save_overwrite"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -632,6 +633,8 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
 
+[node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
+
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar/PrevTarget" to="." method="_on_prev_target_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar/NextTarget" to="." method="_on_next_target_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Advance" to="." method="_on_advance_pressed"]
@@ -646,3 +649,5 @@ text = "Menu"
 [connection signal="item_selected" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Menu" to="." method="_on_menu_pressed"]
+[connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
+[connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]
