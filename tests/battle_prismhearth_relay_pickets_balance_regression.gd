@@ -1,27 +1,14 @@
 extends Node
 
 const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
-const REPORT_ID := "BATTLE_REEDBARROW_CHAIN_BALANCE_REGRESSION"
-const SCENARIO_ID := "reedbarrow-ferry"
-const PLACEMENT_IDS := ["barrow_pickets", "reedbarrow_chain", "reedbarrow_levee_totemists"]
-const LOCAL_ARMY_CONTRACTS := {
-	"barrow_pickets": {
-		"army_id": "army_reedbarrow_barrow_pickets_watch",
-		"stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 12},
-	},
-	"reedbarrow_chain": {
-		"army_id": "army_reedbarrow_chain_watch",
-		"stack_counts": {"unit_bog_brute": 5, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
-	},
-}
-const SHARED_ARMY_CONTRACTS := {
-	"army_barrow_pickets": {"unit_blackbranch_cutthroat": 14, "unit_mire_slinger": 9},
-	"army_reedbarrow_chain": {"unit_bog_brute": 6, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
-	"army_muckveil_harriers": {"unit_mire_slinger": 10, "unit_blackbranch_cutthroat": 6, "unit_gorefen_ripper": 2},
-}
+const REPORT_ID := "BATTLE_PRISMHEARTH_RELAY_PICKETS_BALANCE_REGRESSION"
+const SCENARIO_ID := "prismhearth-watch"
+const PLACEMENT_IDS := ["prismhearth_relay_pickets", "prismhearth_glasswing_sortie", "prismhearth_halo_reserve"]
+const LOCAL_STACK_COUNTS := {"unit_shard_guard": 6, "unit_prism_adept": 2}
+const SHARED_STACK_COUNTS := {"unit_shard_guard": 5, "unit_prism_adept": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"barrow_pickets": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 73, "enemy_damage_per_round": 6},
-	"reedbarrow_levee_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 36, "enemy_damage_per_round": 21},
+	"prismhearth_glasswing_sortie": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 52, "enemy_damage_per_round": 23},
+	"prismhearth_halo_reserve": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 36},
 }
 
 func _ready() -> void:
@@ -31,32 +18,30 @@ func _run() -> void:
 	ContentService.clear_cache()
 	var failures := []
 	var payload := {"ok": true, "report_id": REPORT_ID, "scenario_id": SCENARIO_ID, "samples": []}
-	for army_id in SHARED_ARMY_CONTRACTS:
-		if _stack_counts(ContentService.get_army_group(String(army_id))) != SHARED_ARMY_CONTRACTS[army_id]:
-			failures.append("%s changed with the Reedbarrow placement-local correction" % army_id)
+	if _stack_counts(ContentService.get_army_group("army_relay_pickets")) != SHARED_STACK_COUNTS:
+		failures.append("army_relay_pickets changed with the placement-local correction")
 	for placement_id in PLACEMENT_IDS:
 		var encounter := _encounter(placement_id)
 		if encounter.is_empty():
 			failures.append("%s is missing" % placement_id)
 			continue
-		if LOCAL_ARMY_CONTRACTS.has(placement_id):
+		if placement_id == "prismhearth_relay_pickets":
 			var local_army: Dictionary = encounter.get("enemy_army", {})
-			var army_contract: Dictionary = LOCAL_ARMY_CONTRACTS[placement_id]
-			if String(local_army.get("id", "")) != String(army_contract.get("army_id", "")) or _stack_counts(local_army) != army_contract.get("stack_counts", {}):
-				failures.append("%s placement-local army drifted" % placement_id)
+			if String(local_army.get("id", "")) != "army_prismhearth_relay_pickets_watch" or _stack_counts(local_army) != LOCAL_STACK_COUNTS:
+				failures.append("Prismhearth Relay Pickets placement-local army drifted")
 		var sample := Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(placement_id, sample))
-		if placement_id == "reedbarrow_chain":
-			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "defeat" or not String(sample.get("pacing_band", "")) in ["standard", "extended"]:
-				failures.append("Reedbarrow Chain is not a bounded high-difficulty defeat")
+		if placement_id == "prismhearth_relay_pickets":
 			var round_reached := int(sample.get("round_reached", 0))
 			var enemy_dpr := int(sample.get("damage_per_round", {}).get("enemy", 0))
-			if round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 65 or enemy_dpr > 50:
-				failures.append("Reedbarrow Chain remains outside its pacing and pressure target")
+			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory" or not String(sample.get("pacing_band", "")) in ["standard", "extended"]:
+				failures.append("Prismhearth Relay Pickets is not a bounded player victory")
+			if round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 74 or enemy_dpr <= 2 or enemy_dpr > 50:
+				failures.append("Prismhearth Relay Pickets remains outside its pacing and pressure target")
 		else:
 			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
 			if String(sample.get("outcome_state", "")) != String(expected.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(expected.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
-				failures.append("%s changed outside the Chain correction" % placement_id)
+				failures.append("%s changed outside the Relay Pickets correction" % placement_id)
 	if not failures.is_empty():
 		payload["ok"] = false
 		payload["failures"] = failures

@@ -3,7 +3,12 @@ extends Node
 const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_FORD_REAVERS_BALANCE_REGRESSION"
 const PLACEMENT_ID := "bridge_ford_reavers"
-const MAX_TERMINAL_MARGIN_PCT := 90
+const LOCAL_ARMY_CONTRACTS := {
+	"ironbridge-stand": {"army_id": "army_ironbridge_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12, "unit_bog_brute": 2}},
+	"mireford-skirmish": {"army_id": "army_mireford_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 11}},
+}
+const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 8}
+const UNCHANGED_MIREFORD_SAMPLE := {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 35}
 const CASES := [
 	{"scenario_id": "ironbridge-stand"},
 	{"scenario_id": "mireford-skirmish"},
@@ -21,24 +26,31 @@ func _run() -> void:
 	}
 	var failures := []
 	var failed_turn_logs := {}
+	if _stack_counts(ContentService.get_army_group("army_ford_reavers")) != SHARED_STACK_COUNTS:
+		failures.append("army_ford_reavers changed with the placement-local correction")
 	for case_config in CASES:
 		var scenario_id := String(case_config.get("scenario_id", ""))
 		var encounter := _encounter(scenario_id)
 		if encounter.is_empty():
 			failures.append("%s is missing %s" % [scenario_id, PLACEMENT_ID])
 			continue
+		var local_army: Dictionary = encounter.get("enemy_army", {})
+		var army_contract: Dictionary = LOCAL_ARMY_CONTRACTS[scenario_id]
+		if String(local_army.get("id", "")) != String(army_contract.get("army_id", "")) or _stack_counts(local_army) != army_contract.get("stack_counts", {}):
+			failures.append("%s placement-local army drifted" % scenario_id)
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(scenario_id, encounter, 72, "normal")
 		var compact := _compact_sample(scenario_id, sample)
 		payload["samples"].append(compact)
-		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
-			failures.append("%s no longer resolves as a bounded player victory" % scenario_id)
-			failed_turn_logs[scenario_id] = sample.get("turn_log", [])
-		elif int(sample.get("terminal_health_margin_pct", 100)) > MAX_TERMINAL_MARGIN_PCT:
-			failures.append("%s remains above the matrix terminal-margin target" % scenario_id)
-			failed_turn_logs[scenario_id] = sample.get("turn_log", [])
-		elif int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
-			failures.append("%s still fails to apply meaningful enemy pressure" % scenario_id)
-			failed_turn_logs[scenario_id] = sample.get("turn_log", [])
+		if scenario_id == "ironbridge-stand":
+			var round_reached := int(sample.get("round_reached", 0))
+			var enemy_dpr := int(sample.get("damage_per_round", {}).get("enemy", 0))
+			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory" or not String(sample.get("pacing_band", "")) in ["standard", "extended"] or round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 74 or enemy_dpr <= 2 or enemy_dpr > 50:
+				failures.append("Ironbridge Ford Reavers remains outside its pacing and pressure target")
+				failed_turn_logs[scenario_id] = sample.get("turn_log", [])
+		else:
+			if String(sample.get("outcome_state", "")) != String(UNCHANGED_MIREFORD_SAMPLE.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(UNCHANGED_MIREFORD_SAMPLE.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(UNCHANGED_MIREFORD_SAMPLE.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(UNCHANGED_MIREFORD_SAMPLE.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(UNCHANGED_MIREFORD_SAMPLE.get("enemy_damage_per_round", -1)):
+				failures.append("Mireford Ford Reavers changed outside the Ironbridge correction")
+				failed_turn_logs[scenario_id] = sample.get("turn_log", [])
 	if not failures.is_empty():
 		payload["failures"] = failures
 		payload["turn_logs"] = failed_turn_logs
@@ -58,6 +70,7 @@ func _compact_sample(scenario_id: String, sample: Dictionary) -> Dictionary:
 	return {
 		"scenario_id": scenario_id,
 		"outcome_state": String(sample.get("outcome_state", "")),
+		"pacing_band": String(sample.get("pacing_band", "")),
 		"round_reached": int(sample.get("round_reached", 0)),
 		"player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)),
 		"enemy_health_remaining_pct": int(sample.get("enemy_health_remaining_pct", 0)),
@@ -66,6 +79,13 @@ func _compact_sample(scenario_id: String, sample: Dictionary) -> Dictionary:
 		"action_mix": sample.get("action_mix", {}),
 		"initial_stack_profile": sample.get("initial_stack_profile", {}),
 	}
+
+func _stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack in army.get("stacks", []):
+		if stack is Dictionary:
+			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
+	return counts
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false
