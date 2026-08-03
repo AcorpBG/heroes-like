@@ -33,6 +33,7 @@ func _run() -> void:
 	custom["accessibility"]["battle_camera_shake"] = SettingsService.BATTLE_CAMERA_SHAKE_REDUCED
 	custom["accessibility"]["reduce_flashes"] = true
 	custom["accessibility"]["reduce_motion"] = true
+	custom["accessibility"]["reduce_repetitive_sounds"] = true
 	SettingsService.settings = custom.duplicate(true)
 	SettingsService.apply_settings()
 	if SettingsService.save_settings() != SettingsService.SETTINGS_FILE:
@@ -86,6 +87,9 @@ func _run() -> void:
 		return
 	if Engine.max_fps != 0 or SettingsService.battle_playback_speed_id() != SettingsService.BATTLE_PLAYBACK_SPEED_NORMAL:
 		_fail("Default pacing and gameplay settings were not applied to the live runtime.")
+		return
+	if SettingsService.reduced_repetitive_sounds_enabled():
+		_fail("Restore Defaults did not restore normal sound repetition.")
 		return
 
 	SettingsService.settings = {}

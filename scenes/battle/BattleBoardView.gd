@@ -76,6 +76,8 @@ const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
 const BATTLE_VFX_CAST_COLOR := Color(0.72, 0.80, 1.0, 0.78)
 const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
 const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
+const BATTLE_AUDIO_REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 4
+const BATTLE_AUDIO_REDUCED_REPETITION_COOLDOWN_MULTIPLIER := 2
 const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_AUDIO_PRIORITY_VALUES := {"low": 1, "normal": 2, "high": 3, "critical": 4}
@@ -740,6 +742,8 @@ func validation_audio_playback_summary() -> Dictionary:
 		"sfx_manifest_path": BATTLE_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _battle_sfx_manifest_loaded,
 		"muted": SettingsService.effects_audio_muted(),
+		"reduced_repetitive_sounds": SettingsService.reduced_repetitive_sounds_enabled(),
+		"effective_voice_budget": _effective_battle_audio_voice_budget(),
 		"active_records": records,
 	}
 
@@ -2388,6 +2392,8 @@ func _play_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictio
 			"priority_class": String(admission.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)),
 			"priority": int(admission.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS])),
 			"repeat_cooldown_msec": int(admission.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC)),
+			"effective_voice_budget": int(admission.get("effective_voice_budget", BATTLE_AUDIO_MAX_ACTIVE_PLAYERS)),
+			"reduced_repetitive_sounds": bool(admission.get("reduced_repetitive_sounds", false)),
 			"suppressed_reason": String(admission.get("reason", "mix_policy")),
 		}
 	var imported := _play_imported_audio_cue(audio_id, battle_id, serial, admission)
@@ -2497,28 +2503,34 @@ func _audio_mix_admission(audio_id: String) -> Dictionary:
 	var priority := int(policy.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS]))
 	var priority_class := String(policy.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS))
 	var cooldown_msec := int(policy.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))
+	var voice_budget := _effective_battle_audio_voice_budget()
+	var reduced_repetition := SettingsService.reduced_repetitive_sounds_enabled()
 	if SettingsService.effects_audio_muted():
 		_record_audio_cue_suppressed("effects_muted")
-		return {"allowed": false, "reason": "effects_muted", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+		return {"allowed": false, "reason": "effects_muted", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec, "effective_voice_budget": voice_budget, "reduced_repetitive_sounds": reduced_repetition}
 	_cleanup_audio_players()
+	while _active_audio_players.size() > voice_budget:
+		_evict_audio_voice(_audio_eviction_candidate_index())
 	var now := int(Time.get_ticks_msec())
 	var last_started := int(_audio_last_started_msec_by_cue.get(audio_id, -1000000000))
 	if cooldown_msec > 0 and now - last_started < cooldown_msec:
 		_record_audio_cue_suppressed("repeat_cooldown")
-		return {"allowed": false, "reason": "repeat_cooldown", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+		return {"allowed": false, "reason": "repeat_cooldown", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec, "effective_voice_budget": voice_budget, "reduced_repetitive_sounds": reduced_repetition}
 	var evicted := {}
-	if _active_audio_players.size() >= BATTLE_AUDIO_MAX_ACTIVE_PLAYERS:
+	if _active_audio_players.size() >= voice_budget:
 		var candidate_index := _audio_eviction_candidate_index()
 		var candidate: Dictionary = _active_audio_players[candidate_index] if candidate_index >= 0 and _active_audio_players[candidate_index] is Dictionary else {}
 		if candidate.is_empty() or priority <= int(candidate.get("priority", 0)):
 			_record_audio_cue_suppressed("voice_budget")
-			return {"allowed": false, "reason": "voice_budget", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+			return {"allowed": false, "reason": "voice_budget", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec, "effective_voice_budget": voice_budget, "reduced_repetitive_sounds": reduced_repetition}
 		evicted = _evict_audio_voice(candidate_index)
 	return {
 		"allowed": true,
 		"priority": priority,
 		"priority_class": priority_class,
 		"repeat_cooldown_msec": cooldown_msec,
+		"effective_voice_budget": voice_budget,
+		"reduced_repetitive_sounds": reduced_repetition,
 		"evicted_audio_id": String(evicted.get("audio_id", "")),
 		"evicted_priority_class": String(evicted.get("priority_class", "")),
 	}
@@ -2528,11 +2540,17 @@ func _audio_mix_policy(audio_id: String) -> Dictionary:
 	var priority_class := String(cue.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)).strip_edges()
 	if not BATTLE_AUDIO_PRIORITY_VALUES.has(priority_class):
 		priority_class = BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS
+	var repeat_cooldown_msec := maxi(0, int(cue.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC)))
+	if SettingsService.reduced_repetitive_sounds_enabled():
+		repeat_cooldown_msec *= BATTLE_AUDIO_REDUCED_REPETITION_COOLDOWN_MULTIPLIER
 	return {
 		"priority_class": priority_class,
 		"priority": int(BATTLE_AUDIO_PRIORITY_VALUES[priority_class]),
-		"repeat_cooldown_msec": maxi(0, int(cue.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))),
+		"repeat_cooldown_msec": repeat_cooldown_msec,
 	}
+
+func _effective_battle_audio_voice_budget() -> int:
+	return BATTLE_AUDIO_REDUCED_REPETITION_MAX_ACTIVE_PLAYERS if SettingsService.reduced_repetitive_sounds_enabled() else BATTLE_AUDIO_MAX_ACTIVE_PLAYERS
 
 func _audio_eviction_candidate_index() -> int:
 	var candidate_index := -1
@@ -2568,6 +2586,8 @@ func _record_audio_cue_started(audio_id: String, playback: Dictionary, admission
 	playback["priority_class"] = String(admission.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS))
 	playback["priority"] = int(admission.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS]))
 	playback["repeat_cooldown_msec"] = int(admission.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))
+	playback["effective_voice_budget"] = int(admission.get("effective_voice_budget", BATTLE_AUDIO_MAX_ACTIVE_PLAYERS))
+	playback["reduced_repetitive_sounds"] = bool(admission.get("reduced_repetitive_sounds", false))
 	playback["evicted_audio_id"] = String(admission.get("evicted_audio_id", ""))
 	playback["evicted_priority_class"] = String(admission.get("evicted_priority_class", ""))
 

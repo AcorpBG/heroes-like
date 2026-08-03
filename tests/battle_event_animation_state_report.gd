@@ -23,6 +23,7 @@ func _run() -> void:
 	_original_settings = SettingsService.settings.duplicate(true)
 	SettingsService.settings["accessibility"]["reduce_motion"] = false
 	SettingsService.settings["accessibility"]["reduce_flashes"] = false
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = false
 	SettingsService.settings["accessibility"]["battle_camera_shake"] = SettingsService.BATTLE_CAMERA_SHAKE_FULL
 	SettingsService.settings["audio"]["effects_volume_percent"] = 100
 	SettingsService.apply_settings()
@@ -656,7 +657,9 @@ func _validate_battle_audio_mix_policy() -> void:
 	add_child(view)
 	await get_tree().process_frame
 	var original_effects_volume := SettingsService.effects_volume_percent()
+	var original_reduced_repetition := SettingsService.reduced_repetitive_sounds_enabled()
 	SettingsService.settings["audio"]["effects_volume_percent"] = 100
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = false
 	SettingsService.apply_settings()
 
 	view.validation_reset_audio_mix()
@@ -707,7 +710,29 @@ func _validate_battle_audio_mix_policy() -> void:
 	_expect_equal("audio mix muted reason", String(muted_result.get("suppressed_reason", "")), "effects_muted")
 	_expect_int("audio mix muted active voices", int(muted_summary.get("active_player_count", 0)), 0)
 
+	SettingsService.settings["audio"]["effects_volume_percent"] = 100
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = true
+	SettingsService.apply_settings()
+	view.validation_reset_audio_mix()
+	var reduced_idle: Dictionary = view.validation_play_audio_cue("audio_placeholder_idle_soft", "mix_reduced_idle", 50)
+	for reduced_fill in ["audio_placeholder_hit", "audio_placeholder_status_apply", "audio_placeholder_status_clear"]:
+		var reduced_fill_result: Dictionary = view.validation_play_audio_cue(String(reduced_fill), "mix_reduced_fill_%s" % reduced_fill, 51)
+		if not bool(reduced_fill_result.get("played", false)):
+			_error("Reduced audio mix could not fill %s: %s" % [reduced_fill, reduced_fill_result])
+	var reduced_full_summary: Dictionary = view.validation_audio_playback_summary()
+	_expect_int("reduced audio mix voice budget", int(reduced_full_summary.get("effective_voice_budget", 0)), 4)
+	_expect_int("reduced audio mix active voices", int(reduced_full_summary.get("active_player_count", 0)), 4)
+	_expect_int("reduced audio mix doubled cooldown", int(reduced_idle.get("repeat_cooldown_msec", 0)), int(first_idle.get("repeat_cooldown_msec", 0)) * 2)
+	var reduced_critical: Dictionary = view.validation_play_audio_cue("audio_spell_cinder_burst", "mix_reduced_critical", 60)
+	_expect_equal("reduced audio mix critical source", String(reduced_critical.get("source", "")), "imported_wav")
+	_expect_equal("reduced audio mix critical eviction", String(reduced_critical.get("evicted_audio_id", "")), "audio_placeholder_idle_soft")
+	var reduced_post_critical: Dictionary = view.validation_audio_playback_summary()
+	_expect_int("reduced audio mix post-critical voices", int(reduced_post_critical.get("active_player_count", 0)), 4)
+	var reduced_low_budget: Dictionary = view.validation_play_audio_cue("audio_placeholder_unit_step", "mix_reduced_low", 61)
+	_expect_equal("reduced audio mix low budget reason", String(reduced_low_budget.get("suppressed_reason", "")), "voice_budget")
+
 	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = original_reduced_repetition
 	SettingsService.apply_settings()
 	view.validation_reset_audio_mix()
 	view.queue_free()
@@ -720,6 +745,10 @@ func _validate_battle_audio_mix_policy() -> void:
 		"low_budget_result": low_budget_result,
 		"muted_result": muted_result,
 		"muted_summary": muted_summary,
+		"reduced_full_budget": reduced_full_summary,
+		"reduced_critical": reduced_critical,
+		"reduced_post_critical": reduced_post_critical,
+		"reduced_low_budget": reduced_low_budget,
 	}
 
 func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:

@@ -23,6 +23,7 @@ const TEST_VALUES := {
 	"battle_camera_shake": "reduced",
 	"reduce_flashes": true,
 	"reduce_motion": true,
+	"reduce_repetitive_sounds": true,
 }
 
 var _errors: Array[String] = []
@@ -77,6 +78,7 @@ func _run_persistence_check() -> void:
 		"migrated_color_cue_mode": SettingsService.color_cue_mode_id(),
 		"migrated_battle_camera_shake": SettingsService.battle_camera_shake_mode_id(),
 		"migrated_reduce_flashes": SettingsService.reduced_flashes_enabled(),
+		"migrated_reduce_repetitive_sounds": SettingsService.reduced_repetitive_sounds_enabled(),
 		"migrated_battle_playback_speed": SettingsService.battle_playback_speed_id(),
 		"migrated_keyboard_navigation_layout": SettingsService.keyboard_navigation_layout_id(),
 		"migrated_custom_hero_movement_bindings": SettingsService.custom_hero_movement_bindings(),
@@ -86,6 +88,7 @@ func _run_persistence_check() -> void:
 	_expect(SettingsService.color_cue_mode_id() == SettingsService.COLOR_CUE_MODE_STANDARD, "Legacy settings must default to standard color cues.")
 	_expect(SettingsService.battle_camera_shake_mode_id() == SettingsService.BATTLE_CAMERA_SHAKE_FULL, "Legacy settings must default to Full battle shake.")
 	_expect(not SettingsService.reduced_flashes_enabled(), "Legacy settings must default to full flash feedback.")
+	_expect(not SettingsService.reduced_repetitive_sounds_enabled(), "Legacy settings must default to normal sound repetition.")
 	_expect(SettingsService.battle_playback_speed_id() == SettingsService.BATTLE_PLAYBACK_SPEED_NORMAL, "Legacy settings must default to Normal battle playback.")
 	_expect(SettingsService.keyboard_navigation_layout_id() == SettingsService.KEYBOARD_NAVIGATION_LAYOUT_WASD, "Legacy settings must default to WASD + Arrows navigation.")
 	_expect(not SettingsService.has_custom_hero_movement_bindings(), "Legacy settings must default to preset hero movement bindings.")
@@ -117,6 +120,7 @@ func _run_persistence_check() -> void:
 	SettingsService.set_battle_camera_shake_mode_id(String(TEST_VALUES["battle_camera_shake"]))
 	SettingsService.set_reduced_flashes_enabled(bool(TEST_VALUES["reduce_flashes"]))
 	SettingsService.set_reduced_motion_enabled(bool(TEST_VALUES["reduce_motion"]))
+	SettingsService.set_reduced_repetitive_sounds_enabled(bool(TEST_VALUES["reduce_repetitive_sounds"]))
 	var saved_path := SettingsService.save_settings()
 	_report["saved_path"] = saved_path
 	_expect(saved_path == SettingsService.SETTINGS_FILE, "SettingsService.save_settings must return the user:// settings path.")
@@ -253,6 +257,7 @@ func _run_persistence_check() -> void:
 	_expect(assisted_red.r > assisted_red.g and assisted_red.g > assisted_red.b, "Assisted danger styling must use an orange-biased cue instead of red.")
 	_expect(assisted_player.b > assisted_player.r and assisted_enemy.r > assisted_enemy.b, "Assisted ownership colors must separate player blue from enemy orange.")
 	_expect(bool(direct_values.get("reduce_motion", false)) == bool(TEST_VALUES["reduce_motion"]), "Direct config reduce motion mismatch.")
+	_expect(bool(direct_values.get("reduce_repetitive_sounds", false)) == bool(TEST_VALUES["reduce_repetitive_sounds"]), "Direct config reduced repetitive sounds mismatch.")
 
 	SettingsService.settings = {}
 	SettingsService.load_settings()
@@ -276,6 +281,7 @@ func _run_persistence_check() -> void:
 		"battle_camera_shake_scale": SettingsService.battle_camera_shake_scale(),
 		"reduce_flashes": SettingsService.reduced_flashes_enabled(),
 		"reduce_motion": SettingsService.reduced_motion_enabled(),
+		"reduce_repetitive_sounds": SettingsService.reduced_repetitive_sounds_enabled(),
 		"description_has_persistence_check": "Settings check:" in SettingsService.describe_settings(),
 	}
 	_report["reloaded_values"] = reloaded
@@ -305,6 +311,7 @@ func _run_persistence_check() -> void:
 	_expect(bool(reloaded["reduce_flashes"]) == bool(TEST_VALUES["reduce_flashes"]), "Reloaded reduce flashes mismatch.")
 	_expect(is_equal_approx(get_tree().root.content_scale_factor, 1.30), "Reloaded 130% UI scale must remain applied to the root window.")
 	_expect(bool(reloaded["reduce_motion"]) == bool(TEST_VALUES["reduce_motion"]), "Reloaded reduce motion mismatch.")
+	_expect(bool(reloaded["reduce_repetitive_sounds"]) == bool(TEST_VALUES["reduce_repetitive_sounds"]), "Reloaded reduced repetitive sounds mismatch.")
 	_expect(bool(reloaded["description_has_persistence_check"]), "Settings description must include the persistence check copy.")
 
 func _read_settings_config_values() -> Dictionary:
@@ -333,6 +340,7 @@ func _read_settings_config_values() -> Dictionary:
 		"battle_camera_shake": String(config.get_value("accessibility", "battle_camera_shake", "")),
 		"reduce_flashes": bool(config.get_value("accessibility", "reduce_flashes", false)),
 		"reduce_motion": bool(config.get_value("accessibility", "reduce_motion", false)),
+		"reduce_repetitive_sounds": bool(config.get_value("accessibility", "reduce_repetitive_sounds", false)),
 	}
 
 func _action_has_key(action: StringName, keycode: Key) -> bool:

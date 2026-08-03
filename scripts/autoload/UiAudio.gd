@@ -3,6 +3,7 @@ extends Node
 
 const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 8
+const REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 4
 const MAX_RECORDS := 24
 const UI_SFX_MANIFEST_PATH := "res://content/ui_sfx_manifest.json"
 const EFFECTS_AUDIO_BUS := "Effects"
@@ -14,10 +15,19 @@ const CUE_SPECS := {
 	"ui_confirm": {"frequency": 760.0, "duration": 0.09, "gain": 0.11},
 	"ui_invalid": {"frequency": 180.0, "duration": 0.11, "gain": 0.10},
 }
+const REDUCED_REPETITION_COOLDOWN_MSEC := {
+	"ui_click": 120,
+	"ui_select": 160,
+	"ui_adjust": 180,
+	"ui_tab": 180,
+	"ui_confirm": 220,
+	"ui_invalid": 260,
+}
 
 var _connected_control_ids := {}
 var _records: Array[Dictionary] = []
 var _active_players: Array[AudioStreamPlayer] = []
+var _last_started_msec_by_cue := {}
 var _ui_sfx_manifest: Dictionary = {}
 var _ui_sfx_manifest_loaded := false
 
@@ -30,6 +40,16 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 	var normalized := cue_id if CUE_SPECS.has(cue_id) else "ui_click"
 	var spec: Dictionary = CUE_SPECS[normalized]
 	var muted := SettingsService.effects_audio_muted()
+	var reduced_repetition := SettingsService.reduced_repetitive_sounds_enabled()
+	var effective_voice_budget := REDUCED_REPETITION_MAX_ACTIVE_PLAYERS if reduced_repetition else MAX_ACTIVE_PLAYERS
+	var repeat_cooldown_msec := int(REDUCED_REPETITION_COOLDOWN_MSEC.get(normalized, 160)) if reduced_repetition else 0
+	var now := int(Time.get_ticks_msec())
+	var last_started := int(_last_started_msec_by_cue.get(normalized, -1000000000))
+	var suppressed_reason := ""
+	if muted:
+		suppressed_reason = "effects_muted"
+	elif repeat_cooldown_msec > 0 and now - last_started < repeat_cooldown_msec:
+		suppressed_reason = "repeat_cooldown"
 	var record := {
 		"cue_id": normalized,
 		"source": source,
@@ -40,17 +60,25 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 		"duration_sec": float(spec.get("duration", 0.05)),
 		"gain": float(spec.get("gain", 0.08)),
 		"muted": muted,
-		"played": not muted,
-		"timestamp_msec": Time.get_ticks_msec(),
+		"played": false,
+		"timestamp_msec": now,
+		"reduced_repetitive_sounds": reduced_repetition,
+		"effective_voice_budget": effective_voice_budget,
+		"repeat_cooldown_msec": repeat_cooldown_msec,
+		"suppressed_reason": suppressed_reason,
 	}
 	var playback := {}
-	if not muted:
+	if suppressed_reason == "":
+		_trim_players_to_budget(effective_voice_budget - 1)
 		playback = _play_imported_audio_cue(normalized)
 		if playback.is_empty():
 			playback = _play_generated_waveform(record)
 			if not playback.is_empty():
 				playback["source"] = "generated_waveform"
-	record["playback_source"] = String(playback.get("source", "muted" if muted else "none"))
+		if not playback.is_empty():
+			record["played"] = true
+			_last_started_msec_by_cue[normalized] = now
+	record["playback_source"] = String(playback.get("source", "muted" if muted else ("suppressed" if suppressed_reason != "" else "none")))
 	record["asset_path"] = String(playback.get("asset_path", ""))
 	record["role"] = String(playback.get("role", ""))
 	record["volume_db"] = float(playback.get("volume_db", 0.0))
@@ -98,6 +126,7 @@ func attach_control(control: Control) -> bool:
 
 func validation_reset() -> void:
 	_records.clear()
+	_last_started_msec_by_cue.clear()
 	for player in _active_players:
 		if is_instance_valid(player):
 			player.queue_free()
@@ -119,6 +148,8 @@ func validation_summary() -> Dictionary:
 		"connected_control_count": _connected_control_ids.size(),
 		"audio_bus": EFFECTS_AUDIO_BUS,
 		"max_active_players": MAX_ACTIVE_PLAYERS,
+		"effective_voice_budget": _effective_voice_budget(),
+		"reduced_repetitive_sounds": SettingsService.reduced_repetitive_sounds_enabled(),
 		"sfx_manifest_path": UI_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _ui_sfx_manifest_loaded,
 		"records": validation_records(),
@@ -213,7 +244,7 @@ func _play_imported_audio_cue(cue_id: String) -> Dictionary:
 
 func _play_generated_waveform(record: Dictionary) -> Dictionary:
 	_prune_players()
-	while _active_players.size() >= MAX_ACTIVE_PLAYERS:
+	while _active_players.size() >= _effective_voice_budget():
 		var player: AudioStreamPlayer = _active_players.pop_front()
 		if is_instance_valid(player):
 			player.queue_free()
@@ -239,7 +270,7 @@ func _play_generated_waveform(record: Dictionary) -> Dictionary:
 
 func _track_player(player: AudioStreamPlayer, lifetime_sec: float) -> void:
 	_prune_players()
-	while _active_players.size() >= MAX_ACTIVE_PLAYERS:
+	while _active_players.size() >= _effective_voice_budget():
 		var expired: AudioStreamPlayer = _active_players.pop_front()
 		if is_instance_valid(expired):
 			expired.queue_free()
@@ -247,6 +278,16 @@ func _track_player(player: AudioStreamPlayer, lifetime_sec: float) -> void:
 	var timer := get_tree().create_timer(maxf(0.02, lifetime_sec)) if get_tree() != null else null
 	if timer != null:
 		timer.timeout.connect(_on_player_expired.bind(player))
+
+func _effective_voice_budget() -> int:
+	return REDUCED_REPETITION_MAX_ACTIVE_PLAYERS if SettingsService.reduced_repetitive_sounds_enabled() else MAX_ACTIVE_PLAYERS
+
+func _trim_players_to_budget(budget: int) -> void:
+	_prune_players()
+	while _active_players.size() > maxi(0, budget):
+		var expired: AudioStreamPlayer = _active_players.pop_front()
+		if is_instance_valid(expired):
+			expired.queue_free()
 
 func _fill_waveform(playback: AudioStreamGeneratorPlayback, frequency: float, duration: float, gain: float) -> void:
 	var frame_count := maxi(1, int(SAMPLE_RATE * duration))

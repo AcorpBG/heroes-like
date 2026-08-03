@@ -16,18 +16,24 @@ func _ready() -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
+	var original_reduced_repetition := SettingsService.reduced_repetitive_sounds_enabled()
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = false
+	SettingsService.apply_settings()
 	UiAudio.validation_reset()
 	_exercise_controls()
+	await get_tree().process_frame
+	_validate_summary()
+	_validate_reduced_repetition()
 	var original_effects_volume := SettingsService.effects_volume_percent()
 	SettingsService.settings["audio"]["effects_volume_percent"] = 0
 	SettingsService.apply_settings()
 	var muted_record := UiAudio.play_confirm("validation_effects_muted", {"fixture": "ui_audio_cue_runtime"})
 	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = original_reduced_repetition
 	SettingsService.apply_settings()
 	_report["muted_record"] = muted_record
 	_expect(bool(muted_record.get("muted", false)) and not bool(muted_record.get("played", true)), "Zero Effects volume must mute UI cue playback: %s" % muted_record)
 	await get_tree().process_frame
-	_validate_summary()
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
@@ -36,6 +42,31 @@ func _run() -> void:
 	UiAudio.validation_reset()
 	await get_tree().process_frame
 	get_tree().quit(0 if _errors.is_empty() else 1)
+
+func _validate_reduced_repetition() -> void:
+	UiAudio.validation_reset()
+	SettingsService.settings["accessibility"]["reduce_repetitive_sounds"] = true
+	SettingsService.apply_settings()
+	var first_click := UiAudio.play_cue("ui_click", "reduced_first")
+	var repeated_click := UiAudio.play_cue("ui_click", "reduced_repeat")
+	UiAudio.play_cue("ui_select", "reduced_select")
+	UiAudio.play_cue("ui_adjust", "reduced_adjust")
+	UiAudio.play_cue("ui_tab", "reduced_tab")
+	var replacement := UiAudio.play_confirm("reduced_confirm")
+	var summary := UiAudio.validation_summary()
+	_expect(bool(first_click.get("played", false)), "Reduced repetition must allow the first UI cue: %s" % first_click)
+	_expect(not bool(repeated_click.get("played", true)) and String(repeated_click.get("suppressed_reason", "")) == "repeat_cooldown", "Reduced repetition must suppress an immediate duplicate before player creation: %s" % repeated_click)
+	_expect(not bool(repeated_click.get("player_created", true)), "Suppressed UI duplicates must create no player: %s" % repeated_click)
+	_expect(bool(replacement.get("played", false)), "Reduced repetition must keep distinct confirmation cues audible: %s" % replacement)
+	_expect(int(summary.get("effective_voice_budget", 0)) == UiAudio.REDUCED_REPETITION_MAX_ACTIVE_PLAYERS, "Reduced repetition must expose the four-player UI budget: %s" % summary)
+	_expect(int(summary.get("active_player_count", 0)) == UiAudio.REDUCED_REPETITION_MAX_ACTIVE_PLAYERS, "Reduced repetition must hold the live UI voice count at four: %s" % summary)
+	_report["reduced_repetition"] = {
+		"first_click": first_click,
+		"repeated_click": repeated_click,
+		"replacement": replacement,
+		"summary": summary,
+	}
+	UiAudio.validation_reset()
 
 func _exercise_controls() -> void:
 	var root := Control.new()
@@ -128,6 +159,7 @@ func _summary_payload() -> Dictionary:
 		"cue_counts": summary.get("cue_counts", {}),
 		"audio_bus": String(summary.get("audio_bus", "")),
 		"sfx_manifest_loaded": bool(summary.get("sfx_manifest_loaded", false)),
+		"reduced_repetition": _report.get("reduced_repetition", {}),
 	}
 
 func _expect(condition: bool, message: String) -> void:
