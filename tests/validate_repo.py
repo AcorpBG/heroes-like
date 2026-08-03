@@ -20233,6 +20233,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
     active_breadth_report_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.gd"
     active_breadth_scene_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.tscn"
+    drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
+    drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20276,6 +20278,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         active_breadth_report_path,
         active_breadth_scene_path,
+        drowned_reliquary_report_path,
+        drowned_reliquary_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
@@ -20552,6 +20556,27 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if active_breadth_scene_path.exists():
         active_breadth_scene_text = active_breadth_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_active_scenario_breadth_report.gd" in active_breadth_scene_text, errors, "Battle autoplay active scenario breadth scene is not wired to its script.")
+    if drowned_reliquary_report_path.exists():
+        drowned_reliquary_text = drowned_reliquary_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_NINEFOLD_DROWNED_RELIQUARY_BALANCE_REGRESSION",
+            "ninefold_drowned_reliquary_watch",
+            "army_ninefold_drowned_reliquary_watch",
+            "unit_neutral_tidepool_cutters",
+            "unit_neutral_reefbolt_crews",
+            "MAX_TERMINAL_MARGIN_PCT",
+            "player_advantaged",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in drowned_reliquary_text, errors, f"Drowned Reliquary balance regression is missing token: {required_token}")
+    if drowned_reliquary_scene_path.exists():
+        drowned_reliquary_scene_text = drowned_reliquary_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_ninefold_drowned_reliquary_balance_regression.gd" in drowned_reliquary_scene_text,
+            errors,
+            "Drowned Reliquary balance regression scene is not wired to its script.",
+        )
     if tuning_queue_report_path.exists():
         tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")
         for required_token in (
