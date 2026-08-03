@@ -71,19 +71,35 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
 
     def _package(self) -> None:
         result = self._run("--version", VERSION, "--skip-export")
-        self.assertTrue(json.loads(result.stdout)["verification"]["ok"])
+        verification = json.loads(result.stdout)["verification"]
+        self.assertTrue(verification["ok"])
+        self.assertEqual(
+            [row["platform"] for row in verification["installers"]],
+            ["linux-x86_64", "windows-x86_64"],
+        )
 
     def _rewrite_checksums(self) -> None:
         archives = self.output / "archives"
         index_path = archives / "release-index.json"
         index = json.loads(index_path.read_text(encoding="utf-8"))
-        for row in index["archives"]:
+        archive_rows = {str(row["platform"]): row for row in index["archives"]}
+        for row in archive_rows.values():
             archive = archives / row["path"]
             row["size_bytes"] = archive.stat().st_size
             row["sha256"] = sha256(archive)
+        for row in index["installers"]:
+            installer = archives / row["path"]
+            row["size_bytes"] = installer.stat().st_size
+            row["sha256"] = sha256(installer)
+            source = archive_rows[str(row["platform"])]
+            row["source_archive_path"] = source["path"]
+            row["source_archive_sha256"] = source["sha256"]
         index_path.write_text(json.dumps(index, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         (archives / "SHA256SUMS").write_text(
-            "".join(f"{row['sha256']}  {row['path']}\n" for row in index["archives"]),
+            "".join(
+                f"{row['sha256']}  {row['path']}\n"
+                for row in sorted([*index["archives"], *index["installers"]], key=lambda value: value["path"])
+            ),
             encoding="ascii",
         )
 
@@ -98,6 +114,37 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
             handle.write(b"tampered")
         failure = self._run("--verify-only", expect_ok=False)
         self.assertIn("archive size mismatch", failure.stderr)
+
+    def test_runnable_installer_tampering_is_rejected(self) -> None:
+        self._package()
+        installer = self.output / "archives" / f"heroes-like-{VERSION}-linux-x86_64.run"
+        with installer.open("ab") as handle:
+            handle.write(b"tampered")
+        failure = self._run("--verify-only", expect_ok=False)
+        self.assertIn("installer hash mismatch", failure.stderr)
+
+    def test_linux_embedded_archive_tampering_is_rejected_with_updated_outer_hash(self) -> None:
+        self._package()
+        installer = self.output / "archives" / f"heroes-like-{VERSION}-linux-x86_64.run"
+        payload = bytearray(installer.read_bytes())
+        payload[-1] ^= 0x01
+        installer.write_bytes(payload)
+        installer.chmod(0o755)
+        self._rewrite_checksums()
+        failure = self._run("--verify-only", expect_ok=False)
+        self.assertIn("embedded archive hash mismatch", failure.stderr)
+
+    def test_runnable_installers_are_reproducible(self) -> None:
+        self._package()
+        archives = self.output / "archives"
+        names = [
+            f"heroes-like-{VERSION}-linux-x86_64.run",
+            f"heroes-like-{VERSION}-windows-x86_64.setup.exe",
+        ]
+        first = {name: sha256(archives / name) for name in names}
+        self._package()
+        second = {name: sha256(archives / name) for name in names}
+        self.assertEqual(first, second)
 
     def test_path_traversal_is_rejected_even_with_updated_outer_hashes(self) -> None:
         self._package()
@@ -155,6 +202,8 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         archives = self.output / "archives"
         linux_archive = archives / f"heroes-like-{VERSION}-linux-x86_64.tar.gz"
         windows_archive = archives / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        linux_installer = archives / f"heroes-like-{VERSION}-linux-x86_64.run"
+        windows_installer = archives / f"heroes-like-{VERSION}-windows-x86_64.setup.exe"
         extract_root = Path(self.temp.name) / "extracted"
         with tarfile.open(linux_archive, "r:gz") as archive:
             archive.extractall(extract_root, filter="data")
@@ -192,8 +241,9 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         self.assertNotEqual(refused_uninstall.returncode, 0, msg=refused_uninstall.stdout)
         self.assertEqual(unowned_sentinel.read_text(encoding="utf-8"), "keep")
 
+        self.assertTrue(os.access(linux_installer, os.X_OK))
         install = subprocess.run(
-            ["sh", str(linux_bundle / "install.sh")],
+            [str(linux_installer)],
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -227,6 +277,8 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         self.assertIn("uninstall.cmd", names)
         self.assertIn("HEROES_LIKE_INSTALL_DIR", install_cmd)
         self.assertIn("Heroes Like.cmd", install_cmd)
+        setup_head = windows_installer.read_bytes()[:4096]
+        self.assertEqual(setup_head[:2], b"MZ")
 
 
 if __name__ == "__main__":

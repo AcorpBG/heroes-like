@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_DIR = ROOT / ".artifacts" / "release"
 DEFAULT_SOURCE_DATE_EPOCH = 315532800
 PRODUCT_ID = "heroes-like"
-SCHEMA_ID = "heroes_like_release_index_v1"
+SCHEMA_ID = "heroes_like_release_index_v2"
 PLATFORM_MANIFEST_SCHEMA_ID = "heroes_like_platform_release_manifest_v1"
 MAX_ARCHIVE_MEMBER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_ARCHIVE_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
@@ -38,6 +38,13 @@ class PlatformSpec:
     native_name: str
     archive_suffix: str
     installer_names: tuple[str, str]
+
+    @property
+    def runnable_installer_suffix(self) -> str:
+        return "run" if self.platform_id.startswith("linux") else "setup.exe"
+
+    def runnable_installer_name(self, version: str) -> str:
+        return f"{PRODUCT_ID}-{version}-{self.platform_id}.{self.runnable_installer_suffix}"
 
     @property
     def required_names(self) -> tuple[str, ...]:
@@ -216,6 +223,131 @@ def create_zip(bundle_root: Path, destination: Path, spec: PlatformSpec, epoch: 
             info.create_system = 3
             info.external_attr = normalized_mode(path, spec) << 16
             archive.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+
+
+LINUX_INSTALLER_MARKER = b"__HEROES_LIKE_ARCHIVE_BELOW__\n"
+
+
+def create_linux_runnable_installer(
+    archive_path: Path,
+    destination: Path,
+    bundle_root_name: str,
+) -> None:
+    archive_digest = sha256(archive_path)
+    header = f"""#!/bin/sh
+set -eu
+umask 077
+
+ARCHIVE_SHA256='{archive_digest}'
+BUNDLE_ROOT='{bundle_root_name}'
+MARKER='__HEROES_LIKE_ARCHIVE_BELOW__'
+SELF=$0
+WORK_DIR=$(mktemp -d "${{TMPDIR:-/tmp}}/heroes-like-installer.XXXXXX")
+cleanup() {{ rm -rf "$WORK_DIR"; }}
+trap cleanup EXIT HUP INT TERM
+MARKER_LINE=$(awk -v marker="$MARKER" '$0 == marker {{ print NR; exit }}' "$SELF")
+if [ -z "$MARKER_LINE" ]; then
+	echo "heroes-like installer: embedded payload marker is missing" >&2
+	exit 1
+fi
+PAYLOAD_LINE=$((MARKER_LINE + 1))
+tail -n +"$PAYLOAD_LINE" "$SELF" > "$WORK_DIR/release.tar.gz"
+printf '%s  %s\n' "$ARCHIVE_SHA256" "$WORK_DIR/release.tar.gz" | sha256sum -c - >/dev/null
+tar -xzf "$WORK_DIR/release.tar.gz" -C "$WORK_DIR"
+if [ ! -f "$WORK_DIR/$BUNDLE_ROOT/install.sh" ]; then
+	echo "heroes-like installer: verified payload is missing install.sh" >&2
+	exit 1
+fi
+sh "$WORK_DIR/$BUNDLE_ROOT/install.sh"
+exit 0
+__HEROES_LIKE_ARCHIVE_BELOW__
+""".encode("ascii")
+    with destination.open("wb") as handle:
+        handle.write(header)
+        with archive_path.open("rb") as archive:
+            shutil.copyfileobj(archive, handle, length=1024 * 1024)
+    destination.chmod(0o755)
+
+
+def nsis_string(value: str) -> str:
+    return value.replace("$", "$$").replace('"', '$\\"')
+
+
+def create_windows_nsis_installer(
+    bundle_root: Path,
+    destination: Path,
+    version: str,
+    makensis: str,
+    platform_manifest: dict,
+) -> None:
+    if not makensis:
+        raise RuntimeError("makensis is required to build the Windows setup executable")
+    manifest_values = platform_manifest.get("files")
+    if not isinstance(manifest_values, list):
+        raise RuntimeError("Windows setup platform manifest has no file rows")
+    payload_names = sorted(str(value.get("path", "")) for value in manifest_values if isinstance(value, dict))
+    if (
+        len(payload_names) != len(manifest_values)
+        or len(payload_names) != len(set(payload_names))
+        or any(not name or "/" in name or "\\" in name or Path(name).name != name for name in payload_names)
+    ):
+        raise RuntimeError("Windows setup platform manifest has invalid or duplicate file rows")
+    payload_names.append("release-manifest.json")
+    for name in payload_names:
+        path = bundle_root / name
+        if not path.is_file() or path.stat().st_size <= 0:
+            raise RuntimeError(f"missing Windows setup payload: {path}")
+    script_path = bundle_root.parent / "heroes-like-installer.nsi"
+    file_rows = "\n".join(
+        f'  File /oname={nsis_string(name)} "{nsis_string(str(bundle_root / name))}"'
+        for name in payload_names
+    )
+    delete_rows = "\n".join(f'  Delete "$INSTDIR\\{nsis_string(name)}"' for name in payload_names)
+    script = f"""Unicode True
+Name "heroes-like {nsis_string(version)}"
+OutFile "{nsis_string(str(destination))}"
+InstallDir "$LOCALAPPDATA\\Heroes Like"
+RequestExecutionLevel user
+SetCompressor /SOLID lzma
+SetDateSave off
+SilentInstall normal
+SilentUnInstall normal
+
+Section "Install"
+  SetOutPath "$INSTDIR"
+{file_rows}
+  WriteUninstaller "$INSTDIR\\uninstall.exe"
+  CreateDirectory "$SMPROGRAMS\\Heroes Like"
+  CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$INSTDIR\\heroes-like.exe"
+SectionEnd
+
+Section "Uninstall"
+{delete_rows}
+  Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
+  RMDir "$SMPROGRAMS\\Heroes Like"
+  Delete "$INSTDIR\\uninstall.exe"
+  RMDir "$INSTDIR"
+SectionEnd
+"""
+    script_path.write_text(script, encoding="utf-8", newline="\n")
+    run([makensis, "-V2", str(script_path)])
+    if not destination.is_file() or destination.stat().st_size <= 0:
+        raise RuntimeError("makensis did not produce the Windows setup executable")
+
+
+def create_runnable_installer(
+    spec: PlatformSpec,
+    archive_path: Path,
+    bundle_root: Path,
+    destination: Path,
+    version: str,
+    makensis: str,
+    platform_manifest: dict,
+) -> None:
+    if spec.platform_id.startswith("linux"):
+        create_linux_runnable_installer(archive_path, destination, bundle_root.name)
+        return
+    create_windows_nsis_installer(bundle_root, destination, version, makensis, platform_manifest)
 
 
 def validate_archive_member_path(name: str, expected_root: str) -> tuple[str, ...]:
@@ -409,6 +541,76 @@ def verify_platform_archive(spec: PlatformSpec, archive_path: Path, version: str
     }
 
 
+def verify_windows_installer_header(head: bytes, name: str) -> None:
+    pe_offset = int.from_bytes(head[0x3C:0x40], "little") if len(head) >= 0x40 else 0
+    if (
+        head[:2] != b"MZ"
+        or pe_offset + 6 > len(head)
+        or head[pe_offset : pe_offset + 4] != b"PE\x00\x00"
+        or int.from_bytes(head[pe_offset + 4 : pe_offset + 6], "little") not in {0x014C, 0x8664}
+    ):
+        raise RuntimeError(f"Windows setup payload is not an x86/x86_64 PE executable: {name}")
+
+
+def verify_linux_installer_payload(installer_path: Path, source_archive_path: Path) -> None:
+    payload = installer_path.read_bytes()
+    marker_offset = payload.find(LINUX_INSTALLER_MARKER)
+    if marker_offset <= 0 or payload.find(LINUX_INSTALLER_MARKER, marker_offset + 1) >= 0:
+        raise RuntimeError("Linux runnable installer payload marker is missing or duplicated")
+    header = payload[: marker_offset + len(LINUX_INSTALLER_MARKER)]
+    if len(header) > 64 * 1024 or not header.startswith(b"#!/bin/sh\n") or b"\x00" in header:
+        raise RuntimeError("Linux runnable installer header is invalid")
+    expected_digest = sha256(source_archive_path)
+    digest_token = f"ARCHIVE_SHA256='{expected_digest}'".encode("ascii")
+    if digest_token not in header:
+        raise RuntimeError("Linux runnable installer source-archive identity is missing")
+    embedded_archive = payload[marker_offset + len(LINUX_INSTALLER_MARKER) :]
+    if hashlib.sha256(embedded_archive).hexdigest() != expected_digest:
+        raise RuntimeError("Linux runnable installer embedded archive hash mismatch")
+
+
+def verify_installer_artifact(
+    spec: PlatformSpec,
+    installer_path: Path,
+    version: str,
+    row: dict,
+    source_archive_path: Path,
+    source_archive_digest: str,
+) -> dict:
+    expected_name = spec.runnable_installer_name(version)
+    if str(row.get("path", "")) != expected_name or installer_path.name != expected_name:
+        raise RuntimeError(f"release index installer name mismatch for {spec.platform_id}")
+    if str(row.get("platform", "")) != spec.platform_id:
+        raise RuntimeError(f"release index installer platform mismatch for {spec.platform_id}")
+    expected_format = "self_extracting_tar_gz" if spec.platform_id.startswith("linux") else "nsis"
+    if str(row.get("format", "")) != expected_format:
+        raise RuntimeError(f"release index installer format mismatch for {spec.platform_id}")
+    if str(row.get("source_archive_path", "")) != source_archive_path.name:
+        raise RuntimeError(f"release index installer source archive name mismatch for {spec.platform_id}")
+    if str(row.get("source_archive_sha256", "")) != source_archive_digest:
+        raise RuntimeError(f"release index installer source archive hash mismatch for {spec.platform_id}")
+    if int(row.get("size_bytes", -1)) != installer_path.stat().st_size:
+        raise RuntimeError(f"release index installer size mismatch for {spec.platform_id}")
+    installer_digest = sha256(installer_path)
+    if str(row.get("sha256", "")) != installer_digest:
+        raise RuntimeError(f"release index installer hash mismatch for {spec.platform_id}")
+    if spec.platform_id.startswith("linux"):
+        if (installer_path.stat().st_mode & 0o777) != 0o755:
+            raise RuntimeError("Linux runnable installer mode is not 0755")
+        verify_linux_installer_payload(installer_path, source_archive_path)
+    else:
+        with installer_path.open("rb") as handle:
+            verify_windows_installer_header(handle.read(4096), installer_path.name)
+    return {
+        "platform": spec.platform_id,
+        "installer": installer_path.name,
+        "format": expected_format,
+        "size_bytes": installer_path.stat().st_size,
+        "source_archive": source_archive_path.name,
+        "payload_verified": True,
+    }
+
+
 def parse_checksum_file(path: Path) -> dict[str, str]:
     if not path.is_file():
         raise RuntimeError(f"missing release checksum file: {path}")
@@ -440,6 +642,9 @@ def verify_release_archives(output_dir: Path) -> dict:
     archive_values = release_index.get("archives")
     if not isinstance(archive_values, list) or len(archive_values) != len(PLATFORMS):
         raise RuntimeError("release index must contain exactly one archive per supported platform")
+    installer_values = release_index.get("installers")
+    if not isinstance(installer_values, list) or len(installer_values) != len(PLATFORMS):
+        raise RuntimeError("release index must contain exactly one runnable installer per supported platform")
     indexed_rows: dict[str, dict] = {}
     for value in archive_values:
         if not isinstance(value, dict):
@@ -450,11 +655,22 @@ def verify_release_archives(output_dir: Path) -> dict:
         indexed_rows[platform_id] = value
     if set(indexed_rows) != {spec.platform_id for spec in PLATFORMS}:
         raise RuntimeError(f"release index platform set is invalid: {sorted(indexed_rows)}")
+    indexed_installer_rows: dict[str, dict] = {}
+    for value in installer_values:
+        if not isinstance(value, dict):
+            raise RuntimeError("release index installer row is invalid")
+        platform_id = str(value.get("platform", ""))
+        if platform_id in indexed_installer_rows:
+            raise RuntimeError(f"duplicate release index installer platform: {platform_id}")
+        indexed_installer_rows[platform_id] = value
+    if set(indexed_installer_rows) != {spec.platform_id for spec in PLATFORMS}:
+        raise RuntimeError(f"release index installer platform set is invalid: {sorted(indexed_installer_rows)}")
 
     expected_output_names = {
         "release-index.json",
         "SHA256SUMS",
         *(f"{PRODUCT_ID}-{version}-{spec.platform_id}.{spec.archive_suffix}" for spec in PLATFORMS),
+        *(spec.runnable_installer_name(version) for spec in PLATFORMS),
     }
     output_entries = list(archives_dir.iterdir())
     unsafe_entries = [path.name for path in output_entries if path.is_symlink() or not path.is_file()]
@@ -467,6 +683,7 @@ def verify_release_archives(output_dir: Path) -> dict:
 
     checksum_rows = parse_checksum_file(archives_dir / "SHA256SUMS")
     verified_platforms = []
+    verified_installers = []
     for spec in PLATFORMS:
         row = indexed_rows[spec.platform_id]
         expected_name = f"{PRODUCT_ID}-{version}-{spec.platform_id}.{spec.archive_suffix}"
@@ -486,8 +703,29 @@ def verify_release_archives(output_dir: Path) -> dict:
         if not isinstance(manifest, dict):
             raise RuntimeError(f"release index payload manifest is invalid for {spec.platform_id}")
         verified_platforms.append(verify_platform_archive(spec, archive_path, version, manifest))
-    if set(checksum_rows) != {str(row["path"]) for row in archive_values}:
-        raise RuntimeError("SHA256SUMS contains missing or unexpected archive rows")
+        installer_row = indexed_installer_rows[spec.platform_id]
+        installer_path = archives_dir / spec.runnable_installer_name(version)
+        if not installer_path.is_file():
+            raise RuntimeError(f"missing runnable installer: {installer_path}")
+        installer_digest = sha256(installer_path)
+        if checksum_rows.get(installer_path.name) != installer_digest:
+            raise RuntimeError(f"SHA256SUMS installer hash mismatch for {spec.platform_id}")
+        verified_installers.append(
+            verify_installer_artifact(
+                spec,
+                installer_path,
+                version,
+                installer_row,
+                archive_path,
+                archive_digest,
+            )
+        )
+    indexed_artifact_names = {
+        *(str(row["path"]) for row in archive_values),
+        *(str(row["path"]) for row in installer_values),
+    }
+    if set(checksum_rows) != indexed_artifact_names:
+        raise RuntimeError("SHA256SUMS contains missing or unexpected release artifact rows")
     return {
         "ok": True,
         "schema_id": SCHEMA_ID,
@@ -495,14 +733,16 @@ def verify_release_archives(output_dir: Path) -> dict:
         "version": version,
         "archives_dir": str(archives_dir),
         "platforms": verified_platforms,
+        "installers": verified_installers,
     }
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build reproducible Linux and Windows heroes-like release archives.")
+    parser = argparse.ArgumentParser(description="Build reproducible Linux and Windows heroes-like release archives and installers.")
     parser.add_argument("--version", default=project_version())
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--godot", default=os.environ.get("GODOT", "godot"))
+    parser.add_argument("--makensis", default=os.environ.get("MAKENSIS", shutil.which("makensis") or ""))
     parser.add_argument("--skip-export", action="store_true", help="Package existing files under <output-dir>/exports.")
     parser.add_argument("--verify-only", action="store_true", help="Verify existing final archives without exporting or packaging.")
     args = parser.parse_args()
@@ -524,8 +764,10 @@ def main() -> int:
         shutil.rmtree(archives_dir)
     archives_dir.mkdir(parents=True, exist_ok=True)
     epoch = int(os.environ.get("SOURCE_DATE_EPOCH", DEFAULT_SOURCE_DATE_EPOCH))
+    os.environ["SOURCE_DATE_EPOCH"] = str(epoch)
 
     archive_rows = []
+    installer_rows = []
     with tempfile.TemporaryDirectory(prefix="heroes-like-release-") as temp:
         stage_dir = Path(temp)
         for spec in PLATFORMS:
@@ -541,13 +783,35 @@ def main() -> int:
                 create_tar_gz(bundle_root, archive_path, spec, epoch)
             else:
                 create_zip(bundle_root, archive_path, spec, epoch)
+            archive_digest = sha256(archive_path)
             archive_rows.append(
                 {
                     "platform": spec.platform_id,
                     "path": archive_path.name,
                     "size_bytes": archive_path.stat().st_size,
-                    "sha256": sha256(archive_path),
+                    "sha256": archive_digest,
                     "payload_manifest": platform_manifest,
+                }
+            )
+            installer_path = archives_dir / spec.runnable_installer_name(version)
+            create_runnable_installer(
+                spec,
+                archive_path,
+                bundle_root,
+                installer_path,
+                version,
+                args.makensis,
+                platform_manifest,
+            )
+            installer_rows.append(
+                {
+                    "platform": spec.platform_id,
+                    "path": installer_path.name,
+                    "format": "self_extracting_tar_gz" if spec.platform_id.startswith("linux") else "nsis",
+                    "size_bytes": installer_path.stat().st_size,
+                    "sha256": sha256(installer_path),
+                    "source_archive_path": archive_path.name,
+                    "source_archive_sha256": archive_digest,
                 }
             )
 
@@ -557,16 +821,20 @@ def main() -> int:
         "version": version,
         "source_date_epoch": epoch,
         "archives": archive_rows,
+        "installers": installer_rows,
     }
     index_path = archives_dir / "release-index.json"
     index_path.write_text(json.dumps(release_index, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     checksum_path = archives_dir / "SHA256SUMS"
     checksum_path.write_text(
-        "".join(f"{row['sha256']}  {row['path']}\n" for row in archive_rows),
+        "".join(
+            f"{row['sha256']}  {row['path']}\n"
+            for row in sorted([*archive_rows, *installer_rows], key=lambda value: str(value["path"]))
+        ),
         encoding="ascii",
     )
     verification = verify_release_archives(output_dir)
-    print(json.dumps({"ok": True, "version": version, "output": str(archives_dir), "archives": archive_rows, "verification": verification}, sort_keys=True))
+    print(json.dumps({"ok": True, "version": version, "output": str(archives_dir), "archives": archive_rows, "installers": installer_rows, "verification": verification}, sort_keys=True))
     return 0
 
 

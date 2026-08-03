@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `packaging-platform-native-installers-10184`. The verified Linux/Windows release pipeline now emits a reproducible Linux self-installing `.run` and Windows NSIS setup executable from the exact release payloads. Release-index schema v2 links and checksums both installers against their source archives; verification rejects outer and embedded-payload tampering. Isolated Linux and Wine lifecycles install and boot the packaged game, remove owned program and launcher files, and preserve external user data. Code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, and overall release completion remain open.
 - Completed implementation slice: `settings-accessibility-reduced-flash-10184`. Device settings now persist Reduce Flashes independently of reduced motion and battle shake. Normal motion, timing, audio, and combat remain unchanged while live battle event VFX use existing non-flashing fallback cues and spell-specific flash overlays are suppressed. The compact Readability settings surface remains reachable at 130% UI scale through a bounded scroll region, including the existing support-bundle command. Direct reload, exported-PCK persistence, menu control, live battle cue behavior, project parsing, core systems, and repository validation pass. Screen-reader integration, subtitles for nonexistent voiceover, broad VFX redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `strategic-ai-emergency-recruitment-surface-reuse-10184`. During one enemy faction recruitment phase, non-garrison recruit invalidation now retains the immutable emergency-defense commander rotation/availability candidate list while rebuilding army probes and final point/commander choices from live roster continuity. Focused proof records one retained list, one load/three reuses, four rebuilt probe loads/four reuses, one accepted Reedsnare reinforcement, and the required Sable-to-Vaska destination switch with the same target and 149-strength/22-need selection. Town-defense and planned-task recruitment, core systems, a deterministic three-turn native-generated row with unchanged `fdf8234a` behavior signature, project parsing, and repository validation pass. AI scoring changes, final point-surface reuse, broad cache lifetime, save-state changes, Native RMG behavior, full seed-matrix completion, broad performance claims, and overall release completion remain open.
 - Completed implementation slice: `economy-mireclaw-smuggler-exchange-10184`. Market Square, River Granary Exchange, Resonant Exchange, and Smugglers Flotilla now own authored market profiles instead of runtime building-id branches. The existing three profiles retain their rates, bulk orders, and weekly caps; Mireclaw's Flotilla supersedes Market Square with improved wood/ore liquidation, two-crate orders for either common resource, and 8-buy/10-sell weekly caps. The live Exchange Hall exposes eight ready orders and executes a two-ore sale for 836 gold while preserving common-only trading and save version 9. Focused action/cap persistence, 165 unique-building payoff cases, six town economy UI cases, all 15 town development cases, the 15-check economy scorecard, project parsing, and repository validation pass. Rare-resource trading, broad faction balance, strategic-AI policy, Native RMG behavior, and overall release completion remain open.
@@ -768,6 +769,21 @@ Target shape:
 Non-goals:
 - do not change combat rules, event order, animation duration, audio, camera shake settings, expedition saves, or Native RMG;
 - do not redesign the broader VFX catalog or claim medical certification, final accessibility, or release completion.
+
+## Platform Native Installers
+
+The completed Phase 6 packaging slice turns verified release payloads into player-runnable installers on both mandatory platforms.
+
+Target shape:
+- Linux release packaging emits a reproducible self-installing `.run` artifact with the verified executable, PCK, native library, manifest, and uninstall path;
+- Windows release packaging emits an NSIS setup executable with the same verified payload identity and per-user uninstall support;
+- final release metadata and checksums include both installers without weakening existing archive verification;
+- installers reject missing or mismatched payload inputs and install only files owned by the release manifest;
+- isolated Linux and Wine workflows install, boot the packaged game, uninstall program/launcher files, and preserve external user data.
+
+Non-goals:
+- do not claim code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, or overall release completion;
+- do not change game/runtime behavior, saves, authored content, or Native RMG.
 
 ## Strategic AI Emergency Defense Scan Reuse
 
