@@ -22,6 +22,9 @@ func _run() -> void:
 	var global_fit_case := _planner_assigns_specialized_target_globally()
 	if global_fit_case.is_empty():
 		return
+	var fit_context_case := _planner_fit_context_preserves_candidate_scores()
+	if fit_context_case.is_empty():
+		return
 	var adaptive_case := _planner_uses_commander_outcome_memory()
 	if adaptive_case.is_empty():
 		return
@@ -41,6 +44,7 @@ func _run() -> void:
 		"multi_origin_case": multi_origin_case,
 		"personality_case": personality_case,
 		"global_fit_case": global_fit_case,
+		"fit_context_case": fit_context_case,
 		"adaptive_case": adaptive_case,
 		"role_adoption_case": role_adoption_case,
 		"duplicate_recovery_case": duplicate_recovery_case,
@@ -49,6 +53,61 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _planner_fit_context_preserves_candidate_scores() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var actor_id := "hero_sable"
+	var entry := _commander_entry(session, MIRECLAW, actor_id)
+	var origins := EnemyAdventureRules._ai_hero_task_planner_origins(session, config, MIRECLAW)
+	var candidates := EnemyAdventureRules._ai_hero_task_planner_candidates_from_origins(session, config, origins)
+	if entry.is_empty() or candidates.is_empty():
+		_fail("Fit-context fixture requires a live commander entry and planner candidates.")
+		return {}
+	var fit_context := EnemyAdventureRules._ai_commander_task_fit_context(
+		session,
+		MIRECLAW,
+		actor_id,
+		entry
+	)
+	var context_candidates := EnemyAdventureRules._ai_hero_task_planner_candidates_for_commander(
+		session,
+		MIRECLAW,
+		actor_id,
+		candidates,
+		true,
+		fit_context
+	)
+	var standalone_candidates := EnemyAdventureRules._ai_hero_task_planner_candidates_for_commander(
+		session,
+		MIRECLAW,
+		actor_id,
+		candidates
+	)
+	if JSON.stringify(context_candidates) != JSON.stringify(standalone_candidates):
+		_fail("Shared fit context changed candidate scores or ordering: context=%s standalone=%s" % [JSON.stringify(context_candidates), JSON.stringify(standalone_candidates)])
+		return {}
+	var profile := String(fit_context.get("profile", ""))
+	if profile == "" or profile != EnemyAdventureRules._ai_commander_task_fit_profile(session, MIRECLAW, actor_id):
+		_fail("Shared fit context changed commander profile: %s" % JSON.stringify(fit_context))
+		return {}
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		var context_bonus := EnemyAdventureRules._ai_commander_task_fit_bonus_from_context(session, candidate, fit_context)
+		var standalone_bonus := EnemyAdventureRules._ai_commander_task_fit_bonus(session, MIRECLAW, actor_id, candidate)
+		if context_bonus != standalone_bonus:
+			_fail("Shared fit context changed candidate bonus: context=%d standalone=%d candidate=%s" % [context_bonus, standalone_bonus, JSON.stringify(candidate)])
+			return {}
+	return {
+		"case_id": "planner_reuses_one_equivalent_commander_fit_context",
+		"actor_id": actor_id,
+		"candidate_count": candidates.size(),
+		"fit_profile": profile,
+		"scores_exact": true,
+		"ordering_exact": true,
+	}
 
 func _planner_seeds_distinct_tasks_before_spawn() -> Dictionary:
 	var session = _base_session()
