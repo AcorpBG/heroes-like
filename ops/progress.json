@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed isolated one-shot reuse of the active-front launch candidate surface between below-threshold readiness and final spawn selection. Overall release work remains active.",
+  "currentNotes": "Completed a player-operable bounded and sanitized support-bundle export through the existing runtime issue logger and compact Settings board. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-active-front-launch-surface-reuse-10184",
-  "currentSliceId": "strategic-ai-active-front-launch-surface-reuse-10184",
-  "currentSliceNotes": "Active-front readiness now computes in an isolated phase-local context, reuses the exact candidate surface once during final selection, and expires it before later scans.",
+  "currentSlice": "packaging-player-support-bundle-export-10184",
+  "currentSliceId": "packaging-player-support-bundle-export-10184",
+  "currentSliceNotes": "Settings now exports a bounded local app, platform, normalized-settings, and recent-issue bundle while redacting personal paths and excluding save payloads, campaign state, and telemetry.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Active-Front Launch Surface Reuse",
-  "currentSliceUpdatedAt": "2026-08-03T00:04:30Z",
+  "currentSliceTitle": "Player Support Bundle Export",
+  "currentSliceUpdatedAt": "2026-08-03T00:26:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66204,6 +66204,98 @@
         "status": "passed",
         "updatedAt": "2026-08-03T00:04:30Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/packaged_runtime_issue_log_report.tscn",
+        "godot4 --headless --path . tests/menu_outcome_visual_smoke.tscn",
+        "python3 tests/packaged_runtime_issue_log_smoke.py",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The shipped runtime exports one bounded sanitized support bundle under user://debug with app version, non-identifying platform metadata, normalized device settings, issue-log summary, and recent issue records; no absolute user paths, expedition save payloads, campaign state, or telemetry destinations are present; the compact Settings command produces clear player feedback; direct runtime, menu shell, exported-PCK, project parse, and repository validation pass on the current code.",
+      "id": "packaging-player-support-bundle-export-10184",
+      "implementationTargets": [
+        "scripts/autoload/RuntimeIssueLog.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/packaged_runtime_issue_log_report.gd",
+        "tests/packaged_runtime_issue_log_smoke.py",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "remote telemetry, automatic upload, networking, account identifiers, usernames, home-directory paths, expedition save payloads, or campaign state",
+        "native crash minidumps, code signing, installer replacement, clean native Windows hardware certification, or release-channel integration",
+        "settings-screen redesign, new diagnostics panels, Native RMG changes, or overall release completion"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Phase 6 Production Alpha Layer / packaging and support workflow gaps",
+      "purpose": "Turn existing local runtime issue capture into a player-operable cross-platform support handoff without adding telemetry or exposing private save data.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaged-runtime-issue-log-smoke-report.md",
+        "docs/packaging-platform-readiness-report.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "scripts/autoload/RuntimeIssueLog.gd",
+          "scenes/menus/MainMenu.gd",
+          "scenes/menus/MainMenu.tscn",
+          "tests/packaged_runtime_issue_log_report.gd",
+          "tests/packaged_runtime_issue_log_smoke.py",
+          "tests/menu_outcome_visual_smoke.gd",
+          ".artifacts/packaged_runtime_issue_log_smoke/report.json"
+        ],
+        "finding": "The shipped Settings board now creates a local support bundle from allowlisted app, platform, normalized device-setting, and sanitized recent-issue data. Direct and exported-PCK execution both preserve the newest actionable issue while trimming a 26-record fixture containing an oversized record to one 2427-byte included record; injected Linux and Windows private paths and a token are absent while the safe res:// path remains. The menu outcome smoke confirms clear local-only feedback and the no-save/no-telemetry contract.",
+        "metrics": {
+          "support_bundle_path": "user://debug/heroes_support_bundle.json",
+          "support_bundle_schema": "heroes_like.support_bundle.v1",
+          "max_issue_record_count": 25,
+          "max_support_bundle_bytes": 524288,
+          "source_issue_record_count": 26,
+          "included_issue_record_count": 1,
+          "omitted_issue_record_count": 25,
+          "support_bundle_size_bytes": 2427,
+          "exported_pck_size_bytes": 185355808,
+          "normalized_settings_version": 12,
+          "linux_absolute_path_redacted": true,
+          "windows_absolute_path_redacted": true,
+          "token_value_redacted": true,
+          "safe_res_path_preserved": true,
+          "expedition_save_payload_included": false,
+          "campaign_progression_included": false,
+          "remote_telemetry_enabled": false,
+          "settings_export_command_operational": true,
+          "direct_runtime_passed": true,
+          "exported_pck_runtime_passed": true
+        }
+      },
+      "completedAt": "2026-08-03T00:26:31Z",
+      "startedAt": "2026-08-03T00:11:35Z",
+      "status": "completed",
+      "title": "Player Support Bundle Export",
+      "updatedAt": "2026-08-03T00:26:31Z",
+      "notes": "Local support handoff is complete and validated without telemetry or player-save disclosure. Native crash capture and release-channel transport remain outside this slice.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/packaged_runtime_issue_log_report.tscn",
+          "godot4 --headless --path . tests/menu_outcome_visual_smoke.tscn",
+          "python3 tests/packaged_runtime_issue_log_smoke.py",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T00:26:31Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66645,7 +66737,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "strategic_ai_active_front_launch_surface_reuse_complete_overall_release_in_progress",
+  "result": "packaging_player_support_bundle_export_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66746,9 +66838,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Strategic AI below-threshold active-front readiness now reuses an isolated one-shot candidate surface during final spawn selection without changing the targeted generated-map behavior signature or event counts. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Players can now export a bounded, sanitized local support bundle from Settings with normalized device settings and recent issue context but no save payload, campaign state, personal paths, or telemetry. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T00:04:30Z",
+  "updatedAt": "2026-08-03T00:26:31Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -21226,6 +21226,9 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
         PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH,
         PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH,
         PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH,
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing packaged runtime issue log smoke file: {path.relative_to(ROOT)}")
@@ -21245,12 +21248,24 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "heroes_like.runtime_issue.v1",
             "user://debug/heroes_runtime_issues.jsonl",
             "user://debug/heroes_last_runtime_issue.json",
+            "heroes_like.support_bundle.v1",
+            "user://debug/heroes_support_bundle.json",
+            "MAX_SUPPORT_ISSUE_RECORDS := 25",
+            "MAX_SUPPORT_BUNDLE_BYTES := 512 * 1024",
             "func emit_issue",
             "func emit_error",
             "func emit_fatal",
             "func issue_log_snapshot",
             "func last_issue_records",
             "func clear_issue_log",
+            "func export_support_bundle",
+            "func support_bundle_snapshot",
+            "func _support_settings_snapshot",
+            "func _support_safe_value",
+            '"telemetry_uploaded": false',
+            '"includes_expedition_save_payload": false',
+            '"includes_campaign_progression": false',
+            '"includes_absolute_user_paths": false',
             "ProfileLogScript.json_safe",
             "ProfileLogScript.session_metadata",
             "ProjectSettings.get_setting",
@@ -21268,6 +21283,11 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "RuntimeIssueLog.emit_error",
             "RuntimeIssueLog.last_issue_records",
             "RuntimeIssueLog.clear_issue_log",
+            "RuntimeIssueLog.export_support_bundle",
+            "RuntimeIssueLog.SUPPORT_BUNDLE_SCHEMA",
+            "RuntimeIssueLog.MAX_SUPPORT_BUNDLE_BYTES",
+            "secret-support-token",
+            "res://content/scenarios.json",
             "ran_from_pack_scene",
             "ResourceLoader.exists",
             "Vector2i",
@@ -21287,6 +21307,8 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "--scene",
             "scene_report.json",
             "native process crash capture",
+            "bounded sanitized local support bundle",
+            "support_bundle_result",
             "does_not_claim",
             "FATAL_PATTERNS",
         ):
@@ -21306,6 +21328,39 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "Future release packaging still needs",
         ):
             ensure(required_text in doc_text, errors, f"Packaged runtime issue log smoke doc is missing required text: {required_text}")
+
+    if MAIN_MENU_SCENE_PATH.exists():
+        menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            '[node name="ExportSupportBundle" type="Button"',
+            'text = "Export Support Bundle"',
+            'signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle"',
+            'method="_on_export_support_bundle_pressed"',
+            "SupportBundleStatus",
+        ):
+            ensure(required_token in menu_scene_text, errors, f"MainMenu.tscn is missing support-bundle token: {required_token}")
+
+    if MAIN_MENU_SCRIPT_PATH.exists():
+        menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "%ExportSupportBundle",
+            "%SupportBundleStatus",
+            "RuntimeIssueLog.export_support_bundle",
+            "OS.shell_show_in_file_manager",
+            "func validation_export_support_bundle",
+            "No saves or telemetry",
+        ):
+            ensure(required_token in menu_script_text, errors, f"MainMenu.gd is missing support-bundle token: {required_token}")
+
+    if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():
+        menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "validation_export_support_bundle",
+            "RuntimeIssueLog.support_bundle_snapshot",
+            "Support bundle ready",
+            "No saves or telemetry",
+        ):
+            ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing support-bundle token: {required_token}")
 
 
 def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
@@ -23238,7 +23293,7 @@ def main() -> int:
     print("- Linux and Windows post-export release bundle manifests now reject dev/import/debug artifacts and require exact executable/PCK/native sidecar contents")
     print("- final Linux and Windows release archives now self-verify safe entry structure, checksums, embedded payload manifests, file hashes, binary headers, and executable modes")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
-    print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots from a PCK-launched smoke scene")
+    print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots and exports a bounded local support bundle from Settings")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the persisted Effects bus")
     print("- generated overworld ambient audio now syncs terrain, day, and enemy-pressure layers from live overworld sessions on the persisted Effects bus")
     if args.strict_economy_resource_fixtures:

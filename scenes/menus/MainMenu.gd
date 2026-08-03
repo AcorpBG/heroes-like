@@ -111,6 +111,8 @@ const TAB_HELP_TOPIC := {
 @onready var _high_contrast_toggle: CheckButton = %HighContrastToggle
 @onready var _color_cue_picker: OptionButton = %ColorCuePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
+@onready var _export_support_bundle_button: Button = %ExportSupportBundle
+@onready var _support_bundle_status_label: Label = %SupportBundleStatus
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
 @onready var _load_selected_button: Button = %LoadSelected
@@ -144,6 +146,8 @@ var _last_context_tab := TAB_CAMPAIGN
 var _syncing_settings_ui := false
 var _menu_notice := ""
 var _stage_return_focus: Control
+var _support_bundle_status := "No bundle exported"
+var _support_bundle_result := {}
 
 func _ready() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -595,6 +599,24 @@ func _on_reduce_motion_toggled(enabled: bool) -> void:
 	SettingsService.set_reduced_motion_enabled(enabled)
 	_refresh_settings_panel()
 
+func _on_export_support_bundle_pressed() -> void:
+	_export_support_bundle(true)
+
+func _export_support_bundle(reveal_in_file_manager: bool) -> Dictionary:
+	var result: Dictionary = RuntimeIssueLog.export_support_bundle(SettingsService.ensure_settings())
+	_support_bundle_result = result.duplicate(true)
+	if bool(result.get("ok", false)):
+		_support_bundle_status = "Support bundle ready"
+		if reveal_in_file_manager and not OS.has_feature("headless"):
+			var absolute_path := ProjectSettings.globalize_path(String(result.get("path", RuntimeIssueLog.SUPPORT_BUNDLE_PATH)))
+			var reveal_error := OS.shell_show_in_file_manager(absolute_path, true)
+			if reveal_error != OK:
+				_support_bundle_status = "Support bundle ready; folder did not open"
+	else:
+		_support_bundle_status = String(result.get("message", "Support bundle export failed."))
+	_refresh_support_bundle_surface()
+	return result
+
 func _on_quit_pressed() -> void:
 	get_tree().quit()
 
@@ -1038,7 +1060,19 @@ func _refresh_settings_panel() -> void:
 	_color_cue_picker.tooltip_text = "Shape and palette assistance applies immediately to semantic controls and gameplay ownership cues.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
+	_refresh_support_bundle_surface()
 	_syncing_settings_ui = false
+
+func _refresh_support_bundle_surface() -> void:
+	_export_support_bundle_button.tooltip_text = "Create a local support bundle from bounded device settings and recent runtime issues. No saves or telemetry are included."
+	_support_bundle_status_label.text = _support_bundle_status
+	if bool(_support_bundle_result.get("ok", false)):
+		_support_bundle_status_label.tooltip_text = "Saved locally in the application's debug data folder. Recent issue records: %d. Bundle size: %d bytes." % [
+			int(_support_bundle_result.get("issue_record_count", 0)),
+			int(_support_bundle_result.get("size_bytes", 0)),
+		]
+	else:
+		_support_bundle_status_label.tooltip_text = "Local-only export status. Expedition saves and campaign progression are never included."
 
 func _rebuild_save_browser() -> void:
 	_save_summaries = SaveService.list_session_summaries()
@@ -2121,6 +2155,11 @@ func validation_snapshot() -> Dictionary:
 		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
 		"settings_handoff_text": _settings_handoff_label.text,
 		"settings_handoff_tooltip": _settings_handoff_label.tooltip_text,
+		"support_bundle_button_text": _export_support_bundle_button.text,
+		"support_bundle_button_tooltip": _export_support_bundle_button.tooltip_text,
+		"support_bundle_status": _support_bundle_status_label.text,
+		"support_bundle_status_tooltip": _support_bundle_status_label.tooltip_text,
+		"support_bundle_result": _support_bundle_result.duplicate(true),
 		"quit_check": quit_check.duplicate(true),
 		"quit_check_text": String(quit_check.get("visible_text", "")),
 		"quit_check_tooltip": String(quit_check.get("tooltip_text", "")),
@@ -2335,6 +2374,10 @@ func validation_open_settings_stage() -> void:
 	_select_menu_tab(TAB_SETTINGS)
 	_show_stage_dock()
 	_refresh_settings_panel()
+
+func validation_export_support_bundle() -> Dictionary:
+	validation_open_settings_stage()
+	return _export_support_bundle(false)
 
 func validation_select_skirmish(scenario_id: String) -> bool:
 	for index in range(_skirmish_entries.size()):
@@ -2876,6 +2919,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	FrontierVisualKit.apply_button(_customize_movement_keys_button, "secondary", 140.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_export_support_bundle_button, "secondary", 196.0, 34.0, 13)
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 

@@ -150,7 +150,9 @@ def main() -> int:
             and not fatal_matches
             and bool(scene_report.get("ok", False))
             and bool(scene_report.get("ran_from_pack_scene", False))
-            and int(scene_report.get("final_snapshot", {}).get("record_count", 0)) == 1
+            and int(scene_report.get("final_snapshot", {}).get("record_count", 0)) == 26
+            and bool(scene_report.get("support_bundle_result", {}).get("ok", False))
+            and scene_report.get("support_bundle", {}).get("schema") == "heroes_like.support_bundle.v1"
         )
 
     report = {
@@ -164,6 +166,7 @@ def main() -> int:
             "claims": [
                 "RuntimeIssueLog is available from an exported PCK through --main-pack.",
                 "RuntimeIssueLog can write sanitized runtime issue JSONL and latest issue snapshot under user://debug.",
+                "RuntimeIssueLog can export a bounded sanitized local support bundle from an exported PCK.",
             ],
             "does_not_claim": [
                 "native process crash capture",
@@ -188,6 +191,8 @@ def main() -> int:
         "scene_returncode": None if scene_result is None else scene_result["returncode"],
         "record_count": scene_report.get("final_snapshot", {}).get("record_count", 0),
         "issue_log_path": scene_report.get("issue_log_path", ""),
+        "support_bundle_path": scene_report.get("support_bundle_path", ""),
+        "support_bundle_size_bytes": scene_report.get("support_bundle_result", {}).get("size_bytes", 0),
         "fatal_matches": fatal_matches,
         "report": str(REPORT_PATH.relative_to(ROOT)),
     }

@@ -1088,6 +1088,23 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Reduce Motion"
 
+[node name="SupportBundleRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ExportSupportBundle" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(196, 34)
+layout_mode = 2
+text = "Export Support Bundle"
+
+[node name="SupportBundleStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "No bundle exported"
+
 [node name="FooterPocketPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.032
@@ -1223,4 +1240,5 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ColorCuePicker" to="." method="_on_color_cue_selected"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/HighContrastToggle" to="." method="_on_high_contrast_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle" to="." method="_on_export_support_bundle_pressed"]
 [connection signal="dismissed" from="HeroKeybindingsDialog" to="." method="_on_hero_keybindings_dialog_dismissed"]
