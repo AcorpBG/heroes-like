@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 13
+const SETTINGS_VERSION := 14
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -283,6 +283,7 @@ func build_default_settings() -> Dictionary:
 			"battle_camera_shake": BATTLE_CAMERA_SHAKE_FULL,
 			"reduce_flashes": false,
 			"reduce_motion": false,
+			"reduce_repetitive_sounds": false,
 		},
 	}
 
@@ -314,6 +315,7 @@ func load_settings() -> void:
 		settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(String(config.get_value("accessibility", "battle_camera_shake", defaults["accessibility"]["battle_camera_shake"])))
 		settings["accessibility"]["reduce_flashes"] = bool(config.get_value("accessibility", "reduce_flashes", defaults["accessibility"]["reduce_flashes"]))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
+		settings["accessibility"]["reduce_repetitive_sounds"] = bool(config.get_value("accessibility", "reduce_repetitive_sounds", defaults["accessibility"]["reduce_repetitive_sounds"]))
 
 	apply_settings()
 	settings_changed.emit(settings.duplicate(true))
@@ -343,6 +345,7 @@ func save_settings() -> String:
 	config.set_value("accessibility", "battle_camera_shake", battle_camera_shake_mode_id())
 	config.set_value("accessibility", "reduce_flashes", reduced_flashes_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
+	config.set_value("accessibility", "reduce_repetitive_sounds", reduced_repetitive_sounds_enabled())
 	var error := config.save(SETTINGS_FILE)
 	if error != OK:
 		push_error("Unable to save settings file: %s" % SETTINGS_FILE)
@@ -663,6 +666,9 @@ func reduced_motion_enabled() -> bool:
 func reduced_flashes_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_flashes", false))
 
+func reduced_repetitive_sounds_enabled() -> bool:
+	return bool(ensure_settings().get("accessibility", {}).get("reduce_repetitive_sounds", false))
+
 func animation_preferences(overrides: Dictionary = {}) -> Dictionary:
 	var reduced_motion := reduced_motion_enabled()
 	if overrides.has("reduced_motion") or overrides.has("reduce_motion"):
@@ -811,6 +817,11 @@ func set_reduced_flashes_enabled(enabled: bool) -> void:
 	settings["accessibility"]["reduce_flashes"] = enabled
 	_commit_settings()
 
+func set_reduced_repetitive_sounds_enabled(enabled: bool) -> void:
+	ensure_settings()
+	settings["accessibility"]["reduce_repetitive_sounds"] = enabled
+	_commit_settings()
+
 func describe_settings() -> String:
 	var accessibility_parts := []
 	accessibility_parts.append("UI scale %s" % ui_scale_label())
@@ -819,6 +830,7 @@ func describe_settings() -> String:
 	accessibility_parts.append("Battle shake %s" % battle_camera_shake_label())
 	accessibility_parts.append("Reduced flashes %s" % ("On" if reduced_flashes_enabled() else "Off"))
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
+	accessibility_parts.append("Reduced repetitive sounds %s" % ("On" if reduced_repetitive_sounds_enabled() else "Off"))
 	return "\n".join(
 		[
 			"Presentation: %s | %s | %s quality | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), render_quality_label(), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],

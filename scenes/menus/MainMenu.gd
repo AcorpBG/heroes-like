@@ -115,6 +115,7 @@ const TAB_HELP_TOPIC := {
 @onready var _color_cue_picker: OptionButton = %ColorCuePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
 @onready var _reduce_flashes_toggle: CheckButton = %ReduceFlashesToggle
+@onready var _reduce_repetitive_sounds_toggle: CheckButton = %ReduceRepetitiveSoundsToggle
 @onready var _export_support_bundle_button: Button = %ExportSupportBundle
 @onready var _support_bundle_status_label: Label = %SupportBundleStatus
 @onready var _restore_settings_defaults_button: Button = %RestoreSettingsDefaults
@@ -695,6 +696,12 @@ func _on_reduce_flashes_toggled(enabled: bool) -> void:
 	SettingsService.set_reduced_flashes_enabled(enabled)
 	_refresh_settings_panel()
 
+func _on_reduce_repetitive_sounds_toggled(enabled: bool) -> void:
+	if _syncing_settings_ui:
+		return
+	SettingsService.set_reduced_repetitive_sounds_enabled(enabled)
+	_refresh_settings_panel()
+
 func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
 
@@ -1191,6 +1198,8 @@ func _refresh_settings_panel() -> void:
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
 	_reduce_flashes_toggle.button_pressed = SettingsService.reduced_flashes_enabled()
 	_reduce_flashes_toggle.tooltip_text = "Replaces strong battle flashes with static cues while preserving normal motion and timing.\n%s" % settings_check
+	_reduce_repetitive_sounds_toggle.button_pressed = SettingsService.reduced_repetitive_sounds_enabled()
+	_reduce_repetitive_sounds_toggle.tooltip_text = "Limits repeated interface and battle cues while preserving decisive sounds and Effects volume.\n%s" % settings_check
 	_refresh_support_bundle_surface()
 	_restore_settings_defaults_button.tooltip_text = "Restore presentation, sound, gameplay, custom movement keys, and readability defaults. Campaign progress and expedition saves stay unchanged."
 	_settings_restore_status_label.text = _settings_restore_status
@@ -2400,11 +2409,14 @@ func validation_snapshot() -> Dictionary:
 		"color_cue_tooltip": _color_cue_picker.tooltip_text,
 		"reduce_flashes_enabled": SettingsService.reduced_flashes_enabled(),
 		"reduce_flashes_tooltip": _reduce_flashes_toggle.tooltip_text,
+		"reduce_repetitive_sounds_enabled": SettingsService.reduced_repetitive_sounds_enabled(),
+		"reduce_repetitive_sounds_tooltip": _reduce_repetitive_sounds_toggle.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"settings_scroll_max": _settings_scroll.get_v_scroll_bar().max_value,
 		"settings_scroll_page": _settings_scroll.get_v_scroll_bar().page,
 		"settings_scroll_value": _settings_scroll.scroll_vertical,
 		"reduce_flashes_visible_in_scroll": _settings_control_visible(_reduce_flashes_toggle),
+		"reduce_repetitive_sounds_visible_in_scroll": _settings_control_visible(_reduce_repetitive_sounds_toggle),
 		"support_bundle_visible_in_scroll": _settings_control_visible(_export_support_bundle_button),
 		"restore_settings_defaults_visible_in_scroll": _settings_control_visible(_restore_settings_defaults_button),
 		"summary": _summary_label.text,
@@ -2877,9 +2889,19 @@ func validation_set_reduced_flashes(enabled: bool) -> bool:
 	_on_reduce_flashes_toggled(enabled)
 	return SettingsService.reduced_flashes_enabled() == enabled
 
+func validation_set_reduced_repetitive_sounds(enabled: bool) -> bool:
+	validation_open_settings_stage()
+	_reduce_repetitive_sounds_toggle.set_pressed_no_signal(enabled)
+	_on_reduce_repetitive_sounds_toggled(enabled)
+	return SettingsService.reduced_repetitive_sounds_enabled() == enabled
+
 func validation_reveal_reduced_flashes() -> void:
 	validation_open_settings_stage()
 	_settings_scroll.ensure_control_visible(_reduce_flashes_toggle)
+
+func validation_reveal_reduced_repetitive_sounds() -> void:
+	validation_open_settings_stage()
+	_settings_scroll.ensure_control_visible(_reduce_repetitive_sounds_toggle)
 
 func validation_reveal_support_bundle() -> void:
 	validation_open_settings_stage()
@@ -3248,7 +3270,7 @@ func _apply_visual_theme() -> void:
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_vsync_toggle, _high_contrast_toggle, _reduce_motion_toggle, _reduce_flashes_toggle]:
+	for toggle in [_vsync_toggle, _high_contrast_toggle, _reduce_motion_toggle, _reduce_flashes_toggle, _reduce_repetitive_sounds_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:

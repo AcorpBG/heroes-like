@@ -808,6 +808,28 @@ Non-goals:
 - do not change combat rules, event order, animation duration, audio, camera shake settings, expedition saves, or Native RMG;
 - do not redesign the broader VFX catalog or claim medical certification, final accessibility, or release completion.
 
+## Reduced Repetitive Sound Accessibility
+
+Selected slice: `settings-accessibility-reduced-repetitive-sounds-10184`.
+
+Implementation target:
+- persist Reduce Repetitive Sounds as a schema-14 device accessibility preference that defaults off for existing settings;
+- expose the preference on the existing compact, scrollable Readability settings surface without obscuring the scenic menu;
+- rate-limit repeated interface cues before player creation and reduce the live interface voice budget while the preference is enabled;
+- double battle-cue repeat cooldowns and reduce the battle voice budget from eight to four while preserving critical-cue displacement of lower-priority voices;
+- keep normal-mode audio policy, Effects volume behavior, combat state, and event timing unchanged.
+
+Completion evidence:
+- focused UI-audio and battle-audio runtime proof covers normal mode, reduced repetition, mute behavior, duplicate suppression, reduced voice budgets, and critical-cue admission;
+- direct and exported-PCK settings persistence prove schema-14 save, reload, legacy default migration, and Restore Defaults behavior;
+- 1280x720 and 1920x1080 Settings-board coverage proves the control remains reachable at 130 percent UI scale;
+- project parsing, core systems, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add new audio assets, change cue mastering, redesign music or ambience, or claim platform audio certification;
+- do not change combat math, battle event ordering, animation timing, expedition saves, or authored content;
+- do not change Native RMG or claim final accessibility or overall release completion.
+
 ## Native Screen Reader Semantics
 
 Selected slice: `accessibility-native-screen-reader-semantics-10184`.

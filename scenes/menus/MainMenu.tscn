@@ -1139,6 +1139,16 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Reduce Flashes"
 
+[node name="SoundComfortRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ReduceRepetitiveSoundsToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/SoundComfortRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reduce Repetitive Sounds"
+
 [node name="SupportBundleRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -1333,6 +1343,7 @@ text = "Quit"
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/AssistRow/HighContrastToggle" to="." method="_on_high_contrast_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/MotionRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/MotionRow/ReduceFlashesToggle" to="." method="_on_reduce_flashes_toggled"]
+[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/SoundComfortRow/ReduceRepetitiveSoundsToggle" to="." method="_on_reduce_repetitive_sounds_toggled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle" to="." method="_on_export_support_bundle_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow/RestoreSettingsDefaults" to="." method="_on_restore_settings_defaults_pressed"]
 [connection signal="confirmed" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_confirmed"]

@@ -12390,6 +12390,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("ColorCuePicker", "OptionButton"),
         ("ReduceMotionToggle", "CheckButton"),
         ("ReduceFlashesToggle", "CheckButton"),
+        ("ReduceRepetitiveSoundsToggle", "CheckButton"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for settings/onboarding")
 
@@ -12419,6 +12420,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.set_presentation_resolution",
         "SettingsService.set_reduced_motion_enabled",
         "SettingsService.set_reduced_flashes_enabled",
+        "SettingsService.set_reduced_repetitive_sounds_enabled",
         "func _on_help_selected",
         "func _on_presentation_mode_selected",
         "func _on_resolution_selected",
@@ -12433,6 +12435,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func _on_color_cue_selected",
         "func _on_reduce_motion_toggled",
         "func _on_reduce_flashes_toggled",
+        "func _on_reduce_repetitive_sounds_toggled",
         "func _refresh_settings_panel",
         "func _rebuild_help_browser",
         "func validation_open_settings_stage",
@@ -12442,6 +12445,8 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func validation_set_high_contrast",
         "func validation_set_reduced_flashes",
         "func validation_reveal_reduced_flashes",
+        "func validation_set_reduced_repetitive_sounds",
+        "func validation_reveal_reduced_repetitive_sounds",
         "func validation_reveal_support_bundle",
         "func validation_select_color_cue_mode",
         "func validation_set_vsync",
@@ -18421,6 +18426,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func validation_play_audio_cue",
         "BATTLE_SFX_MANIFEST_PATH",
         "BATTLE_AUDIO_PRIORITY_VALUES",
+        "BATTLE_AUDIO_REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
+        "SettingsService.reduced_repetitive_sounds_enabled",
         "imported_asset_count",
         "generated_fallback_count",
         "suppressed_audio_cue_count",
@@ -21742,6 +21749,9 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "ui_confirm",
             "ui_invalid",
             "MAX_ACTIVE_PLAYERS",
+            "REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
+            "REDUCED_REPETITION_COOLDOWN_MSEC",
+            "SettingsService.reduced_repetitive_sounds_enabled",
             "audio_bus",
             "Effects",
             "imported_asset_count",
@@ -21800,6 +21810,8 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "imported_asset_count",
             "generated_fallback_count",
             "imported_wav",
+            "repeat_cooldown",
+            "REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
         ):
             ensure(required_token in report_text, errors, f"UI audio cue runtime report is missing required token: {required_token}")
 

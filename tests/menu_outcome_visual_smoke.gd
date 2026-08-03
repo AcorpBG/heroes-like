@@ -39,6 +39,7 @@ func _run_main_menu_smoke() -> bool:
 	var original_ui_scale := SettingsService.ui_scale_percent()
 	var original_battle_camera_shake := SettingsService.battle_camera_shake_mode_id()
 	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	var original_reduce_repetitive_sounds := SettingsService.reduced_repetitive_sounds_enabled()
 	var original_high_contrast := SettingsService.high_contrast_ui_enabled()
 	var original_color_cue_mode := SettingsService.color_cue_mode_id()
 	var original_keyboard_navigation_layout := SettingsService.keyboard_navigation_layout_id()
@@ -561,10 +562,11 @@ func _run_main_menu_smoke() -> bool:
 	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
 	var color_cue_picker = shell.get_node_or_null("%ColorCuePicker")
 	var reduce_flashes_toggle = shell.get_node_or_null("%ReduceFlashesToggle")
+	var reduce_repetitive_sounds_toggle = shell.get_node_or_null("%ReduceRepetitiveSoundsToggle")
 	var keyboard_navigation_layout_picker = shell.get_node_or_null("%KeyboardNavigationLayoutPicker")
 	var support_bundle_button = shell.get_node_or_null("%ExportSupportBundle")
 	var support_bundle_status = shell.get_node_or_null("%SupportBundleStatus")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (battle_camera_shake_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (reduce_flashes_toggle is CheckButton) or not (keyboard_navigation_layout_picker is OptionButton) or not (support_bundle_button is Button) or not (support_bundle_status is Label):
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (battle_camera_shake_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (reduce_flashes_toggle is CheckButton) or not (reduce_repetitive_sounds_toggle is CheckButton) or not (keyboard_navigation_layout_picker is OptionButton) or not (support_bundle_button is Button) or not (support_bundle_status is Label):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -676,6 +678,17 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: Reduce Flashes could not be enabled independently.")
 		get_tree().quit(1)
 		return false
+	if not bool(shell.call("validation_set_reduced_repetitive_sounds", true)):
+		push_error("Main menu smoke: Reduce Repetitive Sounds could not be enabled independently.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_reveal_reduced_repetitive_sounds")
+	await get_tree().process_frame
+	settings_snapshot = shell.call("validation_snapshot")
+	if not bool(settings_snapshot.get("reduce_repetitive_sounds_visible_in_scroll", false)):
+		push_error("Main menu smoke: Reduce Repetitive Sounds is not reachable in the max-scale settings scroll: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
 	shell.call("validation_reveal_reduced_flashes")
 	await get_tree().process_frame
 	settings_snapshot = shell.call("validation_snapshot")
@@ -710,7 +723,7 @@ func _run_main_menu_smoke() -> bool:
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
-	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or String(settings_snapshot.get("battle_camera_shake", "")) != "reduced" or not is_equal_approx(float(settings_snapshot.get("battle_camera_shake_scale", -1.0)), 0.35) or not bool(settings_snapshot.get("reduce_flashes_enabled", false)) or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("Battle shake Reduced") or not settings_summary.contains("Reduced flashes On") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or String(settings_snapshot.get("battle_camera_shake", "")) != "reduced" or not is_equal_approx(float(settings_snapshot.get("battle_camera_shake_scale", -1.0)), 0.35) or not bool(settings_snapshot.get("reduce_flashes_enabled", false)) or not bool(settings_snapshot.get("reduce_repetitive_sounds_enabled", false)) or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("Battle shake Reduced") or not settings_summary.contains("Reduced flashes On") or not settings_summary.contains("Reduced repetitive sounds On") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
 			shell.call("validation_select_resolution", original_resolution)
 		if original_render_quality != "high":
@@ -739,6 +752,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
 			String(settings_snapshot.get("reduce_flashes_tooltip", "")),
+			String(settings_snapshot.get("reduce_repetitive_sounds_tooltip", "")),
 			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
 		],
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
@@ -769,6 +783,7 @@ func _run_main_menu_smoke() -> bool:
 			String(settings_snapshot.get("high_contrast_tooltip", "")),
 			String(settings_snapshot.get("color_cue_tooltip", "")),
 			String(settings_snapshot.get("reduce_flashes_tooltip", "")),
+			String(settings_snapshot.get("reduce_repetitive_sounds_tooltip", "")),
 			String(settings_snapshot.get("keyboard_navigation_layout_tooltip", "")),
 		]
 	):
@@ -837,6 +852,10 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	if original_reduce_flashes != true and not bool(shell.call("validation_set_reduced_flashes", original_reduce_flashes)):
 		push_error("Main menu smoke: Reduce Flashes could not restore the original setting.")
+		get_tree().quit(1)
+		return false
+	if original_reduce_repetitive_sounds != true and not bool(shell.call("validation_set_reduced_repetitive_sounds", original_reduce_repetitive_sounds)):
+		push_error("Main menu smoke: Reduce Repetitive Sounds could not restore the original setting.")
 		get_tree().quit(1)
 		return false
 
