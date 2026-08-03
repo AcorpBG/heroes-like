@@ -8667,12 +8667,18 @@ static func _ai_hero_task_planner_global_task_assignments(
 			continue
 		if _ai_hero_task_planner_actor_has_open_task(existing_tasks, actor_id):
 			continue
+		var fit_context := _ai_commander_task_fit_context(
+			session,
+			faction_id,
+			actor_id
+		)
 		var fitted_candidates := _ai_hero_task_planner_candidates_for_commander(
 			session,
 			faction_id,
 			actor_id,
 			candidates,
-			false
+			false,
+			fit_context
 		)
 		for candidate_value in fitted_candidates:
 			if not (candidate_value is Dictionary):
@@ -8845,16 +8851,21 @@ static func _ai_hero_task_planner_candidates_for_commander(
 	faction_id: String,
 	actor_id: String,
 	candidates: Array,
-	sort_output: bool = true
+	sort_output: bool = true,
+	fit_context: Dictionary = {}
 ) -> Array:
+	var resolved_fit_context := fit_context
+	if resolved_fit_context.is_empty():
+		resolved_fit_context = _ai_commander_task_fit_context(session, faction_id, actor_id)
+	var fit_profile := String(resolved_fit_context.get("profile", ""))
 	var output := []
 	for candidate_value in candidates:
 		if not (candidate_value is Dictionary):
 			continue
-		var candidate: Dictionary = candidate_value.duplicate(true)
-		var fit_bonus := _ai_commander_task_fit_bonus(session, faction_id, actor_id, candidate)
+		var candidate: Dictionary = candidate_value.duplicate()
+		var fit_bonus := _ai_commander_task_fit_bonus_from_context(session, candidate, resolved_fit_context)
 		candidate["commander_fit_bonus"] = fit_bonus
-		candidate["commander_fit_profile"] = _ai_commander_task_fit_profile(session, faction_id, actor_id)
+		candidate["commander_fit_profile"] = fit_profile
 		candidate["priority"] = max(0, int(candidate.get("priority", 0)) + fit_bonus)
 		output.append(candidate)
 	if sort_output:
@@ -8869,36 +8880,78 @@ static func _ai_hero_task_planner_best_candidate_for_commander(
 	actor_id: String,
 	candidates: Array
 ) -> Dictionary:
+	var fit_context := _ai_commander_task_fit_context(session, faction_id, actor_id)
+	var fit_profile := String(fit_context.get("profile", ""))
 	var best := {}
 	for candidate_value in candidates:
 		if not (candidate_value is Dictionary):
 			continue
-		var candidate: Dictionary = candidate_value.duplicate(true)
-		var fit_bonus := _ai_commander_task_fit_bonus(session, faction_id, actor_id, candidate)
+		var candidate: Dictionary = candidate_value.duplicate()
+		var fit_bonus := _ai_commander_task_fit_bonus_from_context(session, candidate, fit_context)
 		candidate["commander_fit_bonus"] = fit_bonus
-		candidate["commander_fit_profile"] = _ai_commander_task_fit_profile(session, faction_id, actor_id)
+		candidate["commander_fit_profile"] = fit_profile
 		candidate["priority"] = max(0, int(candidate.get("priority", 0)) + fit_bonus)
 		if best.is_empty() or _candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _ai_commander_task_fit_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	actor_id: String,
+	roster_entry: Dictionary = {}
+) -> Dictionary:
+	if actor_id == "":
+		return {}
+	var template := ContentService.get_hero(actor_id)
+	var entry := roster_entry
+	if entry.is_empty():
+		entry = _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
+	var commander_state = entry.get("commander_state", {})
+	if not (commander_state is Dictionary):
+		commander_state = {}
+	var command := _normalize_command_payload(
+		commander_state.get("command", template.get("command", {}))
+	)
+	var archetype := String(commander_state.get("archetype", template.get("archetype", "")))
+	var command_path := String(template.get("command_path", ""))
+	var profile := archetype
+	if profile == "":
+		profile = command_path
+	elif command_path != "":
+		profile = "%s/%s" % [profile, command_path]
+	return {
+		"template": template,
+		"entry": entry,
+		"attack": max(0, int(command.get("attack", 0))),
+		"defense": max(0, int(command.get("defense", 0))),
+		"power": max(0, int(command.get("power", 0))),
+		"knowledge": max(0, int(command.get("knowledge", 0))),
+		"archetype": archetype,
+		"command_path": command_path,
+		"focus_ids": _normalized_specialty_focus_ids(
+			_merge_unique_strings(
+				commander_state.get("specialty_focus_ids", []),
+				template.get("specialty_focus_ids", [])
+			)
+		),
+		"memory": _normalized_commander_memory(entry, commander_state),
+		"live_role_state": commander_live_role_state(entry),
+		"battle_traits": _normalize_string_array(
+			_merge_unique_strings(
+				commander_state.get("battle_traits", []),
+				template.get("battle_traits", [])
+			)
+		),
+		"profile": profile,
+	}
 
 static func _ai_commander_task_fit_profile(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	actor_id: String
 ) -> String:
-	var template := ContentService.get_hero(actor_id)
-	var entry := _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
-	var commander_state = entry.get("commander_state", {})
-	if not (commander_state is Dictionary):
-		commander_state = {}
-	var archetype := String(commander_state.get("archetype", template.get("archetype", "")))
-	var command_path := String(template.get("command_path", ""))
-	if archetype == "":
-		return command_path
-	if command_path == "":
-		return archetype
-	return "%s/%s" % [archetype, command_path]
+	return String(_ai_commander_task_fit_context(session, faction_id, actor_id).get("profile", ""))
 
 static func _ai_commander_task_fit_bonus(
 	session: SessionStateStoreScript.SessionData,
@@ -8908,37 +8961,35 @@ static func _ai_commander_task_fit_bonus(
 ) -> int:
 	if actor_id == "" or candidate.is_empty():
 		return 0
-	var template := ContentService.get_hero(actor_id)
-	var entry := _commander_roster_entry(commander_roster_for_faction(session, faction_id), actor_id)
-	var commander_state = entry.get("commander_state", {})
-	if not (commander_state is Dictionary):
-		commander_state = {}
-	var command := _normalize_command_payload(
-		commander_state.get("command", template.get("command", {}))
+	return _ai_commander_task_fit_bonus_from_context(
+		session,
+		candidate,
+		_ai_commander_task_fit_context(session, faction_id, actor_id)
 	)
-	var attack: int = max(0, int(command.get("attack", 0)))
-	var defense: int = max(0, int(command.get("defense", 0)))
-	var power: int = max(0, int(command.get("power", 0)))
-	var knowledge: int = max(0, int(command.get("knowledge", 0)))
-	var archetype := String(commander_state.get("archetype", template.get("archetype", "")))
-	var command_path := String(template.get("command_path", ""))
-	var focus_ids := _normalized_specialty_focus_ids(
-		_merge_unique_strings(
-			commander_state.get("specialty_focus_ids", []),
-			template.get("specialty_focus_ids", [])
-		)
-	)
-	var memory := _normalized_commander_memory(entry, commander_state)
-	var live_role_state := commander_live_role_state(entry)
-	var battle_traits := _normalize_string_array(
-		_merge_unique_strings(
-			commander_state.get("battle_traits", []),
-			template.get("battle_traits", [])
-		)
-	)
+
+static func _ai_commander_task_fit_bonus_from_context(
+	session: SessionStateStoreScript.SessionData,
+	candidate: Dictionary,
+	fit_context: Dictionary
+) -> int:
+	if candidate.is_empty() or fit_context.is_empty():
+		return 0
+	var template: Dictionary = fit_context.get("template", {}) if fit_context.get("template", {}) is Dictionary else {}
+	var attack := int(fit_context.get("attack", 0))
+	var defense := int(fit_context.get("defense", 0))
+	var power := int(fit_context.get("power", 0))
+	var knowledge := int(fit_context.get("knowledge", 0))
+	var archetype := String(fit_context.get("archetype", ""))
+	var command_path := String(fit_context.get("command_path", ""))
+	var focus_ids: Array = fit_context.get("focus_ids", []) if fit_context.get("focus_ids", []) is Array else []
+	var memory: Dictionary = fit_context.get("memory", {}) if fit_context.get("memory", {}) is Dictionary else {}
+	var live_role_state: Dictionary = fit_context.get("live_role_state", {}) if fit_context.get("live_role_state", {}) is Dictionary else {}
+	var battle_traits: Array = fit_context.get("battle_traits", []) if fit_context.get("battle_traits", []) is Array else []
 	var target_kind := String(candidate.get("target_kind", ""))
 	var reason_codes := _normalize_string_array(candidate.get("target_reason_codes", []))
-	var site_family := String(candidate.get("site_family", target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))))
+	var site_family := String(candidate.get("site_family", ""))
+	if site_family == "":
+		site_family = target_site_family(session, target_kind, String(candidate.get("target_placement_id", "")))
 	var defensive_assignment := (
 		"town_defense" in reason_codes
 		or "site_defense" in reason_codes
@@ -9067,12 +9118,17 @@ static func _ai_hero_task_planner_candidates_from_origins(
 ) -> Array:
 	var best_by_target := {}
 	var exploration_by_target := {}
+	var path_context := _path_distance_surface_context(
+		session,
+		"",
+		String(config.get("faction_id", ""))
+	)
 	for origin_value in origins:
 		if not (origin_value is Dictionary):
 			continue
 		var origin: Dictionary = origin_value
 		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-		var origin_candidates := _target_candidates(session, config, origin_pos)
+		var origin_candidates := _target_candidates(session, config, origin_pos, false, path_context)
 		if origin_candidates.is_empty():
 			var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
 			if not exploration_plan.is_empty():

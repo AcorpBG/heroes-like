@@ -16435,6 +16435,12 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '"spawn_spell_projection_roster_reused"',
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing active-front launch-surface reuse token: {required_token}")
+    for required_token in (
+        "static func _ai_commander_task_fit_context",
+        "static func _ai_commander_task_fit_bonus_from_context",
+        "_target_candidates(session, config, origin_pos, false, path_context)",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing task-planner context reuse token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
         report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (

@@ -15196,12 +15196,12 @@
   ],
   "currentNotes": "Completed the bounded Stag-Knot Runner correction. The all-live matrix improved from 41 to 40 outliers and severity 389 to 356; it remains needs_tuning and overall release completion is not claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-faction-pair-stat-tuning-followup-10184",
-  "currentSliceId": "strategic-ai-spell-projection-roster-reuse-10184",
-  "currentSliceNotes": "Implemented normalized commander-roster reuse for every newly loaded adventure-spell projection in the spawn scan. Focused multi-point saved-task coverage records 2/2 roster reuses with unchanged Tarn task, Trailglyph tempo, Vaska fresh-fit selection, and prepared below-threshold launch behavior. Exact strict-Small row signature stayed 9fff0a26 with identical event counts; repeat turn runtime fell from 1097 ms to 1055 ms, combined spawn loops from 370 ms to 347 ms, and saved-task work from 33/4 ms to 11/1 ms for Mireclaw/Sunvault, with all 7/1 projections reusing the roster. Two-seed three-turn rows preserved dcf52715 and d8902064, exact event counts, all 6 turns, and zero behavior bugs, integrity failures, stalls, or unreachable targets while recording 77 roster reuses. Focused reports, core systems, editor parse, validate_repo, jq, and diff checks passed. No save schema or Native RMG behavior changed.",
+  "currentSlice": "strategic-ai-task-planner-fit-context-reuse-10184",
+  "currentSliceId": "strategic-ai-task-planner-fit-context-reuse-10184",
+  "currentSliceNotes": "Implemented one reused faction path surface per planning pass, one immutable fit context per assignable commander, shallow score overlays, and reuse of materialized site families. Focused coverage proves 15/15 scores and ordering exact. Strict-Small signature 9fff0a26 and events remain exact; one isolated sample improved from 1092 ms to 1083 ms and Mireclaw pre-build planning from 100 ms to 94 ms. Two-seed three-turn signatures dcf52715 and d8902064 remain exact with all six turns and zero failures. Affected planner, recruitment, spawn, core, parse, repository, JSON, and diff gates pass. No scoring, save schema, public event, or Native RMG behavior changed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Spell-Projection Roster Reuse",
-  "currentSliceUpdatedAt": "2026-08-03T08:20:03Z",
+  "currentSliceTitle": "Strategic AI Task-Planner Fit Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-03T10:27:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20718,6 +20718,45 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 240 --scene res://tests/ai_hero_task_strategic_planner_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 600 --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The task-board planner reuses one faction path-distance surface across every planning origin, derives one immutable commander-fit context per assignable commander, and uses shallow score overlays for immutable target candidates; direct context-backed and public helper scores/profiles remain equivalent; exact strict-Small row signature 9fff0a26 and event counts remain unchanged while pre_build_task_plan_ms and whole-turn runtime improve or hold; broad deterministic rows, core, parse, repository, JSON, and diff gates pass.",
+      "id": "strategic-ai-task-planner-fit-context-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_strategic_planner_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "commander fit formulas, task priority, proposal ordering, target selection, or assignment changes",
+        "save schema, public event, recruitment, spawn, or battle changes",
+        "Native RMG changes or broad performance claims"
+      ],
+      "notes": "Implemented one reused faction path surface per planning pass, one immutable fit context per assignable commander, shallow score overlays, and reuse of materialized site families. Focused coverage proves 15/15 scores and ordering exact. Strict-Small signature 9fff0a26 and events remain exact; one isolated sample improved from 1092 ms to 1083 ms and Mireclaw pre-build planning from 100 ms to 94 ms while Sunvault measured 58 ms versus 56 ms baseline timer noise. Two-seed three-turn signatures dcf52715 and d8902064 remain exact with all six turns and zero behavior, integrity, reachability, or stall failures. Affected planner, recruitment, spawn, core, parse, repository, JSON, and diff gates pass. No scoring, save schema, public event, or Native RMG behavior changed; no broad performance claim is made.",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current product focus strategic AI performance follow-up",
+      "purpose": "Remove repeated faction path-surface, immutable commander-state, and deep candidate-copy work from the strategic task-board planning loop.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-03T10:17:36Z",
+      "status": "completed",
+      "title": "Strategic AI Task-Planner Fit Context Reuse",
+      "updatedAt": "2026-08-03T10:27:20Z",
+      "completedAt": "2026-08-03T10:27:20Z"
+    },
     {
       "baselineChecks": [
         "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
