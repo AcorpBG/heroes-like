@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-save-slot-delete-workflow-10184`. The live Saves board now exposes a compact Delete Save command for any occupied autosave or manual slot, including corrupt/unloadable files, and requires exact slot-bound confirmation before removal. SaveService derives paths only from canonical autosave/manual identities, rejects unknown or invalid ids and forged paths, invalidates the selected summary cache after deletion, and refreshes the deleted row to Empty while recalculating latest save state. Focused proof covers cancellation, Manual Slot 2, autosave, corrupt-slot deletion, forged-path rejection, three preserved unrelated saves, campaign progression, device settings, active expedition state, and save version 9; 1280x720/1920x1080 captures, 1024x600 save-load confidence, lean boot, menu/outcome, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, bulk deletion, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `campaign-arc-restart-workflow-10184`. The live campaign board now exposes a compact Restart Arc command only for arcs with recorded progress and requires a campaign-bound confirmation that reports the exact attempts, victories, and carryover being cleared. Confirmation persists a normalized campaign-local reset, returns the selected arc to its authored Chapter I, hides the now-inapplicable command, and preserves other campaign progress, expedition saves, device settings, selected difficulty, and save version 9. Focused persistence, 1280x720 and 1920x1080 visual captures, player-facing campaign flow, six-campaign breadth, menu/outcome, core systems, project parsing, and repository validation pass. Campaign content, balance, chapter rules, broad menu redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `packaging-platform-native-installers-10184`. The verified Linux/Windows release pipeline now emits a reproducible Linux self-installing `.run` and Windows NSIS setup executable from the exact release payloads. Release-index schema v2 links and checksums both installers against their source archives; verification rejects outer and embedded-payload tampering. Isolated Linux and Wine lifecycles install and boot the packaged game, remove owned program and launcher files, and preserve external user data. Code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, and overall release completion remain open.
 - Completed implementation slice: `settings-accessibility-reduced-flash-10184`. Device settings now persist Reduce Flashes independently of reduced motion and battle shake. Normal motion, timing, audio, and combat remain unchanged while live battle event VFX use existing non-flashing fallback cues and spell-specific flash overlays are suppressed. The compact Readability settings surface remains reachable at 130% UI scale through a bounded scroll region, including the existing support-bundle command. Direct reload, exported-PCK persistence, menu control, live battle cue behavior, project parsing, core systems, and repository validation pass. Screen-reader integration, subtitles for nonexistent voiceover, broad VFX redesign, Native RMG, and overall release completion remain open.
@@ -785,6 +786,21 @@ Target shape:
 Non-goals:
 - do not claim code signing, storefront/channel publication, system-wide installation, native Windows hardware certification, or overall release completion;
 - do not change game/runtime behavior, saves, authored content, or Native RMG.
+
+## Confirmed Save Slot Deletion
+
+The completed Phase 6 UX slice lets players remove one unwanted or damaged expedition save without manually editing the user-data directory.
+
+Target shape:
+- the Saves detail surface exposes a compact Delete Save command only for an occupied autosave or manual slot, whether loadable or corrupt;
+- deletion requires explicit confirmation naming the selected slot and, when readable, its expedition;
+- the save service resolves autosave/manual paths from trusted slot identity and refuses progression files, unknown slot types, invalid manual slot ids, and arbitrary paths;
+- successful deletion invalidates summary caches and refreshes selected/latest save state immediately;
+- all unrelated save files, campaign progression, device settings, the active in-memory expedition, and save version 9 remain unchanged.
+
+Non-goals:
+- do not add save renaming, cloud synchronization, recycling/undo, bulk deletion, or automatic cleanup;
+- do not reset campaign progression, delete every save, change save schema, redesign the Saves board, change Native RMG, or claim overall release completion.
 
 ## Campaign Arc Restart Workflow
 

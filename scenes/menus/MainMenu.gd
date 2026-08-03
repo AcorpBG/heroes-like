@@ -119,12 +119,15 @@ const TAB_HELP_TOPIC := {
 @onready var _support_bundle_status_label: Label = %SupportBundleStatus
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
+@onready var _delete_selected_save_button: Button = %DeleteSelectedSave
 @onready var _load_selected_button: Button = %LoadSelected
+@onready var _save_delete_dialog: ConfirmationDialog = $SaveDeleteDialog
 
 var _save_summaries: Array = []
 var _selected_save_key := ""
 var _save_browser_loaded := false
 var _save_load_notice := ""
+var _pending_save_delete_identity := {}
 var _campaign_entries: Array = []
 var _selected_campaign_id := ""
 var _campaign_chapter_entries: Array = []
@@ -385,6 +388,36 @@ func _on_save_selected(index: int) -> void:
 	_save_load_notice = ""
 	_selected_save_key = _summary_key(_save_summaries[index])
 	_refresh_selected_save()
+
+func _on_delete_selected_save_pressed() -> void:
+	var action := SaveService.build_delete_action(_selected_summary())
+	if bool(action.get("disabled", true)):
+		return
+	_pending_save_delete_identity = {
+		"slot_type": String(action.get("slot_type", "")),
+		"slot_id": String(action.get("slot_id", "")),
+	}
+	_save_delete_dialog.title = "Delete %s?" % String(action.get("slot_label", "save"))
+	_save_delete_dialog.dialog_text = String(action.get("summary", ""))
+	var dialog_label := _save_delete_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(520.0, 72.0)
+	_save_delete_dialog.get_ok_button().text = "Delete Save"
+	_save_delete_dialog.popup_centered(Vector2i(640, 210))
+
+func _on_save_delete_confirmed() -> void:
+	_save_delete_dialog.hide()
+	var identity := _pending_save_delete_identity.duplicate(true)
+	_pending_save_delete_identity = {}
+	if identity.is_empty():
+		return
+	var result := SaveService.delete_session_from_summary(identity)
+	_save_load_notice = String(result.get("message", ""))
+	_rebuild_save_browser()
+
+func _on_save_delete_canceled() -> void:
+	_save_delete_dialog.hide()
+	_pending_save_delete_identity = {}
 
 func _on_load_selected_pressed() -> void:
 	var live_summary := SaveService.refresh_summary(_selected_summary())
@@ -1164,6 +1197,9 @@ func _refresh_selected_save() -> void:
 	if summary.is_empty():
 		var empty_text := _save_load_notice if _save_load_notice != "" else "No saved expeditions are available."
 		_set_compact_label(_save_details_label, empty_text, 3, 84)
+		_delete_selected_save_button.visible = false
+		_delete_selected_save_button.disabled = true
+		_delete_selected_save_button.tooltip_text = "Select an occupied autosave or manual slot first."
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
@@ -1173,6 +1209,11 @@ func _refresh_selected_save() -> void:
 	if _save_load_notice != "":
 		details = "%s\n\n%s" % [_save_load_notice, details]
 	_set_compact_label(_save_details_label, details, 6, 88)
+	var delete_action := SaveService.build_delete_action(summary)
+	_delete_selected_save_button.text = String(delete_action.get("label", "Delete Save"))
+	_delete_selected_save_button.disabled = bool(delete_action.get("disabled", true))
+	_delete_selected_save_button.visible = not _delete_selected_save_button.disabled
+	_delete_selected_save_button.tooltip_text = String(delete_action.get("summary", ""))
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
@@ -1235,6 +1276,10 @@ func _reset_save_browser_placeholder() -> void:
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = "Open Load to inspect save slots before loading."
+	if _delete_selected_save_button != null:
+		_delete_selected_save_button.visible = false
+		_delete_selected_save_button.disabled = true
+		_delete_selected_save_button.tooltip_text = "Open Load to inspect occupied save slots before deleting."
 
 func _ensure_save_browser_loaded() -> void:
 	if not _save_browser_loaded:
@@ -2215,6 +2260,12 @@ func validation_snapshot() -> Dictionary:
 		"load_selected_tooltip": _load_selected_button.tooltip_text,
 		"selected_save_command_tooltip": _selected_save_command_tooltip(selected_save_summary),
 		"load_selected_enabled": not _load_selected_button.disabled,
+		"save_delete_action": SaveService.build_delete_action(selected_save_summary),
+		"save_delete_visible": _delete_selected_save_button.visible,
+		"save_delete_enabled": not _delete_selected_save_button.disabled,
+		"save_delete_tooltip": _delete_selected_save_button.tooltip_text,
+		"save_delete_dialog_visible": _save_delete_dialog.visible,
+		"save_delete_pending_identity": _pending_save_delete_identity.duplicate(true),
 		"settings_summary": _settings_summary_label.text,
 		"settings_summary_full": _settings_summary_label.tooltip_text,
 		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
@@ -2434,6 +2485,10 @@ func validation_open_saves_stage() -> void:
 	_select_menu_tab(TAB_SAVES)
 	_show_stage_dock()
 	_ensure_save_browser_loaded()
+
+func validation_refresh_save_browser() -> void:
+	_save_browser_loaded = true
+	_rebuild_save_browser()
 
 func validation_open_contextual_guide_stage() -> void:
 	_on_stage_help_pressed()
@@ -2797,6 +2852,28 @@ func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 		return true
 	return false
 
+func validation_request_selected_save_delete() -> Dictionary:
+	_on_delete_selected_save_pressed()
+	return {
+		"pending_identity": _pending_save_delete_identity.duplicate(true),
+		"dialog_visible": _save_delete_dialog.visible,
+		"title": _save_delete_dialog.title,
+		"text": _save_delete_dialog.dialog_text,
+	}
+
+func validation_confirm_selected_save_delete() -> Dictionary:
+	var selected_key_before := _selected_save_key
+	_on_save_delete_confirmed()
+	return {
+		"selected_key_before": selected_key_before,
+		"selected_key_after": _selected_save_key,
+		"pending_identity": _pending_save_delete_identity.duplicate(true),
+		"notice": _save_load_notice,
+	}
+
+func validation_cancel_selected_save_delete() -> void:
+	_on_save_delete_canceled()
+
 func validation_resume_selected_save() -> Dictionary:
 	var summary := _selected_summary()
 	if summary.is_empty():
@@ -3027,6 +3104,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_delete_selected_save_button, "secondary", 132.0, 38.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	FrontierVisualKit.apply_button(_customize_movement_keys_button, "secondary", 140.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_export_support_bundle_button, "secondary", 196.0, 34.0, 13)

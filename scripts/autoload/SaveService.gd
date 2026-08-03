@@ -153,6 +153,66 @@ func refresh_summary(summary: Dictionary) -> Dictionary:
 		_:
 			return _inspect_slot(slot_type, String(summary.get("slot_id", "")), String(summary.get("path", "")))
 
+func build_delete_action(summary: Dictionary) -> Dictionary:
+	var identity := _deletable_slot_identity(summary)
+	if identity.is_empty():
+		return {
+			"label": "Delete Save",
+			"disabled": true,
+			"summary": "Select an occupied autosave or manual slot before deleting.",
+		}
+
+	var live_summary := _summary_for_slot_identity(identity)
+	var path := String(identity.get("path", ""))
+	var occupied := path != "" and FileAccess.file_exists(path)
+	var slot_label := "Autosave" if String(identity.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE else "Manual Slot %s" % String(identity.get("slot_id", ""))
+	var context := String(live_summary.get("scenario_name", "")).strip_edges()
+	if context == "":
+		context = "this unreadable save" if occupied else "this empty slot"
+	var summary_text := "Delete %s for %s? This permanently removes only this expedition save. Other save slots, campaign progress, settings, and the active expedition are preserved." % [
+		slot_label,
+		context,
+	]
+	return {
+		"slot_type": String(identity.get("slot_type", "")),
+		"slot_id": String(identity.get("slot_id", "")),
+		"slot_label": slot_label,
+		"scenario_name": String(live_summary.get("scenario_name", "")),
+		"label": "Delete Save",
+		"disabled": not occupied,
+		"summary": summary_text,
+	}
+
+func delete_session_from_summary(summary: Dictionary) -> Dictionary:
+	var identity := _deletable_slot_identity(summary)
+	var action := build_delete_action(summary)
+	if identity.is_empty() or bool(action.get("disabled", true)):
+		return {
+			"ok": false,
+			"slot_type": String(action.get("slot_type", "")),
+			"slot_id": String(action.get("slot_id", "")),
+			"message": "No occupied autosave or manual slot was deleted.",
+		}
+
+	var path := String(identity.get("path", ""))
+	var remove_error := DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	if remove_error != OK:
+		return {
+			"ok": false,
+			"slot_type": String(identity.get("slot_type", "")),
+			"slot_id": String(identity.get("slot_id", "")),
+			"message": "%s could not be deleted. Other save slots were not changed." % String(action.get("slot_label", "Save")),
+		}
+
+	_invalidate_summary_cache_for_path(path)
+	return {
+		"ok": true,
+		"slot_type": String(identity.get("slot_type", "")),
+		"slot_id": String(identity.get("slot_id", "")),
+		"slot_label": String(action.get("slot_label", "Save")),
+		"message": "%s was deleted. Other save slots and progress were preserved." % String(action.get("slot_label", "Save")),
+	}
+
 func save_progression(payload: Dictionary) -> String:
 	if payload.is_empty():
 		push_warning("Refusing to save an empty campaign progression payload.")
@@ -725,6 +785,37 @@ func _autosave_path() -> String:
 
 func _progression_path() -> String:
 	return "%s/%s" % [SAVE_DIR, PROGRESSION_FILE]
+
+func _deletable_slot_identity(summary: Dictionary) -> Dictionary:
+	if summary.is_empty():
+		return {}
+	var slot_type := String(summary.get("slot_type", ""))
+	var slot_id := String(summary.get("slot_id", ""))
+	if slot_type == SLOT_TYPE_AUTOSAVE and slot_id == SLOT_TYPE_AUTOSAVE:
+		return {
+			"slot_type": SLOT_TYPE_AUTOSAVE,
+			"slot_id": SLOT_TYPE_AUTOSAVE,
+			"path": _autosave_path(),
+		}
+	if slot_type != SLOT_TYPE_MANUAL or not slot_id.is_valid_int():
+		return {}
+	var manual_slot := int(slot_id)
+	if manual_slot not in MANUAL_SLOT_IDS or str(manual_slot) != slot_id:
+		return {}
+	return {
+		"slot_type": SLOT_TYPE_MANUAL,
+		"slot_id": str(manual_slot),
+		"path": _slot_path(manual_slot),
+	}
+
+func _summary_for_slot_identity(identity: Dictionary) -> Dictionary:
+	match String(identity.get("slot_type", "")):
+		SLOT_TYPE_AUTOSAVE:
+			return inspect_autosave()
+		SLOT_TYPE_MANUAL:
+			return inspect_manual_slot(int(identity.get("slot_id", MANUAL_SLOT_IDS[0])))
+		_:
+			return {}
 
 func _ensure_save_dir() -> bool:
 	var absolute_path := ProjectSettings.globalize_path(SAVE_DIR)

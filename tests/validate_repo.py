@@ -60,6 +60,8 @@ CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_res
 CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_arc_restart_regression.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
+SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_regression.gd"
+SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_slot_delete_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -11761,6 +11763,9 @@ def validate_save_management(errors: list[str]) -> None:
         "func list_session_summaries",
         "func restore_session_from_summary",
         "func refresh_summary",
+        "func build_delete_action",
+        "func delete_session_from_summary",
+        "func _deletable_slot_identity",
         "func load_action_label",
         "func continue_action_label",
         "func _save_runtime_session",
@@ -11781,6 +11786,10 @@ def validate_save_management(errors: list[str]) -> None:
         "AppRouter.resume_latest_session",
         "AppRouter.resume_summary",
         "AppRouter.consume_menu_notice",
+        "SaveService.build_delete_action",
+        "SaveService.delete_session_from_summary",
+        "func _on_delete_selected_save_pressed",
+        "func _on_save_delete_confirmed",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required save-browser state token: {required_token}")
     for required_token in (
@@ -11810,7 +11819,27 @@ def validate_save_management(errors: list[str]) -> None:
         ensure(scene_has_node(main_menu_text, "Saves", "VBoxContainer"), errors, "MainMenu.tscn must define a Saves tab")
         ensure(scene_has_node(main_menu_text, "SaveList", "ItemList"), errors, "MainMenu.tscn must define a SaveList item browser")
         ensure(scene_has_node(main_menu_text, "SaveDetails", "Label"), errors, "MainMenu.tscn must define a SaveDetails label")
+        ensure(scene_has_node(main_menu_text, "DeleteSelectedSave", "Button"), errors, "MainMenu.tscn must define a DeleteSelectedSave button")
         ensure(scene_has_node(main_menu_text, "LoadSelected", "Button"), errors, "MainMenu.tscn must define a LoadSelected button")
+        ensure(scene_has_node(main_menu_text, "SaveDeleteDialog", "ConfirmationDialog"), errors, "MainMenu.tscn must define a SaveDeleteDialog confirmation")
+
+    for path in (SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH, SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing save-slot deletion regression file: {path.relative_to(ROOT)}")
+    if SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH.exists():
+        delete_text = SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SAVE_SLOT_DELETE_REGRESSION",
+            "validation_request_selected_save_delete",
+            "validation_confirm_selected_save_delete",
+            "corrupt_slot_deleted",
+            "forged_path_rejected",
+            "active_session_preserved",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in delete_text, errors, f"save_slot_delete_regression.gd is missing required token: {required_token}")
+    if SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.exists():
+        delete_scene_text = SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure("res://tests/save_slot_delete_regression.gd" in delete_scene_text, errors, "Save-slot deletion regression scene must load its script")
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:

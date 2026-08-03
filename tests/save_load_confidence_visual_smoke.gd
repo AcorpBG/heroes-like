@@ -60,8 +60,10 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 	var details := String(snapshot.get("save_details_full", ""))
 	var button_text := String(snapshot.get("load_selected_text", ""))
 	var button_tooltip := String(snapshot.get("load_selected_tooltip", ""))
+	var delete_text := String(snapshot.get("save_delete_action", {}).get("label", ""))
+	var delete_tooltip := String(snapshot.get("save_delete_tooltip", ""))
 	var rows := "\n".join(snapshot.get("save_browser_items", []))
-	var visible_copy := "\n".join([details, button_text, button_tooltip, rows])
+	var visible_copy := "\n".join([details, button_text, button_tooltip, delete_text, delete_tooltip, rows])
 	for expected in ["River Pass", "Skirmish", "Captain", "Day 4", "Commander:", "Saved:", "Returns to: Adventure Map", "Next:"]:
 		if not visible_copy.contains(expected):
 			_fail("Load preview at %s is missing %s: %s" % [viewport_size, expected, visible_copy])
@@ -76,7 +78,13 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 	if not button_tooltip.contains("Loading does not change any saved slot"):
 		_fail("Load action at %s does not state the save-preservation boundary." % viewport_size)
 		return false
-	for control_name in ["StageDockPanel", "SaveList", "SaveDetails", "LoadSelected"]:
+	if delete_text != "Delete Save" or not bool(snapshot.get("save_delete_enabled", false)):
+		_fail("Occupied autosave does not expose Delete Save at %s: %s" % [viewport_size, JSON.stringify(snapshot)])
+		return false
+	if not delete_tooltip.contains("permanently removes only this expedition save"):
+		_fail("Delete action at %s does not state its single-slot boundary." % viewport_size)
+		return false
+	for control_name in ["StageDockPanel", "SaveList", "SaveDetails", "DeleteSelectedSave", "LoadSelected"]:
 		var control = shell.find_child(control_name, true, false)
 		if not _inside_viewport(control as Control, viewport_size, control_name):
 			return false
@@ -104,6 +112,9 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 			return false
 		if bool(stale_snapshot.get("load_selected_enabled", true)):
 			_fail("A removed selected save left the load action enabled.")
+			return false
+		if bool(stale_snapshot.get("save_delete_visible", true)) or bool(stale_snapshot.get("save_delete_enabled", true)):
+			_fail("A removed selected save left the delete action available.")
 			return false
 
 	viewport.queue_free()
