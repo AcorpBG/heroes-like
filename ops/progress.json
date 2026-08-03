@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact slot-bound confirmation before active-play manual saves replace occupied or unreadable slots across overworld, town, battle, and scenario outcome. Empty slots remain direct saves; cancellation, invalid-slot rejection, selection rebinding protection, and unrelated-state preservation are proven.",
+  "currentNotes": "Completed the confirmed rollback-capable restore-defaults workflow for all persisted device settings, including custom movement keys, with immediate runtime/UI application and strict preservation of game progress and saves.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-manual-save-overwrite-confirmation-10184",
-  "currentSliceId": "ux-manual-save-overwrite-confirmation-10184",
-  "currentSliceNotes": "All four active-play shells share one overwrite action/dialog; occupied and unreadable slots require confirmation, empty slots save directly, and focused plus broad validation pass.",
+  "currentSlice": "settings-confirmed-restore-defaults-10184",
+  "currentSliceId": "settings-confirmed-restore-defaults-10184",
+  "currentSliceNotes": "Implemented and validated one confirmed rollback-capable full reset across presentation, audio, gameplay, custom movement, and accessibility settings. Cancellation is inert; confirmation persists canonical defaults while preserving saves, campaign progress, active session, support bundle state, and save version 9.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Confirmed Manual Save Overwrite",
-  "currentSliceUpdatedAt": "2026-08-03T04:15:27Z",
+  "currentSliceTitle": "Confirmed Restore Settings Defaults",
+  "currentSliceUpdatedAt": "2026-08-03T04:36:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66923,6 +66923,63 @@
         "status": "passed",
         "updatedAt": "2026-08-03T04:15:27Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The live Settings board requires explicit confirmation before atomically restoring every canonical device default; cancellation preserves exact config bytes and runtime state; confirmation immediately applies and persists presentation, audio, gameplay, custom movement, and accessibility defaults; expedition saves, campaign progression, active session state, support bundle state, and save version 9 remain unchanged; focused, visual, packaged-settings, menu, keyboard, core, parse, and repository validation pass.",
+      "id": "settings-confirmed-restore-defaults-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/settings_restore_defaults_regression.gd",
+        "tests/settings_restore_defaults_regression.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "campaign progression, expedition saves, active session, support bundle, or editor-state reset",
+        "per-section resets, settings import/export, cloud settings, account profiles, or broad Settings-board redesign",
+        "save-schema, gameplay-balance, Native RMG, or overall release-completion changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Confirmed Restore Settings Defaults / ux-polish-player-comprehension-10184",
+      "purpose": "Give players a safe recovery path from inaccessible, confusing, or heavily customized device settings without risking gameplay progress.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-03T04:18:43Z",
+      "status": "completed",
+      "title": "Confirmed Restore Settings Defaults",
+      "updatedAt": "2026-08-03T04:36:13Z",
+      "completedAt": "2026-08-03T04:36:13Z",
+      "notes": "The shipped Settings board now requires confirmation before one rollback-capable service operation applies and persists the complete canonical defaults object. Cancellation preserves exact config bytes; confirmation clears custom movement keys and preserves saves, campaign progress, active session, support bundle state, and save version 9. No Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/settings_restore_defaults_regression.tscn",
+          "SETTINGS_RESTORE_CAPTURE=1 SETTINGS_RESTORE_TEST_RESOLUTION=1280x720 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --path . --scene res://tests/settings_restore_defaults_regression.tscn --resolution 1280x720",
+          "SETTINGS_RESTORE_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --path . --scene res://tests/settings_restore_defaults_regression.tscn --resolution 1920x1080",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 240 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/keyboard_navigation_layout_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 240 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 120 godot4 --headless --editor --path . --quit",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T04:36:13Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66933,7 +66990,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed manual-save overwrite, Native RMG matrix, or artifact reward evidence work.",
+  "remainingWork": "Select the next real pending release behavior from the remaining strategic-AI, balance, accessibility, content, performance, clean-machine packaging, or release-integration gaps; do not repeat completed Settings, manual-save overwrite, Native RMG matrix, or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67465,9 +67522,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Reduce Flashes now persists independently of Reduce Motion and Battle Shake, replaces live battle flash VFX with static fallback cues, blocks spell-specific flash overlays, and preserves normal motion, timing, audio, camera policy, combat, and saves. The compact settings surface remains reachable at 130% UI scale. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. The shipped Settings board now exposes confirmed rollback-capable restoration of every canonical device default, including custom movement keys, while preserving saves, campaign progression, active session state, support diagnostics, and save version 9. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T04:15:27Z",
+  "updatedAt": "2026-08-03T04:36:13Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -117,6 +117,9 @@ const TAB_HELP_TOPIC := {
 @onready var _reduce_flashes_toggle: CheckButton = %ReduceFlashesToggle
 @onready var _export_support_bundle_button: Button = %ExportSupportBundle
 @onready var _support_bundle_status_label: Label = %SupportBundleStatus
+@onready var _restore_settings_defaults_button: Button = %RestoreSettingsDefaults
+@onready var _settings_restore_status_label: Label = %SettingsRestoreStatus
+@onready var _settings_restore_defaults_dialog: ConfirmationDialog = $SettingsRestoreDefaultsDialog
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
 @onready var _delete_selected_save_button: Button = %DeleteSelectedSave
@@ -157,6 +160,8 @@ var _menu_notice := ""
 var _stage_return_focus: Control
 var _support_bundle_status := "No bundle exported"
 var _support_bundle_result := {}
+var _settings_restore_status := ""
+var _settings_restore_pending := false
 
 func _ready() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -680,6 +685,29 @@ func _on_reduce_flashes_toggled(enabled: bool) -> void:
 func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
 
+func _on_restore_settings_defaults_pressed() -> void:
+	_settings_restore_pending = true
+	_settings_restore_defaults_dialog.dialog_text = "Restore presentation, sound, gameplay, custom movement keys, and readability settings to their defaults? Campaign progress and expedition saves will stay unchanged."
+	var dialog_label := _settings_restore_defaults_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(560.0, 86.0)
+	_settings_restore_defaults_dialog.get_ok_button().text = "Restore Defaults"
+	_settings_restore_defaults_dialog.popup_centered(Vector2i(680, 230))
+
+func _on_settings_restore_defaults_confirmed() -> void:
+	_settings_restore_defaults_dialog.hide()
+	if not _settings_restore_pending:
+		return
+	_settings_restore_pending = false
+	var result: Dictionary = SettingsService.restore_default_settings()
+	_settings_restore_status = String(result.get("message", "Settings were not changed."))
+	_apply_visual_theme()
+	_refresh_settings_panel()
+
+func _on_settings_restore_defaults_canceled() -> void:
+	_settings_restore_defaults_dialog.hide()
+	_settings_restore_pending = false
+
 func _export_support_bundle(reveal_in_file_manager: bool) -> Dictionary:
 	var result: Dictionary = RuntimeIssueLog.export_support_bundle(SettingsService.ensure_settings())
 	_support_bundle_result = result.duplicate(true)
@@ -1151,6 +1179,9 @@ func _refresh_settings_panel() -> void:
 	_reduce_flashes_toggle.button_pressed = SettingsService.reduced_flashes_enabled()
 	_reduce_flashes_toggle.tooltip_text = "Replaces strong battle flashes with static cues while preserving normal motion and timing.\n%s" % settings_check
 	_refresh_support_bundle_surface()
+	_restore_settings_defaults_button.tooltip_text = "Restore presentation, sound, gameplay, custom movement keys, and readability defaults. Campaign progress and expedition saves stay unchanged."
+	_settings_restore_status_label.text = _settings_restore_status
+	_settings_restore_status_label.tooltip_text = "This operation changes only device settings. Support bundles, campaign progress, expedition saves, and the active session remain unchanged."
 	_syncing_settings_ui = false
 
 func _refresh_support_bundle_surface() -> void:
@@ -2276,6 +2307,14 @@ func validation_snapshot() -> Dictionary:
 		"support_bundle_status": _support_bundle_status_label.text,
 		"support_bundle_status_tooltip": _support_bundle_status_label.tooltip_text,
 		"support_bundle_result": _support_bundle_result.duplicate(true),
+		"restore_settings_defaults_button_text": _restore_settings_defaults_button.text,
+		"restore_settings_defaults_button_tooltip": _restore_settings_defaults_button.tooltip_text,
+		"settings_restore_status": _settings_restore_status_label.text,
+		"settings_restore_status_tooltip": _settings_restore_status_label.tooltip_text,
+		"settings_restore_dialog_visible": _settings_restore_defaults_dialog.visible,
+		"settings_restore_dialog_title": _settings_restore_defaults_dialog.title,
+		"settings_restore_dialog_text": _settings_restore_defaults_dialog.dialog_text,
+		"settings_restore_pending": _settings_restore_pending,
 		"quit_check": quit_check.duplicate(true),
 		"quit_check_text": String(quit_check.get("visible_text", "")),
 		"quit_check_tooltip": String(quit_check.get("tooltip_text", "")),
@@ -2326,6 +2365,7 @@ func validation_snapshot() -> Dictionary:
 		"settings_scroll_value": _settings_scroll.scroll_vertical,
 		"reduce_flashes_visible_in_scroll": _settings_control_visible(_reduce_flashes_toggle),
 		"support_bundle_visible_in_scroll": _settings_control_visible(_export_support_bundle_button),
+		"restore_settings_defaults_visible_in_scroll": _settings_control_visible(_restore_settings_defaults_button),
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,
@@ -2505,6 +2545,27 @@ func validation_open_settings_stage() -> void:
 func validation_export_support_bundle() -> Dictionary:
 	validation_open_settings_stage()
 	return _export_support_bundle(false)
+
+func validation_request_settings_restore_defaults() -> Dictionary:
+	validation_open_settings_stage()
+	_on_restore_settings_defaults_pressed()
+	return {
+		"pending": _settings_restore_pending,
+		"dialog_visible": _settings_restore_defaults_dialog.visible,
+		"title": _settings_restore_defaults_dialog.title,
+		"text": _settings_restore_defaults_dialog.dialog_text,
+	}
+
+func validation_confirm_settings_restore_defaults() -> Dictionary:
+	_on_settings_restore_defaults_confirmed()
+	return {
+		"pending": _settings_restore_pending,
+		"status": _settings_restore_status,
+		"settings": SettingsService.ensure_settings().duplicate(true),
+	}
+
+func validation_cancel_settings_restore_defaults() -> void:
+	_on_settings_restore_defaults_canceled()
 
 func validation_select_skirmish(scenario_id: String) -> bool:
 	for index in range(_skirmish_entries.size()):
@@ -2782,6 +2843,10 @@ func validation_reveal_reduced_flashes() -> void:
 func validation_reveal_support_bundle() -> void:
 	validation_open_settings_stage()
 	_settings_scroll.ensure_control_visible(_export_support_bundle_button)
+
+func validation_reveal_restore_settings_defaults() -> void:
+	validation_open_settings_stage()
+	_settings_scroll.ensure_control_visible(_restore_settings_defaults_button)
 
 func _settings_control_visible(control: Control) -> bool:
 	if control == null or not control.is_visible_in_tree():
@@ -3108,6 +3173,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	FrontierVisualKit.apply_button(_customize_movement_keys_button, "secondary", 140.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_export_support_bundle_button, "secondary", 196.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_restore_settings_defaults_button, "secondary", 196.0, 34.0, 13)
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 

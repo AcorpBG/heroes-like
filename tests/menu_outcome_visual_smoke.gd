@@ -684,6 +684,21 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: support bundle remains clipped after settings scrolling: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
+	shell.call("validation_reveal_restore_settings_defaults")
+	await get_tree().process_frame
+	settings_snapshot = shell.call("validation_snapshot")
+	if not bool(settings_snapshot.get("restore_settings_defaults_visible_in_scroll", false)) \
+			or String(settings_snapshot.get("restore_settings_defaults_button_text", "")) != "Restore Defaults" \
+			or not String(settings_snapshot.get("restore_settings_defaults_button_tooltip", "")).contains("Campaign progress and expedition saves stay unchanged"):
+		push_error("Main menu smoke: Restore Defaults is not reachable with its preservation contract: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	var restore_request: Dictionary = shell.call("validation_request_settings_restore_defaults")
+	if not bool(restore_request.get("dialog_visible", false)) or not String(restore_request.get("text", "")).contains("custom movement keys"):
+		push_error("Main menu smoke: Restore Defaults omitted its confirmation or settings scope: %s." % restore_request)
+		get_tree().quit(1)
+		return false
+	shell.call("validation_cancel_settings_restore_defaults")
 	shell.call("validation_reveal_reduced_flashes")
 	await get_tree().process_frame
 
