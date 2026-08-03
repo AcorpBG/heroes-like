@@ -5,12 +5,21 @@ const CAMPAIGN_ID := "campaign_reedfall"
 const START_SCENARIO_ID := "river-pass"
 const CAMPAIGN_DIFFICULTY := "hard"
 
+var _original_profile := {}
+
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	var tree := get_tree()
 	ContentService.clear_cache()
+	_original_profile = CampaignProgression.ensure_profile().duplicate(true)
+	var clean_profile := CampaignRules.normalize_profile(_original_profile)
+	clean_profile["campaign_states"][CAMPAIGN_ID] = {}
+	clean_profile["last_campaign_id"] = CAMPAIGN_ID
+	clean_profile["last_scenario_id"] = ""
+	CampaignProgression.profile = CampaignRules.normalize_profile(clean_profile)
+	CampaignProgression.save_profile()
 	var campaign_ids: Array = CampaignRules.campaign_ids()
 	if CAMPAIGN_ID not in campaign_ids:
 		_fail("Reactivated campaign id is not exposed by CampaignProgression: %s." % [campaign_ids])
@@ -102,6 +111,7 @@ func _run() -> void:
 	if save_summary.is_empty():
 		return
 
+	_restore_original_profile()
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"campaign_count": int(snapshot.get("campaign_count", 0)),
@@ -150,5 +160,12 @@ func _autosave_started_campaign_session() -> Dictionary:
 	return summary
 
 func _fail(message: String) -> void:
+	_restore_original_profile()
 	push_error("%s: %s" % [REPORT_ID, message])
 	get_tree().quit(1)
+
+func _restore_original_profile() -> void:
+	if _original_profile.is_empty():
+		return
+	CampaignProgression.profile = CampaignRules.normalize_profile(_original_profile)
+	CampaignProgression.save_profile()

@@ -56,6 +56,8 @@ MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
 MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_smoke.gd"
 MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH = ROOT / "docs" / "player-facing-campaign-reactivation-smoke-report.md"
+CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_restart_regression.gd"
+CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_arc_restart_regression.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
@@ -12024,6 +12026,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func describe_campaign_journal",
         "func build_chapter_action",
         "func mark_selected_campaign",
+        "func build_restart_action",
+        "func reset_campaign",
         "_campaign_arc_status_lines",
         "_campaign_completion_title",
         "_final_scenario_entry",
@@ -12046,6 +12050,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func chapter_operational_board",
         "func campaign_journal",
         "func campaign_chapter_entries",
+        "func campaign_restart_action",
+        "func restart_campaign",
         "func chapter_details",
         "func primary_campaign_action",
         "func chapter_action",
@@ -12076,8 +12082,10 @@ def validate_campaign_browser(errors: list[str]) -> None:
         ("JournalTitle", "Label"),
         ("CampaignJournal", "Label"),
         ("CampaignActions", "HBoxContainer"),
+        ("RestartCampaignArc", "Button"),
         ("CampaignPrimaryAction", "Button"),
         ("StartChapter", "Button"),
+        ("CampaignRestartDialog", "ConfirmationDialog"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for the campaign browser")
 
@@ -12095,6 +12103,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "CampaignProgression.chapter_action",
         "CampaignProgression.select_campaign",
         "CampaignProgression.select_scenario",
+        "CampaignProgression.campaign_restart_action",
+        "CampaignProgression.restart_campaign",
         "_campaign_arc_status_label",
         "_campaign_commander_preview_label",
         "_campaign_operational_board_label",
@@ -12103,6 +12113,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func _on_chapter_selected",
         "func _on_campaign_primary_pressed",
         "func _on_start_chapter_pressed",
+        "func _on_campaign_restart_pressed",
+        "func _on_campaign_restart_confirmed",
         "func _launch_campaign_action",
         "campaign_board_status",
         "archived_empty",
@@ -12113,6 +12125,24 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "CampaignProgression.primary_campaign_action",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
+
+    for path in (CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH, CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing campaign arc restart regression file: {path.relative_to(ROOT)}")
+    if CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH.exists():
+        restart_text = CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "CAMPAIGN_ARC_RESTART_REGRESSION",
+            "validation_request_campaign_restart",
+            "validation_confirm_campaign_restart",
+            "other_campaign_preserved",
+            "expedition_save_files_preserved",
+            "device_settings_preserved",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in restart_text, errors, f"campaign_arc_restart_regression.gd is missing required token: {required_token}")
+    if CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH.exists():
+        restart_scene_text = CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure("res://tests/campaign_arc_restart_regression.gd" in restart_scene_text, errors, "Campaign arc restart regression scene must load its script")
 
     ensure(MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists(), errors, "Missing main menu outcome visual smoke script")
     if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():

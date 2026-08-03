@@ -129,6 +129,71 @@ static func mark_selected_campaign(profile: Dictionary, campaign_id: String) -> 
 	normalized["last_campaign_id"] = campaign_id
 	return normalized
 
+static func build_restart_action(profile: Dictionary, campaign_id: String) -> Dictionary:
+	var normalized := normalize_profile(profile)
+	var campaign := ContentService.get_campaign(campaign_id)
+	if not _campaign_is_player_facing(campaign):
+		return {
+			"campaign_id": campaign_id,
+			"label": "Restart Arc",
+			"disabled": true,
+			"summary": "Select an active campaign arc before restarting.",
+		}
+
+	var state := get_campaign_state(normalized, campaign_id)
+	var records: Dictionary = state.get("scenario_records", {}) if state.get("scenario_records", {}) is Dictionary else {}
+	var bundles: Dictionary = state.get("carryover_bundles", {}) if state.get("carryover_bundles", {}) is Dictionary else {}
+	var attempt_count := 0
+	var victory_count := 0
+	for record_value in records.values():
+		if not (record_value is Dictionary):
+			continue
+		attempt_count += max(0, int(record_value.get("attempts", 0)))
+		if String(record_value.get("status", "")) == "victory":
+			victory_count += 1
+	var has_progress := attempt_count > 0 or victory_count > 0 or not bundles.is_empty()
+	var campaign_name := String(campaign.get("name", campaign_id))
+	var starting_scenario_id := String(campaign.get("starting_scenario_id", ""))
+	var starting_entry := _find_scenario_entry(campaign, starting_scenario_id)
+	var starting_label := _chapter_heading(starting_entry, starting_scenario_id)
+	var summary := "No recorded progress to restart."
+	if has_progress:
+		var attempt_label := "attempt" if attempt_count == 1 else "attempts"
+		var victory_label := "victory" if victory_count == 1 else "victories"
+		var carryover_label := "carryover bundle" if bundles.size() == 1 else "carryover bundles"
+		summary = "Restart %s from %s. This clears %d recorded %s, %d %s, and %d %s for this arc only. Expedition saves and other campaigns are preserved." % [
+			campaign_name,
+			starting_label,
+			attempt_count,
+			attempt_label,
+			victory_count,
+			victory_label,
+			bundles.size(),
+			carryover_label,
+		]
+	return {
+		"campaign_id": campaign_id,
+		"campaign_name": campaign_name,
+		"starting_scenario_id": starting_scenario_id,
+		"starting_label": starting_label,
+		"attempt_count": attempt_count,
+		"victory_count": victory_count,
+		"carryover_count": bundles.size(),
+		"label": "Restart Arc",
+		"disabled": not has_progress,
+		"summary": summary,
+	}
+
+static func reset_campaign(profile: Dictionary, campaign_id: String) -> Dictionary:
+	var normalized := normalize_profile(profile)
+	var action := build_restart_action(normalized, campaign_id)
+	if bool(action.get("disabled", true)):
+		return normalized
+	normalized["campaign_states"][campaign_id] = _normalize_campaign_state({})
+	normalized["last_campaign_id"] = campaign_id
+	normalized["last_scenario_id"] = ""
+	return normalized
+
 static func get_scenario_record(profile: Dictionary, campaign_id: String, scenario_id: String) -> Dictionary:
 	var state := get_campaign_state(profile, campaign_id)
 	return state.get("scenario_records", {}).get(scenario_id, {})

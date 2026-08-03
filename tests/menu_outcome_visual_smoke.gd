@@ -1,16 +1,37 @@
 extends Node
 
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const CAMPAIGN_SMOKE_ID := "campaign_reedfall"
+
+var _original_campaign_profile := {}
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	if not await _run_main_menu_smoke():
+	_seed_clean_campaign_smoke_profile()
+	var main_menu_ok := await _run_main_menu_smoke()
+	_restore_campaign_smoke_profile()
+	if not main_menu_ok:
 		return
 	if not await _run_outcome_smoke():
 		return
 	get_tree().quit(0)
+
+func _seed_clean_campaign_smoke_profile() -> void:
+	_original_campaign_profile = CampaignProgression.ensure_profile().duplicate(true)
+	var clean_profile := CampaignRules.normalize_profile(_original_campaign_profile)
+	clean_profile["campaign_states"][CAMPAIGN_SMOKE_ID] = {}
+	clean_profile["last_campaign_id"] = CAMPAIGN_SMOKE_ID
+	clean_profile["last_scenario_id"] = ""
+	CampaignProgression.profile = CampaignRules.normalize_profile(clean_profile)
+	CampaignProgression.save_profile()
+
+func _restore_campaign_smoke_profile() -> void:
+	if _original_campaign_profile.is_empty():
+		return
+	CampaignProgression.profile = CampaignRules.normalize_profile(_original_campaign_profile)
+	CampaignProgression.save_profile()
 
 func _run_main_menu_smoke() -> bool:
 	var original_resolution := SettingsService.presentation_resolution_id()

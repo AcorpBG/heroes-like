@@ -397,6 +397,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 0)
 layout_mode = 2
 
+[node name="RestartCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Restart Arc"
+
 [node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -1197,6 +1202,11 @@ text = "Settings"
 
 [node name="HeroKeybindingsDialog" parent="." instance=ExtResource("4_keybindings")]
 
+[node name="CampaignRestartDialog" type="ConfirmationDialog" parent="."]
+title = "Restart campaign arc?"
+initial_position = 1
+dialog_text = "Restart this campaign arc from Chapter I?"
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1224,8 +1234,11 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/RestartCampaignArc" to="." method="_on_campaign_restart_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="confirmed" from="CampaignRestartDialog" to="." method="_on_campaign_restart_confirmed"]
+[connection signal="canceled" from="CampaignRestartDialog" to="." method="_on_campaign_restart_canceled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
