@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Lockmarsh placement-local pressure. Road Chaplains remain exact at 70 percent margin/28 enemy damage per round; Charter Guard moves from 81/9 to 65/17 and Archive Wardens from 81/9 to 70/19. The cohort improves from 77 to 68 percent and the active queue from 29 to 26 with zero high items.",
+  "currentNotes": "Completed bounded decisive melee pressure in shared tactical autoplay. Ghoul Grove hard moves from a round-7 defeat with 19 percent enemy health to a round-5 victory at 70 percent player health; normal and the exact local/shared roster contracts remain unchanged. The active queue remains exact at 26 medium/zero high with signature 8039155f, so the separate 72 percent low-difficulty watch remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-lockmarsh-surge-cohort-pressure-10184",
-  "currentSliceId": "balance-lockmarsh-surge-cohort-pressure-10184",
-  "currentSliceNotes": "Completed placement-local Charter Guard and Archive Wardens pressure with exact Road and shared-army invariants. Lockmarsh's cohort watch is removed without reopening high-priority items.",
+  "currentSlice": "combat-decisive-attack-and-river-pass-opening-10184",
+  "currentSliceId": "combat-decisive-attack-and-river-pass-opening-10184",
+  "currentSliceNotes": "Completed shared player-autoplay decisive strike selection with acting-side, target-side, action-family, and score-gap bounds. Ghoul Grove hard victory is restored without changing encounter content; all focused and broad gates pass, with the expected 26-item breadth watch unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Lockmarsh Surge Cohort Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T21:12:30Z",
+  "currentSliceTitle": "Decisive Attack and River Pass Opening",
+  "currentSliceUpdatedAt": "2026-08-03T21:40:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17875,7 +17875,7 @@
       "phaseSnapshotArtifact": ".artifacts/rmg_native_medium_seed10_final_sweep_classfix_20260611/medium_4p_seed_10_controlled.phase_snapshot.json",
       "remainingWork": "Continue source-backed adoption of terrain/generated-cell private-state parity before 0x49b2b6. The next named blocker is the upstream 0x4a2777/0x4a325d owner/span/terrain-grid private state and 0x4a4c8e bit26/bit27 lanes. Use Linux .so plus Python parity compares as the inner loop. Run Windows debug/release .dll builds only once Linux/Python parity reaches a final validation boundary.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Ported recovered 0x4bbfcc final-sweep scratch-mask and class-correction semantics; parity improved but remains incomplete upstream of 0x49b2b6.",
       "validatedAt": "2026-06-11T18:30:24Z"
     },
@@ -67891,6 +67891,101 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T21:12:30Z"
+    },
+    {
+      "id": "combat-decisive-attack-and-river-pass-opening-10184",
+      "title": "Decisive Attack and River Pass Opening",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Prevent shared tactical autoplay from defending to death when a healthy engaged stack has a viable near-best melee strike against a critically depleted hostile army, restoring River Pass Ghoul Grove's authored hard victory without changing its proven encounter roster.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_autoplay_tactical_order_report.gd",
+        "tests/battle_ghoul_grove_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 26,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "8039155f",
+        "low_difficulty_cohort_average_terminal_health_margin_pct": 72,
+        "ghoul_grove_normal_outcome_state": "victory",
+        "ghoul_grove_normal_round_reached": 5,
+        "ghoul_grove_normal_terminal_health_margin_pct": 72,
+        "ghoul_grove_normal_enemy_damage_per_round": 7,
+        "ghoul_grove_hard_outcome_state": "defeat",
+        "ghoul_grove_hard_round_reached": 7,
+        "ghoul_grove_hard_enemy_health_remaining_pct": 19,
+        "ghoul_grove_hard_enemy_damage_per_round": 18,
+        "ghoul_grove_hard_late_defend_count_with_legal_strike": 3
+      },
+      "completionCriteria": [
+        "A focused shared-tactical fixture chooses a viable strike over defense against a critically depleted hostile side when the scores are close, while clear superior defense and enemy withdrawal behavior remain intact",
+        "Ghoul Grove resolves deterministically as bounded normal and hard victories with meaningful enemy pressure, without weakening the expected hard outcome",
+        "The Ghoul Grove placement-local army and shared Blackbranch Raiders army remain exact after candidate roster adjustments prove unsuitable",
+        "The active breadth queue does not regress from 26 items or zero high-priority items and both runtime-consequence gates remain passing",
+        "Focused tactical, withdrawal, Ghoul Grove, breadth, River Pass campaign, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "global unit stat, difficulty multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "weakening Ghoul Grove's expected hard victory, broad tactical AI redesign, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T21:40:11Z",
+      "startedAt": "2026-08-03T21:17:59Z",
+      "notes": "Completed bounded decisive melee pressure in shared player autoplay. Candidate local roster changes either added no pressure or broke the authored hard victory, so the proven 8/16/2 roster remains unchanged and the separate 72 percent low-difficulty cohort watch stays open.",
+      "result": {
+        "decisive_fixture_action": "strike",
+        "decisive_fixture_acting_side_health_ratio": 0.5,
+        "decisive_fixture_target_side_health_ratio": 0.375,
+        "decisive_fixture_defend_score": 12.5,
+        "decisive_fixture_strike_score": 11.1861111111111,
+        "superior_defense_control_action": "defend",
+        "superior_defense_control_defend_score": 12.5,
+        "superior_defense_control_strike_score": 9.35277777777778,
+        "ghoul_grove_normal_outcome_state_after": "victory",
+        "ghoul_grove_normal_round_reached_after": 5,
+        "ghoul_grove_normal_terminal_health_margin_pct_after": 72,
+        "ghoul_grove_hard_outcome_state_before": "defeat",
+        "ghoul_grove_hard_outcome_state_after": "victory",
+        "ghoul_grove_hard_round_reached_before": 7,
+        "ghoul_grove_hard_round_reached_after": 5,
+        "ghoul_grove_hard_enemy_health_remaining_pct_before": 19,
+        "ghoul_grove_hard_terminal_health_margin_pct_after": 70,
+        "placement_local_roster_changed": false,
+        "shared_blackbranch_roster_changed": false,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_after": 26,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "8039155f",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "low_difficulty_cohort_watch_remaining": true
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_tactical_order_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_ai_withdrawal_decision_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_ghoul_grove_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: exact baseline 26 medium-priority watches, zero high-priority items, signature 8039155f)",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_full_route_movement_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T21:40:11Z"
     }
   ],
   "project": "heroes-like",
@@ -67901,7 +67996,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 26 medium-priority authored-encounter watches plus the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 26 medium-priority authored-encounter watches, including Ghoul Grove's 72 percent low-difficulty cohort watch, plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68433,9 +68528,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 26 / 0 high across six completed combat slices, and its balance matrix gate passes. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue remains 26 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T21:12:30Z",
+  "updatedAt": "2026-08-03T21:40:11Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

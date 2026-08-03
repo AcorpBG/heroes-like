@@ -20245,6 +20245,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     reedbarrow_mireford_scene_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn"
     lockmarsh_surge_report_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.gd"
     lockmarsh_surge_scene_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.tscn"
+    ghoul_grove_report_path = ROOT / "tests/battle_ghoul_grove_balance_regression.gd"
+    ghoul_grove_scene_path = ROOT / "tests/battle_ghoul_grove_balance_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20288,6 +20290,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         active_breadth_report_path,
         active_breadth_scene_path,
+        ghoul_grove_report_path,
+        ghoul_grove_scene_path,
         drowned_reliquary_report_path,
         drowned_reliquary_scene_path,
         tuning_queue_report_path,
@@ -20812,8 +20816,26 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "legacy shoot-first",
             "battle_ai_nonspell_tactical_order_v1",
             "battle_ai_spell_tactical_order_v1",
+            "DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX",
+            "DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN",
+            "DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP",
+            "_validate_decisive_attack_pressure",
         ):
             ensure(required_token in tactical_report_text, errors, f"Battle autoplay tactical order report is missing token: {required_token}")
+    if ghoul_grove_report_path.exists():
+        ghoul_grove_report_text = ghoul_grove_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION",
+            "army_river_pass_ghoul_grove_watch",
+            "army_blackbranch_raiders",
+            '"normal": 75',
+            '"hard": 80',
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in ghoul_grove_report_text, errors, f"Ghoul Grove balance regression is missing token: {required_token}")
+    if ghoul_grove_scene_path.exists():
+        ghoul_grove_scene_text = ghoul_grove_scene_path.read_text(encoding="utf-8")
+        ensure("battle_ghoul_grove_balance_regression.gd" in ghoul_grove_scene_text, errors, "Ghoul Grove balance regression scene is not wired to its script.")
     if withdrawal_report_path.exists():
         withdrawal_report_text = withdrawal_report_path.read_text(encoding="utf-8")
         for required_token in (

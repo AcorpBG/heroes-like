@@ -17,6 +17,9 @@ const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_dr
 const ENEMY_WITHDRAWAL_SCORING_POLICY := "battle_ai_enemy_withdrawal_decision_v1"
 const BATTLE_HEX_COLUMNS := 11
 const BATTLE_HEX_ROWS := 7
+const DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX := 0.4
+const DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN := 0.5
+const DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP := 2.0
 
 static func _opposing_side(side: String) -> String:
 	if side == "player":
@@ -692,8 +695,10 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	var defend_score := _defend_score(scoring_battle, active_stack, targets)
 	var advance_score := _advance_score(scoring_battle, active_stack, targets)
 	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
-	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
-	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
+	var press_decisive_attack := _should_press_decisive_attack(scoring_battle, active_stack, best_attack, defend_score)
+	var force_attack := force_engaged_attack or press_decisive_attack
+	var best := best_attack if force_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
+	if not force_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
 	if (int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty()) and not lethal_attack_available:
 		var advance_candidate := {"action": "advance", "score": advance_score}
@@ -847,6 +852,23 @@ static func _must_force_engaged_attack(
 	if _has_hostile_ranged_pressure(targets):
 		return false
 	return true
+
+static func _should_press_decisive_attack(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	best_attack: Dictionary,
+	defend_score: float
+) -> bool:
+	if String(best_attack.get("action", "")) != "strike" or int(battle.get("distance", 1)) > 0:
+		return false
+	var acting_side := String(active_stack.get("side", ""))
+	if acting_side == "" or _side_health_ratio(battle, acting_side) < DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN:
+		return false
+	var target := _stack_by_battle_id(battle, String(best_attack.get("target_battle_id", "")))
+	var target_side := String(target.get("side", ""))
+	if target_side == "" or _side_health_ratio(battle, target_side) > DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX:
+		return false
+	return float(best_attack.get("score", -9999.0)) >= defend_score - DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP
 
 static func battle_spell_choice_report(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	var errors := []
