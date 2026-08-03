@@ -36,6 +36,20 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(summary.get("commander_probes_loaded", 0)) != 2 or int(summary.get("commander_probes_reused", 0)) != 6:
 		_fail("Emergency defense commander probe cache counts changed: %s" % JSON.stringify(summary))
 		return false
+	if int(summary.get("post_recruit_candidate_list_retained", 0)) != 1 \
+			or int(summary.get("post_recruit_commander_candidates_loaded", 0)) != 1 \
+			or int(summary.get("post_recruit_commander_candidates_reused", 0)) != 3:
+		_fail("Emergency recruitment did not retain and reuse the immutable commander candidate list: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("post_recruit_commander_probes_loaded", 0)) != 4 \
+			or int(summary.get("post_recruit_commander_probes_reused", 0)) != 4:
+		_fail("Emergency recruitment did not rebuild the dynamic commander army probes: %s" % JSON.stringify(summary))
+		return false
+	if int(summary.get("accepted_reinforcement", 0)) != 1 \
+			or String(summary.get("emergency_commander_before", "")) != "hero_sable" \
+			or String(summary.get("emergency_commander_after", "")) != "hero_vaska":
+		_fail("Emergency reinforcement did not preserve the dynamic Sable-to-Vaska destination switch: %s" % JSON.stringify(summary))
+		return false
 	if not bool(summary.get("launch_candidate_matches_plan", false)):
 		_fail("Final launch candidate did not match the precomputed emergency plan: %s" % JSON.stringify(summary))
 		return false

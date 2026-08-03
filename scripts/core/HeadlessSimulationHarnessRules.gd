@@ -3656,6 +3656,37 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 	var selected_hero_id := String(emergency_plan.get("roster_hero_id", ""))
 	var selected_fit_bonus := int(emergency_plan.get("spawn_plan_commander_fit_bonus", 0))
 	var selected_source := String(emergency_plan.get("spawn_plan_source", ""))
+	var recruitment_phase_context := {}
+	var recruitment_destination_context := {"faction_recruitment_context": recruitment_phase_context}
+	var support_town := _first_town_for_owner(session, "enemy")
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	var emergency_need_before := EnemyTurnRules._best_emergency_defense_recruitment_target(
+		session,
+		config,
+		faction_id,
+		support_town,
+		recruitment_phase_context
+	)
+	var reinforcement_unit_id := _first_recruit_unit_id_for_faction(faction_id)
+	var accepted_reinforcement := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		faction_id,
+		String(emergency_need_before.get("roster_hero_id", "")),
+		reinforcement_unit_id,
+		1,
+		String(emergency_need_before.get("base_encounter_id", "")),
+		int(emergency_need_before.get("target_strength", 0))
+	)
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(recruitment_destination_context)
+	var emergency_need_after := EnemyTurnRules._best_emergency_defense_recruitment_target(
+		session,
+		config,
+		faction_id,
+		support_town,
+		recruitment_phase_context
+	)
+	var recruitment_reuse_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var recruitment_reuse_counts: Dictionary = recruitment_reuse_profile.get("counts", {}) if recruitment_reuse_profile.get("counts", {}) is Dictionary else {}
 	if emergency_plan.is_empty():
 		failures.append("Emergency defense launch produced no ready plan.")
 	if selected_hero_id != expected_defender_id:
@@ -3676,6 +3707,27 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 		failures.append("Emergency defense recruitment loaded/reused commander candidates %d/%d instead of 1/3." % [commander_candidates_loaded, commander_candidates_reused])
 	if commander_probes_loaded != 2 or commander_probes_reused != 6:
 		failures.append("Emergency defense recruitment loaded/reused commander probes %d/%d instead of 2/6." % [commander_probes_loaded, commander_probes_reused])
+	if accepted_reinforcement != 1:
+		failures.append("Emergency defense live-strength fixture accepted %d reinforcement units instead of one." % accepted_reinforcement)
+	if String(emergency_need_before.get("roster_hero_id", "")) != expected_defender_id \
+			or String(emergency_need_after.get("roster_hero_id", "")) != rotation_first_id:
+		failures.append("Emergency recruitment did not preserve the expected post-recruit commander switch.")
+	if String(emergency_need_before.get("target_id", "")) != String(emergency_need_after.get("target_id", "")):
+		failures.append("Emergency recruitment changed the defended target after reinforcement.")
+	if int(emergency_need_after.get("current_strength", 0)) != int(emergency_need_before.get("current_strength", 0)) \
+			or int(emergency_need_after.get("need", 0)) != int(emergency_need_before.get("need", 0)):
+		failures.append("Emergency recruitment changed the selected replacement commander's expected strength or need.")
+	if int(recruitment_reuse_counts.get("emergency_commander_candidate_list_retained", 0)) != 1:
+		failures.append("Emergency recruitment did not retain the immutable commander candidate list once.")
+	if int(recruitment_reuse_counts.get("emergency_commander_candidates_loaded", 0)) != 1 \
+			or int(recruitment_reuse_counts.get("emergency_commander_candidates_reused", 0)) != 3:
+		failures.append("Emergency recruitment did not load commander candidates once and reuse them for the remaining points.")
+	if int(recruitment_reuse_counts.get("emergency_commander_probe_loaded", 0)) != 4 \
+			or int(recruitment_reuse_counts.get("emergency_commander_probe_reused", 0)) != 4:
+		failures.append("Emergency recruitment did not rebuild dynamic army probes after reinforcement.")
+	if int(recruitment_reuse_counts.get("emergency_path_context_loaded", 0)) != 1 \
+			or int(recruitment_reuse_counts.get("emergency_path_context_reused", 0)) != 3:
+		failures.append("Emergency recruitment did not preserve its phase-local path context.")
 	if not launch_candidate_matches_plan:
 		failures.append("Final launch selection changed the precomputed emergency-defense plan.")
 	if int(spawn_profile_counts.get("emergency_candidate_surface_loaded", 0)) != 1:
@@ -3705,6 +3757,21 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"commander_candidates_reused": commander_candidates_reused,
 			"commander_probes_loaded": commander_probes_loaded,
 			"commander_probes_reused": commander_probes_reused,
+			"post_recruit_candidate_list_retained": int(recruitment_reuse_counts.get("emergency_commander_candidate_list_retained", 0)),
+			"post_recruit_commander_candidates_loaded": int(recruitment_reuse_counts.get("emergency_commander_candidates_loaded", 0)),
+			"post_recruit_commander_candidates_reused": int(recruitment_reuse_counts.get("emergency_commander_candidates_reused", 0)),
+			"post_recruit_commander_probes_loaded": int(recruitment_reuse_counts.get("emergency_commander_probe_loaded", 0)),
+			"post_recruit_commander_probes_reused": int(recruitment_reuse_counts.get("emergency_commander_probe_reused", 0)),
+			"post_recruit_path_context_loaded": int(recruitment_reuse_counts.get("emergency_path_context_loaded", 0)),
+			"post_recruit_path_context_reused": int(recruitment_reuse_counts.get("emergency_path_context_reused", 0)),
+			"reinforcement_unit_id": reinforcement_unit_id,
+			"accepted_reinforcement": accepted_reinforcement,
+			"emergency_commander_before": String(emergency_need_before.get("roster_hero_id", "")),
+			"emergency_commander_after": String(emergency_need_after.get("roster_hero_id", "")),
+			"emergency_need_before": int(emergency_need_before.get("need", 0)),
+			"emergency_need_after": int(emergency_need_after.get("need", 0)),
+			"emergency_strength_before": int(emergency_need_before.get("current_strength", 0)),
+			"emergency_strength_after": int(emergency_need_after.get("current_strength", 0)),
 			"launch_candidate_matches_plan": launch_candidate_matches_plan,
 			"launch_surface_loaded": int(spawn_profile_counts.get("emergency_candidate_surface_loaded", 0)),
 			"launch_surface_points_reused": int(spawn_profile_counts.get("emergency_candidate_surface_point_reused", 0)),
@@ -3717,6 +3784,9 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"first_recruitment_candidates": first_recruitment_candidates,
 			"second_recruitment_candidates": second_recruitment_candidates,
 			"reinforcement_profile": reinforcement_profile,
+			"recruitment_reuse_profile": recruitment_reuse_profile,
+			"emergency_need_before": emergency_need_before,
+			"emergency_need_after": emergency_need_after,
 			"spawn_profile": spawn_profile,
 			"target_reason_codes": _string_array(emergency_plan.get("spawn_plan_reason_codes", [])),
 			"warnings": warnings,

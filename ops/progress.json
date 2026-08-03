@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Mireclaw's authored Smugglers Flotilla as a real data-driven common-resource exchange profile through the existing Town Exchange Hall. Overall release work remains active.",
+  "currentNotes": "Completed phase-local emergency-defense commander candidate-list reuse while preserving dynamic probe rebuilds and exact strategic-AI decisions. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "economy-mireclaw-smuggler-exchange-10184",
-  "currentSliceId": "economy-mireclaw-smuggler-exchange-10184",
-  "currentSliceNotes": "Four authored market profiles now drive live selection; Smugglers Flotilla exposes bounded bulk wood/ore liquidation and higher common-resource throughput without rare-resource markets or a save-version change.",
+  "currentSlice": "strategic-ai-emergency-recruitment-surface-reuse-10184",
+  "currentSliceId": "strategic-ai-emergency-recruitment-surface-reuse-10184",
+  "currentSliceNotes": "Immutable emergency commander rotation/availability candidates are retained across recruited batches; dynamic army probes and final choices continue to rebuild.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Smuggler Exchange",
-  "currentSliceUpdatedAt": "2026-08-03T00:45:45Z",
+  "currentSliceTitle": "Strategic AI Emergency Recruitment Candidate Reuse",
+  "currentSliceUpdatedAt": "2026-08-03T01:04:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66385,6 +66385,102 @@
         "status": "passed",
         "updatedAt": "2026-08-03T00:45:45Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
+        "godot4 --headless --path . --scene res://tests/ai_town_defense_retask_report.tscn",
+        "godot4 --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Emergency-defense recruitment builds its commander rotation/availability candidate list once per faction recruitment phase and reuses it after non-garrison recruit batches while rebuilding dynamic army probes and final point/commander choices. Target, commander switching, recruit, treasury, market-cap, event, and deterministic generated-map behavior remain exact. Focused recruitment/defense, core systems, generated-map profile, project parse, and repository validation pass.",
+      "id": "strategic-ai-emergency-recruitment-surface-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/strategic_ai_emergency_defense_commander_fit_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "strategic-AI scoring, target priority, commander fit, recruit priority, economy, battle, or public-event behavior changes",
+        "final point/commander surface reuse, cross-turn cache persistence, save-state or save-version changes, broad seed-matrix completion, Native RMG changes, or overall release completion",
+        "new standalone report surfaces or wall-clock claims without deterministic behavior evidence"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current strategic AI follow-up / strict Small enemy-turn bottleneck",
+      "purpose": "Remove repeated emergency-defense commander availability normalization after each recruited unit batch while preserving dynamic army probes and final destination decisions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "scripts/core/EnemyTurnRules.gd",
+          "scripts/core/HeadlessSimulationHarnessRules.gd",
+          "tests/strategic_ai_emergency_defense_commander_fit_report.gd"
+        ],
+        "finding": "Non-garrison recruitment now retains the phase-stable emergency-defense commander rotation/availability list after accepted batches while invalidating dynamic army probes and final point/commander choices. A focused live mutation accepts one Reedsnare reinforcement, reuses the list, rebuilds probes, and preserves the required Sable-to-Vaska switch for the same defended target. The native-generated profile keeps its established row signature and event counts.",
+        "metrics": {
+          "emergency_commander_candidate_list_phase_reuse_active": true,
+          "candidate_list_retained_count": 1,
+          "commander_candidate_load_count": 1,
+          "commander_candidate_reuse_count": 3,
+          "dynamic_commander_probe_rebuild_preserved": true,
+          "commander_probe_load_count": 4,
+          "commander_probe_reuse_count": 4,
+          "path_context_load_count": 1,
+          "path_context_reuse_count": 3,
+          "accepted_reinforcement_count": 1,
+          "reinforcement_unit_id": "unit_mireclaw_reedsnare_kin",
+          "defended_target_id": "river_free_company",
+          "selected_strength_before": 149,
+          "selected_strength_after": 149,
+          "selected_need_before": 22,
+          "selected_need_after": 22,
+          "post_recruit_commander_switch_preserved": true,
+          "commander_before": "hero_sable",
+          "commander_after": "hero_vaska",
+          "focused_report_signature": "01a3008d",
+          "generated_profile_seed_count": 1,
+          "generated_profile_turn_count": 3,
+          "generated_profile_turns_completed": 3,
+          "generated_profile_event_count": 15,
+          "generated_profile_behavior_bug_count": 0,
+          "generated_profile_target_integrity_violation_count": 0,
+          "generated_profile_row_signature": "fdf8234a",
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T01:04:17Z",
+      "startedAt": "2026-08-03T00:49:38Z",
+      "status": "completed",
+      "title": "Strategic AI Emergency Recruitment Candidate Reuse",
+      "updatedAt": "2026-08-03T01:04:17Z",
+      "notes": "Candidate-list reuse is complete. The rejected final-surface reuse assumption was not shipped: dynamic probes and post-recruit commander switching remain live, and no broad wall-clock improvement is claimed from one generated profile row.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/strategic_ai_emergency_defense_commander_fit_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_town_defense_retask_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_planned_task_recruitment_prep_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 GODOT_SILENCE_ROOT_WARNING=1 timeout 300 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T01:04:17Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66826,7 +66922,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "economy_mireclaw_smuggler_exchange_complete_overall_release_in_progress",
+  "result": "strategic_ai_emergency_commander_candidate_reuse_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66927,9 +67023,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Four market profiles are now authored in building content, and Mireclaw players can operate Smugglers Flotilla as a bounded common-resource bulk-liquidation exchange through the existing Town Exchange Hall. Strategic AI breadth, broader balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Emergency-defense recruitment now retains its phase-stable commander rotation/availability list across accepted non-garrison batches while rebuilding dynamic army probes and final commander choices; focused and generated-map behavior remains exact. Strategic AI breadth, broader balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T00:45:45Z",
+  "updatedAt": "2026-08-03T01:04:17Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

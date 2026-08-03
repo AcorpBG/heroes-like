@@ -2324,12 +2324,12 @@ static func _invalidate_recruit_destination_field_cache(destination_context: Dic
 		destination_context.erase(key)
 	var faction_context = destination_context.get("faction_recruitment_context", {})
 	if faction_context is Dictionary:
-		for key in [
-			"emergency_defense_recruitment_candidates",
-			"emergency_defense_commander_candidates",
-			"emergency_defense_probe_by_commander",
-		]:
-			faction_context.erase(key)
+		# Accepted recruits can change army probes and the best point/commander pairing.
+		# Rotation order and availability remain stable until this faction leaves recruitment.
+		faction_context.erase("emergency_defense_recruitment_candidates")
+		faction_context.erase("emergency_defense_probe_by_commander")
+		if faction_context.has("emergency_defense_commander_candidates"):
+			_reinforcement_profile_count("emergency_commander_candidate_list_retained")
 
 static func _choose_recruit_destination_breakdown(
 	session: SessionStateStoreScript.SessionData,
