@@ -13428,7 +13428,8 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         "BattleRules.describe_initiative_track",
         "BattleRules.describe_effect_board",
         "BattleRules.describe_action_surface",
-        "AppRouter.save_active_session_to_selected_manual_slot",
+        "AppRouter.active_manual_save_action",
+        "AppRouter.save_active_session_to_manual_slot",
         "_begin_battle_exit_animation_handoff",
         "_complete_battle_exit_animation_handoff",
         "_battle_exit_handoff_in_progress",
@@ -13769,6 +13770,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         "func save_runtime_selected_manual_session",
         "func save_runtime_manual_session",
         "func save_runtime_autosave_session",
+        "func build_manual_save_action",
         "func build_in_session_save_surface",
         "func _in_session_save_label",
         "func _in_session_save_tooltip",
@@ -13781,11 +13783,13 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     for required_token in (
         "func return_to_main_menu_from_active_play",
         "func save_active_session_to_selected_manual_slot",
+        "func save_active_session_to_manual_slot",
+        "func active_manual_save_action",
         "func active_save_surface",
         "func resume_summary",
         "func resume_latest_session",
         "func consume_menu_notice",
-        "SaveService.save_runtime_selected_manual_session",
+        "SaveService.save_runtime_manual_session",
         "SaveService.save_runtime_autosave_session",
     ):
         ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required in-session save-routing token: {required_token}")
@@ -13794,7 +13798,9 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     for required_token in (
         "_save_status_label",
         "_menu_button",
-        "AppRouter.save_active_session_to_selected_manual_slot",
+        "_manual_save_overwrite_dialog",
+        "AppRouter.active_manual_save_action",
+        "AppRouter.save_active_session_to_manual_slot",
         "AppRouter.active_save_surface",
         "AppRouter.return_to_main_menu_from_active_play",
         "SaveService.save_runtime_autosave_session(_session)",
@@ -13805,7 +13811,9 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     for required_token in (
         "_save_status_label",
         "_menu_button",
-        "AppRouter.save_active_session_to_selected_manual_slot",
+        "_manual_save_overwrite_dialog",
+        "AppRouter.active_manual_save_action",
+        "AppRouter.save_active_session_to_manual_slot",
         "AppRouter.active_save_surface",
         "AppRouter.return_to_main_menu_from_active_play",
     ):
@@ -13815,7 +13823,9 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     for required_token in (
         "_system_body_label",
         "_menu_button",
-        "AppRouter.save_active_session_to_selected_manual_slot",
+        "_manual_save_overwrite_dialog",
+        "AppRouter.active_manual_save_action",
+        "AppRouter.save_active_session_to_manual_slot",
         "AppRouter.active_save_surface",
         "AppRouter.return_to_main_menu_from_active_play",
     ):
@@ -13829,12 +13839,15 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         "_menu_button",
         "func _configure_save_slot_picker",
         "func _refresh_save_surface",
-        "AppRouter.save_active_session_to_selected_manual_slot",
+        "_manual_save_overwrite_dialog",
+        "AppRouter.active_manual_save_action",
+        "AppRouter.save_active_session_to_manual_slot",
         "AppRouter.return_to_main_menu_from_active_play",
     ):
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required in-session save token: {required_token}")
 
     overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('name="ManualSaveOverwriteDialog"' in overworld_scene_text, errors, "OverworldShell.tscn must instance the shared manual-save overwrite dialog")
     for node_name, node_type in (
         ("SaveStatus", "Label"),
         ("SaveSlot", "OptionButton"),
@@ -13844,6 +13857,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for in-session save controls")
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('name="ManualSaveOverwriteDialog"' in town_scene_text, errors, "TownShell.tscn must instance the shared manual-save overwrite dialog")
     for node_name, node_type in (
         ("SaveStatus", "Label"),
         ("SaveSlot", "OptionButton"),
@@ -13853,6 +13867,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for in-session save controls")
 
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('name="ManualSaveOverwriteDialog"' in battle_scene_text, errors, "BattleShell.tscn must instance the shared manual-save overwrite dialog")
     for node_name, node_type in (
         ("SystemPanel", "PanelContainer"),
         ("SystemBody", "Label"),
@@ -13863,6 +13878,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for in-session save controls")
 
     outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('name="ManualSaveOverwriteDialog"' in outcome_scene_text, errors, "ScenarioOutcomeShell.tscn must instance the shared manual-save overwrite dialog")
     for node_name, node_type in (
         ("SaveStatus", "Label"),
         ("SaveBar", "HFlowContainer"),

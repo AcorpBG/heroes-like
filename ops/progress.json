@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed confirmed deletion of one occupied autosave or manual save slot, including corrupt files. Trusted slot identity, cancellation, immediate cache/UI refresh, and preservation of unrelated saves, campaign progression, device settings, active expedition state, and save version 9 are proven. Overall release work remains active.",
+  "currentNotes": "Completed exact slot-bound confirmation before active-play manual saves replace occupied or unreadable slots across overworld, town, battle, and scenario outcome. Empty slots remain direct saves; cancellation, invalid-slot rejection, selection rebinding protection, and unrelated-state preservation are proven.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-save-slot-delete-workflow-10184",
-  "currentSliceId": "ux-save-slot-delete-workflow-10184",
-  "currentSliceNotes": "The Saves board now deletes one occupied autosave/manual slot after exact confirmation; SaveService rejects forged identities/paths, corrupt files remain deletable, and focused plus broad validation pass.",
+  "currentSlice": "ux-manual-save-overwrite-confirmation-10184",
+  "currentSliceId": "ux-manual-save-overwrite-confirmation-10184",
+  "currentSliceNotes": "All four active-play shells share one overwrite action/dialog; occupied and unreadable slots require confirmation, empty slots save directly, and focused plus broad validation pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Confirmed Save Slot Deletion",
-  "currentSliceUpdatedAt": "2026-08-03T03:41:44Z",
+  "currentSliceTitle": "Confirmed Manual Save Overwrite",
+  "currentSliceUpdatedAt": "2026-08-03T04:15:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66833,6 +66833,96 @@
         "status": "passed",
         "updatedAt": "2026-08-03T03:41:44Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 300 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Overworld, town, battle, and scenario outcome save immediately to empty manual slots but require exact slot-bound confirmation before replacing occupied or unreadable slots; cancellation preserves exact bytes; pending confirmation cannot be redirected by a later selection change; unrelated saves, autosave, campaign progression, device settings, active session state, and save version 9 remain unchanged; focused and broad validation pass.",
+      "id": "ux-manual-save-overwrite-confirmation-10184",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/shared/ManualSaveOverwriteDialog.gd",
+        "scenes/shared/ManualSaveOverwriteDialog.tscn",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "scenes/results/ScenarioOutcomeShell.tscn",
+        "tests/manual_save_overwrite_regression.gd",
+        "tests/manual_save_overwrite_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "save renaming, cloud synchronization, undo/history, bulk operations, or autosave confirmation",
+        "save-schema changes, campaign progression changes, device-setting changes, gameplay or balance changes, or broad active-play save-rail redesign",
+        "Native RMG behavior or overall release-completion claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Confirmed Manual Save Overwrite / ux-polish-player-comprehension-10184",
+      "purpose": "Prevent accidental destruction of an occupied expedition save while keeping empty-slot manual saves fast and consistent across every shipped active-play route.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          ".artifacts/manual_save_overwrite_regression/overwrite_confirmation_1280x720.png",
+          ".artifacts/manual_save_overwrite_regression/overwrite_confirmation_1920x1080.png"
+        ],
+        "finding": "Overworld, town, battle, and scenario outcome now use one canonical manual-save action and shared confirmation dialog. Occupied and unreadable slots cannot be replaced before exact slot-bound confirmation; empty slots still save immediately; cancellation preserves exact bytes; a later selected slot cannot redirect the pending overwrite; invalid slot ids fail closed.",
+        "metrics": {
+          "confirmed_active_play_routes": 4,
+          "empty_slot_direct_save": true,
+          "occupied_slot_confirmation": true,
+          "corrupt_slot_confirmation": true,
+          "cancel_preserved_exact_bytes": true,
+          "pending_slot_binding_preserved": true,
+          "invalid_slot_rejected": true,
+          "unrelated_manual_slots_preserved": 2,
+          "autosave_preserved": true,
+          "campaign_progression_preserved": true,
+          "device_settings_preserved": true,
+          "active_session_preserved": true,
+          "viewport_capture_count": 2,
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T04:15:27Z",
+      "startedAt": "2026-08-03T03:49:54Z",
+      "status": "completed",
+      "title": "Confirmed Manual Save Overwrite",
+      "updatedAt": "2026-08-03T04:15:27Z",
+      "notes": "Implemented after direct runtime-path inspection showed all four active-play shells called the immediate selected-slot save path for occupied slots. No save schema, autosave policy, gameplay, content, balance, settings, campaign progression, or Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 120 godot4 --headless --path . --scene res://tests/manual_save_overwrite_regression.tscn",
+          "MANUAL_SAVE_OVERWRITE_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 150 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1280x720 --scene res://tests/manual_save_overwrite_regression.tscn",
+          "MANUAL_SAVE_OVERWRITE_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 150 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1920x1080 --scene res://tests/manual_save_overwrite_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 300 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 600 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T04:15:27Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66843,7 +66933,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed Native RMG matrix or artifact reward evidence work.",
+  "remainingWork": "Select the next pending production implementation slice from the remaining product gaps; do not repeat completed manual-save overwrite, Native RMG matrix, or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67377,7 +67467,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Reduce Flashes now persists independently of Reduce Motion and Battle Shake, replaces live battle flash VFX with static fallback cues, blocks spell-specific flash overlays, and preserves normal motion, timing, audio, camera policy, combat, and saves. The compact settings surface remains reachable at 130% UI scale. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T01:36:51Z",
+  "updatedAt": "2026-08-03T04:15:27Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
