@@ -20239,6 +20239,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
+    rough_exactors_report_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.gd"
+    rough_exactors_scene_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.tscn"
     orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
     orevein_contract_scene_path = ROOT / "tests/battle_orevein_contract_balance_regression.tscn"
     reedbarrow_mireford_report_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd"
@@ -20641,6 +20643,31 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_ninefold_drowned_reliquary_balance_regression.gd" in drowned_reliquary_scene_text,
             errors,
             "Drowned Reliquary balance regression scene is not wired to its script.",
+        )
+    if rough_exactors_report_path.exists():
+        rough_exactors_text = rough_exactors_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_NINEFOLD_ROUGH_EXACTORS_BALANCE_REGRESSION",
+            "ninefold_orevein_exactors",
+            "ninefold_basalt_gatehouse_watch",
+            "army_ninefold_orevein_exactors_watch",
+            "army_ninefold_basalt_gatehouse_watch",
+            "army_orevein_exactors",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_EXACTORS_CONTRACT",
+            "GATEHOUSE_SAMPLE_CONTRACT",
+            "MAX_EXACTORS_TERMINAL_MARGIN_PCT",
+            "MAX_ROUGH_COHORT_TERMINAL_MARGIN_PCT",
+            "rough_cohort_average_terminal_health_margin_pct",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in rough_exactors_text, errors, f"Ninefold rough Exactors balance regression is missing token: {required_token}")
+    if rough_exactors_scene_path.exists():
+        rough_exactors_scene_text = rough_exactors_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_ninefold_rough_exactors_balance_regression.gd" in rough_exactors_scene_text,
+            errors,
+            "Ninefold rough Exactors balance regression scene is not wired to its script.",
         )
     if orevein_contract_report_path.exists():
         orevein_contract_text = orevein_contract_report_path.read_text(encoding="utf-8")
