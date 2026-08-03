@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `balance-bellwake-mirror-lancers-pressure-10184`. Bellwake Wreck Claim's placement-local Mirror Lancers now field nine Shard Guards, six Prism Adepts, and eight Mirror Duelists; the deterministic battle moves from a two-round victory at 98% terminal margin and 3 enemy damage per round to a three-round victory at 74% and 26. The adjacent zero-pressure Relay Pickets line now resolves at 87% margin and 7 enemy damage per round, while Aurora Battery remains unchanged. The 59-sample active breadth queue improves from 40 items / 10 high to 38 / 8. Shared Sunvault armies and the exact all-live faction matrix remain unchanged; focused battle, Bellwake skirmish, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-ninefold-drowned-reliquary-pressure-10184`. Ninefold Confluence's high-difficulty Drowned Reliquary now owns a placement-local five-Cutter/eight-Reefbolt guard instead of inheriting the shared Skiffyard roster. The deterministic battle remains player-advantaged but moves from a flawless two-round victory to a four-round victory at 71% terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves from 44 items / 12 high to 40 / 10, and its runtime-consequence matrix moves from fail to pass. The unchanged all-live faction matrix, guarded rewards, core systems, Ninefold smoke, project parse, repository, JSON, and diff gates pass; remaining encounter and faction balance debt stays open.
 - Completed implementation slice: `strategic-ai-ninefold-front-launch-retask-10184`. Ninefold Confluence now gives Brasshollow and Veilmourn open passable pressure origins, connects Bellwake Harbor to the badland road, and keeps Bellwake's common and rare development sources local without enclosing its raid host. The defense fixture preserves a real stabilization gap across faction rosters. All five Ninefold factions launch and retask correctly; the broader five-scenario harness records 9/9 pressure launches, 9/9 town-defense retasks, and 9/9 objective-front assignments with no failures. Ninefold smoke, core systems, full headless harness, project parse, repository, JSON, and diff validation pass. Overall game completion remains open.
 - Completed implementation slice: `combat-brasshollow-foundry-saint-aura-10184`. Brasshollow's tier-7 Foundry Saint now projects Saint's Temper while alive: active Overheated Brasshollow machinery receives a bounded non-stacking defense bonus, and surviving allied stacks receive bounded non-resurrecting round-start repair with stronger Overheated repair. Readable healing events, tactical AI valuation, live summaries, focused runtime proof, and exact benchmark parity share the authored contract. The unchanged all-live matrix retains 36 outliers and 12 rows at or above 65%, improves severity from 300.0 to 293.5 and maximum dominance from 78.0% to 75.5%, and reduces excessive week-3 Brasshollow losses against Embercourt, Mireclaw, and Thornwake. Ability, focused autoplay balance/regression, town-development, core, parse, repository, JSON, and diff gates pass. The broader standard harness retains identical no-aura-control failures in the pre-existing 44-item active encounter queue and Ninefold Brasshollow/Veilmourn strategic-AI launch/retask cases; those remain overall-game debt rather than this slice's progress.
@@ -717,6 +718,30 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
+
+## Bellwake Mirror Lancers Battle Pressure
+
+id: `balance-bellwake-mirror-lancers-pressure-10184`
+
+Completed Phase 6 authored-combat implementation slice. Repairs Bellwake Wreck
+Claim's high-difficulty Mirror Lancers guard, which previously resolved as a
+two-round victory at 98% terminal margin with negligible enemy pressure.
+
+Implementation target:
+- strengthen `bellwake_mirror_lancers` through its placement-local army without changing the shared `army_mirror_lancers` roster;
+- strengthen the adjacent placement-local `bellwake_relay_pickets` line enough to apply meaningful pressure while preserving its bounded medium-difficulty victory;
+- retain a deterministic player victory while reducing terminal margin below the active matrix outlier threshold and producing meaningful enemy damage;
+- extend focused live regression coverage to prove outcome, pacing, pressure, and exact placement-local army ownership.
+
+Completion evidence:
+- the focused Bellwake battle suite resolves Relay Pickets at 87% terminal margin / 7 enemy damage per round, Mirror Lancers at 74% / 26, and the unchanged Aurora Battery at 50% / 25; all are bounded player victories;
+- the 59-sample active-scenario breadth queue improves from 40 items / 10 high-priority items to 38 / 8 with signature `8958533c`, zero stalls or invalid orders, and passing runtime-consequence gates;
+- both shared Sunvault armies retain their exact rosters and the unchanged 100-seed all-live faction matrix retains 36 outliers, 293.5 severity, 12 rows at or above 65%, 75.5% maximum dominance, and zero structural failures;
+- focused battle, Bellwake skirmish, core systems, project parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change shared army groups, global unit stats, battle difficulty, rewards, strategic AI, saves, campaigns, or Native RMG;
+- do not weaken queue thresholds or claim the remaining active encounter/faction balance debt or overall release is complete.
 
 ## Ninefold Drowned Reliquary Battle Pressure
 

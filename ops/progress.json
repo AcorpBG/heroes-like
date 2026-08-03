@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Ninefold Drowned Reliquary placement-local guard. Its deterministic battle moves from a flawless two-round victory to a four-round player-advantaged victory at 71 percent terminal margin and 11 enemy damage per round; the active breadth queue improves from 44/12-high to 40/10-high.",
+  "currentNotes": "Completed the Bellwake placement-local guard correction. Relay Pickets now resolve at 87 percent terminal margin with 7 enemy damage per round and Mirror Lancers at 74 percent with 26; the active breadth queue improves from 40/10-high to 38/8-high while shared armies and the all-live faction matrix remain unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-ninefold-drowned-reliquary-pressure-10184",
-  "currentSliceId": "balance-ninefold-drowned-reliquary-pressure-10184",
-  "currentSliceNotes": "Completed. A placement-local five-Cutter/eight-Reefbolt roster preserves the player-advantaged matchup while producing a four-round victory at 71 percent terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves to 40 items / 10 high and runtime-consequence matrix status passes.",
+  "currentSlice": "balance-bellwake-mirror-lancers-pressure-10184",
+  "currentSliceId": "balance-bellwake-mirror-lancers-pressure-10184",
+  "currentSliceNotes": "Validated placement-local Bellwake guards: Relay Pickets 87 percent margin and 7 enemy damage per round; Mirror Lancers 74 percent and 26. Active breadth improved from 40/10-high to 38/8-high; shared armies and exact all-live faction matrix unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Drowned Reliquary Battle Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T19:56:44Z",
+  "currentSliceTitle": "Bellwake Mirror Lancers Battle Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T20:15:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67498,6 +67498,82 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T19:56:44Z"
+    },
+    {
+      "id": "balance-bellwake-mirror-lancers-pressure-10184",
+      "title": "Bellwake Mirror Lancers Battle Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Restore meaningful deterministic combat pressure to Bellwake Wreck Claim's placement-local Mirror Lancers and Relay Pickets guards without changing shared Sunvault armies.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_bellwake_wreck_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 40,
+        "active_queue_high_priority_count": 10,
+        "active_queue_signature": "833dcd19",
+        "mirror_lancers_round_reached": 2,
+        "mirror_lancers_terminal_health_margin_pct": 98,
+        "mirror_lancers_enemy_damage_per_round": 3,
+        "relay_pickets_enemy_damage_per_round": 0
+      },
+      "completionCriteria": [
+        "Every Bellwake focused sample remains a bounded player victory at or below 90 percent terminal margin and above 2 enemy damage per round",
+        "Relay Pickets and Mirror Lancers own exact placement-local rosters while both shared Sunvault armies remain unchanged",
+        "The active breadth queue reduces its item and high-priority counts without creating new high-priority contributors",
+        "The all-live faction matrix, core systems, Bellwake skirmish, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army group, global unit stat, battle difficulty, reward, strategic AI, save, campaign, or Native RMG changes",
+        "queue threshold changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T20:15:40Z",
+      "startedAt": "2026-08-03T20:01:17Z",
+      "notes": "Validated placement-local Bellwake guards: Relay Pickets 87 percent margin and 7 enemy damage per round; Mirror Lancers 74 percent and 26. Active breadth improved from 40/10-high to 38/8-high; shared armies and exact all-live faction matrix unchanged.",
+      "result": {
+        "relay_pickets_outcome_state": "victory",
+        "relay_pickets_round_reached": 2,
+        "relay_pickets_terminal_health_margin_pct": 87,
+        "relay_pickets_enemy_damage_per_round": 7,
+        "mirror_lancers_outcome_state": "victory",
+        "mirror_lancers_round_reached": 3,
+        "mirror_lancers_terminal_health_margin_pct": 74,
+        "mirror_lancers_enemy_damage_per_round": 26,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 40,
+        "active_queue_item_count_after": 38,
+        "active_queue_high_priority_count_before": 10,
+        "active_queue_high_priority_count_after": 8,
+        "active_queue_signature_after": "8958533c",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_outlier_count": 36,
+        "faction_matrix_severity": 293.5,
+        "faction_matrix_rows_at_or_above_65_pct": 12,
+        "faction_matrix_maximum_dominance_pct": 75.5,
+        "faction_matrix_structural_failure_count": 0
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_bellwake_wreck_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active queue remains; improved to 38 items / 8 high)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",
+        "godot4 --headless --path . --scene res://tests/veilmourn_bellwake_wreck_player_skirmish_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T20:15:40Z"
     }
   ],
   "project": "heroes-like",
@@ -67508,7 +67584,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 40 items / 10 high-priority items.",
+  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 38 items / 8 high-priority items.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68040,9 +68116,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence now passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment, while its Drowned Reliquary guard applies meaningful four-round battle pressure instead of resolving as a flawless victory. The active encounter queue improves from 44 items / 12 high to 40 / 10. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Its Drowned Reliquary and Bellwake Wreck Claim's Relay Pickets and Mirror Lancers now apply meaningful battle pressure through placement-local armies. The active encounter queue improves from 44 items / 12 high to 38 / 8 across the two completed guard slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T19:56:44Z",
+  "updatedAt": "2026-08-03T20:15:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
