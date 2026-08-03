@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Bellwake Relay Pickets placement-local pressure at 9/7/8. Relay moves from a two-round 87 percent victory/7 enemy damage per round to a four-round 59 percent victory/19; Bellwake's cohort falls from 70 to 61 percent and the active queue from 26 to 23 with zero high items.",
+  "currentNotes": "Completed placement-local Orevein Archive Wardens pressure at 6/8/2. Archive moves from round 3 at 83 percent margin/15 enemy damage per round to round 4 at 59 percent/29; Orevein's cohort falls from 70 to 62 percent and the active queue from 23 to 21 with zero high items. The unrelated rough-terrain cohort remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-bellwake-relay-pickets-pressure-10184",
-  "currentSliceId": "balance-bellwake-relay-pickets-pressure-10184",
-  "currentSliceNotes": "Completed local 9/7/8 Relay Pickets pressure with exact Mirror Lancers, Aurora Battery, and shared Sunvault invariants. Active queue is 23 medium/zero high with signature 276888b1.",
+  "currentSlice": "balance-orevein-archive-wardens-pressure-10184",
+  "currentSliceId": "balance-orevein-archive-wardens-pressure-10184",
+  "currentSliceNotes": "Completed local 6/8/2 Archive Wardens pressure with exact Bridgeward Levies, Beacon Wardens, and shared Embercourt invariants. Active queue is 21 medium/zero high with signature 723d6501; the unrelated rough-terrain watch remains open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bellwake Relay Pickets Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T21:47:55Z",
+  "currentSliceTitle": "Orevein Archive Wardens Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T22:00:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68080,6 +68080,102 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T21:47:55Z"
+    },
+    {
+      "id": "balance-orevein-archive-wardens-pressure-10184",
+      "title": "Orevein Archive Wardens Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Orevein Archive Wardens' low-pressure resolution with a bounded battle through placement-local roster strength while preserving adjacent encounters and shared Embercourt content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_orevein_contract_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 23,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "276888b1",
+        "archive_wardens_outcome_state": "victory",
+        "archive_wardens_round_reached": 3,
+        "archive_wardens_terminal_health_margin_pct": 83,
+        "archive_wardens_enemy_damage_per_round": 15,
+        "bridgeward_levies_round_reached": 5,
+        "bridgeward_levies_terminal_health_margin_pct": 64,
+        "bridgeward_levies_enemy_damage_per_round": 20,
+        "beacon_wardens_round_reached": 3,
+        "beacon_wardens_terminal_health_margin_pct": 63,
+        "beacon_wardens_enemy_damage_per_round": 28,
+        "orevein_cohort_average_terminal_health_margin_pct": 70,
+        "rough_cohort_average_terminal_health_margin_pct": 75
+      },
+      "completionCriteria": [
+        "Archive Wardens remains a bounded player victory below the 80 percent sample watch threshold with meaningful enemy pressure",
+        "Orevein's three-encounter cohort averages below 70 percent terminal margin; the unrelated rough-terrain watch remains explicitly open",
+        "Bridgeward Levies and Beacon Wardens outcomes remain exact, Archive owns a placement-local correction, and both shared Embercourt armies remain exact",
+        "The active breadth queue decreases from 23 with zero high-priority items and both runtime-consequence gates remain passing",
+        "Focused Orevein battle, Orevein skirmish, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T22:00:18Z",
+      "startedAt": "2026-08-03T21:52:47Z",
+      "notes": "Completed a placement-local 6/8/2 Archive Wardens roster. Archive's sample-margin watch and Orevein's scenario-cohort watch are removed while adjacent outcomes and both shared Embercourt armies stay exact; the unrelated rough-terrain cohort remains open.",
+      "result": {
+        "archive_wardens_stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 2},
+        "archive_wardens_round_reached_before": 3,
+        "archive_wardens_round_reached_after": 4,
+        "archive_wardens_terminal_health_margin_pct_before": 83,
+        "archive_wardens_terminal_health_margin_pct_after": 59,
+        "archive_wardens_enemy_damage_per_round_before": 15,
+        "archive_wardens_enemy_damage_per_round_after": 29,
+        "archive_wardens_enemy_power_after": 1580,
+        "archive_wardens_player_enemy_power_ratio_pct_after": 158,
+        "bridgeward_levies_round_reached_after": 5,
+        "bridgeward_levies_terminal_health_margin_pct_after": 64,
+        "bridgeward_levies_enemy_damage_per_round_after": 20,
+        "beacon_wardens_round_reached_after": 3,
+        "beacon_wardens_terminal_health_margin_pct_after": 63,
+        "beacon_wardens_enemy_damage_per_round_after": 28,
+        "orevein_cohort_average_terminal_health_margin_pct_before": 70,
+        "orevein_cohort_average_terminal_health_margin_pct_after": 62,
+        "rough_cohort_average_terminal_health_margin_pct_before": 75,
+        "rough_cohort_average_terminal_health_margin_pct_after": 75,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 23,
+        "active_queue_item_count_after": 21,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "723d6501",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "shared_embercourt_armies_changed": false,
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_orevein_contract_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: 21 medium-priority watches remain; zero high-priority items; signature 723d6501)",
+        "godot4 --headless --path . --scene res://tests/brasshollow_orevein_player_skirmish_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T22:00:18Z"
     }
   ],
   "project": "heroes-like",
@@ -68090,7 +68186,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 23 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 21 medium-priority authored-encounter watches, including the unrelated 75 percent rough-terrain cohort, plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68622,9 +68718,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake Relay and Mirror, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 23 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 21 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T21:47:55Z",
+  "updatedAt": "2026-08-03T22:00:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
