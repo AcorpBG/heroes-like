@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the schema-14 reduced repetitive sounds setting and its live UI/battle audio admission behavior; overall game completion remains open.",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-accessibility-reduced-repetitive-sounds-10184",
-  "currentSliceId": "ux-active-play-settings-overlay-10184",
-  "currentSliceNotes": "Completed. One shared modal settings surface now serves overworld, town, and battle; settings persist and apply immediately, modal input/focus is owned, gameplay state is preserved, and active battle playback speed synchronizes live. Focused runtime, 1280/1920 rendered captures, accessibility, active-play focus, packaged settings, Restore Defaults, core, town/battle visual, menu/outcome, battle layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains red and is not hidden by this slice.",
+  "currentNotes": "Completed Veilmourn Obituary Scribes' missing live morale-pressure role. Final Notice is a bounded one-use battle effect and the unchanged matrix improved to 37 outliers / 304 severity; overall game completion remains open.",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSlice": "combat-veilmourn-obituary-pressure-10184",
+  "currentSliceId": "combat-veilmourn-obituary-pressure-10184",
+  "currentSliceNotes": "Completed. Final Notice applies one readable one-round cohesion/retaliation mark per battle, uses stronger pressure against veteran Brace, persists tier/use state through battle normalization, and matches live BattleRules, Battle AI, and the fast benchmark. The unchanged all-live matrix improved from 38 to 37 outliers and 336 to 304 severity; final balance and overall release completion remain open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active-Play Settings Access",
-  "currentSliceUpdatedAt": "2026-08-03T11:32:00Z",
+  "currentSliceTitle": "Veilmourn Obituary Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T14:05:41Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17875,7 +17875,7 @@
       "phaseSnapshotArtifact": ".artifacts/rmg_native_medium_seed10_final_sweep_classfix_20260611/medium_4p_seed_10_controlled.phase_snapshot.json",
       "remainingWork": "Continue source-backed adoption of terrain/generated-cell private-state parity before 0x49b2b6. The next named blocker is the upstream 0x4a2777/0x4a325d owner/span/terrain-grid private state and 0x4a4c8e bit26/bit27 lanes. Use Linux .so plus Python parity compares as the inner loop. Run Windows debug/release .dll builds only once Linux/Python parity reaches a final validation boundary.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Ported recovered 0x4bbfcc final-sweep scratch-mask and class-correction semantics; parity improved but remains incomplete upstream of 0x49b2b6.",
       "validatedAt": "2026-06-11T18:30:24Z"
     },
@@ -66937,6 +66937,82 @@
       "startedAt": "2026-08-03T11:41:12Z",
       "notes": "Completed. One shared modal settings surface now serves overworld, town, and battle; settings persist and apply immediately, modal input/focus is owned, gameplay state is preserved, and active battle playback speed synchronizes live. Focused runtime, 1280/1920 rendered captures, accessibility, active-play focus, packaged settings, Restore Defaults, core, town/battle visual, menu/outcome, battle layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains red and is not hidden by this slice.",
       "completedAt": "2026-08-03T12:40:11Z"
+    },
+    {
+      "id": "combat-veilmourn-obituary-pressure-10184",
+      "title": "Veilmourn Obituary Pressure",
+      "status": "in_progress",
+      "source": "PLAN.md",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "purpose": "Restore Obituary Scribes' authored morale-drain and retaliation-weakening role through live battle behavior and reduce Veilmourn's worst current deterministic matchup without raw stat inflation.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd"
+      ],
+      "baseline": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 38,
+        "balance_severity": 336,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 80.5,
+        "max_dominance_pair": [
+          "faction_thornwake",
+          "faction_veilmourn"
+        ],
+        "max_dominance_week": 2
+      },
+      "completionCriteria": [
+        "Obituary Scribes apply readable live cohesion pressure that weakens retaliation through the existing morale model",
+        "BattleRules, Battle AI valuation, and fast benchmark implement the same normalized ability contract",
+        "Focused live runtime proof covers application, cohesion loss, retaliation reduction, expiration, and stripped-ability control behavior",
+        "The unchanged all-live 100-seed matrix materially lowers the week-2 Thornwake/Veilmourn 80.5 percent baseline without increasing 38 outliers or severity 336",
+        "Focused combat, core, project parse, repository, and JSON validation pass"
+      ],
+      "nonGoals": [
+        "benchmark threshold, seed, growth, raw stat, spell catalog, strategic AI, save, or campaign changes",
+        "Native RMG changes, final faction balance, or overall release completion claims"
+      ],
+      "startedAt": "2026-08-03T12:56:02Z",
+      "updatedAt": "2026-08-03T14:05:41Z",
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+          "godot4 --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "evidence": {
+        "ability_instance_count": 80,
+        "runtime_consequence_count": 80,
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 37,
+        "balance_severity": 304,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 78.5,
+        "thornwake_veilmourn_week_2_dominance_pct": 74.5,
+        "structural_failure_count": 0,
+        "balance_status": "needs_tuning"
+      },
+      "notes": "Completed. Obituary Scribes now own a readable once-per-battle Final Notice mark with one-round cohesion and retaliation pressure, stronger veteran-Brace pressure, spent-state feedback, normalized tier/use state, AI valuation, and fast-benchmark parity. The unchanged full matrix improves every primary severity measure while retaining explicit needs_tuning status.",
+      "completedAt": "2026-08-03T14:05:41Z"
     }
   ],
   "project": "heroes-like",
@@ -66947,7 +67023,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Select the next release-bound runtime, content, accessibility, strategic-AI, performance, balance, or packaging slice. Keep the remaining 41 combat pair-band outliers visible as future tuning work rather than reopening isolated stat nudges.",
+  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 37 outliers / 304 severity.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67481,7 +67557,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T12:41:07Z",
+  "updatedAt": "2026-08-03T12:56:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

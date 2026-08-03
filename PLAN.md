@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-veilmourn-obituary-pressure-10184`. Veilmourn's tier-5 Obituary Scribes now issue one readable Final Notice per battle: the mark drains cohesion, weakens retaliation for one round, and applies stronger pressure to veteran braced lines. Battle tier/use state survives normalization and live BattleRules, Battle AI, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix improves from 38 to 37 outliers, severity 336 to 304, maximum dominance 80.5% to 78.5%, and Thornwake/Veilmourn week 2 from 80.5% to 74.5%, with 12 rows still at or above 65%. Ability, live autoplay, core, parse, repository, JSON, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `ux-active-play-settings-overlay-10184`. Overworld, town, and battle now expose one shared modal Settings surface beside their existing Save/Menu controls. Audio levels, battle playback, UI scale, camera shake, color cues, high contrast, reduced motion, reduced flashes, and reduced repetitive sounds apply and persist without routing away or changing gameplay state; active battles adopt playback changes immediately. Keyboard/controller modal ownership, native accessibility semantics, 1280x720 and 1920x1080 rendered captures, packaged settings, Restore Defaults, core, shell visual, battle-layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains explicit; overall release completion remains open.
 - Completed implementation slice: `combat-battle-sfx-priority-mixing-10184`. All 21 imported battle SFX cues now own low/normal/high/critical priority and repeat-cooldown policy. Live playback rejects immediate duplicates before player creation, keeps the eight-voice cap, replaces the oldest lowest-priority voice only for a higher-priority cue, rejects low-priority arrivals under saturation, and creates no player while Effects is muted. The same slice fixes deferred native accessibility setup for controls freed before callback dispatch. Focused battle presentation, screen-reader semantics, core, parse, repository, JSON, and diff gates pass. Final sound design, platform audio certification, and overall release completion remain open.
 - Completed implementation slice: `combat-veilmourn-maskglass-finisher-10184`. Veilmourn's tier-3 Maskglass Corsairs now execute their bible-defined disrupted/wounded-target finisher through the existing live `backstab` contract. Runtime coverage proves all 79/79 authored ability instances have consequences. The unchanged all-live 100-seed matrix improves from 40 to 38 outliers, severity 356 to 336, rows at or above 65% from 16 to 12, and maximum dominance from 83.5% to 80.5%, while structural, pacing, side-bias, town-development, core, parse, and repository gates pass. The matrix remains `needs_tuning`; final faction balance and overall release completion remain open.
@@ -615,6 +616,29 @@ Completion evidence:
 Non-goals:
 - do not change Native RMG generation, strategic-AI policy, benchmark outcome semantics, or save schemas;
 - do not claim final magic-vs-might balance, final faction balance, or overall release completion from one tuning pass.
+
+## Veilmourn Obituary Pressure
+
+id: `combat-veilmourn-obituary-pressure-10184`
+
+Completed Phase 5 combat implementation slice. Restores the tier-5 Obituary
+Scribes' faction-bible role through live battle behavior instead of another raw
+stat adjustment.
+
+Implementation target:
+- give Obituary Scribes a bounded ranged obituary effect that drains cohesion and therefore weakens the target's retaliation through the existing morale model;
+- normalize, preview, resolve, and value the ability consistently in live BattleRules, Battle AI, and the fast Python benchmark;
+- expose readable ability/status feedback and prove the effect changes a real battle outcome without changing turn order or base unit stats.
+
+Completion evidence:
+- focused live runtime coverage proves obituary application, cohesion loss, retaliation reduction, expiration, authored text, and stripped-ability control behavior;
+- the unchanged all-live 100-seed matrix materially lowers the week-2 Thornwake/Veilmourn `80.5%` baseline and does not increase the baseline `38` outliers or `336` severity;
+- unit ability consequence, battle AI, combat/core, project parse, repository, and JSON validation pass.
+- final matrix: `37` outliers, `304` severity, `12` rows at or above `65%`, `78.5%` maximum dominance, and `74.5%` Thornwake/Veilmourn week-2 dominance, with zero structural failures.
+
+Non-goals:
+- do not alter benchmark thresholds, seed policy, faction growth, raw unit stats, spell catalogs, strategic AI, saves, or campaign progression;
+- do not touch Native RMG or claim final faction balance or overall release completion.
 
 ## Magic Resistance And Counter-Control Target
 

@@ -3893,6 +3893,14 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Reach makes melee contact live from the current closing distance."
 	if _has_ability(stack, "volley") and bool(stack.get("ranged", false)) and distance >= int(_ability_by_id(stack, "volley").get("min_distance", 1)):
 		return "Volley rewards the long lane while the firing line stays open."
+	if _has_ability(stack, "obituary") and bool(stack.get("ranged", false)):
+		var obituary := _ability_by_id(stack, "obituary")
+		var ability_uses = stack.get("ability_uses", {})
+		if ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) >= int(obituary.get("uses_per_battle", 1)):
+			return "Final Notice has already been issued this battle."
+		if not target.is_empty() and _has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
+			return "Final Notice will sharply drain this veteran braced line and weaken its retaliation for this round."
+		return "Final Notice will drain the target's cohesion and weaken its retaliation for this round."
 	if _has_ability(stack, "harry") and bool(stack.get("ranged", false)):
 		return "Harry will mark the target and soften its defense tempo for later breaks."
 	if _has_ability(stack, "brace") and int(stack.get("retaliations_left", 0)) > 0:
@@ -3942,6 +3950,12 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			return "%s extends melee threat before full contact" % name
 		"harry":
 			return "%s applies %s%s for follow-up pressure" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+			]
+		"obituary":
+			return "%s applies %s%s once per battle to drain cohesion and weaken retaliation, with stronger pressure against veteran braced lines" % [
 				name,
 				status_label,
 				" (%s)" % modifier_text if modifier_text != "" else "",
@@ -7416,6 +7430,7 @@ static func _build_battle_stack(
 		"affiliation": affiliation,
 		"unit_id": unit_id,
 		"name": String(unit.get("name", unit_id)),
+		"tier": clamp(int(unit.get("tier", 1)), 1, 7),
 		"unit_hp": unit_hp,
 		"total_health": max(0, count) * unit_hp,
 		"base_count": max(0, count),
@@ -7439,6 +7454,7 @@ static func _build_battle_stack(
 		"momentum": 0,
 		STACK_HEX_KEY: {},
 		"abilities": _normalize_unit_abilities(unit.get("abilities", [])),
+		"ability_uses": {},
 		"effects": [],
 		"source_type": String(source.get("source_type", "")),
 		"source_hero_id": String(source.get("hero_id", "")),
@@ -7469,6 +7485,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"affiliation": affiliation,
 		"unit_id": unit_id,
 		"name": String(stack.get("name", unit.get("name", unit_id))),
+		"tier": clamp(int(stack.get("tier", unit.get("tier", 1))), 1, 7),
 		"unit_hp": unit_hp,
 		"total_health": max(0, int(stack.get("total_health", int(stack.get("base_count", 0)) * unit_hp))),
 		"base_count": max(0, int(stack.get("base_count", 0))),
@@ -7492,6 +7509,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"momentum": clamp(int(stack.get("momentum", 0)), 0, MOMENTUM_MAX),
 		STACK_HEX_KEY: normalized_hex,
 		"abilities": _normalize_unit_abilities(unit.get("abilities", [])),
+		"ability_uses": stack.get("ability_uses", {}).duplicate(true) if stack.get("ability_uses", {}) is Dictionary else {},
 		"effects": stack.get("effects", []).duplicate(true) if stack.get("effects", []) is Array else [],
 		"source_type": String(stack.get("source_type", "")),
 		"source_hero_id": String(stack.get("source_hero_id", "")),
@@ -8689,6 +8707,29 @@ static func _apply_attack_ability_effects(
 			_stack_label(defender),
 			String(harry.get("status_label", "Harried")).to_lower(),
 		])
+	var obituary = _ability_by_id(attacker, "obituary")
+	var ability_uses = attacker.get("ability_uses", {})
+	if not (ability_uses is Dictionary):
+		ability_uses = {}
+	var obituary_available := int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
+	if is_ranged and not obituary.is_empty() and obituary_available:
+		var obituary_effect := _status_effect_from_ability(obituary, battle)
+		var braced_line := _has_ability(defender, "brace") and int(defender.get("tier", 1)) >= 2
+		if braced_line:
+			obituary_effect["modifiers"] = _normalize_ability_modifiers(obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20}))
+		_apply_stack_effect(
+			battle,
+			String(defender.get("battle_id", "")),
+			obituary_effect
+		)
+		ability_uses["obituary"] = int(ability_uses.get("obituary", 0)) + 1
+		attacker["ability_uses"] = ability_uses
+		var retaliation_clause := "the braced line's retaliation weakens" if braced_line else "its retaliation weakens"
+		messages.append("%s is %s; %s." % [
+			_stack_label(defender),
+			String(obituary.get("status_label", "Obituary-Marked")).to_lower(),
+			retaliation_clause,
+		])
 	return messages
 
 static func _apply_retaliation_ability_effects(
@@ -8740,6 +8781,10 @@ static func _ability_damage_modifier(
 	var brace = _ability_by_id(attacker, "brace")
 	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
+	if is_retaliation:
+		var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(attacker, battle, "retaliation")
+		if retaliation_pressure < 0:
+			modifier *= clampf(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
 
 	var backstab = _ability_by_id(attacker, "backstab")
 	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
@@ -9051,6 +9096,18 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"momentum_gain": max(0, int(entry.get("momentum_gain", 0))),
 					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.0)), 0.0, 1.0),
 					"wounded_damage_multiplier": clampf(float(entry.get("wounded_damage_multiplier", 1.0)), 1.0, 2.0),
+				}
+			"obituary":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Obituary")),
+					"description": String(entry.get("description", "")),
+					"status_id": String(entry.get("status_id", "status_obituary_marked")),
+					"status_label": String(entry.get("status_label", "Obituary-Marked")),
+					"duration_rounds": max(1, int(entry.get("duration_rounds", 1))),
+					"uses_per_battle": max(1, int(entry.get("uses_per_battle", 1))),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"cohesion": -1, "retaliation": -10})),
+					"braced_modifiers": _normalize_ability_modifiers(entry.get("braced_modifiers", {"cohesion": -2, "retaliation": -20})),
 				}
 			"backstab":
 				normalized = {

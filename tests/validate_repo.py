@@ -316,7 +316,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10564,6 +10564,21 @@ def validate_content(errors: list[str]) -> None:
                         ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} harry wounded_threshold_ratio must be between 0 and 1")
                     if "wounded_damage_multiplier" in ability:
                         ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} harry wounded_damage_multiplier must be > 1")
+                elif ability_id == "obituary":
+                    modifiers = ability.get("modifiers", {})
+                    ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} obituary must belong to a ranged unit")
+                    ensure(str(ability.get("status_id", "")) == "status_obituary_marked", errors, f"Unit {unit_id} obituary must use status_obituary_marked")
+                    ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} obituary must last one round")
+                    ensure(int(ability.get("uses_per_battle", 0)) == 1, errors, f"Unit {unit_id} obituary must be limited to one use per battle")
+                    ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} obituary modifiers must be an object")
+                    if isinstance(modifiers, dict):
+                        ensure(int(modifiers.get("cohesion", 0)) < 0, errors, f"Unit {unit_id} obituary must drain cohesion")
+                        ensure(-50 <= int(modifiers.get("retaliation", 0)) < 0, errors, f"Unit {unit_id} obituary retaliation pressure must be between -50 and -1")
+                    braced_modifiers = ability.get("braced_modifiers", {})
+                    ensure(isinstance(braced_modifiers, dict), errors, f"Unit {unit_id} obituary braced_modifiers must be an object")
+                    if isinstance(braced_modifiers, dict) and isinstance(modifiers, dict):
+                        ensure(int(braced_modifiers.get("cohesion", 0)) < int(modifiers.get("cohesion", 0)), errors, f"Unit {unit_id} obituary must apply stronger cohesion pressure to veteran braced lines")
+                        ensure(-50 <= int(braced_modifiers.get("retaliation", 0)) < int(modifiers.get("retaliation", 0)), errors, f"Unit {unit_id} obituary must apply stronger retaliation pressure to veteran braced lines")
                 elif ability_id == "backstab":
                     ensure(float(ability.get("damage_multiplier", 0.0)) >= 1.0, errors, f"Unit {unit_id} backstab must define damage_multiplier >= 1")
                     ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} backstab must define momentum_gain > 0")
@@ -10610,10 +10625,17 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("late_round_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be > 0")
 
     ensure(
-        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush"}.issubset(authored_unit_ability_ids),
+        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush",
+        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, and obituary",
     )
+
+    obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
+    obituary_ability = next(
+        (ability for ability in obituary_scribes.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "obituary"),
+        {},
+    )
+    ensure(bool(obituary_ability), errors, "Veilmourn Obituary Scribes must retain Final Notice obituary pressure")
 
     thornwhip_carriers = units.get("unit_thornwake_thornwhip_carriers", {})
     thornwhip_root_brace = next(
@@ -18568,6 +18590,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "REQUIRED_ABILITY_IDS",
         "func _runtime_consequence_for_ability",
         "func _probe_harry",
+        "func _probe_obituary",
         "func _probe_bloodrush",
         "runtime_consequence_count",
         "ability_family_consequence_counts",

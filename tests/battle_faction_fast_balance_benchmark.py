@@ -1343,6 +1343,13 @@ class FastBattleBenchmark:
             score += 1.5
         if self._has_ability(attacker, "harry") and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
             score += 2.0
+        obituary = self._ability_by_id(attacker, "obituary")
+        ability_uses = attacker.get("ability_uses", {})
+        obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
+        if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):
+            score += 0.25
+            if self._has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
+                score += 0.25
         if self._has_ability(attacker, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
         if is_ranged and self._side_defending_count(battle, side) > 0 and self._side_has_ability(battle, side, "formation_guard"):
@@ -1444,6 +1451,10 @@ class FastBattleBenchmark:
         brace = self._ability_by_id(attacker, "brace")
         if is_retaliation and bool(attacker.get("defending", False)) and brace:
             modifier *= float(brace.get("retaliation_multiplier", 1.0))
+        if is_retaliation:
+            retaliation_pressure = self._effect_bonus(attacker, battle, "retaliation")
+            if retaliation_pressure < 0:
+                modifier *= clamp(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
         backstab = self._ability_by_id(attacker, "backstab")
         if backstab and self._has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
             modifier *= float(backstab.get("damage_multiplier", 1.0))
@@ -1596,6 +1607,21 @@ class FastBattleBenchmark:
                 "duration_rounds": int(harry.get("duration_rounds", 1)),
                 "modifiers": harry.get("modifiers", {}),
             }, battle, "ability", "harry")
+            counts["status_applied"] += 1
+        obituary = self._ability_by_id(attacker, "obituary")
+        ability_uses = attacker.setdefault("ability_uses", {})
+        obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
+        if is_ranged and obituary and obituary_available:
+            modifiers = obituary.get("modifiers", {})
+            if self._has_ability(defender, "brace") and int(defender.get("tier", 1)) >= 2:
+                modifiers = obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20})
+            self._apply_effect(defender, {
+                "effect_id": str(obituary.get("status_id", "status_obituary_marked")),
+                "label": str(obituary.get("status_label", "Obituary-Marked")),
+                "duration_rounds": int(obituary.get("duration_rounds", 1)),
+                "modifiers": modifiers,
+            }, battle, "ability", "obituary")
+            ability_uses["obituary"] = int(ability_uses.get("obituary", 0)) + 1
             counts["status_applied"] += 1
 
     def _apply_retaliation_ability_effects(self, battle: dict[str, Any], retaliator: dict[str, Any], attacker: dict[str, Any], counts: Counter[str]) -> None:

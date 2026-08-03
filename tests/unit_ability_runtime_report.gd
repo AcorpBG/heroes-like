@@ -13,6 +13,7 @@ const REQUIRED_ABILITY_IDS := [
 	"volley",
 	"formation_guard",
 	"bloodrush",
+	"obituary",
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
 
@@ -98,6 +99,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_brace(unit_id)
 		"harry":
 			return _probe_harry(unit_id)
+		"obituary":
+			return _probe_obituary(unit_id)
 		"backstab":
 			return _probe_backstab(unit_id)
 		"shielding":
@@ -194,6 +197,79 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		"status_without": status_without,
 		"message_count": messages.size(),
 		"reason": "" if ok else "harry did not uniquely apply its status effect",
+	}
+
+func _probe_obituary(unit_id: String) -> Dictionary:
+	var scribe := _stack_for_unit(unit_id, "player", 0)
+	var defender := _defender_stack("enemy", 0)
+	_set_hex(scribe, 4, 3)
+	_set_hex(defender, 5, 3)
+	var battle := _battle_for_stacks([scribe, defender])
+	var preview := BattleRulesScript._active_ability_window_summary(scribe, battle, defender)
+	var base_retaliation := BattleRulesScript._ability_damage_modifier(defender, scribe, battle, false, true, 0)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, scribe, defender, true, 1)
+	var message_text := " ".join(messages).to_lower()
+	var marked := BattleRulesScript._get_stack_by_id(battle, String(defender.get("battle_id", "")))
+	var cohesion_pressure := SpellRulesScript.effect_bonus_for_kind(marked, battle, "cohesion")
+	var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(marked, battle, "retaliation")
+	var marked_retaliation := BattleRulesScript._ability_damage_modifier(marked, scribe, battle, false, true, 0)
+	var second_defender := _defender_stack("enemy", 1)
+	_set_hex(second_defender, 6, 3)
+	battle["stacks"].append(second_defender)
+	BattleRulesScript._apply_attack_ability_effects(battle, scribe, second_defender, true, 1)
+	var second_marked := BattleRulesScript._get_stack_by_id(battle, String(second_defender.get("battle_id", "")))
+	var spent_preview := BattleRulesScript._active_ability_window_summary(scribe, battle, second_defender)
+	var braced_defender := _stack_for_unit("unit_thornwake_barkmantle_rams", "enemy", 0)
+	var braced_scribe := _stack_for_unit(unit_id, "player", 0)
+	_set_hex(braced_scribe, 4, 3)
+	_set_hex(braced_defender, 5, 3)
+	var braced_battle := _battle_for_stacks([braced_scribe, braced_defender])
+	BattleRulesScript._apply_attack_ability_effects(braced_battle, braced_scribe, braced_defender, true, 1)
+	var braced_marked := BattleRulesScript._get_stack_by_id(braced_battle, String(braced_defender.get("battle_id", "")))
+	var braced_cohesion_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "cohesion")
+	var braced_retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "retaliation")
+
+	var stripped := _without_ability(scribe, "obituary")
+	var stripped_defender := _defender_stack("enemy", 0)
+	_set_hex(stripped, 4, 3)
+	_set_hex(stripped_defender, 5, 3)
+	var stripped_battle := _battle_for_stacks([stripped, stripped_defender])
+	BattleRulesScript._apply_attack_ability_effects(stripped_battle, stripped, stripped_defender, true, 1)
+	var stripped_marked := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_defender.get("battle_id", "")))
+
+	battle["round"] = 4
+	var expired_retaliation := BattleRulesScript._ability_damage_modifier(marked, scribe, battle, false, true, 0)
+	var ok := (
+		SpellRulesScript.has_effect_id(marked, {"round": 1}, "status_obituary_marked")
+		and cohesion_pressure == -1
+		and retaliation_pressure == -10
+		and braced_cohesion_pressure == -2
+		and braced_retaliation_pressure == -20
+		and marked_retaliation < base_retaliation
+		and not SpellRulesScript.has_effect_id(second_marked, battle, "status_obituary_marked")
+		and spent_preview.contains("already been issued")
+		and is_equal_approx(expired_retaliation, base_retaliation)
+		and not SpellRulesScript.has_effect_id(stripped_marked, stripped_battle, "status_obituary_marked")
+		and preview.contains("Final Notice")
+		and preview.contains("retaliation")
+		and message_text.contains("obituary-marked")
+		and message_text.contains("retaliation weakens")
+	)
+	return {
+		"ok": ok,
+		"probe": "obituary_cohesion_and_retaliation_pressure",
+		"cohesion_pressure": cohesion_pressure,
+		"retaliation_pressure_pct": retaliation_pressure,
+		"braced_cohesion_pressure": braced_cohesion_pressure,
+		"braced_retaliation_pressure_pct": braced_retaliation_pressure,
+		"uses_after_second_attack": int(scribe.get("ability_uses", {}).get("obituary", 0)),
+		"base_retaliation_modifier": base_retaliation,
+		"marked_retaliation_modifier": marked_retaliation,
+		"expired_retaliation_modifier": expired_retaliation,
+		"preview": preview,
+		"spent_preview": spent_preview,
+		"message_count": messages.size(),
+		"reason": "" if ok else "obituary did not apply bounded one-round cohesion and retaliation pressure",
 	}
 
 func _probe_backstab(unit_id: String) -> Dictionary:
