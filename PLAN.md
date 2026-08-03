@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `balance-orevein-contract-encounter-resolution-10184`. Blocked advances now apply their authored field-objective pressure, allowing obstruction lines to be forced aside without moving the blocked stack in that action. Orevein Bridgeward Levies retain their original roster but move from a round-14 stalemate with 87% enemy health to a five-round victory at 64% terminal margin and 20 enemy damage per round. Archive Wardens' local six-Guard/eight-Archer/one-Pikeward roster moves its battle from 91% margin / 6 damage per round to 83% / 15. The active breadth queue improves from 35 items / 6 high to 34 / 4; focused battle, Orevein skirmish, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-ninefold-barrow-vault-pressure-10184`. Ninefold Confluence's medium-difficulty Barrow Vault now owns a placement-local eight-Hedgehook/six-Thornbow guard instead of inheriting the shared 6/4 Bramble Hedge roster. Its deterministic battle moves from a two-round victory at 92% terminal margin and 7 enemy damage per round to a three-round player-advantaged victory at 70% and 15. The 59-sample active breadth queue improves from 38 items / 8 high to 35 / 6 with both runtime consequence gates passing. Shared neutral/faction inputs remain unchanged; focused battle, Ninefold smoke, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-bellwake-mirror-lancers-pressure-10184`. Bellwake Wreck Claim's placement-local Mirror Lancers now field nine Shard Guards, six Prism Adepts, and eight Mirror Duelists; the deterministic battle moves from a two-round victory at 98% terminal margin and 3 enemy damage per round to a three-round victory at 74% and 26. The adjacent zero-pressure Relay Pickets line now resolves at 87% margin and 7 enemy damage per round, while Aurora Battery remains unchanged. The 59-sample active breadth queue improves from 40 items / 10 high to 38 / 8. Shared Sunvault armies and the exact all-live faction matrix remain unchanged; focused battle, Bellwake skirmish, core, parse, repository, JSON, and diff gates pass.
 - Completed implementation slice: `balance-ninefold-drowned-reliquary-pressure-10184`. Ninefold Confluence's high-difficulty Drowned Reliquary now owns a placement-local five-Cutter/eight-Reefbolt guard instead of inheriting the shared Skiffyard roster. The deterministic battle remains player-advantaged but moves from a flawless two-round victory to a four-round victory at 71% terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves from 44 items / 12 high to 40 / 10, and its runtime-consequence matrix moves from fail to pass. The unchanged all-live faction matrix, guarded rewards, core systems, Ninefold smoke, project parse, repository, JSON, and diff gates pass; remaining encounter and faction balance debt stays open.
@@ -719,6 +720,31 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
+
+## Orevein Contract Encounter Resolution
+
+id: `balance-orevein-contract-encounter-resolution-10184`
+
+Completed Phase 6 authored-combat implementation slice. Repairs Orevein
+Contract's placement-local Archive Wardens low-pressure victory and the
+Bridgeward Levies deterministic round-14 stalemate.
+
+Implementation target:
+- strengthen `orevein_archive_wardens` enough to clear its 91% terminal-margin outlier while retaining a bounded medium-difficulty player victory;
+- make blocked advances apply their authored field-objective influence so obstruction lines can be forced aside while preserving the blocked stack's current position for that action;
+- preserve Bridgeward Levies' authored local roster and resolve it as a bounded high-difficulty player victory through the corrected objective runtime;
+- preserve shared Embercourt army groups and exact faction-benchmark inputs while extending focused ownership regression coverage.
+
+Completion evidence:
+- Archive Wardens resolves in three rounds at 83% terminal margin / 15 enemy damage per round, Bridgeward Levies in five rounds at 64% / 20, and unchanged Beacon Wardens in three rounds at 63% / 28;
+- focused core coverage proves a blocked advance leaves the stack in place, surfaces the obstruction message, and finishes forcing aside a pre-contested obstruction line;
+- exact assertions preserve Archive/Bridgeward local rosters and shared Archive Warden/Causeway Phalanx army groups;
+- the 59-sample active-scenario breadth queue improves from 35 items / 6 high-priority items to 34 / 4 with signature `ec937a0e`, zero stalls or invalid orders, and passing runtime consequence gates;
+- Orevein skirmish, core systems, project parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change shared armies, global unit stats, battle difficulty labels, rewards, strategic AI, saves, campaigns, or Native RMG;
+- do not weaken queue thresholds or claim remaining encounter/faction balance debt or overall release completion.
 
 ## Ninefold Barrow Vault Battle Pressure
 

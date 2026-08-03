@@ -20239,6 +20239,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
+    orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
+    orevein_contract_scene_path = ROOT / "tests/battle_orevein_contract_balance_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20625,6 +20627,30 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_ninefold_drowned_reliquary_balance_regression.gd" in drowned_reliquary_scene_text,
             errors,
             "Drowned Reliquary balance regression scene is not wired to its script.",
+        )
+    if orevein_contract_report_path.exists():
+        orevein_contract_text = orevein_contract_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_OREVEIN_CONTRACT_BALANCE_REGRESSION",
+            "orevein_archive_wardens",
+            "orevein_bridgeward_levies",
+            "army_orevein_archive_wardens_watch",
+            "army_orevein_bridgeward_levies",
+            "army_archive_wardens",
+            "army_causeway_phalanx",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_ARMY_CONTRACTS",
+            "MAX_TERMINAL_MARGIN_PCT",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in orevein_contract_text, errors, f"Orevein Contract balance regression is missing token: {required_token}")
+    if orevein_contract_scene_path.exists():
+        orevein_contract_scene_text = orevein_contract_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_orevein_contract_balance_regression.gd" in orevein_contract_scene_text,
+            errors,
+            "Orevein Contract balance regression scene is not wired to its script.",
         )
     if tuning_queue_report_path.exists():
         tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")

@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Ninefold Barrow Vault placement-local guard. Its deterministic battle moves from a two-round victory at 92 percent terminal margin and 7 enemy damage per round to a three-round player-advantaged victory at 70 percent and 15; the active breadth queue improves from 38/8-high to 35/6-high.",
+  "currentNotes": "Completed blocked-advance field-objective pressure and Orevein Archive Wardens tuning. Bridgeward Levies now resolve in five rounds at 64 percent terminal margin and 20 enemy damage per round instead of stalling at round 14; Archive Wardens resolve at 83 percent and 15. The active breadth queue improves from 35/6-high to 34/4-high.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-ninefold-barrow-vault-pressure-10184",
-  "currentSliceId": "balance-ninefold-barrow-vault-pressure-10184",
-  "currentSliceNotes": "Completed placement-local Barrow Vault guard: three-round player-advantaged victory at 70 percent terminal margin and 15 enemy damage per round. Active breadth improved from 38/8-high to 35/6-high; shared army and faction benchmark inputs remain unchanged.",
+  "currentSlice": "balance-orevein-contract-encounter-resolution-10184",
+  "currentSliceId": "balance-orevein-contract-encounter-resolution-10184",
+  "currentSliceNotes": "Completed blocked-advance objective pressure and Orevein Archive roster correction. Bridgeward now resolves in five rounds at 64 percent margin/20 enemy damage per round; Archive resolves in three rounds at 83 percent/15. Active breadth improves from 35/6-high to 34/4-high.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Barrow Vault Battle Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T20:28:59Z",
+  "currentSliceTitle": "Orevein Contract Encounter Resolution",
+  "currentSliceUpdatedAt": "2026-08-03T20:41:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67646,6 +67646,87 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T20:28:59Z"
+    },
+    {
+      "id": "balance-orevein-contract-encounter-resolution-10184",
+      "title": "Orevein Contract Encounter Resolution",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Make blocked advances contest authored field objectives so obstruction battles resolve, and strengthen Orevein's low-pressure Archive Wardens without changing shared armies or faction inputs.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "content/scenarios.json",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/battle_orevein_contract_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 35,
+        "active_queue_high_priority_count": 6,
+        "active_queue_signature": "b17034f9",
+        "archive_wardens_outcome_state": "victory",
+        "archive_wardens_round_reached": 4,
+        "archive_wardens_terminal_health_margin_pct": 91,
+        "archive_wardens_enemy_damage_per_round": 6,
+        "bridgeward_levies_outcome_state": "stalemate",
+        "bridgeward_levies_round_reached": 14,
+        "bridgeward_levies_enemy_health_remaining_pct": 87,
+        "bridgeward_levies_enemy_damage_per_round": 9
+      },
+      "completionCriteria": [
+        "Blocked advances remain in place but apply their authored field-objective pressure and can finish forcing aside a pre-contested obstruction line",
+        "Every Orevein encounter resolves as a bounded player victory at or below 90 percent terminal margin with meaningful enemy pressure",
+        "Archive and Bridgeward placement-local rosters plus their shared encounter army groups remain exact",
+        "The active breadth queue reduces its item and high-priority counts without creating new high-priority contributors",
+        "Orevein skirmish, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, global unit stat, battle difficulty, reward, strategic AI, save, campaign, or Native RMG changes",
+        "queue threshold changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T20:41:39Z",
+      "startedAt": "2026-08-03T20:32:28Z",
+      "notes": "Completed blocked-advance objective pressure and Orevein Archive roster correction. Bridgeward now resolves in five rounds at 64 percent margin/20 enemy damage per round; Archive resolves in three rounds at 83 percent/15. Active breadth improves from 35/6-high to 34/4-high.",
+      "result": {
+        "archive_wardens_outcome_state": "victory",
+        "archive_wardens_round_reached": 3,
+        "archive_wardens_terminal_health_margin_pct": 83,
+        "archive_wardens_enemy_damage_per_round": 15,
+        "bridgeward_levies_outcome_state": "victory",
+        "bridgeward_levies_round_reached": 5,
+        "bridgeward_levies_terminal_health_margin_pct": 64,
+        "bridgeward_levies_enemy_damage_per_round": 20,
+        "beacon_wardens_terminal_health_margin_pct": 63,
+        "beacon_wardens_enemy_damage_per_round": 28,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 35,
+        "active_queue_item_count_after": 34,
+        "active_queue_high_priority_count_before": 6,
+        "active_queue_high_priority_count_after": 4,
+        "active_queue_signature_after": "ec937a0e",
+        "runtime_consequence_status_after": "pass",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_orevein_contract_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active queue remains; improved to 34 items / 4 high)",
+        "godot4 --headless --path . --scene res://tests/brasshollow_orevein_player_skirmish_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T20:41:39Z"
     }
   ],
   "project": "heroes-like",
@@ -67656,7 +67737,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 35 items / 6 high-priority items.",
+  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 34 items / 4 high-priority items.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68188,9 +68269,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Its Drowned Reliquary and Barrow Vault guards plus Bellwake Wreck Claim's Relay Pickets and Mirror Lancers now apply meaningful battle pressure through placement-local armies. The active encounter queue improves from 44 items / 12 high to 35 / 6 across three completed guard slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, and Orevein guards now apply meaningful battle pressure, while blocked advances correctly force aside contested obstruction objectives instead of producing deterministic stalemates. The active encounter queue improves from 44 items / 12 high to 34 / 4 across four completed combat slices. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T20:28:59Z",
+  "updatedAt": "2026-08-03T20:41:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

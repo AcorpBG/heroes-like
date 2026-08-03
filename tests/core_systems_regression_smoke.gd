@@ -1245,6 +1245,11 @@ func _run_battlefield_cover_obstruction_regression() -> bool:
 		push_error("Core systems smoke: obstruction-line coverage did not surface the stalled-lane message.")
 		get_tree().quit(1)
 		return false
+	var contested_obstruction := _battlefield_objective(session.battle, "ferry_chain_obstruction")
+	if String(contested_obstruction.get("control_side", "")) != "player":
+		push_error("Core systems smoke: a blocked advance did not finish forcing aside the pre-contested obstruction line: %s." % contested_obstruction)
+		get_tree().quit(1)
+		return false
 	var pressure_summary := BattleRules.describe_pressure(session)
 	if "Terrain effect:" not in pressure_summary or "cover" not in pressure_summary.to_lower() or "obstruction" not in pressure_summary.to_lower():
 		push_error("Core systems smoke: battle pressure summary did not surface compact terrain implications for cover and obstruction.")
@@ -1253,7 +1258,7 @@ func _run_battlefield_cover_obstruction_regression() -> bool:
 
 	var restored = _clone_session(session)
 	var current_cover := _battlefield_objective(session.battle, "bone_rack_cover_line")
-	var current_obstruction := _battlefield_objective(session.battle, "ferry_chain_obstruction")
+	var current_obstruction := contested_obstruction
 	var restored_cover := _battlefield_objective(restored.battle, "bone_rack_cover_line")
 	if (
 		String(restored_cover.get("control_side", "")) != String(current_cover.get("control_side", ""))

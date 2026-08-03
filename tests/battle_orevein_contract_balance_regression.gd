@@ -9,6 +9,20 @@ const PLACEMENT_IDS := [
 	"orevein_bridgeward_levies",
 	"orevein_beacon_wardens",
 ]
+const LOCAL_ARMY_CONTRACTS := {
+	"orevein_archive_wardens": {
+		"army_id": "army_orevein_archive_wardens_watch",
+		"stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 1},
+	},
+	"orevein_bridgeward_levies": {
+		"army_id": "army_orevein_bridgeward_levies",
+		"stack_counts": {"unit_river_guard": 5, "unit_citadel_pikeward": 3, "unit_ember_archer": 6},
+	},
+}
+const SHARED_ARMY_CONTRACTS := {
+	"army_archive_wardens": {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2},
+	"army_causeway_phalanx": {"unit_river_guard": 6, "unit_citadel_pikeward": 4, "unit_ember_archer": 4},
+}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -20,14 +34,24 @@ func _run() -> void:
 		"report_id": REPORT_ID,
 		"scenario_id": SCENARIO_ID,
 		"samples": [],
+		"shared_army_ids": SHARED_ARMY_CONTRACTS.keys(),
 	}
 	var failures := []
 	var failed_turn_logs := {}
+	for army_id in SHARED_ARMY_CONTRACTS:
+		var shared_army := ContentService.get_army_group(String(army_id))
+		if String(shared_army.get("id", "")) != army_id or _stack_counts(shared_army) != SHARED_ARMY_CONTRACTS[army_id]:
+			failures.append("%s changed with the Orevein placement-local correction" % army_id)
 	for placement_id in PLACEMENT_IDS:
 		var encounter := _encounter(String(placement_id))
 		if encounter.is_empty():
 			failures.append("%s is missing" % placement_id)
 			continue
+		if LOCAL_ARMY_CONTRACTS.has(placement_id):
+			var local_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+			var contract: Dictionary = LOCAL_ARMY_CONTRACTS[placement_id]
+			if String(local_army.get("id", "")) != String(contract.get("army_id", "")) or _stack_counts(local_army) != contract.get("stack_counts", {}):
+				failures.append("%s placement-local army drifted from its bounded roster" % placement_id)
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
@@ -66,6 +90,13 @@ func _compact_sample(placement_id: String, sample: Dictionary) -> Dictionary:
 		"action_mix": sample.get("action_mix", {}),
 		"initial_stack_profile": sample.get("initial_stack_profile", {}),
 	}
+
+func _stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack in army.get("stacks", []):
+		if stack is Dictionary:
+			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
+	return counts
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false
