@@ -349,6 +349,34 @@ func save_settings() -> String:
 		return ""
 	return SETTINGS_FILE
 
+func restore_default_settings() -> Dictionary:
+	ensure_settings()
+	var previous_settings := settings.duplicate(true)
+	var default_settings := build_default_settings()
+	var changed := previous_settings != default_settings
+	settings = default_settings.duplicate(true)
+	apply_settings()
+	var saved_path := save_settings()
+	if saved_path == "":
+		settings = previous_settings
+		apply_settings()
+		settings_changed.emit(settings.duplicate(true))
+		return {
+			"ok": false,
+			"path": "",
+			"settings": settings.duplicate(true),
+			"changed": false,
+			"message": "Defaults could not be saved. Your previous settings remain active.",
+		}
+	settings_changed.emit(settings.duplicate(true))
+	return {
+		"ok": true,
+		"path": saved_path,
+		"settings": settings.duplicate(true),
+		"changed": changed,
+		"message": "Default settings restored and saved on this device.",
+	}
+
 func build_presentation_options() -> Array:
 	var selected_mode := presentation_mode_id()
 	var options := []

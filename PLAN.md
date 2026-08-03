@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `settings-confirmed-restore-defaults-10184`. The shipped Settings board now exposes a confirmed Restore Defaults command backed by one rollback-capable SettingsService operation. Confirmation names presentation, sound, gameplay, custom movement keys, and readability settings; success applies immediately, persists across reload, refreshes the board, and preserves expedition saves, campaign progress, active session state, support bundles, and save version 9. Focused cancellation/persistence proof, 1280x720 and 1920x1080 captures, packaged settings, menu/outcome, keyboard navigation, core systems, project parsing, and repository validation pass. Per-section resets, cloud/account settings, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-manual-save-overwrite-confirmation-10184`. Manual saves from overworld, town, battle, and scenario outcome now require one shared exact slot-bound confirmation before replacing an occupied or unreadable manual slot, while empty slots remain one-step saves. Cancellation preserves exact bytes, invalid slots fail closed, and changing selection cannot redirect a pending overwrite. Focused four-route proof, 1280x720/1920x1080 captures, save/load confidence, menu/outcome, active-play keyboard, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, undo/history, autosave confirmation, broad save-browser redesign, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-save-slot-delete-workflow-10184`. The live Saves board now exposes a compact Delete Save command for any occupied autosave or manual slot, including corrupt/unloadable files, and requires exact slot-bound confirmation before removal. SaveService derives paths only from canonical autosave/manual identities, rejects unknown or invalid ids and forged paths, invalidates the selected summary cache after deletion, and refreshes the deleted row to Empty while recalculating latest save state. Focused proof covers cancellation, Manual Slot 2, autosave, corrupt-slot deletion, forged-path rejection, three preserved unrelated saves, campaign progression, device settings, active expedition state, and save version 9; 1280x720/1920x1080 captures, 1024x600 save-load confidence, lean boot, menu/outcome, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, bulk deletion, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `campaign-arc-restart-workflow-10184`. The live campaign board now exposes a compact Restart Arc command only for arcs with recorded progress and requires a campaign-bound confirmation that reports the exact attempts, victories, and carryover being cleared. Confirmation persists a normalized campaign-local reset, returns the selected arc to its authored Chapter I, hides the now-inapplicable command, and preserves other campaign progress, expedition saves, device settings, selected difficulty, and save version 9. Focused persistence, 1280x720 and 1920x1080 visual captures, player-facing campaign flow, six-campaign breadth, menu/outcome, core systems, project parsing, and repository validation pass. Campaign content, balance, chapter rules, broad menu redesign, Native RMG, and overall release completion remain open.
@@ -772,6 +773,27 @@ Target shape:
 Non-goals:
 - do not change combat rules, event order, animation duration, audio, camera shake settings, expedition saves, or Native RMG;
 - do not redesign the broader VFX catalog or claim medical certification, final accessibility, or release completion.
+
+## Confirmed Restore Settings Defaults
+
+Selected slice: `settings-confirmed-restore-defaults-10184`.
+
+Implementation target:
+- add one SettingsService operation that replaces all current device settings with the canonical defaults, applies them immediately, persists them, and restores the prior state if persistence fails;
+- expose a compact Restore Defaults command on the existing scrollable Settings board;
+- require confirmation naming presentation, sound, gameplay, custom movement keys, and readability state before reset;
+- refresh all live controls and visual styling after confirmation with clear local feedback.
+
+Completion evidence:
+- focused runtime proof covers cancel preserving exact config bytes and current runtime values;
+- confirmed reset matches the complete canonical default dictionary, clears custom movement keys, applies runtime scale/palette/audio/navigation/pacing state, and survives a SettingsService reload;
+- expedition saves, campaign progression, active session state, support bundle state, and save version 9 remain unchanged;
+- 1280x720 and 1920x1080 confirmation captures plus packaged settings, menu/outcome, active-play keyboard, project-parse, core-system, and repository validation pass.
+
+Non-goals:
+- do not reset campaign progress, expedition saves, active sessions, support bundles, or editor state;
+- do not add per-section resets, import/export, cloud settings, account profiles, or a broad Settings redesign;
+- do not change save schema, gameplay balance, Native RMG behavior, or claim overall release completion.
 
 ## Platform Native Installers
 

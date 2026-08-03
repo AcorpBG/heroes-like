@@ -283,6 +283,8 @@ PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_se
 PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_settings_persistence_report.tscn"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_settings_persistence_smoke.py"
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-settings-persistence-smoke-report.md"
+SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_restore_defaults_regression.gd"
+SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_restore_defaults_regression.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.gd"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
@@ -21279,9 +21281,44 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
         PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCENE_PATH,
         PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH,
         PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH,
+        SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH,
+        SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing packaged settings persistence smoke file: {path.relative_to(ROOT)}")
+
+    if SETTINGS_SERVICE_PATH.exists():
+        settings_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func restore_default_settings",
+            "build_default_settings()",
+            "previous_settings",
+            "Defaults could not be saved. Your previous settings remain active.",
+            "Default settings restored and saved on this device.",
+        ):
+            ensure(required_token in settings_text, errors, f"SettingsService.gd is missing restore-defaults token: {required_token}")
+
+    if MAIN_MENU_SCENE_PATH.exists():
+        menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            'RestoreSettingsDefaults" type="Button"',
+            'SettingsRestoreDefaultsDialog" type="ConfirmationDialog"',
+            'method="_on_restore_settings_defaults_pressed"',
+            'method="_on_settings_restore_defaults_confirmed"',
+        ):
+            ensure(required_token in menu_scene_text, errors, f"MainMenu.tscn is missing restore-defaults token: {required_token}")
+
+    if SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH.exists():
+        regression_text = SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SETTINGS_RESTORE_DEFAULTS_REGRESSION",
+            "validation_cancel_settings_restore_defaults",
+            "validation_confirm_settings_restore_defaults",
+            "cancel_preserved_exact_bytes",
+            "player_state_preserved",
+            "SessionState.SAVE_VERSION != 9",
+        ):
+            ensure(required_token in regression_text, errors, f"Settings restore-defaults regression is missing token: {required_token}")
 
     if PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.exists():
         report_text = PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")

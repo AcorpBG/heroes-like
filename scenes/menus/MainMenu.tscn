@@ -1138,6 +1138,23 @@ size_flags_horizontal = 3
 autowrap_mode = 3
 text = "No bundle exported"
 
+[node name="RestoreDefaultsRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RestoreSettingsDefaults" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(196, 34)
+layout_mode = 2
+text = "Restore Defaults"
+
+[node name="SettingsRestoreStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "Device settings only"
+
 [node name="FooterPocketPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.032
@@ -1222,6 +1239,11 @@ title = "Delete save?"
 initial_position = 1
 dialog_text = "Permanently delete this expedition save?"
 
+[node name="SettingsRestoreDefaultsDialog" type="ConfirmationDialog" parent="."]
+title = "Restore default settings?"
+initial_position = 1
+dialog_text = "Restore all device settings to their defaults?"
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1291,4 +1313,7 @@ text = "Quit"
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/MotionRow/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/MotionRow/ReduceFlashesToggle" to="." method="_on_reduce_flashes_toggled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle" to="." method="_on_export_support_bundle_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow/RestoreSettingsDefaults" to="." method="_on_restore_settings_defaults_pressed"]
+[connection signal="confirmed" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_confirmed"]
+[connection signal="canceled" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_canceled"]
 [connection signal="dismissed" from="HeroKeybindingsDialog" to="." method="_on_hero_keybindings_dialog_dismissed"]
