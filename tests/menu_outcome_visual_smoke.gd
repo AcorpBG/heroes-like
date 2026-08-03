@@ -533,7 +533,9 @@ func _run_main_menu_smoke() -> bool:
 	var high_contrast_toggle = shell.get_node_or_null("%HighContrastToggle")
 	var color_cue_picker = shell.get_node_or_null("%ColorCuePicker")
 	var keyboard_navigation_layout_picker = shell.get_node_or_null("%KeyboardNavigationLayoutPicker")
-	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (battle_camera_shake_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (keyboard_navigation_layout_picker is OptionButton):
+	var support_bundle_button = shell.get_node_or_null("%ExportSupportBundle")
+	var support_bundle_status = shell.get_node_or_null("%SupportBundleStatus")
+	if not (vsync_toggle is CheckButton) or not (frame_rate_picker is OptionButton) or not (render_quality_picker is OptionButton) or not (ui_scale_picker is OptionButton) or not (battle_camera_shake_picker is OptionButton) or not (high_contrast_toggle is CheckButton) or not (color_cue_picker is OptionButton) or not (keyboard_navigation_layout_picker is OptionButton) or not (support_bundle_button is Button) or not (support_bundle_status is Label):
 		push_error("Main menu smoke: settings board is missing quality, pacing, or UI-scale controls.")
 		get_tree().quit(1)
 		return false
@@ -583,6 +585,22 @@ func _run_main_menu_smoke() -> bool:
 		],
 		["Settings handoff:", "changes apply now", "Settings Handoff", "presentation, sound, gameplay, and readability", "device config", "campaign progress", "expedition saves", "Close:", "scenic first view"]
 	):
+		return false
+	var support_bundle_result: Dictionary = shell.call("validation_export_support_bundle")
+	settings_snapshot = shell.call("validation_snapshot")
+	if not bool(support_bundle_result.get("ok", false)) \
+			or String(settings_snapshot.get("support_bundle_button_text", "")) != "Export Support Bundle" \
+			or not String(settings_snapshot.get("support_bundle_status", "")).contains("Support bundle ready") \
+			or not String(settings_snapshot.get("support_bundle_button_tooltip", "")).contains("No saves or telemetry"):
+		push_error("Main menu smoke: support bundle command did not export with clear local-only feedback: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+	var support_bundle: Dictionary = RuntimeIssueLog.support_bundle_snapshot()
+	if String(support_bundle.get("schema", "")) != RuntimeIssueLog.SUPPORT_BUNDLE_SCHEMA \
+			or not bool(support_bundle.get("privacy", {}).get("local_only", false)) \
+			or bool(support_bundle.get("privacy", {}).get("telemetry_uploaded", true)):
+		push_error("Main menu smoke: exported support bundle did not preserve its privacy contract: %s." % support_bundle)
+		get_tree().quit(1)
 		return false
 	for expected_id in ["1280x720", "1600x900", "1920x1080", "2560x1440"]:
 		if not resolution_ids.has(expected_id):
