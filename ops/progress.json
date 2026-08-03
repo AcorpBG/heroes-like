@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed bounded decisive melee pressure in shared tactical autoplay. Ghoul Grove hard moves from a round-7 defeat with 19 percent enemy health to a round-5 victory at 70 percent player health; normal and the exact local/shared roster contracts remain unchanged. The active queue remains exact at 26 medium/zero high with signature 8039155f, so the separate 72 percent low-difficulty watch remains open.",
+  "currentNotes": "Completed Bellwake Relay Pickets placement-local pressure at 9/7/8. Relay moves from a two-round 87 percent victory/7 enemy damage per round to a four-round 59 percent victory/19; Bellwake's cohort falls from 70 to 61 percent and the active queue from 26 to 23 with zero high items.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-decisive-attack-and-river-pass-opening-10184",
-  "currentSliceId": "combat-decisive-attack-and-river-pass-opening-10184",
-  "currentSliceNotes": "Completed shared player-autoplay decisive strike selection with acting-side, target-side, action-family, and score-gap bounds. Ghoul Grove hard victory is restored without changing encounter content; all focused and broad gates pass, with the expected 26-item breadth watch unchanged.",
+  "currentSlice": "balance-bellwake-relay-pickets-pressure-10184",
+  "currentSliceId": "balance-bellwake-relay-pickets-pressure-10184",
+  "currentSliceNotes": "Completed local 9/7/8 Relay Pickets pressure with exact Mirror Lancers, Aurora Battery, and shared Sunvault invariants. Active queue is 23 medium/zero high with signature 276888b1.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Decisive Attack and River Pass Opening",
-  "currentSliceUpdatedAt": "2026-08-03T21:40:11Z",
+  "currentSliceTitle": "Bellwake Relay Pickets Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T21:47:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67986,6 +67986,100 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T21:40:11Z"
+    },
+    {
+      "id": "balance-bellwake-relay-pickets-pressure-10184",
+      "title": "Bellwake Relay Pickets Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace Bellwake Relay Pickets' burst, low-pressure resolution with a bounded standard-paced battle through placement-local roster strength while preserving adjacent encounters and shared Sunvault content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_bellwake_wreck_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 26,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "8039155f",
+        "bellwake_cohort_average_terminal_health_margin_pct": 70,
+        "relay_pickets_outcome_state": "victory",
+        "relay_pickets_round_reached": 2,
+        "relay_pickets_terminal_health_margin_pct": 87,
+        "relay_pickets_enemy_damage_per_round": 7,
+        "mirror_lancers_round_reached": 3,
+        "mirror_lancers_terminal_health_margin_pct": 74,
+        "mirror_lancers_enemy_damage_per_round": 26,
+        "aurora_battery_round_reached": 3,
+        "aurora_battery_terminal_health_margin_pct": 50,
+        "aurora_battery_enemy_damage_per_round": 25
+      },
+      "completionCriteria": [
+        "Relay Pickets remains a bounded player victory, reaches standard pacing, falls below the 75 percent sample watch threshold, and applies more than 10 enemy damage per round",
+        "Bellwake's three-encounter cohort averages below 70 percent terminal margin",
+        "Mirror Lancers and Aurora Battery outcomes remain exact, Relay owns a placement-local correction, and both shared Sunvault armies remain exact",
+        "The active breadth queue decreases from 26 with zero high-priority items and both runtime-consequence gates remain passing",
+        "Focused Bellwake battle, Bellwake skirmish, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T21:47:55Z",
+      "startedAt": "2026-08-03T21:42:51Z",
+      "notes": "Completed a placement-local 9/7/8 Relay roster. Relay's sample-margin and burst-pacing watches and Bellwake's scenario-cohort watch are removed while adjacent outcomes and all shared Sunvault armies stay exact.",
+      "result": {
+        "relay_pickets_stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 7, "unit_mirror_duelist": 8},
+        "relay_pickets_round_reached_before": 2,
+        "relay_pickets_round_reached_after": 4,
+        "relay_pickets_terminal_health_margin_pct_before": 87,
+        "relay_pickets_terminal_health_margin_pct_after": 59,
+        "relay_pickets_enemy_damage_per_round_before": 7,
+        "relay_pickets_enemy_damage_per_round_after": 19,
+        "relay_pickets_enemy_power_after": 2380,
+        "relay_pickets_player_enemy_power_ratio_pct_after": 110,
+        "mirror_lancers_round_reached_after": 3,
+        "mirror_lancers_terminal_health_margin_pct_after": 74,
+        "mirror_lancers_enemy_damage_per_round_after": 26,
+        "aurora_battery_round_reached_after": 3,
+        "aurora_battery_terminal_health_margin_pct_after": 50,
+        "aurora_battery_enemy_damage_per_round_after": 25,
+        "bellwake_cohort_average_terminal_health_margin_pct_before": 70,
+        "bellwake_cohort_average_terminal_health_margin_pct_after": 61,
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 26,
+        "active_queue_item_count_after": 23,
+        "active_queue_high_priority_count_before": 0,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "276888b1",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "shared_sunvault_armies_changed": false,
+        "faction_matrix_inputs_changed": false
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_bellwake_wreck_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: 23 medium-priority watches remain; zero high-priority items; signature 276888b1)",
+        "godot4 --headless --path . --scene res://tests/veilmourn_bellwake_wreck_player_skirmish_report.tscn",
+        "godot4 --headless --path . --scene res://tests/artifact_battle_salvage_execution_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T21:47:55Z"
     }
   ],
   "project": "heroes-like",
@@ -67996,7 +68090,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 26 medium-priority authored-encounter watches, including Ghoul Grove's 72 percent low-difficulty cohort watch, plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the 23 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -68528,9 +68622,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue remains 26 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Bellwake Relay and Mirror, Orevein, Reedbarrow, Mireford, and Lockmarsh guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 23 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T21:40:11Z",
+  "updatedAt": "2026-08-03T21:47:55Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
