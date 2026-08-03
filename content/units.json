@@ -580,22 +580,6 @@
         "gold": 95,
         "wood": 1
       },
-      "abilities": [
-        {
-          "id": "brace",
-          "name": "Root Brace",
-          "description": "Defensive retaliations lash attackers into root-bound rhythm.",
-          "retaliation_multiplier": 1.15,
-          "defending_cohesion_bonus": 2,
-          "status_id": "status_rooted",
-          "status_label": "Root-Bound",
-          "duration_rounds": 1,
-          "modifiers": {
-            "initiative": -2,
-            "cohesion": -1
-          }
-        }
-      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 0,
       "control_resistance_pct": 0,
@@ -1218,6 +1202,22 @@
         "gold": 95,
         "wood": 1
       },
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Root Brace",
+          "description": "Defensive retaliations lash attackers into root-bound rhythm.",
+          "retaliation_multiplier": 1.15,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_rooted",
+          "status_label": "Root-Bound",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -1
+          }
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 0,
       "control_resistance_pct": 0,
@@ -1296,9 +1296,9 @@
           "name": "Barkmantle Screens",
           "description": "Layered living bark shields blunt missile pressure while the root line closes.",
           "cohesion_hold_bonus": 1,
-          "ranged_damage_multiplier": 0.62,
-          "engaged_damage_multiplier": 1.12,
-          "harried_damage_multiplier": 1.12
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.06
         }
       ],
       "content_status": "six_faction_scaffold",
@@ -1334,7 +1334,7 @@
           "id": "reach",
           "name": "Pinning Reach",
           "description": "Can engage from a step away to pin ranged lines before they reset.",
-          "distance_one_multiplier": 1.14
+          "distance_one_multiplier": 0.95
         }
       ],
       "content_status": "six_faction_scaffold",

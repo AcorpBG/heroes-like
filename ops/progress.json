@@ -604,18 +604,34 @@
         "content/factions.json",
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
-      "notes": "Pending. Use full benchmark outlier rows to reduce deterministic faction-pair win-rate spread now that fake round-cap outcomes have been removed.",
+      "notes": "Completed. Corrected Thornwake Root Brace ownership and restored the pre-compensation Barkmantle/Pinning multipliers. The unchanged all-live 100-seed matrix improved from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; overall balance remains needs_tuning.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
-      "status": "pending",
+      "status": "completed",
       "title": "Combat Faction Pair Stat Tuning",
       "validation": {
-        "commands": [],
-        "evidence": {},
+        "commands": [
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; structural gate, 41 outliers)",
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn (passed; 78/78 ability consequences)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "python3 tests/validate_repo.py (passed)",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn (passed)",
+          "godot4 --headless --path . --editor --quit (passed)",
+          "jq empty content/units.json ops/progress.json; python3 -m py_compile tests/validate_repo.py; git diff --check (passed)"
+        ],
+        "evidence": {
+          "balance_status": "needs_tuning",
+          "outliers": "45 -> 41",
+          "rows_at_or_above_65_pct": "23 -> 18",
+          "rows_at_100_pct": "0 -> 0",
+          "severity_above_55_pct": "503.5 -> 389",
+          "week_average_rounds": [5.72, 6.32, 6.58, 7.6],
+          "week_side_bias_points": [0.07, 0.33, 3.47, 0.8]
+        },
         "sliceId": "combat-faction-pair-stat-tuning-10184",
-        "status": "pending",
-        "updatedAt": "2026-05-26T18:18:00Z"
+        "status": "passed",
+        "updatedAt": "2026-08-03T05:52:39Z"
       }
     },
     {
@@ -15140,14 +15156,14 @@
       }
     }
   ],
-  "currentNotes": "Manual save naming is implemented and validated through the canonical payload and shipped Saves board. The overall release remains incomplete across the recorded strategic AI, balance, accessibility, content, performance, clean-machine packaging, and release-integration gaps.",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-manual-save-slot-naming-10184",
-  "currentSliceId": "ux-manual-save-slot-naming-10184",
-  "currentSliceNotes": "Occupied manual slots now persist bounded optional player names, retain them through overwrite and reload, show them beside fixed identity, and clear them without changing non-name payload state. Invalid targets fail closed and all affected regressions pass.",
+  "currentNotes": "Corrected Thornwake Root Brace ownership and restored pre-compensation T4/T5 ability multipliers. The full benchmark materially improved while remaining honestly marked needs_tuning.",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSlice": "combat-faction-pair-stat-tuning-10184",
+  "currentSliceId": "combat-faction-pair-stat-tuning-10184",
+  "currentSliceNotes": "Corrected Thornwake Root Brace ownership, restored pre-compensation T4/T5 ability multipliers, and reduced full all-live 100-seed severity 503.5 -> 389, outliers 45 -> 41, and 65%+ rows 23 -> 18 with structural, side-bias, pacing, live battle, town, and repository gates passing. Overall balance remains needs_tuning.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Manual Save Slot Naming",
-  "currentSliceUpdatedAt": "2026-08-03T05:09:02Z",
+  "currentSliceTitle": "Combat Faction Pair Stat Tuning",
+  "currentSliceUpdatedAt": "2026-08-03T05:52:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21195,10 +21211,10 @@
       "implementationTargets": [
         "scenes/battle/BattleBoardView.gd",
         "scenes/battle/BattleShell.gd",
-		"scripts/autoload/SaveService.gd",
+        "scripts/autoload/SaveService.gd",
         "tests/battle_controller_board_navigation_smoke.gd",
         "tests/battle_controller_board_navigation_smoke.tscn",
-		"tests/battle_layout_smoke.gd",
+        "tests/battle_layout_smoke.gd",
         "PLAN.md",
         "ops/progress.json"
       ],
@@ -57478,7 +57494,10 @@
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work / headless-balance-harness-next-10184 follow-up",
       "purpose": "Correct the 100% Lockmarsh Road Chaplains victory and clear the last high-priority authored breadth row without affecting dynamic relief armies.",
-      "sourceDocs": ["project.md", "PLAN.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
       "startedAt": "2026-08-02T08:04:06Z",
       "status": "completed",
       "summary": "Completed. A placement-local 9-guard/8-archer host survives the exact opening stack deletions, converting the 100% no-damage burst victory into a 70% victory with 28 enemy damage per round. The active breadth queue improves from 28 items/2 high to 25/0 and its balance-matrix gate moves from warning to pass without changing the shared relief group or combat rules.",
@@ -57493,12 +57512,40 @@
           "git diff --check (passed)"
         ],
         "evidence": {
-          "active_breadth_after": {"item_count": 25, "high_priority_count": 0, "medium_priority_count": 25, "balance_matrix_gate_status": "pass", "sample_count": 51},
-          "active_breadth_before": {"item_count": 28, "high_priority_count": 2, "medium_priority_count": 26, "balance_matrix_gate_status": "warning", "sample_count": 51},
-          "baseline_sample": {"outcome_state": "victory", "round_reached": 2, "player_health_remaining_pct": 100, "enemy_damage_per_round": 0, "enemy_power_score": 1308, "player_power_score": 1762},
-          "implemented_sample": {"outcome_state": "victory", "round_reached": 2, "player_health_remaining_pct": 70, "enemy_damage_per_round": 28, "enemy_power_score": 1594, "player_power_score": 1762},
+          "active_breadth_after": {
+            "item_count": 25,
+            "high_priority_count": 0,
+            "medium_priority_count": 25,
+            "balance_matrix_gate_status": "pass",
+            "sample_count": 51
+          },
+          "active_breadth_before": {
+            "item_count": 28,
+            "high_priority_count": 2,
+            "medium_priority_count": 26,
+            "balance_matrix_gate_status": "warning",
+            "sample_count": 51
+          },
+          "baseline_sample": {
+            "outcome_state": "victory",
+            "round_reached": 2,
+            "player_health_remaining_pct": 100,
+            "enemy_damage_per_round": 0,
+            "enemy_power_score": 1308,
+            "player_power_score": 1762
+          },
+          "implemented_sample": {
+            "outcome_state": "victory",
+            "round_reached": 2,
+            "player_health_remaining_pct": 70,
+            "enemy_damage_per_round": 28,
+            "enemy_power_score": 1594,
+            "player_power_score": 1762
+          },
           "player_facing_change": "Only surge_road_chaplains gains a 9 River Guard/8 Ember Archer local host. The shared army_riverwatch_relief group remains 8/6.",
-          "rejected_adjacent_candidates": {"9_7": "Cleared the 90% matrix threshold at 89% but retained the sample-level high-priority watch targeting 75%."},
+          "rejected_adjacent_candidates": {
+            "9_7": "Cleared the 90% matrix threshold at 89% but retained the sample-level high-priority watch targeting 75%."
+          },
           "remaining_debt": "The active breadth queue remains watch with 25 medium-priority cohort and sample pacing/margin items. High-priority authored balance is clear, but broad combat balance and release completion are not claimed."
         },
         "sliceId": "balance-lockmarsh-road-chaplains-pressure-10184",
@@ -57910,7 +57957,7 @@
             "settings_version": 6,
             "reloaded_ui_scale_percent": 130,
             "compatibility_large_ui_text": true,
-            "runtime_content_scale_factor": 1.30,
+            "runtime_content_scale_factor": 1.3,
             "restored_original_settings": true
           },
           "layout_behavior": "The footer pocket now collapses whenever a secondary board is open and returns on close, preserving scenery-first first view while preventing the 130-percent settings board from colliding with footer content.",
@@ -58119,11 +58166,11 @@
         "campaign production",
         "authored scenario balance target"
       ],
-      "notes": "Paused after a 2026-08-02 current-code rerun rejected further global tuning. The 100-seed all-live baseline has 45 outliers, severity 503.5, 23 rows at or above 65%, and low 0.33-1.87 side bias. Sporeglass 4-5 alone worsened severity to 516; paired T5 compensation improved severity only to 489 with unchanged outlier/severe-row counts and mixed late regressions; paired T6 compensation improved matched 30-seed severity only 508.25->494.69 while adding one outlier. All candidates were reverted. Resume only from a stronger systemic rule/ability diagnosis, not more isolated stat nudges.",
+      "notes": "Corrected Thornwake Root Brace ownership, restored pre-compensation T4/T5 ability multipliers, and reduced full all-live 100-seed severity 503.5 -> 389, outliers 45 -> 41, and 65%+ rows 23 -> 18 with structural, side-bias, pacing, live battle, town, and repository gates passing. Overall balance remains needs_tuning.",
       "phase": "phase-5-playable-alpha-baseline",
       "planRef": "PLAN.md Selectable Near-Term Work / GOALS.md Goal 3",
       "purpose": "Tune unit stats, growth, and ability power using the fast benchmark outliers after benchmark scoring and round-cap outcome artifacts were removed.",
-      "summary": "Paused on current code. Fresh default/all-live matrices reproduce broad faction-pair imbalance, but tested Thornwake timing packages fail the material-improvement criterion and were fully reverted.",
+      "summary": "Completed the systemic Thornwake correction: Root Brace ownership and the T4/T5 compensation values now match the intended faction progression, materially reducing full-matrix severity without changing benchmark semantics.",
       "source": "ops/progress.json combat-feel-balance-pass-10184 evidence",
       "sourceDocs": [
         "GOALS.md",
@@ -58131,9 +58178,9 @@
         "tests/battle_faction_fast_balance_benchmark.py"
       ],
       "startedAt": "2026-05-26T19:02:51Z",
-      "status": "paused",
+      "status": "completed",
       "title": "Combat Faction Pair Stat Tuning",
-      "updatedAt": "2026-08-02T07:32:51Z",
+      "updatedAt": "2026-08-03T05:51:58Z",
       "validation": {
         "commands": [
           "jq empty content/units.json (passed before benchmark)",
@@ -58166,9 +58213,44 @@
           "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --json > tmp/battle_balance_100_seed_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed; selected partial severe-outlier tuning candidate, needs_tuning, 34 total outliers, 8 rows at 65%+)",
           "python3 tests/battle_faction_fast_balance_benchmark.py --quick --json > tmp/battle_balance_quick_65plus_clean_veil_t5_latehp_thorn_t7hp.json (passed)",
           "jq empty content/units.json content/spells.json ops/progress.json (passed)",
-          "Created docs/spell-system-player-balance-audit.md (audit-only; no gameplay code changes)"
+          "Created docs/spell-system-player-balance-audit.md (audit-only; no gameplay code changes)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json > /tmp/heroes_balance_all_live_baseline_20260803.json (passed; baseline 45 outliers, severity 503.5, 23 rows at or above 65%)",
+          "focused all-live Thornwake 100-seed comparison after authored multiplier restoration (passed; Thornwake severity 319.5 -> 140, outliers 18 -> 13, severe rows 14 -> 5)",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json > /tmp/heroes_balance_all_live_final_20260803.json (passed; structural gate, 41 outliers)",
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn (passed; 78 ability instances and 78 live consequences)",
+          "eight authored battle balance regression scenes (passed)",
+          "python3 tests/town_development_balance_report.py (passed; ok=true)",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn (passed)",
+          "godot4 --headless --path . --editor --quit (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json; python3 -m py_compile tests/validate_repo.py; git diff --check (passed)"
         ],
         "evidence": {
+          "systemic_root_brace_correction_20260803": {
+            "balance_status": "needs_tuning",
+            "baseline": {
+              "outliers": 45,
+              "rows_at_or_above_65_pct": 23,
+              "rows_at_100_pct": 0,
+              "severity_above_55_pct": 503.5
+            },
+            "implementation": [
+              "Moved Root Brace from unit_embercourt_lantern_sappers to unit_thornwake_thornwhip_carriers.",
+              "Restored Barkmantle Screens multipliers to ranged 0.82 and engaged/harried 1.06.",
+              "Restored Pinning Reach distance-one multiplier to 0.95.",
+              "Added repository validation for the intended Root Brace owner and Embercourt exclusion."
+            ],
+            "result": {
+              "outliers": 41,
+              "rows_at_or_above_65_pct": 18,
+              "rows_at_100_pct": 0,
+              "severity_above_55_pct": 389,
+              "structural_failures": [],
+              "week_average_rounds": [5.72, 6.32, 6.58, 7.6],
+              "week_side_bias_points": [0.07, 0.33, 3.47, 0.8]
+            },
+            "remaining_risk": "The unchanged benchmark still reports needs_tuning with 41 pair-band outliers. This slice fixes a systemic ownership defect and materially reduces severity; it does not claim final faction balance."
+          },
           "comparison_to_after_thornwake_100_seed": {
             "total_balance_outliers": "33 -> 32",
             "week2_average_rounds": "6.12 -> 6.11",
@@ -58354,9 +58436,10 @@
           }
         },
         "sliceId": "combat-faction-pair-stat-tuning-10184",
-        "status": "current_baseline_rejected_candidates_paused",
-        "updatedAt": "2026-08-02T07:32:51Z"
-      }
+        "status": "passed_material_improvement_needs_further_tuning",
+        "updatedAt": "2026-08-03T05:52:39Z"
+      },
+      "completedAt": "2026-08-03T05:51:58Z"
     },
     {
       "baselineChecks": [
@@ -65210,7 +65293,9 @@
         ],
         "evidence": {
           "active_source_table_count": 1,
-          "active_source_tags": ["guarded_site"],
+          "active_source_tags": [
+            "guarded_site"
+          ],
           "ai_commander_claim_and_auto_equip": true,
           "ai_empire_capture_tracking": true,
           "guarded_site_count": 2,
@@ -65286,7 +65371,10 @@
         ],
         "evidence": {
           "active_source_table_count": 2,
-          "active_source_tags": ["guarded_site", "battle_salvage"],
+          "active_source_tags": [
+            "guarded_site",
+            "battle_salvage"
+          ],
           "battle_salvage_encounter_count": 1,
           "deterministic_artifact_id": "artifact_warcrest_pennon",
           "reserved_map_artifact_id": "artifact_black_sail_compass",
@@ -67048,7 +67136,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Select and implement the next release-bound runtime, content, accessibility, strategic AI, performance, or packaging slice; do not repeat completed manual save naming, Settings, overwrite, delete, Native RMG matrix, or artifact reward evidence work.",
+  "remainingWork": "Select the next release-bound runtime, content, accessibility, strategic-AI, performance, balance, or packaging slice. Keep the remaining 41 combat pair-band outliers visible as future tuning work rather than reopening isolated stat nudges.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67580,9 +67668,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Occupied manual save slots now support persistent bounded player names through the shipped Saves board, retain names across overwrite and reload, preserve fixed slot identity and protected player state, and reject invalid targets. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T05:09:02Z",
+  "updatedAt": "2026-08-03T05:51:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

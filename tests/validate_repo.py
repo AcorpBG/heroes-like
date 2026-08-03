@@ -10612,6 +10612,24 @@ def validate_content(errors: list[str]) -> None:
         "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush",
     )
 
+    thornwhip_carriers = units.get("unit_thornwake_thornwhip_carriers", {})
+    thornwhip_root_brace = next(
+        (
+            ability
+            for ability in thornwhip_carriers.get("abilities", [])
+            if isinstance(ability, dict) and str(ability.get("name", "")) == "Root Brace"
+        ),
+        {},
+    )
+    ensure(str(thornwhip_root_brace.get("id", "")) == "brace", errors, "Thornwake Thornwhip Carriers must own Root Brace")
+    ensure(str(thornwhip_root_brace.get("status_id", "")) == "status_rooted", errors, "Thornwake Root Brace must apply status_rooted")
+    ember_lantern_sappers = units.get("unit_embercourt_lantern_sappers", {})
+    ensure(
+        not any(isinstance(ability, dict) and str(ability.get("id", "")) == "brace" for ability in ember_lantern_sappers.get("abilities", [])),
+        errors,
+        "Embercourt Lantern Sappers must not own Thornwake's brace ability",
+    )
+
     ember_archer = units.get("unit_ember_archer", {})
     ember_archer_volley = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})
     ensure("status_staggered" in [str(value) for value in ember_archer_volley.get("status_ids", [])], errors, "Ember Archer volley must keep its stagger payoff authored")

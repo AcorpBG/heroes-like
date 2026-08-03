@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-faction-pair-stat-tuning-10184`. Corrected the misplaced Thornwake `Root Brace` ownership, restored the authored Barkmantle/Pinning multipliers that predated compensation for that defect, and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%. Structural, side-bias, pacing, live battle, town-development, project-parse, and repository gates pass. The matrix remains `needs_tuning`; final faction balance, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-manual-save-slot-naming-10184`. Occupied manual slots now accept a bounded optional player name from the shipped Saves board, persist it in the canonical slot payload, retain it through overwrite and reload, display it beside fixed slot identity, and clear it without changing expedition state. Autosave, empty, corrupt, invalid, and forged targets fail closed; unrelated slots, progression, settings, active session state, support diagnostics, and save version 9 remain unchanged. Focused persistence proof, 1280x720 and 1920x1080 captures, overwrite, delete, save/load confidence, menu/outcome, keyboard, core systems, project parsing, and repository validation pass. Cloud sync, save history, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `settings-confirmed-restore-defaults-10184`. The shipped Settings board now exposes a confirmed Restore Defaults command backed by one rollback-capable SettingsService operation. Confirmation names presentation, sound, gameplay, custom movement keys, and readability settings; success applies immediately, persists across reload, refreshes the board, and preserves expedition saves, campaign progress, active session state, support bundles, and save version 9. Focused cancellation/persistence proof, 1280x720 and 1920x1080 captures, packaged settings, menu/outcome, keyboard navigation, core systems, project parsing, and repository validation pass. Per-section resets, cloud/account settings, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-manual-save-overwrite-confirmation-10184`. Manual saves from overworld, town, battle, and scenario outcome now require one shared exact slot-bound confirmation before replacing an occupied or unreadable manual slot, while empty slots remain one-step saves. Cancellation preserves exact bytes, invalid slots fail closed, and changing selection cannot redirect a pending overwrite. Focused four-route proof, 1280x720/1920x1080 captures, save/load confidence, menu/outcome, active-play keyboard, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, undo/history, autosave confirmation, broad save-browser redesign, Native RMG, and overall release completion remain outside this slice.
@@ -442,7 +443,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 - Previous completed slice: `battle-spell-parity-counterplay-10184`.
 - Previous completed slice: `magic-town-study-full-tier-access-10184`.
 - Previous completed slice: `magic-spell-tier-power-bands-10184`.
-- Paused slice: `combat-faction-pair-stat-tuning-10184` remains needs-tuning; fresh current-code global Thornwake candidates were rejected and reverted because they did not materially reduce the full outlier set.
+- Completed slice: `combat-faction-pair-stat-tuning-10184` corrected Thornwake ability ownership and materially reduced full-matrix severity while retaining `needs_tuning` as the honest remaining balance state.
 - Previous completed slice: `battle-benchmark-no-round-cap-10184`.
 - Previous completed slice: `combat-feel-balance-pass-10184`.
 - Earlier completed slice: `battle-fast-faction-benchmark-10184`.
@@ -581,6 +582,29 @@ Initial target bands:
 - average rounds should remain readable, and later-week battles should take more turns on average than early battles.
 
 The first benchmark should report outliers as tuning evidence. Do not tune away failures blindly just to make the initial benchmark look green.
+
+## Combat Faction Pair Stat Tuning
+
+Completed slice: `combat-faction-pair-stat-tuning-10184`.
+
+Result:
+- `Root Brace` now belongs to Thornwake Thornwhip Carriers instead of Embercourt Lantern Sappers, and content validation locks that faction ownership;
+- Barkmantle Screens and Pinning Reach use their original authored multipliers instead of the later values that compensated for the missing T2 ability;
+- the unchanged all-live 100-seed, four-week matrix improved from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%, with no 100-0 rows and all structural gates passing.
+
+Implementation target:
+- trace deterministic and high-margin pair outcomes to shipped unit stats, weekly growth, and live ability power rather than changing benchmark gates or outcome rules;
+- preserve faction identity and progression while reducing dominant pair outcomes across weeks 1-4;
+- keep aggregate side bias low, retain resolved side-a/side-b outcomes only, and preserve existing town-development and live Godot battle behavior.
+
+Completion evidence:
+- the deterministic 100-seed four-week matrix has no 100-0 faction-pair rows and materially fewer 45-55% pair outliers than the pre-slice baseline;
+- quick iteration rows and the final full matrix use unchanged benchmark semantics and live content files;
+- focused content validation, town development/economy checks, live battle/core regressions, project parsing, and repository validation pass.
+
+Non-goals:
+- do not change Native RMG generation, strategic-AI policy, benchmark outcome semantics, or save schemas;
+- do not claim final magic-vs-might balance, final faction balance, or overall release completion from one tuning pass.
 
 ## Magic Resistance And Counter-Control Target
 
