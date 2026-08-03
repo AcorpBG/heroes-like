@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-manual-save-slot-naming-10184`. Occupied manual slots now accept a bounded optional player name from the shipped Saves board, persist it in the canonical slot payload, retain it through overwrite and reload, display it beside fixed slot identity, and clear it without changing expedition state. Autosave, empty, corrupt, invalid, and forged targets fail closed; unrelated slots, progression, settings, active session state, support diagnostics, and save version 9 remain unchanged. Focused persistence proof, 1280x720 and 1920x1080 captures, overwrite, delete, save/load confidence, menu/outcome, keyboard, core systems, project parsing, and repository validation pass. Cloud sync, save history, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `settings-confirmed-restore-defaults-10184`. The shipped Settings board now exposes a confirmed Restore Defaults command backed by one rollback-capable SettingsService operation. Confirmation names presentation, sound, gameplay, custom movement keys, and readability settings; success applies immediately, persists across reload, refreshes the board, and preserves expedition saves, campaign progress, active session state, support bundles, and save version 9. Focused cancellation/persistence proof, 1280x720 and 1920x1080 captures, packaged settings, menu/outcome, keyboard navigation, core systems, project parsing, and repository validation pass. Per-section resets, cloud/account settings, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-manual-save-overwrite-confirmation-10184`. Manual saves from overworld, town, battle, and scenario outcome now require one shared exact slot-bound confirmation before replacing an occupied or unreadable manual slot, while empty slots remain one-step saves. Cancellation preserves exact bytes, invalid slots fail closed, and changing selection cannot redirect a pending overwrite. Focused four-route proof, 1280x720/1920x1080 captures, save/load confidence, menu/outcome, active-play keyboard, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, undo/history, autosave confirmation, broad save-browser redesign, Native RMG, and overall release completion remain outside this slice.
 - Completed implementation slice: `ux-save-slot-delete-workflow-10184`. The live Saves board now exposes a compact Delete Save command for any occupied autosave or manual slot, including corrupt/unloadable files, and requires exact slot-bound confirmation before removal. SaveService derives paths only from canonical autosave/manual identities, rejects unknown or invalid ids and forged paths, invalidates the selected summary cache after deletion, and refreshes the deleted row to Empty while recalculating latest save state. Focused proof covers cancellation, Manual Slot 2, autosave, corrupt-slot deletion, forged-path rejection, three preserved unrelated saves, campaign progression, device settings, active expedition state, and save version 9; 1280x720/1920x1080 captures, 1024x600 save-load confidence, lean boot, menu/outcome, core systems, project parsing, and repository validation pass. Save renaming, cloud sync, bulk deletion, Native RMG, and overall release completion remain open.
@@ -794,6 +795,25 @@ Non-goals:
 - do not reset campaign progress, expedition saves, active sessions, support bundles, or editor state;
 - do not add per-section resets, import/export, cloud settings, account profiles, or a broad Settings redesign;
 - do not change save schema, gameplay balance, Native RMG behavior, or claim overall release completion.
+
+## Manual Save Slot Naming
+
+Selected slice: `ux-manual-save-slot-naming-10184`.
+
+Implementation target:
+- add one canonical SaveService operation that writes or clears a bounded player-owned name only on an occupied, structurally valid manual slot;
+- preserve the optional name when that same manual slot is overwritten from any active-play shell;
+- expose a compact keyboard/controller-reachable name field and command on the existing Saves detail board;
+- surface the custom name alongside the fixed Manual Slot identity in browser rows and resume previews.
+
+Completion evidence:
+- focused runtime proof covers naming, clearing, invalid and forged target rejection, exact non-name payload preservation, overwrite retention, reload/load continuity, and save version 9;
+- autosave, empty and corrupt slots, unrelated manual slots, campaign progression, settings, active session state, and support diagnostics remain unchanged;
+- 1280x720 and 1920x1080 Saves-board captures plus overwrite, delete, save/load confidence, menu/outcome, keyboard, core-system, project-parse, and repository validation pass.
+
+Non-goals:
+- do not rename autosave files or canonical slot paths, create arbitrary slot counts, move/copy saves, add cloud sync, or add save history;
+- do not change session schema normalization, gameplay state, save version, Native RMG behavior, or claim overall release completion.
 
 ## Platform Native Installers
 

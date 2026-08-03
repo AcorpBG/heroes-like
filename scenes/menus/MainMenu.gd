@@ -122,6 +122,8 @@ const TAB_HELP_TOPIC := {
 @onready var _settings_restore_defaults_dialog: ConfirmationDialog = $SettingsRestoreDefaultsDialog
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
+@onready var _save_name_edit: LineEdit = %SaveNameEdit
+@onready var _apply_save_name_button: Button = %ApplySaveName
 @onready var _delete_selected_save_button: Button = %DeleteSelectedSave
 @onready var _load_selected_button: Button = %LoadSelected
 @onready var _save_delete_dialog: ConfirmationDialog = $SaveDeleteDialog
@@ -409,6 +411,17 @@ func _on_delete_selected_save_pressed() -> void:
 	dialog_label.custom_minimum_size = Vector2(520.0, 72.0)
 	_save_delete_dialog.get_ok_button().text = "Delete Save"
 	_save_delete_dialog.popup_centered(Vector2i(640, 210))
+
+func _on_save_name_text_changed(_new_text: String) -> void:
+	_refresh_save_name_action()
+
+func _on_save_name_submitted(_new_text: String) -> void:
+	_on_apply_save_name_pressed()
+
+func _on_apply_save_name_pressed() -> void:
+	var result := SaveService.set_manual_slot_name_from_summary(_selected_summary(), _save_name_edit.text)
+	_save_load_notice = String(result.get("message", "The manual save name was not changed."))
+	_rebuild_save_browser()
 
 func _on_save_delete_confirmed() -> void:
 	_save_delete_dialog.hide()
@@ -1231,6 +1244,8 @@ func _refresh_selected_save() -> void:
 		_delete_selected_save_button.visible = false
 		_delete_selected_save_button.disabled = true
 		_delete_selected_save_button.tooltip_text = "Select an occupied autosave or manual slot first."
+		_save_name_edit.visible = false
+		_apply_save_name_button.visible = false
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
@@ -1241,6 +1256,13 @@ func _refresh_selected_save() -> void:
 		details = "%s\n\n%s" % [_save_load_notice, details]
 	_set_compact_label(_save_details_label, details, 6, 88)
 	var delete_action := SaveService.build_delete_action(summary)
+	var name_action := SaveService.build_manual_slot_name_action(summary)
+	_save_name_edit.visible = not bool(name_action.get("disabled", true))
+	_apply_save_name_button.visible = _save_name_edit.visible
+	_save_name_edit.text = String(name_action.get("current_name", ""))
+	_save_name_edit.placeholder_text = "Optional save name"
+	_save_name_edit.tooltip_text = String(name_action.get("message", ""))
+	_refresh_save_name_action()
 	_delete_selected_save_button.text = String(delete_action.get("label", "Delete Save"))
 	_delete_selected_save_button.disabled = bool(delete_action.get("disabled", true))
 	_delete_selected_save_button.visible = not _delete_selected_save_button.disabled
@@ -1248,6 +1270,17 @@ func _refresh_selected_save() -> void:
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
+
+func _refresh_save_name_action() -> void:
+	if not _save_name_edit.visible:
+		_apply_save_name_button.disabled = true
+		return
+	var action := SaveService.build_manual_slot_name_action(_selected_summary())
+	var current_name := String(action.get("current_name", ""))
+	var requested_name := _save_name_edit.text.strip_edges()
+	_apply_save_name_button.text = "Clear Name" if requested_name == "" and current_name != "" else "Save Name"
+	_apply_save_name_button.disabled = bool(action.get("disabled", true)) or requested_name == current_name
+	_apply_save_name_button.tooltip_text = String(action.get("message", ""))
 
 func _save_browser_row_tooltip(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1280,7 +1313,7 @@ func _latest_loaded_save_summary() -> Dictionary:
 	for summary in _save_summaries:
 		if not SaveService.can_load_summary(summary):
 			continue
-		if latest.is_empty() or int(summary.get("modified_timestamp", 0)) > int(latest.get("modified_timestamp", 0)):
+		if latest.is_empty() or SaveService.summary_recency_timestamp(summary) > SaveService.summary_recency_timestamp(latest):
 			latest = summary
 	return latest
 
@@ -2297,6 +2330,14 @@ func validation_snapshot() -> Dictionary:
 		"save_delete_tooltip": _delete_selected_save_button.tooltip_text,
 		"save_delete_dialog_visible": _save_delete_dialog.visible,
 		"save_delete_pending_identity": _pending_save_delete_identity.duplicate(true),
+		"save_name_action": SaveService.build_manual_slot_name_action(selected_save_summary),
+		"save_name_text": _save_name_edit.text,
+		"save_name_edit_visible": _save_name_edit.visible,
+		"save_name_edit_tooltip": _save_name_edit.tooltip_text,
+		"apply_save_name_text": _apply_save_name_button.text,
+		"apply_save_name_visible": _apply_save_name_button.visible,
+		"apply_save_name_enabled": not _apply_save_name_button.disabled,
+		"apply_save_name_tooltip": _apply_save_name_button.tooltip_text,
 		"settings_summary": _settings_summary_label.text,
 		"settings_summary_full": _settings_summary_label.tooltip_text,
 		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
@@ -2939,6 +2980,16 @@ func validation_confirm_selected_save_delete() -> Dictionary:
 func validation_cancel_selected_save_delete() -> void:
 	_on_save_delete_canceled()
 
+func validation_set_selected_save_name(name: String) -> Dictionary:
+	_save_name_edit.text = name
+	_refresh_save_name_action()
+	_on_apply_save_name_pressed()
+	return {
+		"selected_key": _selected_save_key,
+		"notice": _save_load_notice,
+		"summary": _selected_summary().duplicate(true),
+	}
+
 func validation_resume_selected_save() -> Dictionary:
 	var summary := _selected_summary()
 	if summary.is_empty():
@@ -3170,6 +3221,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_delete_selected_save_button, "secondary", 132.0, 38.0, 13)
+	FrontierVisualKit.apply_button(_apply_save_name_button, "secondary", 112.0, 38.0, 13)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	FrontierVisualKit.apply_button(_customize_movement_keys_button, "secondary", 140.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_export_support_bundle_button, "secondary", 196.0, 34.0, 13)
