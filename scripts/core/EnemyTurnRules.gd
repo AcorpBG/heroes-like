@@ -6048,6 +6048,9 @@ static func _ready_saved_task_spawn_candidate_for_point(
 	spawn_order: int,
 	spawn_scan_context: Dictionary = {}
 ) -> Dictionary:
+	if bool(spawn_scan_context.get("ready_saved_task_no_prepared_commander", false)):
+		_spawn_profile_count("ready_saved_task_no_prepared_commander_reused")
+		return {}
 	var best := {}
 	var candidates := _spawn_scan_commander_candidates(
 		session,
@@ -6057,8 +6060,37 @@ static func _ready_saved_task_spawn_candidate_for_point(
 		spawn_scan_context
 	)
 	var live_tasks := _spawn_scan_live_tasks(session, faction_id, spawn_scan_context)
-	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
 	var normalized_roster := _spawn_scan_commander_roster(session, faction_id, state, spawn_scan_context)
+	var base_encounter_id := _primary_raid_encounter_id(config)
+	var base_strength := _enemy_encounter_base_strength(base_encounter_id)
+	var minimum_ready_strength := base_strength + _planned_task_prep_strength(base_strength, "", "")
+	var has_minimum_ready_continuity := false
+	if base_strength > 0:
+		for commander_value in candidates:
+			if not (commander_value is Dictionary):
+				continue
+			var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+			var commander := _commander_roster_entry_for_launch(
+				session,
+				faction_id,
+				roster_hero_id,
+				state,
+				normalized_roster
+			)
+			if commander.is_empty() \
+					or String(commander.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) != EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE \
+					or not EnemyAdventureRulesScript.commander_can_deploy(commander):
+				continue
+			var continuity := EnemyAdventureRulesScript.commander_army_continuity(commander)
+			if String(continuity.get("encounter_id", "")) == base_encounter_id \
+					and int(continuity.get("current_strength", 0)) >= minimum_ready_strength:
+				has_minimum_ready_continuity = true
+				break
+	if not has_minimum_ready_continuity:
+		spawn_scan_context["ready_saved_task_no_prepared_commander"] = true
+		_spawn_profile_count("ready_saved_task_no_prepared_commander_skip")
+		return {}
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
 	for commander_value in candidates:
 		if not (commander_value is Dictionary):
 			continue
