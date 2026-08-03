@@ -1926,7 +1926,7 @@
       "encounters": [
         {"placement_id": "bogbound_lantern_patrol", "encounter_id": "encounter_lantern_patrol", "x": 3, "y": 1, "difficulty": "medium", "combat_seed": 7201},
         {"placement_id": "bogbound_survey_guard", "encounter_id": "encounter_survey_guard", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 7202},
-        {"placement_id": "bogbound_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 7203}
+        {"placement_id": "bogbound_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 7203, "enemy_army": {"id": "army_bogbound_archive_wardens_watch", "name": "Bogbound Archive Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 8}, {"unit_id": "unit_ember_archer", "count": 12}, {"unit_id": "unit_citadel_pikeward", "count": 6}]}}
       ]
     },
     {

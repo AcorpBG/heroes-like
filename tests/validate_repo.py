@@ -20247,6 +20247,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     reedbarrow_mireford_scene_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn"
     reedbarrow_chain_report_path = ROOT / "tests/battle_reedbarrow_chain_balance_regression.gd"
     reedbarrow_chain_scene_path = ROOT / "tests/battle_reedbarrow_chain_balance_regression.tscn"
+    bogbound_archive_report_path = ROOT / "tests/battle_bogbound_archive_wardens_balance_regression.gd"
+    bogbound_archive_scene_path = ROOT / "tests/battle_bogbound_archive_wardens_balance_regression.tscn"
     lockmarsh_surge_report_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.gd"
     lockmarsh_surge_scene_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.tscn"
     ghoul_grove_report_path = ROOT / "tests/battle_ghoul_grove_balance_regression.gd"
@@ -20296,6 +20298,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         active_breadth_scene_path,
         reedbarrow_chain_report_path,
         reedbarrow_chain_scene_path,
+        bogbound_archive_report_path,
+        bogbound_archive_scene_path,
         ghoul_grove_report_path,
         ghoul_grove_scene_path,
         drowned_reliquary_report_path,
@@ -20748,6 +20752,29 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_reedbarrow_chain_balance_regression.gd" in reedbarrow_chain_scene_text,
             errors,
             "Reedbarrow Chain balance regression scene is not wired to its script.",
+        )
+    if bogbound_archive_report_path.exists():
+        bogbound_archive_text = bogbound_archive_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_BOGBOUND_ARCHIVE_WARDENS_BALANCE_REGRESSION",
+            "bogbound_lantern_patrol",
+            "bogbound_survey_guard",
+            "bogbound_archive_wardens",
+            "army_bogbound_archive_wardens_watch",
+            "army_archive_wardens",
+            "LOCAL_STACK_COUNTS",
+            "SHARED_STACK_COUNTS",
+            "UNCHANGED_SAMPLE_CONTRACTS",
+            "player_disadvantaged",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in bogbound_archive_text, errors, f"Bogbound Archive Wardens balance regression is missing token: {required_token}")
+    if bogbound_archive_scene_path.exists():
+        bogbound_archive_scene_text = bogbound_archive_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_bogbound_archive_wardens_balance_regression.gd" in bogbound_archive_scene_text,
+            errors,
+            "Bogbound Archive Wardens balance regression scene is not wired to its script.",
         )
     if lockmarsh_surge_report_path.exists():
         lockmarsh_surge_text = lockmarsh_surge_report_path.read_text(encoding="utf-8")
