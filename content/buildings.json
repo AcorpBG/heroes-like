@@ -54,6 +54,22 @@
       ],
       "income": {
         "gold": 250
+      },
+      "market_profile": {
+        "id": "square",
+        "tier": 1,
+        "buy_rate_adjustments": {
+          "wood": -20,
+          "ore": -20
+        },
+        "sell_rate_adjustments": {
+          "wood": 10,
+          "ore": 10
+        },
+        "bulk_resources": [],
+        "buy_cap_bonus": {},
+        "sell_cap_bonus": {},
+        "specialty_summary": "Standard brokers can move one crate at a time between raw stock and hard coin."
       }
     },
     {
@@ -178,6 +194,28 @@
       },
       "growth_bonus": {
         "unit_river_guard": 1
+      },
+      "market_profile": {
+        "id": "river",
+        "tier": 2,
+        "buy_rate_adjustments": {
+          "wood": -80,
+          "ore": -25
+        },
+        "sell_rate_adjustments": {
+          "wood": 90,
+          "ore": 25
+        },
+        "bulk_resources": [
+          "wood"
+        ],
+        "buy_cap_bonus": {
+          "wood": 2
+        },
+        "sell_cap_bonus": {
+          "wood": 2
+        },
+        "specialty_summary": "River barges tighten wood rates and open double-wood convoy trades for construction or levy recovery."
       },
       "readiness_bonus": 4,
       "faction_id": "faction_embercourt"
@@ -472,6 +510,31 @@
       "growth_bonus": {
         "unit_blackbranch_cutthroat": 1
       },
+      "market_profile": {
+        "id": "smugglers",
+        "tier": 2,
+        "buy_rate_adjustments": {
+          "wood": 0,
+          "ore": 0
+        },
+        "sell_rate_adjustments": {
+          "wood": 70,
+          "ore": 70
+        },
+        "bulk_resources": [
+          "wood",
+          "ore"
+        ],
+        "buy_cap_bonus": {
+          "wood": 2,
+          "ore": 2
+        },
+        "sell_cap_bonus": {
+          "wood": 2,
+          "ore": 2
+        },
+        "specialty_summary": "Midnight brokers favor liquidating captured cargo and move double lots of either wood or ore before the weekly chain-boom closes."
+      },
       "pressure_bonus": 1,
       "readiness_bonus": 4,
       "faction_id": "faction_mireclaw"
@@ -700,6 +763,28 @@
       },
       "growth_bonus": {
         "unit_prism_adept": 1
+      },
+      "market_profile": {
+        "id": "resonant",
+        "tier": 2,
+        "buy_rate_adjustments": {
+          "wood": -25,
+          "ore": -80
+        },
+        "sell_rate_adjustments": {
+          "wood": 25,
+          "ore": 90
+        },
+        "bulk_resources": [
+          "ore"
+        ],
+        "buy_cap_bonus": {
+          "ore": 2
+        },
+        "sell_cap_bonus": {
+          "ore": 2
+        },
+        "specialty_summary": "Resonant relay brokers tighten ore rates and open double-ore lots for crystal feed and battery upkeep."
       },
       "pressure_bonus": 1,
       "readiness_bonus": 4,

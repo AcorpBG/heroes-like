@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed a player-operable bounded and sanitized support-bundle export through the existing runtime issue logger and compact Settings board. Overall release work remains active.",
+  "currentNotes": "Completed Mireclaw's authored Smugglers Flotilla as a real data-driven common-resource exchange profile through the existing Town Exchange Hall. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-player-support-bundle-export-10184",
-  "currentSliceId": "packaging-player-support-bundle-export-10184",
-  "currentSliceNotes": "Settings now exports a bounded local app, platform, normalized-settings, and recent-issue bundle while redacting personal paths and excluding save payloads, campaign state, and telemetry.",
+  "currentSlice": "economy-mireclaw-smuggler-exchange-10184",
+  "currentSliceId": "economy-mireclaw-smuggler-exchange-10184",
+  "currentSliceNotes": "Four authored market profiles now drive live selection; Smugglers Flotilla exposes bounded bulk wood/ore liquidation and higher common-resource throughput without rare-resource markets or a save-version change.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Player Support Bundle Export",
-  "currentSliceUpdatedAt": "2026-08-03T00:26:31Z",
+  "currentSliceTitle": "Mireclaw Smuggler Exchange",
+  "currentSliceUpdatedAt": "2026-08-03T00:45:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66296,6 +66296,95 @@
         "status": "passed",
         "updatedAt": "2026-08-03T00:26:31Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/runtime_market_cap_persistence_report.tscn",
+        "godot4 --headless --path . tests/town_unique_building_runtime_payoff_report.tscn",
+        "godot4 --headless --path . tests/town_economy_resource_ui_surface_report.tscn",
+        "godot4 --headless --path . tests/town_development_runtime_balance_report.tscn",
+        "python3 tests/economy_town_goal_scorecard_report.py",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Market profile selection is authored on buildings rather than hardcoded to two upgrade ids; Market Square, River Granary Exchange, and Resonant Exchange preserve their current common-resource rates, bulk behavior, and weekly caps; built Smugglers Flotilla supersedes Market Square with a distinct common-only profile that improves wood and ore liquidation, exposes bounded two-crate orders for both, and raises both weekly caps; the existing Town Exchange Hall exposes and executes those actions; save version remains 9; focused live action/cap, unique-building payoff, town economy UI, town development, project parse, and repository validation pass.",
+      "id": "economy-mireclaw-smuggler-exchange-10184",
+      "implementationTargets": [
+        "content/buildings.json",
+        "scripts/core/OverworldRules.gd",
+        "tests/runtime_market_cap_persistence_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "rare-resource buying or selling, market shortcuts around authored rare sources, free stockpile grants, or save-version changes",
+        "broad faction unit-stat, growth, building-cost, strategic-AI, scenario, campaign, or Native RMG changes",
+        "new town panels, report-only work, final economy approval, or overall release completion"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Economy and Town Development Target / current player-balance finding",
+      "purpose": "Give Mireclaw a real player-operated plunder-liquidation economy through an authored building that currently provides only passive income, while removing hardcoded market-profile ownership from runtime rules.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-town-development-pacing-parity-report.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "content/buildings.json",
+          "scripts/core/OverworldRules.gd",
+          "tests/runtime_market_cap_persistence_report.gd",
+          "tests/validate_repo.py",
+          "PLAN.md",
+          "ops/progress.json"
+        ],
+        "finding": "Market profile ownership is authored on four buildings and selected by live runtime rules. Smugglers Flotilla supersedes Market Square in Reedbarrow Ferry, improves both common-resource sale rates from 320 to 380 gold, exposes two-crate wood and ore orders, and executes the expected 836-gold bulk ore sale through the existing Exchange Hall.",
+        "metrics": {
+          "authored_market_profile_count": 4,
+          "hardcoded_market_profile_building_branches_removed": true,
+          "existing_square_river_resonant_profiles_preserved": true,
+          "smugglers_flotilla_player_exchange_active": true,
+          "smuggler_ready_action_count": 8,
+          "smuggler_bulk_resource_count": 2,
+          "smuggler_bulk_amount": 2,
+          "smuggler_buy_cap_per_common_resource": 8,
+          "smuggler_sell_cap_per_common_resource": 10,
+          "smuggler_square_sell_rate_per_common_resource": 320,
+          "smuggler_profile_sell_rate_per_common_resource": 380,
+          "smuggler_bulk_ore_sale_gold": 836,
+          "unique_building_runtime_payoff_case_count": 165,
+          "town_economy_ui_case_count": 6,
+          "town_development_case_count": 15,
+          "economy_goal_scorecard_passed_check_count": 15,
+          "normal_market_rare_resource_trading_enabled": false,
+          "save_version": 9
+        }
+      },
+      "startedAt": "2026-08-03T00:32:23Z",
+      "status": "completed",
+      "title": "Mireclaw Smuggler Exchange",
+      "updatedAt": "2026-08-03T00:45:45Z",
+      "notes": "The player-operable Mireclaw exchange identity is complete and validated. Rare-resource trading and broader faction/economy approval remain outside this slice.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --log-file /tmp/heroes-like-runtime-market-cap.log --path . --scene res://tests/runtime_market_cap_persistence_report.tscn",
+          "godot4 --headless --log-file /tmp/heroes-like-town-unique-payoff.log --path . --scene res://tests/town_unique_building_runtime_payoff_report.tscn",
+          "godot4 --headless --log-file /tmp/heroes-like-town-economy-ui.log --path . --scene res://tests/town_economy_resource_ui_surface_report.tscn",
+          "godot4 --headless --log-file /tmp/heroes-like-town-runtime-balance.log --path . --scene res://tests/town_development_runtime_balance_report.tscn",
+          "python3 tests/economy_town_goal_scorecard_report.py",
+          "godot4 --headless --editor --quit --path . --log-file /tmp/heroes-like-editor-parse.log",
+          "python3 -m py_compile tests/validate_repo.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T00:45:45Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66737,7 +66826,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "packaging_player_support_bundle_export_complete_overall_release_in_progress",
+  "result": "economy_mireclaw_smuggler_exchange_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66838,9 +66927,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Players can now export a bounded, sanitized local support bundle from Settings with normalized device settings and recent issue context but no save payload, campaign state, personal paths, or telemetry. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Four market profiles are now authored in building content, and Mireclaw players can operate Smugglers Flotilla as a bounded common-resource bulk-liquidation exchange through the existing Town Exchange Hall. Strategic AI breadth, broader balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T00:26:31Z",
+  "updatedAt": "2026-08-03T00:45:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
