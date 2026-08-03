@@ -20243,6 +20243,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     orevein_contract_scene_path = ROOT / "tests/battle_orevein_contract_balance_regression.tscn"
     reedbarrow_mireford_report_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd"
     reedbarrow_mireford_scene_path = ROOT / "tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn"
+    lockmarsh_surge_report_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.gd"
+    lockmarsh_surge_scene_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20676,6 +20678,34 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_reedbarrow_mireford_guard_pressure_regression.gd" in reedbarrow_mireford_scene_text,
             errors,
             "Reedbarrow/Mireford guard pressure regression scene is not wired to its script.",
+        )
+    if lockmarsh_surge_report_path.exists():
+        lockmarsh_surge_text = lockmarsh_surge_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_LOCKMARSH_ROAD_CHAPLAINS_BALANCE_REGRESSION",
+            "surge_road_chaplains",
+            "surge_charter_guard",
+            "lockmarsh_archive_wardens",
+            "army_lockmarsh_road_chaplains_watch",
+            "army_lockmarsh_charter_guard_watch",
+            "army_lockmarsh_archive_wardens_watch",
+            "army_riverwatch_relief",
+            "army_charter_bastion_reserve",
+            "army_archive_wardens",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_ARMY_CONTRACTS",
+            "MAX_COHORT_TERMINAL_MARGIN_PCT",
+            "cohort_average_terminal_health_margin_pct",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in lockmarsh_surge_text, errors, f"Lockmarsh Surge balance regression is missing token: {required_token}")
+    if lockmarsh_surge_scene_path.exists():
+        lockmarsh_surge_scene_text = lockmarsh_surge_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_lockmarsh_road_chaplains_balance_regression.gd" in lockmarsh_surge_scene_text,
+            errors,
+            "Lockmarsh Surge balance regression scene is not wired to its script.",
         )
     if tuning_queue_report_path.exists():
         tuning_queue_text = tuning_queue_report_path.read_text(encoding="utf-8")
