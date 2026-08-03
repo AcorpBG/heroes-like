@@ -20233,6 +20233,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
     active_breadth_report_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.gd"
     active_breadth_scene_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.tscn"
+    ford_reavers_report_path = ROOT / "tests/battle_ford_reavers_balance_regression.gd"
+    ford_reavers_scene_path = ROOT / "tests/battle_ford_reavers_balance_regression.tscn"
+    prismhearth_relay_report_path = ROOT / "tests/battle_prismhearth_relay_pickets_balance_regression.gd"
+    prismhearth_relay_scene_path = ROOT / "tests/battle_prismhearth_relay_pickets_balance_regression.tscn"
+    glassroad_archive_report_path = ROOT / "tests/battle_glassroad_archive_wardens_balance_regression.gd"
+    glassroad_archive_scene_path = ROOT / "tests/battle_glassroad_archive_wardens_balance_regression.tscn"
     bellwake_wreck_report_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.gd"
     bellwake_wreck_scene_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.tscn"
     barrow_vault_report_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.gd"
@@ -20296,6 +20302,12 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         active_breadth_report_path,
         active_breadth_scene_path,
+        ford_reavers_report_path,
+        ford_reavers_scene_path,
+        prismhearth_relay_report_path,
+        prismhearth_relay_scene_path,
+        glassroad_archive_report_path,
+        glassroad_archive_scene_path,
         reedbarrow_chain_report_path,
         reedbarrow_chain_scene_path,
         bogbound_archive_report_path,
@@ -20705,6 +20717,79 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_orevein_contract_balance_regression.gd" in orevein_contract_scene_text,
             errors,
             "Orevein Contract balance regression scene is not wired to its script.",
+        )
+    if ford_reavers_report_path.exists():
+        ford_reavers_text = ford_reavers_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_FORD_REAVERS_BALANCE_REGRESSION",
+            "ironbridge-stand",
+            "mireford-skirmish",
+            "bridge_ford_reavers",
+            "army_ironbridge_ford_reavers_watch",
+            "army_mireford_ford_reavers_watch",
+            "army_ford_reavers",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_STACK_COUNTS",
+            "UNCHANGED_MIREFORD_SAMPLE",
+            "terminal_health_margin_pct",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in ford_reavers_text, errors, f"Ford Reavers balance regression is missing token: {required_token}")
+    if ford_reavers_scene_path.exists():
+        ford_reavers_scene_text = ford_reavers_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_ford_reavers_balance_regression.gd" in ford_reavers_scene_text,
+            errors,
+            "Ford Reavers balance regression scene is not wired to its script.",
+        )
+    if prismhearth_relay_report_path.exists():
+        prismhearth_relay_text = prismhearth_relay_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_PRISMHEARTH_RELAY_PICKETS_BALANCE_REGRESSION",
+            "prismhearth_relay_pickets",
+            "prismhearth_glasswing_sortie",
+            "prismhearth_halo_reserve",
+            "army_prismhearth_relay_pickets_watch",
+            "army_relay_pickets",
+            "LOCAL_STACK_COUNTS",
+            "SHARED_STACK_COUNTS",
+            "UNCHANGED_SAMPLE_CONTRACTS",
+            "terminal_health_margin_pct",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in prismhearth_relay_text, errors, f"Prismhearth Relay Pickets balance regression is missing token: {required_token}")
+    if prismhearth_relay_scene_path.exists():
+        prismhearth_relay_scene_text = prismhearth_relay_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_prismhearth_relay_pickets_balance_regression.gd" in prismhearth_relay_scene_text,
+            errors,
+            "Prismhearth Relay Pickets balance regression scene is not wired to its script.",
+        )
+    if glassroad_archive_report_path.exists():
+        glassroad_archive_text = glassroad_archive_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_GLASSROAD_ARCHIVE_WARDENS_BALANCE_REGRESSION",
+            "glassroad_archive_wardens",
+            "glassroad_bridgeward_levies",
+            "glassroad_beacon_wardens",
+            "army_glassroad_archive_line_watch",
+            "army_archive_wardens",
+            "LOCAL_STACK_COUNTS",
+            "SHARED_STACK_COUNTS",
+            "UNCHANGED_SAMPLE_CONTRACTS",
+            "terminal_health_margin_pct",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in glassroad_archive_text, errors, f"Glassroad Archive Wardens balance regression is missing token: {required_token}")
+    if glassroad_archive_scene_path.exists():
+        glassroad_archive_scene_text = glassroad_archive_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_glassroad_archive_wardens_balance_regression.gd" in glassroad_archive_scene_text,
+            errors,
+            "Glassroad Archive Wardens balance regression scene is not wired to its script.",
         )
     if reedbarrow_mireford_report_path.exists():
         reedbarrow_mireford_text = reedbarrow_mireford_report_path.read_text(encoding="utf-8")

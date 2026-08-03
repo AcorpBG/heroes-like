@@ -1390,7 +1390,7 @@
         {"placement_id": "reedbarrow_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "barrow_pickets", "encounter_id": "encounter_barrow_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 5201, "enemy_army": {"id": "army_reedbarrow_barrow_pickets_watch", "name": "Reedbarrow Barrow Pickets Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 16}, {"unit_id": "unit_mire_slinger", "count": 11}]}},
+        {"placement_id": "barrow_pickets", "encounter_id": "encounter_barrow_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 5201, "enemy_army": {"id": "army_reedbarrow_barrow_pickets_watch", "name": "Reedbarrow Barrow Pickets Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 15}, {"unit_id": "unit_mire_slinger", "count": 12}]}},
         {
           "placement_id": "reedbarrow_chain",
           "encounter_id": "encounter_reedbarrow_chain",
@@ -2616,7 +2616,7 @@
         {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201, "enemy_army": {"id": "army_ironbridge_ford_reavers_watch", "name": "Ironbridge Ford Reavers Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 10}, {"unit_id": "unit_mire_slinger", "count": 12}]}},
+        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201, "enemy_army": {"id": "army_ironbridge_ford_reavers_watch", "name": "Ironbridge Ford Reavers Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 10}, {"unit_id": "unit_mire_slinger", "count": 12}, {"unit_id": "unit_bog_brute", "count": 2}]}},
         {"placement_id": "bridge_silt_hunters", "encounter_id": "encounter_silt_hunters", "x": 7, "y": 4, "difficulty": "medium", "combat_seed": 10202, "enemy_army": {"id": "army_ironbridge_silt_hunters_watch", "name": "Ironbridge Silt Hunters Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 8}, {"unit_id": "unit_blackbranch_cutthroat", "count": 12}, {"unit_id": "unit_mire_slinger", "count": 6}]}},
         {"placement_id": "ironbridge_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 0, "difficulty": "medium", "combat_seed": 10203}
       ]
@@ -2837,6 +2837,15 @@
           "y": 1,
           "difficulty": "medium",
           "combat_seed": 11201,
+          "enemy_army": {
+            "id": "army_prismhearth_relay_pickets_watch",
+            "name": "Prismhearth Relay Pickets Watch",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+              {"unit_id": "unit_shard_guard", "count": 6},
+              {"unit_id": "unit_prism_adept", "count": 2}
+            ]
+          },
           "field_objectives": [
             {
               "id": "relay_kill_lane",
@@ -3066,7 +3075,7 @@
         {"placement_id": "market_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "glassroad_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 12201, "enemy_army": {"id": "army_glassroad_archive_line_watch", "name": "Glassroad Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 4}, {"unit_id": "unit_ember_archer", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
+        {"placement_id": "glassroad_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 12201, "enemy_army": {"id": "army_glassroad_archive_line_watch", "name": "Glassroad Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_ember_archer", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}},
         {"placement_id": "glassroad_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 12202},
         {"placement_id": "glassroad_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 12203}
       ]

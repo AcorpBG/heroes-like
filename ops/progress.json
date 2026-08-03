@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Lockmarsh Road Chaplains now own a placement-local 9/10/6 roster and resolve as a round-6 extended defeat at 51 percent terminal margin and 31 enemy damage per round. Charter Guard, Archive Wardens, all three shared armies, faction-matrix inputs, and runtime-consequence gates remain exact.",
+  "currentNotes": "Completed placement-local pressure for the final four sample terminal-margin watches. The 59-sample active queue now contains seven medium cohort-only watches, zero sample watches, and zero high-priority items.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-lockmarsh-road-chaplains-outcome-pacing-10184",
-  "currentSliceId": "balance-lockmarsh-road-chaplains-outcome-pacing-10184",
-  "currentSliceNotes": "Completed: Lockmarsh Road Chaplains' placement-local 9/10/6 roster converts the round-2 burst victory at 70 percent margin and 28 enemy damage per round into a round-6 extended defeat at 51 percent and 31. The active queue falls from 13 to 11 medium/zero high with signature 29388bfe.",
+  "currentSlice": "balance-remaining-sample-margin-pressure-10184",
+  "currentSliceId": "balance-remaining-sample-margin-pressure-10184",
+  "currentSliceNotes": "Implemented Ironbridge 10/12/2, Prismhearth 6/2, Glassroad 5/7/1, and Reedbarrow 15/12 placement-local rosters. All four remain bounded victories at 66, 70, 66, and 73 percent margins; active queue 11 to 7, zero sample/high, signature 5200ba7d.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Lockmarsh Road Chaplains Outcome Pacing",
-  "currentSliceUpdatedAt": "2026-08-03T23:00:14Z",
+  "currentSliceTitle": "Remaining Sample Margin Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T23:18:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68566,6 +68566,79 @@
         "jq empty content/scenarios.json ops/progress.json",
         "git diff --check"
       ]
+    },
+    {
+      "id": "balance-remaining-sample-margin-pressure-10184",
+      "title": "Remaining Sample Margin Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Remove all four remaining sample-level terminal-margin watches through placement-local authored roster pressure while preserving outcomes, adjacent encounters, and shared faction content.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ford_reavers_balance_regression.gd",
+        "tests/battle_prismhearth_relay_pickets_balance_regression.gd",
+        "tests/battle_prismhearth_relay_pickets_balance_regression.tscn",
+        "tests/battle_glassroad_archive_wardens_balance_regression.gd",
+        "tests/battle_reedbarrow_chain_balance_regression.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 11,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "29388bfe",
+        "active_queue_sample_watch_count": 4,
+        "active_queue_cohort_watch_count": 7,
+        "ironbridge_ford_reavers": {"stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 89, "enemy_damage_per_round": 4},
+        "prismhearth_relay_pickets": {"shared_stack_counts": {"unit_shard_guard": 5, "unit_prism_adept": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 82, "enemy_damage_per_round": 3},
+        "glassroad_archive_wardens": {"stack_counts": {"unit_river_guard": 4, "unit_ember_archer": 7, "unit_citadel_pikeward": 1}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 87, "enemy_damage_per_round": 5},
+        "reedbarrow_barrow_pickets": {"stack_counts": {"unit_blackbranch_cutthroat": 16, "unit_mire_slinger": 11}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 76, "enemy_damage_per_round": 6}
+      },
+      "completionCriteria": [
+        "All four selected samples remain standard or extended player victories in three to eight rounds with terminal margins no greater than 74 percent and meaningful bounded enemy damage per round",
+        "Mireford Ford Reavers and each selected scenario's non-target adjacent encounters remain exact",
+        "Each selected placement owns its correction while shared Ford Reavers, Relay Pickets, Archive Wardens, and Barrow Pickets armies remain exact",
+        "All four sample terminal-margin watches close, the active queue decreases from 11 to at most 7 with zero high-priority items, and both runtime-consequence gates remain passing",
+        "Focused battle regressions, active breadth, player-facing campaign menu, runtime consequence, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared army, encounter definition, global unit stat, battle rule, difficulty label or multiplier, queue threshold, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "scenario outcome changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T23:18:24Z",
+      "startedAt": "2026-08-03T23:02:39Z",
+      "completedAt": "2026-08-03T23:18:24Z",
+      "implemented": {
+        "ironbridge_ford_reavers": {"stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12, "unit_bog_brute": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
+        "prismhearth_relay_pickets": {"stack_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 7},
+        "glassroad_archive_wardens": {"stack_counts": {"unit_river_guard": 5, "unit_ember_archer": 7, "unit_citadel_pikeward": 1}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 12},
+        "reedbarrow_barrow_pickets": {"stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 12}, "outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 73, "enemy_damage_per_round": 6},
+        "active_breadth_after": {"sample_count": 59, "completed_sample_count": 59, "queue_item_count": 7, "queue_sample_watch_count": 0, "queue_cohort_watch_count": 7, "queue_high_priority_count": 0, "queue_medium_priority_count": 7, "queue_signature": "5200ba7d", "balance_matrix_gate_status": "pass", "runtime_consequence_gate_status": "pass", "runtime_consequence_matrix_gate_status": "pass"},
+        "preserved": {"mireford_ford_reavers_exact": true, "selected_scenario_adjacent_samples_exact": true, "shared_armies_exact": true, "faction_matrix_inputs_changed": false, "native_rmg_inputs_changed": false}
+      },
+      "validation": [
+        "battle_ford_reavers_balance_regression",
+        "battle_prismhearth_relay_pickets_balance_regression",
+        "battle_glassroad_archive_wardens_balance_regression",
+        "battle_reedbarrow_chain_balance_regression",
+        "active_battle_balance_breadth_report: expected nonzero queue, 7 medium cohort-only, zero sample/high, signature 5200ba7d",
+        "player_facing_campaign_menu_smoke",
+        "runtime_consequence_report",
+        "runtime_consequence_matrix_report",
+        "core_systems_regression_smoke",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Seven medium cohort-only balance watches remain: low-difficulty terminal margin plus River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish scenario outcome-bias cohorts. Overall release completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -68576,7 +68649,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the 11 medium-priority authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue the seven medium-priority cohort-only authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -69110,7 +69183,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Bogbound Archive, Reedbarrow Chain, Mireford, and Lockmarsh Road Chaplains guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 11 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T23:00:14Z",
+  "updatedAt": "2026-08-03T23:18:24Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
