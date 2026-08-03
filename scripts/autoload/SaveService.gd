@@ -24,6 +24,8 @@ const SAVE_METADATA_SLOT_TYPE_KEY := "save_slot_type"
 const SAVE_METADATA_GAME_STATE_KEY := "saved_from_game_state"
 const SAVE_METADATA_SCENARIO_STATUS_KEY := "saved_from_scenario_status"
 const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
+const SAVE_METADATA_MANUAL_NAME_KEY := "manual_slot_name"
+const MANUAL_SLOT_NAME_MAX_LENGTH := 32
 const SUMMARY_INLINE_PAYLOAD_MAX_BYTES := 8 * 1024 * 1024
 const TRANSITION_AUTOSAVE_INTENT_FLAGS := [
 	"runtime_autosave_dirty",
@@ -183,6 +185,106 @@ func build_delete_action(summary: Dictionary) -> Dictionary:
 		"summary": summary_text,
 	}
 
+func build_manual_slot_name_action(summary: Dictionary) -> Dictionary:
+	var identity := _deletable_slot_identity(summary)
+	if String(identity.get("slot_type", "")) != SLOT_TYPE_MANUAL:
+		return {
+			"disabled": true,
+			"slot_id": "",
+			"current_name": "",
+			"message": "Select an occupied manual save before naming it.",
+		}
+	var live_summary := _summary_for_slot_identity(identity)
+	if not can_load_summary(live_summary):
+		return {
+			"disabled": true,
+			"slot_id": String(identity.get("slot_id", "")),
+			"current_name": "",
+			"message": "Only a valid occupied manual save can be named.",
+		}
+	return {
+		"disabled": false,
+		"slot_id": String(identity.get("slot_id", "")),
+		"current_name": String(live_summary.get("manual_slot_name", "")),
+		"message": "Set an optional name for Manual Slot %s. The save path and expedition state stay unchanged." % String(identity.get("slot_id", "")),
+	}
+
+func set_manual_slot_name_from_summary(summary: Dictionary, requested_name: String) -> Dictionary:
+	var action := build_manual_slot_name_action(summary)
+	if bool(action.get("disabled", true)):
+		return {
+			"ok": false,
+			"changed": false,
+			"slot_id": String(action.get("slot_id", "")),
+			"name": "",
+			"message": String(action.get("message", "No manual save was renamed.")),
+		}
+	var name_check := _validate_manual_slot_name(requested_name)
+	if not bool(name_check.get("ok", false)):
+		return {
+			"ok": false,
+			"changed": false,
+			"slot_id": String(action.get("slot_id", "")),
+			"name": String(action.get("current_name", "")),
+			"message": String(name_check.get("message", "The save name is invalid.")),
+		}
+
+	var slot_id := String(action.get("slot_id", ""))
+	var path := _slot_path(int(slot_id))
+	var payload := _load_raw_dictionary(path, false)
+	var structure_report := _payload_structure_report(payload, SLOT_TYPE_MANUAL)
+	if payload.is_empty() or not bool(structure_report.get("ok", false)):
+		return {
+			"ok": false,
+			"changed": false,
+			"slot_id": slot_id,
+			"name": String(action.get("current_name", "")),
+			"message": "Manual Slot %s changed or became unreadable before its name could be saved." % slot_id,
+		}
+	var normalized_name := String(name_check.get("name", ""))
+	var previous_name := _manual_slot_name_from_payload(payload)
+	if previous_name == normalized_name:
+		return {
+			"ok": true,
+			"changed": false,
+			"slot_id": slot_id,
+			"name": normalized_name,
+			"path": path,
+			"message": "Manual Slot %s already uses that name." % slot_id,
+		}
+
+	var previous_payload := payload.duplicate(true)
+	if normalized_name == "":
+		payload.erase(SAVE_METADATA_MANUAL_NAME_KEY)
+	else:
+		payload[SAVE_METADATA_MANUAL_NAME_KEY] = normalized_name
+	if _save_raw_dictionary(payload, path) == "":
+		return {
+			"ok": false,
+			"changed": false,
+			"slot_id": slot_id,
+			"name": previous_name,
+			"message": "Manual Slot %s could not save its new name. Expedition data was not intentionally changed." % slot_id,
+		}
+	var persisted := _load_raw_dictionary(path, false)
+	if persisted != payload:
+		_save_raw_dictionary(previous_payload, path)
+		return {
+			"ok": false,
+			"changed": false,
+			"slot_id": slot_id,
+			"name": previous_name,
+			"message": "Manual Slot %s failed name verification and its previous payload was restored." % slot_id,
+		}
+	return {
+		"ok": true,
+		"changed": true,
+		"slot_id": slot_id,
+		"name": normalized_name,
+		"path": path,
+		"message": "%s Manual Slot %s." % ["Cleared the name from" if normalized_name == "" else "Named", slot_id],
+	}
+
 func build_manual_save_action(
 	session: SessionStateStoreScript.SessionData,
 	manual_slot: int
@@ -320,6 +422,9 @@ func latest_loadable_summary() -> Dictionary:
 		if latest.is_empty() or _summary_sort_timestamp(summary) > _summary_sort_timestamp(latest):
 			latest = summary
 	return latest
+
+func summary_recency_timestamp(summary: Dictionary) -> int:
+	return _summary_sort_timestamp(summary)
 
 func build_in_session_save_surface(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -666,7 +771,7 @@ func describe_load_preview(summary: Dictionary) -> String:
 	var difficulty_label := ScenarioSelectRulesScript.difficulty_label(
 		String(summary.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	)
-	var lines := [scenario_name]
+	var lines := [_slot_label(summary), scenario_name]
 	var expedition_parts := [mode_label, difficulty_label]
 	var day := int(summary.get("day", 0))
 	if day > 0:
@@ -881,6 +986,9 @@ func _save_payload(
 	profile: Dictionary = {}
 ) -> String:
 	var normalize_started := ProfileLogScript.begin_usec()
+	var retained_manual_name := ""
+	if slot_type == SLOT_TYPE_MANUAL and FileAccess.file_exists(file_path):
+		retained_manual_name = _manual_slot_name_from_payload(_load_raw_dictionary(file_path, false))
 	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(payload)
 	normalized["save_version"] = SessionStateStoreScript.SAVE_VERSION
 	normalized[SAVE_METADATA_TIMESTAMP_KEY] = Time.get_unix_time_from_system()
@@ -888,6 +996,8 @@ func _save_payload(
 	normalized[SAVE_METADATA_GAME_STATE_KEY] = String(normalized.get("game_state", "overworld"))
 	normalized[SAVE_METADATA_SCENARIO_STATUS_KEY] = String(normalized.get("scenario_status", "in_progress"))
 	normalized[SAVE_METADATA_LAUNCH_MODE_KEY] = String(normalized.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	if retained_manual_name != "":
+		normalized[SAVE_METADATA_MANUAL_NAME_KEY] = retained_manual_name
 	_runtime_save_profile_bucket(profile, "save_normalize", ProfileLogScript.elapsed_ms(normalize_started))
 	saved_payload_out.clear()
 	for key in normalized.keys():
@@ -1612,6 +1722,7 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 	summary["saved_from_game_state"] = String(payload.get(SAVE_METADATA_GAME_STATE_KEY, summary.get("game_state", "overworld")))
 	summary["saved_from_scenario_status"] = String(payload.get(SAVE_METADATA_SCENARIO_STATUS_KEY, summary.get("scenario_status", "in_progress")))
 	summary["saved_from_launch_mode"] = String(payload.get(SAVE_METADATA_LAUNCH_MODE_KEY, summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
+	summary["manual_slot_name"] = _manual_slot_name_from_payload(payload) if String(summary.get("slot_type", "")) == SLOT_TYPE_MANUAL else ""
 	return summary
 
 func _campaign_metadata_for_scenario(scenario_id: String, launch_mode: String) -> Dictionary:
@@ -1728,6 +1839,7 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"saved_from_game_state": "overworld",
 		"saved_from_scenario_status": "in_progress",
 		"saved_from_launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
+		"manual_slot_name": "",
 		"resume_target": "blocked",
 		"validity": "missing",
 		"valid": false,
@@ -1852,7 +1964,8 @@ func _resume_target_from_payload_summary(payload: Dictionary) -> String:
 	return "overworld"
 
 func _summary_sort_timestamp(summary: Dictionary) -> int:
-	return max(int(summary.get("modified_timestamp", 0)), int(summary.get("recorded_timestamp", 0)))
+	var recorded_timestamp := int(summary.get("recorded_timestamp", 0))
+	return recorded_timestamp if recorded_timestamp > 0 else int(summary.get("modified_timestamp", 0))
 
 func _runtime_session_resume_brief(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.scenario_id == "":
@@ -2214,7 +2327,29 @@ func _first_meaningful_line(text: String, ignored_lines: Array = []) -> String:
 func _slot_label(summary: Dictionary) -> String:
 	if String(summary.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE:
 		return "Autosave"
+	var manual_name := String(summary.get("manual_slot_name", "")).strip_edges()
+	if manual_name != "":
+		return "%s - Manual %s" % [manual_name, String(summary.get("slot_id", "1"))]
 	return "Manual %s" % String(summary.get("slot_id", "1"))
+
+func _manual_slot_name_from_payload(payload: Dictionary) -> String:
+	var check := _validate_manual_slot_name(String(payload.get(SAVE_METADATA_MANUAL_NAME_KEY, "")))
+	return String(check.get("name", "")) if bool(check.get("ok", false)) else ""
+
+func _validate_manual_slot_name(value: String) -> Dictionary:
+	var normalized := value.strip_edges().replace("\r", " ").replace("\n", " ").replace("\t", " ")
+	while normalized.find("  ") >= 0:
+		normalized = normalized.replace("  ", " ")
+	if normalized.length() > MANUAL_SLOT_NAME_MAX_LENGTH:
+		return {
+			"ok": false,
+			"name": "",
+			"message": "Save names can use at most %d characters." % MANUAL_SLOT_NAME_MAX_LENGTH,
+		}
+	for index in range(normalized.length()):
+		if normalized.unicode_at(index) < 32:
+			return {"ok": false, "name": "", "message": "Save names cannot contain control characters."}
+	return {"ok": true, "name": normalized, "message": ""}
 
 func _summary_status_badge(summary: Dictionary) -> String:
 	if not bool(summary.get("valid", false)):

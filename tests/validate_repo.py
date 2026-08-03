@@ -62,6 +62,8 @@ MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boo
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_regression.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_slot_delete_regression.tscn"
+MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
+MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -11767,6 +11769,12 @@ def validate_save_management(errors: list[str]) -> None:
         "func refresh_summary",
         "func build_delete_action",
         "func delete_session_from_summary",
+        "func build_manual_slot_name_action",
+        "func set_manual_slot_name_from_summary",
+        "SAVE_METADATA_MANUAL_NAME_KEY",
+        "MANUAL_SLOT_NAME_MAX_LENGTH",
+        "retained_manual_name",
+        "func summary_recency_timestamp",
         "func _deletable_slot_identity",
         "func load_action_label",
         "func continue_action_label",
@@ -11792,6 +11800,8 @@ def validate_save_management(errors: list[str]) -> None:
         "SaveService.delete_session_from_summary",
         "func _on_delete_selected_save_pressed",
         "func _on_save_delete_confirmed",
+        "func _on_apply_save_name_pressed",
+        "func validation_set_selected_save_name",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required save-browser state token: {required_token}")
     for required_token in (
@@ -11822,6 +11832,8 @@ def validate_save_management(errors: list[str]) -> None:
         ensure(scene_has_node(main_menu_text, "SaveList", "ItemList"), errors, "MainMenu.tscn must define a SaveList item browser")
         ensure(scene_has_node(main_menu_text, "SaveDetails", "Label"), errors, "MainMenu.tscn must define a SaveDetails label")
         ensure(scene_has_node(main_menu_text, "DeleteSelectedSave", "Button"), errors, "MainMenu.tscn must define a DeleteSelectedSave button")
+        ensure(scene_has_node(main_menu_text, "SaveNameEdit", "LineEdit"), errors, "MainMenu.tscn must define a bounded SaveNameEdit field")
+        ensure(scene_has_node(main_menu_text, "ApplySaveName", "Button"), errors, "MainMenu.tscn must define an ApplySaveName button")
         ensure(scene_has_node(main_menu_text, "LoadSelected", "Button"), errors, "MainMenu.tscn must define a LoadSelected button")
         ensure(scene_has_node(main_menu_text, "SaveDeleteDialog", "ConfirmationDialog"), errors, "MainMenu.tscn must define a SaveDeleteDialog confirmation")
 
@@ -11842,6 +11854,24 @@ def validate_save_management(errors: list[str]) -> None:
     if SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.exists():
         delete_scene_text = SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/save_slot_delete_regression.gd" in delete_scene_text, errors, "Save-slot deletion regression scene must load its script")
+
+    for path in (MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH, MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing manual-save naming regression file: {path.relative_to(ROOT)}")
+    if MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH.exists():
+        naming_text = MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "MANUAL_SAVE_SLOT_NAMING_REGRESSION",
+            "validation_set_selected_save_name",
+            "overwrite_retained_name",
+            "exact_non_name_payload_preserved",
+            "invalid_targets_rejected",
+            "player_state_preserved",
+            "SessionState.SAVE_VERSION != 9",
+        ):
+            ensure(required_token in naming_text, errors, f"manual_save_slot_naming_regression.gd is missing required token: {required_token}")
+    if MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.exists():
+        naming_scene_text = MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure("res://tests/manual_save_slot_naming_regression.gd" in naming_scene_text, errors, "Manual-save naming regression scene must load its script")
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:

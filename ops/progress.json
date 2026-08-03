@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the confirmed rollback-capable restore-defaults workflow for all persisted device settings, including custom movement keys, with immediate runtime/UI application and strict preservation of game progress and saves.",
+  "currentNotes": "Manual save naming is implemented and validated through the canonical payload and shipped Saves board. The overall release remains incomplete across the recorded strategic AI, balance, accessibility, content, performance, clean-machine packaging, and release-integration gaps.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-confirmed-restore-defaults-10184",
-  "currentSliceId": "settings-confirmed-restore-defaults-10184",
-  "currentSliceNotes": "Implemented and validated one confirmed rollback-capable full reset across presentation, audio, gameplay, custom movement, and accessibility settings. Cancellation is inert; confirmation persists canonical defaults while preserving saves, campaign progress, active session, support bundle state, and save version 9.",
+  "currentSlice": "ux-manual-save-slot-naming-10184",
+  "currentSliceId": "ux-manual-save-slot-naming-10184",
+  "currentSliceNotes": "Occupied manual slots now persist bounded optional player names, retain them through overwrite and reload, show them beside fixed identity, and clear them without changing non-name payload state. Invalid targets fail closed and all affected regressions pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Confirmed Restore Settings Defaults",
-  "currentSliceUpdatedAt": "2026-08-03T04:36:13Z",
+  "currentSliceTitle": "Manual Save Slot Naming",
+  "currentSliceUpdatedAt": "2026-08-03T05:09:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66980,6 +66980,64 @@
         "status": "passed",
         "updatedAt": "2026-08-03T04:36:13Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Occupied manual slots accept bounded optional player names through the shipped Saves board; names persist in canonical slot payloads, survive overwrite and reload, remain visibly paired with fixed slot identity, and can be cleared; invalid, forged, autosave, empty, and corrupt targets fail closed; exact non-name payload state, unrelated slots, campaign progression, settings, active session, support diagnostics, and save version 9 remain unchanged; focused, visual, overwrite, delete, save/load, menu, keyboard, core, parse, and repository validation pass.",
+      "id": "ux-manual-save-slot-naming-10184",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/manual_save_slot_naming_regression.gd",
+        "tests/manual_save_slot_naming_regression.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "autosave naming, canonical path changes, arbitrary slot counts, save move/copy, cloud sync, or history",
+        "session normalization, gameplay state, save version, Native RMG, or overall release-completion changes"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Manual Save Slot Naming / ux-polish-player-comprehension-10184",
+      "purpose": "Let players distinguish repeated manual snapshots without weakening the fixed-slot safety and load/overwrite/delete workflows.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "startedAt": "2026-08-03T04:39:43Z",
+      "status": "completed",
+      "title": "Manual Save Slot Naming",
+      "updatedAt": "2026-08-03T05:09:02Z",
+      "completedAt": "2026-08-03T05:09:02Z",
+      "notes": "The shipped Saves board now writes and clears bounded optional names only for canonical occupied manual slots. Names survive overwrite and reload, remain paired with fixed slot identity, and cannot promote a metadata-only rename to Latest. Exact non-name payload state and protected player data remain unchanged. No Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/manual_save_slot_naming_regression.tscn",
+          "SAVE_SLOT_NAMING_CAPTURE=1 SAVE_SLOT_NAMING_TEST_RESOLUTION=1280x720 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --path . --scene res://tests/manual_save_slot_naming_regression.tscn --resolution 1280x720",
+          "SAVE_SLOT_NAMING_CAPTURE=1 SAVE_SLOT_NAMING_TEST_RESOLUTION=1920x1080 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --path . --scene res://tests/manual_save_slot_naming_regression.tscn --resolution 1920x1080",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/manual_save_overwrite_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_slot_delete_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 120 godot4 --headless --editor --path . --quit",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T05:09:02Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66990,7 +67048,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Select the next real pending release behavior from the remaining strategic-AI, balance, accessibility, content, performance, clean-machine packaging, or release-integration gaps; do not repeat completed Settings, manual-save overwrite, Native RMG matrix, or artifact reward evidence work.",
+  "remainingWork": "Select and implement the next release-bound runtime, content, accessibility, strategic AI, performance, or packaging slice; do not repeat completed manual save naming, Settings, overwrite, delete, Native RMG matrix, or artifact reward evidence work.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67522,9 +67580,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. The shipped Settings board now exposes confirmed rollback-capable restoration of every canonical device default, including custom movement keys, while preserving saves, campaign progression, active session state, support diagnostics, and save version 9. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Occupied manual save slots now support persistent bounded player names through the shipped Saves board, retain names across overwrite and reload, preserve fixed slot identity and protected player state, and reject invalid targets. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T04:36:13Z",
+  "updatedAt": "2026-08-03T05:09:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -775,6 +775,24 @@ custom_minimum_size = Vector2(0, 124)
 autowrap_mode = 3
 text = "Save details"
 
+[node name="SaveNameRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SaveNameEdit" type="LineEdit" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 32
+placeholder_text = "Optional save name"
+
+[node name="ApplySaveName" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(112, 38)
+layout_mode = 2
+text = "Save Name"
+
 [node name="SaveActions" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
@@ -1290,6 +1308,9 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedUndergroundToggle" to="." method="_on_generated_level_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/StartGeneratedSkirmish" to="." method="_on_start_generated_skirmish_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
+[connection signal="text_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow/SaveNameEdit" to="." method="_on_save_name_text_changed"]
+[connection signal="text_submitted" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow/SaveNameEdit" to="." method="_on_save_name_submitted"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveNameRow/ApplySaveName" to="." method="_on_apply_save_name_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions/DeleteSelectedSave" to="." method="_on_delete_selected_save_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions/LoadSelected" to="." method="_on_load_selected_pressed"]
 [connection signal="confirmed" from="SaveDeleteDialog" to="." method="_on_save_delete_confirmed"]

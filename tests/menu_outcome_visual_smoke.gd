@@ -431,6 +431,12 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	shell.call("validation_open_saves_stage")
 	var save_snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected_save_summary: Dictionary = save_snapshot.get("selected_save_summary", {}) if save_snapshot.get("selected_save_summary", {}) is Dictionary else {}
+	if String(selected_save_summary.get("slot_type", "")) == SaveService.SLOT_TYPE_AUTOSAVE \
+			and (bool(save_snapshot.get("save_name_edit_visible", false)) or bool(save_snapshot.get("apply_save_name_visible", false))):
+		push_error("Main menu smoke: autosave incorrectly exposed manual-slot naming controls: %s." % save_snapshot)
+		get_tree().quit(1)
+		return false
 	var save_browser_item_texts := []
 	for item_label in (save_snapshot.get("save_browser_items", []) if save_snapshot.get("save_browser_items", []) is Array else []):
 		save_browser_item_texts.append(String(item_label))
