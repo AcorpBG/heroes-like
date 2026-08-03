@@ -15194,14 +15194,14 @@
       }
     }
   ],
-  "currentNotes": "Completed authored rare-source breadth: 42 capturable exchanges and 82 explicit guard bindings cover all 18 active scenarios, with all-resource routes, development pacing, AI, and save/resume gates passing.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "economy-authored-rare-source-breadth-10184",
-  "currentSliceId": "economy-authored-rare-source-breadth-10184",
-  "currentSliceNotes": "Completed. Added 42 local capturable rare exchanges across all 18 active authored scenarios and preserved 82 explicit resource guard bindings. Runtime now retains guard_front_id, blocks collection until the named encounter clears, applies the exchange's four-of-each-rare weekly income on growth days, and labels weekly income correctly. Live route evidence passes 160/160 player and 176/176 enemy all-resource routes with every rare route guarded. Player development passes 20/20 at days 25-30 with 20/20 delayed save/resume and recruitment; AI passes 22/22 at days 24-28 with 22/22 delayed save/resume. Dedicated town save/resume passes 15/15, project parsing and repository validation pass, normal markets and save version 9 remain unchanged.",
+  "currentNotes": "Completed the bounded Stag-Knot Runner correction. The all-live matrix improved from 41 to 40 outliers and severity 389 to 356; it remains needs_tuning and overall release completion is not claimed.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "combat-faction-pair-stat-tuning-followup-10184",
+  "currentSliceId": "combat-faction-pair-stat-tuning-followup-10184",
+  "currentSliceNotes": "Stag-Knot Runner HP 34 -> 32 and maximum damage 13 -> 12 reduced authoritative all-live matrix outliers 41 -> 40, severity 389 -> 356, 65%+ rows 18 -> 16, and maximum dominance 85% -> 83.5% without structural failures.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Economy Authored Rare Source Breadth",
-  "currentSliceUpdatedAt": "2026-08-03T07:20:52Z",
+  "currentSliceTitle": "Combat Faction Pair Stat Tuning Followup",
+  "currentSliceUpdatedAt": "2026-08-03T08:20:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20718,6 +20718,87 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "baselineChecks": [
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+        "python3 tests/town_development_balance_report.py",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/units.json ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completedAt": "2026-08-03T08:20:03Z",
+      "completionCriteria": "The unchanged all-live 100-seed weeks-1-through-4 matrix has fewer or materially less severe faction-pair outliers than the 41-outlier/severity-389 baseline without introducing 100-percent rows or invalid battle outcomes; the correction changes live unit or ability behavior, preserves faction roles and ability ownership, and passes ability, town-development, core, parse, and repository regressions.",
+      "id": "combat-faction-pair-stat-tuning-followup-10184",
+      "implementationTargets": [
+        "content/units.json",
+        "content/factions.json as needed",
+        "scripts/core/BattleRules.gd or BattleAiRules.gd only if a live semantic defect is proven",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing benchmark semantics, outcome rules, or thresholds to hide content imbalance",
+        "flattening faction identity or making all matchups identical",
+        "unrelated economy, campaign, packaging, save-schema, or Native RMG changes",
+        "final combat balance or overall release completion claims"
+      ],
+      "notes": "Completed a bounded Thornwake correction. Stag-Knot Runner HP 34 -> 32 and maximum damage 13 -> 12 preserve its fast reach role while reducing the authoritative all-live matrix from 41 to 40 outliers and severity 389 to 356. The matrix remains needs_tuning.",
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Battle Balance Benchmark Target / Selectable Near-Term Work",
+      "purpose": "Reduce deterministic faction-pair outcomes in the shipped combat model through evidence-driven live unit or ability tuning without weakening faction identity or falsifying benchmark evidence.",
+      "source": "PLAN.md Battle Balance Benchmark Target",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-03T07:25:56Z",
+      "status": "completed",
+      "summary": "Reduced Stag-Knot Runner durability and damage ceiling to curb broad Thornwake dominance without changing ability ownership or benchmark semantics; the authoritative matrix improved materially and all required regressions pass.",
+      "title": "Combat Faction Pair Stat Tuning Followup",
+      "updatedAt": "2026-08-03T08:20:03Z",
+      "validation": {
+        "commands": [
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; needs_tuning, 40 outliers)",
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn (passed; 78 ability instances and consequences)",
+          "python3 tests/town_development_balance_report.py (passed; 15/15 authored towns complete)",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn (passed)",
+          "godot4 --headless --path . --editor --quit (passed)",
+          "python3 tests/validate_repo.py (passed)",
+          "jq empty content/units.json ops/progress.json; git diff --check (passed)"
+        ],
+        "evidence": {
+          "authoritative_100_seed_result": {
+            "baseline_outliers": 41,
+            "result_outliers": 40,
+            "baseline_severity_above_55_pct": 389,
+            "result_severity_above_55_pct": 356,
+            "baseline_rows_at_or_above_65_pct": 18,
+            "result_rows_at_or_above_65_pct": 16,
+            "baseline_max_dominance_pct": 85.0,
+            "result_max_dominance_pct": 83.5,
+            "rows_at_100_pct": 0,
+            "structural_failures": [],
+            "week_average_rounds": [5.72, 6.33, 6.59, 7.59],
+            "week_side_bias_points": [0.07, 0.6, 3.13, 0.8],
+            "balance_status": "needs_tuning"
+          },
+          "implemented_changes": [
+            "unit_thornwake_stagknot_runners hp 34 -> 32",
+            "unit_thornwake_stagknot_runners max_damage 13 -> 12"
+          ],
+          "remaining_risk": "The matrix still reports 40 faction-pair outliers and maximum dominance 83.5%. This is material incremental balance progress, not final combat balance or release completion."
+        },
+        "sliceId": "combat-faction-pair-stat-tuning-followup-10184",
+        "status": "passed_material_improvement_needs_further_tuning",
+        "updatedAt": "2026-08-03T08:20:03Z"
+      }
+    },
     {
       "baselineChecks": [
         "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=1 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
