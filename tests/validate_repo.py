@@ -16193,6 +16193,14 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         errors,
         "Enemy task-state normalizer does not accept target_kind regroup.",
     )
+    for required_token in (
+        "static func _active_front_support_launch_ready_report",
+        '"active_front_support_candidate_surface"',
+        '"active_front_support_candidate_surface_complete"',
+        '"active_front_candidate_surface_point_reused"',
+        '"active_front_candidate_surface_consumed"',
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing active-front launch-surface reuse token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
         report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
@@ -16217,6 +16225,12 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
             "resource_controller_after",
             "save_version_before",
             "save_version_after",
+            "launch_surface_candidate_match",
+            "launch_surface_all_origin_payloads_match",
+            "launch_surface_context_isolated",
+            "launch_surface_points_reused",
+            "launch_surface_consumed",
+            "post_consumption_recomputed",
         ):
             ensure(required_token in report_text, errors, f"AI raid regroup/retreat report is missing token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.exists():
