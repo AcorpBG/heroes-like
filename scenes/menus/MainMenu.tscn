@@ -775,9 +775,19 @@ custom_minimum_size = Vector2(0, 124)
 autowrap_mode = 3
 text = "Save details"
 
-[node name="LoadSelected" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+[node name="SaveActions" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DeleteSelectedSave" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "Delete Save"
+
+[node name="LoadSelected" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Load Save"
 
 [node name="Guide" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
@@ -1207,6 +1217,11 @@ title = "Restart campaign arc?"
 initial_position = 1
 dialog_text = "Restart this campaign arc from Chapter I?"
 
+[node name="SaveDeleteDialog" type="ConfirmationDialog" parent="."]
+title = "Delete save?"
+initial_position = 1
+dialog_text = "Permanently delete this expedition save?"
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1253,7 +1268,10 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedUndergroundToggle" to="." method="_on_generated_level_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/StartGeneratedSkirmish" to="." method="_on_start_generated_skirmish_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/LoadSelected" to="." method="_on_load_selected_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions/DeleteSelectedSave" to="." method="_on_delete_selected_save_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveActions/LoadSelected" to="." method="_on_load_selected_pressed"]
+[connection signal="confirmed" from="SaveDeleteDialog" to="." method="_on_save_delete_confirmed"]
+[connection signal="canceled" from="SaveDeleteDialog" to="." method="_on_save_delete_canceled"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/HelpList" to="." method="_on_help_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/RenderQualityPicker" to="." method="_on_render_quality_selected"]

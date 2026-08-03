@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the confirmed campaign-local Restart Arc workflow. It clears only the selected campaign's records, carryover, and chapter pointers; returns to authored Chapter I; and preserves other campaign progress, expedition saves, device settings, difficulty selection, and save version 9. Overall release work remains active.",
+  "currentNotes": "Completed confirmed deletion of one occupied autosave or manual save slot, including corrupt files. Trusted slot identity, cancellation, immediate cache/UI refresh, and preservation of unrelated saves, campaign progression, device settings, active expedition state, and save version 9 are proven. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-arc-restart-workflow-10184",
-  "currentSliceId": "campaign-arc-restart-workflow-10184",
-  "currentSliceNotes": "The live campaign board now offers Restart Arc only for recorded progress, requires exact campaign-bound confirmation, persists the isolated reset, and refreshes to authored Chapter I. Focused, visual, campaign, menu/outcome, core, parse, and repository validation pass.",
+  "currentSlice": "ux-save-slot-delete-workflow-10184",
+  "currentSliceId": "ux-save-slot-delete-workflow-10184",
+  "currentSliceNotes": "The Saves board now deletes one occupied autosave/manual slot after exact confirmation; SaveService rejects forged identities/paths, corrupt files remain deletable, and focused plus broad validation pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Arc Restart Workflow",
-  "currentSliceUpdatedAt": "2026-08-03T03:11:15Z",
+  "currentSliceTitle": "Confirmed Save Slot Deletion",
+  "currentSliceUpdatedAt": "2026-08-03T03:41:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66747,6 +66747,91 @@
         ],
         "status": "passed",
         "updatedAt": "2026-08-03T03:11:15Z"
+      }
+    },
+    {
+      "baselineChecks": [
+        "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "The live Saves board exposes confirmed deletion for every occupied autosave/manual slot, including corrupt files; the service resolves only trusted slot identities; successful deletion refreshes selected/latest state; all unrelated saves, campaign progression, device settings, active session state, and save version 9 remain unchanged; focused and broad validation pass.",
+      "id": "ux-save-slot-delete-workflow-10184",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/save_slot_delete_regression.gd",
+        "tests/save_slot_delete_regression.tscn",
+        "tests/save_load_confidence_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "save renaming, cloud synchronization, recycling/undo, bulk deletion, or automatic cleanup",
+        "campaign progression reset, all-save deletion, save-schema changes, or broad Saves-board redesign",
+        "Native RMG behavior or overall release-completion claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Confirmed Save Slot Deletion / ux-polish-player-comprehension-10184",
+      "purpose": "Let players remove one unwanted, stale, or corrupt expedition save through the shipped UI without manually editing user-data files or risking unrelated progress.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          ".artifacts/save_slot_delete_regression/delete_manual_confirmation_1280x720.png",
+          ".artifacts/save_slot_delete_regression/delete_manual_complete_1280x720.png",
+          ".artifacts/save_slot_delete_regression/delete_manual_confirmation_1920x1080.png",
+          ".artifacts/save_slot_delete_regression/delete_manual_complete_1920x1080.png"
+        ],
+        "finding": "The Saves board deletes an occupied manual slot or autosave only after exact slot-bound confirmation, keeps corrupt/unloadable slots deletable, and refreshes the selected row to Empty. SaveService derives canonical paths from autosave/manual identity and rejects unknown or invalid identities even when they supply a real save path.",
+        "metrics": {
+          "occupied_slot_delete_command_present": true,
+          "confirmation_required": true,
+          "trusted_slot_identity_enforced": true,
+          "corrupt_slot_deletion_supported": true,
+          "manual_slots_deleted": 1,
+          "autosaves_deleted": 1,
+          "corrupt_slots_deleted": 1,
+          "rejected_forged_identity_cases": 2,
+          "unrelated_save_files_preserved": 3,
+          "campaign_progression_preserved": true,
+          "device_settings_preserved": true,
+          "active_session_preserved": true,
+          "selected_empty_slot_refreshed": true,
+          "latest_save_fallback_refreshed": true,
+          "viewport_capture_count": 4,
+          "minimum_save_browser_viewport": "1024x600",
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T03:41:44Z",
+      "startedAt": "2026-08-03T03:18:46Z",
+      "status": "completed",
+      "title": "Confirmed Save Slot Deletion",
+      "updatedAt": "2026-08-03T03:41:44Z",
+      "notes": "Implemented from the existing UX/player-comprehension release track after the save/load confidence smoke confirmed there was no shipped cleanup workflow for occupied or unreadable slots. No save schema, campaign progression, settings, gameplay, content, balance, or Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_slot_delete_regression.tscn",
+          "SAVE_SLOT_DELETE_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1280x720 --scene res://tests/save_slot_delete_regression.tscn",
+          "SAVE_SLOT_DELETE_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --resolution 1920x1080 --scene res://tests/save_slot_delete_regression.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/save_load_confidence_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --path . --scene res://tests/main_menu_lean_boot_save_guard.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 300 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 600 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 timeout 180 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T03:41:44Z"
       }
     }
   ],
