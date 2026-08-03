@@ -3300,7 +3300,13 @@ static func _launchable_spawn_candidate(
 		var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
 		_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
 		started_usec = _spawn_profile_timer()
-		var active_front_support_plan := _active_front_support_launch_ready_report(session, config, state, faction_id)
+		var active_front_support_plan := _active_front_support_launch_ready_report(
+			session,
+			config,
+			state,
+			faction_id,
+			launch_scan_cache
+		)
 		_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
 		started_usec = _spawn_profile_timer()
 		var rebuild_pressure_plan := _rebuild_pressure_launch_ready_report(session, config, state, faction_id)
@@ -3460,15 +3466,31 @@ static func _active_front_support_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	launch_scan_cache: Dictionary = {}
 ) -> Dictionary:
 	if session == null or faction_id == "":
 		return {}
 	var points := _open_spawn_points(session, config)
 	if points.is_empty():
 		return {}
+	if bool(launch_scan_cache.get("active_front_support_candidate_surface_complete", false)):
+		var cached_surface_value = launch_scan_cache.get("active_front_support_candidate_surface", [])
+		var cached_surface: Array = cached_surface_value if cached_surface_value is Array else []
+		var cached_best := {}
+		for candidate_value in cached_surface:
+			if not (candidate_value is Dictionary) or candidate_value.is_empty():
+				continue
+			var candidate: Dictionary = candidate_value
+			if cached_best.is_empty() or _spawn_point_candidate_beats(candidate, cached_best):
+				cached_best = candidate
+		_spawn_profile_count("active_front_candidate_surface_readiness_reused")
+		return cached_best.duplicate(true)
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
 	var best := {}
+	var active_front_scan_context := {}
+	var candidate_surface := []
+	candidate_surface.resize(points.size())
 	for index in range(points.size()):
 		var point = points[index]
 		if not (point is Dictionary):
@@ -3480,12 +3502,17 @@ static func _active_front_support_launch_ready_report(
 			faction_id,
 			point,
 			occupied_commander_ids,
-			index
+			index,
+			active_front_scan_context
 		)
+		candidate_surface[index] = candidate.duplicate(true)
 		if candidate.is_empty():
 			continue
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
+	launch_scan_cache["active_front_support_candidate_surface"] = candidate_surface
+	launch_scan_cache["active_front_support_candidate_surface_complete"] = true
+	_spawn_profile_count("active_front_candidate_surface_loaded")
 	return best
 
 static func _spawn_point_candidate_ready_launch_report(
@@ -4860,6 +4887,7 @@ static func _best_open_spawn_point(
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
 	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
 	var spawn_scan_context := preloaded_spawn_scan_context
+	var consume_active_front_surface := bool(spawn_scan_context.get("active_front_support_candidate_surface_complete", false))
 	# A successful launch mutates commander occupancy before the next sweep.
 	spawn_scan_context.erase("active_front_support_commander_candidates")
 	spawn_scan_context.erase("active_front_support_probe_payload_by_commander")
@@ -4894,6 +4922,10 @@ static func _best_open_spawn_point(
 		)
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
+	if consume_active_front_surface:
+		spawn_scan_context.erase("active_front_support_candidate_surface")
+		spawn_scan_context.erase("active_front_support_candidate_surface_complete")
+		_spawn_profile_count("active_front_candidate_surface_consumed")
 	return best
 
 static func _apply_generated_multi_town_front_distribution(
@@ -5002,21 +5034,32 @@ static func _spawn_point_candidate(
 		if not ready_saved_candidate.is_empty():
 			_spawn_profile_count("ready_saved_task_spawn_candidate_selected")
 			return ready_saved_candidate
-		started_usec = _spawn_profile_timer()
-		var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
-			session,
-			config,
-			state,
-			faction_id,
-			point,
-			occupied_commander_ids,
-			spawn_order,
-			spawn_scan_context
-		)
-		_spawn_profile_add_ms("active_front_support_spawn_candidate_ms", started_usec)
-		if not active_front_support_candidate.is_empty():
-			_spawn_profile_count("active_front_support_spawn_candidate_selected")
-			return active_front_support_candidate
+		var active_front_surface_complete := bool(spawn_scan_context.get("active_front_support_candidate_surface_complete", false))
+		if active_front_surface_complete:
+			var active_surface_value = spawn_scan_context.get("active_front_support_candidate_surface", [])
+			var active_surface: Array = active_surface_value if active_surface_value is Array else []
+			var precomputed_active_candidate: Dictionary = active_surface[spawn_order] if spawn_order >= 0 and spawn_order < active_surface.size() and active_surface[spawn_order] is Dictionary else {}
+			if precomputed_active_candidate.is_empty():
+				_spawn_profile_count("active_front_candidate_surface_point_empty")
+			else:
+				_spawn_profile_count("active_front_candidate_surface_point_reused")
+				return precomputed_active_candidate.duplicate(true)
+		else:
+			started_usec = _spawn_profile_timer()
+			var active_front_support_candidate := _active_front_support_spawn_candidate_for_point(
+				session,
+				config,
+				state,
+				faction_id,
+				point,
+				occupied_commander_ids,
+				spawn_order,
+				spawn_scan_context
+			)
+			_spawn_profile_add_ms("active_front_support_spawn_candidate_ms", started_usec)
+			if not active_front_support_candidate.is_empty():
+				_spawn_profile_count("active_front_support_spawn_candidate_selected")
+				return active_front_support_candidate
 		started_usec = _spawn_profile_timer()
 		var saved_candidate := _saved_task_spawn_candidate_for_point(
 			session,

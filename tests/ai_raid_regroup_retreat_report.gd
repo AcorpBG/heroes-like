@@ -546,6 +546,91 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 			or int(counts.get("active_front_support_commander_candidates_reused", 0)) != 2:
 		_fail("Active-front commander candidates were not shared across three origin checks: %s" % JSON.stringify(counts))
 		return {}
+	var uncached_launch_surface := []
+	for point_index in range(points.size()):
+		var launch_point: Dictionary = points[point_index] if points[point_index] is Dictionary else {}
+		uncached_launch_surface.append(EnemyTurnRules._active_front_support_spawn_candidate_for_point(
+			session,
+			config,
+			state,
+			MIRECLAW,
+			launch_point,
+			occupied,
+			point_index,
+			{}
+		))
+	var uncached_launch_candidate := EnemyTurnRules._best_open_spawn_point(session, config, state, MIRECLAW)
+	var launch_scan_cache := {
+		"active_front_support_commander_candidates": [],
+		"active_front_support_probe_payload_by_commander": {"stale": {"unexpected": true}},
+	}
+	EnemyTurnRules._spawn_profile_begin(true)
+	var readiness_candidate := EnemyTurnRules._active_front_support_launch_ready_report(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		launch_scan_cache
+	)
+	var cached_launch_surface: Array = launch_scan_cache.get("active_front_support_candidate_surface", []).duplicate(true) if launch_scan_cache.get("active_front_support_candidate_surface", []) is Array else []
+	var cached_launch_candidate := EnemyTurnRules._best_open_spawn_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		false,
+		launch_scan_cache
+	)
+	var launch_surface_profile := EnemyTurnRules._spawn_profile_finish()
+	var launch_surface_counts: Dictionary = launch_surface_profile.get("counts", {}) if launch_surface_profile.get("counts", {}) is Dictionary else {}
+	if uncached_launch_candidate.is_empty() or String(uncached_launch_candidate.get("spawn_plan_source", "")) != "active_front_support":
+		_fail("Uncached active-front launch fixture selected the wrong candidate: %s" % JSON.stringify(uncached_launch_candidate))
+		return {}
+	var uncached_launch_surface_keys := []
+	var cached_launch_surface_keys := []
+	for candidate in uncached_launch_surface:
+		uncached_launch_surface_keys.append(_spawn_candidate_payload_key(candidate))
+	for candidate in cached_launch_surface:
+		cached_launch_surface_keys.append(_spawn_candidate_payload_key(candidate))
+	if uncached_launch_surface_keys != cached_launch_surface_keys:
+		_fail("Active-front launch readiness changed a per-origin candidate payload: uncached=%s cached=%s" % [JSON.stringify(uncached_launch_surface), JSON.stringify(cached_launch_surface)])
+		return {}
+	if _spawn_candidate_payload_key(readiness_candidate) != _spawn_candidate_payload_key(cached_launch_candidate) \
+			or _spawn_candidate_payload_key(uncached_launch_candidate) != _spawn_candidate_payload_key(cached_launch_candidate):
+		_fail("Active-front launch-surface reuse changed candidate behavior: readiness=%s cached=%s uncached=%s" % [JSON.stringify(readiness_candidate), JSON.stringify(cached_launch_candidate), JSON.stringify(uncached_launch_candidate)])
+		return {}
+	if int(launch_surface_counts.get("active_front_candidate_surface_loaded", 0)) != 1 \
+			or int(launch_surface_counts.get("active_front_candidate_surface_point_reused", 0)) != points.size() \
+			or int(launch_surface_counts.get("active_front_candidate_surface_consumed", 0)) != 1:
+		_fail("Active-front launch surface was not loaded, reused for every point, and consumed exactly once: %s" % JSON.stringify(launch_surface_profile))
+		return {}
+	if int(launch_surface_counts.get("active_front_support_commander_candidates_loaded", 0)) != 1 \
+			or int(launch_surface_counts.get("active_front_support_probe_loaded", 0)) <= 0:
+		_fail("Final selection rebuilt active-front commanders or probes instead of consuming readiness work: %s" % JSON.stringify(launch_surface_profile))
+		return {}
+	if launch_scan_cache.has("active_front_support_candidate_surface") \
+			or launch_scan_cache.has("active_front_support_candidate_surface_complete"):
+		_fail("Consumed active-front launch surface remained cached: %s" % JSON.stringify(launch_scan_cache))
+		return {}
+	EnemyTurnRules._spawn_profile_begin(true)
+	var recomputed_launch_candidate := EnemyTurnRules._best_open_spawn_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		false,
+		launch_scan_cache
+	)
+	var recompute_profile := EnemyTurnRules._spawn_profile_finish()
+	var recompute_counts: Dictionary = recompute_profile.get("counts", {}) if recompute_profile.get("counts", {}) is Dictionary else {}
+	if _spawn_candidate_payload_key(recomputed_launch_candidate) != _spawn_candidate_payload_key(uncached_launch_candidate):
+		_fail("Post-consumption active-front scan did not recompute the same live candidate: %s" % JSON.stringify(recomputed_launch_candidate))
+		return {}
+	if int(recompute_counts.get("active_front_candidate_surface_point_reused", 0)) != 0 \
+			or int(recompute_counts.get("active_front_support_commander_candidates_loaded", 0)) != 1 \
+			or int(recompute_counts.get("active_front_support_probe_loaded", 0)) <= 0:
+		_fail("Post-consumption active-front scan reused stale surface state instead of recomputing: %s" % JSON.stringify(recompute_profile))
+		return {}
 	return {
 		"candidate_count": shared_candidates.size(),
 		"candidate_payloads_match": true,
@@ -553,7 +638,22 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 		"commander_candidates_reused": int(counts.get("active_front_support_commander_candidates_reused", 0)),
 		"commander_probes_loaded": probe_loaded,
 		"commander_probes_reused": probe_reused,
+		"launch_surface_candidate_match": true,
+		"launch_surface_all_origin_payloads_match": true,
+		"launch_surface_context_isolated": true,
+		"launch_surface_points_reused": int(launch_surface_counts.get("active_front_candidate_surface_point_reused", 0)),
+		"launch_surface_consumed": int(launch_surface_counts.get("active_front_candidate_surface_consumed", 0)),
+		"post_consumption_recomputed": true,
 	}
+
+func _spawn_candidate_payload_key(candidate_value) -> String:
+	if not (candidate_value is Dictionary):
+		return JSON.stringify(candidate_value)
+	var candidate: Dictionary = candidate_value.duplicate(true)
+	for coordinate_key in ["x", "y"]:
+		if candidate.has(coordinate_key) and (candidate[coordinate_key] is int or candidate[coordinate_key] is float):
+			candidate[coordinate_key] = float(candidate[coordinate_key])
+	return JSON.stringify(candidate)
 
 func _resource_front_support_consolidates_into_capture_ready_host() -> Dictionary:
 	var session = _base_session()

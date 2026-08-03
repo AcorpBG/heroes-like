@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed one-spell knowledge sharing between co-located owned commanders through the existing compact rendezvous workflow with exact mana, movement, and save persistence. Overall release work remains active.",
+  "currentNotes": "Completed isolated one-shot reuse of the active-front launch candidate surface between below-threshold readiness and final spawn selection. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "hero-field-rendezvous-spell-sharing-10184",
-  "currentSliceId": "hero-field-rendezvous-spell-sharing-10184",
-  "currentSliceNotes": "Co-located owned commanders teach individual known spells through the existing rendezvous selector while preserving mana, movement, source knowledge, and save-version-9 continuity.",
+  "currentSlice": "strategic-ai-active-front-launch-surface-reuse-10184",
+  "currentSliceId": "strategic-ai-active-front-launch-surface-reuse-10184",
+  "currentSliceNotes": "Active-front readiness now computes in an isolated phase-local context, reuses the exact candidate surface once during final selection, and expires it before later scans.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Hero Field Rendezvous Spell Sharing",
-  "currentSliceUpdatedAt": "2026-08-02T23:36:58Z",
+  "currentSliceTitle": "Strategic AI Active-Front Launch Surface Reuse",
+  "currentSliceUpdatedAt": "2026-08-03T00:04:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66114,6 +66114,96 @@
         "status": "passed",
         "updatedAt": "2026-08-02T23:36:58Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+        "godot4 --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --path . tests/strategic_ai_baseline_kpi_report.tscn",
+        "godot4 --headless --path . tests/ai_hero_task_strategic_planner_report.tscn",
+        "godot4 --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Below-threshold active-front launch readiness stores the exact per-origin candidate surface in the existing launch cache; final spawn selection reuses every stored point without rebuilding commander candidates or prepared probes; cached and uncached selected candidates are identical; the surface is consumed once and a later scan recomputes from current commander occupancy, army, and target state; launch priority, selected commander/target, public events, save state, and generated-map behavior signatures remain unchanged; focused and broad regressions pass with current-code phase telemetry showing the duplicate evaluation removed.",
+      "id": "strategic-ai-active-front-launch-surface-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "changing strategic target scores, launch priority, commander fit, raid strength, pressure thresholds, movement, recruitment, or public event wording",
+        "persisting transient scan caches, weakening live-state rescoring, changing save version, or claiming full strategic-AI performance readiness",
+        "changing Native RMG generation/package output, battle rules, content balance, or overall release completion"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Strategic AI Active-Front Probe Reuse / production performance gaps",
+      "purpose": "Remove a measured duplicate candidate scan from live generated-map enemy turns without changing strategic decisions.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          "scripts/core/EnemyTurnRules.gd",
+          "tests/ai_raid_regroup_retreat_report.gd",
+          "tests/validate_repo.py"
+        ],
+        "finding": "Below-threshold readiness now builds active-front candidates in an isolated phase-local context, stores only the completed per-origin surface in the outer launch cache, reuses both fixture points during final selection, consumes the surface once, and recomputes on a later scan. The first shared-outer-context attempt failed the core commander-rebuild smoke and was rejected; the isolated implementation passes it. A one-seed/three-turn generated profile preserved row signature fdf8234a and all event counts, but mixed wall-clock timings do not support a broad runtime-reduction claim.",
+        "metrics": {
+          "focused_spawn_origin_count": 2,
+          "active_front_candidate_surface_load_count": 1,
+          "active_front_candidate_surface_point_reuse_count": 2,
+          "active_front_candidate_surface_consume_count": 1,
+          "per_origin_candidate_payloads_match": true,
+          "selected_candidate_matches_uncached": true,
+          "outer_scan_context_isolated": true,
+          "post_consumption_recomputed": true,
+          "generated_profile_seed_count": 1,
+          "generated_profile_turn_count": 3,
+          "generated_row_signature_before": "fdf8234a",
+          "generated_row_signature_after": "fdf8234a",
+          "generated_event_counts_preserved": true,
+          "baseline_runtime_msec": 7450,
+          "corrected_runtime_msec": 7399,
+          "baseline_max_turn_runtime_msec": 1651,
+          "corrected_max_turn_runtime_msec": 1718,
+          "baseline_active_front_launch_ready_max_msec": 75,
+          "corrected_active_front_launch_ready_max_msec": 75,
+          "baseline_active_front_spawn_candidate_max_msec": 125,
+          "corrected_active_front_spawn_candidate_max_msec": 121,
+          "broad_runtime_reduction_claimed": false
+        }
+      },
+      "completedAt": "2026-08-03T00:04:30Z",
+      "startedAt": "2026-08-02T23:42:42Z",
+      "status": "completed",
+      "title": "Strategic AI Active-Front Launch Surface Reuse",
+      "updatedAt": "2026-08-03T00:04:30Z",
+      "notes": "One-shot candidate-surface reuse is complete with phase-local cache isolation. Generated behavior is preserved; no broad runtime reduction is claimed from the single profile shard.",
+      "validation": {
+        "commands": [
+          "godot4 --headless --path . tests/ai_raid_regroup_retreat_report.tscn",
+          "godot4 --headless --path . tests/ai_hero_task_strategic_planner_report.tscn",
+          "godot4 --headless --path . tests/ai_planned_task_recruitment_prep_report.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . tests/strategic_ai_baseline_kpi_report.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 -m py_compile tests/validate_repo.py",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T00:04:30Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66555,7 +66645,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "hero_field_rendezvous_spell_sharing_complete_overall_release_in_progress",
+  "result": "strategic_ai_active_front_launch_surface_reuse_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -66656,9 +66746,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Owned commanders now exchange troops, artifacts, and individual spell knowledge through a compact field-rendezvous workflow with atomic validation, exact mana and movement preservation, and save-version-9 persistence. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Strategic AI below-threshold active-front readiness now reuses an isolated one-shot candidate surface during final spawn selection without changing the targeted generated-map behavior signature or event counts. Strategic AI breadth, balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-02T23:36:58Z",
+  "updatedAt": "2026-08-03T00:04:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
