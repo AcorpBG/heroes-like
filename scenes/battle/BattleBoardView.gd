@@ -78,6 +78,9 @@ const BATTLE_AUDIO_SAMPLE_RATE := 22050.0
 const BATTLE_AUDIO_MAX_ACTIVE_PLAYERS := 8
 const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
+const BATTLE_AUDIO_PRIORITY_VALUES := {"low": 1, "normal": 2, "high": 3, "critical": 4}
+const BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS := "normal"
+const BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC := 80
 const BATTLE_CAMERA_MAX_OFFSET_PX := 8.0
 
 var _session = null
@@ -104,6 +107,13 @@ var _stack_animation_audio_playback_records: Dictionary = {}
 var _active_audio_players: Array = []
 var _battle_sfx_manifest: Dictionary = {}
 var _battle_sfx_manifest_loaded := false
+var _audio_last_started_msec_by_cue: Dictionary = {}
+var _audio_mix_counters: Dictionary = {
+	"played": 0,
+	"suppressed": 0,
+	"evicted": 0,
+	"suppressed_by_reason": {},
+}
 var _presentation_speed := BattleRulesScript.PRESENTATION_SPEED_NORMAL
 
 func _ready() -> void:
@@ -700,6 +710,8 @@ func validation_audio_playback_summary() -> Dictionary:
 	var imported_asset_count := 0
 	var generated_fallback_count := 0
 	var scheduled_record_count := 0
+	var played_audio_cue_count := 0
+	var suppressed_audio_cue_count := 0
 	for battle_id in _stack_animation_audio_playback_records.keys():
 		var record: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {}) if _stack_animation_audio_playback_records.get(battle_id, {}) is Dictionary else {}
 		var audio_ids: Array = record.get("selected_audio_cue_ids", []) if record.get("selected_audio_cue_ids", []) is Array else []
@@ -707,6 +719,8 @@ func validation_audio_playback_summary() -> Dictionary:
 		generated_waveform_count += int(record.get("generated_waveform_count", 0))
 		imported_asset_count += int(record.get("imported_asset_count", 0))
 		generated_fallback_count += int(record.get("generated_fallback_count", 0))
+		played_audio_cue_count += int(record.get("played_audio_cue_count", 0))
+		suppressed_audio_cue_count += int(record.get("suppressed_audio_cue_count", 0))
 		if bool(record.get("scheduled", false)):
 			scheduled_record_count += 1
 		records[String(battle_id)] = record.duplicate(true)
@@ -716,14 +730,36 @@ func validation_audio_playback_summary() -> Dictionary:
 		"generated_waveform_count": generated_waveform_count,
 		"imported_asset_count": imported_asset_count,
 		"generated_fallback_count": generated_fallback_count,
+		"played_audio_cue_count": played_audio_cue_count,
+		"suppressed_audio_cue_count": suppressed_audio_cue_count,
 		"scheduled_record_count": scheduled_record_count,
 		"active_player_count": _active_audio_player_count(),
+		"active_voice_mix": _active_audio_voice_mix(),
+		"mix_counters": _audio_mix_counters.duplicate(true),
 		"audio_bus": BATTLE_AUDIO_BUS,
 		"sfx_manifest_path": BATTLE_SFX_MANIFEST_PATH,
 		"sfx_manifest_loaded": _battle_sfx_manifest_loaded,
 		"muted": SettingsService.effects_audio_muted(),
 		"active_records": records,
 	}
+
+func validation_reset_audio_mix() -> void:
+	for entry in _active_audio_players:
+		if entry is Dictionary:
+			var player = entry.get("player", null)
+			if player is AudioStreamPlayer and is_instance_valid(player):
+				player.queue_free()
+	_active_audio_players.clear()
+	_audio_last_started_msec_by_cue.clear()
+	_audio_mix_counters = {
+		"played": 0,
+		"suppressed": 0,
+		"evicted": 0,
+		"suppressed_by_reason": {},
+	}
+
+func validation_play_audio_cue(audio_id: String, battle_id: String = "validation", serial: int = 1) -> Dictionary:
+	return _play_audio_cue(audio_id, battle_id, serial)
 
 func validation_camera_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
@@ -2302,6 +2338,7 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		return
 	var generated_records := []
 	var imported_records := []
+	var suppressed_records := []
 	var asset_records := []
 	for audio_id_value in audio_ids:
 		var audio_id := String(audio_id_value).strip_edges()
@@ -2314,8 +2351,10 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		match String(playback.get("source", "")):
 			"imported_wav":
 				imported_records.append(playback)
-			_:
+			"generated_waveform":
 				generated_records.append(playback)
+			"suppressed":
+				suppressed_records.append(playback)
 	_stack_animation_audio_playback_records[battle_id] = {
 		"battle_id": battle_id,
 		"event_id": String(cue_record.get("event_id", "")),
@@ -2325,8 +2364,11 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		"generated_waveform_count": generated_records.size(),
 		"imported_asset_count": imported_records.size(),
 		"generated_fallback_count": generated_records.size(),
+		"played_audio_cue_count": imported_records.size() + generated_records.size(),
+		"suppressed_audio_cue_count": suppressed_records.size(),
 		"generated_waveforms": generated_records,
 		"imported_assets": imported_records,
+		"suppressed_cues": suppressed_records,
 		"asset_playbacks": asset_records,
 		"started_at_msec": int(cue_record.get("started_at_msec", Time.get_ticks_msec())),
 		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
@@ -2337,15 +2379,28 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 	}
 
 func _play_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
-	var imported := _play_imported_audio_cue(audio_id, battle_id, serial)
+	var admission := _audio_mix_admission(audio_id)
+	if not bool(admission.get("allowed", false)):
+		return {
+			"audio_id": audio_id,
+			"source": "suppressed",
+			"played": false,
+			"priority_class": String(admission.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)),
+			"priority": int(admission.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS])),
+			"repeat_cooldown_msec": int(admission.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC)),
+			"suppressed_reason": String(admission.get("reason", "mix_policy")),
+		}
+	var imported := _play_imported_audio_cue(audio_id, battle_id, serial, admission)
 	if not imported.is_empty():
+		_record_audio_cue_started(audio_id, imported, admission)
 		return imported
-	var generated := _play_generated_audio_cue(audio_id, battle_id, serial)
+	var generated := _play_generated_audio_cue(audio_id, battle_id, serial, admission)
 	if not generated.is_empty():
 		generated["source"] = "generated_waveform"
+		_record_audio_cue_started(audio_id, generated, admission)
 	return generated
 
-func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
+func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int, mix_policy: Dictionary) -> Dictionary:
 	var cue := _battle_sfx_manifest_cue(audio_id)
 	if cue.is_empty():
 		return {}
@@ -2379,6 +2434,9 @@ func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int) 
 		"source": "imported_wav",
 		"asset_path": path,
 		"serial": serial,
+		"priority_class": String(mix_policy.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)),
+		"priority": int(mix_policy.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS])),
+		"started_at_msec": int(Time.get_ticks_msec()),
 		"expires_at_msec": int(Time.get_ticks_msec()) + duration_msec + 180,
 	})
 	_trim_audio_players()
@@ -2390,10 +2448,11 @@ func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int) 
 		"role": String(cue.get("role", "")),
 		"duration_msec": duration_msec,
 		"volume_db": float(cue.get("volume_db", -12.0)),
+		"played": true,
 		"player_created": true,
 	}
 
-func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int) -> Dictionary:
+func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int, mix_policy: Dictionary) -> Dictionary:
 	var spec := _audio_cue_wave_spec(audio_id)
 	if spec.is_empty():
 		return {}
@@ -2412,6 +2471,9 @@ func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int)
 		"battle_id": battle_id,
 		"audio_id": audio_id,
 		"serial": serial,
+		"priority_class": String(mix_policy.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)),
+		"priority": int(mix_policy.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS])),
+		"started_at_msec": int(Time.get_ticks_msec()),
 		"expires_at_msec": int(Time.get_ticks_msec()) + duration_msec + 180,
 	})
 	_trim_audio_players()
@@ -2426,8 +2488,108 @@ func _play_generated_audio_cue(audio_id: String, battle_id: String, serial: int)
 		"secondary_frequency_hz": float(spec.get("secondary_frequency_hz", 0.0)),
 		"duration_msec": duration_msec,
 		"frame_count": frame_count,
+		"played": true,
 		"player_created": true,
 	}
+
+func _audio_mix_admission(audio_id: String) -> Dictionary:
+	var policy := _audio_mix_policy(audio_id)
+	var priority := int(policy.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS]))
+	var priority_class := String(policy.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS))
+	var cooldown_msec := int(policy.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))
+	if SettingsService.effects_audio_muted():
+		_record_audio_cue_suppressed("effects_muted")
+		return {"allowed": false, "reason": "effects_muted", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+	_cleanup_audio_players()
+	var now := int(Time.get_ticks_msec())
+	var last_started := int(_audio_last_started_msec_by_cue.get(audio_id, -1000000000))
+	if cooldown_msec > 0 and now - last_started < cooldown_msec:
+		_record_audio_cue_suppressed("repeat_cooldown")
+		return {"allowed": false, "reason": "repeat_cooldown", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+	var evicted := {}
+	if _active_audio_players.size() >= BATTLE_AUDIO_MAX_ACTIVE_PLAYERS:
+		var candidate_index := _audio_eviction_candidate_index()
+		var candidate: Dictionary = _active_audio_players[candidate_index] if candidate_index >= 0 and _active_audio_players[candidate_index] is Dictionary else {}
+		if candidate.is_empty() or priority <= int(candidate.get("priority", 0)):
+			_record_audio_cue_suppressed("voice_budget")
+			return {"allowed": false, "reason": "voice_budget", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec}
+		evicted = _evict_audio_voice(candidate_index)
+	return {
+		"allowed": true,
+		"priority": priority,
+		"priority_class": priority_class,
+		"repeat_cooldown_msec": cooldown_msec,
+		"evicted_audio_id": String(evicted.get("audio_id", "")),
+		"evicted_priority_class": String(evicted.get("priority_class", "")),
+	}
+
+func _audio_mix_policy(audio_id: String) -> Dictionary:
+	var cue := _battle_sfx_manifest_cue(audio_id)
+	var priority_class := String(cue.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)).strip_edges()
+	if not BATTLE_AUDIO_PRIORITY_VALUES.has(priority_class):
+		priority_class = BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS
+	return {
+		"priority_class": priority_class,
+		"priority": int(BATTLE_AUDIO_PRIORITY_VALUES[priority_class]),
+		"repeat_cooldown_msec": maxi(0, int(cue.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))),
+	}
+
+func _audio_eviction_candidate_index() -> int:
+	var candidate_index := -1
+	var candidate_priority := 1000000
+	var candidate_started_at := 1000000000000
+	for index in range(_active_audio_players.size()):
+		var entry: Dictionary = _active_audio_players[index] if _active_audio_players[index] is Dictionary else {}
+		if entry.is_empty():
+			continue
+		var priority := int(entry.get("priority", 0))
+		var started_at := int(entry.get("started_at_msec", 0))
+		if priority < candidate_priority or (priority == candidate_priority and started_at < candidate_started_at):
+			candidate_index = index
+			candidate_priority = priority
+			candidate_started_at = started_at
+	return candidate_index
+
+func _evict_audio_voice(index: int) -> Dictionary:
+	if index < 0 or index >= _active_audio_players.size():
+		return {}
+	var entry = _active_audio_players.pop_at(index)
+	if entry is Dictionary:
+		var player = entry.get("player", null)
+		if player is AudioStreamPlayer and is_instance_valid(player):
+			player.queue_free()
+		_audio_mix_counters["evicted"] = int(_audio_mix_counters.get("evicted", 0)) + 1
+		return entry.duplicate(true)
+	return {}
+
+func _record_audio_cue_started(audio_id: String, playback: Dictionary, admission: Dictionary) -> void:
+	_audio_last_started_msec_by_cue[audio_id] = int(Time.get_ticks_msec())
+	_audio_mix_counters["played"] = int(_audio_mix_counters.get("played", 0)) + 1
+	playback["priority_class"] = String(admission.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS))
+	playback["priority"] = int(admission.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS]))
+	playback["repeat_cooldown_msec"] = int(admission.get("repeat_cooldown_msec", BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC))
+	playback["evicted_audio_id"] = String(admission.get("evicted_audio_id", ""))
+	playback["evicted_priority_class"] = String(admission.get("evicted_priority_class", ""))
+
+func _record_audio_cue_suppressed(reason: String) -> void:
+	_audio_mix_counters["suppressed"] = int(_audio_mix_counters.get("suppressed", 0)) + 1
+	var reasons: Dictionary = _audio_mix_counters.get("suppressed_by_reason", {}) if _audio_mix_counters.get("suppressed_by_reason", {}) is Dictionary else {}
+	reasons[reason] = int(reasons.get(reason, 0)) + 1
+	_audio_mix_counters["suppressed_by_reason"] = reasons
+
+func _active_audio_voice_mix() -> Array:
+	_cleanup_audio_players()
+	var result := []
+	for entry in _active_audio_players:
+		if entry is Dictionary:
+			result.append({
+				"audio_id": String(entry.get("audio_id", "")),
+				"battle_id": String(entry.get("battle_id", "")),
+				"priority_class": String(entry.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS)),
+				"priority": int(entry.get("priority", 0)),
+				"source": String(entry.get("source", "generated_waveform")),
+			})
+	return result
 
 func _battle_sfx_manifest_cue(audio_id: String) -> Dictionary:
 	_load_battle_sfx_manifest()

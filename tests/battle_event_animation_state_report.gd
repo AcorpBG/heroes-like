@@ -8,6 +8,7 @@ const OUTPUT_DIR := "res://.artifacts/battle_event_animation_state_report"
 const REPORT_ID := "BATTLE_EVENT_ANIMATION_STATE_REPORT"
 
 var _errors: Array[String] = []
+var _original_settings: Dictionary = {}
 var _report := {
 	"ok": false,
 	"cases": {},
@@ -19,6 +20,12 @@ func _ready() -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
+	_original_settings = SettingsService.settings.duplicate(true)
+	SettingsService.settings["accessibility"]["reduce_motion"] = false
+	SettingsService.settings["accessibility"]["reduce_flashes"] = false
+	SettingsService.settings["accessibility"]["battle_camera_shake"] = SettingsService.BATTLE_CAMERA_SHAKE_FULL
+	SettingsService.settings["audio"]["effects_volume_percent"] = 100
+	SettingsService.apply_settings()
 	_validate_fallback_states()
 	_validate_defend_state()
 	_validate_move_state()
@@ -33,6 +40,7 @@ func _run() -> void:
 	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
+	await _validate_battle_audio_mix_policy()
 	await _validate_board_playback_lifecycle()
 	await _validate_presentation_event_stream_contract()
 	await _validate_real_faction_matchup_presentation_smoke()
@@ -40,6 +48,8 @@ func _run() -> void:
 	_report["ok"] = _errors.is_empty()
 	_report["errors"] = _errors.duplicate()
 	_write_json("%s/report.json" % OUTPUT_DIR, _report)
+	SettingsService.settings = _original_settings.duplicate(true)
+	SettingsService.apply_settings()
 	if _errors.is_empty():
 		print("%s %s" % [REPORT_ID, JSON.stringify(_summary_payload())])
 	get_tree().quit(0 if _errors.is_empty() else 1)
@@ -640,6 +650,78 @@ func _validate_board_playback_lifecycle() -> void:
 		"expired_camera_playback": expired_camera,
 	}
 
+func _validate_battle_audio_mix_policy() -> void:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	await get_tree().process_frame
+	var original_effects_volume := SettingsService.effects_volume_percent()
+	SettingsService.settings["audio"]["effects_volume_percent"] = 100
+	SettingsService.apply_settings()
+
+	view.validation_reset_audio_mix()
+	var first_idle: Dictionary = view.validation_play_audio_cue("audio_placeholder_idle_soft", "mix_idle_1", 1)
+	var repeated_idle: Dictionary = view.validation_play_audio_cue("audio_placeholder_idle_soft", "mix_idle_2", 2)
+	_expect_equal("audio mix first idle source", String(first_idle.get("source", "")), "imported_wav")
+	_expect_equal("audio mix first idle priority", String(first_idle.get("priority_class", "")), "low")
+	_expect_equal("audio mix repeated idle source", String(repeated_idle.get("source", "")), "suppressed")
+	_expect_equal("audio mix repeated idle reason", String(repeated_idle.get("suppressed_reason", "")), "repeat_cooldown")
+	var duplicate_summary: Dictionary = view.validation_audio_playback_summary()
+	_expect_int("audio mix duplicate active voices", int(duplicate_summary.get("active_player_count", 0)), 1)
+	_expect_int("audio mix duplicate suppressed count", int(duplicate_summary.get("mix_counters", {}).get("suppressed", 0)), 1)
+
+	view.validation_reset_audio_mix()
+	var fill_ids := [
+		"audio_placeholder_idle_soft",
+		"audio_placeholder_hit",
+		"audio_placeholder_status_apply",
+		"audio_placeholder_status_clear",
+		"audio_placeholder_defend",
+		"audio_placeholder_turn_ready",
+		"audio_placeholder_melee_release",
+		"audio_placeholder_ranged_release",
+	]
+	for index in range(fill_ids.size()):
+		var fill_result: Dictionary = view.validation_play_audio_cue(String(fill_ids[index]), "mix_fill_%d" % index, index + 10)
+		if not bool(fill_result.get("played", false)):
+			_error("Audio mix could not fill voice %d with %s: %s" % [index, fill_ids[index], fill_result])
+	var full_summary: Dictionary = view.validation_audio_playback_summary()
+	_expect_int("audio mix full voice budget", int(full_summary.get("active_player_count", 0)), 8)
+	var critical_result: Dictionary = view.validation_play_audio_cue("audio_spell_cinder_burst", "mix_critical", 30)
+	_expect_equal("audio mix critical source", String(critical_result.get("source", "")), "imported_wav")
+	_expect_equal("audio mix critical priority", String(critical_result.get("priority_class", "")), "critical")
+	_expect_equal("audio mix critical eviction", String(critical_result.get("evicted_audio_id", "")), "audio_placeholder_idle_soft")
+	var post_eviction_summary: Dictionary = view.validation_audio_playback_summary()
+	_expect_int("audio mix post-eviction voice budget", int(post_eviction_summary.get("active_player_count", 0)), 8)
+	_expect_int("audio mix eviction count", int(post_eviction_summary.get("mix_counters", {}).get("evicted", 0)), 1)
+	var low_budget_result: Dictionary = view.validation_play_audio_cue("audio_placeholder_unit_step", "mix_low_budget", 31)
+	_expect_equal("audio mix low budget source", String(low_budget_result.get("source", "")), "suppressed")
+	_expect_equal("audio mix low budget reason", String(low_budget_result.get("suppressed_reason", "")), "voice_budget")
+
+	view.validation_reset_audio_mix()
+	SettingsService.settings["audio"]["effects_volume_percent"] = 0
+	SettingsService.apply_settings()
+	var muted_result: Dictionary = view.validation_play_audio_cue("audio_spell_cinder_burst", "mix_muted", 40)
+	var muted_summary: Dictionary = view.validation_audio_playback_summary()
+	_expect_equal("audio mix muted source", String(muted_result.get("source", "")), "suppressed")
+	_expect_equal("audio mix muted reason", String(muted_result.get("suppressed_reason", "")), "effects_muted")
+	_expect_int("audio mix muted active voices", int(muted_summary.get("active_player_count", 0)), 0)
+
+	SettingsService.settings["audio"]["effects_volume_percent"] = original_effects_volume
+	SettingsService.apply_settings()
+	view.validation_reset_audio_mix()
+	view.queue_free()
+	await get_tree().process_frame
+	_report["cases"]["battle_audio_mix_policy"] = {
+		"duplicate": duplicate_summary,
+		"full_budget": full_summary,
+		"critical_result": critical_result,
+		"post_eviction": post_eviction_summary,
+		"low_budget_result": low_budget_result,
+		"muted_result": muted_result,
+		"muted_summary": muted_summary,
+	}
+
 func _validate_active_cue_dispatch(summary: Dictionary) -> Dictionary:
 	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
 	if int(cue_playback.get("active_cue_record_count", 0)) < 2:
@@ -1127,6 +1209,10 @@ func _expect_ok(label: String, result: Dictionary) -> void:
 func _expect_equal(label: String, actual: String, expected: String) -> void:
 	if actual != expected:
 		_error("%s expected %s but got %s." % [label, expected, actual])
+
+func _expect_int(label: String, actual: int, expected: int) -> void:
+	if actual != expected:
+		_error("%s expected %d but got %d." % [label, expected, actual])
 
 func _expect_array_contains(label: String, values: Variant, expected: String) -> void:
 	if not (values is Array):
