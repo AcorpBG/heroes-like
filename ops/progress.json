@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the nested hero-action signature runtime correction and canonical terrain visual regression gate. River Pass, Ninefold, cache, full-route, core, parse, repository, JSON, and diff validation pass; overall game completion remains open.",
+  "currentNotes": "Completed the Brasshollow Crucible Barrage content slice. Live ability, autoplay, town-development, core, parse, repository, JSON, and diff validation pass; the unchanged exact matrix improves to 36 outliers / 300.5 severity and overall game completion remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "terrain-taxonomy-visual-regression-gate-10184",
-  "currentSliceId": "terrain-taxonomy-visual-regression-gate-10184",
-  "currentSliceNotes": "Completed. Canonical authored terrain boundaries and controlled legacy degradation coverage pass, and stale River Pass expectations now match shipped content and full-route behavior without changing runtime renderer or map behavior.",
+  "currentSlice": "combat-brasshollow-crucible-barrage-10184",
+  "currentSliceId": "combat-brasshollow-crucible-barrage-10184",
+  "currentSliceNotes": "Completed. Crucible Crawlers now own a live tier-6 Volley consequence; the unchanged full matrix improves from 37 to 36 outliers and severity 304 to 300.5, keeps maximum dominance at 78.5 percent, and leaves all week-1/2 pair rows exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Canonical Terrain Visual Regression Gate",
-  "currentSliceUpdatedAt": "2026-08-03T15:18:13Z",
+  "currentSliceTitle": "Brasshollow Crucible Barrage",
+  "currentSliceUpdatedAt": "2026-08-03T16:03:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67122,6 +67122,138 @@
       },
       "notes": "Completed. Hero-action cache signatures preserve nested plain-data arrays structurally, so real pending-specialty dictionaries no longer trigger the Godot 4.6 String-constructor error. Existing route reuse plus active-hero and roster invalidation remain intact, and pending-choice changes invalidate the cache and expose the live specialty action.",
       "completedAt": "2026-08-03T14:44:09Z"
+    },
+    {
+      "id": "combat-brasshollow-furnace-screen-10184",
+      "title": "Brasshollow Furnace Screen",
+      "status": "superseded",
+      "source": "PLAN.md",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "purpose": "Restore Furnace Pavis Teams' authored engine-protection and frontal-punish role through the existing live Formation Guard contract while reducing targeted Brasshollow matchup pressure without raw stat inflation.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json"
+      ],
+      "baseline": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "balance_outlier_count": 37,
+        "balance_severity": 304,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 78.5,
+        "brasshollow_embercourt_week_3_opponent_dominance_pct": 78.5,
+        "brasshollow_thornwake_week_3_opponent_dominance_pct": 75.0,
+        "brasshollow_sunvault_week_1_opponent_dominance_pct": 69.5
+      },
+      "completionCriteria": [
+        "Furnace Pavis Teams gain a readable live line-anchor ability with defending-cohesion, allied-ranged-cohesion, and staggered-target consequences",
+        "Focused runtime proof covers the authored Pavis ability and all authored ability instances remain implemented",
+        "The unchanged all-live 100-seed matrix does not exceed 37 outliers or severity 304, improves at least one targeted Brasshollow row, and does not exceed 78.5 percent maximum dominance",
+        "Structural, pacing, side-bias, town-development, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "benchmark threshold, seed, growth, raw stat, spell, strategic AI, save, campaign, or Native RMG changes",
+        "final faction balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-03T15:33:30Z",
+      "updatedAt": "2026-08-03T15:48:48Z",
+      "notes": "Superseded after exact rejection. The candidate kept 37 outliers and improved maximum dominance from 78.5 to 78.0 percent, but worsened severity from 304 to 314; the authored Pavis ability was removed.",
+      "supersededAt": "2026-08-03T15:48:48Z",
+      "supersededBy": "combat-brasshollow-crucible-barrage-10184",
+      "rejectedEvidence": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "balance_outlier_count": 37,
+        "balance_severity": 314,
+        "max_dominance_pct": 78.0,
+        "structural_failure_count": 0
+      }
+    },
+    {
+      "id": "combat-brasshollow-crucible-barrage-10184",
+      "title": "Brasshollow Crucible Barrage",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "purpose": "Restore Crucible Crawlers' authored setup-siege and disrupted-line punishment role through the existing live Volley contract while reducing Brasshollow's week-3 matchup deficits.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json"
+      ],
+      "baseline": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 37,
+        "balance_severity": 304,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 78.5,
+        "brasshollow_embercourt_week_3_opponent_dominance_pct": 78.5,
+        "brasshollow_thornwake_week_3_opponent_dominance_pct": 75.0
+      },
+      "completionCriteria": [
+        "Crucible Crawlers gain a readable live tier-6 ranged barrage with base and staggered-target damage consequences",
+        "Focused runtime proof covers the authored Crawler ability and all authored ability instances remain implemented",
+        "The unchanged all-live 100-seed matrix improves on 37 outliers / severity 304, improves at least one targeted week-3 Brasshollow row, and does not exceed 78.5 percent maximum dominance",
+        "Structural, pacing, side-bias, town-development, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "benchmark threshold, seed, growth, raw stat, spell, strategic AI, save, campaign, or Native RMG changes",
+        "final faction balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-03T15:48:48Z",
+      "updatedAt": "2026-08-03T16:03:54Z",
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+          "godot4 --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "evidence": {
+        "ability_instance_count": 81,
+        "runtime_consequence_count": 81,
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 36,
+        "balance_severity": 300.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 78.5,
+        "max_week_side_bias_points": 2.93,
+        "early_week_pair_rows_exact": true,
+        "brasshollow_mireclaw_week_3_win_rate_before_pct": 42.5,
+        "brasshollow_mireclaw_week_3_win_rate_after_pct": 43.5,
+        "brasshollow_sunvault_week_3_win_rate_before_pct": 46.5,
+        "brasshollow_sunvault_week_3_win_rate_after_pct": 48.0,
+        "brasshollow_thornwake_week_4_win_rate_before_pct": 40.5,
+        "brasshollow_thornwake_week_4_win_rate_after_pct": 42.5,
+        "structural_failure_count": 0,
+        "town_development_passed_count": 15,
+        "balance_status": "needs_tuning"
+      },
+      "notes": "Completed. Crucible Crawlers own a bounded tier-6 Crucible Barrage through the existing live Volley contract. The exact full matrix improves both outlier count and severity without changing early-week rows or worsening maximum dominance. The rejected Pavis Formation Guard candidate remains superseded evidence only.",
+      "completedAt": "2026-08-03T16:03:54Z"
     }
   ],
   "project": "heroes-like",
@@ -67132,7 +67264,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 37 outliers / 304 severity.",
+  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 36 outliers / 300.5 severity.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67664,9 +67796,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Successive live combat/content corrections now reduce the unchanged all-live 100-seed matrix from 45 to 36 outliers and severity 503.5 to 300.5 while preserving zero structural failures; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T15:18:13Z",
+  "updatedAt": "2026-08-03T16:03:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

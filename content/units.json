@@ -1579,6 +1579,19 @@
       "initiative": 7,
       "retaliations": 1,
       "ranged": true,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Crucible Barrage",
+          "description": "The crawler braces for a furnace-driven barrage that tears hardest through already-staggered battle lines.",
+          "damage_multiplier": 1.06,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.08
+        }
+      ],
       "growth": 1,
       "cost": {
         "gold": 820,
