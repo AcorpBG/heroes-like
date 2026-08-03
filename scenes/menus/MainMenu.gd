@@ -91,6 +91,7 @@ const TAB_HELP_TOPIC := {
 @onready var _help_details_label: Label = %HelpDetails
 @onready var _settings_summary_label: Label = %SettingsSummary
 @onready var _settings_handoff_label: Label = %SettingsHandoff
+@onready var _settings_scroll: ScrollContainer = %SettingsScroll
 @onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
 @onready var _resolution_picker: OptionButton = %ResolutionPicker
 @onready var _render_quality_picker: OptionButton = %RenderQualityPicker
@@ -111,6 +112,7 @@ const TAB_HELP_TOPIC := {
 @onready var _high_contrast_toggle: CheckButton = %HighContrastToggle
 @onready var _color_cue_picker: OptionButton = %ColorCuePicker
 @onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
+@onready var _reduce_flashes_toggle: CheckButton = %ReduceFlashesToggle
 @onready var _export_support_bundle_button: Button = %ExportSupportBundle
 @onready var _support_bundle_status_label: Label = %SupportBundleStatus
 @onready var _save_list: ItemList = %SaveList
@@ -599,6 +601,12 @@ func _on_reduce_motion_toggled(enabled: bool) -> void:
 	SettingsService.set_reduced_motion_enabled(enabled)
 	_refresh_settings_panel()
 
+func _on_reduce_flashes_toggled(enabled: bool) -> void:
+	if _syncing_settings_ui:
+		return
+	SettingsService.set_reduced_flashes_enabled(enabled)
+	_refresh_settings_panel()
+
 func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
 
@@ -1060,6 +1068,8 @@ func _refresh_settings_panel() -> void:
 	_color_cue_picker.tooltip_text = "Shape and palette assistance applies immediately to semantic controls and gameplay ownership cues.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
 	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
+	_reduce_flashes_toggle.button_pressed = SettingsService.reduced_flashes_enabled()
+	_reduce_flashes_toggle.tooltip_text = "Replaces strong battle flashes with static cues while preserving normal motion and timing.\n%s" % settings_check
 	_refresh_support_bundle_surface()
 	_syncing_settings_ui = false
 
@@ -2202,7 +2212,14 @@ func validation_snapshot() -> Dictionary:
 		"color_cue_mode": SettingsService.color_cue_mode_id(),
 		"color_cue_picker_items": _picker_item_labels(_color_cue_picker),
 		"color_cue_tooltip": _color_cue_picker.tooltip_text,
+		"reduce_flashes_enabled": SettingsService.reduced_flashes_enabled(),
+		"reduce_flashes_tooltip": _reduce_flashes_toggle.tooltip_text,
 		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
+		"settings_scroll_max": _settings_scroll.get_v_scroll_bar().max_value,
+		"settings_scroll_page": _settings_scroll.get_v_scroll_bar().page,
+		"settings_scroll_value": _settings_scroll.scroll_vertical,
+		"reduce_flashes_visible_in_scroll": _settings_control_visible(_reduce_flashes_toggle),
+		"support_bundle_visible_in_scroll": _settings_control_visible(_export_support_bundle_button),
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,
@@ -2624,6 +2641,25 @@ func validation_set_high_contrast(enabled: bool) -> bool:
 	_on_high_contrast_toggled(enabled)
 	return SettingsService.high_contrast_ui_enabled() == enabled
 
+func validation_set_reduced_flashes(enabled: bool) -> bool:
+	validation_open_settings_stage()
+	_reduce_flashes_toggle.set_pressed_no_signal(enabled)
+	_on_reduce_flashes_toggled(enabled)
+	return SettingsService.reduced_flashes_enabled() == enabled
+
+func validation_reveal_reduced_flashes() -> void:
+	validation_open_settings_stage()
+	_settings_scroll.ensure_control_visible(_reduce_flashes_toggle)
+
+func validation_reveal_support_bundle() -> void:
+	validation_open_settings_stage()
+	_settings_scroll.ensure_control_visible(_export_support_bundle_button)
+
+func _settings_control_visible(control: Control) -> bool:
+	if control == null or not control.is_visible_in_tree():
+		return false
+	return _settings_scroll.get_global_rect().grow(1.0).encloses(control.get_global_rect())
+
 func validation_select_color_cue_mode(mode_id: String) -> bool:
 	validation_open_settings_stage()
 	for index in range(_color_cue_picker.get_item_count()):
@@ -2942,7 +2978,7 @@ func _apply_visual_theme() -> void:
 	]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
-	for toggle in [_vsync_toggle, _high_contrast_toggle, _reduce_motion_toggle]:
+	for toggle in [_vsync_toggle, _high_contrast_toggle, _reduce_motion_toggle, _reduce_flashes_toggle]:
 		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:

@@ -285,6 +285,7 @@ static func normalize_animation_preferences(preferences: Dictionary = {}) -> Dic
 	var gameplay: Dictionary = preferences.get("gameplay", {}) if preferences.get("gameplay", {}) is Dictionary else {}
 	var animation: Dictionary = preferences.get("animation", {}) if preferences.get("animation", {}) is Dictionary else {}
 	var reduced_motion := bool(preferences.get("reduced_motion", preferences.get("reduce_motion", accessibility.get("reduce_motion", accessibility.get("reduced_motion", false)))))
+	var reduced_flashes := bool(preferences.get("reduced_flashes", preferences.get("reduce_flashes", accessibility.get("reduce_flashes", accessibility.get("reduced_flashes", false)))))
 	var fast_mode := bool(preferences.get("fast_mode", preferences.get("fast_resolution", gameplay.get("fast_mode", animation.get("fast_mode", false)))))
 	var mode_hint := String(preferences.get("mode", preferences.get("speed_mode", ""))).strip_edges()
 	match mode_hint:
@@ -313,6 +314,7 @@ static func normalize_animation_preferences(preferences: Dictionary = {}) -> Dic
 		"schema_id": PREFERENCE_POLICY_SCHEMA_ID,
 		"mode": mode,
 		"reduced_motion": reduced_motion,
+		"reduced_flashes": reduced_flashes,
 		"fast_mode": fast_mode,
 		"visual_fallback_preference": "reduced_motion_tag" if reduced_motion else ("fast_mode_tag" if fast_mode else "animation_state"),
 		"timing_preference": MODE_FAST if fast_mode else MODE_NORMAL,
@@ -322,7 +324,7 @@ static func normalize_animation_preferences(preferences: Dictionary = {}) -> Dic
 		"allows_large_motion": not reduced_motion,
 		"allows_camera_motion": not reduced_motion,
 		"allows_loop_motion": not reduced_motion,
-		"allows_strong_flash": not reduced_motion,
+		"allows_strong_flash": not reduced_motion and not reduced_flashes,
 		"audio_policy": "placeholder_cues_allowed_no_final_import",
 	}
 
@@ -817,6 +819,7 @@ static func _entry_for_event(event_id: String, catalog: Dictionary) -> Dictionar
 static func _cue_playback_policy_for_entry(entry: Dictionary, preferences: Dictionary) -> Dictionary:
 	var fallbacks: Dictionary = entry.get("fallbacks", {}) if entry.get("fallbacks", {}) is Dictionary else {}
 	var reduced_motion := bool(preferences.get("reduced_motion", false))
+	var reduced_flashes := bool(preferences.get("reduced_flashes", false))
 	var fast_mode := bool(preferences.get("fast_mode", false))
 	var selected_fallback_tag := ""
 	var selected_animation_state := String(entry.get("animation_state", ""))
@@ -838,8 +841,9 @@ static func _cue_playback_policy_for_entry(entry: Dictionary, preferences: Dicti
 
 	var selected_vfx_ids := _string_array(entry.get("vfx_cue_ids", []))
 	var selected_audio_ids := _string_array(entry.get("audio_cue_ids", []))
-	if reduced_motion:
-		selected_vfx_ids = [selected_fallback_tag] if selected_fallback_tag != "" else []
+	if reduced_motion or reduced_flashes:
+		var reduced_flash_tag := String(fallbacks.get("reduced_motion_tag", ""))
+		selected_vfx_ids = [reduced_flash_tag] if reduced_flash_tag != "" else []
 	elif fast_mode:
 		selected_vfx_ids = [selected_fallback_tag] if selected_fallback_tag != "" else []
 
@@ -864,6 +868,7 @@ static func _cue_playback_policy_for_entry(entry: Dictionary, preferences: Dicti
 		"allows_camera_motion": bool(preferences.get("allows_camera_motion", true)),
 		"allows_loop_motion": bool(preferences.get("allows_loop_motion", true)),
 		"allows_strong_flash": bool(preferences.get("allows_strong_flash", true)),
+		"reduced_flashes": reduced_flashes,
 		"audio_policy": String(preferences.get("audio_policy", "")),
 		"timing_preference": String(preferences.get("timing_preference", MODE_NORMAL)),
 		"combined_policy": String(preferences.get("combined_policy", "single_preference")),

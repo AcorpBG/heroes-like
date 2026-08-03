@@ -85,6 +85,8 @@ func _run() -> void:
 		if not bool(shell.call("validation_select_ui_scale", 130)) or not bool(shell.call("validation_select_battle_camera_shake", "reduced")):
 			_fail("Could not prepare the 130 percent Reduced battle-shake settings capture.")
 			return
+		shell.call("validation_reveal_reduced_flashes")
+		await get_tree().process_frame
 		await _capture_if_requested("settings_130_reduced_shake")
 		shell.call("validation_select_ui_scale", original_ui_scale)
 		shell.call("validation_select_battle_camera_shake", original_shake_mode)

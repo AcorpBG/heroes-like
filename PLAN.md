@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `settings-accessibility-reduced-flash-10184`. Device settings now persist Reduce Flashes independently of reduced motion and battle shake. Normal motion, timing, audio, and combat remain unchanged while live battle event VFX use existing non-flashing fallback cues and spell-specific flash overlays are suppressed. The compact Readability settings surface remains reachable at 130% UI scale through a bounded scroll region, including the existing support-bundle command. Direct reload, exported-PCK persistence, menu control, live battle cue behavior, project parsing, core systems, and repository validation pass. Screen-reader integration, subtitles for nonexistent voiceover, broad VFX redesign, Native RMG, and overall release completion remain open.
 - Completed implementation slice: `strategic-ai-emergency-recruitment-surface-reuse-10184`. During one enemy faction recruitment phase, non-garrison recruit invalidation now retains the immutable emergency-defense commander rotation/availability candidate list while rebuilding army probes and final point/commander choices from live roster continuity. Focused proof records one retained list, one load/three reuses, four rebuilt probe loads/four reuses, one accepted Reedsnare reinforcement, and the required Sable-to-Vaska destination switch with the same target and 149-strength/22-need selection. Town-defense and planned-task recruitment, core systems, a deterministic three-turn native-generated row with unchanged `fdf8234a` behavior signature, project parsing, and repository validation pass. AI scoring changes, final point-surface reuse, broad cache lifetime, save-state changes, Native RMG behavior, full seed-matrix completion, broad performance claims, and overall release completion remain open.
 - Completed implementation slice: `economy-mireclaw-smuggler-exchange-10184`. Market Square, River Granary Exchange, Resonant Exchange, and Smugglers Flotilla now own authored market profiles instead of runtime building-id branches. The existing three profiles retain their rates, bulk orders, and weekly caps; Mireclaw's Flotilla supersedes Market Square with improved wood/ore liquidation, two-crate orders for either common resource, and 8-buy/10-sell weekly caps. The live Exchange Hall exposes eight ready orders and executes a two-ore sale for 836 gold while preserving common-only trading and save version 9. Focused action/cap persistence, 165 unique-building payoff cases, six town economy UI cases, all 15 town development cases, the 15-check economy scorecard, project parsing, and repository validation pass. Rare-resource trading, broad faction balance, strategic-AI policy, Native RMG behavior, and overall release completion remain open.
 - Completed implementation slice: `packaging-player-support-bundle-export-10184`. The shipped runtime issue logger now exports a local `user://debug/heroes_support_bundle.json` with allowlisted app/platform/device-setting metadata and recent sanitized issue records, capped at 25 records and 512 KiB. Sensitive-key values and absolute Linux/Windows user paths are redacted, safe `res://` paths remain diagnostic, and the bundle explicitly contains no save payload, campaign progression, or telemetry destination. The existing Settings board exposes one compact export command with local success/failure feedback and desktop file-manager reveal. Direct runtime coverage proves record-cap and byte-limit trimming preserve the newest issue, the menu outcome smoke covers the player command/privacy contract, and a 185,355,808-byte exported PCK executes the same path successfully. Signing, native Windows hardware certification, automatic upload, crash minidumps, release-channel integration, and overall release completion remain open.
@@ -751,6 +752,22 @@ Non-goals:
 - do not add camera pan/zoom controls or alter non-battle camera behavior;
 - do not change expedition saves, packaging payloads, or Native RMG;
 - do not claim final accessibility or release completion.
+
+## Reduced Flash Accessibility
+
+The completed Phase 6 accessibility slice separates photosensitive flash reduction from motion reduction.
+
+Target shape:
+- device settings persist Reduce Flashes independently of Reduce Motion and Battle Shake;
+- normal movement, timing, camera policy, audio, combat, and authored state animation remain unchanged;
+- live battle events use the existing reduced-motion fallback VFX tags instead of strong flash cues;
+- spell-specific VFX overlays cannot bypass the reduced-flash preference;
+- the compact Readability surface exposes the preference without crowding its existing color and motion controls;
+- direct settings reload, exported-PCK persistence, live battle cue playback, menu layout, project parsing, and repository validation pass.
+
+Non-goals:
+- do not change combat rules, event order, animation duration, audio, camera shake settings, expedition saves, or Native RMG;
+- do not redesign the broader VFX catalog or claim medical certification, final accessibility, or release completion.
 
 ## Strategic AI Emergency Defense Scan Reuse
 

@@ -15140,14 +15140,14 @@
       }
     }
   ],
-  "currentNotes": "Completed phase-local emergency-defense commander candidate-list reuse while preserving dynamic probe rebuilds and exact strategic-AI decisions. Overall release work remains active.",
+  "currentNotes": "Completed the persisted reduced-flash accessibility preference: live battle VFX use static fallback cues and block spell-specific flash overlays while normal motion, timing, audio, camera shake, combat, saves, and Native RMG remain unchanged. Overall release work remains active.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-emergency-recruitment-surface-reuse-10184",
-  "currentSliceId": "strategic-ai-emergency-recruitment-surface-reuse-10184",
-  "currentSliceNotes": "Immutable emergency commander rotation/availability candidates are retained across recruited batches; dynamic army probes and final choices continue to rebuild.",
+  "currentSlice": "settings-accessibility-reduced-flash-10184",
+  "currentSliceId": "settings-accessibility-reduced-flash-10184",
+  "currentSliceNotes": "Reduce Flashes is persisted independently and routes live battle VFX through non-flashing fallbacks without forcing reduced motion; direct, packaged, battle, menu, parse, core, and repository checks pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Emergency Recruitment Candidate Reuse",
-  "currentSliceUpdatedAt": "2026-08-03T01:04:17Z",
+  "currentSliceTitle": "Reduced Flash Accessibility",
+  "currentSliceUpdatedAt": "2026-08-03T01:36:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66481,6 +66481,106 @@
         "status": "passed",
         "updatedAt": "2026-08-03T01:04:17Z"
       }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/animation_reduced_motion_fast_mode_policy_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+        "godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "A device-persisted Reduce Flashes setting independently replaces live battle event VFX with non-flashing fallback cues and blocks spell-specific flash overlays while preserving normal motion, timing, audio, camera policy, combat behavior, expedition saves, and Native RMG. The compact settings surface, direct and packaged reload, battle cue playback, project parse, and repository validation pass.",
+      "id": "settings-accessibility-reduced-flash-10184",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scripts/autoload/RuntimeIssueLog.gd",
+        "scripts/core/AnimationCueCatalog.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/animation_reduced_motion_fast_mode_policy_report.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/packaged_settings_persistence_report.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "combat, event ordering, animation timing, audio, camera shake semantics, authored content, expedition saves, or Native RMG changes",
+        "screen-reader integration, voiceover/subtitle systems, broad VFX catalog redesign, medical certification, final accessibility, or overall release completion",
+        "new report surfaces or validation-only work without the live setting and battle VFX behavior"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Reduced Flash Accessibility / Phase 6 settings and accessibility gaps",
+      "purpose": "Let photosensitive players suppress strong battle flashes without sacrificing movement and timing feedback.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md"
+      ],
+      "evidence": {
+        "artifacts": [
+          ".artifacts/animation_reduced_motion_fast_mode_policy_report/report.json",
+          ".artifacts/battle_event_animation_state_report/report.json",
+          ".artifacts/packaged_settings_persistence_smoke/report.json",
+          ".artifacts/packaged_runtime_issue_log_report/report.json",
+          ".artifacts/main_menu_keyboard_navigation_smoke/settings_130_reduced_shake.png"
+        ],
+        "finding": "Reduce Flashes now persists independently, preserves normal cast state, movement, timing, and audio, selects the existing static fallback VFX, and prevents spell-specific VFX from bypassing the policy. A bounded settings scroll keeps the new control and existing support-bundle command reachable at 130% UI scale.",
+        "metrics": {
+          "settings_version_before": 12,
+          "settings_version_after": 13,
+          "reduce_flashes_setting_present": true,
+          "legacy_default": false,
+          "independent_normal_motion_preserved": true,
+          "normal_animation_mode_preserved": true,
+          "authored_cast_state": "cast_support_anchor",
+          "reduced_vfx_tag": "cast_icon_anchor",
+          "spell_specific_flash_guard_present": true,
+          "spell_audio_preserved": true,
+          "battle_event_case_count": 22,
+          "maximum_ui_scale_percent": 130,
+          "settings_scroll_active": true,
+          "support_bundle_scroll_reachable": true,
+          "exported_pck_byte_count": 185362976,
+          "support_bundle_byte_count": 2455,
+          "save_version": 9
+        }
+      },
+      "completedAt": "2026-08-03T01:36:51Z",
+      "startedAt": "2026-08-03T01:09:12Z",
+      "status": "completed",
+      "title": "Reduced Flash Accessibility",
+      "updatedAt": "2026-08-03T01:36:51Z",
+      "notes": "Completed as a bounded live accessibility behavior using existing reduced-motion fallback VFX. No combat, timing, audio, save, or Native RMG behavior changed.",
+      "validation": {
+        "commands": [
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/animation_reduced_motion_fast_mode_policy_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_event_animation_state_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaged_settings_persistence_smoke.py",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "MAIN_MENU_KEYBOARD_CAPTURE=1 GODOT_SILENCE_ROOT_WARNING=1 timeout 180 xvfb-run -a godot4 --audio-driver Dummy --display-driver x11 --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/packaged_runtime_issue_log_report.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py tests/packaged_settings_persistence_smoke.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "status": "passed",
+        "updatedAt": "2026-08-03T01:36:51Z"
+      }
     }
   ],
   "project": "heroes-like",
@@ -66922,7 +67022,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "strategic_ai_emergency_commander_candidate_reuse_complete_overall_release_in_progress",
+  "result": "reduced_flash_accessibility_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -67023,9 +67123,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Emergency-defense recruitment now retains its phase-stable commander rotation/availability list across accepted non-garrison batches while rebuilding dynamic army probes and final commander choices; focused and generated-map behavior remains exact. Strategic AI breadth, broader balance, accessibility, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Reduce Flashes now persists independently of Reduce Motion and Battle Shake, replaces live battle flash VFX with static fallback cues, blocks spell-specific flash overlays, and preserves normal motion, timing, audio, camera policy, combat, and saves. The compact settings surface remains reachable at 130% UI scale. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T01:04:17Z",
+  "updatedAt": "2026-08-03T01:36:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
