@@ -27,6 +27,7 @@ func _run() -> void:
 	await _validate_ranged_status_state()
 	_validate_death_state()
 	await _validate_spell_cast_state()
+	await _validate_reduced_flash_spell_state()
 	await _validate_status_cleanse_state()
 	_validate_status_round_expiry_state()
 	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
@@ -357,6 +358,50 @@ func _validate_spell_cast_state() -> void:
 	case_payload["spell_specific_vfx"] = spell_vfx
 	case_payload["spell_specific_audio"] = caster_audio
 	_report["cases"]["spell_cast"] = case_payload
+
+func _validate_reduced_flash_spell_state() -> void:
+	SettingsService.ensure_settings()
+	var original_reduce_motion := SettingsService.reduced_motion_enabled()
+	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	SettingsService.settings["accessibility"]["reduce_motion"] = false
+	SettingsService.settings["accessibility"]["reduce_flashes"] = true
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	session.battle["turn_order"] = ["player_0", "player_0"]
+	session.battle["player_commander_state"] = _spellcaster_state()
+	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+	var result := BattleRulesScript.cast_player_spell(session, "spell_cinder_burst")
+	_expect_ok("reduced-flash spell cast action", result)
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	await get_tree().process_frame
+	await get_tree().create_timer(0.08).timeout
+	var summary: Dictionary = view.validation_unit_art_summary()
+	view.queue_free()
+	await get_tree().process_frame
+	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
+	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
+	var caster_cue := _cue_record_for(cue_playback, "player_0")
+	var selected_vfx: Array = caster_cue.get("selected_vfx_cue_ids", []) if caster_cue.get("selected_vfx_cue_ids", []) is Array else []
+	var selected_audio: Array = caster_cue.get("selected_audio_cue_ids", []) if caster_cue.get("selected_audio_cue_ids", []) is Array else []
+	_expect_equal("reduced-flash caster animation state", String(caster_cue.get("selected_animation_state", "")), "cast_support_anchor")
+	_expect_equal("reduced-flash caster mode", String(caster_cue.get("mode", "")), "normal")
+	_expect_equal("reduced-flash strong-flash policy", str(bool(caster_cue.get("allows_strong_flash", true))), "false")
+	_expect_array_contains("reduced-flash static caster cue", selected_vfx, "cast_icon_anchor")
+	if selected_vfx.has("vfx_spell_cinder_burst") or selected_vfx.has("vfx_placeholder_cast_anchor"):
+		_error("Reduced-flash battle playback retained a strong spell overlay: %s" % caster_cue)
+	_expect_array_contains("reduced-flash spell audio", selected_audio, "audio_spell_cinder_burst")
+	_expect_array_contains("reduced-flash generic audio", selected_audio, "audio_placeholder_cast")
+	var caster_stack := _summary_stack_entry(summary, "player_0")
+	_expect_equal("reduced-flash caster motion role", String(caster_stack.get("presentation_motion_role", "")), "cast_anchor")
+	_report["cases"]["reduced_flash_spell"] = {
+		"cue": caster_cue,
+		"stack": caster_stack,
+		"vfx_playback": summary.get("vfx_playback", {}),
+		"audio_playback": summary.get("audio_playback", {}),
+	}
 
 func _validate_status_cleanse_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)

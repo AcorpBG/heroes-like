@@ -5,7 +5,7 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 12
+const SETTINGS_VERSION := 13
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
@@ -281,6 +281,7 @@ func build_default_settings() -> Dictionary:
 			"high_contrast_ui": false,
 			"color_cue_mode": COLOR_CUE_MODE_STANDARD,
 			"battle_camera_shake": BATTLE_CAMERA_SHAKE_FULL,
+			"reduce_flashes": false,
 			"reduce_motion": false,
 		},
 	}
@@ -311,6 +312,7 @@ func load_settings() -> void:
 		settings["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
 		settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(String(config.get_value("accessibility", "color_cue_mode", defaults["accessibility"]["color_cue_mode"])))
 		settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(String(config.get_value("accessibility", "battle_camera_shake", defaults["accessibility"]["battle_camera_shake"])))
+		settings["accessibility"]["reduce_flashes"] = bool(config.get_value("accessibility", "reduce_flashes", defaults["accessibility"]["reduce_flashes"]))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
 	apply_settings()
@@ -339,6 +341,7 @@ func save_settings() -> String:
 	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
 	config.set_value("accessibility", "color_cue_mode", color_cue_mode_id())
 	config.set_value("accessibility", "battle_camera_shake", battle_camera_shake_mode_id())
+	config.set_value("accessibility", "reduce_flashes", reduced_flashes_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
 	if error != OK:
@@ -629,14 +632,21 @@ func battle_camera_shake_scale() -> float:
 func reduced_motion_enabled() -> bool:
 	return bool(ensure_settings().get("accessibility", {}).get("reduce_motion", false))
 
+func reduced_flashes_enabled() -> bool:
+	return bool(ensure_settings().get("accessibility", {}).get("reduce_flashes", false))
+
 func animation_preferences(overrides: Dictionary = {}) -> Dictionary:
 	var reduced_motion := reduced_motion_enabled()
 	if overrides.has("reduced_motion") or overrides.has("reduce_motion"):
 		reduced_motion = bool(overrides.get("reduced_motion", overrides.get("reduce_motion", reduced_motion)))
+	var reduced_flashes := reduced_flashes_enabled()
+	if overrides.has("reduced_flashes") or overrides.has("reduce_flashes"):
+		reduced_flashes = bool(overrides.get("reduced_flashes", overrides.get("reduce_flashes", reduced_flashes)))
 	var fast_mode := bool(overrides.get("fast_mode", false))
 	return {
 		"accessibility": {
 			"reduce_motion": reduced_motion,
+			"reduce_flashes": reduced_flashes,
 		},
 		"animation": {
 			"fast_mode": fast_mode,
@@ -768,12 +778,18 @@ func set_reduced_motion_enabled(enabled: bool) -> void:
 	settings["accessibility"]["reduce_motion"] = enabled
 	_commit_settings()
 
+func set_reduced_flashes_enabled(enabled: bool) -> void:
+	ensure_settings()
+	settings["accessibility"]["reduce_flashes"] = enabled
+	_commit_settings()
+
 func describe_settings() -> String:
 	var accessibility_parts := []
 	accessibility_parts.append("UI scale %s" % ui_scale_label())
 	accessibility_parts.append("High contrast %s" % ("On" if high_contrast_ui_enabled() else "Off"))
 	accessibility_parts.append("Color cues %s" % color_cue_mode_label())
 	accessibility_parts.append("Battle shake %s" % battle_camera_shake_label())
+	accessibility_parts.append("Reduced flashes %s" % ("On" if reduced_flashes_enabled() else "Off"))
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[

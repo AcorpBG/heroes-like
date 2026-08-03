@@ -42,6 +42,15 @@ func _run() -> void:
 	if String(reduced_attack.get("selected_fallback_tag", "")) != "directional_attack_icon":
 		_fail("Reduced-motion troop attack policy did not preserve attack direction readability: %s" % reduced_attack)
 		return
+	var reduced_flash_cast := AnimationCueCatalogScript.cue_playback_policy_for_event("battle_unit_cast", {"reduce_flashes": true})
+	if String(reduced_flash_cast.get("mode", "")) != "normal" \
+			or String(reduced_flash_cast.get("selected_animation_state", "")) != "cast_support_anchor" \
+			or not bool(reduced_flash_cast.get("allows_large_motion", false)) \
+			or bool(reduced_flash_cast.get("allows_strong_flash", true)) \
+			or reduced_flash_cast.get("selected_vfx_cue_ids", []) != ["cast_icon_anchor"] \
+			or reduced_flash_cast.get("selected_audio_cue_ids", []) != ["audio_placeholder_cast"]:
+		_fail("Reduced-flash policy changed motion/timing/audio or failed to select the static cast cue: %s" % reduced_flash_cast)
+		return
 	var fast_hit := AnimationCueCatalogScript.cue_playback_policy_for_event("battle_unit_hit", {"fast_mode": true})
 	if String(fast_hit.get("selected_fallback_tag", "")) != "damage_badge_instant":
 		_fail("Fast-mode troop hit policy did not preserve damage feedback: %s" % fast_hit)
@@ -68,6 +77,10 @@ func _run() -> void:
 	var normalized_settings := AnimationCueCatalogScript.normalize_animation_preferences(settings_preferences)
 	if String(normalized_settings.get("mode", "")) != "reduced_motion_fast":
 		_fail("Settings preference helper did not normalize combined animation preferences: %s" % normalized_settings)
+		return
+	var flash_only_settings := AnimationCueCatalogScript.normalize_animation_preferences(SettingsService.animation_preferences({"reduce_motion": false, "reduce_flashes": true}))
+	if String(flash_only_settings.get("mode", "")) != "normal" or bool(flash_only_settings.get("allows_strong_flash", true)) or not bool(flash_only_settings.get("allows_large_motion", false)):
+		_fail("Settings preference helper did not preserve normal motion while reducing flashes: %s" % flash_only_settings)
 		return
 
 	var covered_surfaces: Dictionary = report.get("covered_surfaces", {}) if report.get("covered_surfaces", {}) is Dictionary else {}

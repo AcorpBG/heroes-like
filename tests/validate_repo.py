@@ -12221,6 +12221,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func set_presentation_resolution",
         "func set_large_ui_text_enabled",
         "func set_reduced_motion_enabled",
+        "func set_reduced_flashes_enabled",
         '"resolution"',
         "DisplayServer.window_set_mode",
         "DisplayServer.window_set_size",
@@ -12254,6 +12255,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("HelpList", "ItemList"),
         ("HelpDetails", "Label"),
         ("Settings", "VBoxContainer"),
+        ("SettingsScroll", "ScrollContainer"),
         ("SettingsSummary", "Label"),
         ("PresentationModePicker", "OptionButton"),
         ("ResolutionPicker", "OptionButton"),
@@ -12267,6 +12269,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("HighContrastToggle", "CheckButton"),
         ("ColorCuePicker", "OptionButton"),
         ("ReduceMotionToggle", "CheckButton"),
+        ("ReduceFlashesToggle", "CheckButton"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for settings/onboarding")
 
@@ -12295,6 +12298,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.set_presentation_mode",
         "SettingsService.set_presentation_resolution",
         "SettingsService.set_reduced_motion_enabled",
+        "SettingsService.set_reduced_flashes_enabled",
         "func _on_help_selected",
         "func _on_presentation_mode_selected",
         "func _on_resolution_selected",
@@ -12308,6 +12312,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func _on_high_contrast_toggled",
         "func _on_color_cue_selected",
         "func _on_reduce_motion_toggled",
+        "func _on_reduce_flashes_toggled",
         "func _refresh_settings_panel",
         "func _rebuild_help_browser",
         "func validation_open_settings_stage",
@@ -12315,6 +12320,9 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func validation_select_render_quality",
         "func validation_select_ui_scale",
         "func validation_set_high_contrast",
+        "func validation_set_reduced_flashes",
+        "func validation_reveal_reduced_flashes",
+        "func validation_reveal_support_bundle",
         "func validation_select_color_cue_mode",
         "func validation_set_vsync",
         "func validation_select_frame_rate_limit",
@@ -21356,7 +21364,7 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
         for required_token in (
             '[node name="ExportSupportBundle" type="Button"',
             'text = "Export Support Bundle"',
-            'signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle"',
+            'signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/SupportBundleRow/ExportSupportBundle"',
             'method="_on_export_support_bundle_pressed"',
             "SupportBundleStatus",
         ):

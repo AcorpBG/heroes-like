@@ -1421,7 +1421,9 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 		return {}
 	var selected_vfx_cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
 	var selected_audio_cue_ids: Array = policy.get("selected_audio_cue_ids", []) if policy.get("selected_audio_cue_ids", []) is Array else []
-	selected_vfx_cue_ids = _spell_specific_vfx_cue_ids_for_event(event, selected_vfx_cue_ids)
+	var allows_strong_flash := bool(policy.get("allows_strong_flash", true))
+	if allows_strong_flash:
+		selected_vfx_cue_ids = _spell_specific_vfx_cue_ids_for_event(event, selected_vfx_cue_ids)
 	selected_audio_cue_ids = _spell_specific_audio_cue_ids_for_event(event, selected_audio_cue_ids)
 	return {
 		"battle_id": battle_id,
@@ -1444,6 +1446,7 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
 		"selected_vfx_cue_ids": selected_vfx_cue_ids,
 		"selected_audio_cue_ids": selected_audio_cue_ids,
+		"allows_strong_flash": allows_strong_flash,
 		"max_duration_ms": int(policy.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 		"audio_policy": String(policy.get("audio_policy", "")),
 	}

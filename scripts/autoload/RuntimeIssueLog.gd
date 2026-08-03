@@ -234,6 +234,7 @@ func _support_settings_snapshot(value: Dictionary) -> Dictionary:
 			"high_contrast_ui": bool(accessibility.get("high_contrast_ui", false)),
 			"color_cue_mode": _bounded_text(String(accessibility.get("color_cue_mode", "")), 32),
 			"battle_camera_shake": _bounded_text(String(accessibility.get("battle_camera_shake", "")), 32),
+			"reduce_flashes": bool(accessibility.get("reduce_flashes", false)),
 			"reduce_motion": bool(accessibility.get("reduce_motion", false)),
 		},
 	})
