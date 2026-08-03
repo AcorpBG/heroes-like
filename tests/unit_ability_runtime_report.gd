@@ -16,6 +16,7 @@ const REQUIRED_ABILITY_IDS := [
 	"bloodrush",
 	"obituary",
 	"overheat",
+	"foundry_aura",
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
 
@@ -115,6 +116,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_bloodrush(unit_id)
 		"overheat":
 			return _probe_overheat(unit_id)
+		"foundry_aura":
+			return _probe_foundry_aura(unit_id)
 		_:
 			return {"ok": false, "reason": "unsupported ability"}
 
@@ -428,6 +431,172 @@ func _probe_overheat(unit_id: String) -> Dictionary:
 		"recovered_modifier": recovered_modifier,
 		"message_count": messages.size(),
 		"reason": "" if ok else "overheat did not prove its complete burst, cooldown, expiry, and AI contract",
+	}
+
+func _probe_foundry_aura(unit_id: String) -> Dictionary:
+	var saint := _stack_for_unit(unit_id, "player", 0)
+	var ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	var outsider := _stack_for_unit(BASE_DEFENDER_UNIT_ID, "player", 2)
+	var enemy := _defender_stack("enemy", 0)
+	ally["defending"] = true
+	outsider["defending"] = true
+	var battle := _battle_for_stacks([saint, ally, outsider, enemy], [], "plains", 1)
+	var stripped_saint := _without_ability(saint, "foundry_aura")
+	var stripped_ally := ally.duplicate(true)
+	var stripped_outsider := outsider.duplicate(true)
+	var stripped_enemy := enemy.duplicate(true)
+	var stripped_battle := _battle_for_stacks([stripped_saint, stripped_ally, stripped_outsider, stripped_enemy], [], "plains", 1)
+	var allied_defense_with := BattleRulesScript._stack_defense_total(ally, battle)
+	var allied_defense_without := BattleRulesScript._stack_defense_total(stripped_ally, stripped_battle)
+	var outsider_defense_with := BattleRulesScript._stack_defense_total(outsider, battle)
+	var outsider_defense_without := BattleRulesScript._stack_defense_total(stripped_outsider, stripped_battle)
+	var unbraced_saint := _stack_for_unit(unit_id, "player", 0)
+	var unbraced_ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	var unbraced_stripped_saint := _without_ability(unbraced_saint, "foundry_aura")
+	var unbraced_stripped_ally := unbraced_ally.duplicate(true)
+	var unbraced_battle := _battle_for_stacks([unbraced_saint, unbraced_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var unbraced_stripped_battle := _battle_for_stacks([unbraced_stripped_saint, unbraced_stripped_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var unbraced_defense_with := BattleRulesScript._stack_defense_total(unbraced_ally, unbraced_battle)
+	var unbraced_defense_without := BattleRulesScript._stack_defense_total(unbraced_stripped_ally, unbraced_stripped_battle)
+
+	var unit_hp: int = max(1, int(ally.get("unit_hp", 1)))
+	var full_health: int = int(ally.get("base_count", 1)) * unit_hp
+	ally["total_health"] = full_health - 10
+	ally["effects"] = [
+		SpellRulesScript.build_battle_effect(
+			"status_overheated",
+			"Overheated",
+			{"defense": -2, "initiative": -2},
+			2,
+			battle,
+			"unit_ability_runtime_report",
+			"overheat"
+		)
+	]
+	var alive_before := BattleRulesScript._alive_count(ally)
+	var health_before := int(ally.get("total_health", 0))
+	BattleRulesScript._prepare_round(battle, 2)
+	var repaired_ally := BattleRulesScript._get_stack_by_id(battle, String(ally.get("battle_id", "")))
+	var overheated_repair := int(repaired_ally.get("total_health", 0)) - health_before
+	var alive_after := BattleRulesScript._alive_count(repaired_ally)
+	var repaired_saint := BattleRulesScript._get_stack_by_id(battle, String(saint.get("battle_id", "")))
+	var repaired_stripped_saint := _without_ability(repaired_saint, "foundry_aura")
+	var repaired_stripped_ally := repaired_ally.duplicate(true)
+	var overheated_stripped_battle := _battle_for_stacks([repaired_stripped_saint, repaired_stripped_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var overheated_defense_with := BattleRulesScript._stack_defense_total(repaired_ally, battle)
+	var overheated_defense_without := BattleRulesScript._stack_defense_total(repaired_stripped_ally, overheated_stripped_battle)
+	var heal_event_found := false
+	for event in battle.get("battle_presentation_events", []):
+		if event is Dictionary and String(event.get("event_type", "")) == "heal" and String(event.get("action_id", "")) == "foundry_aura":
+			heal_event_found = true
+			break
+
+	var plain_saint := _stack_for_unit(unit_id, "player", 0)
+	var plain_ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	plain_ally["total_health"] = full_health - 10
+	var plain_battle := _battle_for_stacks([plain_saint, plain_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var plain_health_before := int(plain_ally.get("total_health", 0))
+	BattleRulesScript._prepare_round(plain_battle, 2)
+	plain_ally = BattleRulesScript._get_stack_by_id(plain_battle, String(plain_ally.get("battle_id", "")))
+	var plain_repair := int(plain_ally.get("total_health", 0)) - plain_health_before
+
+	var hex_saint := _stack_for_unit(unit_id, "player", 0)
+	var hex_ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	hex_ally["total_health"] = full_health - 10
+	var hex_battle := _battle_for_stacks([hex_saint, hex_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var hex_health_before := int(hex_ally.get("total_health", 0))
+	BattleRulesScript._ensure_battle_hex_state(hex_battle)
+	hex_ally = BattleRulesScript._get_stack_by_id(hex_battle, String(hex_ally.get("battle_id", "")))
+	var hex_health_after := int(hex_ally.get("total_health", 0))
+
+	var lost_unit_saint := _stack_for_unit(unit_id, "player", 0)
+	var lost_unit_ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	lost_unit_ally["total_health"] = full_health - unit_hp
+	var lost_unit_battle := _battle_for_stacks([lost_unit_saint, lost_unit_ally, _defender_stack("enemy", 0)], [], "plains", 1)
+	var lost_unit_health_before := int(lost_unit_ally.get("total_health", 0))
+	BattleRulesScript._prepare_round(lost_unit_battle, 2)
+	lost_unit_ally = BattleRulesScript._get_stack_by_id(lost_unit_battle, String(lost_unit_ally.get("battle_id", "")))
+	var lost_unit_health_after := int(lost_unit_ally.get("total_health", 0))
+
+	var dead_saint := saint.duplicate(true)
+	dead_saint["total_health"] = 0
+	var unsupported_ally := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	unsupported_ally["defending"] = true
+	var dead_saint_battle := _battle_for_stacks([dead_saint, unsupported_ally, enemy.duplicate(true)], [], "plains", 1)
+	var defense_without_living_saint := BattleRulesScript._stack_defense_total(unsupported_ally, dead_saint_battle)
+	var dead_saint_aura_bonus := BattleRulesScript._side_max_ability_int(dead_saint_battle, "player", "foundry_aura", "ally_defense_bonus")
+	var living_saint_same_shape := _stack_for_unit(unit_id, "player", 0)
+	var supported_ally_same_shape := _stack_for_unit("unit_brasshollow_debt_engine_exactors", "player", 1)
+	supported_ally_same_shape["defending"] = true
+	var living_saint_battle := _battle_for_stacks([living_saint_same_shape, supported_ally_same_shape, _defender_stack("enemy", 0)], [], "plains", 1)
+	var defense_with_living_saint := BattleRulesScript._stack_defense_total(supported_ally_same_shape, living_saint_battle)
+	var living_saint_aura_bonus := BattleRulesScript._side_max_ability_int(living_saint_battle, "player", "foundry_aura", "ally_defense_bonus")
+	var target_priority_with := BattleAiRulesScript._attack_score(enemy, saint, battle, false)
+	var target_priority_without := BattleAiRulesScript._attack_score(stripped_enemy, stripped_saint, stripped_battle, false)
+	var ok: bool = (
+		allied_defense_with == allied_defense_without
+		and outsider_defense_with == outsider_defense_without
+		and unbraced_defense_with == unbraced_defense_without
+		and overheated_defense_with == overheated_defense_without + 1
+		and living_saint_aura_bonus == 1
+		and dead_saint_aura_bonus == 0
+		and overheated_repair > plain_repair
+		and plain_repair > 0
+		and hex_health_after == hex_health_before
+		and alive_before == alive_after
+		and lost_unit_health_after == lost_unit_health_before
+		and heal_event_found
+		and target_priority_with > target_priority_without
+	)
+	return {
+		"ok": ok,
+		"probe": "foundry_aura_hardening_repair_scope_and_ai",
+		"allied_defense_with": allied_defense_with,
+		"allied_defense_without": allied_defense_without,
+		"outsider_defense_with": outsider_defense_with,
+		"outsider_defense_without": outsider_defense_without,
+		"unbraced_defense_with": unbraced_defense_with,
+		"unbraced_defense_without": unbraced_defense_without,
+		"overheated_defense_with": overheated_defense_with,
+		"overheated_defense_without": overheated_defense_without,
+		"defense_without_living_saint": defense_without_living_saint,
+		"defense_with_living_saint": defense_with_living_saint,
+		"living_saint_aura_bonus": living_saint_aura_bonus,
+		"dead_saint_aura_bonus": dead_saint_aura_bonus,
+		"plain_repair": plain_repair,
+		"overheated_repair": overheated_repair,
+		"hex_health_before": hex_health_before,
+		"hex_health_after": hex_health_after,
+		"alive_before": alive_before,
+		"alive_after": alive_after,
+		"lost_unit_health_before": lost_unit_health_before,
+		"lost_unit_health_after": lost_unit_health_after,
+		"heal_event_found": heal_event_found,
+		"target_priority_with": target_priority_with,
+		"target_priority_without": target_priority_without,
+		"reason": "" if ok else "foundry aura mismatch: defended=%d/%d outsider=%d/%d unbraced=%d/%d overheated_defense=%d/%d repair=%d/%d hex=%d/%d alive=%d/%d lost=%d/%d aura=%d/%d heal=%s ai=%.2f/%.2f" % [
+			allied_defense_with,
+			allied_defense_without,
+			outsider_defense_with,
+			outsider_defense_without,
+			unbraced_defense_with,
+			unbraced_defense_without,
+			overheated_defense_with,
+			overheated_defense_without,
+			overheated_repair,
+			plain_repair,
+			hex_health_before,
+			hex_health_after,
+			alive_before,
+			alive_after,
+			lost_unit_health_before,
+			lost_unit_health_after,
+			living_saint_aura_bonus,
+			dead_saint_aura_bonus,
+			str(heal_event_found),
+			target_priority_with,
+			target_priority_without,
+		],
 	}
 
 func _defend_cohesion_delta(stack: Dictionary, label: String) -> int:

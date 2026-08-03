@@ -3908,6 +3908,8 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
+	if _has_ability(stack, "foundry_aura"):
+		return "Saint's Temper is hardening overheated Combine machinery and will repair surviving allies when the next round begins."
 	if _has_ability(stack, "overheat"):
 		if SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
 			return "The Debt Furnace is overheated; damage, defense, and initiative stay reduced until pressure recovers."
@@ -3973,6 +3975,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			]
 		"formation_guard":
 			return "%s steadies allied lanes and improves support fire" % name
+		"foundry_aura":
+			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
 		"volley":
 			return "%s rewards an open firing lane%s" % [
 				name,
@@ -8226,6 +8230,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		if expired_effect_count > 0:
 			_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), "battle_status_expired")
 	battle["stacks"] = stacks
+	_apply_foundry_aura_round_repair(battle)
 	_sync_occupied_hexes(battle)
 	_apply_round_pressure_shifts(battle)
 	battle["turn_order"] = _sorted_turn_order(battle)
@@ -8608,6 +8613,56 @@ static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> Str
 	if _stack_cohesion_total(updated, battle) >= 8:
 		return "%s steadies the line." % _stack_label(updated)
 	return ""
+
+static func _apply_foundry_aura_round_repair(battle: Dictionary) -> int:
+	var total_restored := 0
+	for side in ["player", "enemy"]:
+		var aura_source := {}
+		for candidate in _alive_stacks_for_side(battle, side):
+			if not _ability_by_id(candidate, "foundry_aura").is_empty():
+				aura_source = candidate
+				break
+		if aura_source.is_empty():
+			continue
+		var repair_pct := _side_max_ability_float(battle, side, "foundry_aura", "round_repair_pct", 0.0)
+		var overheated_bonus_pct := _side_max_ability_float(battle, side, "foundry_aura", "overheated_repair_bonus_pct", 0.0)
+		if repair_pct <= 0.0:
+			continue
+		var side_restored := 0
+		for ally in _alive_stacks_for_side(battle, side):
+			if String(ally.get("faction_id", "")) != "faction_brasshollow":
+				continue
+			var unit_hp: int = max(1, int(ally.get("unit_hp", 1)))
+			var current_health: int = max(0, int(ally.get("total_health", 0)))
+			var max_recoverable_health: int = _alive_count(ally) * unit_hp
+			if current_health >= max_recoverable_health:
+				continue
+			var active_repair_pct := repair_pct
+			var repairing_overheat := SpellRulesScript.has_effect_id(ally, battle, STATUS_OVERHEATED)
+			if repairing_overheat:
+				active_repair_pct += overheated_bonus_pct
+			var base_max_health: int = max(1, int(ally.get("base_count", 1)) * unit_hp)
+			var requested_repair: int = max(1, int(floor(float(base_max_health) * active_repair_pct)))
+			var restored := _restore_stack_health(battle, String(ally.get("battle_id", "")), requested_repair)
+			if restored <= 0:
+				continue
+			total_restored += restored
+			side_restored += restored
+			_append_presentation_event(
+				battle,
+				"heal",
+				"%s repairs %d health under %s." % [_stack_label(ally), restored, _stack_label(aura_source)],
+				{
+					"action_id": "foundry_aura",
+					"actor_battle_id": String(aura_source.get("battle_id", "")),
+					"target_battle_id": String(ally.get("battle_id", "")),
+					"healing": restored,
+					"overheated_priority": repairing_overheat,
+				}
+			)
+		if side_restored > 0:
+			_record_event(battle, "%s repairs %d allied health as the pressure cycle resets." % [_stack_label(aura_source), side_restored])
+	return total_restored
 
 static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_payload: Variant) -> void:
 	if not (effect_payload is Dictionary):
@@ -9076,6 +9131,11 @@ static func _side_max_ability_int(battle: Dictionary, side: String, ability_id: 
 		best = max(best, int(ability.get(key, 0)))
 	return best
 
+static func _side_ability_bool(battle: Dictionary, side: String, ability_id: String, key: String, default_value: bool) -> bool:
+	for ability in _side_ability_payloads(battle, side, ability_id):
+		return bool(ability.get(key, default_value))
+	return default_value
+
 static func _normalize_unit_abilities(value: Variant) -> Array:
 	var abilities = []
 	var seen = {}
@@ -9203,6 +9263,17 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_label": String(entry.get("status_label", "Overheated")),
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 2))),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -2, "initiative": -2})),
+				}
+			"foundry_aura":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Foundry Aura")),
+					"description": String(entry.get("description", "")),
+					"ally_defense_bonus": clampi(int(entry.get("ally_defense_bonus", 0)), 0, 3),
+					"hardening_requires_overheated": bool(entry.get("hardening_requires_overheated", true)),
+					"round_repair_pct": clampf(float(entry.get("round_repair_pct", 0.0)), 0.0, 0.1),
+					"overheated_repair_bonus_pct": clampf(float(entry.get("overheated_repair_bonus_pct", 0.0)), 0.0, 0.1),
+					"ai_target_priority_bonus": clampf(float(entry.get("ai_target_priority_bonus", 0.0)), 0.0, 5.0),
 				}
 			_:
 				continue
@@ -10137,11 +10208,18 @@ static func _stack_attack_total(stack: Dictionary, battle: Dictionary) -> int:
 	)
 
 static func _stack_defense_total(stack: Dictionary, battle: Dictionary) -> int:
+	var foundry_bonus := 0
+	if String(stack.get("faction_id", "")) == "faction_brasshollow":
+		var side := String(stack.get("side", ""))
+		var requires_overheat := _side_ability_bool(battle, side, "foundry_aura", "hardening_requires_overheated", true)
+		if not requires_overheat or SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
+			foundry_bonus = _side_max_ability_int(battle, side, "foundry_aura", "ally_defense_bonus")
 	return (
 		int(stack.get("defense", 0))
 		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "defense")
 		+ _contextual_defense_bonus(stack, battle)
 		+ _cohesion_defense_bonus(_stack_cohesion_total(stack, battle))
+		+ foundry_bonus
 	)
 
 static func _stack_initiative_total(stack: Dictionary, battle: Dictionary) -> int:

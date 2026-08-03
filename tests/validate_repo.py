@@ -317,7 +317,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10636,11 +10636,18 @@ def validate_content(errors: list[str]) -> None:
                     if isinstance(modifiers, dict):
                         ensure(int(modifiers.get("defense", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce defense")
                         ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce initiative")
+                elif ability_id == "foundry_aura":
+                    ensure(str(unit.get("faction_id", "")) == "faction_brasshollow", errors, f"Unit {unit_id} foundry_aura must belong to Brasshollow")
+                    ensure(int(ability.get("ally_defense_bonus", 0)) > 0, errors, f"Unit {unit_id} foundry_aura ally_defense_bonus must be > 0")
+                    ensure(ability.get("hardening_requires_overheated") is True, errors, f"Unit {unit_id} foundry_aura must harden only Overheated allies")
+                    ensure(0.0 < float(ability.get("round_repair_pct", 0.0)) <= 0.1, errors, f"Unit {unit_id} foundry_aura round_repair_pct must be in (0, 0.1]")
+                    ensure(0.0 < float(ability.get("overheated_repair_bonus_pct", 0.0)) <= 0.1, errors, f"Unit {unit_id} foundry_aura overheated_repair_bonus_pct must be in (0, 0.1]")
+                    ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat"}.issubset(authored_unit_ability_ids),
+        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, and overheat",
+        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, overheat, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10720,6 +10727,13 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "overheat" for ability in unit.get("abilities", []))
     )
     ensure(overheat_owners == ["unit_brasshollow_debt_engine_exactors"], errors, "Debt Furnace overheat must remain exclusive to Brasshollow Debt-Engine Exactors")
+
+    foundry_aura_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "foundry_aura" for ability in unit.get("abilities", []))
+    )
+    ensure(foundry_aura_owners == ["unit_brasshollow_foundry_saint"], errors, "Saint's Temper foundry_aura must remain exclusive to the Brasshollow Foundry Saint")
 
     for group_id, group in army_groups.items():
         if is_neutral_army_group(group):
@@ -18613,6 +18627,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _probe_obituary",
         "func _probe_bloodrush",
         "func _probe_overheat",
+        "func _probe_foundry_aura",
         "runtime_consequence_count",
         "ability_family_consequence_counts",
     ):

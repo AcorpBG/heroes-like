@@ -1075,6 +1075,9 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 2.5
 	if int(target.get("shots_remaining", 0)) > 0:
 		score += 1.0
+	var foundry_aura := _ability_by_id(target, "foundry_aura")
+	if not foundry_aura.is_empty():
+		score += float(foundry_aura.get("ai_target_priority_bonus", 0.0))
 	score += _target_immediate_threat_score(attacker, target, battle)
 	score += (1.0 - _health_ratio(target)) * 3.0
 	score += (1.0 - (float(_stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * 3.5
@@ -1858,6 +1861,11 @@ static func _estimate_damage(
 
 	var attack_stat: int = int(attacker.get("attack", 0)) + SpellRulesScript.effect_bonus_for_kind(attacker, battle, "attack") + _contextual_attack_bonus(attacker, battle)
 	var defense_stat: int = int(defender.get("defense", 0)) + SpellRulesScript.effect_bonus_for_kind(defender, battle, "defense") + _contextual_defense_bonus(defender, battle)
+	if String(defender.get("faction_id", "")) == "faction_brasshollow":
+		var defender_side := String(defender.get("side", ""))
+		var requires_overheat := _side_ability_bool(battle, defender_side, "foundry_aura", "hardening_requires_overheated", true)
+		if not requires_overheat or SpellRulesScript.has_effect_id(defender, battle, STATUS_OVERHEATED):
+			defense_stat += int(_side_max_ability_float(battle, defender_side, "foundry_aura", "ally_defense_bonus", 0.0))
 	attack_stat += _hero_bonus_for_side(battle, String(attacker.get("side", "")), "attack")
 	defense_stat += _hero_bonus_for_side(battle, String(defender.get("side", "")), "defense")
 	if bool(defender.get("defending", false)):
@@ -2595,6 +2603,13 @@ static func _side_max_ability_float(
 			continue
 		best = max(best, float(ability.get(key, default_value)))
 	return best
+
+static func _side_ability_bool(battle: Dictionary, side: String, ability_id: String, key: String, default_value: bool) -> bool:
+	for stack in _alive_stacks_for_side(battle, side):
+		var ability := _ability_by_id(stack, ability_id)
+		if not ability.is_empty():
+			return bool(ability.get(key, default_value))
+	return default_value
 
 static func _allied_ranged_count(battle: Dictionary, side: String) -> int:
 	var total := 0
