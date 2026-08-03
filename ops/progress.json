@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Ninefold strategic-AI front correction. Authored open origins, a passable Bellwake coast road, local owned development sources, and a roster-independent defense fixture restore all five Ninefold pressure launches and town-defense retasks; the full headless harness has zero failures.",
+  "currentNotes": "Completed the Ninefold Drowned Reliquary placement-local guard. Its deterministic battle moves from a flawless two-round victory to a four-round player-advantaged victory at 71 percent terminal margin and 11 enemy damage per round; the active breadth queue improves from 44/12-high to 40/10-high.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-ninefold-front-launch-retask-10184",
-  "currentSliceId": "strategic-ai-ninefold-front-launch-retask-10184",
-  "currentSliceNotes": "Completed. Ninefold's Brasshollow and Veilmourn fronts now have open passable origins, Bellwake is connected to the badland road with local owned development sources, and the defense fixture preserves its intended stabilization gap across faction rosters. All five Ninefold factions launch and retask; the broader harness records 9/9 pressure launches, 9/9 defense retasks, and 9/9 objective assignments with no failures.",
+  "currentSlice": "balance-ninefold-drowned-reliquary-pressure-10184",
+  "currentSliceId": "balance-ninefold-drowned-reliquary-pressure-10184",
+  "currentSliceNotes": "Completed. A placement-local five-Cutter/eight-Reefbolt roster preserves the player-advantaged matchup while producing a four-round victory at 71 percent terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves to 40 items / 10 high and runtime-consequence matrix status passes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Strategic AI Front Launch And Retask",
-  "currentSliceUpdatedAt": "2026-08-03T19:30:15Z",
+  "currentSliceTitle": "Ninefold Drowned Reliquary Battle Pressure",
+  "currentSliceUpdatedAt": "2026-08-03T19:56:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67425,6 +67425,79 @@
         "git diff --check"
       ],
       "completedAt": "2026-08-03T19:30:15Z"
+    },
+    {
+      "id": "balance-ninefold-drowned-reliquary-pressure-10184",
+      "title": "Ninefold Drowned Reliquary Battle Pressure",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Replace the flawless high-difficulty Drowned Reliquary battle with a placement-local guard that creates meaningful pressure while retaining a bounded player-advantaged victory.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ninefold_drowned_reliquary_balance_regression.gd",
+        "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 44,
+        "active_queue_high_priority_count": 12,
+        "active_queue_signature": "84d7d7c9",
+        "outcome_state": "victory",
+        "terminal_health_margin_pct": 100,
+        "encounter_difficulty": "high"
+      },
+      "completionCriteria": [
+        "Drowned Reliquary resolves deterministically as a completed player victory below 90 percent terminal margin with meaningful enemy damage",
+        "The army override is placement-local and the shared Tidepool Skiffyard army remains unchanged",
+        "The active breadth queue reduces its item and high-priority counts without creating new high-priority contributors",
+        "Faction benchmark structure, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "shared neutral army, global unit stat, battle difficulty, reward, artifact, strategic AI, save, campaign, or Native RMG changes",
+        "queue threshold changes, final encounter balance, final faction balance, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-03T19:35:32Z",
+      "updatedAt": "2026-08-03T19:56:44Z",
+      "notes": "Completed. The Drowned Reliquary now owns a five-Cutter/eight-Reefbolt placement army. Its deterministic battle remains player-advantaged at 134 percent power ratio but changes from a flawless two-round victory to a four-round victory at 71 percent terminal margin and 11 enemy damage per round. The active breadth queue improves from 44 items / 12 high to 40 / 10 and its runtime-consequence matrix moves from fail to pass. Remaining active encounter and faction-matrix debt is unchanged and unclaimed.",
+      "result": {
+        "focused_outcome_state": "victory",
+        "focused_round_reached": 4,
+        "focused_terminal_health_margin_pct": 71,
+        "focused_enemy_damage_per_round": 11,
+        "focused_matchup_band": "player_advantaged",
+        "active_breadth_sample_count": 59,
+        "active_queue_item_count_before": 44,
+        "active_queue_item_count_after": 40,
+        "active_queue_high_priority_count_before": 12,
+        "active_queue_high_priority_count_after": 10,
+        "active_queue_signature_after": "833dcd19",
+        "runtime_consequence_matrix_status_after": "pass",
+        "faction_matrix_outlier_count": 36,
+        "faction_matrix_severity": 293.5,
+        "faction_matrix_rows_at_or_above_65_pct": 12,
+        "faction_matrix_maximum_dominance_pct": 75.5
+      },
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/battle_ninefold_drowned_reliquary_balance_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: unrelated active queue remains; improved to 40 items / 10 high)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",
+        "godot4 --headless --path . --scene res://tests/artifact_guarded_site_reward_execution_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/ninefold_scenario_smoke.tscn",
+        "godot4 --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "completedAt": "2026-08-03T19:56:44Z"
     }
   ],
   "project": "heroes-like",
@@ -67435,7 +67508,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 44 items.",
+  "remainingWork": "Continue the remaining faction-balance, authored-encounter balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, and the active encounter queue retains 40 items / 10 high-priority items.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -67866,7 +67939,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ninefold_strategic_ai_fronts_complete_overall_release_in_progress",
+  "result": "ninefold_drowned_reliquary_pressure_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -67967,9 +68040,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence now passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Successive live combat/content corrections reduce the unchanged all-live 100-seed matrix from 45 to 36 outliers, severity 503.5 to 293.5, and maximum dominance to 75.5 percent while preserving zero structural failures; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence now passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment, while its Drowned Reliquary guard applies meaningful four-round battle pressure instead of resolving as a flawless victory. The active encounter queue improves from 44 items / 12 high to 40 / 10. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T19:30:15Z",
+  "updatedAt": "2026-08-03T19:56:44Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

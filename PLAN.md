@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `balance-ninefold-drowned-reliquary-pressure-10184`. Ninefold Confluence's high-difficulty Drowned Reliquary now owns a placement-local five-Cutter/eight-Reefbolt guard instead of inheriting the shared Skiffyard roster. The deterministic battle remains player-advantaged but moves from a flawless two-round victory to a four-round victory at 71% terminal margin and 11 enemy damage per round. The 59-sample active breadth queue improves from 44 items / 12 high to 40 / 10, and its runtime-consequence matrix moves from fail to pass. The unchanged all-live faction matrix, guarded rewards, core systems, Ninefold smoke, project parse, repository, JSON, and diff gates pass; remaining encounter and faction balance debt stays open.
 - Completed implementation slice: `strategic-ai-ninefold-front-launch-retask-10184`. Ninefold Confluence now gives Brasshollow and Veilmourn open passable pressure origins, connects Bellwake Harbor to the badland road, and keeps Bellwake's common and rare development sources local without enclosing its raid host. The defense fixture preserves a real stabilization gap across faction rosters. All five Ninefold factions launch and retask correctly; the broader five-scenario harness records 9/9 pressure launches, 9/9 town-defense retasks, and 9/9 objective-front assignments with no failures. Ninefold smoke, core systems, full headless harness, project parse, repository, JSON, and diff validation pass. Overall game completion remains open.
 - Completed implementation slice: `combat-brasshollow-foundry-saint-aura-10184`. Brasshollow's tier-7 Foundry Saint now projects Saint's Temper while alive: active Overheated Brasshollow machinery receives a bounded non-stacking defense bonus, and surviving allied stacks receive bounded non-resurrecting round-start repair with stronger Overheated repair. Readable healing events, tactical AI valuation, live summaries, focused runtime proof, and exact benchmark parity share the authored contract. The unchanged all-live matrix retains 36 outliers and 12 rows at or above 65%, improves severity from 300.0 to 293.5 and maximum dominance from 78.0% to 75.5%, and reduces excessive week-3 Brasshollow losses against Embercourt, Mireclaw, and Thornwake. Ability, focused autoplay balance/regression, town-development, core, parse, repository, JSON, and diff gates pass. The broader standard harness retains identical no-aura-control failures in the pre-existing 44-item active encounter queue and Ninefold Brasshollow/Veilmourn strategic-AI launch/retask cases; those remain overall-game debt rather than this slice's progress.
 - Completed implementation slice: `combat-brasshollow-debt-engine-overheat-10184`. Brasshollow's tier-5 Debt-Engine Exactors now open primary strikes at 1.16x damage, then run at 0.83x damage with -2 defense and initiative for a non-refreshing two-round Overheated cycle. Tactical AI, live summaries, runtime resolution, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 300.5 to 300.0 and maximum dominance from 78.5% to 78.0%, and reduces week-2 Brasshollow dominance versus Embercourt from 69% to 66% and Veilmourn from 71% to 68%. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -716,6 +717,29 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
+
+## Ninefold Drowned Reliquary Battle Pressure
+
+id: `balance-ninefold-drowned-reliquary-pressure-10184`
+
+Completed Phase 6 authored-combat implementation slice. Repairs the active
+Ninefold Confluence Drowned Reliquary guard, which previously resolved as a
+flawless player victory despite its high-difficulty authored role.
+
+Implementation target:
+- give `ninefold_drowned_reliquary_watch` a placement-local army suited to its high-difficulty guarded-artifact role without changing the shared Tidepool Skiffyard army;
+- retain a deterministic player-advantaged victory while reducing terminal margin below the active matrix outlier threshold and producing meaningful enemy damage;
+- add focused live regression coverage for outcome, pacing, pressure, and exact placement-local army ownership.
+
+Completion evidence:
+- the focused battle resolves in four rounds without stalls or invalid orders as a player-advantaged victory at 71% terminal margin and 11 enemy damage per round;
+- the 59-sample active-scenario breadth queue improves from 44 items / 12 high-priority items to 40 / 10, with the Drowned Reliquary outliers removed and runtime-consequence matrix status improved from fail to pass;
+- the unchanged 100-seed all-live faction matrix retains 36 outliers, 293.5 severity, 12 rows at or above 65%, and 75.5% maximum dominance with zero structural failures;
+- guarded-site rewards, core systems, Ninefold smoke, project parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change shared neutral army groups, global unit stats, battle difficulty, rewards, artifact behavior, strategic AI, saves, campaigns, or Native RMG;
+- do not weaken queue thresholds or claim the remaining active breadth/faction balance debt is complete.
 
 ## Ninefold Strategic AI Front Launch And Retask
 
