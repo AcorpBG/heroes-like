@@ -9,7 +9,7 @@ const ENCOUNTER_CONTRACTS := {
 	"reedbarrow-ferry": {
 		"placement_id": "barrow_pickets",
 		"local_army_id": "army_reedbarrow_barrow_pickets_watch",
-		"local_stack_counts": {"unit_blackbranch_cutthroat": 16, "unit_mire_slinger": 11},
+		"local_stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 12},
 		"shared_army_id": "army_barrow_pickets",
 		"shared_stack_counts": {"unit_blackbranch_cutthroat": 14, "unit_mire_slinger": 9},
 	},

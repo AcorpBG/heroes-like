@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed placement-local pressure for the final four sample terminal-margin watches. The 59-sample active queue now contains seven medium cohort-only watches, zero sample watches, and zero high-priority items.",
+  "currentNotes": "Completed seven placement-local authored battle corrections. The 59-sample active queue is clear with zero cohort, sample, medium, or high-priority watches and stable signature 829808c9.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-remaining-sample-margin-pressure-10184",
-  "currentSliceId": "balance-remaining-sample-margin-pressure-10184",
-  "currentSliceNotes": "Implemented Ironbridge 10/12/2, Prismhearth 6/2, Glassroad 5/7/1, and Reedbarrow 15/12 placement-local rosters. All four remain bounded victories at 66, 70, 66, and 73 percent margins; active queue 11 to 7, zero sample/high, signature 5200ba7d.",
+  "currentSlice": "balance-active-cohort-queue-clear-10184",
+  "currentSliceId": "balance-active-cohort-queue-clear-10184",
+  "currentSliceNotes": "Ghoul Grove remains a bounded normal victory and becomes a hard defeat; six one-sided scenario cohorts now contain bounded victory/defeat outcomes. Eleven controls and seven shared armies remain exact. Active queue 7 to 0, signature 829808c9.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Remaining Sample Margin Pressure",
-  "currentSliceUpdatedAt": "2026-08-03T23:18:24Z",
+  "currentSliceTitle": "Active Cohort Queue Clear",
+  "currentSliceUpdatedAt": "2026-08-03T23:52:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68639,6 +68639,82 @@
         "git diff --check"
       ],
       "remainingWork": "Seven medium cohort-only balance watches remain: low-difficulty terminal margin plus River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish scenario outcome-bias cohorts. Overall release completion remains open."
+    },
+    {
+      "id": "balance-active-cohort-queue-clear-10184",
+      "title": "Active Cohort Queue Clear",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Clear the remaining authored-battle cohort queue through placement-local roster pressure and outcome variety while preserving difficulty ordering, unaffected samples, and shared content.",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_ghoul_grove_balance_regression.gd",
+        "tests/battle_bellwake_wreck_balance_regression.gd",
+        "tests/battle_orevein_contract_balance_regression.gd",
+        "tests/battle_mireford_silt_hunters_balance_regression.gd",
+        "tests/battle_reedbarrow_mireford_guard_pressure_regression.gd",
+        "tests/battle_active_cohort_queue_clear_regression.gd",
+        "tests/battle_active_cohort_queue_clear_regression.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 7,
+        "active_queue_medium_priority_count": 7,
+        "active_queue_high_priority_count": 0,
+        "active_queue_sample_watch_count": 0,
+        "active_queue_cohort_watch_count": 7,
+        "active_queue_signature": "5200ba7d",
+        "low_difficulty_watch": {"scenario_id": "river-pass", "placement_id": "river_pass_ghoul_grove", "outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 72, "enemy_damage_per_round": 7},
+        "scenario_outcome_bias_watches": ["river-pass", "bellwake-wreck-claim", "fen-crown", "glassfen-breakers", "orevein-contract", "mireford-skirmish"]
+      },
+      "completionCriteria": [
+        "Low-difficulty River Pass Ghoul Grove remains a standard or extended victory in three to eight rounds at no more than 70 percent terminal margin, with normal no easier than hard",
+        "Each watched scenario contains at least one bounded victory and one bounded defeat, with target reversals in three to eight rounds, no more than 70 percent terminal margin, and no more than 50 enemy damage per round",
+        "All unaffected samples and shared army groups remain exact; each correction is placement-local and does not change faction-matrix or Native RMG inputs",
+        "The 59-sample active queue clears from seven to zero with zero sample/high items and both runtime-consequence gates passing, without queue-policy or threshold changes",
+        "Focused battle regressions, active breadth, player-facing campaign menu, runtime consequences, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "queue threshold, battle rule, difficulty multiplier, shared army, global unit stat, reward, strategic AI, save schema, faction matrix, or Native RMG changes",
+        "final faction balance, manual-play completion, packaging completion, or overall release-completion claims"
+      ],
+      "updatedAt": "2026-08-03T23:52:54Z",
+      "startedAt": "2026-08-03T23:22:04Z",
+      "completedAt": "2026-08-03T23:52:54Z",
+      "implemented": {
+        "river_pass_ghoul_grove": {"stack_counts": {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}, "normal": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 9}, "hard": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 42}},
+        "river_pass_reed_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 14, "enemy_damage_per_round": 18},
+        "bellwake_mirror_lancers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 35, "enemy_damage_per_round": 49},
+        "fen_crown_watch": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 43, "enemy_damage_per_round": 42},
+        "glassfen_relay_pickets": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 5},
+        "orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 23, "enemy_damage_per_round": 40},
+        "mireford_ford_reavers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 28, "enemy_damage_per_round": 42},
+        "active_breadth_after": {"sample_count": 59, "completed_sample_count": 59, "queue_item_count": 0, "queue_sample_watch_count": 0, "queue_cohort_watch_count": 0, "queue_high_priority_count": 0, "queue_medium_priority_count": 0, "queue_signature": "829808c9", "balance_matrix_gate_status": "pass", "runtime_consequence_gate_status": "pass", "runtime_consequence_matrix_gate_status": "pass"},
+        "preserved": {"adjacent_sample_count_exact": 11, "shared_army_count_exact": 7, "queue_policy_changed": false, "battle_rules_changed": false, "difficulty_multipliers_changed": false, "faction_matrix_inputs_changed": false, "native_rmg_inputs_changed": false}
+      },
+      "validation": [
+        "battle_active_cohort_queue_clear_regression",
+        "battle_ghoul_grove_balance_regression",
+        "battle_bellwake_wreck_balance_regression",
+        "battle_orevein_contract_balance_regression",
+        "battle_ford_reavers_balance_regression",
+        "battle_reedbarrow_mireford_guard_pressure_regression",
+        "battle_autoplay_active_scenario_breadth_report: queue clear, 59/59 completed, zero watches, signature 829808c9",
+        "battle_autoplay_balance_tuning_queue_report: queue clear, 12/12 sampled, zero watches, signature 829808c9",
+        "player_facing_campaign_menu_smoke",
+        "runtime_consequence_report",
+        "runtime_consequence_matrix_report",
+        "core_systems_regression_smoke",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Authored active-scenario battle tuning queue is clear. Overall release completion remains open across faction balance, strategic-AI breadth, accessibility, content, performance, packaging, certification, and release integration."
     }
   ],
   "project": "heroes-like",
@@ -68649,7 +68725,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the seven medium-priority cohort-only authored-encounter watches plus faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
+  "remainingWork": "Continue faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the authored active-scenario battle queue is clear, while the faction matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -69080,7 +69156,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ninefold_drowned_reliquary_pressure_complete_overall_release_in_progress",
+  "result": "active_authored_battle_queue_clear_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -69181,9 +69257,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Ninefold Confluence passes every covered strategic-AI pressure launch, town-defense retask, and objective-front assignment. Placement-local Drowned Reliquary, Barrow Vault, Ninefold Orevein Exactors, Bellwake Relay and Mirror, Orevein Archive and Bridgeward, Bogbound Archive, Reedbarrow Chain, Mireford, and Lockmarsh Road Chaplains guards now apply meaningful battle pressure, blocked advances correctly force aside contested obstruction objectives, and bounded decisive melee pressure restores Ghoul Grove's hard-mode victory without changing its roster. The active encounter queue improves to 11 / 0 high with its balance matrix gate passing. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance with zero structural failures and still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. The authored 59-sample active battle queue is now clear after placement-local roster corrections produce bounded outcome variety across River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish while preserving eleven adjacent samples and seven shared armies. Ghoul Grove remains a bounded normal victory and hard remains more difficult. Balance-matrix and runtime-consequence gates pass with stable queue signature 829808c9. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance and still reports needs_tuning. Broader strategic AI, accessibility, content, performance, packaging, certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T23:18:24Z",
+  "updatedAt": "2026-08-03T23:52:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

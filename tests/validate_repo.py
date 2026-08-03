@@ -20259,6 +20259,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     lockmarsh_surge_scene_path = ROOT / "tests/battle_lockmarsh_road_chaplains_balance_regression.tscn"
     ghoul_grove_report_path = ROOT / "tests/battle_ghoul_grove_balance_regression.gd"
     ghoul_grove_scene_path = ROOT / "tests/battle_ghoul_grove_balance_regression.tscn"
+    active_cohort_report_path = ROOT / "tests/battle_active_cohort_queue_clear_regression.gd"
+    active_cohort_scene_path = ROOT / "tests/battle_active_cohort_queue_clear_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
@@ -20607,7 +20609,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "army_aurora_battery",
             "LOCAL_ARMY_CONTRACTS",
             "SHARED_ARMY_CONTRACTS",
-            "UNCHANGED_SAMPLE_CONTRACTS",
+            "SAMPLE_CONTRACTS",
             "MAX_TERMINAL_MARGIN_PCT",
             "MAX_COHORT_TERMINAL_MARGIN_PCT",
             "cohort_average_terminal_health_margin_pct",
@@ -20703,7 +20705,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "army_causeway_phalanx",
             "LOCAL_ARMY_CONTRACTS",
             "SHARED_ARMY_CONTRACTS",
-            "UNCHANGED_SAMPLE_CONTRACTS",
+            "SAMPLE_CONTRACTS",
             "MAX_TERMINAL_MARGIN_PCT",
             "MAX_COHORT_TERMINAL_MARGIN_PCT",
             "cohort_average_terminal_health_margin_pct",
@@ -20730,7 +20732,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "army_ford_reavers",
             "LOCAL_ARMY_CONTRACTS",
             "SHARED_STACK_COUNTS",
-            "UNCHANGED_MIREFORD_SAMPLE",
+            "MIREFORD_SAMPLE",
             "terminal_health_margin_pct",
             "damage_per_round",
             "get_tree().quit(1)",
@@ -21008,14 +21010,37 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION",
             "army_river_pass_ghoul_grove_watch",
             "army_blackbranch_raiders",
-            '"normal": 75',
-            '"hard": 80',
+            "unit_mireclaw_mudglass_slingers",
+            "SAMPLE_CONTRACTS",
+            '"normal": {"outcome_state": "victory"',
+            '"hard": {"outcome_state": "defeat"',
             "get_tree().quit(1)",
         ):
             ensure(required_token in ghoul_grove_report_text, errors, f"Ghoul Grove balance regression is missing token: {required_token}")
     if ghoul_grove_scene_path.exists():
         ghoul_grove_scene_text = ghoul_grove_scene_path.read_text(encoding="utf-8")
         ensure("battle_ghoul_grove_balance_regression.gd" in ghoul_grove_scene_text, errors, "Ghoul Grove balance regression scene is not wired to its script.")
+    if active_cohort_report_path.exists():
+        active_cohort_report_text = active_cohort_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_ACTIVE_COHORT_QUEUE_CLEAR_REGRESSION",
+            "TARGET_CONTRACTS",
+            "CONTROL_SAMPLE_CONTRACTS",
+            "SHARED_ARMY_CONTRACTS",
+            "river_pass_ghoul_grove",
+            "river_pass_reed_totemists",
+            "bellwake_mirror_lancers",
+            "fen_crown_watch",
+            "glassfen_relay_pickets",
+            "orevein_archive_wardens",
+            "bridge_ford_reavers",
+            "_within_target_bounds",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in active_cohort_report_text, errors, f"Active cohort queue-clear regression is missing token: {required_token}")
+    if active_cohort_scene_path.exists():
+        active_cohort_scene_text = active_cohort_scene_path.read_text(encoding="utf-8")
+        ensure("battle_active_cohort_queue_clear_regression.gd" in active_cohort_scene_text, errors, "Active cohort queue-clear regression scene is not wired to its script.")
     if withdrawal_report_path.exists():
         withdrawal_report_text = withdrawal_report_path.read_text(encoding="utf-8")
         for required_token in (

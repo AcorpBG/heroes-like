@@ -5,12 +5,12 @@ const REPORT_ID := "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION"
 const SCENARIO_ID := "river-pass"
 const PLACEMENT_ID := "river_pass_ghoul_grove"
 const LOCAL_ARMY_ID := "army_river_pass_ghoul_grove_watch"
-const LOCAL_STACK_COUNTS := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2}
+const LOCAL_STACK_COUNTS := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}
 const SHARED_ARMY_ID := "army_blackbranch_raiders"
 const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 11, "unit_mire_slinger": 6, "unit_bog_brute": 2}
-const MAX_TERMINAL_MARGIN_PCT_BY_DIFFICULTY := {
-	"normal": 75,
-	"hard": 80,
+const SAMPLE_CONTRACTS := {
+	"normal": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 9},
+	"hard": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 42},
 }
 
 func _ready() -> void:
@@ -45,15 +45,12 @@ func _run() -> void:
 			launch_difficulty
 		)
 		payload["samples"][launch_difficulty] = _compact_sample(sample)
-		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
-			_fail_sample("Ghoul Grove no longer resolves as a bounded opening victory on %s." % launch_difficulty, payload, launch_difficulty, sample)
+		if not bool(sample.get("completed", false)) or not _sample_matches(sample, SAMPLE_CONTRACTS[launch_difficulty]):
+			_fail_sample("Ghoul Grove drifted from its bounded %s outcome." % launch_difficulty, payload, launch_difficulty, sample)
 			return
-		if int(sample.get("terminal_health_margin_pct", 100)) > int(MAX_TERMINAL_MARGIN_PCT_BY_DIFFICULTY[launch_difficulty]):
-			_fail_sample("Ghoul Grove remains above the terminal-margin watch target on %s." % launch_difficulty, payload, launch_difficulty, sample)
-			return
-		if int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
-			_fail_sample("Ghoul Grove still fails to apply meaningful enemy pressure on %s." % launch_difficulty, payload, launch_difficulty, sample)
-			return
+	if String(payload["samples"]["normal"].get("outcome_state", "")) != "victory" or String(payload["samples"]["hard"].get("outcome_state", "")) != "defeat":
+		_fail("Ghoul Grove launch difficulty is no longer monotonic.", payload)
+		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
 
@@ -86,6 +83,15 @@ func _stack_counts(army: Dictionary) -> Dictionary:
 		if stack is Dictionary:
 			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
 	return counts
+
+func _sample_matches(sample: Dictionary, expected: Dictionary) -> bool:
+	return (
+		String(sample.get("outcome_state", "")) == String(expected.get("outcome_state", ""))
+		and String(sample.get("pacing_band", "")) == String(expected.get("pacing_band", ""))
+		and int(sample.get("round_reached", 0)) == int(expected.get("round_reached", -1))
+		and int(sample.get("terminal_health_margin_pct", -1)) == int(expected.get("terminal_health_margin_pct", -1))
+		and int(sample.get("damage_per_round", {}).get("enemy", -1)) == int(expected.get("enemy_damage_per_round", -1))
+	)
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false

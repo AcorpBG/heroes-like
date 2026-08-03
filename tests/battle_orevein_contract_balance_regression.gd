@@ -13,7 +13,7 @@ const PLACEMENT_IDS := [
 const LOCAL_ARMY_CONTRACTS := {
 	"orevein_archive_wardens": {
 		"army_id": "army_orevein_archive_wardens_watch",
-		"stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 2},
+		"stack_counts": {"unit_river_guard": 11, "unit_ember_archer": 11, "unit_citadel_pikeward": 4},
 	},
 	"orevein_bridgeward_levies": {
 		"army_id": "army_orevein_bridgeward_levies",
@@ -28,9 +28,10 @@ const SHARED_ARMY_CONTRACTS := {
 	"army_archive_wardens": {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2},
 	"army_causeway_phalanx": {"unit_river_guard": 6, "unit_citadel_pikeward": 4, "unit_ember_archer": 4},
 }
-const UNCHANGED_SAMPLE_CONTRACTS := {
-	"orevein_bridgeward_levies": {"round_reached": 5, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 20},
-	"orevein_beacon_wardens": {"round_reached": 3, "terminal_health_margin_pct": 63, "enemy_damage_per_round": 28},
+const SAMPLE_CONTRACTS := {
+	"orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 23, "enemy_damage_per_round": 40},
+	"orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 20},
+	"orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 63, "enemy_damage_per_round": 28},
 }
 
 func _ready() -> void:
@@ -65,24 +66,10 @@ func _run() -> void:
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
 		terminal_margin_total += int(sample.get("terminal_health_margin_pct", 100))
-		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
-			failures.append("%s does not resolve as a bounded player victory" % placement_id)
+		var expected: Dictionary = SAMPLE_CONTRACTS[placement_id]
+		if not bool(sample.get("completed", false)) or not _sample_matches(sample, expected):
+			failures.append("%s drifted from its bounded cohort outcome" % placement_id)
 			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		elif int(sample.get("terminal_health_margin_pct", 100)) > MAX_TERMINAL_MARGIN_PCT:
-			failures.append("%s exceeds the terminal-margin target" % placement_id)
-			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		elif int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 2:
-			failures.append("%s does not apply meaningful enemy pressure" % placement_id)
-			failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		if placement_id == "orevein_archive_wardens":
-			if int(sample.get("round_reached", 0)) < 3 or int(sample.get("terminal_health_margin_pct", 100)) >= 80 or int(sample.get("damage_per_round", {}).get("enemy", 0)) <= 10:
-				failures.append("Archive Wardens remains outside its bounded pressure target")
-				failed_turn_logs[placement_id] = sample.get("turn_log", [])
-		elif UNCHANGED_SAMPLE_CONTRACTS.has(placement_id):
-			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
-			if int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
-				failures.append("%s changed outside the Archive Wardens correction" % placement_id)
-				failed_turn_logs[placement_id] = sample.get("turn_log", [])
 	var cohort_average := terminal_margin_total / PLACEMENT_IDS.size()
 	payload["cohort_average_terminal_health_margin_pct"] = cohort_average
 	if cohort_average > MAX_COHORT_TERMINAL_MARGIN_PCT:
@@ -121,6 +108,15 @@ func _stack_counts(army: Dictionary) -> Dictionary:
 		if stack is Dictionary:
 			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
 	return counts
+
+func _sample_matches(sample: Dictionary, expected: Dictionary) -> bool:
+	return (
+		String(sample.get("outcome_state", "")) == String(expected.get("outcome_state", ""))
+		and String(sample.get("pacing_band", "")) == String(expected.get("pacing_band", ""))
+		and int(sample.get("round_reached", 0)) == int(expected.get("round_reached", -1))
+		and int(sample.get("terminal_health_margin_pct", -1)) == int(expected.get("terminal_health_margin_pct", -1))
+		and int(sample.get("damage_per_round", {}).get("enemy", -1)) == int(expected.get("enemy_damage_per_round", -1))
+	)
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false
