@@ -9,20 +9,43 @@ const PLACEMENT_IDS := [
 	"bellwake_mirror_lancers",
 	"bellwake_aurora_battery",
 ]
+const LOCAL_ARMY_CONTRACTS := {
+	"bellwake_relay_pickets": {
+		"army_id": "army_bellwake_relay_pickets_watch",
+		"stack_counts": {"unit_shard_guard": 8, "unit_prism_adept": 6, "unit_mirror_duelist": 6},
+	},
+	"bellwake_mirror_lancers": {
+		"army_id": "army_bellwake_mirror_lancers_watch",
+		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 8},
+	},
+}
+const SHARED_ARMY_CONTRACTS := {
+	"army_relay_pickets": {"unit_shard_guard": 5, "unit_prism_adept": 2},
+	"army_mirror_lancers": {"unit_mirror_duelist": 6, "unit_shard_guard": 4, "unit_prism_adept": 4},
+}
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	ContentService.clear_cache()
-	var payload := {"ok": true, "report_id": REPORT_ID, "scenario_id": SCENARIO_ID, "samples": []}
+	var payload := {"ok": true, "report_id": REPORT_ID, "scenario_id": SCENARIO_ID, "samples": [], "shared_army_ids": SHARED_ARMY_CONTRACTS.keys()}
 	var failures := []
 	var failed_turn_logs := {}
+	for army_id in SHARED_ARMY_CONTRACTS:
+		var shared_army := ContentService.get_army_group(String(army_id))
+		if String(shared_army.get("id", "")) != army_id or _stack_counts(shared_army) != SHARED_ARMY_CONTRACTS[army_id]:
+			failures.append("%s changed with the Bellwake placement-local correction" % army_id)
 	for placement_id in PLACEMENT_IDS:
 		var encounter := _encounter(String(placement_id))
 		if encounter.is_empty():
 			failures.append("%s is missing" % placement_id)
 			continue
+		if LOCAL_ARMY_CONTRACTS.has(placement_id):
+			var local_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+			var contract: Dictionary = LOCAL_ARMY_CONTRACTS[placement_id]
+			if String(local_army.get("id", "")) != String(contract.get("army_id", "")) or _stack_counts(local_army) != contract.get("stack_counts", {}):
+				failures.append("%s placement-local army drifted from its bounded pressure roster" % placement_id)
 		var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 		payload["samples"].append(_compact_sample(String(placement_id), sample))
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
@@ -61,6 +84,13 @@ func _compact_sample(placement_id: String, sample: Dictionary) -> Dictionary:
 		"action_mix": sample.get("action_mix", {}),
 		"initial_stack_profile": sample.get("initial_stack_profile", {}),
 	}
+
+func _stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack in army.get("stacks", []):
+		if stack is Dictionary:
+			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
+	return counts
 
 func _fail(message: String, payload: Dictionary) -> void:
 	payload["ok"] = false

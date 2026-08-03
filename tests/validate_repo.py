@@ -20233,6 +20233,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     combat_balance_scene_path = ROOT / "tests/battle_autoplay_combat_balance_report.tscn"
     active_breadth_report_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.gd"
     active_breadth_scene_path = ROOT / "tests/battle_autoplay_active_scenario_breadth_report.tscn"
+    bellwake_wreck_report_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.gd"
+    bellwake_wreck_scene_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
     tuning_queue_report_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.gd"
@@ -20556,6 +20558,30 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if active_breadth_scene_path.exists():
         active_breadth_scene_text = active_breadth_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_active_scenario_breadth_report.gd" in active_breadth_scene_text, errors, "Battle autoplay active scenario breadth scene is not wired to its script.")
+    if bellwake_wreck_report_path.exists():
+        bellwake_wreck_text = bellwake_wreck_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_BELLWAKE_WRECK_BALANCE_REGRESSION",
+            "bellwake_relay_pickets",
+            "bellwake_mirror_lancers",
+            "army_bellwake_relay_pickets_watch",
+            "army_bellwake_mirror_lancers_watch",
+            "army_relay_pickets",
+            "army_mirror_lancers",
+            "LOCAL_ARMY_CONTRACTS",
+            "SHARED_ARMY_CONTRACTS",
+            "MAX_TERMINAL_MARGIN_PCT",
+            "damage_per_round",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in bellwake_wreck_text, errors, f"Bellwake Wreck balance regression is missing token: {required_token}")
+    if bellwake_wreck_scene_path.exists():
+        bellwake_wreck_scene_text = bellwake_wreck_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_bellwake_wreck_balance_regression.gd" in bellwake_wreck_scene_text,
+            errors,
+            "Bellwake Wreck balance regression scene is not wired to its script.",
+        )
     if drowned_reliquary_report_path.exists():
         drowned_reliquary_text = drowned_reliquary_report_path.read_text(encoding="utf-8")
         for required_token in (
