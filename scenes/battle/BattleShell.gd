@@ -61,8 +61,10 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _system_body_label: Label = %SystemBody
+@onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
+@onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
@@ -449,6 +451,23 @@ func _on_save_slot_selected(index: int) -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
+func _on_settings_pressed() -> void:
+	_active_play_settings_dialog.open_dialog()
+
+func _on_active_play_settings_closed() -> void:
+	_settings_button.call_deferred("grab_focus")
+
+func _on_active_play_setting_changed(setting_id: String) -> void:
+	if setting_id == "battle_playback_speed":
+		BattleRules.set_battle_presentation_speed(_session, SettingsService.battle_playback_speed_id())
+		_refresh()
+		return
+	if setting_id not in ["ui_scale", "high_contrast", "color_cues"]:
+		return
+	_apply_visual_theme()
+	_apply_responsive_layout()
+	_refresh()
+
 func _perform_action(action: String) -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -724,7 +743,7 @@ func _refresh() -> void:
 	call_deferred("_configure_battle_keyboard_focus", false)
 
 func _configure_battle_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree() or _session == null or _session.battle.is_empty():
+	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
 		return
 	var surfaces := [
 		_battle_board_view,
@@ -742,6 +761,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_speed_instant_button,
 		_save_slot_picker,
 		_save_button,
+		_settings_button,
 		_menu_button,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
@@ -2185,6 +2205,13 @@ func validation_confirm_manual_save_overwrite() -> Dictionary:
 func validation_cancel_manual_save_overwrite() -> void:
 	_on_manual_save_overwrite_canceled()
 
+func validation_open_active_play_settings() -> Dictionary:
+	_on_settings_pressed()
+	return _active_play_settings_dialog.validation_snapshot()
+
+func validation_active_play_settings_dialog():
+	return _active_play_settings_dialog
+
 func validation_return_to_menu() -> Dictionary:
 	_on_menu_pressed()
 	return {
@@ -2705,8 +2732,9 @@ func _apply_visual_theme() -> void:
 		_style_action_button(button, true)
 	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
 		_style_action_button(button, false, 78)
-	for button in [_save_button, _menu_button]:
+	for button in [_save_button, _settings_button, _menu_button]:
 		_style_action_button(button, true, 104)
+	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the battle."
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 104.0, 32.0, 12)
 
 	for title_label in find_children("*Title", "Label", true, false):

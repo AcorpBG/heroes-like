@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/town/TownShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/town/TownStageView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/shared/ManualSaveOverwriteDialog.tscn" id="4_save_overwrite"]
+[ext_resource type="PackedScene" path="res://scenes/shared/ActivePlaySettingsDialog.tscn" id="5_active_settings"]
 
 [node name="TownShell" type="Control"]
 layout_mode = 3
@@ -623,6 +624,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Leave"
 
+[node name="Settings" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
 [node name="Menu" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -630,10 +636,15 @@ text = "Menu"
 
 [node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
 
+[node name="ActivePlaySettingsDialog" parent="." instance=ExtResource("5_active_settings")]
+
 [connection signal="item_selected" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/TownOrdersToggle" to="." method="_on_town_orders_toggle_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Leave" to="." method="_on_leave_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Menu" to="." method="_on_menu_pressed"]
 [connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
 [connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]
+[connection signal="closed" from="ActivePlaySettingsDialog" to="." method="_on_active_play_settings_closed"]
+[connection signal="setting_changed" from="ActivePlaySettingsDialog" to="." method="_on_active_play_setting_changed"]

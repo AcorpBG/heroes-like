@@ -88,8 +88,10 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _save_status_label: Label = %SaveStatus
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
+@onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
+@onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
 const DIRECTIONS := [
 	Vector2i.UP,
@@ -293,6 +295,8 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		return
 	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
 		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
 			return
@@ -545,6 +549,19 @@ func _on_save_slot_selected(index: int) -> void:
 
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
+
+func _on_settings_pressed() -> void:
+	_active_play_settings_dialog.open_dialog()
+
+func _on_active_play_settings_closed() -> void:
+	_settings_button.call_deferred("grab_focus")
+
+func _on_active_play_setting_changed(setting_id: String) -> void:
+	if setting_id not in ["ui_scale", "high_contrast", "color_cues"]:
+		return
+	_apply_visual_theme()
+	_apply_responsive_layout()
+	_refresh()
 
 func _on_primary_action_pressed() -> void:
 	_activate_primary_action()
@@ -5076,7 +5093,7 @@ func _sync_context_drawers() -> void:
 	_refresh_drawer_handoff_cues()
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
 		return
 	var surfaces := [
 		_primary_action_button,
@@ -5094,6 +5111,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		_end_turn_button,
 		_save_slot_picker,
 		_save_button,
+		_settings_button,
 		_menu_button,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
@@ -7536,6 +7554,13 @@ func validation_confirm_manual_save_overwrite() -> Dictionary:
 func validation_cancel_manual_save_overwrite() -> void:
 	_on_manual_save_overwrite_canceled()
 
+func validation_open_active_play_settings() -> Dictionary:
+	_on_settings_pressed()
+	return _active_play_settings_dialog.validation_snapshot()
+
+func validation_active_play_settings_dialog():
+	return _active_play_settings_dialog
+
 func validation_return_to_menu() -> Dictionary:
 	var scenario_id := _session.scenario_id
 	var resume_target := SaveService.resume_target_for_session(_session)
@@ -8654,6 +8679,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_primary_action_button, "primary", 210.0, 36.0, 13)
 	FrontierVisualKit.apply_button(_end_turn_button, "primary", 104.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_save_button, "secondary", 78.0, 32.0, 13)
+	FrontierVisualKit.apply_button(_settings_button, "secondary", 86.0, 32.0, 13)
+	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the expedition."
 	FrontierVisualKit.apply_button(_menu_button, "secondary", 78.0, 32.0, 13)
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 92.0, 32.0, 13)
 
