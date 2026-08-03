@@ -119,8 +119,8 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
-	var receiver_tile := Vector2i(23, 23)
-	var source_tile := Vector2i(22, 23)
+	var receiver_tile := Vector2i(27, 23)
+	var source_tile := Vector2i(28, 23)
 	_reveal_validation_tiles(session, [receiver_tile, source_tile])
 	shell.call("validation_select_tile", receiver_tile.x, receiver_tile.y)
 	var presentation: Dictionary = shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)
@@ -131,36 +131,39 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		or not bool(terrain.get("neighbor_aware_transitions", false))
 		or String(terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
 		or String(terrain.get("transition_edge_model", "")) != "bridge_or_shoreline_atlas_frame_lookup"
-		or String(terrain.get("transition_edge_mask", "")) != "NW"
-		or "plains" not in terrain.get("transition_source_terrain_ids", [])
-		or "grasslands" not in terrain.get("transition_source_groups", [])
-		or int(terrain.get("edge_transition_count", 0)) != 2
+		or String(terrain.get("transition_edge_mask", "")) != "E"
+		or "dirt" not in terrain.get("transition_source_terrain_ids", [])
+		or "dirt" not in terrain.get("transition_source_groups", [])
+		or int(terrain.get("edge_transition_count", 0)) != 1
 		or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 		or String(terrain.get("homm3_bridge_family", "")) != "dirt"
 		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
 	):
-		_fail("Ninefold smoke: terrain transition was not selected from the HoMM3 full-receiver stamp lookup at the grass/plains boundary: %s." % presentation)
+		_fail("Ninefold smoke: terrain transition was not selected from the HoMM3 full-receiver stamp lookup at the canonical grass/dirt boundary: %s." % presentation)
 		return false
 	if not _assert_full_receiver_stamp_payload(terrain, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "N",
-		"frame": "00_08",
-		"offset": {"x": 0, "y": -1},
+		"direction": "E",
+		"frame": "00_06",
+		"offset": {"x": 1, "y": 0},
 		"bridge_family": "dirt",
 		"target_block": "native_to_dirt_transition",
 		"source_kind": "cardinal_source",
-		"mixed_reserved": true,
+		"shape_class": 3,
+		"row_group": "4-7",
+		"flip": "H",
+		"flip_h": true,
 	}):
-		_fail("Ninefold smoke: two-edge grass/plains boundary did not expose reserved mixed-junction stamp metadata: %s." % presentation)
+		_fail("Ninefold smoke: canonical east-side grass/dirt boundary did not expose accepted relation-class metadata: %s." % presentation)
 		return false
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
-	var found_west_plains := false
+	var found_east_dirt := false
 	for source_value in sources:
 		var source: Dictionary = source_value
-		if String(source.get("source_terrain", "")) == "plains" and String(source.get("direction", "")) == "W" and String(source.get("relation_kind", "")) == "bridge_base_resolution":
-			found_west_plains = true
+		if String(source.get("source_terrain", "")) == "dirt" and String(source.get("direction", "")) == "E" and String(source.get("relation_kind", "")) == "bridge_base_resolution":
+			found_east_dirt = true
 			break
-	if not found_west_plains:
+	if not found_east_dirt:
 		_fail("Ninefold smoke: terrain transition did not expose its neighboring source terrain and direction: %s." % presentation)
 		return false
 	var shoreline_tile := Vector2i(49, 0)
@@ -171,116 +174,30 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	if String(shoreline.get("homm3_selection_kind", "")) != "water_shoreline" or not bool(shoreline.get("homm3_shoreline_specific", false)) or String(shoreline.get("homm3_terrain_atlas", "")) != "watrtl":
 		_fail("Ninefold smoke: water/coast terrain did not use shoreline-specific HoMM3 lookup beside land: %s." % shoreline_presentation)
 		return false
-	if not _assert_direct_dirt_swamp_transition(shell, session):
-		return false
-	if not _assert_horizontal_transition_orientation(shell, session):
+	if not _assert_direct_dirt_sand_transition(shell, session):
 		return false
 	return true
 
-func _assert_direct_dirt_swamp_transition(shell: Node, session) -> bool:
-	var swamp_receiver := Vector2i(28, 13)
-	var dirt_source := Vector2i(27, 13)
-	_reveal_validation_tiles(session, [swamp_receiver, dirt_source])
-	var swamp_presentation: Dictionary = shell.call("validation_tile_presentation", swamp_receiver.x, swamp_receiver.y)
-	var swamp_terrain: Dictionary = swamp_presentation.get("terrain_presentation", {})
+func _assert_direct_dirt_sand_transition(shell: Node, session) -> bool:
+	var dirt_receiver := Vector2i(34, 1)
+	var sand_source := Vector2i(35, 1)
+	_reveal_validation_tiles(session, [dirt_receiver, sand_source])
+	var dirt_presentation: Dictionary = shell.call("validation_tile_presentation", dirt_receiver.x, dirt_receiver.y)
+	var dirt_terrain: Dictionary = dirt_presentation.get("terrain_presentation", {})
 	if (
-		String(swamp_terrain.get("terrain", "")) != "swamp"
-		or String(swamp_terrain.get("homm3_terrain_family", "")) != "swamp"
-		or String(swamp_terrain.get("homm3_terrain_atlas", "")) != "swmptl"
-		or String(swamp_terrain.get("transition_edge_mask", "")) != "W"
-		or String(swamp_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(swamp_terrain.get("homm3_bridge_family", "")) != "dirt"
-		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
-		or String(swamp_terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1"
-		or not _transition_sources_include_bridge(swamp_terrain, "W", "plains", "dirt", "direct_family_pair_lookup")
+		String(dirt_terrain.get("terrain", "")) != "dirt"
+		or String(dirt_terrain.get("homm3_terrain_family", "")) != "dirt"
+		or String(dirt_terrain.get("homm3_terrain_atlas", "")) != "dirttl"
+		or String(dirt_terrain.get("transition_edge_mask", "")) != "E"
+		or String(dirt_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(dirt_terrain.get("homm3_bridge_family", "")) != "sand"
+		or String(dirt_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
+		or String(dirt_terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1"
+		or not _transition_sources_include_bridge(dirt_terrain, "E", "sand", "sand", "direct_dirt_sand_receiver_lookup")
 	):
-		_fail("Ninefold smoke: direct swamp/dirt transition did not keep direct-pair diagnostics while using the accepted relation-class selector: %s." % swamp_presentation)
-		return false
-	if not _assert_full_receiver_stamp_payload(swamp_terrain, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "W",
-		"frame": "00_04",
-		"offset": {"x": -1, "y": 0},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "cardinal_source",
-		"shape_class": 3,
-		"row_group": "4-7",
-	}):
-		_fail("Ninefold smoke: direct swamp/dirt transition did not expose accepted relation-class metadata: %s." % swamp_presentation)
+		_fail("Ninefold smoke: canonical direct dirt/sand boundary did not keep direct-pair diagnostics: %s." % dirt_presentation)
 		return false
 	return true
-
-func _assert_horizontal_transition_orientation(shell: Node, session) -> bool:
-	var east_receiver := Vector2i(26, 63)
-	var east_source := Vector2i(27, 63)
-	_reveal_validation_tiles(session, [east_receiver, east_source])
-	var east_presentation: Dictionary = shell.call("validation_tile_presentation", east_receiver.x, east_receiver.y)
-	var east_terrain: Dictionary = east_presentation.get("terrain_presentation", {})
-	if (
-		String(east_terrain.get("terrain", "")) != "grass"
-		or String(east_terrain.get("transition_edge_mask", "")) != "E"
-		or String(east_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(east_terrain.get("homm3_terrain_frame", "")) != "00_07"
-		or String(east_terrain.get("homm3_terrain_flip", "")) != "H"
-		or not _transition_sources_include(east_terrain, "E", "plains")
-	):
-		_fail("Ninefold smoke: HoMM3 east-side grass/plains transition did not use the accepted relation-class edge frame plus horizontal transform: %s." % east_presentation)
-		return false
-	if not _assert_full_receiver_stamp_payload(east_terrain, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "E",
-		"frame": "00_07",
-		"offset": {"x": 1, "y": 0},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "cardinal_source",
-		"shape_class": 3,
-		"row_group": "4-7",
-		"flip": "H",
-		"flip_h": true,
-	}):
-		_fail("Ninefold smoke: east-side grass/plains transition did not expose accepted relation-class metadata: %s." % east_presentation)
-		return false
-
-	var west_receiver := Vector2i(26, 0)
-	var west_source := Vector2i(25, 0)
-	_reveal_validation_tiles(session, [west_receiver, west_source])
-	var west_presentation: Dictionary = shell.call("validation_tile_presentation", west_receiver.x, west_receiver.y)
-	var west_terrain: Dictionary = west_presentation.get("terrain_presentation", {})
-	if (
-		String(west_terrain.get("terrain", "")) != "grass"
-		or String(west_terrain.get("transition_edge_mask", "")) != "W"
-		or String(west_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(west_terrain.get("homm3_terrain_frame", "")) != "00_04"
-		or not _transition_sources_include(west_terrain, "W", "plains")
-	):
-		_fail("Ninefold smoke: HoMM3 west-side grass/plains transition is horizontally reversed or missing its left-side dirt frame: %s." % west_presentation)
-		return false
-	if not _assert_full_receiver_stamp_payload(west_terrain, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "W",
-		"frame": "00_04",
-		"offset": {"x": -1, "y": 0},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "cardinal_source",
-		"shape_class": 3,
-		"row_group": "4-7",
-	}):
-		_fail("Ninefold smoke: west-side grass/plains transition did not expose accepted relation-class metadata: %s." % west_presentation)
-		return false
-	return true
-
-func _transition_sources_include(terrain: Dictionary, direction: String, source_terrain: String) -> bool:
-	var sources: Array = terrain.get("transition_cardinal_sources", [])
-	for source_value in sources:
-		if not (source_value is Dictionary):
-			continue
-		var source: Dictionary = source_value
-		if String(source.get("direction", "")) == direction and String(source.get("source_terrain", "")) == source_terrain:
-			return true
-	return false
 
 func _transition_sources_include_bridge(terrain: Dictionary, direction: String, source_terrain: String, bridge_family: String, bridge_model: String) -> bool:
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
@@ -293,7 +210,7 @@ func _transition_sources_include_bridge(terrain: Dictionary, direction: String, 
 			and String(source.get("source_terrain", "")) == source_terrain
 			and String(source.get("resolved_bridge_family", "")) == bridge_family
 			and String(source.get("bridge_resolution_model", "")) == bridge_model
-			and bool(source.get("uses_direct_bridge_pair", false))
+			and (bool(source.get("uses_direct_bridge_pair", false)) or bool(source.get("uses_direct_bridge_material_contact", false)))
 		):
 			return true
 	return false

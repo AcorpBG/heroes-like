@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed corrective release-gate slice: `terrain-taxonomy-visual-regression-gate-10184`. River Pass now proves controlled legacy forest degradation while Ninefold asserts canonical authored grass/dirt, dirt/sand, and water/land boundaries. The longer River Pass suite was reconciled with shipped persistent-site, encounter-army, artifact-set, Waystride, full-route, and remote-town contracts without weakening detailed route payload checks. Both visual suites, full-route regression, project parsing, repository validation, JSON validation, and diff checks pass. This is validation maintenance, not implementation progress.
+- Completed implementation slice: `overworld-hero-action-signature-reliability-10184`. Hero-action cache signatures now preserve nested pending-specialty choice records structurally instead of coercing every array member through `String`. The focused live regression proves unchanged-route reuse plus active-hero, roster, and nested-choice invalidation, including the `choose_specialty:spellwright` action; core systems and project parsing pass without the Godot 4.6 constructor error. Overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-obituary-pressure-10184`. Veilmourn's tier-5 Obituary Scribes now issue one readable Final Notice per battle: the mark drains cohesion, weakens retaliation for one round, and applies stronger pressure to veteran braced lines. Battle tier/use state survives normalization and live BattleRules, Battle AI, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix improves from 38 to 37 outliers, severity 336 to 304, maximum dominance 80.5% to 78.5%, and Thornwake/Veilmourn week 2 from 80.5% to 74.5%, with 12 rows still at or above 65%. Ability, live autoplay, core, parse, repository, JSON, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `ux-active-play-settings-overlay-10184`. Overworld, town, and battle now expose one shared modal Settings surface beside their existing Save/Menu controls. Audio levels, battle playback, UI scale, camera shake, color cues, high contrast, reduced motion, reduced flashes, and reduced repetitive sounds apply and persist without routing away or changing gameplay state; active battles adopt playback changes immediately. Keyboard/controller modal ownership, native accessibility semantics, 1280x720 and 1920x1080 rendered captures, packaged settings, Restore Defaults, core, shell visual, battle-layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains explicit; overall release completion remains open.
 - Completed implementation slice: `combat-battle-sfx-priority-mixing-10184`. All 21 imported battle SFX cues now own low/normal/high/critical priority and repeat-cooldown policy. Live playback rejects immediate duplicates before player creation, keeps the eight-voice cap, replaces the oldest lowest-priority voice only for a higher-priority cue, rejects low-priority arrivals under saturation, and creates no player while Effects is muted. The same slice fixes deferred native accessibility setup for controls freed before callback dispatch. Focused battle presentation, screen-reader semantics, core, parse, repository, JSON, and diff gates pass. Final sound design, platform audio certification, and overall release completion remain open.
@@ -639,6 +641,44 @@ Completion evidence:
 Non-goals:
 - do not alter benchmark thresholds, seed policy, faction growth, raw unit stats, spell catalogs, strategic AI, saves, or campaign progression;
 - do not touch Native RMG or claim final faction balance or overall release completion.
+
+## Canonical Terrain Visual Regression Gate
+
+id: `terrain-taxonomy-visual-regression-gate-10184`
+
+Selected Phase 6 corrective validation slice. Aligns authored visual smoke inputs
+with the canonical terrain taxonomy introduced by `c24abe70` without changing
+runtime terrain selection or generated-map behavior.
+
+Completion evidence:
+- the River Pass smoke proves legacy forest-to-grass degradation through a controlled fixture instead of a town-footprint cell that is now authored grass;
+- the Ninefold smoke proves current grass/dirt, dirt/sand, and water/land transitions at canonical authored coordinates;
+- both visual suites, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not change terrain renderer rules, canonical authored maps, Native RMG, or recovered H3MapEd behavior;
+- do not count this release-gate repair as runtime/content implementation progress or overall release completion.
+
+## Overworld Hero Action Signature Reliability
+
+id: `overworld-hero-action-signature-reliability-10184`
+
+Selected Phase 6 runtime correction. The hero-action cache signature must accept
+the real nested `pending_specialty_choices` schema used by active progression
+without throwing during refresh.
+
+Implementation target:
+- preserve arrays of plain nested hero metadata structurally in the JSON cache signature instead of assuming every member is a scalar string;
+- retain cache hits for unchanged route selection and cache misses for active-hero, roster, and pending-choice changes;
+- keep hero actions, specialty choices, session state, save version 9, and Native RMG behavior unchanged.
+
+Completion evidence:
+- focused cache regression covers nested pending specialty records and all existing reuse/invalidation cases without script errors;
+- overworld visual specialty flow, core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not redesign progression, action surfaces, renderer behavior, saves, or Native RMG;
+- do not claim broad performance, accessibility, or overall release completion.
 
 ## Magic Resistance And Counter-Control Target
 
