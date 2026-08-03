@@ -16431,6 +16431,7 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '"active_front_candidate_surface_point_reused"',
         '"active_front_candidate_surface_consumed"',
         '"active_front_support_no_active_front_skip"',
+        '"ready_saved_task_no_prepared_commander_skip"',
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing active-front launch-surface reuse token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():

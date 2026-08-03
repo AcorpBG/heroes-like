@@ -269,9 +269,16 @@ func _target_aware_spawn_point_case() -> Dictionary:
 			_fail("Target-aware multi-point scan should load %s exactly once: %s" % [loaded_key, JSON.stringify(spawn_scan_profile)])
 			return {}
 	if int(spawn_scan_counts.get("spawn_scan_live_tasks_reused", 0)) <= 0 \
-		or int(spawn_scan_counts.get("spawn_scan_path_context_reused", 0)) <= 0 \
-		or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) <= 0:
-		_fail("Target-aware multi-point scan did not reuse task, path, and spell-projection context: %s" % JSON.stringify(spawn_scan_profile))
+			or int(spawn_scan_counts.get("spawn_scan_path_context_reused", 0)) <= 0:
+		_fail("Target-aware multi-point scan did not reuse task and path context: %s" % JSON.stringify(spawn_scan_profile))
+		return {}
+	if int(spawn_scan_counts.get("ready_saved_task_no_prepared_commander_skip", 0)) != 1 \
+			or int(spawn_scan_counts.get("ready_saved_task_no_prepared_commander_reused", 0)) <= 0:
+		_fail("Understrength saved-task scan did not reuse the explicit no-prepared-commander preflight: %s" % JSON.stringify(spawn_scan_profile))
+		return {}
+	if int(spawn_scan_counts.get("spawn_spell_projection_loaded", 0)) != 2 \
+			or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) != 0:
+		_fail("Understrength saved-task scan retained redundant ready-path spell projections: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
 	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
 		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
@@ -417,6 +424,7 @@ func _fresh_launch_commander_fit_beats_rotation_case() -> Dictionary:
 	_update_enemy_state(session, state)
 	_set_town_owner(session, "riverwatch_hold", "enemy", MIRECLAW)
 	_set_resource_controller(session, "duskfen_bastion_peatwax_front", "")
+	_set_resource_controller(session, "river_pass_duskfen_bastion_rare_exchange", "")
 	_set_primary_hero_position(session, 6, 2)
 	var memory_result := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
 	_update_enemy_state(session, memory_result.get("state", _enemy_state(session)))
