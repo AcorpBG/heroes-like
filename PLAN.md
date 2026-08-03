@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-brasshollow-debt-engine-overheat-10184`. Brasshollow's tier-5 Debt-Engine Exactors now open primary strikes at 1.16x damage, then run at 0.83x damage with -2 defense and initiative for a non-refreshing two-round Overheated cycle. Tactical AI, live summaries, runtime resolution, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 300.5 to 300.0 and maximum dominance from 78.5% to 78.0%, and reduces week-2 Brasshollow dominance versus Embercourt from 69% to 66% and Veilmourn from 71% to 68%. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-brasshollow-crucible-barrage-10184`. Brasshollow's tier-6 Crucible Crawlers now own a live setup-siege Volley that strengthens long-lane fire and punishes staggered lines. The unchanged all-live 100-seed matrix improves from 37 to 36 outliers and severity 304 to 300.5, keeps maximum dominance at 78.5%, and leaves every week-1/2 row exact. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed corrective release-gate slice: `terrain-taxonomy-visual-regression-gate-10184`. River Pass now proves controlled legacy forest degradation while Ninefold asserts canonical authored grass/dirt, dirt/sand, and water/land boundaries. The longer River Pass suite was reconciled with shipped persistent-site, encounter-army, artifact-set, Waystride, full-route, and remote-town contracts without weakening detailed route payload checks. Both visual suites, full-route regression, project parsing, repository validation, JSON validation, and diff checks pass. This is validation maintenance, not implementation progress.
 - Completed implementation slice: `overworld-hero-action-signature-reliability-10184`. Hero-action cache signatures now preserve nested pending-specialty choice records structurally instead of coercing every array member through `String`. The focused live regression proves unchanged-route reuse plus active-hero, roster, and nested-choice invalidation, including the `choose_specialty:spellwright` action; core systems and project parsing pass without the Godot 4.6 constructor error. Overall release completion remains open.
@@ -666,6 +667,29 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, faction growth, raw unit stats, spells, strategic AI, saves, campaigns, or Native RMG;
 - do not claim final faction balance or overall release completion.
+
+## Brasshollow Debt-Engine Overheat
+
+id: `combat-brasshollow-debt-engine-overheat-10184`
+
+Completed Phase 5 combat implementation slice. Restores the tier-5 Debt-Engine
+Exactors' faction-bible burst/overheat cycle as a live tactical tradeoff rather
+than mapping it onto an unrelated generic ability.
+
+Implementation target:
+- fresh Debt-Engine primary attacks receive a bounded burst multiplier and then apply a visible two-round Overheated effect to the attacking stack;
+- Overheated lowers outgoing damage, defense, and initiative until it expires, cannot stack or refresh from repeated attacks, and allows the burst again only after recovery;
+- BattleRules previews/resolution, tactical AI attack/defend valuation, player-facing ability/status summaries, the fast benchmark, and focused runtime coverage use the same contract;
+- preserve raw unit stats, growth, costs, spell access, save version, strategic AI, and Native RMG behavior.
+
+Completion evidence:
+- focused live coverage proves fresh burst, self-application, active penalties, no refresh while active, expiration, and recovered burst behavior;
+- the unchanged all-live 100-seed matrix keeps `36` outliers, improves severity `300.5 -> 300.0`, improves maximum dominance `78.5% -> 78.0%`, keeps `12` rows at or above 65%, and reduces week-2 Brasshollow dominance versus Embercourt `69% -> 66%` and Veilmourn `71% -> 68%`;
+- structural, pacing, side-bias, ability, autoplay, town-development, core, project-parse, repository, JSON, and diff gates pass.
+
+Non-goals:
+- do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
+- do not claim final Brasshollow identity, final faction balance, or overall release completion.
 
 ## Canonical Terrain Visual Regression Gate
 

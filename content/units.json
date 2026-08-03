@@ -1551,6 +1551,22 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "overheat",
+          "name": "Debt Furnace",
+          "description": "The exactor opens with a furnace-driven impact, then runs overheated until its pressure cycle recovers.",
+          "burst_damage_multiplier": 1.16,
+          "overheated_damage_multiplier": 0.83,
+          "status_id": "status_overheated",
+          "status_label": "Overheated",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -2,
+            "initiative": -2
+          }
+        }
+      ],
       "growth": 2,
       "cost": {
         "gold": 520,

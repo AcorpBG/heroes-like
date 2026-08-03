@@ -16,6 +16,7 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
 const STATUS_ROOTED := "status_rooted"
+const STATUS_OVERHEATED := "status_overheated"
 const RECENT_EVENT_LIMIT := 6
 const TACTICAL_BRIEFING_KEY := "tactical_briefing"
 const FIELD_OBJECTIVES_KEY := "field_objectives"
@@ -3907,6 +3908,10 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
+	if _has_ability(stack, "overheat"):
+		if SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
+			return "The Debt Furnace is overheated; damage, defense, and initiative stay reduced until pressure recovers."
+		return "The Debt Furnace is pressure-ready and will burst on the next primary strike before overheating."
 	if not target.is_empty() and _has_ability(stack, "backstab") and (
 		SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "backstab").get("status_ids", []))
 		or _health_ratio(target) <= float(_ability_by_id(stack, "backstab").get("health_threshold_ratio", 0.0))
@@ -3983,6 +3988,10 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				name,
 				" now" if not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)) else "",
 			]
+		"overheat":
+			if SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
+				return "%s is cooling under reduced damage, defense, and initiative" % name
+			return "%s is pressure-ready for one burst strike before overheating" % name
 		"shielding":
 			return "%s blunts missile pressure and helps the line hold" % name
 	if String(ability.get("description", "")) != "":
@@ -8691,6 +8700,14 @@ static func _apply_attack_ability_effects(
 	attack_distance: int
 ) -> Array:
 	var messages = []
+	var overheat = _ability_by_id(attacker, "overheat")
+	if not overheat.is_empty() and not is_ranged and not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
+		_apply_stack_effect(
+			battle,
+			String(attacker.get("battle_id", "")),
+			_status_effect_from_ability(overheat, battle)
+		)
+		messages.append("%s vents into an overheated pressure cycle." % _stack_label(attacker))
 	if defender.is_empty() or _alive_count(defender) <= 0:
 		return messages
 	if not is_ranged and attack_distance > 1:
@@ -8813,6 +8830,13 @@ static func _ability_damage_modifier(
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
 		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+
+	var overheat = _ability_by_id(attacker, "overheat")
+	if not overheat.is_empty():
+		if SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
+			modifier *= float(overheat.get("overheated_damage_multiplier", 1.0))
+		elif not is_retaliation:
+			modifier *= float(overheat.get("burst_damage_multiplier", 1.0))
 
 	var shielding = _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
@@ -9167,6 +9191,18 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"momentum_gain": max(0, int(entry.get("momentum_gain", 0))),
 					"kill_momentum_gain": max(0, int(entry.get("kill_momentum_gain", 0))),
 					"late_round_initiative_bonus": max(0, int(entry.get("late_round_initiative_bonus", 0))),
+				}
+			"overheat":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Overheat")),
+					"description": String(entry.get("description", "")),
+					"burst_damage_multiplier": clampf(float(entry.get("burst_damage_multiplier", 1.0)), 1.0, 2.0),
+					"overheated_damage_multiplier": clampf(float(entry.get("overheated_damage_multiplier", 1.0)), 0.25, 1.0),
+					"status_id": String(entry.get("status_id", STATUS_OVERHEATED)),
+					"status_label": String(entry.get("status_label", "Overheated")),
+					"duration_rounds": max(1, int(entry.get("duration_rounds", 2))),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -2, "initiative": -2})),
 				}
 			_:
 				continue
