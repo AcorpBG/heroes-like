@@ -14325,10 +14325,10 @@
   "currentNotes": "Completed the schema-14 reduced repetitive sounds setting and its live UI/battle audio admission behavior; overall game completion remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "settings-accessibility-reduced-repetitive-sounds-10184",
-  "currentSliceId": "settings-accessibility-reduced-repetitive-sounds-10184",
-  "currentSliceNotes": "Schema 14 now persists a default-off Reduce Repetitive Sounds accessibility preference and exposes it on the scrollable Readability board. UiAudio suppresses immediate repeated cues before player creation and uses a four-player budget only while enabled; normal mode remains at eight. Battle audio doubles manifest repeat cooldowns, uses a four-voice budget, and still lets critical cues evict the oldest lower-priority voice. Direct and exported-PCK persistence, legacy migration, Restore Defaults, 1280x720 and 1920x1080 menu reachability, native semantics, focused audio, core, parse, repository, JSON, and diff checks pass. Native RMG and overall release completion are unchanged.",
+  "currentSliceId": "ux-active-play-settings-overlay-10184",
+  "currentSliceNotes": "Completed. One shared modal settings surface now serves overworld, town, and battle; settings persist and apply immediately, modal input/focus is owned, gameplay state is preserved, and active battle playback speed synchronizes live. Focused runtime, 1280/1920 rendered captures, accessibility, active-play focus, packaged settings, Restore Defaults, core, town/battle visual, menu/outcome, battle layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains red and is not hidden by this slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Reduced Repetitive Sound Accessibility",
+  "currentSliceTitle": "Active-Play Settings Access",
   "currentSliceUpdatedAt": "2026-08-03T11:32:00Z",
   "deferredRiskRegister": [
     {
@@ -66873,6 +66873,70 @@
         "status": "passed",
         "updatedAt": "2026-08-03T05:09:02Z"
       }
+    },
+    {
+      "id": "ux-active-play-settings-overlay-10184",
+      "title": "Active-Play Settings Access",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "purpose": "Keep essential sound, battle-presentation, and readability settings reachable from overworld, town, and battle without abandoning the active session.",
+      "implementationTargets": [
+        "scenes/shared/ActivePlaySettingsDialog.gd",
+        "scenes/shared/ActivePlaySettingsDialog.tscn",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/active_play_settings_runtime_report.tscn"
+      ],
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "godot4 --headless --path . tests/active_play_settings_runtime_report.tscn",
+          "ACTIVE_PLAY_SETTINGS_CAPTURE_DIR=res://.artifacts/active_play_settings_runtime_report/1280x720 xvfb-run -a godot4 --resolution 1280x720 --path . tests/active_play_settings_runtime_report.tscn",
+          "ACTIVE_PLAY_SETTINGS_CAPTURE_DIR=res://.artifacts/active_play_settings_runtime_report/1920x1080 xvfb-run -a godot4 --resolution 1920x1080 --path . tests/active_play_settings_runtime_report.tscn",
+          "godot4 --headless --path . tests/accessibility_screen_reader_semantics_report.tscn",
+          "godot4 --headless --path . tests/active_play_keyboard_focus_smoke.tscn",
+          "godot4 --headless --path . tests/packaged_settings_persistence_report.tscn",
+          "godot4 --headless --path . tests/settings_restore_defaults_regression.tscn",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . tests/menu_outcome_visual_smoke.tscn",
+          "godot4 --headless --path . tests/battle_layout_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "evidence": {
+          "active_play_surfaces": [
+            "overworld",
+            "town",
+            "battle"
+          ],
+          "persisted_control_count": 11,
+          "session_gameplay_state_preserved": true,
+          "active_battle_speed_synchronized": true,
+          "native_accessibility_semantics_passed": true,
+          "rendered_capture_sizes": [
+            "1280x720",
+            "1920x1080"
+          ],
+          "compact_final_control_focus_visible": true,
+          "save_version": 9,
+          "native_rmg_unchanged": true
+        },
+        "knownBaselineFailure": "tests/overworld_visual_smoke.tscn still fails its unrelated forest-degradation metadata assertion against the current authored grass town-footprint presentation; this slice changes no terrain renderer, terrain content, or assertion input."
+      },
+      "updatedAt": "2026-08-03T12:41:07Z",
+      "startedAt": "2026-08-03T11:41:12Z",
+      "notes": "Completed. One shared modal settings surface now serves overworld, town, and battle; settings persist and apply immediately, modal input/focus is owned, gameplay state is preserved, and active battle playback speed synchronizes live. Focused runtime, 1280/1920 rendered captures, accessibility, active-play focus, packaged settings, Restore Defaults, core, town/battle visual, menu/outcome, battle layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains red and is not hidden by this slice.",
+      "completedAt": "2026-08-03T12:40:11Z"
     }
   ],
   "project": "heroes-like",
@@ -67417,7 +67481,7 @@
   ],
   "summary": "The selected Native RMG release matrix and manual save naming workflow remain complete. Combat faction-pair tuning corrected a cross-faction Root Brace ownership defect and reduced the unchanged all-live 100-seed matrix from 45 to 41 outliers, severity 503.5 to 389, and 23 to 18 rows at or above 65%; the matrix still reports needs_tuning. Broader accessibility, strategic AI breadth, balance, content, performance, clean-machine certification, signing, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T11:37:13Z",
+  "updatedAt": "2026-08-03T12:41:07Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

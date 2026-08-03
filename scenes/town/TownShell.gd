@@ -70,8 +70,10 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _leave_button: Button = %Leave
+@onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
+@onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
@@ -365,6 +367,19 @@ func _on_leave_pressed() -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
+func _on_settings_pressed() -> void:
+	_active_play_settings_dialog.open_dialog()
+
+func _on_active_play_settings_closed() -> void:
+	_settings_button.call_deferred("grab_focus")
+
+func _on_active_play_setting_changed(setting_id: String) -> void:
+	if setting_id not in ["ui_scale", "high_contrast", "color_cues"]:
+		return
+	_apply_visual_theme()
+	_apply_responsive_layout()
+	_refresh(true)
+
 func _refresh(first_render_minimal: bool = false) -> void:
 	_last_refresh_minimal = first_render_minimal
 	var profile_started := ProfileLogScript.begin_usec()
@@ -487,6 +502,8 @@ func _on_management_tab_changed(_tab: int) -> void:
 	call_deferred("_configure_town_keyboard_focus", true)
 
 func _input(event: InputEvent) -> void:
+	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		return
 	if _session == null or not event.is_action_pressed("ui_cancel"):
 		return
 	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
@@ -500,7 +517,7 @@ func _input(event: InputEvent) -> void:
 	_on_leave_pressed()
 
 func _configure_town_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree():
+	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
 		return
 	var tab_surfaces := _town_keyboard_focus_surfaces()
 	var surfaces := tab_surfaces.duplicate()
@@ -511,6 +528,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		_save_slot_picker,
 		_save_button,
 		_leave_button,
+		_settings_button,
 		_menu_button,
 	])
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
@@ -1958,6 +1976,13 @@ func validation_confirm_manual_save_overwrite() -> Dictionary:
 
 func validation_cancel_manual_save_overwrite() -> void:
 	_on_manual_save_overwrite_canceled()
+
+func validation_open_active_play_settings() -> Dictionary:
+	_on_settings_pressed()
+	return _active_play_settings_dialog.validation_snapshot()
+
+func validation_active_play_settings_dialog():
+	return _active_play_settings_dialog
 
 func validation_return_to_menu() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
@@ -3944,8 +3969,9 @@ func _apply_visual_theme() -> void:
 	_management_tabs.set_tab_title(3, "Trade")
 	_management_tabs.set_tab_title(4, "Log")
 
-	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _menu_button]:
+	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _settings_button, _menu_button]:
 		_style_action_button(button, true)
+	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the town."
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 112.0, 32.0, 12)
 
 	for label in find_children("*Title", "Label", true, false):

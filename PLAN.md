@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-active-play-settings-overlay-10184`. Overworld, town, and battle now expose one shared modal Settings surface beside their existing Save/Menu controls. Audio levels, battle playback, UI scale, camera shake, color cues, high contrast, reduced motion, reduced flashes, and reduced repetitive sounds apply and persist without routing away or changing gameplay state; active battles adopt playback changes immediately. Keyboard/controller modal ownership, native accessibility semantics, 1280x720 and 1920x1080 rendered captures, packaged settings, Restore Defaults, core, shell visual, battle-layout, parse, repository, JSON, and diff gates pass. The unrelated pre-existing overworld terrain-degradation assertion remains explicit; overall release completion remains open.
 - Completed implementation slice: `combat-battle-sfx-priority-mixing-10184`. All 21 imported battle SFX cues now own low/normal/high/critical priority and repeat-cooldown policy. Live playback rejects immediate duplicates before player creation, keeps the eight-voice cap, replaces the oldest lowest-priority voice only for a higher-priority cue, rejects low-priority arrivals under saturation, and creates no player while Effects is muted. The same slice fixes deferred native accessibility setup for controls freed before callback dispatch. Focused battle presentation, screen-reader semantics, core, parse, repository, JSON, and diff gates pass. Final sound design, platform audio certification, and overall release completion remain open.
 - Completed implementation slice: `combat-veilmourn-maskglass-finisher-10184`. Veilmourn's tier-3 Maskglass Corsairs now execute their bible-defined disrupted/wounded-target finisher through the existing live `backstab` contract. Runtime coverage proves all 79/79 authored ability instances have consequences. The unchanged all-live 100-seed matrix improves from 40 to 38 outliers, severity 356 to 336, rows at or above 65% from 16 to 12, and maximum dominance from 83.5% to 80.5%, while structural, pacing, side-bias, town-development, core, parse, and repository gates pass. The matrix remains `needs_tuning`; final faction balance and overall release completion remain open.
 - Completed implementation slice: `strategic-ai-task-planner-fit-context-reuse-10184`. The strategic task-board planner now reuses one faction path-distance surface across every planning origin and derives each assignable commander's immutable fit context once per pass. It also uses shallow top-level score overlays and retains already-materialized site families. Focused coverage proves 15/15 candidate scores and ordering remain exact; the strict-Small row preserves signature `9fff0a26` and exact events while one isolated sample moves from 1092 ms to 1083 ms and Mireclaw pre-build planning from 100 ms to 94 ms. This is a bounded redundant-work cleanup, not a broad performance or release-completion claim.
@@ -829,6 +830,31 @@ Non-goals:
 - do not add new audio assets, change cue mastering, redesign music or ambience, or claim platform audio certification;
 - do not change combat math, battle event ordering, animation timing, expedition saves, or authored content;
 - do not change Native RMG or claim final accessibility or overall release completion.
+
+## Active-Play Settings Access
+
+id: `ux-active-play-settings-overlay-10184`
+
+Selected Phase 6 implementation slice. Overworld, town, and battle must expose
+one shared modal device-settings surface without routing away from the active
+session.
+
+Implementation target:
+- add a compact scrollable settings overlay to all three active-play shells and a Settings command beside their existing Save/Menu controls;
+- expose immediately applied audio levels, battle playback speed, UI scale, camera shake, color cues, high contrast, reduced motion, reduced flashes, and reduced repetitive sounds through the existing SettingsService persistence boundary;
+- keep the session, current route, battle state, save schema, and campaign progression unchanged while settings are edited;
+- make close/back behavior, keyboard focus, controller focus, and 1280x720/1920x1080 layout usable without allowing commands to leak through the modal;
+- synchronize a live battle's current presentation speed when that preference changes from the overlay.
+
+Completion evidence:
+- focused runtime coverage opens, edits, persists, closes, and reopens the shared overlay from overworld, town, and battle while proving session state is unchanged;
+- active-play keyboard/controller focus and close behavior pass on all three surfaces;
+- compact and desktop captures prove controls remain reachable without covering the underlying screen when the overlay is closed;
+- core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not duplicate custom movement-key editing, support-bundle export, or Restore Defaults inside active play;
+- do not change gameplay rules, save version, campaign progression, Native RMG, or claim overall release completion.
 
 ## Native Screen Reader Semantics
 

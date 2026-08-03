@@ -1,0 +1,277 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/shared/ActivePlaySettingsDialog.gd" id="1"]
+
+[node name="ActivePlaySettingsDialog" type="Control"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+z_index = 100
+script = ExtResource("1")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.015, 0.02, 0.025, 0.82)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogPanel" type="PanelContainer" parent="Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(700, 500)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/DialogPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="Content" type="VBoxContainer" parent="Center/DialogPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="Center/DialogPanel/Margin/Content"]
+layout_mode = 2
+z_index = 2
+
+[node name="Title" type="Label" parent="Center/DialogPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Settings"
+
+[node name="Status" type="Label" parent="Center/DialogPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Saved on this device"
+vertical_alignment = 1
+
+[node name="Close" type="Button" parent="Center/DialogPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
+
+[node name="Divider" type="HSeparator" parent="Center/DialogPanel/Margin/Content"]
+layout_mode = 2
+z_index = 2
+
+[node name="SettingsScroll" type="ScrollContainer" parent="Center/DialogPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 410)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SettingsBox" type="VBoxContainer" parent="Center/DialogPanel/Margin/Content/SettingsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="SoundTitle" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+text = "Sound"
+
+[node name="SoundGrid" type="GridContainer" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 6
+columns = 3
+
+[node name="MasterLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Master"
+vertical_alignment = 1
+
+[node name="MasterVolumeSlider" type="HSlider" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+step = 5.0
+
+[node name="MasterVolumeValue" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "80%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="MusicLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+layout_mode = 2
+text = "Music"
+vertical_alignment = 1
+
+[node name="MusicVolumeSlider" type="HSlider" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+step = 5.0
+
+[node name="MusicVolumeValue" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "65%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="EffectsLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+layout_mode = 2
+text = "Effects"
+vertical_alignment = 1
+
+[node name="EffectsVolumeSlider" type="HSlider" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(330, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+step = 5.0
+
+[node name="EffectsVolumeValue" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "75%"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="GameplayTitle" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+text = "Gameplay"
+
+[node name="GameplayGrid" type="GridContainer" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="BattleSpeedLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Battle Playback"
+vertical_alignment = 1
+
+[node name="BattlePlaybackSpeedPicker" type="OptionButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UIScaleLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid"]
+layout_mode = 2
+text = "UI Scale"
+vertical_alignment = 1
+
+[node name="UIScalePicker" type="OptionButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReadabilityTitle" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+text = "Readability"
+
+[node name="ReadabilityGrid" type="GridContainer" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="BattleShakeLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Battle Camera Shake"
+vertical_alignment = 1
+
+[node name="BattleCameraShakePicker" type="OptionButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorCueLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+layout_mode = 2
+text = "Color Cues"
+vertical_alignment = 1
+
+[node name="ColorCuePicker" type="OptionButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HighContrastLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+layout_mode = 2
+text = "Contrast"
+vertical_alignment = 1
+
+[node name="HighContrastToggle" type="CheckButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "High Contrast"
+
+[node name="ReduceMotionLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+layout_mode = 2
+text = "Motion"
+vertical_alignment = 1
+
+[node name="ReduceMotionToggle" type="CheckButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reduce Motion"
+
+[node name="ReduceFlashesLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+layout_mode = 2
+text = "Flashes"
+vertical_alignment = 1
+
+[node name="ReduceFlashesToggle" type="CheckButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reduce Flashes"
+
+[node name="ReduceSoundsLabel" type="Label" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+layout_mode = 2
+text = "Repeated Sounds"
+vertical_alignment = 1
+
+[node name="ReduceRepetitiveSoundsToggle" type="CheckButton" parent="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reduce Repetition"
+
+[connection signal="pressed" from="Center/DialogPanel/Margin/Content/Header/Close" to="." method="_on_close_pressed"]
+[connection signal="value_changed" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/SoundGrid/EffectsVolumeSlider" to="." method="_on_effects_volume_changed"]
+[connection signal="item_selected" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid/BattlePlaybackSpeedPicker" to="." method="_on_battle_playback_speed_selected"]
+[connection signal="item_selected" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/GameplayGrid/UIScalePicker" to="." method="_on_ui_scale_selected"]
+[connection signal="item_selected" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/BattleCameraShakePicker" to="." method="_on_battle_camera_shake_selected"]
+[connection signal="item_selected" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/ColorCuePicker" to="." method="_on_color_cue_selected"]
+[connection signal="toggled" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/HighContrastToggle" to="." method="_on_high_contrast_toggled"]
+[connection signal="toggled" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[connection signal="toggled" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/ReduceFlashesToggle" to="." method="_on_reduce_flashes_toggled"]
+[connection signal="toggled" from="Center/DialogPanel/Margin/Content/SettingsScroll/SettingsBox/ReadabilityGrid/ReduceRepetitiveSoundsToggle" to="." method="_on_reduce_repetitive_sounds_toggled"]
