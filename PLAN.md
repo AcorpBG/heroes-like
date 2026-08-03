@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-brasshollow-crucible-barrage-10184`. Brasshollow's tier-6 Crucible Crawlers now own a live setup-siege Volley that strengthens long-lane fire and punishes staggered lines. The unchanged all-live 100-seed matrix improves from 37 to 36 outliers and severity 304 to 300.5, keeps maximum dominance at 78.5%, and leaves every week-1/2 row exact. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed corrective release-gate slice: `terrain-taxonomy-visual-regression-gate-10184`. River Pass now proves controlled legacy forest degradation while Ninefold asserts canonical authored grass/dirt, dirt/sand, and water/land boundaries. The longer River Pass suite was reconciled with shipped persistent-site, encounter-army, artifact-set, Waystride, full-route, and remote-town contracts without weakening detailed route payload checks. Both visual suites, full-route regression, project parsing, repository validation, JSON validation, and diff checks pass. This is validation maintenance, not implementation progress.
 - Completed implementation slice: `overworld-hero-action-signature-reliability-10184`. Hero-action cache signatures now preserve nested pending-specialty choice records structurally instead of coercing every array member through `String`. The focused live regression proves unchanged-route reuse plus active-hero, roster, and nested-choice invalidation, including the `choose_specialty:spellwright` action; core systems and project parsing pass without the Godot 4.6 constructor error. Overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-obituary-pressure-10184`. Veilmourn's tier-5 Obituary Scribes now issue one readable Final Notice per battle: the mark drains cohesion, weakens retaliation for one round, and applies stronger pressure to veteran braced lines. Battle tier/use state survives normalization and live BattleRules, Battle AI, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix improves from 38 to 37 outliers, severity 336 to 304, maximum dominance 80.5% to 78.5%, and Thornwake/Veilmourn week 2 from 80.5% to 74.5%, with 12 rows still at or above 65%. Ability, live autoplay, core, parse, repository, JSON, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -641,6 +642,30 @@ Completion evidence:
 Non-goals:
 - do not alter benchmark thresholds, seed policy, faction growth, raw unit stats, spell catalogs, strategic AI, saves, or campaign progression;
 - do not touch Native RMG or claim final faction balance or overall release completion.
+
+## Brasshollow Crucible Barrage
+
+id: `combat-brasshollow-crucible-barrage-10184`
+
+Completed Phase 5 combat implementation slice. Restores the tier-6 Crucible
+Crawlers' faction-bible setup-siege role through the existing live Volley
+mechanics, without changing benchmark semantics or inflating raw unit stats.
+
+Implementation target:
+- give Crucible Crawlers a bounded long-lane barrage that deals modestly stronger ranged damage and punishes already-staggered battle lines;
+- use the existing BattleRules, Battle AI, player-facing summary, and fast benchmark Volley contract rather than introducing a content-only marker;
+- keep the ability at tier 6 so it cannot worsen Brasshollow's already dominant week-1/2 rows;
+- preserve Brasshollow's slow armored identity and current growth, costs, spell access, strategic AI, save, and Native RMG behavior.
+
+Completion evidence:
+- focused live ability coverage proves the authored Crawler ability has a real ranged-damage consequence and all authored ability instances remain implemented;
+- the unchanged all-live 100-seed matrix improves on the baseline `37` outliers / `304` severity, materially improves at least one targeted week-3 Brasshollow row, and does not exceed `78.5%` maximum dominance;
+- structural, pacing, side-bias, town-development, core, project-parse, repository, JSON, and diff gates pass.
+- final matrix: `36` outliers, `300.5` severity, `12` rows at or above `65%`, `78.5%` maximum dominance, `2.93` maximum side bias, and zero structural failures; all week-1/2 pair rows remain exact.
+
+Non-goals:
+- do not change benchmark thresholds, seeds, faction growth, raw unit stats, spells, strategic AI, saves, campaigns, or Native RMG;
+- do not claim final faction balance or overall release completion.
 
 ## Canonical Terrain Visual Regression Gate
 
