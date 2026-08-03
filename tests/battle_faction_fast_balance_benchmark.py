@@ -770,6 +770,7 @@ class FastBattleBenchmark:
             stack["defending"] = False
             stack["retaliations_left"] = int(stack.get("retaliations", 1))
             stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
+        self._apply_foundry_aura_round_repair(battle)
         order = sorted(
             [stack["battle_id"] for stack in battle["stacks"] if self._alive_count(stack) > 0],
             key=lambda battle_id: self._turn_order_key(battle, battle_id),
@@ -777,6 +778,37 @@ class FastBattleBenchmark:
         battle["turn_order"] = order
         battle["turn_index"] = 0
         battle["active_stack_id"] = order[0] if order else ""
+
+    def _apply_foundry_aura_round_repair(self, battle: dict[str, Any]) -> int:
+        total_restored = 0
+        for side in [INTERNAL_SIDE_A, INTERNAL_SIDE_B]:
+            repair_pct = self._side_max_ability_float(battle, side, "foundry_aura", "round_repair_pct", 0.0)
+            if repair_pct <= 0.0:
+                continue
+            overheated_bonus_pct = self._side_max_ability_float(
+                battle,
+                side,
+                "foundry_aura",
+                "overheated_repair_bonus_pct",
+                0.0,
+            )
+            for stack in self._alive_stacks_for_side(battle, side):
+                if str(stack.get("faction_id", "")) != "faction_brasshollow":
+                    continue
+                unit_hp = max(1, int(stack.get("unit_hp", 1)))
+                current_health = max(0, int(stack.get("total_health", 0)))
+                max_recoverable_health = self._alive_count(stack) * unit_hp
+                if current_health >= max_recoverable_health:
+                    continue
+                active_repair_pct = repair_pct
+                if self._has_effect_id(stack, battle, STATUS_OVERHEATED):
+                    active_repair_pct += overheated_bonus_pct
+                base_max_health = max(1, int(stack.get("base_count", 1)) * unit_hp)
+                requested_repair = max(1, int(math.floor(float(base_max_health) * active_repair_pct)))
+                restored = min(max_recoverable_health - current_health, requested_repair)
+                stack["total_health"] = current_health + restored
+                total_restored += restored
+        return total_restored
 
     def _turn_order_key(self, battle: dict[str, Any], battle_id: str) -> tuple[int, int, int, int]:
         stack = self._stack_by_id(battle, battle_id)
@@ -1320,6 +1352,9 @@ class FastBattleBenchmark:
             score += 2.5
         if int(target.get("shots_remaining", 0)) > 0:
             score += 1.0
+        foundry_aura = self._ability_by_id(target, "foundry_aura")
+        if foundry_aura:
+            score += float(foundry_aura.get("ai_target_priority_bonus", 0.0))
         score += (1.0 - self._health_ratio(target)) * 3.0
         score += (1.0 - (float(self._stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * 3.5
         score += float(self._stack_momentum_total(attacker, battle)) * 0.6
@@ -1734,7 +1769,13 @@ class FastBattleBenchmark:
         return int(stack.get("attack", 0)) + self._effect_bonus(stack, battle, "attack") + self._contextual_attack_bonus(stack, battle) + self._cohesion_attack_bonus(self._stack_cohesion_total(stack, battle)) + self._momentum_attack_bonus(self._stack_momentum_total(stack, battle))
 
     def _stack_defense_total(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
-        return int(stack.get("defense", 0)) + self._effect_bonus(stack, battle, "defense") + self._contextual_defense_bonus(stack, battle) + self._cohesion_defense_bonus(self._stack_cohesion_total(stack, battle))
+        foundry_bonus = 0
+        if str(stack.get("faction_id", "")) == "faction_brasshollow":
+            side = str(stack.get("side", ""))
+            requires_overheat = self._side_ability_bool(battle, side, "foundry_aura", "hardening_requires_overheated", True)
+            if not requires_overheat or self._has_effect_id(stack, battle, STATUS_OVERHEATED):
+                foundry_bonus = int(self._side_max_ability_float(battle, side, "foundry_aura", "ally_defense_bonus", 0.0))
+        return int(stack.get("defense", 0)) + self._effect_bonus(stack, battle, "defense") + self._contextual_defense_bonus(stack, battle) + self._cohesion_defense_bonus(self._stack_cohesion_total(stack, battle)) + foundry_bonus
 
     def _stack_initiative_total(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         return int(stack.get("initiative", 0)) + self._effect_bonus(stack, battle, "initiative") + self._contextual_initiative_bonus(stack, battle) + self._cohesion_initiative_bonus(self._stack_cohesion_total(stack, battle)) + self._momentum_initiative_bonus(self._stack_momentum_total(stack, battle)) + int(self._hero_for_side(battle, stack.get("side", "")).get("initiative", 0))
@@ -2044,6 +2085,13 @@ class FastBattleBenchmark:
             if ability:
                 result = max(result, float(ability.get(key, default)))
         return result
+
+    def _side_ability_bool(self, battle: dict[str, Any], side: str, ability_id: str, key: str, default: bool) -> bool:
+        for stack in self._alive_stacks_for_side(battle, side):
+            ability = self._ability_by_id(stack, ability_id)
+            if ability:
+                return bool(ability.get(key, default))
+        return default
 
     def _allied_status_synergy_score(self, battle: dict[str, Any], side: str, status_id: str) -> float:
         if not status_id:

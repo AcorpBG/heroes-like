@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Brasshollow Debt-Engine fresh-strike/overheat tactical cycle with live runtime, tactical AI, player summary, benchmark parity, focused proof, and an accepted exact all-live matrix result.",
+  "currentNotes": "Completed the Brasshollow Foundry Saint Saint's Temper implementation with live Overheated hardening, bounded repair, tactical AI, presentation events, benchmark parity, and focused runtime proof. The exact matrix keeps 36 outliers while improving severity to 293.5 and maximum dominance to 75.5 percent.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-brasshollow-debt-engine-overheat-10184",
-  "currentSliceId": "combat-brasshollow-debt-engine-overheat-10184",
-  "currentSliceNotes": "Completed. Debt-Engine Exactors now own a 1.16x opening strike followed by a non-refreshing two-round 0.83x damage, -2 defense, and -2 initiative Overheated cycle. The exact all-live matrix keeps 36 outliers while improving severity to 300.0 and maximum dominance to 78.0%.",
+  "currentSlice": "combat-brasshollow-foundry-saint-aura-10184",
+  "currentSliceId": "combat-brasshollow-foundry-saint-aura-10184",
+  "currentSliceNotes": "Completed. Saint's Temper hardens active Overheated Brasshollow machinery and repairs surviving allied stacks without resurrection, with stronger Overheated repair. Exact all-live balance retains 36 outliers and 12 rows at or above 65 percent while improving severity from 300.0 to 293.5 and maximum dominance from 78.0 to 75.5 percent.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Debt-Engine Overheat",
-  "currentSliceUpdatedAt": "2026-08-03T17:26:00Z",
+  "currentSliceTitle": "Brasshollow Foundry Saint Aura",
+  "currentSliceUpdatedAt": "2026-08-03T18:44:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -67314,6 +67314,52 @@
       "updatedAt": "2026-08-03T17:26:00Z",
       "notes": "Completed. Debt-Engine Exactors own a new live Overheat family with a 1.16x opening strike and a non-refreshing two-round 0.83x damage, -2 defense, and -2 initiative cycle. Focused proof covers self-application, active penalties, no refresh, expiration, recovered burst, retaliation behavior, and tactical-AI defend preference. The accepted exact all-live matrix keeps 36 outliers while improving severity from 300.5 to 300.0 and maximum dominance from 78.5% to 78.0%; week-2 Brasshollow falls from 69% to 66% versus Embercourt and 71% to 68% versus Veilmourn.",
       "completedAt": "2026-08-03T17:26:00Z"
+    },
+    {
+      "id": "combat-brasshollow-foundry-saint-aura-10184",
+      "title": "Brasshollow Foundry Saint Aura",
+      "status": "completed",
+      "source": "PLAN.md",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "purpose": "Restore the Foundry Saint's authored ally-hardening and machine-repair role as live capstone battle behavior while reducing excessive week-3 Brasshollow losses without raw stat changes.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 36,
+        "balance_severity": 300.0,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 78.0,
+        "brasshollow_thornwake_week_3_opponent_win_rate_pct": 78.0,
+        "brasshollow_embercourt_week_3_opponent_win_rate_pct": 76.0
+      },
+      "completionCriteria": [
+        "A living Foundry Saint grants one side-scoped non-stacking defense aura to active Overheated Brasshollow machinery",
+        "Round-start repair restores bounded damage within surviving stacks without resurrecting units and gives active Overheated allies the authored repair bonus",
+        "Live events and summaries, tactical AI, benchmark parity, focused runtime proof, and content validation share the contract",
+        "The unchanged full matrix does not regress 36 outliers / 300.0 severity / 78.0 percent maximum and reduces at least one excessive week-3 Brasshollow loss"
+      ],
+      "nonGoals": [
+        "benchmark threshold, seed, raw unit stat, growth, spell, economy, strategic AI, save, campaign, or Native RMG changes",
+        "unit resurrection, stacking Saint auras, general machine-tag migration, final faction balance, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-03T17:33:23Z",
+      "updatedAt": "2026-08-03T18:44:23Z",
+      "notes": "Completed. Saint's Temper is live across authored content, BattleRules, tactical AI, presentation events, summaries, and benchmark parity. Focused proof covers Overheated-only defense, ordinary-defend and cross-faction exclusion, living/dead aura ownership, bounded non-resurrecting repair, stronger Overheated repair, and AI target priority. The exact all-live matrix keeps 36 outliers and 12 rows at or above 65 percent, improves severity from 300.0 to 293.5 and maximum dominance from 78.0 to 75.5 percent, and reduces week-3 losses versus Embercourt from 76.0 to 72.5, Mireclaw from 60.0 to 56.0, and Thornwake from 78.0 to 75.5. Ability, focused autoplay balance/regression, town-development, core, parse, repository, JSON, and diff gates pass. The broad standard harness retains identical no-aura-control failures for the pre-existing active encounter queue and Ninefold strategic-AI launch/retask cases.",
+      "completedAt": "2026-08-03T18:44:23Z"
     }
   ],
   "project": "heroes-like",
@@ -67324,7 +67370,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 36 outliers / 300.0 severity / 78.0 percent maximum dominance.",
+  "remainingWork": "Continue the remaining faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the combat matrix remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance, the active encounter queue has 44 items, and Ninefold Brasshollow/Veilmourn strategic-AI launch/retask coverage remains failing.",
   "reportOnlyEvidence": [
     {
       "entries": [

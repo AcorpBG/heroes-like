@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-brasshollow-foundry-saint-aura-10184`. Brasshollow's tier-7 Foundry Saint now projects Saint's Temper while alive: active Overheated Brasshollow machinery receives a bounded non-stacking defense bonus, and surviving allied stacks receive bounded non-resurrecting round-start repair with stronger Overheated repair. Readable healing events, tactical AI valuation, live summaries, focused runtime proof, and exact benchmark parity share the authored contract. The unchanged all-live matrix retains 36 outliers and 12 rows at or above 65%, improves severity from 300.0 to 293.5 and maximum dominance from 78.0% to 75.5%, and reduces excessive week-3 Brasshollow losses against Embercourt, Mireclaw, and Thornwake. Ability, focused autoplay balance/regression, town-development, core, parse, repository, JSON, and diff gates pass. The broader standard harness retains identical no-aura-control failures in the pre-existing 44-item active encounter queue and Ninefold Brasshollow/Veilmourn strategic-AI launch/retask cases; those remain overall-game debt rather than this slice's progress.
 - Completed implementation slice: `combat-brasshollow-debt-engine-overheat-10184`. Brasshollow's tier-5 Debt-Engine Exactors now open primary strikes at 1.16x damage, then run at 0.83x damage with -2 defense and initiative for a non-refreshing two-round Overheated cycle. Tactical AI, live summaries, runtime resolution, and the fast benchmark share the contract. The unchanged all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 300.5 to 300.0 and maximum dominance from 78.5% to 78.0%, and reduces week-2 Brasshollow dominance versus Embercourt from 69% to 66% and Veilmourn from 71% to 68%. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-brasshollow-crucible-barrage-10184`. Brasshollow's tier-6 Crucible Crawlers now own a live setup-siege Volley that strengthens long-lane fire and punishes staggered lines. The unchanged all-live 100-seed matrix improves from 37 to 36 outliers and severity 304 to 300.5, keeps maximum dominance at 78.5%, and leaves every week-1/2 row exact. Ability, autoplay, town-development, core, parse, and repository gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed corrective release-gate slice: `terrain-taxonomy-visual-regression-gate-10184`. River Pass now proves controlled legacy forest degradation while Ninefold asserts canonical authored grass/dirt, dirt/sand, and water/land boundaries. The longer River Pass suite was reconciled with shipped persistent-site, encounter-army, artifact-set, Waystride, full-route, and remote-town contracts without weakening detailed route payload checks. Both visual suites, full-route regression, project parsing, repository validation, JSON validation, and diff checks pass. This is validation maintenance, not implementation progress.
@@ -690,6 +691,30 @@ Completion evidence:
 Non-goals:
 - do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
 - do not claim final Brasshollow identity, final faction balance, or overall release completion.
+
+## Brasshollow Foundry Saint Aura
+
+id: `combat-brasshollow-foundry-saint-aura-10184`
+
+Completed Phase 5 combat implementation slice. Restores the tier-7 Foundry
+Saint's faction-bible ally-hardening and machine-repair role as live battle
+behavior instead of leaving the capstone as raw statistics.
+
+Implementation target:
+- while a Foundry Saint stack remains alive, active Overheated Brasshollow machinery receives one bounded non-stacking defense bonus;
+- at round start, the same aura repairs bounded damage within each surviving allied stack without resurrecting lost units, with an authored bonus for active Overheated machinery;
+- repair emits player-readable battle/presentation events, tactical AI values removing the enemy aura, and live summaries explain the active hardening/repair role;
+- BattleRules, Battle AI, the fast benchmark, focused runtime coverage, and content validation use the same authored contract;
+- preserve raw unit stats, growth, costs, spell access, saves, campaigns, strategic AI, and Native RMG behavior.
+
+Completion evidence:
+- focused live coverage proves Overheated-only side-scoped defense, no ordinary-defend or cross-faction benefit, bounded non-resurrecting repair, Overheated repair priority, aura removal when the Saint dies, and tactical-AI target valuation;
+- the unchanged all-live 100-seed matrix does not regress the `36` outlier / `300.0` severity / `78.0%` maximum baseline and reduces at least one excessive week-3 Brasshollow loss;
+- structural, pacing, side-bias, ability, focused autoplay balance/regression, town-development, core, project-parse, repository, JSON, and diff gates pass; the broader standard harness's active-encounter queue and Ninefold strategic-AI failures remain byte-for-byte/signature-identical with the Foundry aura removed and stay outside this combat slice.
+
+Non-goals:
+- do not change benchmark thresholds, seeds, unit stats, growth, spells, economy, strategic AI, saves, campaigns, or Native RMG;
+- do not resurrect destroyed units, stack multiple Saint auras, create a general machine-tag migration, or claim final faction balance/release completion.
 
 ## Canonical Terrain Visual Regression Gate
 
