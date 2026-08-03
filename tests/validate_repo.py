@@ -21276,6 +21276,13 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "verify_installer_artifact",
             "source_archive_sha256",
             "SHA256SUMS installer hash mismatch",
+            "heroes_like_release_index_v3",
+            "heroes_like_platform_release_manifest_v2",
+            "heroes_like_build_info_v1",
+            "--source-revision",
+            "resolve_source_revision",
+            "build-info.json",
+            "embedded build info identity mismatch",
         ):
             ensure(required_token in tool_text, errors, f"Release packager verification is missing required token: {required_token}")
 
@@ -21291,6 +21298,10 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "test_duplicate_member_is_rejected_even_with_updated_outer_hashes",
             "test_stale_release_output_is_rejected_and_next_package_cleans_it",
             "test_installer_payloads_are_verified_and_linux_lifecycle_is_reversible",
+            "test_build_info_is_deterministic_and_bound_to_each_platform",
+            "test_build_info_tampering_is_rejected_with_updated_outer_hashes",
+            "test_release_index_source_revision_disagreement_is_rejected",
+            "test_source_revision_validation_and_dirty_local_source_rejection",
             "--verify-only",
         ):
             ensure(required_token in test_text, errors, f"Release artifact verification test is missing required token: {required_token}")
@@ -21299,7 +21310,7 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         smoke_text = PACKAGE_INSTALLER_SMOKE_PATH.read_text(encoding="utf-8")
         for required_token in (
             "PACKAGING_USER_LOCAL_INSTALLER_SMOKE",
-            "packaging_user_local_installer_smoke_v2",
+            "packaging_user_local_installer_smoke_v3",
             "linux_lifecycle",
             "windows_lifecycle",
             "user_data_preserved",
@@ -21307,14 +21318,15 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "windows-x86_64.setup.exe",
             "Boot.scn",
             "MainMenu.scn",
+            "build_info_verified",
             "clean native Windows hardware certification",
         ):
             ensure(required_token in smoke_text, errors, f"Installer lifecycle smoke is missing required token: {required_token}")
 
     for path, required_tokens in (
-        (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install")),
+        (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install", "build-info.json")),
         (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rm -rf", "were preserved")),
-        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install")),
+        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install", "build-info.json")),
         (PACKAGE_WINDOWS_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rmdir /S /Q", "were preserved")),
     ):
         if path.exists():

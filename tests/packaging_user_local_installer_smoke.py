@@ -20,8 +20,9 @@ ARTIFACT_DIR = Path(
 ).resolve()
 REPORT_PATH = ARTIFACT_DIR / "report.json"
 REPORT_ID = "PACKAGING_USER_LOCAL_INSTALLER_SMOKE"
-SCHEMA_ID = "packaging_user_local_installer_smoke_v2"
+SCHEMA_ID = "packaging_user_local_installer_smoke_v3"
 VERSION = "0.1.0-alpha.1-installer-smoke"
+SOURCE_REVISION = "c" * 40
 PACKAGER = ROOT / "tools" / "package_release.py"
 WINE = os.environ.get("WINE", shutil.which("wine") or "")
 WINESERVER = shutil.which("wineserver") or ""
@@ -103,7 +104,7 @@ def wine_path(path: Path) -> str:
     return "Z:" + str(path.resolve()).replace("/", "\\")
 
 
-def verify_installed_payload(install_dir: Path) -> dict:
+def verify_installed_payload(install_dir: Path, expected_platform: str) -> dict:
     manifest_path = install_dir / "release-manifest.json"
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -125,10 +126,26 @@ def verify_installed_payload(install_dir: Path) -> dict:
             errors.append(f"payload identity mismatch: {name}")
             continue
         verified += 1
+    try:
+        build_info = json.loads((install_dir / "build-info.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        errors.append(f"invalid installed build info: {exc}")
+        build_info = {}
+    expected_build_info = {
+        "schema_id": "heroes_like_build_info_v1",
+        "product_id": "heroes-like",
+        "version": VERSION,
+        "platform": expected_platform,
+        "source_revision": SOURCE_REVISION,
+        "source_date_epoch": 315532800,
+    }
+    if build_info != expected_build_info:
+        errors.append(f"installed build info identity mismatch: {expected_platform}")
     return {
         "ok": not errors and verified == len(rows),
         "expected_file_count": len(rows),
         "verified_file_count": verified,
+        "build_info_verified": build_info == expected_build_info,
         "errors": errors,
     }
 
@@ -149,7 +166,7 @@ def linux_lifecycle(installer: Path) -> dict:
     install = run([str(installer)], env=env, timeout=120)
     launcher = bin_dir / "heroes-like"
     payload_installed = (install_dir / "heroes-like.x86_64").is_file()
-    payload_verification = verify_installed_payload(install_dir)
+    payload_verification = verify_installed_payload(install_dir, "linux-x86_64")
     launcher_created = launcher.is_file()
     desktop_entry_created = (applications_dir / "heroes-like.desktop").is_file()
     boot = run(
@@ -196,7 +213,7 @@ def windows_lifecycle(installer: Path) -> dict:
         "WINEDLLOVERRIDES": "dinput8=",
     }
     install = run([WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240)
-    payload_verification = verify_installed_payload(install_dir)
+    payload_verification = verify_installed_payload(install_dir, "windows-x86_64")
     start_menu_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
     user_data.parent.mkdir(parents=True, exist_ok=True)
     user_data.write_text("preserve-windows", encoding="utf-8")
@@ -249,11 +266,14 @@ def main() -> int:
             str(PACKAGER),
             "--version",
             VERSION,
+            "--source-revision",
+            SOURCE_REVISION,
             "--output-dir",
             str(ARTIFACT_DIR),
             "--godot",
             os.environ.get("GODOT", "godot4"),
         ],
+        env={"SOURCE_DATE_EPOCH": "315532800"},
         timeout=900,
     )
     if not command_ok(package):

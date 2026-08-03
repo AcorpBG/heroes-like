@@ -16,7 +16,7 @@ if not defined HEROES_LIKE_START_MENU_DIR (
   set "HEROES_LIKE_START_MENU_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Heroes Like"
 )
 
-for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt release-manifest.json uninstall.cmd) do (
+for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt build-info.json release-manifest.json uninstall.cmd) do (
   if not exist "%SOURCE_DIR%%%F" (
     echo heroes-like installer: missing payload %%F 1>&2
     exit /b 1
@@ -28,7 +28,7 @@ if errorlevel 1 exit /b 1
 if not exist "%HEROES_LIKE_START_MENU_DIR%" mkdir "%HEROES_LIKE_START_MENU_DIR%"
 if errorlevel 1 exit /b 1
 
-for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt release-manifest.json install.cmd uninstall.cmd) do (
+for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt build-info.json release-manifest.json install.cmd uninstall.cmd) do (
   copy /Y "%SOURCE_DIR%%%F" "%HEROES_LIKE_INSTALL_DIR%\%%F" >nul
   if errorlevel 1 exit /b 1
 )
