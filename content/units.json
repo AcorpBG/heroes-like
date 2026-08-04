@@ -1473,6 +1473,21 @@
         "wood": 3,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Highroot Graft Salvo",
+          "description": "The matriarch seeds living shafts through a prepared firing lane, pressing hardest into enemies already caught by bramble or broken formation.",
+          "damage_multiplier": 1.01,
+          "min_distance": 1,
+          "status_ids": [
+            "status_harried",
+            "status_rooted",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.03
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "shots": 4,
       "spell_resistance_pct": 10,
@@ -1503,6 +1518,15 @@
         "wood": 4,
         "ore": 2
       },
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Worldroot Rampart",
+          "description": "Interlocked root plates absorb incoming volleys and keep the living fortress coherent while the surrounding bramble line grinds down the field.",
+          "cohesion_hold_bonus": 0,
+          "ranged_damage_multiplier": 0.97
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 15,
       "control_resistance_pct": 10,

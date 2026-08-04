@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-thornwake-highroot-capstone-identity-10184`. Thornwake's production capstone pair now has source-aligned live roles: Graft Matriarchs deliver Highroot Graft Salvo with an open-lane floor and stronger payoff into rooted or disrupted enemies, while Worldroot Bastion's passive Worldroot Rampart directly blunts incoming ranged attrition without adding a global cohesion tier. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The accepted all-live 100-seed pair and week summaries remain exact at 33 outliers / 262.5 severity / 12 rows at or above 65% / 74.5% maximum dominance / 3.07 maximum side bias with week 1 unchanged. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-embercourt-charter-ladder-identity-10184`. Embercourt's production tier-4 through tier-7 charter ladder now has source-aligned live roles: Ash-Oath Bailiffs enforce a held line through Ash-Writ Formation, Beacon Lectors spend one Beacon Lane Citation against a tier-4-or-higher breach, Sluicefire Lindworms convert wounded or disrupted prey into supported shock pressure, and Charter Colossus anchors a stronger retaliation through Charter Lock. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix improves from 35 outliers / 264.0 severity to 33 / 262.5, keeps 12 rows at or above 65% and 74.5% maximum dominance, leaves week 1 exact, and lowers maximum side bias from 3.8 to 3.07 points. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-sunvault-relay-ladder-identity-10184`. Sunvault's production tier-4 through tier-7 relay ladder now has source-aligned live roles: Resonant Choristers spend one Calibration Cant to expose a tier-6-or-higher line, Solar Array Striders resist 15% of control effects, Aurora Bastions blunt ranged fire and hold cohesion through Aurora Facet Wall, and Daybreak Colossus gains prepared-line and disrupted-target artillery pressure through Daybreak Firing Solution. Shared BattleRules/SpellRules behavior, tactical AI consumption, player summaries, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix keeps 35 outliers and 12 rows at or above 65%, lowers severity from 272.5 to 264.0 and maximum dominance from 75.0% to 74.5%, leaves week 1 exact, and improves week-4 Embercourt/Sunvault from 75% to 71% Embercourt dominance. Ability, resistance, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-mourning-lantern-mark-10184`. Veilmourn Mourning Lanterns now own Wake-Lantern Mark: their first ranged attack against a tier-3-or-higher veteran line applies one round of cohesion pressure, spends one battle use, and then reports the mark as spent. BattleRules, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused runtime proof share the authored limit and target threshold. The all-live 100-seed matrix improves from 36 outliers / 280.5 severity to 35 / 272.5, keeps 12 rows at or above 65% and 75% maximum dominance, lowers maximum side bias from 4.0 to 3.73 points, and moves week-1 Embercourt/Veilmourn from 62.5% Embercourt dominance to 53.5%. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; faction balance and overall release completion remain open.
@@ -1547,6 +1548,36 @@ Completion evidence:
 
 Non-goals:
 - do not change Embercourt tier-1 through tier-3 units or add faction-only combat code;
+- do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
+- do not change Native RMG or claim final faction balance or overall release completion.
+
+## Thornwake Highroot Capstone Identity
+
+id: `combat-thornwake-highroot-capstone-identity-10184`
+
+Completed Phase 5 faction-identity and combat-balance implementation slice. The
+production Thornwake tier-6 Graft Matriarchs and tier-7 Worldroot Bastion now
+express late backline bramble pressure and a rooted attrition wall through
+shared live ability contracts.
+
+Implementation target:
+- give Graft Matriarchs a prepared graft salvo that rewards existing bramble pressure and Worldroot Bastion a passive ranged-attrition root rampart;
+- use shared live BattleRules, tactical AI, player-summary, and fast-benchmark contracts rather than faction-only combat branches;
+- keep week-1 armies exact and do not increase the current 33 outliers, 262.5 severity, 12 rows at or above 65%, 74.5% maximum dominance, or 3.07 maximum side bias;
+- preserve raw unit stats, growth, recruitment, town economy, spells, heroes, saves, scenarios, strategic AI, and Native RMG behavior.
+
+Completion criteria:
+- both high-tier Thornwake units produce focused live runtime consequences and player-readable summaries for all authored abilities;
+- the unchanged all-live 100-seed four-week matrix keeps zero structural failures, leaves week 1 exact, and does not regress any aggregate balance baseline;
+- focused ability, battle autoplay, town-development, core, project-parse, repository, JSON, Python syntax, and diff validation pass.
+
+Completion evidence:
+- Highroot Graft Salvo measures a `1.01` open-lane modifier and retains stronger rooted/disrupted payoff, while Worldroot Rampart measures `0.97` incoming ranged damage; both names are present in player summaries and all 94 authored ability instances pass focused live consequence proof;
+- the accepted 100-seed all-live pair and week summaries remain exact at 33 outliers / 262.5 severity / 12 severe rows / 74.5% maximum dominance / 3.07 maximum side bias with zero structural failures and unchanged week 1;
+- focused ability, battle autoplay, balance regression, town development, core systems, project parse, repository, JSON, Python syntax, and diff validation pass. The matrix honestly remains `needs_tuning`.
+
+Non-goals:
+- do not change Thornwake tier-1 through tier-5 units or add faction-only combat code;
 - do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
