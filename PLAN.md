@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-sunvault-relay-ladder-identity-10184`. Sunvault's production tier-4 through tier-7 relay ladder now has source-aligned live roles: Resonant Choristers spend one Calibration Cant to expose a tier-6-or-higher line, Solar Array Striders resist 15% of control effects, Aurora Bastions blunt ranged fire and hold cohesion through Aurora Facet Wall, and Daybreak Colossus gains prepared-line and disrupted-target artillery pressure through Daybreak Firing Solution. Shared BattleRules/SpellRules behavior, tactical AI consumption, player summaries, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix keeps 35 outliers and 12 rows at or above 65%, lowers severity from 272.5 to 264.0 and maximum dominance from 75.0% to 74.5%, leaves week 1 exact, and improves week-4 Embercourt/Sunvault from 75% to 71% Embercourt dominance. Ability, resistance, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-mourning-lantern-mark-10184`. Veilmourn Mourning Lanterns now own Wake-Lantern Mark: their first ranged attack against a tier-3-or-higher veteran line applies one round of cohesion pressure, spends one battle use, and then reports the mark as spent. BattleRules, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused runtime proof share the authored limit and target threshold. The all-live 100-seed matrix improves from 36 outliers / 280.5 severity to 35 / 272.5, keeps 12 rows at or above 65% and 75% maximum dominance, lowers maximum side bias from 4.0 to 3.73 points, and moves week-1 Embercourt/Veilmourn from 62.5% Embercourt dominance to 53.5%. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; faction balance and overall release completion remain open.
 - Completed implementation slice: `combat-brasshollow-pavis-screen-10184`. Furnace Pavis Teams now own Furnace Screen: a non-stacking live Pavis wall blunts incoming missiles and reduces frontal `Brace`/`Reach` line-breaker damage against itself and allied ranged engines by 6% while a screen survives. BattleRules, tactical AI estimates, player summaries, the fast benchmark, schema validation, and focused runtime proof share the contract. The all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 293.5 to 280.5, maximum dominance from 75.5% to 75.0%, week-3 Thornwake/Brasshollow from 75.5% to 67.5%, and week-2 Thornwake/Brasshollow from 61.5% to 50.5%. Ability, autoplay, town-development, core, parse, repository, JSON, and diff gates pass; faction balance and overall release completion remain open.
 - Completed implementation slice: `native-rmg-player-release-matrix-adoption-10184`. Generated skirmish setup now exposes the completed native RMG 24-workflow release matrix across Small through Extra Large, land/normal-water/Islands, and one/two levels. Public launch normalization preserves the selected level, Islands no longer rewrites size or player count, and native catalog auto-selection plus fail-closed validation remain intact. Focused runtime proof launches Small two-level normal-water into a skirmish session in one attempt without authored writeback; the full native boundary retains 24/24 workflow shapes, legacy Small/land launch, core, parse, repository, JSON, diff, and 1280x720 visual gates pass. This is runtime adoption of already parity-owned workflows, not a new recovery or arbitrary-configuration parity claim.
@@ -1488,6 +1489,35 @@ Non-goals:
 - do not add a new panel or expand compact map cues;
 - do not reveal armies hidden by fog or non-exact encounter policies;
 - do not tune encounter armies, rewards, balance, saves, strategic AI, or Native RMG.
+
+## Sunvault Relay-Ladder Identity
+
+id: `combat-sunvault-relay-ladder-identity-10184`
+
+Completed Phase 5 faction-identity and combat-balance implementation slice. The
+production Sunvault tier-4 through tier-7 ladder now expresses its source roles
+through shared live ability and resistance contracts.
+
+Implementation target:
+- give Resonant Choristers a bounded high-tier focused mark, Solar Array Striders data-driven control resistance, Aurora Bastions a passive close-line prism wall, and the Daybreak Colossus prepared-lane artillery pressure;
+- use shared live BattleRules/SpellRules, tactical AI, player-summary, and fast-benchmark contracts instead of faction-only combat branches;
+- keep week-1 armies exact and improve Sunvault's late progression without increasing the current 35 outliers, 272.5 severity, 12 rows at or above 65%, or 75% maximum dominance;
+- preserve HP, attack, defense, damage, speed, initiative, growth, recruitment, town economy, spells, heroes, saves, scenarios, strategic AI, and Native RMG behavior.
+
+Completion criteria:
+- all four high-tier Sunvault roles produce focused live runtime consequences, with the three active abilities retaining player-readable summaries;
+- the unchanged all-live 100-seed four-week matrix keeps zero structural failures, leaves week 1 exact, and does not regress any aggregate balance baseline;
+- focused ability, battle autoplay, town-development, core, project-parse, repository, JSON, Python syntax, and diff validation pass.
+
+Completion evidence:
+- Calibration Cant, 15% array control resistance, Aurora Facet Wall, and Daybreak Firing Solution pass focused live consequence and player-summary proof across 88 authored ability instances;
+- the 100-seed all-live matrix leaves week 1 exact, keeps 35 outliers and 12 severe rows, and improves severity `272.5 -> 264.0`, maximum dominance `75.0% -> 74.5%`, and week-4 Embercourt/Sunvault `75% -> 71%`;
+- focused ability/resistance, battle autoplay, balance regression, town development, core systems, project parse, repository, JSON, Python syntax, and diff validation pass. The matrix honestly remains `needs_tuning`.
+
+Non-goals:
+- do not change Sunvault tier-1 through tier-3 units or duplicate spell/status systems;
+- do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, or benchmark thresholds;
+- do not change strategic AI or Native RMG, or claim final faction balance or overall release completion.
 
 ## Slice Status Model
 

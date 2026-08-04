@@ -10,6 +10,7 @@ func _run() -> void:
 		"damage_resistance": _damage_resistance_case(),
 		"control_immunity": _control_immunity_case(),
 		"control_resistance": _control_resistance_case(),
+		"sunvault_array_control_resistance": _sunvault_array_control_resistance_case(),
 		"cleanse_immunity": _cleanse_immunity_case(),
 		"artifact_resistance": _artifact_resistance_case(),
 	}
@@ -70,6 +71,26 @@ func _control_resistance_case() -> Dictionary:
 				"blocked_status_id": String(resolution.get("blocked_status_id", "")),
 			}
 	return {"ok": false, "error": "no deterministic resistance roll succeeded across fixture seeds"}
+
+func _sunvault_array_control_resistance_case() -> Dictionary:
+	var unit := ContentService.get_unit("unit_sunvault_solar_array_striders")
+	var authored_resistance := int(unit.get("control_resistance_pct", 0))
+	if authored_resistance != 15:
+		return {"ok": false, "error": "Solar Array Striders lost their authored control resistance", "control_resistance_pct": authored_resistance}
+	for seed in range(200):
+		var hero := _hero(["spell_briar_bind"])
+		var battle := _battle("sunvault_array_%d" % seed, _target("enemy_target", "enemy", {"control_resistance_pct": authored_resistance}))
+		battle["resistance_seed"] = seed
+		var resolution := SpellRules.resolve_battle_spell(hero, battle, _stack_by_id(battle, "player_line"), _stack_by_id(battle, "enemy_target"), "spell_briar_bind")
+		if bool(resolution.get("ok", false)) and bool(resolution.get("resisted", false)):
+			return {
+				"ok": true,
+				"seed": seed,
+				"roll": int(resolution.get("resistance_roll", -1)),
+				"control_resistance_pct": int(resolution.get("control_resistance_pct", 0)),
+				"blocked_status_id": String(resolution.get("blocked_status_id", "")),
+			}
+	return {"ok": false, "error": "Solar Array Striders never resisted deterministic root control"}
 
 func _cleanse_immunity_case() -> Dictionary:
 	var hero := _hero(["spell_prism_bastion"])

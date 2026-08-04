@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Exact-known hostile contact detail now names all four authored groups, while compact hover cues remain totals-only. The full overworld visual smoke passes through hostile-contact, terrain, fog, and compact-layout checks.",
+  "currentNotes": "Completed the production Sunvault high-tier identity ladder through shared live behavior: focused Calibration Cant, targeted array control resistance, passive Aurora Facet Wall, and prepared Daybreak artillery. The accepted 100-seed matrix keeps 35 outliers and 12 severe rows while lowering severity to 264.0 and maximum dominance to 74.5 percent; faction balance and overall release completion remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-hostile-full-roster-inspection-10184",
-  "currentSliceId": "ux-overworld-hostile-full-roster-inspection-10184",
-  "currentSliceNotes": "Completed four-group hostile-roster inspection on the detailed selected-contact surface while preserving totals-only compact hover cues, visibility policy, content, saves, balance, and Native RMG behavior.",
+  "currentSlice": "combat-sunvault-relay-ladder-identity-10184",
+  "currentSliceId": "combat-sunvault-relay-ladder-identity-10184",
+  "currentSliceNotes": "Implemented and validated all four source-authored tier-4 through tier-7 Sunvault combat roles through shared live ability and control-resistance contracts without regressing the full faction matrix.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hostile Full-Roster Inspection",
-  "currentSliceUpdatedAt": "2026-08-04T04:41:15Z",
+  "currentSliceTitle": "Sunvault Relay-Ladder Identity",
+  "currentSliceUpdatedAt": "2026-08-04T05:40:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69195,6 +69195,84 @@
       },
       "notes": "The initial live smoke exposed two distinct facts: its 26-troop/three-group expectation was stale, and selected-contact detail collapsed the current fourth known stack. Runtime detail now names all four groups. A first follow-up assertion also confirmed hover intentionally uses the compact formatter, so hover remains totals-only rather than expanding into a long unit list.",
       "remainingWork": "Overall release completion remains open across strategic AI, balance, accessibility, content, performance, clean-machine packaging, certification, and release integration."
+    },
+    {
+      "id": "combat-sunvault-relay-ladder-identity-10184",
+      "title": "Sunvault Relay-Ladder Identity",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/magic_resistance_countercontrol_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "baseline": {
+        "sunvault_tier_4_to_7_unit_count": 4,
+        "sunvault_tier_4_to_7_specialized_behavior_count": 0,
+        "balance_outlier_count": 35,
+        "balance_severity": 272.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 75.0,
+        "week_1_sunvault_over_brasshollow_pct": 69.5,
+        "week_4_embercourt_over_sunvault_pct": 75.0,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Resonant Choristers, Solar Array Striders, Aurora Bastions, and Daybreak Colossus each own a source-aligned authored behavior with a focused live runtime consequence",
+        "Live combat, SpellRules, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume shared behavior fields",
+        "The full all-live matrix leaves week 1 exact and does not increase outlier count, severity, severe-row count, or maximum dominance",
+        "Focused ability, autoplay, town-development, core, parse, repository, JSON, Python syntax, and diff validation pass"
+      ],
+      "nonGoals": [
+        "Sunvault tier-1 through tier-3 changes or a duplicate spell/status system",
+        "raw unit-stat, growth, cost, building, spell, hero, scenario, benchmark-threshold, strategic-AI, or Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T04:54:35Z",
+      "updatedAt": "2026-08-04T05:40:43Z",
+      "completedAt": "2026-08-04T05:40:43Z",
+      "implemented": {
+        "resonant_choristers": "Calibration Cant: one-use tier-6 focused harry mark",
+        "solar_array_striders_control_resistance_pct": 15,
+        "aurora_bastions": "Aurora Facet Wall: 0.92 ranged multiplier and +2 cohesion hold",
+        "daybreak_colossus": "Daybreak Firing Solution: prepared-line and disrupted-target volley pressure",
+        "sunvault_tier_1_to_3_changed": false,
+        "raw_unit_stats_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "ability_instance_count": 88,
+        "ability_runtime_consequence_count": 88,
+        "sunvault_array_resistance_seed": 1,
+        "sunvault_array_resistance_roll": 12,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 35,
+        "balance_severity": 264.0,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "structural_failure_count": 0,
+        "week_1_exact": true,
+        "week_4_embercourt_over_sunvault_pct": 71.0
+      },
+      "validation": {
+        "status": "passed_with_unrelated_warning",
+        "commands": [
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/magic_resistance_countercontrol_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/balance_regression_report_suite.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --editor --path . --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "git diff --check"
+        ],
+        "residual": "balance_regression_report_suite remains warning-only on its pre-existing unsupported generated-map save/replay fixture; all suite sections have zero failures."
+      },
+      "notes": "Completed after rejecting generic walker shielding because even a one-percent universal damage modifier created shallow week-2 outliers. Targeted control resistance preserves the source role without that regression. A Bastion brace was also rejected because its AI defend preference pushed week-4 Brasshollow dominance from 62.5 to 65 percent; passive prism shielding preserves the intended close-line role and the accepted aggregate matrix.",
+      "remainingWork": "Faction balance remains needs_tuning at 35 outliers / 264.0 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
     }
   ],
   "project": "heroes-like",
@@ -69205,7 +69283,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 35 outliers / 272.5 severity / 75.0 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 35 outliers / 264.0 severity / 74.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
