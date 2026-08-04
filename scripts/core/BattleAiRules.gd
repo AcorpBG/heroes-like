@@ -2418,8 +2418,29 @@ static func _ability_damage_modifier(
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
 	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
+	if not is_ranged:
+		modifier *= _solar_array_lane_melee_multiplier(defender, battle)
 
 	return modifier
+
+static func _solar_array_lane_melee_multiplier(defender: Dictionary, battle: Dictionary) -> float:
+	if String(defender.get("faction_id", "")) != "faction_sunvault" or not bool(defender.get("ranged", false)):
+		return 1.0
+	var side := String(defender.get("side", ""))
+	for source in _alive_stacks_for_side(battle, side):
+		var ability := _ability_by_id(source, "solar_array_lane")
+		if ability.is_empty() or not _side_has_linked_unit(battle, side, ability.get("linked_unit_ids", [])):
+			continue
+		return float(ability.get("incoming_melee_damage_multiplier", 1.0))
+	return 1.0
+
+static func _side_has_linked_unit(battle: Dictionary, side: String, unit_ids: Variant) -> bool:
+	if not (unit_ids is Array):
+		return false
+	for stack in _alive_stacks_for_side(battle, side):
+		if String(stack.get("unit_id", "")) in unit_ids:
+			return true
+	return false
 
 static func _faction_damage_modifier(
 	attacker: Dictionary,

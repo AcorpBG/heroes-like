@@ -1220,6 +1220,17 @@
         "gold": 430,
         "ore": 2
       },
+      "abilities": [
+        {
+          "id": "solar_array_lane",
+          "name": "Solar Array Lanes",
+          "description": "While these Striders and a linked Daybreak Colossus survive, calibrated lanes reduce incoming melee damage to allied Sunvault ranged stacks by three percent. Ranged and spell damage are unchanged.",
+          "incoming_melee_damage_multiplier": 0.97,
+          "linked_unit_ids": [
+            "unit_sunvault_daybreak_colossus"
+          ]
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 5,
       "control_resistance_pct": 15,
