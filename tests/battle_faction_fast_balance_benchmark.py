@@ -1578,7 +1578,20 @@ class FastBattleBenchmark:
             modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
         if not is_ranged and attacking_shielding and self._has_effect_id(defender, battle, STATUS_HARRIED):
             modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
+        if not is_ranged:
+            modifier *= self._solar_array_lane_melee_multiplier(defender, battle)
         return modifier
+
+    def _solar_array_lane_melee_multiplier(self, defender: dict[str, Any], battle: dict[str, Any]) -> float:
+        if str(defender.get("faction_id", "")) != "faction_sunvault" or not bool(defender.get("ranged", False)):
+            return 1.0
+        side = str(defender.get("side", ""))
+        for source in self._alive_stacks_for_side(battle, side):
+            ability = self._ability_by_id(source, "solar_array_lane")
+            linked_ids = [str(value) for value in ability.get("linked_unit_ids", [])]
+            if ability and any(str(stack.get("unit_id", "")) in linked_ids for stack in self._alive_stacks_for_side(battle, side)):
+                return float(ability.get("incoming_melee_damage_multiplier", 1.0))
+        return 1.0
 
     def _faction_damage_modifier(self, attacker: dict[str, Any], defender: dict[str, Any], battle: dict[str, Any], is_ranged: bool, attack_distance: int) -> float:
         modifier = 1.0

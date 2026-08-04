@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-sunvault-solar-array-lanes-10184`. Solar Array Striders now project Solar Array Lanes while a linked Daybreak Colossus survives, reducing incoming melee primary and retaliation damage to same-side Sunvault ranged stacks by three percent without affecting melee allies, other factions, ranged attacks, spells, or direct health loss. Live BattleRules, tactical AI estimates, player summaries, the fast benchmark, content validation, and focused runtime proof share the authored source/link contract. The accepted all-live 100-seed four-week matrix leaves weeks one and two exact, keeps 29 outliers, lowers severity from 179.0 to 174.0, rows at or above 65 percent from 6 to 5, and maximum dominance from 69.5 to 68.5 percent with zero structural failures. Maximum side bias rises from 2.67 to 3.67 points but remains inside the existing 7-point gate. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-thornwake-sporeglass-mending-fire-10184`. Sporeglass Menders now use Mending Fire after successful ranged attacks to restore three health per living Mender, capped at eight, to one deterministically selected injured surviving allied stack without resurrecting casualties. Live BattleRules, player summaries and heal presentation, the fast benchmark, content validation, and focused runtime proof share the same contract. The accepted all-live 100-seed four-week matrix moves week-one Embercourt/Thornwake from 68.5 to 64.0 percent, lowers severity from 183.5 to 179.0 and rows at or above 65 percent from 7 to 6, keeps 29 outliers / 69.5 percent maximum dominance / 2.67-point maximum side bias / zero structural failures, and leaves every other pair win rate exact. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-final-notice-brace-targeting-10184`. Final Notice now authors its tier-two veteran-brace threshold and bounded 3.75 target priority, and live tactical AI, stack normalization, player ability summaries, effect resolution, and the fast benchmark consume the same fields. Focused runtime proof makes Obituary Scribes choose Thornwhip Carriers over the otherwise preferred Sporeglass ranged line, gives the qualifying brace a 4.0 total once-per-battle score delta while a tier-one brace retains only the unchanged 0.25 base value, and preserves the existing one-round `-2` cohesion / `-20%` retaliation pressure. The accepted all-live 100-seed four-week matrix improves from 30 to 29 outliers, 193.0 to 183.5 severity, 8 to 7 rows at or above 65 percent, and 70.5 to 69.5 percent maximum dominance; maximum side bias moves from 2.53 to 2.67 points with zero structural failures. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `battle-ai-survivor-recovery-valuation-10184`. Live recovery, tactical-AI targeting, player-facing spell consequences, and the fast benchmark now share a survivor-only recoverable-health contract: casualty-only stacks cannot receive recovery, genuinely injured survivors remain valid targets, and repeated casts cannot restore fallen creatures. Focused reports prove a 38-health stack with ten health per creature caps at 40 and that AI filters a casualty-only 60/80 stack while casting Graft Mend on a 51-health six-survivor stack. The accepted all-live 100-seed four-week matrix has zero structural failures but exposes the honest tuning cost of removing illegal benchmark resurrection and wasted AI casts: outliers move from 29 to 30, severity from 186.5 to 193.0, rows at or above 65 percent from 7 to 8, and maximum dominance from 69.5 to 70.5 percent, while maximum side bias improves from 2.80 to 2.53 points. Magic-AI, spell behavior, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
@@ -559,6 +560,33 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Sunvault Solar Array Lanes
+
+id: `combat-sunvault-solar-array-lanes-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and combat-balance slice. The faction bible
+defines Solar Array Striders as disruption-resistant construct walkers that
+project small firing lanes, but live content currently implements only the
+resistance half of that role.
+
+Implementation target:
+- author a bounded Solar Array Lane ability on the tier-five Strider;
+- while both the Strider source and linked Daybreak Colossus survive, reduce incoming melee damage to same-side Sunvault ranged stacks by three percent;
+- consume the same authored source, link, role, faction, and multiplier contract in live BattleRules, tactical AI estimates, and the fast benchmark;
+- expose the linked setup and loss condition in player ability summaries.
+
+Completion criteria:
+- focused live proof covers active primary and retaliation mitigation, source loss, linked-unit loss, non-Sunvault and melee-target exclusion, and no effect on ranged attacks or direct health loss;
+- weeks one and two remain exact because the linked tier-seven unit is absent;
+- the all-live 100-seed four-week matrix has zero structural failures and records exact outlier, severity, severe-row, dominance, and side-bias movement;
+- ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not change unit stats, growth, costs, spells, heroes, benchmark thresholds, saves, strategic AI task planning, campaign content, or Native RMG;
+- do not apply broad Sunvault stat buffs, protect melee stacks, reduce ranged/spell/direct damage, or claim final faction balance/overall release completion.
 
 ## Thornwake Sporeglass Mending Fire
 

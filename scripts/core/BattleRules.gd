@@ -3935,6 +3935,11 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
+	if _has_ability(stack, "solar_array_lane"):
+		var array_lane := _ability_by_id(stack, "solar_array_lane")
+		if _side_has_linked_unit(battle, String(stack.get("side", "")), array_lane.get("linked_unit_ids", [])):
+			return "Solar Array Lanes are screening allied Sunvault firing lines from melee pressure while the linked Daybreak Colossus survives."
+		return "Solar Array Lanes are waiting for their linked Daybreak Colossus."
 	if _has_ability(stack, "sporeglass_mend") and bool(stack.get("ranged", false)):
 		return "Mending Fire will repair an injured surviving allied stack after this shot; fallen creatures cannot return."
 	if _has_ability(stack, "foundry_aura"):
@@ -4029,6 +4034,11 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			return "%s steadies allied lanes and improves support fire" % name
 		"resonance_relay":
 			return "%s synchronizes two or more separately calibrated allied stacks while this choir remains in the battle" % name
+		"solar_array_lane":
+			return "%s screens allied Sunvault ranged stacks against %d%% of incoming melee damage while the linked Daybreak Colossus survives" % [
+				name,
+				int(round((1.0 - float(ability.get("incoming_melee_damage_multiplier", 1.0))) * 100.0)),
+			]
 		"sporeglass_mend":
 			return "%s restores up to %d surviving allied health after ranged fire" % [
 				name,
@@ -9135,8 +9145,29 @@ static func _ability_damage_modifier(
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
 	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
+	if not is_ranged:
+		modifier *= _solar_array_lane_melee_multiplier(defender, battle)
 
 	return modifier
+
+static func _solar_array_lane_melee_multiplier(defender: Dictionary, battle: Dictionary) -> float:
+	if String(defender.get("faction_id", "")) != "faction_sunvault" or not bool(defender.get("ranged", false)):
+		return 1.0
+	var side := String(defender.get("side", ""))
+	for source in _alive_stacks_for_side(battle, side):
+		var ability := _ability_by_id(source, "solar_array_lane")
+		if ability.is_empty() or not _side_has_linked_unit(battle, side, ability.get("linked_unit_ids", [])):
+			continue
+		return float(ability.get("incoming_melee_damage_multiplier", 1.0))
+	return 1.0
+
+static func _side_has_linked_unit(battle: Dictionary, side: String, unit_ids: Variant) -> bool:
+	if not (unit_ids is Array):
+		return false
+	for stack in _alive_stacks_for_side(battle, side):
+		if String(stack.get("unit_id", "")) in unit_ids:
+			return true
+	return false
 
 static func _faction_damage_modifier(
 	attacker: Dictionary,
@@ -9538,6 +9569,14 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"terrain_momentum_bonus": clampi(int(entry.get("terrain_momentum_bonus", 0)), 0, 3),
 					"linked_unit_ids": _normalize_string_array(entry.get("linked_unit_ids", [])),
 					"linked_initiative_bonus": clampi(int(entry.get("linked_initiative_bonus", 0)), 0, 3),
+				}
+			"solar_array_lane":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Solar Array Lanes")),
+					"description": String(entry.get("description", "")),
+					"incoming_melee_damage_multiplier": clampf(float(entry.get("incoming_melee_damage_multiplier", 1.0)), 0.75, 1.0),
+					"linked_unit_ids": _normalize_string_array(entry.get("linked_unit_ids", [])),
 				}
 			"bloodrush":
 				normalized = {

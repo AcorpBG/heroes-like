@@ -320,7 +320,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10694,6 +10694,11 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush momentum_gain must be > 0")
                     ensure(int(ability.get("kill_momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush kill_momentum_gain must be > 0")
                     ensure(int(ability.get("late_round_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be > 0")
+                elif ability_id == "solar_array_lane":
+                    ensure(str(unit.get("faction_id", "")) == "faction_sunvault", errors, f"Unit {unit_id} solar_array_lane must belong to Sunvault")
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} solar_array_lane must belong to a melee screen")
+                    ensure(float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.97, errors, f"Unit {unit_id} solar_array_lane incoming multiplier must equal 0.97")
+                    ensure(ability.get("linked_unit_ids", []) == ["unit_sunvault_daybreak_colossus"], errors, f"Unit {unit_id} solar_array_lane must link the Daybreak Colossus")
                 elif ability_id == "overheat":
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} overheat must belong to a melee unit")
                     ensure(float(ability.get("burst_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} overheat burst_damage_multiplier must be > 1")
@@ -10720,9 +10725,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, bloodrush, obituary, overheat, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10912,6 +10917,13 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "sporeglass_mend" for ability in unit.get("abilities", []))
     )
     ensure(sporeglass_mend_owners == ["unit_thornwake_sporeglass_menders"], errors, "Mending Fire must remain exclusive to Thornwake Sporeglass Menders")
+
+    solar_array_lane_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "solar_array_lane" for ability in unit.get("abilities", []))
+    )
+    ensure(solar_array_lane_owners == ["unit_sunvault_solar_array_striders"], errors, "Solar Array Lanes must remain exclusive to Sunvault Solar Array Striders")
 
     for group_id, group in army_groups.items():
         if is_neutral_army_group(group):

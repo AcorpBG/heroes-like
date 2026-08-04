@@ -17,6 +17,7 @@ const REQUIRED_ABILITY_IDS := [
 	"volley",
 	"formation_guard",
 	"resonance_relay",
+	"solar_array_lane",
 	"bloodrush",
 	"obituary",
 	"overheat",
@@ -132,6 +133,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_formation_guard(unit_id)
 		"resonance_relay":
 			return _probe_resonance_relay(unit_id)
+		"solar_array_lane":
+			return _probe_solar_array_lane(unit_id)
 		"bloodrush":
 			return _probe_bloodrush(unit_id)
 		"overheat":
@@ -738,6 +741,136 @@ func _probe_resonance_relay(unit_id: String) -> Dictionary:
 		"relay_summary": relay_summary,
 		"no_relay_summary": no_relay_summary,
 		"reason": "" if ok else "resonance relay did not gate line damage/initiative while preserving personal calibration after relay absence or defeat",
+	}
+
+func _probe_solar_array_lane(unit_id: String) -> Dictionary:
+	var source := _stack_for_unit(unit_id, "player", 0)
+	var linked := _stack_for_unit("unit_sunvault_daybreak_colossus", "player", 1)
+	var ranged_ally := _stack_for_unit("unit_sunvault_resonant_choristers", "player", 2)
+	var melee_ally := _stack_for_unit("unit_sunvault_shard_wardens", "player", 3)
+	var outsider_ranged := _stack_for_unit("unit_ember_archer", "player", 4)
+	var melee_attacker := _defender_stack("enemy", 0)
+	var ranged_attacker := _stack_for_unit("unit_ember_archer", "enemy", 1)
+	ranged_attacker["abilities"] = []
+	ranged_attacker["effects"] = []
+	var battle := _battle_for_stacks([
+		source,
+		linked,
+		ranged_ally,
+		melee_ally,
+		outsider_ranged,
+		melee_attacker,
+		ranged_attacker,
+	])
+	var primary_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, ranged_ally, battle, false, false, 0)
+	var retaliation_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, ranged_ally, battle, false, true, 0)
+	var ai_primary_modifier := BattleAiRulesScript._ability_damage_modifier(melee_attacker, ranged_ally, battle, false, false, 0)
+	var ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(melee_attacker, ranged_ally, battle, false, true, 0)
+	var ranged_attack_modifier := BattleRulesScript._ability_damage_modifier(ranged_attacker, ranged_ally, battle, true, false, 2)
+	var melee_ally_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, melee_ally, battle, false, false, 0)
+	var outsider_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, outsider_ranged, battle, false, false, 0)
+
+	var dead_source := source.duplicate(true)
+	dead_source["total_health"] = 0
+	var dead_source_ally := ranged_ally.duplicate(true)
+	var dead_source_battle := _battle_for_stacks([
+		dead_source,
+		linked.duplicate(true),
+		dead_source_ally,
+		melee_attacker.duplicate(true),
+	])
+	var dead_source_modifier := BattleRulesScript._ability_damage_modifier(
+		dead_source_battle["stacks"][3],
+		dead_source_ally,
+		dead_source_battle,
+		false,
+		false,
+		0
+	)
+
+	var dead_linked := linked.duplicate(true)
+	dead_linked["total_health"] = 0
+	var dead_linked_source := source.duplicate(true)
+	var dead_linked_ally := ranged_ally.duplicate(true)
+	var dead_linked_battle := _battle_for_stacks([
+		dead_linked_source,
+		dead_linked,
+		dead_linked_ally,
+		melee_attacker.duplicate(true),
+	])
+	var dead_linked_modifier := BattleRulesScript._ability_damage_modifier(
+		dead_linked_battle["stacks"][3],
+		dead_linked_ally,
+		dead_linked_battle,
+		false,
+		false,
+		0
+	)
+
+	var stripped_source := _without_ability(source, "solar_array_lane")
+	var stripped_ally := ranged_ally.duplicate(true)
+	var stripped_battle := _battle_for_stacks([
+		stripped_source,
+		linked.duplicate(true),
+		stripped_ally,
+		melee_attacker.duplicate(true),
+	])
+	var stripped_modifier := BattleRulesScript._ability_damage_modifier(
+		stripped_battle["stacks"][3],
+		stripped_ally,
+		stripped_battle,
+		false,
+		false,
+		0
+	)
+
+	var direct_health_before := int(ranged_ally.get("total_health", 0))
+	BattleRulesScript._apply_damage_to_stack(battle, String(ranged_ally.get("battle_id", "")), 11)
+	var direct_health_after := int(BattleRulesScript._get_stack_by_id(
+		battle,
+		String(ranged_ally.get("battle_id", ""))
+	).get("total_health", 0))
+	var ability := _ability_by_id(source, "solar_array_lane")
+	var role_line := BattleRulesScript._ability_role_sentence(source, ability, battle, ranged_ally)
+	var active_window := BattleRulesScript._active_ability_window_summary(source, battle, melee_attacker)
+	var waiting_window := BattleRulesScript._active_ability_window_summary(dead_linked_source, dead_linked_battle, dead_linked_battle["stacks"][3])
+	var ok: bool = (
+		is_equal_approx(primary_modifier, 0.97)
+		and is_equal_approx(retaliation_modifier, 0.97)
+		and is_equal_approx(ai_primary_modifier, 0.97)
+		and is_equal_approx(ai_retaliation_modifier, 0.97)
+		and is_equal_approx(ranged_attack_modifier, 1.0)
+		and is_equal_approx(melee_ally_modifier, 1.0)
+		and is_equal_approx(outsider_modifier, 1.0)
+		and is_equal_approx(dead_source_modifier, 1.0)
+		and is_equal_approx(dead_linked_modifier, 1.0)
+		and is_equal_approx(stripped_modifier, 1.0)
+		and direct_health_after == direct_health_before - 11
+		and float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.97
+		and ability.get("linked_unit_ids", []) == ["unit_sunvault_daybreak_colossus"]
+		and role_line.contains("3%")
+		and role_line.contains("Daybreak Colossus")
+		and active_window.contains("screening")
+		and waiting_window.contains("waiting")
+	)
+	return {
+		"ok": ok,
+		"probe": "solar_array_lane_linked_melee_screen_scope_and_ai",
+		"primary_modifier": primary_modifier,
+		"retaliation_modifier": retaliation_modifier,
+		"ai_primary_modifier": ai_primary_modifier,
+		"ai_retaliation_modifier": ai_retaliation_modifier,
+		"ranged_attack_modifier": ranged_attack_modifier,
+		"melee_ally_modifier": melee_ally_modifier,
+		"outsider_modifier": outsider_modifier,
+		"dead_source_modifier": dead_source_modifier,
+		"dead_linked_modifier": dead_linked_modifier,
+		"stripped_modifier": stripped_modifier,
+		"direct_health_loss": direct_health_before - direct_health_after,
+		"role_line": role_line,
+		"active_window": active_window,
+		"waiting_window": waiting_window,
+		"reason": "" if ok else "Solar Array Lanes did not preserve its linked, melee-only, Sunvault-ranged runtime and AI contract",
 	}
 
 func _probe_shielding(unit_id: String) -> Dictionary:
