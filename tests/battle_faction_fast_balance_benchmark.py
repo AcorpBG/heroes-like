@@ -1393,8 +1393,8 @@ class FastBattleBenchmark:
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):
             score += 0.25
-            if self._has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
-                score += 0.25
+            if self._has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+                score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
         if self._has_ability(attacker, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
         fogwake = self._ability_by_id(attacker, "fogwake")
@@ -1748,7 +1748,7 @@ class FastBattleBenchmark:
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if is_ranged and obituary and obituary_available:
             modifiers = obituary.get("modifiers", {})
-            if self._has_ability(defender, "brace") and int(defender.get("tier", 1)) >= 2:
+            if self._has_ability(defender, "brace") and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
                 modifiers = obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20})
             self._apply_effect(defender, {
                 "effect_id": str(obituary.get("status_id", "status_obituary_marked")),

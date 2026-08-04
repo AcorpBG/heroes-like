@@ -462,10 +462,30 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 	_set_hex(braced_scribe, 4, 3)
 	_set_hex(braced_defender, 5, 3)
 	var braced_battle := _battle_for_stacks([braced_scribe, braced_defender])
+	var braced_preview := BattleRulesScript._active_ability_window_summary(braced_scribe, braced_battle, braced_defender)
 	BattleRulesScript._apply_attack_ability_effects(braced_battle, braced_scribe, braced_defender, true, 1)
 	var braced_marked := BattleRulesScript._get_stack_by_id(braced_battle, String(braced_defender.get("battle_id", "")))
 	var braced_cohesion_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "cohesion")
 	var braced_retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "retaliation")
+	var ai_scribe := _stack_for_unit(unit_id, "enemy", 0)
+	var ai_ranged_target := _stack_for_unit("unit_thornwake_sporeglass_menders", "player", 0)
+	var ai_braced_target := _stack_for_unit("unit_thornwake_thornwhip_carriers", "player", 1)
+	var ai_tier_one_brace := _stack_for_unit("unit_river_guard", "player", 2)
+	_set_hex(ai_scribe, 4, 3)
+	_set_hex(ai_ranged_target, 6, 2)
+	_set_hex(ai_braced_target, 6, 3)
+	_set_hex(ai_tier_one_brace, 6, 4)
+	var ai_battle := _battle_for_stacks([ai_scribe, ai_ranged_target, ai_braced_target])
+	var ai_action := BattleAiRulesScript.choose_enemy_action(ai_battle, ai_scribe, {})
+	var stripped_ai_scribe := _without_ability(ai_scribe, "obituary")
+	var braced_score := BattleAiRulesScript._attack_score(ai_scribe, ai_braced_target, ai_battle, true)
+	var ranged_score := BattleAiRulesScript._attack_score(ai_scribe, ai_ranged_target, ai_battle, true)
+	var stripped_braced_score := BattleAiRulesScript._attack_score(stripped_ai_scribe, ai_braced_target, ai_battle, true)
+	var braced_priority_delta := braced_score - stripped_braced_score
+	var tier_one_battle := _battle_for_stacks([ai_scribe, ai_tier_one_brace])
+	var tier_one_score := BattleAiRulesScript._attack_score(ai_scribe, ai_tier_one_brace, tier_one_battle, true)
+	var stripped_tier_one_score := BattleAiRulesScript._attack_score(stripped_ai_scribe, ai_tier_one_brace, tier_one_battle, true)
+	var tier_one_priority_delta := tier_one_score - stripped_tier_one_score
 
 	var stripped := _without_ability(scribe, "obituary")
 	var stripped_defender := _defender_stack("enemy", 0)
@@ -483,6 +503,11 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 		and retaliation_pressure == -10
 		and braced_cohesion_pressure == -2
 		and braced_retaliation_pressure == -20
+		and String(ai_action.get("action", "")) == "shoot"
+		and String(ai_action.get("target_battle_id", "")) == String(ai_braced_target.get("battle_id", ""))
+		and braced_score > ranged_score
+		and is_equal_approx(braced_priority_delta, 4.0)
+		and is_equal_approx(tier_one_priority_delta, 0.25)
 		and marked_retaliation < base_retaliation
 		and not SpellRulesScript.has_effect_id(second_marked, battle, "status_obituary_marked")
 		and spent_preview.contains("already been issued")
@@ -490,6 +515,7 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 		and not SpellRulesScript.has_effect_id(stripped_marked, stripped_battle, "status_obituary_marked")
 		and preview.contains("Final Notice")
 		and preview.contains("retaliation")
+		and braced_preview.contains("prioritizes")
 		and message_text.contains("obituary-marked")
 		and message_text.contains("retaliation weakens")
 	)
@@ -500,14 +526,20 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 		"retaliation_pressure_pct": retaliation_pressure,
 		"braced_cohesion_pressure": braced_cohesion_pressure,
 		"braced_retaliation_pressure_pct": braced_retaliation_pressure,
+		"ai_selected_target_id": String(ai_action.get("target_battle_id", "")),
+		"braced_target_score": braced_score,
+		"ranged_target_score": ranged_score,
+		"braced_priority_delta": braced_priority_delta,
+		"tier_one_priority_delta": tier_one_priority_delta,
 		"uses_after_second_attack": int(scribe.get("ability_uses", {}).get("obituary", 0)),
 		"base_retaliation_modifier": base_retaliation,
 		"marked_retaliation_modifier": marked_retaliation,
 		"expired_retaliation_modifier": expired_retaliation,
 		"preview": preview,
+		"braced_preview": braced_preview,
 		"spent_preview": spent_preview,
 		"message_count": messages.size(),
-		"reason": "" if ok else "obituary did not apply bounded one-round cohesion and retaliation pressure",
+		"reason": "" if ok else "obituary did not prioritize and apply bounded one-round pressure to a qualifying veteran brace",
 	}
 
 func _probe_backstab(unit_id: String) -> Dictionary:

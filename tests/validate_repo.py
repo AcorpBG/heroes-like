@@ -10606,6 +10606,8 @@ def validate_content(errors: list[str]) -> None:
                     ensure(str(ability.get("status_id", "")) == "status_obituary_marked", errors, f"Unit {unit_id} obituary must use status_obituary_marked")
                     ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} obituary must last one round")
                     ensure(int(ability.get("uses_per_battle", 0)) == 1, errors, f"Unit {unit_id} obituary must be limited to one use per battle")
+                    ensure(2 <= int(ability.get("braced_target_min_tier", 0)) <= 7, errors, f"Unit {unit_id} obituary braced_target_min_tier must be between 2 and 7")
+                    ensure(0.0 < float(ability.get("braced_ai_target_priority_bonus", 0.0)) <= 10.0, errors, f"Unit {unit_id} obituary braced_ai_target_priority_bonus must be in (0, 10]")
                     ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} obituary modifiers must be an object")
                     if isinstance(modifiers, dict):
                         ensure(int(modifiers.get("cohesion", 0)) < 0, errors, f"Unit {unit_id} obituary must drain cohesion")

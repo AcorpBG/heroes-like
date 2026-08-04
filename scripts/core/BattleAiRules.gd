@@ -1161,8 +1161,8 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var obituary_available := ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if not obituary.is_empty() and obituary_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, "status_obituary_marked"):
 		score += 0.25
-		if _has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
-			score += 0.25
+		if _has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+			score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
 	if _has_ability(attacker, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
 	var fogwake := _ability_by_id(attacker, "fogwake")
