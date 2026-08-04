@@ -2070,6 +2070,25 @@
         "ore": 1
       },
       "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Mirror-Keel Passage",
+          "description": "The reavers phase a reflected keel through a half-open lane, trading some force for access to the backline beyond it.",
+          "distance_one_multiplier": 0.5
+        },
+        {
+          "id": "backstab",
+          "name": "Black-Sail Breach",
+          "description": "A phase raid converts lantern marks and broken footing into a harder boarding strike and fresh attack momentum.",
+          "damage_multiplier": 1.05,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ]
+        }
+      ],
       "spell_resistance_pct": 10,
       "control_resistance_pct": 5,
       "spell_school_resistance_pct": {
@@ -2099,6 +2118,23 @@
         "ore": 3
       },
       "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "fogwake",
+          "name": "Leviathan Fogwake",
+          "description": "The leviathan closes its fog around a stack with no adjacent ally, striking harder and leaving the survivor fogbound for the next exchange.",
+          "isolated_damage_multiplier": 1.12,
+          "status_id": "status_fogbound",
+          "status_label": "Fogbound",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "ai_target_priority_bonus": 2.0
+        }
+      ],
       "spell_resistance_pct": 15,
       "control_resistance_pct": 10,
       "spell_school_resistance_pct": {

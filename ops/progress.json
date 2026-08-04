@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed and validated the live Sporewake opening veteran-line correction. The full faction matrix improved to 31 outliers / 204.5 severity / 69.5 percent maximum dominance; overall game completion remains open.",
+  "currentNotes": "Completed and validated Veilmourn's live phase-raider and true hex-isolation fog-control capstones. The faction matrix remains needs_tuning at 31 outliers / 203.0 severity / 69.5 percent maximum dominance; overall game completion remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-sporewake-veteran-line-10184",
-  "currentSliceId": "combat-mireclaw-sporewake-veteran-line-10184",
-  "currentSliceNotes": "Rot Cant now opens on tier-four-or-higher lines with 1.0 authored tactical priority and remains one use per battle. Week-two Brasshollow-Mireclaw moved from 74-26 Brasshollow dominance to 50-50; the full matrix improved to 31 / 204.5 / 69.5 with zero structural failures.",
+  "currentSlice": "combat-veilmourn-fog-ladder-identity-10184",
+  "currentSliceId": "combat-veilmourn-fog-ladder-identity-10184",
+  "currentSliceNotes": "Mirror-Keel Reavers now cross distance-two lanes at half force and exploit harried/staggered targets; Fogbound Leviathan uses true allied hex adjacency to gate Fogwake damage, status pressure, AI preference, and player summaries. Full matrix and broad regressions pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Sporewake Veteran-Line Pressure",
-  "currentSliceUpdatedAt": "2026-08-04T16:54:55Z",
+  "currentSliceTitle": "Veilmourn Fog-Ladder Identity",
+  "currentSliceUpdatedAt": "2026-08-04T17:43:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69829,6 +69829,96 @@
       "updatedAt": "2026-08-04T16:54:55Z",
       "notes": "Sporewake Rot Cant now opens against tier-four-or-higher veteran lines with a narrow 1.0 authored tactical priority, survives BattleRules normalization, and remains one use per battle. Focused runtime proof passes all 96 authored ability instances and sampled week-two Brasshollow fights record the Rot Cant use before the Chanter stack dies. The all-live 100-seed four-week matrix improves from 33 outliers / 233.5 severity / 10 rows at or above 65 percent / 74.0 percent maximum dominance to 31 / 204.5 / 8 / 69.5, with zero structural failures; week-two Brasshollow-Mireclaw improves from 74-26 Brasshollow dominance to 50-50. Authored autoplay consequence and balance gates, core regression, Godot editor parse, repository validation, Python syntax, JSON, and diff checks pass.",
       "remainingWork": "No work remains in this slice. The matrix remains needs_tuning at 31 outliers / 204.5 severity / 69.5 percent maximum dominance, and overall game completion remains open."
+    },
+    {
+      "id": "combat-veilmourn-fog-ladder-identity-10184",
+      "title": "Veilmourn Fog-Ladder Identity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the authored phase-raider and fog-control roles for Veilmourn's tier-six and tier-seven units through live hex-based combat behavior.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "veilmourn_tier_6_to_7_unit_count": 2,
+        "veilmourn_tier_6_to_7_specialized_behavior_count": 0,
+        "balance_outlier_count": 31,
+        "balance_severity": 204.5,
+        "rows_at_or_above_65_pct": 8,
+        "max_dominance_pct": 69.5,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Mirror-Keel Reavers can cross a partial engagement lane and convert Veilmourn's existing disrupted-target setup into a bounded melee payoff",
+        "Fogbound Leviathan has a live fog-control payoff that applies only to genuinely isolated enemy stacks on the hex battlefield",
+        "BattleRules normalization, damage resolution, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume the authored fields",
+        "The full all-live matrix does not regress outlier count, severity, severe-row count, maximum dominance, side bias, or structural failures"
+      ],
+      "nonGoals": [
+        "raw unit-stat, growth, cost, building, hero, spell, scenario, strategic-AI, or Native RMG changes",
+        "proxy-only behavior without a live hex-based tactical consequence",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T17:07:44Z",
+      "completedAt": "2026-08-04T17:43:31Z",
+      "updatedAt": "2026-08-04T17:43:31Z",
+      "implemented": {
+        "mirror_keel_passage_distance_one_multiplier": 0.5,
+        "black_sail_breach_status_damage_multiplier": 1.05,
+        "leviathan_fogwake_isolated_damage_multiplier": 1.12,
+        "leviathan_fogwake_status_id": "status_fogbound",
+        "leviathan_fogwake_hex_adjacency_gated": true,
+        "raw_unit_stats_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "ability_instance_count": 99,
+        "ability_runtime_consequence_count": 99,
+        "fogwake_family_instance_count": 1,
+        "fogwake_true_hex_isolation_proved": true,
+        "fogwake_adjacent_ally_rejection_proved": true,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 31,
+        "balance_severity": 203.0,
+        "rows_at_or_above_65_pct": 8,
+        "max_dominance_pct": 69.5,
+        "max_side_bias_pct": 2.8,
+        "structural_failure_count": 0,
+        "weeks_1_and_2_exact": true
+      },
+      "validation": {
+        "status": "passed_with_unrelated_warning",
+        "commands": [
+          "godot4 --headless --path . tests/unit_ability_runtime_report.tscn",
+          "godot4 --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+          "godot4 --headless --path . tests/balance_regression_report_suite.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --hero-policy all-live --seeds 100 --weeks 1,2,3,4 --json --gate",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "git diff --check"
+        ],
+        "residual": "balance_regression_report_suite remains warning-only on its pre-existing unsupported generated-map save/replay fixture; all suite sections have zero failures."
+      },
+      "notes": "Accepted after rejecting full-force and 80-percent phase-strike candidates because they raised week-three side bias to 3.40 and 3.47 points. The bounded half-force passage preserves live backline access while the final matrix lowers maximum side bias to 2.80 and aggregate severity to 203.0. Fogwake uses actual live hex adjacency; the Python benchmark retains only its existing stack-composition isolation approximation for aggregate regression coverage.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning and overall game completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -69839,7 +69929,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 31 outliers / 204.5 severity / 69.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 31 outliers / 203.0 severity / 69.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [

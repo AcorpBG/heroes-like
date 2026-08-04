@@ -12,6 +12,7 @@ const REQUIRED_ABILITY_IDS := [
 	"brace",
 	"harry",
 	"backstab",
+	"fogwake",
 	"shielding",
 	"volley",
 	"formation_guard",
@@ -119,6 +120,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_obituary(unit_id)
 		"backstab":
 			return _probe_backstab(unit_id)
+		"fogwake":
+			return _probe_fogwake(unit_id)
 		"shielding":
 			return _probe_shielding(unit_id)
 		"volley":
@@ -525,6 +528,91 @@ func _probe_backstab(unit_id: String) -> Dictionary:
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
 		"reason": "" if ok else "backstab did not increase damage against a status-marked target",
+	}
+
+func _probe_fogwake(unit_id: String) -> Dictionary:
+	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var target := _defender_stack("enemy", 0)
+	var distant_ally := _defender_stack("enemy", 1)
+	_set_hex(attacker, 4, 3)
+	_set_hex(target, 5, 3)
+	_set_hex(distant_ally, 9, 3)
+	var isolated_battle := _battle_for_stacks([attacker, target, distant_ally])
+	var stripped := _without_ability(attacker, "fogwake")
+	var stripped_target := target.duplicate(true)
+	var stripped_battle := _battle_for_stacks([stripped, stripped_target, distant_ally.duplicate(true)])
+	var isolated_live := BattleRulesScript._stack_is_hex_isolated(isolated_battle, target)
+	var isolated_ai := BattleAiRulesScript._stack_is_hex_isolated(isolated_battle, target)
+	var live_modifier := BattleRulesScript._ability_damage_modifier(attacker, target, isolated_battle, false, false, 0)
+	var stripped_modifier := BattleRulesScript._ability_damage_modifier(stripped, stripped_target, stripped_battle, false, false, 0)
+	var ai_damage := BattleAiRulesScript._estimate_damage(attacker, target, isolated_battle, false, false, 0)
+	var stripped_ai_damage := BattleAiRulesScript._estimate_damage(stripped, stripped_target, stripped_battle, false, false, 0)
+	var preview := BattleRulesScript._active_ability_window_summary(attacker, isolated_battle, target)
+	var messages := BattleRulesScript._apply_attack_ability_effects(isolated_battle, attacker, target, false, 0)
+	var fogwake := _ability_by_id(attacker, "fogwake")
+	var status_id := String(fogwake.get("status_id", ""))
+	var updated_target := BattleRulesScript._get_stack_by_id(isolated_battle, String(target.get("battle_id", "")))
+	var status_applied := SpellRulesScript.has_effect_id(updated_target, isolated_battle, status_id)
+
+	var supported_attacker := _stack_for_unit(unit_id, "player", 0)
+	var supported_target := _defender_stack("enemy", 0)
+	var adjacent_ally := _defender_stack("enemy", 1)
+	_set_hex(supported_attacker, 4, 3)
+	_set_hex(supported_target, 5, 3)
+	_set_hex(adjacent_ally, 6, 3)
+	var supported_battle := _battle_for_stacks([supported_attacker, supported_target, adjacent_ally])
+	var supported_stripped := _without_ability(supported_attacker, "fogwake")
+	var supported_stripped_target := supported_target.duplicate(true)
+	var supported_stripped_battle := _battle_for_stacks([supported_stripped, supported_stripped_target, adjacent_ally.duplicate(true)])
+	var supported_live := BattleRulesScript._stack_is_hex_isolated(supported_battle, supported_target)
+	var supported_ai := BattleAiRulesScript._stack_is_hex_isolated(supported_battle, supported_target)
+	var supported_modifier := BattleRulesScript._ability_damage_modifier(supported_attacker, supported_target, supported_battle, false, false, 0)
+	var supported_stripped_modifier := BattleRulesScript._ability_damage_modifier(supported_stripped, supported_stripped_target, supported_stripped_battle, false, false, 0)
+	var isolated_score := BattleAiRulesScript._attack_score(attacker, target, isolated_battle, false)
+	var supported_score := BattleAiRulesScript._attack_score(supported_attacker, supported_target, supported_battle, false)
+	var supported_messages := BattleRulesScript._apply_attack_ability_effects(supported_battle, supported_attacker, supported_target, false, 0)
+	var supported_updated := BattleRulesScript._get_stack_by_id(supported_battle, String(supported_target.get("battle_id", "")))
+	var supported_status := SpellRulesScript.has_effect_id(supported_updated, supported_battle, status_id)
+	var priority_bonus := float(fogwake.get("ai_target_priority_bonus", 0.0))
+	var ok := (
+		isolated_live
+		and isolated_ai
+		and not supported_live
+		and not supported_ai
+		and live_modifier > stripped_modifier
+		and ai_damage > stripped_ai_damage
+		and is_equal_approx(supported_modifier, supported_stripped_modifier)
+		and isolated_score - supported_score >= priority_bonus
+		and status_applied
+		and not supported_status
+		and SpellRulesScript.effect_bonus_for_kind(updated_target, isolated_battle, "defense") == -1
+		and SpellRulesScript.effect_bonus_for_kind(updated_target, isolated_battle, "initiative") == -1
+		and SpellRulesScript.effect_bonus_for_kind(updated_target, isolated_battle, "cohesion") == -1
+		and preview.contains(String(fogwake.get("name", "Fogwake")))
+		and preview.contains("no adjacent allied stack")
+		and not messages.is_empty()
+		and supported_messages.is_empty()
+	)
+	return {
+		"ok": ok,
+		"probe": "fogwake_true_hex_isolation_damage_status_and_ai",
+		"isolated_live": isolated_live,
+		"isolated_ai": isolated_ai,
+		"supported_live": supported_live,
+		"supported_ai": supported_ai,
+		"isolated_modifier": live_modifier,
+		"stripped_modifier": stripped_modifier,
+		"supported_modifier": supported_modifier,
+		"supported_stripped_modifier": supported_stripped_modifier,
+		"isolated_ai_damage": ai_damage,
+		"stripped_ai_damage": stripped_ai_damage,
+		"isolated_score": isolated_score,
+		"supported_score": supported_score,
+		"ai_target_priority_bonus": priority_bonus,
+		"status_applied": status_applied,
+		"supported_status_blocked": not supported_status,
+		"preview": preview,
+		"reason": "" if ok else "fogwake did not remain gated to true hex isolation across damage, status, AI, and player summary behavior",
 	}
 
 func _probe_shielding(unit_id: String) -> Dictionary:
