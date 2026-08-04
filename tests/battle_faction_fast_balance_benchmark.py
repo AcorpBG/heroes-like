@@ -1528,6 +1528,12 @@ class FastBattleBenchmark:
         if is_ranged and rot_cant and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and self._health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
         bloodrush = self._ability_by_id(attacker, "bloodrush")
+        bloodrush_prepared = bool(bloodrush) and (
+            self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+            or self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+        )
+        if bloodrush and not is_retaliation and not bloodrush_prepared:
+            modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
         if bloodrush and self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
         if bloodrush and self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):

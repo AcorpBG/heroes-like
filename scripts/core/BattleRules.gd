@@ -3946,8 +3946,13 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		or _health_ratio(target) <= float(_ability_by_id(stack, "backstab").get("health_threshold_ratio", 0.0))
 	):
 		return "Backstab is live on the marked target right now."
-	if not target.is_empty() and _has_ability(stack, "bloodrush") and _health_ratio(target) <= float(_ability_by_id(stack, "bloodrush").get("wounded_threshold_ratio", 0.0)):
-		return "Bloodrush is live on the wounded target and can snowball momentum."
+	if not target.is_empty() and _has_ability(stack, "bloodrush"):
+		var bloodrush := _ability_by_id(stack, "bloodrush")
+		if _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)) \
+				or SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+			return "Bloodrush is live through the prepared breach and can snowball momentum."
+		if float(bloodrush.get("clean_target_damage_multiplier", 1.0)) < 1.0:
+			return "Bloodrush needs a wounded or disrupted breach; a clean primary attack loses force."
 	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		return "Shielding bites harder into a harried target once the line closes."
 	var ability_summary = _stack_ability_summary(stack)
@@ -4030,9 +4035,12 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				" now" if target_is_marked or (not target.is_empty() and _health_ratio(target) <= float(ability.get("health_threshold_ratio", 0.0))) else "",
 			]
 		"bloodrush":
-			return "%s snowballs against wounded lines%s" % [
+			var clean_penalty_pct := int(round((1.0 - float(ability.get("clean_target_damage_multiplier", 1.0))) * 100.0))
+			var target_is_prepared := target_is_marked or (not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)))
+			return "%s hits harder through wounded or disrupted lines%s%s" % [
 				name,
-				" now" if not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)) else "",
+				" now" if target_is_prepared else "",
+				"; clean primary attacks lose %d%% damage" % clean_penalty_pct if clean_penalty_pct > 0 else "",
 			]
 		"overheat":
 			if SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
@@ -8991,6 +8999,12 @@ static func _ability_damage_modifier(
 		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush = _ability_by_id(attacker, "bloodrush")
+	var bloodrush_prepared := not bloodrush.is_empty() and (
+		_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+		or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+	)
+	if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
+		modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
@@ -9400,6 +9414,7 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"id": ability_id,
 					"name": String(entry.get("name", "Bloodrush")),
 					"description": String(entry.get("description", "")),
+					"clean_target_damage_multiplier": clampf(float(entry.get("clean_target_damage_multiplier", 1.0)), 0.25, 1.0),
 					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.0)), 0.0, 1.0),
 					"wounded_damage_multiplier": clampf(float(entry.get("wounded_damage_multiplier", 1.0)), 1.0, 2.0),
 					"status_ids": _normalize_string_array(entry.get("status_ids", [STATUS_HARRIED, STATUS_STAGGERED])),

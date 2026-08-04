@@ -10655,6 +10655,8 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("defending_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define defending_initiative_bonus > 0")
                     ensure(float(ability.get("staggered_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} formation_guard must define staggered_damage_multiplier > 1")
                 elif ability_id == "bloodrush":
+                    if "clean_target_damage_multiplier" in ability:
+                        ensure(0.25 <= float(ability.get("clean_target_damage_multiplier", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush clean_target_damage_multiplier must be between 0.25 and 1")
                     ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush wounded_threshold_ratio must be between 0 and 1")
                     ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} bloodrush wounded_damage_multiplier must be > 1")
                     ensure(isinstance(ability.get("status_ids", []), list) and bool(ability.get("status_ids", [])), errors, f"Unit {unit_id} bloodrush must define status_ids")
@@ -10779,6 +10781,7 @@ def validate_content(errors: list[str]) -> None:
     embercourt_lindworms = units.get("unit_embercourt_sluicefire_lindworms", {})
     sluicefire_commitment = next((ability for ability in embercourt_lindworms.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Sluicefire Commitment"), {})
     ensure(str(sluicefire_commitment.get("id", "")) == "bloodrush", errors, "Sluicefire Lindworms must keep supported-shock pressure")
+    ensure(float(sluicefire_commitment.get("clean_target_damage_multiplier", 1.0)) == 0.85, errors, "Sluicefire Commitment must lose force against a clean line")
     ensure(float(sluicefire_commitment.get("wounded_damage_multiplier", 1.0)) > 1.0, errors, "Sluicefire Commitment must punish wounded targets")
     ensure(float(sluicefire_commitment.get("status_damage_multiplier", 1.0)) > 1.0, errors, "Sluicefire Commitment must reward a prepared disruption")
     embercourt_colossus = units.get("unit_embercourt_charter_colossus", {})

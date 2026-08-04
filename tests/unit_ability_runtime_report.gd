@@ -619,14 +619,47 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, false, 0)
-	var ok := modifier_with > modifier_without
+	var clean_defender := _defender_stack()
+	var clean_battle := _battle_for_stacks([attacker.duplicate(true), clean_defender])
+	var clean_attacker := BattleRulesScript._get_stack_by_id(clean_battle, String(attacker.get("battle_id", "")))
+	var clean_target := BattleRulesScript._get_stack_by_id(clean_battle, String(clean_defender.get("battle_id", "")))
+	var clean_modifier := BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, false, 0)
+	var clean_retaliation_modifier := BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, true, 0)
+	var clean_ai_modifier := BattleAiRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, false, 0)
+	var clean_role := BattleRulesScript._ability_role_sentence(clean_attacker, _ability_by_id(clean_attacker, "bloodrush"), clean_battle, clean_target)
+	var disrupted_defender := _defender_stack()
+	_add_effect(disrupted_defender, "status_staggered")
+	var disrupted_battle := _battle_for_stacks([attacker.duplicate(true), disrupted_defender])
+	var disrupted_attacker := BattleRulesScript._get_stack_by_id(disrupted_battle, String(attacker.get("battle_id", "")))
+	var disrupted_target := BattleRulesScript._get_stack_by_id(disrupted_battle, String(disrupted_defender.get("battle_id", "")))
+	var disrupted_modifier := BattleRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, false, 0)
+	var disrupted_ai_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, false, 0)
+	var disrupted_role := BattleRulesScript._ability_role_sentence(disrupted_attacker, _ability_by_id(disrupted_attacker, "bloodrush"), disrupted_battle, disrupted_target)
+	var prepared_breach_contract_ok := unit_id != "unit_embercourt_sluicefire_lindworms" or (
+		clean_modifier < 1.0
+		and is_equal_approx(clean_retaliation_modifier, 1.0)
+		and disrupted_modifier > clean_modifier
+		and is_equal_approx(clean_ai_modifier, clean_modifier)
+		and is_equal_approx(disrupted_ai_modifier, disrupted_modifier)
+		and clean_role.contains("15%")
+		and disrupted_role.contains("now")
+	)
+	var ok := modifier_with > modifier_without and prepared_breach_contract_ok
 	return {
 		"ok": ok,
-		"probe": "bloodrush_wounded_damage_modifier",
+		"probe": "bloodrush_prepared_breach_damage_modifier",
 		"target_health_ratio": BattleRulesScript._health_ratio(defender),
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
-		"reason": "" if ok else "bloodrush did not increase damage against a wounded target",
+		"clean_modifier": clean_modifier,
+		"clean_retaliation_modifier": clean_retaliation_modifier,
+		"clean_ai_modifier": clean_ai_modifier,
+		"clean_role": clean_role,
+		"disrupted_modifier": disrupted_modifier,
+		"disrupted_ai_modifier": disrupted_ai_modifier,
+		"disrupted_role": disrupted_role,
+		"prepared_breach_contract_ok": prepared_breach_contract_ok,
+		"reason": "" if ok else "bloodrush did not preserve its wounded payoff and bounded prepared-breach contract",
 	}
 
 func _probe_overheat(unit_id: String) -> Dictionary:
