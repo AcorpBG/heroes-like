@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the measured Thornwake mid-tier balance correction. Barkmantle Screens no longer adds cohesion hold, retains missile mitigation and close-line counterpressure, and the full matrix improves severity and side bias without worsening maximum dominance.",
+  "currentNotes": "Completed Sluicefire prepared breach: clean primary attacks now lose 15 percent damage while retaliation remains unchanged and wounded or disrupted Bloodrush attacks retain their payoff. The exact all-live matrix improves to 33 outliers / 233.5 severity / 10 severe rows / 74.0 percent maximum dominance with zero structural failures.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "balance-thornwake-barkmantle-cohesion-10184",
-  "currentSliceId": "balance-thornwake-barkmantle-cohesion-10184",
-  "currentSliceNotes": "Completed implementation slice: the smallest live Barkmantle ability-contract correction reduces full-matrix balance severity while preserving the unit role and passing focused and broad runtime validation.",
+  "currentSlice": "combat-embercourt-sluicefire-prepared-breach-10184",
+  "currentSliceId": "combat-embercourt-sluicefire-prepared-breach-10184",
+  "currentSliceNotes": "Completed implementation slice: Sluicefire Lindworms now depend on a prepared breach through one shared authored Bloodrush contract consumed by runtime damage, tactical AI, player summaries, and the deterministic benchmark.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Barkmantle Cohesion Balance",
-  "currentSliceUpdatedAt": "2026-08-04T10:04:10Z",
+  "currentSliceTitle": "Embercourt Sluicefire Prepared Breach",
+  "currentSliceUpdatedAt": "2026-08-04T10:29:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69614,6 +69614,64 @@
       },
       "notes": "Changing ranged mitigation alone and small Highroot Graft Salvo adjustments produced no simulated outcome change; removing the whole screen package overcorrected Brasshollow. Removing only Barkmantle cohesion hold was the smallest accepted behavior change. The matrix still needs tuning, so this is one measured reduction in balance debt rather than final faction balance.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 33 outliers / 248.0 severity / 74.5 percent maximum dominance, and overall release work remains open."
+    },
+    {
+      "id": "combat-embercourt-sluicefire-prepared-breach-10184",
+      "title": "Embercourt Sluicefire Prepared Breach",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/battle-autoplay-balance-tuning-queue-report.md"
+      ],
+      "purpose": "Restore the authored Sluicefire supported-shock weakness and reduce broad week-four Embercourt dominance by making clean, unprepared attacks weaker without removing wounded or disrupted-target payoff.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Shared Bloodrush normalization, live damage resolution, tactical AI estimates, player summaries, and benchmark parity consume one authored clean-target offensive multiplier",
+        "Focused runtime proof demonstrates weaker clean offense, unchanged retaliation, and stronger wounded or disrupted-target offense for Sluicefire Lindworms",
+        "The full 100-seed all-live four-week matrix has zero structural failures and improves the accepted 33-outlier / 248.0-severity baseline without increasing 74.5 percent maximum dominance or 2.80-point maximum side bias",
+        "Ability, autoplay, town-development, core, project parse, repository validation, Python syntax, JSON validation, and diff checks pass"
+      ],
+      "nonGoals": [
+        "raw unit stat, growth, cost, building, spell, hero, scenario, strategic-AI, save-schema, benchmark-threshold, or other ability changes",
+        "Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T10:08:46Z",
+      "updatedAt": "2026-08-04T10:29:38Z",
+      "completedAt": "2026-08-04T10:29:38Z",
+      "sliceEvidence": {
+        "implementation": "Sluicefire Commitment now authors clean_target_damage_multiplier 0.85. Shared live BattleRules and tactical AI apply it only to non-retaliation primary attacks against targets that are neither wounded nor disrupted; retaliation remains 1.0 and prepared Bloodrush attacks retain the authored 1.04 payoff. Player role text exposes both the prepared condition and exact 15 percent clean-line penalty.",
+        "focused_runtime": "The 96-instance ability report passes and proves Sluicefire clean live and AI modifiers at 0.85, clean retaliation at 1.0, disrupted live and AI modifiers at 1.04, and wounded payoff at 1.04 versus a stripped 1.0 control.",
+        "balance": "The deterministic all-live 100-seed four-week matrix passes with zero structural failures. Pair outliers remain 33, summed excess severity improves from 248.0 to 233.5, rows at or above 65 percent improve from 11 to 10, maximum dominance improves from 74.5 to 74.0 percent, and maximum side bias remains 2.80 points. Week-four Embercourt dominance changes from 74.5 to 69.0 versus Mireclaw, 73.0 to 69.5 versus Sunvault, 64.5 to 60.5 versus Thornwake, and 66.0 to 64.0 versus Veilmourn; Brasshollow moves from 51.0 to 55.0 percent against Embercourt and remains inside the accepted band.",
+        "validation": [
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/town_development_runtime_balance_report.tscn",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "notes": "The source-defined Sluicefire role requires supported shock and isolation weakness. A 0.85 clean-target primary multiplier was the smallest screened contract that materially reduced week-four Embercourt pressure without creating an outlier or changing retaliation. The matrix still needs tuning, so this is one measured reduction in balance debt rather than final faction balance.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 33 outliers / 233.5 severity / 74.0 percent maximum dominance, and overall release work remains open."
     }
   ],
   "project": "heroes-like",
@@ -69624,7 +69682,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 248.0 severity / 74.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 233.5 severity / 74.0 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -70055,7 +70113,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "thornwake_barkmantle_balance_severity_improved_overall_release_in_progress",
+  "result": "embercourt_sluicefire_prepared_breach_balance_improved_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -70156,9 +70214,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Barkmantle Screens now preserves its missile-screen and close-line role without adding a global cohesion-hold tier. The all-live 100-seed four-week faction matrix keeps 33 outliers and 74.5 percent maximum dominance while lowering summed excess severity from 262.5 to 248.0 and maximum side bias from 3.07 to 2.80 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Sluicefire Lindworms now lose 15 percent primary-attack damage against a clean line while preserving full retaliation and wounded or disrupted Bloodrush payoff. The all-live 100-seed four-week faction matrix keeps 33 outliers while lowering summed excess severity from 248.0 to 233.5, severe rows from 11 to 10, maximum dominance from 74.5 to 74.0 percent, and week-four side bias from 2.13 to 1.87 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T10:04:10Z",
+  "updatedAt": "2026-08-04T10:29:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

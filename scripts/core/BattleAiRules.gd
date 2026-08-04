@@ -2366,6 +2366,12 @@ static func _ability_damage_modifier(
 		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
+	var bloodrush_prepared := not bloodrush.is_empty() and (
+		_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+		or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+	)
+	if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
+		modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):

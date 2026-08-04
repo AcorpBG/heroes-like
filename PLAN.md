@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-embercourt-sluicefire-prepared-breach-10184`. Sluicefire Lindworms now lose 15% primary-attack damage against a clean line while retaining full retaliation damage and their 4% Bloodrush payoff against wounded or disrupted targets. Shared BattleRules behavior, tactical AI estimates, player summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored contract. The all-live 100-seed four-week matrix keeps 33 outliers, lowers excess severity from 248.0 to 233.5, rows at or above 65% from 11 to 10, maximum dominance from 74.5% to 74.0%, and week-four side bias from 2.13 to 1.87 points while the 2.80-point global maximum stays unchanged. Ability, autoplay, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `balance-thornwake-barkmantle-cohesion-10184`. Barkmantle Screens no longer adds a global cohesion-hold tier, while its 18% incoming-ranged mitigation and 6% engaged/harried counterpressure remain live. Focused runtime proof covers the bounded contract across all 96 authored ability instances. The all-live 100-seed four-week matrix keeps 33 outliers and 74.5% maximum dominance, lowers excess severity from 262.5 to 248.0 and maximum side bias from 3.07 to 2.80 points, and has zero structural failures. Ability, autoplay, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-thornwake-highroot-capstone-identity-10184`. Thornwake's production capstone pair now has source-aligned live roles: Graft Matriarchs deliver Highroot Graft Salvo with an open-lane floor and stronger payoff into rooted or disrupted enemies, while Worldroot Bastion's passive Worldroot Rampart directly blunts incoming ranged attrition without adding a global cohesion tier. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The accepted all-live 100-seed pair and week summaries remain exact at 33 outliers / 262.5 severity / 12 rows at or above 65% / 74.5% maximum dominance / 3.07 maximum side bias with week 1 unchanged. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-embercourt-charter-ladder-identity-10184`. Embercourt's production tier-4 through tier-7 charter ladder now has source-aligned live roles: Ash-Oath Bailiffs enforce a held line through Ash-Writ Formation, Beacon Lectors spend one Beacon Lane Citation against a tier-4-or-higher breach, Sluicefire Lindworms convert wounded or disrupted prey into supported shock pressure, and Charter Colossus anchors a stronger retaliation through Charter Lock. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix improves from 35 outliers / 264.0 severity to 33 / 262.5, keeps 12 rows at or above 65% and 74.5% maximum dominance, leaves week 1 exact, and lowers maximum side bias from 3.8 to 3.07 points. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -1640,6 +1641,33 @@ Completion criteria:
 
 Non-goals:
 - do not change Barkmantle raw stats, growth, cost, brace behavior, other Thornwake units, spells, heroes, scenarios, strategic AI, or benchmark thresholds;
+- do not change Native RMG or claim final faction balance or overall release completion.
+
+## Embercourt Sluicefire Prepared Breach
+
+id: `combat-embercourt-sluicefire-prepared-breach-10184`
+
+Status: completed.
+
+Selected Phase 5 combat-balance implementation slice. The current 100-seed
+all-live matrix has 33 pair outliers / 248.0 excess severity, and Embercourt's
+week-four roster dominates Mireclaw, Sunvault, Thornwake, and Veilmourn. The
+faction source defines Sluicefire Lindworms as supported narrow-lane shock that
+collapses when isolated, but the live Bloodrush contract has only positive
+wounded/disrupted-target riders and no clean-target weakness.
+
+Implementation target:
+- add a shared Bloodrush prepared-breach contract that applies an authored offensive penalty only when the target is neither wounded nor disrupted;
+- make live BattleRules, tactical AI estimates, player summaries, normalization, and the fast benchmark consume the same authored field;
+- calibrate only Sluicefire Commitment, preserving its wounded/disrupted payoff, initiative, momentum, raw stats, growth, and defensive retaliation.
+
+Completion criteria:
+- focused runtime proof demonstrates lower clean-target offense, unchanged defensive retaliation, and stronger damage through wounded or disrupted targets, with tactical AI and player-readable text aligned;
+- the full 100-seed all-live four-week matrix has zero structural failures and improves the accepted 33-outlier / 248.0-severity baseline without increasing 74.5% maximum dominance or 2.80-point maximum side bias;
+- ability, autoplay, town-development, core, project-parse, repository, Python syntax, JSON, and diff checks pass.
+
+Non-goals:
+- do not change raw unit stats, growth, costs, buildings, spells, heroes, scenarios, strategic AI, save schemas, benchmark thresholds, or other unit abilities;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
 ## Cross-Platform Release Candidate Pipeline
