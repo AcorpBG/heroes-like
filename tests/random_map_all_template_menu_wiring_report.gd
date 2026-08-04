@@ -34,7 +34,7 @@ func _run() -> void:
 		_fail("Rules setup did not report full internal catalog counts.")
 		return
 	var auto_selection: Dictionary = setup_options.get("player_facing_auto_selection", {}) if setup_options.get("player_facing_auto_selection", {}) is Dictionary else {}
-	if String(setup_options.get("player_facing_template_policy", "")) != "h3maped_strict_small_medium_land_public_generation_scope":
+	if String(setup_options.get("player_facing_template_policy", "")) != "h3maped_native_24_workflow_release_matrix":
 		_fail("Rules setup did not publish the strict H3MapEd public launch policy: %s" % JSON.stringify(setup_options))
 		return
 	if String(auto_selection.get("mode", "")) != ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO or bool(auto_selection.get("manual_template_picker_visible", true)) or bool(auto_selection.get("manual_profile_picker_visible", true)):
@@ -43,18 +43,25 @@ func _run() -> void:
 	var public_scope: Dictionary = setup_options.get("public_generation_scope", {}) if setup_options.get("public_generation_scope", {}) is Dictionary else {}
 	var public_size_ids: Array = public_scope.get("size_class_ids", []) if public_scope.get("size_class_ids", []) is Array else []
 	public_size_ids.sort()
-	if public_size_ids != ["homm3_medium", "homm3_small"] or String(public_scope.get("water_mode", "")) != "land" or int(public_scope.get("level_count", 0)) != 1:
-		_fail("Rules setup did not publish strict Small+Medium/Land/Surface public scope: %s" % JSON.stringify(public_scope))
+	var public_water_modes: Array = public_scope.get("water_modes", []) if public_scope.get("water_modes", []) is Array else []
+	var public_level_counts: Array = public_scope.get("level_counts", []) if public_scope.get("level_counts", []) is Array else []
+	public_water_modes.sort()
+	public_level_counts.sort()
+	if public_size_ids != ["homm3_extra_large", "homm3_large", "homm3_medium", "homm3_small"] \
+			or public_water_modes != ["islands", "land", "normal_water"] \
+			or public_level_counts != [1, 2] \
+			or int(public_scope.get("workflow_count", 0)) != 24:
+		_fail("Rules setup did not publish the 24-workflow native release matrix: %s" % JSON.stringify(public_scope))
 		return
-	if _ids(setup_options.get("size_classes", []) if setup_options.get("size_classes", []) is Array else []) != ["homm3_medium", "homm3_small"]:
-		_fail("Rules setup exposed unsupported public sizes: %s" % JSON.stringify(setup_options.get("size_classes", [])))
+	if _ids(setup_options.get("size_classes", []) if setup_options.get("size_classes", []) is Array else []) != ["homm3_extra_large", "homm3_large", "homm3_medium", "homm3_small"]:
+		_fail("Rules setup missed supported public sizes: %s" % JSON.stringify(setup_options.get("size_classes", [])))
 		return
-	if _ids(setup_options.get("water_modes", []) if setup_options.get("water_modes", []) is Array else []) != ["land"]:
-		_fail("Rules setup exposed unsupported public water modes: %s" % JSON.stringify(setup_options.get("water_modes", [])))
+	if _ids(setup_options.get("water_modes", []) if setup_options.get("water_modes", []) is Array else []) != ["islands", "land", "normal_water"]:
+		_fail("Rules setup missed supported public water modes: %s" % JSON.stringify(setup_options.get("water_modes", [])))
 		return
 	var level_options: Array = setup_options.get("level_options", []) if setup_options.get("level_options", []) is Array else []
-	if level_options.size() != 1 or int(level_options[0].get("level_count", 0)) != 1:
-		_fail("Rules setup exposed unsupported public level options: %s" % JSON.stringify(level_options))
+	if level_options.size() != 2 or int(level_options[0].get("level_count", 0)) != 1 or int(level_options[1].get("level_count", 0)) != 2:
+		_fail("Rules setup missed supported public level options: %s" % JSON.stringify(level_options))
 		return
 	var size_defaults: Dictionary = setup_options.get("size_class_defaults", {}) if setup_options.get("size_class_defaults", {}) is Dictionary else {}
 	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
@@ -135,43 +142,20 @@ func _run() -> void:
 		return
 
 	var size_default_failures := []
-	for hidden_size_class_id in ["homm3_large", "homm3_extra_large"]:
-		if bool(shell.call("validation_select_generated_size_class", hidden_size_class_id)):
-			_fail("Main menu exposed unsupported public generated size class %s." % hidden_size_class_id)
-			return
 	for size_class_id in ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"]:
-		if size_class_id in ["homm3_small", "homm3_medium"] and not bool(shell.call("validation_select_generated_size_class", size_class_id)):
+		if not bool(shell.call("validation_select_generated_size_class", size_class_id)):
 			_fail("Main menu could not select generated public size class %s." % size_class_id)
 			return
 		var defaults := ScenarioSelectRulesScript.random_map_size_class_default(size_class_id)
-		if size_class_id in ["homm3_small", "homm3_medium"]:
-			var size_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
-			var size_controls: Dictionary = size_snapshot.get("controls", {}) if size_snapshot.get("controls", {}) is Dictionary else {}
-			var provenance: Dictionary = size_controls.get("internal_template_provenance", {}) if size_controls.get("internal_template_provenance", {}) is Dictionary else {}
-			if String(size_controls.get("size_class_id", "")) != size_class_id or String(size_controls.get("water_mode", "")) != "land" or int(size_controls.get("level_count", 0)) != 1 or bool(size_controls.get("underground", true)):
-				size_default_failures.append({
-					"size_class_id": size_class_id,
-					"controls": size_controls,
-					"expected_public_scope": "strict one-level land",
-				})
-			if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch":
-				size_default_failures.append({
-					"size_class_id": size_class_id,
-					"provenance": provenance,
-					"expected_selection_source": "native_catalog_auto_on_launch",
-				})
-			if String(provenance.get("template_id", "")) != "native_catalog_auto" or String(provenance.get("profile_id", "")) != "native_catalog_auto":
-				size_default_failures.append({
-					"size_class_id": size_class_id,
-					"provenance": provenance,
-					"expected_template_profile": "native_catalog_auto",
-				})
-			if String(provenance.get("preview_template_id", "")) != String(defaults.get("template_id", "")) or String(provenance.get("preview_profile_id", "")) != String(defaults.get("profile_id", "")):
-				size_default_failures.append({
-					"size_class_id": size_class_id,
-					"provenance": provenance,
-					"defaults": defaults,
-				})
+		var size_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+		var size_controls: Dictionary = size_snapshot.get("controls", {}) if size_snapshot.get("controls", {}) is Dictionary else {}
+		var provenance: Dictionary = size_controls.get("internal_template_provenance", {}) if size_controls.get("internal_template_provenance", {}) is Dictionary else {}
+		if String(size_controls.get("size_class_id", "")) != size_class_id or String(size_controls.get("water_mode", "")) != "land" or int(size_controls.get("level_count", 0)) != 1 or bool(size_controls.get("underground", true)):
+			size_default_failures.append({"size_class_id": size_class_id, "controls": size_controls, "expected_public_scope": "default one-level land"})
+		if String(provenance.get("selection_source", "")) != "native_catalog_auto_on_launch" or String(provenance.get("template_id", "")) != "native_catalog_auto" or String(provenance.get("profile_id", "")) != "native_catalog_auto":
+			size_default_failures.append({"size_class_id": size_class_id, "provenance": provenance, "expected_selection_source": "native_catalog_auto_on_launch"})
+		if String(provenance.get("preview_template_id", "")) != String(defaults.get("template_id", "")) or String(provenance.get("preview_profile_id", "")) != String(defaults.get("profile_id", "")):
+			size_default_failures.append({"size_class_id": size_class_id, "provenance": provenance, "defaults": defaults})
 		var default_config := ScenarioSelectRulesScript.build_random_map_player_config(
 			"size-default-menu-wiring-%s" % size_class_id,
 			"",

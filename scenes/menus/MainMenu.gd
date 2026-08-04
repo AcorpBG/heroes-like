@@ -509,9 +509,6 @@ func _on_generated_size_selected(index: int) -> void:
 	if index < 0 or index >= _generated_size_picker.get_item_count():
 		return
 	_generated_size_class_id = String(_generated_size_picker.get_item_metadata(index))
-	if _generated_water_mode == "islands" and _generated_size_class_id != "homm3_medium":
-		_generated_water_mode = "land"
-		_select_generated_picker_metadata(_generated_water_picker, _generated_water_mode)
 	var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
 	_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
 	_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
@@ -547,17 +544,12 @@ func _on_generated_player_count_selected(index: int) -> void:
 	if index < 0 or index >= _generated_player_count_picker.get_item_count():
 		return
 	_generated_player_count = int(_generated_player_count_picker.get_item_metadata(index))
-	if _generated_water_mode == "islands" and _generated_player_count != 4:
-		_generated_player_count = 4
-		_select_generated_player_count_picker(_generated_player_count)
 	_refresh_generated_random_map_setup()
 
 func _on_generated_water_selected(index: int) -> void:
 	if index < 0 or index >= _generated_water_picker.get_item_count():
 		return
 	_generated_water_mode = String(_generated_water_picker.get_item_metadata(index))
-	if _generated_water_mode == "islands":
-		_apply_generated_medium_islands_selection()
 	_refresh_generated_random_map_setup()
 
 func _on_generated_level_selected(index: int) -> void:
@@ -1441,7 +1433,7 @@ func _configure_generated_random_map_controls() -> void:
 				break
 	if water_selected >= 0:
 		_generated_water_picker.select(water_selected)
-	_generated_water_picker.tooltip_text = "Only land maps are available for generated skirmishes in this release."
+	_generated_water_picker.tooltip_text = "Choose the generated map water layout."
 
 	_rebuild_generated_level_picker()
 	var underground_supported := _generated_underground_supported()
@@ -1569,16 +1561,24 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 		else:
 			var attempt_count := int(retry.get("attempt_count", 1))
 			status_text = "Map ready | built in %d attempt%s" % [attempt_count, "" if attempt_count == 1 else "s"]
-		plan_text = "Seed: %s | %s | %d players | Land | Surface only" % [
+		var water_label: String = {
+			"land": "Land",
+			"normal_water": "Normal Water",
+			"islands": "Islands",
+		}.get(_generated_water_mode, "Land")
+		var level_label := "Surface + Underground" if _generated_underground else "Surface only"
+		plan_text = "Seed: %s | %s | %d players | %s | %s" % [
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,
+			water_label,
+			level_label,
 		]
 		_start_generated_skirmish_button.disabled = false
 		_start_generated_skirmish_button.tooltip_text = "Builds this map, checks that routes and starting positions are playable, and then starts Day 1. If map creation fails, you stay here and no save is changed."
 	else:
 		status_text = "Map build stopped | change the seed or setup"
-		plan_text = "This setup is unavailable. Choose Small or Medium, Land, and Surface only."
+		plan_text = "This setup is unavailable. Choose another supported size, water layout, level count, or seed."
 		_start_generated_skirmish_button.text = "Setup Unavailable"
 		_start_generated_skirmish_button.disabled = true
 		_start_generated_skirmish_button.tooltip_text = "Change the seed or choose another available setup. No game starts and no save is changed."
@@ -1901,22 +1901,6 @@ func _select_generated_player_count_picker(player_count: int) -> bool:
 		_generated_player_count_picker.select(index)
 		return true
 	return false
-
-func _apply_generated_medium_islands_selection() -> void:
-	if _generated_size_class_id != "homm3_medium":
-		_generated_size_class_id = "homm3_medium"
-		_select_generated_picker_metadata(_generated_size_picker, _generated_size_class_id)
-		var size_defaults := ScenarioSelectRulesScript.random_map_size_class_default(_generated_size_class_id)
-		_generated_template_id = String(size_defaults.get("template_id", _generated_template_id))
-		_generated_profile_id = String(size_defaults.get("profile_id", _generated_profile_id))
-		_select_generated_picker_metadata(_generated_template_picker, _generated_template_id)
-		_rebuild_generated_profile_picker()
-	_generated_player_count = 4
-	_rebuild_generated_player_count_picker()
-	for index in range(_generated_player_count_picker.get_item_count()):
-		if int(_generated_player_count_picker.get_item_metadata(index)) == _generated_player_count:
-			_generated_player_count_picker.select(index)
-			break
 
 func _rebuild_generated_player_count_picker() -> void:
 	_generated_player_count_picker.clear()

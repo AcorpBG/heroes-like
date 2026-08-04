@@ -208,22 +208,31 @@ const RANDOM_MAP_AUTO_SEED_PREFIX := "aurelion-auto-random-skirmish"
 const RANDOM_MAP_PUBLIC_H3MAPED_SCOPES := [
 	{
 		"size_class_id": "homm3_small",
-		"water_mode": "land",
-		"level_count": 1,
-		"scope": "strict_small_36x36_one_level_land_only",
+		"scope_size_id": "small",
+		"dimensions": "36x36",
 	},
 	{
 		"size_class_id": "homm3_medium",
-		"water_mode": "land",
-		"level_count": 1,
-		"scope": "strict_medium_72x72_one_level_land_only",
+		"scope_size_id": "medium",
+		"dimensions": "72x72",
+	},
+	{
+		"size_class_id": "homm3_large",
+		"scope_size_id": "large",
+		"dimensions": "108x108",
+	},
+	{
+		"size_class_id": "homm3_extra_large",
+		"scope_size_id": "extra_large",
+		"dimensions": "144x144",
 	},
 ]
 const RANDOM_MAP_PUBLIC_H3MAPED_SCOPE := {
-	"size_class_ids": ["homm3_small", "homm3_medium"],
-	"water_mode": "land",
-	"level_count": 1,
-	"scope": "strict_small_36x36_one_level_land_only; strict_medium_72x72_one_level_land_only",
+	"size_class_ids": ["homm3_small", "homm3_medium", "homm3_large", "homm3_extra_large"],
+	"water_modes": ["land", "normal_water", "islands"],
+	"level_counts": [1, 2],
+	"workflow_count": 24,
+	"scope": "native_rmg_parity_owned_24_workflow_release_matrix",
 	"scopes": RANDOM_MAP_PUBLIC_H3MAPED_SCOPES,
 }
 const GENERATED_MAP_DEV_DIR := "res://maps"
@@ -483,14 +492,14 @@ static func random_map_player_setup_options() -> Dictionary:
 		"package_directory_policy": generated_map_package_directory_policy(),
 		"catalog_template_count": _random_map_template_options().size(),
 		"catalog_profile_count": _random_map_profile_options().size(),
-		"player_facing_template_policy": "h3maped_strict_small_medium_land_public_generation_scope",
+		"player_facing_template_policy": "h3maped_native_24_workflow_release_matrix",
 		"player_facing_auto_selection": {
 			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 			"manual_template_picker_visible": false,
 			"manual_profile_picker_visible": false,
 			"catalog_template_count": _random_map_template_options().size(),
 			"catalog_profile_count": _random_map_profile_options().size(),
-			"launch_filter": "public generated skirmish startup is validator-gated to H3MapEd strict Small 36x36 and Medium 72x72 one-level land scopes; water, underground, Large, and XL remain hidden until their native ports are production-ready",
+			"launch_filter": "public generated skirmish startup is validator-gated to the parity-owned 24-workflow native matrix; unsupported sizes, water modes, level counts, and native configurations remain fail-closed",
 		},
 	}
 
@@ -513,8 +522,9 @@ static func _random_map_public_size_options() -> Array:
 
 static func _random_map_public_water_options() -> Array:
 	var options := []
+	var public_water_modes: Array = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_modes", [])
 	for option in RANDOM_MAP_WATER_OPTIONS:
-		if option is Dictionary and String(option.get("id", "")) == String(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_mode", "land")):
+		if option is Dictionary and String(option.get("id", "")) in public_water_modes:
 			var item: Dictionary = option.duplicate(true)
 			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
 			options.append(item)
@@ -522,39 +532,47 @@ static func _random_map_public_water_options() -> Array:
 
 static func _random_map_public_level_options() -> Array:
 	var options := []
+	var public_level_counts: Array = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_counts", [])
 	for option in RANDOM_MAP_LEVEL_OPTIONS:
-		if option is Dictionary and int(option.get("level_count", 1)) == int(RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_count", 1)):
+		if option is Dictionary and int(option.get("level_count", 1)) in public_level_counts:
 			var item: Dictionary = option.duplicate(true)
 			item["public_generation_scope"] = RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("scope", "")
 			options.append(item)
 	return options
 
 static func _random_map_public_h3maped_size_ids() -> Array:
-	var ids := []
-	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
-		if scope is Dictionary:
-			var size_class_id := String(scope.get("size_class_id", ""))
-			if size_class_id != "" and not ids.has(size_class_id):
-				ids.append(size_class_id)
-	return ids
+	return RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_ids", []).duplicate()
 
 static func _random_map_public_h3maped_scope_label_for_size(size_class_id: String) -> String:
 	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
 		if scope is Dictionary and String(scope.get("size_class_id", "")) == size_class_id:
-			return String(scope.get("scope", ""))
+			return "native_rmg_parity_owned_%s_release_matrix" % String(scope.get("dimensions", ""))
 	return ""
 
 static func _random_map_public_h3maped_scope_for(size_class_id: String, water_mode: String, level_count: int) -> Dictionary:
+	if size_class_id not in RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("size_class_ids", []):
+		return {}
+	if water_mode not in RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("water_modes", []):
+		return {}
+	if level_count not in RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.get("level_counts", []):
+		return {}
 	for scope in RANDOM_MAP_PUBLIC_H3MAPED_SCOPES:
 		if not (scope is Dictionary):
 			continue
 		if String(scope.get("size_class_id", "")) != size_class_id:
 			continue
-		if String(scope.get("water_mode", "land")) != water_mode:
-			continue
-		if int(scope.get("level_count", 1)) != level_count:
-			continue
-		return scope.duplicate(true)
+		var resolved: Dictionary = scope.duplicate(true)
+		resolved["water_mode"] = water_mode
+		resolved["level_count"] = level_count
+		var level_label := "two_level" if level_count == 2 else "one_level"
+		var land_suffix := "land_only" if level_count == 1 and water_mode == "land" else water_mode
+		resolved["scope"] = "strict_%s_%s_%s_%s" % [
+			String(scope.get("scope_size_id", "")),
+			String(scope.get("dimensions", "")),
+			level_label,
+			land_suffix,
+		]
+		return resolved
 	return {}
 
 static func generated_map_package_directory_policy() -> Dictionary:
@@ -2325,7 +2343,7 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 		"",
 		int(player_constraints.get("player_count", 3)),
 		water_mode,
-		false,
+		level_count > 1,
 		size_class_id,
 		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
 	)

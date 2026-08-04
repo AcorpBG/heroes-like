@@ -205,7 +205,7 @@ The strategic focus is now to turn the validated systems foundation into a coher
 
 Near-term work should prioritize player-readable improvements to live loops: deeper faction economy identity, better combat feel and balance, stronger strategic AI decisions, clearer UX, authored rare-source breadth and guard pressure, campaign flow hardening, packaging hardening, and balance harness depth. Owner direction has now selected bounded campaign/content implementation; each campaign slice still needs live flow and progression proof rather than a breadth-only claim.
 
-Random map generation remains strategically important, but the current proven scope is strict Small 36x36 one-level land package/session evidence. Larger sizes, water, underground, broad template families, final reward ecology, route safety, and full HoMM-style production parity remain incomplete and must not be inferred from Small-map validation.
+Random map generation remains strategically important. The current proven release scope is the native parity-owned 24-workflow matrix: Small through Extra Large, land/normal-water/Islands, and one/two levels, with package/session adoption on Windows and Linux. Arbitrary H3MapEd configurations and allocator histories outside that matrix remain unsupported and must fail closed; the supported matrix must not be generalized into a whole-H3MapEd parity claim.
 
 ## Non-Goals
 
