@@ -155,7 +155,29 @@ class ReleaseCandidatePipelineTest(unittest.TestCase):
 			"config\\/version=",
 		):
 			self.assertIn(token, workflow)
-		self.assertNotIn("gh release create", workflow)
+
+	def test_workflow_delivers_only_fail_closed_draft_prereleases(self) -> None:
+		workflow = (ROOT / ".github" / "workflows" / "release-candidate.yml").read_text(encoding="utf-8")
+		for token in (
+			"create_draft_release:",
+			"tools/resolve_release_delivery.py",
+			'if: needs.build-release-candidate.outputs.deliver_draft == \'true\'',
+			"actions/download-artifact@v8",
+			"Verify downloaded candidate identity",
+			"sha256sum --check SHA256SUMS",
+			"gh api --include",
+			"Could not prove release $RELEASE_TAG is absent.",
+			"gh release create",
+			"--draft",
+			"--prerelease",
+			"--latest=false",
+			"--verify-tag",
+			'--target "$GITHUB_SHA"',
+		):
+			self.assertIn(token, workflow)
+		self.assertEqual(workflow.count("contents: write"), 1)
+		self.assertNotIn("--clobber", workflow)
+		self.assertNotIn("--draft=false", workflow)
 
 
 if __name__ == "__main__":

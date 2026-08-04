@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed bounded packaged abnormal-exit recovery into the existing local support bundle; native minidumps, signing, native Windows certification, release-channel integration, and overall release work remain open.",
+  "currentNotes": "Completed fail-closed GitHub draft prerelease delivery for verified Linux and Windows release candidates; human publication, signing, stable-channel policy, and native Windows certification remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-native-process-crash-recovery-10184",
-  "currentSliceId": "packaging-native-process-crash-recovery-10184",
-  "currentSliceNotes": "Desktop runtime startup now recovers one bounded, path-redacted issue after an unclean previous process exit and removes its process-owned marker after normal shutdown.",
+  "currentSlice": "packaging-draft-prerelease-channel-10184",
+  "currentSliceId": "packaging-draft-prerelease-channel-10184",
+  "currentSliceNotes": "Verified artifacts now flow into a least-privilege draft-only delivery job with tested tag policy, repeated identity/hash checks, and no overwrite or automatic-publication path.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Packaged Native Process Crash Recovery",
-  "currentSliceUpdatedAt": "2026-08-04T23:08:08Z",
+  "currentSliceTitle": "Draft Prerelease Channel",
+  "currentSliceUpdatedAt": "2026-08-04T23:41:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70615,6 +70615,81 @@
       ],
       "notes": "The first accepted lifecycle exposed absolute system-library paths behind backtrace frame prefixes. Token-level path detection now redacts those lines, and the complete forced-crash/recovery lifecycle passes again with useful non-path context retained.",
       "remainingWork": "No work remains in this slice. Native minidumps/symbolication, signing, native Windows hardware certification, clean-machine validation, release-channel integration, and overall game completion remain open."
+    },
+    {
+      "id": "packaging-draft-prerelease-channel-10184",
+      "title": "Draft Prerelease Channel",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md"
+      ],
+      "purpose": "Move verified version-tag release candidates from expiring workflow artifacts into a durable, reviewable GitHub draft prerelease without automatic publication or unsafe asset replacement.",
+      "implementationTargets": [
+        ".github/workflows/release-candidate.yml",
+        "tools/resolve_release_delivery.py",
+        "tests/packaging_release_candidate_pipeline_test.py",
+        "tests/release_delivery_policy_test.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "workflow_artifact_retention_days": 30,
+        "draft_release_delivery": false,
+        "build_job_contents_permission": "read",
+        "existing_release_overwrite_guard": false,
+        "automatic_publication": false
+      },
+      "completionCriteria": [
+        "The clean build job remains contents-read-only and a dependent delivery job alone receives contents-write permission",
+        "A directly tested policy helper resolves tag pushes, ordinary manual runs, explicit manual tag delivery, branch rejection, and version mismatch",
+        "Version-tag pushes select draft delivery while ordinary manual runs remain artifact-only and manual delivery requires an explicit request from a matching tag ref",
+        "Draft delivery downloads the exact verified build artifact and attaches the release index, candidate result, both archives, and both installers",
+        "Tag/version/source identity is checked before delivery, any existing release fails closed, and the workflow never publishes or overwrites release assets"
+      ],
+      "nonGoals": [
+        "publishing a release, selecting a stable/latest channel, replacing existing release assets, signing, certificate acquisition, or native Windows hardware certification",
+        "gameplay, save, content, combat, strategic AI, balance, or Native RMG behavior changes",
+        "overall release completion"
+      ],
+      "startedAt": "2026-08-04T23:37:19Z",
+      "updatedAt": "2026-08-04T23:41:56Z",
+      "completedAt": "2026-08-04T23:41:56Z",
+      "result": {
+        "build_job_contents_permission": "read",
+        "delivery_job_contents_permission": "write",
+        "contents_write_grant_count": 1,
+        "version_tag_push_delivery": true,
+        "ordinary_manual_run_artifact_only": true,
+        "explicit_manual_matching_tag_delivery": true,
+        "manual_branch_delivery_rejected": true,
+        "tag_version_mismatch_rejected": true,
+        "downloaded_candidate_identity_reverified": true,
+        "archive_and_installer_checksum_count": 4,
+        "existing_release_fails_closed": true,
+        "release_asset_overwrite": false,
+        "automatic_publication": false,
+        "live_release_created_during_validation": false
+      },
+      "validation": [
+        "python3 tests/release_delivery_policy_test.py",
+        "python3 tests/packaging_release_candidate_pipeline_test.py",
+        "python3 tools/resolve_release_delivery.py --event-name push --ref-name v0.1.0-rc1 --ref-type tag --version 0.1.0-rc1 --create-draft-release false",
+        "local candidate/index identity jq checks and SHA256SUMS verification",
+        "read-only gh api missing-release 404 probe",
+        "PyYAML safe_load .github/workflows/release-candidate.yml",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/resolve_release_delivery.py tests/release_delivery_policy_test.py tests/packaging_release_candidate_pipeline_test.py tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "The delivery policy moved out of inline workflow shell into a directly tested deterministic helper. Existing releases are never refreshed or clobbered; maintainers must resolve any partial draft explicitly before retrying.",
+      "remainingWork": "No work remains in this slice. Human draft review/publication, stable-channel policy, signing, and native Windows hardware certification remain open."
     }
   ],
   "project": "heroes-like",
@@ -70624,8 +70699,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, stable-channel selection, and native Windows hardware certification.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, stable-channel, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [

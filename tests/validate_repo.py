@@ -283,6 +283,8 @@ PACKAGE_RELEASE_VERIFICATION_TEST_PATH = ROOT / "tests" / "packaging_release_art
 RELEASE_CANDIDATE_TOOL_PATH = ROOT / "tools" / "build_release_candidate.py"
 RELEASE_CANDIDATE_TEST_PATH = ROOT / "tests" / "packaging_release_candidate_pipeline_test.py"
 RELEASE_CANDIDATE_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release-candidate.yml"
+RELEASE_DELIVERY_POLICY_TOOL_PATH = ROOT / "tools" / "resolve_release_delivery.py"
+RELEASE_DELIVERY_POLICY_TEST_PATH = ROOT / "tests" / "release_delivery_policy_test.py"
 PACKAGE_INSTALLER_SMOKE_PATH = ROOT / "tests" / "packaging_user_local_installer_smoke.py"
 PACKAGE_LINUX_INSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "install.sh"
 PACKAGE_LINUX_UNINSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "uninstall.sh"
@@ -22245,6 +22247,8 @@ def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
         RELEASE_CANDIDATE_TOOL_PATH,
         RELEASE_CANDIDATE_TEST_PATH,
         RELEASE_CANDIDATE_WORKFLOW_PATH,
+        RELEASE_DELIVERY_POLICY_TOOL_PATH,
+        RELEASE_DELIVERY_POLICY_TEST_PATH,
     ):
         ensure(path.exists(), errors, f"Missing release-candidate pipeline file: {path.relative_to(ROOT)}")
 
@@ -22285,6 +22289,7 @@ def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
             "test_pe_validation_accepts_only_x86_64",
             "test_release_output_reset_refuses_repository_paths",
             "test_workflow_uses_clean_recursive_checkout_and_single_driver",
+            "test_workflow_delivers_only_fail_closed_draft_prereleases",
         ):
             ensure(required_token in test_text, errors, f"Release-candidate focused test is missing required token: {required_token}")
 
@@ -22306,14 +22311,34 @@ def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
             '--source-revision "$RELEASE_SOURCE_REVISION"',
             "actions/upload-artifact@v7",
             "if-no-files-found: error",
+            "create_draft_release:",
+            "create-draft-prerelease:",
+            "tools/resolve_release_delivery.py",
+            "if: needs.build-release-candidate.outputs.deliver_draft == 'true'",
+            "actions/download-artifact@v8",
+            "Verify downloaded candidate identity",
+            "sha256sum --check SHA256SUMS",
+            "gh api --include",
+            "Could not prove release $RELEASE_TAG is absent.",
+            "gh release create",
+            "--draft",
+            "--prerelease",
+            "--latest=false",
+            "--verify-tag",
+            '--target "$GITHUB_SHA"',
         ):
             ensure(required_token in workflow_text, errors, f"Release-candidate workflow is missing required token: {required_token}")
         for forbidden_token in (
-            "gh release create",
             "softprops/action-gh-release",
-            "contents: write",
+            "--clobber",
+            "--draft=false",
         ):
-            ensure(forbidden_token not in workflow_text, errors, f"Release-candidate workflow must not publish releases: {forbidden_token}")
+            ensure(forbidden_token not in workflow_text, errors, f"Release-candidate workflow has unsafe release behavior: {forbidden_token}")
+        ensure(
+            workflow_text.count("contents: write") == 1,
+            errors,
+            "Release-candidate workflow must grant contents write to exactly one delivery job",
+        )
 
 
 def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:

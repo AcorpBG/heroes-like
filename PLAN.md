@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `packaging-draft-prerelease-channel-10184`. The clean-source build job remains contents-read-only and now passes its immutable verified artifact to the only contents-write job. Version-tag pushes select draft delivery; manual runs remain artifact-only unless explicitly dispatched from a matching tag. A directly tested policy rejects branch delivery and tag/version mismatches. The delivery job revalidates candidate/index version and exact source revision, checks all archive/installer hashes, proves the release tag is absent, and creates a draft prerelease with existing-tag and exact-target guards. It never publishes, replaces assets, or touches an existing release. Focused policy/workflow tests, live candidate identity/hash verification, a read-only GitHub 404 probe, workflow YAML, repository, Python, JSON, and diff gates pass. Signing, human publication, stable-channel selection, and native Windows hardware certification remain open.
 - Completed implementation slice: `packaging-native-process-crash-recovery-10184`. Linux and Windows desktop runs now retain at most five rotated Godot engine logs and atomically own `user://debug/heroes_runtime_session.json`; normal autoload shutdown removes only the current process marker. A surviving marker is consumed exactly once on the next launch and records `previous_session_unclean_exit` with at most 64 KiB/40 bounded lines from the newest prior rotated log. Token-level support sanitization redacts Unix and Windows absolute paths even when backtrace frame prefixes precede them, while preserving useful engine, GDScript, and crash context. The real exported-PCK lifecycle intentionally terminates the first process through `OS.crash()` with return code -6, observes the crash marker, recovers exactly one issue on the second process, retains two logs inside the five-file bound, exports the recovered issue through the existing local-only support bundle, and leaves no session marker after clean exit. Existing 26-record packaged issue history, Linux binary export/boot, Windows PE/PCK/DLL export and Wine Boot/MainMenu load, platform readiness, core, editor-import, repository, Python, JSON, and diff gates pass. This closes bounded abnormal-exit recovery, not native minidumps, symbolication, remote reporting, signing, clean-machine/native-Windows certification, release-channel integration, or overall release completion.
 - Completed implementation slice: `combat-sunvault-solar-array-screen-strength-10184`. Solar Array Lanes now reduces incoming melee primary and retaliation damage to allied Sunvault ranged stacks by five percent while both its Solar Array Strider source and linked Daybreak Colossus survive; source/link invalidation and exclusions for melee allies, other factions, ranged attacks, spells, and direct health loss remain exact. Live BattleRules, tactical-AI estimates, player summaries, the fast benchmark, focused runtime proof, and repository validation consume the same authored `0.95` multiplier. A six-percent candidate was rejected because outliers increased from 29 to 30. The accepted all-live 100-seed four-week matrix reduces outliers from 29 to 28 and severity from 174.0 to 172.0, keeps five rows at or above 65 percent and maximum dominance at 68.5 percent, moves side bias from 3.67 to 3.8 points inside the seven-point gate, and has zero structural failures. Week-four Embercourt/Sunvault improves from 68.5 to 67.5 percent and Mireclaw/Sunvault from 63 to 62 percent; Brasshollow/Sunvault worsens from 59 to 60 percent and week-three Sunvault/Veilborne from 60.5 to 61 percent without creating a new outlier. Focused ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass. Faction balance remains `needs_tuning`; this is not final faction balance or overall release completion.
 - Completed implementation slice: `artifact-faction-rare-income-runtime-10184`. Each of the six existing faction-aligned rare relics now provides exactly one matching faction rare resource per day while equipped or captured by a strategic-AI empire: Tollstone Ring/Embergrain, Mudglass Beads/Peatwax, Choir Tuning Fork/Aetherglass, Living Bridge Knot/Verdant Grafts, Pressure Gauge Reliquary/Brass Scrip, and Black-Sail Compass/Memory Salt. Live player end-turn and strategic-AI treasury application, compact effect/comparison summaries, magic/economy reporting, and artifact valuation consume the same authored income. Five rare-capable source tables declare activation while the common pickup table remains inactive; all six source execution reports pass, normal markets remain wood/ore-only, spell costs remain mana-only, existing non-income bonuses and source gates remain intact, and save version 9 is unchanged. Focused six-case runtime proof, artifact/source/taxonomy/set/magic/AI reports, market persistence, broad core smoke, repository validation, Python/JSON, and diff checks pass. This is a bounded live artifact/economy breadth increment, not final artifact catalog breadth, economy balance, or overall release completion.
@@ -1945,6 +1946,40 @@ Non-goals:
 - do not add code signing, certificate or secret acquisition, storefront/channel publication, automatic public releases, or native Windows hardware certification;
 - do not change gameplay, saves, content, combat balance, strategic AI, or Native RMG behavior;
 - do not claim overall release completion from one automated release-candidate path.
+
+## Draft Prerelease Channel
+
+id: `packaging-draft-prerelease-channel-10184`
+
+Status: completed.
+
+Selected Phase 6 delivery implementation slice. The clean-source pipeline now
+proves and retains both platform releases, but its 30-day workflow artifact is
+not a durable release channel and the workflow intentionally cannot create a
+release.
+
+Implementation target:
+- keep the clean build job read-only and pass its immutable verified artifact to a separate least-privilege delivery job;
+- automatically select draft delivery for version-tag pushes and permit manual delivery only when explicitly requested from an existing matching version tag;
+- centralize and directly test tag/ref/version delivery selection in one deterministic workflow helper;
+- create one draft prerelease bound to the triggering tag and exact source revision, with the verified release index, release-candidate result, archives, and installers attached;
+- fail closed before upload when tag/version identity differs or any GitHub release already exists for the tag, and never publish or replace release assets automatically.
+
+Completion criteria:
+- focused policy and workflow coverage proves tag pushes select delivery, ordinary manual runs remain artifact-only, manual delivery requires a tag ref, and version/tag mismatches fail;
+- the delivery job downloads only the exact build artifact, has the only `contents: write` permission, verifies the release is absent, and invokes `gh release create` with draft, prerelease, existing-tag, and exact-target guards;
+- workflow syntax, release-candidate tests, repository validation, Python/JSON validation, and diff checks pass.
+
+Completion evidence:
+- four direct policy cases prove matching version-tag delivery, ordinary manual artifact-only behavior, explicit manual tag delivery, branch rejection, and version mismatch rejection;
+- the final workflow has one contents-write grant isolated to the dependent delivery job, downloads the exact commit-named artifact, and revalidates candidate/index identities plus all four payload checksums before any GitHub write;
+- a read-only live GitHub API probe confirms the release-absence guard recognizes 404 while failing closed on other responses, and focused workflow, repository, YAML, Python, JSON, and diff validation pass;
+- no tag or release was created during validation. Draft publication remains an explicit later human decision.
+
+Non-goals:
+- do not publish the draft, select a stable/latest channel, overwrite an existing release, acquire signing credentials, sign binaries, or perform native Windows hardware certification;
+- do not change gameplay, saves, content, combat balance, strategic AI, or Native RMG behavior;
+- do not claim overall release completion from draft-channel integration.
 
 ## Slice Status Model
 
