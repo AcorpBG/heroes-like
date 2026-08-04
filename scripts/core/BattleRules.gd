@@ -3892,6 +3892,12 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	var distance = int(battle.get("distance", 1))
 	if _has_ability(stack, "reach") and not bool(stack.get("ranged", false)) and distance == 1:
 		return "Reach makes melee contact live from the current closing distance."
+	if _has_ability(stack, "hookline") and int(battle.get("round", 1)) < int(_ability_by_id(stack, "hookline").get("available_from_round", 1)):
+		return "%s is waiting for the midline exchange." % String(_ability_by_id(stack, "hookline").get("name", "Hookline"))
+	if _hookline_available(stack, battle) and not bool(stack.get("ranged", false)) and distance == 1:
+		return "%s can pin the selected line from the current closing distance." % String(_ability_by_id(stack, "hookline").get("name", "Hookline"))
+	if _has_ability(stack, "hookline") and not _hookline_available(stack, battle):
+		return "%s has already been spent this battle." % String(_ability_by_id(stack, "hookline").get("name", "Hookline"))
 	if _has_ability(stack, "volley") and bool(stack.get("ranged", false)) and distance >= int(_ability_by_id(stack, "volley").get("min_distance", 1)):
 		return "Volley rewards the long lane while the firing line stays open."
 	if _has_ability(stack, "obituary") and bool(stack.get("ranged", false)):
@@ -3902,6 +3908,17 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		if not target.is_empty() and _has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
 			return "Final Notice will sharply drain this veteran braced line and weaken its retaliation for this round."
 		return "Final Notice will drain the target's cohesion and weaken its retaliation for this round."
+	if _has_ability(stack, "rot_cant") and bool(stack.get("ranged", false)):
+		var rot_cant := _ability_by_id(stack, "rot_cant")
+		if int(battle.get("round", 1)) < int(rot_cant.get("available_from_round", 1)):
+			return "%s is waiting for the midline exchange." % String(rot_cant.get("name", "Rot Cant"))
+		var rot_uses = stack.get("ability_uses", {})
+		if rot_uses is Dictionary and int(rot_uses.get("rot_cant", 0)) >= int(rot_cant.get("uses_per_battle", 1)):
+			return "%s has already been placed this battle." % String(rot_cant.get("name", "Rot Cant"))
+		var rot_min_tier := int(rot_cant.get("target_min_tier", 1))
+		if target.is_empty() or int(target.get("tier", 1)) < rot_min_tier:
+			return "%s is waiting for a tier-%d veteran line." % [String(rot_cant.get("name", "Rot Cant")), rot_min_tier]
+		return "%s will rot-call this veteran line and weaken its retaliation for the round." % String(rot_cant.get("name", "Rot Cant"))
 	if _has_ability(stack, "harry") and bool(stack.get("ranged", false)):
 		var harry := _ability_by_id(stack, "harry")
 		var uses_per_battle := int(harry.get("uses_per_battle", 0))
@@ -3965,6 +3982,19 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			if not target.is_empty() and _stack_hex_distance(stack, target) <= 2:
 				return "%s keeps melee live from the half-open lane" % name
 			return "%s extends melee threat before full contact" % name
+		"hookline":
+			return "%s makes one reduced-damage strike across a broken lane and applies %s%s" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+			]
+		"rot_cant":
+			return "%s applies %s%s once per battle against tier-%d veteran lines and amplifies wounded-target pressure" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+				int(ability.get("target_min_tier", 1)),
+			]
 		"harry":
 			return "%s applies %s%s%s%s for follow-up pressure" % [
 				name,
@@ -4879,8 +4909,8 @@ static func _action_range_line(action_id: String, active_stack: Dictionary, targ
 			var legality := _attack_legality_for_target(active_stack, target, battle)
 			if bool(legality.get("melee", false)):
 				return "Melee ready at hex range %d" % int(legality.get("hex_distance", -1))
-			if _has_ability(active_stack, "reach"):
-				return "Reach needs hex range 2 or closer"
+			if _has_ability(active_stack, "reach") or _hookline_available(active_stack, battle):
+				return "Chain reach needs hex range 2 or closer"
 			return "Needs adjacent contact"
 		"shoot":
 			if not bool(active_stack.get("ranged", false)):
@@ -8219,7 +8249,7 @@ static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary
 		return _distance_band_from_hex_distance(hex_distance)
 	if hex_distance <= 1:
 		return 0
-	if hex_distance == 2 and _has_ability(attacker, "reach"):
+	if hex_distance == 2 and (_has_ability(attacker, "reach") or _hookline_available(attacker, battle)):
 		return 1
 	return int(battle.get("distance", 1))
 
@@ -8750,7 +8780,16 @@ static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target
 	var hex_distance := _stack_hex_distance(stack, target)
 	if hex_distance <= 1:
 		return true
-	return hex_distance == 2 and _has_ability(stack, "reach")
+	return hex_distance == 2 and (_has_ability(stack, "reach") or _hookline_available(stack, battle))
+
+static func _hookline_available(stack: Dictionary, battle: Dictionary) -> bool:
+	var hookline := _ability_by_id(stack, "hookline")
+	if hookline.is_empty():
+		return false
+	if int(battle.get("round", 1)) < int(hookline.get("available_from_round", 1)):
+		return false
+	var ability_uses = stack.get("ability_uses", {})
+	return ability_uses is Dictionary and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int) -> bool:
 	if attack_distance <= 0:
@@ -8773,14 +8812,45 @@ static func _apply_attack_ability_effects(
 			_status_effect_from_ability(overheat, battle)
 		)
 		messages.append("%s vents into an overheated pressure cycle." % _stack_label(attacker))
+	var ability_uses = attacker.get("ability_uses", {})
+	if not (ability_uses is Dictionary):
+		ability_uses = {}
+	var hookline := _ability_by_id(attacker, "hookline")
+	var hookline_triggered := not is_ranged and attack_distance == 1 and not hookline.is_empty() and _hookline_available(attacker, battle)
+	if hookline_triggered:
+		ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
+		attacker["ability_uses"] = ability_uses
 	if defender.is_empty() or _alive_count(defender) <= 0:
 		return messages
 	if not is_ranged and attack_distance > 1:
 		return messages
-
-	var ability_uses = attacker.get("ability_uses", {})
-	if not (ability_uses is Dictionary):
-		ability_uses = {}
+	if hookline_triggered:
+		var pulled_into_contact := _apply_hookline_pull(battle, attacker, defender)
+		_apply_stack_effect(
+			battle,
+			String(defender.get("battle_id", "")),
+			_status_effect_from_ability(hookline, battle)
+		)
+		messages.append("%s is %s%s." % [
+			_stack_label(defender),
+			"pulled into contact and " if pulled_into_contact else "",
+			String(hookline.get("status_label", "Pinned")).to_lower(),
+		])
+	var rot_cant := _ability_by_id(attacker, "rot_cant")
+	var rot_target_ready := int(defender.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1))
+	var rot_available := int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and rot_target_ready and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
+	if is_ranged and not rot_cant.is_empty() and rot_available:
+		_apply_stack_effect(
+			battle,
+			String(defender.get("battle_id", "")),
+			_status_effect_from_ability(rot_cant, battle)
+		)
+		messages.append("%s is %s." % [
+			_stack_label(defender),
+			String(rot_cant.get("status_label", "Rot-Called")).to_lower(),
+		])
+		ability_uses["rot_cant"] = int(ability_uses.get("rot_cant", 0)) + 1
+		attacker["ability_uses"] = ability_uses
 	var harry = _ability_by_id(attacker, "harry")
 	var harry_limit := int(harry.get("uses_per_battle", 0))
 	var harry_target_ready := int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
@@ -8853,6 +8923,24 @@ static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary)
 		String(ability.get("id", ""))
 	)
 
+static func _apply_hookline_pull(battle: Dictionary, attacker: Dictionary, defender: Dictionary) -> bool:
+	var attacker_cell := _stack_hex(attacker)
+	var defender_cell := _stack_hex(defender)
+	if attacker_cell.is_empty() or defender_cell.is_empty() or _hex_distance(attacker_cell, defender_cell) != 2:
+		return false
+	var occupied := _build_occupancy_map(battle)
+	var destination := {}
+	for candidate in _hex_neighbors(attacker_cell):
+		if occupied.has(_hex_key(candidate)) or _hex_distance(candidate, defender_cell) != 1:
+			continue
+		destination = candidate
+		break
+	if destination.is_empty():
+		return false
+	_set_stack_hex(battle, String(defender.get("battle_id", "")), destination)
+	_sync_distance_from_hexes(battle)
+	return true
+
 static func _ability_damage_modifier(
 	attacker: Dictionary,
 	defender: Dictionary,
@@ -8865,6 +8953,9 @@ static func _ability_damage_modifier(
 	var reach = _ability_by_id(attacker, "reach")
 	if not is_ranged and attack_distance == 1 and not reach.is_empty():
 		modifier *= float(reach.get("distance_one_multiplier", 1.0))
+	var hookline = _ability_by_id(attacker, "hookline")
+	if not is_ranged and attack_distance == 1 and not hookline.is_empty() and _hookline_available(attacker, battle):
+		modifier *= float(hookline.get("distance_one_multiplier", 0.5))
 
 	var brace = _ability_by_id(attacker, "brace")
 	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
@@ -8895,6 +8986,9 @@ static func _ability_damage_modifier(
 	var harry = _ability_by_id(attacker, "harry")
 	if is_ranged and not harry.is_empty() and _health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
+	var rot_cant = _ability_by_id(attacker, "rot_cant")
+	if is_ranged and not rot_cant.is_empty() and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and _health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
+		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush = _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
@@ -9187,6 +9281,34 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"name": String(entry.get("name", "Reach")),
 					"description": String(entry.get("description", "")),
 					"distance_one_multiplier": clampf(float(entry.get("distance_one_multiplier", 1.0)), 0.5, 1.5),
+				}
+			"hookline":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Hookline")),
+					"description": String(entry.get("description", "")),
+					"distance_one_multiplier": clampf(float(entry.get("distance_one_multiplier", 0.5)), 0.0, 1.0),
+					"uses_per_battle": maxi(1, int(entry.get("uses_per_battle", 1))),
+					"available_from_round": maxi(1, int(entry.get("available_from_round", 1))),
+					"status_id": String(entry.get("status_id", STATUS_ROOTED)),
+					"status_label": String(entry.get("status_label", "Pinned")),
+					"duration_rounds": maxi(1, int(entry.get("duration_rounds", 1))),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {})),
+				}
+			"rot_cant":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Rot Cant")),
+					"description": String(entry.get("description", "")),
+					"status_id": String(entry.get("status_id", STATUS_HARRIED)),
+					"status_label": String(entry.get("status_label", "Rot-Called")),
+					"duration_rounds": maxi(1, int(entry.get("duration_rounds", 1))),
+					"uses_per_battle": maxi(1, int(entry.get("uses_per_battle", 1))),
+					"available_from_round": maxi(1, int(entry.get("available_from_round", 1))),
+					"target_min_tier": maxi(2, int(entry.get("target_min_tier", 2))),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"cohesion": -1, "retaliation": -5})),
+					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.5)), 0.1, 1.0),
+					"wounded_damage_multiplier": clampf(float(entry.get("wounded_damage_multiplier", 1.02)), 1.0, 1.25),
 				}
 			"brace":
 				normalized = {

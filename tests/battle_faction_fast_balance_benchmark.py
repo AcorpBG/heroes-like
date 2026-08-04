@@ -1053,7 +1053,7 @@ class FastBattleBenchmark:
         if not target or self._alive_count(target) <= 0:
             return False
         is_ranged = action == "shoot"
-        attack_distance = int(battle.get("distance", 1)) if is_ranged else (1 if int(battle.get("distance", 1)) == 1 and self._has_ability(active, "reach") else 0)
+        attack_distance = self._attack_distance_for_action(active, battle, is_ranged)
         return self._estimated_damage(active, target, battle, is_ranged, False, attack_distance) >= int(target.get("total_health", 0))
 
     def _candidate_is_lethal_damage_spell(self, candidate: dict[str, Any], battle: dict[str, Any], active: dict[str, Any]) -> bool:
@@ -1268,7 +1268,7 @@ class FastBattleBenchmark:
         if not target or self._alive_count(target) <= 0:
             return
         is_ranged = action_id == "shoot"
-        attack_distance = int(battle.get("distance", 1)) if is_ranged else (1 if int(battle.get("distance", 1)) == 1 and self._has_ability(active, "reach") else 0)
+        attack_distance = self._attack_distance_for_action(active, battle, is_ranged)
         before = dict(target)
         damage = self._calculate_damage(active, target, battle, rng, is_ranged, False, attack_distance)
         self._apply_damage(target, damage)
@@ -1338,7 +1338,7 @@ class FastBattleBenchmark:
         return modifier
 
     def _attack_score(self, attacker: dict[str, Any], target: dict[str, Any], battle: dict[str, Any], is_ranged: bool) -> float:
-        attack_distance = int(battle.get("distance", 1)) if is_ranged else (1 if int(battle.get("distance", 1)) == 1 and self._has_ability(attacker, "reach") else 0)
+        attack_distance = self._attack_distance_for_action(attacker, battle, is_ranged)
         avg_roll = (int(attacker.get("min_damage", 1)) + int(attacker.get("max_damage", 1))) / 2.0
         avg_damage = max(1.0, float(max(1, self._alive_count(attacker))) * avg_roll * self._damage_modifier(attacker, target, battle, is_ranged, False, attack_distance))
         target_health = max(1, int(target.get("total_health", 0)))
@@ -1383,6 +1383,10 @@ class FastBattleBenchmark:
         harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
         if harry and harry_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
             score += 2.0
+        rot_cant = self._ability_by_id(attacker, "rot_cant")
+        rot_available = int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
+        if rot_cant and rot_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
+            score += 0.25
         obituary = self._ability_by_id(attacker, "obituary")
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):
@@ -1492,6 +1496,9 @@ class FastBattleBenchmark:
         reach = self._ability_by_id(attacker, "reach")
         if not is_ranged and attack_distance == 1 and reach:
             modifier *= float(reach.get("distance_one_multiplier", 1.0))
+        hookline = self._ability_by_id(attacker, "hookline")
+        if not is_ranged and attack_distance == 1 and hookline and self._hookline_available(attacker, battle):
+            modifier *= float(hookline.get("distance_one_multiplier", 0.5))
         brace = self._ability_by_id(attacker, "brace")
         if is_retaliation and bool(attacker.get("defending", False)) and brace:
             modifier *= float(brace.get("retaliation_multiplier", 1.0))
@@ -1517,6 +1524,9 @@ class FastBattleBenchmark:
         harry = self._ability_by_id(attacker, "harry")
         if is_ranged and harry and self._health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
+        rot_cant = self._ability_by_id(attacker, "rot_cant")
+        if is_ranged and rot_cant and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and self._health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
+            modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
         bloodrush = self._ability_by_id(attacker, "bloodrush")
         if bloodrush and self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
@@ -1676,9 +1686,34 @@ class FastBattleBenchmark:
                 "modifiers": overheat.get("modifiers", {}),
             }, battle, "ability", "overheat")
             counts["status_applied"] += 1
+        ability_uses = attacker.setdefault("ability_uses", {})
+        hookline = self._ability_by_id(attacker, "hookline")
+        hookline_triggered = bool(hookline) and not is_ranged and attack_distance == 1 and self._hookline_available(attacker, battle)
+        if hookline_triggered:
+            ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
         if self._alive_count(defender) <= 0:
             return
-        ability_uses = attacker.setdefault("ability_uses", {})
+        if hookline_triggered:
+            battle["distance"] = 0
+            self._apply_effect(defender, {
+                "effect_id": str(hookline.get("status_id", STATUS_ROOTED)),
+                "label": str(hookline.get("status_label", "Pinned")),
+                "duration_rounds": int(hookline.get("duration_rounds", 1)),
+                "modifiers": hookline.get("modifiers", {}),
+            }, battle, "ability", "hookline")
+            counts["status_applied"] += 1
+        rot_cant = self._ability_by_id(attacker, "rot_cant")
+        rot_target_ready = int(defender.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1))
+        rot_available = int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and rot_target_ready and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
+        if is_ranged and rot_cant and rot_available:
+            self._apply_effect(defender, {
+                "effect_id": str(rot_cant.get("status_id", STATUS_HARRIED)),
+                "label": str(rot_cant.get("status_label", "Rot-Called")),
+                "duration_rounds": int(rot_cant.get("duration_rounds", 1)),
+                "modifiers": rot_cant.get("modifiers", {}),
+            }, battle, "ability", "rot_cant")
+            ability_uses["rot_cant"] = int(ability_uses.get("rot_cant", 0)) + 1
+            counts["status_applied"] += 1
         harry = self._ability_by_id(attacker, "harry")
         harry_limit = int(harry.get("uses_per_battle", 0))
         harry_target_ready = int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
@@ -1939,13 +1974,30 @@ class FastBattleBenchmark:
     def _has_ability(self, stack: dict[str, Any], ability_id: str) -> bool:
         return bool(self._ability_by_id(stack, ability_id))
 
+    def _hookline_available(self, stack: dict[str, Any], battle: dict[str, Any]) -> bool:
+        hookline = self._ability_by_id(stack, "hookline")
+        if not hookline:
+            return False
+        if int(battle.get("round", 1)) < int(hookline.get("available_from_round", 1)):
+            return False
+        ability_uses = stack.get("ability_uses", {})
+        return isinstance(ability_uses, dict) and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
+
+    def _attack_distance_for_action(self, stack: dict[str, Any], battle: dict[str, Any], is_ranged: bool) -> int:
+        distance = int(battle.get("distance", 1))
+        if is_ranged:
+            return distance
+        if distance == 1 and (self._has_ability(stack, "reach") or self._hookline_available(stack, battle)):
+            return 1
+        return 0
+
     def _can_make_melee_attack(self, stack: dict[str, Any], battle: dict[str, Any], target: dict[str, Any] | None = None) -> bool:
         if not stack or self._alive_count(stack) <= 0:
             return False
         if target is not None and target and self._alive_count(target) <= 0:
             return False
         distance = int(battle.get("distance", 1))
-        return distance <= 0 or (distance == 1 and self._has_ability(stack, "reach"))
+        return distance <= 0 or (distance == 1 and (self._has_ability(stack, "reach") or self._hookline_available(stack, battle)))
 
     def _can_make_retaliation(self, stack: dict[str, Any], attack_distance: int) -> bool:
         return attack_distance <= 0 or (attack_distance == 1 and self._has_ability(stack, "reach"))

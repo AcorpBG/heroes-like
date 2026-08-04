@@ -903,6 +903,19 @@
         "wood": 1,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "hookline",
+          "name": "Ferrychain Hookline",
+          "description": "Once per battle, long ferry chains lash across a broken lane, pull the surviving target into contact, and pin it for the round at reduced leverage.",
+          "distance_one_multiplier": 0.0,
+          "uses_per_battle": 1,
+          "available_from_round": 2,
+          "status_id": "status_rooted",
+          "status_label": "Ferry-Pinned",
+          "duration_rounds": 1
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
@@ -931,6 +944,25 @@
         "gold": 330,
         "wood": 1
       },
+      "abilities": [
+        {
+          "id": "rot_cant",
+          "name": "Sporewake Rot Cant",
+          "description": "The chanters name one veteran line for rot, weakening its cohesion and retaliation while their spores bite deeper into wounded prey.",
+          "status_id": "status_harried",
+          "status_label": "Rot-Called",
+          "duration_rounds": 1,
+          "modifiers": {
+            "cohesion": -1,
+            "retaliation": -5
+          },
+          "uses_per_battle": 1,
+          "available_from_round": 2,
+          "target_min_tier": 6,
+          "wounded_threshold_ratio": 0.5,
+          "wounded_damage_multiplier": 1.02
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "shots": 6,
       "spell_resistance_pct": 5,

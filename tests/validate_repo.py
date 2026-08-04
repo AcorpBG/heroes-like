@@ -317,7 +317,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10548,6 +10548,26 @@ def validate_content(errors: list[str]) -> None:
                     authored_unit_ability_ids.add(ability_id)
                 if ability_id == "reach":
                     ensure(float(ability.get("distance_one_multiplier", 0.0)) > 0.0, errors, f"Unit {unit_id} reach must define distance_one_multiplier > 0")
+                elif ability_id == "hookline":
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} hookline must belong to a melee unit")
+                    ensure(0.0 <= float(ability.get("distance_one_multiplier", -1.0)) < 1.0, errors, f"Unit {unit_id} hookline must trade normal damage for control")
+                    ensure(int(ability.get("uses_per_battle", 0)) == 1, errors, f"Unit {unit_id} hookline must be one use per battle")
+                    ensure(int(ability.get("available_from_round", 0)) == 2, errors, f"Unit {unit_id} hookline must wait until round two")
+                    ensure(str(ability.get("status_id", "")) == "status_rooted", errors, f"Unit {unit_id} hookline must apply status_rooted")
+                    ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} hookline must pin for one round")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} hookline modifiers must be a dictionary when present")
+                elif ability_id == "rot_cant":
+                    ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} rot_cant must belong to a ranged unit")
+                    ensure(str(ability.get("status_id", "")) == "status_harried", errors, f"Unit {unit_id} rot_cant must apply status_harried")
+                    ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} rot_cant must last one round")
+                    ensure(int(ability.get("uses_per_battle", 0)) == 1, errors, f"Unit {unit_id} rot_cant must be one use per battle")
+                    ensure(int(ability.get("available_from_round", 0)) == 2, errors, f"Unit {unit_id} rot_cant must wait until round two")
+                    ensure(2 <= int(ability.get("target_min_tier", 0)) <= 7, errors, f"Unit {unit_id} rot_cant must target a veteran tier")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict) and any(isinstance(value, (int, float)) and value < 0 for value in modifiers.values()), errors, f"Unit {unit_id} rot_cant must define negative pressure")
+                    ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} rot_cant wounded threshold must be in (0, 1]")
+                    ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} rot_cant wounded multiplier must be > 1")
                 elif ability_id == "brace":
                     ensure(float(ability.get("retaliation_multiplier", 0.0)) >= 1.0, errors, f"Unit {unit_id} brace must define retaliation_multiplier >= 1")
                     ensure(int(ability.get("defending_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} brace must define defending_cohesion_bonus > 0")
@@ -10662,9 +10682,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, overheat, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, overheat, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10773,6 +10793,21 @@ def validate_content(errors: list[str]) -> None:
     ensure(str(worldroot_rampart.get("id", "")) == "shielding", errors, "Worldroot Bastion must keep its passive attrition wall")
     ensure(float(worldroot_rampart.get("ranged_damage_multiplier", 1.0)) < 1.0, errors, "Worldroot Rampart must blunt incoming ranged pressure")
     ensure(int(worldroot_rampart.get("cohesion_hold_bonus", -1)) == 0, errors, "Worldroot Rampart must not add a global cohesion tier")
+    mireclaw_lashers = units.get("unit_mireclaw_ferrychain_lashers", {})
+    ferrychain_hookline = next((ability for ability in mireclaw_lashers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Ferrychain Hookline"), {})
+    ensure(str(ferrychain_hookline.get("id", "")) == "hookline", errors, "Ferrychain Lashers must keep bounded cross-lane Hookline contact")
+    ensure(float(ferrychain_hookline.get("distance_one_multiplier", -1.0)) == 0.0, errors, "Ferrychain Hookline must be a control-only cross-lane lash")
+    ensure(int(ferrychain_hookline.get("uses_per_battle", 0)) == 1, errors, "Ferrychain Hookline must be one use per battle")
+    ensure(int(ferrychain_hookline.get("available_from_round", 0)) == 2, errors, "Ferrychain Hookline must wait until the midline exchange")
+    ensure(str(ferrychain_hookline.get("status_id", "")) == "status_rooted", errors, "Ferrychain Hookline must pin its surviving target")
+    mireclaw_chanters = units.get("unit_mireclaw_sporewake_chanters", {})
+    sporewake_rot_cant = next((ability for ability in mireclaw_chanters.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Sporewake Rot Cant"), {})
+    ensure(str(sporewake_rot_cant.get("id", "")) == "rot_cant", errors, "Sporewake Chanters must keep their bounded Rot Cant support role")
+    ensure(int(sporewake_rot_cant.get("uses_per_battle", 0)) == 1, errors, "Sporewake Rot Cant must be limited to one veteran-line call per battle")
+    ensure(int(sporewake_rot_cant.get("available_from_round", 0)) == 2, errors, "Sporewake Rot Cant must wait until the midline exchange")
+    ensure(int(sporewake_rot_cant.get("target_min_tier", 0)) == 6, errors, "Sporewake Rot Cant must require a tier-6-or-higher target")
+    ensure(int(sporewake_rot_cant.get("modifiers", {}).get("retaliation", 0)) < 0, errors, "Sporewake Rot Cant must weaken retaliation")
+    ensure(float(sporewake_rot_cant.get("wounded_damage_multiplier", 1.0)) > 1.0, errors, "Sporewake Rot Cant must amplify wounded-prey pressure")
     ensure(int(wake_lantern_mark.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Wake-Lantern Mark must drain cohesion")
     ensure(int(wake_lantern_mark.get("momentum_gain", -1)) == 0, errors, "Wake-Lantern Mark must not add momentum")
 
