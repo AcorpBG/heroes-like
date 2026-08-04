@@ -128,7 +128,7 @@
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": true
       }
     },
     {
@@ -181,7 +181,7 @@
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": true
       }
     },
     {
@@ -225,7 +225,7 @@
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": true
       }
     },
     {
@@ -285,7 +285,7 @@
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": true
       }
     },
     {
@@ -330,7 +330,7 @@
         "save_version_bump": false,
         "equipment_runtime_effects": false,
         "ai_valuation_behavior": false,
-        "rare_resource_activation": false
+        "rare_resource_activation": true
       }
     }
   ],
@@ -883,10 +883,11 @@
           "scope": "equipped",
           "resource_ids": [
             "gold",
-            "wood"
+            "wood",
+            "embergrain"
           ],
           "cadence": "daily",
-          "public_summary": "Adds daily common-resource income from public route work."
+          "public_summary": "Adds daily gold, wood, and Embergrain income from public route work."
         }
       ],
       "risk": {
@@ -895,11 +896,12 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Embercourt-aligned toll ring for road income and town support.",
+        "summary": "Embercourt-aligned toll ring for road, Embergrain, and town income.",
         "icon_id": "artifact_tollstone_ring_placeholder",
         "effect_tags": [
           "economy",
           "route",
+          "embergrain",
           "embercourt"
         ],
         "comparison_priority": [
@@ -911,6 +913,7 @@
         "value_drivers": [
           "road_income",
           "wood_shortage",
+          "rare_resource_income",
           "town_build_support"
         ],
         "preferred_hero_roles": [
@@ -937,7 +940,8 @@
       "bonuses": {
         "daily_income": {
           "gold": 80,
-          "wood": 1
+          "wood": 1,
+          "embergrain": 1
         }
       }
     },
@@ -951,7 +955,8 @@
       "roles": [
         "combat",
         "morale",
-        "magic"
+        "magic",
+        "economy"
       ],
       "accord_affinity": "mire",
       "faction_affinity": [
@@ -980,6 +985,15 @@
           "scope": "equipped",
           "stat": "battle_initiative",
           "public_summary": "Improves initiative command."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "peatwax"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Peatwax each day."
         }
       ],
       "risk": {
@@ -988,16 +1002,18 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Mireclaw-aligned bead string for harrying tempo and attack command.",
+        "summary": "Mireclaw-aligned bead string for harrying tempo, attack command, and Peatwax income.",
         "icon_id": "artifact_mudglass_beads_placeholder",
         "effect_tags": [
           "combat",
           "initiative",
+          "peatwax",
           "mireclaw"
         ],
         "comparison_priority": [
           "battle_attack",
           "battle_initiative",
+          "daily_income",
           "faction_affinity"
         ]
       },
@@ -1005,6 +1021,7 @@
         "value_drivers": [
           "frontline_attack",
           "initiative_tempo",
+          "rare_resource_income",
           "wounded_prey_setup"
         ],
         "preferred_hero_roles": [
@@ -1030,7 +1047,10 @@
       "description": "Opaque beads hardened in blackwater channels. They click like teeth when a wounded route is ready to close.",
       "bonuses": {
         "battle_attack": 1,
-        "battle_initiative": 1
+        "battle_initiative": 1,
+        "daily_income": {
+          "peatwax": 1
+        }
       }
     },
     {
@@ -1043,7 +1063,8 @@
       "roles": [
         "magic",
         "scouting",
-        "resistance"
+        "resistance",
+        "economy"
       ],
       "accord_affinity": "lens",
       "faction_affinity": [
@@ -1090,6 +1111,15 @@
           "scope": "equipped",
           "stat": "battle_school_resistance_pct:lens",
           "public_summary": "Improves resistance to Lens school magic."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "aetherglass"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Aetherglass each day."
         }
       ],
       "risk": {
@@ -1098,18 +1128,20 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Sunvault-aligned tuning tool for calibrated sight, defensive command, and spell resistance.",
+        "summary": "Sunvault-aligned tuning tool for calibrated sight, spell resistance, and Aetherglass income.",
         "icon_id": "artifact_tuning_fork_placeholder",
         "effect_tags": [
           "scouting",
           "defense",
           "sunvault",
           "resistance",
-          "countermagic"
+          "countermagic",
+          "aetherglass"
         ],
         "comparison_priority": [
           "scouting_radius",
           "battle_defense",
+          "daily_income",
           "faction_affinity",
           "battle_spell_resistance_pct",
           "battle_control_resistance_pct",
@@ -1120,6 +1152,7 @@
         "value_drivers": [
           "calibrated_scouting",
           "frontline_survival",
+          "rare_resource_income",
           "lens_spell_support"
         ],
         "preferred_hero_roles": [
@@ -1150,6 +1183,9 @@
         "battle_control_resistance_pct": 8,
         "battle_school_resistance_pct": {
           "lens": 10
+        },
+        "daily_income": {
+          "aetherglass": 1
         }
       }
     },
@@ -1163,7 +1199,8 @@
       "roles": [
         "movement",
         "route",
-        "recruitment"
+        "recruitment",
+        "economy"
       ],
       "accord_affinity": "root",
       "faction_affinity": [
@@ -1191,10 +1228,11 @@
           "bonus_type": "resource_income",
           "scope": "equipped",
           "resource_ids": [
-            "wood"
+            "wood",
+            "verdant_grafts"
           ],
           "cadence": "daily",
-          "public_summary": "Adds daily wood from careful graft tending."
+          "public_summary": "Adds daily wood and Verdant Grafts from careful graft tending."
         }
       ],
       "risk": {
@@ -1203,11 +1241,12 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Thornwake-aligned graft knot for living routes and wood support.",
+        "summary": "Thornwake-aligned graft knot for living routes, wood, and Verdant Grafts.",
         "icon_id": "artifact_living_knot_placeholder",
         "effect_tags": [
           "movement",
           "wood",
+          "verdant_grafts",
           "thornwake"
         ],
         "comparison_priority": [
@@ -1220,6 +1259,7 @@
         "value_drivers": [
           "root_route_tempo",
           "wood_shortage",
+          "rare_resource_income",
           "recovery_loop_support"
         ],
         "preferred_hero_roles": [
@@ -1246,7 +1286,8 @@
       "bonuses": {
         "overworld_movement": 1,
         "daily_income": {
-          "wood": 1
+          "wood": 1,
+          "verdant_grafts": 1
         }
       }
     },
@@ -1260,7 +1301,8 @@
       "roles": [
         "defense",
         "combat",
-        "magic"
+        "magic",
+        "economy"
       ],
       "accord_affinity": "furnace",
       "faction_affinity": [
@@ -1289,6 +1331,15 @@
           "scope": "equipped",
           "stat": "battle_initiative",
           "public_summary": "Improves pressure-window timing."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "brass_scrip"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Brass Scrip each day."
         }
       ],
       "risk": {
@@ -1297,16 +1348,18 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Brasshollow-aligned gauge relic for armor timing and command tempo.",
+        "summary": "Brasshollow-aligned gauge relic for armor timing, command tempo, and Brass Scrip income.",
         "icon_id": "artifact_pressure_gauge_placeholder",
         "effect_tags": [
           "defense",
           "initiative",
+          "brass_scrip",
           "brasshollow"
         ],
         "comparison_priority": [
           "battle_defense",
           "battle_initiative",
+          "daily_income",
           "faction_affinity"
         ]
       },
@@ -1314,6 +1367,7 @@
         "value_drivers": [
           "frontline_survival",
           "initiative_tempo",
+          "rare_resource_income",
           "furnace_risk_support"
         ],
         "preferred_hero_roles": [
@@ -1339,7 +1393,10 @@
       "description": "A sealed gauge carried like a chapel icon. Its needle climbs before armor crews admit the heat is dangerous.",
       "bonuses": {
         "battle_defense": 1,
-        "battle_initiative": 1
+        "battle_initiative": 1,
+        "daily_income": {
+          "brass_scrip": 1
+        }
       }
     },
     {
@@ -1352,7 +1409,8 @@
       "roles": [
         "scouting",
         "route",
-        "reward_modifier"
+        "reward_modifier",
+        "economy"
       ],
       "accord_affinity": "veil",
       "faction_affinity": [
@@ -1375,6 +1433,15 @@
           "scope": "equipped",
           "stat": "scouting_radius",
           "public_summary": "Extends fog-route scouting."
+        },
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "memory_salt"
+          ],
+          "cadence": "daily",
+          "public_summary": "Provides 1 Memory Salt each day."
         }
       ],
       "risk": {
@@ -1383,15 +1450,17 @@
         "warning_tags": []
       },
       "ui": {
-        "summary": "Veilmourn-aligned compass for fog scouting and salvage-route reads.",
+        "summary": "Veilmourn-aligned compass for fog scouting, salvage routes, and Memory Salt income.",
         "icon_id": "artifact_black_sail_compass_placeholder",
         "effect_tags": [
           "scouting",
           "route",
+          "memory_salt",
           "veilmourn"
         ],
         "comparison_priority": [
           "scouting_radius",
+          "daily_income",
           "faction_affinity"
         ]
       },
@@ -1399,6 +1468,7 @@
         "value_drivers": [
           "fog_route_scouting",
           "salvage_reward_read",
+          "rare_resource_income",
           "hidden_site_reveal"
         ],
         "preferred_hero_roles": [
@@ -1423,7 +1493,10 @@
       },
       "description": "A lacquered ship compass that refuses north but remembers which fog bank last hid a wreck.",
       "bonuses": {
-        "scouting_radius": 2
+        "scouting_radius": 2,
+        "daily_income": {
+          "memory_salt": 1
+        }
       }
     }
   ]

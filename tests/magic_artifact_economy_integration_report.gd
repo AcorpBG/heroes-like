@@ -24,6 +24,7 @@ func _run() -> void:
 				"equipped": {
 					"boots": "artifact_trailsinger_boots",
 					"trinket": "artifact_quarry_tally_rod",
+					"trinket_2": "artifact_tollstone_ring",
 				},
 				"inventory": [],
 			},
@@ -68,14 +69,15 @@ func _run() -> void:
 		_fail("Integration report did not expose artifact spell hook records: %s" % report)
 		return
 	var income: Dictionary = report.get("common_artifact_income", {}) if report.get("common_artifact_income", {}) is Dictionary else {}
-	if int(income.get("gold", 0)) != 120 or int(income.get("ore", 0)) != 1:
+	if int(income.get("gold", 0)) != 200 or int(income.get("wood", 0)) != 1 or int(income.get("ore", 0)) != 1:
 		_fail("Integration report did not preserve common artifact economy income: %s" % report)
 		return
-	if not (report.get("rare_artifact_income", {}) is Dictionary) or not report.get("rare_artifact_income", {}).is_empty():
-		_fail("Integration report activated rare artifact income unexpectedly: %s" % report)
+	var rare_income: Dictionary = report.get("rare_artifact_income", {}) if report.get("rare_artifact_income", {}) is Dictionary else {}
+	if rare_income != {"embergrain": 1}:
+		_fail("Integration report did not preserve Tollstone rare artifact income: %s" % report)
 		return
 	var resource_policy: Dictionary = report.get("resource_policy", {}) if report.get("resource_policy", {}) is Dictionary else {}
-	if String(resource_policy.get("live_cost_mode", "")) != "mana_only" or bool(resource_policy.get("rare_resource_costs_active", true)):
+	if String(resource_policy.get("live_cost_mode", "")) != "mana_only" or bool(resource_policy.get("rare_resource_costs_active", true)) or not bool(resource_policy.get("rare_artifact_income_active", false)):
 		_fail("Integration report did not preserve mana-only rare-resource boundary: %s" % report)
 		return
 	if not _assert_public_payload("integration report", report):
@@ -89,6 +91,7 @@ func _run() -> void:
 		"schema_status": String(report.get("schema_status", "")),
 		"artifact_spell_hook_count": int(report.get("artifact_spell_hook_count", 0)),
 		"common_artifact_income": income,
+		"rare_artifact_income": rare_income,
 		"trailglyph": {
 			"base_mana_cost": int(base_preview.get("mana_cost", 0)),
 			"artifact_mana_cost": int(relic_preview.get("mana_cost", 0)),
@@ -98,7 +101,7 @@ func _run() -> void:
 		},
 		"resource_policy": resource_policy,
 		"caveats": [
-			"This report proves bounded artifact spell-affinity and common-resource economy reporting only; rare-resource costs, market migration, save migration, artifact taxonomy overhaul, and economy rebalance remain outside this slice.",
+			"This report proves artifact spell-affinity and common plus faction rare-resource income reporting while spell costs remain mana-only; market migration, save migration, and economy rebalance remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

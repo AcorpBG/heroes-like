@@ -605,8 +605,6 @@ static func magic_artifact_economy_integration_report(
 		)
 	if matching_artifact_records.is_empty():
 		errors.append("No equipped artifact spell-affinity metadata matched the spell fixture.")
-	if not rare_income.is_empty():
-		errors.append("Artifact income activated rare resources in this bounded integration report.")
 	for record in records:
 		var encoded := JSON.stringify(record).to_lower()
 		for leak_token in ["debug", "score", "internal"]:
@@ -623,6 +621,7 @@ static func magic_artifact_economy_integration_report(
 		"resource_policy": {
 			"live_cost_mode": "mana_only",
 			"common_resources_reported": ["gold", "wood", "ore"],
+			"rare_artifact_income_active": not rare_income.is_empty(),
 			"rare_resource_costs_active": false,
 		},
 		"errors": errors,

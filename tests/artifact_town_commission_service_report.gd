@@ -51,7 +51,7 @@ func _run() -> void:
 			"common_resource_costs": true,
 			"auto_equip": true,
 			"ai_valuation_behavior": false,
-			"rare_resource_activation": false,
+			"rare_resource_activation": true,
 			"save_version_bump": false,
 		},
 	})])

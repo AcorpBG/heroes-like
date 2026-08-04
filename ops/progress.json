@@ -70377,6 +70377,74 @@
       ],
       "notes": "The focused matrix intentionally retains its remaining-validation status because the paused 100-seed eight-week release gate was not run. The measured gain is local and small; multi-second strategic-AI turns remain dominated by pathing, target assignment, raid advancement, reinforcement, and town planning.",
       "remainingWork": "No work remains in this slice. Broader strategic-AI performance and the paused final long-run matrix remain open, and overall game completion is not claimed."
+    },
+    {
+      "id": "artifact-faction-rare-income-runtime-10184",
+      "title": "Faction Artifact Rare-Resource Income",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md"
+      ],
+      "purpose": "Activate a bounded faction-economy consequence on all six existing rare faction relics through live player and strategic-AI income paths.",
+      "implementationTargets": [
+        "content/artifacts.json",
+        "scripts/core/ArtifactRules.gd",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/SpellRules.gd",
+        "tests/artifact_rare_resource_income_runtime_report.gd",
+        "tests/artifact_equip_runtime_effects_report.gd",
+        "tests/artifact_ai_valuation_report.gd",
+        "tests/magic_artifact_economy_integration_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "faction_artifact_rare_income_count": 0,
+        "artifact_runtime_rare_resource_activation": false,
+        "artifact_source_table_rare_resource_activation": false,
+        "normal_market_rare_resource_buying_enabled": false,
+        "save_version": 9
+      },
+      "completionCriteria": [
+        "Each of the six existing rare faction artifacts grants exactly one matching faction rare resource per day while equipped or captured by a strategic-AI empire",
+        "Artifact effect, comparison, runtime, and AI valuation surfaces expose rare income without leaking internal score fields",
+        "Live artifact source tables that can grant a rare-income relic declare activation while the common pickup-only table remains inactive",
+        "Normal markets still cannot buy rare resources, spell costs remain mana-only, existing artifact bonuses and source gates remain intact, and save version 9 remains unchanged"
+      ],
+      "nonGoals": [
+        "new artifact ids, new source placements, rare-resource market buying, rare-resource spell costs, broad economy retuning, save migration, Native RMG, or final artifact catalog breadth",
+        "code signing, native Windows hardware certification, release-channel publication, or overall release completion"
+      ],
+      "startedAt": "2026-08-04T22:00:32Z",
+      "updatedAt": "2026-08-04T22:14:13Z",
+      "completedAt": "2026-08-04T22:14:13Z",
+      "result": {
+        "faction_artifact_rare_income_count": 6,
+        "player_end_turn_case_count": 6,
+        "strategic_ai_treasury_case_count": 6,
+        "rare_capable_source_table_count": 5,
+        "common_pickup_rare_resource_activation": false,
+        "normal_market_rare_resource_buying_enabled": false,
+        "spell_cost_mode": "mana_only",
+        "save_version": 9
+      },
+      "validation": [
+        "artifact_rare_resource_income_runtime_report passed six exact player end-turn and six strategic-AI captured treasury cases with public summary and valuation coverage",
+        "artifact equipment, magic/economy integration, AI valuation, source reward, taxonomy, and set/faction reports passed",
+        "pickup, guarded-site, shrine, dwelling, town commission, and battle-salvage source execution reports passed",
+        "runtime_market_cap_persistence_report passed with normal market orders limited to wood and ore",
+        "core_systems_regression_smoke passed",
+        "validate_repo.py passed",
+        "Python compile, content/progress JSON parse, and git diff checks passed"
+      ],
+      "notes": "The six mappings add one bounded daily faction resource without changing artifact ids, source placements, normal-market access, spell costs, save schema, or existing non-income bonuses. Artifact balance and broader catalog breadth were not retuned by this slice.",
+      "remainingWork": "No work remains in this slice. Broader artifact catalog breadth, economy balance, remaining faction balance, and overall game completion remain open."
     }
   ],
   "project": "heroes-like",

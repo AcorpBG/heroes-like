@@ -50,6 +50,9 @@ func _run() -> void:
 			_fail("Artifact runtime report did not mark %s live: %s" % [context_key, runtime_report])
 			return
 	var aggregate: Dictionary = runtime_report.get("aggregate_bonuses", {}) if runtime_report.get("aggregate_bonuses", {}) is Dictionary else {}
+	if not (aggregate.get("daily_rare_income", {}) is Dictionary) or not aggregate.get("daily_rare_income", {}).is_empty():
+		_fail("Common artifact fixture unexpectedly produced rare daily income: %s" % runtime_report)
+		return
 	if int(aggregate.get("overworld_movement", 0)) != 2 or int(aggregate.get("scouting_radius", 0)) != 1:
 		_fail("Artifact runtime report did not aggregate adventure bonuses: %s" % runtime_report)
 		return
@@ -62,6 +65,10 @@ func _run() -> void:
 		return
 	if int(aggregate.get("spell_modifier_count", 0)) != 1:
 		_fail("Artifact runtime report did not aggregate spell modifiers: %s" % runtime_report)
+		return
+	var runtime_policy: Dictionary = runtime_report.get("runtime_policy", {}) if runtime_report.get("runtime_policy", {}) is Dictionary else {}
+	if not bool(runtime_policy.get("rare_resource_activation", false)):
+		_fail("Artifact runtime report did not declare live rare-resource income support: %s" % runtime_report)
 		return
 	var slot_surface: Dictionary = runtime_report.get("slot_surface", {}) if runtime_report.get("slot_surface", {}) is Dictionary else {}
 	if int(slot_surface.get("active_trinket_slots", 0)) != 2 or not bool(slot_surface.get("second_trinket_slot_live", false)):
@@ -138,9 +145,9 @@ func _run() -> void:
 			"trailglyph_movement_delta": int(artifact_preview.get("movement_after", 0)) - int(base_preview.get("movement_after", 0)),
 		},
 		"slot_surface": slot_surface,
-		"runtime_policy": runtime_report.get("runtime_policy", {}),
+		"runtime_policy": runtime_policy,
 		"caveats": [
-			"This report proves equipped artifact effects on current equipment management, adventure, battle, economy, and spell hooks; source reward execution, save-version migration, rare-resource activation, and broad UI overhaul remain outside this slice.",
+			"This common-artifact fixture proves equipped effects on current equipment management, adventure, battle, economy, and spell hooks; the faction rare-income matrix is covered by its focused runtime report.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
