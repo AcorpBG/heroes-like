@@ -2358,6 +2358,24 @@ static func _ability_damage_modifier(
 	var shielding := _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+	if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", false)) or not shielding.is_empty()):
+		var screen_reduction_pct := int(_side_max_ability_float(
+			battle,
+			String(defender.get("side", "")),
+			"shielding",
+			"ally_ranged_melee_damage_reduction_pct",
+			0.0
+		))
+		if _has_ability(attacker, "brace") or _has_ability(attacker, "reach"):
+			screen_reduction_pct += int(_side_max_ability_float(
+				battle,
+				String(defender.get("side", "")),
+				"shielding",
+				"linebreaker_screen_bonus_pct",
+				0.0
+			))
+		screen_reduction_pct = clampi(screen_reduction_pct, 0, 75)
+		modifier *= 1.0 - (float(screen_reduction_pct) / 100.0)
 	var attacking_shielding := _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))

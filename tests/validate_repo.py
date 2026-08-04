@@ -10598,6 +10598,12 @@ def validate_content(errors: list[str]) -> None:
                         ensure(float(ability.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding engaged_damage_multiplier must be > 1")
                     if "harried_damage_multiplier" in ability:
                         ensure(float(ability.get("harried_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding harried_damage_multiplier must be > 1")
+                    if "ally_ranged_melee_damage_reduction_pct" in ability:
+                        reduction_pct = int(ability.get("ally_ranged_melee_damage_reduction_pct", 0))
+                        ensure(0 <= reduction_pct <= 50, errors, f"Unit {unit_id} shielding ally_ranged_melee_damage_reduction_pct must be between 0 and 50")
+                    if "linebreaker_screen_bonus_pct" in ability:
+                        linebreaker_bonus_pct = int(ability.get("linebreaker_screen_bonus_pct", 0))
+                        ensure(0 < linebreaker_bonus_pct <= 50, errors, f"Unit {unit_id} shielding linebreaker_screen_bonus_pct must be between 1 and 50")
                 elif ability_id == "volley":
                     ensure(float(ability.get("damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley must define damage_multiplier > 1")
                     ensure(int(ability.get("min_distance", 0)) > 0, errors, f"Unit {unit_id} volley must define min_distance > 0")
@@ -10708,6 +10714,11 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(bog_brute_shielding.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, "Bog Brute shielding must keep its engaged damage payoff authored")
     ensure(float(bog_brute_shielding.get("harried_damage_multiplier", 0.0)) > 1.0, errors, "Bog Brute shielding must keep its harried-target payoff authored")
     ensure(int(bog_brute_shielding.get("cohesion_hold_bonus", 0)) > 0, errors, "Bog Brute shielding must keep its cohesion-hold payoff authored")
+
+    furnace_pavis = units.get("unit_brasshollow_furnace_pavis_teams", {})
+    furnace_pavis_shielding = next((ability for ability in furnace_pavis.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    ensure(float(furnace_pavis_shielding.get("ranged_damage_multiplier", 1.0)) < 1.0, errors, "Furnace Pavis Teams must blunt incoming ranged damage")
+    ensure(int(furnace_pavis_shielding.get("linebreaker_screen_bonus_pct", 0)) > 0, errors, "Furnace Pavis Teams must strengthen their engine screen against Brace and Reach line breakers")
 
     citadel_pikeward = units.get("unit_citadel_pikeward", {})
     pikeward_screen = next((ability for ability in citadel_pikeward.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "formation_guard"), {})
