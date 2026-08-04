@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the production Embercourt high-tier charter ladder through shared live behavior: Ash-Writ Formation, one-use Beacon Lane Citation, supported Sluicefire Commitment, and Charter Lock. The accepted 100-seed matrix improves to 33 outliers / 262.5 severity while keeping 12 severe rows and 74.5 percent maximum dominance; faction balance and overall release completion remain open.",
+  "currentNotes": "Completed the production Thornwake capstone pair through shared live behavior: Highroot Graft Salvo rewards existing bramble pressure and Worldroot Rampart directly blunts ranged attrition without changing global cohesion. The accepted 100-seed pair/week summaries remain exact at 33 outliers / 262.5 severity / 12 severe rows / 74.5 percent maximum dominance / 3.07 side bias; faction balance and overall release completion remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-embercourt-charter-ladder-identity-10184",
-  "currentSliceId": "combat-embercourt-charter-ladder-identity-10184",
-  "currentSliceNotes": "Implemented and validated all four source-authored tier-4 through tier-7 Embercourt combat roles through shared live ability contracts while improving the aggregate faction matrix.",
+  "currentSlice": "combat-thornwake-highroot-capstone-identity-10184",
+  "currentSliceId": "combat-thornwake-highroot-capstone-identity-10184",
+  "currentSliceNotes": "Implemented and validated source-authored Graft Matriarch and Worldroot Bastion combat roles through shared live ability contracts with exact aggregate faction-matrix parity.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Charter-Ladder Identity",
-  "currentSliceUpdatedAt": "2026-08-04T05:57:42Z",
+  "currentSliceTitle": "Thornwake Highroot Capstone Identity",
+  "currentSliceUpdatedAt": "2026-08-04T06:38:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69350,6 +69350,86 @@
         "residual": "balance_regression_report_suite remains warning-only on its pre-existing unsupported generated-map save/replay fixture; all suite sections have zero failures."
       },
       "notes": "The accepted first candidate uses only shared ability families and conservative triggers. It improves two aggregate outliers while retaining the source-defined formation, support, supported-shock, and retaliation identities without changing raw stats, economy, scenarios, strategic AI, saves, or Native RMG.",
+      "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
+    },
+    {
+      "id": "combat-thornwake-highroot-capstone-identity-10184",
+      "title": "Thornwake Highroot Capstone Identity",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "baseline": {
+        "thornwake_tier_6_to_7_unit_count": 2,
+        "thornwake_tier_6_to_7_specialized_behavior_count": 0,
+        "balance_outlier_count": 33,
+        "balance_severity": 262.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "max_side_bias_pct": 3.07,
+        "week_4_thornwake_over_sunvault_pct": 51.0,
+        "week_4_veilmourn_over_thornwake_pct": 56.5,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Graft Matriarchs and Worldroot Bastion each own source-aligned authored behavior with focused live runtime consequences",
+        "Live combat, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume shared behavior fields",
+        "The full all-live matrix leaves week 1 exact and does not increase outlier count, severity, severe-row count, maximum dominance, or maximum side bias",
+        "Focused ability, autoplay, town-development, core, parse, repository, JSON, Python syntax, and diff validation pass"
+      ],
+      "nonGoals": [
+        "Thornwake tier-1 through tier-5 changes or faction-only combat code",
+        "raw unit-stat, growth, cost, building, spell, hero, scenario, benchmark-threshold, strategic-AI, or Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T06:00:17Z",
+      "updatedAt": "2026-08-04T06:38:48Z",
+      "completedAt": "2026-08-04T06:38:48Z",
+      "implemented": {
+        "graft_matriarchs": "Highroot Graft Salvo: open-lane ranged pressure with stronger rooted/disrupted payoff",
+        "worldroot_bastion": "Worldroot Rampart: direct ranged attrition protection without a global cohesion tier",
+        "thornwake_tier_1_to_5_changed": false,
+        "raw_unit_stats_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "ability_instance_count": 94,
+        "ability_runtime_consequence_count": 94,
+        "new_thornwake_player_summary_count": 2,
+        "highroot_open_lane_modifier": 1.01,
+        "worldroot_incoming_ranged_modifier": 0.97,
+        "pair_summaries_exact": true,
+        "week_summaries_exact": true,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 33,
+        "balance_severity": 262.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "max_side_bias_pct": 3.07,
+        "structural_failure_count": 0,
+        "week_1_exact": true
+      },
+      "validation": {
+        "status": "passed_with_unrelated_warning",
+        "commands": [
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/balance_regression_report_suite.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --editor --path . --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "git diff --check"
+        ],
+        "residual": "balance_regression_report_suite remains warning-only on its pre-existing unsupported generated-map save/replay fixture; all suite sections have zero failures."
+      },
+      "calibration": "Rejected a one-use Matriarch opening mark because it raised week-3 side bias from 3.07 to 4.47. Replacing the mark did not remove the bias; removing Worldroot Brace did, proving the defend-order cause. A subsequent Shielding cohesion hold added one outlier and seven severity points by crossing integer cohesion thresholds, so the accepted Rampart uses direct ranged protection only.",
+      "notes": "The source-defined Thornwake tier-6 and tier-7 capstones are the only upper-ladder pair with no abilities after the existing Barkmantle and Stag-Knot roles. This slice adds only shared contracts and requires full-matrix non-regression. The first Matriarch one-use mark candidate improved aggregate outliers and severity but increased week-3 side bias from 3.07 to 4.47 points; raising its target tier and replacing it with persistent Volley pressure left that bias unchanged, isolating the order distortion to Worldroot Brace/defend preference. Removing Brace fixed side bias, but Shielding cohesion hold crossed integer cohesion thresholds and added one outlier plus seven severity points, so the global cohesion bonus was rejected in favor of direct ranged protection only.",
       "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
     }
   ],
