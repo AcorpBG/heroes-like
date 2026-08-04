@@ -1061,6 +1061,23 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 6,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Calibration Cant",
+          "description": "The choir fixes one veteran line in harmonic measure, exposing its defense and cohesion to the array for the next exchange.",
+          "status_id": "status_harried",
+          "status_label": "Calibrated",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 6
+        }
+      ],
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {
@@ -1090,7 +1107,7 @@
       },
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 5,
-      "control_resistance_pct": 0,
+      "control_resistance_pct": 15,
       "spell_school_resistance_pct": {
         "lens": 10
       },
@@ -1117,6 +1134,15 @@
         "wood": 2,
         "ore": 3
       },
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Aurora Facet Wall",
+          "description": "Overlapping prism faces blunt incoming batteries and keep the bastion line coherent without abandoning its close relay front.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.92
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 10,
       "control_resistance_pct": 5,
@@ -1147,6 +1173,21 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 4,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Daybreak Firing Solution",
+          "description": "The colossus resolves a prepared firing solution through open lanes, intensifying fire against disrupted targets and behind a held line.",
+          "damage_multiplier": 1.08,
+          "min_distance": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.08,
+          "ally_defending_multiplier": 1.05
+        }
+      ],
       "spell_resistance_pct": 15,
       "control_resistance_pct": 10,
       "spell_school_resistance_pct": {

@@ -64,6 +64,7 @@ func _validate_unit(unit: Dictionary) -> void:
 		return
 	var ability_summaries := []
 	var abilities: Array = unit.get("abilities", []) if unit.get("abilities", []) is Array else []
+	var player_summary := BattleRulesScript._stack_ability_summary(_stack_for_unit(unit_id, "player", 0)) if not abilities.is_empty() else ""
 	for ability in abilities:
 		if not (ability is Dictionary):
 			_error("Unit %s has non-dictionary ability payload." % unit_id)
@@ -75,6 +76,10 @@ func _validate_unit(unit: Dictionary) -> void:
 		if ability_id not in REQUIRED_ABILITY_IDS:
 			_error("Unit %s uses unsupported ability %s." % [unit_id, ability_id])
 			continue
+		var ability_name := String(ability.get("name", ability_id)).strip_edges()
+		var player_summary_visible := ability_name != "" and player_summary.contains(ability_name)
+		if not player_summary_visible:
+			_error("Unit %s ability %s is missing from the player-facing stack summary." % [unit_id, ability_id])
 		_report["ability_instance_count"] = int(_report["ability_instance_count"]) + 1
 		_report["ability_family_counts"][ability_id] = int(_report["ability_family_counts"].get(ability_id, 0)) + 1
 		var consequence := _runtime_consequence_for_ability(unit_id, ability_id)
@@ -85,12 +90,14 @@ func _validate_unit(unit: Dictionary) -> void:
 			_error("Unit %s ability %s has no proved runtime consequence: %s." % [unit_id, ability_id, String(consequence.get("reason", ""))])
 		ability_summaries.append({
 			"ability_id": ability_id,
+			"player_summary_visible": player_summary_visible,
 			"runtime_consequence": consequence,
 		})
 	_report["units"].append({
 		"unit_id": unit_id,
 		"name": String(unit.get("name", unit_id)),
 		"ability_count": abilities.size(),
+		"player_summary": player_summary,
 		"abilities": ability_summaries,
 	})
 
