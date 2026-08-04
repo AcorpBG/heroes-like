@@ -31,6 +31,7 @@ const LIVE_STOCKPILE_RESOURCE_KEYS := [
 const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]
 const MARKET_BASE_BUY_CAP := 6
 const MARKET_BASE_SELL_CAP := 8
+const ENCOUNTER_ARMY_DETAIL_GROUP_LIMIT := 4
 
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
@@ -6539,7 +6540,7 @@ static func _encounter_army_unit_summary(army: Dictionary) -> String:
 		var unit_id := String(stack.get("unit_id", ""))
 		var unit := ContentService.get_unit(unit_id)
 		labels.append("%s x%d" % [String(unit.get("name", unit_id)), count])
-		if labels.size() >= 3:
+		if labels.size() >= ENCOUNTER_ARMY_DETAIL_GROUP_LIMIT:
 			break
 	var total_groups := int(_army_totals(army).get("groups", 0))
 	if total_groups > labels.size():

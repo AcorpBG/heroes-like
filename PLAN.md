@@ -1465,6 +1465,30 @@ Non-goals:
 - do not tune unrelated unit stats, growth, spells, heroes, towns, scenarios, strategic AI, or Native RMG;
 - do not claim final faction balance or overall release completion.
 
+## Overworld Hostile Full-Roster Inspection
+
+id: `ux-overworld-hostile-full-roster-inspection-10184`
+
+Completed Phase 5 player-comprehension implementation slice. Exact-known hostile
+contacts can contain four live groups, while the detailed selected-contact
+surface previously named only three and collapsed the fourth to `+1 group`.
+
+Implementation target:
+- expose all four authored hostile groups, including unit names and counts, on the detailed selected-contact inspection surface;
+- keep compact contact cues totals-only and preserve fog/hidden-information boundaries;
+- update the stale Ghoul Grove visual-smoke expectation to its current 27-troop, four-group authored placement and require the fourth group by name;
+- preserve encounter content, combat balance, saves, strategic AI, and Native RMG behavior.
+
+Completion criteria:
+- River Pass Ghoul Grove selected-contact inspection names Mudglass Slingers instead of collapsing the stack to `+1 group`, while hover remains a totals-only compact cue;
+- the overworld visual smoke passes through its terrain, fog, compact-layout, and hostile-contact checks;
+- core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add a new panel or expand compact map cues;
+- do not reveal armies hidden by fog or non-exact encounter policies;
+- do not tune encounter armies, rewards, balance, saves, strategic AI, or Native RMG.
+
 ## Slice Status Model
 
 Each executable slice should map to one `ops/progress.json` entry with:
