@@ -958,8 +958,9 @@
             "retaliation": -5
           },
           "uses_per_battle": 1,
-          "available_from_round": 2,
-          "target_min_tier": 6,
+          "available_from_round": 1,
+          "target_min_tier": 4,
+          "ai_target_priority_bonus": 1.0,
           "wounded_threshold_ratio": 0.5,
           "wounded_damage_multiplier": 1.02
         }

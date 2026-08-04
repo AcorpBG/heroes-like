@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed and validated atomic Map Editor Save Copy with exact package-object/player-contract preservation and non-overwriting typed output. Overall game completion remains open.",
+  "currentNotes": "Completed and validated the live Sporewake opening veteran-line correction. The full faction matrix improved to 31 outliers / 204.5 severity / 69.5 percent maximum dominance; overall game completion remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "map-editor-package-save-copy-10184",
-  "currentSliceId": "map-editor-package-save-copy-10184",
-  "currentSliceNotes": "Save Copy writes unique typed pairs, reloads/adopts a clean editor-only baseline, preserves opaque object fields and explicit player slots, excludes copies from skirmish indexing, and leaves source/authored files unchanged.",
+  "currentSlice": "combat-mireclaw-sporewake-veteran-line-10184",
+  "currentSliceId": "combat-mireclaw-sporewake-veteran-line-10184",
+  "currentSliceNotes": "Rot Cant now opens on tier-four-or-higher lines with 1.0 authored tactical priority and remains one use per battle. Week-two Brasshollow-Mireclaw moved from 74-26 Brasshollow dominance to 50-50; the full matrix improved to 31 / 204.5 / 69.5 with zero structural failures.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Package Save Copy",
-  "currentSliceUpdatedAt": "2026-08-04T16:03:47Z",
+  "currentSliceTitle": "Mireclaw Sporewake Veteran-Line Pressure",
+  "currentSliceUpdatedAt": "2026-08-04T16:54:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69791,6 +69791,44 @@
       "updatedAt": "2026-08-04T16:03:47Z",
       "notes": "Map Editor Save Copy now converts validated package-backed drafts, writes unique non-overwriting .amap/.ascenario pairs, reloads and validates them, and adopts each result as a clean editor-only baseline. Raw source-object records are retained so runtime normalization cannot erase opaque editable fields; focused proof preserves 21 objects, two explicit player slots, terrain/road/start edits, source bytes, and authored JSON, while failed validation leaves no output and skirmish indexing stays empty. Broad smoke also exposed and fixed duplicate accessibility signal connections on control re-entry. Linux and Windows native builds, package conversion/browser/editor/accessibility/core proofs, project parse, repository validation, Python/JSON, and diff checks pass.",
       "remainingWork": "No work remains in this slice. Authored JSON in-place writeback and overall game completion remain open."
+    },
+    {
+      "id": "combat-mireclaw-sporewake-veteran-line-10184",
+      "title": "Mireclaw Sporewake Veteran-Line Pressure",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Activate Sporewake Chanters' bounded tier-five support identity when they first enter the week-two army instead of requiring an unavailable tier-six target and losing its only surviving action to a commander spell.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Sporewake Rot Cant can target tier-four-or-higher veteran lines on its opening shot while remaining limited to one use per battle",
+        "Focused live runtime proof covers the week-two target floor, lower-tier rejection, tactical-AI preference, status application, and one-use bound",
+        "The all-live 100-seed four-week faction matrix improves from 33 outliers / 233.5 severity / 74.0 percent maximum dominance without structural regressions"
+      ],
+      "nonGoals": [
+        "broad faction stat rewrites or unrelated ability tuning",
+        "strategic AI, authored scenario roster, or Native RMG changes",
+        "overall faction-balance or release-completion claims"
+      ],
+      "startedAt": "2026-08-04T16:18:14Z",
+      "completedAt": "2026-08-04T16:54:55Z",
+      "updatedAt": "2026-08-04T16:54:55Z",
+      "notes": "Sporewake Rot Cant now opens against tier-four-or-higher veteran lines with a narrow 1.0 authored tactical priority, survives BattleRules normalization, and remains one use per battle. Focused runtime proof passes all 96 authored ability instances and sampled week-two Brasshollow fights record the Rot Cant use before the Chanter stack dies. The all-live 100-seed four-week matrix improves from 33 outliers / 233.5 severity / 10 rows at or above 65 percent / 74.0 percent maximum dominance to 31 / 204.5 / 8 / 69.5, with zero structural failures; week-two Brasshollow-Mireclaw improves from 74-26 Brasshollow dominance to 50-50. Authored autoplay consequence and balance gates, core regression, Godot editor parse, repository validation, Python syntax, JSON, and diff checks pass.",
+      "remainingWork": "No work remains in this slice. The matrix remains needs_tuning at 31 outliers / 204.5 severity / 69.5 percent maximum dominance, and overall game completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -69801,7 +69839,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 233.5 severity / 74.0 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 31 outliers / 204.5 severity / 69.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [

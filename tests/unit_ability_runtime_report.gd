@@ -239,10 +239,10 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 	var opening_battle := _battle_for_stacks([opening_attacker, opening_target], [], "plains", 1)
 	var opening_messages := BattleRulesScript._apply_attack_ability_effects(opening_battle, opening_attacker, opening_target, true, 1)
 	var opening_updated := BattleRulesScript._get_stack_by_id(opening_battle, String(opening_target.get("battle_id", "")))
-	var opening_blocked := (
-		not SpellRulesScript.has_effect_id(opening_updated, opening_battle, status_id)
-		and int(opening_attacker.get("ability_uses", {}).get("rot_cant", 0)) == 0
-		and opening_messages.is_empty()
+	var opening_applied := (
+		SpellRulesScript.has_effect_id(opening_updated, opening_battle, status_id)
+		and int(opening_attacker.get("ability_uses", {}).get("rot_cant", 0)) == 1
+		and not opening_messages.is_empty()
 	)
 
 	attacker = _stack_for_unit(unit_id, "player", 0)
@@ -268,10 +268,14 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 	var stripped := _without_ability(attacker, "rot_cant")
 	var damage_with := BattleRulesScript._ability_damage_modifier(attacker, wounded, battle, true, false, 1)
 	var damage_without := BattleRulesScript._ability_damage_modifier(stripped, wounded, battle, true, false, 1)
+	var priority_bonus := float(rot_cant.get("ai_target_priority_bonus", 0.0))
 	var ok := (
-		opening_blocked
+		min_tier == 4
+		and int(rot_cant.get("available_from_round", 0)) == 1
+		and opening_applied
 		and low_blocked
-		and eligible_score > low_score
+		and priority_bonus > 0.0
+		and eligible_score - low_score >= priority_bonus
 		and status_applied
 		and uses_recorded == 1
 		and second_blocked
@@ -282,8 +286,11 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 	return {
 		"ok": ok,
 		"probe": "rot_cant_veteran_gate_bounded_status_wounded_damage_and_ai",
+		"target_min_tier": min_tier,
+		"week_two_veteran_target_proven": min_tier == 4,
+		"ai_target_priority_bonus": priority_bonus,
 		"low_tier_blocked": low_blocked,
-		"opening_round_blocked": opening_blocked,
+		"opening_round_applied": opening_applied,
 		"low_tier_score": low_score,
 		"eligible_score": eligible_score,
 		"status_applied": status_applied,
@@ -292,7 +299,7 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 		"wounded_modifier_with": damage_with,
 		"wounded_modifier_without": damage_without,
 		"preview": preview,
-		"reason": "" if ok else "rot cant did not prove its veteran gate, use bound, status, wounded pressure, and AI contract",
+		"reason": "" if ok else "rot cant did not prove its week-two veteran gate, use bound, status, wounded pressure, and AI contract",
 	}
 
 func _probe_brace(unit_id: String) -> Dictionary:
