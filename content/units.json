@@ -637,6 +637,21 @@
         "gold": 260,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Ash-Writ Formation",
+          "description": "Bailiffs seal the compact line under civic writ, steadying their brace and citing the first attacker out of formation on the counterstroke.",
+          "retaliation_multiplier": 1.06,
+          "defending_cohesion_bonus": 1,
+          "status_id": "status_staggered",
+          "status_label": "Cited",
+          "duration_rounds": 1,
+          "modifiers": {
+            "cohesion": -1
+          }
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
@@ -666,6 +681,22 @@
         "wood": 1,
         "ore": 1
       },
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Beacon Lane Citation",
+          "description": "The lector names one veteran breach in beacon law, slowing that line's response long enough for the compact formation to answer.",
+          "status_id": "status_harried",
+          "status_label": "Lane-Cited",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 4
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "shots": 7,
       "spell_resistance_pct": 5,
@@ -695,6 +726,25 @@
         "gold": 700,
         "ore": 2
       },
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Sluicefire Commitment",
+          "description": "The lindworm commits through a prepared breach, accelerating into wounded or disrupted prey but gaining no clean advantage without support.",
+          "wounded_threshold_ratio": 0.5,
+          "wounded_damage_multiplier": 1.04,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.04,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 1,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 10,
       "control_resistance_pct": 5,
@@ -724,6 +774,22 @@
         "wood": 2,
         "ore": 3
       },
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Charter Lock",
+          "description": "The walking charter anchors the declared zone, hardening its held line and staggering attackers that refuse to break commitment.",
+          "retaliation_multiplier": 1.08,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Charter-Bound",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "spell_resistance_pct": 15,
       "control_resistance_pct": 10,
