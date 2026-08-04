@@ -6,7 +6,7 @@ Slice: `packaged-runtime-issue-log-smoke-20260523-10184`
 
 This slice adds a package-safe runtime issue reporting baseline. It registers `RuntimeIssueLog` as an autoload, writes sanitized issue records to `user://debug/heroes_runtime_issues.jsonl`, writes the latest issue snapshot to `user://debug/heroes_last_runtime_issue.json`, and proves the service works from a focused scene launched out of an exported PCK.
 
-This does not claim native process crash capture, remote telemetry upload, binary export readiness, clean-machine smoke coverage, or release readiness. It is a local packaged-runtime error-reporting foundation that future crash handlers and release builds can build on.
+This specific v1 smoke does not claim native process crash capture, remote telemetry upload, binary export readiness, clean-machine smoke coverage, or release readiness. Native-process abnormal-exit recovery is proved separately by `tests/packaged_native_process_crash_recovery_smoke.py` and `docs/packaged-native-process-crash-recovery-smoke-report.md`.
 
 ## Implemented Gate
 
@@ -29,4 +29,4 @@ godot --headless --main-pack .artifacts/packaged_runtime_issue_log_smoke/heroes-
 python3 tests/packaged_runtime_issue_log_smoke.py
 ```
 
-Future release packaging still needs native crash capture policy, executable smoke tests on Linux and Windows, clean-machine validation, installer/export preset hardening, and final support workflow decisions.
+Future release packaging still needs native minidump/symbol policy, clean-machine validation, native Windows hardware certification, signing, release-channel integration, and final support workflow decisions.

@@ -42,4 +42,4 @@ Latest local result on 2026-05-23:
 - `libaurelion_map_persistence.linux.template_release.x86_64.so`: exported beside the executable.
 - Local headless binary boot returned 0 with no fatal boot patterns.
 
-Future release packaging still needs installer/export-preset hardening, clean-machine validation on Linux and Windows, settings persistence verification under installed builds, native process crash capture, code signing, package signing, and release-channel packaging.
+Future release packaging still needs clean-machine validation on Linux and Windows, native Windows hardware certification, native minidump/symbol policy, code signing, package signing, and release-channel packaging. Bounded abnormal-exit recovery into the local support bundle is now covered separately.

@@ -9,9 +9,17 @@ const LATEST_ISSUE_PATH := "user://debug/heroes_last_runtime_issue.json"
 const SUPPORT_BUNDLE_SCHEMA := "heroes_like.support_bundle.v1"
 const SUPPORT_BUNDLE_PATH := "user://debug/heroes_support_bundle.json"
 const SUPPORT_BUNDLE_TEMP_PATH := "user://debug/heroes_support_bundle.tmp"
+const SESSION_MARKER_SCHEMA := "heroes_like.runtime_session.v1"
+const SESSION_MARKER_PATH := "user://debug/heroes_runtime_session.json"
+const SESSION_MARKER_TEMP_PATH := "user://debug/heroes_runtime_session.tmp"
+const ENGINE_LOG_DIRECTORY := "user://logs"
+const ENGINE_ACTIVE_LOG_NAME := "godot.log"
 const MAX_MESSAGE_LENGTH := 600
 const MAX_SUPPORT_ISSUE_RECORDS := 25
 const MAX_SUPPORT_BUNDLE_BYTES := 512 * 1024
+const MAX_PREVIOUS_ENGINE_LOG_BYTES := 64 * 1024
+const MAX_PREVIOUS_ENGINE_LOG_LINES := 40
+const MAX_PREVIOUS_ENGINE_LOG_LINE_LENGTH := 240
 const VALID_SEVERITIES := ["info", "warning", "error", "fatal"]
 const SUPPORT_REDACTED := "<redacted>"
 const SUPPORT_SENSITIVE_KEY_FRAGMENTS := [
@@ -25,6 +33,17 @@ const SUPPORT_SENSITIVE_KEY_FRAGMENTS := [
 	"user_name",
 	"username",
 ]
+
+var _owned_process_id := -1
+
+func _ready() -> void:
+	_ensure_debug_directory()
+	_recover_previous_unclean_session()
+	_owned_process_id = OS.get_process_id()
+	_write_session_marker()
+
+func _exit_tree() -> void:
+	_remove_owned_session_marker()
 
 func emit_issue(
 	severity: String,
@@ -162,6 +181,124 @@ func support_bundle_snapshot() -> Dictionary:
 	file.close()
 	return parsed if parsed is Dictionary else {}
 
+func session_marker_snapshot() -> Dictionary:
+	return _read_json_dictionary(SESSION_MARKER_PATH)
+
+func _recover_previous_unclean_session() -> void:
+	if not FileAccess.file_exists(SESSION_MARKER_PATH):
+		return
+	var marker := _read_json_dictionary(SESSION_MARKER_PATH)
+	var marker_absolute := ProjectSettings.globalize_path(SESSION_MARKER_PATH)
+	var remove_error := DirAccess.remove_absolute(marker_absolute)
+	if remove_error != OK and remove_error != ERR_FILE_NOT_FOUND:
+		push_warning("Unable to consume previous runtime session marker: %s" % error_string(remove_error))
+		return
+	if String(marker.get("schema", "")) != SESSION_MARKER_SCHEMA:
+		push_warning("Discarded an invalid previous runtime session marker.")
+		return
+	var log_tail := _latest_previous_engine_log_tail()
+	emit_issue(
+		"warning",
+		"runtime",
+		"previous_session_unclean_exit",
+		"The previous game session ended without a clean shutdown.",
+		{
+			"previous_process_id": maxi(0, int(marker.get("process_id", 0))),
+			"previous_started_at_utc": _bounded_text(String(marker.get("started_at_utc", "")), 40),
+			"previous_app_version": _bounded_text(String(marker.get("app_version", "")), 80),
+			"engine_log_available": not log_tail.is_empty(),
+			"engine_log_line_count": log_tail.size(),
+			"engine_log_tail": log_tail,
+		}
+	)
+
+func _write_session_marker() -> void:
+	_ensure_debug_directory()
+	var marker := {
+		"schema": SESSION_MARKER_SCHEMA,
+		"process_id": _owned_process_id,
+		"started_at_utc": Time.get_datetime_string_from_system(true),
+		"app_version": String(ProjectSettings.get_setting("application/config/version", "")),
+	}
+	var temp_file := FileAccess.open(SESSION_MARKER_TEMP_PATH, FileAccess.WRITE)
+	if temp_file == null:
+		push_warning("Unable to create runtime session marker: %s" % error_string(FileAccess.get_open_error()))
+		return
+	temp_file.store_string(JSON.stringify(marker, "\t"))
+	temp_file.close()
+	var marker_absolute := ProjectSettings.globalize_path(SESSION_MARKER_PATH)
+	var temp_absolute := ProjectSettings.globalize_path(SESSION_MARKER_TEMP_PATH)
+	if FileAccess.file_exists(SESSION_MARKER_PATH):
+		var remove_error := DirAccess.remove_absolute(marker_absolute)
+		if remove_error != OK:
+			DirAccess.remove_absolute(temp_absolute)
+			push_warning("Unable to replace runtime session marker: %s" % error_string(remove_error))
+			return
+	var rename_error := DirAccess.rename_absolute(temp_absolute, marker_absolute)
+	if rename_error != OK:
+		DirAccess.remove_absolute(temp_absolute)
+		push_warning("Unable to finalize runtime session marker: %s" % error_string(rename_error))
+
+func _remove_owned_session_marker() -> void:
+	if _owned_process_id <= 0 or not FileAccess.file_exists(SESSION_MARKER_PATH):
+		return
+	var marker := _read_json_dictionary(SESSION_MARKER_PATH)
+	if int(marker.get("process_id", -1)) != _owned_process_id:
+		return
+	var remove_error := DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_MARKER_PATH))
+	if remove_error != OK and remove_error != ERR_FILE_NOT_FOUND:
+		push_warning("Unable to clear runtime session marker: %s" % error_string(remove_error))
+
+func _read_json_dictionary(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed = JSON.parse_string(file.get_as_text())
+	file.close()
+	return parsed if parsed is Dictionary else {}
+
+func _latest_previous_engine_log_tail() -> Array:
+	var directory := DirAccess.open(ENGINE_LOG_DIRECTORY)
+	if directory == null:
+		return []
+	var newest_path := ""
+	var newest_modified := 0
+	directory.list_dir_begin()
+	var name := directory.get_next()
+	while not name.is_empty():
+		if not directory.current_is_dir() and name.ends_with(".log") and name != ENGINE_ACTIVE_LOG_NAME:
+			var path := "%s/%s" % [ENGINE_LOG_DIRECTORY, name]
+			var modified := int(FileAccess.get_modified_time(path))
+			if modified > newest_modified or (modified == newest_modified and path > newest_path):
+				newest_modified = modified
+				newest_path = path
+		name = directory.get_next()
+	directory.list_dir_end()
+	if newest_path.is_empty():
+		return []
+	var file := FileAccess.open(newest_path, FileAccess.READ)
+	if file == null:
+		return []
+	var length := file.get_length()
+	var offset := maxi(0, length - MAX_PREVIOUS_ENGINE_LOG_BYTES)
+	file.seek(offset)
+	if offset > 0:
+		file.get_line()
+	var text := file.get_buffer(file.get_length() - file.get_position()).get_string_from_utf8()
+	file.close()
+	var result := []
+	for line_value in text.split("\n", false):
+		var line := _bounded_text(String(line_value), MAX_PREVIOUS_ENGINE_LOG_LINE_LENGTH)
+		if line.is_empty():
+			continue
+		var safe_line = _support_safe_value(line)
+		result.append(safe_line)
+		while result.size() > MAX_PREVIOUS_ENGINE_LOG_LINES:
+			result.pop_front()
+	return result
+
 func _append_jsonl(path: String, record: Dictionary) -> void:
 	_ensure_debug_directory()
 	var file := FileAccess.open(path, FileAccess.READ_WRITE)
@@ -274,7 +411,18 @@ func _support_text_contains_absolute_path(text: String) -> bool:
 		return true
 	if normalized.length() >= 3 and normalized.substr(1, 2) == ":/":
 		return true
-	return normalized.contains("/home/") or normalized.contains("/Users/")
+	if normalized.contains("/home/") or normalized.contains("/root/") or normalized.contains("/Users/"):
+		return true
+	var token_source := normalized.replace("\t", " ")
+	for token_value in token_source.split(" ", false):
+		var token := String(token_value)
+		while not token.is_empty() and token[0] in ["(", "[", "{", "\"", "'"]:
+			token = token.substr(1)
+		if token.begins_with("/"):
+			return true
+		if token.length() >= 3 and token.substr(1, 2) == ":/":
+			return true
+	return false
 
 func _bounded_text(value: String, max_length: int) -> String:
 	var text := value.strip_edges()
