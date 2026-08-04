@@ -178,6 +178,24 @@ It includes `*.editor.x86_64` entries for editor/headless execution and keeps
 directories should stay in `.artifacts/` so Godot does not scan CMake output as
 project content.
 
+## Release Candidate Build
+
+Run the complete clean-source Linux and Windows release-candidate path from the
+repository root after committing tracked changes:
+
+```sh
+python3 tools/build_release_candidate.py --version 0.1.0-rc1
+```
+
+The driver rebuilds both release GDExtensions and native self-tests, runs the
+Linux self-test directly and the Windows self-test under Wine, parses the Godot
+project, runs repository validation, then delegates export, installer creation,
+provenance binding, and final verification to `tools/package_release.py`.
+Outputs and the machine-readable `release-candidate-result.json` are written
+under `.artifacts/release-candidate/` by default. The same driver is the only
+build entrypoint used by `.github/workflows/release-candidate.yml`; that workflow
+retains verified artifacts but does not publish or sign a release.
+
 ## Smoke Validation
 
 Focused native load smoke:

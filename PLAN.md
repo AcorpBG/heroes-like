@@ -1615,6 +1615,34 @@ Non-goals:
 - do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
+## Cross-Platform Release Candidate Pipeline
+
+id: `packaging-cross-platform-release-candidate-pipeline-10184`
+
+Status: in progress.
+
+Selected Phase 6 packaging implementation slice. Local release tooling can
+already export, package, verify, install, boot, and uninstall Linux and Windows
+payloads, but the repository has no clean-checkout automation that rebuilds both
+native release targets from the selected source revision before those payloads
+are published.
+
+Implementation target:
+- add one deterministic release-candidate driver that verifies prerequisites, rebuilds Linux and Windows release GDExtensions plus native self-tests from the checked-out submodule/source state, and rejects stale or missing outputs;
+- run the Linux self-test directly and the Windows self-test under Wine before export/package work can begin;
+- export and package both platform payloads through the existing provenance-bound release tool, verify archives/installers, and emit a compact machine-readable result;
+- add a clean-checkout GitHub Actions workflow that uses the driver for manual and version-tag release candidates and retains the verified release artifacts.
+
+Completion criteria:
+- dry-run and focused unit coverage prove exact command construction, source-revision binding, prerequisite failures, stale-output rejection, and platform symmetry;
+- a live local run rebuilds both release libraries and self-tests, passes Linux and Wine self-tests, exports/packages both platforms from one revision, and verifies all archives/installers;
+- repository validation, workflow syntax, Python syntax, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add code signing, certificate or secret acquisition, storefront/channel publication, automatic public releases, or native Windows hardware certification;
+- do not change gameplay, saves, content, combat balance, strategic AI, or Native RMG behavior;
+- do not claim overall release completion from one automated release-candidate path.
+
 ## Slice Status Model
 
 Each executable slice should map to one `ops/progress.json` entry with:

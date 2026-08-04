@@ -280,6 +280,9 @@ PACKAGING_RELEASE_BUNDLE_MANIFEST_SCRIPT_PATH = ROOT / "tests" / "packaging_rele
 PACKAGING_RELEASE_BUNDLE_MANIFEST_DOC_PATH = ROOT / "docs" / "packaging-release-bundle-manifest-gate-report.md"
 PACKAGE_RELEASE_TOOL_PATH = ROOT / "tools" / "package_release.py"
 PACKAGE_RELEASE_VERIFICATION_TEST_PATH = ROOT / "tests" / "packaging_release_artifact_verification_test.py"
+RELEASE_CANDIDATE_TOOL_PATH = ROOT / "tools" / "build_release_candidate.py"
+RELEASE_CANDIDATE_TEST_PATH = ROOT / "tests" / "packaging_release_candidate_pipeline_test.py"
+RELEASE_CANDIDATE_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release-candidate.yml"
 PACKAGE_INSTALLER_SMOKE_PATH = ROOT / "tests" / "packaging_user_local_installer_smoke.py"
 PACKAGE_LINUX_INSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "install.sh"
 PACKAGE_LINUX_UNINSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "uninstall.sh"
@@ -22022,6 +22025,82 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
                 ensure(required_token in installer_text, errors, f"Installer template {path.relative_to(ROOT)} is missing required token: {required_token}")
 
 
+def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
+    for path in (
+        RELEASE_CANDIDATE_TOOL_PATH,
+        RELEASE_CANDIDATE_TEST_PATH,
+        RELEASE_CANDIDATE_WORKFLOW_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing release-candidate pipeline file: {path.relative_to(ROOT)}")
+
+    if RELEASE_CANDIDATE_TOOL_PATH.exists():
+        tool_text = RELEASE_CANDIDATE_TOOL_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "heroes_like_release_candidate_v1",
+            "release candidate requires a clean tracked worktree",
+            "release candidate found unexpected untracked source",
+            "requested source revision does not match checked-out HEAD",
+            "configure_linux_release",
+            "build_linux_release",
+            "selftest_linux_release",
+            "configure_windows_release",
+            "-DCMAKE_SYSTEM_NAME=Windows",
+            "-DCMAKE_SYSTEM_PROCESSOR=x86_64",
+            "build_windows_release",
+            "selftest_windows_release",
+            "parse_project",
+            "validate_repository",
+            "package_release",
+            "verify_release",
+            "native release output is stale",
+            'protect_owned_directory(build_root, "native build root")',
+            "release-candidate-result.json",
+            "SOURCE_DATE_EPOCH",
+            "RELEASE_SOURCE_REVISION",
+        ):
+            ensure(required_token in tool_text, errors, f"Release-candidate driver is missing required token: {required_token}")
+
+    if RELEASE_CANDIDATE_TEST_PATH.exists():
+        test_text = RELEASE_CANDIDATE_TEST_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "test_command_plan_rebuilds_and_tests_both_platforms_before_packaging",
+            "test_revision_must_be_full_lowercase_git_object_id",
+            "test_source_revision_rejects_mismatched_head_and_dirty_checkout",
+            "test_native_output_rejects_stale_and_wrong_architecture_payloads",
+            "test_pe_validation_accepts_only_x86_64",
+            "test_release_output_reset_refuses_repository_paths",
+            "test_workflow_uses_clean_recursive_checkout_and_single_driver",
+        ):
+            ensure(required_token in test_text, errors, f"Release-candidate focused test is missing required token: {required_token}")
+
+    if RELEASE_CANDIDATE_WORKFLOW_PATH.exists():
+        workflow_text = RELEASE_CANDIDATE_WORKFLOW_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "workflow_dispatch:",
+            '"v[0-9]*"',
+            "permissions:",
+            "contents: read",
+            "actions/checkout@v6",
+            "submodules: recursive",
+            "actions/setup-python@v5",
+            "Godot_v${GODOT_VERSION}_linux.x86_64.zip",
+            "Godot_v${GODOT_VERSION}_export_templates.tpz",
+            "mingw-w64",
+            "wine64",
+            "tools/build_release_candidate.py",
+            '--source-revision "$RELEASE_SOURCE_REVISION"',
+            "actions/upload-artifact@v7",
+            "if-no-files-found: error",
+        ):
+            ensure(required_token in workflow_text, errors, f"Release-candidate workflow is missing required token: {required_token}")
+        for forbidden_token in (
+            "gh release create",
+            "softprops/action-gh-release",
+            "contents: write",
+        ):
+            ensure(forbidden_token not in workflow_text, errors, f"Release-candidate workflow must not publish releases: {forbidden_token}")
+
+
 def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
     required_paths = (
         PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH,
@@ -24121,6 +24200,7 @@ def main() -> int:
     validate_packaging_windows_export_smoke(errors)
     validate_packaging_release_bundle_manifest(errors)
     validate_packaging_release_artifact_verification(errors)
+    validate_packaging_release_candidate_pipeline(errors)
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
@@ -24258,6 +24338,7 @@ def main() -> int:
     print("- Linux binary export smoke now exports a real Linux Release executable, checks ELF/PCK/native library placement, and boots it headlessly as local artifact evidence")
     print("- Linux and Windows post-export release bundle manifests now reject dev/import/debug artifacts and require exact executable/PCK/native sidecar contents")
     print("- final Linux and Windows release archives now self-verify safe entry structure, checksums, embedded payload manifests, file hashes, binary headers, and executable modes")
+    print("- clean-source release-candidate automation rebuilds and self-tests Linux and Windows native outputs before provenance-bound export, verification, and artifact retention")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots and exports a bounded local support bundle from Settings")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the persisted Effects bus")
