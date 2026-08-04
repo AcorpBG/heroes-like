@@ -10711,7 +10711,7 @@ def validate_content(errors: list[str]) -> None:
                 elif ability_id == "solar_array_lane":
                     ensure(str(unit.get("faction_id", "")) == "faction_sunvault", errors, f"Unit {unit_id} solar_array_lane must belong to Sunvault")
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} solar_array_lane must belong to a melee screen")
-                    ensure(float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.97, errors, f"Unit {unit_id} solar_array_lane incoming multiplier must equal 0.97")
+                    ensure(float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.95, errors, f"Unit {unit_id} solar_array_lane incoming multiplier must equal 0.95")
                     ensure(ability.get("linked_unit_ids", []) == ["unit_sunvault_daybreak_colossus"], errors, f"Unit {unit_id} solar_array_lane must link the Daybreak Colossus")
                 elif ability_id == "overheat":
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} overheat must belong to a melee unit")
