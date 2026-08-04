@@ -54,8 +54,9 @@ func _run() -> void:
 	var index := ScenarioSelectRulesScript.maps_folder_package_index()
 	var indexed_entry := _find_package_entry(index.get("entries", []), package_id)
 	if indexed_entry.is_empty():
+		var generated_warning := _find_rejected_warning(index.get("warnings", []), package_id)
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
-		_fail("Generated package pair was not found in maps folder index: %s" % JSON.stringify(index))
+		_fail("Generated package pair %s (%s) was rejected by maps folder index: %s" % [package_id, package_stem, JSON.stringify(generated_warning)])
 		return
 	if bool(indexed_entry.get("legacy_json_scenario_record", true)) or bool(indexed_entry.get("authored_json_scenarios_used", true)):
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])

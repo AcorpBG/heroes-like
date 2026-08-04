@@ -20031,6 +20031,60 @@ def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> Non
             ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
 
 
+def validate_legacy_scenario_package_conversion(errors: list[str]) -> None:
+    native_path = ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp"
+    report_script_path = ROOT / "tests" / "map_package_legacy_scenario_conversion_report.gd"
+    report_scene_path = ROOT / "tests" / "map_package_legacy_scenario_conversion_report.tscn"
+    for path in (native_path, report_script_path, report_scene_path):
+        ensure(path.exists(), errors, f"Missing legacy scenario package conversion file: {path.relative_to(ROOT)}")
+
+    if native_path.exists():
+        native_text = native_path.read_text(encoding="utf-8")
+        for required_token in (
+            'result.append("legacy_scenario_record_conversion")',
+            'const String operation = "convert_legacy_scenario_record"',
+            '"ragged_map_rows"',
+            '"duplicate_placement_id"',
+            '"authored_legacy_scenario_conversion"',
+            '"typed_documents_no_authored_json_writeback"',
+            "validate_map_document_structural_report(map_document)",
+            "validate_scenario_document_structural_report(scenario_document, map_document)",
+            'metadata["native_runtime_authoritative"] = true',
+            'workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size()',
+            'component_counts["town_count"] = town_count',
+        ):
+            ensure(required_token in native_text, errors, f"Native legacy scenario conversion is missing required token: {required_token}")
+        ensure(
+            'return not_implemented("convert_legacy_scenario_record"' not in native_text,
+            errors,
+            "Native legacy scenario conversion must not return the package skeleton stub",
+        )
+
+    if report_script_path.exists():
+        report_text = report_script_path.read_text(encoding="utf-8")
+        for required_token in (
+            "MAP_PACKAGE_LEGACY_SCENARIO_CONVERSION_REPORT",
+            'get_authored_scenario("river-pass")',
+            'get_terrain_layers_for_scenario("river-pass")',
+            '"legacy_scenario_record_conversion"',
+            '"ragged_map_rows"',
+            '"terrain_scenario_id_mismatch"',
+            '"object_out_of_bounds"',
+            '"duplicate_placement_id"',
+            '"editor_user_maps_copy"',
+            '"authored_source_unchanged": true',
+        ):
+            ensure(required_token in report_text, errors, f"Legacy scenario conversion runtime proof is missing required token: {required_token}")
+
+    if report_scene_path.exists():
+        scene_text = report_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/map_package_legacy_scenario_conversion_report.gd"' in scene_text,
+            errors,
+            "Legacy scenario conversion report scene is not wired to its script",
+        )
+
+
 def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     guard_path = ROOT / "tools" / "rmg_no_godot_guard.py"
     wrapper_path = ROOT / "tools" / "rmg_native_batch_export.py"
@@ -24208,6 +24262,7 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
+    validate_legacy_scenario_package_conversion(errors)
     validate_native_rmg_no_godot_export_boundary(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_packaging_platform_readiness(errors)

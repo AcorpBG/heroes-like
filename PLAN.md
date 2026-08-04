@@ -1689,6 +1689,32 @@ Non-goals:
 - do not change raw unit stats, growth, costs, buildings, spells, heroes, scenarios, strategic AI, save schemas, benchmark thresholds, or other unit abilities;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
+## Legacy Scenario Package Conversion
+
+id: `map-package-legacy-scenario-conversion-10184`
+
+Status: completed.
+
+Completed production content-pipeline implementation slice. The native
+`MapPackageService::convert_legacy_scenario_record` boundary now converts
+validated authored scenario and terrain-layer drafts into typed cross-platform
+`.amap` / `.ascenario` documents without writing authored JSON.
+
+Implementation target:
+- convert one authored scenario record plus its terrain-layer record into validated typed `MapDocument` and `ScenarioDocument` instances;
+- preserve terrain cells, roads, towns, resources, artifacts, encounters, selection, objectives, hooks, enemy factions, start state, and stable hashes without mutating authored JSON;
+- fail closed on missing ids, invalid dimensions, ragged maps, malformed terrain cells, or structurally invalid converted documents;
+- keep the converter and native capability available in synchronized Linux and Windows GDExtension builds.
+
+Completion criteria:
+- focused runtime proof covers exact River Pass terrain/object conversion, typed validation, negative malformed input, package save/load round trips, and unchanged authored source bytes;
+- Linux and Windows native extension builds succeed and the existing package API, package browser/load, core, project-parse, repository, JSON, and diff gates pass;
+- the implementation is explicitly a prerequisite for editor Save Copy/writeback, not a claim that the player command already exists.
+
+Non-goals:
+- do not write `content/scenarios.json`, `content/terrain_layers.json`, campaign progress, or save data;
+- do not change Native RMG generation/parity, map-editor layout, scenario content, or claim overall release completion.
+
 ## Cross-Platform Release Candidate Pipeline
 
 id: `packaging-cross-platform-release-candidate-pipeline-10184`

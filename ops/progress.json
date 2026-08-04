@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed shared OptionButton native semantics: stable field names now remain independent of selected text, generated descriptions retain tooltip consequences plus current values, and authored semantics remain unchanged.",
+  "currentNotes": "Completed the native legacy-scenario converter and typed package round-trip path. Overall game completion remains open.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "accessibility-option-control-field-semantics-10184",
-  "currentSliceId": "accessibility-option-control-field-semantics-10184",
-  "currentSliceNotes": "Completed implementation slice: shared native accessibility now exposes stable OptionButton field identity and refreshed current values across generated and shipped controls.",
+  "currentSlice": "map-package-legacy-scenario-conversion-10184",
+  "currentSliceId": "map-package-legacy-scenario-conversion-10184",
+  "currentSliceNotes": "Native conversion now preserves River Pass terrain, roads, 20 authored placements, scenario selection/objectives/hooks/enemy/start contracts, validates typed documents, rejects malformed inputs, and round-trips no-writeback packages. Linux/Windows builds and package/browser/core/repository gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Option Control Field Semantics",
-  "currentSliceUpdatedAt": "2026-08-04T12:30:50Z",
+  "currentSliceTitle": "Legacy Scenario Package Conversion",
+  "currentSliceUpdatedAt": "2026-08-04T13:03:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69707,6 +69707,42 @@
       "updatedAt": "2026-08-04T12:30:50Z",
       "notes": "Shared native accessibility now excludes OptionButton from native text-only naming, derives bounded field names with UI/RMG/FPS acronym handling, preserves authored semantics, appends bounded current values to generated tooltip descriptions, and refreshes after selection handlers finish. Focused proof passes with six dynamic fixture controls, 61 real main-menu focusable controls, four live regions, generated current-value refresh, authored-semantic preservation, and stable Presentation Mode, UI Scale, and Color Cue field names. Main-menu and active-play keyboard navigation, core systems, editor parsing, repository validation, Python syntax, JSON, and diff checks pass.",
       "remainingWork": "No work remains in this slice. Platform NVDA/Orca certification, final accessibility, and overall release completion remain open."
+    },
+    {
+      "id": "map-package-legacy-scenario-conversion-10184",
+      "title": "Legacy Scenario Package Conversion",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Replace the native legacy-scenario conversion stub so validated authored/editor working copies can enter the typed Windows/Linux map package pipeline.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/map_package_legacy_scenario_conversion_report.gd",
+        "tests/map_package_legacy_scenario_conversion_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Native conversion returns validated typed MapDocument and ScenarioDocument instances while preserving authored terrain, roads, object families, selection, objectives, hooks, enemy factions, and start state",
+        "Malformed ids, dimensions, rows, cells, and invalid converted documents fail closed without source mutation",
+        "Focused conversion and package round-trip proof plus synchronized Linux and Windows extension builds and broad package/repository regressions pass"
+      ],
+      "nonGoals": [
+        "authored JSON, campaign progress, or save-data writes",
+        "map-editor UI or Save Copy command changes",
+        "Native RMG generation/parity or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T12:36:35Z",
+      "completedAt": "2026-08-04T13:03:02Z",
+      "updatedAt": "2026-08-04T13:03:02Z",
+      "notes": "MapPackageService::convert_legacy_scenario_record now creates validated typed MapDocument and ScenarioDocument instances with deterministic hashes while preserving River Pass's 45 terrain cells, three roads, 20 placements, and scenario selection/objective/hook/enemy/start contracts. Focused proof covers four fail-closed inputs, no authored JSON mutation, and .amap/.ascenario round trips. Native package validation now enforces roads, unique placements, bounds, and map-ref identity. The parity-owned native RMG package handoff now carries its exact selected H3MapEd template, runtime zone/town counts, authority, and completion status, so package browser/disk startup/editor loading succeeds. Linux and Windows debug GDExtensions, package API, package-browser/editor integration, core systems, project parsing, repository validation, Python syntax, JSON, and diff checks pass.",
+      "remainingWork": "No work remains in this slice. The editor Save Copy command, obsolete authored-default map_editor_smoke contract, and overall game completion remain separate work."
     }
   ],
   "project": "heroes-like",
@@ -70251,7 +70287,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Sluicefire Lindworms now lose 15 percent primary-attack damage against a clean line while preserving full retaliation and wounded or disrupted Bloodrush payoff. The all-live 100-seed four-week faction matrix keeps 33 outliers while lowering summed excess severity from 248.0 to 233.5, severe rows from 11 to 10, maximum dominance from 74.5 to 74.0 percent, and week-four side bias from 2.13 to 1.87 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T12:30:50Z",
+  "updatedAt": "2026-08-04T13:03:02Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -31,7 +31,7 @@ func _run() -> void:
 			_fail("Missing capability %s in %s." % [required, JSON.stringify(Array(capabilities))])
 			return
 
-	if not _assert_gdscript_fallback_surface_underground_terrain_policy():
+	if not _assert_gdscript_fallback_remains_fail_closed():
 		return
 
 	var terrain_codes := []
@@ -183,9 +183,9 @@ func _run() -> void:
 	})])
 	get_tree().quit(0)
 
-func _assert_gdscript_fallback_surface_underground_terrain_policy() -> bool:
+func _assert_gdscript_fallback_remains_fail_closed() -> bool:
 	var fallback_service := MapPackageServiceScript.new()
-	var surface_config := {
+	var config := {
 		"seed": "gdscript-fallback-surface-underground-policy-10184",
 		"size": {"width": 12, "height": 10, "level_count": 1, "water_mode": "land"},
 		"profile": {
@@ -194,41 +194,22 @@ func _assert_gdscript_fallback_surface_underground_terrain_policy() -> bool:
 			"faction_ids": ["faction_embercourt", "faction_mireclaw"],
 		},
 	}
-	var surface: Dictionary = fallback_service.generate_random_map(surface_config)
-	if not bool(surface.get("ok", false)):
-		_fail("GDScript fallback surface terrain policy generation failed: %s" % JSON.stringify(surface))
+	var blocked: Dictionary = fallback_service.generate_random_map(config)
+	if bool(blocked.get("ok", true)):
+		_fail("GDScript compatibility RMG unexpectedly generated a runtime map: %s" % JSON.stringify(blocked))
 		return false
-	var surface_grid: Dictionary = surface.get("terrain_grid", {}) if surface.get("terrain_grid", {}) is Dictionary else {}
-	var surface_counts: Dictionary = surface_grid.get("terrain_counts", {}) if surface_grid.get("terrain_counts", {}) is Dictionary else {}
-	if int(surface_counts.get("underground", 0)) != 0:
-		_fail("GDScript fallback surface-only map materialized underground terrain: %s" % JSON.stringify(surface_counts))
+	if String(blocked.get("error_code", "")) != "native_rmg_exact_state_chain_not_ported":
+		_fail("GDScript compatibility RMG returned the wrong fail-closed code: %s" % JSON.stringify(blocked))
 		return false
-	if String(surface_grid.get("underground_terrain_policy", "")) != "not_materialized_for_surface_only_maps":
-		_fail("GDScript fallback surface-only map missed terrain policy metadata: %s" % JSON.stringify(surface_grid))
+	if bool(blocked.get("runtime_generation_allowed", true)) or bool(blocked.get("native_runtime_authoritative", true)):
+		_fail("GDScript compatibility RMG exposed runtime generation authority: %s" % JSON.stringify(blocked))
 		return false
-
-	var two_level_config := surface_config.duplicate(true)
-	two_level_config["seed"] = "gdscript-fallback-two-level-underground-policy-10184"
-	two_level_config["size"] = surface_config.get("size", {}).duplicate(true)
-	two_level_config["size"]["level_count"] = 2
-	var two_level: Dictionary = fallback_service.generate_random_map(two_level_config)
-	if not bool(two_level.get("ok", false)):
-		_fail("GDScript fallback two-level terrain policy generation failed: %s" % JSON.stringify(two_level))
+	if blocked.has("terrain_grid") or blocked.has("map_document") or blocked.has("scenario_document"):
+		_fail("GDScript compatibility RMG leaked generated payload state: %s" % JSON.stringify(blocked))
 		return false
-	var two_level_grid: Dictionary = two_level.get("terrain_grid", {}) if two_level.get("terrain_grid", {}) is Dictionary else {}
-	var levels: Array = two_level_grid.get("levels", []) if two_level_grid.get("levels", []) is Array else []
-	if levels.size() != 2:
-		_fail("GDScript fallback two-level map did not materialize two levels: %s" % JSON.stringify(two_level_grid))
-		return false
-	var level0: Dictionary = levels[0] if levels[0] is Dictionary else {}
-	var level1: Dictionary = levels[1] if levels[1] is Dictionary else {}
-	var level0_counts: Dictionary = level0.get("terrain_counts", {}) if level0.get("terrain_counts", {}) is Dictionary else {}
-	var level1_counts: Dictionary = level1.get("terrain_counts", {}) if level1.get("terrain_counts", {}) is Dictionary else {}
-	if int(level0_counts.get("underground", 0)) != 0:
-		_fail("GDScript fallback two-level map used underground terrain on level 0: %s" % JSON.stringify(level0_counts))
-		return false
-	if int(level1_counts.get("underground", 0)) != 12 * 10:
-		_fail("GDScript fallback two-level map did not reserve underground terrain for level 1: %s" % JSON.stringify(level1_counts))
+	var normalized: Dictionary = blocked.get("normalized_config", {}) if blocked.get("normalized_config", {}) is Dictionary else {}
+	if normalized.get("terrain_ids", []) != config.get("profile", {}).get("terrain_ids", []):
+		_fail("GDScript compatibility RMG fail-closed report lost normalized terrain ids: %s" % JSON.stringify(blocked))
 		return false
 	return true
 
