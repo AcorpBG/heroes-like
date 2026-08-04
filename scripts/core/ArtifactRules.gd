@@ -40,6 +40,17 @@ const ARTIFACT_SOURCE_TAGS := [
 ]
 const ARTIFACT_BONUS_TYPES := ["stat", "resource_income", "spell_modifier", "site_modifier", "town_modifier", "unit_tag_modifier", "adventure_effect", "tradeoff"]
 const SLOT_LIMITS := {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
+const DAILY_INCOME_RESOURCE_IDS := [
+	"gold",
+	"wood",
+	"ore",
+	"aetherglass",
+	"embergrain",
+	"peatwax",
+	"verdant_grafts",
+	"brass_scrip",
+	"memory_salt",
+]
 
 static func ensure_hero_artifacts(hero_state: Dictionary) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
@@ -314,7 +325,7 @@ static func artifact_schema_report(artifact_records: Array = [], set_records: Ar
 			"save_version_bump": false,
 			"equipment_runtime_migration": false,
 			"source_reward_tables_active": false,
-			"rare_resource_activation": false,
+			"rare_resource_activation": true,
 			"set_bonuses_active": true,
 		},
 	}
@@ -529,7 +540,7 @@ static func artifact_set_faction_report(artifact_records: Array = [], set_record
 			"save_version_bump": false,
 			"equipment_runtime_migration": false,
 			"source_reward_tables_active": false,
-			"rare_resource_activation": false,
+			"rare_resource_activation": true,
 			"set_bonuses_active": true,
 			"ai_valuation_behavior": false,
 		},
@@ -612,6 +623,7 @@ static func artifact_source_reward_report(
 	var eligible_artifact_ids := []
 	var seen_table_ids := []
 	var live_source_tags := []
+	var rare_resource_activation := false
 
 	for table_value in tables:
 		if not (table_value is Dictionary):
@@ -624,6 +636,7 @@ static func artifact_source_reward_report(
 			seen_table_ids.append(table_id)
 		var source_tag := String(table.get("source_tag", "")).strip_edges()
 		var runtime_policy := _artifact_source_runtime_policy(table)
+		rare_resource_activation = rare_resource_activation or bool(runtime_policy.get("rare_resource_activation", false))
 		if bool(runtime_policy.get("live_drop_execution", false)):
 			report["live_table_count"] = int(report.get("live_table_count", 0)) + 1
 			if source_tag not in live_source_tags:
@@ -673,6 +686,7 @@ static func artifact_source_reward_report(
 	report["eligible_artifact_count"] = eligible_artifact_ids.size()
 	report["live_source_tags"] = live_source_tags
 	report["runtime_policy"]["live_drop_execution"] = int(report.get("live_table_count", 0)) > 0
+	report["runtime_policy"]["rare_resource_activation"] = rare_resource_activation
 	report["ok"] = (
 		int(report.get("table_count", 0)) >= 5
 		and int(report.get("table_ready_count", 0)) == int(report.get("table_count", 0))
@@ -810,11 +824,12 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 			or int(bonuses.get("battle_initiative", 0)) != 0
 		),
 		"daily_common_income": not daily_income.is_empty(),
+		"daily_rare_income": not rare_income.is_empty(),
 		"spell_modifiers": spell_modifiers is Array and not spell_modifiers.is_empty(),
 	}
 
 	return {
-		"ok": equipped_artifacts.size() > 0 and rare_income.is_empty(),
+		"ok": equipped_artifacts.size() > 0,
 		"schema_status": "artifact_equip_runtime_effects_loaded",
 		"equipped_slot_count": equipped_artifacts.size(),
 		"inventory_artifact_count": inventory.size() if inventory is Array else 0,
@@ -827,6 +842,7 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 			"battle_defense": int(bonuses.get("battle_defense", 0)),
 			"battle_initiative": int(bonuses.get("battle_initiative", 0)),
 			"daily_common_income": daily_income,
+			"daily_rare_income": rare_income,
 			"spell_modifier_count": spell_modifiers.size() if spell_modifiers is Array else 0,
 		},
 		"live_contexts": live_contexts,
@@ -839,7 +855,6 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 		},
 		"not_live_contexts": [
 			"source_reward_drop_execution",
-			"rare_resource_income",
 			"ai_valuation_behavior",
 		],
 		"runtime_policy": {
@@ -847,7 +862,7 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 			"source_reward_execution": false,
 			"set_bonuses_active": true,
 			"ai_valuation_behavior": false,
-			"rare_resource_activation": false,
+			"rare_resource_activation": true,
 			"broad_ui_overhaul": false,
 		},
 	}
@@ -1588,10 +1603,10 @@ static func _artifact_effect_summary(artifact: Dictionary) -> String:
 	var income = bonuses.get("daily_income", {})
 	var income_parts := []
 	if income is Dictionary:
-		for key in ["gold", "wood", "ore"]:
+		for key in DAILY_INCOME_RESOURCE_IDS:
 			var amount := int(income.get(key, 0))
 			if amount > 0:
-				income_parts.append("+%d %s/day" % [amount, key])
+				income_parts.append("+%d %s/day" % [amount, _resource_display_name(key)])
 	if not income_parts.is_empty():
 		parts.append(", ".join(income_parts))
 	var spell_parts := _artifact_spell_modifier_parts(_artifact_spell_modifier_records(artifact, String(artifact.get("id", ""))))
@@ -1610,7 +1625,17 @@ static func _blank_bonus_totals() -> Dictionary:
 		"battle_spell_resistance_pct": 0,
 		"battle_control_resistance_pct": 0,
 		"battle_school_resistance_pct": {},
-		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
+		"daily_income": {
+			"gold": 0,
+			"wood": 0,
+			"ore": 0,
+			"aetherglass": 0,
+			"embergrain": 0,
+			"peatwax": 0,
+			"verdant_grafts": 0,
+			"brass_scrip": 0,
+			"memory_salt": 0,
+		},
 		"spell_modifiers": [],
 		"active_sets": [],
 	}
@@ -1701,11 +1726,16 @@ static func _resource_impact_parts(value: Variant) -> Array:
 	var parts := []
 	if not (value is Dictionary):
 		return parts
-	for key in ["gold", "wood", "ore"]:
+	for key in DAILY_INCOME_RESOURCE_IDS:
 		var amount := int(value.get(key, 0))
 		if amount > 0:
-			parts.append("%d %s/day" % [amount, key])
+			parts.append("%d %s/day" % [amount, _resource_display_name(key)])
 	return parts
+
+static func _resource_display_name(resource_id: String) -> String:
+	if resource_id in ["gold", "wood", "ore"]:
+		return resource_id
+	return resource_id.replace("_", " ").capitalize()
 
 static func _common_resource_delta(value: Variant) -> Dictionary:
 	var result := {}
@@ -1901,6 +1931,7 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 
 	var faction_constraints := _string_array(table.get("faction_constraints", []))
 	var artifact_ids := _string_array(table.get("artifact_ids", []))
+	var table_activates_rare_income := false
 	if artifact_ids.is_empty():
 		issues.append("missing_artifact_ids")
 	for artifact_id in artifact_ids:
@@ -1908,6 +1939,8 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 			issues.append("unknown_artifact:%s" % artifact_id)
 			continue
 		var artifact: Dictionary = artifact_by_id.get(artifact_id, {})
+		if not _rare_resource_delta(artifact.get("bonuses", {}).get("daily_income", {})).is_empty():
+			table_activates_rare_income = true
 		if source_tag not in _string_array(artifact.get("source_tags", [])):
 			issues.append("artifact_missing_source_tag:%s" % artifact_id)
 		var rarity := String(artifact.get("rarity", "")).strip_edges()
@@ -1938,9 +1971,11 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 		issues.append("source_table_runtime_mode_invalid")
 	if live_drop_execution and source_tag not in ["pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"]:
 		issues.append("unsupported_live_source_tag:%s" % source_tag)
-	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"]:
+	for blocked_flag in ["save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior"]:
 		if bool(runtime_policy.get(blocked_flag, false)):
 			issues.append("blocked_runtime_flag:%s" % blocked_flag)
+	if bool(runtime_policy.get("rare_resource_activation", false)) != table_activates_rare_income:
+		issues.append("rare_resource_activation_mismatch")
 	return issues
 
 static func _stable_source_reward_index(source_key: String, candidate_count: int) -> int:

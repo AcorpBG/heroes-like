@@ -106,6 +106,9 @@ func _run() -> void:
 	if String(faction_fit.get("public_reason", "")) != "faction-fit relic":
 		_fail("Faction affinity did not produce compact faction-fit public reason: %s" % faction_fit)
 		return
+	if "daily_rare_income" not in faction_fit.get("runtime_surfaces", []):
+		_fail("Faction artifact valuation did not expose its live rare-income surface: %s" % faction_fit)
+		return
 
 	var leak_check := EnemyAdventureRules.artifact_ai_public_leak_check(report)
 	if not bool(leak_check.get("ok", false)):
@@ -132,7 +135,7 @@ func _run() -> void:
 		},
 		"runtime_policy": report.get("runtime_policy", {}),
 		"caveats": [
-			"This report proves bounded artifact AI valuation helpers and public-safe report payloads only; live artifact source/drop execution, broad AI behavior changes, save migration, set bonus activation, and rare-resource activation remain outside this slice.",
+			"This report proves bounded artifact AI valuation helpers, including faction rare-income valuation, and public-safe payloads; broad AI behavior changes and save migration remain outside this slice.",
 		],
 	}
 	if not _assert_no_public_leaks("final artifact AI valuation payload", payload):

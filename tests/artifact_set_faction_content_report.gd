@@ -52,7 +52,7 @@ func _run() -> void:
 		return
 
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
-	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or not bool(policy.get("set_bonuses_active", false)) or bool(policy.get("ai_valuation_behavior", true)) or bool(policy.get("rare_resource_activation", true)):
+	if bool(policy.get("save_version_bump", true)) or bool(policy.get("source_reward_tables_active", true)) or not bool(policy.get("set_bonuses_active", false)) or bool(policy.get("ai_valuation_behavior", true)) or not bool(policy.get("rare_resource_activation", false)):
 		_fail("Artifact set/faction report crossed slice boundaries: %s" % policy)
 		return
 
@@ -81,7 +81,7 @@ func _run() -> void:
 		"faction_affinity_counts": faction_counts,
 		"runtime_policy": policy,
 		"caveats": [
-			"This report proves bounded artifact set and faction-affinity content plus active threshold metadata; live source execution, save-version migration, and rare-resource activation remain outside this slice.",
+			"This report proves bounded artifact set and faction-affinity content plus active threshold and rare-income metadata; live source execution and save-version migration remain separate runtime concerns.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

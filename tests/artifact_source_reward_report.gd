@@ -43,9 +43,16 @@ func _run() -> void:
 			return
 
 	var policy: Dictionary = report.get("runtime_policy", {}) if report.get("runtime_policy", {}) is Dictionary else {}
-	if not bool(policy.get("source_reward_metadata_authored", false)) or not bool(policy.get("live_drop_execution", false)) or bool(policy.get("equipment_runtime_effects", true)) or bool(policy.get("save_version_bump", true)) or bool(policy.get("ai_valuation_behavior", true)) or bool(policy.get("rare_resource_activation", true)):
+	if not bool(policy.get("source_reward_metadata_authored", false)) or not bool(policy.get("live_drop_execution", false)) or bool(policy.get("equipment_runtime_effects", true)) or bool(policy.get("save_version_bump", true)) or bool(policy.get("ai_valuation_behavior", true)) or not bool(policy.get("rare_resource_activation", false)):
 		_fail("Artifact source/reward report crossed slice runtime boundaries: %s" % policy)
 		return
+	for table_value in report.get("table_reports", []):
+		var table: Dictionary = table_value if table_value is Dictionary else {}
+		var table_policy: Dictionary = table.get("runtime_policy", {}) if table.get("runtime_policy", {}) is Dictionary else {}
+		var expected_rare_activation := String(table.get("source_tag", "")) != "pickup"
+		if bool(table_policy.get("rare_resource_activation", false)) != expected_rare_activation:
+			_fail("Artifact source table did not match its rare-income payloads: %s" % table)
+			return
 	if not _assert_public_payload("artifact source/reward report", report):
 		return
 
@@ -65,7 +72,7 @@ func _run() -> void:
 		"guarded_context_match_count": int(report.get("guarded_context_match_count", 0)),
 		"runtime_policy": policy,
 		"caveats": [
-			"Only explicitly opted-in pickup caches, guarded sites, Starlens Sanctum, Rootwatch Hollow, Greenbranch Copse, Lockhouse Tally, Scalehouse, and Bellwake battle salvage execute source-table rewards; other pickups, shrines, dwellings, town buildings, save migration, AI valuation changes, and rare-resource activation remain outside this slice.",
+			"Only explicitly opted-in pickup caches, guarded sites, Starlens Sanctum, Rootwatch Hollow, Greenbranch Copse, Lockhouse Tally, Scalehouse, and Bellwake battle salvage execute source-table rewards; other pickups, shrines, dwellings, town buildings, save migration, and broad AI changes remain outside this slice.",
 		],
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])

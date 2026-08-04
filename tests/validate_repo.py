@@ -8830,7 +8830,7 @@ def build_artifact_taxonomy_report() -> dict:
             "save_version_bump": False,
             "equipment_runtime_migration": False,
             "source_reward_tables_active": False,
-            "rare_resource_activation": False,
+            "rare_resource_activation": True,
             "set_bonuses_active": True,
         },
     }
@@ -9037,7 +9037,7 @@ def build_artifact_set_faction_report(
             "save_version_bump": False,
             "equipment_runtime_migration": False,
             "source_reward_tables_active": False,
-            "rare_resource_activation": False,
+            "rare_resource_activation": True,
             "set_bonuses_active": True,
             "ai_valuation_behavior": False,
         },
@@ -9203,9 +9203,18 @@ def artifact_source_table_issues(
             issues.append("source_table_runtime_mode_invalid")
         if live_drop_execution and source_tag not in {"pickup", "guarded_site", "shrine", "dwelling", "town", "battle_salvage"}:
             issues.append(f"unsupported_live_source_tag:{source_tag}")
-        for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior", "rare_resource_activation"):
+        for blocked_flag in ("save_version_bump", "equipment_runtime_effects", "ai_valuation_behavior"):
             if bool(runtime_policy.get(blocked_flag, False)):
                 issues.append(f"blocked_runtime_flag:{blocked_flag}")
+        table_activates_rare_income = any(
+            any(
+                int(artifacts.get(artifact_id, {}).get("bonuses", {}).get("daily_income", {}).get(resource_id, 0)) > 0
+                for resource_id in ECONOMY_STAGED_RARE_RESOURCE_IDS
+            )
+            for artifact_id in artifact_ids
+        )
+        if bool(runtime_policy.get("rare_resource_activation", False)) != table_activates_rare_income:
+            issues.append("rare_resource_activation_mismatch")
     return issues
 
 
@@ -9258,10 +9267,15 @@ def build_artifact_source_reward_report() -> dict:
             seen_table_ids.add(table_id)
         source_tag = str(table.get("source_tag", "")).strip()
         policy = table.get("runtime_policy", {}) if isinstance(table.get("runtime_policy", {}), dict) else {}
+
         if bool(policy.get("live_drop_execution", False)):
             report["live_table_count"] += 1
             if source_tag not in report["live_source_tags"]:
                 report["live_source_tags"].append(source_tag)
+        report["runtime_policy"]["rare_resource_activation"] = (
+            bool(report["runtime_policy"].get("rare_resource_activation", False))
+            or bool(policy.get("rare_resource_activation", False))
+        )
         increment_count(report["source_tag_counts"], source_tag)
         for rarity in string_list(table.get("rarity_bands", [])):
             increment_count(report["rarity_band_counts"], rarity)
@@ -24524,7 +24538,7 @@ def main() -> int:
     print("- six-faction unique non-unit town buildings now expose payoff-domain-diverse live income/readiness/pressure/reinforcement/spell/market gates across authored towns")
     print("- active authored scenarios now provide persistent common-resource development runway sources and a live town-construction runway report gates all player-town cases")
     print("- active enemy towns now preserve full live treasuries, enforce one-build-per-day, and complete AI development runways with rare-resource spend")
-    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, selected deterministic pickup-cache rewards, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, Embercourt and Brasshollow one-time town commissions, and Bellwake player battle salvage while rare-resource artifact income remains inactive")
+    print("- artifact runtime supports two live trinket slots, cumulative set bonuses, selected deterministic pickup-cache rewards, guarded-site rewards, Starlens shrine rewards, Thornwake dwelling rewards for eligible player and AI commanders, Embercourt and Brasshollow one-time town commissions, Bellwake player battle salvage, and faction relic rare-resource income for players and captured strategic-AI stockpiles")
     print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")

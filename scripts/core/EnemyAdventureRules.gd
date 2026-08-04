@@ -505,7 +505,7 @@ static func artifact_reward_valuation_report(
 			"live_drop_execution": false,
 			"save_version_bump": false,
 			"set_bonuses_active": false,
-			"rare_resource_activation": false,
+			"rare_resource_activation": true,
 			"broad_ai_rewrite": false,
 		},
 	}
@@ -16018,8 +16018,13 @@ static func _artifact_runtime_surfaces(artifact: Dictionary) -> Array:
 	):
 		surfaces.append("battle_command")
 	var income = bonuses.get("daily_income", {})
-	if income is Dictionary and not _reward_resources_for_empire(income).is_empty():
-		surfaces.append("daily_common_income")
+	if income is Dictionary:
+		if not _reward_resources_for_empire(income).is_empty():
+			surfaces.append("daily_common_income")
+		for resource_id in ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
+			if int(income.get(resource_id, 0)) != 0:
+				surfaces.append("daily_rare_income")
+				break
 	var spell_modifiers = bonuses.get("spell_modifiers", [])
 	if spell_modifiers is Array and not spell_modifiers.is_empty():
 		surfaces.append("spell_modifier")
@@ -16125,7 +16130,7 @@ static func _artifact_reason_codes(
 		codes.append("defense_posture")
 	if "magic" in role_buckets:
 		codes.append("magic_support")
-	if "daily_common_income" in runtime_surfaces and "economy_support" not in codes:
+	if ("daily_common_income" in runtime_surfaces or "daily_rare_income" in runtime_surfaces) and "economy_support" not in codes:
 		codes.append("economy_support")
 	if "battle_command" in runtime_surfaces and "command_pressure" not in codes:
 		codes.append("command_pressure")
