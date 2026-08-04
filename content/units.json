@@ -1093,7 +1093,7 @@
       "min_damage": 3,
       "max_damage": 4,
       "speed": 3,
-      "initiative": 7,
+      "initiative": 6,
       "retaliations": 1,
       "ranged": true,
       "growth": 5,
@@ -1162,6 +1162,21 @@
       "content_status": "six_faction_scaffold",
       "shots": 6,
       "abilities": [
+        {
+          "id": "resonance_relay",
+          "name": "Resonant Relay",
+          "description": "The living choir synchronizes separate spell calibrations into one firing measure; when it falls, each remaining blessing supports only its bearer.",
+          "minimum_calibrated_stacks": 2,
+          "maximum_calibrated_stacks": 3,
+          "line_damage_per_calibrated_stack": 0.03,
+          "line_initiative_bonus": 1,
+          "late_round_initiative_bonus": 1,
+          "terrain_momentum_bonus": 1,
+          "linked_unit_ids": [
+            "unit_sunvault_prism_adepts"
+          ],
+          "linked_initiative_bonus": 1
+        },
         {
           "id": "harry",
           "name": "Calibration Cant",

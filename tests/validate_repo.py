@@ -320,7 +320,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10667,6 +10667,19 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("defending_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define defending_cohesion_bonus > 0")
                     ensure(int(ability.get("defending_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define defending_initiative_bonus > 0")
                     ensure(float(ability.get("staggered_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} formation_guard must define staggered_damage_multiplier > 1")
+                elif ability_id == "resonance_relay":
+                    ensure(str(unit.get("faction_id", "")) == "faction_sunvault", errors, f"Unit {unit_id} resonance_relay must belong to Sunvault")
+                    ensure(int(unit.get("tier", 0)) >= 4, errors, f"Unit {unit_id} resonance_relay must enter at tier four or later")
+                    minimum = int(ability.get("minimum_calibrated_stacks", 0))
+                    maximum = int(ability.get("maximum_calibrated_stacks", 0))
+                    ensure(2 <= minimum <= maximum <= 6, errors, f"Unit {unit_id} resonance_relay calibrated stack bounds must satisfy 2 <= minimum <= maximum <= 6")
+                    ensure(0.0 < float(ability.get("line_damage_per_calibrated_stack", 0.0)) <= 0.1, errors, f"Unit {unit_id} resonance_relay line damage must be in (0, 0.1]")
+                    ensure(0 < int(ability.get("line_initiative_bonus", 0)) <= 3, errors, f"Unit {unit_id} resonance_relay line initiative bonus must be in [1, 3]")
+                    ensure(0 < int(ability.get("late_round_initiative_bonus", 0)) <= 3, errors, f"Unit {unit_id} resonance_relay late-round initiative bonus must be in [1, 3]")
+                    ensure(0 < int(ability.get("terrain_momentum_bonus", 0)) <= 3, errors, f"Unit {unit_id} resonance_relay terrain momentum bonus must be in [1, 3]")
+                    linked_unit_ids = ability.get("linked_unit_ids", [])
+                    ensure(linked_unit_ids == ["unit_sunvault_prism_adepts"], errors, f"Unit {unit_id} resonance_relay must link the Prism Adept stack")
+                    ensure(0 < int(ability.get("linked_initiative_bonus", 0)) <= 3, errors, f"Unit {unit_id} resonance_relay linked initiative bonus must be in [1, 3]")
                 elif ability_id == "bloodrush":
                     if "clean_target_damage_multiplier" in ability:
                         ensure(0.25 <= float(ability.get("clean_target_damage_multiplier", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush clean_target_damage_multiplier must be between 0.25 and 1")
@@ -10700,9 +10713,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, bloodrush, obituary, overheat, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, bloodrush, obituary, overheat, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10767,7 +10780,13 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(wake_lantern_mark.get("uses_per_battle", 0)) == 1, errors, "Wake-Lantern Mark must be limited to one use per battle")
     ensure(int(wake_lantern_mark.get("target_min_tier", 0)) == 3, errors, "Wake-Lantern Mark must require a tier-3 veteran target")
 
+    sunvault_prism_adepts = units.get("unit_sunvault_prism_adepts", {})
+    ensure(int(sunvault_prism_adepts.get("initiative", 0)) == 6, errors, "Prism Adepts must keep initiative six before their linked relay arrives")
     sunvault_choristers = units.get("unit_sunvault_resonant_choristers", {})
+    resonant_relay = next((ability for ability in sunvault_choristers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "resonance_relay"), {})
+    ensure(str(resonant_relay.get("name", "")) == "Resonant Relay", errors, "Resonant Choristers must own the Sunvault relay ability")
+    ensure(resonant_relay.get("linked_unit_ids", []) == ["unit_sunvault_prism_adepts"], errors, "Resonant Relay must restore linked Prism Adept tempo")
+    ensure(int(resonant_relay.get("linked_initiative_bonus", 0)) == 1, errors, "Resonant Relay must restore exactly one Prism Adept initiative point")
     calibration_cant = next((ability for ability in sunvault_choristers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
     ensure(str(calibration_cant.get("name", "")) == "Calibration Cant", errors, "Resonant Choristers must keep Calibration Cant as their focused-mark support role")
     ensure(int(calibration_cant.get("uses_per_battle", 0)) == 1, errors, "Calibration Cant must be limited to one use per battle")
@@ -18780,6 +18799,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _probe_harry",
         "func _probe_obituary",
         "func _probe_fogwake",
+        "func _probe_resonance_relay",
         "func _probe_bloodrush",
         "func _probe_overheat",
         "func _probe_foundry_aura",

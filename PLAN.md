@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-sunvault-relay-activation-10184`. Prism Adepts now enter at initiative six instead of owning unearned first-action tempo, while a living tier-four Resonant Chorister restores that point to the linked Prism stack and activates Sunvault's line-wide multi-calibration damage, initiative, terrain-momentum, tactical-AI, and player-doctrine payoff; defeating the relay immediately removes those linked consequences without removing each stack's personal spell-calibration benefit. Focused live proof passes all 100 authored ability instances. The all-live 100-seed four-week matrix changes only week-one pair rows, reducing outliers from 31 to 29, severity from 203.0 to 186.5, rows at or above 65 percent from 8 to 7, and the week-one Brasshollow-Sunvault result from 69.5 to 58.5 percent while preserving 69.5 percent maximum dominance, 2.80-point side bias, zero structural failures, and every week-two through week-four pair summary. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-fog-ladder-identity-10184`. Veilmourn's production capstones now own the authored late-ladder roles: Mirror-Keel Reavers use a half-force Mirror-Keel Passage to attack across a distance-two lane and gain Black-Sail Breach pressure against harried or staggered targets, while Fogbound Leviathan's Leviathan Fogwake uses actual hex adjacency to deal 12% more primary-strike damage and apply one round of defense, initiative, and cohesion pressure only to unsupported enemy stacks. Shared BattleRules normalization/damage/status behavior, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused live proof consume the same contracts. The all-live 100-seed four-week matrix keeps 31 outliers / 8 rows at or above 65% / 69.5% maximum dominance, lowers severity from 204.5 to 203.0 and maximum side bias from 2.93 to 2.80 points, leaves weeks 1-2 exact, and has zero structural failures. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-mireclaw-sporewake-veteran-line-10184`. Sporewake Rot Cant now opens against tier-four-or-higher veteran lines with a narrow authored tactical priority, so its two-unit week-two Chanter stack takes the bounded once-per-battle shot instead of casting a routine commander spell and dying before round two. Shared BattleRules normalization, tactical AI scoring, the fast benchmark, schema validation, and focused runtime proof consume the same contract. The all-live 100-seed four-week matrix improves from 33 outliers / 233.5 severity / 74.0% maximum dominance to 31 / 204.5 / 69.5%, rows at or above 65% fall from 10 to 8, and structural failures stay at zero. Ability, autoplay, core, parse, repository, Python, JSON, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `accessibility-option-control-field-semantics-10184`. Shared native accessibility now gives every `OptionButton` a stable field identity derived from its control role instead of announcing only the selected display text. Generated descriptions retain tooltip consequences, reserve bounded space for the current value, and refresh after selection handlers complete; explicitly authored semantics remain unchanged. Focused dynamic and shipped-Settings proof, main-menu and active-play keyboard navigation, core systems, project parsing, repository, Python, JSON, and diff gates pass. Platform NVDA/Orca certification, final accessibility, and overall release completion remain open.
@@ -555,6 +556,38 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Sunvault Relay Activation
+
+id: `combat-sunvault-relay-activation-10184`
+
+Status: completed.
+
+Selected Phase 6 combat-balance implementation slice. The accepted all-live
+matrix has 31 outliers / 203.0 severity, and Sunvault wins 69.5 percent of its
+week-one Brasshollow pairing before its authored tier-four support unit enters
+the army. Sunvault's source identity is planned calibration warfare that becomes
+strong after relay and support infrastructure, but the live faction doctrine
+currently turns multiple independent spell buffs into a line-wide resonance at
+every tier. Focused replay also shows Sunvault still wins 57 percent with spells
+removed. Exact hero-pair candidate replay rejects lower growth because it worsens
+the extreme, while reducing Prism Adept initiative from seven to six lowers that
+pairing to 58.5 percent without changing its damage, growth, range, or accuracy role.
+
+Implementation target:
+- give Resonant Choristers an authored relay ability that activates Sunvault's line-wide multi-buff damage and initiative payoff while the support stack is alive;
+- preserve the existing personal damage and initiative payoff on each individually buffed Sunvault stack before or after relay loss;
+- reduce Prism Adept initiative from seven to six before the support ladder arrives, then let a living Resonant Relay restore that point to the linked Prism stack;
+- align live combat resolution, tactical AI estimates, player doctrine summaries, the fast benchmark, schema validation, and focused runtime proof.
+
+Completion criteria:
+- focused live proof covers relay absent, relay present, linked Prism initiative restoration, and defeated-relay states without changing individual buff consequences;
+- the full 100-seed all-live four-week matrix improves week-one Sunvault excess without increasing the accepted 31 outliers, 203.0 severity, 8 rows at or above 65 percent, 69.5 percent maximum dominance, 2.80-point side bias, or zero structural failures;
+- ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not change other raw combat stats, unit growth, costs, spells, heroes, scenarios, strategic AI, saves, benchmark thresholds, or Native RMG;
+- do not remove Sunvault's individual spell-calibration payoff or claim final faction balance or overall release completion.
 
 ## Magic Availability And Strategic Influence Target
 

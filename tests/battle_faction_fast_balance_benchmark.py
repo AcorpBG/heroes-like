@@ -1605,8 +1605,10 @@ class FastBattleBenchmark:
                 modifier *= 1.08
                 if self._battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
                     modifier *= 1.04
-            if positive_count >= 2:
-                modifier *= 1.0 + (float(min(positive_count, 3)) * 0.03)
+            relay_minimum = int(self._side_max_ability_float(battle, side, "resonance_relay", "minimum_calibrated_stacks", 2.0))
+            if self._side_has_ability(battle, side, "resonance_relay") and positive_count >= relay_minimum:
+                calibrated_count = min(positive_count, int(self._side_max_ability_float(battle, side, "resonance_relay", "maximum_calibrated_stacks", 3.0)))
+                modifier *= 1.0 + (float(calibrated_count) * self._side_max_ability_float(battle, side, "resonance_relay", "line_damage_per_calibrated_stack", 0.0))
             if self._has_effect_id(defender, battle, STATUS_STAGGERED):
                 modifier *= 1.05
             if is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_count > 0:
@@ -1861,7 +1863,7 @@ class FastBattleBenchmark:
         return int(stack.get("defense", 0)) + self._effect_bonus(stack, battle, "defense") + self._contextual_defense_bonus(stack, battle) + self._cohesion_defense_bonus(self._stack_cohesion_total(stack, battle)) + foundry_bonus
 
     def _stack_initiative_total(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
-        return int(stack.get("initiative", 0)) + self._effect_bonus(stack, battle, "initiative") + self._contextual_initiative_bonus(stack, battle) + self._cohesion_initiative_bonus(self._stack_cohesion_total(stack, battle)) + self._momentum_initiative_bonus(self._stack_momentum_total(stack, battle)) + int(self._hero_for_side(battle, stack.get("side", "")).get("initiative", 0))
+        return int(stack.get("initiative", 0)) + self._effect_bonus(stack, battle, "initiative") + self._contextual_initiative_bonus(stack, battle) + self._linked_resonance_relay_initiative_bonus(stack, battle) + self._cohesion_initiative_bonus(self._stack_cohesion_total(stack, battle)) + self._momentum_initiative_bonus(self._stack_momentum_total(stack, battle)) + int(self._hero_for_side(battle, stack.get("side", "")).get("initiative", 0))
 
     def _contextual_attack_bonus(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         bonus = 0
@@ -2177,6 +2179,14 @@ class FastBattleBenchmark:
 
     def _side_has_ability(self, battle: dict[str, Any], side: str, ability_id: str) -> bool:
         return any(self._has_ability(stack, ability_id) for stack in self._alive_stacks_for_side(battle, side))
+
+    def _linked_resonance_relay_initiative_bonus(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
+        unit_id = str(stack.get("unit_id", ""))
+        for ally in self._alive_stacks_for_side(battle, str(stack.get("side", ""))):
+            relay = self._ability_by_id(ally, "resonance_relay")
+            if relay and unit_id in [str(value) for value in relay.get("linked_unit_ids", [])]:
+                return int(relay.get("linked_initiative_bonus", 0))
+        return 0
 
     def _side_max_ability_float(self, battle: dict[str, Any], side: str, ability_id: str, key: str, default: float) -> float:
         result = default
