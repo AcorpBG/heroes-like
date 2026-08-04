@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the native legacy-scenario converter and typed package round-trip path. Overall game completion remains open.",
-  "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "map-package-legacy-scenario-conversion-10184",
-  "currentSliceId": "map-package-legacy-scenario-conversion-10184",
-  "currentSliceNotes": "Native conversion now preserves River Pass terrain, roads, 20 authored placements, scenario selection/objectives/hooks/enemy/start contracts, validates typed documents, rejects malformed inputs, and round-trips no-writeback packages. Linux/Windows builds and package/browser/core/repository gates pass.",
+  "currentNotes": "Completed and validated atomic Map Editor Save Copy with exact package-object/player-contract preservation and non-overwriting typed output. Overall game completion remains open.",
+  "currentPhase": "phase-6-production-alpha-layer",
+  "currentSlice": "map-editor-package-save-copy-10184",
+  "currentSliceId": "map-editor-package-save-copy-10184",
+  "currentSliceNotes": "Save Copy writes unique typed pairs, reloads/adopts a clean editor-only baseline, preserves opaque object fields and explicit player slots, excludes copies from skirmish indexing, and leaves source/authored files unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Legacy Scenario Package Conversion",
-  "currentSliceUpdatedAt": "2026-08-04T13:03:02Z",
+  "currentSliceTitle": "Map Editor Package Save Copy",
+  "currentSliceUpdatedAt": "2026-08-04T16:03:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -14384,10 +14384,11 @@
       "status": "completed"
     },
     {
-      "evidence": "Current editor export behavior includes validated authored scenario/terrain-layer draft contracts and working-copy validation, but deliberately does not write authored scenario files or campaign progress.",
+      "evidence": "Package-backed working copies now have a non-destructive typed Save Copy path. Authored JSON, campaign progress, and in-place source writeback remain deliberately unsupported.",
       "id": "terrain-editor-authored-scenario-export-writeback-10184",
       "replacementPlannedSliceIds": [
-        "terrain-editor-scenario-export-validation-10184"
+        "terrain-editor-scenario-export-validation-10184",
+        "map-editor-package-save-copy-10184"
       ],
       "sourceRefs": [
         "PLAN.md",
@@ -14395,7 +14396,7 @@
         "tests/map_editor_smoke.gd"
       ],
       "status": "deferred_followup",
-      "title": "Terrain editor authored scenario export/writeback is not implemented"
+      "title": "Authored JSON in-place editor writeback is not implemented"
     }
   ],
   "docsReadyEvidence": [
@@ -69742,7 +69743,54 @@
       "completedAt": "2026-08-04T13:03:02Z",
       "updatedAt": "2026-08-04T13:03:02Z",
       "notes": "MapPackageService::convert_legacy_scenario_record now creates validated typed MapDocument and ScenarioDocument instances with deterministic hashes while preserving River Pass's 45 terrain cells, three roads, 20 placements, and scenario selection/objective/hook/enemy/start contracts. Focused proof covers four fail-closed inputs, no authored JSON mutation, and .amap/.ascenario round trips. Native package validation now enforces roads, unique placements, bounds, and map-ref identity. The parity-owned native RMG package handoff now carries its exact selected H3MapEd template, runtime zone/town counts, authority, and completion status, so package browser/disk startup/editor loading succeeds. Linux and Windows debug GDExtensions, package API, package-browser/editor integration, core systems, project parsing, repository validation, Python syntax, JSON, and diff checks pass.",
-      "remainingWork": "No work remains in this slice. The editor Save Copy command, obsolete authored-default map_editor_smoke contract, and overall game completion remain separate work."
+      "remainingWork": "No work remains in this slice. The editor Save Copy command is selected separately and overall game completion remains open."
+    },
+    {
+      "id": "map-editor-package-save-copy-10184",
+      "title": "Map Editor Package Save Copy",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Let the map editor persist a validated package-backed working copy as a new typed package pair without mutating authored content or its source package.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/editor/MapEditorShell.tscn",
+        "scripts/autoload/UiAccessibility.gd",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "tests/map_editor_package_save_copy_report.gd",
+        "tests/map_editor_package_save_copy_report.tscn",
+        "tests/map_editor_scenario_export_contract_report.gd",
+        "tests/map_editor_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Save Copy atomically writes a unique map/scenario package pair and adopts the reloaded copy as a clean editor baseline",
+        "Terrain, roads, every object record, scenario contracts, and player slots survive conversion while authored JSON and source package bytes remain unchanged",
+        "Editor copies are loadable in the editor but excluded from skirmish launch, and Linux/Windows native plus focused and broad regressions pass"
+      ],
+      "nonGoals": [
+        "authored JSON, campaign progress, save-data, or in-place source writes",
+        "skirmish certification, Native RMG generation/parity changes, or migration UI",
+        "overall game-completion claims"
+      ],
+      "startedAt": "2026-08-04T13:18:00Z",
+      "completedAt": "2026-08-04T16:03:47Z",
+      "updatedAt": "2026-08-04T16:03:47Z",
+      "notes": "Map Editor Save Copy now converts validated package-backed drafts, writes unique non-overwriting .amap/.ascenario pairs, reloads and validates them, and adopts each result as a clean editor-only baseline. Raw source-object records are retained so runtime normalization cannot erase opaque editable fields; focused proof preserves 21 objects, two explicit player slots, terrain/road/start edits, source bytes, and authored JSON, while failed validation leaves no output and skirmish indexing stays empty. Broad smoke also exposed and fixed duplicate accessibility signal connections on control re-entry. Linux and Windows native builds, package conversion/browser/editor/accessibility/core proofs, project parse, repository validation, Python/JSON, and diff checks pass.",
+      "remainingWork": "No work remains in this slice. Authored JSON in-place writeback and overall game completion remain open."
     }
   ],
   "project": "heroes-like",
@@ -70287,7 +70335,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Sluicefire Lindworms now lose 15 percent primary-attack damage against a clean line while preserving full retaliation and wounded or disrupted Bloodrush payoff. The all-live 100-seed four-week faction matrix keeps 33 outliers while lowering summed excess severity from 248.0 to 233.5, severe rows from 11 to 10, maximum dominance from 74.5 to 74.0 percent, and week-four side bias from 2.13 to 1.87 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T13:03:02Z",
+  "updatedAt": "2026-08-04T16:03:47Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -80,6 +80,12 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Load Map"
 
+[node name="SaveCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+text = "Save Copy"
+
 [node name="PlayWorkingCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 0)

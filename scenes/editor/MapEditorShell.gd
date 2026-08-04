@@ -48,6 +48,7 @@ const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
 @onready var _load_map_button: Button = %LoadMap
+@onready var _save_copy_button: Button = %SaveCopy
 @onready var _terrain_picker: OptionButton = %TerrainPicker
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
@@ -106,6 +107,8 @@ var _last_terrain_placement_result := {}
 var _authored_baseline_cache = null
 var _authored_baseline_cache_id := ""
 var _placement_debug_overlay_enabled := false
+var _last_save_copy_result := {}
+var validation_skip_initial_package_index := false
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -113,7 +116,12 @@ func _ready() -> void:
 	_rebuild_terrain_picker()
 	_rebuild_object_family_picker()
 	_rebuild_property_option_pickers()
-	_rebuild_map_package_picker()
+	if not validation_skip_initial_package_index:
+		_rebuild_map_package_picker()
+	else:
+		_map_package_entries = []
+		_map_package_index_status = {"ok": true, "entries": [], "message": "Initial package index skipped for focused validation."}
+		_map_package_picker.clear()
 	_select_tool(TOOL_INSPECT)
 	var returned_session = SessionState.consume_editor_return_session()
 	if returned_session != null and _resume_working_copy_from_memory(returned_session):
@@ -129,6 +137,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _connect_ui() -> void:
 	_map_package_picker.item_selected.connect(_on_map_package_selected)
 	_load_map_button.pressed.connect(_on_load_map_pressed)
+	_save_copy_button.pressed.connect(_on_save_copy_pressed)
 	_terrain_picker.item_selected.connect(_on_terrain_selected)
 	_inspect_tool_button.pressed.connect(func(): _select_tool(TOOL_INSPECT))
 	_terrain_tool_button.pressed.connect(func(): _select_tool(TOOL_TERRAIN))
@@ -2796,22 +2805,34 @@ func _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id:
 	return true
 
 func _load_maps_folder_package_working_copy(package_id: String) -> bool:
-	var session = ScenarioSelectRulesScript.load_maps_folder_package_session(
-		package_id,
+	var index_options := {
+		"include_non_launchable_generated_packages": true,
+		"consumer": "map_editor",
+	}
+	var entry := ScenarioSelectRulesScript.maps_folder_package_entry(package_id, index_options)
+	if entry.is_empty():
+		_last_message = "Unable to find map package %s for the editor." % package_id
+		_refresh_state()
+		return false
+	return _load_maps_folder_package_entry_working_copy(entry)
+
+func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
+	var package_id := String(entry.get("package_id", ""))
+	var session = ScenarioSelectRulesScript.load_maps_folder_package_session_from_entry(
+		entry,
 		"normal",
 		{
 			"startup_source": "map_editor_maps_folder",
 			"session_id_prefix": "editor_maps_folder_package",
-			"include_non_launchable_generated_packages": true,
 			"consumer": "map_editor",
 		}
 	)
 	if session == null or session.scenario_id == "":
-		_last_message = "Unable to load generated package %s into the editor." % package_id
+		_last_message = "Unable to load package %s into the editor." % package_id
 		_refresh_state()
 		return false
 	_session = session
-	var entry: Dictionary = _session.flags.get("maps_folder_package_entry", {}) if _session.flags.get("maps_folder_package_entry", {}) is Dictionary else {}
+	entry = _session.flags.get("maps_folder_package_entry", entry) if _session.flags.get("maps_folder_package_entry", entry) is Dictionary else entry
 	_session.flags["editor_source_kind"] = "maps_folder_package"
 	_session.flags["editor_source_package_id"] = package_id
 	_session.flags["editor_source_display_name"] = String(entry.get("display_name", package_id))
@@ -2833,7 +2854,7 @@ func _load_maps_folder_package_working_copy(package_id: String) -> bool:
 	_terrain_paint_order = 0
 	_dirty = false
 	_restored_from_play_copy = false
-	_last_message = "Loaded generated package from maps/ into a mutable editor working copy."
+	_last_message = "Loaded editor package into a mutable working copy."
 	_refresh_state()
 	return true
 
@@ -2940,6 +2961,7 @@ func _refresh_state() -> void:
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
 	_sync_map_package_load_surface()
+	_sync_save_copy_surface()
 	_sync_play_handoff_surface()
 	_sync_menu_return_surface()
 	_sync_restore_tile_surface()
@@ -2966,6 +2988,20 @@ func _sync_play_handoff_surface() -> void:
 	if return_tooltip != "":
 		tooltip_lines.append(return_tooltip)
 	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a map package working copy before play-testing it."
+
+func _sync_save_copy_surface() -> void:
+	if _save_copy_button == null:
+		return
+	var contract := _authored_scenario_export_contract_payload(false)
+	var package_backed := _session != null and String(_session.flags.get("editor_source_kind", "")) == "maps_folder_package"
+	_save_copy_button.disabled = not package_backed or not bool(contract.get("ready", false))
+	_save_copy_button.text = "Save Copy"
+	if not package_backed:
+		_save_copy_button.tooltip_text = "Load a map package working copy before saving a new package pair."
+	elif not bool(contract.get("ready", false)):
+		_save_copy_button.tooltip_text = "Resolve editor validation blockers before saving a copy."
+	else:
+		_save_copy_button.tooltip_text = "Write a new non-overwriting map and scenario package pair, then continue editing that copy."
 
 func _sync_map_package_load_surface() -> void:
 	if _map_package_picker == null:
@@ -3307,6 +3343,150 @@ func _on_load_map_pressed() -> void:
 		_refresh_state()
 		return
 	_load_maps_folder_package_working_copy(_selected_map_package_id)
+
+func _on_save_copy_pressed() -> void:
+	_save_package_working_copy()
+
+func _save_package_working_copy(target_dir_override: String = "", target_stem_override: String = "") -> Dictionary:
+	if _session == null or String(_session.flags.get("editor_source_kind", "")) != "maps_folder_package":
+		return _finish_save_copy_failure("package_working_copy_required", "Load a map package working copy before saving a copy.")
+	var contract := _authored_scenario_export_contract_payload(true)
+	if not bool(contract.get("ready", false)):
+		return _finish_save_copy_failure("draft_validation_failed", "Resolve editor validation blockers before saving a copy.", [], {"blockers": contract.get("blockers", [])})
+	if not ClassDB.class_exists("MapPackageService"):
+		return _finish_save_copy_failure("native_service_unavailable", "Native map package persistence is unavailable.")
+	var service: Variant = ClassDB.instantiate("MapPackageService")
+	if not service.get_capabilities().has("legacy_scenario_record_conversion"):
+		return _finish_save_copy_failure("native_conversion_unavailable", "Native scenario conversion is unavailable.")
+	var target_dir := target_dir_override.strip_edges()
+	if target_dir == "":
+		target_dir = String(ScenarioSelectRulesScript.generated_map_package_directory_policy().get("active_dir", "user://maps"))
+	var mkdir_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target_dir))
+	if mkdir_error != OK:
+		return _finish_save_copy_failure("target_directory_failed", "Could not create the map package directory.", [], {"error": mkdir_error, "target_dir": target_dir})
+	var source_entry: Dictionary = _session.flags.get("maps_folder_package_entry", {}) if _session.flags.get("maps_folder_package_entry", {}) is Dictionary else {}
+	var source_stem := String(source_entry.get("package_stem", _session.scenario_id))
+	var requested_stem := target_stem_override.strip_edges()
+	if requested_stem == "":
+		requested_stem = "%s-copy" % source_stem
+	var base_stem := ScenarioSelectRulesScript.safe_maps_folder_package_stem(requested_stem)
+	var target_stem := _unique_package_copy_stem(target_dir, base_stem)
+	var map_path := "%s/%s.amap" % [target_dir.trim_suffix("/"), target_stem]
+	var scenario_path := "%s/%s.ascenario" % [target_dir.trim_suffix("/"), target_stem]
+	var output_paths := [map_path, scenario_path]
+	var draft: Dictionary = contract.get("draft", {}) if contract.get("draft", {}) is Dictionary else {}
+	var scenario_record: Dictionary = draft.get("scenario_record", {}).duplicate(true)
+	var terrain_layers_record: Dictionary = draft.get("terrain_layers_record", {}).duplicate(true)
+	var display_name := String(scenario_record.get("name", source_entry.get("display_name", _session.scenario_id))).strip_edges()
+	if not display_name.ends_with(" Copy"):
+		display_name = "%s Copy" % display_name
+	scenario_record["name"] = display_name
+	var conversion: Dictionary = service.convert_legacy_scenario_record(
+		scenario_record,
+		terrain_layers_record,
+		{"map_id": "%s-map" % target_stem, "scenario_id": target_stem}
+	)
+	if not bool(conversion.get("ok", false)):
+		return _finish_save_copy_failure("conversion_failed", "The editor working copy could not be converted to package documents.", output_paths, {"conversion": conversion})
+	var map_document: Variant = conversion.get("map_document", null)
+	var scenario_document: Variant = conversion.get("scenario_document", null)
+	if map_document == null or scenario_document == null:
+		return _finish_save_copy_failure("conversion_missing_documents", "Native conversion did not return package documents.", output_paths)
+	var save_options := {"path_policy": "editor_non_overwriting_package_copy", "return_package": false}
+	var map_save: Dictionary = service.save_map_package(map_document, map_path, save_options)
+	if not bool(map_save.get("ok", false)):
+		return _finish_save_copy_failure("map_save_failed", "The map package copy could not be written.", output_paths, {"map_save": map_save})
+	var map_load: Dictionary = service.load_map_package(map_path)
+	if not bool(map_load.get("ok", false)):
+		return _finish_save_copy_failure("map_reload_failed", "The written map package could not be reloaded.", output_paths, {"map_load": map_load})
+	scenario_document.configure({
+		"scenario_id": scenario_document.get_scenario_id(),
+		"scenario_hash": scenario_document.get_scenario_hash(),
+		"map_ref": map_load.get("map_ref", {}),
+		"selection": scenario_document.get_selection(),
+		"player_slots": scenario_document.get_player_slots(),
+		"objectives": scenario_document.get_objectives(),
+		"script_hooks": scenario_document.get_script_hooks(),
+		"enemy_factions": scenario_document.get_enemy_factions(),
+		"start_contract": scenario_document.get_start_contract(),
+	})
+	var scenario_save: Dictionary = service.save_scenario_package(scenario_document, scenario_path, save_options)
+	if not bool(scenario_save.get("ok", false)):
+		return _finish_save_copy_failure("scenario_save_failed", "The scenario package copy could not be written.", output_paths, {"scenario_save": scenario_save})
+	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	if not bool(scenario_load.get("ok", false)):
+		return _finish_save_copy_failure("scenario_reload_failed", "The written scenario package could not be reloaded.", output_paths, {"scenario_load": scenario_load})
+	var loaded_map: Variant = map_load.get("map_document", null)
+	var loaded_scenario: Variant = scenario_load.get("scenario_document", null)
+	var map_validation: Dictionary = service.validate_map_document(loaded_map)
+	var scenario_validation: Dictionary = service.validate_scenario_document(loaded_scenario, loaded_map)
+	if not bool(map_validation.get("ok", false)) or not bool(scenario_validation.get("ok", false)):
+		return _finish_save_copy_failure("saved_pair_validation_failed", "The written package pair failed structural validation.", output_paths, {"map_validation": map_validation, "scenario_validation": scenario_validation})
+	var index := ScenarioSelectRulesScript.maps_folder_package_index({
+		"package_dir": target_dir,
+		"include_non_launchable_generated_packages": true,
+		"consumer": "map_editor",
+	})
+	var saved_entry := {}
+	for entry_value in index.get("entries", []):
+		if entry_value is Dictionary and String(entry_value.get("package_stem", "")) == target_stem:
+			saved_entry = entry_value
+			break
+	if saved_entry.is_empty() or not _load_maps_folder_package_entry_working_copy(saved_entry):
+		return _finish_save_copy_failure("saved_pair_adoption_failed", "The saved package pair could not be adopted as the editor baseline.", output_paths, {"index": index})
+	var default_dir := String(ScenarioSelectRulesScript.generated_map_package_directory_policy().get("active_dir", ""))
+	if target_dir == default_dir:
+		_rebuild_map_package_picker()
+		_select_map_package_picker_by_id(String(saved_entry.get("package_id", "")))
+	_dirty = false
+	_authored_baseline_cache = _duplicate_session(_session)
+	_authored_baseline_cache_id = _session.scenario_id
+	var result := {
+		"ok": true,
+		"status": "saved_copy",
+		"package_id": String(saved_entry.get("package_id", "")),
+		"package_stem": target_stem,
+		"target_dir": target_dir,
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"map_hash": loaded_map.get_map_hash(),
+		"scenario_hash": loaded_scenario.get_scenario_hash(),
+		"object_count": loaded_map.get_object_count(),
+		"player_slot_count": loaded_scenario.get_player_slots().size(),
+		"source_unchanged_by_policy": true,
+		"authored_json_writeback": false,
+		"editor_inspection_only": bool(saved_entry.get("editor_inspection_only", false)),
+	}
+	_last_save_copy_result = result.duplicate(true)
+	_last_message = "Saved %s as a new map package copy." % target_stem
+	_refresh_state()
+	return result
+
+func _unique_package_copy_stem(target_dir: String, base_stem: String) -> String:
+	var suffix := 1
+	var candidate := base_stem
+	while FileAccess.file_exists("%s/%s.amap" % [target_dir.trim_suffix("/"), candidate]) or FileAccess.file_exists("%s/%s.ascenario" % [target_dir.trim_suffix("/"), candidate]):
+		suffix += 1
+		candidate = "%s-%d" % [base_stem, suffix]
+	return candidate
+
+func _finish_save_copy_failure(code: String, message: String, cleanup_paths: Array = [], details: Dictionary = {}) -> Dictionary:
+	for path_value in cleanup_paths:
+		var path := String(path_value)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	var result := {
+		"ok": false,
+		"status": "failed",
+		"error_code": code,
+		"message": message,
+		"partial_outputs_removed": true,
+	}
+	result.merge(details, true)
+	_last_save_copy_result = result.duplicate(true)
+	_last_message = message
+	_refresh_state()
+	return result
 
 func _on_terrain_selected(index: int) -> void:
 	if index < 0 or index >= _terrain_picker.get_item_count():
@@ -4113,6 +4293,7 @@ func _place_object(tile: Vector2i) -> bool:
 	if built_placement.is_empty():
 		_last_message = "Could not build %s placement for %s." % [_object_family_label(_selected_object_family), _selected_object_content_id]
 		return false
+	built_placement["editor_authored_placement"] = true
 
 	var array_key := _placement_array_key(_selected_object_family)
 	var placements = _session.overworld.get(array_key, [])
@@ -4322,6 +4503,7 @@ func _duplicate_object_by_key(property_key: String, destination_tile: Vector2i) 
 		duplicated_placement["placement_id"] = duplicated_placement_id
 		duplicated_placement["x"] = destination_tile.x
 		duplicated_placement["y"] = destination_tile.y
+		duplicated_placement["editor_authored_placement"] = true
 		placements.append(duplicated_placement)
 		_session.overworld[array_key] = placements
 		_selected_property_object_key = _object_property_key(kind, duplicated_placement_id)
@@ -5091,7 +5273,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 			"write_context": "validated draft only; no authored file or campaign progress is written",
 			"blockers": ["No editor working copy is loaded."],
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := _editor_scenario_template()
 	if scenario.is_empty():
 		return {
 			"ok": false,
@@ -5103,7 +5285,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 			"writeback_supported": false,
 			"writeback_state": "disabled_missing_scenario",
 			"write_context": "validated draft only; no authored file or campaign progress is written",
-			"blockers": ["Authored scenario %s could not be loaded." % _session.scenario_id],
+			"blockers": ["Scenario template %s could not be reconstructed from the loaded working copy." % _session.scenario_id],
 		}
 
 	var validation := _scenario_authoring_validation_payload()
@@ -5144,7 +5326,8 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 		blockers.append(blocker)
 	var baseline_session = _authored_baseline_session()
 	var baseline_scenario_record := _export_scenario_record_from_session(scenario, baseline_session) if baseline_session != null else scenario
-	var baseline_terrain_layers_record := _export_terrain_layers_record_from_layers(ContentService.get_terrain_layers_for_scenario(_session.scenario_id))
+	var baseline_layers: Dictionary = baseline_session.overworld.get("terrain_layers", {}) if baseline_session != null else {}
+	var baseline_terrain_layers_record := _export_terrain_layers_record_from_layers(baseline_layers)
 	var changed_domains := _export_changed_domains(baseline_scenario_record, baseline_terrain_layers_record, scenario_record, terrain_layers_record)
 	var draft := {
 		"scenario_record": scenario_record,
@@ -5180,6 +5363,27 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 		"export_scope": "authored_scenario_and_terrain_layers_draft",
 	}
 
+func _editor_scenario_template() -> Dictionary:
+	if _session == null or _session.scenario_id == "":
+		return {}
+	var authored := ContentService.get_scenario(_session.scenario_id)
+	if not authored.is_empty():
+		return authored
+	var runtime_record = _session.flags.get("native_random_map_runtime_scenario_record", {})
+	if not (runtime_record is Dictionary) or runtime_record.is_empty():
+		runtime_record = _session.overworld.get("native_random_map_runtime_scenario_record", {})
+	if not (runtime_record is Dictionary) or runtime_record.is_empty():
+		return {}
+	var scenario: Dictionary = runtime_record.duplicate(true)
+	scenario["id"] = _session.scenario_id
+	if not (scenario.get("map_size", {}) is Dictionary) or scenario.get("map_size", {}).is_empty():
+		var map_size := OverworldRules.derive_map_size(_session)
+		scenario["map_size"] = {"width": map_size.x, "height": map_size.y}
+	if not (scenario.get("start", {}) is Dictionary):
+		var hero_position := OverworldRules.hero_position(_session)
+		scenario["start"] = {"x": hero_position.x, "y": hero_position.y}
+	return scenario
+
 func _export_draft_signature(scenario_record: Dictionary, terrain_layers_record: Dictionary, changed_domains: Array) -> String:
 	var map_rows = scenario_record.get("map", [])
 	var map_height: int = map_rows.size() if map_rows is Array else 0
@@ -5190,7 +5394,7 @@ func _export_draft_signature(scenario_record: Dictionary, terrain_layers_record:
 	var changed_labels := []
 	for domain in changed_domains:
 		changed_labels.append(String(domain))
-	return "%s|%dx%d|start=%d,%d|towns=%d|resources=%d|artifacts=%d|encounters=%d|roads=%d|changed=%s" % [
+	return "%s|%dx%d|start=%d,%d|towns=%d|resources=%d|artifacts=%d|encounters=%d|objects=%d|roads=%d|changed=%s" % [
 		String(scenario_record.get("id", "")),
 		map_width,
 		map_height,
@@ -5200,6 +5404,7 @@ func _export_draft_signature(scenario_record: Dictionary, terrain_layers_record:
 		scenario_record.get("resource_nodes", []).size(),
 		scenario_record.get("artifact_nodes", []).size(),
 		scenario_record.get("encounters", []).size(),
+		scenario_record.get("map_objects", []).size(),
 		terrain_layers_record.get("roads", []).size(),
 		",".join(changed_labels),
 	]
@@ -5218,6 +5423,7 @@ func _export_scenario_record_from_session(baseline_scenario: Dictionary, session
 	record["resource_nodes"] = _normalized_export_placements(OBJECT_FAMILY_RESOURCE, session.overworld.get("resource_nodes", []))
 	record["artifact_nodes"] = _normalized_export_placements(OBJECT_FAMILY_ARTIFACT, session.overworld.get("artifact_nodes", []))
 	record["encounters"] = _normalized_export_placements(OBJECT_FAMILY_ENCOUNTER, session.overworld.get("encounters", []))
+	record["map_objects"] = _normalized_export_map_objects(session.overworld.get("map_objects", []))
 	return record
 
 func _export_terrain_layers_record_from_working_copy() -> Dictionary:
@@ -5278,11 +5484,15 @@ func _normalized_export_placements(family: String, placements_value: Variant) ->
 		if not (placement_value is Dictionary):
 			continue
 		var placement: Dictionary = placement_value
-		var record := {
-			"placement_id": String(placement.get("placement_id", "")),
-			"x": int(placement.get("x", 0)),
-			"y": int(placement.get("y", 0)),
-		}
+		if not _placement_belongs_in_saved_package(placement):
+			continue
+		var placement_id := String(placement.get("placement_id", ""))
+		var source_record := _package_source_object_record(placement_id)
+		var record: Dictionary = source_record.duplicate(true) if not source_record.is_empty() else {}
+		record.merge(placement.duplicate(true), true)
+		record["placement_id"] = placement_id
+		record["x"] = int(placement.get("x", 0))
+		record["y"] = int(placement.get("y", 0))
 		match family:
 			OBJECT_FAMILY_TOWN:
 				record["town_id"] = String(placement.get("town_id", ""))
@@ -5317,6 +5527,40 @@ func _normalized_export_placements(family: String, placements_value: Variant) ->
 		records.append(record)
 	return records
 
+func _package_source_object_record(placement_id: String) -> Dictionary:
+	if _session == null or placement_id == "":
+		return {}
+	var source_records = _session.overworld.get("package_source_objects_by_id", {})
+	if not (source_records is Dictionary):
+		return {}
+	var source_record = source_records.get(placement_id, {})
+	return source_record if source_record is Dictionary else {}
+
+func _placement_belongs_in_saved_package(placement: Dictionary) -> bool:
+	if _session == null or String(_session.flags.get("editor_source_kind", "")) != "maps_folder_package":
+		return true
+	if bool(placement.get("editor_authored_placement", false)):
+		return true
+	var source_ids = _session.overworld.get("package_source_object_ids", [])
+	if not (source_ids is Array) or source_ids.is_empty():
+		return true
+	return String(placement.get("placement_id", "")) in source_ids
+
+func _normalized_export_map_objects(objects_value: Variant) -> Array:
+	var records := []
+	if not (objects_value is Array):
+		return records
+	for object_value in objects_value:
+		if not (object_value is Dictionary):
+			continue
+		var record: Dictionary = object_value.duplicate(true)
+		record["placement_id"] = String(record.get("placement_id", ""))
+		record["x"] = int(record.get("x", 0))
+		record["y"] = int(record.get("y", 0))
+		record["level"] = int(record.get("level", 0))
+		records.append(record)
+	return records
+
 func _copy_optional_dict(target: Dictionary, source: Dictionary, key: String) -> void:
 	var value = source.get(key, {})
 	if value is Dictionary and not value.is_empty():
@@ -5341,7 +5585,7 @@ func _copy_optional_positive_int(target: Dictionary, source: Dictionary, key: St
 
 func _export_changed_domains(baseline_scenario: Dictionary, baseline_layers: Dictionary, scenario_record: Dictionary, terrain_layers_record: Dictionary) -> Array:
 	var domains := []
-	for key in ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters"]:
+	for key in ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "map_objects"]:
 		if baseline_scenario.get(key, null) != scenario_record.get(key, null):
 			domains.append(key)
 	if baseline_layers != terrain_layers_record:
@@ -5394,6 +5638,31 @@ func _validate_export_scenario_record(record: Dictionary) -> Array:
 			var content_id := String(placement.get(_placement_content_key(family), "")).strip_edges()
 			if content_id == "" or _object_content_lookup(family, content_id).is_empty():
 				blockers.append("Scenario export draft placement %s references missing %s content %s." % [placement_id, _object_family_label(family), content_id])
+	var map_object_ids := {}
+	var map_objects = record.get("map_objects", [])
+	if not (map_objects is Array):
+		blockers.append("Scenario export draft map_objects is not an array.")
+	else:
+		for object_value in map_objects:
+			if not (object_value is Dictionary):
+				blockers.append("Scenario export draft map_objects contains a non-dictionary placement.")
+				continue
+			var object: Dictionary = object_value
+			var placement_id := String(object.get("placement_id", "")).strip_edges()
+			if placement_id == "":
+				blockers.append("Scenario export draft map object is missing placement_id.")
+			elif map_object_ids.has(placement_id):
+				blockers.append("Scenario export draft repeats map object placement_id %s." % placement_id)
+			else:
+				map_object_ids[placement_id] = true
+			var tile := Vector2i(int(object.get("x", -1)), int(object.get("y", -1)))
+			if not _tile_in_bounds(tile):
+				blockers.append("Scenario export draft map object %s is outside the map." % placement_id)
+			var kind := String(object.get("kind", "")).strip_edges()
+			if kind == "":
+				kind = String(object.get("native_record_kind", "")).strip_edges()
+			if kind == "":
+				blockers.append("Scenario export draft map object %s is missing kind." % placement_id)
 	return blockers
 
 func _validate_export_terrain_layers_record(record: Dictionary) -> Array:
@@ -6555,7 +6824,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _terrain_line_tool_button, _terrain_rectangle_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _terrain_line_tool_button, _terrain_rectangle_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _save_copy_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -6621,6 +6890,10 @@ func validation_snapshot() -> Dictionary:
 		"map_package_picker_metadata": _map_package_picker_metadata(),
 		"load_map_button_text": _load_map_button.text if _load_map_button != null else "",
 		"load_map_button_disabled": _load_map_button.disabled if _load_map_button != null else true,
+		"save_copy_button_text": _save_copy_button.text if _save_copy_button != null else "",
+		"save_copy_button_disabled": _save_copy_button.disabled if _save_copy_button != null else true,
+		"save_copy_button_tooltip": _save_copy_button.tooltip_text if _save_copy_button != null else "",
+		"last_save_copy_result": _last_save_copy_result.duplicate(true),
 		"load_map_flow_active": true,
 		"legacy_scenario_dropdown_active": false,
 		"authored_json_scenarios_used": false,
@@ -6769,6 +7042,23 @@ func validation_load_maps_folder_package(package_id: String) -> Dictionary:
 	var loaded := _load_maps_folder_package_working_copy(package_id)
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = loaded
+	return snapshot
+
+func validation_load_package_from_directory(package_dir: String, package_stem: String) -> Dictionary:
+	var index := ScenarioSelectRulesScript.maps_folder_package_index({
+		"package_dir": package_dir,
+		"include_non_launchable_generated_packages": true,
+		"consumer": "map_editor",
+	})
+	var entry := {}
+	for entry_value in index.get("entries", []):
+		if entry_value is Dictionary and String(entry_value.get("package_stem", "")) == package_stem:
+			entry = entry_value
+			break
+	var loaded := not entry.is_empty() and _load_maps_folder_package_entry_working_copy(entry)
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = loaded
+	snapshot["package_index"] = index
 	return snapshot
 
 func validation_load_selected_map_package() -> Dictionary:
@@ -7438,6 +7728,9 @@ func validation_launch_working_copy() -> Dictionary:
 
 func validation_authored_scenario_export_contract() -> Dictionary:
 	return _authored_scenario_export_contract_payload(true)
+
+func validation_save_copy(target_dir: String = "", target_stem: String = "") -> Dictionary:
+	return _save_package_working_copy(target_dir, target_stem)
 
 func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
 	if _session == null or not _tile_in_bounds(tile):

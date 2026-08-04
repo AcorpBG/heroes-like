@@ -61,6 +61,13 @@ static func build_session_from_adoption(
 	var artifact_nodes := _artifact_nodes_from_document(map_document)
 	var encounters := _ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document))
 	var map_objects := _map_objects_from_document(map_document)
+	var package_source_object_ids := []
+	var package_source_objects_by_id := {}
+	for source_object in _document_objects(map_document):
+		var source_placement_id := String(source_object.get("placement_id", "")).strip_edges()
+		if source_placement_id != "":
+			package_source_object_ids.append(source_placement_id)
+			package_source_objects_by_id[source_placement_id] = source_object.duplicate(true)
 	var overworld_state := {
 		"map": map_rows,
 		"map_size": map_size,
@@ -77,6 +84,8 @@ static func build_session_from_adoption(
 		"towns": towns,
 		"resource_nodes": resource_nodes,
 		"map_objects": map_objects,
+		"package_source_object_ids": package_source_object_ids,
+		"package_source_objects_by_id": package_source_objects_by_id,
 		"artifact_nodes": artifact_nodes,
 		"enemy_states": _enemy_states_from_document(scenario_document),
 		"map_package_ref": map_ref,
@@ -179,6 +188,8 @@ static func _primary_start(adoption: Dictionary) -> Dictionary:
 	var scenario_document: Variant = adoption.get("scenario_document", null)
 	if scenario_document != null and scenario_document.has_method("get_start_contract"):
 		var start_contract: Dictionary = scenario_document.get_start_contract()
+		if start_contract.has("x") and start_contract.has("y"):
+			return {"x": int(start_contract.get("x", 0)), "y": int(start_contract.get("y", 0))}
 		var start_towns: Array = start_contract.get("player_start_towns", []) if start_contract.get("player_start_towns", []) is Array else []
 		for town_value in start_towns:
 			if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
@@ -293,7 +304,8 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			town_faction_id = String(town_template.get("faction_id", town_faction_id))
 		var owner_slot := _int_or_default(object.get("owner_slot", object.get("player_slot", -1)), -1)
 		var player_slot := _int_or_default(object.get("player_slot", object.get("owner_slot", -1)), -1)
-		towns.append({
+		var town_state: Dictionary = object.duplicate(true)
+		town_state.merge({
 			"placement_id": String(object.get("placement_id", "")),
 			"town_id": town_id,
 			"x": int(object.get("x", 0)),
@@ -306,17 +318,18 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 			"faction_id": town_faction_id,
 			"source_h3maped_faction_id": String(object.get("h3maped_faction_id", object.get("faction_id", ""))),
 			"source_package_town_id": String(object.get("town_id", "")),
-				"is_start_town": _bool_or_default(object.get("is_start_town", object.get("start_anchor", false)), false),
-				"start_anchor": _bool_or_default(object.get("start_anchor", object.get("is_start_town", false)), false),
+			"is_start_town": _bool_or_default(object.get("is_start_town", object.get("start_anchor", false)), false),
+			"start_anchor": _bool_or_default(object.get("start_anchor", object.get("is_start_town", false)), false),
 			"body_tiles": object.get("package_body_tiles", object.get("body_tiles", [])).duplicate(true) if object.get("package_body_tiles", object.get("body_tiles", [])) is Array else [],
 			"package_block_tiles": object.get("package_block_tiles", []).duplicate(true) if object.get("package_block_tiles", []) is Array else [],
 			"visit_tile": object.get("visit_tile", {}).duplicate(true) if object.get("visit_tile", {}) is Dictionary else {},
 			"package_visit_tiles": object.get("package_visit_tiles", []).duplicate(true) if object.get("package_visit_tiles", []) is Array else [],
-				"blocking_body": _bool_or_default(object.get("blocking_body", true), true),
+			"blocking_body": _bool_or_default(object.get("blocking_body", true), true),
 			"built_buildings": town_template.get("starting_building_ids", []).duplicate(true) if town_template.get("starting_building_ids", []) is Array else [],
 			"available_recruits": {},
 			"garrison": town_template.get("garrison", []).duplicate(true) if town_template.get("garrison", []) is Array else [],
-		})
+		}, true)
+		towns.append(town_state)
 	return towns
 
 static func _project_town_identity_from_h3m_record(object: Dictionary) -> Dictionary:
@@ -888,6 +901,7 @@ static func _runtime_scenario_record_from_documents(
 		return {}
 	var selection: Dictionary = scenario_document.get_selection() if scenario_document.has_method("get_selection") else {}
 	var objectives: Dictionary = scenario_document.get_objectives() if scenario_document.has_method("get_objectives") else {}
+	var start_contract: Dictionary = scenario_document.get_start_contract() if scenario_document.has_method("get_start_contract") else {}
 	return {
 		"id": scenario_id,
 		"name": String(selection.get("name", scenario_id)),
@@ -898,13 +912,18 @@ static func _runtime_scenario_record_from_documents(
 		"map": overworld_state.get("map", []),
 		"player_faction_id": _player_faction_from_document(scenario_document, overworld_state),
 		"starting_hero_id": hero_id,
-		"hero_id": hero_id,
+		"hero_id": String(start_contract.get("hero_id", hero_id)),
+		"player_army_id": String(start_contract.get("player_army_id", "")),
+		"starting_resources": start_contract.get("starting_resources", {}),
+		"hero_starts": start_contract.get("hero_starts", []),
 		"starting_position": start,
+		"start": start.duplicate(true),
 		"towns": overworld_state.get("towns", []),
 		"resource_nodes": overworld_state.get("resource_nodes", []),
 		"artifact_nodes": overworld_state.get("artifact_nodes", []),
 		"encounters": overworld_state.get("encounters", []),
 		"map_objects": overworld_state.get("map_objects", []),
+		"player_slots": scenario_document.get_player_slots() if scenario_document.has_method("get_player_slots") else [],
 		"objectives": objectives,
 		"script_hooks": scenario_document.get_script_hooks() if scenario_document.has_method("get_script_hooks") else [],
 		"enemy_factions": scenario_document.get_enemy_factions() if scenario_document.has_method("get_enemy_factions") else [],

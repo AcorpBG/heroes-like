@@ -9,6 +9,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	var shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
+	shell.set("validation_skip_initial_package_index", true)
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -17,7 +18,14 @@ func _run() -> void:
 		_fail("Map editor smoke: shell did not expose validation_snapshot.")
 		return
 
-	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var initial_snapshot: Dictionary = shell.call("validation_snapshot")
+	if bool(initial_snapshot.get("working_copy", true)):
+		_fail("Map editor smoke: production editor should start at the package picker without an implicit authored working copy.")
+		return
+	var snapshot: Dictionary = shell.call("validation_load_legacy_authored_scenario_for_dev", SCENARIO_ID)
+	if not bool(snapshot.get("ok", false)):
+		_fail("Map editor smoke: could not load the authored Ninefold validation fixture.")
+		return
 	if String(snapshot.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Map editor smoke: default working copy did not load Ninefold Confluence: %s." % snapshot)
 		return
@@ -51,7 +59,7 @@ func _run() -> void:
 		return
 	if not _assert_authored_scenario_export_contract(shell.call("validation_authored_scenario_export_contract"), false, [], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
 		return
-	if not _assert_editor_scenario_switch_handoff(snapshot, false, ["Scenario switch:", "Ninefold Confluence", "clean working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "choose another scenario to load its authored baseline", "no authored file or campaign progress is written"]):
+	if not _assert_editor_scenario_switch_handoff(snapshot, false, ["Load Map:", "Ninefold Confluence", "clean working copy", "loading another map package replaces this in-memory working copy", "choose another map package, then Load Map", "no authored file, old JSON scenario record, or campaign progress is written"]):
 		return
 	if not _assert_editor_selected_validation_focus(snapshot, ["Validation focus:", "23,26", "ninefold_embercourt_survey_camp", "objectives 1", "enemy focus", "Selected Validation Focus", "selected tile in the editor working copy only", "Play Copy"]):
 		return
@@ -61,7 +69,7 @@ func _run() -> void:
 		return
 	if not _assert_editor_selected_property_handoff(snapshot, "town", ["Selection handoff:", "Town", "Owner", "Apply Properties", "working copy"]):
 		return
-	if not _assert_editor_restore_tile_cue(snapshot, false, ["Tile reset:", "23,26", "already matches authored baseline", "Restore Tile", "no-op check"]):
+	if not _assert_editor_restore_tile_cue(snapshot, false, ["Tile reset:", "23,26", "already matches loaded map baseline", "Restore Tile", "no-op check"]):
 		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
@@ -103,13 +111,13 @@ func _run() -> void:
 		return
 	if not _assert_editor_play_readiness_gate(paint_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 23,26", "Objects"]):
 		return
-	if not _assert_editor_restore_tile_cue(paint_result, true, ["Tile reset:", "2,2", "differs in terrain", "returns this tile to authored baseline", "Play Copy"]):
+	if not _assert_editor_restore_tile_cue(paint_result, true, ["Tile reset:", "2,2", "differs in terrain", "returns this tile to the loaded map baseline", "Play Copy"]):
 		return
 	if not _assert_editor_terrain_paint_check(paint_result, ["Paint check:", "Terrain Paint Check", "single tile 2,2", "Changes:", "Scope: in-memory working copy only"]):
 		return
 	if not _assert_editor_menu_return_cue(paint_result, true, ["Menu return:", "Main menu", "unsaved editor edits are discarded", "Use Play Copy before leaving"]):
 		return
-	if not _assert_editor_scenario_switch_handoff(paint_result, true, ["Scenario switch:", "Ninefold Confluence", "dirty working copy", "choosing another scenario replaces this in-memory working copy", "Scenario Switch", "use Play Copy for a smoke pass or keep editing before switching", "no authored file or campaign progress is written"]):
+	if not _assert_editor_scenario_switch_handoff(paint_result, true, ["Load Map:", "Ninefold Confluence", "dirty working copy", "loading another map package replaces this in-memory working copy", "no authored file, old JSON scenario record, or campaign progress is written"]):
 		return
 	if not _assert_editor_export_intent(paint_result, true, ["Export intent:", "Editor Export Intent", "Ninefold Confluence", "dirty working copy", "validated authored draft", "future authored export", "no authored file or campaign progress is written"]):
 		return
@@ -1815,13 +1823,13 @@ func _assert_selected_tile_restore(shell) -> bool:
 	var empty_inspection: Dictionary = empty_restore.get("tile_inspection", {})
 	if (
 		not bool(empty_restore.get("ok", false))
-		or String(empty_inspection.get("terrain_id", "")) != "frost"
+		or String(empty_inspection.get("terrain_id", "")) != "snow"
 		or bool(empty_inspection.get("road", true))
 		or not _object_detail_for_family(empty_inspection, "encounter").is_empty()
 	):
 		_fail("Map editor smoke: restore did not return an empty tile to authored terrain/no-road/no-object state: %s." % empty_restore)
 		return false
-	if not _assert_editor_restore_tile_cue(empty_restore, false, ["Tile reset:", "6,6", "already matches authored baseline", "Restore Tile", "no-op check"]):
+	if not _assert_editor_restore_tile_cue(empty_restore, false, ["Tile reset:", "6,6", "already matches loaded map baseline", "Restore Tile", "no-op check"]):
 		return false
 
 	var removed_authored_road: Dictionary = shell.call("validation_toggle_road", 23, 24)
@@ -2011,7 +2019,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if (
 		not bool(palette_result.get("ok", false))
 		or String(palette_taxonomy.get("primary_class", "")) != "pickup"
-		or String(palette_taxonomy.get("cadence", "")) != "one_time"
+		or String(palette_taxonomy.get("cadence", "")) != "persistent_control"
 		or String(palette_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
 		or String(palette_taxonomy.get("resource_site_id", "")) != "site_wood_wagon"
 		or "build_resource" not in palette_taxonomy.get("secondary_tags", [])
@@ -2035,7 +2043,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	var resource_guidance: Dictionary = resource_detail.get("placement_guidance", {})
 	if (
 		String(resource_taxonomy.get("primary_class", "")) != "pickup"
-		or String(resource_taxonomy.get("cadence", "")) != "one_time"
+		or String(resource_taxonomy.get("cadence", "")) != "persistent_control"
 		or String(resource_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
 		or String(resource_taxonomy.get("map_object_id", "")) != "object_wood_wagon"
 		or String(resource_detail.get("taxonomy_summary", "")).find("class Pickup") < 0
@@ -2053,7 +2061,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_wood_wagon | Site site_wood_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
-	if resource_text.find("Control: Uncollected; one visit can claim it.") < 0 or resource_text.find("Economy: one-time 150 gold, 2 wood") < 0:
+	if resource_text.find("Control: Unclaimed; capture flips control.") < 0 or resource_text.find("Economy: claim 150 gold, 2 wood, daily 1 wood") < 0:
 		_fail("Map editor smoke: tile text did not include practical resource-site control/reward inspection: %s." % resource_text)
 		return false
 	var guarded_resource_result: Dictionary = shell.call("validation_select_tile", 60, 36)
@@ -2721,7 +2729,7 @@ func _assert_editor_scenario_switch_handoff(result: Dictionary, expected_dirty: 
 	if bool(handoff.get("dirty", not expected_dirty)) != expected_dirty:
 		_fail("Map editor smoke: scenario switch handoff dirty state mismatch: %s." % handoff)
 		return false
-	if String(handoff.get("scope", "")) != "scenario_picker_working_copy_replace":
+	if String(handoff.get("scope", "")) != "map_package_load_working_copy_replace":
 		_fail("Map editor smoke: scenario switch handoff did not declare working-copy replace scope: %s." % handoff)
 		return false
 	var expected_state := "dirty" if expected_dirty else "clean"
@@ -2734,11 +2742,11 @@ func _assert_editor_scenario_switch_handoff(result: Dictionary, expected_dirty: 
 		if expected != "" and combined.find(expected) < 0:
 			_fail("Map editor smoke: scenario switch handoff missed '%s': %s." % [expected, combined])
 			return false
-	if picker_tooltip.find("Scenario Switch") < 0:
-		_fail("Map editor smoke: scenario picker tooltip did not carry scenario-switch handoff: %s." % picker_tooltip)
+	if picker_tooltip.find("Load Map") < 0:
+		_fail("Map editor smoke: map package picker tooltip did not carry load handoff: %s." % picker_tooltip)
 		return false
-	if visible_status.find("Scenario switch:") < 0:
-		_fail("Map editor smoke: visible editor status did not carry scenario-switch handoff: %s." % visible_status)
+	if visible_status.find("Load Map:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry map-load handoff: %s." % visible_status)
 		return false
 	for forbidden in [
 		"final_priority",
@@ -3244,8 +3252,8 @@ func _assert_object_property_edits(shell) -> bool:
 		_fail("Map editor smoke: resource collected property edit did not update working-copy inspection: %s." % resource_result)
 		return false
 	var resource_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 6)
-	if bool(resource_presentation.get("has_resource", true)):
-		_fail("Map editor smoke: live preview still exposed a collected resource pickup: %s." % resource_presentation)
+	if not bool(resource_presentation.get("has_resource", false)) or not bool(resource_presentation.get("draws_discoverable_object", false)):
+		_fail("Map editor smoke: live preview hid a captured persistent-control resource site: %s." % resource_presentation)
 		return false
 	if not _assert_authoring_recap(resource_result, "edit_property", true, ["Collected", "economy value is already claimed", "Next:"]):
 		return false
@@ -3466,8 +3474,8 @@ func _assert_object_move(
 				_fail("Map editor smoke: moved town preview did not preserve owner: %s." % destination_presentation)
 				return false
 		"resource":
-			if bool(source_presentation.get("has_resource", false)) or bool(destination_presentation.get("has_resource", true)):
-				_fail("Map editor smoke: collected moved resource did not stay hidden in live preview: source=%s destination=%s." % [source_presentation, destination_presentation])
+			if bool(source_presentation.get("has_resource", false)) or not bool(destination_presentation.get("has_resource", false)):
+				_fail("Map editor smoke: live preview did not move the captured persistent resource site: source=%s destination=%s." % [source_presentation, destination_presentation])
 				return false
 		"artifact":
 			if bool(source_presentation.get("has_artifact", false)) or bool(destination_presentation.get("has_artifact", true)):
@@ -3542,8 +3550,8 @@ func _assert_object_duplicate(
 				_fail("Map editor smoke: duplicated town preview did not preserve owner: %s." % destination_presentation)
 				return false
 		"resource":
-			if bool(source_presentation.get("has_resource", true)) or bool(destination_presentation.get("has_resource", true)):
-				_fail("Map editor smoke: collected duplicated resource did not stay hidden in live preview: source=%s destination=%s." % [source_presentation, destination_presentation])
+			if not bool(source_presentation.get("has_resource", false)) or not bool(destination_presentation.get("has_resource", false)):
+				_fail("Map editor smoke: live preview did not expose both captured persistent resource sites after duplication: source=%s destination=%s." % [source_presentation, destination_presentation])
 				return false
 		"artifact":
 			if bool(source_presentation.get("has_artifact", true)) or bool(destination_presentation.get("has_artifact", true)):
@@ -3602,10 +3610,11 @@ func _assert_object_retheme(
 	if String(selected_property.get("placement_id", "")) != placement_id or String(selected_property.get("content_id", "")) != replacement_content_id:
 		_fail("Map editor smoke: validation snapshot did not select the rethemed %s: %s." % [family, retheme_result])
 		return false
-	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+	var presentation_tile := Vector2i(tile.x - 1, tile.y) if family == "town" else tile
+	var presentation: Dictionary = shell.call("validation_tile_presentation", presentation_tile.x, presentation_tile.y)
 	match family:
 		"town":
-			if not bool(presentation.get("has_town", false)) or String(presentation.get("town_presentation", {}).get("town_id", "")) != replacement_content_id:
+			if not bool(presentation.get("has_town_footprint", false)) or String(presentation.get("town_presentation", {}).get("town_id", "")) != replacement_content_id:
 				_fail("Map editor smoke: live preview did not use the rethemed town id: %s." % presentation)
 				return false
 			if String(presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
