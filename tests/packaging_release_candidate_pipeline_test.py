@@ -131,6 +131,17 @@ class ReleaseCandidatePipelineTest(unittest.TestCase):
 		with self.assertRaisesRegex(RuntimeError, "not x86_64"):
 			release_candidate.verify_pe_x86_64(bytes(head))
 
+	def test_captured_step_accepts_tool_output_before_final_json_object(self) -> None:
+		payload = release_candidate.parse_final_json_line(
+			"Processing installer payload\n{\"ok\": true, \"version\": \"0.1.0-rc1\"}\n",
+			"package_release",
+		)
+		self.assertEqual(payload, {"ok": True, "version": "0.1.0-rc1"})
+		with self.assertRaisesRegex(RuntimeError, "did not emit valid JSON"):
+			release_candidate.parse_final_json_line("{\"ok\": true}\ntrailing noise\n", "package_release")
+		with self.assertRaisesRegex(RuntimeError, "JSON object"):
+			release_candidate.parse_final_json_line("[]\n", "package_release")
+
 	def test_workflow_uses_clean_recursive_checkout_and_single_driver(self) -> None:
 		workflow = (ROOT / ".github" / "workflows" / "release-candidate.yml").read_text(encoding="utf-8")
 		for token in (

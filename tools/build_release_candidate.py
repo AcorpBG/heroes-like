@@ -337,16 +337,26 @@ def run_step(step: CommandStep, env: dict[str, str], capture_json: bool = False)
 		raise RuntimeError(f"{step.id} failed with exit code {result.returncode}{': ' + detail if detail else ''}")
 	payload = None
 	if capture_json:
-		try:
-			payload = json.loads(result.stdout)
-		except json.JSONDecodeError as exc:
-			raise RuntimeError(f"{step.id} did not emit valid JSON") from exc
+		payload = parse_final_json_line(result.stdout, step.id)
 	return {
 		"id": step.id,
 		"command": list(step.command),
 		"duration_seconds": duration,
 		"ok": True,
 	}, payload
+
+
+def parse_final_json_line(output: str, step_id: str) -> dict:
+	lines = output.rstrip().splitlines()
+	if not lines:
+		raise RuntimeError(f"{step_id} did not emit valid JSON")
+	try:
+		payload = json.loads(lines[-1])
+	except json.JSONDecodeError as exc:
+		raise RuntimeError(f"{step_id} did not emit valid JSON") from exc
+	if not isinstance(payload, dict):
+		raise RuntimeError(f"{step_id} did not emit a JSON object")
+	return payload
 
 
 def parse_args() -> argparse.Namespace:
