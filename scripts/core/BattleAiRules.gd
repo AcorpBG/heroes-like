@@ -1156,7 +1156,7 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var rot_cant := _ability_by_id(attacker, "rot_cant")
 	var rot_available := ability_uses is Dictionary and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
 	if not rot_cant.is_empty() and rot_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
-		score += 0.25
+		score += float(rot_cant.get("ai_target_priority_bonus", 0.25))
 	var obituary = _ability_by_id(attacker, "obituary")
 	var obituary_available := ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if not obituary.is_empty() and obituary_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, "status_obituary_marked"):

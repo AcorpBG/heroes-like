@@ -1386,7 +1386,7 @@ class FastBattleBenchmark:
         rot_cant = self._ability_by_id(attacker, "rot_cant")
         rot_available = int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
         if rot_cant and rot_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
-            score += 0.25
+            score += float(rot_cant.get("ai_target_priority_bonus", 0.25))
         obituary = self._ability_by_id(attacker, "obituary")
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):

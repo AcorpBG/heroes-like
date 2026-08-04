@@ -9320,6 +9320,7 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"uses_per_battle": maxi(1, int(entry.get("uses_per_battle", 1))),
 					"available_from_round": maxi(1, int(entry.get("available_from_round", 1))),
 					"target_min_tier": maxi(2, int(entry.get("target_min_tier", 2))),
+					"ai_target_priority_bonus": clampf(float(entry.get("ai_target_priority_bonus", 0.25)), 0.0, 4.0),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"cohesion": -1, "retaliation": -5})),
 					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.5)), 0.1, 1.0),
 					"wounded_damage_multiplier": clampf(float(entry.get("wounded_damage_multiplier", 1.02)), 1.0, 1.25),
