@@ -528,6 +528,8 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped_defender, attacker.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, 2)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(attacker, stripped_defender, stripped_battle, true, false, 2)
+	var cohesion_hold_bonus := int(_ability_by_id(defender, "shielding").get("cohesion_hold_bonus", 0))
+	var cohesion_contract_ok := unit_id != "unit_thornwake_barkmantle_rams" or cohesion_hold_bonus == 0
 	var ally_screen_reduction_pct := int(_ability_by_id(defender, "shielding").get("ally_ranged_melee_damage_reduction_pct", 0))
 	var linebreaker_bonus_pct := int(_ability_by_id(defender, "shielding").get("linebreaker_screen_bonus_pct", 0))
 	var total_linebreaker_screen_pct := ally_screen_reduction_pct + linebreaker_bonus_pct
@@ -556,12 +558,14 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 			and ai_damage_with < ai_damage_without
 		)
 	)
-	var ok := modifier_with < modifier_without and ally_screen_ok
+	var ok := modifier_with < modifier_without and ally_screen_ok and cohesion_contract_ok
 	return {
 		"ok": ok,
 		"probe": "shielding_self_and_allied_engine_damage_reduction",
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
+		"cohesion_hold_bonus": cohesion_hold_bonus,
+		"cohesion_contract_ok": cohesion_contract_ok,
 		"ally_screen_reduction_pct": ally_screen_reduction_pct,
 		"linebreaker_bonus_pct": linebreaker_bonus_pct,
 		"total_linebreaker_screen_pct": total_linebreaker_screen_pct,
@@ -570,7 +574,7 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"ally_modifier_with_second_screen": ally_modifier_with_second_screen,
 		"ai_damage_with": ai_damage_with,
 		"ai_damage_without": ai_damage_without,
-		"reason": "" if ok else "shielding did not reduce its authored self or allied-engine incoming damage",
+		"reason": "" if ok else "shielding did not preserve its authored damage screen and bounded cohesion contract",
 	}
 
 func _probe_volley(unit_id: String) -> Dictionary:
