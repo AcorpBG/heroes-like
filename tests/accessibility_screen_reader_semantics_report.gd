@@ -39,6 +39,21 @@ func _run() -> void:
 	entry.placeholder_text = "Optional save name"
 	fixture.add_child(entry)
 
+	var option := OptionButton.new()
+	option.name = "PresentationModePicker"
+	option.tooltip_text = "Choose a display mode."
+	option.add_item("Windowed")
+	option.add_item("Fullscreen")
+	option.select(0)
+	fixture.add_child(option)
+
+	var authored_option := OptionButton.new()
+	authored_option.name = "AuthoredPicker"
+	authored_option.add_item("Brief")
+	authored_option.accessibility_name = "Battle detail level"
+	authored_option.accessibility_description = "Choose how much tactical detail is announced."
+	fixture.add_child(authored_option)
+
 	var event := Label.new()
 	event.name = "Event"
 	event.text = "A frontier route opened."
@@ -58,6 +73,17 @@ func _run() -> void:
 		return _fail("Icon-only command did not receive a readable node-name fallback: %s / %s" % [fallback.accessibility_name, fallback.accessibility_description])
 	if entry.accessibility_name != "Save Name Input" or entry.accessibility_description != "Enter Save Name Input.":
 		return _fail("Text entry did not receive a stable field identity: %s" % entry.accessibility_name)
+	if option.accessibility_name != "Presentation Mode" or UiAccessibility.semantic_name(option) != "Presentation Mode":
+		return _fail("Option control did not receive a stable field identity: %s / %s" % [option.accessibility_name, UiAccessibility.semantic_name(option)])
+	if not option.accessibility_description.contains("Choose a display mode") or not option.accessibility_description.contains("Current value: Windowed"):
+		return _fail("Option control did not expose its initial current value: %s" % option.accessibility_description)
+	option.select(1)
+	option.item_selected.emit(1)
+	await _settle()
+	if UiAccessibility.semantic_name(option) != "Presentation Mode" or not option.accessibility_description.contains("Current value: Fullscreen"):
+		return _fail("Option semantics did not retain field identity and refresh the selected value: %s / %s" % [UiAccessibility.semantic_name(option), option.accessibility_description])
+	if authored_option.accessibility_name != "Battle detail level" or authored_option.accessibility_description != "Choose how much tactical detail is announced.":
+		return _fail("Authored option semantics were replaced: %s / %s" % [authored_option.accessibility_name, authored_option.accessibility_description])
 	if event.accessibility_live != DisplayServer.LIVE_POLITE:
 		return _fail("Event label is not a polite native live region.")
 	if event.accessibility_name != "":
@@ -91,6 +117,18 @@ func _run() -> void:
 		var control := menu.get_node_or_null("BackdropCommandHotspots/%s" % node_name) as Control
 		if control == null or UiAccessibility.semantic_name(control) == "" or control.accessibility_description == "":
 			return _fail("Main-menu command lacks native semantics: %s" % node_name)
+	for option_contract in [
+		{"node": "PresentationModePicker", "name": "Presentation Mode"},
+		{"node": "UIScalePicker", "name": "UI Scale"},
+		{"node": "ColorCuePicker", "name": "Color Cue"},
+	]:
+		var shipped_option := menu.find_child(String(option_contract["node"]), true, false) as OptionButton
+		if shipped_option == null:
+			return _fail("Shipped option control is missing: %s" % option_contract["node"])
+		if UiAccessibility.semantic_name(shipped_option) != String(option_contract["name"]):
+			return _fail("Shipped option control lacks stable field identity: %s / %s" % [option_contract["node"], UiAccessibility.semantic_name(shipped_option)])
+		if not shipped_option.accessibility_description.contains("Current value:"):
+			return _fail("Shipped option control lacks current-value semantics: %s / %s" % [option_contract["node"], shipped_option.accessibility_description])
 
 	var result := {
 		"schema": "accessibility_screen_reader_semantics_report_v1",
@@ -100,6 +138,7 @@ func _run() -> void:
 		"menu_live_regions": int(menu_snapshot.get("live_region_count", 0)),
 		"dynamic_control_named": UiAccessibility.semantic_name(dynamic) != "",
 		"authored_semantics_preserved": true,
+		"option_field_semantics": true,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()

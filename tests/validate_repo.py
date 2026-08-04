@@ -12695,6 +12695,9 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         "accessibility_description",
         "focus_entered.connect",
         "visibility_changed.connect",
+        "item_selected.connect",
+        "func _option_field_name",
+        "Current value:",
         '"ui_accessibility_semantics_v1"',
     ):
         ensure(required_token in service_text, errors, f"UiAccessibility.gd is missing required native semantics token: {required_token}")
@@ -12705,6 +12708,10 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         '"accessibility_screen_reader_semantics_report_v1"',
         "authored_semantics_preserved",
         "dynamic_control_named",
+        "option_field_semantics",
+        "PresentationModePicker",
+        "UIScalePicker",
+        "ColorCuePicker",
         "DisplayServer.LIVE_POLITE",
         "UiAccessibility.validation_snapshot",
         "res://scenes/menus/MainMenu.tscn",

@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Sluicefire prepared breach: clean primary attacks now lose 15 percent damage while retaliation remains unchanged and wounded or disrupted Bloodrush attacks retain their payoff. The exact all-live matrix improves to 33 outliers / 233.5 severity / 10 severe rows / 74.0 percent maximum dominance with zero structural failures.",
+  "currentNotes": "Completed shared OptionButton native semantics: stable field names now remain independent of selected text, generated descriptions retain tooltip consequences plus current values, and authored semantics remain unchanged.",
   "currentPhase": "phase-5-playable-alpha-baseline",
-  "currentSlice": "combat-embercourt-sluicefire-prepared-breach-10184",
-  "currentSliceId": "combat-embercourt-sluicefire-prepared-breach-10184",
-  "currentSliceNotes": "Completed implementation slice: Sluicefire Lindworms now depend on a prepared breach through one shared authored Bloodrush contract consumed by runtime damage, tactical AI, player summaries, and the deterministic benchmark.",
+  "currentSlice": "accessibility-option-control-field-semantics-10184",
+  "currentSliceId": "accessibility-option-control-field-semantics-10184",
+  "currentSliceNotes": "Completed implementation slice: shared native accessibility now exposes stable OptionButton field identity and refreshed current values across generated and shipped controls.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Sluicefire Prepared Breach",
-  "currentSliceUpdatedAt": "2026-08-04T10:29:38Z",
+  "currentSliceTitle": "Option Control Field Semantics",
+  "currentSliceUpdatedAt": "2026-08-04T12:30:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69672,6 +69672,41 @@
       },
       "notes": "The source-defined Sluicefire role requires supported shock and isolation weakness. A 0.85 clean-target primary multiplier was the smallest screened contract that materially reduced week-four Embercourt pressure without creating an outlier or changing retaliation. The matrix still needs tuning, so this is one measured reduction in balance debt rather than final faction balance.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 33 outliers / 233.5 severity / 74.0 percent maximum dominance, and overall release work remains open."
+    },
+    {
+      "id": "accessibility-option-control-field-semantics-10184",
+      "title": "Option Control Field Semantics",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Ensure native screen readers identify OptionButton fields and their current values across shipped menu, active-play, outcome, and editor surfaces.",
+      "implementationTargets": [
+        "scripts/autoload/UiAccessibility.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Shared native semantics give OptionButton controls stable field names independent of selected display text",
+        "Generated descriptions expose the current selected value and refresh after user selection while authored semantics remain unchanged",
+        "Focused proof covers dynamic controls and real shipped Settings pickers, and broad keyboard, core, parse, repository, JSON, and diff gates pass"
+      ],
+      "nonGoals": [
+        "custom speech or platform-specific screen-reader integrations",
+        "visual layout or gameplay changes",
+        "NVDA or Orca certification, final accessibility, Native RMG, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T12:16:12Z",
+      "completedAt": "2026-08-04T12:30:50Z",
+      "updatedAt": "2026-08-04T12:30:50Z",
+      "notes": "Shared native accessibility now excludes OptionButton from native text-only naming, derives bounded field names with UI/RMG/FPS acronym handling, preserves authored semantics, appends bounded current values to generated tooltip descriptions, and refreshes after selection handlers finish. Focused proof passes with six dynamic fixture controls, 61 real main-menu focusable controls, four live regions, generated current-value refresh, authored-semantic preservation, and stable Presentation Mode, UI Scale, and Color Cue field names. Main-menu and active-play keyboard navigation, core systems, editor parsing, repository validation, Python syntax, JSON, and diff checks pass.",
+      "remainingWork": "No work remains in this slice. Platform NVDA/Orca certification, final accessibility, and overall release completion remain open."
     }
   ],
   "project": "heroes-like",
@@ -70216,7 +70251,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Sluicefire Lindworms now lose 15 percent primary-attack damage against a clean line while preserving full retaliation and wounded or disrupted Bloodrush payoff. The all-live 100-seed four-week faction matrix keeps 33 outliers while lowering summed excess severity from 248.0 to 233.5, severe rows from 11 to 10, maximum dominance from 74.5 to 74.0 percent, and week-four side bias from 2.13 to 1.87 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T10:29:38Z",
+  "updatedAt": "2026-08-04T12:30:50Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
