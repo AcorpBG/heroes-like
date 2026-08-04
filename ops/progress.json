@@ -68770,6 +68770,133 @@
         "git diff --check"
       ],
       "remainingWork": "Overall release completion remains open across faction balance, strategic-AI breadth, accessibility, content, performance, packaging certification, and release integration."
+    },
+    {
+      "id": "combat-brasshollow-foundry-repair-throughput-10184",
+      "title": "Brasshollow Foundry Repair Throughput",
+      "status": "superseded",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd"],
+      "baseline": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 36,
+        "balance_severity": 293.5,
+        "max_dominance_pct": 75.5,
+        "brasshollow_sunvault_week_1_win_rate_pct": 30.5,
+        "brasshollow_mireclaw_week_2_win_rate_pct": 74.0,
+        "brasshollow_embercourt_week_3_win_rate_pct": 27.5,
+        "brasshollow_thornwake_week_3_win_rate_pct": 24.5
+      },
+      "completionCriteria": [
+        "Saint's Temper base round repair increases from one to two percent while its separate overheated bonus remains intact",
+        "Focused live runtime proof covers the exact base rate, stronger overheated repair, no resurrection, living-Saint ownership, presentation events, and tactical-AI priority",
+        "The unchanged all-live 100-seed four-week matrix does not regress 36 outliers, 293.5 severity, or 75.5 percent maximum dominance and improves at least one week-three Brasshollow deficit",
+        "Battle autoplay, town development, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "raw unit stat, growth, spell, economy, benchmark threshold, strategic AI, save, campaign, or Native RMG changes",
+        "unit resurrection, stacked Saints, cross-faction aura support, the rejected Pavis formation-guard candidate, final faction balance, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T01:38:18Z",
+      "updatedAt": "2026-08-04T01:49:52Z",
+      "supersededAt": "2026-08-04T01:49:52Z",
+      "notes": "Superseded after exact rejection. The 2 percent repair candidate improved the named week-three/four Brasshollow deficits and maximum dominance, but increased total outliers from 36 to 38 and severity from 293.5 to 302.5. The authored repair rate and focused test were restored to baseline.",
+      "rejectedEvidence": {
+        "all_live_seeds_per_ordered_matchup": 100,
+        "balance_outlier_count": 38,
+        "balance_severity": 302.5,
+        "rows_at_or_above_65_pct": 13,
+        "max_dominance_pct": 75.0,
+        "structural_failure_count": 0,
+        "brasshollow_embercourt_week_3_win_rate_pct": 28.5,
+        "brasshollow_mireclaw_week_3_win_rate_pct": 46.5,
+        "brasshollow_thornwake_week_3_win_rate_pct": 26.0,
+        "brasshollow_thornwake_week_4_win_rate_pct": 48.5
+      }
+    },
+    {
+      "id": "magic-prism-bastion-root-countercontrol-10184",
+      "title": "Prism Bastion Root Counter-Control",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/spell-system-player-balance-audit.md"],
+      "implementationTargets": ["content/spells.json", "tests/magic_battle_spell_behavior_report.gd", "tests/magic_resistance_countercontrol_report.gd", "tests/magic_ai_valuation_casting_hooks_report.gd", "tests/magic_prism_bastion_root_countercontrol_regression.gd", "tests/magic_prism_bastion_root_countercontrol_regression.tscn", "tests/validate_repo.py"],
+      "baseline": {
+        "prism_bastion_cleanse_effect_ids": ["status_harried", "status_staggered"],
+        "prism_bastion_root_countercontrol_live": false,
+        "all_live_seeds_per_ordered_matchup": 100,
+        "balance_outlier_count": 36,
+        "balance_severity": 293.5,
+        "max_dominance_pct": 75.5,
+        "sunvault_thornwake_week_2_win_rate_pct": 38.5,
+        "sunvault_thornwake_week_3_win_rate_pct": 38.5
+      },
+      "completionCriteria": [
+        "Prism Bastion cleanses Harried, Staggered, and Rooted and grants temporary immunity to the same three statuses",
+        "Focused live battle proof executes Rooted through Briar Bind, removes Harried and Rooted through BattleRules, applies the ward, and proves Rooted immunity",
+        "Resistance/counter-control and battle-AI reports preserve cleanse/immunity symmetry and best-ally casting",
+        "The unchanged all-live 100-seed four-week matrix remains structurally valid without regressing 36 outliers / 293.5 severity / 75.5 percent maximum dominance",
+        "Magic schema, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "spell damage, modifiers, mana, tier, school access, AI scoring, unit stat, growth, economy, save, campaign, strategic AI, or Native RMG changes",
+        "final spell balance, final faction balance, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T01:58:34Z",
+      "updatedAt": "2026-08-04T02:12:49Z",
+      "completedAt": "2026-08-04T02:12:49Z",
+      "implemented": {
+        "prism_bastion_cleanse_effect_ids": ["status_harried", "status_staggered", "status_rooted"],
+        "prism_bastion_status_immunity_ids": ["status_harried", "status_staggered", "status_rooted"],
+        "live_briar_bind_root_cleanse": true,
+        "live_root_immunity_after_ward": true,
+        "ai_rooted_ally_targeting_preserved": true,
+        "spell_power_changed": false,
+        "ai_scoring_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "cleansed_live_effect_count": 2,
+        "blocked_status_id": "status_rooted",
+        "all_live_seeds_per_ordered_matchup": 100,
+        "weeks": [1, 2, 3, 4],
+        "balance_outlier_count": 36,
+        "balance_severity": 293.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 75.5,
+        "max_week_side_bias_points": 4.13,
+        "structural_failure_count": 0,
+        "sunvault_thornwake_week_2_win_rate_pct": 38.5,
+        "sunvault_thornwake_week_3_win_rate_pct": 38.5,
+        "town_development_passed_count": 15,
+        "authored_encounter_balance_gate": "pass"
+      },
+      "validation": {
+        "status": "passed_with_unrelated_residual",
+        "commands": [
+          "godot4 --headless --path . tests/magic_battle_spell_behavior_report.tscn",
+          "godot4 --headless --path . tests/magic_resistance_countercontrol_report.tscn",
+          "godot4 --headless --path . tests/magic_prism_bastion_root_countercontrol_regression.tscn",
+          "godot4 --headless --path . tests/magic_spell_schema_report.tscn",
+          "godot4 --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot4 --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py equivalent: all-live, 100 seeds, weeks 1-4",
+          "python3 tests/validate_repo.py",
+          "jq empty content/spells.json ops/progress.json",
+          "git diff --check"
+        ],
+        "residual": "The broad magic_ai_valuation_casting_hooks_report reaches the passing Prism cleanse case, then fails its pre-existing adventure spell executor expectation because current strategic threat avoidance regroups at Duskfen Bastion instead of moving to the stale resource target. The focused Prism AI regression passes."
+      },
+      "notes": "Completed. Prism Bastion now removes Rooted alongside Harried and Staggered and grants matching temporary immunity through the existing live cleanse/ward path. Focused runtime proof executes Briar Bind, removes two live debuffs, applies the ward, blocks renewed Rooted pressure, and preserves AI selection of the affected ally. The exact full faction matrix is unchanged, so this is player counter-control implementation progress rather than faction-balance progress.",
+      "remainingWork": "Faction balance remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance. Reconcile the stale adventure-spell executor fixture against current strategic threat-avoidance behavior in a separate runtime slice."
     }
   ],
   "project": "heroes-like",

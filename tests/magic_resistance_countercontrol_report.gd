@@ -74,7 +74,8 @@ func _control_resistance_case() -> Dictionary:
 func _cleanse_immunity_case() -> Dictionary:
 	var hero := _hero(["spell_prism_bastion"])
 	var harried := SpellRules.build_battle_effect("status_harried", "Harried", {"defense": -1}, 2, {"round": 1}, "test", "seed")
-	var player := _target("player_line", "player", {"effects": [harried]})
+	var rooted := SpellRules.build_battle_effect("status_rooted", "Rooted", {"initiative": -2}, 2, {"round": 1}, "test", "seed")
+	var player := _target("player_line", "player", {"effects": [harried, rooted]})
 	var battle := _battle("cleanse_case", _target("enemy_target", "enemy", {}), player)
 	var resolution := SpellRules.resolve_battle_spell(hero, battle, _stack_by_id(battle, "player_line"), {}, "spell_prism_bastion")
 	if not bool(resolution.get("ok", false)):
@@ -84,6 +85,8 @@ func _cleanse_immunity_case() -> Dictionary:
 	for status_id in resolution.get("cleanse_effect_ids", []):
 		if String(status_id) not in immunity_ids:
 			return {"ok": false, "error": "cleanse immunity did not mirror cleanse ids", "resolution": resolution}
+	if "status_rooted" not in resolution.get("cleanse_effect_ids", []):
+		return {"ok": false, "error": "Prism Bastion did not expose Rooted counter-control", "resolution": resolution}
 	return {"ok": true, "cleanse_effect_ids": resolution.get("cleanse_effect_ids", []), "status_immunity_ids": immunity_ids}
 
 func _artifact_resistance_case() -> Dictionary:
