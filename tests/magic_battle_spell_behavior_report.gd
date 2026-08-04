@@ -77,6 +77,10 @@ func _run() -> void:
 	if not SpellRules.has_effect_id(_stack_by_id(battle, "enemy_fresh"), battle, "status_rooted"):
 		_fail("Briar Bind control effect was not applied through the battle effect hook.")
 		return
+	BattleRules._apply_stack_effect(battle, "player_line", control.get("effect", {}))
+	if not SpellRules.has_effect_id(_stack_by_id(battle, "player_line"), battle, "status_rooted"):
+		_fail("Briar Bind did not apply Rooted pressure before Prism Bastion.")
+		return
 
 	var recover := SpellRules.resolve_battle_spell(hero, battle, active, {}, "spell_graft_mend")
 	if not bool(recover.get("ok", false)) or String(recover.get("resolution_type", "")) != "recover_effect":
@@ -97,13 +101,17 @@ func _run() -> void:
 		_fail("Prism Bastion did not resolve as a cleanse effect: %s" % cleanse)
 		return
 	var cleansed := BattleRules._cleanse_stack_effects(battle, "player_line", cleanse.get("cleanse_effect_ids", []))
-	if cleansed <= 0 or SpellRules.has_effect_id(_stack_by_id(battle, "player_line"), battle, "status_harried"):
-		_fail("Prism Bastion cleanse hook did not clear Harried.")
+	if cleansed != 2 or SpellRules.has_any_effect_ids(_stack_by_id(battle, "player_line"), battle, ["status_harried", "status_rooted"]):
+		_fail("Prism Bastion cleanse hook did not clear Harried and Rooted.")
 		return
 	if cleanse.get("effect", {}) is Dictionary and not cleanse.get("effect", {}).is_empty():
 		BattleRules._apply_stack_effect(battle, "player_line", cleanse.get("effect", {}))
 	if not SpellRules.has_effect_id(_stack_by_id(battle, "player_line"), battle, "spell:spell_prism_bastion:cleanse_ally"):
 		_fail("Prism Bastion ward effect was not applied after cleanse.")
+		return
+	var blocked_root := SpellRules.target_is_immune_to_status(_stack_by_id(battle, "player_line"), battle, "status_rooted")
+	if not blocked_root:
+		_fail("Prism Bastion ward did not block renewed Rooted pressure.")
 		return
 
 	var payload := {
@@ -129,6 +137,7 @@ func _run() -> void:
 			"countermagic": {
 				"spell_id": "spell_prism_bastion",
 				"cleansed_effects": cleansed,
+				"blocked_status_id": "status_rooted",
 			},
 		},
 		"caveats": [

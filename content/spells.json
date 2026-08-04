@@ -350,7 +350,8 @@
         "duration_rounds": 1,
         "cleanse_effect_ids": [
           "status_harried",
-          "status_staggered"
+          "status_staggered",
+          "status_rooted"
         ],
         "modifiers": {
           "defense": 2,
@@ -358,7 +359,8 @@
         },
         "status_immunity_ids": [
           "status_harried",
-          "status_staggered"
+          "status_staggered",
+          "status_rooted"
         ]
       }
     },

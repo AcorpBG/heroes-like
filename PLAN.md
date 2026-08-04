@@ -1387,6 +1387,31 @@ Non-goals:
 - do not add more artifact sets or claim final artifact balance;
 - do not redesign the full town/overworld artifact UI.
 
+## Prism Bastion Root Counter-Control
+
+id: `magic-prism-bastion-root-countercontrol-10184`
+
+Completed Phase 5 magic implementation slice. Closes the source-backed
+counterplay gap named in `docs/spell-system-player-balance-audit.md`: Sunvault's
+Prism Bastion must answer Thornwake root pressure, not only Harried and
+Staggered effects.
+
+Implementation target:
+- add Rooted to Prism Bastion's cleanse list and matching temporary immunity list;
+- execute the existing Briar Bind root, cleanse it through BattleRules, and apply the resulting ward through the current spell-effect path;
+- preserve mana cost, modifiers, duration, spell availability, AI thresholds, unit content, saves, and Native RMG behavior.
+
+Completion evidence:
+- focused spell behavior proves Harried and Rooted are both removed and the resulting ward blocks Rooted;
+- resistance/counter-control and battle-AI reports prove cleanse/immunity symmetry and retained best-ally casting;
+- the unchanged all-live 100-seed four-week faction matrix remains structurally valid and does not regress its current balance metrics;
+- magic schema, core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not claim the fast benchmark will exercise every player-available counter-control line or complete faction balance;
+- do not change spell damage, modifiers, mana, tier, school access, AI scoring, unit stats, growth, or town economy;
+- do not change Native RMG or claim overall release completion.
+
 ## Slice Status Model
 
 Each executable slice should map to one `ops/progress.json` entry with:

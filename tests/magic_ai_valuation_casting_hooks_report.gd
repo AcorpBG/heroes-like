@@ -640,6 +640,15 @@ func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
 		"test",
 		"seed_staggered"
 	)
+	var rooted_effect := SpellRules.build_battle_effect(
+		"status_rooted",
+		"Rooted",
+		{"initiative": -2, "cohesion": -1},
+		2,
+		{"round": 2},
+		"test",
+		"seed_rooted"
+	)
 	var battle := {
 		"round": 2,
 		"distance": 1,
@@ -647,11 +656,13 @@ func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
 		"tags": [],
 		"stacks": [
 			_stack("enemy_cleanse_caster", "enemy", "Enemy Cleanse Caster", 7, 10, 70, []),
-			_stack("enemy_warded_staggered", "enemy", "Enemy Warded Staggered", 8, 10, 80, [active_ward, staggered_effect]),
+			_stack("enemy_warded_staggered", "enemy", "Enemy Warded Staggered", 8, 10, 80, [active_ward, staggered_effect, rooted_effect]),
 			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
 		],
 	}
 	var active := _stack_by_id(battle, "enemy_cleanse_caster")
+	if not SpellRules.has_effect_id(_stack_by_id(battle, "enemy_warded_staggered"), battle, "status_rooted"):
+		return {"ok": false, "error": "Cleanse active-ward fixture must carry Rooted pressure"}
 	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
 	if not bool(report.get("ok", false)):
 		return {"ok": false, "error": "Cleanse active-ward report failed: %s" % report}
@@ -667,6 +678,7 @@ func _run_battle_ai_cleanse_active_ward_case() -> Dictionary:
 		"selected_target_id": String(selected.get("target_battle_id", "")),
 		"target_had_active_ward_modifiers": true,
 		"target_had_cleanseable_status": true,
+		"target_had_rooted_status": true,
 		"live_action": String(live_action.get("action", "")),
 	}
 

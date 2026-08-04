@@ -11211,6 +11211,7 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Bloodwake Drum must keep a momentum rider for Mireclaw collapse tempo")
     ensure(str(spells.get("spell_prism_bastion", {}).get("effect", {}).get("type", "")) == "cleanse_ally", errors, "Prism Bastion must keep its cleanse_ally countermagic identity authored")
     ensure("status_harried" in [str(effect_id) for effect_id in spells.get("spell_prism_bastion", {}).get("effect", {}).get("cleanse_effect_ids", [])], errors, "Prism Bastion must cleanse harried pressure")
+    ensure("status_rooted" in [str(effect_id) for effect_id in spells.get("spell_prism_bastion", {}).get("effect", {}).get("cleanse_effect_ids", [])], errors, "Prism Bastion must cleanse rooted pressure")
     ensure(int(spells.get("spell_prism_bastion", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Prism Bastion must keep a cohesion rider for Sunvault array support")
     ensure(str(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("type", "")) == "initiative_buff", errors, "Resonant Chorus must keep its initiative_buff identity authored")
     ensure(int(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Resonant Chorus must keep a momentum rider for Sunvault tempo")
