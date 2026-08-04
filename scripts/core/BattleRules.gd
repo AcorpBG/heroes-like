@@ -4024,6 +4024,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			]
 		"formation_guard":
 			return "%s steadies allied lanes and improves support fire" % name
+		"resonance_relay":
+			return "%s synchronizes two or more separately calibrated allied stacks while this choir remains in the battle" % name
 		"foundry_aura":
 			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
 		"volley":
@@ -9108,8 +9110,11 @@ static func _faction_damage_modifier(
 				modifier *= 1.08
 				if _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
 					modifier *= 1.04
-			if positive_effect_count >= 2:
-				modifier *= 1.0 + (float(min(positive_effect_count, 3)) * 0.03)
+			var resonance_relay := _side_resonance_relay(battle, side)
+			var relay_minimum := int(resonance_relay.get("minimum_calibrated_stacks", 2))
+			if not resonance_relay.is_empty() and positive_effect_count >= relay_minimum:
+				var calibrated_count: int = mini(positive_effect_count, int(resonance_relay.get("maximum_calibrated_stacks", 3)))
+				modifier *= 1.0 + (float(calibrated_count) * float(resonance_relay.get("line_damage_per_calibrated_stack", 0.0)))
 			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
@@ -9232,6 +9237,10 @@ static func _side_ability_payloads(battle: Dictionary, side: String, ability_id:
 
 static func _side_has_ability(battle: Dictionary, side: String, ability_id: String) -> bool:
 	return not _side_ability_payloads(battle, side, ability_id).is_empty()
+
+static func _side_resonance_relay(battle: Dictionary, side: String) -> Dictionary:
+	var payloads := _side_ability_payloads(battle, side, "resonance_relay")
+	return payloads[0] if not payloads.is_empty() and payloads[0] is Dictionary else {}
 
 static func _battle_has_tag(battle: Dictionary, tag: String) -> bool:
 	if tag == "":
@@ -9444,6 +9453,20 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"defending_cohesion_bonus": max(0, int(entry.get("defending_cohesion_bonus", 0))),
 					"defending_initiative_bonus": max(0, int(entry.get("defending_initiative_bonus", 0))),
 					"staggered_damage_multiplier": clampf(float(entry.get("staggered_damage_multiplier", 1.0)), 1.0, 2.0),
+				}
+			"resonance_relay":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Resonance Relay")),
+					"description": String(entry.get("description", "")),
+					"minimum_calibrated_stacks": clampi(int(entry.get("minimum_calibrated_stacks", 2)), 2, 6),
+					"maximum_calibrated_stacks": clampi(int(entry.get("maximum_calibrated_stacks", 3)), 2, 6),
+					"line_damage_per_calibrated_stack": clampf(float(entry.get("line_damage_per_calibrated_stack", 0.0)), 0.0, 0.1),
+					"line_initiative_bonus": clampi(int(entry.get("line_initiative_bonus", 0)), 0, 3),
+					"late_round_initiative_bonus": clampi(int(entry.get("late_round_initiative_bonus", 0)), 0, 3),
+					"terrain_momentum_bonus": clampi(int(entry.get("terrain_momentum_bonus", 0)), 0, 3),
+					"linked_unit_ids": _normalize_string_array(entry.get("linked_unit_ids", [])),
+					"linked_initiative_bonus": clampi(int(entry.get("linked_initiative_bonus", 0)), 0, 3),
 				}
 			"bloodrush":
 				normalized = {
@@ -10682,8 +10705,9 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 		bonus += 1
 	if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 		bonus += 1
-		if _side_positive_effect_count(battle, side) >= 2 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
-			bonus += 1
+		var resonance_relay := _side_resonance_relay(battle, side)
+		if not resonance_relay.is_empty() and _side_positive_effect_count(battle, side) >= int(resonance_relay.get("minimum_calibrated_stacks", 2)) and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
+			bonus += int(resonance_relay.get("terrain_momentum_bonus", 0))
 	bonus += _field_objective_momentum_bonus(stack, battle)
 	return bonus
 
@@ -10722,14 +10746,18 @@ static func _faction_initiative_bonus(stack: Dictionary, battle: Dictionary) -> 
 		"faction_sunvault":
 			var bonus = 0
 			var positive_effect_count = _side_positive_effect_count(battle, side)
+			var resonance_relay := _side_resonance_relay(battle, side)
+			var relay_minimum := int(resonance_relay.get("minimum_calibrated_stacks", 2))
+			if String(stack.get("unit_id", "")) in resonance_relay.get("linked_unit_ids", []):
+				bonus += int(resonance_relay.get("linked_initiative_bonus", 0))
 			if _stack_has_positive_effect(stack, battle):
 				bonus += 1
 				if bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 					bonus += 1
-			if positive_effect_count >= 2 and not _stack_is_isolated(battle, stack):
-				bonus += 1
-			if int(battle.get("round", 1)) >= 3 and positive_effect_count >= 2:
-				bonus += 1
+			if not resonance_relay.is_empty() and positive_effect_count >= relay_minimum and not _stack_is_isolated(battle, stack):
+				bonus += int(resonance_relay.get("line_initiative_bonus", 0))
+			if not resonance_relay.is_empty() and int(battle.get("round", 1)) >= 3 and positive_effect_count >= relay_minimum:
+				bonus += int(resonance_relay.get("late_round_initiative_bonus", 0))
 			return bonus
 		"faction_thornwake":
 			var bonus = 0
@@ -10794,8 +10822,9 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 		if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 			if not _stack_is_isolated(battle, stack) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 2:
 				_adjust_stack_cohesion(battle, battle_id, 1)
-			if _side_positive_effect_count(battle, side) >= 2 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
-				_adjust_stack_momentum(battle, battle_id, 1)
+			var resonance_relay := _side_resonance_relay(battle, side)
+			if not resonance_relay.is_empty() and _side_positive_effect_count(battle, side) >= int(resonance_relay.get("minimum_calibrated_stacks", 2)) and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
+				_adjust_stack_momentum(battle, battle_id, int(resonance_relay.get("terrain_momentum_bonus", 0)))
 	_apply_field_objective_round_effects(battle)
 
 static func _adjust_stack_cohesion(battle: Dictionary, battle_id: String, amount: int) -> void:
@@ -11071,14 +11100,19 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 			return "The pack is probing for the first break"
 		"faction_sunvault":
 			var positive_effect_count = _side_positive_effect_count(battle, side)
+			var resonance_relay := _side_resonance_relay(battle, side)
 			if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side({"side": side}, battle):
 				if _reserve_wave_is_active_for_side(battle, side):
 					return "Battery nests are rotating fresh arrays into the firing line"
 				return "Battery nests are turning the approach into a relay kill lane"
-			if positive_effect_count >= 3 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
+			if not resonance_relay.is_empty() and positive_effect_count >= 3 and _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
 				return "Resonant arrays are firing in sequence"
-			if positive_effect_count >= 2:
+			if not resonance_relay.is_empty() and positive_effect_count >= int(resonance_relay.get("minimum_calibrated_stacks", 2)):
 				return "Relay chants are syncing the line"
+			if positive_effect_count >= 2:
+				return "Separate calibrations are waiting for a living relay"
+			if not resonance_relay.is_empty() and positive_effect_count >= 1:
+				return "The relay is waiting for a second calibrated stack"
 			if positive_effect_count >= 1:
 				return "A resonant array is coming online"
 			return "The array is still gathering signal"

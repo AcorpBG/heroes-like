@@ -1586,8 +1586,11 @@ static func _buff_spell_score(
 			score += 1.25
 		if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(target_stack, battle) and not bool(target_stack.get("ranged", false)) and round_number >= 3:
 			score += 1.5
-		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _side_positive_effect_count(battle, String(target_stack.get("side", ""))) >= 2:
-			score += 1.0
+		if String(target_stack.get("faction_id", "")) == "faction_sunvault":
+			var target_side := String(target_stack.get("side", ""))
+			var relay_minimum := int(_side_max_ability_float(battle, target_side, "resonance_relay", "minimum_calibrated_stacks", 2.0))
+			if _side_has_ability(battle, target_side, "resonance_relay") and _side_positive_effect_count(battle, target_side) >= relay_minimum:
+				score += 1.0
 	if String(target_stack.get("faction_id", "")) == "faction_sunvault" and not _stack_has_positive_effect(target_stack, battle):
 		score += 1.5
 	score += _stack_spell_target_value(target_stack)
@@ -2456,8 +2459,10 @@ static func _faction_damage_modifier(
 				modifier *= 1.08
 				if _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
 					modifier *= 1.04
-			if positive_effect_count >= 2:
-				modifier *= 1.0 + (float(min(positive_effect_count, 3)) * 0.03)
+			var relay_minimum := int(_side_max_ability_float(battle, side, "resonance_relay", "minimum_calibrated_stacks", 2.0))
+			if _side_has_ability(battle, side, "resonance_relay") and positive_effect_count >= relay_minimum:
+				var calibrated_count: int = mini(positive_effect_count, int(_side_max_ability_float(battle, side, "resonance_relay", "maximum_calibrated_stacks", 3.0)))
+				modifier *= 1.0 + (float(calibrated_count) * _side_max_ability_float(battle, side, "resonance_relay", "line_damage_per_calibrated_stack", 0.0))
 			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:

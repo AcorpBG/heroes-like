@@ -16,6 +16,7 @@ const REQUIRED_ABILITY_IDS := [
 	"shielding",
 	"volley",
 	"formation_guard",
+	"resonance_relay",
 	"bloodrush",
 	"obituary",
 	"overheat",
@@ -128,6 +129,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_volley(unit_id)
 		"formation_guard":
 			return _probe_formation_guard(unit_id)
+		"resonance_relay":
+			return _probe_resonance_relay(unit_id)
 		"bloodrush":
 			return _probe_bloodrush(unit_id)
 		"overheat":
@@ -615,6 +618,93 @@ func _probe_fogwake(unit_id: String) -> Dictionary:
 		"reason": "" if ok else "fogwake did not remain gated to true hex isolation across damage, status, AI, and player summary behavior",
 	}
 
+func _probe_resonance_relay(unit_id: String) -> Dictionary:
+	var relay := _stack_for_unit(unit_id, "player", 2)
+	var attacker := _stack_for_unit("unit_sunvault_shard_wardens", "player", 0)
+	var calibrated_ally := _stack_for_unit("unit_sunvault_prism_adepts", "player", 1)
+	var defender := _defender_stack("enemy", 0)
+	_set_hex(relay, 3, 3)
+	_set_hex(attacker, 4, 3)
+	_set_hex(calibrated_ally, 5, 3)
+	_set_hex(defender, 6, 3)
+	_add_positive_effect(attacker, "relay_probe_attack")
+	_add_positive_effect(calibrated_ally, "relay_probe_initiative", "initiative")
+	var relay_battle := _battle_for_stacks([attacker, calibrated_ally, relay, defender], [], "plains", 3)
+	var relay_modifier := BattleRulesScript._faction_damage_modifier(attacker, defender, relay_battle, false, 0)
+	var relay_ai_modifier := BattleAiRulesScript._faction_damage_modifier(attacker, defender, relay_battle, false, 0)
+	var relay_initiative := BattleRulesScript._faction_initiative_bonus(attacker, relay_battle)
+	var relay_linked_initiative := BattleRulesScript._faction_initiative_bonus(calibrated_ally, relay_battle)
+	var relay_summary := BattleRulesScript._side_doctrine_summary(relay_battle, "player")
+
+	var no_relay := _without_ability(relay, "resonance_relay")
+	var no_relay_attacker := attacker.duplicate(true)
+	var no_relay_ally := calibrated_ally.duplicate(true)
+	var no_relay_defender := defender.duplicate(true)
+	var no_relay_battle := _battle_for_stacks([no_relay_attacker, no_relay_ally, no_relay, no_relay_defender], [], "plains", 3)
+	var no_relay_modifier := BattleRulesScript._faction_damage_modifier(no_relay_attacker, no_relay_defender, no_relay_battle, false, 0)
+	var no_relay_ai_modifier := BattleAiRulesScript._faction_damage_modifier(no_relay_attacker, no_relay_defender, no_relay_battle, false, 0)
+	var no_relay_initiative := BattleRulesScript._faction_initiative_bonus(no_relay_attacker, no_relay_battle)
+	var no_relay_linked_initiative := BattleRulesScript._faction_initiative_bonus(no_relay_ally, no_relay_battle)
+	var no_relay_summary := BattleRulesScript._side_doctrine_summary(no_relay_battle, "player")
+
+	var dead_relay := relay.duplicate(true)
+	dead_relay["total_health"] = 0
+	var dead_attacker := attacker.duplicate(true)
+	var dead_ally := calibrated_ally.duplicate(true)
+	var dead_defender := defender.duplicate(true)
+	var dead_relay_battle := _battle_for_stacks([dead_attacker, dead_ally, dead_relay, dead_defender], [], "plains", 3)
+	var dead_relay_modifier := BattleRulesScript._faction_damage_modifier(dead_attacker, dead_defender, dead_relay_battle, false, 0)
+	var dead_relay_ai_modifier := BattleAiRulesScript._faction_damage_modifier(dead_attacker, dead_defender, dead_relay_battle, false, 0)
+	var dead_relay_initiative := BattleRulesScript._faction_initiative_bonus(dead_attacker, dead_relay_battle)
+	var dead_relay_linked_initiative := BattleRulesScript._faction_initiative_bonus(dead_ally, dead_relay_battle)
+
+	var single_attacker := attacker.duplicate(true)
+	var uncalibrated_ally := calibrated_ally.duplicate(true)
+	uncalibrated_ally["effects"] = []
+	var single_defender := defender.duplicate(true)
+	var single_battle := _battle_for_stacks([single_attacker, uncalibrated_ally, no_relay.duplicate(true), single_defender], [], "plains", 3)
+	var single_modifier := BattleRulesScript._faction_damage_modifier(single_attacker, single_defender, single_battle, false, 0)
+	var single_initiative := BattleRulesScript._faction_initiative_bonus(single_attacker, single_battle)
+	var ok := (
+		relay_modifier > no_relay_modifier
+		and relay_ai_modifier > no_relay_ai_modifier
+		and is_equal_approx(relay_modifier, relay_ai_modifier)
+		and is_equal_approx(no_relay_modifier, no_relay_ai_modifier)
+		and is_equal_approx(no_relay_modifier, dead_relay_modifier)
+		and is_equal_approx(no_relay_ai_modifier, dead_relay_ai_modifier)
+		and is_equal_approx(no_relay_modifier, single_modifier)
+		and no_relay_modifier > 1.0
+		and relay_initiative > no_relay_initiative
+		and relay_linked_initiative == relay_initiative + 1
+		and no_relay_initiative == dead_relay_initiative
+		and no_relay_linked_initiative == dead_relay_linked_initiative
+		and relay_linked_initiative > no_relay_linked_initiative
+		and no_relay_initiative == single_initiative
+		and relay_summary.contains("syncing the line")
+		and no_relay_summary.contains("waiting for a living relay")
+	)
+	return {
+		"ok": ok,
+		"probe": "resonance_relay_living_line_activation_and_personal_fallback",
+		"relay_modifier": relay_modifier,
+		"no_relay_modifier": no_relay_modifier,
+		"dead_relay_modifier": dead_relay_modifier,
+		"single_calibration_modifier": single_modifier,
+		"relay_ai_modifier": relay_ai_modifier,
+		"no_relay_ai_modifier": no_relay_ai_modifier,
+		"dead_relay_ai_modifier": dead_relay_ai_modifier,
+		"relay_initiative": relay_initiative,
+		"relay_linked_initiative": relay_linked_initiative,
+		"no_relay_initiative": no_relay_initiative,
+		"no_relay_linked_initiative": no_relay_linked_initiative,
+		"dead_relay_initiative": dead_relay_initiative,
+		"dead_relay_linked_initiative": dead_relay_linked_initiative,
+		"single_calibration_initiative": single_initiative,
+		"relay_summary": relay_summary,
+		"no_relay_summary": no_relay_summary,
+		"reason": "" if ok else "resonance relay did not gate line damage/initiative while preserving personal calibration after relay absence or defeat",
+	}
+
 func _probe_shielding(unit_id: String) -> Dictionary:
 	var defender := _stack_for_unit(unit_id, "player", 0)
 	var attacker := _defender_stack("enemy", 0)
@@ -1057,6 +1147,19 @@ func _add_effect(stack: Dictionary, status_id: String) -> void:
 	var battle := {"round": 3}
 	stack["effects"] = [
 		SpellRulesScript.build_battle_effect(status_id, status_id, {}, 2, battle, "unit_ability_runtime_report", status_id)
+	]
+
+func _add_positive_effect(stack: Dictionary, effect_id: String, modifier_kind: String = "attack") -> void:
+	stack["effects"] = [
+		SpellRulesScript.build_battle_effect(
+			effect_id,
+			effect_id,
+			{modifier_kind: 1},
+			2,
+			{"round": 3},
+			"unit_ability_runtime_report",
+			effect_id
+		)
 	]
 
 func _wounded_defender_for_ability(attacker: Dictionary, ability_id: String) -> Dictionary:
