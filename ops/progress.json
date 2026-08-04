@@ -70308,6 +70308,75 @@
       ],
       "notes": "The accepted matrix leaves weeks one and two exact, improves nine of ten changed week-three/week-four pair margins or dominance results, removes the week-four Mireclaw/Sunvault severe row, and creates no new outlier. Week-three Veilmourn/Sunvault worsens from 58.5 to 60.5 percent and maximum side bias rises from 2.67 to 3.67 points, remaining inside the existing seven-point gate.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 29 outliers / 174.0 severity, and overall game completion remains open."
+    },
+    {
+      "id": "strategic-ai-launch-open-point-snapshot-10184",
+      "title": "Strategic AI Launch Open-Point Snapshot",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Remove repeated live encounter occupancy scans from one strategic-AI launch decision while preserving all spawn decisions and post-launch invalidation.",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "medium_ordinal": 99,
+        "medium_row_signature": "59262e55",
+        "medium_row_runtime_msec": 302679,
+        "medium_max_turn_runtime_msec": 11320,
+        "live_open_spawn_point_rebuilds_per_below_threshold_launch_decision": 4
+      },
+      "completionCriteria": [
+        "Emergency, planned-task, active-front, and final best-candidate scans consume one decision-local open-spawn-point snapshot",
+        "A completed spawn cannot leak the snapshot into the next launch decision, where encounter occupancy has changed",
+        "Focused runtime proof observes one open-point load and repeated reuse while preserving the selected candidate payload",
+        "Exact Medium ordinal 99 preserves its row signature, outcome, and behavior counts without regressing measured runtime beyond normal local variance"
+      ],
+      "nonGoals": [
+        "spawn scoring changes, commander selection changes, encounter topology changes, strategic-AI matrix expansion, battle balance, Native RMG, or release completion",
+        "cross-turn caches or reuse after a spawned raid mutates encounter occupancy"
+      ],
+      "startedAt": "2026-08-04T21:29:38Z",
+      "updatedAt": "2026-08-04T21:48:58Z",
+      "completedAt": "2026-08-04T21:48:58Z",
+      "result": {
+        "decision_open_spawn_points_loaded": 1,
+        "decision_open_spawn_points_reused": 4,
+        "post_spawn_open_spawn_points_loaded": 1,
+        "medium_ordinal": 99,
+        "medium_row_signature": "59262e55",
+        "medium_turns_completed": 37,
+        "medium_enemy_activity_event_count": 171,
+        "medium_behavior_bug_count": 0,
+        "medium_target_integrity_violation_count": 0,
+        "medium_unreachable_active_target_total": 0,
+        "medium_control_row_runtime_msec": 302679,
+        "medium_current_row_runtime_msec": 301646,
+        "medium_control_max_turn_runtime_msec": 11320,
+        "medium_current_max_turn_runtime_msec": 11290,
+        "local_runtime_improvement_pct": 0.34
+      },
+      "validation": [
+        "strategic_ai_emergency_defense_commander_fit_report passed with exact launch-plan equivalence, one open-point load, four reuses, and mandatory post-spawn reload",
+        "ai_raid_regroup_retreat_report passed",
+        "ai_planned_task_recruitment_prep_report passed",
+        "ai_hero_task_spawn_commander_selection_report passed with current eight-way equal-route tie behavior",
+        "core_systems_regression_smoke passed",
+        "current-code no-reuse control and final Medium ordinal 99 preserved exact row signature, outcome, and all event counts",
+        "Godot editor parse, validate_repo.py, JSON parse, and git diff checks passed"
+      ],
+      "notes": "The focused matrix intentionally retains its remaining-validation status because the paused 100-seed eight-week release gate was not run. The measured gain is local and small; multi-second strategic-AI turns remain dominated by pathing, target assignment, raid advancement, reinforcement, and town planning.",
+      "remainingWork": "No work remains in this slice. Broader strategic-AI performance and the paused final long-run matrix remain open, and overall game completion is not claimed."
     }
   ],
   "project": "heroes-like",

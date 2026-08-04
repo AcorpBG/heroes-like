@@ -260,6 +260,7 @@ func _target_aware_spawn_point_case() -> Dictionary:
 	var spawn_scan_profile := EnemyTurnRules._spawn_profile_finish()
 	var spawn_scan_counts: Dictionary = spawn_scan_profile.get("counts", {}) if spawn_scan_profile.get("counts", {}) is Dictionary else {}
 	for loaded_key in [
+		"decision_open_spawn_points_loaded",
 		"spawn_scan_commander_roster_loaded",
 		"spawn_scan_commander_candidates_loaded",
 		"spawn_scan_live_tasks_loaded",
@@ -276,16 +277,16 @@ func _target_aware_spawn_point_case() -> Dictionary:
 			or int(spawn_scan_counts.get("ready_saved_task_no_prepared_commander_reused", 0)) <= 0:
 		_fail("Understrength saved-task scan did not reuse the explicit no-prepared-commander preflight: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
-	if int(spawn_scan_counts.get("spawn_spell_projection_loaded", 0)) != 2 \
-			or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) != 0:
+	if int(spawn_scan_counts.get("spawn_spell_projection_loaded", 0)) != 1 \
+			or int(spawn_scan_counts.get("spawn_spell_projection_reused", 0)) != 1:
 		_fail("Understrength saved-task scan retained redundant ready-path spell projections: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
 	if int(spawn_scan_counts.get("spawn_spell_projection_roster_reused", 0)) \
 			!= int(spawn_scan_counts.get("spawn_spell_projection_loaded", 0)):
 		_fail("Saved-task spell projections did not all reuse the normalized spawn roster: %s" % JSON.stringify(spawn_scan_profile))
 		return {}
-	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 3:
-		_fail("Target-aware spawn selection should prefer closer southern spawn point, got %s" % JSON.stringify(best_open))
+	if int(best_open.get("x", 0)) != 7 or int(best_open.get("y", 0)) != 1:
+		_fail("Equal eight-way task routes should retain the first deterministic spawn point, got %s" % JSON.stringify(best_open))
 		return {}
 	if String(best_open.get("spawn_plan_source", "")) != "saved_task":
 		_fail("Target-aware spawn selection should be driven by saved task, got %s" % JSON.stringify(best_open))
@@ -299,8 +300,8 @@ func _target_aware_spawn_point_case() -> Dictionary:
 		_fail("Target-aware spawn result failed: %s" % JSON.stringify(spawn_result))
 		return {}
 	var raid := _latest_raid(session)
-	if int(raid.get("x", 0)) != 7 or int(raid.get("y", 0)) != 3:
-		_fail("Spawned raid did not use target-aware spawn point 7,3: %s" % JSON.stringify(raid))
+	if int(raid.get("x", 0)) != 7 or int(raid.get("y", 0)) != 1:
+		_fail("Spawned raid did not preserve the equal-route deterministic spawn point 7,1: %s" % JSON.stringify(raid))
 		return {}
 	if String(raid.get("enemy_commander_state", {}).get("roster_hero_id", "")) != "hero_tarn":
 		_fail("Spawned raid did not keep saved-task commander hero_tarn: %s" % JSON.stringify(raid))
@@ -312,7 +313,7 @@ func _target_aware_spawn_point_case() -> Dictionary:
 	if _failed:
 		return {}
 	return {
-		"case_id": "spawn_point_prefers_saved_task_reachable_origin_over_first_open",
+		"case_id": "spawn_point_equal_eight_way_task_routes_keep_first_open",
 		"first_open": first_open,
 		"selected_spawn_point": {"x": int(best_open.get("x", 0)), "y": int(best_open.get("y", 0))},
 		"spawn_plan_source": String(best_open.get("spawn_plan_source", "")),

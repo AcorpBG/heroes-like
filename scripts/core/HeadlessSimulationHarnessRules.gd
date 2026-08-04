@@ -3633,21 +3633,21 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 	var commander_candidates_reused := int(profile_counts.get("emergency_commander_candidates_reused", 0))
 	var commander_probes_loaded := int(profile_counts.get("emergency_commander_probe_loaded", 0))
 	var commander_probes_reused := int(profile_counts.get("emergency_commander_probe_reused", 0))
-	var launch_scan_context := {}
-	EnemyTurnRules._spawn_profile_begin(true)
+	var plan_scan_context := {}
 	var emergency_plan := EnemyTurnRules._emergency_defense_launch_ready_report(
 		session,
 		config,
 		state,
 		faction_id,
-		launch_scan_context
+		plan_scan_context
 	)
-	var launch_candidate := EnemyTurnRules._best_open_spawn_point(
+	var launch_scan_context := {}
+	EnemyTurnRules._spawn_profile_begin(true)
+	var launch_candidate := EnemyTurnRules._launchable_spawn_candidate(
 		session,
 		config,
 		state,
 		faction_id,
-		false,
 		launch_scan_context
 	)
 	var spawn_profile := EnemyTurnRules._spawn_profile_finish()
@@ -3738,6 +3738,30 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 		failures.append("Emergency launch scan did not load/reuse commander candidates exactly once.")
 	if int(spawn_profile_counts.get("emergency_commander_probe_loaded", 0)) != 2 or int(spawn_profile_counts.get("emergency_commander_probe_reused", 0)) != 2:
 		failures.append("Emergency launch scan did not prepare/reuse the two commander probes exactly once per point.")
+	if int(spawn_profile_counts.get("decision_open_spawn_points_loaded", 0)) != 1 \
+			or int(spawn_profile_counts.get("decision_open_spawn_points_reused", 0)) != 4:
+		failures.append("One launch decision did not load/reuse its open-point snapshot 1/4 times.")
+	var open_points_before_spawn := EnemyTurnRules._open_spawn_points(session, config)
+	var launch_spawn_result := EnemyTurnRules._spawn_raid(session, config, state, launch_candidate)
+	EnemyTurnRules._spawn_profile_begin(true)
+	var open_points_after_spawn := EnemyTurnRules._launch_decision_open_spawn_points(session, config)
+	var post_spawn_profile := EnemyTurnRules._spawn_profile_finish()
+	var post_spawn_counts: Dictionary = post_spawn_profile.get("counts", {}) if post_spawn_profile.get("counts", {}) is Dictionary else {}
+	var launched_point_still_open := false
+	for point_value in open_points_after_spawn:
+		if not (point_value is Dictionary):
+			continue
+		if int(point_value.get("x", -1)) == int(launch_candidate.get("x", -2)) \
+				and int(point_value.get("y", -1)) == int(launch_candidate.get("y", -2)):
+			launched_point_still_open = true
+			break
+	if launch_spawn_result.is_empty():
+		failures.append("Emergency launch fixture could not spawn its selected candidate.")
+	if int(post_spawn_counts.get("decision_open_spawn_points_loaded", 0)) != 1 \
+			or int(post_spawn_counts.get("decision_open_spawn_points_reused", 0)) != 0:
+		failures.append("Post-spawn occupancy check did not force a fresh open-point load.")
+	if open_points_after_spawn.size() != open_points_before_spawn.size() - 1 or launched_point_still_open:
+		failures.append("Post-spawn open-point refresh retained the newly occupied launch point.")
 	var status := _status_from(failures, warnings, deferred)
 	return _case(
 		"strategic_ai_emergency_defense_commander_fit",
@@ -3775,6 +3799,12 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"launch_candidate_matches_plan": launch_candidate_matches_plan,
 			"launch_surface_loaded": int(spawn_profile_counts.get("emergency_candidate_surface_loaded", 0)),
 			"launch_surface_points_reused": int(spawn_profile_counts.get("emergency_candidate_surface_point_reused", 0)),
+			"decision_open_points_loaded": int(spawn_profile_counts.get("decision_open_spawn_points_loaded", 0)),
+			"decision_open_points_reused": int(spawn_profile_counts.get("decision_open_spawn_points_reused", 0)),
+			"open_points_before_spawn": open_points_before_spawn.size(),
+			"open_points_after_spawn": open_points_after_spawn.size(),
+			"post_spawn_open_points_loaded": int(post_spawn_counts.get("decision_open_spawn_points_loaded", 0)),
+			"launched_point_still_open": launched_point_still_open,
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
 		},
@@ -3788,6 +3818,8 @@ static func strategic_ai_emergency_defense_commander_fit_case(input_config: Dict
 			"emergency_need_before": emergency_need_before,
 			"emergency_need_after": emergency_need_after,
 			"spawn_profile": spawn_profile,
+			"post_spawn_profile": post_spawn_profile,
+			"launch_spawn_result": launch_spawn_result,
 			"target_reason_codes": _string_array(emergency_plan.get("spawn_plan_reason_codes", [])),
 			"warnings": warnings,
 			"failures": failures,

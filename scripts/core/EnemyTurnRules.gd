@@ -3275,6 +3275,12 @@ static func _launchable_spawn_candidate(
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		_spawn_profile_count("launchable_no_encounter_pool")
 		return {}
+	started_usec = _spawn_profile_timer()
+	var decision_open_spawn_points := _launch_decision_open_spawn_points(session, config)
+	_spawn_profile_add_ms("decision_open_spawn_points_ms", started_usec)
+	if decision_open_spawn_points.is_empty():
+		_spawn_profile_count("launchable_no_open_spawn_point")
+		return {}
 	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
 	var pressure_threshold_met: bool = int(state.get("pressure", 0)) >= int(raid_threshold)
 	var emergency_defense_plan := {}
@@ -3287,7 +3293,8 @@ static func _launchable_spawn_candidate(
 			config,
 			state,
 			faction_id,
-			launch_scan_cache
+			launch_scan_cache,
+			decision_open_spawn_points
 		)
 		_spawn_profile_add_ms("emergency_defense_launch_ready_ms", started_usec)
 		if emergency_defense_plan.is_empty():
@@ -3297,7 +3304,13 @@ static func _launchable_spawn_candidate(
 		_spawn_profile_count("launchable_pressure_threshold_met")
 	else:
 		started_usec = _spawn_profile_timer()
-		var launch_ready_plan := _planned_task_launch_ready_report(session, config, state, faction_id)
+		var launch_ready_plan := _planned_task_launch_ready_report(
+			session,
+			config,
+			state,
+			faction_id,
+			decision_open_spawn_points
+		)
 		_spawn_profile_add_ms("planned_task_launch_ready_ms", started_usec)
 		started_usec = _spawn_profile_timer()
 		var active_front_support_plan := _active_front_support_launch_ready_report(
@@ -3305,7 +3318,8 @@ static func _launchable_spawn_candidate(
 			config,
 			state,
 			faction_id,
-			launch_scan_cache
+			launch_scan_cache,
+			decision_open_spawn_points
 		)
 		_spawn_profile_add_ms("active_front_support_launch_ready_ms", started_usec)
 		started_usec = _spawn_profile_timer()
@@ -3326,7 +3340,8 @@ static func _launchable_spawn_candidate(
 		state,
 		faction_id,
 		skip_emergency_defense_scan,
-		launch_scan_cache
+		launch_scan_cache,
+		decision_open_spawn_points
 	)
 	_spawn_profile_add_ms("best_open_spawn_point_ms", started_usec)
 	if candidate.is_empty():
@@ -3380,13 +3395,14 @@ static func _emergency_defense_launch_ready_report(
 	config: Dictionary,
 	state: Dictionary,
 	faction_id: String,
-	emergency_scan_context: Dictionary = {}
+	emergency_scan_context: Dictionary = {},
+	preloaded_open_spawn_points: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "":
 		return {}
 	if not _has_open_emergency_defense_front(session, faction_id):
 		return {}
-	var points := _open_spawn_points(session, config)
+	var points := _launch_decision_open_spawn_points(session, config, preloaded_open_spawn_points)
 	if points.is_empty():
 		return {}
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
@@ -3421,11 +3437,12 @@ static func _planned_task_launch_ready_report(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_open_spawn_points: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "":
 		return {}
-	var points := _open_spawn_points(session, config)
+	var points := _launch_decision_open_spawn_points(session, config, preloaded_open_spawn_points)
 	if points.is_empty():
 		return {}
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
@@ -3467,11 +3484,12 @@ static func _active_front_support_launch_ready_report(
 	config: Dictionary,
 	state: Dictionary,
 	faction_id: String,
-	launch_scan_cache: Dictionary = {}
+	launch_scan_cache: Dictionary = {},
+	preloaded_open_spawn_points: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "":
 		return {}
-	var points := _open_spawn_points(session, config)
+	var points := _launch_decision_open_spawn_points(session, config, preloaded_open_spawn_points)
 	if points.is_empty():
 		return {}
 	if bool(launch_scan_cache.get("active_front_support_candidate_surface_complete", false)):
@@ -4872,10 +4890,11 @@ static func _best_open_spawn_point(
 	state: Dictionary = {},
 	faction_id: String = "",
 	skip_emergency_defense_scan: bool = false,
-	preloaded_spawn_scan_context: Dictionary = {}
+	preloaded_spawn_scan_context: Dictionary = {},
+	preloaded_open_spawn_points: Variant = null
 ) -> Dictionary:
 	var started_usec := _spawn_profile_timer()
-	var points := _open_spawn_points(session, config)
+	var points := _launch_decision_open_spawn_points(session, config, preloaded_open_spawn_points)
 	_spawn_profile_add_ms("open_spawn_points_ms", started_usec)
 	_spawn_profile_count("open_spawn_point_count", points.size())
 	if points.is_empty():
@@ -6658,6 +6677,17 @@ static func _open_spawn_points(session: SessionStateStoreScript.SessionData, con
 		if not occupied:
 			points.append({"x": x, "y": y})
 	return points
+
+static func _launch_decision_open_spawn_points(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	preloaded_open_spawn_points: Variant = null
+) -> Array:
+	if preloaded_open_spawn_points is Array:
+		_spawn_profile_count("decision_open_spawn_points_reused")
+		return preloaded_open_spawn_points
+	_spawn_profile_count("decision_open_spawn_points_loaded")
+	return _open_spawn_points(session, config)
 
 static func _player_hero_occupied_tile_lookup(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var occupied := {}
