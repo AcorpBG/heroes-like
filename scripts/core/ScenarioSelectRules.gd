@@ -596,6 +596,9 @@ static func maps_folder_package_stem_from_id(package_id: String) -> String:
 		return ""
 	return package_id.substr(MAPS_FOLDER_PACKAGE_ID_PREFIX.length())
 
+static func safe_maps_folder_package_stem(value: String) -> String:
+	return _safe_package_stem(value)
+
 static func build_maps_folder_package_browser_entries(options: Dictionary = {}) -> Array:
 	return maps_folder_package_index(options).get("entries", [])
 
@@ -701,6 +704,9 @@ static func load_maps_folder_package_session(package_id: String, difficulty_id: 
 	var entry := maps_folder_package_entry(package_id, options)
 	if entry.is_empty():
 		return SessionStateStoreScript.new_session_data()
+	return _load_maps_folder_package_session_from_entry(entry, normalize_difficulty(difficulty_id), options)
+
+static func load_maps_folder_package_session_from_entry(entry: Dictionary, difficulty_id: String = "normal", options: Dictionary = {}) -> SessionStateStoreScript.SessionData:
 	return _load_maps_folder_package_session_from_entry(entry, normalize_difficulty(difficulty_id), options)
 
 static func start_maps_folder_package_skirmish_session(package_id: String, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
@@ -1304,7 +1310,26 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 	var player_count := _scenario_document_player_count(scenario_document)
 	var source_kind := String(map_ref.get("source_kind", metadata.get("source_kind", "generated")))
 	var generated := source_kind == "generated" or source_kind.begins_with("generated_")
+	var editor_authored_copy := source_kind == "authored_legacy_scenario_conversion"
 	if not generated:
+		if editor_authored_copy and bool(options.get("include_non_launchable_generated_packages", false)) and String(options.get("consumer", "")) == "map_editor":
+			return _maps_folder_package_entry_payload(
+				package_stem,
+				map_path,
+				scenario_path,
+				map_document,
+				scenario_document,
+				metadata,
+				map_ref,
+				scenario_ref,
+				player_count,
+				{
+					"ok": false,
+					"error_code": "editor_authored_copy_not_skirmish_validated",
+					"message": "Editor-authored package copies require separate skirmish validation.",
+				},
+				false
+			)
 		return {
 			"ok": false,
 			"package_stem": package_stem,
@@ -1368,8 +1393,12 @@ static func _maps_folder_package_entry_payload(
 	var level_count: int = map_document.get_level_count() if map_document != null else 1
 	var package_id := maps_folder_package_id_for_stem(package_stem)
 	var display_name := _maps_folder_display_name(package_stem, metadata, scenario_document)
+	var source_kind := String(map_ref.get("source_kind", metadata.get("source_kind", "generated")))
+	var editor_authored_copy := source_kind == "authored_legacy_scenario_conversion"
 	var map_size_label := "%dx%d L%d" % [width, height, max(1, level_count)]
-	var summary := "Generated package | %s | Players %d | %s" % [
+	var package_label := "Editor copy" if editor_authored_copy else "Generated package"
+	var summary := "%s | %s | Players %d | %s" % [
+		package_label,
 		map_size_label,
 		max(1, player_count),
 		_maps_folder_metadata_summary(metadata),
@@ -1383,7 +1412,7 @@ static func _maps_folder_package_entry_payload(
 		"label": "%s | %s | %s" % [display_name, map_size_label, difficulty_label(default_difficulty_id())],
 		"display_name": display_name,
 		"summary": summary,
-		"front_context": "Front: generated package pair from maps/.",
+		"front_context": "Front: editor-authored package copy from maps/." if editor_authored_copy else "Front: generated package pair from maps/.",
 		"readiness_summary": "Readiness: paired .amap/.ascenario files load through native MapPackageService.",
 		"operational_board": "%s\n%s\n%s" % [summary, map_path, scenario_path],
 		"map_path": map_path,
@@ -1397,7 +1426,8 @@ static func _maps_folder_package_entry_payload(
 		"launchable": launchable,
 		"editor_inspection_only": not launchable,
 		"editor_index_policy": launch_status,
-		"source_kind": "generated",
+		"source_kind": source_kind,
+		"editor_authored_copy": editor_authored_copy,
 		"startup_source": "maps_folder_package",
 		"legacy_json_scenario_record": false,
 		"authored_json_scenarios_used": false,

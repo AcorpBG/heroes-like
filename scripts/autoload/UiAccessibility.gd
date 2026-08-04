@@ -172,11 +172,18 @@ func _attach_control(control: Control) -> void:
 	if _connected_control_ids.has(id):
 		return
 	_connected_control_ids[id] = true
-	control.focus_entered.connect(_on_control_refresh_requested.bind(control))
-	control.visibility_changed.connect(_on_control_refresh_requested.bind(control))
+	var refresh_callback := _on_control_refresh_requested.bind(control)
+	if not control.focus_entered.is_connected(refresh_callback):
+		control.focus_entered.connect(refresh_callback)
+	if not control.visibility_changed.is_connected(refresh_callback):
+		control.visibility_changed.connect(refresh_callback)
 	if control is OptionButton:
-		(control as OptionButton).item_selected.connect(_on_option_selected.bind(control as OptionButton))
-	control.tree_exited.connect(_on_control_exited.bind(id), CONNECT_ONE_SHOT)
+		var option_callback := _on_option_selected.bind(control as OptionButton)
+		if not (control as OptionButton).item_selected.is_connected(option_callback):
+			(control as OptionButton).item_selected.connect(option_callback)
+	var exit_callback := _on_control_exited.bind(id)
+	if not control.tree_exited.is_connected(exit_callback):
+		control.tree_exited.connect(exit_callback, CONNECT_ONE_SHOT)
 
 
 func _on_node_added(node: Node) -> void:

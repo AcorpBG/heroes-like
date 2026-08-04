@@ -84,6 +84,17 @@ func _run() -> void:
 		return _fail("Option semantics did not retain field identity and refresh the selected value: %s / %s" % [UiAccessibility.semantic_name(option), option.accessibility_description])
 	if authored_option.accessibility_name != "Battle detail level" or authored_option.accessibility_description != "Choose how much tactical detail is announced.":
 		return _fail("Authored option semantics were replaced: %s / %s" % [authored_option.accessibility_name, authored_option.accessibility_description])
+	fixture.remove_child(option)
+	await _settle()
+	fixture.add_child(option)
+	await _settle()
+	UiAccessibility.configure_control(option)
+	if (
+		_connection_count(option.focus_entered, "_on_control_refresh_requested") != 1
+		or _connection_count(option.visibility_changed, "_on_control_refresh_requested") != 1
+		or _connection_count(option.item_selected, "_on_option_selected") != 1
+	):
+		return _fail("Re-entered controls received duplicate accessibility signal connections.")
 	if event.accessibility_live != DisplayServer.LIVE_POLITE:
 		return _fail("Event label is not a polite native live region.")
 	if event.accessibility_name != "":
@@ -139,6 +150,7 @@ func _run() -> void:
 		"dynamic_control_named": UiAccessibility.semantic_name(dynamic) != "",
 		"authored_semantics_preserved": true,
 		"option_field_semantics": true,
+		"reentry_connections_deduplicated": true,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()
@@ -150,6 +162,15 @@ func _settle() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+func _connection_count(signal_value: Signal, method_name: String) -> int:
+	var count := 0
+	for connection in signal_value.get_connections():
+		var callable: Callable = connection.get("callable", Callable())
+		if callable.get_object() == UiAccessibility and callable.get_method() == method_name:
+			count += 1
+	return count
 
 
 func _fail(message: String) -> void:

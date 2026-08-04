@@ -1715,6 +1715,37 @@ Non-goals:
 - do not write `content/scenarios.json`, `content/terrain_layers.json`, campaign progress, or save data;
 - do not change Native RMG generation/parity, map-editor layout, scenario content, or claim overall release completion.
 
+## Map Editor Package Save Copy
+
+id: `map-editor-package-save-copy-10184`
+
+Status: completed.
+
+Completed Phase 6 production-tooling implementation slice. The editor now saves
+validated package-backed working copies as unique typed package pairs and adopts
+the reloaded result as its new clean baseline.
+
+Implementation target:
+- add a visible Save Copy command for loaded editor working copies that converts the validated draft and writes a unique `.amap` / `.ascenario` pair without overwriting its source;
+- preserve terrain, roads, every object record, scenario contracts, and player slots through native conversion and package reload;
+- clean up partial output on failure, adopt the successful copy as the new clean editor baseline, and list it for editor loading without certifying it for skirmish launch;
+- keep authored scenario JSON, campaign progress, saves, and the source package byte-for-byte unchanged.
+
+Completion criteria:
+- focused runtime proof edits a package-backed working copy, saves two uniquely named copies, reloads and validates each pair, and proves terrain, roads, object topology, scenario/player contracts, dirty-state reset, and non-overwrite behavior;
+- authored JSON and source packages remain unchanged, editor-authored copies remain excluded from the skirmish package index, and failed writes leave no partial pair;
+- synchronized Linux and Windows native builds plus package-browser, editor, core, project-parse, repository, JSON, and diff gates pass.
+
+Completion evidence:
+- focused runtime proof saves `saved-editor-copy` and `saved-editor-copy-2`, preserves 21 exact object records including opaque standalone/town fields and two explicit player slots, and leaves source/authored bytes unchanged;
+- failed validation leaves no partial output, editor indexing lists all three package pairs, and the skirmish index lists none;
+- Linux and Windows native builds, conversion/package/editor/accessibility/core runtime proofs, project parsing, repository validation, Python/JSON, and diff checks pass; the full editor smoke exits without engine errors.
+
+Non-goals:
+- do not write authored JSON, campaign progress, save data, or provide in-place overwrite;
+- do not certify editor copies for skirmish launch or change Native RMG generation/parity;
+- do not add broad map migration UI or claim overall game completion.
+
 ## Cross-Platform Release Candidate Pipeline
 
 id: `packaging-cross-platform-release-candidate-pipeline-10184`

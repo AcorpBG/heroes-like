@@ -1798,6 +1798,44 @@ Dictionary MapPackageService::convert_legacy_scenario_record(Dictionary scenario
 			|| !append_objects("encounters", "encounter")) {
 		return package_failure(operation, "", object_failure_code, object_failure_message);
 	}
+	Variant map_objects_value = scenario_record.get("map_objects", Variant());
+	if (map_objects_value.get_type() != Variant::NIL) {
+		if (map_objects_value.get_type() != Variant::ARRAY) {
+			return package_failure(operation, "", "invalid_map_objects", "Legacy scenario map_objects must be an array.");
+		}
+		Array map_objects = map_objects_value;
+		for (int64_t index = 0; index < map_objects.size(); ++index) {
+			if (map_objects[index].get_type() != Variant::DICTIONARY) {
+				return package_failure(operation, "", "invalid_map_object_record", "Legacy scenario map_objects contains a non-dictionary placement.");
+			}
+			Dictionary object = Dictionary(map_objects[index]).duplicate(true);
+			const String placement_id = String(object.get("placement_id", "")).strip_edges();
+			if (placement_id.is_empty()) {
+				return package_failure(operation, "", "missing_placement_id", "Legacy scenario map_objects contains a placement without placement_id.");
+			}
+			// Runtime family projections can contain the same source object. The editable
+			// family record wins while standalone source objects remain byte-faithful.
+			if (placement_ids.has(placement_id)) {
+				continue;
+			}
+			const int32_t x = int32_t(object.get("x", -1));
+			const int32_t y = int32_t(object.get("y", -1));
+			const int32_t level = int32_t(object.get("level", 0));
+			if (x < 0 || y < 0 || x >= width || y >= height || level != 0) {
+				return package_failure(operation, "", "object_out_of_bounds", "Legacy scenario map_objects contains an out-of-bounds placement.");
+			}
+			String object_kind = String(object.get("kind", "")).strip_edges();
+			if (object_kind.is_empty()) {
+				object_kind = String(object.get("native_record_kind", "")).strip_edges();
+			}
+			if (object_kind.is_empty()) {
+				return package_failure(operation, "", "missing_object_kind", "Legacy scenario map_objects contains a placement without kind.");
+			}
+			object["level"] = level;
+			placement_ids[placement_id] = true;
+			objects.append(object);
+		}
+	}
 
 	Array roads;
 	Variant roads_value = terrain_layers_record.get("roads", Array());
@@ -1884,19 +1922,29 @@ Dictionary MapPackageService::convert_legacy_scenario_record(Dictionary scenario
 	map_ref["map_hash"] = map_hash;
 	map_ref["source_kind"] = "authored_legacy_scenario_conversion";
 	Array player_slots;
-	Dictionary player_slot;
-	player_slot["slot"] = 1;
-	player_slot["owner"] = "player";
-	player_slot["human"] = true;
-	player_slot["computer"] = false;
-	player_slot["faction_id"] = scenario_record.get("player_faction_id", "");
-	player_slots.append(player_slot);
+	Variant player_slots_value = scenario_record.get("player_slots", Variant());
+	if (player_slots_value.get_type() != Variant::NIL) {
+		if (player_slots_value.get_type() != Variant::ARRAY) {
+			return package_failure(operation, "", "invalid_player_slots", "Legacy scenario player_slots must be an array.");
+		}
+		player_slots = Array(player_slots_value).duplicate(true);
+	}
+	const bool preserve_explicit_player_slots = !player_slots.is_empty();
+	if (player_slots.is_empty()) {
+		Dictionary player_slot;
+		player_slot["slot"] = 1;
+		player_slot["owner"] = "player";
+		player_slot["human"] = true;
+		player_slot["computer"] = false;
+		player_slot["faction_id"] = scenario_record.get("player_faction_id", "");
+		player_slots.append(player_slot);
+	}
 	Variant enemy_factions_value = scenario_record.get("enemy_factions", Array());
 	if (enemy_factions_value.get_type() != Variant::ARRAY) {
 		return package_failure(operation, "", "invalid_enemy_factions", "Legacy scenario enemy_factions must be an array.");
 	}
 	Array enemy_factions = Array(enemy_factions_value).duplicate(true);
-	for (int64_t index = 0; index < enemy_factions.size(); ++index) {
+	for (int64_t index = 0; !preserve_explicit_player_slots && index < enemy_factions.size(); ++index) {
 		String faction_id;
 		if (enemy_factions[index].get_type() == Variant::DICTIONARY) {
 			Dictionary enemy = enemy_factions[index];

@@ -12709,6 +12709,7 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         "authored_semantics_preserved",
         "dynamic_control_named",
         "option_field_semantics",
+        "reentry_connections_deduplicated",
         "PresentationModePicker",
         "UIScalePicker",
         "ColorCuePicker",
@@ -20085,6 +20086,69 @@ def validate_legacy_scenario_package_conversion(errors: list[str]) -> None:
         )
 
 
+def validate_map_editor_package_save_copy(errors: list[str]) -> None:
+    shell_path = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
+    scene_path = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
+    rules_path = ROOT / "scripts" / "core" / "ScenarioSelectRules.gd"
+    bridge_path = ROOT / "scripts" / "persistence" / "NativeRandomMapPackageSessionBridge.gd"
+    report_path = ROOT / "tests" / "map_editor_package_save_copy_report.gd"
+    report_scene_path = ROOT / "tests" / "map_editor_package_save_copy_report.tscn"
+    for path in (shell_path, scene_path, rules_path, bridge_path, report_path, report_scene_path):
+        ensure(path.exists(), errors, f"Missing Map Editor Save Copy file: {path.relative_to(ROOT)}")
+
+    if shell_path.exists():
+        shell_text = shell_path.read_text(encoding="utf-8")
+        for required_token in (
+            "func _save_package_working_copy",
+            '"editor_non_overwriting_package_copy"',
+            "func _unique_package_copy_stem",
+            "func _finish_save_copy_failure",
+            '"authored_json_writeback": false',
+            "package_source_object_ids",
+            "editor_authored_placement",
+        ):
+            ensure(required_token in shell_text, errors, f"Map Editor Save Copy is missing required token: {required_token}")
+
+    if scene_path.exists():
+        scene_text = scene_path.read_text(encoding="utf-8")
+        ensure('[node name="SaveCopy" type="Button"' in scene_text, errors, "Map Editor scene is missing its Save Copy button")
+
+    if rules_path.exists():
+        rules_text = rules_path.read_text(encoding="utf-8")
+        for required_token in (
+            '"editor_authored_copy_not_skirmish_validated"',
+            'source_kind == "authored_legacy_scenario_conversion"',
+            'String(options.get("consumer", "")) == "map_editor"',
+        ):
+            ensure(required_token in rules_text, errors, f"Editor-copy package indexing is missing required token: {required_token}")
+
+    if bridge_path.exists():
+        bridge_text = bridge_path.read_text(encoding="utf-8")
+        for required_token in ("package_source_object_ids", "package_source_objects_by_id", 'start_contract.has("x")', '"player_slots"'):
+            ensure(required_token in bridge_text, errors, f"Package session preservation is missing required token: {required_token}")
+
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "MAP_EDITOR_PACKAGE_SAVE_COPY_REPORT",
+            '"source_package_unchanged": true',
+            '"authored_json_unchanged": true',
+            '"saved-editor-copy-2"',
+            '"opaque_fixture_field"',
+            '"opaque_town_fixture_field"',
+            '"skirmish_index_count"',
+        ):
+            ensure(required_token in report_text, errors, f"Map Editor Save Copy runtime proof is missing required token: {required_token}")
+
+    if report_scene_path.exists():
+        report_scene_text = report_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/map_editor_package_save_copy_report.gd"' in report_scene_text,
+            errors,
+            "Map Editor Save Copy report scene is not wired to its script",
+        )
+
+
 def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     guard_path = ROOT / "tools" / "rmg_no_godot_guard.py"
     wrapper_path = ROOT / "tools" / "rmg_native_batch_export.py"
@@ -24263,6 +24327,7 @@ def main() -> int:
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_legacy_scenario_package_conversion(errors)
+    validate_map_editor_package_save_copy(errors)
     validate_native_rmg_no_godot_export_boundary(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_packaging_platform_readiness(errors)

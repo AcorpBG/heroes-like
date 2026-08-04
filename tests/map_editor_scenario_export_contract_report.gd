@@ -7,9 +7,14 @@ func _ready() -> void:
 
 func _run() -> void:
 	var shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
+	shell.set("validation_skip_initial_package_index", true)
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var load_result: Dictionary = shell.call("validation_load_legacy_authored_scenario_for_dev", SCENARIO_ID)
+	if not bool(load_result.get("ok", false)):
+		_fail("Could not load authored validation scenario before export contract checks.")
+		return
 
 	var clean_contract: Dictionary = shell.call("validation_authored_scenario_export_contract")
 	if not _assert_contract_boundary(clean_contract, false):
