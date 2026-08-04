@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the production Thornwake capstone pair through shared live behavior: Highroot Graft Salvo rewards existing bramble pressure and Worldroot Rampart directly blunts ranged attrition without changing global cohesion. The accepted 100-seed pair/week summaries remain exact at 33 outliers / 262.5 severity / 12 severe rows / 74.5 percent maximum dominance / 3.07 side bias; faction balance and overall release completion remain open.",
+  "currentNotes": "Completed the Mireclaw midline pair through shared live behavior: Ferrychain Hookline is a round-two one-use control lash that pulls and pins a surviving target in adjacent contact, while Sporewake Rot Cant is a round-two one-use tier-6 veteran-line call with bounded retaliation, cohesion, and wounded-target pressure. The accepted 100-seed matrix remains exact; faction balance and overall release completion remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-thornwake-highroot-capstone-identity-10184",
-  "currentSliceId": "combat-thornwake-highroot-capstone-identity-10184",
-  "currentSliceNotes": "Implemented and validated source-authored Graft Matriarch and Worldroot Bastion combat roles through shared live ability contracts with exact aggregate faction-matrix parity.",
+  "currentSlice": "combat-mireclaw-ferry-rot-midline-identity-10184",
+  "currentSliceId": "combat-mireclaw-ferry-rot-midline-identity-10184",
+  "currentSliceNotes": "Implemented and validated source-authored Ferrychain Lasher and Sporewake Chanter combat roles through shared round-two ability contracts with exact aggregate faction-matrix parity.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Highroot Capstone Identity",
-  "currentSliceUpdatedAt": "2026-08-04T06:38:48Z",
+  "currentSliceTitle": "Mireclaw Ferry-Rot Midline Identity",
+  "currentSliceUpdatedAt": "2026-08-04T08:27:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69430,6 +69430,62 @@
       },
       "calibration": "Rejected a one-use Matriarch opening mark because it raised week-3 side bias from 3.07 to 4.47. Replacing the mark did not remove the bias; removing Worldroot Brace did, proving the defend-order cause. A subsequent Shielding cohesion hold added one outlier and seven severity points by crossing integer cohesion thresholds, so the accepted Rampart uses direct ranged protection only.",
       "notes": "The source-defined Thornwake tier-6 and tier-7 capstones are the only upper-ladder pair with no abilities after the existing Barkmantle and Stag-Knot roles. This slice adds only shared contracts and requires full-matrix non-regression. The first Matriarch one-use mark candidate improved aggregate outliers and severity but increased week-3 side bias from 3.07 to 4.47 points; raising its target tier and replacing it with persistent Volley pressure left that bias unchanged, isolating the order distortion to Worldroot Brace/defend preference. Removing Brace fixed side bias, but Shielding cohesion hold crossed integer cohesion thresholds and added one outlier plus seven severity points, so the global cohesion bonus was rejected in favor of direct ranged protection only.",
+      "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
+    },
+    {
+      "id": "combat-mireclaw-ferry-rot-midline-identity-10184",
+      "title": "Mireclaw Ferry-Rot Midline Identity",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
+      "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "baseline": {
+        "mireclaw_tier_4_to_5_unit_count": 2,
+        "mireclaw_tier_4_to_5_specialized_behavior_count": 0,
+        "balance_outlier_count": 33,
+        "balance_severity": 262.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "max_side_bias_pct": 3.07,
+        "week_2_brasshollow_over_mireclaw_pct": 74.0,
+        "week_2_embercourt_over_mireclaw_pct": 66.5,
+        "week_2_sunvault_over_mireclaw_pct": 66.5,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Ferrychain Lashers and Sporewake Chanters each own source-aligned authored behavior with focused live runtime consequences",
+        "Live combat, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume shared behavior fields",
+        "The full all-live matrix leaves week 1 exact and does not increase outlier count, severity, severe-row count, maximum dominance, or maximum side bias",
+        "Focused ability, autoplay, town-development, core, parse, repository, JSON, Python syntax, and diff validation pass"
+      ],
+      "nonGoals": [
+        "other Mireclaw unit changes or faction-only combat code",
+        "raw unit-stat, growth, cost, building, spell, hero, scenario, benchmark-threshold, strategic-AI, or Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T06:41:15Z",
+      "updatedAt": "2026-08-04T08:27:33Z",
+      "completedAt": "2026-08-04T08:27:33Z",
+      "sliceEvidence": {
+        "implementation": "Ferrychain Hookline now uses a shared round-two one-use control contract with unique distance-two legality, minimum control damage, live hex pull into adjacent contact, rooted pin, use consumption, tactical-AI parity, and player summaries. Sporewake Rot Cant now uses a separate shared round-two one-use tier-6 contract with one-round cohesion/retaliation pressure and a 1.02 wounded-target rider, avoiding unrelated Reach/Harry systemic bonuses.",
+        "focused_runtime": "unit_ability_runtime_report passes all 96 authored ability instances and proves round-one blocking, later legality, physical pull, distance resync, pin/status application, bounded uses, veteran targeting, wounded damage, tactical-AI agreement, and player-visible names.",
+        "balance": "The final 100-seed all-live four-week report is exact against the accepted baseline: 33 outliers, 262.5 severity, 12 rows at or above 65 percent, 74.5 percent maximum dominance, 3.07 maximum side bias, zero structural failures, and identical pair summaries, week summaries, ordered matchups, and outlier rows.",
+        "validation": [
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/town_development_runtime_balance_report.tscn",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "git diff --check"
+        ]
+      },
+      "notes": "Existing Reach and Harry IDs were rejected because they carried unrelated fortification, terrain, hero-trait, and opening-order behavior. Specialized Hookline and Rot Cant contracts were then calibrated. A free standoff strike caused severe week-3 dominance; implementing the source role's physical pull fixed it. Opening-round use still raised side bias, so both midline controls now begin in round two. The accepted candidate preserves exact matrix parity while retaining focused live post-opening consequences.",
       "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
     }
   ],

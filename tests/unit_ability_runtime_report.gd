@@ -7,6 +7,8 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const OUTPUT_DIR := "res://.artifacts/unit_ability_runtime_report"
 const REQUIRED_ABILITY_IDS := [
 	"reach",
+	"hookline",
+	"rot_cant",
 	"brace",
 	"harry",
 	"backstab",
@@ -105,6 +107,10 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 	match ability_id:
 		"reach":
 			return _probe_reach(unit_id)
+		"hookline":
+			return _probe_hookline(unit_id)
+		"rot_cant":
+			return _probe_rot_cant(unit_id)
 		"brace":
 			return _probe_brace(unit_id)
 		"harry":
@@ -144,6 +150,149 @@ func _probe_reach(unit_id: String) -> Dictionary:
 		"legal_with": legal_with,
 		"legal_without": legal_without,
 		"reason": "" if legal_with and not legal_without else "reach did not uniquely unlock distance-two melee",
+	}
+
+func _probe_hookline(unit_id: String) -> Dictionary:
+	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var defender := _defender_stack()
+	_set_hex(attacker, 4, 3)
+	_set_hex(defender, 6, 3)
+	var opening_battle := _battle_for_stacks([attacker.duplicate(true), defender.duplicate(true)], [], "plains", 1)
+	var opening_attacker := BattleRulesScript._get_stack_by_id(opening_battle, String(attacker.get("battle_id", "")))
+	var opening_defender := BattleRulesScript._get_stack_by_id(opening_battle, String(defender.get("battle_id", "")))
+	var opening_blocked := (
+		not BattleRulesScript._can_make_melee_attack(opening_attacker, opening_battle, opening_defender)
+		and not BattleAiRulesScript._can_make_melee_attack(opening_attacker, opening_battle, opening_defender)
+	)
+	var battle := _battle_for_stacks([attacker, defender])
+	var stripped := _without_ability(attacker, "hookline")
+	var stripped_defender := defender.duplicate(true)
+	var stripped_battle := _battle_for_stacks([stripped, stripped_defender])
+	var legal_with := BattleRulesScript._can_make_melee_attack(attacker, battle, defender)
+	var legal_without := BattleRulesScript._can_make_melee_attack(stripped, stripped_battle, stripped_defender)
+	var ai_legal_with := BattleAiRulesScript._can_make_melee_attack(attacker, battle, defender)
+	var damage_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 1)
+	var damage_without := BattleRulesScript._ability_damage_modifier(stripped, stripped_defender, stripped_battle, false, false, 1)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, attacker, defender, false, 1)
+	var updated_defender := BattleRulesScript._get_stack_by_id(battle, String(defender.get("battle_id", "")))
+	var pulled_into_contact := BattleRulesScript._stack_hex_distance(attacker, updated_defender) == 1 and int(battle.get("distance", 1)) == 0
+	var status_id := String(_ability_by_id(attacker, "hookline").get("status_id", ""))
+	var pinned := SpellRulesScript.has_effect_id(updated_defender, battle, status_id)
+	var uses_recorded := int(attacker.get("ability_uses", {}).get("hookline", 0))
+	var second_live_attack := BattleRulesScript._can_make_melee_attack(attacker, battle, updated_defender)
+	var second_ai_attack := BattleAiRulesScript._can_make_melee_attack(attacker, battle, updated_defender)
+	var second_live_hookline := BattleRulesScript._hookline_available(attacker, battle)
+	var second_ai_hookline := BattleAiRulesScript._hookline_available(attacker, battle)
+	var ok := (
+		opening_blocked
+		and legal_with
+		and ai_legal_with
+		and not legal_without
+		and damage_with < damage_without
+		and pulled_into_contact
+		and pinned
+		and uses_recorded == 1
+		and second_live_attack
+		and second_ai_attack
+		and not second_live_hookline
+		and not second_ai_hookline
+		and not messages.is_empty()
+	)
+	return {
+		"ok": ok,
+		"probe": "hookline_bounded_range_pin_and_ai_legality",
+		"legal_with": legal_with,
+		"opening_round_blocked": opening_blocked,
+		"legal_without": legal_without,
+		"ai_legal_with": ai_legal_with,
+		"damage_modifier_with": damage_with,
+		"damage_modifier_without": damage_without,
+		"pulled_into_contact": pulled_into_contact,
+		"pinned": pinned,
+		"uses_recorded": uses_recorded,
+		"second_live_attack": second_live_attack,
+		"second_ai_attack": second_ai_attack,
+		"second_live_hookline": second_live_hookline,
+		"second_ai_hookline": second_ai_hookline,
+		"reason": "" if ok else "hookline did not prove bounded cross-lane damage, pin, and AI legality",
+	}
+
+func _probe_rot_cant(unit_id: String) -> Dictionary:
+	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var rot_cant := _ability_by_id(attacker, "rot_cant")
+	var min_tier := int(rot_cant.get("target_min_tier", 1))
+	var status_id := String(rot_cant.get("status_id", ""))
+	var low_target := _defender_stack()
+	low_target["tier"] = min_tier - 1
+	var low_battle := _battle_for_stacks([attacker, low_target])
+	var low_score := BattleAiRulesScript._attack_score(attacker, low_target, low_battle, true)
+	var low_messages := BattleRulesScript._apply_attack_ability_effects(low_battle, attacker, low_target, true, 1)
+	var low_updated := BattleRulesScript._get_stack_by_id(low_battle, String(low_target.get("battle_id", "")))
+	var low_blocked := (
+		not SpellRulesScript.has_effect_id(low_updated, low_battle, status_id)
+		and int(attacker.get("ability_uses", {}).get("rot_cant", 0)) == 0
+		and low_messages.is_empty()
+	)
+	var opening_attacker := _stack_for_unit(unit_id, "player", 0)
+	var opening_target := _defender_stack()
+	opening_target["tier"] = min_tier
+	var opening_battle := _battle_for_stacks([opening_attacker, opening_target], [], "plains", 1)
+	var opening_messages := BattleRulesScript._apply_attack_ability_effects(opening_battle, opening_attacker, opening_target, true, 1)
+	var opening_updated := BattleRulesScript._get_stack_by_id(opening_battle, String(opening_target.get("battle_id", "")))
+	var opening_blocked := (
+		not SpellRulesScript.has_effect_id(opening_updated, opening_battle, status_id)
+		and int(opening_attacker.get("ability_uses", {}).get("rot_cant", 0)) == 0
+		and opening_messages.is_empty()
+	)
+
+	attacker = _stack_for_unit(unit_id, "player", 0)
+	rot_cant = _ability_by_id(attacker, "rot_cant")
+	var target := _defender_stack()
+	target["tier"] = min_tier
+	var battle := _battle_for_stacks([attacker, target])
+	var eligible_score := BattleAiRulesScript._attack_score(attacker, target, battle, true)
+	var preview := BattleRulesScript._active_ability_window_summary(attacker, battle, target)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, attacker, target, true, 1)
+	var updated := BattleRulesScript._get_stack_by_id(battle, String(target.get("battle_id", "")))
+	var status_applied := SpellRulesScript.has_effect_id(updated, battle, status_id)
+	var uses_recorded := int(attacker.get("ability_uses", {}).get("rot_cant", 0))
+	var second_target := _defender_stack("enemy", 1)
+	second_target["tier"] = min_tier
+	battle["stacks"].append(second_target)
+	BattleRulesScript._apply_attack_ability_effects(battle, attacker, second_target, true, 1)
+	var second_updated := BattleRulesScript._get_stack_by_id(battle, String(second_target.get("battle_id", "")))
+	var second_blocked := not SpellRulesScript.has_effect_id(second_updated, battle, status_id)
+	var wounded := target.duplicate(true)
+	var threshold := float(rot_cant.get("wounded_threshold_ratio", 0.5))
+	wounded["total_health"] = maxi(1, int(float(wounded.get("base_count", 1) * wounded.get("unit_hp", 1)) * threshold))
+	var stripped := _without_ability(attacker, "rot_cant")
+	var damage_with := BattleRulesScript._ability_damage_modifier(attacker, wounded, battle, true, false, 1)
+	var damage_without := BattleRulesScript._ability_damage_modifier(stripped, wounded, battle, true, false, 1)
+	var ok := (
+		opening_blocked
+		and low_blocked
+		and eligible_score > low_score
+		and status_applied
+		and uses_recorded == 1
+		and second_blocked
+		and damage_with > damage_without
+		and preview.contains(String(rot_cant.get("name", "Rot Cant")))
+		and not messages.is_empty()
+	)
+	return {
+		"ok": ok,
+		"probe": "rot_cant_veteran_gate_bounded_status_wounded_damage_and_ai",
+		"low_tier_blocked": low_blocked,
+		"opening_round_blocked": opening_blocked,
+		"low_tier_score": low_score,
+		"eligible_score": eligible_score,
+		"status_applied": status_applied,
+		"uses_recorded": uses_recorded,
+		"second_mark_blocked": second_blocked,
+		"wounded_modifier_with": damage_with,
+		"wounded_modifier_without": damage_without,
+		"preview": preview,
+		"reason": "" if ok else "rot cant did not prove its veteran gate, use bound, status, wounded pressure, and AI contract",
 	}
 
 func _probe_brace(unit_id: String) -> Dictionary:

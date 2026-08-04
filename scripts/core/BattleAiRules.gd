@@ -1153,6 +1153,10 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var harry_available := ability_uses is Dictionary and harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
 	if not harry.is_empty() and harry_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		score += 2.0
+	var rot_cant := _ability_by_id(attacker, "rot_cant")
+	var rot_available := ability_uses is Dictionary and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
+	if not rot_cant.is_empty() and rot_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
+		score += 0.25
 	var obituary = _ability_by_id(attacker, "obituary")
 	var obituary_available := ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if not obituary.is_empty() and obituary_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, "status_obituary_marked"):
@@ -2188,7 +2192,16 @@ static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target
 	var hex_distance := _stack_hex_distance(stack, target)
 	if hex_distance <= 1:
 		return true
-	return hex_distance == 2 and _has_ability(stack, "reach")
+	return hex_distance == 2 and (_has_ability(stack, "reach") or _hookline_available(stack, battle))
+
+static func _hookline_available(stack: Dictionary, battle: Dictionary) -> bool:
+	var hookline := _ability_by_id(stack, "hookline")
+	if hookline.is_empty():
+		return false
+	if int(battle.get("round", 1)) < int(hookline.get("available_from_round", 1)):
+		return false
+	var ability_uses = stack.get("ability_uses", {})
+	return ability_uses is Dictionary and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
 
 static func _can_make_ranged_attack(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
 	return (
@@ -2217,7 +2230,7 @@ static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary
 		return _distance_band_from_hex_distance(hex_distance)
 	if hex_distance <= 1:
 		return 0
-	if hex_distance == 2 and _has_ability(attacker, "reach"):
+	if hex_distance == 2 and (_has_ability(attacker, "reach") or _hookline_available(attacker, battle)):
 		return 1
 	return int(battle.get("distance", 1))
 
@@ -2315,6 +2328,9 @@ static func _ability_damage_modifier(
 	var reach := _ability_by_id(attacker, "reach")
 	if not is_ranged and attack_distance == 1 and not reach.is_empty():
 		modifier *= float(reach.get("distance_one_multiplier", 1.0))
+	var hookline := _ability_by_id(attacker, "hookline")
+	if not is_ranged and attack_distance == 1 and not hookline.is_empty() and _hookline_available(attacker, battle):
+		modifier *= float(hookline.get("distance_one_multiplier", 0.5))
 
 	var brace := _ability_by_id(attacker, "brace")
 	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
@@ -2345,6 +2361,9 @@ static func _ability_damage_modifier(
 	var harry := _ability_by_id(attacker, "harry")
 	if is_ranged and not harry.is_empty() and _health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
+	var rot_cant := _ability_by_id(attacker, "rot_cant")
+	if is_ranged and not rot_cant.is_empty() and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and _health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
+		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):

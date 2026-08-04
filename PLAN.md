@@ -1581,6 +1581,40 @@ Non-goals:
 - do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
+## Mireclaw Ferry-Rot Midline Identity
+
+id: `combat-mireclaw-ferry-rot-midline-identity-10184`
+
+Status: completed.
+
+Selected Phase 5 faction-identity and combat-balance implementation slice. The
+production Mireclaw tier-4 Ferrychain Lashers and tier-5 Sporewake Chanters have
+no authored combat behavior despite explicit lane-pull/pin and rot-support
+roles between already implemented lower and upper ladder units.
+
+Implementation target:
+- give Ferrychain Lashers cross-lane chain reach and Sporewake Chanters a bounded veteran-line rot chant that weakens retaliation and amplifies wounded-prey pressure;
+- use shared live BattleRules, tactical AI, player-summary, and fast-benchmark contracts rather than faction-only combat branches;
+- keep week-1 armies exact and do not increase the current 33 outliers, 262.5 severity, 12 rows at or above 65%, 74.5% maximum dominance, or 3.07 maximum side bias;
+- preserve raw unit stats, growth, recruitment, town economy, spells, heroes, saves, scenarios, strategic AI, and Native RMG behavior.
+
+Completion criteria:
+- both Mireclaw units produce focused live runtime consequences and player-readable summaries for all authored abilities;
+- the unchanged all-live 100-seed four-week matrix keeps zero structural failures, leaves week 1 exact, and does not regress any aggregate balance baseline;
+- focused ability, battle autoplay, town-development, core, project-parse, repository, JSON, Python syntax, and diff validation pass.
+
+Completion evidence:
+- Ferrychain Hookline is a round-two, one-use control lash that uniquely reaches across one broken hex, deals only the engine's minimum control damage, pulls a surviving target into adjacent contact, applies the Ferry-Pinned rooted marker for one round, consumes its use, and leaves ordinary adjacent melee legal;
+- Sporewake Rot Cant is a round-two, one-use tier-6 veteran-line call that applies one round of cohesion/retaliation pressure and retains its bounded `1.02` wounded-target rider; tactical AI, active previews, role summaries, normalized runtime payloads, and focused probes consume both shared contracts;
+- all 96 authored ability instances have focused live consequences and player-visible names, including opening-round rejection and later-round availability for both new families;
+- the final 100-seed all-live four-week pair summaries, ordered matchups, week summaries, and outlier rows remain exact at 33 outliers / 262.5 severity / 12 severe rows / 74.5% maximum dominance / 3.07 maximum side bias with zero structural failures;
+- focused ability, live battle autoplay, town development, core systems, project parse, repository, JSON, Python syntax, and diff validation pass. The faction matrix honestly remains `needs_tuning`.
+
+Non-goals:
+- do not change other Mireclaw units or add faction-only combat code;
+- do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
+- do not change Native RMG or claim final faction balance or overall release completion.
+
 ## Slice Status Model
 
 Each executable slice should map to one `ops/progress.json` entry with:
