@@ -3997,6 +3997,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				return "%s is cooling under reduced damage, defense, and initiative" % name
 			return "%s is pressure-ready for one burst strike before overheating" % name
 		"shielding":
+			if int(ability.get("ally_ranged_melee_damage_reduction_pct", 0)) > 0 or int(ability.get("linebreaker_screen_bonus_pct", 0)) > 0:
+				return "%s blunts missiles and screens allied engines from frontal pressure" % name
 			return "%s blunts missile pressure and helps the line hold" % name
 	if String(ability.get("description", "")) != "":
 		return "%s: %s" % [name, String(ability.get("description", ""))]
@@ -8892,6 +8894,22 @@ static func _ability_damage_modifier(
 	var shielding = _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+	if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", false)) or not shielding.is_empty()):
+		var screen_reduction_pct := _side_max_ability_int(
+			battle,
+			String(defender.get("side", "")),
+			"shielding",
+			"ally_ranged_melee_damage_reduction_pct"
+		)
+		if _has_ability(attacker, "brace") or _has_ability(attacker, "reach"):
+			screen_reduction_pct += _side_max_ability_int(
+				battle,
+				String(defender.get("side", "")),
+				"shielding",
+				"linebreaker_screen_bonus_pct"
+			)
+		screen_reduction_pct = clampi(screen_reduction_pct, 0, 75)
+		modifier *= 1.0 - (float(screen_reduction_pct) / 100.0)
 	var attacking_shielding = _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
@@ -9209,6 +9227,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"ranged_damage_multiplier": clampf(float(entry.get("ranged_damage_multiplier", 1.0)), 0.25, 1.0),
 					"engaged_damage_multiplier": clampf(float(entry.get("engaged_damage_multiplier", 1.0)), 1.0, 2.0),
 					"harried_damage_multiplier": clampf(float(entry.get("harried_damage_multiplier", 1.0)), 1.0, 2.0),
+					"ally_ranged_melee_damage_reduction_pct": clampi(int(entry.get("ally_ranged_melee_damage_reduction_pct", 0)), 0, 50),
+					"linebreaker_screen_bonus_pct": clampi(int(entry.get("linebreaker_screen_bonus_pct", 0)), 0, 50),
 				}
 			"volley":
 				normalized = {

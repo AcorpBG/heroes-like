@@ -310,13 +310,49 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped_defender, attacker.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, 2)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(attacker, stripped_defender, stripped_battle, true, false, 2)
-	var ok := modifier_with < modifier_without
+	var ally_screen_reduction_pct := int(_ability_by_id(defender, "shielding").get("ally_ranged_melee_damage_reduction_pct", 0))
+	var linebreaker_bonus_pct := int(_ability_by_id(defender, "shielding").get("linebreaker_screen_bonus_pct", 0))
+	var total_linebreaker_screen_pct := ally_screen_reduction_pct + linebreaker_bonus_pct
+	var ally_modifier_with := 1.0
+	var ally_modifier_without := 1.0
+	var ally_modifier_with_second_screen := 1.0
+	var ai_damage_with := 0
+	var ai_damage_without := 0
+	if total_linebreaker_screen_pct > 0:
+		var ally := _stack_for_unit("unit_brasshollow_boiler_rivetcasters", "player", 1)
+		var second_screen := _stack_for_unit(unit_id, "player", 2)
+		var melee_attacker := _stack_for_unit("unit_thornwake_stagknot_runners", "enemy", 0)
+		battle = _battle_for_stacks([defender, ally, melee_attacker])
+		stripped_battle = _battle_for_stacks([stripped_defender, ally.duplicate(true), melee_attacker.duplicate(true)])
+		var stacked_battle := _battle_for_stacks([defender.duplicate(true), second_screen, ally.duplicate(true), melee_attacker.duplicate(true)])
+		ally_modifier_with = BattleRulesScript._ability_damage_modifier(melee_attacker, ally, battle, false, false, 0)
+		ally_modifier_without = BattleRulesScript._ability_damage_modifier(melee_attacker, ally, stripped_battle, false, false, 0)
+		ally_modifier_with_second_screen = BattleRulesScript._ability_damage_modifier(melee_attacker, ally, stacked_battle, false, false, 0)
+		ai_damage_with = BattleAiRulesScript._estimate_damage(melee_attacker, ally, battle, false, false, 0)
+		ai_damage_without = BattleAiRulesScript._estimate_damage(melee_attacker, ally, stripped_battle, false, false, 0)
+	var ally_screen_ok := (
+		total_linebreaker_screen_pct <= 0
+		or (
+			ally_modifier_with < ally_modifier_without
+			and is_equal_approx(ally_modifier_with, ally_modifier_with_second_screen)
+			and ai_damage_with < ai_damage_without
+		)
+	)
+	var ok := modifier_with < modifier_without and ally_screen_ok
 	return {
 		"ok": ok,
-		"probe": "shielding_ranged_damage_reduction",
+		"probe": "shielding_self_and_allied_engine_damage_reduction",
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
-		"reason": "" if ok else "shielding did not reduce incoming ranged damage",
+		"ally_screen_reduction_pct": ally_screen_reduction_pct,
+		"linebreaker_bonus_pct": linebreaker_bonus_pct,
+		"total_linebreaker_screen_pct": total_linebreaker_screen_pct,
+		"ally_modifier_with": ally_modifier_with,
+		"ally_modifier_without": ally_modifier_without,
+		"ally_modifier_with_second_screen": ally_modifier_with_second_screen,
+		"ai_damage_with": ai_damage_with,
+		"ai_damage_without": ai_damage_without,
+		"reason": "" if ok else "shielding did not reduce its authored self or allied-engine incoming damage",
 	}
 
 func _probe_volley(unit_id: String) -> Dictionary:

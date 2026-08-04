@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-brasshollow-pavis-screen-10184`. Furnace Pavis Teams now own Furnace Screen: a non-stacking live Pavis wall blunts incoming missiles and reduces frontal `Brace`/`Reach` line-breaker damage against itself and allied ranged engines by 6% while a screen survives. BattleRules, tactical AI estimates, player summaries, the fast benchmark, schema validation, and focused runtime proof share the contract. The all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 293.5 to 280.5, maximum dominance from 75.5% to 75.0%, week-3 Thornwake/Brasshollow from 75.5% to 67.5%, and week-2 Thornwake/Brasshollow from 61.5% to 50.5%. Ability, autoplay, town-development, core, parse, repository, JSON, and diff gates pass; faction balance and overall release completion remain open.
 - Completed implementation slice: `native-rmg-player-release-matrix-adoption-10184`. Generated skirmish setup now exposes the completed native RMG 24-workflow release matrix across Small through Extra Large, land/normal-water/Islands, and one/two levels. Public launch normalization preserves the selected level, Islands no longer rewrites size or player count, and native catalog auto-selection plus fail-closed validation remain intact. Focused runtime proof launches Small two-level normal-water into a skirmish session in one attempt without authored writeback; the full native boundary retains 24/24 workflow shapes, legacy Small/land launch, core, parse, repository, JSON, diff, and 1280x720 visual gates pass. This is runtime adoption of already parity-owned workflows, not a new recovery or arbitrary-configuration parity claim.
 - Completed implementation slice: `balance-active-cohort-queue-clear-10184`. Seven placement-local roster corrections clear the final authored-battle cohort queue: Ghoul Grove is a normal round-5 victory at 66% margin / 9 enemy damage per round and a hard round-3 defeat; River Pass Reed Totemists, Bellwake Mirror Lancers, Fen Crown Watch, Orevein Archive Wardens, and Mireford Ford Reavers become bounded defeats, while Glassfen Relay Pickets becomes a bounded victory. Eleven adjacent samples and seven shared armies remain exact. The 59-sample active queue falls from seven medium cohort watches to zero with signature `829808c9`; balance-matrix, runtime-consequence, focused battle, campaign menu, core, parse, repository, JSON, and diff gates pass. Overall release completion remains open.
 - Completed implementation slice: `balance-remaining-sample-margin-pressure-10184`. Four placement-local rosters remove the final sample-level terminal-margin watches while preserving player victories: Ironbridge Ford Reavers add two Bog Brutes and move from 89% margin / 4 enemy damage per round to round 4 at 66% / 13; Prismhearth Relay Pickets own a local `6/2` Guard/Adept line and move from 82% / 3 to round 4 at 70% / 7; Glassroad Archive Wardens move from `4/7/1` to `5/7/1` and from 87% / 5 to round 4 at 66% / 12; Reedbarrow Barrow Pickets shift from `16/11` to `15/12` Cutthroats/Slingers and move from round 5 at 76% / 6 to round 6 at 73% / 6. Adjacent outcomes, shared armies, faction-matrix inputs, and runtime-consequence gates remain exact. The 59-sample queue improves from 11 to 7 medium cohort-only watches with zero sample/high items and signature `5200ba7d`; focused battle, breadth acceptance, campaign menu, consequence, core, parse, repository, JSON, and diff gates pass.
@@ -1412,6 +1413,31 @@ Non-goals:
 - do not claim the fast benchmark will exercise every player-available counter-control line or complete faction balance;
 - do not change spell damage, modifiers, mana, tier, school access, AI scoring, unit stats, growth, or town economy;
 - do not change Native RMG or claim overall release completion.
+
+## Brasshollow Pavis Screen
+
+id: `combat-brasshollow-pavis-screen-10184`
+
+Completed Phase 5 combat-balance implementation slice. Closes the authored unit
+behavior gap in `docs/factions-content-bible.md`: Furnace Pavis Teams are heavy
+shield teams that protect engines and punish frontal attacks, but currently
+have no live ability.
+
+Implementation target:
+- give Furnace Pavis Teams a bounded shielding contract that reduces incoming ranged pressure on the Pavis stack and frontal Brace/Reach line-breaker pressure on the Pavis and surviving allied ranged stacks;
+- apply the allied screen only while a live same-side Pavis stack owns it, without stacking multiple screens;
+- keep live BattleRules, tactical AI estimates, player-facing summaries, the fast benchmark, schema validation, and focused runtime proof in parity;
+- preserve unit base stats, recruitment, growth, spells, heroes, towns, saves, scenario rosters, and Native RMG behavior.
+
+Completion evidence:
+- focused runtime proof measures lower incoming melee damage for an allied ranged engine while the Pavis survives, no protection after the Pavis is removed, and retained self-shielding against ranged fire;
+- the unchanged all-live 100-seed four-week matrix improves the 75.5% week-3 Thornwake/Brasshollow row without increasing 36 outliers, 293.5 severity, 12 rows at or above 65%, or the 75.5% maximum baseline;
+- unit ability, focused autoplay, town-development, core systems, project parsing, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not tune unrelated unit stats, growth, spell behavior, hero policy, town economy, scenario-local encounter rosters, or strategic AI;
+- do not add adjacency simulation to the abstract fast benchmark or stack multiple Pavis screens;
+- do not change Native RMG or claim final faction balance or overall release completion.
 
 ## Slice Status Model
 

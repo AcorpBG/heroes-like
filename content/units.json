@@ -1505,7 +1505,18 @@
       "spell_school_resistance_pct": {
         "furnace": 5
       },
-      "status_immunity_ids": []
+      "status_immunity_ids": [],
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Furnace Screen",
+          "description": "The pavis wall blunts missiles and screens itself and allied engines from frontal line breakers.",
+          "cohesion_hold_bonus": 0,
+          "ranged_damage_multiplier": 0.99,
+          "ally_ranged_melee_damage_reduction_pct": 0,
+          "linebreaker_screen_bonus_pct": 6
+        }
+      ]
     },
     {
       "id": "unit_brasshollow_boiler_rivetcasters",
