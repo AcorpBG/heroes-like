@@ -1402,6 +1402,15 @@
         "gold": 150,
         "wood": 2
       },
+      "abilities": [
+        {
+          "id": "sporeglass_mend",
+          "name": "Mending Fire",
+          "description": "Sporeglass salves ride each successful volley, restoring three health per living Mender up to eight health to one injured allied stack. Fallen creatures cannot return.",
+          "health_per_mender": 3,
+          "max_health_per_attack": 8
+        }
+      ],
       "content_status": "six_faction_scaffold",
       "shots": 6,
       "spell_resistance_pct": 0,

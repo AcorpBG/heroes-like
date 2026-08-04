@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-thornwake-sporeglass-mending-fire-10184`. Sporeglass Menders now use Mending Fire after successful ranged attacks to restore three health per living Mender, capped at eight, to one deterministically selected injured surviving allied stack without resurrecting casualties. Live BattleRules, player summaries and heal presentation, the fast benchmark, content validation, and focused runtime proof share the same contract. The accepted all-live 100-seed four-week matrix moves week-one Embercourt/Thornwake from 68.5 to 64.0 percent, lowers severity from 183.5 to 179.0 and rows at or above 65 percent from 7 to 6, keeps 29 outliers / 69.5 percent maximum dominance / 2.67-point maximum side bias / zero structural failures, and leaves every other pair win rate exact. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-final-notice-brace-targeting-10184`. Final Notice now authors its tier-two veteran-brace threshold and bounded 3.75 target priority, and live tactical AI, stack normalization, player ability summaries, effect resolution, and the fast benchmark consume the same fields. Focused runtime proof makes Obituary Scribes choose Thornwhip Carriers over the otherwise preferred Sporeglass ranged line, gives the qualifying brace a 4.0 total once-per-battle score delta while a tier-one brace retains only the unchanged 0.25 base value, and preserves the existing one-round `-2` cohesion / `-20%` retaliation pressure. The accepted all-live 100-seed four-week matrix improves from 30 to 29 outliers, 193.0 to 183.5 severity, 8 to 7 rows at or above 65 percent, and 70.5 to 69.5 percent maximum dominance; maximum side bias moves from 2.53 to 2.67 points with zero structural failures. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `battle-ai-survivor-recovery-valuation-10184`. Live recovery, tactical-AI targeting, player-facing spell consequences, and the fast benchmark now share a survivor-only recoverable-health contract: casualty-only stacks cannot receive recovery, genuinely injured survivors remain valid targets, and repeated casts cannot restore fallen creatures. Focused reports prove a 38-health stack with ten health per creature caps at 40 and that AI filters a casualty-only 60/80 stack while casting Graft Mend on a 51-health six-survivor stack. The accepted all-live 100-seed four-week matrix has zero structural failures but exposes the honest tuning cost of removing illegal benchmark resurrection and wasted AI casts: outliers move from 29 to 30, severity from 186.5 to 193.0, rows at or above 65 percent from 7 to 8, and maximum dominance from 69.5 to 70.5 percent, while maximum side bias improves from 2.80 to 2.53 points. Magic-AI, spell behavior, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-sunvault-relay-activation-10184`. Prism Adepts now enter at initiative six instead of owning unearned first-action tempo, while a living tier-four Resonant Chorister restores that point to the linked Prism stack and activates Sunvault's line-wide multi-calibration damage, initiative, terrain-momentum, tactical-AI, and player-doctrine payoff; defeating the relay immediately removes those linked consequences without removing each stack's personal spell-calibration benefit. Focused live proof passes all 100 authored ability instances. The all-live 100-seed four-week matrix changes only week-one pair rows, reducing outliers from 31 to 29, severity from 203.0 to 186.5, rows at or above 65 percent from 8 to 7, and the week-one Brasshollow-Sunvault result from 69.5 to 58.5 percent while preserving 69.5 percent maximum dominance, 2.80-point side bias, zero structural failures, and every week-two through week-four pair summary. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -558,6 +559,33 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Thornwake Sporeglass Mending Fire
+
+id: `combat-thornwake-sporeglass-mending-fire-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and combat-balance slice. Sporeglass Menders
+are named and priced as a support line, but currently own no ability and deal
+less ranged damage than Embercourt's otherwise equivalent Bargebow Crews.
+The all-live week-one Embercourt/Thornwake row is 68.5 percent Embercourt.
+
+Implementation target:
+- author a bounded Sporeglass mending ability that triggers after a successful primary ranged attack;
+- restore only injured surviving creatures, select the target deterministically, and never resurrect casualties;
+- consume the same amount and target policy in live BattleRules and the fast benchmark;
+- expose the firing consequence in player ability summaries and battle presentation events.
+
+Completion criteria:
+- focused live proof covers successful firing, deterministic target choice, dead/no-source behavior, no valid target, and casualty-only non-resurrection;
+- the authored contract restores three health per living Mender, capped at eight per attack, to one allied surviving stack;
+- the all-live 100-seed four-week matrix has zero structural failures and records exact outlier, severity, dominance, and side-bias movement;
+- ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not change unit stats, growth, costs, spells, heroes, benchmark thresholds, saves, strategic AI, campaign content, or Native RMG;
+- do not add casualty resurrection, a passive army-wide aura, or final faction-balance/overall-release claims.
 
 ## Veilmourn Final Notice Brace Targeting
 

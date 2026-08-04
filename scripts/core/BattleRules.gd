@@ -3935,6 +3935,8 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
+	if _has_ability(stack, "sporeglass_mend") and bool(stack.get("ranged", false)):
+		return "Mending Fire will repair an injured surviving allied stack after this shot; fallen creatures cannot return."
 	if _has_ability(stack, "foundry_aura"):
 		return "Saint's Temper is hardening overheated Combine machinery and will repair surviving allies when the next round begins."
 	if _has_ability(stack, "overheat"):
@@ -4027,6 +4029,11 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			return "%s steadies allied lanes and improves support fire" % name
 		"resonance_relay":
 			return "%s synchronizes two or more separately calibrated allied stacks while this choir remains in the battle" % name
+		"sporeglass_mend":
+			return "%s restores up to %d surviving allied health after ranged fire" % [
+				name,
+				int(ability.get("max_health_per_attack", 0)),
+			]
 		"foundry_aura":
 			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
 		"volley":
@@ -8575,6 +8582,65 @@ static func _restore_stack_health(battle: Dictionary, battle_id: String, amount:
 	_sync_occupied_hexes(battle)
 	return restored
 
+static func _sporeglass_mend_target(battle: Dictionary, side: String) -> Dictionary:
+	var best := {}
+	var best_recoverable := 0
+	for candidate in _alive_stacks_for_side(battle, side):
+		var recoverable := SpellRulesScript.battle_spell_recoverable_health(candidate)
+		if recoverable <= 0:
+			continue
+		var candidate_tier := int(candidate.get("tier", 1))
+		var best_tier := int(best.get("tier", 1))
+		var candidate_id := String(candidate.get("battle_id", ""))
+		var best_id := String(best.get("battle_id", ""))
+		if best.is_empty() or recoverable > best_recoverable \
+				or (recoverable == best_recoverable and candidate_tier > best_tier) \
+				or (recoverable == best_recoverable and candidate_tier == best_tier and candidate_id < best_id):
+			best = candidate
+			best_recoverable = recoverable
+	return best
+
+static func _apply_sporeglass_mending_fire(battle: Dictionary, attacker: Dictionary) -> Dictionary:
+	var source := _get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	if source.is_empty() or _alive_count(source) <= 0:
+		return {}
+	var ability := _ability_by_id(source, "sporeglass_mend")
+	if ability.is_empty() or not bool(source.get("ranged", false)):
+		return {}
+	var requested: int = min(
+		int(ability.get("max_health_per_attack", 0)),
+		_alive_count(source) * int(ability.get("health_per_mender", 0))
+	)
+	if requested <= 0:
+		return {}
+	var target := _sporeglass_mend_target(battle, String(source.get("side", "")))
+	if target.is_empty():
+		return {}
+	var restored := _restore_stack_health(battle, String(target.get("battle_id", "")), requested)
+	if restored <= 0:
+		return {}
+	var visible_text := "%s restores %d surviving health to %s with Mending Fire." % [
+		_stack_label(source),
+		restored,
+		_stack_label(target),
+	]
+	_append_presentation_event(
+		battle,
+		"heal",
+		visible_text,
+		{
+			"action_id": "sporeglass_mend",
+			"actor_battle_id": String(source.get("battle_id", "")),
+			"target_battle_id": String(target.get("battle_id", "")),
+			"healing": restored,
+		}
+	)
+	return {
+		"message": visible_text,
+		"restored": restored,
+		"target_battle_id": String(target.get("battle_id", "")),
+	}
+
 static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
@@ -8838,6 +8904,10 @@ static func _apply_attack_ability_effects(
 	if hookline_triggered:
 		ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
 		attacker["ability_uses"] = ability_uses
+	if is_ranged:
+		var mending_fire := _apply_sporeglass_mending_fire(battle, attacker)
+		if not mending_fire.is_empty():
+			messages.append(String(mending_fire.get("message", "")))
 	if defender.is_empty() or _alive_count(defender) <= 0:
 		return messages
 	if not is_ranged and attack_distance > 1:
@@ -9496,6 +9566,14 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_label": String(entry.get("status_label", "Overheated")),
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 2))),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -2, "initiative": -2})),
+				}
+			"sporeglass_mend":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Mending Fire")),
+					"description": String(entry.get("description", "")),
+					"health_per_mender": clampi(int(entry.get("health_per_mender", 1)), 1, 6),
+					"max_health_per_attack": clampi(int(entry.get("max_health_per_attack", 1)), 1, 20),
 				}
 			"foundry_aura":
 				normalized = {

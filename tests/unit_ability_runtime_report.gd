@@ -20,6 +20,7 @@ const REQUIRED_ABILITY_IDS := [
 	"bloodrush",
 	"obituary",
 	"overheat",
+	"sporeglass_mend",
 	"foundry_aura",
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
@@ -135,6 +136,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_bloodrush(unit_id)
 		"overheat":
 			return _probe_overheat(unit_id)
+		"sporeglass_mend":
+			return _probe_sporeglass_mend(unit_id)
 		"foundry_aura":
 			return _probe_foundry_aura(unit_id)
 		_:
@@ -939,6 +942,117 @@ func _probe_overheat(unit_id: String) -> Dictionary:
 		"recovered_modifier": recovered_modifier,
 		"message_count": messages.size(),
 		"reason": "" if ok else "overheat did not prove its complete burst, cooldown, expiry, and AI contract",
+	}
+
+func _probe_sporeglass_mend(unit_id: String) -> Dictionary:
+	var source := _stack_for_unit(unit_id, "player", 0)
+	var high_first := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 1)
+	var high_second := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 2)
+	var low_tier := _stack_for_unit("unit_thornwake_thornwhip_carriers", "player", 3)
+	var defeated_target := _defender_stack("enemy", 0)
+	for ally in [high_first, high_second, low_tier]:
+		var full_health: int = int(ally.get("base_count", 1)) * int(ally.get("unit_hp", 1))
+		ally["total_health"] = full_health - 9
+	defeated_target["total_health"] = 0
+	var battle := _battle_for_stacks([source, high_first, high_second, low_tier, defeated_target])
+	var high_first_id := String(high_first.get("battle_id", ""))
+	var high_second_id := String(high_second.get("battle_id", ""))
+	var low_tier_id := String(low_tier.get("battle_id", ""))
+	var high_first_before := int(high_first.get("total_health", 0))
+	var high_second_before := int(high_second.get("total_health", 0))
+	var low_tier_before := int(low_tier.get("total_health", 0))
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, source, defeated_target, true, 1)
+	var high_first_after := BattleRulesScript._get_stack_by_id(battle, high_first_id)
+	var high_second_after := BattleRulesScript._get_stack_by_id(battle, high_second_id)
+	var low_tier_after := BattleRulesScript._get_stack_by_id(battle, low_tier_id)
+	var restored := int(high_first_after.get("total_health", 0)) - high_first_before
+	var deterministic_target_only := (
+		int(high_second_after.get("total_health", 0)) == high_second_before
+		and int(low_tier_after.get("total_health", 0)) == low_tier_before
+	)
+	var heal_event_found := false
+	for event in battle.get("battle_presentation_events", []):
+		if event is Dictionary \
+				and String(event.get("event_type", "")) == "heal" \
+				and String(event.get("action_id", "")) == "sporeglass_mend" \
+				and String(event.get("target_battle_id", "")) == high_first_id \
+				and int(event.get("healing", 0)) == 8:
+			heal_event_found = true
+			break
+
+	var full_source := _stack_for_unit(unit_id, "player", 0)
+	var full_ally := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 1)
+	var full_target := _defender_stack("enemy", 0)
+	full_target["total_health"] = 0
+	var full_battle := _battle_for_stacks([full_source, full_ally, full_target])
+	var full_messages := BattleRulesScript._apply_attack_ability_effects(full_battle, full_source, full_target, true, 1)
+
+	var casualty_source := _stack_for_unit(unit_id, "player", 0)
+	var casualty_ally := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 1)
+	var casualty_target := _defender_stack("enemy", 0)
+	var casualty_health: int = int(casualty_ally.get("total_health", 0)) - int(casualty_ally.get("unit_hp", 1))
+	casualty_ally["total_health"] = casualty_health
+	casualty_target["total_health"] = 0
+	var casualty_battle := _battle_for_stacks([casualty_source, casualty_ally, casualty_target])
+	var casualty_messages := BattleRulesScript._apply_attack_ability_effects(casualty_battle, casualty_source, casualty_target, true, 1)
+	var casualty_after := BattleRulesScript._get_stack_by_id(casualty_battle, String(casualty_ally.get("battle_id", "")))
+
+	var dead_source := _stack_for_unit(unit_id, "player", 0)
+	var dead_ally := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 1)
+	dead_source["total_health"] = 0
+	dead_ally["total_health"] = int(dead_ally.get("total_health", 0)) - 9
+	var dead_target := _defender_stack("enemy", 0)
+	dead_target["total_health"] = 0
+	var dead_battle := _battle_for_stacks([dead_source, dead_ally, dead_target])
+	var dead_ally_before := int(dead_ally.get("total_health", 0))
+	var dead_messages := BattleRulesScript._apply_attack_ability_effects(dead_battle, dead_source, dead_target, true, 1)
+	var dead_ally_after := BattleRulesScript._get_stack_by_id(dead_battle, String(dead_ally.get("battle_id", "")))
+
+	var stripped_source := _without_ability(_stack_for_unit(unit_id, "player", 0), "sporeglass_mend")
+	var stripped_ally := _stack_for_unit("unit_thornwake_barkmantle_rams", "player", 1)
+	stripped_ally["total_health"] = int(stripped_ally.get("total_health", 0)) - 9
+	var stripped_target := _defender_stack("enemy", 0)
+	stripped_target["total_health"] = 0
+	var stripped_battle := _battle_for_stacks([stripped_source, stripped_ally, stripped_target])
+	var stripped_ally_before := int(stripped_ally.get("total_health", 0))
+	var stripped_messages := BattleRulesScript._apply_attack_ability_effects(stripped_battle, stripped_source, stripped_target, true, 1)
+	var stripped_ally_after := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_ally.get("battle_id", "")))
+
+	var ability := _ability_by_id(source, "sporeglass_mend")
+	var role_line := BattleRulesScript._ability_role_sentence(source, ability, battle, defeated_target)
+	var window_line := BattleRulesScript._active_ability_window_summary(source, battle, defeated_target)
+	var ok: bool = (
+		restored == 8
+		and deterministic_target_only
+		and not messages.is_empty()
+		and heal_event_found
+		and full_messages.is_empty()
+		and casualty_messages.is_empty()
+		and int(casualty_after.get("total_health", 0)) == casualty_health
+		and dead_messages.is_empty()
+		and int(dead_ally_after.get("total_health", 0)) == dead_ally_before
+		and stripped_messages.is_empty()
+		and int(stripped_ally_after.get("total_health", 0)) == stripped_ally_before
+		and role_line.contains("8")
+		and window_line.contains("fallen creatures cannot return")
+	)
+	return {
+		"ok": ok,
+		"probe": "sporeglass_mend_success_targeting_survivor_scope_and_presentation",
+		"restored": restored,
+		"selected_target": high_first_id,
+		"deterministic_target_only": deterministic_target_only,
+		"heal_event_found": heal_event_found,
+		"full_health_message_count": full_messages.size(),
+		"casualty_health_before": casualty_health,
+		"casualty_health_after": int(casualty_after.get("total_health", 0)),
+		"dead_source_health_before": dead_ally_before,
+		"dead_source_health_after": int(dead_ally_after.get("total_health", 0)),
+		"stripped_source_health_before": stripped_ally_before,
+		"stripped_source_health_after": int(stripped_ally_after.get("total_health", 0)),
+		"role_line": role_line,
+		"window_line": window_line,
+		"reason": "" if ok else "Mending Fire did not prove capped deterministic survivor-only repair and player-facing presentation",
 	}
 
 func _probe_foundry_aura(unit_id: String) -> Dictionary:
