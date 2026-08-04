@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Implementing a clean-checkout release-candidate pipeline that rebuilds Linux and Windows native release outputs from one source revision, runs both native self-tests, packages both verified payloads, and retains the resulting artifacts. No signing, publication, or native Windows certification is claimed.",
+  "currentNotes": "The clean-checkout release-candidate pipeline is implemented and locally proven end to end for revision 51485b818aad7632ff01e4bc8e573ae5a1072bb3. Signing, publication, native Windows hardware certification, and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "packaging-cross-platform-release-candidate-pipeline-10184",
   "currentSliceId": "packaging-cross-platform-release-candidate-pipeline-10184",
-  "currentSliceNotes": "Selected implementation slice: rebuild and validate both native release targets before provenance-bound export, package verification, and CI artifact retention.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Completed implementation slice: one source-bound driver rebuilds and self-tests both native Release targets before provenance-bound export, package verification, and CI artifact retention.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Cross-Platform Release Candidate Pipeline",
-  "currentSliceUpdatedAt": "2026-08-04T08:36:56Z",
+  "currentSliceUpdatedAt": "2026-08-04T09:22:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69491,7 +69491,7 @@
     {
       "id": "packaging-cross-platform-release-candidate-pipeline-10184",
       "title": "Cross-Platform Release Candidate Pipeline",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
@@ -69524,9 +69524,44 @@
         "overall release completion claims"
       ],
       "startedAt": "2026-08-04T08:36:56Z",
-      "updatedAt": "2026-08-04T08:36:56Z",
-      "notes": "The existing export, installer, provenance, and verification tools remain authoritative. This slice adds orchestration and clean-checkout execution rather than replacing their formats or weakening their fail-closed checks.",
-      "remainingWork": "Implement the driver and workflow, prove failure paths, run a live Linux/Windows rebuild plus release package verification, then record evidence."
+      "updatedAt": "2026-08-04T09:22:42Z",
+      "completedAt": "2026-08-04T09:22:42Z",
+      "sliceEvidence": {
+        "implementation": "tools/build_release_candidate.py now binds one exact clean Git revision and commit epoch, verifies prerequisites, resets only owned output roots, rebuilds Linux and MinGW Windows Release GDExtensions plus native self-tests, rejects stale or wrong-architecture outputs, runs both self-tests before export, invokes the existing provenance-bound packager, verifies all outputs independently, and writes heroes_like_release_candidate_v1 JSON. .github/workflows/release-candidate.yml runs that driver from a recursive checkout for manual and version-tag candidates and retains the verified artifacts.",
+        "provenRevision": "51485b818aad7632ff01e4bc8e573ae5a1072bb3",
+        "version": "0.1.0-rc1",
+        "nativeOutputs": {
+          "linuxGDExtensionSha256": "5e0bc4b2400d7af9b1d2943fe30b2baad18516334b92924430cb4f2772832dcc",
+          "linuxSelftestSha256": "738e2aa37e985df71ce3f82c60203595a2892487dd78149b3720fd855dbe6353",
+          "windowsGDExtensionSha256": "e739d20f7c610801895dacf0a5818b35b994422788d121dddf33a392b2af0a05",
+          "windowsSelftestSha256": "f677cd320c909e9d83c930e2345f75f66a830e42d8ca90eb0981a889f0706c24"
+        },
+        "releaseArtifacts": {
+          "linuxArchiveSha256": "cfae271002e1ed6f1318d56842f7cd94b88b251d7b52044fb8475f827430cd91",
+          "linuxInstallerSha256": "2e011c817adc031985f2f53ce34c44f834cb3899f07c1d954e1a71c179473208",
+          "windowsArchiveSha256": "23d8787e0af9e3ab58ced13dfd6fa97794b358dacb58a959e693a7df16a4ea27",
+          "windowsInstallerSha256": "8347a7b30f4162bd12d6e0afa77f8f9134ddac308e2be579156a2c75461c0b7c"
+        },
+        "liveDurationsSeconds": {
+          "linuxBuild": 270.286,
+          "linuxSelftest": 100.06,
+          "windowsBuild": 310.733,
+          "windowsWineSelftest": 148.914,
+          "package": 168.067,
+          "verify": 3.584
+        },
+        "validation": [
+          "python3 tools/build_release_candidate.py --version 0.1.0-rc1 --source-revision 51485b818aad7632ff01e4bc8e573ae5a1072bb3 --output-dir .artifacts/release-candidate --build-root .artifacts/release-candidate-native --result-json .artifacts/release-candidate/release-candidate-result.json",
+          "python3 tests/packaging_release_candidate_pipeline_test.py",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tools/build_release_candidate.py tests/packaging_release_candidate_pipeline_test.py tests/validate_repo.py",
+          "PyYAML safe_load .github/workflows/release-candidate.yml",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "notes": "The existing export, installer, provenance, and verification formats remain authoritative. The first live run exposed NSIS progress text before the packager JSON; final-line structured parsing and a regression test fixed that orchestration defect before the successful clean rerun. This slice does not claim signing, publication, or native Windows hardware certification.",
+      "remainingWork": "No work remains in this slice. Overall release work still includes signing/publication policy, native Windows hardware certification, accessibility, performance, content, strategic-AI breadth, faction balance, and release-channel integration."
     }
   ],
   "project": "heroes-like",
@@ -69536,8 +69571,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -69968,7 +70003,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "active_authored_battle_queue_clear_overall_release_in_progress",
+  "result": "cross_platform_release_candidate_pipeline_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -70069,9 +70104,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. The authored 59-sample active battle queue is now clear after placement-local roster corrections produce bounded outcome variety across River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish while preserving eleven adjacent samples and seven shared armies. Ghoul Grove remains a bounded normal victory and hard remains more difficult. Balance-matrix and runtime-consequence gates pass with stable queue signature 829808c9. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance and still reports needs_tuning. Broader strategic AI, accessibility, content, performance, packaging, certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Cross-platform release-candidate automation now rebuilds Linux and Windows Release native outputs from one clean source revision, executes the Linux and Wine self-tests, parses the Godot project, validates the repository, packages both platforms, independently verifies both archives and installers, and retains the verified artifacts through GitHub Actions. The successful local candidate is bound to revision 51485b818aad7632ff01e4bc8e573ae5a1072bb3. Broader strategic AI, accessibility, content, performance, faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T08:36:56Z",
+  "updatedAt": "2026-08-04T09:22:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

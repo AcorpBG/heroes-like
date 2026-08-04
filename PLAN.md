@@ -1619,7 +1619,7 @@ Non-goals:
 
 id: `packaging-cross-platform-release-candidate-pipeline-10184`
 
-Status: in progress.
+Status: completed.
 
 Selected Phase 6 packaging implementation slice. Local release tooling can
 already export, package, verify, install, boot, and uninstall Linux and Windows
@@ -1637,6 +1637,11 @@ Completion criteria:
 - dry-run and focused unit coverage prove exact command construction, source-revision binding, prerequisite failures, stale-output rejection, and platform symmetry;
 - a live local run rebuilds both release libraries and self-tests, passes Linux and Wine self-tests, exports/packages both platforms from one revision, and verifies all archives/installers;
 - repository validation, workflow syntax, Python syntax, JSON validation, and diff checks pass.
+
+Completion evidence:
+- commit `51485b818aad7632ff01e4bc8e573ae5a1072bb3` completed the clean-source driver end to end for `0.1.0-rc1`: both Release native targets rebuilt, the Linux and Wine self-tests passed, Godot parsed the project, repository validation passed, both platform archives/installers were produced, and a separate verification-only pass accepted all four payloads;
+- the focused pipeline suite covers command order, revision/worktree rejection, stale or wrong-architecture outputs, unsafe output roots, noisy packager output, and workflow contract requirements; the workflow uses the same driver from a recursive clean checkout and retains the verified artifact set;
+- this completes release-candidate orchestration only. Signing, publication, native Windows hardware certification, and overall game release readiness remain open.
 
 Non-goals:
 - do not add code signing, certificate or secret acquisition, storefront/channel publication, automatic public releases, or native Windows hardware certification;
