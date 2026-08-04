@@ -1723,6 +1723,22 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 7,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Wake-Lantern Mark",
+          "description": "Memory-salt lantern light fixes a veteran hostile line in the fog, draining its cohesion for the next exchange.",
+          "status_id": "status_harried",
+          "status_label": "Wake-Marked",
+          "duration_rounds": 1,
+          "uses_per_battle": 1,
+          "target_min_tier": 3,
+          "modifiers": {
+            "cohesion": -1
+          },
+          "momentum_gain": 0
+        }
+      ],
       "spell_resistance_pct": 0,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {

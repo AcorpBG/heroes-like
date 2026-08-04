@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-veilmourn-mourning-lantern-mark-10184`. Veilmourn Mourning Lanterns now own Wake-Lantern Mark: their first ranged attack against a tier-3-or-higher veteran line applies one round of cohesion pressure, spends one battle use, and then reports the mark as spent. BattleRules, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused runtime proof share the authored limit and target threshold. The all-live 100-seed matrix improves from 36 outliers / 280.5 severity to 35 / 272.5, keeps 12 rows at or above 65% and 75% maximum dominance, lowers maximum side bias from 4.0 to 3.73 points, and moves week-1 Embercourt/Veilmourn from 62.5% Embercourt dominance to 53.5%. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; faction balance and overall release completion remain open.
 - Completed implementation slice: `combat-brasshollow-pavis-screen-10184`. Furnace Pavis Teams now own Furnace Screen: a non-stacking live Pavis wall blunts incoming missiles and reduces frontal `Brace`/`Reach` line-breaker damage against itself and allied ranged engines by 6% while a screen survives. BattleRules, tactical AI estimates, player summaries, the fast benchmark, schema validation, and focused runtime proof share the contract. The all-live 100-seed matrix keeps 36 outliers and 12 rows at or above 65%, improves severity from 293.5 to 280.5, maximum dominance from 75.5% to 75.0%, week-3 Thornwake/Brasshollow from 75.5% to 67.5%, and week-2 Thornwake/Brasshollow from 61.5% to 50.5%. Ability, autoplay, town-development, core, parse, repository, JSON, and diff gates pass; faction balance and overall release completion remain open.
 - Completed implementation slice: `native-rmg-player-release-matrix-adoption-10184`. Generated skirmish setup now exposes the completed native RMG 24-workflow release matrix across Small through Extra Large, land/normal-water/Islands, and one/two levels. Public launch normalization preserves the selected level, Islands no longer rewrites size or player count, and native catalog auto-selection plus fail-closed validation remain intact. Focused runtime proof launches Small two-level normal-water into a skirmish session in one attempt without authored writeback; the full native boundary retains 24/24 workflow shapes, legacy Small/land launch, core, parse, repository, JSON, diff, and 1280x720 visual gates pass. This is runtime adoption of already parity-owned workflows, not a new recovery or arbitrary-configuration parity claim.
 - Completed implementation slice: `balance-active-cohort-queue-clear-10184`. Seven placement-local roster corrections clear the final authored-battle cohort queue: Ghoul Grove is a normal round-5 victory at 66% margin / 9 enemy damage per round and a hard round-3 defeat; River Pass Reed Totemists, Bellwake Mirror Lancers, Fen Crown Watch, Orevein Archive Wardens, and Mireford Ford Reavers become bounded defeats, while Glassfen Relay Pickets becomes a bounded victory. Eleven adjacent samples and seven shared armies remain exact. The 59-sample active queue falls from seven medium cohort watches to zero with signature `829808c9`; balance-matrix, runtime-consequence, focused battle, campaign menu, core, parse, repository, JSON, and diff gates pass. Overall release completion remains open.
@@ -1438,6 +1439,31 @@ Non-goals:
 - do not tune unrelated unit stats, growth, spell behavior, hero policy, town economy, scenario-local encounter rosters, or strategic AI;
 - do not add adjacency simulation to the abstract fast benchmark or stack multiple Pavis screens;
 - do not change Native RMG or claim final faction balance or overall release completion.
+
+## Veilmourn Mourning Lantern Mark
+
+id: `combat-veilmourn-mourning-lantern-mark-10184`
+
+Completed Phase 5 faction-identity and combat-balance implementation slice. It
+closes the authored behavior gap for Mourning Lanterns: the faction bible names
+them as Veilmourn's lantern-mark unit, and their live unit record now carries a
+bounded veteran-line mark.
+
+Implemented:
+- give Mourning Lanterns one Wake-Lantern Mark per battle through the shared Harried contract, draining a struck tier-3-or-higher stack's cohesion for one round;
+- keep live BattleRules, tactical AI targeting, player summaries, the fast benchmark, schema validation, and the existing per-instance runtime consequence proof on the same authored fields;
+- improve Veilmourn's week-1 and week-2 matchup deficits without changing unit stats, growth, recruitment, town economy, spells, heroes, or scenario-local armies;
+- preserve save compatibility and Native RMG behavior.
+
+Completion evidence:
+- focused runtime ability proof shows low-tier targets do not consume the mark, AI values an eligible veteran target, the cohesion mark applies once, cannot be reapplied after its battle use is spent, and disappears when the ability is removed;
+- the all-live 100-seed four-week matrix improves 36 outliers / 280.5 severity to 35 / 272.5, keeps 12 rows at or above 65% and 75% maximum dominance, and reduces week-1 Embercourt dominance over Veilmourn from 62.5% to 53.5%;
+- focused autoplay, town-development, core, project-parse, repository, JSON, Python syntax, and diff validation pass.
+
+Non-goals:
+- do not add a second status subsystem or duplicate Harried mechanics;
+- do not tune unrelated unit stats, growth, spells, heroes, towns, scenarios, strategic AI, or Native RMG;
+- do not claim final faction balance or overall release completion.
 
 ## Slice Status Model
 

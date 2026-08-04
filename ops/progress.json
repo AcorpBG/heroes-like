@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Furnace Pavis Teams now own a live non-stacking screen against Brace and Reach line breakers. The all-live matrix keeps 36 outliers and 12 severe rows while improving severity to 280.5 and maximum dominance to 75.0 percent.",
+  "currentNotes": "Mourning Lanterns now own a one-use Wake-Lantern Mark against tier-3-or-higher lines. The all-live matrix improves to 35 outliers and 272.5 severity while keeping 12 severe rows and 75.0 percent maximum dominance.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-brasshollow-pavis-screen-10184",
-  "currentSliceId": "combat-brasshollow-pavis-screen-10184",
-  "currentSliceNotes": "Completed the missing Pavis protective screen through live combat, tactical AI, benchmark parity, content validation, and focused runtime proof.",
+  "currentSlice": "combat-veilmourn-mourning-lantern-mark-10184",
+  "currentSliceId": "combat-veilmourn-mourning-lantern-mark-10184",
+  "currentSliceNotes": "Completed the missing Mourning Lantern veteran-line mark through live combat, tactical AI, player summaries, benchmark parity, content validation, and focused runtime proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Pavis Screen",
-  "currentSliceUpdatedAt": "2026-08-04T03:27:39Z",
+  "currentSliceTitle": "Veilmourn Mourning Lantern Mark",
+  "currentSliceUpdatedAt": "2026-08-04T04:21:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69047,6 +69047,88 @@
       },
       "notes": "Completed after rejecting two broader Pavis candidates that worsened the matrix. The accepted contract is ability-based rather than faction- or week-keyed and changes only Brace/Reach frontal pressure plus minimal self missile shielding.",
       "remainingWork": "Faction balance remains needs_tuning at 36 outliers / 280.5 severity / 75.0 percent maximum dominance. Overall release completion remains open."
+    },
+    {
+      "id": "combat-veilmourn-mourning-lantern-mark-10184",
+      "title": "Veilmourn Mourning Lantern Mark",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py"],
+      "baseline": {
+        "mourning_lantern_authored_ability_count": 0,
+        "balance_outlier_count": 36,
+        "balance_severity": 280.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 75.0,
+        "week_1_embercourt_vs_veilmourn_dominance_pct": 62.5,
+        "week_1_sunvault_vs_veilmourn_dominance_pct": 61.5,
+        "week_2_thornwake_vs_veilmourn_dominance_pct": 74.5,
+        "week_2_brasshollow_vs_veilmourn_dominance_pct": 68.0,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Mourning Lantern ranged attacks apply one authored Harried mark per battle that reduces cohesion for one round",
+        "Live combat, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume the same authored ability fields",
+        "The full all-live matrix improves at least one Veilmourn deficit without increasing baseline outlier count, severity, severe-row count, or maximum dominance",
+        "Focused runtime, autoplay, town-development, core, parse, repository, JSON, Python syntax, and diff validation pass"
+      ],
+      "nonGoals": [
+        "a duplicate status subsystem or changes to shared Harried behavior",
+        "unrelated unit-stat, growth, spell, hero, town, scenario, strategic-AI, or Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T03:45:33Z",
+      "updatedAt": "2026-08-04T04:21:09Z",
+      "completedAt": "2026-08-04T04:21:09Z",
+      "implemented": {
+        "mourning_lantern_authored_ability_count": 1,
+        "ability_id": "harry",
+        "ability_name": "Wake-Lantern Mark",
+        "uses_per_battle": 1,
+        "target_min_tier": 3,
+        "duration_rounds": 1,
+        "cohesion_modifier": -1,
+        "momentum_gain": 0,
+        "unit_base_stats_changed": false
+      },
+      "evidence": {
+        "ability_instance_count": 85,
+        "ability_runtime_consequence_count": 85,
+        "harry_instance_count": 18,
+        "harry_runtime_consequence_count": 18,
+        "balance_outlier_count": 35,
+        "balance_severity": 272.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 75.0,
+        "max_week_side_bias_points": 3.73,
+        "week_1_embercourt_vs_veilmourn_dominance_pct": 53.5,
+        "week_1_sunvault_vs_veilmourn_dominance_pct": 61.5,
+        "week_2_thornwake_vs_veilmourn_dominance_pct": 74.5,
+        "week_2_brasshollow_vs_veilmourn_dominance_pct": 68.0,
+        "structural_failure_count": 0
+      },
+      "validation": {
+        "status": "passed_with_unrelated_warning",
+        "commands": [
+          "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . tests/balance_regression_report_suite.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "git diff --check"
+        ],
+        "residual": "balance_regression_report_suite remains warning-only on its pre-existing generated-map save/replay case because the fixture still requests a blocked strict-small native shape; all suite sections have zero failures."
+      },
+      "notes": "Completed after rejecting an unrestricted mark that added a severe row and a defending-only/tier-4 trigger that did not move the sampled matchups. The accepted tier-3 veteran-line contract improves the matrix without changing unit stats, economy, scenarios, strategic AI, save version, or Native RMG.",
+      "remainingWork": "Faction balance remains needs_tuning at 35 outliers / 272.5 severity / 75.0 percent maximum dominance. Overall release completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -69057,7 +69139,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue faction-balance, strategic-AI, accessibility, content, performance, packaging, certification, and release-integration gaps; the authored active-scenario battle queue is clear, while the faction matrix remains needs_tuning at 36 outliers / 280.5 severity / 75.0 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 35 outliers / 272.5 severity / 75.0 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -69591,7 +69673,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The authored 59-sample active battle queue is now clear after placement-local roster corrections produce bounded outcome variety across River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish while preserving eleven adjacent samples and seven shared armies. Ghoul Grove remains a bounded normal victory and hard remains more difficult. Balance-matrix and runtime-consequence gates pass with stable queue signature 829808c9. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance and still reports needs_tuning. Broader strategic AI, accessibility, content, performance, packaging, certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T00:43:33Z",
+  "updatedAt": "2026-08-04T03:45:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

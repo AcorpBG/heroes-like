@@ -10560,7 +10560,18 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
                     modifiers = ability.get("modifiers", {})
                     ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} harry must define modifiers")
-                    ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} harry must define momentum_gain > 0")
+                    uses_per_battle = int(ability.get("uses_per_battle", 0))
+                    ensure(uses_per_battle in (0, 1), errors, f"Unit {unit_id} harry uses_per_battle must be 0 or 1")
+                    ensure(1 <= int(ability.get("target_min_tier", 1)) <= 7, errors, f"Unit {unit_id} harry target_min_tier must be between 1 and 7")
+                    if uses_per_battle == 0:
+                        ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} unlimited harry must define momentum_gain > 0")
+                    else:
+                        ensure(int(ability.get("momentum_gain", 0)) >= 0, errors, f"Unit {unit_id} bounded harry momentum_gain must be >= 0")
+                        ensure(
+                            isinstance(modifiers, dict) and any(isinstance(value, (int, float)) and value < 0 for value in modifiers.values()),
+                            errors,
+                            f"Unit {unit_id} bounded harry must define negative pressure",
+                        )
                     if "wounded_threshold_ratio" in ability:
                         ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} harry wounded_threshold_ratio must be between 0 and 1")
                     if "wounded_damage_multiplier" in ability:
@@ -10702,6 +10713,23 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(maskglass_backstab.get("damage_multiplier", 0.0)) > 1.0, errors, "Maskglass Corsairs must keep status-marked damage payoff authored")
     ensure(float(maskglass_backstab.get("health_threshold_ratio", 0.0)) > 0.0, errors, "Maskglass Corsairs must keep wounded-target threshold authored")
     ensure(float(maskglass_backstab.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, "Maskglass Corsairs must keep wounded-target damage payoff authored")
+
+    mourning_lanterns = units.get("unit_veilmourn_mourning_lanterns", {})
+    wake_lantern_mark = next(
+        (
+            ability
+            for ability in mourning_lanterns.get("abilities", [])
+            if isinstance(ability, dict) and str(ability.get("name", "")) == "Wake-Lantern Mark"
+        ),
+        {},
+    )
+    ensure(str(wake_lantern_mark.get("id", "")) == "harry", errors, "Mourning Lanterns must own Wake-Lantern Mark")
+    ensure(str(wake_lantern_mark.get("status_id", "")) == "status_harried", errors, "Wake-Lantern Mark must apply status_harried")
+    ensure(int(wake_lantern_mark.get("duration_rounds", 0)) == 1, errors, "Wake-Lantern Mark must last one round")
+    ensure(int(wake_lantern_mark.get("uses_per_battle", 0)) == 1, errors, "Wake-Lantern Mark must be limited to one use per battle")
+    ensure(int(wake_lantern_mark.get("target_min_tier", 0)) == 3, errors, "Wake-Lantern Mark must require a tier-3 veteran target")
+    ensure(int(wake_lantern_mark.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Wake-Lantern Mark must drain cohesion")
+    ensure(int(wake_lantern_mark.get("momentum_gain", -1)) == 0, errors, "Wake-Lantern Mark must not add momentum")
 
     mire_slinger = units.get("unit_mire_slinger", {})
     mire_slinger_harry = next((ability for ability in mire_slinger.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
