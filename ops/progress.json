@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the production Sunvault high-tier identity ladder through shared live behavior: focused Calibration Cant, targeted array control resistance, passive Aurora Facet Wall, and prepared Daybreak artillery. The accepted 100-seed matrix keeps 35 outliers and 12 severe rows while lowering severity to 264.0 and maximum dominance to 74.5 percent; faction balance and overall release completion remain open.",
+  "currentNotes": "Completed the production Embercourt high-tier charter ladder through shared live behavior: Ash-Writ Formation, one-use Beacon Lane Citation, supported Sluicefire Commitment, and Charter Lock. The accepted 100-seed matrix improves to 33 outliers / 262.5 severity while keeping 12 severe rows and 74.5 percent maximum dominance; faction balance and overall release completion remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-relay-ladder-identity-10184",
-  "currentSliceId": "combat-sunvault-relay-ladder-identity-10184",
-  "currentSliceNotes": "Implemented and validated all four source-authored tier-4 through tier-7 Sunvault combat roles through shared live ability and control-resistance contracts without regressing the full faction matrix.",
+  "currentSlice": "combat-embercourt-charter-ladder-identity-10184",
+  "currentSliceId": "combat-embercourt-charter-ladder-identity-10184",
+  "currentSliceNotes": "Implemented and validated all four source-authored tier-4 through tier-7 Embercourt combat roles through shared live ability contracts while improving the aggregate faction matrix.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Relay-Ladder Identity",
-  "currentSliceUpdatedAt": "2026-08-04T05:40:43Z",
+  "currentSliceTitle": "Embercourt Charter-Ladder Identity",
+  "currentSliceUpdatedAt": "2026-08-04T05:57:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69273,6 +69273,84 @@
       },
       "notes": "Completed after rejecting generic walker shielding because even a one-percent universal damage modifier created shallow week-2 outliers. Targeted control resistance preserves the source role without that regression. A Bastion brace was also rejected because its AI defend preference pushed week-4 Brasshollow dominance from 62.5 to 65 percent; passive prism shielding preserves the intended close-line role and the accepted aggregate matrix.",
       "remainingWork": "Faction balance remains needs_tuning at 35 outliers / 264.0 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
+    },
+    {
+      "id": "combat-embercourt-charter-ladder-identity-10184",
+      "title": "Embercourt Charter-Ladder Identity",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "baseline": {
+        "embercourt_tier_4_to_7_unit_count": 4,
+        "embercourt_tier_4_to_7_specialized_behavior_count": 0,
+        "balance_outlier_count": 35,
+        "balance_severity": 264.0,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "week_4_embercourt_over_mireclaw_pct": 68.5,
+        "week_4_embercourt_over_sunvault_pct": 71.0,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Ash-Oath Bailiffs, Beacon Lectors, Sluicefire Lindworms, and Charter Colossus each own a source-aligned authored behavior with a focused live runtime consequence",
+        "Live combat, tactical AI, player summaries, the fast benchmark, schema validation, and focused runtime proof consume shared behavior fields",
+        "The full all-live matrix leaves week 1 exact and does not increase outlier count, severity, severe-row count, or maximum dominance",
+        "Focused ability, autoplay, town-development, core, parse, repository, JSON, Python syntax, and diff validation pass"
+      ],
+      "nonGoals": [
+        "Embercourt tier-1 through tier-3 changes or faction-only combat code",
+        "raw unit-stat, growth, cost, building, spell, hero, scenario, benchmark-threshold, strategic-AI, or Native RMG changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T05:44:20Z",
+      "updatedAt": "2026-08-04T05:57:42Z",
+      "completedAt": "2026-08-04T05:57:42Z",
+      "implemented": {
+        "ash_oath_bailiffs": "Ash-Writ Formation: held-line cohesion and retaliation pressure",
+        "beacon_lectors": "Beacon Lane Citation: one-use tier-4 veteran-line initiative mark",
+        "sluicefire_lindworms": "Sluicefire Commitment: wounded and disrupted target shock pressure",
+        "charter_colossus": "Charter Lock: stronger held-line retaliation anchor",
+        "embercourt_tier_1_to_3_changed": false,
+        "raw_unit_stats_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "ability_instance_count": 92,
+        "ability_runtime_consequence_count": 92,
+        "new_embercourt_player_summary_count": 4,
+        "beacon_lane_citation_tier_gate_proved": true,
+        "beacon_lane_citation_one_use_proved": true,
+        "balance_status": "needs_tuning",
+        "balance_outlier_count": 33,
+        "balance_severity": 262.5,
+        "rows_at_or_above_65_pct": 12,
+        "max_dominance_pct": 74.5,
+        "max_side_bias_pct": 3.07,
+        "structural_failure_count": 0,
+        "week_1_exact": true
+      },
+      "validation": {
+        "status": "passed_with_unrelated_warning",
+        "commands": [
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/balance_regression_report_suite.tscn",
+          "python3 tests/town_development_balance_report.py",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --editor --path . --quit",
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "python3 tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "git diff --check"
+        ],
+        "residual": "balance_regression_report_suite remains warning-only on its pre-existing unsupported generated-map save/replay fixture; all suite sections have zero failures."
+      },
+      "notes": "The accepted first candidate uses only shared ability families and conservative triggers. It improves two aggregate outliers while retaining the source-defined formation, support, supported-shock, and retaliation identities without changing raw stats, economy, scenarios, strategic AI, saves, or Native RMG.",
+      "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
     }
   ],
   "project": "heroes-like",
@@ -69283,7 +69361,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, clean-machine packaging, and release integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 35 outliers / 264.0 severity / 74.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, packaging, certification, release integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
