@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Mourning Lanterns now own a one-use Wake-Lantern Mark against tier-3-or-higher lines. The all-live matrix improves to 35 outliers and 272.5 severity while keeping 12 severe rows and 75.0 percent maximum dominance.",
+  "currentNotes": "Exact-known hostile contact detail now names all four authored groups, while compact hover cues remain totals-only. The full overworld visual smoke passes through hostile-contact, terrain, fog, and compact-layout checks.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-veilmourn-mourning-lantern-mark-10184",
-  "currentSliceId": "combat-veilmourn-mourning-lantern-mark-10184",
-  "currentSliceNotes": "Completed the missing Mourning Lantern veteran-line mark through live combat, tactical AI, player summaries, benchmark parity, content validation, and focused runtime proof.",
+  "currentSlice": "ux-overworld-hostile-full-roster-inspection-10184",
+  "currentSliceId": "ux-overworld-hostile-full-roster-inspection-10184",
+  "currentSliceNotes": "Completed four-group hostile-roster inspection on the detailed selected-contact surface while preserving totals-only compact hover cues, visibility policy, content, saves, balance, and Native RMG behavior.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Mourning Lantern Mark",
-  "currentSliceUpdatedAt": "2026-08-04T04:21:09Z",
+  "currentSliceTitle": "Overworld Hostile Full-Roster Inspection",
+  "currentSliceUpdatedAt": "2026-08-04T04:41:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69129,6 +69129,72 @@
       },
       "notes": "Completed after rejecting an unrestricted mark that added a severe row and a defending-only/tier-4 trigger that did not move the sampled matchups. The accepted tier-3 veteran-line contract improves the matrix without changing unit stats, economy, scenarios, strategic AI, save version, or Native RMG.",
       "remainingWork": "Faction balance remains needs_tuning at 35 outliers / 272.5 severity / 75.0 percent maximum dominance. Overall release completion remains open."
+    },
+    {
+      "id": "ux-overworld-hostile-full-roster-inspection-10184",
+      "title": "Overworld Hostile Full-Roster Inspection",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/ui-flow.md"],
+      "implementationTargets": ["scripts/core/OverworldRules.gd", "tests/overworld_visual_smoke.gd"],
+      "baseline": {
+        "max_authored_hostile_group_count": 4,
+        "max_placement_hostile_group_count": 4,
+        "detailed_named_group_limit": 3,
+        "ghoul_grove_headcount": 27,
+        "ghoul_grove_group_count": 4,
+        "ghoul_grove_collapsed_group_count": 1,
+        "stale_visual_smoke_expected_headcount": 26,
+        "stale_visual_smoke_expected_group_count": 3
+      },
+      "completionCriteria": [
+        "Detailed selected-contact inspection names and counts every group in exact-known four-group hostile armies",
+        "Compact contact cues remain totals-only and fog or uncertainty boundaries do not change",
+        "The overworld visual smoke reaches and passes its terrain, fog, compact-layout, and hostile-contact checks",
+        "Core systems, project parsing, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "a new panel or expanded compact map cues",
+        "revealing hidden or uncertain hostile-army details",
+        "encounter-content, combat-balance, save, strategic-AI, or Native RMG changes"
+      ],
+      "startedAt": "2026-08-04T04:30:26Z",
+      "updatedAt": "2026-08-04T04:41:15Z",
+      "completedAt": "2026-08-04T04:41:15Z",
+      "implemented": {
+        "detailed_named_group_limit": 4,
+        "ghoul_grove_named_group_count": 4,
+        "ghoul_grove_fourth_group": "Mudglass Slingers x1",
+        "compact_hover_unit_name_count": 0,
+        "content_changed": false,
+        "save_contract_changed": false,
+        "native_rmg_changed": false
+      },
+      "evidence": {
+        "ghoul_grove_headcount": 27,
+        "ghoul_grove_group_count": 4,
+        "selected_contact_fourth_group_visible": true,
+        "compact_hover_totals_only": true,
+        "overworld_hostile_contact_checks_passed": true,
+        "overworld_terrain_checks_passed": true,
+        "overworld_fog_checks_passed": true,
+        "overworld_compact_layout_checks_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "godot --headless --path . --scene tests/overworld_visual_smoke.tscn",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty content/scenarios.json content/units.json ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "notes": "The initial live smoke exposed two distinct facts: its 26-troop/three-group expectation was stale, and selected-contact detail collapsed the current fourth known stack. Runtime detail now names all four groups. A first follow-up assertion also confirmed hover intentionally uses the compact formatter, so hover remains totals-only rather than expanding into a long unit list.",
+      "remainingWork": "Overall release completion remains open across strategic AI, balance, accessibility, content, performance, clean-machine packaging, certification, and release integration."
     }
   ],
   "project": "heroes-like",

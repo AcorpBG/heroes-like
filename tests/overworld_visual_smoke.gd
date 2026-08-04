@@ -1035,8 +1035,9 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Risk Light",
 			"Difficulty Low",
 			"Army: River Pass Ghoul Grove Watch",
-			"26 troops/3 groups",
+			"27 troops/4 groups",
 			"Blackbranch Cutthroat x8",
+			"Mudglass Slingers x1",
 			"Readiness: your army",
 			"Ready",
 			"Reward: 250 gold, 180 xp",
@@ -1051,7 +1052,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass encounter hover tooltip",
 		[String(encounter_hover.get("map_tooltip", ""))],
-		["Ghoul Grove", "Risk Light", "Difficulty Low", "River Pass Ghoul Grove Watch", "26 troops/3 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
+		["Ghoul Grove", "Risk Light", "Difficulty Low", "River Pass Ghoul Grove Watch", "27 troops/4 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
 	):
 		return false
 
