@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `balance-thornwake-barkmantle-cohesion-10184`. Barkmantle Screens no longer adds a global cohesion-hold tier, while its 18% incoming-ranged mitigation and 6% engaged/harried counterpressure remain live. Focused runtime proof covers the bounded contract across all 96 authored ability instances. The all-live 100-seed four-week matrix keeps 33 outliers and 74.5% maximum dominance, lowers excess severity from 262.5 to 248.0 and maximum side bias from 3.07 to 2.80 points, and has zero structural failures. Ability, autoplay, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-thornwake-highroot-capstone-identity-10184`. Thornwake's production capstone pair now has source-aligned live roles: Graft Matriarchs deliver Highroot Graft Salvo with an open-lane floor and stronger payoff into rooted or disrupted enemies, while Worldroot Bastion's passive Worldroot Rampart directly blunts incoming ranged attrition without adding a global cohesion tier. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The accepted all-live 100-seed pair and week summaries remain exact at 33 outliers / 262.5 severity / 12 rows at or above 65% / 74.5% maximum dominance / 3.07 maximum side bias with week 1 unchanged. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-embercourt-charter-ladder-identity-10184`. Embercourt's production tier-4 through tier-7 charter ladder now has source-aligned live roles: Ash-Oath Bailiffs enforce a held line through Ash-Writ Formation, Beacon Lectors spend one Beacon Lane Citation against a tier-4-or-higher breach, Sluicefire Lindworms convert wounded or disrupted prey into supported shock pressure, and Charter Colossus anchors a stronger retaliation through Charter Lock. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix improves from 35 outliers / 264.0 severity to 33 / 262.5, keeps 12 rows at or above 65% and 74.5% maximum dominance, leaves week 1 exact, and lowers maximum side bias from 3.8 to 3.07 points. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-sunvault-relay-ladder-identity-10184`. Sunvault's production tier-4 through tier-7 relay ladder now has source-aligned live roles: Resonant Choristers spend one Calibration Cant to expose a tier-6-or-higher line, Solar Array Striders resist 15% of control effects, Aurora Bastions blunt ranged fire and hold cohesion through Aurora Facet Wall, and Daybreak Colossus gains prepared-line and disrupted-target artillery pressure through Daybreak Firing Solution. Shared BattleRules/SpellRules behavior, tactical AI consumption, player summaries, content validation, and focused runtime proof consume the authored fields. The all-live 100-seed matrix keeps 35 outliers and 12 rows at or above 65%, lowers severity from 272.5 to 264.0 and maximum dominance from 75.0% to 74.5%, leaves week 1 exact, and improves week-4 Embercourt/Sunvault from 75% to 71% Embercourt dominance. Ability, resistance, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -1613,6 +1614,32 @@ Completion evidence:
 Non-goals:
 - do not change other Mireclaw units or add faction-only combat code;
 - do not tune raw unit stats, growth, costs, buildings, spells, heroes, scenarios, benchmark thresholds, or strategic AI;
+- do not change Native RMG or claim final faction balance or overall release completion.
+
+## Thornwake Barkmantle Cohesion Balance
+
+id: `balance-thornwake-barkmantle-cohesion-10184`
+
+Status: completed.
+
+Selected Phase 5 combat-balance implementation slice. The accepted 100-seed
+all-live matrix has 33 pair outliers, and Thornwake's week-two T1-T5 package
+dominates Embercourt, Mireclaw, Sunvault, and Veilmourn. Component simulations
+identify the Barkmantle Screens cohesion hold as broad excess leverage while its
+missile mitigation remains a readable unit-role contract.
+
+Implementation target:
+- remove the Barkmantle Screens cohesion hold bonus while retaining its ranged mitigation and close-line counterpressure;
+- keep the authored unit description, runtime normalization, tactical AI, and player-visible ability summary aligned with the changed contract;
+- prove the change with focused ability runtime coverage and the full 100-seed all-live four-week faction matrix.
+
+Completion criteria:
+- Barkmantle Screens no longer increases stack cohesion hold, and focused runtime coverage proves its remaining missile-screen and engagement behavior;
+- the full matrix has zero structural failures and improves the accepted 33-outlier / 262.5-severity baseline without increasing the 74.5% maximum dominance or 3.07-point side bias;
+- unit JSON, focused runtime, core regression, project parse, repository validation, Python syntax, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not change Barkmantle raw stats, growth, cost, brace behavior, other Thornwake units, spells, heroes, scenarios, strategic AI, or benchmark thresholds;
 - do not change Native RMG or claim final faction balance or overall release completion.
 
 ## Cross-Platform Release Candidate Pipeline

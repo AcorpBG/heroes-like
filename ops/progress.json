@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "The clean-checkout release-candidate pipeline is implemented and locally proven end to end for revision 51485b818aad7632ff01e4bc8e573ae5a1072bb3. Signing, publication, native Windows hardware certification, and overall release readiness remain open.",
-  "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-cross-platform-release-candidate-pipeline-10184",
-  "currentSliceId": "packaging-cross-platform-release-candidate-pipeline-10184",
-  "currentSliceNotes": "Completed implementation slice: one source-bound driver rebuilds and self-tests both native Release targets before provenance-bound export, package verification, and CI artifact retention.",
+  "currentNotes": "Completed the measured Thornwake mid-tier balance correction. Barkmantle Screens no longer adds cohesion hold, retains missile mitigation and close-line counterpressure, and the full matrix improves severity and side bias without worsening maximum dominance.",
+  "currentPhase": "phase-5-playable-alpha-baseline",
+  "currentSlice": "balance-thornwake-barkmantle-cohesion-10184",
+  "currentSliceId": "balance-thornwake-barkmantle-cohesion-10184",
+  "currentSliceNotes": "Completed implementation slice: the smallest live Barkmantle ability-contract correction reduces full-matrix balance severity while preserving the unit role and passing focused and broad runtime validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Cross-Platform Release Candidate Pipeline",
-  "currentSliceUpdatedAt": "2026-08-04T09:22:42Z",
+  "currentSliceTitle": "Thornwake Barkmantle Cohesion Balance",
+  "currentSliceUpdatedAt": "2026-08-04T10:04:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69562,6 +69562,58 @@
       },
       "notes": "The existing export, installer, provenance, and verification formats remain authoritative. The first live run exposed NSIS progress text before the packager JSON; final-line structured parsing and a regression test fixed that orchestration defect before the successful clean rerun. This slice does not claim signing, publication, or native Windows hardware certification.",
       "remainingWork": "No work remains in this slice. Overall release work still includes signing/publication policy, native Windows hardware certification, accessibility, performance, content, strategic-AI breadth, faction balance, and release-channel integration."
+    },
+    {
+      "id": "balance-thornwake-barkmantle-cohesion-10184",
+      "title": "Thornwake Barkmantle Cohesion Balance",
+      "status": "completed",
+      "phase": "phase-5-playable-alpha-baseline",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-balance-tuning-queue-report.md"
+      ],
+      "purpose": "Reduce demonstrated week-two Thornwake T1-T5 dominance by removing excess Barkmantle Screens cohesion leverage while preserving the unit's missile-screen and close-line identity.",
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Barkmantle Screens no longer increases stack cohesion hold while its ranged mitigation and engaged counterpressure remain live and player-readable",
+        "The full 100-seed all-live four-week matrix has zero structural failures and improves the accepted 33-outlier / 262.5-severity baseline without increasing 74.5 percent maximum dominance or 3.07-point maximum side bias",
+        "Focused unit ability runtime, core regression, Godot project parse, repository validation, Python syntax, JSON validation, and diff checks pass"
+      ],
+      "nonGoals": [
+        "Barkmantle raw-stat, growth, cost, brace, or other Thornwake unit changes",
+        "spell, hero, scenario, strategic-AI, Native RMG, or benchmark-threshold changes",
+        "final faction-balance or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T09:44:01Z",
+      "updatedAt": "2026-08-04T10:04:10Z",
+      "completedAt": "2026-08-04T10:04:10Z",
+      "sliceEvidence": {
+        "implementation": "Barkmantle Screens cohesion_hold_bonus is now zero while ranged_damage_multiplier remains 0.82 and engaged/harried damage multipliers remain 1.06. Focused runtime and repository assertions prevent the removed global cohesion tier from returning while preserving the missile-screen and close-line role.",
+        "balance": "The deterministic all-live 100-seed four-week matrix passes with zero structural failures. Pair outliers remain 33, summed excess severity improves from 262.5 to 248.0, maximum dominance remains 74.5 percent, and maximum side bias improves from 3.07 to 2.80 points. Week side-bias points are 0.13, 0.67, 2.80, and 2.13.",
+        "validation": [
+          "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --json",
+          "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+          "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+          "godot --headless --path . --scene tests/town_development_runtime_balance_report.tscn",
+          "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+          "jq empty content/units.json ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "notes": "Changing ranged mitigation alone and small Highroot Graft Salvo adjustments produced no simulated outcome change; removing the whole screen package overcorrected Brasshollow. Removing only Barkmantle cohesion hold was the smallest accepted behavior change. The matrix still needs tuning, so this is one measured reduction in balance debt rather than final faction balance.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 33 outliers / 248.0 severity / 74.5 percent maximum dominance, and overall release work remains open."
     }
   ],
   "project": "heroes-like",
@@ -69572,7 +69624,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 33 outliers / 248.0 severity / 74.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -70003,7 +70055,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "cross_platform_release_candidate_pipeline_complete_overall_release_in_progress",
+  "result": "thornwake_barkmantle_balance_severity_improved_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -70104,9 +70156,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Cross-platform release-candidate automation now rebuilds Linux and Windows Release native outputs from one clean source revision, executes the Linux and Wine self-tests, parses the Godot project, validates the repository, packages both platforms, independently verifies both archives and installers, and retains the verified artifacts through GitHub Actions. The successful local candidate is bound to revision 51485b818aad7632ff01e4bc8e573ae5a1072bb3. Broader strategic AI, accessibility, content, performance, faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Barkmantle Screens now preserves its missile-screen and close-line role without adding a global cohesion-hold tier. The all-live 100-seed four-week faction matrix keeps 33 outliers and 74.5 percent maximum dominance while lowering summed excess severity from 262.5 to 248.0 and maximum side bias from 3.07 to 2.80 points. Focused and broad runtime gates pass. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T09:22:42Z",
+  "updatedAt": "2026-08-04T10:04:10Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
