@@ -7,6 +7,11 @@ on:
         description: Version written into the verified release payloads
         required: false
         type: string
+      create_draft_release:
+        description: Create a draft prerelease when this run is dispatched from a matching version tag
+        required: false
+        default: false
+        type: boolean
   push:
     tags:
       - "v[0-9]*"
@@ -22,6 +27,10 @@ jobs:
   build-release-candidate:
     runs-on: ubuntu-24.04
     timeout-minutes: 120
+    outputs:
+      deliver_draft: ${{ steps.delivery.outputs.deliver_draft }}
+      release_tag: ${{ steps.delivery.outputs.release_tag }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Check out exact source and native dependency
         uses: actions/checkout@v6
@@ -74,6 +83,23 @@ jobs:
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
+      - name: Resolve draft delivery
+        id: delivery
+        env:
+          CREATE_DRAFT_RELEASE: ${{ inputs.create_draft_release }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          python3 tools/resolve_release_delivery.py \
+            --event-name "$EVENT_NAME" \
+            --ref-name "$REF_NAME" \
+            --ref-type "$REF_TYPE" \
+            --version "$VERSION" \
+            --create-draft-release "${CREATE_DRAFT_RELEASE:-false}" \
+            >> "$GITHUB_OUTPUT"
+
       - name: Rebuild, test, export, and verify both platforms
         env:
           RELEASE_SOURCE_REVISION: ${{ github.sha }}
@@ -95,3 +121,73 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           compression-level: 0
+
+  create-draft-prerelease:
+    needs: build-release-candidate
+    if: needs.build-release-candidate.outputs.deliver_draft == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Download exact verified release candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: heroes-like-${{ needs.build-release-candidate.outputs.version }}-${{ github.sha }}
+          path: .artifacts/release-candidate
+
+      - name: Verify downloaded candidate identity
+        env:
+          VERSION: ${{ needs.build-release-candidate.outputs.version }}
+        run: |
+          result=.artifacts/release-candidate/release-candidate-result.json
+          index=.artifacts/release-candidate/archives/release-index.json
+          test -f "$result"
+          test -f "$index"
+          jq -e --arg version "$VERSION" --arg revision "$GITHUB_SHA" '
+            .ok == true and
+            .schema_id == "heroes_like_release_candidate_v1" and
+            .version == $version and
+            .source_revision == $revision and
+            .release_verification.ok == true and
+            .release_verification.version == $version and
+            .release_verification.source_revision == $revision
+          ' "$result" >/dev/null
+          jq -e --arg version "$VERSION" --arg revision "$GITHUB_SHA" '
+            .schema_id == "heroes_like_release_index_v3" and
+            .version == $version and
+            .source_revision == $revision and
+            (.archives | length) == 2 and
+            (.installers | length) == 2
+          ' "$index" >/dev/null
+          (cd .artifacts/release-candidate/archives && sha256sum --check SHA256SUMS)
+
+      - name: Create fail-closed draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.build-release-candidate.outputs.release_tag }}
+          VERSION: ${{ needs.build-release-candidate.outputs.version }}
+        run: |
+          set +e
+          lookup="$(gh api --include "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" 2>&1)"
+          lookup_status=$?
+          set -e
+          if [ "$lookup_status" -eq 0 ]; then
+            echo "Release $RELEASE_TAG already exists; refusing to replace its assets." >&2
+            exit 1
+          fi
+          if ! grep -Eq '^HTTP/[^ ]+ 404' <<<"$lookup"; then
+            echo "Could not prove release $RELEASE_TAG is absent." >&2
+            printf '%s\n' "$lookup" >&2
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" \
+            .artifacts/release-candidate/archives/* \
+            .artifacts/release-candidate/release-candidate-result.json \
+            --draft \
+            --prerelease \
+            --latest=false \
+            --verify-tag \
+            --target "$GITHUB_SHA" \
+            --title "heroes-like $VERSION" \
+            --generate-notes
