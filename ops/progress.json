@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed authored veteran-brace targeting for Veilmourn Final Notice across live tactical AI, player summaries, effect resolution, and the fast benchmark. The full matrix improves while remaining needs_tuning.",
+  "currentNotes": "Completed bounded survivor-only Sporeglass mending across live combat, player presentation, and the fast benchmark. The targeted week-one outlier improves while faction balance remains needs_tuning.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-veilmourn-final-notice-brace-targeting-10184",
-  "currentSliceId": "combat-veilmourn-final-notice-brace-targeting-10184",
-  "currentSliceNotes": "Final Notice now owns and consumes an authored tier-two veteran-brace threshold and bounded target priority without changing its one-use, one-round consequences.",
+  "currentSlice": "combat-thornwake-sporeglass-mending-fire-10184",
+  "currentSliceId": "combat-thornwake-sporeglass-mending-fire-10184",
+  "currentSliceNotes": "Mending Fire now repairs one deterministically chosen injured surviving allied stack after successful Sporeglass ranged fire and cannot resurrect casualties.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Final Notice Brace Targeting",
-  "currentSliceUpdatedAt": "2026-08-04T19:40:39Z",
+  "currentSliceTitle": "Thornwake Sporeglass Mending Fire",
+  "currentSliceUpdatedAt": "2026-08-04T20:32:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70162,6 +70162,79 @@
       ],
       "notes": "The accepted target priority changes only four matrix rows. Week-three Embercourt/Veilmourn worsens by one point to 61.5 percent Veilmourn, while the two material Thornwake/Veilmourn rows improve and the remaining matrix stays exact.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 29 outliers / 183.5 severity, and overall game completion remains open."
+    },
+    {
+      "id": "combat-thornwake-sporeglass-mending-fire-10184",
+      "title": "Thornwake Sporeglass Mending Fire",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Give Thornwake's named tier-three support line a live mending consequence tied to successful ranged fire while reducing its week-one Embercourt imbalance without transferring the outlier elsewhere.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "week_1_embercourt_thornwake_dominant_faction": "faction_embercourt",
+        "week_1_embercourt_thornwake_dominance_pct": 68.5,
+        "balance_outlier_count": 29,
+        "balance_severity": 183.5,
+        "rows_at_or_above_65_pct": 7,
+        "max_dominance_pct": 69.5,
+        "max_side_bias_pct": 2.67,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Successful Sporeglass ranged attacks restore only injured surviving creatures and never resurrect casualties",
+        "Live BattleRules and the fast benchmark consume the same authored amount, cap, and deterministic target policy",
+        "Focused live proof covers valid healing, target ordering, dead/no source, no valid target, and casualty-only damage",
+        "The full all-live matrix has zero structural failures and does not regress aggregate outlier count, severity, severe-row count, maximum dominance, or side bias"
+      ],
+      "nonGoals": [
+        "unit stats, growth, costs, spells, heroes, benchmark thresholds, saves, strategic AI, campaigns, or Native RMG",
+        "casualty resurrection, passive army-wide repair, final faction balance, or overall release completion claims"
+      ],
+      "startedAt": "2026-08-04T20:13:45Z",
+      "updatedAt": "2026-08-04T20:32:57Z",
+      "completedAt": "2026-08-04T20:32:57Z",
+      "result": {
+        "health_per_mender": 3,
+        "max_health_per_attack": 8,
+        "focused_restored_health": 8,
+        "focused_selected_target_id": "player_1_unit_thornwake_barkmantle_rams",
+        "week_1_embercourt_thornwake_dominant_faction": "faction_embercourt",
+        "week_1_embercourt_thornwake_dominance_pct": 64.0,
+        "balance_outlier_count": 29,
+        "balance_severity": 179.0,
+        "rows_at_or_above_65_pct": 6,
+        "max_dominance_pct": 69.5,
+        "max_side_bias_pct": 2.67,
+        "structural_failure_count": 0,
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "unit_ability_runtime_report passed all 101 authored ability instances",
+        "battle_autoplay_combat_balance_report passed",
+        "balance_regression_report_suite passed with the existing Native RMG save/replay deferral warning",
+        "core_systems_regression_smoke passed",
+        "Godot editor import passed",
+        "validate_repo.py passed",
+        "Python compile, content/progress JSON parse, and git diff checks passed",
+        "all-live 100-seed four-week balance matrix passed with zero structural failures"
+      ],
+      "notes": "The accepted matrix changes only the targeted week-one Embercourt/Thornwake win rate. Every other pair win rate remains exact; two week-four Thornwake pair margins move by only 0.01 point.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 29 outliers / 179.0 severity, and overall game completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -70704,9 +70777,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Veilmourn Final Notice now directs its once-per-battle stronger pressure into qualifying veteran braces through one authored contract shared by live tactical AI and the fast benchmark. The accepted matrix improves to 29 outliers / 183.5 severity / 69.5 percent maximum dominance with zero structural failures, but remains needs_tuning. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Thornwake Sporeglass Menders now own bounded survivor-only Mending Fire across live combat, player presentation, and the fast benchmark. The accepted matrix improves week-one Embercourt/Thornwake from 68.5 to 64.0 percent and severity from 183.5 to 179.0 while keeping 29 outliers / 69.5 percent maximum dominance / 2.67-point maximum side bias and zero structural failures; faction balance remains needs_tuning. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T19:40:39Z",
+  "updatedAt": "2026-08-04T20:32:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

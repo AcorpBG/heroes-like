@@ -1707,6 +1707,18 @@ class FastBattleBenchmark:
         hookline_triggered = bool(hookline) and not is_ranged and attack_distance == 1 and self._hookline_available(attacker, battle)
         if hookline_triggered:
             ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
+        if is_ranged:
+            mending_fire = self._ability_by_id(attacker, "sporeglass_mend")
+            if mending_fire and self._alive_count(attacker) > 0:
+                requested = min(
+                    int(mending_fire.get("max_health_per_attack", 0)),
+                    self._alive_count(attacker) * int(mending_fire.get("health_per_mender", 0)),
+                )
+                target = self._sporeglass_mend_target(battle, str(attacker.get("side", "")))
+                if requested > 0 and target:
+                    restored = min(requested, self._stack_recoverable_health(target))
+                    target["total_health"] = int(target.get("total_health", 0)) + restored
+                    counts["sporeglass_mend"] += restored
         if self._alive_count(defender) <= 0:
             return
         if hookline_triggered:
@@ -2044,6 +2056,22 @@ class FastBattleBenchmark:
         unit_hp = max(1, int(stack.get("unit_hp", 1)))
         living_creatures = int(math.ceil(float(current_health) / float(unit_hp)))
         return max(0, (living_creatures * unit_hp) - current_health)
+
+    def _sporeglass_mend_target(self, battle: dict[str, Any], side: str) -> dict[str, Any]:
+        candidates = [
+            stack for stack in self._alive_stacks_for_side(battle, side)
+            if self._stack_recoverable_health(stack) > 0
+        ]
+        if not candidates:
+            return {}
+        return min(
+            candidates,
+            key=lambda stack: (
+                -self._stack_recoverable_health(stack),
+                -int(stack.get("tier", 1)),
+                str(stack.get("battle_id", "")),
+            ),
+        )
 
     def _stack_cohesion_total(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         total = int(stack.get("cohesion", stack.get("cohesion_base", 5))) + self._effect_bonus(stack, battle, "cohesion")

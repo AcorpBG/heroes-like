@@ -320,7 +320,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10706,6 +10706,11 @@ def validate_content(errors: list[str]) -> None:
                     if isinstance(modifiers, dict):
                         ensure(int(modifiers.get("defense", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce defense")
                         ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce initiative")
+                elif ability_id == "sporeglass_mend":
+                    ensure(str(unit.get("faction_id", "")) == "faction_thornwake", errors, f"Unit {unit_id} sporeglass_mend must belong to Thornwake")
+                    ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} sporeglass_mend must belong to a ranged unit")
+                    ensure(int(ability.get("health_per_mender", 0)) == 3, errors, f"Unit {unit_id} sporeglass_mend health_per_mender must equal 3")
+                    ensure(int(ability.get("max_health_per_attack", 0)) == 8, errors, f"Unit {unit_id} sporeglass_mend max_health_per_attack must equal 8")
                 elif ability_id == "foundry_aura":
                     ensure(str(unit.get("faction_id", "")) == "faction_brasshollow", errors, f"Unit {unit_id} foundry_aura must belong to Brasshollow")
                     ensure(int(ability.get("ally_defense_bonus", 0)) > 0, errors, f"Unit {unit_id} foundry_aura ally_defense_bonus must be > 0")
@@ -10715,9 +10720,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, bloodrush, obituary, overheat, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, bloodrush, obituary, overheat, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10900,6 +10905,13 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "foundry_aura" for ability in unit.get("abilities", []))
     )
     ensure(foundry_aura_owners == ["unit_brasshollow_foundry_saint"], errors, "Saint's Temper foundry_aura must remain exclusive to the Brasshollow Foundry Saint")
+
+    sporeglass_mend_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "sporeglass_mend" for ability in unit.get("abilities", []))
+    )
+    ensure(sporeglass_mend_owners == ["unit_thornwake_sporeglass_menders"], errors, "Mending Fire must remain exclusive to Thornwake Sporeglass Menders")
 
     for group_id, group in army_groups.items():
         if is_neutral_army_group(group):
