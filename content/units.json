@@ -2046,6 +2046,8 @@
           "status_label": "Obituary-Marked",
           "duration_rounds": 1,
           "uses_per_battle": 1,
+          "braced_target_min_tier": 2,
+          "braced_ai_target_priority_bonus": 3.75,
           "modifiers": {
             "cohesion": -1,
             "retaliation": -10

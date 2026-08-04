@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-veilmourn-final-notice-brace-targeting-10184`. Final Notice now authors its tier-two veteran-brace threshold and bounded 3.75 target priority, and live tactical AI, stack normalization, player ability summaries, effect resolution, and the fast benchmark consume the same fields. Focused runtime proof makes Obituary Scribes choose Thornwhip Carriers over the otherwise preferred Sporeglass ranged line, gives the qualifying brace a 4.0 total once-per-battle score delta while a tier-one brace retains only the unchanged 0.25 base value, and preserves the existing one-round `-2` cohesion / `-20%` retaliation pressure. The accepted all-live 100-seed four-week matrix improves from 30 to 29 outliers, 193.0 to 183.5 severity, 8 to 7 rows at or above 65 percent, and 70.5 to 69.5 percent maximum dominance; maximum side bias moves from 2.53 to 2.67 points with zero structural failures. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `battle-ai-survivor-recovery-valuation-10184`. Live recovery, tactical-AI targeting, player-facing spell consequences, and the fast benchmark now share a survivor-only recoverable-health contract: casualty-only stacks cannot receive recovery, genuinely injured survivors remain valid targets, and repeated casts cannot restore fallen creatures. Focused reports prove a 38-health stack with ten health per creature caps at 40 and that AI filters a casualty-only 60/80 stack while casting Graft Mend on a 51-health six-survivor stack. The accepted all-live 100-seed four-week matrix has zero structural failures but exposes the honest tuning cost of removing illegal benchmark resurrection and wasted AI casts: outliers move from 29 to 30, severity from 186.5 to 193.0, rows at or above 65 percent from 7 to 8, and maximum dominance from 69.5 to 70.5 percent, while maximum side bias improves from 2.80 to 2.53 points. Magic-AI, spell behavior, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-sunvault-relay-activation-10184`. Prism Adepts now enter at initiative six instead of owning unearned first-action tempo, while a living tier-four Resonant Chorister restores that point to the linked Prism stack and activates Sunvault's line-wide multi-calibration damage, initiative, terrain-momentum, tactical-AI, and player-doctrine payoff; defeating the relay immediately removes those linked consequences without removing each stack's personal spell-calibration benefit. Focused live proof passes all 100 authored ability instances. The all-live 100-seed four-week matrix changes only week-one pair rows, reducing outliers from 31 to 29, severity from 203.0 to 186.5, rows at or above 65 percent from 8 to 7, and the week-one Brasshollow-Sunvault result from 69.5 to 58.5 percent while preserving 69.5 percent maximum dominance, 2.80-point side bias, zero structural failures, and every week-two through week-four pair summary. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-fog-ladder-identity-10184`. Veilmourn's production capstones now own the authored late-ladder roles: Mirror-Keel Reavers use a half-force Mirror-Keel Passage to attack across a distance-two lane and gain Black-Sail Breach pressure against harried or staggered targets, while Fogbound Leviathan's Leviathan Fogwake uses actual hex adjacency to deal 12% more primary-strike damage and apply one round of defense, initiative, and cohesion pressure only to unsupported enemy stacks. Shared BattleRules normalization/damage/status behavior, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused live proof consume the same contracts. The all-live 100-seed four-week matrix keeps 31 outliers / 8 rows at or above 65% / 69.5% maximum dominance, lowers severity from 204.5 to 203.0 and maximum side bias from 2.93 to 2.80 points, leaves weeks 1-2 exact, and has zero structural failures. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -557,6 +558,41 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Veilmourn Final Notice Brace Targeting
+
+id: `combat-veilmourn-final-notice-brace-targeting-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-balance and tactical-AI slice. Final Notice already
+applies stronger cohesion and retaliation pressure to a veteran braced line,
+but both live AI and the benchmark add only a hardcoded 0.25 braced-target
+bonus. In the current Thornwake/Veilmourn week-two row, every measured notice
+instead targets Sporeglass Menders and the intended counter-line branch never
+guides the once-per-battle decision.
+
+Implementation target:
+- author a minimum brace tier and bounded braced-target priority on Final Notice rather than keeping the choice in hardcoded AI constants;
+- consume the same fields in live tactical AI and the fast balance benchmark;
+- keep the existing one-use, one-round cohesion and retaliation pressure unchanged;
+- make the player ability window explain when Final Notice is prioritizing a veteran braced line.
+
+Completion criteria:
+- focused live proof shows Obituary Scribes select a qualifying braced line over an otherwise attractive ranged target, apply the stronger existing mark, and do not retarget a tier-one brace;
+- live AI and the benchmark use the same authored threshold and priority fields;
+- the all-live 100-seed four-week matrix has zero structural failures and records exact outlier, severity, dominance, and side-bias movement;
+- ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not change unit stats, growth, spell behavior, Final Notice duration/use count/modifiers, benchmark thresholds, saves, strategic AI, campaign content, or Native RMG;
+- do not claim final Veilmourn identity, final faction balance, or overall release completion.
+
+Completion result:
+- Final Notice owns a tier-two veteran-brace threshold and 3.75 authored target priority shared by live tactical AI and the fast benchmark;
+- focused runtime proof selects Thornwhip Carriers over Sporeglass Menders, applies the existing stronger braced mark, and proves tier-one braces receive no added braced priority;
+- only four faction-pair rows change: Thornwake/Veilmourn moves from 70.5 to 64.0 percent in week two and from 59.0 percent Veilmourn to 52.0 percent Veilmourn in week four, week-three Thornwake/Veilmourn remains 61.5 percent with pacing movement, and week-three Embercourt/Veilmourn moves from 60.5 to 61.5 percent Veilmourn;
+- the accepted all-live matrix passes with zero structural failures at 29 outliers / 183.5 severity / 7 rows at or above 65 percent / 69.5 percent maximum dominance / 2.67-point maximum side bias.
 
 ## Survivor-Only Battle Recovery Valuation
 

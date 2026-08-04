@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed survivor-only battle recovery valuation across live tactical AI, recovery resolution, player summaries, and the fast benchmark. The full matrix retains zero structural failures but exposes explicit remaining faction-balance tuning debt.",
+  "currentNotes": "Completed authored veteran-brace targeting for Veilmourn Final Notice across live tactical AI, player summaries, effect resolution, and the fast benchmark. The full matrix improves while remaining needs_tuning.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "battle-ai-survivor-recovery-valuation-10184",
-  "currentSliceId": "battle-ai-survivor-recovery-valuation-10184",
-  "currentSliceNotes": "Tactical AI, live recovery, player consequence text, and the fast benchmark now share the survivor-only healing cap; casualty-only recovery is filtered and injured survivors remain valid targets.",
+  "currentSlice": "combat-veilmourn-final-notice-brace-targeting-10184",
+  "currentSliceId": "combat-veilmourn-final-notice-brace-targeting-10184",
+  "currentSliceNotes": "Final Notice now owns and consumes an authored tier-two veteran-brace threshold and bounded target priority without changing its one-use, one-round consequences.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Survivor-Only Battle Recovery Valuation",
-  "currentSliceUpdatedAt": "2026-08-04T19:13:08Z",
+  "currentSliceTitle": "Veilmourn Final Notice Brace Targeting",
+  "currentSliceUpdatedAt": "2026-08-04T19:40:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70086,6 +70086,82 @@
       ],
       "notes": "The accepted correctness fix raises the tuning matrix from 29 to 30 outliers and from 186.5 to 193.0 severity because the prior fast benchmark illegally resurrected casualties and live tactical AI spent mana on impossible healing. This regression is recorded rather than hidden with compensating stat or threshold tuning.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 30 outliers / 193.0 severity, and overall game completion remains open."
+    },
+    {
+      "id": "combat-veilmourn-final-notice-brace-targeting-10184",
+      "title": "Veilmourn Final Notice Brace Targeting",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Make Veilmourn tactical AI direct its once-per-battle Final Notice into the veteran braced lines that its authored stronger-pressure branch is designed to counter.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleAiRules.gd",
+        "scripts/core/BattleRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "week_2_thornwake_veilmourn_dominance_pct": 70.5,
+        "week_2_final_notice_sporeglass_target_count": 164,
+        "week_2_final_notice_brace_target_count": 0,
+        "balance_outlier_count": 30,
+        "balance_severity": 193.0,
+        "rows_at_or_above_65_pct": 8,
+        "max_dominance_pct": 70.5,
+        "max_side_bias_pct": 2.53,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Final Notice owns authored veteran-brace tier and target-priority fields consumed by live tactical AI and the fast benchmark",
+        "Focused live proof selects a qualifying veteran brace over an attractive ranged target while excluding a tier-one brace",
+        "Final Notice retains one use, one round, and its existing normal/braced cohesion and retaliation modifiers",
+        "The full all-live matrix has zero structural failures and exact balance movement is recorded"
+      ],
+      "nonGoals": [
+        "unit stats, growth, spell behavior, Final Notice duration/use/modifier changes, benchmark thresholds, saves, strategic AI, campaigns, or Native RMG",
+        "final Veilmourn identity, final faction balance, or overall release completion claims"
+      ],
+      "startedAt": "2026-08-04T19:23:42Z",
+      "updatedAt": "2026-08-04T19:40:39Z",
+      "completedAt": "2026-08-04T19:40:39Z",
+      "result": {
+        "braced_target_min_tier": 2,
+        "braced_ai_target_priority_bonus": 3.75,
+        "focused_total_braced_priority_delta": 4.0,
+        "focused_tier_one_priority_delta": 0.25,
+        "focused_ai_selected_target_id": "player_1_unit_thornwake_thornwhip_carriers",
+        "week_2_thornwake_veilmourn_dominance_pct": 64.0,
+        "week_4_thornwake_veilmourn_dominant_faction": "faction_veilmourn",
+        "week_4_thornwake_veilmourn_dominance_pct": 52.0,
+        "balance_outlier_count": 29,
+        "balance_severity": 183.5,
+        "rows_at_or_above_65_pct": 7,
+        "max_dominance_pct": 69.5,
+        "max_side_bias_pct": 2.67,
+        "structural_failure_count": 0,
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "unit_ability_runtime_report passed all 100 authored ability instances",
+        "battle_autoplay_combat_balance_report passed",
+        "balance_regression_report_suite passed with the existing Native RMG save/replay deferral warning",
+        "core_systems_regression_smoke passed",
+        "Godot editor import passed",
+        "validate_repo.py passed",
+        "Python compile, content/progress JSON parse, and git diff checks passed",
+        "all-live 100-seed four-week balance matrix passed its structural gate"
+      ],
+      "notes": "The accepted target priority changes only four matrix rows. Week-three Embercourt/Veilmourn worsens by one point to 61.5 percent Veilmourn, while the two material Thornwake/Veilmourn rows improve and the remaining matrix stays exact.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 29 outliers / 183.5 severity, and overall game completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -70096,7 +70172,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 29 outliers / 186.5 severity / 69.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 29 outliers / 183.5 severity / 69.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -70628,9 +70704,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Battle recovery now uses one survivor-only contract across live resolution, tactical AI, player summaries, and the fast benchmark; the accepted matrix has zero structural failures but remains needs_tuning at 30 outliers / 193.0 severity / 70.5 percent maximum dominance. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Veilmourn Final Notice now directs its once-per-battle stronger pressure into qualifying veteran braces through one authored contract shared by live tactical AI and the fast benchmark. The accepted matrix improves to 29 outliers / 183.5 severity / 69.5 percent maximum dominance with zero structural failures, but remains needs_tuning. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T19:13:08Z",
+  "updatedAt": "2026-08-04T19:40:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -3905,8 +3905,8 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		var ability_uses = stack.get("ability_uses", {})
 		if ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) >= int(obituary.get("uses_per_battle", 1)):
 			return "Final Notice has already been issued this battle."
-		if not target.is_empty() and _has_ability(target, "brace") and int(target.get("tier", 1)) >= 2:
-			return "Final Notice will sharply drain this veteran braced line and weaken its retaliation for this round."
+		if not target.is_empty() and _has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+			return "Final Notice prioritizes this veteran braced line, sharply draining it and weakening its retaliation for this round."
 		return "Final Notice will drain the target's cohesion and weaken its retaliation for this round."
 	if _has_ability(stack, "rot_cant") and bool(stack.get("ranged", false)):
 		var rot_cant := _ability_by_id(stack, "rot_cant")
@@ -4011,10 +4011,11 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				" against tier-%d veteran lines" % int(ability.get("target_min_tier", 1)) if int(ability.get("target_min_tier", 1)) > 1 else "",
 			]
 		"obituary":
-			return "%s applies %s%s once per battle to drain cohesion and weaken retaliation, with stronger pressure against veteran braced lines" % [
+			return "%s applies %s%s once per battle to drain cohesion and weaken retaliation, prioritizing tier-%d-or-higher braced lines for stronger pressure" % [
 				name,
 				status_label,
 				" (%s)" % modifier_text if modifier_text != "" else "",
+				int(ability.get("braced_target_min_tier", 2)),
 			]
 		"brace":
 			return "%s turns a defended retaliation into %s%s" % [
@@ -8889,7 +8890,7 @@ static func _apply_attack_ability_effects(
 	var obituary_available := int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if is_ranged and not obituary.is_empty() and obituary_available:
 		var obituary_effect := _status_effect_from_ability(obituary, battle)
-		var braced_line := _has_ability(defender, "brace") and int(defender.get("tier", 1)) >= 2
+		var braced_line := _has_ability(defender, "brace") and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2))
 		if braced_line:
 			obituary_effect["modifiers"] = _normalize_ability_modifiers(obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20}))
 		_apply_stack_effect(
@@ -9391,6 +9392,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_label": String(entry.get("status_label", "Obituary-Marked")),
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 1))),
 					"uses_per_battle": max(1, int(entry.get("uses_per_battle", 1))),
+					"braced_target_min_tier": maxi(2, int(entry.get("braced_target_min_tier", 2))),
+					"braced_ai_target_priority_bonus": clampf(float(entry.get("braced_ai_target_priority_bonus", 0.25)), 0.0, 10.0),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"cohesion": -1, "retaliation": -10})),
 					"braced_modifiers": _normalize_ability_modifiers(entry.get("braced_modifiers", {"cohesion": -2, "retaliation": -20})),
 				}
