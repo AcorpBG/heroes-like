@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed seven placement-local authored battle corrections. The 59-sample active queue is clear with zero cohort, sample, medium, or high-priority watches and stable signature 829808c9.",
+  "currentNotes": "Strategic AI now uses deterministic eight-way traversal with the live blocked-corner rule. The standard route captures its target in seven turns; Medium ordinal 95 stalls improve from 12 to 7 but its remaining exact-mask overlap is a separate Native RMG blocker.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-active-cohort-queue-clear-10184",
-  "currentSliceId": "balance-active-cohort-queue-clear-10184",
-  "currentSliceNotes": "Ghoul Grove remains a bounded normal victory and becomes a hard defeat; six one-sided scenario cohorts now contain bounded victory/defeat outcomes. Eleven controls and seven shared armies remain exact. Active queue 7 to 0, signature 829808c9.",
+  "currentSlice": "strategic-ai-eight-way-overworld-pathing-10184",
+  "currentSliceId": "strategic-ai-eight-way-overworld-pathing-10184",
+  "currentSliceNotes": "Completed eight-way traversal, blocked-corner parity, and planner grouping leadership. Standard route capture passes; ordinal 95 remains sealed only by the named parity-proven exact object-mask overlap.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Cohort Queue Clear",
-  "currentSliceUpdatedAt": "2026-08-03T23:52:54Z",
+  "currentSliceTitle": "Strategic AI Eight-Way Overworld Pathing",
+  "currentSliceUpdatedAt": "2026-08-04T00:43:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -68715,6 +68715,34 @@
         "git diff --check"
       ],
       "remainingWork": "Authored active-scenario battle tuning queue is clear. Overall release completion remains open across faction balance, strategic-AI breadth, accessibility, content, performance, packaging, certification, and release integration."
+    },
+    {
+      "id": "strategic-ai-eight-way-overworld-pathing-10184",
+      "title": "Strategic AI Eight-Way Overworld Pathing",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "implementationTargets": ["scripts/core/EnemyAdventureRules.gd", "tests/ai_raid_assault_grouping_report.gd"],
+      "updatedAt": "2026-08-04T00:43:33Z",
+      "startedAt": "2026-08-04T00:00:36Z",
+      "completedAt": "2026-08-04T00:43:33Z",
+      "implemented": {"eight_way_traversal": true, "blocked_corner_rule": true, "planner_grouping_leadership": true, "standard_route_turns": 7, "standard_route_controller_after": "faction_mireclaw", "ordinal_95_turns_completed": 56, "ordinal_95_stalls_before": 12, "ordinal_95_stalls_after": 7, "native_payload_changed": false},
+      "validation": ["ai_raid_assault_grouping_report", "ai_raid_regroup_retreat_report", "ai_known_world_memory_report", "headless_simulation_harness_report: 19 pass, one warning, one deferred, zero failures", "core_systems_regression_smoke", "strategic_ai_long_run_seed_matrix_report: Medium ordinal 95 56/56", "Godot editor parse", "tests/validate_repo.py", "jq empty ops/progress.json", "git diff --check"],
+      "remainingWork": "Medium ordinal 95 still has zero movement because the parity-proven AVMsawg0.def and AVLautr7.def exact masks seal the corridor. Handle playable runtime start selection separately without changing recovered payload bytes."
+    },
+    {
+      "id": "native-rmg-exact-mask-runtime-start-selection-10184",
+      "title": "Native RMG Exact-Mask Runtime Start Selection",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "implementationTargets": ["src/gdextension/src/map_package_service.cpp", "scripts/persistence/NativeRandomMapPackageSessionBridge.gd"],
+      "updatedAt": "2026-08-04T00:43:33Z",
+      "notes": "Restore exact-mask runtime hero-start selection without changing recovered H3MapEd final payload bytes or object masks."
     }
   ],
   "project": "heroes-like",
@@ -69259,7 +69287,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The authored 59-sample active battle queue is now clear after placement-local roster corrections produce bounded outcome variety across River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish while preserving eleven adjacent samples and seven shared armies. Ghoul Grove remains a bounded normal victory and hard remains more difficult. Balance-matrix and runtime-consequence gates pass with stable queue signature 829808c9. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance and still reports needs_tuning. Broader strategic AI, accessibility, content, performance, packaging, certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-03T23:52:54Z",
+  "updatedAt": "2026-08-04T00:43:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

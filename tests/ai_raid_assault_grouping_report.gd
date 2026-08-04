@@ -17,6 +17,9 @@ func _run() -> void:
 	var commander_case_report := _river_pass_commander_raids_group_for_town_assault()
 	if commander_case_report.is_empty():
 		return
+	var planned_commander_case_report := _planned_commander_keeps_grouping_leadership()
+	if planned_commander_case_report.is_empty():
+		return
 	var post_move_case_report := _river_pass_raids_group_after_leader_movement_for_town_assault()
 	if post_move_case_report.is_empty():
 		return
@@ -38,6 +41,9 @@ func _run() -> void:
 	var resource_traversal_case_report := _resource_visit_tile_allows_contest_route()
 	if resource_traversal_case_report.is_empty():
 		return
+	var eight_way_pathing_case_report := _eight_way_pathing_matches_overworld_corner_rules()
+	if eight_way_pathing_case_report.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
@@ -46,6 +52,7 @@ func _run() -> void:
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": commanderless_case_report,
 		"commander_case": commander_case_report,
+		"planned_commander_case": planned_commander_case_report,
 		"post_move_case": post_move_case_report,
 		"long_range_pressure_case": long_range_pressure_case_report,
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
@@ -53,11 +60,111 @@ func _run() -> void:
 		"exhausted_route_pressure_case": exhausted_route_pressure_case_report,
 		"neutral_town_fallback_case": neutral_town_fallback_case_report,
 		"resource_traversal_case": resource_traversal_case_report,
+		"eight_way_pathing_case": eight_way_pathing_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _planned_commander_keeps_grouping_leadership() -> Dictionary:
+	var session = _base_session()
+	_set_player_captured_retake_front(session, TOWN_ID)
+	var config := _enemy_config()
+	var generic_leader := _raid_seed("generic_pressure_leader", 7, 2, 12, true, session, config, "hero_sable")
+	var planned_commander := _raid_seed("planned_task_commander", 7, 3, 8, true, session, config, "hero_vaska")
+	var planned_reason_codes: Array = planned_commander.get("target_reason_codes", []).duplicate()
+	planned_reason_codes.append("strategic_task_planner")
+	planned_commander["target_reason_codes"] = planned_reason_codes
+	var encounters := [generic_leader, planned_commander]
+	var resolved: Array = []
+	var generic_result := EnemyAdventureRules.group_nearby_raids_for_town_assault(
+		session,
+		config,
+		encounters,
+		0,
+		generic_leader,
+		MIRECLAW,
+		resolved
+	)
+	if bool(generic_result.get("grouped", false)):
+		_fail("Generic pressure host consumed an intact planner-assigned commander.")
+		return {}
+	var planned_result := EnemyAdventureRules.group_nearby_raids_for_town_assault(
+		session,
+		config,
+		encounters,
+		1,
+		planned_commander,
+		MIRECLAW,
+		resolved
+	)
+	if not bool(planned_result.get("grouped", false)):
+		_fail("Planner-assigned commander did not consolidate the stronger generic support host.")
+		return {}
+	if String(planned_result.get("donor_placement_id", "")) != "generic_pressure_leader":
+		_fail("Planner-assigned commander consolidated the wrong support host: %s" % JSON.stringify(planned_result))
+		return {}
+	var grouped: Dictionary = planned_result.get("encounter", {})
+	return {
+		"case_id": "planned_commander_keeps_grouping_leadership",
+		"planned_commander_id": "planned_task_commander",
+		"task_marker": "strategic_task_planner",
+		"support_id": "generic_pressure_leader",
+		"generic_leader_grouped": false,
+		"planned_commander_grouped": true,
+		"grouped_strength": EnemyAdventureRules.raid_strength(grouped),
+	}
+
+func _eight_way_pathing_matches_overworld_corner_rules() -> Dictionary:
+	var session = _base_session()
+	session.overworld["map"] = [
+		["water", "water", "water", "water", "water"],
+		["water", "grass", "water", "grass", "water"],
+		["water", "grass", "grass", "grass", "water"],
+		["water", "water", "water", "water", "water"],
+	]
+	session.overworld["map_size"] = {"width": 5, "height": 4}
+	for key in ["towns", "encounters", "map_objects", "resource_nodes", "artifact_nodes", "player_heroes"]:
+		session.overworld[key] = []
+	session.overworld["hero"] = {}
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var start := Vector2i(1, 1)
+	var goal := Vector2i(3, 1)
+	var bridge := Vector2i(2, 2)
+	var diagonal_distance := EnemyAdventureRules._path_distance(session, start, [goal], "", MIRECLAW)
+	var next_step := EnemyAdventureRules._next_step_toward(session, start, [goal], "", MIRECLAW)
+	if diagonal_distance != 2 or next_step != bridge:
+		_fail("Eight-way AI pathing did not use the legal two-diagonal route: distance=%d next=%s" % [diagonal_distance, next_step])
+		return {}
+	if OverworldRules.tile_step_cuts_blocked_corner(session, start, bridge):
+		_fail("AI accepted a diagonal that the live overworld corner rule rejects.")
+		return {}
+
+	session.overworld["map"] = [
+		["grass", "water", "water"],
+		["water", "grass", "water"],
+		["water", "water", "grass"],
+	]
+	session.overworld["map_size"] = {"width": 3, "height": 3}
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var blocked_start := Vector2i(0, 0)
+	var blocked_goal := Vector2i(1, 1)
+	var blocked_distance := EnemyAdventureRules._path_distance(session, blocked_start, [blocked_goal], "", MIRECLAW)
+	var blocked_next_step := EnemyAdventureRules._next_step_toward(session, blocked_start, [blocked_goal], "", MIRECLAW)
+	if blocked_distance < 9999 or blocked_next_step != blocked_start:
+		_fail("Eight-way AI pathing cut through a doubly blocked corner: distance=%d next=%s" % [blocked_distance, blocked_next_step])
+		return {}
+	if not OverworldRules.tile_step_cuts_blocked_corner(session, blocked_start, blocked_goal):
+		_fail("Blocked-corner fixture does not exercise the live overworld corner rule.")
+		return {}
+	return {
+		"case_id": "strategic_ai_eight_way_pathing_matches_overworld_corner_rules",
+		"legal_diagonal_distance": diagonal_distance,
+		"legal_diagonal_next_step": {"x": next_step.x, "y": next_step.y},
+		"blocked_corner_distance": blocked_distance,
+		"blocked_corner_next_step": {"x": blocked_next_step.x, "y": blocked_next_step.y},
+	}
 
 func _resource_visit_tile_allows_contest_route() -> Dictionary:
 	var session = _base_session()
@@ -117,7 +224,8 @@ func _resource_visit_tile_allows_contest_route() -> Dictionary:
 		Vector2i(0, 0),
 		{"faction_id": MIRECLAW},
 		MIRECLAW,
-		true
+		true,
+		EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)
 	)
 	if candidates.size() != 1 \
 			or int(candidates[0].get("target_x", -1)) != 2 \
