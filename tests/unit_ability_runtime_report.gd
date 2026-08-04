@@ -835,10 +835,10 @@ func _probe_solar_array_lane(unit_id: String) -> Dictionary:
 	var active_window := BattleRulesScript._active_ability_window_summary(source, battle, melee_attacker)
 	var waiting_window := BattleRulesScript._active_ability_window_summary(dead_linked_source, dead_linked_battle, dead_linked_battle["stacks"][3])
 	var ok: bool = (
-		is_equal_approx(primary_modifier, 0.97)
-		and is_equal_approx(retaliation_modifier, 0.97)
-		and is_equal_approx(ai_primary_modifier, 0.97)
-		and is_equal_approx(ai_retaliation_modifier, 0.97)
+		is_equal_approx(primary_modifier, 0.95)
+		and is_equal_approx(retaliation_modifier, 0.95)
+		and is_equal_approx(ai_primary_modifier, 0.95)
+		and is_equal_approx(ai_retaliation_modifier, 0.95)
 		and is_equal_approx(ranged_attack_modifier, 1.0)
 		and is_equal_approx(melee_ally_modifier, 1.0)
 		and is_equal_approx(outsider_modifier, 1.0)
@@ -846,9 +846,9 @@ func _probe_solar_array_lane(unit_id: String) -> Dictionary:
 		and is_equal_approx(dead_linked_modifier, 1.0)
 		and is_equal_approx(stripped_modifier, 1.0)
 		and direct_health_after == direct_health_before - 11
-		and float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.97
+		and float(ability.get("incoming_melee_damage_multiplier", 0.0)) == 0.95
 		and ability.get("linked_unit_ids", []) == ["unit_sunvault_daybreak_colossus"]
-		and role_line.contains("3%")
+		and role_line.contains("5%")
 		and role_line.contains("Daybreak Colossus")
 		and active_window.contains("screening")
 		and waiting_window.contains("waiting")

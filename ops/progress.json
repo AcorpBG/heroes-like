@@ -70445,6 +70445,90 @@
       ],
       "notes": "The six mappings add one bounded daily faction resource without changing artifact ids, source placements, normal-market access, spell costs, save schema, or existing non-income bonuses. Artifact balance and broader catalog breadth were not retuned by this slice.",
       "remainingWork": "No work remains in this slice. Broader artifact catalog breadth, economy balance, remaining faction balance, and overall game completion remain open."
+    },
+    {
+      "id": "combat-sunvault-solar-array-screen-strength-10184",
+      "title": "Sunvault Solar Array Screen Strength",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Strengthen Sunvault's existing setup-dependent firing-line screen against its measured late-game melee pressure without a broad stat increase.",
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "solar_array_lane_incoming_melee_damage_multiplier": 0.97,
+        "balance_outlier_count": 29,
+        "balance_severity": 174.0,
+        "rows_at_or_above_65_pct": 5,
+        "max_dominance_pct": 68.5,
+        "max_side_bias_pct": 3.67,
+        "structural_failure_count": 0,
+        "week_4_embercourt_sunvault_dominance_pct": 68.5,
+        "week_4_mireclaw_sunvault_dominance_pct": 63.0,
+        "week_4_brasshollow_sunvault_dominance_pct": 59.0
+      },
+      "completionCriteria": [
+        "A living Solar Array Strider plus linked Daybreak Colossus reduces incoming melee primary and retaliation damage to allied Sunvault ranged stacks by exactly five percent",
+        "Source or linked-unit loss removes the screen, and melee allies, other factions, ranged attacks, spells, and direct health changes remain unaffected",
+        "Live BattleRules, tactical AI estimates, player summaries, and the fast benchmark consume the same authored multiplier",
+        "The all-live 100-seed four-week matrix has zero structural failures, improves at least one targeted late Sunvault row, and does not regress aggregate outliers, severity, severe-row count, maximum dominance, or the seven-point side-bias gate"
+      ],
+      "nonGoals": [
+        "unit base stats, growth, costs, spells, heroes, benchmarks, saves, strategic AI, campaigns, Native RMG, or encounter rosters",
+        "generic ranged superiority, protection for Sunvault melee stacks, ranged or spell mitigation, final faction balance, or overall release completion"
+      ],
+      "startedAt": "2026-08-04T22:27:05Z",
+      "updatedAt": "2026-08-04T22:50:59Z",
+      "completedAt": "2026-08-04T22:50:59Z",
+      "result": {
+        "solar_array_lane_incoming_melee_damage_multiplier": 0.95,
+        "incoming_melee_mitigation_pct": 5.0,
+        "rejected_six_percent_candidate": {
+          "balance_outlier_count": 30,
+          "balance_severity": 166.5,
+          "rows_at_or_above_65_pct": 5,
+          "max_dominance_pct": 68.5,
+          "max_side_bias_pct": 4.2,
+          "structural_failure_count": 0,
+          "rejection_reason": "Outliers regressed from 29 to 30."
+        },
+        "accepted_balance_outlier_count": 28,
+        "accepted_balance_severity": 172.0,
+        "accepted_rows_at_or_above_65_pct": 5,
+        "accepted_max_dominance_pct": 68.5,
+        "accepted_max_side_bias_pct": 3.8,
+        "accepted_structural_failure_count": 0,
+        "week_4_embercourt_sunvault_dominance_pct": 67.5,
+        "week_4_mireclaw_sunvault_dominance_pct": 62.0,
+        "week_4_brasshollow_sunvault_dominance_pct": 60.0,
+        "week_3_sunvault_veilborne_dominance_pct": 61.0
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . tests/balance_regression_report_suite.tscn",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --weeks 1,2,3,4 --seeds 100 --all-live-factions",
+        "python3 -m py_compile tests/validate_repo.py tests/battle_faction_fast_balance_benchmark.py",
+        "jq empty content/units.json ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "The five-percent candidate improves the aggregate matrix and two measured late Sunvault rows. Brasshollow/Sunvault and Sunvault/Veilborne each worsen slightly, but neither creates a new outlier and every aggregate acceptance bound passes.",
+      "remainingWork": "No work remains in this slice. The faction matrix remains needs_tuning at 28 outliers and severity 172.0; broader faction balance and overall game completion remain open."
     }
   ],
   "project": "heroes-like",
