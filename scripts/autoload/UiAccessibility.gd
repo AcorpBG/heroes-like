@@ -174,6 +174,8 @@ func _attach_control(control: Control) -> void:
 	_connected_control_ids[id] = true
 	control.focus_entered.connect(_on_control_refresh_requested.bind(control))
 	control.visibility_changed.connect(_on_control_refresh_requested.bind(control))
+	if control is OptionButton:
+		(control as OptionButton).item_selected.connect(_on_option_selected.bind(control as OptionButton))
 	control.tree_exited.connect(_on_control_exited.bind(id), CONNECT_ONE_SHOT)
 
 
@@ -193,13 +195,20 @@ func _on_control_refresh_requested(control: Control) -> void:
 		configure_control(control)
 
 
+func _on_option_selected(_index: int, control: OptionButton) -> void:
+	if is_instance_valid(control):
+		call_deferred("_configure_added_control", control.get_instance_id())
+
+
 func _on_control_exited(id: int) -> void:
 	_connected_control_ids.erase(id)
 
 
 func _control_name(control: Control) -> String:
 	var value := ""
-	if control is Button:
+	if control is OptionButton:
+		value = _option_field_name(control as OptionButton)
+	elif control is Button:
 		value = String((control as Button).text)
 	elif control is LineEdit:
 		value = _humanize_node_name(control.name)
@@ -217,15 +226,25 @@ func _control_name(control: Control) -> String:
 
 
 func _uses_native_text_name(control: Control) -> bool:
-	return control is Button and String((control as Button).text).strip_edges() != ""
+	return control is Button and not control is OptionButton and String((control as Button).text).strip_edges() != ""
 
 
 func _control_description(control: Control, semantic_name: String) -> String:
+	if control is OptionButton:
+		var option := control as OptionButton
+		var current_value := "No selection"
+		if option.selected >= 0 and option.selected < option.item_count:
+			current_value = _bounded_text(String(option.get_item_text(option.selected)), MAX_NAME_LENGTH)
+			if current_value == "":
+				current_value = "Unnamed option"
+		var current_clause := "Current value: %s." % current_value
+		var tooltip := _bounded_text(control.tooltip_text, MAX_DESCRIPTION_LENGTH - current_clause.length() - 1)
+		if tooltip != "":
+			return _bounded_text("%s %s" % [tooltip, current_clause], MAX_DESCRIPTION_LENGTH)
+		return _bounded_text("Choose an option for %s. Current value: %s." % [semantic_name, current_value], MAX_DESCRIPTION_LENGTH)
 	var tooltip := _bounded_text(control.tooltip_text, MAX_DESCRIPTION_LENGTH)
 	if tooltip != "":
 		return tooltip
-	if control is OptionButton:
-		return "Choose an option for %s." % semantic_name
 	if control is CheckButton or control is CheckBox:
 		return "Toggle %s." % semantic_name
 	if control is Button:
@@ -241,6 +260,19 @@ func _control_description(control: Control, semantic_name: String) -> String:
 
 func _humanize_node_name(node_name: StringName) -> String:
 	return String(node_name).to_snake_case().replace("_", " ").capitalize().strip_edges()
+
+
+func _option_field_name(control: OptionButton) -> String:
+	var field_name := _humanize_node_name(control.name)
+	field_name = field_name.replace("Ui ", "UI ").replace(" Fps", " FPS").replace("Rmg ", "RMG ")
+	for suffix in [" Picker", " Selector", " Toggle"]:
+		if field_name.ends_with(suffix):
+			field_name = field_name.substr(0, field_name.length() - suffix.length()).strip_edges()
+	if field_name == "" and control.selected >= 0 and control.selected < control.item_count:
+		field_name = String(control.get_item_text(control.selected)).strip_edges()
+	if field_name == "":
+		field_name = "Option"
+	return _bounded_text(field_name, MAX_NAME_LENGTH)
 
 
 func _bounded_text(value: String, maximum_length: int) -> String:

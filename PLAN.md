@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `accessibility-option-control-field-semantics-10184`. Shared native accessibility now gives every `OptionButton` a stable field identity derived from its control role instead of announcing only the selected display text. Generated descriptions retain tooltip consequences, reserve bounded space for the current value, and refresh after selection handlers complete; explicitly authored semantics remain unchanged. Focused dynamic and shipped-Settings proof, main-menu and active-play keyboard navigation, core systems, project parsing, repository, Python, JSON, and diff gates pass. Platform NVDA/Orca certification, final accessibility, and overall release completion remain open.
 - Completed implementation slice: `combat-embercourt-sluicefire-prepared-breach-10184`. Sluicefire Lindworms now lose 15% primary-attack damage against a clean line while retaining full retaliation damage and their 4% Bloodrush payoff against wounded or disrupted targets. Shared BattleRules behavior, tactical AI estimates, player summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored contract. The all-live 100-seed four-week matrix keeps 33 outliers, lowers excess severity from 248.0 to 233.5, rows at or above 65% from 11 to 10, maximum dominance from 74.5% to 74.0%, and week-four side bias from 2.13 to 1.87 points while the 2.80-point global maximum stays unchanged. Ability, autoplay, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `balance-thornwake-barkmantle-cohesion-10184`. Barkmantle Screens no longer adds a global cohesion-hold tier, while its 18% incoming-ranged mitigation and 6% engaged/harried counterpressure remain live. Focused runtime proof covers the bounded contract across all 96 authored ability instances. The all-live 100-seed four-week matrix keeps 33 outliers and 74.5% maximum dominance, lowers excess severity from 262.5 to 248.0 and maximum side bias from 3.07 to 2.80 points, and has zero structural failures. Ability, autoplay, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-thornwake-highroot-capstone-identity-10184`. Thornwake's production capstone pair now has source-aligned live roles: Graft Matriarchs deliver Highroot Graft Salvo with an open-lane floor and stronger payoff into rooted or disrupted enemies, while Worldroot Bastion's passive Worldroot Rampart directly blunts incoming ranged attrition without adding a global cohesion tier. Shared BattleRules behavior, tactical AI consumption, player summaries, the fast benchmark, content validation, and focused runtime proof consume the authored fields. The accepted all-live 100-seed pair and week summaries remain exact at 33 outliers / 262.5 severity / 12 rows at or above 65% / 74.5% maximum dominance / 3.07 maximum side bias with week 1 unchanged. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -1201,6 +1202,24 @@ Completion evidence:
 Non-goals:
 - do not add a custom text-to-speech narrator, transmit accessibility data, or require game audio for screen-reader output;
 - do not claim NVDA/Orca certification, medical certification, final accessibility, Native RMG changes, or overall release completion.
+
+## Option Control Field Semantics
+
+Selected slice: `accessibility-option-control-field-semantics-10184`.
+
+Implementation target:
+- make shared native accessibility expose each `OptionButton` as a stable field such as Presentation Mode, UI Scale, or Save Slot instead of using only the currently selected value as its name;
+- include the current selected value in the generated description and refresh that description after user selection without replacing authored names or descriptions;
+- apply the behavior automatically to static and dynamically inserted controls across menu, active play, outcome, and editor surfaces.
+
+Completion evidence:
+- focused runtime proof covers initial and changed values, stable field identity, authored-semantic preservation, dynamic insertion, and real shipped Settings pickers;
+- the real main-menu tree retains complete native semantics and existing keyboard/controller navigation remains green;
+- core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not add custom speech, platform-specific screen-reader code, visual layout changes, or gameplay changes;
+- do not claim NVDA/Orca certification, final accessibility, Native RMG changes, or overall release completion.
 
 ## Confirmed Restore Settings Defaults
 
