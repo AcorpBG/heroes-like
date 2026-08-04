@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Strategic AI now uses deterministic eight-way traversal with the live blocked-corner rule. The standard route captures its target in seven turns; Medium ordinal 95 stalls improve from 12 to 7 but its remaining exact-mask overlap is a separate Native RMG blocker.",
+  "currentNotes": "Generated skirmish setup now exposes the parity-owned native RMG 24-workflow release matrix. Small two-level normal-water launches through the live menu/session boundary, and the full native runtime boundary retains all 24 workflow shapes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-eight-way-overworld-pathing-10184",
-  "currentSliceId": "strategic-ai-eight-way-overworld-pathing-10184",
-  "currentSliceNotes": "Completed eight-way traversal, blocked-corner parity, and planner grouping leadership. Standard route capture passes; ordinal 95 remains sealed only by the named parity-proven exact object-mask overlap.",
+  "currentSlice": "native-rmg-player-release-matrix-adoption-10184",
+  "currentSliceId": "native-rmg-player-release-matrix-adoption-10184",
+  "currentSliceNotes": "Completed player-facing adoption of all 24 parity-owned native RMG workflows while preserving native auto-selection and fail-closed unsupported inputs.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Eight-Way Overworld Pathing",
-  "currentSliceUpdatedAt": "2026-08-04T00:43:33Z",
+  "currentSliceTitle": "Native RMG Player Release Matrix Adoption",
+  "currentSliceUpdatedAt": "2026-08-04T02:40:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17875,7 +17875,7 @@
       "phaseSnapshotArtifact": ".artifacts/rmg_native_medium_seed10_final_sweep_classfix_20260611/medium_4p_seed_10_controlled.phase_snapshot.json",
       "remainingWork": "Continue source-backed adoption of terrain/generated-cell private-state parity before 0x49b2b6. The next named blocker is the upstream 0x4a2777/0x4a325d owner/span/terrain-grid private state and 0x4a4c8e bit26/bit27 lanes. Use Linux .so plus Python parity compares as the inner loop. Run Windows debug/release .dll builds only once Linux/Python parity reaches a final validation boundary.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Ported recovered 0x4bbfcc final-sweep scratch-mask and class-correction semantics; parity improved but remains incomplete upstream of 0x49b2b6.",
       "validatedAt": "2026-06-11T18:30:24Z"
     },
@@ -68897,6 +68897,81 @@
       },
       "notes": "Completed. Prism Bastion now removes Rooted alongside Harried and Staggered and grants matching temporary immunity through the existing live cleanse/ward path. Focused runtime proof executes Briar Bind, removes two live debuffs, applies the ward, blocks renewed Rooted pressure, and preserves AI selection of the affected ally. The exact full faction matrix is unchanged, so this is player counter-control implementation progress rather than faction-balance progress.",
       "remainingWork": "Faction balance remains needs_tuning at 36 outliers / 293.5 severity / 75.5 percent maximum dominance. Reconcile the stale adventure-spell executor fixture against current strategic threat-avoidance behavior in a separate runtime slice."
+    },
+    {
+      "id": "native-rmg-player-release-matrix-adoption-10184",
+      "title": "Native RMG Player Release Matrix Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/h3maped-rmg-end-to-end-behavior.md"],
+      "implementationTargets": ["scripts/core/ScenarioSelectRules.gd", "scenes/menus/MainMenu.gd", "tests/random_map_player_setup_retry_ux_report.gd", "tests/random_map_player_setup_retry_ux_report.tscn", "tests/random_map_all_template_menu_wiring_report.gd", "tests/random_map_all_template_menu_wiring_report.tscn", "tests/native_rmg_end_to_end_runtime_boundary_report.gd", "tests/native_rmg_end_to_end_runtime_boundary_report.tscn"],
+      "baseline": {
+        "native_release_matrix_workflow_count": 24,
+        "public_size_class_count": 2,
+        "public_water_mode_count": 1,
+        "public_level_count": 1,
+        "selected_underground_preserved_through_launch_config": false,
+        "large_and_xlarge_player_controls_visible": false
+      },
+      "completionCriteria": [
+        "Generated-skirmish controls expose all four parity-owned size classes, all three parity-owned water modes, and both parity-owned level counts",
+        "The selected underground level survives public launch-config normalization and reaches the native workflow unchanged",
+        "Stale Medium-only and four-player Islands coercion is removed while native catalog auto-selection and fail-closed validation remain intact",
+        "Focused runtime proof launches at least one newly exposed two-level workflow into a skirmish session without authored-content writeback",
+        "The existing native 24-workflow runtime boundary, core systems, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "changes to recovered H3MapEd phase behavior, native payload bytes, authority profiles, RNG, object materialization, or serialization",
+        "arbitrary H3MapEd configuration parity outside the completed 24-workflow release matrix",
+        "gameplay balance, campaign, save schema, or overall release-completion claims"
+      ],
+      "startedAt": "2026-08-04T02:26:38Z",
+      "updatedAt": "2026-08-04T02:40:31Z",
+      "completedAt": "2026-08-04T02:40:31Z",
+      "implemented": {
+        "public_size_class_count": 4,
+        "public_water_mode_count": 3,
+        "public_level_option_count": 2,
+        "public_workflow_count": 24,
+        "selected_underground_preserved_through_launch_config": true,
+        "islands_selection_rewrites_size_or_player_count": false,
+        "native_catalog_auto_selection_preserved": true,
+        "unsupported_native_inputs_fail_closed": true,
+        "native_payload_behavior_changed": false
+      },
+      "evidence": {
+        "focused_launch_size_class_id": "homm3_small",
+        "focused_launch_water_mode": "normal_water",
+        "focused_launch_level_count": 2,
+        "focused_launch_scope": "strict_small_36x36_two_level_normal_water",
+        "focused_launch_attempt_count": 1,
+        "focused_launch_mode": "skirmish",
+        "focused_authored_content_writeback": false,
+        "native_runtime_boundary_workflow_shape_count": 24,
+        "native_runtime_boundary_medium_object_count": 1326,
+        "native_runtime_boundary_xlarge_object_count": 2779,
+        "legacy_small_land_launch_passed": true,
+        "visual_capture": ".artifacts/generated_map_setup_visual_smoke/generated_map_setup_1280x720.png"
+      },
+      "validation": {
+        "status": "passed",
+        "commands": [
+          "godot --headless --path . tests/random_map_player_setup_retry_ux_report.tscn",
+          "godot --headless --path . tests/random_map_all_template_menu_wiring_report.tscn",
+          "godot --headless --path . tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+          "godot --headless --path . tests/random_map_skirmish_menu_button_2p_retry_report.tscn",
+          "GENERATED_MAP_SETUP_VISUAL_CAPTURE=1 godot --headless --path . tests/generated_map_setup_visual_smoke.tscn",
+          "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+          "godot --headless --path . --editor --quit",
+          "python3 tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      },
+      "notes": "Completed. The player-facing setup and actual launch path now match the already completed native release matrix instead of the stale Small/Medium surface-land fence. This is live runtime adoption, not native parity rework.",
+      "remainingWork": "The overall game remains incomplete. Arbitrary H3MapEd configurations outside the selected 24-workflow release matrix remain unsupported and fail closed by design."
     }
   ],
   "project": "heroes-like",

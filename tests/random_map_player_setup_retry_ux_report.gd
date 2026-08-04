@@ -35,11 +35,14 @@ func _run() -> void:
 	if not bool(shell.call("validation_set_generated_underground", false)):
 		_fail("Underground control hook did not disable underground.")
 		return
-	if bool(shell.call("validation_set_generated_underground", true)):
-		_fail("Underground control hook enabled unsupported two-level generation.")
+	if not bool(shell.call("validation_set_generated_underground", true)):
+		_fail("Underground control hook did not enable supported two-level generation.")
 		return
 	var underground_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
-	if not _assert_strict_h3maped_scope_surface(underground_snapshot):
+	if not _assert_release_matrix_surface(underground_snapshot):
+		return
+	if not bool(shell.call("validation_set_generated_underground", false)):
+		_fail("Underground control hook did not restore the surface-only default.")
 		return
 
 	var setup_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
@@ -49,14 +52,21 @@ func _run() -> void:
 	var failure_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _invalid_config())
 	if not _assert_failure_surface(shell, failure_setup):
 		return
-	if bool(shell.call("validation_select_generated_size_class", "homm3_extra_large")):
-		_fail("Size-class control hook selected unsupported Extra Large public generation.")
+	if not bool(shell.call("validation_select_generated_size_class", "homm3_extra_large")):
+		_fail("Size-class control hook did not select supported Extra Large public generation.")
+		return
+	var xlarge_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if not _assert_extra_large_size_surface(xlarge_snapshot):
 		return
 	var over_cap_setup: Dictionary = shell.call("validation_force_generated_random_map_config", _over_cap_config())
 	if not _assert_over_cap_size_surface(shell, over_cap_setup):
 		return
-	if bool(shell.call("validation_select_generated_water_mode", "islands")):
-		_fail("Water control hook selected unsupported Islands public generation.")
+	var pre_islands_controls: Dictionary = shell.call("validation_generated_random_map_snapshot").get("controls", {})
+	if not bool(shell.call("validation_select_generated_water_mode", "islands")):
+		_fail("Water control hook did not select supported Islands generation.")
+		return
+	var islands_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if not _assert_water_selection_independent(islands_snapshot, pre_islands_controls):
 		return
 	var legacy_compact_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
 		_legacy_compact_launch_config(),
@@ -68,9 +78,9 @@ func _run() -> void:
 
 	shell.call("validation_set_generated_seed", "player-facing-setup-retry-ux-10184")
 	shell.call("validation_select_generated_size_class", "homm3_small")
-	shell.call("validation_select_generated_player_count", 3)
-	shell.call("validation_select_generated_water_mode", "land")
-	shell.call("validation_set_generated_underground", false)
+	shell.call("validation_select_generated_player_count", 2)
+	shell.call("validation_select_generated_water_mode", "normal_water")
+	shell.call("validation_set_generated_underground", true)
 	var launch_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
 	var launch_setup: Dictionary = launch_snapshot.get("setup", {}) if launch_snapshot.get("setup", {}) is Dictionary else {}
 	if String(launch_setup.get("template_id", "")) != AUTO_TEMPLATE_ID or String(launch_setup.get("profile_id", "")) != AUTO_TEMPLATE_ID:
@@ -82,7 +92,7 @@ func _run() -> void:
 		_fail("Generated UI launch handoff did not start a generated skirmish session: %s" % JSON.stringify(launch_result))
 		return
 	var scenario_id := String(launch_result.get("active_scenario_id", ""))
-	if not _assert_session_boundary(launch_result):
+	if not _assert_session_boundary(launch_result, "strict_small_36x36_two_level_normal_water", "normal_water", 2):
 		return
 	if not _assert_no_authored_writeback(scenario_id, "after generated UI launch"):
 		return
@@ -143,35 +153,32 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	if bool(internal_provenance.get("template_picker_visible", true)) or bool(internal_provenance.get("profile_picker_visible", true)):
 		_fail("Generated manual template/profile pickers were visible: %s" % JSON.stringify(internal_provenance))
 		return false
-	if bool(internal_provenance.get("underground_supported", true)) or bool(internal_provenance.get("underground_player_control_visible", true)):
-		_fail("Generated setup exposed unsupported underground control: %s" % JSON.stringify(internal_provenance))
+	if not bool(internal_provenance.get("underground_supported", false)) or not bool(internal_provenance.get("underground_player_control_visible", false)):
+		_fail("Generated setup did not expose the supported underground control: %s" % JSON.stringify(internal_provenance))
 		return false
 	if int(controls.get("player_count", 0)) != 3 or String(controls.get("water_mode", "")) != "land" or bool(controls.get("underground", true)) or int(controls.get("level_count", 0)) != 1:
 		_fail("Generated player/water/underground controls did not persist in snapshot: %s" % JSON.stringify(controls))
 		return false
 	var level_options: Array = controls.get("level_options", []) if controls.get("level_options", []) is Array else []
-	if level_options != ["Surface Only (1 Level)"]:
-		_fail("Generated level option list exposed unsupported non-surface levels: %s" % JSON.stringify(level_options))
+	if level_options != ["Surface Only (1 Level)", "Surface + Underground (2 Levels)"]:
+		_fail("Generated level option list missed the supported release levels: %s" % JSON.stringify(level_options))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
-	for expected_control in ["seed", "size_class", "player_count", "water_mode", "launch_generated"]:
+	for expected_control in ["seed", "size_class", "player_count", "water_mode", "level_count", "underground", "launch_generated"]:
 		if expected_control not in visible_controls:
 			_fail("Generated visible player controls missed %s: %s" % [expected_control, JSON.stringify(visible_controls)])
 			return false
-	if "underground" in visible_controls:
-		_fail("Generated visible player controls exposed unsupported underground: %s" % JSON.stringify(visible_controls))
-		return false
 	for forbidden_key in ["template_options", "template_option_ids", "profile_options", "profile_option_ids"]:
 		if controls.has(forbidden_key):
 			_fail("Generated player-facing controls still exposed %s: %s" % [forbidden_key, JSON.stringify(controls)])
 			return false
 	var water_options: Array = controls.get("water_options", []) if controls.get("water_options", []) is Array else []
-	if water_options != ["Land"]:
-		_fail("Generated water option list exposed unsupported water modes: %s" % JSON.stringify(water_options))
+	if water_options != ["Land", "Normal Water", "Islands"]:
+		_fail("Generated water option list missed supported water modes: %s" % JSON.stringify(water_options))
 		return false
 	var size_options: Array = controls.get("size_options", []) if controls.get("size_options", []) is Array else []
-	if size_options != ["Small 36x36", "Medium 72x72"]:
-		_fail("Generated size option list exposed unsupported sizes: %s" % JSON.stringify(size_options))
+	if size_options != ["Small 36x36", "Medium 72x72", "Large 108x108", "Extra Large 144x144"]:
+		_fail("Generated size option list missed supported release sizes: %s" % JSON.stringify(size_options))
 		return false
 	var setup: Dictionary = snapshot.get("setup", {}) if snapshot.get("setup", {}) is Dictionary else {}
 	if not bool(setup.get("ok", false)):
@@ -209,21 +216,32 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_strict_h3maped_scope_surface(snapshot: Dictionary) -> bool:
+func _assert_release_matrix_surface(snapshot: Dictionary) -> bool:
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	if bool(controls.get("underground", true)) or int(controls.get("level_count", 0)) != 1:
-		_fail("Generated strict H3MapEd scope did not stay surface-only: %s" % JSON.stringify(controls))
+	if not bool(controls.get("underground", false)) or int(controls.get("level_count", 0)) != 2:
+		_fail("Generated release-matrix selection did not retain two levels: %s" % JSON.stringify(controls))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
-	if "underground" in visible_controls:
-		_fail("Generated strict H3MapEd scope exposed unsupported underground control: %s" % JSON.stringify(visible_controls))
+	if "underground" not in visible_controls:
+		_fail("Generated release-matrix setup hid the underground control: %s" % JSON.stringify(visible_controls))
 		return false
 	var combined_text := "\n".join([
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	if combined_text.find("Surface only") < 0:
-		_fail("Generated strict H3MapEd scope did not explain the surface-only setup: %s" % combined_text)
+	if combined_text.find("Surface + Underground") < 0:
+		_fail("Generated release-matrix setup did not explain the two-level selection: %s" % combined_text)
+		return false
+	return true
+
+func _assert_water_selection_independent(snapshot: Dictionary, before: Dictionary) -> bool:
+	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
+	if String(controls.get("water_mode", "")) != "islands":
+		_fail("Islands selection did not persist: %s" % JSON.stringify(controls))
+		return false
+	if String(controls.get("size_class_id", "")) != String(before.get("size_class_id", "")) \
+			or int(controls.get("player_count", 0)) != int(before.get("player_count", 0)):
+		_fail("Islands selection rewrote the selected size or player count: before=%s after=%s" % [JSON.stringify(before), JSON.stringify(controls)])
 		return false
 	return true
 
@@ -305,37 +323,6 @@ func _assert_over_cap_size_surface(shell: Node, setup: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_medium_islands_auto_supported(setup: Dictionary) -> bool:
-	if not bool(setup.get("ok", false)):
-		_fail("Medium Islands generated setup did not produce a launchable package: %s" % JSON.stringify(setup))
-		return false
-	var attempts: Array = setup.get("retry_attempts", []) if setup.get("retry_attempts", []) is Array else []
-	if attempts.is_empty() or not (attempts[0] is Dictionary):
-		_fail("Medium Islands generated setup did not preserve retry attempt evidence: %s" % JSON.stringify(setup))
-		return false
-	var attempt: Dictionary = attempts[0]
-	if String(attempt.get("template_id", "")) != "translated_rmg_template_001_v1" or String(attempt.get("profile_id", "")) != "translated_rmg_profile_001_v1":
-		_fail("Medium Islands native auto-selection did not use owner-compared translated 001: %s" % JSON.stringify(attempt))
-		return false
-	if String(attempt.get("full_generation_status", "")) == "not_implemented":
-		_fail("Medium Islands native auto-selection remained not_implemented: %s" % JSON.stringify(attempt))
-		return false
-	return true
-
-func _assert_medium_islands_player_surface(snapshot: Dictionary) -> bool:
-	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	if String(controls.get("size_class_id", "")) != "homm3_medium" or int(controls.get("player_count", 0)) != 4 or String(controls.get("water_mode", "")) != "islands":
-		_fail("Islands player-facing selection did not coerce to supported Medium/4-player setup: %s" % JSON.stringify(controls))
-		return false
-	if bool(controls.get("underground", true)):
-		_fail("Islands player-facing selection re-enabled underground: %s" % JSON.stringify(controls))
-		return false
-	var setup: Dictionary = snapshot.get("setup", {}) if snapshot.get("setup", {}) is Dictionary else {}
-	if not bool(setup.get("ok", false)):
-		_fail("Islands player-facing setup failed validation: %s" % JSON.stringify(setup))
-		return false
-	return true
-
 func _assert_legacy_compact_launch_normalized(setup: Dictionary) -> bool:
 	if not bool(setup.get("ok", false)):
 		_fail("Public Small/Land setup did not override stale compact template/profile into native h3maped generation: %s" % JSON.stringify(setup))
@@ -353,7 +340,7 @@ func _assert_legacy_compact_launch_normalized(setup: Dictionary) -> bool:
 		return false
 	return true
 
-func _assert_session_boundary(launch_result: Dictionary) -> bool:
+func _assert_session_boundary(launch_result: Dictionary, expected_scope: String, expected_water_mode: String, expected_level_count: int) -> bool:
 	if String(launch_result.get("active_launch_mode", "")) != SessionState.LAUNCH_MODE_SKIRMISH:
 		_fail("Generated UI launch left skirmish launch mode: %s" % JSON.stringify(launch_result))
 		return false
@@ -377,7 +364,9 @@ func _assert_session_boundary(launch_result: Dictionary) -> bool:
 		_fail("Generated UI launch provenance crossed forbidden boundary: %s" % JSON.stringify(provenance))
 		return false
 	if String(normalized.get("size_class_id", "")) != "small" \
-			or String(normalized.get("h3maped_strict_scope", "")) != "strict_small_36x36_one_level_land_only" \
+			or String(normalized.get("h3maped_strict_scope", "")) != expected_scope \
+			or String(normalized.get("water_mode", "")) != expected_water_mode \
+			or int(normalized.get("level_count", 0)) != expected_level_count \
 			or int(normalized.get("width", 0)) != 36 \
 			or int(normalized.get("height", 0)) != 36:
 		_fail("Generated UI launch provenance missed HoMM3 Small source size: %s" % JSON.stringify(normalized))
@@ -416,18 +405,6 @@ func _over_cap_config() -> Dictionary:
 		"player_constraints": {"human_count": 1, "player_count": 3, "team_mode": "free_for_all"},
 		"profile": {"id": "border_gate_compact_profile_v1", "template_id": "border_gate_compact_v1"},
 	}
-
-func _medium_islands_auto_config() -> Dictionary:
-	return ScenarioSelectRulesScript.build_random_map_player_config(
-		"player-facing-setup-retry-ux-10184-medium-islands",
-		"",
-		"",
-		4,
-		"islands",
-		false,
-		"homm3_medium",
-		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
-	)
 
 func _legacy_compact_launch_config() -> Dictionary:
 	return ScenarioSelectRulesScript.build_random_map_player_config(
