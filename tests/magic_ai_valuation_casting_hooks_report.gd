@@ -48,6 +48,10 @@ func _run() -> void:
 	if not bool(recovery_filter_case.get("ok", false)):
 		_fail(String(recovery_filter_case.get("error", "Battle AI recovery target filter case failed.")))
 		return
+	var survivor_recovery_case := _run_battle_ai_injured_survivor_recovery_case()
+	if not bool(survivor_recovery_case.get("ok", false)):
+		_fail(String(survivor_recovery_case.get("error", "Battle AI survivor recovery case failed.")))
+		return
 	var spell_report_payload_case := _run_battle_ai_spell_report_payload_bridge_case()
 	if not bool(spell_report_payload_case.get("ok", false)):
 		_fail(String(spell_report_payload_case.get("error", "Battle AI spell report payload bridge case failed.")))
@@ -83,13 +87,14 @@ func _run() -> void:
 		"battle_cleanse_active_ward": cleanse_ward_case,
 		"battle_buff_best_ally": buff_target_case,
 		"battle_full_health_recovery_filter": recovery_filter_case,
+		"battle_injured_survivor_recovery": survivor_recovery_case,
 		"battle_spell_report_payload_bridge": spell_report_payload_case,
 		"battle_lethal_attack_priority": lethal_priority_case,
 		"battle_lethal_spell_priority": lethal_spell_case,
 		"adventure": adventure_case,
 		"adventure_spell_tiebreak": adventure_tiebreak_case,
 		"caveats": [
-			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, richer enemy payload spellbook merging for live battle casts, normalized rich enemy payload preservation across battle state refresh, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, full-health recovery target filtering, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
+			"This report proves bounded AI spell valuation, resistance-aware battle targeting, damage status-rider targeting, commander role-aware spell preference, live template-derived enemy battle spell execution, richer enemy payload spellbook merging for live battle casts, normalized rich enemy payload preservation across battle state refresh, urgent cleanse targeting through active ward modifiers, best-ally commander buff targeting, full-health and casualty-only recovery filtering, injured-survivor recovery targeting, argument-only commander payload parity for spell reports, lethal attack priority over non-lethal setup spells, lethal damage spell priority over non-lethal setup spells, the existing battle casting decision hook, same-band adventure spell tiebreaks, live enemy movement-spell execution, and live enemy scouting-spell execution for strategic raid movement.",
 		],
 	}
 	if not _assert_public_payload("final report", payload):
@@ -754,6 +759,7 @@ func _run_battle_ai_full_health_recovery_filter_case() -> Dictionary:
 				"max_damage": 6,
 			}),
 			_stack("enemy_full_health_line", "enemy", "Enemy Full Health Line", 8, 10, 80, []),
+			_stack("enemy_casualty_only_line", "enemy", "Enemy Casualty-Only Line", 8, 10, 60, []),
 			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
 		],
 	}
@@ -771,6 +777,57 @@ func _run_battle_ai_full_health_recovery_filter_case() -> Dictionary:
 		"candidate_count": int(report.get("candidate_count", 0)),
 		"live_action": String(live_action.get("action", "")),
 		"full_health_target_filtered": true,
+		"casualty_only_target_filtered": true,
+	}
+
+func _run_battle_ai_injured_survivor_recovery_case() -> Dictionary:
+	var enemy_hero := SpellRules.ensure_hero_spellbook(
+		{
+			"name": "Enemy Survivor Recovery Caster",
+			"command": {"power": 2, "knowledge": 8},
+			"spellbook": {
+				"known_spell_ids": ["spell_graft_mend"],
+				"mana": {"current": 24, "max": 24},
+			},
+		}
+	)
+	var battle := {
+		"round": 2,
+		"distance": 2,
+		"terrain": "plains",
+		"tags": [],
+		"stacks": [
+			_stack("enemy_recovery_archer", "enemy", "Enemy Recovery Archer", 7, 10, 70, [], {
+				"ranged": true,
+				"shots_remaining": 5,
+				"tier": 1,
+				"min_damage": 1,
+				"max_damage": 2,
+			}),
+			_stack("enemy_injured_survivor", "enemy", "Enemy Injured Survivor", 8, 10, 51, [], {
+				"tier": 7,
+				"min_damage": 14,
+				"max_damage": 20,
+			}),
+			_stack("player_pressure", "player", "Player Pressure", 8, 10, 80, []),
+		],
+	}
+	var active := _stack_by_id(battle, "enemy_recovery_archer")
+	var report := BattleAiRules.battle_spell_choice_report(battle, active, enemy_hero)
+	if not bool(report.get("ok", false)):
+		return {"ok": false, "error": "Survivor recovery report failed: %s" % report}
+	var selected: Dictionary = report.get("selected", {}) if report.get("selected", {}) is Dictionary else {}
+	if String(selected.get("spell_id", "")) != "spell_graft_mend" or String(selected.get("target_battle_id", "")) != "enemy_injured_survivor":
+		return {"ok": false, "error": "Survivor recovery should select the injured living creature, got selected=%s candidates=%s" % [selected, report.get("candidates", [])]}
+	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("target_battle_id", "")) != "enemy_injured_survivor":
+		return {"ok": false, "error": "Survivor recovery live choice should cast on the injured living creature, got %s" % live_action}
+	return {
+		"ok": true,
+		"recoverable_health": SpellRules.battle_spell_recoverable_health(_stack_by_id(battle, "enemy_injured_survivor")),
+		"selected_spell_id": String(selected.get("spell_id", "")),
+		"selected_target_id": String(selected.get("target_battle_id", "")),
+		"live_action": String(live_action.get("action", "")),
 	}
 
 func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
@@ -1109,6 +1166,8 @@ func _run_adventure_executor_case() -> Dictionary:
 	OverworldRules.normalize_overworld_state(session)
 	OverworldRules.refresh_fog_of_war(session)
 	EnemyTurnRules.normalize_enemy_states(session)
+	session.overworld["player_heroes"] = []
+	session.overworld["hero"] = {}
 	var faction_id := "faction_mireclaw"
 	var config := _enemy_config(session, faction_id)
 	var commander := SpellRules.ensure_hero_spellbook(
@@ -1200,6 +1259,8 @@ func _run_adventure_minimal_template_executor_case() -> Dictionary:
 	OverworldRules.normalize_overworld_state(session)
 	OverworldRules.refresh_fog_of_war(session)
 	EnemyTurnRules.normalize_enemy_states(session)
+	session.overworld["player_heroes"] = []
+	session.overworld["hero"] = {}
 	var faction_id := "faction_mireclaw"
 	var config := _enemy_config(session, faction_id)
 	var minimal_commander := {

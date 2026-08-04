@@ -795,7 +795,7 @@ static func _battle_spell_effect_summary(
 		"recover_ally":
 			var target_label := String(active_stack.get("name", "active stack"))
 			var recovery_amount := _battle_spell_recovery_amount(hero_state, spell)
-			var summary := "restores up to %d health to %s" % [recovery_amount, target_label]
+			var summary := "restores up to %d health to surviving creatures in %s; fallen creatures are not restored" % [recovery_amount, target_label]
 			var modifiers := battle_spell_modifiers(spell)
 			if not modifiers.is_empty():
 				summary += "; %s for %d rounds" % [
@@ -1444,6 +1444,14 @@ static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 		_:
 			return {}
 
+static func battle_spell_recoverable_health(stack: Dictionary) -> int:
+	var current_health: int = max(0, int(stack.get("total_health", 0)))
+	if current_health <= 0:
+		return 0
+	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
+	var living_creatures: int = int(ceil(float(current_health) / float(unit_hp)))
+	return max(0, (living_creatures * unit_hp) - current_health)
+
 static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dictionary) -> Dictionary:
 	var modifiers := battle_spell_modifiers(spell)
 	return build_battle_effect(
@@ -1510,7 +1518,7 @@ static func _battle_spell_action_summary(
 				summary += " Timing: %s" % timing_hint
 			return summary
 		"recover_ally":
-			var recovery_summary := "Restore up to %d health to %s." % [
+			var recovery_summary := "Restore up to %d health to surviving creatures in %s; fallen creatures are not restored." % [
 				_battle_spell_recovery_amount(hero_state, spell),
 				String(active_stack.get("name", "the active stack")),
 			]

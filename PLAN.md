@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `battle-ai-survivor-recovery-valuation-10184`. Live recovery, tactical-AI targeting, player-facing spell consequences, and the fast benchmark now share a survivor-only recoverable-health contract: casualty-only stacks cannot receive recovery, genuinely injured survivors remain valid targets, and repeated casts cannot restore fallen creatures. Focused reports prove a 38-health stack with ten health per creature caps at 40 and that AI filters a casualty-only 60/80 stack while casting Graft Mend on a 51-health six-survivor stack. The accepted all-live 100-seed four-week matrix has zero structural failures but exposes the honest tuning cost of removing illegal benchmark resurrection and wasted AI casts: outliers move from 29 to 30, severity from 186.5 to 193.0, rows at or above 65 percent from 7 to 8, and maximum dominance from 69.5 to 70.5 percent, while maximum side bias improves from 2.80 to 2.53 points. Magic-AI, spell behavior, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass; faction balance remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-sunvault-relay-activation-10184`. Prism Adepts now enter at initiative six instead of owning unearned first-action tempo, while a living tier-four Resonant Chorister restores that point to the linked Prism stack and activates Sunvault's line-wide multi-calibration damage, initiative, terrain-momentum, tactical-AI, and player-doctrine payoff; defeating the relay immediately removes those linked consequences without removing each stack's personal spell-calibration benefit. Focused live proof passes all 100 authored ability instances. The all-live 100-seed four-week matrix changes only week-one pair rows, reducing outliers from 31 to 29, severity from 203.0 to 186.5, rows at or above 65 percent from 8 to 7, and the week-one Brasshollow-Sunvault result from 69.5 to 58.5 percent while preserving 69.5 percent maximum dominance, 2.80-point side bias, zero structural failures, and every week-two through week-four pair summary. Ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-veilmourn-fog-ladder-identity-10184`. Veilmourn's production capstones now own the authored late-ladder roles: Mirror-Keel Reavers use a half-force Mirror-Keel Passage to attack across a distance-two lane and gain Black-Sail Breach pressure against harried or staggered targets, while Fogbound Leviathan's Leviathan Fogwake uses actual hex adjacency to deal 12% more primary-strike damage and apply one round of defense, initiative, and cohesion pressure only to unsupported enemy stacks. Shared BattleRules normalization/damage/status behavior, tactical AI scoring, player summaries, the fast benchmark, schema validation, and focused live proof consume the same contracts. The all-live 100-seed four-week matrix keeps 31 outliers / 8 rows at or above 65% / 69.5% maximum dominance, lowers severity from 204.5 to 203.0 and maximum side bias from 2.93 to 2.80 points, leaves weeks 1-2 exact, and has zero structural failures. Ability, autoplay, balance-regression, town-development, core, parse, repository, JSON, Python, process-lifecycle, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
 - Completed implementation slice: `combat-mireclaw-sporewake-veteran-line-10184`. Sporewake Rot Cant now opens against tier-four-or-higher veteran lines with a narrow authored tactical priority, so its two-unit week-two Chanter stack takes the bounded once-per-battle shot instead of casting a routine commander spell and dying before round two. Shared BattleRules normalization, tactical AI scoring, the fast benchmark, schema validation, and focused runtime proof consume the same contract. The all-live 100-seed four-week matrix improves from 33 outliers / 233.5 severity / 74.0% maximum dominance to 31 / 204.5 / 69.5%, rows at or above 65% fall from 10 to 8, and structural failures stay at zero. Ability, autoplay, core, parse, repository, Python, JSON, and diff gates pass; the matrix remains `needs_tuning` and overall release completion remains open.
@@ -556,6 +557,41 @@ Do not select:
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
+
+## Survivor-Only Battle Recovery Valuation
+
+id: `battle-ai-survivor-recovery-valuation-10184`
+
+Status: completed.
+
+Selected Phase 6 tactical-AI correctness slice. `BattleRules` already caps
+recovery at the remaining health capacity of living creatures, but tactical AI
+and the fast benchmark compare against the stack's original full army health.
+That mismatch lets enemy commanders value and cast recovery for casualties that
+the live resolver cannot restore, while the benchmark resurrects those casualties
+and reports balance for behavior the shipped game does not have.
+
+Implementation target:
+- define one survivor-only recoverable-health contract and consume it in live recovery resolution and tactical-AI target valuation;
+- prevent recovery candidates when a stack has lost whole creatures but every survivor is at full health, while retaining casts for genuinely injured survivors;
+- align the fast benchmark's recovery target scoring and health cap with live BattleRules;
+- make player-facing recovery summaries explicitly state that fallen creatures are not restored.
+
+Completion criteria:
+- focused live proof covers casualty-only, injured-survivor, and full-health recovery targets and proves AI never selects impossible healing;
+- live resolution cannot raise a stack above its current living-creature health cap;
+- the all-live benchmark has zero structural failures and records any resulting balance movement without claiming balance completion;
+- magic-AI, spell behavior, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not change spell costs, restore amounts, unit stats, growth, faction abilities, benchmark thresholds, saves, strategic AI, campaign content, or Native RMG;
+- do not add casualty resurrection or claim final spell, faction-balance, or overall release completion.
+
+Completion result:
+- shared live and benchmark recovery behavior now caps healing at current surviving-creature capacity and exposes zero value for casualty-only damage;
+- focused live reports prove both impossible-target filtering and valid injured-survivor casting, and player action text states that fallen creatures are not restored;
+- the accepted all-live matrix passes with zero structural failures at 30 outliers / 193.0 severity / 8 rows at or above 65 percent / 70.5 percent maximum dominance / 2.53-point maximum side bias;
+- the resulting balance regression is retained as explicit tuning debt because the previous benchmark behavior resurrected casualties and caused tactical AI to spend mana on impossible healing.
 
 ## Sunvault Relay Activation
 

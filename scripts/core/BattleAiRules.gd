@@ -2150,8 +2150,7 @@ static func _alive_count(stack: Dictionary) -> int:
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
 static func _stack_missing_health(stack: Dictionary) -> int:
-	var max_health: int = max(1, int(stack.get("base_count", stack.get("count", 0))) * max(1, int(stack.get("unit_hp", 1))))
-	return max(0, max_health - max(0, int(stack.get("total_health", 0))))
+	return SpellRulesScript.battle_spell_recoverable_health(stack)
 
 static func _battle_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
 	var effect = spell.get("effect", {})
