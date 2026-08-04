@@ -47,4 +47,4 @@ Latest v2 local result on 2026-08-02:
 - Godot startup, `Boot.scn`, `MainMenu.scn`, and native DLL markers were all present; no fatal runtime pattern matched.
 - Runner: Wine 9.0 with an isolated `win64` prefix and `dinput8=` override.
 
-The v2 gate additionally requires a successful isolated Wine boot. Future release packaging still needs clean native Windows execution, installer/export-preset hardening, clean-machine validation, settings persistence verification under native Windows packaged binaries, controller and hardware validation, crash/error capture, code signing, and release-channel packaging.
+The v2 gate additionally requires a successful isolated Wine boot. Future release packaging still needs clean native Windows execution, clean-machine validation, settings persistence verification under native Windows packaged binaries, controller and hardware validation, native minidump/symbol policy, code signing, and release-channel packaging. Bounded abnormal-exit recovery into the local support bundle is now covered separately.

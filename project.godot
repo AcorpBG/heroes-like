@@ -11,6 +11,7 @@ general/accessibility_support=0
 config/name="heroes-like"
 config/version="0.1.0-alpha.1"
 run/main_scene="res://scenes/boot/Boot.tscn"
+run/flush_stdout_on_print=true
 config/features=PackedStringArray("4.2")
 config/icon="res://icon.svg"
 
@@ -27,6 +28,12 @@ MusicAudio="*res://scripts/autoload/MusicAudio.gd"
 AppRouter="*res://scripts/autoload/AppRouter.gd"
 LiveValidationHarness="*res://scripts/autoload/LiveValidationHarness.gd"
 UiAccessibility="*res://scripts/autoload/UiAccessibility.gd"
+
+[debug]
+file_logging/enable_file_logging=true
+file_logging/enable_file_logging.pc=true
+file_logging/log_path="user://logs/godot.log"
+file_logging/max_log_files=5
 
 [display]
 window/size/viewport_width=1920

@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the missing Solar Array Strider firing-lane role as a bounded linked late-ladder melee screen for Sunvault ranged stacks; remaining faction balance and overall release work stay open.",
+  "currentNotes": "Completed bounded packaged abnormal-exit recovery into the existing local support bundle; native minidumps, signing, native Windows certification, release-channel integration, and overall release work remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-solar-array-lanes-10184",
-  "currentSliceId": "combat-sunvault-solar-array-lanes-10184",
-  "currentSliceNotes": "Solar Array Striders now project a three-percent melee screen for allied Sunvault ranged stacks while both the source and linked Daybreak Colossus survive.",
+  "currentSlice": "packaging-native-process-crash-recovery-10184",
+  "currentSliceId": "packaging-native-process-crash-recovery-10184",
+  "currentSliceNotes": "Desktop runtime startup now recovers one bounded, path-redacted issue after an unclean previous process exit and removes its process-owned marker after normal shutdown.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Solar Array Lanes",
-  "currentSliceUpdatedAt": "2026-08-04T21:11:09Z",
+  "currentSliceTitle": "Packaged Native Process Crash Recovery",
+  "currentSliceUpdatedAt": "2026-08-04T23:08:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70529,6 +70529,92 @@
       ],
       "notes": "The five-percent candidate improves the aggregate matrix and two measured late Sunvault rows. Brasshollow/Sunvault and Sunvault/Veilborne each worsen slightly, but neither creates a new outlier and every aggregate acceptance bound passes.",
       "remainingWork": "No work remains in this slice. The faction matrix remains needs_tuning at 28 outliers and severity 172.0; broader faction balance and overall game completion remain open."
+    },
+    {
+      "id": "packaging-native-process-crash-recovery-10184",
+      "title": "Packaged Native Process Crash Recovery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaged-runtime-issue-log-smoke-report.md",
+        "docs/packaging-platform-readiness-report.md"
+      ],
+      "purpose": "Turn an abnormal desktop process exit into a bounded local issue that players can include in the existing support bundle after the next launch.",
+      "implementationTargets": [
+        "project.godot",
+        "scripts/autoload/RuntimeIssueLog.gd",
+        "tests/packaged_native_process_crash_recovery_smoke.py",
+        "tests/native_process_crash_fixture.gd",
+        "tests/native_process_crash_fixture.tscn",
+        "tests/native_process_crash_recovery_report.gd",
+        "tests/native_process_crash_recovery_report.tscn",
+        "docs/packaged-native-process-crash-recovery-smoke-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "desktop_engine_file_logging_explicit": false,
+        "unclean_session_marker": false,
+        "previous_native_process_issue_recovery": false,
+        "support_bundle_native_process_context": false
+      },
+      "completionCriteria": [
+        "Linux and Windows desktop runs retain at most five engine logs under user data and flush printed crash markers",
+        "Runtime startup atomically owns a process-scoped session marker and normal shutdown removes only the current process marker",
+        "A previous unclean marker causes exactly one bounded local issue on the next launch using only the newest prior rotated log tail with absolute-path redaction",
+        "The recovered issue is included by the existing bounded local support bundle without saves, progression, credentials, or telemetry",
+        "A real forced Godot crash from an exported PCK followed by a second packaged launch passes in isolated user data, while normal exits leave no stale marker"
+      ],
+      "nonGoals": [
+        "native minidump generation, symbol upload, remote telemetry, automatic report submission, or retaining unbounded raw logs",
+        "code signing, package signing, native Windows hardware certification, release-channel publication, or overall release completion"
+      ],
+      "startedAt": "2026-08-04T22:57:13Z",
+      "updatedAt": "2026-08-04T23:08:08Z",
+      "completedAt": "2026-08-04T23:08:08Z",
+      "result": {
+        "desktop_engine_file_logging_explicit": true,
+        "max_rotated_engine_log_count": 5,
+        "session_marker_atomic_and_process_owned": true,
+        "max_previous_engine_log_read_bytes": 65536,
+        "max_previous_engine_log_lines": 40,
+        "max_previous_engine_log_line_length": 240,
+        "forced_crash_returncode": -6,
+        "forced_crash_marker_observed": true,
+        "retained_engine_log_count": 2,
+        "recovered_issue_count": 1,
+        "recovered_event": "previous_session_unclean_exit",
+        "absolute_backtrace_paths_redacted": true,
+        "support_bundle_local_only": true,
+        "support_bundle_save_payload_included": false,
+        "support_bundle_campaign_progression_included": false,
+        "support_bundle_telemetry_uploaded": false,
+        "clean_exit_session_marker_remaining": false,
+        "existing_packaged_issue_record_count": 26,
+        "linux_binary_boot_returncode": 0,
+        "windows_wine_boot_returncode": 0,
+        "windows_boot_main_menu_and_native_dll_markers": true
+      },
+      "validation": [
+        "python3 tests/packaged_native_process_crash_recovery_smoke.py",
+        "python3 tests/packaged_runtime_issue_log_smoke.py",
+        "godot --headless --path . tests/packaging_platform_readiness_report.tscn",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py tests/packaged_native_process_crash_recovery_smoke.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "The first accepted lifecycle exposed absolute system-library paths behind backtrace frame prefixes. Token-level path detection now redacts those lines, and the complete forced-crash/recovery lifecycle passes again with useful non-path context retained.",
+      "remainingWork": "No work remains in this slice. Native minidumps/symbolication, signing, native Windows hardware certification, clean-machine validation, release-channel integration, and overall game completion remain open."
     }
   ],
   "project": "heroes-like",
@@ -70539,7 +70625,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, native Windows hardware certification, and release-channel integration.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 29 outliers / 174.0 severity / 68.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, release-channel integration, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -71071,9 +71157,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Sunvault Solar Array Striders now project a linked late-ladder melee screen across live BattleRules, tactical AI, player summaries, and the fast benchmark. The accepted matrix keeps 29 outliers, lowers severity from 179.0 to 174.0, severe rows from 6 to 5, and maximum dominance from 69.5 to 68.5 percent with zero structural failures; maximum side bias rises from 2.67 to 3.67 points but remains inside the seven-point gate. Faction balance remains needs_tuning. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T21:11:09Z",
+  "updatedAt": "2026-08-04T23:08:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -298,6 +298,12 @@ PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runti
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-runtime-issue-log-smoke-report.md"
+NATIVE_PROCESS_CRASH_FIXTURE_SCRIPT_PATH = ROOT / "tests" / "native_process_crash_fixture.gd"
+NATIVE_PROCESS_CRASH_FIXTURE_SCENE_PATH = ROOT / "tests" / "native_process_crash_fixture.tscn"
+NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_process_crash_recovery_report.gd"
+NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCENE_PATH = ROOT / "tests" / "native_process_crash_recovery_report.tscn"
+PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_SMOKE_PATH = ROOT / "tests" / "packaged_native_process_crash_recovery_smoke.py"
+PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_DOC_PATH = ROOT / "docs" / "packaged-native-process-crash-recovery-smoke-report.md"
 UI_AUDIO_CUE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.gd"
 UI_AUDIO_CUE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "ui_audio_cue_runtime_report.tscn"
 UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-report.md"
@@ -22413,6 +22419,12 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
         PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH,
         PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH,
         PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_DOC_PATH,
+        NATIVE_PROCESS_CRASH_FIXTURE_SCRIPT_PATH,
+        NATIVE_PROCESS_CRASH_FIXTURE_SCENE_PATH,
+        NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCRIPT_PATH,
+        NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCENE_PATH,
+        PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_SMOKE_PATH,
+        PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_DOC_PATH,
         MAIN_MENU_SCENE_PATH,
         MAIN_MENU_SCRIPT_PATH,
         MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH,
@@ -22427,6 +22439,14 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             errors,
             "project.godot must register RuntimeIssueLog as an autoload",
         )
+        for required_setting in (
+            'run/flush_stdout_on_print=true',
+            'file_logging/enable_file_logging=true',
+            'file_logging/enable_file_logging.pc=true',
+            'file_logging/log_path="user://logs/godot.log"',
+            'file_logging/max_log_files=5',
+        ):
+            ensure(required_setting in project_text, errors, f"project.godot is missing crash-recovery setting: {required_setting}")
 
     if RUNTIME_ISSUE_LOG_PATH.exists():
         issue_text = RUNTIME_ISSUE_LOG_PATH.read_text(encoding="utf-8")
@@ -22439,6 +22459,10 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "user://debug/heroes_support_bundle.json",
             "MAX_SUPPORT_ISSUE_RECORDS := 25",
             "MAX_SUPPORT_BUNDLE_BYTES := 512 * 1024",
+            "heroes_like.runtime_session.v1",
+            "user://debug/heroes_runtime_session.json",
+            "MAX_PREVIOUS_ENGINE_LOG_BYTES := 64 * 1024",
+            "MAX_PREVIOUS_ENGINE_LOG_LINES := 40",
             "func emit_issue",
             "func emit_error",
             "func emit_fatal",
@@ -22447,6 +22471,12 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "func clear_issue_log",
             "func export_support_bundle",
             "func support_bundle_snapshot",
+            "func session_marker_snapshot",
+            "func _recover_previous_unclean_session",
+            "func _write_session_marker",
+            "func _remove_owned_session_marker",
+            "func _latest_previous_engine_log_tail",
+            "previous_session_unclean_exit",
             "func _support_settings_snapshot",
             "func _support_safe_value",
             '"telemetry_uploaded": false',
@@ -22515,6 +22545,59 @@ def validate_packaged_runtime_issue_log_smoke(errors: list[str]) -> None:
             "Future release packaging still needs",
         ):
             ensure(required_text in doc_text, errors, f"Packaged runtime issue log smoke doc is missing required text: {required_text}")
+
+    if NATIVE_PROCESS_CRASH_FIXTURE_SCRIPT_PATH.exists():
+        fixture_text = NATIVE_PROCESS_CRASH_FIXTURE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "NATIVE_PROCESS_CRASH_FIXTURE_MARKER",
+            "OS.delay_msec",
+            "OS.crash",
+        ):
+            ensure(required_token in fixture_text, errors, f"Native process crash fixture is missing required token: {required_token}")
+
+    if NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCRIPT_PATH.exists():
+        recovery_text = NATIVE_PROCESS_CRASH_RECOVERY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "NATIVE_PROCESS_CRASH_RECOVERY_REPORT",
+            "native_process_crash_recovery_v1",
+            "previous_session_unclean_exit",
+            "RuntimeIssueLog.session_marker_snapshot",
+            "RuntimeIssueLog.MAX_PREVIOUS_ENGINE_LOG_LINES",
+            "RuntimeIssueLog.export_support_bundle",
+            "RuntimeIssueLog.SUPPORT_REDACTED",
+            "includes_absolute_user_paths",
+            "recovered_issue_count",
+        ):
+            ensure(required_token in recovery_text, errors, f"Native process crash recovery report is missing required token: {required_token}")
+
+    if PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_SMOKE_PATH.exists():
+        recovery_smoke_text = PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_SMOKE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_SMOKE",
+            "packaged_native_process_crash_recovery_smoke_v1",
+            "PRESET_NAME = \"Linux Release\"",
+            "--export-pack",
+            "--main-pack",
+            "NATIVE_PROCESS_CRASH_FIXTURE_MARKER",
+            "XDG_DATA_HOME",
+            "marker_removed_after_clean_exit",
+            "native minidump generation or symbolication",
+            "clean native Windows hardware certification",
+        ):
+            ensure(required_token in recovery_smoke_text, errors, f"Packaged native-process recovery smoke is missing required token: {required_token}")
+
+    if PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_DOC_PATH.exists():
+        recovery_doc_text = PACKAGED_NATIVE_PROCESS_CRASH_RECOVERY_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Packaged Native Process Crash Recovery Smoke Report",
+            "packaging-native-process-crash-recovery-10184",
+            "user://logs",
+            "previous_session_unclean_exit",
+            "OS.crash()",
+            "local-only",
+            "native Windows hardware certification",
+        ):
+            ensure(required_text in recovery_doc_text, errors, f"Packaged native-process recovery doc is missing required text: {required_text}")
 
     if MAIN_MENU_SCENE_PATH.exists():
         menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
@@ -24552,6 +24635,7 @@ def main() -> int:
     print("- clean-source release-candidate automation rebuilds and self-tests Linux and Windows native outputs before provenance-bound export, verification, and artifact retention")
     print("- packaged settings persistence now has a PCK-launched smoke scene that writes, reloads, verifies, and restores user://config/settings.cfg")
     print("- packaged runtime issue reporting now writes sanitized user://debug JSONL and latest-issue snapshots and exports a bounded local support bundle from Settings")
+    print("- packaged desktop runs now recover one bounded, path-redacted previous-session issue after an abnormal process exit")
     print("- generated UI audio cues now attach to common controls and synthesize click/select/adjust/tab/confirm/invalid feedback on the persisted Effects bus")
     print("- generated overworld ambient audio now syncs terrain, day, and enemy-pressure layers from live overworld sessions on the persisted Effects bus")
     if args.strict_economy_resource_fixtures:
