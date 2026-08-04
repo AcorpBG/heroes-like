@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Mireclaw midline pair through shared live behavior: Ferrychain Hookline is a round-two one-use control lash that pulls and pins a surviving target in adjacent contact, while Sporewake Rot Cant is a round-two one-use tier-6 veteran-line call with bounded retaliation, cohesion, and wounded-target pressure. The accepted 100-seed matrix remains exact; faction balance and overall release completion remain open.",
+  "currentNotes": "Implementing a clean-checkout release-candidate pipeline that rebuilds Linux and Windows native release outputs from one source revision, runs both native self-tests, packages both verified payloads, and retains the resulting artifacts. No signing, publication, or native Windows certification is claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-ferry-rot-midline-identity-10184",
-  "currentSliceId": "combat-mireclaw-ferry-rot-midline-identity-10184",
-  "currentSliceNotes": "Implemented and validated source-authored Ferrychain Lasher and Sporewake Chanter combat roles through shared round-two ability contracts with exact aggregate faction-matrix parity.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Ferry-Rot Midline Identity",
-  "currentSliceUpdatedAt": "2026-08-04T08:27:33Z",
+  "currentSlice": "packaging-cross-platform-release-candidate-pipeline-10184",
+  "currentSliceId": "packaging-cross-platform-release-candidate-pipeline-10184",
+  "currentSliceNotes": "Selected implementation slice: rebuild and validate both native release targets before provenance-bound export, package verification, and CI artifact retention.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Cross-Platform Release Candidate Pipeline",
+  "currentSliceUpdatedAt": "2026-08-04T08:36:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -69487,6 +69487,46 @@
       },
       "notes": "Existing Reach and Harry IDs were rejected because they carried unrelated fortification, terrain, hero-trait, and opening-order behavior. Specialized Hookline and Rot Cant contracts were then calibrated. A free standoff strike caused severe week-3 dominance; implementing the source role's physical pull fixed it. Opening-round use still raised side bias, so both midline controls now begin in round two. The accepted candidate preserves exact matrix parity while retaining focused live post-opening consequences.",
       "remainingWork": "Faction balance remains needs_tuning at 33 outliers / 262.5 severity / 74.5 percent maximum dominance. Overall release completion remains open across strategic AI, accessibility, content, performance, clean-machine packaging, certification, and release integration."
+    },
+    {
+      "id": "packaging-cross-platform-release-candidate-pipeline-10184",
+      "title": "Cross-Platform Release Candidate Pipeline",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "src/gdextension/README.md",
+        "docs/packaging-platform-readiness-report.md",
+        "docs/packaging-release-bundle-manifest-gate-report.md"
+      ],
+      "purpose": "Turn the existing local cross-platform packaging pieces into one clean-source release-candidate path that rebuilds both native targets before publishing verified archives and installers.",
+      "implementationTargets": [
+        "tools/build_release_candidate.py",
+        ".github/workflows/release-candidate.yml",
+        "tests/packaging_release_candidate_pipeline_test.py",
+        "tests/validate_repo.py",
+        "src/gdextension/README.md",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The driver verifies prerequisites and exact source revision, rebuilds Linux and Windows release GDExtensions and native self-tests, rejects missing or stale outputs, and runs Linux plus Wine self-tests before packaging",
+        "The existing provenance-bound package tool exports and verifies both platform archives/installers from the same source revision and the driver emits a machine-readable result",
+        "A clean-checkout GitHub Actions workflow runs the same driver for manual or version-tag release candidates and uploads only the verified release artifact set",
+        "Focused driver tests, live cross-platform build/package execution, repository validation, workflow syntax, Python syntax, JSON validation, and diff checks pass"
+      ],
+      "nonGoals": [
+        "code signing, certificate or secret acquisition, storefront publication, automatic public release creation, or native Windows hardware certification",
+        "gameplay, save, content, combat balance, strategic AI, or Native RMG changes",
+        "overall release completion claims"
+      ],
+      "startedAt": "2026-08-04T08:36:56Z",
+      "updatedAt": "2026-08-04T08:36:56Z",
+      "notes": "The existing export, installer, provenance, and verification tools remain authoritative. This slice adds orchestration and clean-checkout execution rather than replacing their formats or weakening their fail-closed checks.",
+      "remainingWork": "Implement the driver and workflow, prove failure paths, run a live Linux/Windows rebuild plus release package verification, then record evidence."
     }
   ],
   "project": "heroes-like",
@@ -70031,7 +70071,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. The authored 59-sample active battle queue is now clear after placement-local roster corrections produce bounded outcome variety across River Pass, Bellwake Wreck Claim, Fen Crown, Glassfen Breakers, Orevein Contract, and Mireford Skirmish while preserving eleven adjacent samples and seven shared armies. Ghoul Grove remains a bounded normal victory and hard remains more difficult. Balance-matrix and runtime-consequence gates pass with stable queue signature 829808c9. The unchanged all-live faction matrix retains 36 outliers, 293.5 severity, and 75.5 percent maximum dominance and still reports needs_tuning. Broader strategic AI, accessibility, content, performance, packaging, certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T03:45:33Z",
+  "updatedAt": "2026-08-04T08:36:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -1,0 +1,97 @@
+name: Release Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version written into the verified release payloads
+        required: false
+        type: string
+  push:
+    tags:
+      - "v[0-9]*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-release-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out exact source and native dependency
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install cross-platform build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes cmake mingw-w64 nsis unzip wine wine64
+
+      - name: Install pinned Godot editor and export templates
+        env:
+          GODOT_VERSION: 4.6.2-stable
+        run: |
+          curl --fail --location --retry 3 --output godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          curl --fail --location --retry 3 --output godot-templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz"
+          unzip -q godot.zip -d godot-bin
+          sudo install -m 0755 "godot-bin/Godot_v${GODOT_VERSION}_linux.x86_64" /usr/local/bin/godot
+          unzip -q godot-templates.tpz -d godot-template-stage
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.2.stable"
+          cp -R godot-template-stage/templates/. "$HOME/.local/share/godot/export_templates/4.6.2.stable/"
+          godot --version
+
+      - name: Resolve release candidate version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          REF_NAME: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] && [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            version="$(sed -n 's/^config\/version="\([^"]*\)"$/\1/p' project.godot)"
+          else
+            version="${REF_NAME#v}"
+          fi
+          if ! printf '%s' "$version" | grep -Eq '^[0-9A-Za-z][0-9A-Za-z._+-]*$'; then
+            echo "Invalid release candidate version: $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Rebuild, test, export, and verify both platforms
+        env:
+          RELEASE_SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          python3 tools/build_release_candidate.py \
+            --version "${{ steps.version.outputs.version }}" \
+            --source-revision "$RELEASE_SOURCE_REVISION" \
+            --output-dir .artifacts/release-candidate \
+            --build-root .artifacts/release-candidate-native \
+            --result-json .artifacts/release-candidate/release-candidate-result.json
+
+      - name: Upload verified release candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: heroes-like-${{ steps.version.outputs.version }}-${{ github.sha }}
+          path: |
+            .artifacts/release-candidate/archives/
+            .artifacts/release-candidate/release-candidate-result.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
