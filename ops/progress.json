@@ -68735,14 +68735,41 @@
     {
       "id": "native-rmg-exact-mask-runtime-start-selection-10184",
       "title": "Native RMG Exact-Mask Runtime Start Selection",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
       "implementationTargets": ["src/gdextension/src/map_package_service.cpp", "scripts/persistence/NativeRandomMapPackageSessionBridge.gd"],
-      "updatedAt": "2026-08-04T00:43:33Z",
-      "notes": "Restore exact-mask runtime hero-start selection without changing recovered H3MapEd final payload bytes or object masks."
+      "updatedAt": "2026-08-04T01:12:46Z",
+      "startedAt": "2026-08-04T00:48:11Z",
+      "completedAt": "2026-08-04T01:12:46Z",
+      "implemented": {
+        "exact_mask_body_action_terrain_exclusion": true,
+        "eight_way_blocked_corner_route_search": true,
+        "road_connected_start_preference": true,
+        "hero_start_tile_contract": true,
+        "runtime_start_tile_contract": true,
+        "unsupported_start_fail_closed": true,
+        "ordinal_95_payload_fnv1a32": "1744e025",
+        "ordinal_95_town_anchor": {"x": 31, "y": 10},
+        "ordinal_95_runtime_start": {"x": 34, "y": 9},
+        "ordinal_95_player_move_to": {"x": 34, "y": 10},
+        "native_payload_changed": false,
+        "linux_windows_debug_release_artifacts_synced": true
+      },
+      "validation": [
+        "Linux Debug and Release GDExtension builds",
+        "Windows cross Debug and Release GDExtension builds",
+        "native_rmg_end_to_end_runtime_boundary_report",
+        "strategic_ai_long_run_seed_matrix_report: Medium ordinal 95 3/3 turns, 13 activity events, zero stalls/unreachable/integrity failures",
+        "core_systems_regression_smoke",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Overall release completion remains open across faction balance, strategic-AI breadth, accessibility, content, performance, packaging certification, and release integration."
     }
   ],
   "project": "heroes-like",

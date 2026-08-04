@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <cstdint>
 #include <string>
+#include <unordered_set>
+#include <utility>
 #include <vector>
 
 using namespace godot;
@@ -496,6 +498,196 @@ Array runtime_tile_points(const std::vector<aurelion::h3maped_rmg_core::RuntimeM
 		result.append(runtime_tile_point(point));
 	}
 	return result;
+}
+
+int64_t runtime_tile_flat(
+		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection,
+		int32_t x,
+		int32_t y,
+		int32_t level) {
+	if (x < 0 || y < 0 || level < 0
+			|| x >= projection.width || y >= projection.height || level >= projection.level_count) {
+		return -1;
+	}
+	return int64_t(level) * projection.width * projection.height
+			+ int64_t(y) * projection.width + x;
+}
+
+Dictionary runtime_start_tile_for_slot(
+		const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 &slot,
+		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection) {
+	std::unordered_set<int64_t> blocked_tiles;
+	std::unordered_set<int64_t> interaction_tiles;
+	std::unordered_set<int64_t> road_tiles;
+	for (const auto &object : projection.objects) {
+		for (const auto &point : object.body_tiles) {
+			const int64_t flat = runtime_tile_flat(projection, point.x, point.y, point.level);
+			if (flat >= 0) {
+				blocked_tiles.insert(flat);
+			}
+		}
+		for (const auto &point : object.action_tiles) {
+			const int64_t flat = runtime_tile_flat(projection, point.x, point.y, point.level);
+			if (flat >= 0) {
+				interaction_tiles.insert(flat);
+			}
+		}
+	}
+	for (const auto &point : projection.road_tiles) {
+		const int64_t flat = runtime_tile_flat(projection, point.x, point.y, point.level);
+		if (flat >= 0) {
+			road_tiles.insert(flat);
+		}
+	}
+
+	auto terrain_passable = [&](int32_t x, int32_t y, int32_t level) {
+		const int64_t flat = runtime_tile_flat(projection, x, y, level);
+		if (flat < 0 || flat >= int64_t(projection.terrain_type_codes.size())) {
+			return false;
+		}
+		const uint8_t terrain = projection.terrain_type_codes[size_t(flat)] & 0x3f;
+		return terrain != 8 && terrain != 9;
+	};
+	auto has_unblocked_adjacent_road = [&](int32_t x, int32_t y, int32_t level) {
+		for (int32_t dy = -1; dy <= 1; ++dy) {
+			for (int32_t dx = -1; dx <= 1; ++dx) {
+				if (dx == 0 && dy == 0) {
+					continue;
+				}
+				const int64_t flat = runtime_tile_flat(projection, x + dx, y + dy, level);
+				if (flat >= 0 && road_tiles.count(flat) > 0 && blocked_tiles.count(flat) == 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+	auto cuts_blocked_corner = [&](int32_t from_x, int32_t from_y, int32_t to_x, int32_t to_y, int32_t level) {
+		const int32_t dx = to_x - from_x;
+		const int32_t dy = to_y - from_y;
+		if (std::abs(dx) != 1 || std::abs(dy) != 1) {
+			return false;
+		}
+		const int64_t horizontal = runtime_tile_flat(projection, from_x + dx, from_y, level);
+		const int64_t vertical = runtime_tile_flat(projection, from_x, from_y + dy, level);
+		return blocked_tiles.count(horizontal) > 0 && blocked_tiles.count(vertical) > 0;
+	};
+	auto road_reachable_step_count = [&](int32_t start_x, int32_t start_y, int32_t level) {
+		const int64_t start_flat = runtime_tile_flat(projection, start_x, start_y, level);
+		if (start_flat < 0 || blocked_tiles.count(start_flat) > 0
+				|| road_tiles.count(start_flat) > 0 || !terrain_passable(start_x, start_y, level)) {
+			return -1;
+		}
+		std::vector<std::pair<int32_t, int32_t>> queue;
+		std::vector<int32_t> distances;
+		std::unordered_set<int64_t> visited;
+		queue.emplace_back(start_x, start_y);
+		distances.push_back(0);
+		visited.insert(start_flat);
+		for (size_t cursor = 0; cursor < queue.size(); ++cursor) {
+			const auto current = queue[cursor];
+			const int32_t current_distance = distances[cursor];
+			for (int32_t dy = -1; dy <= 1; ++dy) {
+				for (int32_t dx = -1; dx <= 1; ++dx) {
+					if (dx == 0 && dy == 0) {
+						continue;
+					}
+					const int32_t next_x = current.first + dx;
+					const int32_t next_y = current.second + dy;
+					if (!terrain_passable(next_x, next_y, level)
+							|| cuts_blocked_corner(current.first, current.second, next_x, next_y, level)) {
+						continue;
+					}
+					const int64_t next_flat = runtime_tile_flat(projection, next_x, next_y, level);
+					if (visited.count(next_flat) > 0 || blocked_tiles.count(next_flat) > 0) {
+						continue;
+					}
+					if (road_tiles.count(next_flat) > 0) {
+						return current_distance + 1;
+					}
+					if (interaction_tiles.count(next_flat) > 0) {
+						continue;
+					}
+					visited.insert(next_flat);
+					queue.emplace_back(next_x, next_y);
+					distances.push_back(current_distance + 1);
+				}
+			}
+		}
+		return -1;
+	};
+	auto selected_tile = [&](int32_t x, int32_t y, int32_t level, int32_t radius,
+			int32_t road_steps, bool adjacent_road, const char *source) {
+		Dictionary selected;
+		selected["x"] = x;
+		selected["y"] = y;
+		selected["level"] = level;
+		selected["selection_radius_from_town_coordinate"] = radius;
+		selected["selection_package_road_reachable_steps"] = road_steps;
+		selected["selection_adjacent_unblocked_package_road"] = adjacent_road;
+		selected["selection_removed_removable_start_block_mask"] = false;
+		selected["selection_source"] = source;
+		return selected;
+	};
+	auto candidate_available = [&](int32_t x, int32_t y, int32_t level) {
+		const int64_t flat = runtime_tile_flat(projection, x, y, level);
+		return flat >= 0 && terrain_passable(x, y, level)
+				&& blocked_tiles.count(flat) == 0
+				&& road_tiles.count(flat) == 0
+				&& interaction_tiles.count(flat) == 0;
+	};
+
+	const int32_t road_radius = std::min<int32_t>(std::max(projection.width, projection.height), 18);
+	for (int32_t adjacent_pass = 0; adjacent_pass < 2; ++adjacent_pass) {
+		const bool require_adjacent_road = adjacent_pass == 0;
+		for (int32_t radius = 1; radius <= road_radius; ++radius) {
+			for (int32_t dy = -radius; dy <= radius; ++dy) {
+				for (int32_t dx = -radius; dx <= radius; ++dx) {
+					if (std::abs(dx) + std::abs(dy) != radius) {
+						continue;
+					}
+					const int32_t x = slot.town_x + dx;
+					const int32_t y = slot.town_y + dy;
+					if (!candidate_available(x, y, slot.town_level)) {
+						continue;
+					}
+					const bool adjacent_road = has_unblocked_adjacent_road(x, y, slot.town_level);
+					if (require_adjacent_road && !adjacent_road) {
+						continue;
+					}
+					const int32_t road_steps = road_reachable_step_count(x, y, slot.town_level);
+					if (road_steps <= 0) {
+						continue;
+					}
+					return selected_tile(
+							x, y, slot.town_level, radius, road_steps, adjacent_road,
+							require_adjacent_road
+									? "h3maped_town_coordinate_exact_package_mask_adjacent_road_runtime_start"
+									: "h3maped_town_coordinate_exact_package_mask_reachable_road_runtime_start");
+				}
+			}
+		}
+	}
+
+	const int32_t safe_radius = std::max(projection.width, projection.height);
+	for (int32_t radius = 1; radius <= safe_radius; ++radius) {
+		for (int32_t dy = -radius; dy <= radius; ++dy) {
+			for (int32_t dx = -radius; dx <= radius; ++dx) {
+				if (std::abs(dx) + std::abs(dy) != radius) {
+					continue;
+				}
+				const int32_t x = slot.town_x + dx;
+				const int32_t y = slot.town_y + dy;
+				if (candidate_available(x, y, slot.town_level)) {
+					return selected_tile(
+							x, y, slot.town_level, radius, -1,
+							has_unblocked_adjacent_road(x, y, slot.town_level),
+							"h3maped_town_coordinate_exact_package_mask_nearest_unblocked_runtime_start");
+				}
+			}
+		}
+	}
+	return Dictionary();
 }
 
 Dictionary runtime_layer(const std::vector<uint8_t> &codes, int32_t width, int32_t height, int32_t level_count) {
@@ -1688,6 +1880,21 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			start["x"] = slot.town_x;
 			start["y"] = slot.town_y;
 			start["level"] = slot.town_level;
+			const Dictionary runtime_start_tile = runtime_start_tile_for_slot(slot, projection);
+			if (runtime_start_tile.is_empty()) {
+				Dictionary blocked;
+				blocked["ok"] = false;
+				blocked["status"] = "blocked";
+				blocked["error_code"] = "native_rmg_runtime_start_blocked_by_exact_h3m_masks";
+				blocked["message"] = "Native payload projection did not expose an exact-mask-safe runtime start tile.";
+				blocked["player_slot"] = slot.color + 1;
+				blocked["town_x"] = slot.town_x;
+				blocked["town_y"] = slot.town_y;
+				blocked["town_level"] = slot.town_level;
+				return blocked;
+			}
+			start["hero_start_tile"] = runtime_start_tile;
+			start["runtime_start_tile"] = runtime_start_tile.duplicate(true);
 			player_starts.append(start);
 			player_start_towns.append(start.duplicate(true));
 		}
