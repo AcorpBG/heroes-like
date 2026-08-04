@@ -65,6 +65,16 @@ const PATH_CARDINAL_DELTAS := [
 	Vector2i(0, 1),
 	Vector2i(0, -1),
 ]
+const PATH_MOVEMENT_DELTAS := [
+	Vector2i(1, 0),
+	Vector2i(-1, 0),
+	Vector2i(0, 1),
+	Vector2i(0, -1),
+	Vector2i(1, 1),
+	Vector2i(1, -1),
+	Vector2i(-1, 1),
+	Vector2i(-1, -1),
+]
 const AI_HERO_SIGHTING_MEMORY_DAYS := 3
 const AI_HERO_SIGHTING_MAX_RECORDS := 16
 const AI_HERO_TOWN_SIGHT_RADIUS := 7
@@ -2938,6 +2948,13 @@ static func _best_nearby_assault_support_raid_index(
 	var best_label := ""
 	var leader_strength := raid_strength(leader)
 	var leader_has_commander := _raid_has_commander(leader)
+	var leader_reason_codes := _normalize_string_array(leader.get("target_reason_codes", []))
+	var leader_continuity := commander_army_continuity(leader.get("enemy_commander_state", {}))
+	var leader_has_rebuild_debt := (
+		int(leader_continuity.get("base_strength", 0)) > 0
+		and int(leader_continuity.get("current_strength", 0)) < int(leader_continuity.get("base_strength", 0))
+	)
+	var planner_leadership := "strategic_task_planner" in leader_reason_codes and not leader_has_rebuild_debt
 	var max_group_distance := RAID_TACTICAL_PRESSURE_SUPPORT_GROUP_RADIUS if _raid_is_tactical_pressure_target(leader) else 1
 	for index in range(encounters.size()):
 		if index == leader_index:
@@ -2947,6 +2964,14 @@ static func _best_nearby_assault_support_raid_index(
 			continue
 		var donor: Dictionary = donor_value
 		if bool(donor.get("arrived", false)):
+			continue
+		var donor_reason_codes := _normalize_string_array(donor.get("target_reason_codes", []))
+		var donor_continuity := commander_army_continuity(donor.get("enemy_commander_state", {}))
+		var donor_has_rebuild_debt := (
+			int(donor_continuity.get("base_strength", 0)) > 0
+			and int(donor_continuity.get("current_strength", 0)) < int(donor_continuity.get("base_strength", 0))
+		)
+		if "strategic_task_planner" in donor_reason_codes and not donor_has_rebuild_debt and not planner_leadership:
 			continue
 		if String(donor.get("target_kind", "")) != String(leader.get("target_kind", "")):
 			continue
@@ -2958,7 +2983,7 @@ static func _best_nearby_assault_support_raid_index(
 		if _raid_has_commander(donor):
 			if not leader_has_commander:
 				continue
-			if donor_strength > leader_strength:
+			if donor_strength > leader_strength and not planner_leadership:
 				continue
 		var donor_label := _raid_name(donor)
 		if donor_strength > best_strength or (donor_strength == best_strength and donor_label < best_label):
@@ -18838,10 +18863,12 @@ static func _next_step_toward(
 		return start
 	var best_step := start
 	var best_distance := 9999
-	for delta in PATH_CARDINAL_DELTAS:
+	for delta in PATH_MOVEMENT_DELTAS:
 		var candidate: Vector2i = start + delta
 		var candidate_index := _tile_index(candidate, map_size)
 		if _position_blocked_index(candidate_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+			continue
+		if _path_step_cuts_blocked_corner_index(start_index, candidate_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 			continue
 		var candidate_distance := 9999
 		for distance_field_value in goal_fields:
@@ -18872,10 +18899,13 @@ static func _verified_next_step_toward(
 	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
 	var best_step := start
 	var best_distance := 9999
-	for delta in PATH_CARDINAL_DELTAS:
+	var start_index := _tile_index(start, map_size)
+	for delta in PATH_MOVEMENT_DELTAS:
 		var candidate: Vector2i = start + delta
 		var candidate_index := _tile_index(candidate, map_size)
 		if _position_blocked_index(candidate_index, goal_lookup, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+			continue
+		if _path_step_cuts_blocked_corner_index(start_index, candidate_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 			continue
 		var candidate_distance := _path_distance(session, candidate, goal_tiles, ignore_placement_id, observer_faction_id)
 		if candidate_distance >= 9999:
@@ -19117,11 +19147,13 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 		head += 1
 		var pos := _vector_from_index(pos_index, map_size)
 		var next_distance := int(distances[pos_index]) + 1
-		for delta in PATH_CARDINAL_DELTAS:
+		for delta in PATH_MOVEMENT_DELTAS:
 			var next_index := _tile_index(pos + delta, map_size)
 			if next_index < 0 or int(distances[next_index]) >= 0:
 				continue
 			if _position_blocked_for_distance_field(next_index, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
+				continue
+			if _path_step_cuts_blocked_corner_index(pos_index, next_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 				continue
 			distances[next_index] = next_distance
 			queue.append(next_index)
@@ -19148,12 +19180,14 @@ static func _path_distance_to_goal_index(
 	var best_distance := -1
 	if resource_blocked.has(goal_index) or terrain_blocked.has(goal_index):
 		var goal := _vector_from_index(goal_index, map_size)
-		for delta in PATH_CARDINAL_DELTAS:
+		for delta in PATH_MOVEMENT_DELTAS:
 			var neighbor_index := _tile_index(goal + delta, map_size)
 			if neighbor_index < 0 or neighbor_index >= distance_field.size():
 				continue
 			var neighbor_distance := int(distance_field[neighbor_index])
 			if neighbor_distance < 0:
+				continue
+			if _path_step_cuts_blocked_corner_index(neighbor_index, goal_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 				continue
 			var candidate_distance := neighbor_distance + 1
 			if best_distance < 0 or candidate_distance < best_distance:
@@ -19335,6 +19369,28 @@ static func _position_blocked_for_distance_field(
 		or resource_blocked.has(pos_index) \
 		or hero_blocked.has(pos_index) \
 		or terrain_blocked.has(pos_index)
+
+static func _path_step_cuts_blocked_corner_index(
+	from_index: int,
+	to_index: int,
+	map_size: Vector2i,
+	encounter_blocked: Dictionary,
+	resource_blocked: Dictionary,
+	hero_blocked: Dictionary,
+	terrain_blocked: Dictionary
+) -> bool:
+	if from_index < 0 or to_index < 0:
+		return true
+	var from_tile := _vector_from_index(from_index, map_size)
+	var to_tile := _vector_from_index(to_index, map_size)
+	var dx := to_tile.x - from_tile.x
+	var dy := to_tile.y - from_tile.y
+	if abs(dx) != 1 or abs(dy) != 1:
+		return false
+	var side_a_index := _tile_index(Vector2i(from_tile.x + dx, from_tile.y), map_size)
+	var side_b_index := _tile_index(Vector2i(from_tile.x, from_tile.y + dy), map_size)
+	return _position_blocked_for_distance_field(side_a_index, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked) \
+		and _position_blocked_for_distance_field(side_b_index, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked)
 
 static func _refresh_target(
 	session: SessionStateStoreScript.SessionData,

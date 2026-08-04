@@ -851,6 +851,52 @@ Non-goals:
 - do not weaken path passability, commander availability, defense commitment, or public-event contracts merely to satisfy fixtures;
 - do not change combat balance, economy, save version, Native RMG, or claim overall game completion.
 
+## Strategic AI Eight-Way Overworld Pathing
+
+id: `strategic-ai-eight-way-overworld-pathing-10184`
+
+Selected Phase 6 runtime correction. Strategic raids must evaluate and execute
+the same eight-way overworld movement surface available to the player, including
+the existing blocked-corner rule, so recovered Native RMG object masks do not
+become artificial cardinal-only barriers.
+
+Implementation target:
+- replace the strategic AI's cardinal-only distance fields, next-step selection, and blocked-goal approach scans with deterministic eight-way traversal;
+- reject a diagonal step only when both orthogonal side cells are blocked, matching `OverworldRules.tile_step_cuts_blocked_corner()` without changing terrain or package object masks;
+- preserve authoritative Native RMG terrain, body, action, and visit cells and retain deterministic target selection, encounter handling, resource interaction, and save-state behavior.
+
+Completion evidence:
+- a focused live pathing regression proves legal diagonals cross a cardinal-only barrier, blocked corners remain rejected, and distance/next-step behavior agree;
+- the standard live route captures `river_free_company` in seven turns after reducing route distance from six to two, and intact planner-assigned commanders retain grouping leadership without breaking partial commander rebuild continuity;
+- Medium ordinal 95 completes 56/56 deterministic turns and reduces stalls from 12 to 7, while its remaining zero-movement seal is named separately as the parity-proven `AVMsawg0.def` plus `AVLautr7.def` exact-mask overlap rather than misreported as an eight-way pathing failure;
+- focused strategic-AI suites, core systems, project parsing, repository validation, JSON validation, and diff checks pass.
+
+Non-goals:
+- do not modify recovered Native RMG output, package terrain/object masks, object placement, benchmark thresholds, combat balance, economy, or save schemas;
+- do not add retries, density tuning, topology gates, or claim full Native RMG, strategic-AI matrix, or overall release completion from this correction.
+
+## Native RMG Exact-Mask Runtime Start Selection
+
+id: `native-rmg-exact-mask-runtime-start-selection-10184`
+
+Selected Phase 6 runtime correction. Restore the established exact-mask runtime
+hero-start selection that the active package service dropped, so a parity-proven
+town action tile is not used as the playable start when recovered object bodies
+seal every legal first move.
+
+Implementation target:
+- select the nearest exact-mask-passable runtime start tile with route continuity from the generated source town, using active package terrain/body/action/visit data and the existing bridge helpers;
+- emit `hero_start_tile` and `runtime_start_tile` through the active package contract for Linux and Windows without changing recovered H3MapEd final payload bytes;
+- preserve deterministic package identity, town action/visit coordinates, object masks, and fail-closed unsupported-scope behavior.
+
+Completion evidence:
+- the Medium ordinal 95 package starts the player on a legal tile in the adjacent reachable component instead of the sealed town action tile `(31,10)`;
+- generated-session movement and strategic-AI smoke prove the selected start is playable while exact package terrain/object masks and parity payload hashes remain unchanged;
+- native package, bridge, core systems, project parsing, repository, JSON, and diff validation pass on synchronized Linux/Windows contract surfaces.
+
+Non-goals:
+- do not delete or move recovered objects, tune density, clear final-map tiles, alter the parity-proven `AVMsawg0.def` plus `AVLautr7.def` overlap, or claim full Native RMG or overall release completion.
+
 ## Canonical Terrain Visual Regression Gate
 
 id: `terrain-taxonomy-visual-regression-gate-10184`
