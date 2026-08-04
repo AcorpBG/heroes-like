@@ -43,6 +43,7 @@ PackedStringArray capabilities() {
 	result.append("native_rmg_homm3_generator_data_model_report");
 	result.append("native_package_save_load");
 	result.append("native_map_package_document_validation");
+	result.append("legacy_scenario_record_conversion");
 	result.append("headless_binding_smoke");
 	return result;
 }
@@ -1298,7 +1299,58 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 			}
 		}
 	}
+	Dictionary terrain_layers = map_document->get_terrain_layers();
+	Variant roads_value = terrain_layers.get("roads", Variant());
+	if (roads_value.get_type() == Variant::ARRAY) {
+		Array roads = roads_value;
+		for (int64_t road_index = 0; road_index < roads.size(); ++road_index) {
+			if (roads[road_index].get_type() != Variant::DICTIONARY) {
+				Dictionary context;
+				context["index"] = road_index;
+				append_document_validation_issue(failures, "invalid_road_record", "fail", "terrain_layers.roads", "Road overlay records must be dictionaries.", context);
+				continue;
+			}
+			Dictionary road = roads[road_index];
+			Variant tiles_value = road.get("tiles", Variant());
+			const int32_t tile_count = tiles_value.get_type() == Variant::ARRAY
+					? int32_t(Array(tiles_value).size())
+					: int32_t(road.get("tile_count", 0));
+			if (tile_count <= 0) {
+				Dictionary context;
+				context["index"] = road_index;
+				context["tile_count"] = tile_count;
+				append_document_validation_issue(failures, "invalid_road_tile_count", "fail", "terrain_layers.roads", "Road overlays must contain at least one tile.", context);
+			}
+			if (tiles_value.get_type() != Variant::ARRAY) {
+				continue;
+			}
+			Array tiles = tiles_value;
+			for (int64_t tile_index = 0; tile_index < tiles.size(); ++tile_index) {
+				if (tiles[tile_index].get_type() != Variant::DICTIONARY) {
+					Dictionary context;
+					context["road_index"] = road_index;
+					context["tile_index"] = tile_index;
+					append_document_validation_issue(failures, "invalid_road_tile", "fail", "terrain_layers.roads", "Road overlay tiles must be dictionaries.", context);
+					continue;
+				}
+				Dictionary tile = tiles[tile_index];
+				const int32_t x = int32_t(tile.get("x", -1));
+				const int32_t y = int32_t(tile.get("y", -1));
+				const int32_t level = int32_t(tile.get("level", 0));
+				if (x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= level_count) {
+					Dictionary context;
+					context["road_index"] = road_index;
+					context["tile_index"] = tile_index;
+					context["x"] = x;
+					context["y"] = y;
+					context["level"] = level;
+					append_document_validation_issue(failures, "road_tile_out_of_bounds", "fail", "terrain_layers.roads", "Road overlay tiles must be inside map bounds and level range.", context);
+				}
+			}
+		}
+	}
 
+	Dictionary placement_ids;
 	for (int32_t index = 0; index < map_document->get_object_count(); ++index) {
 		Dictionary object = map_document->get_object_by_index(index);
 		if (object.is_empty()) {
@@ -1310,6 +1362,19 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 		const int32_t x = int32_t(object.get("x", -1));
 		const int32_t y = int32_t(object.get("y", -1));
 		const int32_t level = int32_t(object.get("level", 0));
+		const String placement_id = String(object.get("placement_id", "")).strip_edges();
+		if (placement_id.is_empty()) {
+			Dictionary context;
+			context["index"] = index;
+			append_document_validation_issue(failures, "missing_object_placement_id", "fail", "objects", "Map object placement ids are required.", context);
+		} else if (placement_ids.has(placement_id)) {
+			Dictionary context;
+			context["index"] = index;
+			context["placement_id"] = placement_id;
+			append_document_validation_issue(failures, "duplicate_object_placement_id", "fail", "objects", "Map object placement ids must be unique.", context);
+		} else {
+			placement_ids[placement_id] = true;
+		}
 		if (x < 0 || y < 0 || x >= width || y >= height || level < 0 || level >= level_count) {
 			Dictionary context;
 			context["index"] = index;
@@ -1358,6 +1423,12 @@ Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> sc
 		Dictionary map_report = map_validation.get("report", Dictionary());
 		if (String(map_report.get("status", "")) != "pass") {
 			append_document_validation_issue(failures, "referenced_map_invalid", "fail", "map_document", "Referenced map document did not pass structural validation.", map_report);
+		}
+		if (String(map_ref.get("map_id", "")) != map_document->get_map_id()) {
+			append_document_validation_issue(failures, "map_ref_id_mismatch", "fail", "map_ref.map_id", "Scenario map reference id must match the referenced MapDocument.");
+		}
+		if (String(map_ref.get("map_hash", "")) != map_document->get_map_hash()) {
+			append_document_validation_issue(failures, "map_ref_hash_mismatch", "fail", "map_ref.map_hash", "Scenario map reference hash must match the referenced MapDocument.");
 		}
 	}
 	return validation_report_result("validate_scenario_document", "aurelion_scenario_validation_report", scenario_id, scenario_hash, failures, warnings, metrics);
@@ -1609,9 +1680,299 @@ Dictionary MapPackageService::migrate_scenario_package(String source_path, Strin
 }
 
 Dictionary MapPackageService::convert_legacy_scenario_record(Dictionary scenario_record, Dictionary terrain_layers_record, Dictionary options) const {
-	(void)scenario_record;
-	(void)terrain_layers_record;
-	return not_implemented("convert_legacy_scenario_record", "", options);
+	const String operation = "convert_legacy_scenario_record";
+	const String source_scenario_id = String(scenario_record.get("id", "")).strip_edges();
+	if (source_scenario_id.is_empty()) {
+		return package_failure(operation, "", "missing_scenario_id", "Legacy scenario conversion requires a non-empty scenario id.");
+	}
+	const String terrain_record_id = String(terrain_layers_record.get("id", source_scenario_id)).strip_edges();
+	if (!terrain_record_id.is_empty() && terrain_record_id != source_scenario_id) {
+		return package_failure(operation, "", "terrain_scenario_id_mismatch", "Terrain-layer record id must match the legacy scenario id.");
+	}
+
+	Variant map_value = scenario_record.get("map", Variant());
+	if (map_value.get_type() != Variant::ARRAY) {
+		return package_failure(operation, "", "invalid_map_rows", "Legacy scenario map must be an array of terrain rows.");
+	}
+	Array map_rows = map_value;
+	Variant map_size_value = scenario_record.get("map_size", Variant());
+	if (map_size_value.get_type() != Variant::DICTIONARY) {
+		return package_failure(operation, "", "invalid_map_size", "Legacy scenario map_size must be a dictionary.");
+	}
+	Dictionary map_size = map_size_value;
+	const int32_t height = int32_t(map_size.get("height", map_rows.size()));
+	int32_t width = int32_t(map_size.get("width", 0));
+	if (width <= 0 && !map_rows.is_empty() && map_rows[0].get_type() == Variant::ARRAY) {
+		width = Array(map_rows[0]).size();
+	}
+	if (width <= 0 || height <= 0 || map_rows.size() != height) {
+		return package_failure(operation, "", "invalid_map_dimensions", "Legacy scenario map dimensions must be positive and match the authored row count.");
+	}
+
+	Dictionary terrain_code_by_id;
+	Array terrain_id_by_code;
+	for (const char *terrain_id : { "dirt", "sand", "grass", "snow", "swamp", "rough", "underground", "lava", "water", "rock", "forest", "mire", "badlands", "ash", "cavern" }) {
+		const String id = terrain_id;
+		terrain_code_by_id[id] = terrain_id_by_code.size();
+		terrain_id_by_code.append(id);
+	}
+	PackedInt32Array terrain_codes;
+	terrain_codes.resize(width * height);
+	for (int32_t y = 0; y < height; ++y) {
+		Variant row_value = map_rows[y];
+		if (row_value.get_type() != Variant::ARRAY) {
+			return package_failure(operation, "", "invalid_map_row", "Legacy scenario map rows must be arrays.");
+		}
+		Array row = row_value;
+		if (row.size() != width) {
+			return package_failure(operation, "", "ragged_map_rows", "Legacy scenario map rows must all match map_size.width.");
+		}
+		for (int32_t x = 0; x < width; ++x) {
+			if (row[x].get_type() != Variant::STRING && row[x].get_type() != Variant::STRING_NAME) {
+				return package_failure(operation, "", "invalid_terrain_cell", "Legacy scenario terrain cells must contain non-empty terrain ids.");
+			}
+			const String terrain_id = String(row[x]).strip_edges();
+			if (terrain_id.is_empty()) {
+				return package_failure(operation, "", "invalid_terrain_cell", "Legacy scenario terrain cells must contain non-empty terrain ids.");
+			}
+			if (!terrain_code_by_id.has(terrain_id)) {
+				terrain_code_by_id[terrain_id] = terrain_id_by_code.size();
+				terrain_id_by_code.append(terrain_id);
+			}
+			terrain_codes.set(y * width + x, int32_t(terrain_code_by_id[terrain_id]));
+		}
+	}
+
+	Array objects;
+	Dictionary placement_ids;
+	String object_failure_code;
+	String object_failure_message;
+	auto append_objects = [&](const char *source_key, const char *kind) -> bool {
+		Variant source_value = scenario_record.get(source_key, Variant());
+		if (source_value.get_type() == Variant::NIL) {
+			return true;
+		}
+		if (source_value.get_type() != Variant::ARRAY) {
+			object_failure_code = "invalid_object_family";
+			object_failure_message = String("Legacy scenario ") + source_key + String(" must be an array.");
+			return false;
+		}
+		Array source = source_value;
+		for (int64_t index = 0; index < source.size(); ++index) {
+			if (source[index].get_type() != Variant::DICTIONARY) {
+				object_failure_code = "invalid_object_record";
+				object_failure_message = String("Legacy scenario ") + source_key + String(" contains a non-dictionary placement.");
+				return false;
+			}
+			Dictionary object = Dictionary(source[index]).duplicate(true);
+			const String placement_id = String(object.get("placement_id", "")).strip_edges();
+			if (placement_id.is_empty()) {
+				object_failure_code = "missing_placement_id";
+				object_failure_message = String("Legacy scenario ") + source_key + String(" contains a placement without placement_id.");
+				return false;
+			}
+			if (placement_ids.has(placement_id)) {
+				object_failure_code = "duplicate_placement_id";
+				object_failure_message = String("Legacy scenario contains duplicate placement_id: ") + placement_id;
+				return false;
+			}
+			const int32_t x = int32_t(object.get("x", -1));
+			const int32_t y = int32_t(object.get("y", -1));
+			const int32_t level = int32_t(object.get("level", 0));
+			if (x < 0 || y < 0 || x >= width || y >= height || level != 0) {
+				object_failure_code = "object_out_of_bounds";
+				object_failure_message = String("Legacy scenario ") + source_key + String(" contains an out-of-bounds placement.");
+				return false;
+			}
+			object["kind"] = kind;
+			object["source_kind"] = "authored_legacy_scenario";
+			object["level"] = level;
+			placement_ids[placement_id] = true;
+			objects.append(object);
+		}
+		return true;
+	};
+	if (!append_objects("towns", "town")
+			|| !append_objects("resource_nodes", "resource_site")
+			|| !append_objects("artifact_nodes", "artifact")
+			|| !append_objects("encounters", "encounter")) {
+		return package_failure(operation, "", object_failure_code, object_failure_message);
+	}
+
+	Array roads;
+	Variant roads_value = terrain_layers_record.get("roads", Array());
+	if (roads_value.get_type() != Variant::ARRAY) {
+		return package_failure(operation, "", "invalid_road_layers", "Legacy terrain-layer roads must be an array.");
+	}
+	roads = Array(roads_value).duplicate(true);
+	for (int64_t road_index = 0; road_index < roads.size(); ++road_index) {
+		if (roads[road_index].get_type() != Variant::DICTIONARY) {
+			return package_failure(operation, "", "invalid_road_record", "Legacy terrain-layer roads contain a non-dictionary record.");
+		}
+		Dictionary road = roads[road_index];
+		Variant tiles_value = road.get("tiles", Variant());
+		if (tiles_value.get_type() != Variant::ARRAY) {
+			return package_failure(operation, "", "invalid_road_tiles", "Legacy terrain-layer road tiles must be an array.");
+		}
+		Array tiles = tiles_value;
+		for (int64_t tile_index = 0; tile_index < tiles.size(); ++tile_index) {
+			if (tiles[tile_index].get_type() != Variant::DICTIONARY) {
+				return package_failure(operation, "", "invalid_road_tile", "Legacy terrain-layer roads contain a non-dictionary tile.");
+			}
+			Dictionary tile = tiles[tile_index];
+			const int32_t x = int32_t(tile.get("x", -1));
+			const int32_t y = int32_t(tile.get("y", -1));
+			if (x < 0 || y < 0 || x >= width || y >= height) {
+				return package_failure(operation, "", "road_tile_out_of_bounds", "Legacy terrain-layer roads contain an out-of-bounds tile.");
+			}
+		}
+	}
+
+	Dictionary terrain_layer;
+	Array terrain_levels;
+	terrain_levels.append(terrain_codes);
+	terrain_layer["levels"] = terrain_levels;
+	Dictionary converted_terrain_layers;
+	converted_terrain_layers["schema_id"] = "aurelion_terrain_layers";
+	converted_terrain_layers["schema_version"] = 1;
+	converted_terrain_layers["terrain_id_by_code"] = terrain_id_by_code;
+	converted_terrain_layers["terrain"] = terrain_layer;
+	converted_terrain_layers["terrain_layer_status"] = terrain_layers_record.get("terrain_layer_status", "foundation_authored");
+	converted_terrain_layers["roads"] = roads;
+
+	const String scenario_id = String(options.get("scenario_id", source_scenario_id)).strip_edges();
+	const String map_id = String(options.get("map_id", scenario_id + String("_map"))).strip_edges();
+	if (scenario_id.is_empty() || map_id.is_empty()) {
+		return package_failure(operation, "", "invalid_target_identity", "Converted map and scenario ids must be non-empty.");
+	}
+	Dictionary map_identity;
+	map_identity["map_id"] = map_id;
+	map_identity["map"] = map_rows;
+	map_identity["terrain_layers"] = converted_terrain_layers;
+	map_identity["objects"] = objects;
+	const String map_hash = "fnv1a32:" + hash32_hex(canonical_variant(map_identity));
+
+	Dictionary metadata;
+	metadata["generated"] = false;
+	metadata["source_kind"] = "authored_legacy_scenario_conversion";
+	metadata["source_scenario_id"] = source_scenario_id;
+	metadata["display_name"] = scenario_record.get("name", source_scenario_id);
+	metadata["legacy_json_writeback"] = false;
+	Dictionary route_graph;
+	route_graph["schema_id"] = "aurelion_route_graph";
+	route_graph["nodes"] = Array();
+	route_graph["edges"] = Array();
+	Dictionary map_state;
+	map_state["map_id"] = map_id;
+	map_state["map_hash"] = map_hash;
+	map_state["source_kind"] = "authored_legacy_scenario_conversion";
+	map_state["width"] = width;
+	map_state["height"] = height;
+	map_state["level_count"] = 1;
+	map_state["metadata"] = metadata;
+	map_state["terrain_layers"] = converted_terrain_layers;
+	map_state["route_graph"] = route_graph;
+	map_state["objects"] = objects;
+	Ref<MapDocument> map_document;
+	map_document.instantiate();
+	map_document->configure(map_state);
+
+	Dictionary map_ref;
+	map_ref["schema_id"] = MAP_SCHEMA_ID;
+	map_ref["schema_version"] = MapDocument::SCHEMA_VERSION;
+	map_ref["map_id"] = map_id;
+	map_ref["map_hash"] = map_hash;
+	map_ref["source_kind"] = "authored_legacy_scenario_conversion";
+	Array player_slots;
+	Dictionary player_slot;
+	player_slot["slot"] = 1;
+	player_slot["owner"] = "player";
+	player_slot["human"] = true;
+	player_slot["computer"] = false;
+	player_slot["faction_id"] = scenario_record.get("player_faction_id", "");
+	player_slots.append(player_slot);
+	Variant enemy_factions_value = scenario_record.get("enemy_factions", Array());
+	if (enemy_factions_value.get_type() != Variant::ARRAY) {
+		return package_failure(operation, "", "invalid_enemy_factions", "Legacy scenario enemy_factions must be an array.");
+	}
+	Array enemy_factions = Array(enemy_factions_value).duplicate(true);
+	for (int64_t index = 0; index < enemy_factions.size(); ++index) {
+		String faction_id;
+		if (enemy_factions[index].get_type() == Variant::DICTIONARY) {
+			Dictionary enemy = enemy_factions[index];
+			faction_id = String(enemy.get("faction_id", enemy.get("id", ""))).strip_edges();
+		} else {
+			faction_id = String(enemy_factions[index]).strip_edges();
+		}
+		if (faction_id.is_empty()) {
+			continue;
+		}
+		Dictionary enemy_slot;
+		enemy_slot["slot"] = player_slots.size() + 1;
+		enemy_slot["owner"] = "enemy";
+		enemy_slot["human"] = false;
+		enemy_slot["computer"] = true;
+		enemy_slot["faction_id"] = faction_id;
+		player_slots.append(enemy_slot);
+	}
+	Variant start_value = scenario_record.get("start", Dictionary());
+	if (start_value.get_type() != Variant::DICTIONARY) {
+		return package_failure(operation, "", "invalid_start_contract", "Legacy scenario start must be a dictionary.");
+	}
+	Dictionary start_contract = Dictionary(start_value).duplicate(true);
+	start_contract["hero_id"] = scenario_record.get("hero_id", "");
+	start_contract["player_army_id"] = scenario_record.get("player_army_id", "");
+	start_contract["player_faction_id"] = scenario_record.get("player_faction_id", "");
+	start_contract["starting_resources"] = scenario_record.get("starting_resources", Dictionary());
+	if (scenario_record.has("hero_starts")) {
+		start_contract["hero_starts"] = scenario_record.get("hero_starts", Array());
+	}
+	Dictionary scenario_identity;
+	scenario_identity["scenario_id"] = scenario_id;
+	scenario_identity["map_hash"] = map_hash;
+	scenario_identity["selection"] = scenario_record.get("selection", Dictionary());
+	scenario_identity["player_slots"] = player_slots;
+	scenario_identity["objectives"] = scenario_record.get("objectives", Dictionary());
+	scenario_identity["script_hooks"] = scenario_record.get("script_hooks", Array());
+	scenario_identity["enemy_factions"] = enemy_factions;
+	scenario_identity["start_contract"] = start_contract;
+	const String scenario_hash = "fnv1a32:" + hash32_hex(canonical_variant(scenario_identity));
+	Dictionary scenario_state = scenario_identity.duplicate(true);
+	scenario_state["scenario_id"] = scenario_id;
+	scenario_state["scenario_hash"] = scenario_hash;
+	scenario_state["map_ref"] = map_ref;
+	Ref<ScenarioDocument> scenario_document;
+	scenario_document.instantiate();
+	scenario_document->configure(scenario_state);
+
+	Dictionary map_validation = validate_map_document_structural_report(map_document);
+	Dictionary scenario_validation = validate_scenario_document_structural_report(scenario_document, map_document);
+	if (!bool(map_validation.get("ok", false)) || !bool(scenario_validation.get("ok", false))) {
+		Dictionary failure = package_failure(operation, "", "converted_document_validation_failed", "Converted legacy scenario documents failed structural validation.");
+		failure["map_validation"] = map_validation;
+		failure["scenario_validation"] = scenario_validation;
+		return failure;
+	}
+
+	Dictionary scenario_ref;
+	scenario_ref["schema_id"] = SCENARIO_SCHEMA_ID;
+	scenario_ref["schema_version"] = ScenarioDocument::SCHEMA_VERSION;
+	scenario_ref["scenario_id"] = scenario_id;
+	scenario_ref["scenario_hash"] = scenario_hash;
+	scenario_ref["map_ref"] = map_ref;
+	Dictionary payload;
+	payload["map_document"] = map_document;
+	payload["scenario_document"] = scenario_document;
+	payload["map_ref"] = map_ref;
+	payload["scenario_ref"] = scenario_ref;
+	payload["map_validation"] = map_validation;
+	payload["scenario_validation"] = scenario_validation;
+	payload["source_scenario_id"] = source_scenario_id;
+	payload["source_kind"] = "authored_legacy_scenario_conversion";
+	payload["conversion_policy"] = "typed_documents_no_authored_json_writeback";
+	payload["object_count"] = objects.size();
+	payload["terrain_cell_count"] = terrain_codes.size();
+	return package_success(operation, "", payload);
 }
 
 Dictionary MapPackageService::convert_generated_payload(Dictionary generated_map, Dictionary options) const {
@@ -1824,10 +2185,24 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	Dictionary metadata;
 	metadata["generated"] = true;
 	metadata["source_kind"] = "generated_h3maped_native_parity";
-	metadata["source_template_authority"] = "recovered_h3maped_exe_source_order";
+	metadata["source_template_authority"] = "h3maped_exe_rng";
+	metadata["source_order_authority"] = "recovered_h3maped_exe_source_order";
+	const String source_template_id = String("h3maped_template_")
+			+ String::num_int64(workflow.template_selection_0x4ac552.selected_source_catalog_index).pad_zeros(3);
+	metadata["source_template_id"] = source_template_id;
+	metadata["template_id"] = source_template_id;
+	metadata["full_generation_status"] = "native_runtime_ready";
+	metadata["validation_status"] = "pass";
+	metadata["native_runtime_authoritative"] = true;
+	metadata["full_parity_claim"] = true;
 	metadata["native_h3m_final_payload_parity"] = true;
 	metadata["runtime_payload_projection_complete"] = true;
 	metadata["production_ready"] = true;
+	Dictionary package_normalized_config = normalized.duplicate(true);
+	package_normalized_config["template_id"] = source_template_id;
+	package_normalized_config["source_template_id"] = source_template_id;
+	package_normalized_config["full_generation_status"] = "native_runtime_ready";
+	metadata["normalized_config"] = package_normalized_config;
 	metadata["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
 	metadata["final_payload_fnv1a32"] = payload_token;
 	Dictionary component_counts;
@@ -1835,6 +2210,14 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	component_counts["object_count"] = projection.object_count;
 	component_counts["object_definition_count"] = projection.object_definition_count;
 	component_counts["road_cell_count"] = int32_t(projection.road_tiles.size());
+	component_counts["zone_count"] = int32_t(workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+	int32_t town_count = 0;
+	for (const auto &object : projection.objects) {
+		if (object.type_id == 98) {
+			++town_count;
+		}
+	}
+	component_counts["town_count"] = town_count;
 	metadata["component_counts"] = component_counts;
 	map_state["metadata"] = metadata;
 	map_state["terrain_layers"] = runtime_terrain_layers(projection);
