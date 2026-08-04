@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed and validated Sunvault relay activation and tier-gated Prism tempo. The full matrix improves to 29 outliers / 186.5 severity with weeks two through four unchanged; overall game completion remains open.",
+  "currentNotes": "Completed survivor-only battle recovery valuation across live tactical AI, recovery resolution, player summaries, and the fast benchmark. The full matrix retains zero structural failures but exposes explicit remaining faction-balance tuning debt.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-relay-activation-10184",
-  "currentSliceId": "combat-sunvault-relay-activation-10184",
-  "currentSliceNotes": "Prism Adepts now start at initiative six and regain the linked point only through a living Resonant Chorister; that relay also gates line-wide multi-calibration pressure while personal buff payoffs remain intact.",
+  "currentSlice": "battle-ai-survivor-recovery-valuation-10184",
+  "currentSliceId": "battle-ai-survivor-recovery-valuation-10184",
+  "currentSliceNotes": "Tactical AI, live recovery, player consequence text, and the fast benchmark now share the survivor-only healing cap; casualty-only recovery is filtered and injured survivors remain valid targets.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Relay Activation",
-  "currentSliceUpdatedAt": "2026-08-04T18:27:04Z",
+  "currentSliceTitle": "Survivor-Only Battle Recovery Valuation",
+  "currentSliceUpdatedAt": "2026-08-04T19:13:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70013,6 +70013,79 @@
       },
       "notes": "Rejected a Prism growth reduction because it worsened Brasshollow-Sunvault to 72 percent, and rejected a permanent initiative-six candidate because the full matrix regressed to 210.0 severity / 70.0 percent maximum dominance / 3.33-point side bias. The accepted living-relay link preserves every week-two through week-four pair summary while retaining the week-one correction.",
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 29 outliers / 186.5 severity, and overall game completion remains open."
+    },
+    {
+      "id": "battle-ai-survivor-recovery-valuation-10184",
+      "title": "Survivor-Only Battle Recovery Valuation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md"
+      ],
+      "purpose": "Stop tactical AI and balance simulation from treating fallen-creature health as recoverable when live BattleRules can heal only injured survivors.",
+      "implementationTargets": [
+        "scripts/core/SpellRules.gd",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/magic_ai_valuation_casting_hooks_report.gd",
+        "tests/magic_battle_spell_behavior_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "live_recovery_survivor_capped": true,
+        "battle_ai_counts_fallen_health_as_missing": true,
+        "fast_benchmark_resurrects_fallen_creatures": true,
+        "balance_outlier_count": 29,
+        "balance_severity": 186.5,
+        "max_dominance_pct": 69.5,
+        "max_side_bias_pct": 2.8,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Casualty-only stacks expose zero recoverable health and are not recovery-spell candidates",
+        "Stacks with an injured surviving creature remain legal recovery targets and restore only to the current survivor cap",
+        "BattleRules, BattleAiRules, player-facing spell summaries, and the fast benchmark consume the same survivor-only recovery contract",
+        "The full all-live matrix has zero structural failures and any balance movement is recorded without a balance-completion claim"
+      ],
+      "nonGoals": [
+        "spell cost or restore-amount tuning, unit-stat or growth changes, faction ability changes, benchmark threshold changes, save changes, strategic AI, campaigns, or Native RMG",
+        "casualty resurrection, final spell balance, final faction balance, or overall release completion claims"
+      ],
+      "startedAt": "2026-08-04T18:53:30Z",
+      "updatedAt": "2026-08-04T19:13:08Z",
+      "completedAt": "2026-08-04T19:13:08Z",
+      "result": {
+        "live_recovery_survivor_capped": true,
+        "battle_ai_counts_fallen_health_as_missing": false,
+        "fast_benchmark_resurrects_fallen_creatures": false,
+        "casualty_only_recovery_candidate_count": 0,
+        "injured_survivor_recoverable_health": 9,
+        "balance_outlier_count": 30,
+        "balance_severity": 193.0,
+        "rows_at_or_above_65_pct": 8,
+        "max_dominance_pct": 70.5,
+        "max_side_bias_pct": 2.53,
+        "structural_failure_count": 0,
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "magic_battle_spell_behavior_report passed",
+        "magic_ai_valuation_casting_hooks_report passed",
+        "battle_autoplay_combat_balance_report passed",
+        "balance_regression_report_suite passed with the existing Native RMG save/replay deferral warning",
+        "core_systems_regression_smoke passed",
+        "Godot editor import passed",
+        "validate_repo.py passed",
+        "Python compile, JSON parse, and git diff checks passed",
+        "all-live 100-seed four-week balance matrix passed its structural gate"
+      ],
+      "notes": "The accepted correctness fix raises the tuning matrix from 29 to 30 outliers and from 186.5 to 193.0 severity because the prior fast benchmark illegally resurrected casualties and live tactical AI spent mana on impossible healing. This regression is recorded rather than hidden with compensating stat or threshold tuning.",
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 30 outliers / 193.0 severity, and overall game completion remains open."
     }
   ],
   "project": "heroes-like",
@@ -70555,9 +70628,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Sunvault's live relay ladder now gates line-wide calibration pressure and linked Prism tempo through a living Resonant Chorister while preserving personal spell-calibration payoff. The all-live 100-seed four-week faction matrix improves from 31 outliers / 203.0 severity / 8 rows at or above 65 percent to 29 / 186.5 / 7, with 69.5 percent maximum dominance, 2.80-point maximum side bias, and zero structural failures. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Battle recovery now uses one survivor-only contract across live resolution, tactical AI, player summaries, and the fast benchmark; the accepted matrix has zero structural failures but remains needs_tuning at 30 outliers / 193.0 severity / 70.5 percent maximum dominance. Strategic AI, accessibility, content, performance, remaining faction balance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T18:27:04Z",
+  "updatedAt": "2026-08-04T19:13:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

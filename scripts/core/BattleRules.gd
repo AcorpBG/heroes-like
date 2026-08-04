@@ -8564,9 +8564,7 @@ static func _restore_stack_health(battle: Dictionary, battle_id: String, amount:
 		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
 			continue
 		var current_health: int = max(0, int(stack.get("total_health", 0)))
-		var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
-		var current_alive: int = max(1, _alive_count(stack))
-		var max_recoverable_health: int = max(current_health, current_alive * unit_hp)
+		var max_recoverable_health: int = current_health + SpellRulesScript.battle_spell_recoverable_health(stack)
 		var updated_health: int = min(max_recoverable_health, current_health + max(0, amount))
 		restored = max(0, updated_health - current_health)
 		stack["total_health"] = updated_health

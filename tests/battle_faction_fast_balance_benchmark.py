@@ -908,6 +908,8 @@ class FastBattleBenchmark:
                 for target in allies:
                     if effect_type in ["defense_buff", "initiative_buff", "attack_buff"] and self._spell_buff_already_active(target, battle, spell):
                         continue
+                    if effect_type == "recover_ally" and self._stack_recoverable_health(target) <= 0:
+                        continue
                     if effect_type == "cleanse_ally" and not self._cleanse_spell_has_value(target, battle, spell):
                         continue
                     score = self._spell_score(hero, battle, active, target, spell)
@@ -1009,7 +1011,7 @@ class FastBattleBenchmark:
                     score += 0.6
             return score - (mana_cost * 0.2)
         if effect_type == "recover_ally":
-            missing = max(0, int(target.get("base_count", 0)) * int(target.get("unit_hp", 1)) - int(target.get("total_health", 0)))
+            missing = self._stack_recoverable_health(target)
             return (float(missing) / float(max(1, target.get("unit_hp", 1)))) + 2.5 + self._spell_ally_target_value(target) - (mana_cost * 0.2)
         if effect_type == "cleanse_ally":
             return (4.0 if target.get("effects") else 0.0) + self._spell_ally_target_value(target) - (mana_cost * 0.2)
@@ -1130,7 +1132,7 @@ class FastBattleBenchmark:
             consequence_counts["buff_applied"] += 1
         elif effect_type == "recover_ally":
             restore = int(effect.get("base_restore", 0)) + int(hero.get("power", 0)) * int(effect.get("power_scale", 0))
-            max_health = int(target.get("base_count", 0)) * int(target.get("unit_hp", 1))
+            max_health = int(target.get("total_health", 0)) + self._stack_recoverable_health(target)
             target["total_health"] = min(max_health, int(target.get("total_health", 0)) + max(0, restore))
             self._apply_effect(target, effect, battle, "spell", str(spell["id"]))
             consequence_counts["recovery"] += 1
@@ -2034,6 +2036,14 @@ class FastBattleBenchmark:
     def _health_ratio(self, stack: dict[str, Any]) -> float:
         maximum = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
         return clamp(float(max(0, int(stack.get("total_health", 0)))) / float(maximum), 0.0, 1.0)
+
+    def _stack_recoverable_health(self, stack: dict[str, Any]) -> int:
+        current_health = max(0, int(stack.get("total_health", 0)))
+        if current_health <= 0:
+            return 0
+        unit_hp = max(1, int(stack.get("unit_hp", 1)))
+        living_creatures = int(math.ceil(float(current_health) / float(unit_hp)))
+        return max(0, (living_creatures * unit_hp) - current_health)
 
     def _stack_cohesion_total(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         total = int(stack.get("cohesion", stack.get("cohesion_base", 5))) + self._effect_bonus(stack, battle, "cohesion")

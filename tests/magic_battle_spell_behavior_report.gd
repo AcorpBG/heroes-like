@@ -86,9 +86,17 @@ func _run() -> void:
 	if not bool(recover.get("ok", false)) or String(recover.get("resolution_type", "")) != "recover_effect":
 		_fail("Graft Mend did not resolve as a recovery effect: %s" % recover)
 		return
+	var recoverable_before := SpellRules.battle_spell_recoverable_health(_stack_by_id(battle, "player_line"))
+	if recoverable_before != 2:
+		_fail("Graft Mend survivor cap should expose two recoverable health, got %d." % recoverable_before)
+		return
 	var restored := BattleRules._restore_stack_health(battle, "player_line", int(recover.get("recovery_amount", 0)))
-	if restored <= 0:
-		_fail("Graft Mend recovery hook did not restore stack health.")
+	if restored != 2 or int(_stack_by_id(battle, "player_line").get("total_health", 0)) != 40:
+		_fail("Graft Mend recovery crossed the four-survivor health cap: restored=%d stack=%s" % [restored, _stack_by_id(battle, "player_line")])
+		return
+	var casualty_only_restore := BattleRules._restore_stack_health(battle, "player_line", int(recover.get("recovery_amount", 0)))
+	if casualty_only_restore != 0 or SpellRules.battle_spell_recoverable_health(_stack_by_id(battle, "player_line")) != 0:
+		_fail("Graft Mend restored a fallen creature after surviving bodies were full: restored=%d stack=%s" % [casualty_only_restore, _stack_by_id(battle, "player_line")])
 		return
 	if recover.get("effect", {}) is Dictionary and not recover.get("effect", {}).is_empty():
 		BattleRules._apply_stack_effect(battle, "player_line", recover.get("effect", {}))
@@ -132,7 +140,10 @@ func _run() -> void:
 			},
 			"recovery": {
 				"spell_id": "spell_graft_mend",
+				"recoverable_health_before": recoverable_before,
 				"restored_health": restored,
+				"casualty_only_restore": casualty_only_restore,
+				"survivor_health_cap": int(_stack_by_id(battle, "player_line").get("total_health", 0)),
 			},
 			"countermagic": {
 				"spell_id": "spell_prism_bastion",
@@ -191,6 +202,10 @@ func _assert_public_spell_actions(actions: Array) -> bool:
 			continue
 		surface_text += JSON.stringify(action).to_lower()
 		required_ids.erase(String(action.get("id", "")))
+		var action_recovery_text := "%s %s" % [String(action.get("summary", "")), String(action.get("effect", ""))]
+		if String(action.get("id", "")) == "cast_spell:spell_graft_mend" and not action_recovery_text.to_lower().contains("fallen creatures are not restored"):
+			_fail("Graft Mend action did not disclose its survivor-only recovery cap: %s" % action)
+			return false
 	if not required_ids.is_empty():
 		_fail("Missing spell action ids: %s" % required_ids)
 		return false
