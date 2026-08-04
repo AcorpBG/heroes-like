@@ -1,6 +1,8 @@
 extends Node
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const NativeRandomMapPackageSessionBridgeScript = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
+const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
 
 func _ready() -> void:
@@ -22,6 +24,34 @@ func _run() -> void:
 	)
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
+		return
+	var ordinal_95 := _generate_and_validate(
+		service,
+		_config("medium", 72, 1, "land", "165429308", "weak", 4),
+		76831,
+		1283
+	)
+	if not bool(ordinal_95.get("ok", false)):
+		_fail("Medium ordinal 95 exact-mask start boundary failed: %s" % JSON.stringify(ordinal_95))
+		return
+	var ordinal_95_generated: Dictionary = ordinal_95.get("generated", {})
+	var ordinal_95_scenario: Variant = ordinal_95_generated.get("scenario_document", null)
+	var ordinal_95_contract: Dictionary = ordinal_95_scenario.get_start_contract() if ordinal_95_scenario != null else {}
+	var ordinal_95_player_start := _player_owned_start(ordinal_95_contract)
+	var ordinal_95_runtime_start: Dictionary = ordinal_95_player_start.get("runtime_start_tile", {}) if ordinal_95_player_start.get("runtime_start_tile", {}) is Dictionary else {}
+	var ordinal_95_adoption: Dictionary = service.convert_generated_payload(ordinal_95_generated, {"feature_gate": REPORT_ID})
+	var ordinal_95_session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(ordinal_95_adoption)
+	var ordinal_95_hero_position: Dictionary = ordinal_95_session.overworld.get("hero_position", {}) if ordinal_95_session != null and ordinal_95_session.overworld.get("hero_position", {}) is Dictionary else {}
+	var ordinal_95_player_move := _execute_legal_player_step(ordinal_95_session)
+	if String(ordinal_95_generated.get("final_payload_fnv1a32", "")) != "1744e025" \
+			or int(ordinal_95_player_start.get("x", -1)) != 31 \
+			or int(ordinal_95_player_start.get("y", -1)) != 10 \
+			or ordinal_95_runtime_start.is_empty() \
+			or (int(ordinal_95_runtime_start.get("x", -1)) == 31 and int(ordinal_95_runtime_start.get("y", -1)) == 10) \
+			or int(ordinal_95_runtime_start.get("selection_package_road_reachable_steps", -1)) <= 0 \
+			or ordinal_95_hero_position != {"x": int(ordinal_95_runtime_start.get("x", -1)), "y": int(ordinal_95_runtime_start.get("y", -1))} \
+			or not bool(ordinal_95_player_move.get("ok", false)):
+		_fail("Medium ordinal 95 did not preserve its payload/town anchor while moving the runtime start: %s" % JSON.stringify(ordinal_95_player_start))
 		return
 	var xlarge := _generate_and_validate(
 		service,
@@ -46,6 +76,11 @@ func _run() -> void:
 		"ok": true,
 		"workflow_shape_count": 24,
 		"medium": medium.get("summary", {}),
+		"medium_ordinal_95": ordinal_95.get("summary", {}),
+		"medium_ordinal_95_town_anchor": {"x": 31, "y": 10},
+		"medium_ordinal_95_runtime_start": ordinal_95_runtime_start,
+		"medium_ordinal_95_hero_position": ordinal_95_hero_position,
+		"medium_ordinal_95_player_move": ordinal_95_player_move,
 		"xlarge": xlarge.get("summary", {}),
 		"round_trip": round_trip,
 		"startup": startup,
@@ -95,7 +130,9 @@ func _generate_and_validate(
 	) if map_document != null and scenario_document != null else {"ok": false}
 	var start_contract: Dictionary = scenario_document.get_start_contract() if scenario_document != null else {}
 	var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
-	var start_bindings_ok := starts.size() == 2
+	var expected_player_count := int(config.get("player_constraints", {}).get("player_count", 0))
+	var start_bindings_ok := starts.size() == expected_player_count
+	var start_binding_details := []
 	for start_value in starts:
 		if not (start_value is Dictionary):
 			start_bindings_ok = false
@@ -103,9 +140,26 @@ func _generate_and_validate(
 		var start: Dictionary = start_value
 		var placement_id := String(start.get("town_placement_id", ""))
 		var town: Dictionary = map_document.get_object_by_placement_id(placement_id) if map_document != null else {}
+		var hero_start: Dictionary = start.get("hero_start_tile", {}) if start.get("hero_start_tile", {}) is Dictionary else {}
+		var runtime_start: Dictionary = start.get("runtime_start_tile", {}) if start.get("runtime_start_tile", {}) is Dictionary else {}
+		var runtime_start_usable := _runtime_start_tile_is_usable(map_document, runtime_start)
+		start_binding_details.append({
+			"player_slot": start.get("player_slot", 0),
+			"town_placement_id": placement_id,
+			"town_kind": town.get("kind", ""),
+			"town_owner_slot": town.get("owner_slot", 0),
+			"start_owner_slot": start.get("owner_slot", -1),
+			"hero_start": hero_start,
+			"runtime_start": runtime_start,
+			"tiles_match": hero_start == runtime_start,
+			"runtime_start_usable": runtime_start_usable,
+		})
 		if placement_id == "" \
 				or String(town.get("kind", "")) != "town" \
-				or int(town.get("owner_slot", 0)) != int(start.get("owner_slot", -1)):
+				or int(town.get("owner_slot", 0)) != int(start.get("owner_slot", -1)) \
+				or hero_start.is_empty() \
+				or hero_start != runtime_start \
+				or not runtime_start_usable:
 			start_bindings_ok = false
 	var ok := bool(generated.get("ok", false)) \
 			and String(generated.get("generation_status", "")) == "native_rmg_complete" \
@@ -118,8 +172,8 @@ func _generate_and_validate(
 			and int(map_document.get_object_count()) == expected_object_count \
 			and bool(map_validation.get("ok", false)) \
 			and bool(scenario_validation.get("ok", false)) \
-			and int(start_contract.get("start_count", -1)) == 2 \
-			and int(start_contract.get("start_town_count", -1)) == 2 \
+			and int(start_contract.get("start_count", -1)) == expected_player_count \
+			and int(start_contract.get("start_town_count", -1)) == expected_player_count \
 			and start_bindings_ok
 	return {
 		"ok": ok,
@@ -129,10 +183,71 @@ func _generate_and_validate(
 			"objects": generated.get("runtime_object_count", -1),
 			"starts": start_contract.get("start_count", -1),
 			"start_bindings_ok": start_bindings_ok,
+			"start_binding_details": start_binding_details,
 		},
 		"map_validation": map_validation,
 		"scenario_validation": scenario_validation,
 	}
+
+func _runtime_start_tile_is_usable(map_document: Variant, tile: Dictionary) -> bool:
+	if map_document == null or tile.is_empty():
+		return false
+	var x := int(tile.get("x", -1))
+	var y := int(tile.get("y", -1))
+	var level := int(tile.get("level", -1))
+	if x < 0 or y < 0 or level < 0 or x >= int(map_document.get_width()) or y >= int(map_document.get_height()) or level >= int(map_document.get_level_count()):
+		return false
+	var terrain_layers: Dictionary = map_document.get_terrain_layers()
+	var terrain: Dictionary = terrain_layers.get("terrain", {}) if terrain_layers.get("terrain", {}) is Dictionary else {}
+	var levels: Array = terrain.get("levels", []) if terrain.get("levels", []) is Array else []
+	if level >= levels.size() or not (levels[level] is PackedInt32Array):
+		return false
+	var terrain_values: PackedInt32Array = levels[level]
+	var terrain_code := int(terrain_values[y * int(map_document.get_width()) + x]) & 0x3f
+	if terrain_code == 8 or terrain_code == 9:
+		return false
+	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
+	for road_value in roads:
+		if not (road_value is Dictionary):
+			continue
+		var road_tiles: Array = road_value.get("tiles", []) if road_value.get("tiles", []) is Array else []
+		for road_tile_value in road_tiles:
+			if road_tile_value is Dictionary and int(road_tile_value.get("x", -2)) == x and int(road_tile_value.get("y", -2)) == y and int(road_tile_value.get("level", -2)) == level:
+				return false
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		for field in ["package_block_tiles", "package_visit_tiles"]:
+			var cells: Array = object.get(field, []) if object.get(field, []) is Array else []
+			for cell_value in cells:
+				if cell_value is Dictionary and int(cell_value.get("x", -2)) == x and int(cell_value.get("y", -2)) == y and int(cell_value.get("level", -2)) == level:
+					return false
+	return String(tile.get("selection_source", "")) != ""
+
+func _player_owned_start(start_contract: Dictionary) -> Dictionary:
+	var starts: Array = start_contract.get("player_starts", []) if start_contract.get("player_starts", []) is Array else []
+	for start_value in starts:
+		if start_value is Dictionary and String(start_value.get("owner", "")) == "player":
+			return start_value
+	return {}
+
+func _execute_legal_player_step(session: Variant) -> Dictionary:
+	if session == null:
+		return {"ok": false, "reason": "missing_session"}
+	var start := OverworldRulesScript.hero_position(session)
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var target := start + Vector2i(dx, dy)
+			if OverworldRulesScript.tile_is_blocked(session, target.x, target.y) \
+					or OverworldRulesScript.tile_has_route_interaction(session, target.x, target.y) \
+					or OverworldRulesScript.tile_step_cuts_blocked_corner(session, start, target):
+				continue
+			var move: Dictionary = OverworldRulesScript.try_move(session, dx, dy)
+			var finish := OverworldRulesScript.hero_position(session)
+			if bool(move.get("ok", false)) and finish != start:
+				return {"ok": true, "from": {"x": start.x, "y": start.y}, "to": {"x": finish.x, "y": finish.y}, "result": move}
+	return {"ok": false, "reason": "no_executable_neighbor", "from": {"x": start.x, "y": start.y}}
 
 func _validate_round_trip(service: Variant, generated: Dictionary) -> Dictionary:
 	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
@@ -207,7 +322,8 @@ func _config(
 	level_count: int,
 	water_mode: String,
 	seed: String,
-	monster_strength: String = "weak"
+	monster_strength: String = "weak",
+	player_count: int = 2
 ) -> Dictionary:
 	return {
 		"seed": seed,
@@ -221,8 +337,8 @@ func _config(
 		"monster_strength": monster_strength,
 		"player_constraints": {
 			"human_count": 1,
-			"computer_count": 1,
-			"player_count": 2,
+			"computer_count": player_count - 1,
+			"player_count": player_count,
 			"human_team_count": 1,
 			"computer_team_count": 0,
 		},
