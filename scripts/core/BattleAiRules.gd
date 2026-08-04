@@ -1165,6 +1165,9 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 			score += 0.25
 	if _has_ability(attacker, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
+	var fogwake := _ability_by_id(attacker, "fogwake")
+	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, target):
+		score += float(fogwake.get("ai_target_priority_bonus", 0.0))
 	if is_ranged and _side_defending_count(battle, side) > 0 and _side_has_ability(battle, side, "formation_guard"):
 		score += 1.5
 	if _has_ability(attacker, "formation_guard") and SpellRulesScript.has_effect_id(target, battle, STATUS_STAGGERED):
@@ -2345,6 +2348,9 @@ static func _ability_damage_modifier(
 		modifier *= float(backstab.get("damage_multiplier", 1.0))
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+	var fogwake := _ability_by_id(attacker, "fogwake")
+	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
+		modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
 
 	var volley := _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
@@ -2704,6 +2710,21 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	if bool(stack.get("ranged", false)):
 		return _allied_melee_count(battle, side) <= 0
 	return false
+
+static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> bool:
+	if stack.is_empty():
+		return false
+	var stack_hex := _stack_hex(stack)
+	if stack_hex.is_empty():
+		return _stack_is_isolated(battle, stack)
+	var battle_id := String(stack.get("battle_id", ""))
+	for ally in _alive_stacks_for_side(battle, String(stack.get("side", ""))):
+		if String(ally.get("battle_id", "")) == battle_id:
+			continue
+		var ally_hex := _stack_hex(ally)
+		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
+			return false
+	return true
 
 static func _side_has_role_mix(battle: Dictionary, side: String) -> bool:
 	var ranged_alive := false

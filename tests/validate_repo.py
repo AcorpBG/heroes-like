@@ -320,7 +320,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "bloodrush", "obituary", "overheat", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -356,7 +356,7 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
 }
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
 SUPPORTED_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"}
-SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted", "status_overheated"}
+SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted", "status_overheated", "status_fogbound"}
 REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil"}
 SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
 SUPPORTED_SPELL_PRIMARY_ROLES = {
@@ -10624,6 +10624,18 @@ def validate_content(errors: list[str]) -> None:
                         ensure(0.0 < float(ability.get("health_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} backstab health_threshold_ratio must be between 0 and 1")
                     if "threshold_damage_multiplier" in ability:
                         ensure(float(ability.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} backstab threshold_damage_multiplier must be > 1")
+                elif ability_id == "fogwake":
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} fogwake must belong to a melee unit")
+                    ensure(float(ability.get("isolated_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} fogwake isolated_damage_multiplier must be > 1")
+                    ensure(str(ability.get("status_id", "")) == "status_fogbound", errors, f"Unit {unit_id} fogwake must apply status_fogbound")
+                    ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} fogwake must last one round")
+                    ensure(0.0 < float(ability.get("ai_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} fogwake ai_target_priority_bonus must be in (0, 4]")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} fogwake modifiers must be an object")
+                    if isinstance(modifiers, dict):
+                        ensure(int(modifiers.get("defense", 0)) < 0, errors, f"Unit {unit_id} fogwake must reduce defense")
+                        ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} fogwake must reduce initiative")
+                        ensure(int(modifiers.get("cohesion", 0)) < 0, errors, f"Unit {unit_id} fogwake must reduce cohesion")
                 elif ability_id == "shielding":
                     multiplier = float(ability.get("ranged_damage_multiplier", 0.0))
                     ensure(0.0 < multiplier <= 1.0, errors, f"Unit {unit_id} shielding must define ranged_damage_multiplier between 0 and 1")
@@ -18767,6 +18779,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _runtime_consequence_for_ability",
         "func _probe_harry",
         "func _probe_obituary",
+        "func _probe_fogwake",
         "func _probe_bloodrush",
         "func _probe_overheat",
         "func _probe_foundry_aura",

@@ -3955,6 +3955,8 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 			return "Bloodrush needs a wounded or disrupted breach; a clean primary attack loses force."
 	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		return "Shielding bites harder into a harried target once the line closes."
+	if not target.is_empty() and _has_ability(stack, "fogwake") and _stack_is_hex_isolated(battle, target):
+		return "Leviathan Fogwake is live because the target has no adjacent allied stack."
 	var ability_summary = _stack_ability_summary(stack)
 	return "Abilities in hand: %s." % ability_summary if ability_summary != "" else ""
 
@@ -4033,6 +4035,13 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			return "%s punishes marked or wounded targets%s" % [
 				name,
 				" now" if target_is_marked or (not target.is_empty() and _health_ratio(target) <= float(ability.get("health_threshold_ratio", 0.0))) else "",
+			]
+		"fogwake":
+			return "%s strikes harder and applies %s%s when the target has no adjacent allied stack%s" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+				" now" if not target.is_empty() and _stack_is_hex_isolated(battle, target) else "",
 			]
 		"bloodrush":
 			var clean_penalty_pct := int(round((1.0 - float(ability.get("clean_target_damage_multiplier", 1.0))) * 100.0))
@@ -8896,6 +8905,17 @@ static func _apply_attack_ability_effects(
 			String(obituary.get("status_label", "Obituary-Marked")).to_lower(),
 			retaliation_clause,
 		])
+	var fogwake = _ability_by_id(attacker, "fogwake")
+	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
+		_apply_stack_effect(
+			battle,
+			String(defender.get("battle_id", "")),
+			_status_effect_from_ability(fogwake, battle)
+		)
+		messages.append("%s is %s with no adjacent allied stack." % [
+			_stack_label(defender),
+			String(fogwake.get("status_label", "Fogbound")).to_lower(),
+		])
 	return messages
 
 static func _apply_retaliation_ability_effects(
@@ -8978,6 +8998,9 @@ static func _ability_damage_modifier(
 		modifier *= float(backstab.get("damage_multiplier", 1.0))
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+	var fogwake = _ability_by_id(attacker, "fogwake")
+	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
+		modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
 
 	var volley = _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
@@ -9374,6 +9397,18 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_ids": _normalize_string_array(entry.get("status_ids", [STATUS_HARRIED, STATUS_STAGGERED])),
 					"health_threshold_ratio": clampf(float(entry.get("health_threshold_ratio", 0.0)), 0.0, 1.0),
 					"threshold_damage_multiplier": clampf(float(entry.get("threshold_damage_multiplier", 1.0)), 1.0, 2.0),
+				}
+			"fogwake":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Fogwake")),
+					"description": String(entry.get("description", "")),
+					"isolated_damage_multiplier": clampf(float(entry.get("isolated_damage_multiplier", 1.0)), 1.0, 2.0),
+					"status_id": String(entry.get("status_id", "status_fogbound")),
+					"status_label": String(entry.get("status_label", "Fogbound")),
+					"duration_rounds": maxi(1, int(entry.get("duration_rounds", 1))),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -1, "initiative": -1, "cohesion": -1})),
+					"ai_target_priority_bonus": clampf(float(entry.get("ai_target_priority_bonus", 0.0)), 0.0, 4.0),
 				}
 			"shielding":
 				normalized = {
@@ -10948,6 +10983,21 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	if bool(stack.get("ranged", false)):
 		return _allied_melee_count(battle, side) <= 0
 	return false
+
+static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> bool:
+	if stack.is_empty():
+		return false
+	var stack_hex := _stack_hex(stack)
+	if stack_hex.is_empty():
+		return _stack_is_isolated(battle, stack)
+	var battle_id := String(stack.get("battle_id", ""))
+	for ally in _alive_stacks_for_side(battle, String(stack.get("side", ""))):
+		if String(ally.get("battle_id", "")) == battle_id:
+			continue
+		var ally_hex := _stack_hex(ally)
+		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
+			return false
+	return true
 
 static func _side_defending_count(battle: Dictionary, side: String) -> int:
 	var total = 0

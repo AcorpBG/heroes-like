@@ -1395,6 +1395,9 @@ class FastBattleBenchmark:
                 score += 0.25
         if self._has_ability(attacker, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
+        fogwake = self._ability_by_id(attacker, "fogwake")
+        if fogwake and not is_ranged and self._stack_is_isolated(battle, target):
+            score += float(fogwake.get("ai_target_priority_bonus", 0.0))
         if is_ranged and self._side_defending_count(battle, side) > 0 and self._side_has_ability(battle, side, "formation_guard"):
             score += 1.5
         if self._has_ability(attacker, "formation_guard") and self._has_effect_id(target, battle, STATUS_STAGGERED):
@@ -1511,6 +1514,9 @@ class FastBattleBenchmark:
             modifier *= float(backstab.get("damage_multiplier", 1.0))
         if backstab and self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
             modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+        fogwake = self._ability_by_id(attacker, "fogwake")
+        if fogwake and not is_ranged and not is_retaliation and self._stack_is_isolated(battle, defender):
+            modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
         volley = self._ability_by_id(attacker, "volley")
         if is_ranged and volley and attack_distance >= int(volley.get("min_distance", 1)):
             modifier *= float(volley.get("damage_multiplier", 1.0))
@@ -1747,6 +1753,15 @@ class FastBattleBenchmark:
                 "modifiers": modifiers,
             }, battle, "ability", "obituary")
             ability_uses["obituary"] = int(ability_uses.get("obituary", 0)) + 1
+            counts["status_applied"] += 1
+        fogwake = self._ability_by_id(attacker, "fogwake")
+        if fogwake and not is_ranged and self._stack_is_isolated(battle, defender):
+            self._apply_effect(defender, {
+                "effect_id": str(fogwake.get("status_id", "status_fogbound")),
+                "label": str(fogwake.get("status_label", "Fogbound")),
+                "duration_rounds": int(fogwake.get("duration_rounds", 1)),
+                "modifiers": fogwake.get("modifiers", {}),
+            }, battle, "ability", "fogwake")
             counts["status_applied"] += 1
 
     def _apply_retaliation_ability_effects(self, battle: dict[str, Any], retaliator: dict[str, Any], attacker: dict[str, Any], counts: Counter[str]) -> None:
