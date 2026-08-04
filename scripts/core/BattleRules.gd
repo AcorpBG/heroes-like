@@ -3903,7 +3903,17 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 			return "Final Notice will sharply drain this veteran braced line and weaken its retaliation for this round."
 		return "Final Notice will drain the target's cohesion and weaken its retaliation for this round."
 	if _has_ability(stack, "harry") and bool(stack.get("ranged", false)):
-		return "Harry will mark the target and soften its defense tempo for later breaks."
+		var harry := _ability_by_id(stack, "harry")
+		var uses_per_battle := int(harry.get("uses_per_battle", 0))
+		var ability_uses = stack.get("ability_uses", {})
+		if uses_per_battle > 0 and ability_uses is Dictionary and int(ability_uses.get("harry", 0)) >= uses_per_battle:
+			return "%s has already been placed this battle." % String(harry.get("name", "Harry"))
+		var modifier_text := _ability_modifier_text(harry)
+		var pressure_summary := " (%s)" % modifier_text if modifier_text != "" else ""
+		var target_min_tier := int(harry.get("target_min_tier", 1))
+		if target_min_tier > 1 and (target.is_empty() or int(target.get("tier", 1)) < target_min_tier):
+			return "%s is waiting for a tier-%d veteran line." % [String(harry.get("name", "Harry")), target_min_tier]
+		return "%s will mark the target%s for later breaks." % [String(harry.get("name", "Harry")), pressure_summary]
 	if _has_ability(stack, "brace") and int(stack.get("retaliations_left", 0)) > 0:
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
@@ -3956,10 +3966,12 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				return "%s keeps melee live from the half-open lane" % name
 			return "%s extends melee threat before full contact" % name
 		"harry":
-			return "%s applies %s%s for follow-up pressure" % [
+			return "%s applies %s%s%s%s for follow-up pressure" % [
 				name,
 				status_label,
 				" (%s)" % modifier_text if modifier_text != "" else "",
+				" once per battle" if int(ability.get("uses_per_battle", 0)) == 1 else "",
+				" against tier-%d veteran lines" % int(ability.get("target_min_tier", 1)) if int(ability.get("target_min_tier", 1)) > 1 else "",
 			]
 		"obituary":
 			return "%s applies %s%s once per battle to drain cohesion and weaken retaliation, with stronger pressure against veteran braced lines" % [
@@ -8766,8 +8778,14 @@ static func _apply_attack_ability_effects(
 	if not is_ranged and attack_distance > 1:
 		return messages
 
+	var ability_uses = attacker.get("ability_uses", {})
+	if not (ability_uses is Dictionary):
+		ability_uses = {}
 	var harry = _ability_by_id(attacker, "harry")
-	if not harry.is_empty():
+	var harry_limit := int(harry.get("uses_per_battle", 0))
+	var harry_target_ready := int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
+	var harry_available := harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+	if not harry.is_empty() and harry_available:
 		_apply_stack_effect(
 			battle,
 			String(defender.get("battle_id", "")),
@@ -8777,10 +8795,10 @@ static func _apply_attack_ability_effects(
 			_stack_label(defender),
 			String(harry.get("status_label", "Harried")).to_lower(),
 		])
+		if harry_limit > 0:
+			ability_uses["harry"] = int(ability_uses.get("harry", 0)) + 1
+			attacker["ability_uses"] = ability_uses
 	var obituary = _ability_by_id(attacker, "obituary")
-	var ability_uses = attacker.get("ability_uses", {})
-	if not (ability_uses is Dictionary):
-		ability_uses = {}
 	var obituary_available := int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if is_ranged and not obituary.is_empty() and obituary_available:
 		var obituary_effect := _status_effect_from_ability(obituary, battle)
@@ -9190,6 +9208,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_id": String(entry.get("status_id", STATUS_HARRIED)),
 					"status_label": String(entry.get("status_label", "Harried")),
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 2))),
+					"uses_per_battle": max(0, int(entry.get("uses_per_battle", 0))),
+					"target_min_tier": maxi(1, int(entry.get("target_min_tier", 1))),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -1, "initiative": -1})),
 					"momentum_gain": max(0, int(entry.get("momentum_gain", 0))),
 					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.0)), 0.0, 1.0),

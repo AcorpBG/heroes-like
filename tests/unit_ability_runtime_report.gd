@@ -168,9 +168,39 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	var status_id := String(harry.get("status_id", "")).strip_edges()
 	if status_id == "":
 		return {"ok": false, "probe": "harry_status_application", "reason": "harry ability has no status_id"}
+	var target_min_tier := int(harry.get("target_min_tier", 1))
+	var tier_gate_ok := true
+	var ai_tier_gate_ok := true
+	if target_min_tier > 1:
+		var low_tier_attacker := _stack_for_unit(unit_id, "player", 0)
+		var low_tier_defender := _defender_stack()
+		low_tier_defender["tier"] = target_min_tier - 1
+		_set_hex(low_tier_attacker, 4, 3)
+		_set_hex(low_tier_defender, 5, 3)
+		var low_tier_battle := _battle_for_stacks([low_tier_attacker, low_tier_defender])
+		var eligible_score_target := low_tier_defender.duplicate(true)
+		eligible_score_target["tier"] = target_min_tier
+		var low_tier_score := BattleAiRulesScript._attack_score(low_tier_attacker, low_tier_defender, low_tier_battle, bool(low_tier_attacker.get("ranged", false)))
+		var eligible_tier_score := BattleAiRulesScript._attack_score(low_tier_attacker, eligible_score_target, low_tier_battle, bool(low_tier_attacker.get("ranged", false)))
+		ai_tier_gate_ok = eligible_tier_score > low_tier_score
+		var low_tier_messages := BattleRulesScript._apply_attack_ability_effects(
+			low_tier_battle,
+			low_tier_attacker,
+			low_tier_defender,
+			bool(low_tier_attacker.get("ranged", false)),
+			1 if bool(low_tier_attacker.get("ranged", false)) else 0
+		)
+		var low_tier_updated := BattleRulesScript._get_stack_by_id(low_tier_battle, String(low_tier_defender.get("battle_id", "")))
+		tier_gate_ok = (
+			not SpellRulesScript.has_effect_id(low_tier_updated, low_tier_battle, status_id)
+			and low_tier_messages.is_empty()
+			and int(low_tier_attacker.get("ability_uses", {}).get("harry", 0)) == 0
+		)
 	_set_hex(attacker, 4, 3)
 	_set_hex(defender, 5, 3)
+	defender["tier"] = maxi(int(defender.get("tier", 1)), int(harry.get("target_min_tier", 1)))
 	var battle := _battle_for_stacks([attacker, defender])
+	var preview := BattleRulesScript._active_ability_window_summary(attacker, battle, defender)
 	var messages := BattleRulesScript._apply_attack_ability_effects(
 		battle,
 		attacker,
@@ -180,6 +210,29 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	)
 	var updated_defender := BattleRulesScript._get_stack_by_id(battle, String(defender.get("battle_id", "")))
 	var status_with := SpellRulesScript.has_effect_id(updated_defender, battle, status_id)
+	var uses_per_battle := int(harry.get("uses_per_battle", 0))
+	var bounded_second_mark_blocked := true
+	var bounded_summary_ok := true
+	var spent_preview := ""
+	if uses_per_battle > 0:
+		var second_defender := _defender_stack("enemy", 1)
+		_set_hex(second_defender, 6, 3)
+		second_defender["tier"] = maxi(int(second_defender.get("tier", 1)), int(harry.get("target_min_tier", 1)))
+		battle["stacks"].append(second_defender)
+		BattleRulesScript._apply_attack_ability_effects(
+			battle,
+			attacker,
+			second_defender,
+			bool(attacker.get("ranged", false)),
+			1 if bool(attacker.get("ranged", false)) else 0
+		)
+		var second_updated := BattleRulesScript._get_stack_by_id(battle, String(second_defender.get("battle_id", "")))
+		bounded_second_mark_blocked = not SpellRulesScript.has_effect_id(second_updated, battle, status_id)
+		spent_preview = BattleRulesScript._active_ability_window_summary(attacker, battle, second_defender)
+		bounded_summary_ok = (
+			preview.contains(String(harry.get("name", "Harry")))
+			and spent_preview.contains("already been placed")
+		)
 	var stripped := _without_ability(attacker, "harry")
 	var stripped_defender := _defender_stack()
 	_set_hex(stripped, 4, 3)
@@ -194,7 +247,7 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	)
 	var stripped_updated := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_defender.get("battle_id", "")))
 	var status_without := SpellRulesScript.has_effect_id(stripped_updated, stripped_battle, status_id)
-	var ok := status_with and not status_without and not messages.is_empty()
+	var ok := status_with and not status_without and not messages.is_empty() and bounded_second_mark_blocked and bounded_summary_ok and tier_gate_ok and ai_tier_gate_ok
 	return {
 		"ok": ok,
 		"probe": "harry_status_application",
@@ -203,7 +256,16 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		"status_with": status_with,
 		"status_without": status_without,
 		"message_count": messages.size(),
-		"reason": "" if ok else "harry did not uniquely apply its status effect",
+		"uses_per_battle": uses_per_battle,
+		"target_min_tier": target_min_tier,
+		"tier_gate_ok": tier_gate_ok,
+		"ai_tier_gate_ok": ai_tier_gate_ok,
+		"uses_recorded": int(attacker.get("ability_uses", {}).get("harry", 0)),
+		"bounded_second_mark_blocked": bounded_second_mark_blocked,
+		"preview": preview,
+		"spent_preview": spent_preview,
+		"bounded_summary_ok": bounded_summary_ok,
+		"reason": "" if ok else "harry did not uniquely apply its authored bounded status effect",
 	}
 
 func _probe_obituary(unit_id: String) -> Dictionary:

@@ -1376,10 +1376,14 @@ class FastBattleBenchmark:
             score += 1.5
         if self._battle_has_tag(battle, "bog_channels") and any(self._has_ability(attacker, ability) for ability in ["harry", "backstab", "bloodrush"]):
             score += 1.5
-        if self._has_ability(attacker, "harry") and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
+        ability_uses = attacker.get("ability_uses", {})
+        harry = self._ability_by_id(attacker, "harry")
+        harry_limit = int(harry.get("uses_per_battle", 0))
+        harry_target_ready = int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
+        harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+        if harry and harry_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
             score += 2.0
         obituary = self._ability_by_id(attacker, "obituary")
-        ability_uses = attacker.get("ability_uses", {})
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):
             score += 0.25
@@ -1674,8 +1678,12 @@ class FastBattleBenchmark:
             counts["status_applied"] += 1
         if self._alive_count(defender) <= 0:
             return
+        ability_uses = attacker.setdefault("ability_uses", {})
         harry = self._ability_by_id(attacker, "harry")
-        if harry:
+        harry_limit = int(harry.get("uses_per_battle", 0))
+        harry_target_ready = int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
+        harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+        if harry and harry_available:
             self._apply_effect(defender, {
                 "effect_id": str(harry.get("status_id", "")),
                 "label": str(harry.get("status_label", "Harried")),
@@ -1683,8 +1691,9 @@ class FastBattleBenchmark:
                 "modifiers": harry.get("modifiers", {}),
             }, battle, "ability", "harry")
             counts["status_applied"] += 1
+            if harry_limit > 0:
+                ability_uses["harry"] = int(ability_uses.get("harry", 0)) + 1
         obituary = self._ability_by_id(attacker, "obituary")
-        ability_uses = attacker.setdefault("ability_uses", {})
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if is_ranged and obituary and obituary_available:
             modifiers = obituary.get("modifiers", {})

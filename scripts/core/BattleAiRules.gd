@@ -1146,9 +1146,13 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 2.0
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(attacker, "harry") or _has_ability(attacker, "backstab") or _has_ability(attacker, "bloodrush")):
 		score += 1.5
-	if _has_ability(attacker, "harry") and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
-		score += 2.0
 	var ability_uses = attacker.get("ability_uses", {})
+	var harry := _ability_by_id(attacker, "harry")
+	var harry_limit := int(harry.get("uses_per_battle", 0))
+	var harry_target_ready := int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
+	var harry_available := ability_uses is Dictionary and harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+	if not harry.is_empty() and harry_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
+		score += 2.0
 	var obituary = _ability_by_id(attacker, "obituary")
 	var obituary_available := ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if not obituary.is_empty() and obituary_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, "status_obituary_marked"):
