@@ -10628,6 +10628,9 @@ def validate_content(errors: list[str]) -> None:
                         ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} harry wounded_threshold_ratio must be between 0 and 1")
                     if "wounded_damage_multiplier" in ability:
                         ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} harry wounded_damage_multiplier must be > 1")
+                    if "shielding_damage_multiplier" in ability:
+                        ensure(1.0 < float(ability.get("shielding_damage_multiplier", 0.0)) <= 1.5, errors, f"Unit {unit_id} harry shielding_damage_multiplier must be in (1, 1.5]")
+                        ensure(0.0 < float(ability.get("shielding_ai_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} harry shielding_ai_target_priority_bonus must be in (0, 4]")
                 elif ability_id == "obituary":
                     modifiers = ability.get("modifiers", {})
                     ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} obituary must belong to a ranged unit")
@@ -10669,6 +10672,8 @@ def validate_content(errors: list[str]) -> None:
                 elif ability_id == "shielding":
                     multiplier = float(ability.get("ranged_damage_multiplier", 0.0))
                     ensure(0.0 < multiplier <= 1.0, errors, f"Unit {unit_id} shielding must define ranged_damage_multiplier between 0 and 1")
+                    if "snare_vulnerable" in ability:
+                        ensure(ability.get("snare_vulnerable") is True, errors, f"Unit {unit_id} shielding snare_vulnerable must be true when present")
                     ensure("cohesion_hold_bonus" in ability, errors, f"Unit {unit_id} shielding must define cohesion_hold_bonus")
                     ensure(int(ability.get("cohesion_hold_bonus", 0)) >= 0, errors, f"Unit {unit_id} shielding cohesion_hold_bonus must be >= 0")
                     if "engaged_damage_multiplier" in ability:

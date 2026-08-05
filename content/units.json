@@ -1634,6 +1634,7 @@
           "id": "shielding",
           "name": "Ledger Plate",
           "description": "Cheap riveted plates blunt incoming ranged fire without adding battle-line punch.",
+          "snare_vulnerable": true,
           "cohesion_hold_bonus": 0,
           "ranged_damage_multiplier": 0.95
         }
@@ -1671,6 +1672,7 @@
           "id": "shielding",
           "name": "Rivet Hide",
           "description": "Low-slung plating screens the pack from arrows but does not improve its bite.",
+          "snare_vulnerable": true,
           "cohesion_hold_bonus": 0,
           "ranged_damage_multiplier": 0.92
         }
@@ -1721,6 +1723,7 @@
           "id": "shielding",
           "name": "Furnace Screen",
           "description": "The pavis wall blunts missiles and screens itself and allied engines from frontal line breakers.",
+          "snare_vulnerable": true,
           "cohesion_hold_bonus": 0,
           "ranged_damage_multiplier": 0.99,
           "ally_ranged_melee_damage_reduction_pct": 0,
@@ -2030,6 +2033,8 @@
           "status_id": "status_harried",
           "status_label": "Harried",
           "duration_rounds": 2,
+          "shielding_damage_multiplier": 1.25,
+          "shielding_ai_target_priority_bonus": 2.0,
           "modifiers": {
             "defense": -1,
             "initiative": -1,
