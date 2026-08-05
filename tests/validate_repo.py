@@ -208,6 +208,7 @@ AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.gd"
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.tscn"
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-turn-execution-report.md"
+AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_target_selection_report.gd"
 AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.gd"
 AI_HERO_TASK_LIFECYCLE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.tscn"
 AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-lifecycle-reconciliation-report.md"
@@ -15631,6 +15632,7 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH,
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH,
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH,
+        AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI hero task live turn execution file: {path.relative_to(ROOT)}")
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
@@ -15645,6 +15647,7 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
         "func ai_hero_task_live_target_selection_plan",
         "func _ai_hero_task_live_plan_from_task",
         "func _ai_hero_task_live_target_reserved",
+        "precomputed_candidate: Dictionary = {}",
         "func _secure_resource_target",
         '"ai_site_seized"',
         '"live_target_selection"',
@@ -15669,6 +15672,15 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
             "save_version_after",
         ):
             ensure(required_token in report_text, errors, f"AI hero task live turn execution report is missing token: {required_token}")
+    if AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "precomputed_resource_target_view_semantics_match",
+            "full_breakdown_retained",
+            "live_breakdown_recomputed",
+            "semantic_fields",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task live target-selection report is missing token: {required_token}")
     if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (

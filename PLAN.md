@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `strategic-ai-live-resource-target-view-reuse-10184`. Live hero-task resource selection now reuses each already scored candidate's normalized reasons, public importance, and debug reason when constructing its commander role view, while ordinary report callers retain the full resource score breakdown. Focused proof matches all 15 behavior-facing fields and keeps the intended Free Company/Signal Post reservation outcomes exact. Medium ordinal 99 preserves row signature `59262e55`, all 171 activity events, 37 turns, the same defeat outcome, and zero behavior, integrity, or reachability failures; local row runtime falls from 298228 to 296997 ms and accumulated target-assignment time from 50029 to 49886 ms across 74 samples. This is a bounded redundant-score cleanup, not broad strategic-AI performance completion or overall release completion.
 - Completed implementation slice: `balance-post-identity-active-outlier-repair-10184`. Glassfen Relay Pickets now own a placement-local six-Guard/two-Adept line and Ninefold Drowned Reliquary owns a four-Cutter/nine-Reefbolt guard. Under current live faction mechanics both remain player-advantaged victories: Glassfen resolves in four rounds at 62% terminal margin / 8 enemy damage per round, and the Reliquary in three rounds at 85% / 8. The 59-encounter queue improves from 20 items / 4 high to 16 / 0 high, removes both matrix outliers and the matrix warning, and preserves passing runtime-consequence gates; the remaining 16 medium watches stay open. Focused exact roster/outcome proof, shared armies, default balance, unit abilities, core, Ninefold smoke, editor parse, repository, JSON, and diff gates pass. This is not full active-queue clearance, final encounter/faction balance, or overall release completion.
 - Completed implementation slice: `packaging-public-prerelease-promotion-10184`. A manual main-branch workflow can now publish one existing verified draft as a public prerelease without rebuilding or replacing assets. Exact tag-bound confirmation, remote tag commit, draft/prerelease state, candidate and release-index schemas, version/revision identity, the exact seven-asset set, GitHub asset sizes, four package checksums, and all seven downloaded hashes are verified before publication. The workflow re-fetches metadata and downloads the same validated asset ids after `gh release edit`, then requires an immutable release/asset fingerprint to match. It has one contents-write job, one publication command, no automatic trigger, and no create/upload/delete/build path; it can only set draft false, prerelease true, and latest false. The production verifier passes against the retained real 0.1.0-alpha.1 Linux/Windows candidate with fingerprint `d01d8d250933896e76b26abc0ee266a917f417e2cb55be2f0a1796299d77e09a`. Promotion, artifact, candidate, delivery, repository, Python, JSON, workflow-YAML, shell-syntax, and diff gates pass. No live release was created. Manual public-prerelease execution, stable publication, signing, and native Windows hardware certification remain open.
 - Completed implementation slice: `combat-sunvault-shard-warden-facet-reprisal-10184`. Shard Wardens now own Facet Reprisal: two-percent incoming ranged-attack mitigation plus ten-percent return of actual damage received while the stack survives. Melee, retaliation, spells, direct health loss, and lethal ranged attacks do not trigger it. Live player and AI attack resolution, tactical target scoring, attack previews, role summaries, the fast benchmark, schema validation, and focused runtime proof consume the same authored fields; returned damage can kill the shooter. The all-live 100-seed four-week matrix preserves 28 outliers / 172.0 severity / five rows at or above 65 percent / 68.5 percent maximum dominance / 3.8-point maximum side bias / zero structural failures. Week-four Sunvault/Veilmourn improves from 54.5/45.5 to 53/47, while Mireclaw/Sunvault keeps the same 62/38 result with a 0.01-point terminal-margin change. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
@@ -2179,6 +2180,30 @@ Completion criteria:
 Non-goals:
 - do not change global strategic-AI score coefficients, target kinds, route/pathing rules, faction defaults, save data, combat, packaging, or Native RMG;
 - do not weaken the focused assertion, remove later economy nodes, or claim broad strategic-AI or release completion.
+
+## Strategic AI Live Resource Target-View Reuse
+
+id: `strategic-ai-live-resource-target-view-reuse-10184`
+
+Selected Phase 6 runtime-performance slice. Live hero-task resource selection
+already owns a scored candidate, but rebuilds the same score breakdown for every
+candidate solely to construct its commander role view.
+
+Implementation target:
+- let live target selection reuse the candidate's normalized reason codes, public importance, and debug reason when constructing the resource role view;
+- preserve the full score-breakdown path for public/report callers that do not provide a precomputed candidate;
+- keep node-anchor target identity, labels, controller/site metadata, role proposals, task priorities, reservations, and deterministic selection exact;
+- add focused runtime proof that full and reused role views have identical behavior-facing semantics.
+
+Completion criteria:
+- focused proof shows full and reused resource role views match on every field consumed by live role/task behavior while the full report API retains its breakdown;
+- primary and companion live target-selection cases remain exact;
+- Medium ordinal 99 preserves row signature `59262e55`, outcome, 171 activity events, 37 turns, all event counts, integrity, and reachability with no target-assignment or total-runtime regression;
+- focused strategic-AI, core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change score coefficients, priorities, target kinds, role semantics, pathing, content, saves, combat, packaging, or Native RMG;
+- do not remove the full score breakdown from report callers, add timing-only gates, or claim broad strategic-AI, performance, or release completion.
 
 ## Work Selection Gates
 

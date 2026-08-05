@@ -8473,7 +8473,7 @@ static func ai_hero_task_live_target_selection_plan(
 		var target_id := String(candidate.get("target_placement_id", ""))
 		if target_id == "" or _ai_hero_task_live_target_reserved(session, faction_id, "resource", target_id, String(raid.get("placement_id", "")), roster_hero_id):
 			continue
-		var target_view := commander_role_resource_target_view(session, config, faction_id, target_id, origin)
+		var target_view := commander_role_resource_target_view(session, config, faction_id, target_id, origin, candidate)
 		if target_view.is_empty():
 			continue
 		var proposal := commander_role_proposal_for_resource_target(
@@ -10930,7 +10930,8 @@ static func commander_role_resource_target_view(
 	config: Dictionary,
 	faction_id: String,
 	placement_id: String,
-	origin: Dictionary
+	origin: Dictionary,
+	precomputed_candidate: Dictionary = {}
 ) -> Dictionary:
 	if session == null or placement_id == "":
 		return {}
@@ -10940,8 +10941,12 @@ static func commander_role_resource_target_view(
 		return {}
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
-	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
+	var reuse_candidate := String(precomputed_candidate.get("target_kind", "")) == "resource" \
+		and String(precomputed_candidate.get("target_placement_id", "")) == placement_id
+	var breakdown := {} if reuse_candidate else resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
+	var reason_codes: Array = _normalize_string_array(
+		precomputed_candidate.get("target_reason_codes", []) if reuse_candidate else breakdown.get("reason_codes", [])
+	)
 	if reason_codes.is_empty():
 		reason_codes = _resource_target_reason_codes(
 			site,
@@ -10970,8 +10975,12 @@ static func commander_role_resource_target_view(
 		"site_family": String(site.get("family", "")),
 		"reason_codes": reason_codes,
 		"public_reason": _public_reason_from_codes(reason_codes),
-		"public_importance": String(breakdown.get("public_importance", _resource_target_public_importance(String(node.get("collected_by_faction_id", "")) == "player", _resource_site_is_persistent(site), reason_codes, int(breakdown.get("final_priority", 0))))),
-		"debug_reason": String(breakdown.get("debug_reason", "")),
+		"public_importance": String(
+			precomputed_candidate.get("target_public_importance", "low")
+			if reuse_candidate
+			else breakdown.get("public_importance", _resource_target_public_importance(String(node.get("collected_by_faction_id", "")) == "player", _resource_site_is_persistent(site), reason_codes, int(breakdown.get("final_priority", 0))))
+		),
+		"debug_reason": String(precomputed_candidate.get("target_debug_reason", "") if reuse_candidate else breakdown.get("debug_reason", "")),
 		"resource_breakdown": breakdown,
 	}
 
