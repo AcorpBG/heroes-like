@@ -14325,11 +14325,11 @@
   "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-embercourt-bargebow-screened-lane-10184",
-  "currentSliceId": "strategic-ai-raid-movement-path-plan-reuse-10184",
-  "currentSliceNotes": "implemented shared goal-origin raid movement path plans; focused/core/KPI/editor/repo checks passed and exact Medium ordinal 99 preserved row signature 59262e55 with 171 identical events, zero integrity/reachability failures, and runtime 301845ms to 298228ms",
+  "currentSliceId": "strategic-ai-ninefold-mireclaw-resource-priority-10184",
+  "currentSliceNotes": "restored Ninefold Mireclaw declared marsh priorities: Bog Drum rank 3/424, Bogbell rank 6/389, survey camp remained chosen target 925; focused and broad validation passed",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Raid Movement Path-Plan Reuse",
-  "currentSliceUpdatedAt": "2026-08-05T01:47:18Z",
+  "currentSliceTitle": "Ninefold Mireclaw Marsh Priority Recovery",
+  "currentSliceUpdatedAt": "2026-08-05T03:48:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -71958,6 +71958,85 @@
       ],
       "remainingWork": "Continue the broader game completion queue. The deterministic faction_scenario_ai_pressure_report resource-ranking failure remains outside this movement slice and should be reconciled in its own content/pressure slice.",
       "completedAt": "2026-08-05T03:46:26Z"
+    },
+    {
+      "id": "strategic-ai-ninefold-mireclaw-resource-priority-10184",
+      "title": "Ninefold Mireclaw Marsh Priority Recovery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-strategy-config-audit-report.md"
+      ],
+      "purpose": "Restore declared Ninefold Mireclaw marsh resource priorities after later economy-breadth nodes displaced Bogbell Croft from the live top-six pressure set.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/faction_scenario_ai_pressure_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "faction_scenario_ai_pressure_report_ok": false,
+        "missing_top_six_priority_target": "dwelling_bogbell_croft",
+        "ninefold_priority_target_bonus": 110,
+        "bog_drum_rank": 4,
+        "bog_drum_final_priority": 409,
+        "bogbell_rank": 7,
+        "bogbell_final_priority": 374,
+        "top_six_cutoff_final_priority": 384,
+        "observed_top_six_ids": [
+          "ninefold_confluence_ninefold_duskfen_gate_rare_exchange",
+          "ninefold_confluence_ninefold_embercourt_survey_camp_rare_exchange",
+          "ninefold_duskfen_gate_development_source_support",
+          "bog_drum_crossing",
+          "ninefold_prismhearth_relay_development_source_support",
+          "ninefold_confluence_ninefold_prismhearth_relay_rare_exchange"
+        ]
+      },
+      "completionCriteria": [
+        "Prismhearth, Glassroad, and Ninefold focused pressure cases all pass",
+        "Bog Drum Crossing and Bogbell Croft both rank in the Ninefold Mireclaw top six with positive scores and public reasons",
+        "The chosen Ninefold target remains the Embercourt survey camp and public events expose no internal score fields",
+        "Focused Ninefold and strategic-AI runtime, core, editor parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "global strategic-AI scoring changes, pathing, target-kind semantics, faction defaults, saves, combat, packaging, or Native RMG",
+        "removing economy nodes, weakening assertions, or broad completion claims"
+      ],
+      "createdAt": "2026-08-05T03:48:44Z",
+      "updatedAt": "2026-08-05T03:56:34Z",
+      "notes": "restored Ninefold Mireclaw declared marsh priorities: Bog Drum rank 3/424, Bogbell rank 6/389, survey camp remained chosen target 925; focused and broad validation passed",
+      "startedAt": "2026-08-05T03:48:44Z",
+      "result": {
+        "ninefold_priority_target_bonus": 125,
+        "bog_drum_rank": 3,
+        "bog_drum_final_priority": 424,
+        "bogbell_rank": 6,
+        "bogbell_final_priority": 389,
+        "chosen_target_kind": "town",
+        "chosen_target_placement_id": "ninefold_embercourt_survey_camp",
+        "chosen_target_priority": 925,
+        "focused_case_count": 3,
+        "checked_public_event_count": 9,
+        "public_score_field_leak_count": 0
+      },
+      "validation": [
+        "godot --headless --path . --scene tests/faction_scenario_ai_pressure_report.tscn",
+        "godot --headless --path . --scene tests/ai_faction_personality_evidence_report.tscn",
+        "godot --headless --path . --scene tests/ninefold_scenario_smoke.tscn",
+        "godot --headless --path . --scene tests/headless_simulation_harness_report.tscn",
+        "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Continue the broader production-release queue; this slice does not claim global strategic-AI tuning or overall game completion.",
+      "completedAt": "2026-08-05T03:56:34Z"
     }
   ],
   "project": "heroes-like",
@@ -72502,7 +72581,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T03:46:26Z",
+  "updatedAt": "2026-08-05T03:56:34Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

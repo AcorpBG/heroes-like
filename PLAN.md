@@ -2156,6 +2156,30 @@ Non-goals:
 - do not change strategic priorities, target selection, raid speed, topology, passability, encounter placement, combat, faction balance, saves, packaging, or Native RMG;
 - do not add a timing-only gate, broaden the paused long-run matrix, or claim strategic-AI, performance, or overall release completion.
 
+## Ninefold Mireclaw Marsh Priority Recovery
+
+id: `strategic-ai-ninefold-mireclaw-resource-priority-10184`
+
+Selected Phase 6 strategic-AI/content defect slice. Ninefold Confluence declares
+Bog Drum Crossing and Bogbell Croft as Mireclaw priority targets, but later
+economy-breadth nodes displaced Bogbell from the live top resource-pressure set.
+
+Implementation target:
+- preserve the authored Ninefold Mireclaw town, outpost, dwelling, and guard-front priorities through scenario-local configuration;
+- restore both player-controlled marsh assets to the live top-six resource-pressure set from the authored Mireclaw origin;
+- keep the survey-camp town as the chosen top-level pressure target and preserve compact public assignment events;
+- strengthen focused evidence with exact priority ranks and score breakdowns for the declared marsh resource targets.
+
+Completion criteria:
+- the focused faction-scenario pressure scene passes all Prismhearth, Glassroad, and Ninefold cases;
+- Bog Drum Crossing and Bogbell Croft both rank in Ninefold Mireclaw's top six with positive priority and public reasons;
+- the Ninefold chosen target remains the Embercourt survey camp and no score fields leak into public events;
+- focused Ninefold/strategic-AI, core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change global strategic-AI score coefficients, target kinds, route/pathing rules, faction defaults, save data, combat, packaging, or Native RMG;
+- do not weaken the focused assertion, remove later economy nodes, or claim broad strategic-AI or release completion.
+
 ## Work Selection Gates
 
 Before starting any worker:

@@ -15008,6 +15008,60 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
                     break
         ensure(objective_pressure_present, errors, f"Scenario {scenario_id} must author at least one objective that strategic enemy contestation can pressure")
 
+    pressure_report_script = ROOT / "tests" / "faction_scenario_ai_pressure_report.gd"
+    pressure_report_scene = ROOT / "tests" / "faction_scenario_ai_pressure_report.tscn"
+    ensure(pressure_report_script.exists(), errors, "Missing faction scenario AI pressure report script")
+    ensure(pressure_report_scene.exists(), errors, "Missing faction scenario AI pressure report scene")
+    if pressure_report_script.exists():
+        pressure_report_text = pressure_report_script.read_text(encoding="utf-8")
+        for required_token in (
+            "FACTION_SCENARIO_AI_PRESSURE_REPORT",
+            "ninefold_mireclaw_marsh_claim",
+            "bog_drum_crossing",
+            "dwelling_bogbell_croft",
+            "priority_resource_targets",
+            '"rank": index + 1',
+            "top scores=",
+            "commander_role_public_leak_check",
+        ):
+            ensure(required_token in pressure_report_text, errors, f"Faction scenario AI pressure report is missing token: {required_token}")
+    if pressure_report_scene.exists():
+        pressure_scene_text = pressure_report_scene.read_text(encoding="utf-8")
+        ensure(
+            "faction_scenario_ai_pressure_report.gd" in pressure_scene_text,
+            errors,
+            "Faction scenario AI pressure scene is not wired to its report script",
+        )
+
+    ninefold = scenarios.get("ninefold-confluence", {})
+    mireclaw_config = next(
+        (
+            config
+            for config in ninefold.get("enemy_factions", [])
+            if isinstance(config, dict) and str(config.get("faction_id", "")) == "faction_mireclaw"
+        ),
+        {},
+    )
+    ensure(bool(mireclaw_config), errors, "Ninefold Confluence must retain its Mireclaw enemy configuration")
+    if mireclaw_config:
+        ensure(
+            int(mireclaw_config.get("priority_target_bonus", 0)) >= 125,
+            errors,
+            "Ninefold Mireclaw priority strength must keep declared marsh targets above later economy-breadth nodes",
+        )
+        priority_ids = mireclaw_config.get("priority_target_placement_ids", [])
+        for placement_id in (
+            "ninefold_embercourt_survey_camp",
+            "bog_drum_crossing",
+            "dwelling_bogbell_croft",
+            "ninefold_basalt_gatehouse_watch",
+        ):
+            ensure(
+                placement_id in priority_ids,
+                errors,
+                f"Ninefold Mireclaw configuration must retain priority target {placement_id}",
+            )
+
 
 def validate_overworld_logistics_sites(errors: list[str]) -> None:
     payloads = {
