@@ -23,8 +23,8 @@ const TARGET_CONTRACTS := {
 	},
 	"bellwake-wreck-claim/bellwake_mirror_lancers": {
 		"army_id": "army_bellwake_mirror_lancers_watch",
-		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 9, "unit_sunvault_resonant_choristers": 4},
-		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 38, "enemy_damage_per_round": 37},
+		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 8, "unit_mirror_duelist": 8, "unit_sunvault_resonant_choristers": 4},
+		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 20, "enemy_damage_per_round": 42},
 	},
 	"fen-crown/fen_crown_watch": {
 		"army_id": "army_fen_crown_gate_watch",
@@ -43,8 +43,8 @@ const TARGET_CONTRACTS := {
 	},
 	"mireford-skirmish/bridge_ford_reavers": {
 		"army_id": "army_mireford_ford_reavers_watch",
-		"stack_counts": {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2},
-		"sample": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 9, "enemy_damage_per_round": 45},
+		"stack_counts": {"unit_blackbranch_cutthroat": 14, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2},
+		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 42},
 	},
 }
 const CONTROL_SAMPLE_CONTRACTS := {

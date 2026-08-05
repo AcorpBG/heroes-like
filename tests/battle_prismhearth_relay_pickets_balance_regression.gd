@@ -7,8 +7,8 @@ const PLACEMENT_IDS := ["prismhearth_relay_pickets", "prismhearth_glasswing_sort
 const LOCAL_STACK_COUNTS := {"unit_shard_guard": 6, "unit_prism_adept": 2}
 const SHARED_STACK_COUNTS := {"unit_shard_guard": 5, "unit_prism_adept": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"prismhearth_glasswing_sortie": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 52, "enemy_damage_per_round": 23},
-	"prismhearth_halo_reserve": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 36},
+	"prismhearth_glasswing_sortie": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 49, "enemy_damage_per_round": 24},
+	"prismhearth_halo_reserve": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 32, "enemy_damage_per_round": 28},
 }
 
 func _ready() -> void:

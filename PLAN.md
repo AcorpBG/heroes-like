@@ -2105,6 +2105,32 @@ Non-goals:
 - do not change shared armies, global unit stats or abilities, battle rules, strategic AI, campaigns, saves, rewards, or Native RMG;
 - do not claim final encounter balance, final faction balance, or overall release completion.
 
+## Active Outcome-Diversity Queue Clear
+
+id: `balance-active-outcome-diversity-clear-10184`
+
+Active Phase 6 authored-combat implementation slice. The remaining eight
+active breadth watches are deterministic one-sided outcome cohorts across six
+scenarios, the `sporeglass_mend` ability cohort, and player-disadvantaged
+matchups.
+
+Implementation target:
+- tune only placement-local armies in Daybreak Spire, Glassroad Sundering, Bellwake Wreck Claim, Charter Pyre, Mireford Skirmish, Prismhearth Watch, and Reedbarrow Ferry;
+- produce bounded mixed outcomes in all six watched scenario cohorts while one Mireford defeat also diversifies `sporeglass_mend` outcomes;
+- produce one deterministic player victory that remains genuinely player-disadvantaged through Reedbarrow composition tuning;
+- preserve shared armies, global unit stats and abilities, combat rules, queue thresholds, and Native RMG behavior.
+
+Completion criteria:
+- the six watched scenario cohorts, `sporeglass_mend`, and player-disadvantaged cohorts each have primary outcome percentages at or below 90;
+- every corrected battle completes in standard or extended pacing with terminal margin below 75 percent and no invalid order;
+- the active 59-encounter breadth queue is fully clear with zero medium or high items and a deterministic repeated signature;
+- focused battle, faction ability, core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not weaken queue thresholds, relabel matchup bands, or force outcomes through combat-rule changes;
+- do not change shared armies, global unit stats or abilities, strategic AI, campaigns, saves, rewards, or Native RMG;
+- do not claim final faction balance or overall release completion.
+
 ## Work Selection Gates
 
 Before starting any worker:

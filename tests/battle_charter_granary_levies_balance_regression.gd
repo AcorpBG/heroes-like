@@ -4,7 +4,7 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_CHARTER_GRANARY_LEVIES_BALANCE_REGRESSION"
 const SCENARIO_ID := "charter-pyre"
 const PLACEMENT_ID := "charter_granary_levies"
-const MAX_TERMINAL_MARGIN_PCT := 90
+const MAX_TERMINAL_MARGIN_PCT := 74
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -29,8 +29,8 @@ func _run() -> void:
 		"action_mix": sample.get("action_mix", {}),
 		"initial_stack_profile": sample.get("initial_stack_profile", {}),
 	}
-	if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
-		_fail_sample("Granary Levies no longer resolves as a bounded player victory.", payload, sample)
+	if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "defeat":
+		_fail_sample("Granary Levies no longer resolves as a bounded player defeat.", payload, sample)
 		return
 	if int(sample.get("terminal_health_margin_pct", 100)) > MAX_TERMINAL_MARGIN_PCT:
 		_fail_sample("Granary Levies remains above the matrix terminal-margin target.", payload, sample)

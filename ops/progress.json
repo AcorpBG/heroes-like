@@ -14325,10 +14325,10 @@
   "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-embercourt-bargebow-screened-lane-10184",
-  "currentSliceId": "balance-active-medium-sample-pressure-10184",
-  "currentSliceNotes": "Completed six placement-local pressure corrections: queue 16 to 8, sample watches 5 to 0, margin cohorts 2 to 0, zero high; eight outcome-diversity watches remain.",
+  "currentSliceId": "balance-active-outcome-diversity-clear-10184",
+  "currentSliceNotes": "validation passed: active 59-encounter queue clear twice with zero items and repeated signature 829808c9; focused and broad runtime, editor parse, repository, JSON, and diff checks passed",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Medium Encounter Pressure Repair",
+  "currentSliceTitle": "Active Outcome-Diversity Queue Clear",
   "currentSliceUpdatedAt": "2026-08-05T01:47:18Z",
   "deferredRiskRegister": [
     {
@@ -71721,6 +71721,154 @@
       ],
       "remainingWork": "Clear the remaining eight medium outcome-diversity cohort watches in a separately bounded content-balance slice; final faction balance and overall release completion remain open.",
       "completedAt": "2026-08-05T02:43:39Z"
+    },
+    {
+      "id": "balance-active-outcome-diversity-clear-10184",
+      "title": "Active Outcome-Diversity Queue Clear",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-active-scenario-breadth-report.md"
+      ],
+      "purpose": "Clear the final eight active encounter watches by producing bounded mixed outcomes in six scenario cohorts, the sporeglass_mend cohort, and genuinely player-disadvantaged matchups through placement-local authored army tuning.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_active_outcome_diversity_clear_regression.gd",
+        "tests/battle_active_outcome_diversity_clear_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 8,
+        "active_queue_medium_priority_count": 8,
+        "active_queue_high_priority_count": 0,
+        "active_queue_signature": "e1518dfa",
+        "scenario_outcome_watch_count": 6,
+        "ability_outcome_watch_count": 1,
+        "matchup_outcome_watch_count": 1,
+        "shared_army_changes": 0
+      },
+      "completionCriteria": [
+        "The six watched scenario cohorts, sporeglass_mend, and player-disadvantaged cohorts each have primary outcome percentages at or below 90",
+        "Every corrected battle completes in standard or extended pacing with terminal margin below 75 percent and no invalid order",
+        "The active 59-encounter breadth queue is fully clear with zero medium or high items and a deterministic repeated signature",
+        "Focused battle, faction ability, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "weakening queue thresholds, relabeling matchup bands, or forcing outcomes through combat-rule changes",
+        "shared armies, global unit stats or abilities, strategic AI, campaigns, saves, rewards, or Native RMG",
+        "final faction balance or overall release completion"
+      ],
+      "createdAt": "2026-08-05T02:49:18Z",
+      "updatedAt": "2026-08-05T03:13:35Z",
+      "notes": "validation passed: active 59-encounter queue clear twice with zero items and repeated signature 829808c9; focused and broad runtime, editor parse, repository, JSON, and diff checks passed",
+      "startedAt": "2026-08-05T02:50:21Z",
+      "result": {
+        "reedbarrow_barrow_pickets_sample": {
+          "outcome_state": "victory",
+          "matchup_band": "player_disadvantaged",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 58,
+          "enemy_damage_per_round": 7
+        },
+        "charter_granary_levies_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "even",
+          "pacing_band": "standard",
+          "round_reached": 5,
+          "terminal_health_margin_pct": 22,
+          "enemy_damage_per_round": 38
+        },
+        "prismhearth_halo_reserve_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "player_advantaged",
+          "pacing_band": "standard",
+          "round_reached": 5,
+          "terminal_health_margin_pct": 32,
+          "enemy_damage_per_round": 28
+        },
+        "glassroad_archive_wardens_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "even",
+          "pacing_band": "extended",
+          "round_reached": 8,
+          "terminal_health_margin_pct": 35,
+          "enemy_damage_per_round": 18
+        },
+        "daybreak_array_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "player_advantaged",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 48,
+          "enemy_damage_per_round": 29
+        },
+        "mireford_ford_reavers_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "even",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 44,
+          "enemy_damage_per_round": 42
+        },
+        "bellwake_mirror_lancers_sample": {
+          "outcome_state": "defeat",
+          "matchup_band": "even",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 20,
+          "enemy_damage_per_round": 42
+        },
+        "active_scenario_sample_count": 59,
+        "active_completed_sample_count": 59,
+        "active_stalled_sample_count": 0,
+        "active_invalid_order_count": 0,
+        "active_queue_item_count_before": 8,
+        "active_queue_item_count_after": 0,
+        "active_queue_medium_priority_count_after": 0,
+        "active_queue_high_priority_count_after": 0,
+        "scenario_outcome_watch_count_after": 0,
+        "ability_outcome_watch_count_after": 0,
+        "matchup_outcome_watch_count_after": 0,
+        "active_queue_status_after": "clear",
+        "active_queue_signature_after": "829808c9",
+        "active_queue_repeat_signature_after": "829808c9",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "shared_army_changes": 0,
+        "global_rule_changes": 0
+      },
+      "validation": [
+        "godot --headless --path . --scene tests/battle_active_outcome_diversity_clear_regression.tscn",
+        "godot --headless --path . --scene tests/battle_active_medium_sample_pressure_regression.tscn",
+        "godot --headless --path . --scene tests/battle_bellwake_wreck_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_active_cohort_queue_clear_regression.tscn",
+        "godot --headless --path . --scene tests/battle_ford_reavers_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_reedbarrow_mireford_guard_pressure_regression.tscn",
+        "godot --headless --path . --scene tests/battle_reedbarrow_chain_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_glassroad_archive_wardens_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_prismhearth_relay_pickets_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_charter_granary_levies_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_autoplay_active_scenario_breadth_report.tscn (twice: 59 of 59 complete, zero queue items, repeated signature 829808c9)",
+        "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+        "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --scene tests/ninefold_scenario_smoke.tscn",
+        "godot --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "The active authored encounter queue is clear; final faction balance, manual release certification, and the broader game completion gaps remain open.",
+      "completedAt": "2026-08-05T03:13:35Z"
     }
   ],
   "project": "heroes-like",
@@ -72265,7 +72413,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T02:43:39Z",
+  "updatedAt": "2026-08-05T03:13:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
