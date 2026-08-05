@@ -151,7 +151,11 @@ func _run_case(case_config: Dictionary) -> Dictionary:
 	var origin: Dictionary = case_config.get("origin", {})
 	var resource_report := EnemyAdventureRules.resource_pressure_report(session, config, origin, faction_id, 0)
 	var top_targets := _top_resource_targets(resource_report.get("targets", []), 6)
-	_assert_required_top_targets(top_targets, case_config)
+	var priority_resource_targets := _priority_resource_target_snapshots(
+		resource_report.get("targets", []),
+		case_config
+	)
+	_assert_required_top_targets(top_targets, priority_resource_targets, case_config)
 	if _failed:
 		return {}
 
@@ -193,6 +197,7 @@ func _run_case(case_config: Dictionary) -> Dictionary:
 		"strategy_overrides": config.get("strategy_overrides", {}),
 		"staged_player_controlled_resources": case_config.get("controlled_resource_ids", []),
 		"top_resource_targets": top_targets,
+		"priority_resource_targets": priority_resource_targets,
 		"chosen_target": _target_snapshot(chosen),
 		"pressure_event": pressure_event,
 		"assignment_events": assignment_events,
@@ -250,14 +255,21 @@ func _assert_strategy(config: Dictionary, faction_id: String, case_config: Dicti
 				_fail("%s expected %s.%s >= %.2f, got %.2f" % [case_config.get("case_id", ""), bucket_key, value_key, minimum, actual])
 				return
 
-func _assert_required_top_targets(top_targets: Array, case_config: Dictionary) -> void:
+func _assert_required_top_targets(
+	top_targets: Array,
+	priority_resource_targets: Array,
+	case_config: Dictionary
+) -> void:
 	var top_ids := []
 	for target in top_targets:
 		if target is Dictionary:
 			top_ids.append(String(target.get("placement_id", "")))
 	for placement_id in case_config.get("required_top_resource_ids", []):
 		if String(placement_id) not in top_ids:
-			_fail("%s expected %s in top resource pressure targets, got %s" % [case_config.get("case_id", ""), placement_id, top_ids])
+			_fail(
+				"%s expected %s in top resource pressure targets, got %s; top scores=%s; declared target ranks=%s"
+				% [case_config.get("case_id", ""), placement_id, top_ids, JSON.stringify(top_targets), JSON.stringify(priority_resource_targets)]
+			)
 			return
 		var target := _target_by_placement(top_targets, String(placement_id))
 		if String(target.get("public_reason", "")) == "":
@@ -345,6 +357,33 @@ func _top_resource_targets(targets: Array, limit: int) -> Array:
 		)
 		if result.size() >= limit:
 			break
+	return result
+
+func _priority_resource_target_snapshots(targets: Array, case_config: Dictionary) -> Array:
+	var required_ids: Array = case_config.get("required_top_resource_ids", [])
+	var result := []
+	for index in range(targets.size()):
+		var target = targets[index]
+		if not (target is Dictionary):
+			continue
+		var placement_id := String(target.get("placement_id", ""))
+		if placement_id not in required_ids:
+			continue
+		result.append(
+			{
+				"placement_id": placement_id,
+				"rank": index + 1,
+				"final_priority": int(target.get("final_priority", 0)),
+				"faction_bias": int(target.get("faction_bias", 0)),
+				"base_value": int(target.get("base_value", 0)),
+				"recruit_value": int(target.get("recruit_value", 0)),
+				"denial_value": int(target.get("denial_value", 0)),
+				"travel_cost": int(target.get("travel_cost", 0)),
+				"guard_cost": int(target.get("guard_cost", 0)),
+				"reason_codes": target.get("reason_codes", []),
+				"public_reason": String(target.get("public_reason", "")),
+			}
+		)
 	return result
 
 func _target_by_placement(targets: Array, placement_id: String) -> Dictionary:
