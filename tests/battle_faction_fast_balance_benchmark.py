@@ -1410,10 +1410,10 @@ class FastBattleBenchmark:
             score += 0.25
             if self._has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
                 score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
-        if self._has_ability(attacker, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+        if self._has_ability(attacker, "backstab") and not self._counter_ambush_flare_context(battle, target, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
         fogwake = self._ability_by_id(attacker, "fogwake")
-        if fogwake and not is_ranged and self._stack_is_isolated(battle, target):
+        if fogwake and not is_ranged and self._stack_is_isolated(battle, target) and not self._counter_ambush_flare_context(battle, target, "fogwake"):
             score += float(fogwake.get("ai_target_priority_bonus", 0.0))
         if is_ranged and self._side_defending_count(battle, side) > 0 and self._side_has_ability(battle, side, "formation_guard"):
             score += 1.5
@@ -1550,13 +1550,17 @@ class FastBattleBenchmark:
             if retaliation_pressure < 0:
                 modifier *= clamp(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
         backstab = self._ability_by_id(attacker, "backstab")
+        backstab_flare = self._counter_ambush_flare_context(battle, defender, "backstab")
+        backstab_retention = float(backstab_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if backstab_flare else 1.0
         if backstab and self._has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
-            modifier *= float(backstab.get("damage_multiplier", 1.0))
+            modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
         if backstab and self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
-            modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+            modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
         fogwake = self._ability_by_id(attacker, "fogwake")
         if fogwake and not is_ranged and not is_retaliation and self._stack_is_isolated(battle, defender):
-            modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
+            fogwake_flare = self._counter_ambush_flare_context(battle, defender, "fogwake")
+            fogwake_retention = float(fogwake_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if fogwake_flare else 1.0
+            modifier *= 1.0 + ((float(fogwake.get("isolated_damage_multiplier", 1.0)) - 1.0) * fogwake_retention)
         volley = self._ability_by_id(attacker, "volley")
         if is_ranged and volley and attack_distance >= int(volley.get("min_distance", 1)):
             modifier *= float(volley.get("damage_multiplier", 1.0))
@@ -1850,15 +1854,29 @@ class FastBattleBenchmark:
             }, battle, "ability", "obituary")
             ability_uses["obituary"] = int(ability_uses.get("obituary", 0)) + 1
             counts["status_applied"] += 1
+        backstab = self._ability_by_id(attacker, "backstab")
+        backstab_ready = bool(backstab) and (
+            self._has_any_effect_ids(defender, battle, backstab.get("status_ids", []))
+            or self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0))
+        )
+        backstab_flare = self._counter_ambush_flare_context(battle, defender, "backstab")
+        if backstab_ready and backstab_flare:
+            self._apply_counter_ambush_flare_reveal(battle, attacker, backstab_flare, "backstab")
+            counts["counter_ambush_flare"] += 1
         fogwake = self._ability_by_id(attacker, "fogwake")
         if fogwake and not is_ranged and self._stack_is_isolated(battle, defender):
-            self._apply_effect(defender, {
-                "effect_id": str(fogwake.get("status_id", "status_fogbound")),
-                "label": str(fogwake.get("status_label", "Fogbound")),
-                "duration_rounds": int(fogwake.get("duration_rounds", 1)),
-                "modifiers": fogwake.get("modifiers", {}),
-            }, battle, "ability", "fogwake")
-            counts["status_applied"] += 1
+            fogwake_flare = self._counter_ambush_flare_context(battle, defender, "fogwake")
+            if not fogwake_flare or not bool(fogwake_flare.get("ability", {}).get("blocks_ambush_status", False)):
+                self._apply_effect(defender, {
+                    "effect_id": str(fogwake.get("status_id", "status_fogbound")),
+                    "label": str(fogwake.get("status_label", "Fogbound")),
+                    "duration_rounds": int(fogwake.get("duration_rounds", 1)),
+                    "modifiers": fogwake.get("modifiers", {}),
+                }, battle, "ability", "fogwake")
+                counts["status_applied"] += 1
+            else:
+                self._apply_counter_ambush_flare_reveal(battle, attacker, fogwake_flare, "fogwake")
+                counts["counter_ambush_flare"] += 1
 
     def _apply_retaliation_ability_effects(self, battle: dict[str, Any], retaliator: dict[str, Any], attacker: dict[str, Any], counts: Counter[str]) -> None:
         brace = self._ability_by_id(retaliator, "brace")
@@ -2343,6 +2361,39 @@ class FastBattleBenchmark:
 
     def _side_has_ability(self, battle: dict[str, Any], side: str, ability_id: str) -> bool:
         return any(self._has_ability(stack, ability_id) for stack in self._alive_stacks_for_side(battle, side))
+
+    def _counter_ambush_flare_context(
+        self,
+        battle: dict[str, Any],
+        protected_stack: dict[str, Any],
+        ambush_ability_id: str,
+    ) -> dict[str, Any]:
+        if not protected_stack or not ambush_ability_id:
+            return {}
+        for source in self._alive_stacks_for_side(battle, str(protected_stack.get("side", ""))):
+            ability = self._ability_by_id(source, "counter_ambush_flare")
+            if ability and ambush_ability_id in ability.get("countered_ability_ids", []):
+                return {"source": source, "ability": ability}
+        return {}
+
+    def _apply_counter_ambush_flare_reveal(
+        self,
+        battle: dict[str, Any],
+        ambusher: dict[str, Any],
+        flare_context: dict[str, Any],
+        blocked_ability_id: str,
+    ) -> None:
+        if self._alive_count(ambusher) <= 0:
+            return
+        ability = flare_context.get("ability", {})
+        if blocked_ability_id not in ability.get("revealed_ability_ids", []):
+            return
+        self._apply_effect(ambusher, {
+            "effect_id": str(ability.get("revealed_status_id", "status_flare_revealed")),
+            "label": str(ability.get("revealed_status_label", "Flare-Revealed")),
+            "duration_rounds": max(1, int(ability.get("revealed_duration_rounds", 1))),
+            "modifiers": ability.get("revealed_modifiers", {"defense": -1, "initiative": -1}),
+        }, battle, "ability", "counter_ambush_flare")
 
     def _linked_resonance_relay_initiative_bonus(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         unit_id = str(stack.get("unit_id", ""))

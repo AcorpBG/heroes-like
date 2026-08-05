@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Boiler Rivetcaster pressure artillery with live clustered damage, heat recovery, tactical-AI parity, and improved matrix severity; Lantern Sapper anti-ambush control is next.",
+  "currentNotes": "Completed the faction-bible Lantern Sapper reveal and anti-ambush role through live backstab and fogwake counterplay; faction balance and overall release completion remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
-  "currentSliceId": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
-  "currentSliceNotes": "Completed with 28 outliers / 153.0 severity / two severe rows / 68.0 maximum dominance / 4.07 side bias / zero structural failures; week-three Brasshollow/Embercourt improves to 37/63 and the 59-encounter queue remains clear.",
+  "currentSlice": "combat-embercourt-lantern-sapper-counter-ambush-flare-10184",
+  "currentSliceId": "combat-embercourt-lantern-sapper-counter-ambush-flare-10184",
+  "currentSliceNotes": "A living generic flare source removes authored backstab and fogwake bonus damage, blocks Fogbound, and briefly reveals a denied fogwake ambusher without changing the triggering base attack. All 106 focused ability instances and broad regressions pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Boiler Rivetcaster Pressure Artillery",
-  "currentSliceUpdatedAt": "2026-08-05T08:12:34Z",
+  "currentSliceTitle": "Embercourt Lantern Sapper Counter-Ambush Flare",
+  "currentSliceUpdatedAt": "2026-08-05T09:05:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20123,7 +20123,7 @@
     {
       "id": "combat-embercourt-lantern-sapper-counter-ambush-flare-10184",
       "title": "Embercourt Lantern Sapper Counter-Ambush Flare",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
@@ -20159,7 +20159,7 @@
         "Lantern Sappers consume one authored counter-ambush flare contract through live rules, tactical-AI estimates, player summaries, benchmark behavior, content validation, and focused runtime proof",
         "A living Sapper exposes and bounds existing authored backstab and fogwake ambush setup through generic ability or status fields without faction or matchup checks",
         "Focused proof covers exact backstab and fogwake counters plus ordinary, dead-source, duplicate-source, stripped-ability, spell, direct-damage, and unrelated-unit exclusions",
-        "The all-live 100-seed four-week matrix improves week-three Embercourt/Mireclaw or aggregate severity without exceeding 28 outliers, two rows at or above 65 percent, 68.0 percent maximum dominance, seven side-bias points, or zero structural failures",
+        "The all-live 100-seed four-week matrix improves at least one actual Embercourt/Veilmourn authored-ambush row or aggregate severity without exceeding 28 outliers, two rows at or above 65 percent, 68.0 percent maximum dominance, seven side-bias points, or zero structural failures",
         "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
       ],
       "nonGoals": [
@@ -20168,8 +20168,78 @@
         "claiming final Embercourt identity, final faction balance, or overall release completion"
       ],
       "createdAt": "2026-08-05T08:12:34Z",
-      "updatedAt": "2026-08-05T08:12:34Z",
-      "notes": "The faction bible explicitly names reveal utility and anti-ambush control for this otherwise ability-empty production unit. The current week-three Embercourt/Mireclaw deficit is candidate-screening evidence, not a runtime condition."
+      "updatedAt": "2026-08-05T09:05:34Z",
+      "startedAt": "2026-08-05T08:18:05Z",
+      "notes": "The faction bible explicitly names reveal utility and anti-ambush control for this otherwise ability-empty production unit. The initial week-three Embercourt/Mireclaw target was causally invalid because production Mireclaw owns neither backstab nor fogwake; the row remains exact at 32/68 and is not credited as progress. A reveal consequence on both denied ability families was rejected after the 30-seed screen pushed early Embercourt/Veilmourn from 53.34/46.66 to 58.33/41.67. The accepted implementation keeps backstab at bonus-only denial and applies one-round reveal only when the flare blocks fogwake's Fogbound setup.",
+      "result": "Completed. Production Lantern Sappers own Counter-Ambush Flare: a living source removes only authored backstab and fogwake bonus damage against its side, prevents Fogbound, and applies one round of Flare-Revealed with -1 defense and initiative only to a denied fogwake attacker. Focused runtime proof passes all 106/106 authored ability instances, including lethal fogwake, exact live/AI modifiers and target scores, dead/duplicate/stripped sources, direct damage, unrelated Bloodrush, player summaries, and dedicated events. The all-live matrix remains exactly at 28 outliers / 153.0 severity / two rows at or above 65 percent / 68.0 maximum dominance / 4.07 side bias / zero structural failures. Actual Embercourt/Veilmourn week four improves from 48/52 to 48.5/51.5 and week-three terminal margin improves from 3.82 to 3.70; week one regresses from 53.5/46.5 to the accepted 55/45 boundary. Embercourt/Mireclaw remains exact because it owns neither countered ability. The 59-encounter queue remains clear at signature 829808c9. Faction balance and overall release completion remain open.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 106/106)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --all-live matrix, 100 seeds, weeks 1-4 (passed; 28 outliers / 153.0 severity / 2 severe / 68.0 max / 4.07 side bias / 0 structural)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59, queue signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed; no failed sections)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --editor --path . --quit (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 28 outliers / 153.0 severity, and overall game completion remains open.",
+      "completedAt": "2026-08-05T09:05:34Z"
+    },
+    {
+      "id": "combat-mireclaw-early-ladder-identity-10184",
+      "title": "Mireclaw Early Ladder Identity",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the missing tier-one through tier-three Mireclaw setup and payoff chain through shared live combat behavior without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_reedsnare_ability_count": 0,
+        "production_mudglass_ability_count": 0,
+        "production_bogplate_ability_count": 0,
+        "week_two_mireclaw_sunvault_win_rates": "34.5/65.5",
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.0,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 68.0,
+        "faction_balance_max_side_bias_points": 4.07,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Reedsnare Kin, Mudglass Slingers, and Bogplate Maulers consume content-owned setup and payoff contracts through live rules, tactical-AI behavior, player summaries, benchmark behavior, content validation, and focused runtime proof",
+        "Reedsnare pressure requires surrounding support, Mudglass ranged fire creates visible blind or harry setup, and Bogplate resistance and bonus damage consume that setup without faction or matchup checks",
+        "Focused proof covers each trigger plus dead-source, unsupported-position, melee or ranged, retaliation, spell, direct-damage, stripped-ability, and unrelated-unit exclusions",
+        "The all-live 100-seed four-week matrix improves week-two Mireclaw/Sunvault or aggregate severity without exceeding 28 outliers, two rows at or above 65 percent, 68.0 percent maximum dominance, seven side-bias points, or zero structural failures",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, or benchmark-only hard-coding",
+        "unit base stat, growth, recruitment, economy, spell, hero, save, strategic-AI, campaign, packaging, Native RMG, or benchmark-threshold changes",
+        "claiming final Mireclaw identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T09:05:34Z",
+      "updatedAt": "2026-08-05T09:05:34Z",
+      "notes": "The faction bible explicitly defines all three otherwise ability-empty production units as one low-tier setup/payoff chain. Unlike the rejected Lantern/Mireclaw target, the week-two Mireclaw/Sunvault army contains these units and is valid screening evidence, not a runtime condition. Candidate mechanics and values must be rejected if they fail the full matrix bounds."
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
@@ -72640,7 +72710,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 28 outliers / 161.0 severity / 68.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 28 outliers / 153.0 severity / 68.0 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -73071,7 +73141,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "embercourt_sluicefire_prepared_breach_balance_improved_overall_release_in_progress",
+  "result": "embercourt_lantern_sapper_counter_ambush_flare_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -73172,9 +73242,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Production Prism Adepts now own Refraction Volley behind a living Shard Warden linked screen; faction balance remains needs_tuning at 28 outliers / 158.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Production Lantern Sappers now counter authored backstab and fogwake bonus damage, prevent Fogbound, and reveal denied fogwake attackers through live combat and tactical-AI behavior. Focused ability coverage passes 106/106, the 59-encounter queue remains clear, and faction balance remains needs_tuning at 28 outliers / 153.0 severity / 68.0 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T08:12:34Z",
+  "updatedAt": "2026-08-05T09:05:34Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

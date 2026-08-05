@@ -3961,12 +3961,21 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 			String(pressure_artillery.get("name", "Pressure Artillery")),
 			cluster_text,
 		]
+	if _has_ability(stack, "counter_ambush_flare"):
+		return "Counter-Ambush Flare is exposing backstab and fogwake lanes and will flare-reveal a denied fogwake ambusher while this Sapper stack survives."
 	if _has_ability(stack, "foundry_aura"):
 		return "Saint's Temper is hardening overheated Combine machinery and will repair surviving allies when the next round begins."
 	if _has_ability(stack, "overheat"):
 		if SpellRulesScript.has_effect_id(stack, battle, STATUS_OVERHEATED):
 			return "The Debt Furnace is overheated; damage, defense, and initiative stay reduced until pressure recovers."
 		return "The Debt Furnace is pressure-ready and will burst on the next primary strike before overheating."
+	if not target.is_empty() and _has_ability(stack, "backstab") and not _counter_ambush_flare_context(battle, target, "backstab").is_empty() and (
+		SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "backstab").get("status_ids", []))
+		or _health_ratio(target) <= float(_ability_by_id(stack, "backstab").get("health_threshold_ratio", 0.0))
+	):
+		return "Counter-Ambush Flare exposes this backstab lane; the base attack remains, but its ambush bonus is removed."
+	if not target.is_empty() and _has_ability(stack, "fogwake") and _stack_is_hex_isolated(battle, target) and not _counter_ambush_flare_context(battle, target, "fogwake").is_empty():
+		return "Counter-Ambush Flare exposes this fogwake lane; bonus damage and Fogbound are blocked."
 	if not target.is_empty() and _has_ability(stack, "backstab") and (
 		SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "backstab").get("status_ids", []))
 		or _health_ratio(target) <= float(_ability_by_id(stack, "backstab").get("health_threshold_ratio", 0.0))
@@ -4070,6 +4079,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				String(ability.get("status_label", "Overheated")),
 				int(ability.get("duration_rounds", 1)),
 			]
+		"counter_ambush_flare":
+			return "%s removes bonus damage from backstab and fogwake attacks, prevents Fogbound, and flare-reveals a denied fogwake ambusher for one round while this stack survives" % name
 		"foundry_aura":
 			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
 		"volley":
@@ -5750,7 +5761,7 @@ static func _resolve_attack_action(
 
 	var retaliated = false
 	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
+	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance, target_before)
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	_append_damage_presentation_event(session.battle, "damage", attacker, target_before, defender_after, damage, "shoot" if is_ranged else "strike")
@@ -6323,7 +6334,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		messages.append("%s batters %s for %d damage." % [_stack_label(attacker), _stack_label(target), damage])
 
 	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
-	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance)
+	var ability_messages := _apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance, target_before)
 	messages.append_array(ability_messages)
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	_append_damage_presentation_event(session.battle, "damage", attacker, target_before, defender_after, damage, "shoot" if is_ranged else "strike")
@@ -9141,7 +9152,8 @@ static func _apply_attack_ability_effects(
 	attacker: Dictionary,
 	defender: Dictionary,
 	is_ranged: bool,
-	attack_distance: int
+	attack_distance: int,
+	defender_before: Dictionary = {}
 ) -> Array:
 	var messages = []
 	var overheat = _ability_by_id(attacker, "overheat")
@@ -9165,6 +9177,21 @@ static func _apply_attack_ability_effects(
 		var mending_fire := _apply_sporeglass_mending_fire(battle, attacker)
 		if not mending_fire.is_empty():
 			messages.append(String(mending_fire.get("message", "")))
+	var ambush_target := defender_before if not defender_before.is_empty() else defender
+	var ambush_context_target := defender if not defender.is_empty() else ambush_target
+	var backstab := _ability_by_id(attacker, "backstab")
+	var backstab_ready := not backstab.is_empty() and (
+		SpellRulesScript.has_any_effect_ids(ambush_target, battle, backstab.get("status_ids", []))
+		or _health_ratio(ambush_target) <= float(backstab.get("health_threshold_ratio", 0.0))
+	)
+	var backstab_flare := _counter_ambush_flare_context(battle, ambush_context_target, "backstab")
+	if backstab_ready and not backstab_flare.is_empty():
+		messages.append(_append_counter_ambush_flare_event(battle, backstab_flare, attacker, "backstab", String(backstab.get("name", "Backstab"))))
+	var fogwake := _ability_by_id(attacker, "fogwake")
+	var fogwake_ready := not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, ambush_target)
+	var fogwake_flare := _counter_ambush_flare_context(battle, ambush_context_target, "fogwake") if fogwake_ready else {}
+	if fogwake_ready and not fogwake_flare.is_empty() and bool(fogwake_flare.get("ability", {}).get("blocks_ambush_status", false)):
+		messages.append(_append_counter_ambush_flare_event(battle, fogwake_flare, attacker, "fogwake", String(fogwake.get("name", "Fogwake"))))
 	if defender.is_empty() or _alive_count(defender) <= 0:
 		return messages
 	if not is_ranged and attack_distance > 1:
@@ -9233,17 +9260,17 @@ static func _apply_attack_ability_effects(
 			String(obituary.get("status_label", "Obituary-Marked")).to_lower(),
 			retaliation_clause,
 		])
-	var fogwake = _ability_by_id(attacker, "fogwake")
-	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
-		_apply_stack_effect(
-			battle,
-			String(defender.get("battle_id", "")),
-			_status_effect_from_ability(fogwake, battle)
-		)
-		messages.append("%s is %s with no adjacent allied stack." % [
-			_stack_label(defender),
-			String(fogwake.get("status_label", "Fogbound")).to_lower(),
-		])
+	if fogwake_ready:
+		if fogwake_flare.is_empty() or not bool(fogwake_flare.get("ability", {}).get("blocks_ambush_status", false)):
+			_apply_stack_effect(
+				battle,
+				String(defender.get("battle_id", "")),
+				_status_effect_from_ability(fogwake, battle)
+			)
+			messages.append("%s is %s with no adjacent allied stack." % [
+				_stack_label(defender),
+				String(fogwake.get("status_label", "Fogbound")).to_lower(),
+			])
 	return messages
 
 static func _apply_retaliation_ability_effects(
@@ -9322,13 +9349,17 @@ static func _ability_damage_modifier(
 			modifier *= clampf(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
 
 	var backstab = _ability_by_id(attacker, "backstab")
+	var backstab_flare := _counter_ambush_flare_context(battle, defender, "backstab")
+	var backstab_retention := float(backstab_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if not backstab_flare.is_empty() else 1.0
 	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
-		modifier *= float(backstab.get("damage_multiplier", 1.0))
+		modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
-		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+		modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	var fogwake = _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
-		modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
+		var fogwake_flare := _counter_ambush_flare_context(battle, defender, "fogwake")
+		var fogwake_retention := float(fogwake_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if not fogwake_flare.is_empty() else 1.0
+		modifier *= 1.0 + ((float(fogwake.get("isolated_damage_multiplier", 1.0)) - 1.0) * fogwake_retention)
 
 	var volley = _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
@@ -9602,6 +9633,64 @@ static func _side_ability_payloads(battle: Dictionary, side: String, ability_id:
 
 static func _side_has_ability(battle: Dictionary, side: String, ability_id: String) -> bool:
 	return not _side_ability_payloads(battle, side, ability_id).is_empty()
+
+static func _counter_ambush_flare_context(
+	battle: Dictionary,
+	protected_stack: Dictionary,
+	ambush_ability_id: String
+) -> Dictionary:
+	if protected_stack.is_empty() or ambush_ability_id == "":
+		return {}
+	for source in _alive_stacks_for_side(battle, String(protected_stack.get("side", ""))):
+		var ability := _ability_by_id(source, "counter_ambush_flare")
+		if ability.is_empty():
+			continue
+		if ability.get("countered_ability_ids", []).has(ambush_ability_id):
+			return {"source": source, "ability": ability}
+	return {}
+
+static func _append_counter_ambush_flare_event(
+	battle: Dictionary,
+	flare_context: Dictionary,
+	ambusher: Dictionary,
+	blocked_ability_id: String,
+	blocked_ability_name: String
+) -> String:
+	var source: Dictionary = flare_context.get("source", {})
+	var ability: Dictionary = flare_context.get("ability", {})
+	var current_ambusher := _get_stack_by_id(battle, String(ambusher.get("battle_id", "")))
+	var reveals_ambusher: bool = ability.get("revealed_ability_ids", []).has(blocked_ability_id)
+	if reveals_ambusher and not current_ambusher.is_empty() and _alive_count(current_ambusher) > 0:
+		_apply_stack_effect(
+			battle,
+			String(current_ambusher.get("battle_id", "")),
+			SpellRulesScript.build_battle_effect(
+				String(ability.get("revealed_status_id", "status_flare_revealed")),
+				String(ability.get("revealed_status_label", "Flare-Revealed")),
+				_normalize_ability_modifiers(ability.get("revealed_modifiers", {"defense": -1, "initiative": -1})),
+				maxi(1, int(ability.get("revealed_duration_rounds", 1))),
+				battle,
+				"unit_ability",
+				"counter_ambush_flare"
+			)
+		)
+	var message := "%s exposes %s; its ambush payoff is blocked%s." % [
+		String(ability.get("name", "Counter-Ambush Flare")),
+		blocked_ability_name,
+		" and the attacker is %s" % String(ability.get("revealed_status_label", "Flare-Revealed")).to_lower() if reveals_ambusher else "",
+	]
+	_append_presentation_event(
+		battle,
+		"debuff" if reveals_ambusher else "ability",
+		message,
+		{
+			"action_id": "counter_ambush_flare",
+			"actor_battle_id": String(source.get("battle_id", "")),
+			"target_battle_id": String(ambusher.get("battle_id", "")),
+			"ability_id": "counter_ambush_flare",
+		}
+	)
+	return message
 
 static func _side_resonance_relay(battle: Dictionary, side: String) -> Dictionary:
 	var payloads := _side_ability_payloads(battle, side, "resonance_relay")
@@ -9909,6 +9998,20 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"duration_rounds": clampi(int(entry.get("duration_rounds", 2)), 1, 3),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"initiative": -1})),
 					"ai_heat_score_penalty": clampf(float(entry.get("ai_heat_score_penalty", 0.5)), 0.0, 4.0),
+				}
+			"counter_ambush_flare":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Counter-Ambush Flare")),
+					"description": String(entry.get("description", "")),
+					"countered_ability_ids": _normalize_string_array(entry.get("countered_ability_ids", ["backstab", "fogwake"])),
+					"ambush_bonus_retention": clampf(float(entry.get("ambush_bonus_retention", 0.0)), 0.0, 1.0),
+					"blocks_ambush_status": bool(entry.get("blocks_ambush_status", true)),
+					"revealed_status_id": String(entry.get("revealed_status_id", "status_flare_revealed")),
+					"revealed_status_label": String(entry.get("revealed_status_label", "Flare-Revealed")),
+					"revealed_duration_rounds": clampi(int(entry.get("revealed_duration_rounds", 1)), 1, 2),
+					"revealed_ability_ids": _normalize_string_array(entry.get("revealed_ability_ids", ["fogwake"])),
+					"revealed_modifiers": _normalize_ability_modifiers(entry.get("revealed_modifiers", {"defense": -1, "initiative": -1})),
 				}
 			"sporeglass_mend":
 				normalized = {

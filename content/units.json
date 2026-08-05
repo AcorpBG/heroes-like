@@ -575,6 +575,29 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "counter_ambush_flare",
+          "name": "Counter-Ambush Flare",
+          "description": "While a Lantern Sapper stack survives, signal flares expose enemy ambush lanes, removing backstab and fogwake bonus damage and preventing Fogbound.",
+          "countered_ability_ids": [
+            "backstab",
+            "fogwake"
+          ],
+          "ambush_bonus_retention": 0.0,
+          "blocks_ambush_status": true,
+          "revealed_status_id": "status_flare_revealed",
+          "revealed_status_label": "Flare-Revealed",
+          "revealed_duration_rounds": 1,
+          "revealed_ability_ids": [
+            "fogwake"
+          ],
+          "revealed_modifiers": {
+            "defense": -1,
+            "initiative": -1
+          }
+        }
+      ],
       "growth": 5,
       "cost": {
         "gold": 95,
