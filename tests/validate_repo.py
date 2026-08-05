@@ -20597,6 +20597,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
+    post_identity_outlier_report_path = ROOT / "tests/battle_post_identity_active_outlier_regression.gd"
+    post_identity_outlier_scene_path = ROOT / "tests/battle_post_identity_active_outlier_regression.tscn"
     rough_exactors_report_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.gd"
     rough_exactors_scene_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.tscn"
     orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
@@ -20670,6 +20672,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         ghoul_grove_scene_path,
         drowned_reliquary_report_path,
         drowned_reliquary_scene_path,
+        post_identity_outlier_report_path,
+        post_identity_outlier_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
@@ -21017,6 +21021,26 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_ninefold_drowned_reliquary_balance_regression.gd" in drowned_reliquary_scene_text,
             errors,
             "Drowned Reliquary balance regression scene is not wired to its script.",
+        )
+    if post_identity_outlier_report_path.exists():
+        post_identity_outlier_text = post_identity_outlier_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_POST_IDENTITY_ACTIVE_OUTLIER_REGRESSION",
+            "glassfen_relay_pickets",
+            "ninefold_drowned_reliquary_watch",
+            "army_relay_pickets",
+            "army_neutral_tidepool_skiffyard_watch",
+            "player_advantaged",
+            "terminal_health_margin_pct",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in post_identity_outlier_text, errors, f"Post-identity active outlier regression is missing token: {required_token}")
+    if post_identity_outlier_scene_path.exists():
+        post_identity_outlier_scene_text = post_identity_outlier_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_post_identity_active_outlier_regression.gd" in post_identity_outlier_scene_text,
+            errors,
+            "Post-identity active outlier regression scene is not wired to its script.",
         )
     if rough_exactors_report_path.exists():
         rough_exactors_text = rough_exactors_report_path.read_text(encoding="utf-8")

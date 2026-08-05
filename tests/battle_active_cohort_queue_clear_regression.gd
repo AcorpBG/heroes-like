@@ -33,8 +33,8 @@ const TARGET_CONTRACTS := {
 	},
 	"glassfen-breakers/glassfen_relay_pickets": {
 		"army_id": "army_glassfen_relay_pickets_watch",
-		"stack_counts": {"unit_shard_guard": 5, "unit_prism_adept": 2},
-		"sample": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 5},
+		"stack_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2},
+		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 8},
 	},
 	"orevein-contract/orevein_archive_wardens": {
 		"army_id": "army_orevein_archive_wardens_watch",
