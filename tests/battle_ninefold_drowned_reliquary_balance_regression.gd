@@ -6,12 +6,12 @@ const SCENARIO_ID := "ninefold-confluence"
 const PLACEMENT_ID := "ninefold_drowned_reliquary_watch"
 const LOCAL_ARMY_ID := "army_ninefold_drowned_reliquary_watch"
 const SHARED_ARMY_ID := "army_neutral_tidepool_skiffyard_watch"
-const MAX_TERMINAL_MARGIN_PCT := 90
+const MAX_TERMINAL_MARGIN_PCT := 74
 const MIN_ROUND := 3
 const MAX_ROUND := 8
 const EXPECTED_STACK_COUNTS := {
-	"unit_neutral_tidepool_cutters": 4,
-	"unit_neutral_reefbolt_crews": 9,
+	"unit_neutral_tidepool_cutters": 6,
+	"unit_neutral_reefbolt_crews": 11,
 }
 const SHARED_STACK_COUNTS := {
 	"unit_neutral_tidepool_cutters": 7,
@@ -58,8 +58,8 @@ func _run() -> void:
 	if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
 		_fail_sample("Drowned Reliquary no longer resolves as a bounded player victory.", payload, sample)
 		return
-	if String(sample.get("initial_stack_profile", {}).get("matchup_band", "")) != "player_advantaged":
-		_fail_sample("Drowned Reliquary no longer preserves its player-advantaged matchup band.", payload, sample)
+	if String(sample.get("initial_stack_profile", {}).get("matchup_band", "")) != "even":
+		_fail_sample("Drowned Reliquary no longer preserves its even matchup band.", payload, sample)
 		return
 	var round_reached := int(sample.get("round_reached", 0))
 	if round_reached < MIN_ROUND or round_reached > MAX_ROUND:

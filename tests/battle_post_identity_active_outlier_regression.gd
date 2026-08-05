@@ -10,16 +10,18 @@ const CASES := [
 		"local_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2},
 		"shared_army_id": "army_relay_pickets",
 		"shared_counts": {"unit_shard_guard": 5, "unit_prism_adept": 2},
+		"matchup_band": "player_advantaged",
 		"expected": {"round_reached": 4, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 8},
 	},
 	{
 		"scenario_id": "ninefold-confluence",
 		"placement_id": "ninefold_drowned_reliquary_watch",
 		"local_army_id": "army_ninefold_drowned_reliquary_watch",
-		"local_counts": {"unit_neutral_tidepool_cutters": 4, "unit_neutral_reefbolt_crews": 9},
+		"local_counts": {"unit_neutral_tidepool_cutters": 6, "unit_neutral_reefbolt_crews": 11},
 		"shared_army_id": "army_neutral_tidepool_skiffyard_watch",
 		"shared_counts": {"unit_neutral_tidepool_cutters": 7, "unit_neutral_reefbolt_crews": 2},
-		"expected": {"round_reached": 3, "terminal_health_margin_pct": 85, "enemy_damage_per_round": 8},
+		"matchup_band": "even",
+		"expected": {"round_reached": 4, "terminal_health_margin_pct": 68, "enemy_damage_per_round": 12},
 	},
 ]
 
@@ -50,8 +52,8 @@ func _run() -> void:
 		var expected: Dictionary = case.get("expected", {})
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory":
 			failures.append("%s/%s must remain a completed player victory" % [scenario_id, placement_id])
-		if String(sample.get("initial_stack_profile", {}).get("matchup_band", "")) != "player_advantaged":
-			failures.append("%s/%s must remain player-advantaged" % [scenario_id, placement_id])
+		if String(sample.get("initial_stack_profile", {}).get("matchup_band", "")) != String(case.get("matchup_band", "")):
+			failures.append("%s/%s matchup band drifted" % [scenario_id, placement_id])
 		if int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)):
 			failures.append("%s/%s round contract drifted" % [scenario_id, placement_id])
 		if int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)):

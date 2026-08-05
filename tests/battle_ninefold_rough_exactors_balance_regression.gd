@@ -14,7 +14,7 @@ const LOCAL_ARMY_CONTRACTS := {
 	},
 	GATEHOUSE_PLACEMENT_ID: {
 		"army_id": "army_ninefold_basalt_gatehouse_watch",
-		"stack_counts": {"unit_neutral_basalt_wardens": 13, "unit_neutral_tunnelmark_bolters": 5},
+		"stack_counts": {"unit_neutral_basalt_wardens": 11, "unit_neutral_tunnelmark_bolters": 6},
 	},
 }
 const SHARED_EXACTORS_CONTRACT := {
@@ -25,7 +25,7 @@ const SHARED_EXACTORS_CONTRACT := {
 const GATEHOUSE_SAMPLE_CONTRACT := {
 	"outcome_state": "defeat",
 	"round_reached": 4,
-	"terminal_health_margin_pct": 74,
+	"terminal_health_margin_pct": 73,
 	"enemy_damage_per_round": 38,
 }
 

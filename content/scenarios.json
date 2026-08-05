@@ -1130,7 +1130,7 @@
         {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201, "enemy_army": {"id": "army_stonewake_sluice_band", "name": "Stonewake Sluice Band", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mire_slinger", "count": 8}, {"unit_id": "unit_blackbranch_cutthroat", "count": 5}, {"unit_id": "unit_gorefen_ripper", "count": 1}]}},
+        {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201, "enemy_army": {"id": "army_stonewake_sluice_band", "name": "Stonewake Sluice Band", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mire_slinger", "count": 6}, {"unit_id": "unit_blackbranch_cutthroat", "count": 5}, {"unit_id": "unit_gorefen_ripper", "count": 1}]}},
         {"placement_id": "willow_mill", "encounter_id": "encounter_willow_mill_pack", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 4202},
         {
           "placement_id": "stonewake_reed_totemists",
@@ -2618,7 +2618,7 @@
         {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201, "enemy_army": {"id": "army_ironbridge_ford_reavers_watch", "name": "Ironbridge Ford Reavers Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 10}, {"unit_id": "unit_mire_slinger", "count": 12}, {"unit_id": "unit_bog_brute", "count": 2}]}},
+        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201, "enemy_army": {"id": "army_ironbridge_ford_reavers_watch", "name": "Ironbridge Ford Reavers Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 10}, {"unit_id": "unit_mire_slinger", "count": 12}, {"unit_id": "unit_bog_brute", "count": 3}]}},
         {"placement_id": "bridge_silt_hunters", "encounter_id": "encounter_silt_hunters", "x": 7, "y": 4, "difficulty": "medium", "combat_seed": 10202, "enemy_army": {"id": "army_ironbridge_silt_hunters_watch", "name": "Ironbridge Silt Hunters Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 8}, {"unit_id": "unit_blackbranch_cutthroat", "count": 12}, {"unit_id": "unit_mire_slinger", "count": 6}]}},
         {"placement_id": "ironbridge_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 0, "difficulty": "medium", "combat_seed": 10203}
       ]
@@ -4241,7 +4241,7 @@
           "combat_seed": 17201,
           "enemy_army": {"id": "army_orevein_archive_wardens_watch", "name": "Orevein Archive Wardens Watch", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 11}, {"unit_id": "unit_ember_archer", "count": 11}, {"unit_id": "unit_citadel_pikeward", "count": 4}]}
         },
-        {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 3}, {"unit_id": "unit_ember_archer", "count": 6}]}},
+        {"placement_id": "orevein_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 17202, "enemy_army": {"id": "army_orevein_bridgeward_levies", "name": "Orevein Bridgeward Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 4}, {"unit_id": "unit_ember_archer", "count": 6}]}},
         {"placement_id": "orevein_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 17203, "enemy_army": {"id": "army_orevein_beacon_wardens", "name": "Orevein Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 4}, {"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 1}]}}
       ]
     },
@@ -4385,7 +4385,7 @@
       ],
       "encounters": [
         {"placement_id": "bellwake_relay_pickets", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 18201, "enemy_army": {"id": "army_bellwake_relay_pickets_watch", "name": "Bellwake Relay Pickets Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 7}, {"unit_id": "unit_mirror_duelist", "count": 8}]}},
-        {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_mirror_duelist", "count": 8}, {"unit_id": "unit_sunvault_resonant_choristers", "count": 4}]}},
+        {"placement_id": "bellwake_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 18202, "enemy_army": {"id": "army_bellwake_mirror_lancers_watch", "name": "Bellwake Mirror Lancers Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 9}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_mirror_duelist", "count": 9}, {"unit_id": "unit_sunvault_resonant_choristers", "count": 4}]}},
         {"placement_id": "bellwake_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 18203, "artifact_source_context": {"family": "guarded_reward_site", "secondary_tags": ["guarded_reward"], "guard_profile": {"tier": "heavy"}, "reward_preview": {"reward_categories": ["artifact"]}, "guarded_reward_contract": {"battle_salvage_reward_table_id": "artifact_source_battle_salvage_heavy"}, "runtime_boundary": {"artifact_reward_execution": true}}, "enemy_army": {"id": "army_bellwake_aurora_battery_watch", "name": "Bellwake Aurora Battery Watch", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 8}, {"unit_id": "unit_prism_adept", "count": 6}, {"unit_id": "unit_aurora_ballista", "count": 3}]}}
       ]
     },
@@ -4544,7 +4544,7 @@
         {"placement_id": "ninefold_orevein_exactors", "encounter_id": "encounter_orevein_exactors", "x": 37, "y": 48, "difficulty": "medium", "combat_seed": 16404, "enemy_army": {"id": "army_ninefold_orevein_exactors_watch", "name": "Ninefold Orevein Exactors Watch", "faction_id": "faction_brasshollow", "stacks": [{"unit_id": "unit_brasshollow_scrip_haulers", "count": 9}, {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6}, {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 6}]}},
         {"placement_id": "ninefold_bellwake_privateers", "encounter_id": "encounter_bellwake_privateers", "x": 48, "y": 48, "difficulty": "medium", "combat_seed": 16405},
         {"placement_id": "ninefold_barrow_vault_watch", "encounter_id": "encounter_bramble_hedge_watch", "x": 18, "y": 40, "difficulty": "medium", "combat_seed": 16407, "enemy_army": {"id": "army_ninefold_barrow_vault_watch", "name": "Ninefold Barrow Vault Watch", "affiliation": "neutral", "stacks": [{"unit_id": "unit_neutral_hedgehook_watch", "count": 8}, {"unit_id": "unit_neutral_thornbow_scouts", "count": 6}]}, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_barrow_vault", "target_placement_id": "barrow_vault", "blocks_approach": true, "clear_required_for_target": true}},
-        {"placement_id": "ninefold_drowned_reliquary_watch", "encounter_id": "encounter_tidepool_skiffyard_watch", "x": 54, "y": 40, "difficulty": "high", "combat_seed": 16408, "enemy_army": {"id": "army_ninefold_drowned_reliquary_watch", "name": "Ninefold Drowned Reliquary Watch", "affiliation": "neutral", "stacks": [{"unit_id": "unit_neutral_tidepool_cutters", "count": 4}, {"unit_id": "unit_neutral_reefbolt_crews", "count": 9}]}, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_drowned_reliquary", "target_placement_id": "drowned_reliquary", "blocks_approach": true, "clear_required_for_target": true}},
+        {"placement_id": "ninefold_drowned_reliquary_watch", "encounter_id": "encounter_tidepool_skiffyard_watch", "x": 54, "y": 40, "difficulty": "high", "combat_seed": 16408, "enemy_army": {"id": "army_ninefold_drowned_reliquary_watch", "name": "Ninefold Drowned Reliquary Watch", "affiliation": "neutral", "stacks": [{"unit_id": "unit_neutral_tidepool_cutters", "count": 6}, {"unit_id": "unit_neutral_reefbolt_crews", "count": 11}]}, "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "site_drowned_reliquary", "target_placement_id": "drowned_reliquary", "blocks_approach": true, "clear_required_for_target": true}},
         {
         "placement_id": "ninefold_basalt_gatehouse_watch",
         "encounter_id": "encounter_basalt_gatehouse_watch",
@@ -4557,8 +4557,8 @@
           "name": "Ninefold Basalt Gatehouse Watch",
           "affiliation": "neutral",
           "stacks": [
-            {"unit_id": "unit_neutral_basalt_wardens", "count": 13},
-            {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 5}
+            {"unit_id": "unit_neutral_basalt_wardens", "count": 11},
+            {"unit_id": "unit_neutral_tunnelmark_bolters", "count": 6}
           ]
         },
         "object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",

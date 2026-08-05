@@ -20599,6 +20599,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     drowned_reliquary_scene_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.tscn"
     post_identity_outlier_report_path = ROOT / "tests/battle_post_identity_active_outlier_regression.gd"
     post_identity_outlier_scene_path = ROOT / "tests/battle_post_identity_active_outlier_regression.tscn"
+    active_medium_pressure_report_path = ROOT / "tests/battle_active_medium_sample_pressure_regression.gd"
+    active_medium_pressure_scene_path = ROOT / "tests/battle_active_medium_sample_pressure_regression.tscn"
     rough_exactors_report_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.gd"
     rough_exactors_scene_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.tscn"
     orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
@@ -20674,6 +20676,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         drowned_reliquary_scene_path,
         post_identity_outlier_report_path,
         post_identity_outlier_scene_path,
+        active_medium_pressure_report_path,
+        active_medium_pressure_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
@@ -21010,7 +21014,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "unit_neutral_tidepool_cutters",
             "unit_neutral_reefbolt_crews",
             "MAX_TERMINAL_MARGIN_PCT",
-            "player_advantaged",
+            '"even"',
             "damage_per_round",
             "get_tree().quit(1)",
         ):
@@ -21041,6 +21045,27 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_post_identity_active_outlier_regression.gd" in post_identity_outlier_scene_text,
             errors,
             "Post-identity active outlier regression scene is not wired to its script.",
+        )
+    if active_medium_pressure_report_path.exists():
+        active_medium_pressure_text = active_medium_pressure_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_ACTIVE_MEDIUM_SAMPLE_PRESSURE_REGRESSION",
+            "bellwake_mirror_lancers",
+            "bridge_ford_reavers",
+            "orevein_bridgeward_levies",
+            "ninefold_basalt_gatehouse_watch",
+            "ninefold_drowned_reliquary_watch",
+            "sluice_band",
+            "_sample_matches",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in active_medium_pressure_text, errors, f"Active medium sample-pressure regression is missing token: {required_token}")
+    if active_medium_pressure_scene_path.exists():
+        active_medium_pressure_scene_text = active_medium_pressure_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_active_medium_sample_pressure_regression.gd" in active_medium_pressure_scene_text,
+            errors,
+            "Active medium sample-pressure regression scene is not wired to its script.",
         )
     if rough_exactors_report_path.exists():
         rough_exactors_text = rough_exactors_report_path.read_text(encoding="utf-8")
