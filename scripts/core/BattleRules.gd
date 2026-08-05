@@ -3478,6 +3478,13 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 	]
 	if is_ranged:
 		clauses.append("shots after volley %d" % max(0, int(attacker.get("shots_remaining", 0)) - 1))
+		var ranged_return := _ranged_damage_return_ratio(target)
+		if ranged_return > 0.0:
+			var shielding := _ability_by_id(target, "shielding")
+			clauses.append("%s returns %d%% of damage received if the target survives" % [
+				String(shielding.get("name", "Shielding")),
+				int(round(ranged_return * 100.0)),
+			])
 		if _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line") and attack_distance > 0:
 			clauses.append("enemy cover will blunt part of the volley")
 		elif _side_controls_field_objective_type(battle, String(attacker.get("side", "")), "cover_line") and attack_distance > 0:
@@ -4076,6 +4083,14 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				return "%s is cooling under reduced damage, defense, and initiative" % name
 			return "%s is pressure-ready for one burst strike before overheating" % name
 		"shielding":
+			var ranged_reduction_pct := int(round((1.0 - float(ability.get("ranged_damage_multiplier", 1.0))) * 100.0))
+			var ranged_return_pct := int(round(float(ability.get("ranged_damage_return_ratio", 0.0)) * 100.0))
+			if ranged_return_pct > 0:
+				return "%s blunts %d%% of incoming ranged damage and returns %d%% of damage received while this stack survives" % [
+					name,
+					ranged_reduction_pct,
+					ranged_return_pct,
+				]
 			if int(ability.get("ally_ranged_melee_damage_reduction_pct", 0)) > 0 or int(ability.get("linebreaker_screen_bonus_pct", 0)) > 0:
 				return "%s blunts missiles and screens allied engines from frontal pressure" % name
 			return "%s blunts missile pressure and helps the line hold" % name
@@ -5713,6 +5728,14 @@ static func _resolve_attack_action(
 	messages.append_array(damage_pressure_messages)
 	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
 	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
+	var ranged_return_messages := _apply_ranged_damage_return(
+		session.battle,
+		String(attacker.get("battle_id", "")),
+		target_before,
+		is_ranged,
+		"attack"
+	)
+	messages.append_array(ranged_return_messages)
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -6278,6 +6301,14 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	messages.append_array(damage_pressure_messages)
 	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
 	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
+	var ranged_return_messages := _apply_ranged_damage_return(
+		session.battle,
+		String(attacker.get("battle_id", "")),
+		target_before,
+		is_ranged,
+		"attack"
+	)
+	messages.append_array(ranged_return_messages)
 	if (
 		not is_ranged
 		and not defender_after.is_empty()
@@ -8563,6 +8594,78 @@ static func _retaliation_range_preview(
 		"max_units": int(losses.get("max_units", 0)),
 	}
 
+static func _ranged_damage_return_ratio(stack: Dictionary) -> float:
+	var shielding := _ability_by_id(stack, "shielding")
+	if shielding.is_empty():
+		return 0.0
+	return clampf(float(shielding.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25)
+
+static func _apply_ranged_damage_return(
+	battle: Dictionary,
+	attacker_battle_id: String,
+	defender_before: Dictionary,
+	is_ranged: bool,
+	source_type: String
+) -> Array:
+	var messages := []
+	if not is_ranged or source_type != "attack" or attacker_battle_id == "" or defender_before.is_empty():
+		return messages
+	var defender_after := _get_stack_by_id(battle, String(defender_before.get("battle_id", "")))
+	if defender_after.is_empty() or _alive_count(defender_after) <= 0:
+		return messages
+	var return_ratio := _ranged_damage_return_ratio(defender_after)
+	if return_ratio <= 0.0:
+		return messages
+	var damage_received: int = max(
+		0,
+		int(defender_before.get("total_health", 0)) - int(defender_after.get("total_health", 0))
+	)
+	if damage_received <= 0:
+		return messages
+	var attacker_before := _get_stack_by_id(battle, attacker_battle_id)
+	if attacker_before.is_empty() or _alive_count(attacker_before) <= 0:
+		return messages
+	attacker_before = attacker_before.duplicate(true)
+	var reflected_damage: int = max(1, int(round(float(damage_received) * return_ratio)))
+	reflected_damage = min(reflected_damage, int(attacker_before.get("total_health", 0)))
+	_apply_damage_to_stack(battle, attacker_battle_id, reflected_damage)
+	var attacker_after := _get_stack_by_id(battle, attacker_battle_id)
+	var shielding := _ability_by_id(defender_after, "shielding")
+	var ability_name := String(shielding.get("name", "Shielding"))
+	messages.append("%s returns %d damage to %s." % [
+		ability_name,
+		reflected_damage,
+		_stack_label(attacker_before),
+	])
+	_mark_damage_target_animation(
+		battle,
+		attacker_battle_id,
+		false,
+		String(defender_after.get("battle_id", "")),
+		{"ability_id": "shielding"}
+	)
+	_append_damage_presentation_event(
+		battle,
+		"ability",
+		defender_after,
+		attacker_before,
+		attacker_after,
+		reflected_damage,
+		"shielding",
+		{"ability_id": "shielding", "ability_name": ability_name}
+	)
+	var pressure_messages := _apply_damage_pressure(
+		battle,
+		defender_after,
+		attacker_before,
+		attacker_after,
+		false,
+		"ability"
+	)
+	messages.append_array(pressure_messages)
+	_append_text_presentation_event(battle, "morale", pressure_messages, defender_after, attacker_after, "shielding")
+	return messages
+
 static func _apply_damage_to_stack(battle: Dictionary, battle_id: String, damage: int) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
@@ -9532,6 +9635,7 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"harried_damage_multiplier": clampf(float(entry.get("harried_damage_multiplier", 1.0)), 1.0, 2.0),
 					"ally_ranged_melee_damage_reduction_pct": clampi(int(entry.get("ally_ranged_melee_damage_reduction_pct", 0)), 0, 50),
 					"linebreaker_screen_bonus_pct": clampi(int(entry.get("linebreaker_screen_bonus_pct", 0)), 0, 50),
+					"ranged_damage_return_ratio": clampf(float(entry.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25),
 				}
 			"volley":
 				normalized = {

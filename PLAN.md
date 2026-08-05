@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-sunvault-shard-warden-facet-reprisal-10184`. Shard Wardens now own Facet Reprisal: two-percent incoming ranged-attack mitigation plus ten-percent return of actual damage received while the stack survives. Melee, retaliation, spells, direct health loss, and lethal ranged attacks do not trigger it. Live player and AI attack resolution, tactical target scoring, attack previews, role summaries, the fast benchmark, schema validation, and focused runtime proof consume the same authored fields; returned damage can kill the shooter. The all-live 100-seed four-week matrix preserves 28 outliers / 172.0 severity / five rows at or above 65 percent / 68.5 percent maximum dominance / 3.8-point maximum side bias / zero structural failures. Week-four Sunvault/Veilmourn improves from 54.5/45.5 to 53/47, while Mireclaw/Sunvault keeps the same 62/38 result with a 0.01-point terminal-margin change. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
 - Completed implementation slice: `packaging-draft-prerelease-channel-10184`. The clean-source build job remains contents-read-only and now passes its immutable verified artifact to the only contents-write job. Version-tag pushes select draft delivery; manual runs remain artifact-only unless explicitly dispatched from a matching tag. A directly tested policy rejects branch delivery and tag/version mismatches. The delivery job revalidates candidate/index version and exact source revision, checks all archive/installer hashes, proves the release tag is absent, and creates a draft prerelease with existing-tag and exact-target guards. It never publishes, replaces assets, or touches an existing release. Focused policy/workflow tests, live candidate identity/hash verification, a read-only GitHub 404 probe, workflow YAML, repository, Python, JSON, and diff gates pass. Signing, human publication, stable-channel selection, and native Windows hardware certification remain open.
 - Completed implementation slice: `packaging-native-process-crash-recovery-10184`. Linux and Windows desktop runs now retain at most five rotated Godot engine logs and atomically own `user://debug/heroes_runtime_session.json`; normal autoload shutdown removes only the current process marker. A surviving marker is consumed exactly once on the next launch and records `previous_session_unclean_exit` with at most 64 KiB/40 bounded lines from the newest prior rotated log. Token-level support sanitization redacts Unix and Windows absolute paths even when backtrace frame prefixes precede them, while preserving useful engine, GDScript, and crash context. The real exported-PCK lifecycle intentionally terminates the first process through `OS.crash()` with return code -6, observes the crash marker, recovers exactly one issue on the second process, retains two logs inside the five-file bound, exports the recovered issue through the existing local-only support bundle, and leaves no session marker after clean exit. Existing 26-record packaged issue history, Linux binary export/boot, Windows PE/PCK/DLL export and Wine Boot/MainMenu load, platform readiness, core, editor-import, repository, Python, JSON, and diff gates pass. This closes bounded abnormal-exit recovery, not native minidumps, symbolication, remote reporting, signing, clean-machine/native-Windows certification, release-channel integration, or overall release completion.
 - Completed implementation slice: `combat-sunvault-solar-array-screen-strength-10184`. Solar Array Lanes now reduces incoming melee primary and retaliation damage to allied Sunvault ranged stacks by five percent while both its Solar Array Strider source and linked Daybreak Colossus survive; source/link invalidation and exclusions for melee allies, other factions, ranged attacks, spells, and direct health loss remain exact. Live BattleRules, tactical-AI estimates, player summaries, the fast benchmark, focused runtime proof, and repository validation consume the same authored `0.95` multiplier. A six-percent candidate was rejected because outliers increased from 29 to 30. The accepted all-live 100-seed four-week matrix reduces outliers from 29 to 28 and severity from 174.0 to 172.0, keeps five rows at or above 65 percent and maximum dominance at 68.5 percent, moves side bias from 3.67 to 3.8 points inside the seven-point gate, and has zero structural failures. Week-four Embercourt/Sunvault improves from 68.5 to 67.5 percent and Mireclaw/Sunvault from 63 to 62 percent; Brasshollow/Sunvault worsens from 59 to 60 percent and week-three Sunvault/Veilborne from 60.5 to 61 percent without creating a new outlier. Focused ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass. Faction balance remains `needs_tuning`; this is not final faction balance or overall release completion.
@@ -2003,6 +2004,31 @@ Valid operational statuses:
 - `paused`: intentionally delayed until selected again.
 - `pending_after_implementation`: review/gate slice waiting for implementation output.
 - `superseded`: replaced by a later accepted slice/path.
+
+## Sunvault Shard Warden Facet Reprisal
+
+id: `combat-sunvault-shard-warden-facet-reprisal-10184`
+
+Completed Phase 6 faction-identity implementation slice. Shard Wardens are
+authored as a durable shield line that reflects minor damage; the production
+tier-one unit now owns that bounded live role.
+
+Implementation target:
+- give Shard Wardens a bounded shielding contract that reduces incoming ranged damage by two percent and returns ten percent of ranged attack damage actually received while the Warden stack survives;
+- keep reflected damage exclusive to direct ranged unit attacks, with no return from melee, retaliation, spells, direct health loss, or attacks that destroy the Wardens;
+- make live BattleRules, tactical AI estimates, player-facing attack summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored fields;
+- preserve unit base stats, growth, costs, recruitment, heroes, spells, towns, saves, scenarios, strategic AI, and Native RMG behavior.
+
+Completion criteria:
+- focused runtime proof measures the exact ranged reduction and return, proves the reflected damage can destroy the shooter, and proves all excluded damage paths remain unchanged;
+- tactical AI accounts for expected reflected losses and the player attack summary names the return risk before a ranged attack;
+- the all-live 100-seed four-week matrix has zero structural failures and does not regress the accepted 28-outlier / 172.0-severity / 68.5-percent maximum-dominance baseline or seven-point side-bias gate;
+- ability, autoplay, balance-regression, core, project-parse, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not add allied-array protection, broad Sunvault stat buffs, Mirror Duelist abilities, or spell reflection in this slice;
+- do not change Native RMG, save schemas, strategic AI, campaigns, or benchmark thresholds;
+- do not claim final Sunvault identity, faction balance, or overall release completion.
 
 ## Work Selection Gates
 
