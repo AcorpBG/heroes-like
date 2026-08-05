@@ -10689,6 +10689,14 @@ def validate_content(errors: list[str]) -> None:
                     if "ranged_damage_return_ratio" in ability:
                         return_ratio = float(ability.get("ranged_damage_return_ratio", 0.0))
                         ensure(0.0 < return_ratio <= 0.25, errors, f"Unit {unit_id} shielding ranged_damage_return_ratio must be in (0, 0.25]")
+                    if "linked_ranged_unit_ids" in ability or "linked_ranged_damage_reduction_pct" in ability:
+                        linked_unit_ids = ability.get("linked_ranged_unit_ids", [])
+                        ensure(isinstance(linked_unit_ids, list) and bool(linked_unit_ids), errors, f"Unit {unit_id} shielding linked_ranged_unit_ids must be a non-empty list")
+                        for linked_unit_id in linked_unit_ids if isinstance(linked_unit_ids, list) else []:
+                            ensure(str(linked_unit_id) in units, errors, f"Unit {unit_id} shielding references unknown linked ranged unit {linked_unit_id}")
+                            ensure(bool(units.get(str(linked_unit_id), {}).get("ranged", False)), errors, f"Unit {unit_id} shielding linked unit {linked_unit_id} must be ranged")
+                        linked_reduction_pct = int(ability.get("linked_ranged_damage_reduction_pct", 0))
+                        ensure(0 < linked_reduction_pct <= 50, errors, f"Unit {unit_id} shielding linked_ranged_damage_reduction_pct must be between 1 and 50")
                 elif ability_id == "volley":
                     ensure(float(ability.get("damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley must define damage_multiplier > 1")
                     ensure(int(ability.get("min_distance", 0)) > 0, errors, f"Unit {unit_id} volley must define min_distance > 0")
@@ -10834,8 +10842,16 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(facet_reprisal.get("ranged_damage_multiplier", 1.0)) == 0.98, errors, "Facet Reprisal must blunt exactly 2% of incoming ranged damage")
     ensure(float(facet_reprisal.get("ranged_damage_return_ratio", 0.0)) == 0.1, errors, "Facet Reprisal must return exactly 10% of actual ranged attack damage")
     ensure(int(facet_reprisal.get("ally_ranged_melee_damage_reduction_pct", 0)) == 0, errors, "Facet Reprisal must not screen allied stacks")
+    ensure(facet_reprisal.get("linked_ranged_unit_ids", []) == ["unit_sunvault_prism_adepts"], errors, "Facet Reprisal must link only the production Prism Adept array")
+    ensure(int(facet_reprisal.get("linked_ranged_damage_reduction_pct", 0)) == 2, errors, "Facet Reprisal must screen its linked Prism Adept array by exactly two percent")
     sunvault_prism_adepts = units.get("unit_sunvault_prism_adepts", {})
     ensure(int(sunvault_prism_adepts.get("initiative", 0)) == 6, errors, "Prism Adepts must keep initiative six before their linked relay arrives")
+    prism_refraction_volley = next((ability for ability in sunvault_prism_adepts.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})
+    ensure(str(prism_refraction_volley.get("name", "")) == "Refraction Volley", errors, "Production Prism Adepts must own Refraction Volley")
+    ensure(float(prism_refraction_volley.get("damage_multiplier", 0.0)) == 1.12, errors, "Refraction Volley must keep its exact open-lane multiplier")
+    ensure(prism_refraction_volley.get("status_ids", []) == ["status_staggered"], errors, "Refraction Volley must reward staggered targets")
+    ensure(float(prism_refraction_volley.get("status_damage_multiplier", 0.0)) == 1.12, errors, "Refraction Volley must keep its exact staggered-target multiplier")
+    ensure(float(prism_refraction_volley.get("ally_defending_multiplier", 0.0)) == 1.05, errors, "Refraction Volley must keep its exact held-line multiplier")
     sunvault_choristers = units.get("unit_sunvault_resonant_choristers", {})
     resonant_relay = next((ability for ability in sunvault_choristers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "resonance_relay"), {})
     ensure(str(resonant_relay.get("name", "")) == "Resonant Relay", errors, "Resonant Choristers must own the Sunvault relay ability")
