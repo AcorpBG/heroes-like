@@ -10,8 +10,8 @@ const MAX_TERMINAL_MARGIN_PCT := 90
 const MIN_ROUND := 3
 const MAX_ROUND := 8
 const EXPECTED_STACK_COUNTS := {
-	"unit_neutral_tidepool_cutters": 5,
-	"unit_neutral_reefbolt_crews": 8,
+	"unit_neutral_tidepool_cutters": 4,
+	"unit_neutral_reefbolt_crews": 9,
 }
 const SHARED_STACK_COUNTS := {
 	"unit_neutral_tidepool_cutters": 7,

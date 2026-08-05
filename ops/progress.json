@@ -14325,10 +14325,10 @@
   "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-embercourt-bargebow-screened-lane-10184",
-  "currentSliceId": "combat-embercourt-bargebow-screened-lane-10184",
-  "currentSliceNotes": "Rejected after exact 30-seed screening narrowly improved severity from 147.95 to 147.36 without improving 39 outliers, 12 severe rows, 73.33 percent maximum dominance, or 16.0-point side bias; the decisive 100-seed matrix was exactly unchanged at 28 outliers, 172.0 severity, five severe rows, 68.5 percent maximum dominance, 3.8-point side bias, and zero structural failures. Runtime edits were reverted.",
-  "currentSliceStatus": "superseded",
-  "currentSliceTitle": "Embercourt Bargebow Screened Lane",
+  "currentSliceId": "balance-post-identity-active-outlier-repair-10184",
+  "currentSliceNotes": "Completed placement-local Glassfen and Drowned Reliquary pressure repair: 59-encounter queue improved from 20 items / 4 high to 16 / 0 high; unrelated medium queue remains open.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Post-Identity Active Encounter Pressure Repair",
   "currentSliceUpdatedAt": "2026-08-05T01:47:18Z",
   "deferredRiskRegister": [
     {
@@ -71478,6 +71478,100 @@
       "startedAt": "2026-08-05T01:24:25Z",
       "updatedAt": "2026-08-05T01:47:18Z",
       "notes": "Rejected after exact 30-seed screening narrowly improved severity from 147.95 to 147.36 without improving 39 outliers, 12 severe rows, 73.33 percent maximum dominance, or 16.0-point side bias; the decisive 100-seed matrix was exactly unchanged at 28 outliers, 172.0 severity, five severe rows, 68.5 percent maximum dominance, 3.8-point side bias, and zero structural failures. Runtime edits were reverted."
+    },
+    {
+      "id": "balance-post-identity-active-outlier-repair-10184",
+      "title": "Post-Identity Active Encounter Pressure Repair",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-active-scenario-breadth-report.md"
+      ],
+      "purpose": "Repair the two high-priority active encounter outliers reopened by later faction unit-role mechanics without reverting those mechanics or changing shared combat content.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/battle_post_identity_active_outlier_regression.gd",
+        "tests/battle_post_identity_active_outlier_regression.tscn",
+        "tests/battle_ninefold_drowned_reliquary_balance_regression.gd",
+        "tests/battle_active_cohort_queue_clear_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count": 20,
+        "active_queue_high_priority_count": 4,
+        "active_queue_signature": "b8eca423",
+        "glassfen_relay_pickets_terminal_margin_pct": 91,
+        "glassfen_relay_pickets_enemy_damage_per_round": 1,
+        "ninefold_drowned_reliquary_terminal_margin_pct": 94,
+        "shared_army_changes": 0
+      },
+      "completionCriteria": [
+        "Glassfen Relay Pickets and Ninefold Drowned Reliquary remain completed player-advantaged victories at no more than 90 percent terminal margin with meaningful enemy damage",
+        "Both corrections remain placement-local and preserve their corresponding shared armies",
+        "The 59-encounter active breadth gate removes all four current high-priority items without introducing a new high-priority contributor",
+        "Focused battle, unit ability, core, project parse, repository, JSON, and diff validation pass, while the active breadth measurement confirms zero high-priority items and retains its unrelated medium queue"
+      ],
+      "nonGoals": [
+        "clearing unrelated medium cohort watches, weakening queue thresholds, or reverting shipped faction unit roles",
+        "shared armies, global unit stats, battle rules, strategic AI, campaigns, saves, rewards, or Native RMG",
+        "final encounter balance, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T02:05:55Z",
+      "updatedAt": "2026-08-05T02:18:20Z",
+      "startedAt": "2026-08-05T02:06:31Z",
+      "completedAt": "2026-08-05T02:17:38Z",
+      "notes": "Completed placement-local Glassfen and Drowned Reliquary pressure repair: 59-encounter queue improved from 20 items / 4 high to 16 / 0 high; unrelated medium queue remains open.",
+      "result": {
+        "glassfen_relay_pickets_stack_counts": {
+          "unit_shard_guard": 6,
+          "unit_prism_adept": 2
+        },
+        "glassfen_relay_pickets_outcome_state": "victory",
+        "glassfen_relay_pickets_matchup_band": "player_advantaged",
+        "glassfen_relay_pickets_round_reached": 4,
+        "glassfen_relay_pickets_terminal_margin_pct": 62,
+        "glassfen_relay_pickets_enemy_damage_per_round": 8,
+        "ninefold_drowned_reliquary_stack_counts": {
+          "unit_neutral_tidepool_cutters": 4,
+          "unit_neutral_reefbolt_crews": 9
+        },
+        "ninefold_drowned_reliquary_outcome_state": "victory",
+        "ninefold_drowned_reliquary_matchup_band": "player_advantaged",
+        "ninefold_drowned_reliquary_round_reached": 3,
+        "ninefold_drowned_reliquary_terminal_margin_pct": 85,
+        "ninefold_drowned_reliquary_enemy_damage_per_round": 8,
+        "active_scenario_sample_count": 59,
+        "active_queue_item_count_before": 20,
+        "active_queue_item_count_after": 16,
+        "active_queue_high_priority_count_before": 4,
+        "active_queue_high_priority_count_after": 0,
+        "active_queue_signature_after": "27d588fb",
+        "balance_matrix_gate_status_after": "pass",
+        "runtime_consequence_gate_status_after": "pass",
+        "runtime_consequence_matrix_gate_status_after": "pass",
+        "shared_army_changes": 0
+      },
+      "validation": [
+        "godot --headless --path . --scene tests/battle_post_identity_active_outlier_regression.tscn",
+        "godot --headless --path . --scene tests/battle_ninefold_drowned_reliquary_balance_regression.tscn",
+        "godot --headless --path . --scene tests/battle_autoplay_active_scenario_breadth_report.tscn (expected nonzero: improved from 20 items / 4 high to 16 / 0 high; unrelated medium queue remains)",
+        "godot --headless --path . --scene tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . --scene tests/unit_ability_runtime_report.tscn",
+        "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --scene tests/ninefold_scenario_smoke.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/scenarios.json ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Clear the remaining 16 medium active-breadth watches in separately bounded encounter/cohort slices; final faction balance and overall release completion remain open."
     }
   ],
   "project": "heroes-like",
@@ -72022,7 +72116,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T01:47:18Z",
+  "updatedAt": "2026-08-05T02:18:20Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
