@@ -1598,6 +1598,14 @@ class FastBattleBenchmark:
                     "linebreaker_screen_bonus_pct",
                     0.0,
                 )
+            if bool(defender.get("ranged", False)) and self._has_ability(attacker, "bloodrush"):
+                screen_reduction_pct += self._side_max_ability_float(
+                    battle,
+                    str(defender.get("side", "")),
+                    "shielding",
+                    "committed_assault_screen_reduction_pct",
+                    0.0,
+                )
             screen_reduction_pct = clamp(screen_reduction_pct, 0.0, 75.0)
             modifier *= 1.0 - (screen_reduction_pct / 100.0)
         attacking_shielding = self._ability_by_id(attacker, "shielding")

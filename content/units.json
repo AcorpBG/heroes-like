@@ -1274,9 +1274,10 @@
         {
           "id": "shielding",
           "name": "Aurora Facet Wall",
-          "description": "Overlapping prism faces blunt incoming batteries and keep the bastion line coherent without abandoning its close relay front.",
+          "description": "Overlapping prism faces blunt incoming batteries and screen allied ranged relays from close assault without abandoning the bastion front.",
           "cohesion_hold_bonus": 2,
-          "ranged_damage_multiplier": 0.92
+          "ranged_damage_multiplier": 0.92,
+          "committed_assault_screen_reduction_pct": 4
         }
       ],
       "content_status": "six_faction_scaffold",

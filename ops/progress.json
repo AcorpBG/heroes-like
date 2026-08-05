@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed commander role-state fixture reconciliation: current exact ranks pass and case execution stops after the first failure without changing strategic-AI runtime behavior.",
+  "currentNotes": "Completed Aurora Bastion's bounded allied-ranged screen against authored bloodrush committed assaults through shared runtime, AI, benchmark, and focused proof behavior.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-role-state-fixture-reconciliation-10184",
-  "currentSliceId": "strategic-ai-role-state-fixture-reconciliation-10184",
-  "currentSliceNotes": "Completed exact Signal Post/Glassroad rank reconciliation and verified fail-fast report execution.",
+  "currentSlice": "combat-sunvault-aurora-relay-front-10184",
+  "currentSliceId": "combat-sunvault-aurora-relay-front-10184",
+  "currentSliceNotes": "Accepted four-percent bloodrush screen keeps 28 outliers, lowers severity to 161.0, preserves the clear 59-encounter queue, and avoids normalized-state hash drift.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Role-State Fixture Reconciliation",
-  "currentSliceUpdatedAt": "2026-08-05T05:16:56Z",
+  "currentSliceTitle": "Sunvault Aurora Relay Front",
+  "currentSliceUpdatedAt": "2026-08-05T06:22:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,6 +19847,149 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "combat-sunvault-aurora-relay-front-10184",
+      "title": "Sunvault Aurora Relay Front",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Make the tier-six Aurora Bastion hold Sunvault's allied ranged relay front through the existing shared shielding contract and validate the resulting week-four faction balance.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 162.5,
+        "faction_balance_rows_at_or_above_65_pct": 4,
+        "faction_balance_max_dominance_pct": 68.5,
+        "faction_balance_max_side_bias_points": 4.13,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "aurora_committed_assault_screen_reduction_pct": 0
+      },
+      "completionCriteria": [
+        "Focused runtime proof measures the exact additional 0.96 modifier against bloodrush committed assaults and matching tactical-AI estimate while ordinary melee, melee allies, ranged attacks, dead sources, and stacked sources remain exact",
+        "The all-live 100-seed four-week matrix improves or preserves 28 outliers and 162.5 severity, stays at or below 68.5 percent maximum dominance, creates no new row at or above 65 percent, stays within seven side-bias points, and has zero structural failures",
+        "The 59-encounter active breadth queue remains clear at zero items",
+        "Focused ability, autoplay, balance-regression, core, project-parse, repository, JSON, Python, and diff validation pass"
+      ],
+      "nonGoals": [
+        "faction-id, matchup-id, benchmark-only, week-number, or army-count hard-coding",
+        "unit base stat, growth, recruitment, economy, spell, hero, save, strategic-AI, packaging, or Native RMG changes",
+        "claiming final Sunvault identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T05:36:51Z",
+      "updatedAt": "2026-08-05T06:22:14Z",
+      "startedAt": "2026-08-05T05:36:51Z",
+      "notes": "Completed the content-authored committed-assault screen after rejecting broad Brasshollow changes and generic four-percent and one-percent Aurora screens. The first shared implementation placed inert metadata in normalized battle state and changed unrelated deterministic hashes; that regression was removed by resolving the field from immutable authored content only after the live source proves it still owns shielding.",
+      "result": {
+        "committed_assault_screen_reduction_pct": 4,
+        "focused_modifier_without_screen": 0.85,
+        "focused_modifier_with_screen": 0.816,
+        "focused_modifier_with_second_source": 0.816,
+        "focused_dead_source_modifier": 0.85,
+        "focused_melee_ally_modifier": 0.85,
+        "focused_ranged_attack_modifier": 0.85,
+        "focused_ai_damage_without_screen": 114,
+        "focused_ai_damage_with_screen": 110,
+        "ability_instance_count": 103,
+        "runtime_consequence_count": 103,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 161.0,
+        "faction_balance_rows_at_or_above_65_pct": 4,
+        "faction_balance_max_dominance_pct": 68.5,
+        "faction_balance_max_side_bias_points": 4.13,
+        "faction_balance_structural_failure_count": 0,
+        "week_four_embercourt_sunvault_before": "67.5/32.5",
+        "week_four_embercourt_sunvault_after": "66/34",
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "rejected_generic_four_pct_outlier_count": 30,
+        "rejected_generic_one_pct_outlier_count": 30,
+        "normalized_battle_state_metadata_added": false
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --out /tmp/faction_balance_aurora_committed_full.json",
+        "godot --headless --path . tests/balance_regression_report.tscn",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json content/units.json",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py",
+        "git diff --check"
+      ],
+      "remainingWork": "Faction balance remains needs_tuning. Continue with another registered implementation slice; this does not complete Sunvault identity, faction balance, or the game.",
+      "completedAt": "2026-08-05T06:22:14Z"
+    },
+    {
+      "id": "combat-sunvault-prism-adept-refraction-volley-10184",
+      "title": "Sunvault Prism Adept Refraction Volley",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Adopt the retained authored Refraction Volley contract for production Prism Adepts through existing shared volley behavior and improve early Sunvault setup pressure without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_prism_adept_ability_count": 0,
+        "retained_refraction_volley_damage_multiplier": 1.12,
+        "retained_refraction_volley_status_damage_multiplier": 1.12,
+        "retained_refraction_volley_ally_defending_multiplier": 1.05,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 161.0,
+        "faction_balance_rows_at_or_above_65_pct": 4,
+        "faction_balance_max_dominance_pct": 68.5,
+        "faction_balance_max_side_bias_points": 4.13,
+        "faction_balance_structural_failure_count": 0,
+        "week_one_embercourt_sunvault_win_rates": "64.5/35.5",
+        "week_one_brasshollow_sunvault_win_rates": "41.5/58.5",
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Production Prism Adepts consume the retained Refraction Volley fields through existing shared live rules, tactical-AI estimates, summaries, benchmark behavior, and content validation",
+        "Focused proof covers base volley, disrupted-target payoff, allied-defending payoff, melee exclusion, and stripped-ability controls",
+        "At least one accepted early Sunvault outlier improves without exceeding 28 outliers, 161.0 severity, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "new ability families or faction-id, matchup-id, week-number, or army-count hard-coding",
+        "base stat, growth, recruitment, economy, spell, hero, save, strategic-AI, packaging, or Native RMG changes",
+        "claiming final Sunvault identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T06:22:14Z",
+      "updatedAt": "2026-08-05T06:22:14Z",
+      "notes": "Registered from current full-matrix evidence and the retained content-authored Sunvault scaffold so the progress helper exposes a concrete implementation successor instead of reporting no actionable next task while overall release work remains open."
+    },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
       "title": "Strategic AI Role-State Fixture Reconciliation",
@@ -72316,7 +72459,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 28 outliers / 161.0 severity / 68.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -72848,9 +72991,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 162.5 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 161.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T05:16:56Z",
+  "updatedAt": "2026-08-05T06:22:14Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

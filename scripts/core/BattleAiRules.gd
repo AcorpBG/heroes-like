@@ -2423,6 +2423,14 @@ static func _ability_damage_modifier(
 				"linebreaker_screen_bonus_pct",
 				0.0
 			))
+		if bool(defender.get("ranged", false)) and _has_ability(attacker, "bloodrush"):
+			screen_reduction_pct += int(_side_max_authored_ability_float(
+				battle,
+				String(defender.get("side", "")),
+				"shielding",
+				"committed_assault_screen_reduction_pct",
+				0.0
+			))
 		screen_reduction_pct = clampi(screen_reduction_pct, 0, 75)
 		modifier *= 1.0 - (float(screen_reduction_pct) / 100.0)
 	var attacking_shielding := _ability_by_id(attacker, "shielding")
@@ -2718,6 +2726,21 @@ static func _side_max_ability_float(
 		var ability := _ability_by_id(stack, ability_id)
 		if ability.is_empty():
 			continue
+		best = max(best, float(ability.get(key, default_value)))
+	return best
+
+static func _side_max_authored_ability_float(
+	battle: Dictionary,
+	side: String,
+	ability_id: String,
+	key: String,
+	default_value: float = 1.0
+) -> float:
+	var best := default_value
+	for stack in _alive_stacks_for_side(battle, side):
+		if _ability_by_id(stack, ability_id).is_empty():
+			continue
+		var ability := _authored_ability_by_id(stack, ability_id)
 		best = max(best, float(ability.get(key, default_value)))
 	return best
 
