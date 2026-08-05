@@ -334,7 +334,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10769,6 +10769,16 @@ def validate_content(errors: list[str]) -> None:
                         ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} pressure_artillery heat must reduce initiative")
                         ensure("defense" not in modifiers, errors, f"Unit {unit_id} pressure_artillery heat must not reuse the Debt Furnace defense penalty")
                     ensure(0.0 < float(ability.get("ai_heat_score_penalty", 0.0)) <= 4.0, errors, f"Unit {unit_id} pressure_artillery must define a bounded tactical-AI heat cost")
+                elif ability_id == "counter_ambush_flare":
+                    ensure(str(unit.get("faction_id", "")) == "faction_embercourt", errors, f"Unit {unit_id} counter_ambush_flare must belong to Embercourt")
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} counter_ambush_flare must belong to a melee unit")
+                    ensure(ability.get("countered_ability_ids", []) == ["backstab", "fogwake"], errors, f"Unit {unit_id} counter_ambush_flare must counter exactly backstab and fogwake")
+                    ensure(float(ability.get("ambush_bonus_retention", -1.0)) == 0.0, errors, f"Unit {unit_id} counter_ambush_flare must remove only the authored ambush bonus")
+                    ensure(ability.get("blocks_ambush_status") is True, errors, f"Unit {unit_id} counter_ambush_flare must block Fogbound application")
+                    ensure(str(ability.get("revealed_status_id", "")) == "status_flare_revealed", errors, f"Unit {unit_id} counter_ambush_flare must apply status_flare_revealed")
+                    ensure(int(ability.get("revealed_duration_rounds", 0)) == 1, errors, f"Unit {unit_id} counter_ambush_flare reveal must last one round")
+                    ensure(ability.get("revealed_ability_ids", []) == ["fogwake"], errors, f"Unit {unit_id} counter_ambush_flare must reveal only a denied fogwake ambusher")
+                    ensure(ability.get("revealed_modifiers", {}) == {"defense": -1, "initiative": -1}, errors, f"Unit {unit_id} counter_ambush_flare reveal must reduce defense and initiative by one")
                 elif ability_id == "sporeglass_mend":
                     ensure(str(unit.get("faction_id", "")) == "faction_thornwake", errors, f"Unit {unit_id} sporeglass_mend must belong to Thornwake")
                     ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} sporeglass_mend must belong to a ranged unit")
@@ -10783,9 +10793,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10812,6 +10822,17 @@ def validate_content(errors: list[str]) -> None:
         errors,
         "Embercourt Lantern Sappers must not own Thornwake's brace ability",
     )
+    lantern_flare = next(
+        (ability for ability in ember_lantern_sappers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "counter_ambush_flare"),
+        {},
+    )
+    ensure(str(lantern_flare.get("name", "")) == "Counter-Ambush Flare", errors, "Lantern Sappers must own Counter-Ambush Flare")
+    counter_ambush_flare_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "counter_ambush_flare" for ability in unit.get("abilities", []))
+    )
+    ensure(counter_ambush_flare_owners == ["unit_embercourt_lantern_sappers"], errors, "Counter-Ambush Flare must remain exclusive to Embercourt Lantern Sappers")
 
     ember_archer = units.get("unit_ember_archer", {})
     ember_archer_volley = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})

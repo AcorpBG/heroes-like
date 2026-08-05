@@ -1167,10 +1167,10 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 0.25
 		if _has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
 			score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
-	if _has_ability(attacker, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if _has_ability(attacker, "backstab") and _counter_ambush_flare_context(battle, target, "backstab").is_empty() and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
 	var fogwake := _ability_by_id(attacker, "fogwake")
-	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, target):
+	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, target) and _counter_ambush_flare_context(battle, target, "fogwake").is_empty():
 		score += float(fogwake.get("ai_target_priority_bonus", 0.0))
 	if is_ranged and _side_defending_count(battle, side) > 0 and _side_has_ability(battle, side, "formation_guard"):
 		score += 1.5
@@ -2410,13 +2410,17 @@ static func _ability_damage_modifier(
 			modifier *= clampf(1.0 + (float(retaliation_pressure) / 100.0), 0.25, 1.0)
 
 	var backstab := _ability_by_id(attacker, "backstab")
+	var backstab_flare := _counter_ambush_flare_context(battle, defender, "backstab")
+	var backstab_retention := float(backstab_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if not backstab_flare.is_empty() else 1.0
 	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
-		modifier *= float(backstab.get("damage_multiplier", 1.0))
+		modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
-		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
+		modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	var fogwake := _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
-		modifier *= float(fogwake.get("isolated_damage_multiplier", 1.0))
+		var fogwake_flare := _counter_ambush_flare_context(battle, defender, "fogwake")
+		var fogwake_retention := float(fogwake_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if not fogwake_flare.is_empty() else 1.0
+		modifier *= 1.0 + ((float(fogwake.get("isolated_damage_multiplier", 1.0)) - 1.0) * fogwake_retention)
 
 	var volley := _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
@@ -2724,6 +2728,21 @@ static func _side_has_ability(battle: Dictionary, side: String, ability_id: Stri
 		if _has_ability(stack, ability_id):
 			return true
 	return false
+
+static func _counter_ambush_flare_context(
+	battle: Dictionary,
+	protected_stack: Dictionary,
+	ambush_ability_id: String
+) -> Dictionary:
+	if protected_stack.is_empty() or ambush_ability_id == "":
+		return {}
+	for source in _alive_stacks_for_side(battle, String(protected_stack.get("side", ""))):
+		var ability := _ability_by_id(source, "counter_ambush_flare")
+		if ability.is_empty():
+			continue
+		if ability.get("countered_ability_ids", []).has(ambush_ability_id):
+			return {"source": source, "ability": ability}
+	return {}
 
 static func _battle_has_tag(battle: Dictionary, tag: String) -> bool:
 	if tag == "":

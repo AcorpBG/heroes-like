@@ -22,6 +22,7 @@ const REQUIRED_ABILITY_IDS := [
 	"obituary",
 	"overheat",
 	"pressure_artillery",
+	"counter_ambush_flare",
 	"sporeglass_mend",
 	"foundry_aura",
 ]
@@ -142,6 +143,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_overheat(unit_id)
 		"pressure_artillery":
 			return _probe_pressure_artillery(unit_id)
+		"counter_ambush_flare":
+			return _probe_counter_ambush_flare(unit_id)
 		"sporeglass_mend":
 			return _probe_sporeglass_mend(unit_id)
 		"foundry_aura":
@@ -727,6 +730,193 @@ func _probe_fogwake(unit_id: String) -> Dictionary:
 		"supported_status_blocked": not supported_status,
 		"preview": preview,
 		"reason": "" if ok else "fogwake did not remain gated to true hex isolation across damage, status, AI, and player summary behavior",
+	}
+
+func _probe_counter_ambush_flare(unit_id: String) -> Dictionary:
+	var backstab_attacker := _stack_for_unit("unit_blackbranch_cutthroat", "player", 0)
+	var marked_target := _defender_stack("enemy", 0)
+	var sapper := _stack_for_unit(unit_id, "enemy", 1)
+	_add_effect(marked_target, "status_harried")
+	var protected_battle := _battle_for_stacks([backstab_attacker, marked_target, sapper])
+	var stripped_sapper := _without_ability(sapper, "counter_ambush_flare")
+	var unprotected_attacker := backstab_attacker.duplicate(true)
+	var unprotected_target := marked_target.duplicate(true)
+	var unprotected_battle := _battle_for_stacks([unprotected_attacker, unprotected_target, stripped_sapper])
+	var protected_backstab_modifier := BattleRulesScript._ability_damage_modifier(backstab_attacker, marked_target, protected_battle, false, false, 0)
+	var protected_backstab_ai_modifier := BattleAiRulesScript._ability_damage_modifier(backstab_attacker, marked_target, protected_battle, false, false, 0)
+	var unprotected_backstab_modifier := BattleRulesScript._ability_damage_modifier(unprotected_attacker, unprotected_target, unprotected_battle, false, false, 0)
+	var unprotected_backstab_ai_modifier := BattleAiRulesScript._ability_damage_modifier(unprotected_attacker, unprotected_target, unprotected_battle, false, false, 0)
+	var protected_backstab_score := BattleAiRulesScript._attack_score(backstab_attacker, marked_target, protected_battle, false)
+	var unprotected_backstab_score := BattleAiRulesScript._attack_score(unprotected_attacker, unprotected_target, unprotected_battle, false)
+	var backstab_messages := BattleRulesScript._apply_attack_ability_effects(protected_battle, backstab_attacker, marked_target, false, 0, marked_target)
+	var revealed_backstab_attacker := BattleRulesScript._get_stack_by_id(protected_battle, String(backstab_attacker.get("battle_id", "")))
+	var no_flare_messages := BattleRulesScript._apply_attack_ability_effects(unprotected_battle, unprotected_attacker, unprotected_target, false, 0, unprotected_target)
+
+	var wounded_attacker := _stack_for_unit("unit_blackbranch_cutthroat", "player", 0)
+	var wounded_target := _defender_stack("enemy", 0)
+	var wounded_sapper := _stack_for_unit(unit_id, "enemy", 1)
+	wounded_target["total_health"] = int(wounded_target.get("unit_hp", 1)) * 4
+	var wounded_battle := _battle_for_stacks([wounded_attacker, wounded_target, wounded_sapper])
+	var wounded_stripped_target := wounded_target.duplicate(true)
+	var wounded_unprotected_battle := _battle_for_stacks([
+		wounded_attacker.duplicate(true),
+		wounded_stripped_target,
+		_without_ability(wounded_sapper, "counter_ambush_flare"),
+	])
+	var protected_wounded_modifier := BattleRulesScript._ability_damage_modifier(wounded_attacker, wounded_target, wounded_battle, false, false, 0)
+	var unprotected_wounded_modifier := BattleRulesScript._ability_damage_modifier(wounded_unprotected_battle["stacks"][0], wounded_stripped_target, wounded_unprotected_battle, false, false, 0)
+
+	var dead_sapper := sapper.duplicate(true)
+	dead_sapper["total_health"] = 0
+	var dead_target := marked_target.duplicate(true)
+	var dead_battle := _battle_for_stacks([backstab_attacker.duplicate(true), dead_target, dead_sapper])
+	var dead_source_modifier := BattleRulesScript._ability_damage_modifier(dead_battle["stacks"][0], dead_target, dead_battle, false, false, 0)
+	var second_sapper := _stack_for_unit(unit_id, "enemy", 2)
+	var duplicate_target := marked_target.duplicate(true)
+	var duplicate_battle := _battle_for_stacks([backstab_attacker.duplicate(true), duplicate_target, sapper.duplicate(true), second_sapper])
+	var duplicate_source_modifier := BattleRulesScript._ability_damage_modifier(duplicate_battle["stacks"][0], duplicate_target, duplicate_battle, false, false, 0)
+
+	var fogwake_attacker := _stack_for_unit("unit_veilmourn_fogbound_leviathan", "player", 0)
+	var fogwake_target := _defender_stack("enemy", 0)
+	var fogwake_sapper := _stack_for_unit(unit_id, "enemy", 1)
+	_set_hex(fogwake_attacker, 4, 3)
+	_set_hex(fogwake_target, 5, 3)
+	_set_hex(fogwake_sapper, 9, 6)
+	var fogwake_battle := _battle_for_stacks([fogwake_attacker, fogwake_target, fogwake_sapper])
+	var no_fogwake_source := _without_ability(fogwake_sapper, "counter_ambush_flare")
+	var unprotected_fogwake_attacker := fogwake_attacker.duplicate(true)
+	var unprotected_fogwake_target := fogwake_target.duplicate(true)
+	var unprotected_fogwake_battle := _battle_for_stacks([unprotected_fogwake_attacker, unprotected_fogwake_target, no_fogwake_source])
+	var protected_fogwake_modifier := BattleRulesScript._ability_damage_modifier(fogwake_attacker, fogwake_target, fogwake_battle, false, false, 0)
+	var protected_fogwake_ai_modifier := BattleAiRulesScript._ability_damage_modifier(fogwake_attacker, fogwake_target, fogwake_battle, false, false, 0)
+	var unprotected_fogwake_modifier := BattleRulesScript._ability_damage_modifier(unprotected_fogwake_attacker, unprotected_fogwake_target, unprotected_fogwake_battle, false, false, 0)
+	var unprotected_fogwake_ai_modifier := BattleAiRulesScript._ability_damage_modifier(unprotected_fogwake_attacker, unprotected_fogwake_target, unprotected_fogwake_battle, false, false, 0)
+	var protected_fogwake_score := BattleAiRulesScript._attack_score(fogwake_attacker, fogwake_target, fogwake_battle, false)
+	var unprotected_fogwake_score := BattleAiRulesScript._attack_score(unprotected_fogwake_attacker, unprotected_fogwake_target, unprotected_fogwake_battle, false)
+	var fogwake_messages := BattleRulesScript._apply_attack_ability_effects(fogwake_battle, fogwake_attacker, fogwake_target, false, 0, fogwake_target)
+	var fogwake_status_id := String(_ability_by_id(fogwake_attacker, "fogwake").get("status_id", "status_fogbound"))
+	var protected_fogwake_target := BattleRulesScript._get_stack_by_id(fogwake_battle, String(fogwake_target.get("battle_id", "")))
+	var revealed_fogwake_attacker := BattleRulesScript._get_stack_by_id(fogwake_battle, String(fogwake_attacker.get("battle_id", "")))
+	var lethal_fogwake_attacker := fogwake_attacker.duplicate(true)
+	var lethal_fogwake_target_before := fogwake_target.duplicate(true)
+	var lethal_fogwake_target_after := fogwake_target.duplicate(true)
+	lethal_fogwake_target_after["total_health"] = 0
+	var lethal_fogwake_battle := _battle_for_stacks([lethal_fogwake_attacker, lethal_fogwake_target_after, fogwake_sapper.duplicate(true)])
+	var lethal_fogwake_messages := BattleRulesScript._apply_attack_ability_effects(
+		lethal_fogwake_battle,
+		lethal_fogwake_attacker,
+		lethal_fogwake_target_after,
+		false,
+		0,
+		lethal_fogwake_target_before
+	)
+	var lethal_revealed_attacker := BattleRulesScript._get_stack_by_id(lethal_fogwake_battle, String(lethal_fogwake_attacker.get("battle_id", "")))
+
+	var unrelated_attacker := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "player", 0)
+	var unrelated_target := _defender_stack("enemy", 0)
+	unrelated_target["total_health"] = int(unrelated_target.get("unit_hp", 1)) * 4
+	var unrelated_sapper := _stack_for_unit(unit_id, "enemy", 1)
+	var unrelated_battle := _battle_for_stacks([unrelated_attacker, unrelated_target, unrelated_sapper])
+	var unrelated_stripped_target := unrelated_target.duplicate(true)
+	var unrelated_stripped_battle := _battle_for_stacks([
+		unrelated_attacker.duplicate(true),
+		unrelated_stripped_target,
+		_without_ability(unrelated_sapper, "counter_ambush_flare"),
+	])
+	var unrelated_modifier := BattleRulesScript._ability_damage_modifier(unrelated_attacker, unrelated_target, unrelated_battle, false, false, 0)
+	var unrelated_stripped_modifier := BattleRulesScript._ability_damage_modifier(unrelated_stripped_battle["stacks"][0], unrelated_stripped_target, unrelated_stripped_battle, false, false, 0)
+	var direct_before := int(unrelated_target.get("total_health", 0))
+	BattleRulesScript._apply_damage_to_stack(unrelated_battle, String(unrelated_target.get("battle_id", "")), 7)
+	var direct_after := int(BattleRulesScript._get_stack_by_id(unrelated_battle, String(unrelated_target.get("battle_id", ""))).get("total_health", 0))
+
+	var flare_event_count := 0
+	for event in protected_battle.get("battle_presentation_events", []):
+		if event is Dictionary and String(event.get("event_type", "")) == "ability" and String(event.get("action_id", "")) == "counter_ambush_flare":
+			flare_event_count += 1
+	for event in fogwake_battle.get("battle_presentation_events", []):
+		if event is Dictionary and String(event.get("event_type", "")) == "debuff" and String(event.get("action_id", "")) == "counter_ambush_flare":
+			flare_event_count += 1
+	var flare := _ability_by_id(sapper, "counter_ambush_flare")
+	var role_line := BattleRulesScript._ability_role_sentence(sapper, flare, protected_battle, backstab_attacker)
+	var window_line := BattleRulesScript._active_ability_window_summary(sapper, protected_battle, backstab_attacker)
+	var denied_backstab_window := BattleRulesScript._active_ability_window_summary(backstab_attacker, protected_battle, marked_target)
+	var denied_fogwake_window := BattleRulesScript._active_ability_window_summary(fogwake_attacker, fogwake_battle, fogwake_target)
+	var live_context := BattleRulesScript._counter_ambush_flare_context(protected_battle, marked_target, "backstab")
+	var ai_context := BattleAiRulesScript._counter_ambush_flare_context(protected_battle, marked_target, "backstab")
+	var ok: bool = (
+		is_equal_approx(protected_backstab_modifier, 1.0)
+		and is_equal_approx(protected_backstab_ai_modifier, protected_backstab_modifier)
+		and unprotected_backstab_modifier > protected_backstab_modifier
+		and is_equal_approx(unprotected_backstab_ai_modifier, unprotected_backstab_modifier)
+		and unprotected_backstab_score > protected_backstab_score
+		and is_equal_approx(protected_wounded_modifier, 1.0)
+		and unprotected_wounded_modifier > protected_wounded_modifier
+		and is_equal_approx(dead_source_modifier, unprotected_backstab_modifier)
+		and is_equal_approx(duplicate_source_modifier, protected_backstab_modifier)
+		and is_equal_approx(protected_fogwake_modifier, 1.0)
+		and is_equal_approx(protected_fogwake_ai_modifier, protected_fogwake_modifier)
+		and unprotected_fogwake_modifier > protected_fogwake_modifier
+		and is_equal_approx(unprotected_fogwake_ai_modifier, unprotected_fogwake_modifier)
+		and unprotected_fogwake_score > protected_fogwake_score
+		and not SpellRulesScript.has_effect_id(protected_fogwake_target, fogwake_battle, fogwake_status_id)
+		and not SpellRulesScript.has_effect_id(revealed_backstab_attacker, protected_battle, "status_flare_revealed")
+		and SpellRulesScript.has_effect_id(revealed_fogwake_attacker, fogwake_battle, "status_flare_revealed")
+		and SpellRulesScript.effect_bonus_for_kind(revealed_fogwake_attacker, fogwake_battle, "defense") == -1
+		and SpellRulesScript.effect_bonus_for_kind(revealed_fogwake_attacker, fogwake_battle, "initiative") == -1
+		and lethal_fogwake_messages.size() == 1
+		and SpellRulesScript.has_effect_id(lethal_revealed_attacker, lethal_fogwake_battle, "status_flare_revealed")
+		and is_equal_approx(unrelated_modifier, unrelated_stripped_modifier)
+		and direct_before - direct_after == 7
+		and backstab_messages.size() == 1
+		and no_flare_messages.is_empty()
+		and fogwake_messages.size() == 1
+		and flare_event_count == 2
+		and not live_context.is_empty()
+		and not ai_context.is_empty()
+		and String(live_context.get("source", {}).get("battle_id", "")) == String(sapper.get("battle_id", ""))
+		and String(ai_context.get("source", {}).get("battle_id", "")) == String(sapper.get("battle_id", ""))
+		and role_line.contains("removes bonus damage")
+		and role_line.contains("prevents Fogbound")
+		and role_line.contains("flare-reveals")
+		and window_line.contains("exposing backstab and fogwake")
+		and denied_backstab_window.contains("ambush bonus is removed")
+		and denied_fogwake_window.contains("Fogbound are blocked")
+	)
+	return {
+		"ok": ok,
+		"probe": "counter_ambush_flare_backstab_fogwake_source_scope_ai_and_events",
+		"protected_backstab_modifier": protected_backstab_modifier,
+		"unprotected_backstab_modifier": unprotected_backstab_modifier,
+		"protected_backstab_ai_modifier": protected_backstab_ai_modifier,
+		"unprotected_backstab_ai_modifier": unprotected_backstab_ai_modifier,
+		"protected_backstab_score": protected_backstab_score,
+		"unprotected_backstab_score": unprotected_backstab_score,
+		"protected_wounded_modifier": protected_wounded_modifier,
+		"unprotected_wounded_modifier": unprotected_wounded_modifier,
+		"dead_source_modifier": dead_source_modifier,
+		"duplicate_source_modifier": duplicate_source_modifier,
+		"protected_fogwake_modifier": protected_fogwake_modifier,
+		"unprotected_fogwake_modifier": unprotected_fogwake_modifier,
+		"protected_fogwake_ai_modifier": protected_fogwake_ai_modifier,
+		"unprotected_fogwake_ai_modifier": unprotected_fogwake_ai_modifier,
+		"lethal_fogwake_message_count": lethal_fogwake_messages.size(),
+		"lethal_fogwake_revealed": SpellRulesScript.has_effect_id(lethal_revealed_attacker, lethal_fogwake_battle, "status_flare_revealed"),
+		"protected_fogwake_score": protected_fogwake_score,
+		"unprotected_fogwake_score": unprotected_fogwake_score,
+		"fogbound_blocked": not SpellRulesScript.has_effect_id(protected_fogwake_target, fogwake_battle, fogwake_status_id),
+		"backstab_attacker_revealed": SpellRulesScript.has_effect_id(revealed_backstab_attacker, protected_battle, "status_flare_revealed"),
+		"fogwake_attacker_revealed": SpellRulesScript.has_effect_id(revealed_fogwake_attacker, fogwake_battle, "status_flare_revealed"),
+		"revealed_defense_modifier": SpellRulesScript.effect_bonus_for_kind(revealed_fogwake_attacker, fogwake_battle, "defense"),
+		"revealed_initiative_modifier": SpellRulesScript.effect_bonus_for_kind(revealed_fogwake_attacker, fogwake_battle, "initiative"),
+		"unrelated_modifier": unrelated_modifier,
+		"unrelated_stripped_modifier": unrelated_stripped_modifier,
+		"direct_health_loss": direct_before - direct_after,
+		"flare_event_count": flare_event_count,
+		"role_line": role_line,
+		"window_line": window_line,
+		"denied_backstab_window": denied_backstab_window,
+		"denied_fogwake_window": denied_fogwake_window,
+		"reason": "" if ok else "counter-ambush flare did not preserve its exact bonus-only backstab/fogwake denial, source scope, AI parity, events, or exclusions",
 	}
 
 func _probe_resonance_relay(unit_id: String) -> Dictionary:
