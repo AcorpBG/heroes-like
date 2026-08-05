@@ -14325,10 +14325,10 @@
   "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-embercourt-bargebow-screened-lane-10184",
-  "currentSliceId": "balance-active-outcome-diversity-clear-10184",
-  "currentSliceNotes": "validation passed: active 59-encounter queue clear twice with zero items and repeated signature 829808c9; focused and broad runtime, editor parse, repository, JSON, and diff checks passed",
+  "currentSliceId": "strategic-ai-raid-movement-path-plan-reuse-10184",
+  "currentSliceNotes": "implemented shared goal-origin raid movement path plans; focused/core/KPI/editor/repo checks passed and exact Medium ordinal 99 preserved row signature 59262e55 with 171 identical events, zero integrity/reachability failures, and runtime 301845ms to 298228ms",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Outcome-Diversity Queue Clear",
+  "currentSliceTitle": "Strategic AI Raid Movement Path-Plan Reuse",
   "currentSliceUpdatedAt": "2026-08-05T01:47:18Z",
   "deferredRiskRegister": [
     {
@@ -71869,6 +71869,95 @@
       ],
       "remainingWork": "The active authored encounter queue is clear; final faction balance, manual release certification, and the broader game completion gaps remain open.",
       "completedAt": "2026-08-05T03:13:35Z"
+    },
+    {
+      "id": "strategic-ai-raid-movement-path-plan-reuse-10184",
+      "title": "Strategic AI Raid Movement Path-Plan Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-live-turn-execution-report.md"
+      ],
+      "purpose": "Remove duplicate full-map distance-field construction from each live strategic raid movement step while preserving exact pathing and AI behavior.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_movement_path_plan_reuse_regression.gd",
+        "tests/ai_raid_movement_path_plan_reuse_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "duplicate_current_origin_field_per_movement_step": true,
+        "latest_exact_medium_ordinal": 99,
+        "latest_exact_medium_row_signature": "59262e55",
+        "latest_exact_medium_row_runtime_msec": 301845,
+        "latest_exact_medium_max_turn_runtime_msec": 11431
+      },
+      "completionCriteria": [
+        "Open, blocked-approach, multi-goal, and unreachable fixtures preserve exact distance and next-step behavior",
+        "Live multi-step advancement preserves route and movement event behavior without per-step current-origin distance-field loads",
+        "An exact Medium row preserves signature, outcome, event counts, target integrity, and reachability without runtime regression beyond local variance",
+        "Focused strategic-AI, core, project parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "strategic priority, target selection, raid speed, topology, passability, encounter placement, combat, faction balance, save, packaging, or Native RMG changes",
+        "timing-only gates, broad long-run matrix expansion, or release-completion claims"
+      ],
+      "createdAt": "2026-08-05T03:22:00Z",
+      "updatedAt": "2026-08-05T03:46:26Z",
+      "notes": "implemented shared goal-origin raid movement path plans; focused/core/KPI/editor/repo checks passed and exact Medium ordinal 99 preserved row signature 59262e55 with 171 identical events, zero integrity/reachability failures, and runtime 301845ms to 298228ms",
+      "startedAt": "2026-08-05T03:20:23Z",
+      "result": {
+        "shared_goal_origin_path_plan": true,
+        "per_step_current_origin_field_removed": true,
+        "focused_fixture_count": 7,
+        "goal_origin_field_count_for_three_step_route": 1,
+        "live_route_start": [
+          1,
+          2
+        ],
+        "live_route_end": [
+          4,
+          2
+        ],
+        "live_goal_distance_before": 8,
+        "live_goal_distance_after": 5,
+        "live_movement_event_count": 1,
+        "exact_medium_ordinal": 99,
+        "exact_medium_row_signature": "59262e55",
+        "exact_medium_turns_completed": 37,
+        "exact_medium_terminal_status": "defeat",
+        "exact_medium_enemy_activity_event_count": 171,
+        "exact_medium_stalled_turn_count": 2,
+        "exact_medium_behavior_bug_count": 0,
+        "exact_medium_target_integrity_violation_count": 0,
+        "exact_medium_unreachable_active_target_total": 0,
+        "exact_medium_row_runtime_msec": 298228,
+        "exact_medium_max_turn_runtime_msec": 11246
+      },
+      "validation": [
+        "godot --headless --path . --scene tests/ai_raid_movement_path_plan_reuse_regression.tscn",
+        "godot --headless --path . --scene tests/ai_raid_assault_grouping_report.tscn",
+        "godot --headless --path . --scene tests/ai_raid_regroup_retreat_report.tscn",
+        "godot --headless --path . --scene tests/ai_known_world_memory_report.tscn",
+        "godot --headless --path . --scene tests/ai_hero_task_live_turn_execution_report.tscn",
+        "godot --headless --path . --scene tests/ai_town_defense_retask_report.tscn",
+        "godot --headless --path . --scene tests/magic_adventure_spell_hooks_report.tscn",
+        "godot --headless --path . --scene tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --scene tests/strategic_ai_baseline_kpi_report.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_MAP_SCOPE=medium_land HEROES_STRATEGIC_AI_LONG_RUN_SEED_OFFSET=98 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=56 godot --headless --path . --scene tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Continue the broader game completion queue. The deterministic faction_scenario_ai_pressure_report resource-ranking failure remains outside this movement slice and should be reconciled in its own content/pressure slice.",
+      "completedAt": "2026-08-05T03:46:26Z"
     }
   ],
   "project": "heroes-like",
@@ -72413,7 +72502,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T03:13:35Z",
+  "updatedAt": "2026-08-05T03:46:26Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

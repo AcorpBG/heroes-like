@@ -259,6 +259,8 @@ AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-reta
 AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.gd"
 AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.tscn"
 AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-assault-grouping-report.md"
+AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH = ROOT / "tests" / "ai_raid_movement_path_plan_reuse_regression.gd"
+AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH = ROOT / "tests" / "ai_raid_movement_path_plan_reuse_regression.tscn"
 AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-commander-assault-consolidation-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
@@ -17191,6 +17193,8 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH,
+        AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH,
+        AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH,
         AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI raid assault grouping file: {path.relative_to(ROOT)}")
@@ -17207,6 +17211,9 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         '"army_consolidation"',
         "sync_commander_army_continuity",
         "post_move_grouping_result",
+        "func _path_plan_toward",
+        '"initial_path_plan_ms"',
+        '"step_path_plan_ms"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid assault grouping token: {required_token}")
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
@@ -17248,6 +17255,30 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "save_version_after",
         ):
             ensure(required_token in report_text, errors, f"AI raid assault grouping report is missing token: {required_token}")
+    if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.exists():
+        path_plan_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_RAID_MOVEMENT_PATH_PLAN_REUSE_REGRESSION",
+            "open_goal",
+            "blocked_goal_approach",
+            "blocked_origin_exit",
+            "multiple_goal",
+            "unreachable_blocked_corner",
+            "goal_origin_field_reused_across_steps",
+            "live_three_step_raid_uses_shared_path_plan",
+            "_path_plan_toward",
+            "distance_field_cache",
+            "ai_raid_moved",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in path_plan_text, errors, f"AI raid movement path-plan reuse regression is missing token: {required_token}")
+    if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.exists():
+        path_plan_scene_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "ai_raid_movement_path_plan_reuse_regression.gd" in path_plan_scene_text,
+            errors,
+            "AI raid movement path-plan reuse scene is not wired to its script.",
+        )
     if AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.exists():
         doc_text = AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
