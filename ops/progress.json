@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Refraction Volley plus the minimum bible-backed two-percent Shard Warden linked screen; faction balance remains needs_tuning and the Boiler Rivetcaster pressure-artillery implementation is next.",
+  "currentNotes": "Completed Boiler Rivetcaster pressure artillery with live clustered damage, heat recovery, tactical-AI parity, and improved matrix severity; Lantern Sapper anti-ambush control is next.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-prism-adept-refraction-volley-10184",
-  "currentSliceId": "combat-sunvault-prism-adept-refraction-volley-10184",
-  "currentSliceNotes": "Completed with 28 outliers / 158.0 severity / four severe rows / 68.5 maximum dominance / 4.07 side bias / zero structural failures; week-one Embercourt/Sunvault improves to 64/36 and the 59-encounter active queue remains clear.",
+  "currentSlice": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
+  "currentSliceId": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
+  "currentSliceNotes": "Completed with 28 outliers / 153.0 severity / two severe rows / 68.0 maximum dominance / 4.07 side bias / zero structural failures; week-three Brasshollow/Embercourt improves to 37/63 and the 59-encounter queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Prism Adept Refraction Volley",
-  "currentSliceUpdatedAt": "2026-08-05T07:35:08Z",
+  "currentSliceTitle": "Brasshollow Boiler Rivetcaster Pressure Artillery",
+  "currentSliceUpdatedAt": "2026-08-05T08:12:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20033,7 +20033,7 @@
     {
       "id": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
       "title": "Brasshollow Boiler Rivetcaster Pressure Artillery",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
@@ -20076,8 +20076,100 @@
         "claiming final Brasshollow identity, final faction balance, or overall release completion"
       ],
       "createdAt": "2026-08-05T07:35:08Z",
-      "updatedAt": "2026-08-05T07:35:08Z",
-      "notes": "The faction bible explicitly names heat buildup and splash risk for this production unit. The candidate must be screened as generic authored combat behavior; the measured week-three Brasshollow/Embercourt deficit is validation evidence, not a runtime condition."
+      "updatedAt": "2026-08-05T08:12:34Z",
+      "startedAt": "2026-08-05T07:39:59Z",
+      "notes": "The faction bible explicitly names heat buildup and splash risk for this production unit. Boiler Pressure Volley uses generic live adjacency and shared status behavior, not matchup checks. Paired screening improved week-three Brasshollow/Embercourt from 31.5/68.5 to 37/63 and removed the week-three Brasshollow/Thornwake severe row. Week-two Brasshollow/Sunvault and Brasshollow/Thornwake plus week-four Brasshollow/Embercourt, Brasshollow/Mireclaw, and Brasshollow/Veilmourn regressed, while week-two Brasshollow/Embercourt, Mireclaw, and Veilmourn; week-three all five Brasshollow pairings; and week-four Brasshollow/Sunvault and Thornwake improved. Aggregate acceptance bounds pass.",
+      "result": {
+        "production_boiler_rivetcaster_ability_count": 1,
+        "secondary_damage_per_living_unit": 1,
+        "maximum_secondary_damage": 10,
+        "maximum_secondary_target_count": 1,
+        "cluster_range_hexes": 1,
+        "heat_status_id": "status_overheated",
+        "heat_duration_rounds": 2,
+        "heat_initiative_modifier": -1,
+        "heat_refreshes_while_active": false,
+        "ability_instance_count": 105,
+        "ability_runtime_consequence_count": 105,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.0,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 68.0,
+        "faction_balance_max_side_bias_points": 4.07,
+        "faction_balance_structural_failure_count": 0,
+        "week_three_brasshollow_embercourt_before": "31.5/68.5",
+        "week_three_brasshollow_embercourt_after": "37/63",
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn (passed; 105/105 authored ability instances)",
+        "godot --headless --path . tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn (passed; runtime consequence and matrix gates pass)",
+        "godot --headless --path . tests/balance_regression_report_suite.tscn (passed)",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn (passed)",
+        "godot --headless --path . --editor --quit (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; 28 outliers / 153.0 severity / zero structural failures)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 28 outliers / 153.0 severity, and overall game completion remains open.",
+      "completedAt": "2026-08-05T08:12:34Z"
+    },
+    {
+      "id": "combat-embercourt-lantern-sapper-counter-ambush-flare-10184",
+      "title": "Embercourt Lantern Sapper Counter-Ambush Flare",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the missing tier-two Lantern Sapper reveal and anti-ambush role through shared live combat behavior without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_lantern_sapper_ability_count": 0,
+        "week_three_embercourt_mireclaw_win_rates": "32/68",
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.0,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 68.0,
+        "faction_balance_max_side_bias_points": 4.07,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Lantern Sappers consume one authored counter-ambush flare contract through live rules, tactical-AI estimates, player summaries, benchmark behavior, content validation, and focused runtime proof",
+        "A living Sapper exposes and bounds existing authored backstab and fogwake ambush setup through generic ability or status fields without faction or matchup checks",
+        "Focused proof covers exact backstab and fogwake counters plus ordinary, dead-source, duplicate-source, stripped-ability, spell, direct-damage, and unrelated-unit exclusions",
+        "The all-live 100-seed four-week matrix improves week-three Embercourt/Mireclaw or aggregate severity without exceeding 28 outliers, two rows at or above 65 percent, 68.0 percent maximum dominance, seven side-bias points, or zero structural failures",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, or benchmark-only hard-coding",
+        "unit base stat, growth, recruitment, economy, spell, hero, save, strategic-AI, campaign, packaging, Native RMG, or benchmark-threshold changes",
+        "claiming final Embercourt identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T08:12:34Z",
+      "updatedAt": "2026-08-05T08:12:34Z",
+      "notes": "The faction bible explicitly names reveal utility and anti-ambush control for this otherwise ability-empty production unit. The current week-three Embercourt/Mireclaw deficit is candidate-screening evidence, not a runtime condition."
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
@@ -73082,7 +73174,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Production Prism Adepts now own Refraction Volley behind a living Shard Warden linked screen; faction balance remains needs_tuning at 28 outliers / 158.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T07:35:08Z",
+  "updatedAt": "2026-08-05T08:12:34Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

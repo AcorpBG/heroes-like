@@ -21,6 +21,7 @@ const REQUIRED_ABILITY_IDS := [
 	"bloodrush",
 	"obituary",
 	"overheat",
+	"pressure_artillery",
 	"sporeglass_mend",
 	"foundry_aura",
 ]
@@ -139,6 +140,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_bloodrush(unit_id)
 		"overheat":
 			return _probe_overheat(unit_id)
+		"pressure_artillery":
+			return _probe_pressure_artillery(unit_id)
 		"sporeglass_mend":
 			return _probe_sporeglass_mend(unit_id)
 		"foundry_aura":
@@ -1482,6 +1485,177 @@ func _probe_overheat(unit_id: String) -> Dictionary:
 		"recovered_modifier": recovered_modifier,
 		"message_count": messages.size(),
 		"reason": "" if ok else "overheat did not prove its complete burst, cooldown, expiry, and AI contract",
+	}
+
+func _probe_pressure_artillery(unit_id: String) -> Dictionary:
+	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var primary := _defender_stack("enemy", 0)
+	var selected_secondary := _stack_for_unit("unit_mireclaw_ferrychain_lashers", "enemy", 1)
+	var tied_secondary := _stack_for_unit("unit_thornwake_thornwhip_carriers", "enemy", 2)
+	var distant_secondary := _stack_for_unit("unit_veilmourn_bellwake_oars", "enemy", 3)
+	var allied_bystander := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	_set_hex(attacker, 2, 3)
+	_set_hex(primary, 6, 3)
+	_set_hex(selected_secondary, 6, 4)
+	_set_hex(tied_secondary, 5, 3)
+	_set_hex(distant_secondary, 9, 6)
+	_set_hex(allied_bystander, 6, 2)
+	selected_secondary["total_health"] = 40
+	tied_secondary["total_health"] = 40
+	var battle := _battle_for_stacks([attacker, primary, selected_secondary, tied_secondary, distant_secondary, allied_bystander], [], "plains", 3)
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	var expected_damage := mini(
+		int(ability.get("max_secondary_damage", 0)),
+		BattleRulesScript._alive_count(attacker) * int(ability.get("secondary_damage_per_unit", 0))
+	)
+	var selected_id := String(selected_secondary.get("battle_id", ""))
+	var tied_id := String(tied_secondary.get("battle_id", ""))
+	var distant_id := String(distant_secondary.get("battle_id", ""))
+	var ally_id := String(allied_bystander.get("battle_id", ""))
+	var selected_before := int(selected_secondary.get("total_health", 0))
+	var tied_before := int(tied_secondary.get("total_health", 0))
+	var distant_before := int(distant_secondary.get("total_health", 0))
+	var ally_before := int(allied_bystander.get("total_health", 0))
+	var ai_secondary := BattleAiRulesScript._pressure_artillery_secondary_target(battle, attacker, primary)
+	var ai_secondary_damage := BattleAiRulesScript._pressure_artillery_secondary_damage(attacker)
+	var cluster_score := BattleAiRulesScript._attack_score(attacker, primary, battle, true)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, attacker, primary, true, 1)
+	var updated_attacker := BattleRulesScript._get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	var selected_after := BattleRulesScript._get_stack_by_id(battle, selected_id)
+	var tied_after := BattleRulesScript._get_stack_by_id(battle, tied_id)
+	var distant_after := BattleRulesScript._get_stack_by_id(battle, distant_id)
+	var ally_after := BattleRulesScript._get_stack_by_id(battle, ally_id)
+	var selected_after_health := int(selected_after.get("total_health", 0))
+	var tied_after_health := int(tied_after.get("total_health", 0))
+	var distant_after_health := int(distant_after.get("total_health", 0))
+	var ally_after_health := int(ally_after.get("total_health", 0))
+	var overheated := SpellRulesScript.has_effect_id(updated_attacker, battle, "status_overheated")
+	var initiative_before := BattleRulesScript._stack_initiative_total(attacker, _battle_for_stacks([attacker.duplicate(true), primary.duplicate(true)], [], "plains", 3))
+	var initiative_after := BattleRulesScript._stack_initiative_total(updated_attacker, battle)
+	var heat_initiative_modifier := SpellRulesScript.effect_bonus_for_kind(updated_attacker, battle, "initiative")
+	var effect_count: int = updated_attacker.get("effects", []).size()
+	var expires_after_round := int(updated_attacker.get("effects", [])[0].get("expires_after_round", 0)) if effect_count > 0 else 0
+	battle["round"] = 4
+	BattleRulesScript._apply_attack_ability_effects(battle, updated_attacker, primary, true, 1)
+	updated_attacker = BattleRulesScript._get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	var did_not_refresh: bool = (
+		updated_attacker.get("effects", []).size() == effect_count
+		and effect_count > 0
+		and int(updated_attacker.get("effects", [])[0].get("expires_after_round", 0)) == expires_after_round
+	)
+	battle["round"] = 5
+	SpellRulesScript.purge_expired_stack_effects(updated_attacker, 5)
+	var recovered := not SpellRulesScript.has_effect_id(updated_attacker, battle, "status_overheated")
+
+	var event_found := false
+	var heat_event_found := false
+	for event in battle.get("battle_presentation_events", []):
+		if event is Dictionary \
+				and String(event.get("event_type", "")) == "ability" \
+				and String(event.get("action_id", "")) == "pressure_artillery" \
+				and String(event.get("target_battle_id", "")) == selected_id \
+				and int(event.get("damage", 0)) == expected_damage:
+			event_found = true
+		if event is Dictionary \
+				and String(event.get("event_type", "")) == "debuff" \
+				and String(event.get("action_id", "")) == "pressure_artillery_heat" \
+				and String(event.get("target_battle_id", "")) == String(attacker.get("battle_id", "")) \
+				and String(event.get("visible_text", "")).to_lower().contains("overheated"):
+			heat_event_found = true
+
+	var no_cluster_attacker := _stack_for_unit(unit_id, "player", 0)
+	var no_cluster_primary := _defender_stack("enemy", 0)
+	_set_hex(no_cluster_attacker, 2, 3)
+	_set_hex(no_cluster_primary, 6, 3)
+	var no_cluster_battle := _battle_for_stacks([no_cluster_attacker, no_cluster_primary], [], "plains", 3)
+	var no_cluster_primary_before := int(no_cluster_primary.get("total_health", 0))
+	var no_cluster_score := BattleAiRulesScript._attack_score(no_cluster_attacker, no_cluster_primary, no_cluster_battle, true)
+	var no_cluster_messages := BattleRulesScript._apply_attack_ability_effects(no_cluster_battle, no_cluster_attacker, no_cluster_primary, true, 1)
+	var no_cluster_updated := BattleRulesScript._get_stack_by_id(no_cluster_battle, String(no_cluster_attacker.get("battle_id", "")))
+	var no_cluster_primary_after := BattleRulesScript._get_stack_by_id(no_cluster_battle, String(no_cluster_primary.get("battle_id", "")))
+
+	var stripped_attacker := _without_ability(_stack_for_unit(unit_id, "player", 0), "pressure_artillery")
+	var stripped_primary := _defender_stack("enemy", 0)
+	var stripped_secondary := _stack_for_unit("unit_mireclaw_ferrychain_lashers", "enemy", 1)
+	_set_hex(stripped_attacker, 2, 3)
+	_set_hex(stripped_primary, 6, 3)
+	_set_hex(stripped_secondary, 6, 4)
+	var stripped_battle := _battle_for_stacks([stripped_attacker, stripped_primary, stripped_secondary], [], "plains", 3)
+	var stripped_secondary_before := int(stripped_secondary.get("total_health", 0))
+	BattleRulesScript._apply_attack_ability_effects(stripped_battle, stripped_attacker, stripped_primary, true, 1)
+	var stripped_updated := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_attacker.get("battle_id", "")))
+	var stripped_secondary_after := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_secondary.get("battle_id", "")))
+
+	var melee_attacker := _stack_for_unit(unit_id, "player", 0)
+	var melee_primary := _defender_stack("enemy", 0)
+	var melee_secondary := _stack_for_unit("unit_mireclaw_ferrychain_lashers", "enemy", 1)
+	_set_hex(melee_attacker, 5, 3)
+	_set_hex(melee_primary, 6, 3)
+	_set_hex(melee_secondary, 6, 4)
+	var melee_battle := _battle_for_stacks([melee_attacker, melee_primary, melee_secondary], [], "plains", 3)
+	var melee_secondary_before := int(melee_secondary.get("total_health", 0))
+	BattleRulesScript._apply_attack_ability_effects(melee_battle, melee_attacker, melee_primary, false, 0)
+	var melee_updated := BattleRulesScript._get_stack_by_id(melee_battle, String(melee_attacker.get("battle_id", "")))
+	var melee_secondary_after := BattleRulesScript._get_stack_by_id(melee_battle, String(melee_secondary.get("battle_id", "")))
+	var role_line := BattleRulesScript._ability_role_sentence(attacker, ability, battle, primary)
+	var ok: bool = (
+		expected_damage == 8
+		and String(ai_secondary.get("battle_id", "")) == selected_id
+		and ai_secondary_damage == expected_damage
+		and selected_after_health == selected_before - expected_damage
+		and tied_after_health == tied_before
+		and distant_after_health == distant_before
+		and ally_after_health == ally_before
+		and overheated
+		and heat_initiative_modifier == -1
+		and did_not_refresh
+		and recovered
+		and event_found
+		and heat_event_found
+		and cluster_score > no_cluster_score
+		and int(no_cluster_primary_after.get("total_health", 0)) == no_cluster_primary_before
+		and SpellRulesScript.has_effect_id(no_cluster_updated, no_cluster_battle, "status_overheated")
+		and not no_cluster_messages.is_empty()
+		and int(stripped_secondary_after.get("total_health", 0)) == stripped_secondary_before
+		and not SpellRulesScript.has_effect_id(stripped_updated, stripped_battle, "status_overheated")
+		and int(melee_secondary_after.get("total_health", 0)) == melee_secondary_before
+		and not SpellRulesScript.has_effect_id(melee_updated, melee_battle, "status_overheated")
+		and messages.size() >= 2
+		and role_line.contains("up to 10")
+		and role_line.contains("one enemy adjacent")
+		and role_line.contains("Overheated")
+		and role_line.contains("2 rounds")
+	)
+	return {
+		"ok": ok,
+		"probe": "pressure_artillery_cluster_heat_ai_and_exclusions",
+		"expected_damage": expected_damage,
+		"selected_secondary_id": selected_id,
+		"ai_secondary_id": String(ai_secondary.get("battle_id", "")),
+		"ai_secondary_damage": ai_secondary_damage,
+		"selected_health_before": selected_before,
+		"selected_health_after": selected_after_health,
+		"tied_health_before": tied_before,
+		"tied_health_after": tied_after_health,
+		"distant_health_before": distant_before,
+		"distant_health_after": distant_after_health,
+		"ally_health_before": ally_before,
+		"ally_health_after": ally_after_health,
+		"overheated": overheated,
+		"initiative_before": initiative_before,
+		"initiative_after": initiative_after,
+		"heat_initiative_modifier": heat_initiative_modifier,
+		"did_not_refresh": did_not_refresh,
+		"recovered": recovered,
+		"event_found": event_found,
+		"heat_event_found": heat_event_found,
+		"cluster_score": cluster_score,
+		"no_cluster_score": no_cluster_score,
+		"no_cluster_primary_health": int(no_cluster_primary_after.get("total_health", 0)),
+		"stripped_secondary_health": int(stripped_secondary_after.get("total_health", 0)),
+		"melee_secondary_health": int(melee_secondary_after.get("total_health", 0)),
+		"role_line": role_line,
+		"reason": "" if ok else "pressure artillery did not preserve its deterministic clustered hit, heat cycle, AI parity, events, or excluded paths",
 	}
 
 func _probe_sporeglass_mend(unit_id: String) -> Dictionary:

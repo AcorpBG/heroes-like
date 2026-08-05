@@ -1429,6 +1429,20 @@ class FastBattleBenchmark:
         overheat = self._ability_by_id(attacker, "overheat")
         if overheat and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
             score += 0.10
+        if is_ranged:
+            pressure_artillery = self._ability_by_id(attacker, "pressure_artillery")
+            if pressure_artillery:
+                secondary_target = self._pressure_artillery_secondary_target(battle, attacker, target)
+                if secondary_target:
+                    secondary_damage = self._pressure_artillery_secondary_damage(attacker)
+                    secondary_health = max(1, int(secondary_target.get("total_health", 0)))
+                    secondary_applied = min(secondary_damage, secondary_health)
+                    score += float(secondary_applied) / float(max(1, int(secondary_target.get("unit_hp", 1))))
+                    score += min(1.0, float(secondary_applied) / float(secondary_health)) * 5.0
+                    if secondary_damage >= secondary_health:
+                        score += 2.0
+                if not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
+                    score -= float(pressure_artillery.get("ai_heat_score_penalty", 0.5))
         if self._hero_has_trait(battle, side, "artillerist") and is_ranged and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
             score += 1.5
         if self._hero_has_trait(battle, side, "packhunter") and (self._health_ratio(target) <= 0.75 or self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
@@ -1758,6 +1772,22 @@ class FastBattleBenchmark:
         if hookline_triggered:
             ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
         if is_ranged:
+            pressure_artillery = self._ability_by_id(attacker, "pressure_artillery")
+            if pressure_artillery and self._alive_count(attacker) > 0:
+                secondary_target = self._pressure_artillery_secondary_target(battle, attacker, defender)
+                secondary_damage = self._pressure_artillery_secondary_damage(attacker)
+                if secondary_target and secondary_damage > 0:
+                    self._apply_damage(secondary_target, secondary_damage)
+                    counts["pressure_artillery"] += 1
+                    counts["pressure_artillery_damage"] += secondary_damage
+                if not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
+                    self._apply_effect(attacker, {
+                        "effect_id": str(pressure_artillery.get("status_id", STATUS_OVERHEATED)),
+                        "label": str(pressure_artillery.get("status_label", "Overheated")),
+                        "duration_rounds": int(pressure_artillery.get("duration_rounds", 2)),
+                        "modifiers": pressure_artillery.get("modifiers", {}),
+                    }, battle, "ability", "pressure_artillery")
+                    counts["status_applied"] += 1
             mending_fire = self._ability_by_id(attacker, "sporeglass_mend")
             if mending_fire and self._alive_count(attacker) > 0:
                 requested = min(
@@ -2253,6 +2283,37 @@ class FastBattleBenchmark:
 
     def _side_defending_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("defending", False)))
+
+    def _pressure_artillery_secondary_target(
+        self,
+        battle: dict[str, Any],
+        attacker: dict[str, Any],
+        primary_target: dict[str, Any],
+    ) -> dict[str, Any]:
+        ability = self._ability_by_id(attacker, "pressure_artillery")
+        if not ability or not primary_target:
+            return {}
+        primary_id = str(primary_target.get("battle_id", ""))
+        primary_slot = int(primary_target.get("side_slot", -999))
+        cluster_range = max(1, int(ability.get("cluster_range", 1)))
+        candidates = [
+            candidate
+            for candidate in self._alive_stacks_for_side(battle, str(primary_target.get("side", "")))
+            if str(candidate.get("battle_id", "")) != primary_id
+            and abs(int(candidate.get("side_slot", -999)) - primary_slot) <= cluster_range
+        ]
+        if not candidates:
+            return {}
+        return min(candidates, key=lambda candidate: (int(candidate.get("total_health", 0)), str(candidate.get("battle_id", ""))))
+
+    def _pressure_artillery_secondary_damage(self, attacker: dict[str, Any]) -> int:
+        ability = self._ability_by_id(attacker, "pressure_artillery")
+        if not ability or self._alive_count(attacker) <= 0:
+            return 0
+        return min(
+            max(1, int(ability.get("max_secondary_damage", 1))),
+            self._alive_count(attacker) * max(1, int(ability.get("secondary_damage_per_unit", 1))),
+        )
 
     def _linked_ranged_attack_screen_multiplier(self, defender: dict[str, Any], battle: dict[str, Any]) -> float:
         if not bool(defender.get("ranged", False)):
