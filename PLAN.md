@@ -25,7 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Completed implementation slice: `combat-sunvault-aurora-relay-front-10184`. Aurora Bastions' Aurora Facet Wall now screens allied ranged stacks by four percent against melee attackers carrying the authored `bloodrush` committed-assault contract while a Bastion survives. Live damage, tactical-AI estimates, role summaries, the fast benchmark, and focused runtime proof share the same content-owned field without adding inert metadata to normalized battle state. Generic four-percent and one-percent screens were rejected because each increased ordinary outliers from 28 to 30. The accepted all-live matrix keeps 28 outliers, lowers excess severity from 162.5 to 161.0, preserves four rows at or above 65 percent, 68.5 percent maximum dominance, 4.13-point maximum side bias, and zero structural failures, and improves week-four Embercourt/Sunvault from 67.5/32.5 to 66/34. The 59-encounter queue remains clear at signature `829808c9`; focused ability, autoplay, runtime consequence, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
-- Next registered implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184` (pending). Adopt the retained authored Refraction Volley contract for the production Prism Adepts through the existing shared `volley` behavior, then prove early Sunvault setup pressure improves without regressing the accepted full matrix or active encounter queue. This registration prevents the progress workflow from reporting no actionable next task while the game remains incomplete.
+- Completed implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184`. Production Prism Adepts now own Refraction Volley and receive the missing two-percent linked ranged screen while a Shard Warden survives. The all-live matrix remains at 28 outliers and four severe rows while excess severity improves from 161.0 to 158.0, side bias improves from 4.13 to 4.07, maximum dominance remains 68.5, and structural failures remain zero. The 59-encounter active queue remains clear at signature `829808c9`; faction balance remains `needs_tuning` and the game remains incomplete.
+- Next registered implementation slice: `combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184` (pending). Implement the faction-bible tier-four heat-buildup and clustered-pressure role through shared runtime, tactical-AI, summary, benchmark, and validation behavior, starting from the current week-three Brasshollow/Embercourt `31.5/68.5` deficit without runtime matchup checks.
 - Completed corrective validation slice: `strategic-ai-role-state-fixture-reconciliation-10184`. The commander role-state report now matches the unchanged live full-breakdown target surface: River Signal Post and Glassroad Watch Relay both rank third, while the two Free Company cases and memory-continuity target remain first. Eight cases and the compact public leak check pass. Case execution is fail-fast; a forced first-case mismatch emits exactly one report/engine error with no script or later-case errors. Core, editor parse, repository, JSON, and diff gates pass. This changes no strategic-AI runtime behavior and is not gameplay implementation progress.
 - Completed implementation slice: `combat-veilmourn-undertow-screen-snare-10184`. Undertow Harpooners' Mourning Nets now gain an authored 1.25 ranged payoff and 2.0 tactical target bonus only against rigid `snare_vulnerable` screens; Ledger Plate, Rivet Hide, and Furnace Screen opt in while ordinary shields remain exact. The implementation resolves new metadata from immutable unit content instead of normalized battle state, preserving unrelated deterministic battle hashes. The all-live 100-seed four-week matrix keeps 28 outliers and 68.5 percent maximum dominance, lowers excess severity from 172.0 to 162.5 and rows at or above 65 percent from five to four, moves week-two Brasshollow/Veilmourn from 68/32 to 55.5/44.5 and week three from 55/45 to 50.5/49.5, and has zero structural failures; the existing week-four Veilmourn lead increases from 58.5 to 61.5 percent. Focused ability, autoplay, 59-encounter clear-queue, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Veilmourn identity, final faction balance, or overall release completion.
 - Completed implementation slice: `strategic-ai-live-resource-target-view-reuse-10184`. Live hero-task resource selection now reuses each already scored candidate's normalized reasons, public importance, and debug reason when constructing its commander role view, while ordinary report callers retain the full resource score breakdown. Focused proof matches all 15 behavior-facing fields and keeps the intended Free Company/Signal Post reservation outcomes exact. Medium ordinal 99 preserves row signature `59262e55`, all 171 activity events, 37 turns, the same defeat outcome, and zero behavior, integrity, or reachability failures; local row runtime falls from 298228 to 296997 ms and accumulated target-assignment time from 50029 to 49886 ms across 74 samples. This is a bounded redundant-score cleanup, not broad strategic-AI performance completion or overall release completion.
@@ -2286,26 +2287,67 @@ Non-goals:
 
 id: `combat-sunvault-prism-adept-refraction-volley-10184`
 
-Pending Phase 6 faction-identity and balance slice. The retained Sunvault scaffold
+Status: completed.
+
+Completed Phase 6 faction-identity and balance slice. The retained Sunvault scaffold
 authors Refraction Volley through the shared `volley` contract, while the
-production Prism Adepts currently ship without an ability contract despite their
-prepared ranged-relay role.
+production Prism Adepts previously shipped without an ability contract despite their
+prepared ranged-relay role. Focused screening proved that the stack is usually
+deleted before acting and exposed the bible-defined upstream gap: production
+Shard Wardens reflected minor damage but did not yet protect their linked array.
 
 Implementation target:
 - adopt the retained Refraction Volley authored fields for the production Prism Adepts through existing shared live damage, tactical-AI, summary, benchmark, and validation behavior;
+- give living Shard Wardens an authored two-percent incoming ranged-attack screen linked only to production Prism Adepts, using shared shielding behavior and maximum/nonstacking source resolution;
 - preserve ordinary ranged distance behavior and require the existing disrupted-target and allied-defending setup conditions for their additional payoff;
-- validate early Sunvault setup pressure without faction, matchup, week, or army-count checks.
+- keep melee, spell, direct-damage, dead-source, unlinked-unit, and duplicate-source paths exact;
+- validate early Sunvault setup pressure without runtime faction, matchup, week, or army-count checks.
 
 Completion criteria:
 - focused runtime proof covers base volley, disrupted-target payoff, allied-defending payoff, melee exclusion, and stripped-ability controls in live rules and tactical-AI estimates;
+- focused runtime proof also measures the exact linked 0.98 screen while dead/stripped sources, unlinked ranged units, melee attacks, and duplicate sources remain exact;
 - the all-live 100-seed four-week matrix improves at least one accepted early Sunvault outlier without exceeding 28 outliers, 161.0 severity, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures;
 - the 59-encounter active breadth queue remains clear at zero items;
 - focused ability, autoplay, balance-regression, core, project-parse, repository, JSON, Python, and diff validation pass.
 
 Non-goals:
-- do not introduce new ability families or hard-code faction ids, matchup ids, week numbers, or army counts;
+- do not introduce new ability families or hard-code faction ids, matchup ids, week numbers, or army counts in runtime behavior;
 - do not change base stats, growth, recruitment, economy, spells, heroes, saves, strategic AI, packaging, or Native RMG;
 - do not claim final Sunvault identity, final faction balance, or overall release completion.
+
+Result:
+- production Prism Adepts now own the retained Refraction Volley contract: `1.12` base ranged force, `1.2544` against staggered targets, and `1.176` while an ally holds the line;
+- living Shard Wardens apply one maximum/nonstacking `0.98` ranged screen only to linked Prism Adepts, while dead, stripped, unlinked, melee, spell, and direct-damage paths remain outside the contract;
+- the all-live 100-seed four-week matrix remains at 28 outliers and four rows at or above 65 percent while severity improves from `161.0` to `158.0`, side bias improves from `4.13` to `4.07`, maximum dominance remains `68.5`, and structural failures remain zero;
+- week-one Embercourt/Sunvault improves from `64.5/35.5` to `64/36`; week-two Mireclaw/Sunvault and week-four Brasshollow/Sunvault regress slightly, but aggregate acceptance bounds pass;
+- the 59-encounter active breadth queue remains clear with signature `829808c9`; faction balance remains `needs_tuning` and the game remains incomplete.
+
+## Brasshollow Boiler Rivetcaster Pressure Artillery
+
+id: `combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184`
+
+Selected Phase 6 faction-identity and balance slice. The faction bible defines
+Boiler Rivetcasters as short-range pressure artillery with heat buildup and
+splash risk, but the production tier-four unit currently ships without an
+ability contract. The current week-three Brasshollow/Embercourt row is the
+matrix maximum at `31.5/68.5` against Brasshollow.
+
+Implementation target:
+- implement an authored Boiler Rivetcaster pressure-artillery contract in live BattleRules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof;
+- make successful primary ranged fire create bounded deterministic secondary pressure against a clustered enemy and a visible heat cost for the firing stack;
+- preserve ordinary single-target ranged behavior when no valid secondary target exists and keep melee, retaliation, spell, direct-damage, dead-source, and unrelated-unit paths exact;
+- screen the authored values against the full all-live matrix without runtime faction, matchup, week, or army-count checks.
+
+Completion criteria:
+- focused runtime proof covers primary fire, deterministic clustered-target selection, no-target behavior, heat buildup and recovery, tactical-AI parity, and all excluded paths;
+- the player-facing role line and battle events expose both secondary pressure and the firing stack's heat cost;
+- the all-live 100-seed four-week matrix improves the week-three Brasshollow/Embercourt row or aggregate severity without exceeding 28 outliers, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures;
+- focused ability, autoplay, balance-regression, core, project-parse, repository, JSON, Python, and diff validation pass.
+
+Non-goals:
+- do not reuse Debt-Engine Exactors' exclusive overheat ability or change Boiler Rivetcaster base stats, shots, growth, cost, recruitment, or army snapshots;
+- do not change spells, heroes, towns, saves, strategic AI, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not claim final Brasshollow identity, final faction balance, or overall release completion.
 
 ## Work Selection Gates
 

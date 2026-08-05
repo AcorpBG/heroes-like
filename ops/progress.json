@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Aurora Bastion's bounded allied-ranged screen against authored bloodrush committed assaults through shared runtime, AI, benchmark, and focused proof behavior.",
+  "currentNotes": "Completed Refraction Volley plus the minimum bible-backed two-percent Shard Warden linked screen; faction balance remains needs_tuning and the Boiler Rivetcaster pressure-artillery implementation is next.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-aurora-relay-front-10184",
-  "currentSliceId": "combat-sunvault-aurora-relay-front-10184",
-  "currentSliceNotes": "Accepted four-percent bloodrush screen keeps 28 outliers, lowers severity to 161.0, preserves the clear 59-encounter queue, and avoids normalized-state hash drift.",
+  "currentSlice": "combat-sunvault-prism-adept-refraction-volley-10184",
+  "currentSliceId": "combat-sunvault-prism-adept-refraction-volley-10184",
+  "currentSliceNotes": "Completed with 28 outliers / 158.0 severity / four severe rows / 68.5 maximum dominance / 4.07 side bias / zero structural failures; week-one Embercourt/Sunvault improves to 64/36 and the 59-encounter active queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Aurora Relay Front",
-  "currentSliceUpdatedAt": "2026-08-05T06:22:14Z",
+  "currentSliceTitle": "Sunvault Prism Adept Refraction Volley",
+  "currentSliceUpdatedAt": "2026-08-05T07:35:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19940,7 +19940,7 @@
     {
       "id": "combat-sunvault-prism-adept-refraction-volley-10184",
       "title": "Sunvault Prism Adept Refraction Volley",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
@@ -19949,7 +19949,7 @@
         "PLAN.md",
         "docs/factions-content-bible.md"
       ],
-      "purpose": "Adopt the retained authored Refraction Volley contract for production Prism Adepts through existing shared volley behavior and improve early Sunvault setup pressure without matchup-specific tuning.",
+      "purpose": "Adopt Refraction Volley for production Prism Adepts and restore the bible-defined linked array protection from living Shard Wardens through shared ability behavior without matchup-specific tuning.",
       "implementationTargets": [
         "content/units.json",
         "scripts/core/BattleRules.gd",
@@ -19961,6 +19961,7 @@
       ],
       "baseline": {
         "production_prism_adept_ability_count": 0,
+        "production_shard_warden_linked_screen_reduction_pct": 0,
         "retained_refraction_volley_damage_multiplier": 1.12,
         "retained_refraction_volley_status_damage_multiplier": 1.12,
         "retained_refraction_volley_ally_defending_multiplier": 1.05,
@@ -19977,18 +19978,106 @@
       },
       "completionCriteria": [
         "Production Prism Adepts consume the retained Refraction Volley fields through existing shared live rules, tactical-AI estimates, summaries, benchmark behavior, and content validation",
+        "Living Shard Wardens reduce incoming ranged attack damage to linked Prism Adepts by exactly two percent without affecting dead/stripped sources, unlinked units, melee attacks, spells, direct damage, or duplicate-source stacking",
         "Focused proof covers base volley, disrupted-target payoff, allied-defending payoff, melee exclusion, and stripped-ability controls",
         "At least one accepted early Sunvault outlier improves without exceeding 28 outliers, 161.0 severity, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures",
         "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
       ],
       "nonGoals": [
-        "new ability families or faction-id, matchup-id, week-number, or army-count hard-coding",
+        "new ability families or runtime faction-id, matchup-id, week-number, or army-count hard-coding",
         "base stat, growth, recruitment, economy, spell, hero, save, strategic-AI, packaging, or Native RMG changes",
         "claiming final Sunvault identity, final faction balance, or overall release completion"
       ],
       "createdAt": "2026-08-05T06:22:14Z",
-      "updatedAt": "2026-08-05T06:22:14Z",
-      "notes": "Registered from current full-matrix evidence and the retained content-authored Sunvault scaffold so the progress helper exposes a concrete implementation successor instead of reporting no actionable next task while overall release work remains open."
+      "updatedAt": "2026-08-05T07:35:08Z",
+      "startedAt": "2026-08-05T06:27:36Z",
+      "notes": "Refraction Volley alone was rejected as matrix-neutral after focused instrumentation showed Prism Adepts cast only four times, defended twice, and shot zero times across 200 Embercourt/Sunvault samples because they were deleted before acting. The full retained Volley plus Glare Splinters pair worsened week-one Brasshollow/Sunvault from 58.5 to 61.5 percent. Bible-backed linked Shard Warden screens at five and ten percent improved aggregate severity but each created two Sunvault/Veilmourn outliers. Two percent is the minimum linked screen that improves week-one Embercourt/Sunvault from 64.5/35.5 to 64/36 while the sensitive week-two and week-four Sunvault/Veilmourn rows remain inside 45-55. Week-two Mireclaw/Sunvault worsens from 64/36 to 65.5/34.5 and week-four Brasshollow/Sunvault worsens from 60/40 to 60.5/39.5, but aggregate outliers, severe rows, maximum dominance, side bias, and structural bounds all pass.",
+      "result": {
+        "production_prism_adept_ability_count": 1,
+        "refraction_volley_base_modifier": 1.12,
+        "refraction_volley_staggered_modifier": 1.2544,
+        "refraction_volley_held_line_modifier": 1.176,
+        "shard_warden_linked_screen_modifier": 0.98,
+        "linked_screen_stacks": false,
+        "ability_instance_count": 104,
+        "ability_runtime_consequence_count": 104,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 158.0,
+        "faction_balance_rows_at_or_above_65_pct": 4,
+        "faction_balance_max_dominance_pct": 68.5,
+        "faction_balance_max_side_bias_points": 4.07,
+        "faction_balance_structural_failure_count": 0,
+        "week_one_embercourt_sunvault_before": "64.5/35.5",
+        "week_one_embercourt_sunvault_after": "64/36",
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn (passed; 104/104 authored ability instances)",
+        "godot --headless --path . tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn (passed; runtime consequence and matrix gates pass)",
+        "godot --headless --path . tests/balance_regression_report_suite.tscn (passed)",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn (passed)",
+        "godot --headless --path . --editor --quit (passed)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; 28 outliers / 158.0 severity / zero structural failures)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "jq empty content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 28 outliers / 158.0 severity, and overall game completion remains open.",
+      "completedAt": "2026-08-05T07:35:08Z"
+    },
+    {
+      "id": "combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184",
+      "title": "Brasshollow Boiler Rivetcaster Pressure Artillery",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the missing tier-four Boiler Rivetcaster heat-buildup and clustered-pressure role through shared live combat behavior without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_boiler_rivetcaster_ability_count": 0,
+        "week_three_brasshollow_embercourt_win_rates": "31.5/68.5",
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 158.0,
+        "faction_balance_rows_at_or_above_65_pct": 4,
+        "faction_balance_max_dominance_pct": 68.5,
+        "faction_balance_max_side_bias_points": 4.07,
+        "faction_balance_structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Boiler Rivetcasters consume one authored pressure-artillery contract through live rules, tactical-AI estimates, player summaries, benchmark behavior, content validation, and focused runtime proof",
+        "Successful primary ranged fire creates bounded deterministic secondary pressure against one valid clustered enemy and a visible heat cost for the firing stack",
+        "Focused proof covers clustered-target selection, no-target behavior, heat buildup and recovery, AI parity, and melee, retaliation, spell, direct-damage, dead-source, and unrelated-unit exclusions",
+        "The all-live 100-seed four-week matrix improves the week-three Brasshollow/Embercourt row or aggregate severity without exceeding 28 outliers, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures",
+        "Focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "reusing the Debt-Engine Exactors' exclusive overheat ability or changing Boiler Rivetcaster base stats, shots, growth, cost, recruitment, or army snapshots",
+        "spell, hero, town, save, strategic-AI, campaign, packaging, Native RMG, or benchmark-threshold changes",
+        "claiming final Brasshollow identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-05T07:35:08Z",
+      "updatedAt": "2026-08-05T07:35:08Z",
+      "notes": "The faction bible explicitly names heat buildup and splash risk for this production unit. The candidate must be screened as generic authored combat behavior; the measured week-three Brasshollow/Embercourt deficit is validation evidence, not a runtime condition."
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
@@ -72991,9 +73080,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 161.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Production Prism Adepts now own Refraction Volley behind a living Shard Warden linked screen; faction balance remains needs_tuning at 28 outliers / 158.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T06:22:14Z",
+  "updatedAt": "2026-08-05T07:35:08Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

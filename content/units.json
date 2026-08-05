@@ -1072,10 +1072,14 @@
         {
           "id": "shielding",
           "name": "Facet Reprisal",
-          "description": "Mirror-glass shields blunt incoming fire and return a minor shard-flash while the line survives.",
+          "description": "Mirror-glass shields blunt incoming fire, return a minor shard-flash, and overlap linked Prism Adept arrays while the line survives.",
           "cohesion_hold_bonus": 0,
           "ranged_damage_multiplier": 0.98,
-          "ranged_damage_return_ratio": 0.1
+          "ranged_damage_return_ratio": 0.1,
+          "linked_ranged_unit_ids": [
+            "unit_sunvault_prism_adepts"
+          ],
+          "linked_ranged_damage_reduction_pct": 2
         }
       ],
       "growth": 8,
@@ -1113,6 +1117,20 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 8,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Refraction Volley",
+          "description": "Prepared firing tiers bend light into harsher volleys, especially into already-staggered targets.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.12,
+          "ally_defending_multiplier": 1.05
+        }
+      ],
       "spell_resistance_pct": 0,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {

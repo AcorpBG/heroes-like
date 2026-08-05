@@ -985,6 +985,7 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var action_summary := ""
 	var role_line := ""
 	var reflected_hit_event_visible := true
+	var linked_screen_contract := _probe_linked_ranged_screen(unit_id)
 	if total_linebreaker_screen_pct > 0:
 		var ally := _stack_for_unit("unit_brasshollow_boiler_rivetcasters", "player", 1)
 		var second_screen := _stack_for_unit(unit_id, "player", 2)
@@ -1157,7 +1158,14 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 			and role_line.contains("2%")
 			and role_line.contains("10%")
 		)
-	var ok := modifier_with < modifier_without and ally_screen_ok and committed_screen_ok and cohesion_contract_ok and return_contract_ok
+	var ok := (
+		modifier_with < modifier_without
+		and ally_screen_ok
+		and committed_screen_ok
+		and cohesion_contract_ok
+		and return_contract_ok
+		and bool(linked_screen_contract.get("ok", false))
+	)
 	return {
 		"ok": ok,
 		"probe": "shielding_self_and_allied_engine_damage_reduction",
@@ -1186,6 +1194,7 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"committed_ai_damage_without": committed_ai_damage_without,
 		"committed_role_line": committed_role_line,
 		"committed_screen_ok": committed_screen_ok,
+		"linked_ranged_screen": linked_screen_contract,
 		"ranged_damage_return_ratio": return_ratio,
 		"reflected_damage": reflected_damage,
 		"reflected_hit_event_visible": reflected_hit_event_visible,
@@ -1200,6 +1209,85 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"reason": "" if ok else "shielding did not preserve its authored damage screen and bounded cohesion contract",
 	}
 
+func _probe_linked_ranged_screen(unit_id: String) -> Dictionary:
+	var source := _stack_for_unit(unit_id, "player", 0)
+	var authored_shielding := _ability_by_id(ContentService.get_unit(unit_id), "shielding")
+	var reduction_pct := int(authored_shielding.get("linked_ranged_damage_reduction_pct", 0))
+	if reduction_pct <= 0:
+		return {"ok": true, "reduction_pct": 0, "skipped": true}
+	var linked_unit_ids: Array = authored_shielding.get("linked_ranged_unit_ids", [])
+	var linked_unit_id := String(linked_unit_ids[0]) if not linked_unit_ids.is_empty() else ""
+	var linked_ally := _stack_for_unit(linked_unit_id, "player", 1)
+	var ranged_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+	var battle := _battle_for_stacks([source, linked_ally, ranged_attacker])
+	var stripped_source := _without_ability(source, "shielding")
+	var stripped_linked := linked_ally.duplicate(true)
+	var stripped_attacker := ranged_attacker.duplicate(true)
+	var stripped_battle := _battle_for_stacks([stripped_source, stripped_linked, stripped_attacker])
+	var modifier_with := BattleRulesScript._ability_damage_modifier(ranged_attacker, linked_ally, battle, true, false, 2)
+	var modifier_without := BattleRulesScript._ability_damage_modifier(stripped_attacker, stripped_linked, stripped_battle, true, false, 2)
+	var ai_modifier_with := BattleAiRulesScript._ability_damage_modifier(ranged_attacker, linked_ally, battle, true, false, 2)
+	var ai_modifier_without := BattleAiRulesScript._ability_damage_modifier(stripped_attacker, stripped_linked, stripped_battle, true, false, 2)
+
+	var second_source := _stack_for_unit(unit_id, "player", 2)
+	var stacked_ally := _stack_for_unit(linked_unit_id, "player", 1)
+	var stacked_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+	var stacked_battle := _battle_for_stacks([source.duplicate(true), second_source, stacked_ally, stacked_attacker])
+	var stacked_modifier := BattleRulesScript._ability_damage_modifier(stacked_attacker, stacked_ally, stacked_battle, true, false, 2)
+
+	var dead_source := source.duplicate(true)
+	dead_source["total_health"] = 0
+	var dead_ally := _stack_for_unit(linked_unit_id, "player", 1)
+	var dead_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+	var dead_battle := _battle_for_stacks([dead_source, dead_ally, dead_attacker])
+	var dead_source_modifier := BattleRulesScript._ability_damage_modifier(dead_attacker, dead_ally, dead_battle, true, false, 2)
+
+	var unlinked_ally := _stack_for_unit("unit_sunvault_daybreak_colossus", "player", 1)
+	var unlinked_control := unlinked_ally.duplicate(true)
+	var unlinked_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+	var unlinked_battle := _battle_for_stacks([source.duplicate(true), unlinked_ally, unlinked_attacker])
+	var unlinked_control_battle := _battle_for_stacks([stripped_source.duplicate(true), unlinked_control, unlinked_attacker.duplicate(true)])
+	var unlinked_modifier := BattleRulesScript._ability_damage_modifier(unlinked_attacker, unlinked_ally, unlinked_battle, true, false, 2)
+	var unlinked_control_modifier := BattleRulesScript._ability_damage_modifier(unlinked_attacker, unlinked_control, unlinked_control_battle, true, false, 2)
+
+	var melee_ally := _stack_for_unit(linked_unit_id, "player", 1)
+	var melee_control := melee_ally.duplicate(true)
+	var melee_attacker := _stack_for_unit("unit_thornwake_stagknot_runners", "enemy", 0)
+	var melee_battle := _battle_for_stacks([source.duplicate(true), melee_ally, melee_attacker])
+	var melee_control_battle := _battle_for_stacks([stripped_source.duplicate(true), melee_control, melee_attacker.duplicate(true)])
+	var melee_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, melee_ally, melee_battle, false, false, 0)
+	var melee_control_modifier := BattleRulesScript._ability_damage_modifier(melee_attacker, melee_control, melee_control_battle, false, false, 0)
+	var role_line := BattleRulesScript._active_ability_role_line(source, battle, ranged_attacker)
+	var ok := (
+		linked_unit_id != ""
+		and is_equal_approx(modifier_with, modifier_without * (1.0 - (float(reduction_pct) / 100.0)))
+		and is_equal_approx(ai_modifier_with, modifier_with)
+		and is_equal_approx(ai_modifier_without, modifier_without)
+		and is_equal_approx(stacked_modifier, modifier_with)
+		and is_equal_approx(dead_source_modifier, modifier_without)
+		and is_equal_approx(unlinked_modifier, unlinked_control_modifier)
+		and is_equal_approx(melee_modifier, melee_control_modifier)
+		and role_line.contains("%d%%" % reduction_pct)
+		and role_line.contains("linked ranged arrays")
+	)
+	return {
+		"ok": ok,
+		"reduction_pct": reduction_pct,
+		"linked_unit_ids": linked_unit_ids,
+		"modifier_with": modifier_with,
+		"modifier_without": modifier_without,
+		"ai_modifier_with": ai_modifier_with,
+		"ai_modifier_without": ai_modifier_without,
+		"stacked_modifier": stacked_modifier,
+		"dead_source_modifier": dead_source_modifier,
+		"unlinked_modifier": unlinked_modifier,
+		"unlinked_control_modifier": unlinked_control_modifier,
+		"melee_modifier": melee_modifier,
+		"melee_control_modifier": melee_control_modifier,
+		"role_line": role_line,
+		"reason": "" if ok else "linked ranged screen did not preserve its authored living-source, linked-target, ranged-only, and nonstacking contract",
+	}
+
 func _probe_volley(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _defender_stack()
@@ -1210,14 +1298,63 @@ func _probe_volley(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, min_distance)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, true, false, min_distance)
-	var ok := bool(attacker.get("ranged", false)) and modifier_with > modifier_without
+	var ai_modifier_with := BattleAiRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, min_distance)
+	var ai_modifier_without := BattleAiRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, true, false, min_distance)
+	var status_defender := _defender_stack()
+	_add_effect(status_defender, "status_staggered")
+	var status_attacker := attacker.duplicate(true)
+	var status_battle := _battle_for_stacks([status_attacker, status_defender])
+	var status_modifier := BattleRulesScript._ability_damage_modifier(status_attacker, status_defender, status_battle, true, false, min_distance)
+	var status_ai_modifier := BattleAiRulesScript._ability_damage_modifier(status_attacker, status_defender, status_battle, true, false, min_distance)
+	var defending_ally := _defender_stack("player", 1)
+	defending_ally["defending"] = true
+	var held_attacker := attacker.duplicate(true)
+	var held_defender := _defender_stack()
+	var held_battle := _battle_for_stacks([held_attacker, defending_ally, held_defender])
+	var held_modifier := BattleRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, true, false, min_distance)
+	var held_ai_modifier := BattleAiRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, true, false, min_distance)
+	var below_distance_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, max(0, min_distance - 1))
+	var melee_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
+	var melee_control_modifier := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, false, 0)
+	var marked_role := BattleRulesScript._ability_role_sentence(status_attacker, volley, status_battle, status_defender)
+	var exact_refraction_contract_ok: bool = unit_id != "unit_sunvault_prism_adepts" or (
+		is_equal_approx(float(volley.get("damage_multiplier", 1.0)), 1.12)
+		and volley.get("status_ids", []) == ["status_staggered"]
+		and is_equal_approx(float(volley.get("status_damage_multiplier", 1.0)), 1.12)
+		and is_equal_approx(float(volley.get("ally_defending_multiplier", 1.0)), 1.05)
+		and is_equal_approx(status_modifier, modifier_with * 1.12)
+		and is_equal_approx(held_modifier, modifier_with * 1.05)
+		and marked_role.contains("marked targets")
+	)
+	var ok: bool = (
+		bool(attacker.get("ranged", false))
+		and modifier_with > modifier_without
+		and is_equal_approx(ai_modifier_with, modifier_with)
+		and is_equal_approx(ai_modifier_without, modifier_without)
+		and is_equal_approx(status_ai_modifier, status_modifier)
+		and is_equal_approx(held_ai_modifier, held_modifier)
+		and is_equal_approx(below_distance_modifier, modifier_without)
+		and is_equal_approx(melee_modifier, melee_control_modifier)
+		and exact_refraction_contract_ok
+	)
 	return {
 		"ok": ok,
 		"probe": "volley_range_damage_modifier",
 		"min_distance": min_distance,
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
-		"reason": "" if ok else "volley did not increase ranged damage at its minimum distance",
+		"ai_modifier_with": ai_modifier_with,
+		"ai_modifier_without": ai_modifier_without,
+		"status_modifier": status_modifier,
+		"status_ai_modifier": status_ai_modifier,
+		"held_modifier": held_modifier,
+		"held_ai_modifier": held_ai_modifier,
+		"below_distance_modifier": below_distance_modifier,
+		"melee_modifier": melee_modifier,
+		"melee_control_modifier": melee_control_modifier,
+		"marked_role": marked_role,
+		"exact_refraction_contract_ok": exact_refraction_contract_ok,
+		"reason": "" if ok else "volley did not preserve its range, setup, held-line, melee-exclusion, and tactical-AI contract",
 	}
 
 func _probe_formation_guard(unit_id: String) -> Dictionary:

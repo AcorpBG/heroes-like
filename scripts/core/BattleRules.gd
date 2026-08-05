@@ -4089,13 +4089,21 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 		"shielding":
 			var ranged_reduction_pct := int(round((1.0 - float(ability.get("ranged_damage_multiplier", 1.0))) * 100.0))
 			var ranged_return_pct := int(round(float(ability.get("ranged_damage_return_ratio", 0.0)) * 100.0))
+			var authored_shielding := _authored_ability_by_id(stack, "shielding")
+			var linked_screen_pct := int(authored_shielding.get("linked_ranged_damage_reduction_pct", 0))
 			if ranged_return_pct > 0:
+				if linked_screen_pct > 0:
+					return "%s blunts %d%% of incoming ranged damage, returns %d%% of damage received, and screens linked ranged arrays by %d%% while this stack survives" % [
+						name,
+						ranged_reduction_pct,
+						ranged_return_pct,
+						linked_screen_pct,
+					]
 				return "%s blunts %d%% of incoming ranged damage and returns %d%% of damage received while this stack survives" % [
 					name,
 					ranged_reduction_pct,
 					ranged_return_pct,
 				]
-			var authored_shielding := _authored_ability_by_id(stack, "shielding")
 			var committed_screen_pct := int(authored_shielding.get("committed_assault_screen_reduction_pct", 0))
 			if committed_screen_pct > 0:
 				return "%s blunts missiles and screens allied ranged relays by %d%% against committed assaults" % [name, committed_screen_pct]
@@ -9239,6 +9247,8 @@ static func _ability_damage_modifier(
 	var shielding = _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+	if is_ranged:
+		modifier *= _linked_ranged_attack_screen_multiplier(defender, battle)
 	if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", false)) or not shielding.is_empty()):
 		var screen_reduction_pct := _side_max_ability_int(
 			battle,
@@ -9538,6 +9548,20 @@ static func _side_max_authored_ability_int(battle: Dictionary, side: String, abi
 		var ability := _authored_ability_by_id(stack, ability_id)
 		best = max(best, int(ability.get(key, 0)))
 	return best
+
+static func _linked_ranged_attack_screen_multiplier(defender: Dictionary, battle: Dictionary) -> float:
+	if not bool(defender.get("ranged", false)):
+		return 1.0
+	var defender_unit_id := String(defender.get("unit_id", ""))
+	var best_reduction_pct := 0
+	for source in _alive_stacks_for_side(battle, String(defender.get("side", ""))):
+		if _ability_by_id(source, "shielding").is_empty():
+			continue
+		var shielding := _authored_ability_by_id(source, "shielding")
+		var linked_unit_ids = shielding.get("linked_ranged_unit_ids", [])
+		if linked_unit_ids is Array and linked_unit_ids.has(defender_unit_id):
+			best_reduction_pct = max(best_reduction_pct, int(shielding.get("linked_ranged_damage_reduction_pct", 0)))
+	return 1.0 - (float(clampi(best_reduction_pct, 0, 50)) / 100.0)
 
 static func _side_ability_bool(battle: Dictionary, side: String, ability_id: String, key: String, default_value: bool) -> bool:
 	for ability in _side_ability_payloads(battle, side, ability_id):

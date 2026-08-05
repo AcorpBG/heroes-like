@@ -1582,6 +1582,8 @@ class FastBattleBenchmark:
         shielding = self._ability_by_id(defender, "shielding")
         if is_ranged and shielding:
             modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+        if is_ranged:
+            modifier *= self._linked_ranged_attack_screen_multiplier(defender, battle)
         if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", False)) or bool(shielding)):
             screen_reduction_pct = self._side_max_ability_float(
                 battle,
@@ -2251,6 +2253,21 @@ class FastBattleBenchmark:
 
     def _side_defending_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("defending", False)))
+
+    def _linked_ranged_attack_screen_multiplier(self, defender: dict[str, Any], battle: dict[str, Any]) -> float:
+        if not bool(defender.get("ranged", False)):
+            return 1.0
+        defender_unit_id = str(defender.get("unit_id", ""))
+        best_reduction_pct = 0.0
+        for source in self._alive_stacks_for_side(battle, str(defender.get("side", ""))):
+            shielding = self._ability_by_id(source, "shielding")
+            linked_unit_ids = [str(value) for value in shielding.get("linked_ranged_unit_ids", [])]
+            if defender_unit_id in linked_unit_ids:
+                best_reduction_pct = max(
+                    best_reduction_pct,
+                    float(shielding.get("linked_ranged_damage_reduction_pct", 0.0)),
+                )
+        return 1.0 - (clamp(best_reduction_pct, 0.0, 50.0) / 100.0)
 
     def _allied_ranged_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("ranged", False)))
