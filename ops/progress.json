@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
+  "currentNotes": "Completed Undertow Screen Snare with data-authored rigid-screen vulnerability, exact live/benchmark behavior, improved aggregate faction balance, and a preserved clear active encounter queue.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-live-resource-target-view-reuse-10184",
-  "currentSliceId": "strategic-ai-live-resource-target-view-reuse-10184",
-  "currentSliceNotes": "Removed duplicate live resource score-breakdown recomputation; exact ordinal 99 identity preserved and measured totals improved.",
+  "currentSlice": "combat-veilmourn-undertow-screen-snare-10184",
+  "currentSliceId": "combat-veilmourn-undertow-screen-snare-10184",
+  "currentSliceNotes": "Completed authored Mourning Nets rigid-screen payoff; matrix severity improved and the 59-encounter queue remains exactly clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Live Resource Target-View Reuse",
-  "currentSliceUpdatedAt": "2026-08-05T04:14:14Z",
+  "currentSliceTitle": "Veilmourn Undertow Screen Snare",
+  "currentSliceUpdatedAt": "2026-08-05T05:10:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,6 +19847,108 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "combat-veilmourn-undertow-screen-snare-10184",
+      "title": "Veilmourn Undertow Screen Snare",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/battle-autoplay-balance-regression-report.md"
+      ],
+      "purpose": "Give Undertow Harpooners a live anti-shield Mourning Nets payoff that improves Veilmourn's weak week-two pressure without broad faction or stat tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "balance_outlier_count": 28,
+        "balance_excess_severity": 172.0,
+        "rows_at_or_above_65_pct": 5,
+        "maximum_dominance_pct": 68.5,
+        "maximum_side_bias_points": 3.8,
+        "week_two_brasshollow_veilmourn_win_rates": "68/32",
+        "week_three_brasshollow_veilmourn_win_rates": "55/45",
+        "week_four_brasshollow_veilmourn_win_rates": "41.5/58.5",
+        "structural_failure_count": 0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_item_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Live ranged Mourning Nets damage and tactical targeting gain only the authored payoff against snare-vulnerable rigid screens",
+        "Focused runtime proof covers vulnerable screens, ordinary shields, unshielded targets, melee, and stripped-ability controls",
+        "Week-two Brasshollow/Veilmourn moves materially toward 45-55 without a new week-two outlier",
+        "The full all-live matrix does not regress accepted outlier, severity, maximum-dominance, high-row, side-bias, or structural gates",
+        "The active 59-encounter queue remains clear and focused, core, parse, repository, JSON, Python, and diff validation pass"
+      ],
+      "nonGoals": [
+        "faction- or matchup-id hard-coding, benchmark-only behavior, or threshold changes",
+        "unit base stats, growth, economy, spells, heroes, strategic AI, saves, packaging, Native RMG, or broad completion claims"
+      ],
+      "createdAt": "2026-08-05T04:30:54Z",
+      "updatedAt": "2026-08-05T05:10:53Z",
+      "startedAt": "2026-08-05T04:31:32Z",
+      "notes": "Completed data-authored Mourning Nets screen pressure. New ability metadata is read from immutable unit content instead of normalized battle dictionaries so inert metadata cannot perturb the battle-state RNG hash.",
+      "result": {
+        "snare_vulnerable_screen_count": 3,
+        "shielding_damage_multiplier": 1.25,
+        "shielding_ai_target_priority_bonus": 2.0,
+        "focused_vulnerable_screen_modifier": 1.2375,
+        "focused_stripped_screen_modifier": 0.99,
+        "focused_ordinary_shield_modifier": 0.99,
+        "focused_unshielded_modifier": 1.0,
+        "ability_instance_count": 103,
+        "ability_runtime_consequence_count": 103,
+        "balance_outlier_count_before": 28,
+        "balance_outlier_count_after": 28,
+        "balance_excess_severity_before": 172.0,
+        "balance_excess_severity_after": 162.5,
+        "rows_at_or_above_65_pct_before": 5,
+        "rows_at_or_above_65_pct_after": 4,
+        "maximum_dominance_pct_before": 68.5,
+        "maximum_dominance_pct_after": 68.5,
+        "maximum_side_bias_points_before": 3.8,
+        "maximum_side_bias_points_after": 4.13,
+        "structural_failure_count": 0,
+        "week_one_brasshollow_veilmourn_win_rates": "52/48",
+        "week_two_brasshollow_veilmourn_win_rates_before": "68/32",
+        "week_two_brasshollow_veilmourn_win_rates_after": "55.5/44.5",
+        "week_three_brasshollow_veilmourn_win_rates_before": "55/45",
+        "week_three_brasshollow_veilmourn_win_rates_after": "50.5/49.5",
+        "week_four_brasshollow_veilmourn_win_rates_before": "41.5/58.5",
+        "week_four_brasshollow_veilmourn_win_rates_after": "38.5/61.5",
+        "active_encounter_sample_count": 59,
+        "active_encounter_completed_count": 59,
+        "active_encounter_queue_item_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "active_encounter_repeat_queue_signature": "829808c9",
+        "unrelated_battle_state_hash_preserved": true
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --hero-policy all-live --seeds 100 --weeks 1,2,3,4 --gate --json",
+        "godot --headless --path . tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty content/units.json ops/progress.json",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "remainingWork": "Faction balance remains needs_tuning with 28 outliers. The existing week-four Veilmourn-over-Brasshollow outlier increased from 58.5 to 61.5 percent, while aggregate severity and high-dominance rows improved. Overall release completion remains open.",
+      "completedAt": "2026-08-05T05:10:53Z"
+    },
     {
       "id": "strategic-ai-live-resource-target-view-reuse-10184",
       "title": "Strategic AI Live Resource Target-View Reuse",
@@ -72675,9 +72777,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
+  "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 162.5 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T04:14:14Z",
+  "updatedAt": "2026-08-05T05:10:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -1153,6 +1153,10 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var harry_available := ability_uses is Dictionary and harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
 	if not harry.is_empty() and harry_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		score += 2.0
+	var authored_harry := _authored_ability_by_id(attacker, "harry")
+	var target_shielding := _authored_ability_by_id(target, "shielding")
+	if not harry.is_empty() and is_ranged and bool(target_shielding.get("snare_vulnerable", false)):
+		score += float(authored_harry.get("shielding_ai_target_priority_bonus", 0.0))
 	var rot_cant := _ability_by_id(attacker, "rot_cant")
 	var rot_available := ability_uses is Dictionary and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
 	if not rot_cant.is_empty() and rot_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
@@ -2599,6 +2603,11 @@ static func _ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
 		if ability is Dictionary and String(ability.get("id", "")) == ability_id:
 			return ability
 	return {}
+
+static func _authored_ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
+	var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+	var authored := _ability_by_id(unit, ability_id)
+	return authored if not authored.is_empty() else _ability_by_id(stack, ability_id)
 
 static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()

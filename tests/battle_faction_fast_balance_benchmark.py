@@ -1397,6 +1397,9 @@ class FastBattleBenchmark:
         harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
         if harry and harry_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
             score += 2.0
+        target_shielding = self._ability_by_id(target, "shielding")
+        if harry and is_ranged and bool(target_shielding.get("snare_vulnerable", False)):
+            score += float(harry.get("shielding_ai_target_priority_bonus", 0.0))
         rot_cant = self._ability_by_id(attacker, "rot_cant")
         rot_available = int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and int(target.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1)) and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
         if rot_cant and rot_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
@@ -1553,6 +1556,9 @@ class FastBattleBenchmark:
         harry = self._ability_by_id(attacker, "harry")
         if is_ranged and harry and self._health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
+        defender_shielding = self._ability_by_id(defender, "shielding")
+        if is_ranged and harry and bool(defender_shielding.get("snare_vulnerable", False)):
+            modifier *= float(harry.get("shielding_damage_multiplier", 1.0))
         rot_cant = self._ability_by_id(attacker, "rot_cant")
         if is_ranged and rot_cant and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and self._health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))

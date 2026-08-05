@@ -3937,6 +3937,10 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		var target_min_tier := int(harry.get("target_min_tier", 1))
 		if target_min_tier > 1 and (target.is_empty() or int(target.get("tier", 1)) < target_min_tier):
 			return "%s is waiting for a tier-%d veteran line." % [String(harry.get("name", "Harry")), target_min_tier]
+		var authored_harry := _authored_ability_by_id(stack, "harry")
+		var target_shielding := _authored_ability_by_id(target, "shielding")
+		if not target_shielding.is_empty() and bool(target_shielding.get("snare_vulnerable", false)) and float(authored_harry.get("shielding_damage_multiplier", 1.0)) > 1.0:
+			return "%s will foul this shield screen and mark it%s for later breaks." % [String(harry.get("name", "Harry")), pressure_summary]
 		return "%s will mark the target%s for later breaks." % [String(harry.get("name", "Harry")), pressure_summary]
 	if _has_ability(stack, "brace") and int(stack.get("retaliations_left", 0)) > 0:
 		return "Brace can stagger the next attacker if this stack holds."
@@ -9201,6 +9205,10 @@ static func _ability_damage_modifier(
 	var harry = _ability_by_id(attacker, "harry")
 	if is_ranged and not harry.is_empty() and _health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
+	var authored_harry := _authored_ability_by_id(attacker, "harry")
+	var defender_shielding := _authored_ability_by_id(defender, "shielding")
+	if is_ranged and not harry.is_empty() and bool(defender_shielding.get("snare_vulnerable", false)):
+		modifier *= float(authored_harry.get("shielding_damage_multiplier", 1.0))
 	var rot_cant = _ability_by_id(attacker, "rot_cant")
 	if is_ranged and not rot_cant.is_empty() and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and _health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
@@ -9426,6 +9434,11 @@ static func _ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
 		if ability is Dictionary and String(ability.get("id", "")) == ability_id:
 			return ability
 	return {}
+
+static func _authored_ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
+	var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+	var authored := _ability_by_id(unit, ability_id)
+	return authored if not authored.is_empty() else _ability_by_id(stack, ability_id)
 
 static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()

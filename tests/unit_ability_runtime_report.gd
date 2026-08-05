@@ -422,7 +422,64 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	)
 	var stripped_updated := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_defender.get("battle_id", "")))
 	var status_without := SpellRulesScript.has_effect_id(stripped_updated, stripped_battle, status_id)
-	var ok := status_with and not status_without and not messages.is_empty() and bounded_second_mark_blocked and bounded_summary_ok and tier_gate_ok and ai_tier_gate_ok
+	var authored_harry := _ability_by_id(ContentService.get_unit(unit_id), "harry")
+	var shielding_damage_multiplier := float(authored_harry.get("shielding_damage_multiplier", 1.0))
+	var shielding_ai_target_priority_bonus := float(authored_harry.get("shielding_ai_target_priority_bonus", 0.0))
+	var screen_snare_ok := true
+	var shielded_damage_modifier := 1.0
+	var stripped_shielded_damage_modifier := 1.0
+	var ordinary_shield_damage_modifier := 1.0
+	var stripped_ordinary_shield_damage_modifier := 1.0
+	var unshielded_damage_modifier := 1.0
+	var stripped_unshielded_damage_modifier := 1.0
+	var screen_ai_target_id := ""
+	var stripped_screen_ai_target_id := ""
+	var screen_preview := ""
+	var ordinary_shield_preview := ""
+	if shielding_damage_multiplier > 1.0:
+		var screen_attacker := _stack_for_unit(unit_id, "enemy", 0)
+		var shielded_target := _defender_stack("player", 3)
+		shielded_target["battle_id"] = "screen_snare_shielded_target"
+		shielded_target["abilities"] = [{"id": "shielding", "ranged_damage_multiplier": 0.99, "snare_vulnerable": true}]
+		var unshielded_target: Dictionary = shielded_target.duplicate(true)
+		unshielded_target["battle_id"] = "screen_snare_unshielded_target"
+		unshielded_target["abilities"] = []
+		var ordinary_shield_target: Dictionary = shielded_target.duplicate(true)
+		ordinary_shield_target["battle_id"] = "screen_snare_ordinary_shield_target"
+		ordinary_shield_target["abilities"] = [{"id": "shielding", "ranged_damage_multiplier": 0.99}]
+		_set_hex(screen_attacker, 4, 3)
+		_set_hex(shielded_target, 6, 2)
+		_set_hex(unshielded_target, 6, 4)
+		var screen_battle := _battle_for_stacks([screen_attacker, shielded_target, unshielded_target])
+		var stripped_screen_attacker := _without_ability(screen_attacker, "harry")
+		var stripped_screen_battle := _battle_for_stacks([
+			stripped_screen_attacker,
+			shielded_target.duplicate(true),
+			unshielded_target.duplicate(true),
+		])
+		shielded_damage_modifier = BattleRulesScript._ability_damage_modifier(screen_attacker, shielded_target, screen_battle, true, false, 1)
+		stripped_shielded_damage_modifier = BattleRulesScript._ability_damage_modifier(stripped_screen_attacker, shielded_target, stripped_screen_battle, true, false, 1)
+		unshielded_damage_modifier = BattleRulesScript._ability_damage_modifier(screen_attacker, unshielded_target, screen_battle, true, false, 1)
+		stripped_unshielded_damage_modifier = BattleRulesScript._ability_damage_modifier(stripped_screen_attacker, unshielded_target, stripped_screen_battle, true, false, 1)
+		ordinary_shield_damage_modifier = BattleRulesScript._ability_damage_modifier(screen_attacker, ordinary_shield_target, screen_battle, true, false, 1)
+		stripped_ordinary_shield_damage_modifier = BattleRulesScript._ability_damage_modifier(stripped_screen_attacker, ordinary_shield_target, stripped_screen_battle, true, false, 1)
+		var screen_ai_action := BattleAiRulesScript.choose_enemy_action(screen_battle, screen_attacker, {})
+		var stripped_screen_ai_action := BattleAiRulesScript.choose_enemy_action(stripped_screen_battle, stripped_screen_attacker, {})
+		screen_ai_target_id = String(screen_ai_action.get("target_battle_id", ""))
+		stripped_screen_ai_target_id = String(stripped_screen_ai_action.get("target_battle_id", ""))
+		screen_preview = BattleRulesScript._active_ability_window_summary(screen_attacker, screen_battle, shielded_target)
+		ordinary_shield_preview = BattleRulesScript._active_ability_window_summary(screen_attacker, screen_battle, ordinary_shield_target)
+		screen_snare_ok = (
+			shielding_ai_target_priority_bonus > 0.0
+			and is_equal_approx(shielded_damage_modifier, stripped_shielded_damage_modifier * shielding_damage_multiplier)
+			and is_equal_approx(unshielded_damage_modifier, stripped_unshielded_damage_modifier)
+			and is_equal_approx(ordinary_shield_damage_modifier, stripped_ordinary_shield_damage_modifier)
+			and screen_ai_target_id == "screen_snare_shielded_target"
+			and stripped_screen_ai_target_id == "screen_snare_unshielded_target"
+			and screen_preview.contains("shield screen")
+			and not ordinary_shield_preview.contains("shield screen")
+		)
+	var ok := status_with and not status_without and not messages.is_empty() and bounded_second_mark_blocked and bounded_summary_ok and tier_gate_ok and ai_tier_gate_ok and screen_snare_ok
 	return {
 		"ok": ok,
 		"probe": "harry_status_application",
@@ -440,7 +497,20 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		"preview": preview,
 		"spent_preview": spent_preview,
 		"bounded_summary_ok": bounded_summary_ok,
-		"reason": "" if ok else "harry did not uniquely apply its authored bounded status effect",
+		"shielding_damage_multiplier": shielding_damage_multiplier,
+		"shielding_ai_target_priority_bonus": shielding_ai_target_priority_bonus,
+		"shielded_damage_modifier": shielded_damage_modifier,
+		"stripped_shielded_damage_modifier": stripped_shielded_damage_modifier,
+		"ordinary_shield_damage_modifier": ordinary_shield_damage_modifier,
+		"stripped_ordinary_shield_damage_modifier": stripped_ordinary_shield_damage_modifier,
+		"unshielded_damage_modifier": unshielded_damage_modifier,
+		"stripped_unshielded_damage_modifier": stripped_unshielded_damage_modifier,
+		"screen_ai_target_id": screen_ai_target_id,
+		"stripped_screen_ai_target_id": stripped_screen_ai_target_id,
+		"screen_preview": screen_preview,
+		"ordinary_shield_preview": ordinary_shield_preview,
+		"screen_snare_ok": screen_snare_ok,
+		"reason": "" if ok else "harry did not uniquely apply its authored status and optional shield-screen pressure",
 	}
 
 func _probe_obituary(unit_id: String) -> Dictionary:
