@@ -955,12 +955,25 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var cohesion_contract_ok := unit_id != "unit_thornwake_barkmantle_rams" or cohesion_hold_bonus == 0
 	var ally_screen_reduction_pct := int(_ability_by_id(defender, "shielding").get("ally_ranged_melee_damage_reduction_pct", 0))
 	var linebreaker_bonus_pct := int(_ability_by_id(defender, "shielding").get("linebreaker_screen_bonus_pct", 0))
+	var authored_shielding := _ability_by_id(ContentService.get_unit(unit_id), "shielding")
+	var committed_screen_reduction_pct := int(authored_shielding.get("committed_assault_screen_reduction_pct", 0))
 	var total_linebreaker_screen_pct := ally_screen_reduction_pct + linebreaker_bonus_pct
 	var ally_modifier_with := 1.0
 	var ally_modifier_without := 1.0
 	var ally_modifier_with_second_screen := 1.0
 	var ai_damage_with := 0
 	var ai_damage_without := 0
+	var committed_modifier_with := 1.0
+	var committed_modifier_without := 1.0
+	var committed_modifier_with_second_screen := 1.0
+	var committed_dead_source_modifier := 1.0
+	var committed_melee_ally_modifier := 1.0
+	var committed_melee_ally_modifier_without := 1.0
+	var committed_ranged_modifier := 1.0
+	var committed_ranged_modifier_without := 1.0
+	var committed_ai_damage_with := 0
+	var committed_ai_damage_without := 0
+	var committed_role_line := ""
 	var return_ratio := float(_ability_by_id(defender, "shielding").get("ranged_damage_return_ratio", 0.0))
 	var return_contract_ok := true
 	var reflected_damage := 0
@@ -990,6 +1003,49 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 			ally_modifier_with < ally_modifier_without
 			and is_equal_approx(ally_modifier_with, ally_modifier_with_second_screen)
 			and ai_damage_with < ai_damage_without
+		)
+	)
+	if committed_screen_reduction_pct > 0:
+		var committed_ally := _stack_for_unit("unit_sunvault_prism_adepts", "player", 1)
+		var committed_second_source := _stack_for_unit(unit_id, "player", 2)
+		var committed_attacker := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "enemy", 0)
+		var committed_battle := _battle_for_stacks([defender, committed_ally, committed_attacker])
+		var committed_stripped_battle := _battle_for_stacks([stripped_defender, committed_ally.duplicate(true), committed_attacker.duplicate(true)])
+		var committed_stacked_battle := _battle_for_stacks([defender.duplicate(true), committed_second_source, committed_ally.duplicate(true), committed_attacker.duplicate(true)])
+		committed_modifier_with = BattleRulesScript._ability_damage_modifier(committed_attacker, committed_ally, committed_battle, false, false, 0)
+		committed_modifier_without = BattleRulesScript._ability_damage_modifier(committed_attacker, committed_ally, committed_stripped_battle, false, false, 0)
+		committed_modifier_with_second_screen = BattleRulesScript._ability_damage_modifier(committed_attacker, committed_ally, committed_stacked_battle, false, false, 0)
+		committed_ai_damage_with = BattleAiRulesScript._estimate_damage(committed_attacker, committed_ally, committed_battle, false, false, 0)
+		committed_ai_damage_without = BattleAiRulesScript._estimate_damage(committed_attacker, committed_ally, committed_stripped_battle, false, false, 0)
+		var committed_dead_source := defender.duplicate(true)
+		committed_dead_source["total_health"] = 0
+		var committed_dead_ally := _stack_for_unit("unit_sunvault_prism_adepts", "player", 1)
+		var committed_dead_attacker := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "enemy", 0)
+		var committed_dead_battle := _battle_for_stacks([committed_dead_source, committed_dead_ally, committed_dead_attacker])
+		committed_dead_source_modifier = BattleRulesScript._ability_damage_modifier(committed_dead_attacker, committed_dead_ally, committed_dead_battle, false, false, 0)
+		var committed_melee_ally := _stack_for_unit("unit_sunvault_solar_array_striders", "player", 1)
+		var committed_melee_control := committed_melee_ally.duplicate(true)
+		var committed_melee_attacker := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "enemy", 0)
+		var committed_melee_battle := _battle_for_stacks([defender.duplicate(true), committed_melee_ally, committed_melee_attacker])
+		var committed_melee_control_battle := _battle_for_stacks([stripped_defender.duplicate(true), committed_melee_control, committed_melee_attacker.duplicate(true)])
+		committed_melee_ally_modifier = BattleRulesScript._ability_damage_modifier(committed_melee_attacker, committed_melee_ally, committed_melee_battle, false, false, 0)
+		committed_melee_ally_modifier_without = BattleRulesScript._ability_damage_modifier(committed_melee_attacker, committed_melee_control, committed_melee_control_battle, false, false, 0)
+		var committed_ranged_attacker := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "enemy", 0)
+		var committed_ranged_control := committed_ranged_attacker.duplicate(true)
+		committed_ranged_modifier = BattleRulesScript._ability_damage_modifier(committed_ranged_attacker, committed_ally, committed_battle, true, false, 2)
+		committed_ranged_modifier_without = BattleRulesScript._ability_damage_modifier(committed_ranged_control, committed_ally, committed_stripped_battle, true, false, 2)
+		committed_role_line = BattleRulesScript._active_ability_role_line(defender, committed_battle, committed_attacker)
+	var committed_screen_ok := (
+		committed_screen_reduction_pct <= 0
+		or (
+			is_equal_approx(committed_modifier_with, committed_modifier_without * (1.0 - (float(committed_screen_reduction_pct) / 100.0)))
+			and is_equal_approx(committed_modifier_with, committed_modifier_with_second_screen)
+			and is_equal_approx(committed_dead_source_modifier, committed_modifier_without)
+			and is_equal_approx(committed_melee_ally_modifier, committed_melee_ally_modifier_without)
+			and is_equal_approx(committed_ranged_modifier, committed_ranged_modifier_without)
+			and committed_ai_damage_with < committed_ai_damage_without
+			and committed_role_line.contains("%d%%" % committed_screen_reduction_pct)
+			and committed_role_line.contains("committed assaults")
 		)
 	)
 	if return_ratio > 0.0:
@@ -1101,7 +1157,7 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 			and role_line.contains("2%")
 			and role_line.contains("10%")
 		)
-	var ok := modifier_with < modifier_without and ally_screen_ok and cohesion_contract_ok and return_contract_ok
+	var ok := modifier_with < modifier_without and ally_screen_ok and committed_screen_ok and cohesion_contract_ok and return_contract_ok
 	return {
 		"ok": ok,
 		"probe": "shielding_self_and_allied_engine_damage_reduction",
@@ -1111,12 +1167,25 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"cohesion_contract_ok": cohesion_contract_ok,
 		"ally_screen_reduction_pct": ally_screen_reduction_pct,
 		"linebreaker_bonus_pct": linebreaker_bonus_pct,
+		"committed_screen_reduction_pct": committed_screen_reduction_pct,
 		"total_linebreaker_screen_pct": total_linebreaker_screen_pct,
 		"ally_modifier_with": ally_modifier_with,
 		"ally_modifier_without": ally_modifier_without,
 		"ally_modifier_with_second_screen": ally_modifier_with_second_screen,
 		"ai_damage_with": ai_damage_with,
 		"ai_damage_without": ai_damage_without,
+		"committed_modifier_with": committed_modifier_with,
+		"committed_modifier_without": committed_modifier_without,
+		"committed_modifier_with_second_screen": committed_modifier_with_second_screen,
+		"committed_dead_source_modifier": committed_dead_source_modifier,
+		"committed_melee_ally_modifier": committed_melee_ally_modifier,
+		"committed_melee_ally_modifier_without": committed_melee_ally_modifier_without,
+		"committed_ranged_modifier": committed_ranged_modifier,
+		"committed_ranged_modifier_without": committed_ranged_modifier_without,
+		"committed_ai_damage_with": committed_ai_damage_with,
+		"committed_ai_damage_without": committed_ai_damage_without,
+		"committed_role_line": committed_role_line,
+		"committed_screen_ok": committed_screen_ok,
 		"ranged_damage_return_ratio": return_ratio,
 		"reflected_damage": reflected_damage,
 		"reflected_hit_event_visible": reflected_hit_event_visible,

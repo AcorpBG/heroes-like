@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `combat-sunvault-aurora-relay-front-10184`. Aurora Bastions' Aurora Facet Wall now screens allied ranged stacks by four percent against melee attackers carrying the authored `bloodrush` committed-assault contract while a Bastion survives. Live damage, tactical-AI estimates, role summaries, the fast benchmark, and focused runtime proof share the same content-owned field without adding inert metadata to normalized battle state. Generic four-percent and one-percent screens were rejected because each increased ordinary outliers from 28 to 30. The accepted all-live matrix keeps 28 outliers, lowers excess severity from 162.5 to 161.0, preserves four rows at or above 65 percent, 68.5 percent maximum dominance, 4.13-point maximum side bias, and zero structural failures, and improves week-four Embercourt/Sunvault from 67.5/32.5 to 66/34. The 59-encounter queue remains clear at signature `829808c9`; focused ability, autoplay, runtime consequence, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
+- Next registered implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184` (pending). Adopt the retained authored Refraction Volley contract for the production Prism Adepts through the existing shared `volley` behavior, then prove early Sunvault setup pressure improves without regressing the accepted full matrix or active encounter queue. This registration prevents the progress workflow from reporting no actionable next task while the game remains incomplete.
 - Completed corrective validation slice: `strategic-ai-role-state-fixture-reconciliation-10184`. The commander role-state report now matches the unchanged live full-breakdown target surface: River Signal Post and Glassroad Watch Relay both rank third, while the two Free Company cases and memory-continuity target remain first. Eight cases and the compact public leak check pass. Case execution is fail-fast; a forced first-case mismatch emits exactly one report/engine error with no script or later-case errors. Core, editor parse, repository, JSON, and diff gates pass. This changes no strategic-AI runtime behavior and is not gameplay implementation progress.
 - Completed implementation slice: `combat-veilmourn-undertow-screen-snare-10184`. Undertow Harpooners' Mourning Nets now gain an authored 1.25 ranged payoff and 2.0 tactical target bonus only against rigid `snare_vulnerable` screens; Ledger Plate, Rivet Hide, and Furnace Screen opt in while ordinary shields remain exact. The implementation resolves new metadata from immutable unit content instead of normalized battle state, preserving unrelated deterministic battle hashes. The all-live 100-seed four-week matrix keeps 28 outliers and 68.5 percent maximum dominance, lowers excess severity from 172.0 to 162.5 and rows at or above 65 percent from five to four, moves week-two Brasshollow/Veilmourn from 68/32 to 55.5/44.5 and week three from 55/45 to 50.5/49.5, and has zero structural failures; the existing week-four Veilmourn lead increases from 58.5 to 61.5 percent. Focused ability, autoplay, 59-encounter clear-queue, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Veilmourn identity, final faction balance, or overall release completion.
 - Completed implementation slice: `strategic-ai-live-resource-target-view-reuse-10184`. Live hero-task resource selection now reuses each already scored candidate's normalized reasons, public importance, and debug reason when constructing its commander role view, while ordinary report callers retain the full resource score breakdown. Focused proof matches all 15 behavior-facing fields and keeps the intended Free Company/Signal Post reservation outcomes exact. Medium ordinal 99 preserves row signature `59262e55`, all 171 activity events, 37 turns, the same defeat outcome, and zero behavior, integrity, or reachability failures; local row runtime falls from 298228 to 296997 ms and accumulated target-assignment time from 50029 to 49886 ms across 74 samples. This is a bounded redundant-score cleanup, not broad strategic-AI performance completion or overall release completion.
@@ -2254,6 +2256,56 @@ Completion criteria:
 Non-goals:
 - do not change strategic-AI scores, resource ordering, target choice, role behavior, content, runtime state, saves, packaging, or Native RMG;
 - do not claim test maintenance as gameplay implementation progress or broad strategic-AI completion.
+
+## Sunvault Aurora Relay Front
+
+id: `combat-sunvault-aurora-relay-front-10184`
+
+Selected Phase 6 faction-identity and balance slice. Sunvault's tier-six Aurora
+Bastion is authored as a heavy close-line defender, but its current Aurora Facet
+Wall protects only itself and does not hold the allied ranged relay front.
+
+Implementation target:
+- give Aurora Facet Wall a bounded four-percent melee damage screen for allied ranged stacks against attackers with the authored `bloodrush` committed-assault contract while a source Bastion survives;
+- preserve the Bastion's personal ranged mitigation and cohesion hold exactly;
+- keep melee allies, ranged attacks, retaliation-source rules, spells, direct health loss, dead-source cases, and stacked-source cases exact;
+- use the existing shared shielding contract in live BattleRules, tactical AI estimates, player summaries, the fast benchmark, content validation, and focused runtime proof.
+
+Completion criteria:
+- focused runtime proof measures the exact additional 0.96 committed-assault modifier and matching tactical-AI estimate while proving ordinary melee, melee allies, ranged attacks, and dead/stacked sources remain exact;
+- the all-live 100-seed four-week matrix improves or preserves the accepted 28-outlier / 162.5-severity baseline, keeps maximum dominance at or below 68.5 percent, creates no new row at or above 65 percent, stays inside the seven-point side-bias gate, and has zero structural failures;
+- the 59-encounter active breadth queue remains clear at zero items;
+- focused ability, autoplay, balance-regression, core, project-parse, repository, JSON, Python, and diff validation pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, benchmark-only behavior, week numbers, or army counts;
+- do not change unit base stats, growth, recruitment, town economy, spells, heroes, save data, strategic AI, packaging, or Native RMG;
+- do not claim final Sunvault identity, final faction balance, or overall release completion.
+
+## Sunvault Prism Adept Refraction Volley
+
+id: `combat-sunvault-prism-adept-refraction-volley-10184`
+
+Pending Phase 6 faction-identity and balance slice. The retained Sunvault scaffold
+authors Refraction Volley through the shared `volley` contract, while the
+production Prism Adepts currently ship without an ability contract despite their
+prepared ranged-relay role.
+
+Implementation target:
+- adopt the retained Refraction Volley authored fields for the production Prism Adepts through existing shared live damage, tactical-AI, summary, benchmark, and validation behavior;
+- preserve ordinary ranged distance behavior and require the existing disrupted-target and allied-defending setup conditions for their additional payoff;
+- validate early Sunvault setup pressure without faction, matchup, week, or army-count checks.
+
+Completion criteria:
+- focused runtime proof covers base volley, disrupted-target payoff, allied-defending payoff, melee exclusion, and stripped-ability controls in live rules and tactical-AI estimates;
+- the all-live 100-seed four-week matrix improves at least one accepted early Sunvault outlier without exceeding 28 outliers, 161.0 severity, four rows at or above 65 percent, 68.5 percent maximum dominance, seven side-bias points, or zero structural failures;
+- the 59-encounter active breadth queue remains clear at zero items;
+- focused ability, autoplay, balance-regression, core, project-parse, repository, JSON, Python, and diff validation pass.
+
+Non-goals:
+- do not introduce new ability families or hard-code faction ids, matchup ids, week numbers, or army counts;
+- do not change base stats, growth, recruitment, economy, spells, heroes, saves, strategic AI, packaging, or Native RMG;
+- do not claim final Sunvault identity, final faction balance, or overall release completion.
 
 ## Work Selection Gates
 

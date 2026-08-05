@@ -4095,6 +4095,10 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 					ranged_reduction_pct,
 					ranged_return_pct,
 				]
+			var authored_shielding := _authored_ability_by_id(stack, "shielding")
+			var committed_screen_pct := int(authored_shielding.get("committed_assault_screen_reduction_pct", 0))
+			if committed_screen_pct > 0:
+				return "%s blunts missiles and screens allied ranged relays by %d%% against committed assaults" % [name, committed_screen_pct]
 			if int(ability.get("ally_ranged_melee_damage_reduction_pct", 0)) > 0 or int(ability.get("linebreaker_screen_bonus_pct", 0)) > 0:
 				return "%s blunts missiles and screens allied engines from frontal pressure" % name
 			return "%s blunts missile pressure and helps the line hold" % name
@@ -9249,6 +9253,13 @@ static func _ability_damage_modifier(
 				"shielding",
 				"linebreaker_screen_bonus_pct"
 			)
+		if bool(defender.get("ranged", false)) and _has_ability(attacker, "bloodrush"):
+			screen_reduction_pct += _side_max_authored_ability_int(
+				battle,
+				String(defender.get("side", "")),
+				"shielding",
+				"committed_assault_screen_reduction_pct"
+			)
 		screen_reduction_pct = clampi(screen_reduction_pct, 0, 75)
 		modifier *= 1.0 - (float(screen_reduction_pct) / 100.0)
 	var attacking_shielding = _ability_by_id(attacker, "shielding")
@@ -9516,6 +9527,15 @@ static func _side_max_ability_float(
 static func _side_max_ability_int(battle: Dictionary, side: String, ability_id: String, key: String) -> int:
 	var best = 0
 	for ability in _side_ability_payloads(battle, side, ability_id):
+		best = max(best, int(ability.get(key, 0)))
+	return best
+
+static func _side_max_authored_ability_int(battle: Dictionary, side: String, ability_id: String, key: String) -> int:
+	var best := 0
+	for stack in _alive_stacks_for_side(battle, side):
+		if _ability_by_id(stack, ability_id).is_empty():
+			continue
+		var ability := _authored_ability_by_id(stack, ability_id)
 		best = max(best, int(ability.get(key, 0)))
 	return best
 
