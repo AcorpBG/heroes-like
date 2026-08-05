@@ -3942,6 +3942,25 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		if not target_shielding.is_empty() and bool(target_shielding.get("snare_vulnerable", false)) and float(authored_harry.get("shielding_damage_multiplier", 1.0)) > 1.0:
 			return "%s will foul this shield screen and mark it%s for later breaks." % [String(harry.get("name", "Harry")), pressure_summary]
 		return "%s will mark the target%s for later breaks." % [String(harry.get("name", "Harry")), pressure_summary]
+	if _has_ability(stack, "harry") and not bool(stack.get("ranged", false)) and int(_ability_by_id(stack, "harry").get("min_adjacent_allies_to_target", 0)) > 0:
+		var supported_harry := _ability_by_id(stack, "harry")
+		var supported_harry_uses = stack.get("ability_uses", {})
+		if supported_harry_uses is Dictionary and int(supported_harry_uses.get("harry", 0)) >= int(supported_harry.get("uses_per_battle", 0)) and int(supported_harry.get("uses_per_battle", 0)) > 0:
+			return "%s has already been placed this battle." % String(supported_harry.get("name", "Harry"))
+		var target_min_tier := int(supported_harry.get("target_min_tier", 1))
+		if target.is_empty() or int(target.get("tier", 1)) < target_min_tier:
+			return "%s is waiting for a tier-%d veteran line." % [String(supported_harry.get("name", "Harry")), target_min_tier]
+		var target_role := String(supported_harry.get("target_role", ""))
+		if target_role != "" and bool(target.get("ranged", false)) != (target_role == "ranged"):
+			return "%s is waiting for a %s veteran line." % [String(supported_harry.get("name", "Harry")), target_role]
+		var required_support := int(supported_harry.get("min_adjacent_allies_to_target", 0))
+		if not _harry_support_ready(stack, target, battle, supported_harry):
+			return "%s needs %d allied stack%s on the target's far lane before the snare closes." % [
+				String(supported_harry.get("name", "Harry")),
+				required_support,
+				"" if required_support == 1 else "s",
+			]
+		return "%s will close the supported snare and mark this target for the pack." % String(supported_harry.get("name", "Harry"))
 	if _has_ability(stack, "brace") and int(stack.get("retaliations_left", 0)) > 0:
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
@@ -3988,8 +4007,8 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 			return "Bloodrush is live through the prepared breach and can snowball momentum."
 		if float(bloodrush.get("clean_target_damage_multiplier", 1.0)) < 1.0:
 			return "Bloodrush needs a wounded or disrupted breach; a clean primary attack loses force."
-	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
-		return "Shielding bites harder into a harried target once the line closes."
+	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "shielding").get("payoff_status_ids", [STATUS_HARRIED])):
+		return "Shielding bites harder into a marked target once the line closes."
 	if not target.is_empty() and _has_ability(stack, "fogwake") and _stack_is_hex_isolated(battle, target):
 		return "Leviathan Fogwake is live because the target has no adjacent allied stack."
 	var ability_summary = _stack_ability_summary(stack)
@@ -4038,6 +4057,15 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				int(ability.get("target_min_tier", 1)),
 			]
 		"harry":
+			var required_support := int(ability.get("min_adjacent_allies_to_target", 0))
+			if required_support > 0:
+				return "%s applies %s%s only while %d allied stack%s also surrounds the target" % [
+					name,
+					status_label,
+					" (%s)" % modifier_text if modifier_text != "" else "",
+					required_support,
+					"" if required_support == 1 else "s",
+				]
 			return "%s applies %s%s%s%s for follow-up pressure" % [
 				name,
 				status_label,
@@ -4135,6 +4163,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				return "%s blunts missiles and screens allied ranged relays by %d%% against committed assaults" % [name, committed_screen_pct]
 			if int(ability.get("ally_ranged_melee_damage_reduction_pct", 0)) > 0 or int(ability.get("linebreaker_screen_bonus_pct", 0)) > 0:
 				return "%s blunts missiles and screens allied engines from frontal pressure" % name
+			if float(ability.get("harried_damage_multiplier", 1.0)) > 1.0:
+				return "%s blunts %d%% of incoming ranged damage and strikes harder into marked targets" % [name, ranged_reduction_pct]
 			return "%s blunts missile pressure and helps the line hold" % name
 	if String(ability.get("description", "")) != "":
 		return "%s: %s" % [name, String(ability.get("description", ""))]
@@ -9225,8 +9255,9 @@ static func _apply_attack_ability_effects(
 		attacker["ability_uses"] = ability_uses
 	var harry = _ability_by_id(attacker, "harry")
 	var harry_limit := int(harry.get("uses_per_battle", 0))
-	var harry_target_ready := int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
-	var harry_available := harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+	var harry_target_role := String(harry.get("target_role", ""))
+	var harry_target_ready := int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (harry_target_role == "" or bool(defender.get("ranged", false)) == (harry_target_role == "ranged"))
+	var harry_available := harry_target_ready and _harry_support_ready(attacker, defender, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
 	if not harry.is_empty() and harry_available:
 		_apply_stack_effect(
 			battle,
@@ -9434,7 +9465,7 @@ static func _ability_damage_modifier(
 	var attacking_shielding = _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
-	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
+	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, attacking_shielding.get("payoff_status_ids", [STATUS_HARRIED])):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
 	if not is_ranged:
 		modifier *= _solar_array_lane_melee_multiplier(defender, battle)
@@ -9861,6 +9892,14 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"wounded_threshold_ratio": clampf(float(entry.get("wounded_threshold_ratio", 0.0)), 0.0, 1.0),
 					"wounded_damage_multiplier": clampf(float(entry.get("wounded_damage_multiplier", 1.0)), 1.0, 2.0),
 				}
+				if entry.has("target_role"):
+					normalized["target_role"] = String(entry.get("target_role", ""))
+				if entry.has("ai_target_priority_bonus"):
+					normalized["ai_target_priority_bonus"] = clampf(float(entry.get("ai_target_priority_bonus", 2.0)), 0.0, 4.0)
+				if entry.has("min_adjacent_allies_to_target"):
+					normalized["min_adjacent_allies_to_target"] = clampi(int(entry.get("min_adjacent_allies_to_target", 0)), 0, 3)
+				if entry.has("support_ai_target_priority_bonus"):
+					normalized["support_ai_target_priority_bonus"] = clampf(float(entry.get("support_ai_target_priority_bonus", 0.0)), 0.0, 4.0)
 			"obituary":
 				normalized = {
 					"id": ability_id,
@@ -9911,6 +9950,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"linebreaker_screen_bonus_pct": clampi(int(entry.get("linebreaker_screen_bonus_pct", 0)), 0, 50),
 					"ranged_damage_return_ratio": clampf(float(entry.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25),
 				}
+				if entry.has("payoff_status_ids"):
+					normalized["payoff_status_ids"] = _normalize_string_array(entry.get("payoff_status_ids", []))
 			"volley":
 				normalized = {
 					"id": ability_id,
@@ -11552,6 +11593,33 @@ static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> boo
 		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
 			return false
 	return true
+
+static func _harry_support_ready(
+	attacker: Dictionary,
+	target: Dictionary,
+	battle: Dictionary,
+	ability: Dictionary
+) -> bool:
+	var required_support := int(ability.get("min_adjacent_allies_to_target", 0))
+	if required_support <= 0:
+		return true
+	if attacker.is_empty() or target.is_empty():
+		return false
+	var target_hex := _stack_hex(target)
+	if target_hex.is_empty():
+		return false
+	var attacker_id := String(attacker.get("battle_id", ""))
+	var supporting_allies := 0
+	for ally in _alive_stacks_for_side(battle, String(attacker.get("side", ""))):
+		if String(ally.get("battle_id", "")) == attacker_id:
+			continue
+		var ally_hex := _stack_hex(ally)
+		if ally_hex.is_empty() or _hex_distance(target_hex, ally_hex) > 1:
+			continue
+		supporting_allies += 1
+		if supporting_allies >= required_support:
+			return true
+	return false
 
 static func _side_defending_count(battle: Dictionary, side: String) -> int:
 	var total = 0

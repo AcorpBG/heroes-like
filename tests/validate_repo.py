@@ -10631,6 +10631,14 @@ def validate_content(errors: list[str]) -> None:
                     if "shielding_damage_multiplier" in ability:
                         ensure(1.0 < float(ability.get("shielding_damage_multiplier", 0.0)) <= 1.5, errors, f"Unit {unit_id} harry shielding_damage_multiplier must be in (1, 1.5]")
                         ensure(0.0 < float(ability.get("shielding_ai_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} harry shielding_ai_target_priority_bonus must be in (0, 4]")
+                    if "ai_target_priority_bonus" in ability:
+                        ensure(0.0 <= float(ability.get("ai_target_priority_bonus", -1.0)) <= 4.0, errors, f"Unit {unit_id} harry ai_target_priority_bonus must be in [0, 4]")
+                    if "target_role" in ability:
+                        ensure(str(ability.get("target_role", "")) in {"melee", "ranged"}, errors, f"Unit {unit_id} harry target_role must be melee or ranged")
+                    if "min_adjacent_allies_to_target" in ability:
+                        ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} support-gated harry must belong to a melee unit")
+                        ensure(int(ability.get("min_adjacent_allies_to_target", 0)) == 1, errors, f"Unit {unit_id} support-gated harry must require exactly one adjacent ally")
+                        ensure(0.0 < float(ability.get("support_ai_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} support-gated harry must define a bounded AI priority bonus")
                 elif ability_id == "obituary":
                     modifiers = ability.get("modifiers", {})
                     ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} obituary must belong to a ranged unit")
@@ -10680,6 +10688,8 @@ def validate_content(errors: list[str]) -> None:
                         ensure(float(ability.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding engaged_damage_multiplier must be > 1")
                     if "harried_damage_multiplier" in ability:
                         ensure(float(ability.get("harried_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding harried_damage_multiplier must be > 1")
+                    if "payoff_status_ids" in ability:
+                        ensure(isinstance(ability.get("payoff_status_ids", []), list) and bool(ability.get("payoff_status_ids", [])), errors, f"Unit {unit_id} shielding payoff_status_ids must be a non-empty list")
                     if "ally_ranged_melee_damage_reduction_pct" in ability:
                         reduction_pct = int(ability.get("ally_ranged_melee_damage_reduction_pct", 0))
                         ensure(0 <= reduction_pct <= 50, errors, f"Unit {unit_id} shielding ally_ranged_melee_damage_reduction_pct must be between 0 and 50")
@@ -10833,6 +10843,32 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "counter_ambush_flare" for ability in unit.get("abilities", []))
     )
     ensure(counter_ambush_flare_owners == ["unit_embercourt_lantern_sappers"], errors, "Counter-Ambush Flare must remain exclusive to Embercourt Lantern Sappers")
+
+    reedsnare_kin = units.get("unit_mireclaw_reedsnare_kin", {})
+    reedsnare_harry = next((ability for ability in reedsnare_kin.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
+    ensure(str(reedsnare_harry.get("name", "")) == "Reed-Circle Snare", errors, "Reedsnare Kin must own Reed-Circle Snare")
+    ensure(str(reedsnare_harry.get("status_id", "")) == "status_mire_harried", errors, "Reed-Circle Snare must create the isolated Mireclaw setup state")
+    ensure(int(reedsnare_harry.get("min_adjacent_allies_to_target", 0)) == 1, errors, "Reed-Circle Snare must require one allied surrounding stack")
+    ensure(int(reedsnare_harry.get("target_min_tier", 0)) == 4, errors, "Reed-Circle Snare must be reserved for veteran targets")
+    ensure(str(reedsnare_harry.get("target_role", "")) == "melee", errors, "Reed-Circle Snare must target melee veterans")
+    ensure(float(reedsnare_harry.get("ai_target_priority_bonus", -1.0)) == 0.1, errors, "Reed-Circle Snare must keep a narrow base target priority")
+    ensure(reedsnare_harry.get("modifiers", {}) == {"cohesion": -1}, errors, "Reed-Circle Snare must reduce only cohesion by one")
+
+    mudglass_slingers = units.get("unit_mireclaw_mudglass_slingers", {})
+    mudglass_harry = next((ability for ability in mudglass_slingers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
+    ensure(str(mudglass_harry.get("name", "")) == "Mudglass Blind", errors, "Mudglass Slingers must own Mudglass Blind")
+    ensure(str(mudglass_harry.get("status_id", "")) == "status_mire_harried", errors, "Mudglass Blind must create the isolated Mireclaw setup state")
+    ensure(int(mudglass_harry.get("target_min_tier", 0)) == 4, errors, "Mudglass Blind must be reserved for veteran targets")
+    ensure(str(mudglass_harry.get("target_role", "")) == "melee", errors, "Mudglass Blind must target melee veterans")
+    ensure(float(mudglass_harry.get("ai_target_priority_bonus", -1.0)) == 0.05, errors, "Mudglass Blind must keep a narrow target priority")
+    ensure(mudglass_harry.get("modifiers", {}) == {"attack": -1}, errors, "Mudglass Blind must reduce only attack by one")
+
+    bogplate_maulers = units.get("unit_mireclaw_bogplate_maulers", {})
+    bogplate_shielding = next((ability for ability in bogplate_maulers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    ensure(str(bogplate_shielding.get("name", "")) == "Bogplate Hide", errors, "Bogplate Maulers must own Bogplate Hide")
+    ensure(float(bogplate_shielding.get("ranged_damage_multiplier", 0.0)) == 0.99, errors, "Bogplate Hide must retain exactly one percent ranged resistance")
+    ensure(float(bogplate_shielding.get("harried_damage_multiplier", 0.0)) == 1.04, errors, "Bogplate Hide must retain exactly four percent harried-target payoff")
+    ensure(bogplate_shielding.get("payoff_status_ids", []) == ["status_mire_harried"], errors, "Bogplate Hide must consume only the isolated Mireclaw setup state")
 
     ember_archer = units.get("unit_ember_archer", {})
     ember_archer_volley = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})

@@ -2403,7 +2403,7 @@ Result:
 
 id: `combat-mireclaw-early-ladder-identity-10184`
 
-Status: pending.
+Status: completed.
 
 Selected Phase 6 faction-identity and balance slice. The faction bible defines
 Reedsnare Kin as surrounding snarers, Mudglass Slingers as ranged blind/setup
@@ -2427,6 +2427,40 @@ Non-goals:
 - do not hard-code faction ids, matchup ids, week numbers, army counts, or benchmark-only behavior;
 - do not change unit base stats, growth, recruitment, town economy, spells, heroes, saves, strategic AI, campaigns, packaging, Native RMG, or benchmark thresholds;
 - do not claim final Mireclaw identity, final faction balance, or overall release completion.
+
+Result:
+- Reedsnare Kin now close a one-use veteran snare only when another living allied stack surrounds the target, Mudglass Slingers apply a one-round attack blind to veteran melee targets, and Bogplate Maulers resist one percent of ranged damage and gain four percent melee damage only against the isolated Mireclaw mark;
+- shared live rules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored contracts while legacy ability normalization keeps its exact prior shape;
+- all `109/109` authored ability instances across 103 units pass focused runtime consequence proof, including unsupported, spent-use, role, tier, stripped-ability, and unrelated-status controls;
+- the all-live 100-seed four-week matrix stays within bounds at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `3.93` maximum side bias / zero structural failures; week-two Mireclaw/Sunvault remains `34.5/65.5` while terminal margin improves from `7.76` to `7.71`;
+- the 59-encounter active breadth queue remains clear at signature `829808c9`; autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning` and the game remains incomplete.
+
+## Embercourt Early Ladder Completion
+
+id: `combat-embercourt-early-ladder-completion-10184`
+
+Status: pending.
+
+Selected Phase 6 faction-identity implementation slice. Fordhook Cadets and
+Bargebow Crews are the remaining ability-empty production units in Embercourt's
+seven-tier ladder despite explicit crossing-holder and protected heavy-ranged
+roles in the faction bible.
+
+Implementation target:
+- give Fordhook Cadets bounded crossing reach, bracing, and objective-adjacent retaliation behavior through shared contracts;
+- give Bargebow Crews limited-shot heavy ranged pressure that depends on a protected lane or allied screen;
+- carry both roles through live rules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof without faction or matchup checks;
+- preserve unit base stats, growth, recruitment, economy, spells, heroes, saves, strategic AI, campaigns, packaging, Native RMG, and benchmark thresholds.
+
+Completion criteria:
+- both units produce distinct live runtime consequences and player-readable summaries with dead-source, stripped-ability, melee/ranged, spell, direct-damage, retaliation, unsupported-lane, and unrelated-unit controls;
+- the all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, `153.5` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or seven side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, or benchmark-only behavior;
+- do not change other units or broad combat rules unless a shared source-backed contract is required by these two roles;
+- do not claim final Embercourt identity, final faction balance, or overall release completion.
 
 ## Work Selection Gates
 
