@@ -10,11 +10,14 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var reuse_case := _resource_target_view_reuse_case()
+	if _failed or reuse_case.is_empty():
+		return
 	var primary_case := _river_pass_primary_target_case()
-	if primary_case.is_empty():
+	if _failed or primary_case.is_empty():
 		return
 	var companion_case := _river_pass_companion_reservation_case()
-	if companion_case.is_empty():
+	if _failed or companion_case.is_empty():
 		return
 	var payload := {
 		"ok": true,
@@ -22,16 +25,83 @@ func _run() -> void:
 		"schema_status": "live_target_selection_persists_task_board",
 		"behavior_policy": "commander_candidate_tasks_drive_new_raid_targets",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [primary_case, companion_case],
+		"cases": [reuse_case, primary_case, companion_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
 
+func _resource_target_view_reuse_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_all_resource_controllers(session, MIRECLAW)
+	_set_resource_controller(session, "river_free_company", "player")
+	_set_resource_controller(session, "river_signal_post", "player")
+	var origin := {"x": 7, "y": 1}
+	var candidate := {}
+	for candidate_value in EnemyAdventureRules._target_candidates(session, config, Vector2i(7, 1)):
+		if candidate_value is Dictionary \
+				and String(candidate_value.get("target_kind", "")) == "resource" \
+				and String(candidate_value.get("target_placement_id", "")) == "river_free_company":
+			candidate = candidate_value
+			break
+	if candidate.is_empty():
+		_fail("Could not find precomputed river_free_company resource candidate.")
+		return {}
+	var full_view := EnemyAdventureRules.commander_role_resource_target_view(
+		session,
+		config,
+		MIRECLAW,
+		"river_free_company",
+		origin
+	)
+	var reused_view := EnemyAdventureRules.commander_role_resource_target_view(
+		session,
+		config,
+		MIRECLAW,
+		"river_free_company",
+		origin,
+		candidate
+	)
+	var semantic_fields := [
+		"target_kind",
+		"target_id",
+		"target_label",
+		"target_x",
+		"target_y",
+		"front_id",
+		"origin_kind",
+		"origin_id",
+		"controller_id",
+		"site_id",
+		"site_family",
+		"reason_codes",
+		"public_reason",
+		"public_importance",
+		"debug_reason",
+	]
+	for field in semantic_fields:
+		if full_view.get(field) != reused_view.get(field):
+			_fail("Precomputed resource target view changed %s: full=%s reused=%s" % [field, JSON.stringify(full_view.get(field)), JSON.stringify(reused_view.get(field))])
+			return {}
+	var full_breakdown: Dictionary = full_view.get("resource_breakdown", {})
+	var reused_breakdown: Dictionary = reused_view.get("resource_breakdown", {})
+	if full_breakdown.is_empty() or not reused_breakdown.is_empty():
+		_fail("Resource target-view breakdown ownership mismatch: full=%s reused=%s" % [JSON.stringify(full_breakdown), JSON.stringify(reused_breakdown)])
+		return {}
+	return {
+		"case_id": "precomputed_resource_target_view_semantics_match",
+		"target_id": String(reused_view.get("target_id", "")),
+		"semantic_field_count": semantic_fields.size(),
+		"full_breakdown_retained": true,
+		"live_breakdown_recomputed": false,
+	}
+
 func _river_pass_primary_target_case() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
+	_set_all_resource_controllers(session, MIRECLAW)
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_resource_controller(session, "river_signal_post", "player")
 	var raid := _raid_seed(session, config, "hero_vaska", "live_target_vaska_probe", {"x": 7, "y": 1})
@@ -62,6 +132,7 @@ func _river_pass_primary_target_case() -> Dictionary:
 func _river_pass_companion_reservation_case() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
+	_set_all_resource_controllers(session, MIRECLAW)
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_resource_controller(session, "river_signal_post", "player")
 	var vaska := _raid_seed(session, config, "hero_vaska", "live_target_vaska_active", {"x": 1, "y": 4})
@@ -142,6 +213,18 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s" % placement_id)
+
+func _set_all_resource_controllers(session, faction_id: String) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		node["collected"] = true
+		node["collected_by_faction_id"] = faction_id
+		node["collected_day"] = max(1, int(session.day))
+		nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(RIVER_PASS)
