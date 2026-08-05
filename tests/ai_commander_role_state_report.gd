@@ -15,16 +15,21 @@ func _ready() -> void:
 
 func _run() -> void:
 	var cases := []
-	cases.append(_mireclaw_free_company_retaker())
-	cases.append(_mireclaw_free_company_raider())
-	cases.append(_mireclaw_signal_post_companion())
-	cases.append(_embercourt_glassroad_relay_defender())
-	cases.append(_embercourt_glassroad_relay_retaker())
-	cases.append(_embercourt_glassroad_stabilizer())
-	cases.append(_commander_recovery_blocks_assignment())
-	cases.append(_commander_memory_continuity())
-	if _failed:
-		return
+	var case_builders: Array[Callable] = [
+		_mireclaw_free_company_retaker,
+		_mireclaw_free_company_raider,
+		_mireclaw_signal_post_companion,
+		_embercourt_glassroad_relay_defender,
+		_embercourt_glassroad_relay_retaker,
+		_embercourt_glassroad_stabilizer,
+		_commander_recovery_blocks_assignment,
+		_commander_memory_continuity,
+	]
+	for build_case in case_builders:
+		var case_report = build_case.call()
+		if _failed:
+			return
+		cases.append(case_report)
 
 	var public_events := []
 	for case_report in cases:
@@ -115,7 +120,7 @@ func _mireclaw_signal_post_companion() -> Dictionary:
 		"valid",
 		"income and route vision denial",
 		["persistent_income_denial", "route_vision", "player_town_support"],
-		2,
+		3,
 		"riverwatch_hold",
 		"docs/strategic-ai-capture-countercapture-defense-proof-report.md"
 	)
@@ -158,7 +163,7 @@ func _embercourt_glassroad_relay_retaker() -> Dictionary:
 		"valid",
 		"income and route vision denial",
 		["persistent_income_denial", "route_vision", "player_town_support"],
-		1,
+		3,
 		"halo_spire_bridgehead",
 		"docs/strategic-ai-glassroad-defense-proof-report.md"
 	)

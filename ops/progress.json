@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Undertow Screen Snare with data-authored rigid-screen vulnerability, exact live/benchmark behavior, improved aggregate faction balance, and a preserved clear active encounter queue.",
+  "currentNotes": "Completed commander role-state fixture reconciliation: current exact ranks pass and case execution stops after the first failure without changing strategic-AI runtime behavior.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-veilmourn-undertow-screen-snare-10184",
-  "currentSliceId": "combat-veilmourn-undertow-screen-snare-10184",
-  "currentSliceNotes": "Completed authored Mourning Nets rigid-screen payoff; matrix severity improved and the 59-encounter queue remains exactly clear.",
+  "currentSlice": "strategic-ai-role-state-fixture-reconciliation-10184",
+  "currentSliceId": "strategic-ai-role-state-fixture-reconciliation-10184",
+  "currentSliceNotes": "Completed exact Signal Post/Glassroad rank reconciliation and verified fail-fast report execution.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Undertow Screen Snare",
-  "currentSliceUpdatedAt": "2026-08-05T05:10:53Z",
+  "currentSliceTitle": "Strategic AI Role-State Fixture Reconciliation",
+  "currentSliceUpdatedAt": "2026-08-05T05:16:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,6 +19847,77 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "strategic-ai-role-state-fixture-reconciliation-10184",
+      "title": "Strategic AI Role-State Fixture Reconciliation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "validation_and_adoption_gate",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-capture-countercapture-defense-proof-report.md"
+      ],
+      "purpose": "Fix the stale commander role-state report expectation and prevent one failed case from cascading into unrelated errors without changing live strategic-AI behavior.",
+      "implementationTargets": [
+        "tests/ai_commander_role_state_report.gd",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "signal_post_expected_rank": 2,
+        "signal_post_live_rank": 3,
+        "glassroad_watch_relay_expected_rank": 1,
+        "glassroad_watch_relay_live_rank": 3,
+        "independent_stale_rank_count": 2,
+        "cascading_script_error_count": 1,
+        "cascading_false_failure_count": 1
+      },
+      "completionCriteria": [
+        "The report uses the current exact Signal Post rank from the unchanged full-breakdown target surface",
+        "Report case execution stops immediately after the first failed case",
+        "All eight commander role-state cases and the public leak check pass",
+        "Core, editor parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "strategic-AI score, resource-order, target-choice, role, event, pathing, content, save, packaging, or Native RMG changes",
+        "claiming validation maintenance as gameplay implementation progress or broad strategic-AI completion"
+      ],
+      "createdAt": "2026-08-05T05:13:01Z",
+      "updatedAt": "2026-08-05T05:16:56Z",
+      "startedAt": "2026-08-05T05:13:01Z",
+      "notes": "Reconciled two stale exact ranks and replaced eager case construction with fail-fast sequential execution. Production strategic-AI code and content are unchanged.",
+      "result": {
+        "report_ok": true,
+        "case_count": 8,
+        "public_leak_check_ok": true,
+        "free_company_retaker_rank": 1,
+        "free_company_raider_rank": 1,
+        "signal_post_companion_rank": 3,
+        "glassroad_relay_defender_rank": -1,
+        "glassroad_relay_retaker_rank": 3,
+        "glassroad_stabilizer_rank": -1,
+        "memory_continuity_rank": 1,
+        "forced_first_failure_report_error_count": 1,
+        "forced_first_failure_engine_error_count": 1,
+        "forced_first_failure_script_error_count": 0,
+        "forced_first_failure_later_case_error_count": 0,
+        "production_runtime_files_changed": 0,
+        "content_files_changed": 0
+      },
+      "validation": [
+        "godot --headless --path . tests/ai_commander_role_state_report.tscn",
+        "temporary first-case rank mismatch: expected exit 1 with one report error, one engine error, zero script errors, and zero later-case errors",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --path . --editor --quit",
+        "python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "This closes the stale report failure only. Broader strategic-AI and overall release work remain open.",
+      "completedAt": "2026-08-05T05:16:56Z"
+    },
     {
       "id": "combat-veilmourn-undertow-screen-snare-10184",
       "title": "Veilmourn Undertow Screen Snare",
@@ -72779,7 +72850,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 162.5 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-05T05:10:53Z",
+  "updatedAt": "2026-08-05T05:16:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

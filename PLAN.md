@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed corrective validation slice: `strategic-ai-role-state-fixture-reconciliation-10184`. The commander role-state report now matches the unchanged live full-breakdown target surface: River Signal Post and Glassroad Watch Relay both rank third, while the two Free Company cases and memory-continuity target remain first. Eight cases and the compact public leak check pass. Case execution is fail-fast; a forced first-case mismatch emits exactly one report/engine error with no script or later-case errors. Core, editor parse, repository, JSON, and diff gates pass. This changes no strategic-AI runtime behavior and is not gameplay implementation progress.
 - Completed implementation slice: `combat-veilmourn-undertow-screen-snare-10184`. Undertow Harpooners' Mourning Nets now gain an authored 1.25 ranged payoff and 2.0 tactical target bonus only against rigid `snare_vulnerable` screens; Ledger Plate, Rivet Hide, and Furnace Screen opt in while ordinary shields remain exact. The implementation resolves new metadata from immutable unit content instead of normalized battle state, preserving unrelated deterministic battle hashes. The all-live 100-seed four-week matrix keeps 28 outliers and 68.5 percent maximum dominance, lowers excess severity from 172.0 to 162.5 and rows at or above 65 percent from five to four, moves week-two Brasshollow/Veilmourn from 68/32 to 55.5/44.5 and week three from 55/45 to 50.5/49.5, and has zero structural failures; the existing week-four Veilmourn lead increases from 58.5 to 61.5 percent. Focused ability, autoplay, 59-encounter clear-queue, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Veilmourn identity, final faction balance, or overall release completion.
 - Completed implementation slice: `strategic-ai-live-resource-target-view-reuse-10184`. Live hero-task resource selection now reuses each already scored candidate's normalized reasons, public importance, and debug reason when constructing its commander role view, while ordinary report callers retain the full resource score breakdown. Focused proof matches all 15 behavior-facing fields and keeps the intended Free Company/Signal Post reservation outcomes exact. Medium ordinal 99 preserves row signature `59262e55`, all 171 activity events, 37 turns, the same defeat outcome, and zero behavior, integrity, or reachability failures; local row runtime falls from 298228 to 296997 ms and accumulated target-assignment time from 50029 to 49886 ms across 74 samples. This is a bounded redundant-score cleanup, not broad strategic-AI performance completion or overall release completion.
 - Completed implementation slice: `balance-post-identity-active-outlier-repair-10184`. Glassfen Relay Pickets now own a placement-local six-Guard/two-Adept line and Ninefold Drowned Reliquary owns a four-Cutter/nine-Reefbolt guard. Under current live faction mechanics both remain player-advantaged victories: Glassfen resolves in four rounds at 62% terminal margin / 8 enemy damage per round, and the Reliquary in three rounds at 85% / 8. The 59-encounter queue improves from 20 items / 4 high to 16 / 0 high, removes both matrix outliers and the matrix warning, and preserves passing runtime-consequence gates; the remaining 16 medium watches stay open. Focused exact roster/outcome proof, shared armies, default balance, unit abilities, core, Ninefold smoke, editor parse, repository, JSON, and diff gates pass. This is not full active-queue clearance, final encounter/faction balance, or overall release completion.
@@ -2230,6 +2231,29 @@ Non-goals:
 - do not hard-code faction ids, matchup ids, or benchmark-only behavior;
 - do not change unit base stats, growth, town economy, spells, heroes, shared battle thresholds, strategic AI, campaigns, saves, packaging, or Native RMG;
 - do not claim final Veilmourn identity, final faction balance, or overall release completion.
+
+## Strategic AI Role-State Fixture Reconciliation
+
+id: `strategic-ai-role-state-fixture-reconciliation-10184`
+
+Corrective validation slice for stale commander-role report fixtures. The live
+full-breakdown resource ranking now places River Signal Post and Glassroad
+Watch Relay third, while the report expects second and first respectively and
+continues into dependent cases after its first failure.
+
+Implementation target:
+- reconcile the exact Signal Post and Glassroad Watch Relay ranks with the current live target surface;
+- execute report cases fail-fast so one assertion cannot create unrelated dictionary or continuity errors;
+- preserve production target scoring, role proposals, events, pathing, and saves unchanged.
+
+Completion criteria:
+- the commander role-state report passes all eight cases and its public leak check;
+- a forced first-case failure cannot execute later dependent cases;
+- core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change strategic-AI scores, resource ordering, target choice, role behavior, content, runtime state, saves, packaging, or Native RMG;
+- do not claim test maintenance as gameplay implementation progress or broad strategic-AI completion.
 
 ## Work Selection Gates
 
