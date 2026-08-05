@@ -2181,12 +2181,19 @@ static func advance_raids(
 		phase_started = _advance_profile_timer(profile_enabled)
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
 		var goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
-		var goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+		var movement_path_plan := _path_plan_toward(
+			session,
+			current,
+			goal_tiles,
+			String(encounter.get("placement_id", "")),
+			faction_id
+		)
+		var goal_distance := int(movement_path_plan.get("goal_distance", 9999))
 		if raid_reached_regroup_contact(session, encounter):
 			goal_distance = 0
 		var movement_start: Vector2i = current
 		var goal_distance_before_movement: int = goal_distance
-		_advance_profile_add_ms(profile, "initial_path_distance_ms", phase_started)
+		_advance_profile_add_ms(profile, "initial_path_plan_ms", phase_started)
 		var movement_steps := RAID_BASE_MOVEMENT_STEPS
 		movement_steps = max(movement_steps, _tactical_pressure_movement_steps(encounter, goal_distance))
 		if goal_distance > RAID_BASE_MOVEMENT_STEPS and goal_distance < 9999:
@@ -2207,13 +2214,18 @@ static func advance_raids(
 		for step_index in range(max(0, movement_steps)):
 			phase_started = _advance_profile_timer(profile_enabled)
 			goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
-			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
-			_advance_profile_add_ms(profile, "step_path_distance_ms", phase_started)
+			movement_path_plan = _path_plan_toward(
+				session,
+				current,
+				goal_tiles,
+				String(encounter.get("placement_id", "")),
+				faction_id
+			)
+			goal_distance = int(movement_path_plan.get("goal_distance", 9999))
+			_advance_profile_add_ms(profile, "step_path_plan_ms", phase_started)
 			if goal_distance <= 0 or goal_distance >= 9999:
 				break
-			phase_started = _advance_profile_timer(profile_enabled)
-			var next_step = _next_step_toward(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
-			_advance_profile_add_ms(profile, "step_next_tile_ms", phase_started)
+			var next_step: Vector2i = movement_path_plan.get("next_step", current)
 			if next_step == current:
 				break
 			encounter["x"] = next_step.x
@@ -2268,7 +2280,14 @@ static func advance_raids(
 
 		phase_started = _advance_profile_timer(profile_enabled)
 		goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
-		goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")), faction_id)
+		movement_path_plan = _path_plan_toward(
+			session,
+			current,
+			goal_tiles,
+			String(encounter.get("placement_id", "")),
+			faction_id
+		)
+		goal_distance = int(movement_path_plan.get("goal_distance", 9999))
 		if raid_reached_town_battle_contact(session, encounter, faction_id):
 			goal_distance = 0
 		if raid_reached_regroup_contact(session, encounter):
@@ -18844,8 +18863,29 @@ static func _next_step_toward(
 	ignore_placement_id: String,
 	observer_faction_id: String = ""
 ) -> Vector2i:
+	return _path_plan_toward(
+		session,
+		start,
+		goal_tiles,
+		ignore_placement_id,
+		observer_faction_id
+	).get("next_step", start)
+
+static func _path_plan_toward(
+	session: SessionStateStoreScript.SessionData,
+	start: Vector2i,
+	goal_tiles: Array,
+	ignore_placement_id: String,
+	observer_faction_id: String = ""
+) -> Dictionary:
+	var unreachable := {
+		"goal_distance": 9999,
+		"next_step": start,
+		"next_goal_distance": 9999,
+		"goal_field_count": 0,
+	}
 	if goal_tiles.is_empty():
-		return start
+		return unreachable
 	var path_context := _path_distance_surface_context(session, ignore_placement_id, observer_faction_id)
 	var map_size: Vector2i = path_context.get("map_size", OverworldRulesScript.derive_map_size(session))
 	var encounter_blocked: Dictionary = path_context.get("encounter_blocked_indices", {})
@@ -18854,18 +18894,23 @@ static func _next_step_toward(
 	var terrain_blocked: Dictionary = path_context.get("terrain_blocked_indices", {})
 	var start_index := _tile_index(start, map_size)
 	if start_index < 0:
-		return start
+		return unreachable
 	var goal_lookup := _tile_index_lookup(goal_tiles, map_size)
 	if goal_lookup.has(start_index):
-		return start
+		return {
+			"goal_distance": 0,
+			"next_step": start,
+			"next_goal_distance": 0,
+			"goal_field_count": 0,
+		}
 	var goal_fields := []
 	for goal_index_value in goal_lookup.keys():
 		var goal_index := int(goal_index_value)
-		if goal_index < 0:
+		if goal_index < 0 or encounter_blocked.has(goal_index) or hero_blocked.has(goal_index):
 			continue
 		goal_fields.append(_path_distance_field_for_start(path_context, goal_index))
 	if goal_fields.is_empty():
-		return start
+		return unreachable
 	var best_step := start
 	var best_distance := 9999
 	for delta in PATH_MOVEMENT_DELTAS:
@@ -18886,7 +18931,16 @@ static func _next_step_toward(
 		if candidate_distance < best_distance:
 			best_step = candidate
 			best_distance = candidate_distance
-	return best_step
+	# A live raid can share its current tile with a visible hero or a body tile.
+	# Distance fields may leave that occupied origin, while reverse fields cannot
+	# enter it, so derive the current distance from the best legal exit.
+	var current_distance := best_distance + 1 if best_step != start and best_distance < 9999 else 9999
+	return {
+		"goal_distance": current_distance,
+		"next_step": best_step,
+		"next_goal_distance": best_distance,
+		"goal_field_count": goal_fields.size(),
+	}
 
 static func _verified_next_step_toward(
 	session: SessionStateStoreScript.SessionData,

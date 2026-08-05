@@ -2131,6 +2131,31 @@ Non-goals:
 - do not change shared armies, global unit stats or abilities, strategic AI, campaigns, saves, rewards, or Native RMG;
 - do not claim final faction balance or overall release completion.
 
+## Strategic AI Raid Movement Path-Plan Reuse
+
+id: `strategic-ai-raid-movement-path-plan-reuse-10184`
+
+Selected Phase 6 runtime-performance slice. Live raid advancement currently
+builds a full-map path field from the raid's current tile for every movement
+step, then separately builds or reuses goal-origin fields to select that same
+step.
+
+Implementation target:
+- derive current goal distance, deterministic next tile, and next goal distance from one goal-origin path plan;
+- reuse that plan in initial, per-step, and post-move raid advancement instead of building an additional current-origin distance field for every moved tile;
+- preserve eight-way traversal, blocked-corner rejection, occupied/resource/terrain approach semantics, movement allowances, target redirects, and deterministic delta-order tie-breaking;
+- add focused runtime proof for open goals, blocked approach goals, multi-goal selection, unreachable goals, and live multi-step raid movement work.
+
+Completion criteria:
+- focused path fixtures produce the same distance and next-step results through the existing public helpers and the shared path plan;
+- a live multi-step raid follows the same route and emits the same movement outcome while loading no per-step current-origin distance fields;
+- an exact Medium long-run row preserves its row signature, outcome, event counts, target integrity, and reachability while reducing path-field work and not regressing runtime beyond local variance;
+- focused strategic-AI, core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not change strategic priorities, target selection, raid speed, topology, passability, encounter placement, combat, faction balance, saves, packaging, or Native RMG;
+- do not add a timing-only gate, broaden the paused long-run matrix, or claim strategic-AI, performance, or overall release completion.
+
 ## Work Selection Gates
 
 Before starting any worker:

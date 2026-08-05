@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/ai_raid_movement_path_plan_reuse_regression.gd" id="1"]
+
+[node name="AiRaidMovementPathPlanReuseRegression" type="Node"]
+script = ExtResource("1")
