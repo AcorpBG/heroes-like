@@ -17,7 +17,7 @@ const LOCAL_ARMY_CONTRACTS := {
 	},
 	"bellwake_mirror_lancers": {
 		"army_id": "army_bellwake_mirror_lancers_watch",
-		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 8, "unit_sunvault_resonant_choristers": 4},
+		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 9, "unit_sunvault_resonant_choristers": 4},
 	},
 	"bellwake_aurora_battery": {
 		"army_id": "army_bellwake_aurora_battery_watch",
@@ -30,9 +30,9 @@ const SHARED_ARMY_CONTRACTS := {
 	"army_aurora_battery": {"unit_aurora_ballista": 1, "unit_prism_adept": 3, "unit_shard_guard": 3},
 }
 const SAMPLE_CONTRACTS := {
-	"bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 59, "enemy_damage_per_round": 19},
-	"bellwake_mirror_lancers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 35, "enemy_damage_per_round": 49},
-	"bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25},
+	"bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
+	"bellwake_mirror_lancers": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 38, "enemy_damage_per_round": 37},
+	"bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 43, "enemy_damage_per_round": 33},
 }
 
 func _ready() -> void:

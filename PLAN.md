@@ -2080,6 +2080,31 @@ Non-goals:
 - do not change shared armies, global unit stats, battle rules, strategic AI, campaigns, saves, rewards, or Native RMG;
 - do not claim final encounter balance, final faction balance, or overall release completion.
 
+## Active Medium Encounter Pressure Repair
+
+id: `balance-active-medium-sample-pressure-10184`
+
+Active Phase 6 authored-combat implementation slice. The remaining active
+breadth queue contains five concrete sample-pressure failures and two margin
+cohorts attributable to six placement-local encounter armies.
+
+Implementation target:
+- tune only the Bellwake Mirror Lancers, Ironbridge Ford Reavers, Orevein Bridgeward Levies, Ninefold Basalt Gatehouse, Ninefold Drowned Reliquary, and Stonewake Sluice Band placement-local army counts;
+- remove the five sample margin/pacing watches and move the `resonance_relay` and `road` average terminal margins below the active-queue threshold;
+- preserve encounter identity, deterministic bounded completion, shared armies, global unit stats and abilities, battle rules, and Native RMG behavior;
+- add focused exact roster and battle-outcome contracts for the corrected placements.
+
+Completion criteria:
+- all five current sample watches clear with terminal margins below 75 percent and standard or extended pacing;
+- `resonance_relay` and `road` average terminal margins are below 70 percent;
+- the 59-encounter queue falls from 16 to at most nine medium items, remains at zero high-priority items, and introduces no new sample watch;
+- focused battle, faction ability, core, project-parse, repository, JSON, and diff validation pass.
+
+Non-goals:
+- do not force-clear the nine outcome-diversity cohort watches or weaken queue thresholds;
+- do not change shared armies, global unit stats or abilities, battle rules, strategic AI, campaigns, saves, rewards, or Native RMG;
+- do not claim final encounter balance, final faction balance, or overall release completion.
+
 ## Work Selection Gates
 
 Before starting any worker:

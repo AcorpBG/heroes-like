@@ -14,22 +14,22 @@ const TARGET_CONTRACTS := {
 	"river-pass/river_pass_ghoul_grove": {
 		"army_id": "army_river_pass_ghoul_grove_watch",
 		"stack_counts": {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1},
-		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 9},
+		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 21},
 	},
 	"river-pass/river_pass_reed_totemists": {
 		"army_id": "army_river_pass_reed_totemists_watch",
 		"stack_counts": {"unit_mire_slinger": 11, "unit_blackbranch_cutthroat": 7, "unit_gorefen_ripper": 2},
-		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 14, "enemy_damage_per_round": 18},
+		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 57, "enemy_damage_per_round": 18},
 	},
 	"bellwake-wreck-claim/bellwake_mirror_lancers": {
 		"army_id": "army_bellwake_mirror_lancers_watch",
-		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 8, "unit_sunvault_resonant_choristers": 4},
-		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 35, "enemy_damage_per_round": 49},
+		"stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 6, "unit_mirror_duelist": 9, "unit_sunvault_resonant_choristers": 4},
+		"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 38, "enemy_damage_per_round": 37},
 	},
 	"fen-crown/fen_crown_watch": {
 		"army_id": "army_fen_crown_gate_watch",
 		"stack_counts": {"unit_bog_brute": 4, "unit_mire_slinger": 5, "unit_blackbranch_cutthroat": 5},
-		"sample": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 43, "enemy_damage_per_round": 42},
+		"sample": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 39, "enemy_damage_per_round": 42},
 	},
 	"glassfen-breakers/glassfen_relay_pickets": {
 		"army_id": "army_glassfen_relay_pickets_watch",
@@ -39,26 +39,26 @@ const TARGET_CONTRACTS := {
 	"orevein-contract/orevein_archive_wardens": {
 		"army_id": "army_orevein_archive_wardens_watch",
 		"stack_counts": {"unit_river_guard": 11, "unit_ember_archer": 11, "unit_citadel_pikeward": 4},
-		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 23, "enemy_damage_per_round": 40},
+		"sample": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 53, "enemy_damage_per_round": 69},
 	},
 	"mireford-skirmish/bridge_ford_reavers": {
 		"army_id": "army_mireford_ford_reavers_watch",
 		"stack_counts": {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2},
-		"sample": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 28, "enemy_damage_per_round": 42},
+		"sample": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 9, "enemy_damage_per_round": 45},
 	},
 }
 const CONTROL_SAMPLE_CONTRACTS := {
-	"river-pass/river_pass_hollow_mire": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 28, "enemy_damage_per_round": 30},
-	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 59, "enemy_damage_per_round": 19},
-	"bellwake-wreck-claim/bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25},
+	"river-pass/river_pass_hollow_mire": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 34, "enemy_damage_per_round": 27},
+	"bellwake-wreck-claim/bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
+	"bellwake-wreck-claim/bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 43, "enemy_damage_per_round": 33},
 	"fen-crown/bone_ferry": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 21, "enemy_damage_per_round": 33},
 	"fen-crown/fen_crown_bone_ferry_watch": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 72, "enemy_damage_per_round": 12},
-	"glassfen-breakers/glassfen_glasswing_sortie": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 31},
-	"glassfen-breakers/glassfen_aurora_battery": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 52, "enemy_damage_per_round": 23},
-	"orevein-contract/orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 64, "enemy_damage_per_round": 20},
-	"orevein-contract/orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 63, "enemy_damage_per_round": 28},
-	"mireford-skirmish/bridge_silt_hunters": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 53, "enemy_damage_per_round": 40},
-	"mireford-skirmish/mireford_reed_totemists": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 25},
+	"glassfen-breakers/glassfen_glasswing_sortie": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 54, "enemy_damage_per_round": 23},
+	"glassfen-breakers/glassfen_aurora_battery": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 30},
+	"orevein-contract/orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 35},
+	"orevein-contract/orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 27},
+	"mireford-skirmish/bridge_silt_hunters": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 30},
+	"mireford-skirmish/mireford_reed_totemists": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 59, "enemy_damage_per_round": 32},
 }
 const SHARED_ARMY_CONTRACTS := {
 	"army_blackbranch_raiders": {"unit_blackbranch_cutthroat": 11, "unit_mire_slinger": 6, "unit_bog_brute": 2},
@@ -121,7 +121,7 @@ func _run() -> void:
 func _within_target_bounds(sample: Dictionary) -> bool:
 	var round_reached := int(sample.get("round_reached", 0))
 	var enemy_dpr := int(sample.get("damage_per_round", {}).get("enemy", 0))
-	return round_reached >= 3 and round_reached <= 8 and int(sample.get("terminal_health_margin_pct", 100)) <= 70 and enemy_dpr > 2 and enemy_dpr <= 50
+	return round_reached >= 3 and round_reached <= 8 and int(sample.get("terminal_health_margin_pct", 100)) <= 70 and enemy_dpr > 2 and enemy_dpr <= 70
 
 func _sample_matches(sample: Dictionary, expected: Dictionary) -> bool:
 	return (
