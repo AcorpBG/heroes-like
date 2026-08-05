@@ -1393,10 +1393,13 @@ class FastBattleBenchmark:
         ability_uses = attacker.get("ability_uses", {})
         harry = self._ability_by_id(attacker, "harry")
         harry_limit = int(harry.get("uses_per_battle", 0))
-        harry_target_ready = int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
-        harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
-        if harry and harry_available and is_ranged and not self._has_effect_id(target, battle, STATUS_HARRIED):
-            score += 2.0
+        harry_target_role = str(harry.get("target_role", ""))
+        harry_target_ready = int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (not harry_target_role or bool(target.get("ranged", False)) == (harry_target_role == "ranged"))
+        harry_support_gated = int(harry.get("min_adjacent_allies_to_target", 0)) > 0
+        harry_available = (is_ranged or harry_support_gated) and harry_target_ready and self._harry_support_ready(attacker, target, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+        harry_status_id = str(harry.get("status_id", STATUS_HARRIED))
+        if harry and harry_available and not self._has_effect_id(target, battle, harry_status_id):
+            score += float(harry.get("ai_target_priority_bonus", 2.0)) + float(harry.get("support_ai_target_priority_bonus", 0.0))
         target_shielding = self._ability_by_id(target, "shielding")
         if harry and is_ranged and bool(target_shielding.get("snare_vulnerable", False)):
             score += float(harry.get("shielding_ai_target_priority_bonus", 0.0))
@@ -1631,7 +1634,7 @@ class FastBattleBenchmark:
         attacking_shielding = self._ability_by_id(attacker, "shielding")
         if not is_ranged and attacking_shielding and attack_distance <= 0:
             modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
-        if not is_ranged and attacking_shielding and self._has_effect_id(defender, battle, STATUS_HARRIED):
+        if not is_ranged and attacking_shielding and self._has_any_effect_ids(defender, battle, attacking_shielding.get("payoff_status_ids", [STATUS_HARRIED])):
             modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
         if not is_ranged:
             modifier *= self._solar_array_lane_melee_multiplier(defender, battle)
@@ -1828,8 +1831,9 @@ class FastBattleBenchmark:
             counts["status_applied"] += 1
         harry = self._ability_by_id(attacker, "harry")
         harry_limit = int(harry.get("uses_per_battle", 0))
-        harry_target_ready = int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
-        harry_available = harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+        harry_target_role = str(harry.get("target_role", ""))
+        harry_target_ready = int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (not harry_target_role or bool(defender.get("ranged", False)) == (harry_target_role == "ranged"))
+        harry_available = harry_target_ready and self._harry_support_ready(attacker, defender, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
         if harry and harry_available:
             self._apply_effect(defender, {
                 "effect_id": str(harry.get("status_id", "")),
@@ -2298,6 +2302,24 @@ class FastBattleBenchmark:
         if bool(stack.get("ranged", False)):
             return not any(not bool(ally.get("ranged", False)) for ally in allies)
         return False
+
+    def _harry_support_ready(
+        self,
+        attacker: dict[str, Any],
+        target: dict[str, Any],
+        battle: dict[str, Any],
+        ability: dict[str, Any],
+    ) -> bool:
+        required_support = int(ability.get("min_adjacent_allies_to_target", 0))
+        if required_support <= 0:
+            return True
+        attacker_id = str(attacker.get("battle_id", ""))
+        supporting_allies = sum(
+            1
+            for ally in self._alive_stacks_for_side(battle, str(attacker.get("side", "")))
+            if str(ally.get("battle_id", "")) != attacker_id
+        )
+        return supporting_allies >= required_support
 
     def _side_defending_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("defending", False)))

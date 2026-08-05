@@ -837,6 +837,26 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Reed-Circle Snare",
+          "description": "Reedsnare crews close a marked crossing from both sides, binding the target only while another allied stack holds the far lane.",
+          "status_id": "status_mire_harried",
+          "status_label": "Reedsnared",
+          "duration_rounds": 1,
+          "target_min_tier": 4,
+          "target_role": "melee",
+          "modifiers": {
+            "cohesion": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "ai_target_priority_bonus": 0.1,
+          "min_adjacent_allies_to_target": 1,
+          "support_ai_target_priority_bonus": 0.15
+        }
+      ],
       "growth": 8,
       "cost": {
         "gold": 45
@@ -864,6 +884,24 @@
       "initiative": 7,
       "retaliations": 1,
       "ranged": true,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Mudglass Blind",
+          "description": "Mudglass shot bursts across the enemy eye-line, blunting the struck stack's attack and marking it for the Mireclaw pack.",
+          "status_id": "status_mire_harried",
+          "status_label": "Mudglass-Blinded",
+          "duration_rounds": 1,
+          "target_min_tier": 4,
+          "target_role": "melee",
+          "modifiers": {
+            "attack": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "ai_target_priority_bonus": 0.05
+        }
+      ],
       "growth": 5,
       "cost": {
         "gold": 70,
@@ -893,6 +931,19 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Bogplate Hide",
+          "description": "Layered mire plate blunts ranged fire while the maulers drive harder into prey already harried by the pack.",
+          "cohesion_hold_bonus": 0,
+          "ranged_damage_multiplier": 0.99,
+          "harried_damage_multiplier": 1.04,
+          "payoff_status_ids": [
+            "status_mire_harried"
+          ]
+        }
+      ],
       "growth": 4,
       "cost": {
         "gold": 145,

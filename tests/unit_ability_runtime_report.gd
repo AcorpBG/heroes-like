@@ -350,15 +350,24 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	if status_id == "":
 		return {"ok": false, "probe": "harry_status_application", "reason": "harry ability has no status_id"}
 	var target_min_tier := int(harry.get("target_min_tier", 1))
+	var target_role := String(harry.get("target_role", ""))
+	var required_support := int(harry.get("min_adjacent_allies_to_target", 0))
 	var tier_gate_ok := true
 	var ai_tier_gate_ok := true
 	if target_min_tier > 1:
 		var low_tier_attacker := _stack_for_unit(unit_id, "player", 0)
 		var low_tier_defender := _defender_stack()
 		low_tier_defender["tier"] = target_min_tier - 1
+		if target_role != "":
+			low_tier_defender["ranged"] = target_role == "ranged"
 		_set_hex(low_tier_attacker, 4, 3)
 		_set_hex(low_tier_defender, 5, 3)
-		var low_tier_battle := _battle_for_stacks([low_tier_attacker, low_tier_defender])
+		var low_tier_stacks := [low_tier_attacker, low_tier_defender]
+		if required_support > 0:
+			var low_tier_supporter := _defender_stack("player", 1)
+			_set_hex(low_tier_supporter, 5, 2)
+			low_tier_stacks.append(low_tier_supporter)
+		var low_tier_battle := _battle_for_stacks(low_tier_stacks)
 		var eligible_score_target := low_tier_defender.duplicate(true)
 		eligible_score_target["tier"] = target_min_tier
 		var low_tier_score := BattleAiRulesScript._attack_score(low_tier_attacker, low_tier_defender, low_tier_battle, bool(low_tier_attacker.get("ranged", false)))
@@ -380,8 +389,16 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	_set_hex(attacker, 4, 3)
 	_set_hex(defender, 5, 3)
 	defender["tier"] = maxi(int(defender.get("tier", 1)), int(harry.get("target_min_tier", 1)))
-	var battle := _battle_for_stacks([attacker, defender])
+	if target_role != "":
+		defender["ranged"] = target_role == "ranged"
+	var battle_stacks := [attacker, defender]
+	if required_support > 0:
+		var supporter := _defender_stack("player", 1)
+		_set_hex(supporter, 5, 2)
+		battle_stacks.append(supporter)
+	var battle := _battle_for_stacks(battle_stacks)
 	var preview := BattleRulesScript._active_ability_window_summary(attacker, battle, defender)
+	var supported_harry_score := BattleAiRulesScript._attack_score(attacker, defender, battle, bool(attacker.get("ranged", false)))
 	var messages := BattleRulesScript._apply_attack_ability_effects(
 		battle,
 		attacker,
@@ -391,6 +408,41 @@ func _probe_harry(unit_id: String) -> Dictionary:
 	)
 	var updated_defender := BattleRulesScript._get_stack_by_id(battle, String(defender.get("battle_id", "")))
 	var status_with := SpellRulesScript.has_effect_id(updated_defender, battle, status_id)
+	var support_gate_ok := true
+	var support_ai_gate_ok := true
+	var unsupported_preview := ""
+	if required_support > 0:
+		var unsupported_attacker := _stack_for_unit(unit_id, "player", 0)
+		var unsupported_defender := _defender_stack()
+		var distant_supporter := _defender_stack("player", 1)
+		_set_hex(unsupported_attacker, 4, 3)
+		_set_hex(unsupported_defender, 5, 3)
+		_set_hex(distant_supporter, 9, 6)
+		unsupported_defender["tier"] = maxi(int(unsupported_defender.get("tier", 1)), int(harry.get("target_min_tier", 1)))
+		if target_role != "":
+			unsupported_defender["ranged"] = target_role == "ranged"
+		var unsupported_battle := _battle_for_stacks([unsupported_attacker, unsupported_defender, distant_supporter])
+		unsupported_preview = BattleRulesScript._active_ability_window_summary(unsupported_attacker, unsupported_battle, unsupported_defender)
+		var unsupported_score := BattleAiRulesScript._attack_score(unsupported_attacker, unsupported_defender, unsupported_battle, bool(unsupported_attacker.get("ranged", false)))
+		var unsupported_messages := BattleRulesScript._apply_attack_ability_effects(
+			unsupported_battle,
+			unsupported_attacker,
+			unsupported_defender,
+			bool(unsupported_attacker.get("ranged", false)),
+			1 if bool(unsupported_attacker.get("ranged", false)) else 0
+		)
+		var unsupported_updated := BattleRulesScript._get_stack_by_id(unsupported_battle, String(unsupported_defender.get("battle_id", "")))
+		support_gate_ok = (
+			BattleRulesScript._harry_support_ready(attacker, defender, battle, harry)
+			and BattleAiRulesScript._harry_support_ready(attacker, defender, battle, harry)
+			and not BattleRulesScript._harry_support_ready(unsupported_attacker, unsupported_defender, unsupported_battle, harry)
+			and not BattleAiRulesScript._harry_support_ready(unsupported_attacker, unsupported_defender, unsupported_battle, harry)
+			and not SpellRulesScript.has_effect_id(unsupported_updated, unsupported_battle, status_id)
+			and unsupported_messages.is_empty()
+			and preview.contains("supported snare")
+			and unsupported_preview.contains("needs 1 allied stack")
+		)
+		support_ai_gate_ok = supported_harry_score > unsupported_score
 	var uses_per_battle := int(harry.get("uses_per_battle", 0))
 	var bounded_second_mark_blocked := true
 	var bounded_summary_ok := true
@@ -399,6 +451,8 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		var second_defender := _defender_stack("enemy", 1)
 		_set_hex(second_defender, 6, 3)
 		second_defender["tier"] = maxi(int(second_defender.get("tier", 1)), int(harry.get("target_min_tier", 1)))
+		if target_role != "":
+			second_defender["ranged"] = target_role == "ranged"
 		battle["stacks"].append(second_defender)
 		BattleRulesScript._apply_attack_ability_effects(
 			battle,
@@ -485,7 +539,7 @@ func _probe_harry(unit_id: String) -> Dictionary:
 			and screen_preview.contains("shield screen")
 			and not ordinary_shield_preview.contains("shield screen")
 		)
-	var ok := status_with and not status_without and not messages.is_empty() and bounded_second_mark_blocked and bounded_summary_ok and tier_gate_ok and ai_tier_gate_ok and screen_snare_ok
+	var ok := status_with and not status_without and not messages.is_empty() and bounded_second_mark_blocked and bounded_summary_ok and tier_gate_ok and ai_tier_gate_ok and support_gate_ok and support_ai_gate_ok and screen_snare_ok
 	return {
 		"ok": ok,
 		"probe": "harry_status_application",
@@ -498,6 +552,10 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		"target_min_tier": target_min_tier,
 		"tier_gate_ok": tier_gate_ok,
 		"ai_tier_gate_ok": ai_tier_gate_ok,
+		"required_support": required_support,
+		"support_gate_ok": support_gate_ok,
+		"support_ai_gate_ok": support_ai_gate_ok,
+		"unsupported_preview": unsupported_preview,
 		"uses_recorded": int(attacker.get("ability_uses", {}).get("harry", 0)),
 		"bounded_second_mark_blocked": bounded_second_mark_blocked,
 		"preview": preview,
@@ -1144,6 +1202,42 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped_defender, attacker.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, 2)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(attacker, stripped_defender, stripped_battle, true, false, 2)
+	var harried_damage_multiplier := float(_ability_by_id(defender, "shielding").get("harried_damage_multiplier", 1.0))
+	var harried_payoff_ok := true
+	var harried_modifier_with := 1.0
+	var harried_modifier_without := 1.0
+	var clean_modifier_with := 1.0
+	var clean_modifier_without := 1.0
+	var harried_ai_modifier := 1.0
+	var harried_role_line := ""
+	if harried_damage_multiplier > 1.0:
+		var payoff_attacker := _stack_for_unit(unit_id, "player", 0)
+		var payoff_target := _defender_stack("enemy", 0)
+		var payoff_status_ids: Array = _ability_by_id(payoff_attacker, "shielding").get("payoff_status_ids", ["status_harried"])
+		var payoff_status_id := String(payoff_status_ids[0]) if not payoff_status_ids.is_empty() else "status_harried"
+		_add_effect(payoff_target, payoff_status_id)
+		var payoff_battle := _battle_for_stacks([payoff_attacker, payoff_target])
+		var stripped_payoff_attacker := _without_ability(payoff_attacker, "shielding")
+		var stripped_payoff_target := payoff_target.duplicate(true)
+		var stripped_payoff_battle := _battle_for_stacks([stripped_payoff_attacker, stripped_payoff_target])
+		harried_modifier_with = BattleRulesScript._ability_damage_modifier(payoff_attacker, payoff_target, payoff_battle, false, false, 0)
+		harried_modifier_without = BattleRulesScript._ability_damage_modifier(stripped_payoff_attacker, stripped_payoff_target, stripped_payoff_battle, false, false, 0)
+		harried_ai_modifier = BattleAiRulesScript._ability_damage_modifier(payoff_attacker, payoff_target, payoff_battle, false, false, 0)
+		var clean_attacker := _stack_for_unit(unit_id, "player", 0)
+		var clean_target := _defender_stack("enemy", 0)
+		var clean_battle := _battle_for_stacks([clean_attacker, clean_target])
+		var stripped_clean_attacker := _without_ability(clean_attacker, "shielding")
+		var stripped_clean_battle := _battle_for_stacks([stripped_clean_attacker, clean_target.duplicate(true)])
+		clean_modifier_with = BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, false, 0)
+		clean_modifier_without = BattleRulesScript._ability_damage_modifier(stripped_clean_attacker, clean_target, stripped_clean_battle, false, false, 0)
+		harried_role_line = BattleRulesScript._active_ability_role_line(payoff_attacker, payoff_battle, payoff_target)
+		harried_payoff_ok = (
+			is_equal_approx(harried_modifier_with, clean_modifier_with * harried_damage_multiplier)
+			and is_equal_approx(harried_modifier_without, clean_modifier_without)
+			and is_equal_approx(harried_ai_modifier, harried_modifier_with)
+			and (unit_id != "unit_mireclaw_bogplate_maulers" or is_equal_approx(clean_modifier_with, clean_modifier_without))
+			and (unit_id != "unit_mireclaw_bogplate_maulers" or harried_role_line.contains("marked targets"))
+		)
 	var cohesion_hold_bonus := int(_ability_by_id(defender, "shielding").get("cohesion_hold_bonus", 0))
 	var cohesion_contract_ok := unit_id != "unit_thornwake_barkmantle_rams" or cohesion_hold_bonus == 0
 	var ally_screen_reduction_pct := int(_ability_by_id(defender, "shielding").get("ally_ranged_melee_damage_reduction_pct", 0))
@@ -1353,6 +1447,7 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		)
 	var ok := (
 		modifier_with < modifier_without
+		and harried_payoff_ok
 		and ally_screen_ok
 		and committed_screen_ok
 		and cohesion_contract_ok
@@ -1364,6 +1459,14 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"probe": "shielding_self_and_allied_engine_damage_reduction",
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
+		"harried_damage_multiplier": harried_damage_multiplier,
+		"harried_payoff_ok": harried_payoff_ok,
+		"harried_modifier_with": harried_modifier_with,
+		"harried_modifier_without": harried_modifier_without,
+		"harried_ai_modifier": harried_ai_modifier,
+		"clean_modifier_with": clean_modifier_with,
+		"clean_modifier_without": clean_modifier_without,
+		"harried_role_line": harried_role_line,
 		"cohesion_hold_bonus": cohesion_hold_bonus,
 		"cohesion_contract_ok": cohesion_contract_ok,
 		"ally_screen_reduction_pct": ally_screen_reduction_pct,

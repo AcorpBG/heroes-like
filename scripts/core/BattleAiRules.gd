@@ -1149,10 +1149,13 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var ability_uses = attacker.get("ability_uses", {})
 	var harry := _ability_by_id(attacker, "harry")
 	var harry_limit := int(harry.get("uses_per_battle", 0))
-	var harry_target_ready := int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1))
-	var harry_available := ability_uses is Dictionary and harry_target_ready and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
-	if not harry.is_empty() and harry_available and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
-		score += 2.0
+	var harry_target_role := String(harry.get("target_role", ""))
+	var harry_target_ready := int(target.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (harry_target_role == "" or bool(target.get("ranged", false)) == (harry_target_role == "ranged"))
+	var harry_support_gated := int(harry.get("min_adjacent_allies_to_target", 0)) > 0
+	var harry_available := ability_uses is Dictionary and (is_ranged or harry_support_gated) and harry_target_ready and _harry_support_ready(attacker, target, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
+	var harry_status_id := String(harry.get("status_id", STATUS_HARRIED))
+	if not harry.is_empty() and harry_available and not SpellRulesScript.has_effect_id(target, battle, harry_status_id):
+		score += float(harry.get("ai_target_priority_bonus", 2.0)) + float(harry.get("support_ai_target_priority_bonus", 0.0))
 	var authored_harry := _authored_ability_by_id(attacker, "harry")
 	var target_shielding := _authored_ability_by_id(target, "shielding")
 	if not harry.is_empty() and is_ranged and bool(target_shielding.get("snare_vulnerable", false)):
@@ -2494,7 +2497,7 @@ static func _ability_damage_modifier(
 	var attacking_shielding := _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
-	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
+	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, attacking_shielding.get("payoff_status_ids", [STATUS_HARRIED])):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
 	if not is_ranged:
 		modifier *= _solar_array_lane_melee_multiplier(defender, battle)
@@ -2877,6 +2880,33 @@ static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> boo
 		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
 			return false
 	return true
+
+static func _harry_support_ready(
+	attacker: Dictionary,
+	target: Dictionary,
+	battle: Dictionary,
+	ability: Dictionary
+) -> bool:
+	var required_support := int(ability.get("min_adjacent_allies_to_target", 0))
+	if required_support <= 0:
+		return true
+	if attacker.is_empty() or target.is_empty():
+		return false
+	var target_hex := _stack_hex(target)
+	if target_hex.is_empty():
+		return false
+	var attacker_id := String(attacker.get("battle_id", ""))
+	var supporting_allies := 0
+	for ally in _alive_stacks_for_side(battle, String(attacker.get("side", ""))):
+		if String(ally.get("battle_id", "")) == attacker_id:
+			continue
+		var ally_hex := _stack_hex(ally)
+		if ally_hex.is_empty() or _hex_distance(target_hex, ally_hex) > 1:
+			continue
+		supporting_allies += 1
+		if supporting_allies >= required_support:
+			return true
+	return false
 
 static func _side_has_role_mix(battle: Dictionary, side: String) -> bool:
 	var ranged_alive := false
