@@ -1278,6 +1278,18 @@ class FastBattleBenchmark:
             active["shots_remaining"] = max(0, int(active.get("shots_remaining", 0)) - 1)
         self._apply_attack_ability_effects(battle, active, target, is_ranged, attack_distance, consequence_counts)
         self._apply_damage_pressure(battle, active, before, target, is_ranged, "attack", consequence_counts)
+        if is_ranged and self._alive_count(target) > 0 and self._alive_count(active) > 0:
+            shielding = self._ability_by_id(target, "shielding")
+            return_ratio = clamp(float(shielding.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25)
+            damage_received = max(0, int(before.get("total_health", 0)) - int(target.get("total_health", 0)))
+            if return_ratio > 0.0 and damage_received > 0:
+                active_before = dict(active)
+                reflected_damage = max(1, int(round(float(damage_received) * return_ratio)))
+                reflected_damage = min(reflected_damage, int(active.get("total_health", 0)))
+                self._apply_damage(active, reflected_damage)
+                consequence_counts["ranged_damage_return"] += 1
+                consequence_counts["ranged_damage_return_damage"] += reflected_damage
+                self._apply_damage_pressure(battle, target, active_before, active, False, "ability", consequence_counts)
         if (
             not is_ranged
             and self._alive_count(target) > 0
@@ -1422,6 +1434,15 @@ class FastBattleBenchmark:
             score += 1.0
         if self._hero_has_trait(battle, side, "ambusher") and not is_ranged and (str(battle.get("terrain", "")) == "forest" or self._battle_has_tag(battle, "ambush_cover")) and round_number <= 2:
             score += 1.0
+        if is_ranged and avg_damage < target_health:
+            shielding = self._ability_by_id(target, "shielding")
+            return_ratio = clamp(float(shielding.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25)
+            if return_ratio > 0.0:
+                applied_damage = min(avg_damage, float(target_health))
+                reflected_damage = max(1, int(round(applied_damage * return_ratio)))
+                score -= (float(reflected_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
+                if reflected_damage >= int(attacker.get("total_health", 0)):
+                    score -= 6.0
         if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and self._alive_count(target) > 0 and self._can_make_retaliation(target, attack_distance):
             retaliation_damage = self._estimated_damage(target, attacker, battle, False, True, attack_distance)
             score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45

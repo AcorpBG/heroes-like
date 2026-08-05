@@ -10675,6 +10675,9 @@ def validate_content(errors: list[str]) -> None:
                     if "linebreaker_screen_bonus_pct" in ability:
                         linebreaker_bonus_pct = int(ability.get("linebreaker_screen_bonus_pct", 0))
                         ensure(0 < linebreaker_bonus_pct <= 50, errors, f"Unit {unit_id} shielding linebreaker_screen_bonus_pct must be between 1 and 50")
+                    if "ranged_damage_return_ratio" in ability:
+                        return_ratio = float(ability.get("ranged_damage_return_ratio", 0.0))
+                        ensure(0.0 < return_ratio <= 0.25, errors, f"Unit {unit_id} shielding ranged_damage_return_ratio must be in (0, 0.25]")
                 elif ability_id == "volley":
                     ensure(float(ability.get("damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley must define damage_multiplier > 1")
                     ensure(int(ability.get("min_distance", 0)) > 0, errors, f"Unit {unit_id} volley must define min_distance > 0")
@@ -10814,6 +10817,12 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(wake_lantern_mark.get("uses_per_battle", 0)) == 1, errors, "Wake-Lantern Mark must be limited to one use per battle")
     ensure(int(wake_lantern_mark.get("target_min_tier", 0)) == 3, errors, "Wake-Lantern Mark must require a tier-3 veteran target")
 
+    sunvault_shard_wardens = units.get("unit_sunvault_shard_wardens", {})
+    facet_reprisal = next((ability for ability in sunvault_shard_wardens.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    ensure(str(facet_reprisal.get("name", "")) == "Facet Reprisal", errors, "Shard Wardens must own Facet Reprisal")
+    ensure(float(facet_reprisal.get("ranged_damage_multiplier", 1.0)) == 0.98, errors, "Facet Reprisal must blunt exactly 2% of incoming ranged damage")
+    ensure(float(facet_reprisal.get("ranged_damage_return_ratio", 0.0)) == 0.1, errors, "Facet Reprisal must return exactly 10% of actual ranged attack damage")
+    ensure(int(facet_reprisal.get("ally_ranged_melee_damage_reduction_pct", 0)) == 0, errors, "Facet Reprisal must not screen allied stacks")
     sunvault_prism_adepts = units.get("unit_sunvault_prism_adepts", {})
     ensure(int(sunvault_prism_adepts.get("initiative", 0)) == 6, errors, "Prism Adepts must keep initiative six before their linked relay arrives")
     sunvault_choristers = units.get("unit_sunvault_resonant_choristers", {})

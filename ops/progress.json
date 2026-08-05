@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed fail-closed GitHub draft prerelease delivery for verified Linux and Windows release candidates; human publication, signing, stable-channel policy, and native Windows certification remain open.",
+  "currentNotes": "Completed the authored Shard Warden reflected-damage role through shared live combat, tactical AI, player summaries, benchmark parity, validation, and focused runtime proof; faction balance remains needs_tuning.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-draft-prerelease-channel-10184",
-  "currentSliceId": "packaging-draft-prerelease-channel-10184",
-  "currentSliceNotes": "Verified artifacts now flow into a least-privilege draft-only delivery job with tested tag policy, repeated identity/hash checks, and no overwrite or automatic-publication path.",
+  "currentSlice": "combat-sunvault-shard-warden-facet-reprisal-10184",
+  "currentSliceId": "combat-sunvault-shard-warden-facet-reprisal-10184",
+  "currentSliceNotes": "Facet Reprisal is live and bounded across player/AI resolution, tactical scoring, previews, benchmark, validation, and focused proof; the full accepted matrix retains 28 outliers and 172.0 severity with zero structural failures.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Draft Prerelease Channel",
-  "currentSliceUpdatedAt": "2026-08-04T23:41:56Z",
+  "currentSliceTitle": "Sunvault Shard Warden Facet Reprisal",
+  "currentSliceUpdatedAt": "2026-08-05T00:32:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70690,6 +70690,88 @@
       ],
       "notes": "The delivery policy moved out of inline workflow shell into a directly tested deterministic helper. Existing releases are never refreshed or clobbered; maintainers must resolve any partial draft explicitly before retrying.",
       "remainingWork": "No work remains in this slice. Human draft review/publication, stable-channel policy, signing, and native Windows hardware certification remain open."
+    },
+    {
+      "id": "combat-sunvault-shard-warden-facet-reprisal-10184",
+      "title": "Sunvault Shard Warden Facet Reprisal",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the production Shard Wardens' authored minor-damage reflection role as a bounded shared combat contract.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "shard_warden_live_ability_count": 0,
+        "balance_outlier_count": 28,
+        "balance_severity": 172.0,
+        "rows_at_or_above_65_pct": 5,
+        "max_dominance_pct": 68.5,
+        "max_side_bias_pct": 3.8,
+        "structural_failure_count": 0,
+        "targeted_week_1_pair_summaries_unchanged_by_candidate": true
+      },
+      "completionCriteria": [
+        "Shard Wardens reduce direct incoming ranged attack damage by two percent and return ten percent of damage actually received while they survive",
+        "Melee, retaliation, spells, direct health loss, and lethal ranged attacks do not trigger reflected damage",
+        "Live BattleRules, tactical AI, player attack summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored fields",
+        "The all-live 100-seed four-week matrix has zero structural failures and does not regress accepted aggregate balance bounds"
+      ],
+      "nonGoals": [
+        "allied-array protection, Mirror Duelist abilities, spell reflection, or broad Sunvault stat tuning",
+        "unit base stats, growth, costs, recruitment, heroes, spells, towns, saves, scenarios, strategic AI, Native RMG, or benchmark thresholds",
+        "final Sunvault identity, final faction balance, or overall release completion"
+      ],
+      "startedAt": "2026-08-05T00:11:27Z",
+      "updatedAt": "2026-08-05T00:32:50Z",
+      "completedAt": "2026-08-05T00:32:50Z",
+      "result": {
+        "shard_warden_live_ability_count": 1,
+        "ranged_damage_multiplier": 0.98,
+        "ranged_damage_return_ratio": 0.1,
+        "survival_required": true,
+        "excluded_melee_retaliation_spell_direct_and_lethal_paths": true,
+        "returned_damage_can_destroy_shooter": true,
+        "player_attack_preview_visible": true,
+        "tactical_ai_return_risk_consumed": true,
+        "ability_instance_count": 103,
+        "ability_runtime_consequence_count": 103,
+        "balance_outlier_count": 28,
+        "balance_severity": 172.0,
+        "rows_at_or_above_65_pct": 5,
+        "max_dominance_pct": 68.5,
+        "max_side_bias_pct": 3.8,
+        "structural_failure_count": 0,
+        "week_4_sunvault_veilmourn_before": "54.5/45.5",
+        "week_4_sunvault_veilmourn_after": "53.0/47.0"
+      },
+      "validation": [
+        "godot --headless --path . tests/unit_ability_runtime_report.tscn",
+        "godot --headless --path . tests/battle_autoplay_combat_balance_report.tscn",
+        "godot --headless --path . tests/balance_regression_report_suite.tscn",
+        "godot --headless --path . tests/core_systems_regression_smoke.tscn",
+        "godot --headless --editor --path . --quit",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py",
+        "jq empty content/units.json ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "Exact legacy Mirror Duelist and allied-screen candidates were rejected during targeted screening because they regressed other Sunvault pairs. The accepted source-backed Shard Warden contract leaves aggregate balance metrics exact and slightly improves the week-four Sunvault/Veilmourn pair.",
+      "remainingWork": "No work remains in this slice. Final Sunvault identity, the 28-outlier faction balance queue, and overall release completion remain open."
     }
   ],
   "project": "heroes-like",

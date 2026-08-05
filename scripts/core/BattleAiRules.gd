@@ -1193,6 +1193,14 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	if is_ranged and _side_controls_field_objective_type(battle, side, "cover_line") and _stack_is_cover_screened(attacker, battle):
 		score += 1.25
 	score += _objective_action_score(battle, side, "shoot" if is_ranged else "strike", attacker, target)
+	if is_ranged and damage < target_health:
+		var shielding := _ability_by_id(target, "shielding")
+		var return_ratio := clampf(float(shielding.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25)
+		if return_ratio > 0.0:
+			var reflected_damage: int = max(1, int(round(float(applied_damage) * return_ratio)))
+			score -= (float(reflected_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
+			if reflected_damage >= int(attacker.get("total_health", 0)):
+				score -= 6.0
 	if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and _alive_count(target) > 0 and _can_make_retaliation(target, attack_distance):
 		var retaliation_damage := _estimate_damage(target, attacker, battle, false, true, attack_distance)
 		score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45

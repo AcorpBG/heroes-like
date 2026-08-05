@@ -891,6 +891,17 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 	var ally_modifier_with_second_screen := 1.0
 	var ai_damage_with := 0
 	var ai_damage_without := 0
+	var return_ratio := float(_ability_by_id(defender, "shielding").get("ranged_damage_return_ratio", 0.0))
+	var return_contract_ok := true
+	var reflected_damage := 0
+	var lethal_return_blocked := true
+	var excluded_scope_ok := true
+	var lethal_shooter_killed := true
+	var ai_score_with_return := 0.0
+	var ai_score_without_return := 0.0
+	var action_summary := ""
+	var role_line := ""
+	var reflected_hit_event_visible := true
 	if total_linebreaker_screen_pct > 0:
 		var ally := _stack_for_unit("unit_brasshollow_boiler_rivetcasters", "player", 1)
 		var second_screen := _stack_for_unit(unit_id, "player", 2)
@@ -911,7 +922,116 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 			and ai_damage_with < ai_damage_without
 		)
 	)
-	var ok := modifier_with < modifier_without and ally_screen_ok and cohesion_contract_ok
+	if return_ratio > 0.0:
+		var return_defender := _stack_for_unit(unit_id, "player", 0)
+		var return_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+		_set_hex(return_defender, 6, 3)
+		_set_hex(return_attacker, 2, 3)
+		var return_battle := _battle_for_stacks([return_defender, return_attacker])
+		var return_defender_before := return_defender.duplicate(true)
+		var attacker_health_before := int(return_attacker.get("total_health", 0))
+		BattleRulesScript._apply_damage_to_stack(return_battle, String(return_defender.get("battle_id", "")), 20)
+		var return_messages := BattleRulesScript._apply_ranged_damage_return(
+			return_battle,
+			String(return_attacker.get("battle_id", "")),
+			return_defender_before,
+			true,
+			"attack"
+		)
+		var return_attacker_after := BattleRulesScript._get_stack_by_id(return_battle, String(return_attacker.get("battle_id", "")))
+		reflected_damage = attacker_health_before - int(return_attacker_after.get("total_health", 0))
+		reflected_hit_event_visible = false
+		for animation_event in BattleRulesScript.animation_event_queue(return_battle):
+			if (
+				animation_event is Dictionary
+				and String(animation_event.get("battle_id", "")) == String(return_attacker.get("battle_id", ""))
+				and String(animation_event.get("event_id", "")) == "battle_unit_hit"
+			):
+				reflected_hit_event_visible = true
+				break
+
+		var lethal_defender := _stack_for_unit(unit_id, "player", 0)
+		var lethal_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+		var lethal_battle := _battle_for_stacks([lethal_defender, lethal_attacker])
+		var lethal_before := lethal_defender.duplicate(true)
+		var lethal_attacker_health := int(lethal_attacker.get("total_health", 0))
+		BattleRulesScript._apply_damage_to_stack(lethal_battle, String(lethal_defender.get("battle_id", "")), int(lethal_defender.get("total_health", 0)))
+		var lethal_messages := BattleRulesScript._apply_ranged_damage_return(
+			lethal_battle,
+			String(lethal_attacker.get("battle_id", "")),
+			lethal_before,
+			true,
+			"attack"
+		)
+		var lethal_attacker_after := BattleRulesScript._get_stack_by_id(lethal_battle, String(lethal_attacker.get("battle_id", "")))
+		lethal_return_blocked = lethal_messages.is_empty() and int(lethal_attacker_after.get("total_health", 0)) == lethal_attacker_health
+
+		for excluded_case in [
+			{"is_ranged": false, "source_type": "attack"},
+			{"is_ranged": true, "source_type": "spell"},
+			{"is_ranged": true, "source_type": "direct"},
+			{"is_ranged": true, "source_type": "retaliation"},
+		]:
+			var excluded_defender := _stack_for_unit(unit_id, "player", 0)
+			var excluded_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+			var excluded_battle := _battle_for_stacks([excluded_defender, excluded_attacker])
+			var excluded_before := excluded_defender.duplicate(true)
+			var excluded_attacker_health := int(excluded_attacker.get("total_health", 0))
+			BattleRulesScript._apply_damage_to_stack(excluded_battle, String(excluded_defender.get("battle_id", "")), 20)
+			var excluded_messages := BattleRulesScript._apply_ranged_damage_return(
+				excluded_battle,
+				String(excluded_attacker.get("battle_id", "")),
+				excluded_before,
+				bool(excluded_case.get("is_ranged", false)),
+				String(excluded_case.get("source_type", ""))
+			)
+			var excluded_attacker_after := BattleRulesScript._get_stack_by_id(excluded_battle, String(excluded_attacker.get("battle_id", "")))
+			excluded_scope_ok = excluded_scope_ok and excluded_messages.is_empty() and int(excluded_attacker_after.get("total_health", 0)) == excluded_attacker_health
+
+		var fragile_defender := _stack_for_unit(unit_id, "player", 0)
+		var fragile_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+		fragile_attacker["total_health"] = 1
+		var fragile_battle := _battle_for_stacks([fragile_defender, fragile_attacker])
+		var fragile_before := fragile_defender.duplicate(true)
+		BattleRulesScript._apply_damage_to_stack(fragile_battle, String(fragile_defender.get("battle_id", "")), 20)
+		BattleRulesScript._apply_ranged_damage_return(fragile_battle, String(fragile_attacker.get("battle_id", "")), fragile_before, true, "attack")
+		var fragile_attacker_after := BattleRulesScript._get_stack_by_id(fragile_battle, String(fragile_attacker.get("battle_id", "")))
+		lethal_shooter_killed = int(fragile_attacker_after.get("total_health", 0)) == 0
+
+		var ai_return_defender := _stack_for_unit(unit_id, "player", 0)
+		ai_return_defender["total_health"] = int(ai_return_defender.get("total_health", 0)) * 2
+		var no_return_defender := ai_return_defender.duplicate(true)
+		var no_return_abilities: Array = no_return_defender.get("abilities", []).duplicate(true)
+		for ability_index in range(no_return_abilities.size()):
+			var no_return_ability = no_return_abilities[ability_index]
+			if no_return_ability is Dictionary and String(no_return_ability.get("id", "")) == "shielding":
+				no_return_ability = no_return_ability.duplicate(true)
+				no_return_ability["ranged_damage_return_ratio"] = 0.0
+				no_return_abilities[ability_index] = no_return_ability
+		no_return_defender["abilities"] = no_return_abilities
+		var ai_return_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+		var ai_return_battle := _battle_for_stacks([ai_return_defender, ai_return_attacker])
+		var ai_no_return_attacker := _stack_for_unit("unit_embercourt_bargebow_crews", "enemy", 0)
+		var ai_no_return_battle := _battle_for_stacks([no_return_defender, ai_no_return_attacker])
+		ai_score_with_return = BattleAiRulesScript._attack_score(ai_return_attacker, ai_return_defender, ai_return_battle, true)
+		ai_score_without_return = BattleAiRulesScript._attack_score(ai_no_return_attacker, no_return_defender, ai_no_return_battle, true)
+		action_summary = BattleRulesScript._attack_action_summary(return_attacker, return_defender, return_battle, true)
+		role_line = BattleRulesScript._active_ability_role_line(return_defender, return_battle, return_attacker)
+		return_contract_ok = (
+			is_equal_approx(return_ratio, 0.1)
+			and reflected_damage == 2
+			and not return_messages.is_empty()
+			and reflected_hit_event_visible
+			and lethal_return_blocked
+			and excluded_scope_ok
+			and lethal_shooter_killed
+			and ai_score_with_return < ai_score_without_return
+			and action_summary.contains("Facet Reprisal")
+			and action_summary.contains("10%")
+			and role_line.contains("2%")
+			and role_line.contains("10%")
+		)
+	var ok := modifier_with < modifier_without and ally_screen_ok and cohesion_contract_ok and return_contract_ok
 	return {
 		"ok": ok,
 		"probe": "shielding_self_and_allied_engine_damage_reduction",
@@ -927,6 +1047,17 @@ func _probe_shielding(unit_id: String) -> Dictionary:
 		"ally_modifier_with_second_screen": ally_modifier_with_second_screen,
 		"ai_damage_with": ai_damage_with,
 		"ai_damage_without": ai_damage_without,
+		"ranged_damage_return_ratio": return_ratio,
+		"reflected_damage": reflected_damage,
+		"reflected_hit_event_visible": reflected_hit_event_visible,
+		"lethal_return_blocked": lethal_return_blocked,
+		"excluded_scope_ok": excluded_scope_ok,
+		"lethal_shooter_killed": lethal_shooter_killed,
+		"ai_score_with_return": ai_score_with_return,
+		"ai_score_without_return": ai_score_without_return,
+		"action_summary": action_summary,
+		"role_line": role_line,
+		"return_contract_ok": return_contract_ok,
 		"reason": "" if ok else "shielding did not preserve its authored damage screen and bounded cohesion contract",
 	}
 
