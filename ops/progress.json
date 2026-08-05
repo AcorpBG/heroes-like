@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed a fail-closed public-prerelease promotion path for existing verified Linux/Windows drafts; manual execution, stable publication, signing, and native Windows hardware certification remain open.",
+  "currentNotes": "Rejected the Wake-Lantern blind after its exact screen regressed balance and rejected the Bargebow protected-lane penalty after the decisive 100-seed matrix was unchanged. Both runtime experiments were reverted.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-public-prerelease-promotion-10184",
-  "currentSliceId": "packaging-public-prerelease-promotion-10184",
-  "currentSliceNotes": "Manual main-branch promotion now verifies exact tag/revision/state, seven assets, four package checksums, all downloaded hashes, and an unchanged post-publication fingerprint without rebuilding or replacing assets.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Verified Public Prerelease Promotion",
-  "currentSliceUpdatedAt": "2026-08-05T00:49:38Z",
+  "currentSlice": "combat-embercourt-bargebow-screened-lane-10184",
+  "currentSliceId": "combat-embercourt-bargebow-screened-lane-10184",
+  "currentSliceNotes": "Rejected after exact 30-seed screening narrowly improved severity from 147.95 to 147.36 without improving 39 outliers, 12 severe rows, 73.33 percent maximum dominance, or 16.0-point side bias; the decisive 100-seed matrix was exactly unchanged at 28 outliers, 172.0 severity, five severe rows, 68.5 percent maximum dominance, 3.8-point side bias, and zero structural failures. Runtime edits were reverted.",
+  "currentSliceStatus": "superseded",
+  "currentSliceTitle": "Embercourt Bargebow Screened Lane",
+  "currentSliceUpdatedAt": "2026-08-05T01:47:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -66961,7 +66961,12 @@
       ],
       "baseline": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 38,
         "balance_severity": 336,
         "rows_at_or_above_65_pct": 12,
@@ -67003,7 +67008,12 @@
         "ability_instance_count": 80,
         "runtime_consequence_count": 80,
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 37,
         "balance_severity": 304,
         "rows_at_or_above_65_pct": 12,
@@ -67197,7 +67207,12 @@
       ],
       "baseline": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 37,
         "balance_severity": 304,
         "rows_at_or_above_65_pct": 12,
@@ -67236,7 +67251,12 @@
         "ability_instance_count": 81,
         "runtime_consequence_count": 81,
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 300.5,
         "rows_at_or_above_65_pct": 12,
@@ -67279,7 +67299,12 @@
       ],
       "baseline": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 300.5,
         "rows_at_or_above_65_pct": 12,
@@ -67301,7 +67326,12 @@
       "startedAt": "2026-08-03T16:08:34Z",
       "result": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 300.0,
         "rows_at_or_above_65_pct": 12,
@@ -67339,7 +67369,12 @@
       ],
       "baseline": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 300.0,
         "rows_at_or_above_65_pct": 12,
@@ -67384,9 +67419,14 @@
       "baseline": {
         "ninefold_enemy_faction_count": 5,
         "pressure_launch_pass_count": 3,
-        "pressure_launch_failed_factions": ["faction_brasshollow", "faction_veilmourn"],
+        "pressure_launch_failed_factions": [
+          "faction_brasshollow",
+          "faction_veilmourn"
+        ],
         "town_defense_retask_pass_count": 4,
-        "town_defense_retask_failed_factions": ["faction_veilmourn"]
+        "town_defense_retask_failed_factions": [
+          "faction_veilmourn"
+        ]
       },
       "completionCriteria": [
         "All five Ninefold enemy factions launch from an authored open origin under sufficient pressure and emit target assignment events",
@@ -68038,7 +68078,11 @@
       "startedAt": "2026-08-03T21:42:51Z",
       "notes": "Completed a placement-local 9/7/8 Relay roster. Relay's sample-margin and burst-pacing watches and Bellwake's scenario-cohort watch are removed while adjacent outcomes and all shared Sunvault armies stay exact.",
       "result": {
-        "relay_pickets_stack_counts": {"unit_shard_guard": 9, "unit_prism_adept": 7, "unit_mirror_duelist": 8},
+        "relay_pickets_stack_counts": {
+          "unit_shard_guard": 9,
+          "unit_prism_adept": 7,
+          "unit_mirror_duelist": 8
+        },
         "relay_pickets_round_reached_before": 2,
         "relay_pickets_round_reached_after": 4,
         "relay_pickets_terminal_health_margin_pct_before": 87,
@@ -68133,7 +68177,11 @@
       "startedAt": "2026-08-03T21:52:47Z",
       "notes": "Completed a placement-local 6/8/2 Archive Wardens roster. Archive's sample-margin watch and Orevein's scenario-cohort watch are removed while adjacent outcomes and both shared Embercourt armies stay exact; the unrelated rough-terrain cohort remains open.",
       "result": {
-        "archive_wardens_stack_counts": {"unit_river_guard": 6, "unit_ember_archer": 8, "unit_citadel_pikeward": 2},
+        "archive_wardens_stack_counts": {
+          "unit_river_guard": 6,
+          "unit_ember_archer": 8,
+          "unit_citadel_pikeward": 2
+        },
         "archive_wardens_round_reached_before": 3,
         "archive_wardens_round_reached_after": 4,
         "archive_wardens_terminal_health_margin_pct_before": 83,
@@ -68202,7 +68250,11 @@
         "active_queue_item_count": 21,
         "active_queue_high_priority_count": 0,
         "active_queue_signature": "723d6501",
-        "exactors_stack_counts": {"unit_brasshollow_scrip_haulers": 8, "unit_brasshollow_rivet_hounds": 6, "unit_brasshollow_furnace_pavis_teams": 4},
+        "exactors_stack_counts": {
+          "unit_brasshollow_scrip_haulers": 8,
+          "unit_brasshollow_rivet_hounds": 6,
+          "unit_brasshollow_furnace_pavis_teams": 4
+        },
         "exactors_outcome_state": "victory",
         "exactors_round_reached": 4,
         "exactors_terminal_health_margin_pct": 76,
@@ -68228,7 +68280,11 @@
       "startedAt": "2026-08-03T22:03:47Z",
       "notes": "Completed a placement-local 9/6/6 Orevein Exactors roster. Exactors' sample-margin watch and the rough-terrain cohort watch are removed while Basalt Gatehouse and the shared Orevein Exactors army stay exact.",
       "result": {
-        "exactors_stack_counts": {"unit_brasshollow_scrip_haulers": 9, "unit_brasshollow_rivet_hounds": 6, "unit_brasshollow_furnace_pavis_teams": 6},
+        "exactors_stack_counts": {
+          "unit_brasshollow_scrip_haulers": 9,
+          "unit_brasshollow_rivet_hounds": 6,
+          "unit_brasshollow_furnace_pavis_teams": 6
+        },
         "exactors_round_reached_before": 4,
         "exactors_round_reached_after": 6,
         "exactors_pacing_band_before": "standard",
@@ -68295,7 +68351,11 @@
         "active_queue_item_count": 19,
         "active_queue_high_priority_count": 0,
         "active_queue_signature": "daf0f4d8",
-        "chain_shared_stack_counts": {"unit_bog_brute": 6, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
+        "chain_shared_stack_counts": {
+          "unit_bog_brute": 6,
+          "unit_mire_slinger": 7,
+          "unit_blackbranch_cutthroat": 5
+        },
         "chain_outcome_state": "defeat",
         "chain_pacing_band": "burst",
         "chain_round_reached": 2,
@@ -68325,7 +68385,11 @@
       "startedAt": "2026-08-03T22:20:45Z",
       "completedAt": "2026-08-03T22:29:38Z",
       "result": {
-        "chain_stack_counts": {"unit_bog_brute": 5, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
+        "chain_stack_counts": {
+          "unit_bog_brute": 5,
+          "unit_mire_slinger": 7,
+          "unit_blackbranch_cutthroat": 5
+        },
         "chain_outcome_state": "defeat",
         "chain_round_before": 2,
         "chain_round_after": 3,
@@ -68337,8 +68401,20 @@
         "chain_enemy_damage_per_round_after": 42,
         "chain_enemy_power": 1389,
         "chain_player_enemy_power_ratio_pct": 96,
-        "barrow_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 76, "enemy_damage_per_round": 6},
-        "levee_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 36, "enemy_damage_per_round": 21},
+        "barrow_pickets": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 5,
+          "terminal_health_margin_pct": 76,
+          "enemy_damage_per_round": 6
+        },
+        "levee_totemists": {
+          "outcome_state": "defeat",
+          "pacing_band": "extended",
+          "round_reached": 6,
+          "terminal_health_margin_pct": 36,
+          "enemy_damage_per_round": 21
+        },
         "active_scenario_sample_count": 59,
         "active_queue_item_count_before": 19,
         "active_queue_item_count_after": 17,
@@ -68390,15 +68466,31 @@
         "active_queue_signature": "19a4e784",
         "active_queue_sample_watch_count": 6,
         "active_queue_cohort_watch_count": 11,
-        "bogbound_archive_shared_stack_counts": {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2},
+        "bogbound_archive_shared_stack_counts": {
+          "unit_river_guard": 7,
+          "unit_ember_archer": 7,
+          "unit_citadel_pikeward": 2
+        },
         "bogbound_archive_outcome_state": "victory",
         "bogbound_archive_pacing_band": "standard",
         "bogbound_archive_round_reached": 4,
         "bogbound_archive_terminal_health_margin_pct": 81,
         "bogbound_archive_enemy_damage_per_round": 9,
         "bogbound_archive_matchup_band": "even",
-        "bogbound_lantern_patrol": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 71, "enemy_damage_per_round": 8},
-        "bogbound_survey_guard": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 8, "terminal_health_margin_pct": 16, "enemy_damage_per_round": 20},
+        "bogbound_lantern_patrol": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 3,
+          "terminal_health_margin_pct": 71,
+          "enemy_damage_per_round": 8
+        },
+        "bogbound_survey_guard": {
+          "outcome_state": "victory",
+          "pacing_band": "extended",
+          "round_reached": 8,
+          "terminal_health_margin_pct": 16,
+          "enemy_damage_per_round": 20
+        },
         "bogbound_scenario_primary_outcome_pct": 100,
         "forest_primary_outcome_pct": 90
       },
@@ -68417,7 +68509,11 @@
       "startedAt": "2026-08-03T22:37:23Z",
       "completedAt": "2026-08-03T22:49:46Z",
       "result": {
-        "bogbound_archive_stack_counts": {"unit_river_guard": 8, "unit_ember_archer": 12, "unit_citadel_pikeward": 6},
+        "bogbound_archive_stack_counts": {
+          "unit_river_guard": 8,
+          "unit_ember_archer": 12,
+          "unit_citadel_pikeward": 6
+        },
         "bogbound_archive_outcome_state_before": "victory",
         "bogbound_archive_outcome_state_after": "defeat",
         "bogbound_archive_pacing_band_before": "standard",
@@ -68431,8 +68527,20 @@
         "bogbound_archive_enemy_power": 2664,
         "bogbound_archive_player_power": 1762,
         "bogbound_archive_player_enemy_power_ratio_pct": 66,
-        "bogbound_lantern_patrol": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 71, "enemy_damage_per_round": 8},
-        "bogbound_survey_guard": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 8, "terminal_health_margin_pct": 16, "enemy_damage_per_round": 20},
+        "bogbound_lantern_patrol": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 3,
+          "terminal_health_margin_pct": 71,
+          "enemy_damage_per_round": 8
+        },
+        "bogbound_survey_guard": {
+          "outcome_state": "victory",
+          "pacing_band": "extended",
+          "round_reached": 8,
+          "terminal_health_margin_pct": 16,
+          "enemy_damage_per_round": 20
+        },
         "bogbound_scenario_primary_outcome_pct_before": 100,
         "bogbound_scenario_primary_outcome_pct_after": 67,
         "forest_primary_outcome_pct_before": 90,
@@ -68493,7 +68601,10 @@
         "active_queue_signature": "06dad95c",
         "active_queue_sample_watch_count": 5,
         "active_queue_cohort_watch_count": 8,
-        "road_chaplains_stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 8},
+        "road_chaplains_stack_counts": {
+          "unit_river_guard": 9,
+          "unit_ember_archer": 8
+        },
         "road_chaplains_outcome_state": "victory",
         "road_chaplains_pacing_band": "burst",
         "road_chaplains_round_reached": 2,
@@ -68502,8 +68613,20 @@
         "road_chaplains_matchup_band": "even",
         "road_chaplains_enemy_power": 1594,
         "road_chaplains_player_power": 1762,
-        "charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
-        "archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
+        "charter_guard": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 65,
+          "enemy_damage_per_round": 17
+        },
+        "archive_wardens": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 3,
+          "terminal_health_margin_pct": 70,
+          "enemy_damage_per_round": 19
+        },
         "lockmarsh_scenario_primary_outcome_pct": 100
       },
       "completionCriteria": [
@@ -68521,7 +68644,11 @@
       "startedAt": "2026-08-03T22:52:27Z",
       "completedAt": "2026-08-03T23:00:14Z",
       "result": {
-        "road_chaplains_stack_counts": {"unit_river_guard": 9, "unit_ember_archer": 10, "unit_citadel_pikeward": 6},
+        "road_chaplains_stack_counts": {
+          "unit_river_guard": 9,
+          "unit_ember_archer": 10,
+          "unit_citadel_pikeward": 6
+        },
         "road_chaplains_outcome_state_before": "victory",
         "road_chaplains_outcome_state_after": "defeat",
         "road_chaplains_pacing_band_before": "burst",
@@ -68535,8 +68662,20 @@
         "road_chaplains_enemy_power": 2558,
         "road_chaplains_player_power": 1762,
         "road_chaplains_player_enemy_power_ratio_pct": 69,
-        "charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
-        "archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
+        "charter_guard": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 65,
+          "enemy_damage_per_round": 17
+        },
+        "archive_wardens": {
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 3,
+          "terminal_health_margin_pct": 70,
+          "enemy_damage_per_round": 19
+        },
         "lockmarsh_scenario_primary_outcome_pct_before": 100,
         "lockmarsh_scenario_primary_outcome_pct_after": 67,
         "active_scenario_sample_count": 59,
@@ -68597,10 +68736,51 @@
         "active_queue_signature": "29388bfe",
         "active_queue_sample_watch_count": 4,
         "active_queue_cohort_watch_count": 7,
-        "ironbridge_ford_reavers": {"stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 89, "enemy_damage_per_round": 4},
-        "prismhearth_relay_pickets": {"shared_stack_counts": {"unit_shard_guard": 5, "unit_prism_adept": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 82, "enemy_damage_per_round": 3},
-        "glassroad_archive_wardens": {"stack_counts": {"unit_river_guard": 4, "unit_ember_archer": 7, "unit_citadel_pikeward": 1}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 87, "enemy_damage_per_round": 5},
-        "reedbarrow_barrow_pickets": {"stack_counts": {"unit_blackbranch_cutthroat": 16, "unit_mire_slinger": 11}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 76, "enemy_damage_per_round": 6}
+        "ironbridge_ford_reavers": {
+          "stack_counts": {
+            "unit_blackbranch_cutthroat": 10,
+            "unit_mire_slinger": 12
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 89,
+          "enemy_damage_per_round": 4
+        },
+        "prismhearth_relay_pickets": {
+          "shared_stack_counts": {
+            "unit_shard_guard": 5,
+            "unit_prism_adept": 2
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 82,
+          "enemy_damage_per_round": 3
+        },
+        "glassroad_archive_wardens": {
+          "stack_counts": {
+            "unit_river_guard": 4,
+            "unit_ember_archer": 7,
+            "unit_citadel_pikeward": 1
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 87,
+          "enemy_damage_per_round": 5
+        },
+        "reedbarrow_barrow_pickets": {
+          "stack_counts": {
+            "unit_blackbranch_cutthroat": 16,
+            "unit_mire_slinger": 11
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 5,
+          "terminal_health_margin_pct": 76,
+          "enemy_damage_per_round": 6
+        }
       },
       "completionCriteria": [
         "All four selected samples remain standard or extended player victories in three to eight rounds with terminal margins no greater than 74 percent and meaningful bounded enemy damage per round",
@@ -68617,12 +68797,72 @@
       "startedAt": "2026-08-03T23:02:39Z",
       "completedAt": "2026-08-03T23:18:24Z",
       "implemented": {
-        "ironbridge_ford_reavers": {"stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12, "unit_bog_brute": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13},
-        "prismhearth_relay_pickets": {"stack_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 7},
-        "glassroad_archive_wardens": {"stack_counts": {"unit_river_guard": 5, "unit_ember_archer": 7, "unit_citadel_pikeward": 1}, "outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 12},
-        "reedbarrow_barrow_pickets": {"stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 12}, "outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 73, "enemy_damage_per_round": 6},
-        "active_breadth_after": {"sample_count": 59, "completed_sample_count": 59, "queue_item_count": 7, "queue_sample_watch_count": 0, "queue_cohort_watch_count": 7, "queue_high_priority_count": 0, "queue_medium_priority_count": 7, "queue_signature": "5200ba7d", "balance_matrix_gate_status": "pass", "runtime_consequence_gate_status": "pass", "runtime_consequence_matrix_gate_status": "pass"},
-        "preserved": {"mireford_ford_reavers_exact": true, "selected_scenario_adjacent_samples_exact": true, "shared_armies_exact": true, "faction_matrix_inputs_changed": false, "native_rmg_inputs_changed": false}
+        "ironbridge_ford_reavers": {
+          "stack_counts": {
+            "unit_blackbranch_cutthroat": 10,
+            "unit_mire_slinger": 12,
+            "unit_bog_brute": 2
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 66,
+          "enemy_damage_per_round": 13
+        },
+        "prismhearth_relay_pickets": {
+          "stack_counts": {
+            "unit_shard_guard": 6,
+            "unit_prism_adept": 2
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 70,
+          "enemy_damage_per_round": 7
+        },
+        "glassroad_archive_wardens": {
+          "stack_counts": {
+            "unit_river_guard": 5,
+            "unit_ember_archer": 7,
+            "unit_citadel_pikeward": 1
+          },
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 4,
+          "terminal_health_margin_pct": 66,
+          "enemy_damage_per_round": 12
+        },
+        "reedbarrow_barrow_pickets": {
+          "stack_counts": {
+            "unit_blackbranch_cutthroat": 15,
+            "unit_mire_slinger": 12
+          },
+          "outcome_state": "victory",
+          "pacing_band": "extended",
+          "round_reached": 6,
+          "terminal_health_margin_pct": 73,
+          "enemy_damage_per_round": 6
+        },
+        "active_breadth_after": {
+          "sample_count": 59,
+          "completed_sample_count": 59,
+          "queue_item_count": 7,
+          "queue_sample_watch_count": 0,
+          "queue_cohort_watch_count": 7,
+          "queue_high_priority_count": 0,
+          "queue_medium_priority_count": 7,
+          "queue_signature": "5200ba7d",
+          "balance_matrix_gate_status": "pass",
+          "runtime_consequence_gate_status": "pass",
+          "runtime_consequence_matrix_gate_status": "pass"
+        },
+        "preserved": {
+          "mireford_ford_reavers_exact": true,
+          "selected_scenario_adjacent_samples_exact": true,
+          "shared_armies_exact": true,
+          "faction_matrix_inputs_changed": false,
+          "native_rmg_inputs_changed": false
+        }
       },
       "validation": [
         "battle_ford_reavers_balance_regression",
@@ -68649,7 +68889,11 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "purpose": "Clear the remaining authored-battle cohort queue through placement-local roster pressure and outcome variety while preserving difficulty ordering, unaffected samples, and shared content.",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
       "implementationTargets": [
         "content/scenarios.json",
         "tests/battle_ghoul_grove_balance_regression.gd",
@@ -68669,8 +68913,23 @@
         "active_queue_sample_watch_count": 0,
         "active_queue_cohort_watch_count": 7,
         "active_queue_signature": "5200ba7d",
-        "low_difficulty_watch": {"scenario_id": "river-pass", "placement_id": "river_pass_ghoul_grove", "outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 72, "enemy_damage_per_round": 7},
-        "scenario_outcome_bias_watches": ["river-pass", "bellwake-wreck-claim", "fen-crown", "glassfen-breakers", "orevein-contract", "mireford-skirmish"]
+        "low_difficulty_watch": {
+          "scenario_id": "river-pass",
+          "placement_id": "river_pass_ghoul_grove",
+          "outcome_state": "victory",
+          "pacing_band": "standard",
+          "round_reached": 5,
+          "terminal_health_margin_pct": 72,
+          "enemy_damage_per_round": 7
+        },
+        "scenario_outcome_bias_watches": [
+          "river-pass",
+          "bellwake-wreck-claim",
+          "fen-crown",
+          "glassfen-breakers",
+          "orevein-contract",
+          "mireford-skirmish"
+        ]
       },
       "completionCriteria": [
         "Low-difficulty River Pass Ghoul Grove remains a standard or extended victory in three to eight rounds at no more than 70 percent terminal margin, with normal no easier than hard",
@@ -68687,15 +68946,92 @@
       "startedAt": "2026-08-03T23:22:04Z",
       "completedAt": "2026-08-03T23:52:54Z",
       "implemented": {
-        "river_pass_ghoul_grove": {"stack_counts": {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}, "normal": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 9}, "hard": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 42}},
-        "river_pass_reed_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 14, "enemy_damage_per_round": 18},
-        "bellwake_mirror_lancers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 35, "enemy_damage_per_round": 49},
-        "fen_crown_watch": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 43, "enemy_damage_per_round": 42},
-        "glassfen_relay_pickets": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 5},
-        "orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 23, "enemy_damage_per_round": 40},
-        "mireford_ford_reavers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 28, "enemy_damage_per_round": 42},
-        "active_breadth_after": {"sample_count": 59, "completed_sample_count": 59, "queue_item_count": 0, "queue_sample_watch_count": 0, "queue_cohort_watch_count": 0, "queue_high_priority_count": 0, "queue_medium_priority_count": 0, "queue_signature": "829808c9", "balance_matrix_gate_status": "pass", "runtime_consequence_gate_status": "pass", "runtime_consequence_matrix_gate_status": "pass"},
-        "preserved": {"adjacent_sample_count_exact": 11, "shared_army_count_exact": 7, "queue_policy_changed": false, "battle_rules_changed": false, "difficulty_multipliers_changed": false, "faction_matrix_inputs_changed": false, "native_rmg_inputs_changed": false}
+        "river_pass_ghoul_grove": {
+          "stack_counts": {
+            "unit_blackbranch_cutthroat": 8,
+            "unit_mire_slinger": 16,
+            "unit_bog_brute": 2,
+            "unit_mireclaw_mudglass_slingers": 1
+          },
+          "normal": {
+            "outcome_state": "victory",
+            "pacing_band": "standard",
+            "round_reached": 5,
+            "terminal_health_margin_pct": 66,
+            "enemy_damage_per_round": 9
+          },
+          "hard": {
+            "outcome_state": "defeat",
+            "pacing_band": "standard",
+            "round_reached": 3,
+            "terminal_health_margin_pct": 74,
+            "enemy_damage_per_round": 42
+          }
+        },
+        "river_pass_reed_totemists": {
+          "outcome_state": "defeat",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 14,
+          "enemy_damage_per_round": 18
+        },
+        "bellwake_mirror_lancers": {
+          "outcome_state": "defeat",
+          "pacing_band": "extended",
+          "round_reached": 6,
+          "terminal_health_margin_pct": 35,
+          "enemy_damage_per_round": 49
+        },
+        "fen_crown_watch": {
+          "outcome_state": "defeat",
+          "pacing_band": "standard",
+          "round_reached": 3,
+          "terminal_health_margin_pct": 43,
+          "enemy_damage_per_round": 42
+        },
+        "glassfen_relay_pickets": {
+          "outcome_state": "victory",
+          "pacing_band": "extended",
+          "round_reached": 6,
+          "terminal_health_margin_pct": 66,
+          "enemy_damage_per_round": 5
+        },
+        "orevein_archive_wardens": {
+          "outcome_state": "defeat",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 23,
+          "enemy_damage_per_round": 40
+        },
+        "mireford_ford_reavers": {
+          "outcome_state": "defeat",
+          "pacing_band": "extended",
+          "round_reached": 7,
+          "terminal_health_margin_pct": 28,
+          "enemy_damage_per_round": 42
+        },
+        "active_breadth_after": {
+          "sample_count": 59,
+          "completed_sample_count": 59,
+          "queue_item_count": 0,
+          "queue_sample_watch_count": 0,
+          "queue_cohort_watch_count": 0,
+          "queue_high_priority_count": 0,
+          "queue_medium_priority_count": 0,
+          "queue_signature": "829808c9",
+          "balance_matrix_gate_status": "pass",
+          "runtime_consequence_gate_status": "pass",
+          "runtime_consequence_matrix_gate_status": "pass"
+        },
+        "preserved": {
+          "adjacent_sample_count_exact": 11,
+          "shared_army_count_exact": 7,
+          "queue_policy_changed": false,
+          "battle_rules_changed": false,
+          "difficulty_multipliers_changed": false,
+          "faction_matrix_inputs_changed": false,
+          "native_rmg_inputs_changed": false
+        }
       },
       "validation": [
         "battle_active_cohort_queue_clear_regression",
@@ -68724,13 +69060,41 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
-      "implementationTargets": ["scripts/core/EnemyAdventureRules.gd", "tests/ai_raid_assault_grouping_report.gd"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_assault_grouping_report.gd"
+      ],
       "updatedAt": "2026-08-04T00:43:33Z",
       "startedAt": "2026-08-04T00:00:36Z",
       "completedAt": "2026-08-04T00:43:33Z",
-      "implemented": {"eight_way_traversal": true, "blocked_corner_rule": true, "planner_grouping_leadership": true, "standard_route_turns": 7, "standard_route_controller_after": "faction_mireclaw", "ordinal_95_turns_completed": 56, "ordinal_95_stalls_before": 12, "ordinal_95_stalls_after": 7, "native_payload_changed": false},
-      "validation": ["ai_raid_assault_grouping_report", "ai_raid_regroup_retreat_report", "ai_known_world_memory_report", "headless_simulation_harness_report: 19 pass, one warning, one deferred, zero failures", "core_systems_regression_smoke", "strategic_ai_long_run_seed_matrix_report: Medium ordinal 95 56/56", "Godot editor parse", "tests/validate_repo.py", "jq empty ops/progress.json", "git diff --check"],
+      "implemented": {
+        "eight_way_traversal": true,
+        "blocked_corner_rule": true,
+        "planner_grouping_leadership": true,
+        "standard_route_turns": 7,
+        "standard_route_controller_after": "faction_mireclaw",
+        "ordinal_95_turns_completed": 56,
+        "ordinal_95_stalls_before": 12,
+        "ordinal_95_stalls_after": 7,
+        "native_payload_changed": false
+      },
+      "validation": [
+        "ai_raid_assault_grouping_report",
+        "ai_raid_regroup_retreat_report",
+        "ai_known_world_memory_report",
+        "headless_simulation_harness_report: 19 pass, one warning, one deferred, zero failures",
+        "core_systems_regression_smoke",
+        "strategic_ai_long_run_seed_matrix_report: Medium ordinal 95 56/56",
+        "Godot editor parse",
+        "tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
       "remainingWork": "Medium ordinal 95 still has zero movement because the parity-proven AVMsawg0.def and AVLautr7.def exact masks seal the corridor. Handle playable runtime start selection separately without changing recovered payload bytes."
     },
     {
@@ -68740,8 +69104,15 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
-      "implementationTargets": ["src/gdextension/src/map_package_service.cpp", "scripts/persistence/NativeRandomMapPackageSessionBridge.gd"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd"
+      ],
       "updatedAt": "2026-08-04T01:12:46Z",
       "startedAt": "2026-08-04T00:48:11Z",
       "completedAt": "2026-08-04T01:12:46Z",
@@ -68753,9 +69124,18 @@
         "runtime_start_tile_contract": true,
         "unsupported_start_fail_closed": true,
         "ordinal_95_payload_fnv1a32": "1744e025",
-        "ordinal_95_town_anchor": {"x": 31, "y": 10},
-        "ordinal_95_runtime_start": {"x": 34, "y": 9},
-        "ordinal_95_player_move_to": {"x": 34, "y": 10},
+        "ordinal_95_town_anchor": {
+          "x": 31,
+          "y": 10
+        },
+        "ordinal_95_runtime_start": {
+          "x": 34,
+          "y": 9
+        },
+        "ordinal_95_player_move_to": {
+          "x": 34,
+          "y": 10
+        },
         "native_payload_changed": false,
         "linux_windows_debug_release_artifacts_synced": true
       },
@@ -68779,11 +69159,23 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
-      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd"
+      ],
       "baseline": {
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 293.5,
         "max_dominance_pct": 75.5,
@@ -68826,10 +69218,25 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/spells.json", "tests/magic_battle_spell_behavior_report.gd", "tests/magic_resistance_countercontrol_report.gd", "tests/magic_ai_valuation_casting_hooks_report.gd", "tests/magic_prism_bastion_root_countercontrol_regression.gd", "tests/magic_prism_bastion_root_countercontrol_regression.tscn", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/spells.json",
+        "tests/magic_battle_spell_behavior_report.gd",
+        "tests/magic_resistance_countercontrol_report.gd",
+        "tests/magic_ai_valuation_casting_hooks_report.gd",
+        "tests/magic_prism_bastion_root_countercontrol_regression.gd",
+        "tests/magic_prism_bastion_root_countercontrol_regression.tscn",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
-        "prism_bastion_cleanse_effect_ids": ["status_harried", "status_staggered"],
+        "prism_bastion_cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered"
+        ],
         "prism_bastion_root_countercontrol_live": false,
         "all_live_seeds_per_ordered_matchup": 100,
         "balance_outlier_count": 36,
@@ -68853,8 +69260,16 @@
       "updatedAt": "2026-08-04T02:12:49Z",
       "completedAt": "2026-08-04T02:12:49Z",
       "implemented": {
-        "prism_bastion_cleanse_effect_ids": ["status_harried", "status_staggered", "status_rooted"],
-        "prism_bastion_status_immunity_ids": ["status_harried", "status_staggered", "status_rooted"],
+        "prism_bastion_cleanse_effect_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
+        "prism_bastion_status_immunity_ids": [
+          "status_harried",
+          "status_staggered",
+          "status_rooted"
+        ],
         "live_briar_bind_root_cleanse": true,
         "live_root_immunity_after_ward": true,
         "ai_rooted_ally_targeting_preserved": true,
@@ -68866,7 +69281,12 @@
         "cleansed_live_effect_count": 2,
         "blocked_status_id": "status_rooted",
         "all_live_seeds_per_ordered_matchup": 100,
-        "weeks": [1, 2, 3, 4],
+        "weeks": [
+          1,
+          2,
+          3,
+          4
+        ],
         "balance_outlier_count": 36,
         "balance_severity": 293.5,
         "rows_at_or_above_65_pct": 12,
@@ -68906,8 +69326,21 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/h3maped-rmg-end-to-end-behavior.md"],
-      "implementationTargets": ["scripts/core/ScenarioSelectRules.gd", "scenes/menus/MainMenu.gd", "tests/random_map_player_setup_retry_ux_report.gd", "tests/random_map_player_setup_retry_ux_report.tscn", "tests/random_map_all_template_menu_wiring_report.gd", "tests/random_map_all_template_menu_wiring_report.tscn", "tests/native_rmg_end_to_end_runtime_boundary_report.gd", "tests/native_rmg_end_to_end_runtime_boundary_report.tscn"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/h3maped-rmg-end-to-end-behavior.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/random_map_player_setup_retry_ux_report.gd",
+        "tests/random_map_player_setup_retry_ux_report.tscn",
+        "tests/random_map_all_template_menu_wiring_report.gd",
+        "tests/random_map_all_template_menu_wiring_report.tscn",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn"
+      ],
       "baseline": {
         "native_release_matrix_workflow_count": 24,
         "public_size_class_count": 2,
@@ -68981,8 +69414,20 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "pavis_authored_ability_count": 0,
         "balance_outlier_count": 36,
@@ -69011,7 +69456,10 @@
         "pavis_authored_ability_count": 1,
         "self_ranged_damage_multiplier": 0.99,
         "linebreaker_screen_reduction_pct": 6,
-        "linebreaker_ability_ids": ["brace", "reach"],
+        "linebreaker_ability_ids": [
+          "brace",
+          "reach"
+        ],
         "screen_stacks": false,
         "screen_requires_live_owner": true,
         "unit_base_stats_changed": false
@@ -69056,8 +69504,19 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
-      "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "mourning_lantern_authored_ability_count": 0,
         "balance_outlier_count": 36,
@@ -69138,8 +69597,15 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/ui-flow.md"],
-      "implementationTargets": ["scripts/core/OverworldRules.gd", "tests/overworld_visual_smoke.gd"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/ui-flow.md"
+      ],
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "tests/overworld_visual_smoke.gd"
+      ],
       "baseline": {
         "max_authored_hostile_group_count": 4,
         "max_placement_hostile_group_count": 4,
@@ -69204,8 +69670,19 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/magic_resistance_countercontrol_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/magic_resistance_countercontrol_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "sunvault_tier_4_to_7_unit_count": 4,
         "sunvault_tier_4_to_7_specialized_behavior_count": 0,
@@ -69282,8 +69759,18 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "embercourt_tier_4_to_7_unit_count": 4,
         "embercourt_tier_4_to_7_specialized_behavior_count": 0,
@@ -69360,8 +69847,18 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "thornwake_tier_6_to_7_unit_count": 2,
         "thornwake_tier_6_to_7_specialized_behavior_count": 0,
@@ -69440,8 +69937,20 @@
       "phase": "phase-5-playable-alpha-baseline",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md", "docs/spell-system-player-balance-audit.md"],
-      "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/validate_repo.py"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md",
+        "docs/spell-system-player-balance-audit.md"
+      ],
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "mireclaw_tier_4_to_5_unit_count": 2,
         "mireclaw_tier_4_to_5_specialized_behavior_count": 0,
@@ -70856,6 +71365,119 @@
       ],
       "notes": "The workflow intentionally publishes no release during validation. It permits only public prerelease promotion; stable/latest publication remains disabled until signing, native Windows hardware certification, and final release approval are separately implemented.",
       "remainingWork": "No implementation work remains in this slice. A maintainer must still create and review a current verified draft before manually promoting it; stable publication, signing, and native Windows hardware certification remain open."
+    },
+    {
+      "id": "combat-veilmourn-wake-lantern-blind-10184",
+      "title": "Veilmourn Wake-Lantern Blind",
+      "status": "superseded",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the missing bounded blind consequence on Mourning Lanterns' existing Wake-Lantern Mark.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "wake_lantern_attack_penalty": 0,
+        "wake_lantern_cohesion_penalty": -1,
+        "wake_lantern_duration_rounds": 1,
+        "wake_lantern_uses_per_battle": 1,
+        "wake_lantern_target_min_tier": 3,
+        "balance_outlier_count": 28,
+        "balance_severity": 172.0,
+        "rows_at_or_above_65_pct": 5,
+        "max_dominance_pct": 68.5,
+        "max_side_bias_pct": 3.8,
+        "structural_failure_count": 0
+      },
+      "completionCriteria": [
+        "Wake-Lantern Mark applies exactly one attack and one cohesion penalty for one round to a qualifying veteran target and spends its single battle use",
+        "A tier-two target remains ineligible and an unmarked control remains unchanged",
+        "Live status resolution, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored modifier",
+        "The all-live 100-seed four-week matrix has zero structural failures and improves or preserves accepted aggregate balance bounds"
+      ],
+      "nonGoals": [
+        "permanent blind, broad Veilmourn stat buffs, fog terrain, displacement, reveal systems, or additional uses",
+        "benchmark gates, army snapshots, saves, strategic AI, campaigns, or Native RMG",
+        "final Veilmourn identity, final faction balance, or overall release completion"
+      ],
+      "startedAt": "2026-08-05T01:12:18Z",
+      "updatedAt": "2026-08-05T01:24:25Z",
+      "notes": "Rejected after exact same-code 30-seed screening: attack blind moved outliers 39 to 40, severity 147.95 to 150.19, and maximum side bias 16.0 to 16.22. Runtime edits were reverted.",
+      "result": {
+        "accepted": false,
+        "control_outliers": 39,
+        "candidate_outliers": 40,
+        "control_severity": 147.95,
+        "candidate_severity": 150.19,
+        "control_max_side_bias": 16.0,
+        "candidate_max_side_bias": 16.22,
+        "structural_failure_count": 0
+      }
+    },
+    {
+      "id": "combat-embercourt-bargebow-screened-lane-10184",
+      "title": "Embercourt Bargebow Screened Lane",
+      "status": "superseded",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement Bargebow Crews authored dependence on open firing lanes as a bounded protected-target ranged penalty.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "bargebow_live_ability_count": 0,
+        "balance_outlier_count": 28,
+        "balance_severity": 172.0,
+        "rows_at_or_above_65_pct": 5,
+        "max_dominance_pct": 68.5,
+        "max_side_bias_pct": 3.8,
+        "structural_failure_count": 0,
+        "screening_control_outliers": 39,
+        "screening_control_severity": 147.95,
+        "screening_control_severe_rows": 12,
+        "screening_control_max_dominance_pct": 73.33,
+        "screening_control_max_side_bias_pct": 16.0
+      },
+      "completionCriteria": [
+        "Bargebow ranged primary fire loses exactly six percent against Brace and Shielding targets while unprotected targets retain full force",
+        "Melee, retaliation, spells, direct health loss, and other units remain unchanged",
+        "Live BattleRules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof consume one authored contract",
+        "30-seed screening improves its exact control and the full 100-seed matrix improves accepted aggregate balance bounds with zero structural failures"
+      ],
+      "nonGoals": [
+        "Bargebow base stats, shots, growth, cost, army snapshots, or protected-target behavior for other ranged units",
+        "benchmark gates, saves, strategic AI, campaigns, or Native RMG",
+        "final Embercourt identity, final faction balance, or overall release completion"
+      ],
+      "startedAt": "2026-08-05T01:24:25Z",
+      "updatedAt": "2026-08-05T01:47:18Z",
+      "notes": "Rejected after exact 30-seed screening narrowly improved severity from 147.95 to 147.36 without improving 39 outliers, 12 severe rows, 73.33 percent maximum dominance, or 16.0-point side bias; the decisive 100-seed matrix was exactly unchanged at 28 outliers, 172.0 severity, five severe rows, 68.5 percent maximum dominance, 3.8-point side bias, and zero structural failures. Runtime edits were reverted."
     }
   ],
   "project": "heroes-like",
@@ -71400,7 +72022,7 @@
   ],
   "summary": "The selected Native RMG release matrix remains complete. Packaged Linux and Windows desktop runtime now records one bounded, path-redacted previous-session issue after an abnormal process exit and exposes it through the existing local-only support bundle; real exported-PCK crash/restart, Linux binary boot, and Windows Wine boot pass. Faction balance remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance. Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-04T23:08:08Z",
+  "updatedAt": "2026-08-05T01:47:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
