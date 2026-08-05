@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the authored Shard Warden reflected-damage role through shared live combat, tactical AI, player summaries, benchmark parity, validation, and focused runtime proof; faction balance remains needs_tuning.",
+  "currentNotes": "Completed a fail-closed public-prerelease promotion path for existing verified Linux/Windows drafts; manual execution, stable publication, signing, and native Windows hardware certification remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-shard-warden-facet-reprisal-10184",
-  "currentSliceId": "combat-sunvault-shard-warden-facet-reprisal-10184",
-  "currentSliceNotes": "Facet Reprisal is live and bounded across player/AI resolution, tactical scoring, previews, benchmark, validation, and focused proof; the full accepted matrix retains 28 outliers and 172.0 severity with zero structural failures.",
+  "currentSlice": "packaging-public-prerelease-promotion-10184",
+  "currentSliceId": "packaging-public-prerelease-promotion-10184",
+  "currentSliceNotes": "Manual main-branch promotion now verifies exact tag/revision/state, seven assets, four package checksums, all downloaded hashes, and an unchanged post-publication fingerprint without rebuilding or replacing assets.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Shard Warden Facet Reprisal",
-  "currentSliceUpdatedAt": "2026-08-05T00:32:50Z",
+  "currentSliceTitle": "Verified Public Prerelease Promotion",
+  "currentSliceUpdatedAt": "2026-08-05T00:49:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -70772,6 +70772,90 @@
       ],
       "notes": "Exact legacy Mirror Duelist and allied-screen candidates were rejected during targeted screening because they regressed other Sunvault pairs. The accepted source-backed Shard Warden contract leaves aggregate balance metrics exact and slightly improves the week-four Sunvault/Veilmourn pair.",
       "remainingWork": "No work remains in this slice. Final Sunvault identity, the 28-outlier faction balance queue, and overall release completion remain open."
+    },
+    {
+      "id": "packaging-public-prerelease-promotion-10184",
+      "title": "Verified Public Prerelease Promotion",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/packaging-platform-readiness-report.md",
+        "docs/packaged-runtime-issue-log-smoke-report.md"
+      ],
+      "purpose": "Publish one existing verified Linux/Windows draft as a public prerelease through a fail-closed, human-confirmed, no-rebuild promotion path.",
+      "implementationTargets": [
+        ".github/workflows/release-promotion.yml",
+        "tools/verify_release_promotion.py",
+        "tests/release_promotion_policy_test.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "verified_draft_prerelease_creation": true,
+        "public_prerelease_promotion_workflow": false,
+        "tag_bound_human_confirmation": false,
+        "downloaded_release_payload_reverification": false,
+        "post_publish_asset_identity_proof": false,
+        "stable_publication_enabled": false,
+        "signing_complete": false,
+        "native_windows_hardware_certified": false
+      },
+      "completionCriteria": [
+        "Only a manual main-branch run with an exact tag-bound confirmation can promote an existing draft prerelease",
+        "Release metadata, exact tag commit, candidate/index schemas, version/revision, seven expected assets, asset sizes, and four payload checksums are verified before publication",
+        "The public prerelease is re-fetched and must preserve release id, commit, asset ids, names, sizes, and downloaded payload hashes",
+        "The workflow cannot rebuild, upload, replace, publish stable/latest, or run automatically"
+      ],
+      "nonGoals": [
+        "live release publication during validation, asset creation, replacement, or rebuild",
+        "stable/latest publication, signing, certificates, native Windows hardware certification, telemetry, or auto-update",
+        "gameplay, content, saves, strategic AI, balance, Native RMG, or overall release completion"
+      ],
+      "startedAt": "2026-08-05T00:37:52Z",
+      "updatedAt": "2026-08-05T00:49:38Z",
+      "completedAt": "2026-08-05T00:49:38Z",
+      "result": {
+        "manual_workflow_dispatch_only": true,
+        "main_branch_only": true,
+        "tag_bound_exact_confirmation": true,
+        "contents_write_job_count": 1,
+        "publication_command_count": 1,
+        "build_command_count": 0,
+        "asset_create_upload_delete_command_count": 0,
+        "expected_asset_count": 7,
+        "packaged_payload_checksum_count": 4,
+        "pre_and_post_downloads_use_validated_asset_ids": true,
+        "post_publish_fingerprint_required": true,
+        "stable_publication_enabled": false,
+        "latest_publication_enabled": false,
+        "automatic_publication_enabled": false,
+        "live_release_created_during_validation": false,
+        "live_release_count_after_validation": 0,
+        "retained_candidate_version": "0.1.0-alpha.1",
+        "retained_candidate_source_revision": "478388650b385a50d475364109f34fab6c8b30b8",
+        "retained_candidate_promotion_fingerprint": "d01d8d250933896e76b26abc0ee266a917f417e2cb55be2f0a1796299d77e09a"
+      },
+      "validation": [
+        "python3 tests/release_promotion_policy_test.py",
+        "python3 tests/packaging_release_artifact_verification_test.py",
+        "python3 tests/packaging_release_candidate_pipeline_test.py",
+        "python3 tests/release_delivery_policy_test.py",
+        "production verifier against retained .artifacts/release-candidate 0.1.0-alpha.1 payload",
+        "PyYAML safe_load .github/workflows/release-promotion.yml",
+        "bash -n for every release-promotion workflow run block",
+        "python3 tests/validate_repo.py",
+        "python3 -m py_compile tools/build_release_candidate.py tools/resolve_release_delivery.py tools/verify_release_promotion.py tests/packaging_release_candidate_pipeline_test.py tests/release_delivery_policy_test.py tests/release_promotion_policy_test.py tests/validate_repo.py",
+        "gh release list --limit 100 --json tagName,isDraft,isPrerelease,publishedAt",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "notes": "The workflow intentionally publishes no release during validation. It permits only public prerelease promotion; stable/latest publication remains disabled until signing, native Windows hardware certification, and final release approval are separately implemented.",
+      "remainingWork": "No implementation work remains in this slice. A maintainer must still create and review a current verified draft before manually promoting it; stable publication, signing, and native Windows hardware certification remain open."
     }
   ],
   "project": "heroes-like",
@@ -70781,8 +70865,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, signing/publication policy, stable-channel selection, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, certification, signing/publication, stable-channel, and remaining faction balance gaps; the current faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The faction matrix remains needs_tuning at 28 outliers / 172.0 severity / 68.5 percent maximum dominance.",
   "reportOnlyEvidence": [
     {
       "entries": [

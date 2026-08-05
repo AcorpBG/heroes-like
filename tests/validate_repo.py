@@ -285,6 +285,9 @@ RELEASE_CANDIDATE_TEST_PATH = ROOT / "tests" / "packaging_release_candidate_pipe
 RELEASE_CANDIDATE_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release-candidate.yml"
 RELEASE_DELIVERY_POLICY_TOOL_PATH = ROOT / "tools" / "resolve_release_delivery.py"
 RELEASE_DELIVERY_POLICY_TEST_PATH = ROOT / "tests" / "release_delivery_policy_test.py"
+RELEASE_PROMOTION_TOOL_PATH = ROOT / "tools" / "verify_release_promotion.py"
+RELEASE_PROMOTION_TEST_PATH = ROOT / "tests" / "release_promotion_policy_test.py"
+RELEASE_PROMOTION_WORKFLOW_PATH = ROOT / ".github" / "workflows" / "release-promotion.yml"
 PACKAGE_INSTALLER_SMOKE_PATH = ROOT / "tests" / "packaging_user_local_installer_smoke.py"
 PACKAGE_LINUX_INSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "install.sh"
 PACKAGE_LINUX_UNINSTALL_PATH = ROOT / "packaging" / "installers" / "linux" / "uninstall.sh"
@@ -22258,6 +22261,9 @@ def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
         RELEASE_CANDIDATE_WORKFLOW_PATH,
         RELEASE_DELIVERY_POLICY_TOOL_PATH,
         RELEASE_DELIVERY_POLICY_TEST_PATH,
+        RELEASE_PROMOTION_TOOL_PATH,
+        RELEASE_PROMOTION_TEST_PATH,
+        RELEASE_PROMOTION_WORKFLOW_PATH,
     ):
         ensure(path.exists(), errors, f"Missing release-candidate pipeline file: {path.relative_to(ROOT)}")
 
@@ -22347,6 +22353,87 @@ def validate_packaging_release_candidate_pipeline(errors: list[str]) -> None:
             workflow_text.count("contents: write") == 1,
             errors,
             "Release-candidate workflow must grant contents write to exactly one delivery job",
+        )
+
+    if RELEASE_PROMOTION_TOOL_PATH.exists():
+        promotion_text = RELEASE_PROMOTION_TOOL_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "heroes_like_release_promotion_verification_v1",
+            "public prerelease promotion requires a SemVer prerelease tag",
+            "release promotion must run from refs/heads/main",
+            "release target commit does not match the exact tag revision",
+            "release asset set mismatch",
+            "downloaded asset set mismatch",
+            "SHA256SUMS must contain exactly the four packaged payloads",
+            "release or asset identity changed during promotion",
+            "promotion_fingerprint",
+        ):
+            ensure(required_token in promotion_text, errors, f"Release-promotion verifier is missing required token: {required_token}")
+
+    if RELEASE_PROMOTION_TEST_PATH.exists():
+        promotion_test_text = RELEASE_PROMOTION_TEST_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "test_policy_requires_manual_main_prerelease_and_exact_confirmation",
+            "test_full_draft_and_public_verification_preserve_fingerprint",
+            "test_cli_writes_a_full_verification_result",
+            "test_release_metadata_rejects_state_revision_and_asset_identity_drift",
+            "test_payload_rejects_schema_version_size_and_checksum_drift",
+            "test_post_publish_fingerprint_rejects_asset_replacement",
+            "test_workflow_is_manual_prerelease_only_and_reverifies_after_publish",
+        ):
+            ensure(required_token in promotion_test_text, errors, f"Release-promotion focused test is missing required token: {required_token}")
+
+    if RELEASE_PROMOTION_WORKFLOW_PATH.exists():
+        promotion_workflow_text = RELEASE_PROMOTION_WORKFLOW_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "workflow_dispatch:",
+            "confirmation:",
+            "contents: read",
+            "contents: write",
+            "actions/checkout@v6",
+            "if: github.ref == 'refs/heads/main'",
+            "ref: main",
+            "tools/verify_release_promotion.py",
+            "--policy-only",
+            '--workflow-ref "$GITHUB_REF"',
+            "draft-prerelease",
+            "public-prerelease",
+            "releases/assets/$asset_id",
+            "gh release edit",
+            "--draft=false",
+            "--prerelease",
+            "--latest=false",
+            "--expected-fingerprint",
+        ):
+            ensure(required_token in promotion_workflow_text, errors, f"Release-promotion workflow is missing required token: {required_token}")
+        for forbidden_token in (
+            "push:",
+            "schedule:",
+            "gh release create",
+            "gh release upload",
+            "gh release download",
+            "gh release delete",
+            "--clobber",
+            "--latest=true",
+            "tools/build_release_candidate.py",
+            "tools/package_release.py",
+            "actions/upload-artifact",
+        ):
+            ensure(forbidden_token not in promotion_workflow_text, errors, f"Release-promotion workflow has unsafe behavior: {forbidden_token}")
+        ensure(
+            promotion_workflow_text.count("contents: write") == 1,
+            errors,
+            "Release-promotion workflow must grant contents write to exactly one promotion job",
+        )
+        ensure(
+            promotion_workflow_text.count("releases/assets/$asset_id") == 2,
+            errors,
+            "Release-promotion workflow must download exact validated asset ids before and after publication",
+        )
+        ensure(
+            promotion_workflow_text.count("gh release edit") == 1,
+            errors,
+            "Release-promotion workflow must have exactly one publication command",
         )
 
 

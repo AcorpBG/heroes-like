@@ -1,0 +1,165 @@
+name: Release Promotion
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing verified draft prerelease tag, for example v0.1.0-alpha.1
+        required: true
+        type: string
+      confirmation:
+        description: Type publish-prerelease followed by a colon and the exact tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-promotion-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  publish-verified-prerelease:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Check out promotion verifier from main
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          ref: main
+
+      - name: Validate manual promotion policy
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p .artifacts/release-promotion
+          python3 tools/verify_release_promotion.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --workflow-ref "$GITHUB_REF" \
+            --tag "$RELEASE_TAG" \
+            --confirmation "$CONFIRMATION" \
+            --policy-only \
+            --result-json .artifacts/release-promotion/policy.json
+
+      - name: Resolve exact remote tag revision
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          git fetch --force --no-tags --depth=1 origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+          tag_revision="$(git rev-parse "$RELEASE_TAG^{commit}")"
+          test "${#tag_revision}" -eq 40
+          echo "TAG_REVISION=$tag_revision" >> "$GITHUB_ENV"
+
+      - name: Fetch and verify draft release metadata
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \
+            > .artifacts/release-promotion/draft-release.json
+          python3 tools/verify_release_promotion.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --workflow-ref "$GITHUB_REF" \
+            --tag "$RELEASE_TAG" \
+            --confirmation "$CONFIRMATION" \
+            --tag-revision "$TAG_REVISION" \
+            --release-json .artifacts/release-promotion/draft-release.json \
+            --expected-state draft-prerelease \
+            --metadata-only \
+            --result-json .artifacts/release-promotion/draft-metadata-verification.json
+
+      - name: Download and verify exact draft assets
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir .artifacts/release-promotion/draft-assets
+          while IFS=$'\t' read -r asset_id asset_name; do
+            gh api \
+              --header "Accept: application/octet-stream" \
+              "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \
+              > ".artifacts/release-promotion/draft-assets/$asset_name"
+          done < <(jq -r '.assets[] | [.id, .name] | @tsv' .artifacts/release-promotion/draft-metadata-verification.json)
+          python3 tools/verify_release_promotion.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --workflow-ref "$GITHUB_REF" \
+            --tag "$RELEASE_TAG" \
+            --confirmation "$CONFIRMATION" \
+            --tag-revision "$TAG_REVISION" \
+            --release-json .artifacts/release-promotion/draft-release.json \
+            --assets-dir .artifacts/release-promotion/draft-assets \
+            --expected-state draft-prerelease \
+            --result-json .artifacts/release-promotion/draft-verification.json
+
+      - name: Publish verified prerelease without changing assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          gh release edit "$RELEASE_TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft=false \
+            --prerelease \
+            --latest=false \
+            --verify-tag
+
+      - name: Re-fetch and verify public prerelease identity
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG" \
+            > .artifacts/release-promotion/public-release.json
+          python3 tools/verify_release_promotion.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --workflow-ref "$GITHUB_REF" \
+            --tag "$RELEASE_TAG" \
+            --confirmation "$CONFIRMATION" \
+            --tag-revision "$TAG_REVISION" \
+            --release-json .artifacts/release-promotion/public-release.json \
+            --expected-state public-prerelease \
+            --metadata-only \
+            --result-json .artifacts/release-promotion/public-metadata-verification.json
+          mkdir .artifacts/release-promotion/public-assets
+          while IFS=$'\t' read -r asset_id asset_name; do
+            gh api \
+              --header "Accept: application/octet-stream" \
+              "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id" \
+              > ".artifacts/release-promotion/public-assets/$asset_name"
+          done < <(jq -r '.assets[] | [.id, .name] | @tsv' .artifacts/release-promotion/public-metadata-verification.json)
+          expected_fingerprint="$(jq -r .promotion_fingerprint .artifacts/release-promotion/draft-verification.json)"
+          python3 tools/verify_release_promotion.py \
+            --event-name "$GITHUB_EVENT_NAME" \
+            --workflow-ref "$GITHUB_REF" \
+            --tag "$RELEASE_TAG" \
+            --confirmation "$CONFIRMATION" \
+            --tag-revision "$TAG_REVISION" \
+            --release-json .artifacts/release-promotion/public-release.json \
+            --assets-dir .artifacts/release-promotion/public-assets \
+            --expected-state public-prerelease \
+            --expected-fingerprint "$expected_fingerprint" \
+            --result-json .artifacts/release-promotion/public-verification.json
+          {
+            echo "## Public prerelease promotion verified"
+            echo
+            echo "- Tag: \`$RELEASE_TAG\`"
+            echo "- Revision: \`$TAG_REVISION\`"
+            echo "- Assets: 7 unchanged"
+            echo "- Packaged payload checksums: 4 verified"
+            echo "- Stable/latest publication: disabled"
+          } >> "$GITHUB_STEP_SUMMARY"
