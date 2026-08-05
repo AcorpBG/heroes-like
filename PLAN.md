@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `packaging-public-prerelease-promotion-10184`. A manual main-branch workflow can now publish one existing verified draft as a public prerelease without rebuilding or replacing assets. Exact tag-bound confirmation, remote tag commit, draft/prerelease state, candidate and release-index schemas, version/revision identity, the exact seven-asset set, GitHub asset sizes, four package checksums, and all seven downloaded hashes are verified before publication. The workflow re-fetches metadata and downloads the same validated asset ids after `gh release edit`, then requires an immutable release/asset fingerprint to match. It has one contents-write job, one publication command, no automatic trigger, and no create/upload/delete/build path; it can only set draft false, prerelease true, and latest false. The production verifier passes against the retained real 0.1.0-alpha.1 Linux/Windows candidate with fingerprint `d01d8d250933896e76b26abc0ee266a917f417e2cb55be2f0a1796299d77e09a`. Promotion, artifact, candidate, delivery, repository, Python, JSON, workflow-YAML, shell-syntax, and diff gates pass. No live release was created. Manual public-prerelease execution, stable publication, signing, and native Windows hardware certification remain open.
 - Completed implementation slice: `combat-sunvault-shard-warden-facet-reprisal-10184`. Shard Wardens now own Facet Reprisal: two-percent incoming ranged-attack mitigation plus ten-percent return of actual damage received while the stack survives. Melee, retaliation, spells, direct health loss, and lethal ranged attacks do not trigger it. Live player and AI attack resolution, tactical target scoring, attack previews, role summaries, the fast benchmark, schema validation, and focused runtime proof consume the same authored fields; returned damage can kill the shooter. The all-live 100-seed four-week matrix preserves 28 outliers / 172.0 severity / five rows at or above 65 percent / 68.5 percent maximum dominance / 3.8-point maximum side bias / zero structural failures. Week-four Sunvault/Veilmourn improves from 54.5/45.5 to 53/47, while Mireclaw/Sunvault keeps the same 62/38 result with a 0.01-point terminal-margin change. Ability, autoplay, balance-regression, core, editor-import, repository, Python, JSON, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
 - Completed implementation slice: `packaging-draft-prerelease-channel-10184`. The clean-source build job remains contents-read-only and now passes its immutable verified artifact to the only contents-write job. Version-tag pushes select draft delivery; manual runs remain artifact-only unless explicitly dispatched from a matching tag. A directly tested policy rejects branch delivery and tag/version mismatches. The delivery job revalidates candidate/index version and exact source revision, checks all archive/installer hashes, proves the release tag is absent, and creates a draft prerelease with existing-tag and exact-target guards. It never publishes, replaces assets, or touches an existing release. Focused policy/workflow tests, live candidate identity/hash verification, a read-only GitHub 404 probe, workflow YAML, repository, Python, JSON, and diff gates pass. Signing, human publication, stable-channel selection, and native Windows hardware certification remain open.
 - Completed implementation slice: `packaging-native-process-crash-recovery-10184`. Linux and Windows desktop runs now retain at most five rotated Godot engine logs and atomically own `user://debug/heroes_runtime_session.json`; normal autoload shutdown removes only the current process marker. A surviving marker is consumed exactly once on the next launch and records `previous_session_unclean_exit` with at most 64 KiB/40 bounded lines from the newest prior rotated log. Token-level support sanitization redacts Unix and Windows absolute paths even when backtrace frame prefixes precede them, while preserving useful engine, GDScript, and crash context. The real exported-PCK lifecycle intentionally terminates the first process through `OS.crash()` with return code -6, observes the crash marker, recovers exactly one issue on the second process, retains two logs inside the five-file bound, exports the recovered issue through the existing local-only support bundle, and leaves no session marker after clean exit. Existing 26-record packaged issue history, Linux binary export/boot, Windows PE/PCK/DLL export and Wine Boot/MainMenu load, platform readiness, core, editor-import, repository, Python, JSON, and diff gates pass. This closes bounded abnormal-exit recovery, not native minidumps, symbolication, remote reporting, signing, clean-machine/native-Windows certification, release-channel integration, or overall release completion.
@@ -2029,6 +2030,30 @@ Non-goals:
 - do not add allied-array protection, broad Sunvault stat buffs, Mirror Duelist abilities, or spell reflection in this slice;
 - do not change Native RMG, save schemas, strategic AI, campaigns, or benchmark thresholds;
 - do not claim final Sunvault identity, faction balance, or overall release completion.
+
+## Verified Public Prerelease Promotion
+
+id: `packaging-public-prerelease-promotion-10184`
+
+Completed Phase 6 release-channel implementation slice. Verified Linux and
+Windows draft candidates now have a repository-owned, fail-closed path to
+public prerelease publication for external alpha testing.
+
+Implementation target:
+- add a manual, main-branch-only promotion workflow that publishes one existing verified draft as a public prerelease without rebuilding or replacing assets;
+- validate the draft release id, tag, prerelease state, exact tag commit, candidate and release-index schemas, version and source revision, expected seven-asset set, uploaded asset sizes, and all four packaged-payload checksums before publication;
+- require an exact tag-bound confirmation string and re-fetch the public release after publication to prove release id, commit, asset ids, names, sizes, and downloaded payload hashes are unchanged;
+- keep the workflow least-privilege and leave automatic promotion, stable/latest publication, signing claims, and native Windows certification disabled.
+
+Completion criteria:
+- deterministic policy tests reject branch dispatch, malformed or stable-looking versions, wrong confirmation, wrong draft/public state, tag/revision drift, missing/extra/duplicate assets, schema drift, version/revision drift, size drift, and checksum drift;
+- the production workflow has one contents-write job, performs no build or upload, uses the shared verifier before and after `gh release edit`, and can only set `draft=false`, `prerelease=true`, and `latest=false`;
+- repository, workflow YAML, Python, JSON, and diff gates pass.
+
+Non-goals:
+- do not publish a live release during validation or create/replace release assets;
+- do not implement stable/latest publication, signing, certificate acquisition, native Windows hardware certification, telemetry, or auto-update;
+- do not change gameplay, content, saves, strategic AI, balance, Native RMG, or overall release-completion claims.
 
 ## Work Selection Gates
 
