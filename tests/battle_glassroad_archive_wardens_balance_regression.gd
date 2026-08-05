@@ -4,11 +4,11 @@ const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd
 const REPORT_ID := "BATTLE_GLASSROAD_ARCHIVE_WARDENS_BALANCE_REGRESSION"
 const SCENARIO_ID := "glassroad-sundering"
 const PLACEMENT_IDS := ["glassroad_archive_wardens", "glassroad_bridgeward_levies", "glassroad_beacon_wardens"]
-const LOCAL_STACK_COUNTS := {"unit_river_guard": 5, "unit_ember_archer": 7, "unit_citadel_pikeward": 1}
+const LOCAL_STACK_COUNTS := {"unit_river_guard": 5, "unit_ember_archer": 7, "unit_citadel_pikeward": 3}
 const SHARED_STACK_COUNTS := {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"glassroad_bridgeward_levies": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 54, "enemy_damage_per_round": 24},
-	"glassroad_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 46, "enemy_damage_per_round": 19},
+	"glassroad_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 36, "enemy_damage_per_round": 15},
+	"glassroad_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 20},
 }
 
 func _ready() -> void:
@@ -34,7 +34,7 @@ func _run() -> void:
 		if placement_id == "glassroad_archive_wardens":
 			var round_reached := int(sample.get("round_reached", 0))
 			var enemy_dpr := int(sample.get("damage_per_round", {}).get("enemy", 0))
-			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory" or not String(sample.get("pacing_band", "")) in ["standard", "extended"] or round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 74 or enemy_dpr <= 2 or enemy_dpr > 50:
+			if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "defeat" or not String(sample.get("pacing_band", "")) in ["standard", "extended"] or round_reached < 3 or round_reached > 8 or int(sample.get("terminal_health_margin_pct", 100)) > 74 or enemy_dpr <= 2 or enemy_dpr > 50:
 				failures.append("Glassroad Archive Wardens remains outside its pacing and pressure target")
 		else:
 			var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]

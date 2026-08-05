@@ -20601,6 +20601,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     post_identity_outlier_scene_path = ROOT / "tests/battle_post_identity_active_outlier_regression.tscn"
     active_medium_pressure_report_path = ROOT / "tests/battle_active_medium_sample_pressure_regression.gd"
     active_medium_pressure_scene_path = ROOT / "tests/battle_active_medium_sample_pressure_regression.tscn"
+    active_outcome_diversity_report_path = ROOT / "tests/battle_active_outcome_diversity_clear_regression.gd"
+    active_outcome_diversity_scene_path = ROOT / "tests/battle_active_outcome_diversity_clear_regression.tscn"
     rough_exactors_report_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.gd"
     rough_exactors_scene_path = ROOT / "tests/battle_ninefold_rough_exactors_balance_regression.tscn"
     orevein_contract_report_path = ROOT / "tests/battle_orevein_contract_balance_regression.gd"
@@ -20678,6 +20680,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         post_identity_outlier_scene_path,
         active_medium_pressure_report_path,
         active_medium_pressure_scene_path,
+        active_outcome_diversity_report_path,
+        active_outcome_diversity_scene_path,
         tuning_queue_report_path,
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
@@ -21066,6 +21070,29 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_active_medium_sample_pressure_regression.gd" in active_medium_pressure_scene_text,
             errors,
             "Active medium sample-pressure regression scene is not wired to its script.",
+        )
+    if active_outcome_diversity_report_path.exists():
+        active_outcome_diversity_text = active_outcome_diversity_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_ACTIVE_OUTCOME_DIVERSITY_CLEAR_REGRESSION",
+            "barrow_pickets",
+            "charter_granary_levies",
+            "prismhearth_halo_reserve",
+            "glassroad_archive_wardens",
+            "daybreak_array",
+            "bridge_ford_reavers",
+            "bellwake_mirror_lancers",
+            "shared_army_id",
+            "_sample_matches",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in active_outcome_diversity_text, errors, f"Active outcome-diversity clear regression is missing token: {required_token}")
+    if active_outcome_diversity_scene_path.exists():
+        active_outcome_diversity_scene_text = active_outcome_diversity_scene_path.read_text(encoding="utf-8")
+        ensure(
+            "battle_active_outcome_diversity_clear_regression.gd" in active_outcome_diversity_scene_text,
+            errors,
+            "Active outcome-diversity clear regression scene is not wired to its script.",
         )
     if rough_exactors_report_path.exists():
         rough_exactors_text = rough_exactors_report_path.read_text(encoding="utf-8")
