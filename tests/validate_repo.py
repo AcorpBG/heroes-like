@@ -334,7 +334,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10755,6 +10755,20 @@ def validate_content(errors: list[str]) -> None:
                     if isinstance(modifiers, dict):
                         ensure(int(modifiers.get("defense", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce defense")
                         ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} overheat must reduce initiative")
+                elif ability_id == "pressure_artillery":
+                    ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} pressure_artillery must belong to a ranged unit")
+                    ensure(int(ability.get("cluster_range", 0)) == 1, errors, f"Unit {unit_id} pressure_artillery cluster_range must equal one")
+                    ensure(1 <= int(ability.get("secondary_damage_per_unit", 0)) <= 4, errors, f"Unit {unit_id} pressure_artillery secondary_damage_per_unit must be in [1, 4]")
+                    ensure(1 <= int(ability.get("max_secondary_damage", 0)) <= 30, errors, f"Unit {unit_id} pressure_artillery max_secondary_damage must be in [1, 30]")
+                    ensure(int(ability.get("max_secondary_targets", 0)) == 1, errors, f"Unit {unit_id} pressure_artillery must hit exactly one secondary target")
+                    ensure(str(ability.get("status_id", "")) == "status_overheated", errors, f"Unit {unit_id} pressure_artillery must use the shared status_overheated heat state")
+                    ensure(int(ability.get("duration_rounds", 0)) == 2, errors, f"Unit {unit_id} pressure_artillery heat must last two rounds")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict), errors, f"Unit {unit_id} pressure_artillery modifiers must be a dictionary")
+                    if isinstance(modifiers, dict):
+                        ensure(int(modifiers.get("initiative", 0)) < 0, errors, f"Unit {unit_id} pressure_artillery heat must reduce initiative")
+                        ensure("defense" not in modifiers, errors, f"Unit {unit_id} pressure_artillery heat must not reuse the Debt Furnace defense penalty")
+                    ensure(0.0 < float(ability.get("ai_heat_score_penalty", 0.0)) <= 4.0, errors, f"Unit {unit_id} pressure_artillery must define a bounded tactical-AI heat cost")
                 elif ability_id == "sporeglass_mend":
                     ensure(str(unit.get("faction_id", "")) == "faction_thornwake", errors, f"Unit {unit_id} sporeglass_mend must belong to Thornwake")
                     ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} sporeglass_mend must belong to a ranged unit")
@@ -10769,9 +10783,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10961,6 +10975,22 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "overheat" for ability in unit.get("abilities", []))
     )
     ensure(overheat_owners == ["unit_brasshollow_debt_engine_exactors"], errors, "Debt Furnace overheat must remain exclusive to Brasshollow Debt-Engine Exactors")
+
+    boiler_rivetcasters = units.get("unit_brasshollow_boiler_rivetcasters", {})
+    boiler_pressure_artillery = next(
+        (ability for ability in boiler_rivetcasters.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "pressure_artillery"),
+        {},
+    )
+    ensure(str(boiler_pressure_artillery.get("name", "")) == "Boiler Pressure Volley", errors, "Boiler Rivetcasters must own Boiler Pressure Volley")
+    ensure(int(boiler_pressure_artillery.get("secondary_damage_per_unit", 0)) == 1, errors, "Boiler Pressure Volley must deal one secondary damage per living Rivetcaster")
+    ensure(int(boiler_pressure_artillery.get("max_secondary_damage", 0)) == 10, errors, "Boiler Pressure Volley must cap secondary damage at ten")
+    ensure(boiler_pressure_artillery.get("modifiers", {}) == {"initiative": -1}, errors, "Boiler Pressure Volley heat must reduce only initiative by one")
+    pressure_artillery_owners = sorted(
+        unit_id
+        for unit_id, unit in units.items()
+        if any(isinstance(ability, dict) and str(ability.get("id", "")) == "pressure_artillery" for ability in unit.get("abilities", []))
+    )
+    ensure(pressure_artillery_owners == ["unit_brasshollow_boiler_rivetcasters"], errors, "Pressure artillery must remain exclusive to Brasshollow Boiler Rivetcasters")
 
     foundry_aura_owners = sorted(
         unit_id

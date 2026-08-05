@@ -1186,6 +1186,20 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var overheat := _ability_by_id(attacker, "overheat")
 	if not overheat.is_empty() and not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
 		score += 0.10
+	if is_ranged:
+		var pressure_artillery := _ability_by_id(attacker, "pressure_artillery")
+		if not pressure_artillery.is_empty():
+			var secondary_target := _pressure_artillery_secondary_target(battle, attacker, target)
+			if not secondary_target.is_empty():
+				var secondary_damage := _pressure_artillery_secondary_damage(attacker)
+				var secondary_health: int = max(1, int(secondary_target.get("total_health", 0)))
+				var secondary_applied: int = mini(secondary_damage, secondary_health)
+				score += float(secondary_applied) / float(max(1, int(secondary_target.get("unit_hp", 1))))
+				score += min(1.0, float(secondary_applied) / float(secondary_health)) * 5.0
+				if secondary_damage >= secondary_health:
+					score += 2.0
+			if not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
+				score -= float(pressure_artillery.get("ai_heat_score_penalty", 0.5))
 	if _hero_has_trait(battle, side, "artillerist") and is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		score += 1.5
 	if _hero_has_trait(battle, side, "packhunter") and (_health_ratio(target) <= 0.75 or SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
@@ -2275,6 +2289,44 @@ static func _hex_in_bounds(q: int, r: int) -> bool:
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
 	return _hex_distance(_stack_hex(lhs), _stack_hex(rhs))
+
+static func _pressure_artillery_secondary_target(
+	battle: Dictionary,
+	attacker: Dictionary,
+	primary_target: Dictionary
+) -> Dictionary:
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	if ability.is_empty() or primary_target.is_empty():
+		return {}
+	var cluster_range := maxi(1, int(ability.get("cluster_range", 1)))
+	var primary_id := String(primary_target.get("battle_id", ""))
+	var target_side := String(primary_target.get("side", ""))
+	var best := {}
+	for candidate in _alive_stacks_for_side(battle, target_side):
+		if String(candidate.get("battle_id", "")) == primary_id:
+			continue
+		if _stack_hex_distance(primary_target, candidate) > cluster_range:
+			continue
+		if best.is_empty():
+			best = candidate
+			continue
+		var candidate_health := int(candidate.get("total_health", 0))
+		var best_health := int(best.get("total_health", 0))
+		if candidate_health < best_health or (
+			candidate_health == best_health
+			and String(candidate.get("battle_id", "")) < String(best.get("battle_id", ""))
+		):
+			best = candidate
+	return best
+
+static func _pressure_artillery_secondary_damage(attacker: Dictionary) -> int:
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	if ability.is_empty() or _alive_count(attacker) <= 0:
+		return 0
+	return mini(
+		maxi(1, int(ability.get("max_secondary_damage", 1))),
+		_alive_count(attacker) * maxi(1, int(ability.get("secondary_damage_per_unit", 1)))
+	)
 
 static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
 	if lhs.is_empty() or rhs.is_empty():

@@ -1772,6 +1772,24 @@
       },
       "content_status": "six_faction_scaffold",
       "shots": 6,
+      "abilities": [
+        {
+          "id": "pressure_artillery",
+          "name": "Boiler Pressure Volley",
+          "description": "A pressure bolt throws bounded fragments into one adjacent enemy stack, then leaves the firing crew overheated until its next pressure cycle.",
+          "cluster_range": 1,
+          "secondary_damage_per_unit": 1,
+          "max_secondary_damage": 10,
+          "max_secondary_targets": 1,
+          "status_id": "status_overheated",
+          "status_label": "Overheated",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1
+          },
+          "ai_heat_score_penalty": 0.5
+        }
+      ],
       "spell_resistance_pct": 5,
       "control_resistance_pct": 0,
       "spell_school_resistance_pct": {

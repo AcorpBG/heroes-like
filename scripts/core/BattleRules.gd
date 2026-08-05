@@ -3953,6 +3953,14 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Solar Array Lanes are waiting for their linked Daybreak Colossus."
 	if _has_ability(stack, "sporeglass_mend") and bool(stack.get("ranged", false)):
 		return "Mending Fire will repair an injured surviving allied stack after this shot; fallen creatures cannot return."
+	if _has_ability(stack, "pressure_artillery") and bool(stack.get("ranged", false)):
+		var pressure_artillery := _ability_by_id(stack, "pressure_artillery")
+		var clustered_target := _pressure_artillery_secondary_target(battle, stack, target)
+		var cluster_text := " and throw fragments into %s" % _stack_label(clustered_target) if not clustered_target.is_empty() else ""
+		return "%s will fire%s, then run overheated until its pressure cycle recovers." % [
+			String(pressure_artillery.get("name", "Pressure Artillery")),
+			cluster_text,
+		]
 	if _has_ability(stack, "foundry_aura"):
 		return "Saint's Temper is hardening overheated Combine machinery and will repair surviving allies when the next round begins."
 	if _has_ability(stack, "overheat"):
@@ -4054,6 +4062,13 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			return "%s restores up to %d surviving allied health after ranged fire" % [
 				name,
 				int(ability.get("max_health_per_attack", 0)),
+			]
+		"pressure_artillery":
+			return "%s deals up to %d damage to one enemy adjacent to the primary target, then applies %s for %d rounds" % [
+				name,
+				int(ability.get("max_secondary_damage", 0)),
+				String(ability.get("status_label", "Overheated")),
+				int(ability.get("duration_rounds", 1)),
 			]
 		"foundry_aura":
 			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
@@ -9004,6 +9019,118 @@ static func _hookline_available(stack: Dictionary, battle: Dictionary) -> bool:
 	var ability_uses = stack.get("ability_uses", {})
 	return ability_uses is Dictionary and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
 
+static func _pressure_artillery_secondary_target(
+	battle: Dictionary,
+	attacker: Dictionary,
+	primary_target: Dictionary
+) -> Dictionary:
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	if ability.is_empty() or primary_target.is_empty():
+		return {}
+	var cluster_range := maxi(1, int(ability.get("cluster_range", 1)))
+	var primary_id := String(primary_target.get("battle_id", ""))
+	var target_side := String(primary_target.get("side", ""))
+	var best := {}
+	for candidate in _alive_stacks_for_side(battle, target_side):
+		if String(candidate.get("battle_id", "")) == primary_id:
+			continue
+		if _stack_hex_distance(primary_target, candidate) > cluster_range:
+			continue
+		if best.is_empty():
+			best = candidate
+			continue
+		var candidate_health := int(candidate.get("total_health", 0))
+		var best_health := int(best.get("total_health", 0))
+		if candidate_health < best_health or (
+			candidate_health == best_health
+			and String(candidate.get("battle_id", "")) < String(best.get("battle_id", ""))
+		):
+			best = candidate
+	return best
+
+static func _pressure_artillery_secondary_damage(attacker: Dictionary) -> int:
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	if ability.is_empty() or _alive_count(attacker) <= 0:
+		return 0
+	return mini(
+		maxi(1, int(ability.get("max_secondary_damage", 1))),
+		_alive_count(attacker) * maxi(1, int(ability.get("secondary_damage_per_unit", 1)))
+	)
+
+static func _apply_pressure_artillery(
+	battle: Dictionary,
+	attacker: Dictionary,
+	primary_target: Dictionary
+) -> Array:
+	var messages := []
+	var ability := _ability_by_id(attacker, "pressure_artillery")
+	if ability.is_empty() or _alive_count(attacker) <= 0:
+		return messages
+	var secondary_target := _pressure_artillery_secondary_target(battle, attacker, primary_target)
+	var secondary_damage := _pressure_artillery_secondary_damage(attacker)
+	if not secondary_target.is_empty() and secondary_damage > 0:
+		var secondary_before := secondary_target.duplicate(true)
+		_apply_damage_to_stack(battle, String(secondary_target.get("battle_id", "")), secondary_damage)
+		var secondary_after := _get_stack_by_id(battle, String(secondary_target.get("battle_id", "")))
+		var secondary_applied: int = max(
+			0,
+			int(secondary_before.get("total_health", 0)) - int(secondary_after.get("total_health", 0))
+		)
+		var ability_name := String(ability.get("name", "Pressure Artillery"))
+		messages.append("%s throws %d fragment damage into %s." % [
+			ability_name,
+			secondary_applied,
+			_stack_label(secondary_before),
+		])
+		_mark_damage_target_animation(
+			battle,
+			String(secondary_target.get("battle_id", "")),
+			true,
+			String(attacker.get("battle_id", "")),
+			{"ability_id": "pressure_artillery"}
+		)
+		_append_damage_presentation_event(
+			battle,
+			"ability",
+			attacker,
+			secondary_before,
+			secondary_after,
+			secondary_applied,
+			"pressure_artillery",
+			{"ability_id": "pressure_artillery", "ability_name": ability_name}
+		)
+		var pressure_messages := _apply_damage_pressure(
+			battle,
+			attacker,
+			secondary_before,
+			secondary_after,
+			true,
+			"ability"
+		)
+		messages.append_array(pressure_messages)
+		_append_text_presentation_event(battle, "morale", pressure_messages, attacker, secondary_after, "pressure_artillery")
+	var current_attacker := _get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	if not current_attacker.is_empty() and not SpellRulesScript.has_effect_id(current_attacker, battle, STATUS_OVERHEATED):
+		_apply_stack_effect(
+			battle,
+			String(attacker.get("battle_id", "")),
+			_status_effect_from_ability(ability, battle)
+		)
+		messages.append("%s runs overheated until its pressure cycle recovers." % _stack_label(attacker))
+		_append_presentation_event(
+			battle,
+			"debuff",
+			"%s runs overheated until its pressure cycle recovers." % _stack_label(attacker),
+			{
+				"action_id": "pressure_artillery_heat",
+				"actor_battle_id": String(attacker.get("battle_id", "")),
+				"target_battle_id": String(attacker.get("battle_id", "")),
+				"ability_id": "pressure_artillery",
+				"effect_id": STATUS_OVERHEATED,
+			}
+		)
+	return messages
+
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int) -> bool:
 	if attack_distance <= 0:
 		return true
@@ -9034,6 +9161,7 @@ static func _apply_attack_ability_effects(
 		ability_uses["hookline"] = int(ability_uses.get("hookline", 0)) + 1
 		attacker["ability_uses"] = ability_uses
 	if is_ranged:
+		messages.append_array(_apply_pressure_artillery(battle, attacker, defender))
 		var mending_fire := _apply_sporeglass_mending_fire(battle, attacker)
 		if not mending_fire.is_empty():
 			messages.append(String(mending_fire.get("message", "")))
@@ -9766,6 +9894,21 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_label": String(entry.get("status_label", "Overheated")),
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 2))),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"defense": -2, "initiative": -2})),
+				}
+			"pressure_artillery":
+				normalized = {
+					"id": ability_id,
+					"name": String(entry.get("name", "Pressure Artillery")),
+					"description": String(entry.get("description", "")),
+					"cluster_range": clampi(int(entry.get("cluster_range", 1)), 1, 2),
+					"secondary_damage_per_unit": clampi(int(entry.get("secondary_damage_per_unit", 1)), 1, 4),
+					"max_secondary_damage": clampi(int(entry.get("max_secondary_damage", 1)), 1, 30),
+					"max_secondary_targets": 1,
+					"status_id": String(entry.get("status_id", STATUS_OVERHEATED)),
+					"status_label": String(entry.get("status_label", "Overheated")),
+					"duration_rounds": clampi(int(entry.get("duration_rounds", 2)), 1, 3),
+					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"initiative": -1})),
+					"ai_heat_score_penalty": clampf(float(entry.get("ai_heat_score_penalty", 0.5)), 0.0, 4.0),
 				}
 			"sporeglass_mend":
 				normalized = {
