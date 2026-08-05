@@ -61,6 +61,11 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Do not land metadata-only or report-only changes as a substitute for real game/runtime/native behavior. If a diagnostic exposes missing implementation, name the missing function/data structure/behavior as the blocker instead of presenting the diagnostic as progress.
 - For native RMG work, follow `docs/lessons-learned.md`: prove recovered H3MapEd behavior through phase/private-state parity before changing generation rules, and do not replace missing recovery with density scalars, gates, brute-force retries, or final-map report tuning.
 
+## Codex execution-host lifecycle
+- If a `functions.exec` call returns `Script running with cell ID ...`, do not start another `functions.exec` call. Drain that exact cell with the top-level `functions.wait` tool until it completes, or terminate it explicitly.
+- When awaiting `tools.write_stdin` or another long nested tool call inside `functions.exec`, set the outer `// @exec` `yield_time_ms` at least as long as the nested wait. Do not create a new outer cell for every poll of one process.
+- On `code-mode host has too many active cells`, stop retrying. Drain every known yielded cell first; if no cell ids remain available, the Codex execution host must be restarted. This is a Codex host failure, not evidence that a repository slice or the game is blocked.
+
 ## Completion marker
 When finished with a run, print:
 `FINAL: <what changed>; TESTS: <result>; STATUS: <done|blocked>`
