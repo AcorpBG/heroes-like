@@ -10626,6 +10626,13 @@ def validate_content(errors: list[str]) -> None:
                             errors,
                             f"Unit {unit_id} objective brace uses an unsupported field objective type",
                         )
+                    if "ally_retaliation_multiplier" in ability:
+                        ensure(str(unit.get("faction_id", "")) == "faction_embercourt", errors, f"Unit {unit_id} allied retaliation aura must belong to Embercourt")
+                        ensure(1.0 < float(ability.get("ally_retaliation_multiplier", 0.0)) <= 1.25, errors, f"Unit {unit_id} ally_retaliation_multiplier must be in (1, 1.25]")
+                        ensure(int(ability.get("ally_retaliation_min_tier", 0)) == 4, errors, f"Unit {unit_id} allied retaliation aura must support tier-four veterans")
+                        ensure(str(ability.get("ally_retaliation_role", "")) == "melee", errors, f"Unit {unit_id} allied retaliation aura must support melee lines")
+                        ensure(ability.get("ally_retaliation_requires_defending") is True, errors, f"Unit {unit_id} allied retaliation aura must require defending")
+                        ensure(0.0 < float(ability.get("ally_retaliation_ai_defend_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} allied retaliation aura AI defend bonus must be in (0, 4]")
                 elif ability_id == "bramble_ground":
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} bramble_ground must belong to a melee unit")
                     objective_types = ability.get("held_objective_types", [])
@@ -11093,6 +11100,10 @@ def validate_content(errors: list[str]) -> None:
     charter_lock = next((ability for ability in embercourt_colossus.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Charter Lock"), {})
     ensure(str(charter_lock.get("id", "")) == "brace", errors, "Charter Colossus must keep Charter Lock as its retaliation anchor")
     ensure(float(charter_lock.get("retaliation_multiplier", 1.0)) > float(ash_writ_formation.get("retaliation_multiplier", 1.0)), errors, "Charter Lock must project stronger retaliation than the Bailiff line")
+    ensure(float(charter_lock.get("ally_retaliation_multiplier", 1.0)) == 1.08, errors, "Charter Lock must project its bounded allied retaliation multiplier")
+    ensure(int(charter_lock.get("ally_retaliation_min_tier", 0)) == 4, errors, "Charter Lock must support tier-four veteran lines")
+    ensure(str(charter_lock.get("ally_retaliation_role", "")) == "melee", errors, "Charter Lock must support melee lines")
+    ensure(charter_lock.get("ally_retaliation_requires_defending") is True, errors, "Charter Lock must support only defending allied lines")
     thornwake_matriarchs = units.get("unit_thornwake_graft_matriarchs", {})
     highroot_salvo = next((ability for ability in thornwake_matriarchs.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Highroot Graft Salvo"), {})
     ensure(str(highroot_salvo.get("id", "")) == "volley", errors, "Graft Matriarchs must keep Highroot Graft Salvo as their late backline role")

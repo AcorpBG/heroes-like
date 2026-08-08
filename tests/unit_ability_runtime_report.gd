@@ -383,6 +383,7 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		held_retaliation > retaliation_with
 		and is_equal_approx(held_ai_retaliation, held_retaliation)
 	)
+	var charter_aura_probe := _probe_charter_retaliation_aura(unit_id, brace)
 	var status_contract_ok := (
 		unsupported_status_applied and not unsupported_messages.is_empty()
 		if held_objective_types.is_empty()
@@ -394,6 +395,7 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		and defend_with > defend_without
 		and held_objective_contract_ok
 		and status_contract_ok
+		and bool(charter_aura_probe.get("ok", false))
 	)
 	return {
 		"ok": ok,
@@ -408,7 +410,109 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		"held_status_applied": held_status_applied,
 		"defend_cohesion_delta_with": defend_with,
 		"defend_cohesion_delta_without": defend_without,
+		"charter_retaliation_aura": charter_aura_probe,
 		"reason": "" if ok else "brace did not preserve live/AI retaliation, defend cohesion, and held-objective pressure",
+	}
+
+func _probe_charter_retaliation_aura(unit_id: String, brace: Dictionary) -> Dictionary:
+	if float(brace.get("ally_retaliation_multiplier", 1.0)) <= 1.0:
+		return {"ok": true, "applicable": false}
+	var source := _stack_for_unit(unit_id, "player", 0)
+	var control_source := source.duplicate(true)
+	for control_ability in control_source.get("abilities", []):
+		if control_ability is Dictionary and String(control_ability.get("id", "")) == "brace":
+			for key in ["ally_retaliation_multiplier", "ally_retaliation_min_tier", "ally_retaliation_role", "ally_retaliation_requires_defending", "ally_retaliation_ai_defend_bonus"]:
+				control_ability.erase(key)
+	var ally := _stack_for_unit("unit_embercourt_ash_oath_bailiffs", "player", 1)
+	ally["defending"] = true
+	var enemy := _defender_stack("enemy", 0)
+	var battle := _battle_for_stacks([source, ally, enemy])
+	var control_ally := ally.duplicate(true)
+	var control_battle := _battle_for_stacks([control_source, control_ally, enemy.duplicate(true)])
+	var allied_modifier := BattleRulesScript._ability_damage_modifier(ally, enemy, battle, false, true, 0)
+	var control_modifier := BattleRulesScript._ability_damage_modifier(control_ally, control_battle["stacks"][2], control_battle, false, true, 0)
+	var ai_allied_modifier := BattleAiRulesScript._ability_damage_modifier(ally, enemy, battle, false, true, 0)
+	var absent_ally := ally.duplicate(true)
+	var absent_battle := _battle_for_stacks([absent_ally, enemy.duplicate(true)])
+	var absent_modifier := BattleRulesScript._ability_damage_modifier(absent_ally, absent_battle["stacks"][1], absent_battle, false, true, 0)
+
+	var self_source := source.duplicate(true)
+	self_source["defending"] = true
+	var self_control := control_source.duplicate(true)
+	self_control["defending"] = true
+	var self_battle := _battle_for_stacks([self_source, enemy.duplicate(true)])
+	var self_control_battle := _battle_for_stacks([self_control, enemy.duplicate(true)])
+	var self_modifier := BattleRulesScript._ability_damage_modifier(self_source, self_battle["stacks"][1], self_battle, false, true, 0)
+	var self_control_modifier := BattleRulesScript._ability_damage_modifier(self_control, self_control_battle["stacks"][1], self_control_battle, false, true, 0)
+
+	var waiting_ally := ally.duplicate(true)
+	waiting_ally["defending"] = false
+	var waiting_battle := _battle_for_stacks([source.duplicate(true), waiting_ally, enemy.duplicate(true)])
+	var waiting_modifier := BattleRulesScript._ability_damage_modifier(waiting_ally, waiting_battle["stacks"][2], waiting_battle, false, true, 0)
+	var waiting_preview := BattleRulesScript._active_ability_window_summary(waiting_battle["stacks"][0], waiting_battle, waiting_battle["stacks"][2])
+	var active_preview := BattleRulesScript._active_ability_window_summary(source, battle, enemy)
+	var doctrine_summary := BattleRulesScript._side_doctrine_summary(battle, "player")
+
+	var ranged_ally := _stack_for_unit("unit_embercourt_beacon_lectors", "player", 1)
+	ranged_ally["defending"] = true
+	var ranged_battle := _battle_for_stacks([source.duplicate(true), ranged_ally, enemy.duplicate(true)])
+	var ranged_modifier := BattleRulesScript._ability_damage_modifier(ranged_ally, ranged_battle["stacks"][2], ranged_battle, false, true, 0)
+	var low_ally := _stack_for_unit("unit_river_guard", "player", 1)
+	low_ally["defending"] = true
+	var low_battle := _battle_for_stacks([source.duplicate(true), low_ally, enemy.duplicate(true)])
+	var low_modifier := BattleRulesScript._ability_damage_modifier(low_ally, low_battle["stacks"][2], low_battle, false, true, 0)
+	var low_control_ally := low_ally.duplicate(true)
+	var low_control_battle := _battle_for_stacks([low_control_ally, enemy.duplicate(true)])
+	var low_control_modifier := BattleRulesScript._ability_damage_modifier(low_control_ally, low_control_battle["stacks"][1], low_control_battle, false, true, 0)
+
+	var dead_source := source.duplicate(true)
+	dead_source["total_health"] = 0
+	var dead_ally := ally.duplicate(true)
+	var dead_battle := _battle_for_stacks([dead_source, dead_ally, enemy.duplicate(true)])
+	var dead_modifier := BattleRulesScript._ability_damage_modifier(dead_ally, dead_battle["stacks"][2], dead_battle, false, true, 0)
+
+	var ai_ally := ally.duplicate(true)
+	ai_ally["defending"] = false
+	var ai_control_ally := ai_ally.duplicate(true)
+	var ai_battle := _battle_for_stacks([source.duplicate(true), ai_ally, enemy.duplicate(true)])
+	var ai_control_battle := _battle_for_stacks([control_source.duplicate(true), ai_control_ally, enemy.duplicate(true)])
+	var ai_defend_score := BattleAiRulesScript._defend_score(ai_battle, ai_ally, [ai_battle["stacks"][2]])
+	var ai_control_score := BattleAiRulesScript._defend_score(ai_control_battle, ai_control_ally, [ai_control_battle["stacks"][2]])
+
+	var expected_multiplier := float(brace.get("ally_retaliation_multiplier", 1.0))
+	var ok := (
+		is_equal_approx(allied_modifier, control_modifier * expected_multiplier)
+		and is_equal_approx(ai_allied_modifier, allied_modifier)
+		and is_equal_approx(absent_modifier, control_modifier)
+		and is_equal_approx(self_modifier, self_control_modifier)
+		and is_equal_approx(waiting_modifier, 1.0)
+		and is_equal_approx(ranged_modifier, 1.0)
+		and is_equal_approx(low_modifier, low_control_modifier)
+		and is_equal_approx(dead_modifier, control_modifier)
+		and is_equal_approx(ai_defend_score - ai_control_score, float(brace.get("ally_retaliation_ai_defend_bonus", 0.0)))
+		and waiting_preview.contains("waiting for another veteran melee line")
+		and active_preview.contains("raising")
+		and doctrine_summary.contains("Charter Colossus")
+	)
+	return {
+		"ok": ok,
+		"applicable": true,
+		"allied_modifier": allied_modifier,
+		"control_modifier": control_modifier,
+		"ai_allied_modifier": ai_allied_modifier,
+		"absent_source_modifier": absent_modifier,
+		"self_modifier": self_modifier,
+		"self_control_modifier": self_control_modifier,
+		"waiting_modifier": waiting_modifier,
+		"ranged_modifier": ranged_modifier,
+		"low_tier_modifier": low_modifier,
+		"low_tier_control_modifier": low_control_modifier,
+		"dead_source_modifier": dead_modifier,
+		"ai_defend_score_delta": ai_defend_score - ai_control_score,
+		"waiting_preview": waiting_preview,
+		"active_preview": active_preview,
+		"doctrine_summary": doctrine_summary,
+		"reason": "" if ok else "Charter Lock did not preserve bounded allied retaliation aura scope, live/AI parity, and player summaries",
 	}
 
 func _probe_bramble_ground(unit_id: String) -> Dictionary:

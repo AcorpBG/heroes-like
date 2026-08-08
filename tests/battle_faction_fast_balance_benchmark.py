@@ -1491,6 +1491,9 @@ class FastBattleBenchmark:
             score -= 2.0
         if (self._brace_available(active, battle) or self._bramble_ground_available(active, battle)) and int(battle.get("distance", 1)) <= 1:
             score += 3.0
+        charter_aura = self._charter_retaliation_aura_context(active, battle)
+        if charter_aura and self._has_ability(active, "brace"):
+            score += float(charter_aura.get("ability", {}).get("ally_retaliation_ai_defend_bonus", 0.0))
         if self._has_ability(active, "formation_guard") and self._allied_ranged_count(battle, str(active.get("side", ""))) > 0:
             score += 2.5
         if self._has_effect_id(active, battle, STATUS_OVERHEATED):
@@ -1564,6 +1567,11 @@ class FastBattleBenchmark:
             modifier *= float(brace.get("retaliation_multiplier", 1.0))
             if self._brace_has_held_objective(attacker, battle, brace):
                 modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+        if is_retaliation:
+            charter_aura = self._charter_retaliation_aura_context(attacker, battle)
+            aura_ability = charter_aura.get("ability", {})
+            if charter_aura and (not bool(aura_ability.get("ally_retaliation_requires_defending", True)) or bool(attacker.get("defending", False))):
+                modifier *= float(charter_aura.get("ability", {}).get("ally_retaliation_multiplier", 1.0))
         bramble_ground = self._ability_by_id(attacker, "bramble_ground")
         if is_retaliation and bool(attacker.get("defending", False)) and bramble_ground and self._bramble_ground_available(attacker, battle, bramble_ground):
             modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))
@@ -2652,6 +2660,23 @@ class FastBattleBenchmark:
 
     def _side_has_ability(self, battle: dict[str, Any], side: str, ability_id: str) -> bool:
         return any(self._has_ability(stack, ability_id) for stack in self._alive_stacks_for_side(battle, side))
+
+    def _charter_retaliation_aura_context(self, stack: dict[str, Any], battle: dict[str, Any]) -> dict[str, Any]:
+        if not stack or bool(stack.get("ranged", False)):
+            return {}
+        for source in self._alive_stacks_for_side(battle, str(stack.get("side", ""))):
+            if str(source.get("battle_id", "")) == str(stack.get("battle_id", "")):
+                continue
+            brace = self._ability_by_id(source, "brace")
+            if float(brace.get("ally_retaliation_multiplier", 1.0)) <= 1.0:
+                continue
+            if int(stack.get("tier", 1)) < int(brace.get("ally_retaliation_min_tier", 1)):
+                continue
+            role = str(brace.get("ally_retaliation_role", ""))
+            if role and bool(stack.get("ranged", False)) != (role == "ranged"):
+                continue
+            return {"source": source, "ability": brace}
+        return {}
 
     def _counter_ambush_flare_context(
         self,
