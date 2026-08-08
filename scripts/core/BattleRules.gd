@@ -3259,7 +3259,7 @@ static func _burst_risk_line(session: SessionStateStoreScript.SessionData, battl
 				return "%s Bloodrush is live on %s." % [summary, _stack_label(target)]
 			if not target.is_empty() and _has_ability(reply_stack, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 				return "%s Backstab payoff is live on %s." % [summary, _stack_label(target)]
-			if _has_ability(reply_stack, "brace") and bool(reply_stack.get("defending", false)):
+			if _brace_available(reply_stack, battle) and bool(reply_stack.get("defending", false)):
 				return "%s Brace will punish the first stack that overcommits into it." % summary
 		"defend":
 			if _has_ability(reply_stack, "formation_guard"):
@@ -3490,7 +3490,7 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 		elif _side_controls_field_objective_type(battle, String(attacker.get("side", "")), "cover_line") and attack_distance > 0:
 			clauses.append("friendly cover keeps the firing angle cleaner")
 	else:
-		if int(target.get("retaliations_left", 0)) > 0 and _can_make_retaliation(target, attack_distance):
+		if int(target.get("retaliations_left", 0)) > 0 and _can_make_retaliation(target, attack_distance, battle):
 			var retaliation_preview = _retaliation_range_preview(attacker, target, battle, attack_distance, attack_preview)
 			if not retaliation_preview.is_empty():
 				clauses.append("expect %s retaliation" % _damage_preview_text(retaliation_preview))
@@ -3630,7 +3630,7 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 		clauses.append("hold the screened cover line")
 	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line"):
 		clauses.append("keep the obstruction sealed")
-	if _has_ability(stack, "brace"):
+	if _brace_available(stack, battle):
 		clauses.append("Brace can stagger the next attacker")
 	elif _has_ability(stack, "formation_guard"):
 		clauses.append("Formation Guard steadies nearby lanes")
@@ -3878,7 +3878,7 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 		return 0
 	var cohesion_gain = 1
 	var brace = _ability_by_id(stack, "brace")
-	if not brace.is_empty():
+	if not brace.is_empty() and _brace_available(stack, battle):
 		cohesion_gain += max(0, int(brace.get("defending_cohesion_bonus", 0)))
 	var formation_guard = _ability_by_id(stack, "formation_guard")
 	if not formation_guard.is_empty():
@@ -3897,7 +3897,7 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	if stack.is_empty():
 		return ""
 	var distance = int(battle.get("distance", 1))
-	if _has_ability(stack, "reach") and not bool(stack.get("ranged", false)) and distance == 1:
+	if _reach_available(stack, battle) and not bool(stack.get("ranged", false)) and distance == 1:
 		return "Reach makes melee contact live from the current closing distance."
 	if _has_ability(stack, "hookline") and int(battle.get("round", 1)) < int(_ability_by_id(stack, "hookline").get("available_from_round", 1)):
 		return "%s is waiting for the midline exchange." % String(_ability_by_id(stack, "hookline").get("name", "Hookline"))
@@ -3906,13 +3906,18 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	if _has_ability(stack, "hookline") and not _hookline_available(stack, battle):
 		return "%s has already been spent this battle." % String(_ability_by_id(stack, "hookline").get("name", "Hookline"))
 	if _has_ability(stack, "volley") and bool(stack.get("ranged", false)) and distance >= int(_ability_by_id(stack, "volley").get("min_distance", 1)):
+		var active_volley := _ability_by_id(stack, "volley")
+		if bool(active_volley.get("requires_protected_lane", false)):
+			if _volley_has_protected_lane(stack, battle, active_volley):
+				return "%s has full pressure behind the held line." % String(active_volley.get("name", "Volley"))
+			return "%s needs a defending allied screen or controlled firing lane before its heavy shot comes online." % String(active_volley.get("name", "Volley"))
 		return "Volley rewards the long lane while the firing line stays open."
 	if _has_ability(stack, "obituary") and bool(stack.get("ranged", false)):
 		var obituary := _ability_by_id(stack, "obituary")
 		var ability_uses = stack.get("ability_uses", {})
 		if ability_uses is Dictionary and int(ability_uses.get("obituary", 0)) >= int(obituary.get("uses_per_battle", 1)):
 			return "Final Notice has already been issued this battle."
-		if not target.is_empty() and _has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+		if not target.is_empty() and _brace_available(target, battle) and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
 			return "Final Notice prioritizes this veteran braced line, sharply draining it and weakening its retaliation for this round."
 		return "Final Notice will drain the target's cohesion and weaken its retaliation for this round."
 	if _has_ability(stack, "rot_cant") and bool(stack.get("ranged", false)):
@@ -3961,7 +3966,7 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 				"" if required_support == 1 else "s",
 			]
 		return "%s will close the supported snare and mark this target for the pack." % String(supported_harry.get("name", "Harry"))
-	if _has_ability(stack, "brace") and int(stack.get("retaliations_left", 0)) > 0:
+	if _brace_available(stack, battle) and int(stack.get("retaliations_left", 0)) > 0:
 		return "Brace can stagger the next attacker if this stack holds."
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
@@ -4040,6 +4045,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 		target_is_marked = SpellRulesScript.has_any_effect_ids(target, battle, ability.get("status_ids", []))
 	match ability_id:
 		"reach":
+			if not ability.get("held_objective_types", []).is_empty():
+				return "%s extends melee threat across a half-open lane only while this side controls a listed field objective" % name
 			if not target.is_empty() and _stack_hex_distance(stack, target) <= 2:
 				return "%s keeps melee live from the half-open lane" % name
 			return "%s extends melee threat before full contact" % name
@@ -4081,6 +4088,12 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 				int(ability.get("braced_target_min_tier", 2)),
 			]
 		"brace":
+			if float(ability.get("held_objective_retaliation_multiplier", 1.0)) > 1.0:
+				return "%s steadies a defended line, applies %s%s on retaliation, and answers harder while this side controls a listed field objective" % [
+					name,
+					status_label,
+					" (%s)" % modifier_text if modifier_text != "" else "",
+				]
 			return "%s turns a defended retaliation into %s%s" % [
 				name,
 				status_label,
@@ -4112,6 +4125,8 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 		"foundry_aura":
 			return "%s hardens overheated Combine machinery and repairs surviving allies each round" % name
 		"volley":
+			if bool(ability.get("requires_protected_lane", false)):
+				return "%s delivers heavy ranged pressure only behind a defending allied screen or controlled firing lane" % name
 			return "%s rewards an open firing lane%s" % [
 				name,
 				" into marked targets" if target_is_marked else "",
@@ -4850,14 +4865,14 @@ static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary
 			score += 4 if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "chokepoint"]) else 2
 			if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and (
 				_has_ability(stack, "formation_guard")
-				or _has_ability(stack, "brace")
-				or _has_ability(stack, "reach")
+				or _brace_available(stack, battle)
+				or _reach_available(stack, battle)
 				or bool(stack.get("defending", false))
 			):
 				score += 2
 		if _side_controls_field_objective_type(battle, "enemy", "cover_line") and _stack_is_cover_screened(stack, battle):
 			score += 1
-		if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach"):
+		if _has_ability(stack, "formation_guard") or _brace_available(stack, battle) or _reach_available(stack, battle):
 			score += 2
 		if _has_ability(stack, "bloodrush") or _has_ability(stack, "backstab") or _has_ability(stack, "harry"):
 			score += 2
@@ -4877,9 +4892,9 @@ static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> St
 		return "it is part of the screen keeping the hostile firing line protected"
 	if bool(stack.get("ranged", false)):
 		return "it is the sharpest ranged threat on the field"
-	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and (_has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach")):
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and (_has_ability(stack, "formation_guard") or _brace_available(stack, battle) or _reach_available(stack, battle)):
 		return "it is locking the obstruction line and taxing the approach"
-	if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "chokepoint"]) and (_has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach")):
+	if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "chokepoint"]) and (_has_ability(stack, "formation_guard") or _brace_available(stack, battle) or _reach_available(stack, battle)):
 		return "it anchors the tightest lane in the melee"
 	if _has_ability(stack, "bloodrush") or _has_ability(stack, "backstab") or _has_ability(stack, "harry"):
 		return "it can snowball fast once the line starts cracking"
@@ -5033,7 +5048,7 @@ static func _action_range_line(action_id: String, active_stack: Dictionary, targ
 			var legality := _attack_legality_for_target(active_stack, target, battle)
 			if bool(legality.get("melee", false)):
 				return "Melee ready at hex range %d" % int(legality.get("hex_distance", -1))
-			if _has_ability(active_stack, "reach") or _hookline_available(active_stack, battle):
+			if _reach_available(active_stack, battle) or _hookline_available(active_stack, battle):
 				return "Chain reach needs hex range 2 or closer"
 			return "Needs adjacent contact"
 		"shoot":
@@ -5813,7 +5828,7 @@ static func _resolve_attack_action(
 		and not defender_after.is_empty()
 		and _alive_count(defender_after) > 0
 		and int(defender_after.get("retaliations_left", 0)) > 0
-		and _can_make_retaliation(defender_after, attack_distance)
+		and _can_make_retaliation(defender_after, attack_distance, session.battle)
 	):
 		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var attacker_before_retaliation = attacker_after.duplicate(true)
@@ -6386,7 +6401,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		and not defender_after.is_empty()
 		and _alive_count(defender_after) > 0
 		and int(defender_after.get("retaliations_left", 0)) > 0
-		and _can_make_retaliation(defender_after, attack_distance)
+		and _can_make_retaliation(defender_after, attack_distance, session.battle)
 	):
 		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var attacker_before_retaliation = attacker_after.duplicate(true)
@@ -8322,7 +8337,7 @@ static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dicti
 				_sync_distance_from_hexes(battle)
 		return distance_delta
 	var desired_distance: int = max(0, start_distance - distance_delta)
-	if start_distance <= 1 and _has_ability(active_stack, "reach") and not bool(active_stack.get("ranged", false)):
+	if start_distance <= 1 and _reach_available(active_stack, battle) and not bool(active_stack.get("ranged", false)):
 		desired_distance = max(desired_distance, 1)
 	var destination: Dictionary = _best_advance_destination(
 		battle,
@@ -8389,7 +8404,7 @@ static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary
 		return _distance_band_from_hex_distance(hex_distance)
 	if hex_distance <= 1:
 		return 0
-	if hex_distance == 2 and (_has_ability(attacker, "reach") or _hookline_available(attacker, battle)):
+	if hex_distance == 2 and (_reach_available(attacker, battle) or _hookline_available(attacker, battle)):
 		return 1
 	return int(battle.get("distance", 1))
 
@@ -8880,8 +8895,8 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 			stalled_at_obstruction = true
 			momentum_gain = 0
 		if not bool(stack.get("ranged", false)) and not (
-			_has_ability(stack, "reach")
-			or _has_ability(stack, "brace")
+			_reach_available(stack, battle)
+			or _brace_available(stack, battle)
 			or _has_ability(stack, "formation_guard")
 		):
 			_adjust_stack_cohesion(battle, battle_id, -1)
@@ -9049,7 +9064,20 @@ static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target
 	var hex_distance := _stack_hex_distance(stack, target)
 	if hex_distance <= 1:
 		return true
-	return hex_distance == 2 and (_has_ability(stack, "reach") or _hookline_available(stack, battle))
+	return hex_distance == 2 and (_reach_available(stack, battle) or _hookline_available(stack, battle))
+
+static func _reach_available(stack: Dictionary, battle: Dictionary) -> bool:
+	var reach := _ability_by_id(stack, "reach")
+	if reach.is_empty():
+		return false
+	var held_objective_types = reach.get("held_objective_types", [])
+	if not (held_objective_types is Array) or held_objective_types.is_empty():
+		return true
+	var side := String(stack.get("side", ""))
+	for objective_type in held_objective_types:
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
 
 static func _hookline_available(stack: Dictionary, battle: Dictionary) -> bool:
 	var hookline := _ability_by_id(stack, "hookline")
@@ -9172,10 +9200,10 @@ static func _apply_pressure_artillery(
 		)
 	return messages
 
-static func _can_make_retaliation(stack: Dictionary, attack_distance: int) -> bool:
+static func _can_make_retaliation(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
 	if attack_distance <= 0:
 		return true
-	return attack_distance == 1 and _has_ability(stack, "reach")
+	return attack_distance == 1 and _reach_available(stack, battle)
 
 static func _apply_attack_ability_effects(
 	battle: Dictionary,
@@ -9275,7 +9303,7 @@ static func _apply_attack_ability_effects(
 	var obituary_available := int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
 	if is_ranged and not obituary.is_empty() and obituary_available:
 		var obituary_effect := _status_effect_from_ability(obituary, battle)
-		var braced_line := _has_ability(defender, "brace") and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2))
+		var braced_line := _brace_available(defender, battle) and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2))
 		if braced_line:
 			obituary_effect["modifiers"] = _normalize_ability_modifiers(obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20}))
 		_apply_stack_effect(
@@ -9313,7 +9341,7 @@ static func _apply_retaliation_ability_effects(
 	if attacker.is_empty() or _alive_count(attacker) <= 0:
 		return messages
 	var brace = _ability_by_id(retaliator, "brace")
-	if brace.is_empty() or not bool(retaliator.get("defending", false)):
+	if brace.is_empty() or not _brace_available(retaliator, battle) or not bool(retaliator.get("defending", false)):
 		return messages
 	_apply_stack_effect(
 		battle,
@@ -9365,15 +9393,17 @@ static func _ability_damage_modifier(
 ) -> float:
 	var modifier = 1.0
 	var reach = _ability_by_id(attacker, "reach")
-	if not is_ranged and attack_distance == 1 and not reach.is_empty():
+	if not is_ranged and attack_distance == 1 and not reach.is_empty() and _reach_available(attacker, battle):
 		modifier *= float(reach.get("distance_one_multiplier", 1.0))
 	var hookline = _ability_by_id(attacker, "hookline")
 	if not is_ranged and attack_distance == 1 and not hookline.is_empty() and _hookline_available(attacker, battle):
 		modifier *= float(hookline.get("distance_one_multiplier", 0.5))
 
 	var brace = _ability_by_id(attacker, "brace")
-	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
+	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty() and _brace_available(attacker, battle):
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
+		if _brace_has_held_objective(attacker, battle, brace):
+			modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
 	if is_retaliation:
 		var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(attacker, battle, "retaliation")
 		if retaliation_pressure < 0:
@@ -9393,11 +9423,12 @@ static func _ability_damage_modifier(
 		modifier *= 1.0 + ((float(fogwake.get("isolated_damage_multiplier", 1.0)) - 1.0) * fogwake_retention)
 
 	var volley = _ability_by_id(attacker, "volley")
-	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
+	var volley_lane_ready := _volley_has_protected_lane(attacker, battle, volley)
+	if is_ranged and not volley.is_empty() and volley_lane_ready and attack_distance >= int(volley.get("min_distance", 1)):
 		modifier *= float(volley.get("damage_multiplier", 1.0))
-	if is_ranged and not volley.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
+	if is_ranged and not volley.is_empty() and volley_lane_ready and SpellRulesScript.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
 		modifier *= float(volley.get("status_damage_multiplier", 1.0))
-	if is_ranged and not volley.is_empty() and _side_defending_count(battle, String(attacker.get("side", ""))) > 0:
+	if is_ranged and not volley.is_empty() and volley_lane_ready and _side_defending_count(battle, String(attacker.get("side", ""))) > 0:
 		modifier *= float(volley.get("ally_defending_multiplier", 1.0))
 
 	var formation_guard = _ability_by_id(attacker, "formation_guard")
@@ -9446,7 +9477,7 @@ static func _ability_damage_modifier(
 			"shielding",
 			"ally_ranged_melee_damage_reduction_pct"
 		)
-		if _has_ability(attacker, "brace") or _has_ability(attacker, "reach"):
+		if _brace_available(attacker, battle) or _reach_available(attacker, battle):
 			screen_reduction_pct += _side_max_ability_int(
 				battle,
 				String(defender.get("side", "")),
@@ -9586,7 +9617,7 @@ static func _terrain_tag_damage_modifier(
 	if _battle_has_tag(battle, "open_lane") and is_ranged and attack_distance > 0:
 		modifier *= 1.06
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]):
-		if not is_ranged and attack_distance <= 1 and (_has_ability(attacker, "reach") or _has_ability(attacker, "brace") or _has_ability(attacker, "formation_guard")):
+		if not is_ranged and attack_distance <= 1 and (_reach_available(attacker, battle) or _brace_available(attacker, battle) or _has_ability(attacker, "formation_guard")):
 			modifier *= 1.08
 		elif is_ranged and attack_distance > 0:
 			modifier *= 0.92
@@ -9836,6 +9867,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"description": String(entry.get("description", "")),
 					"distance_one_multiplier": clampf(float(entry.get("distance_one_multiplier", 1.0)), 0.5, 1.5),
 				}
+				if entry.has("held_objective_types"):
+					normalized["held_objective_types"] = _normalize_string_array(entry.get("held_objective_types", []))
 			"hookline":
 				normalized = {
 					"id": ability_id,
@@ -9877,6 +9910,11 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"duration_rounds": max(1, int(entry.get("duration_rounds", 1))),
 					"modifiers": _normalize_ability_modifiers(entry.get("modifiers", {"initiative": -2})),
 				}
+				if entry.has("grants_base_cohesion"):
+					normalized["grants_base_cohesion"] = bool(entry.get("grants_base_cohesion", true))
+				if entry.has("held_objective_retaliation_multiplier"):
+					normalized["held_objective_retaliation_multiplier"] = clampf(float(entry.get("held_objective_retaliation_multiplier", 1.0)), 1.0, 2.0)
+					normalized["held_objective_types"] = _normalize_string_array(entry.get("held_objective_types", []))
 			"harry":
 				normalized = {
 					"id": ability_id,
@@ -9963,6 +10001,9 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"status_damage_multiplier": clampf(float(entry.get("status_damage_multiplier", 1.0)), 1.0, 2.0),
 					"ally_defending_multiplier": clampf(float(entry.get("ally_defending_multiplier", 1.0)), 1.0, 2.0),
 				}
+				if bool(entry.get("requires_protected_lane", false)):
+					normalized["requires_protected_lane"] = true
+					normalized["protected_lane_objective_types"] = _normalize_string_array(entry.get("protected_lane_objective_types", []))
 			"formation_guard":
 				normalized = {
 					"id": ability_id,
@@ -11056,7 +11097,11 @@ static func _cohesion_base_for_unit(unit: Dictionary) -> int:
 		if not (ability is Dictionary):
 			continue
 		var ability_id = String(ability.get("id", ""))
-		if ability_id in ["brace", "formation_guard"] or (ability_id == "shielding" and int(ability.get("cohesion_hold_bonus", 0)) > 0):
+		if (
+			(ability_id == "brace" and bool(ability.get("grants_base_cohesion", true)))
+			or ability_id == "formation_guard"
+			or (ability_id == "shielding" and int(ability.get("cohesion_hold_bonus", 0)) > 0)
+		):
 			base += 1
 			break
 	if bool(unit.get("ranged", false)) and int(unit.get("hp", 1)) <= 6:
@@ -11115,7 +11160,7 @@ static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> i
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
 	if _battle_has_tag(battle, "fortress_lane"):
-		if _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+		if _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 			bonus += 1
 		elif _stack_is_assault_side(stack, battle) and bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
 			bonus -= 1
@@ -11148,15 +11193,15 @@ static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> 
 	var bonus = 0
 	var side = String(stack.get("side", ""))
 	var round_number = int(battle.get("round", 1))
-	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
-	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _reserve_wave_is_active_for_side(battle, side) and _stack_is_anchor_side(stack, battle) and not _stack_is_isolated(battle, stack):
 		bonus += 1
 	if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side(stack, battle) and bool(stack.get("ranged", false)) and _stack_has_positive_effect(stack, battle):
 		bonus += 1
-	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _hero_has_trait(battle, side, "bogwise") and String(battle.get("terrain", "")) == "mire" and not bool(stack.get("ranged", false)):
 		bonus += 1
@@ -11169,9 +11214,9 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 	var round_number = int(battle.get("round", 1))
 	if _stack_is_isolated(battle, stack):
 		bonus -= 1
-	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
-	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and bool(stack.get("ranged", false)):
 		bonus += 1
@@ -11188,7 +11233,7 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 	var shielding = _ability_by_id(stack, "shielding")
 	if not shielding.is_empty():
 		bonus += max(0, int(shielding.get("cohesion_hold_bonus", 0)))
-	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		bonus += 1
@@ -11215,9 +11260,9 @@ static func _contextual_initiative_bonus(stack: Dictionary, battle: Dictionary) 
 		bonus += 1
 	if _battle_has_tag(battle, "open_lane") and bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
 		bonus += 1
-	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
-	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
+	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _reserve_wave_is_active_for_side(battle, side) and _stack_is_anchor_side(stack, battle) and not _stack_is_isolated(battle, stack):
 		bonus += 1
@@ -11360,7 +11405,7 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 			_adjust_stack_cohesion(battle, battle_id, -1)
 		if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 			_adjust_stack_cohesion(battle, battle_id, -1)
-		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and (bool(stack.get("defending", false)) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
+		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and (bool(stack.get("defending", false)) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
 			_adjust_stack_cohesion(battle, battle_id, 1)
 		if _reserve_wave_is_active_for_side(battle, side) and _stack_is_anchor_side(stack, battle) and not _stack_is_isolated(battle, stack):
 			if _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
@@ -11377,7 +11422,7 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 			elif _stack_is_anchor_side(stack, battle) and bool(stack.get("ranged", false)) and _stack_is_isolated(battle, stack):
 				_adjust_stack_cohesion(battle, battle_id, -1)
 		if _hero_has_trait(battle, side, "linekeeper") and _stack_cohesion_total(stack, battle) < max(6, int(stack.get("cohesion_base", 5))):
-			if bool(stack.get("defending", false)) or _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard"):
+			if bool(stack.get("defending", false)) or _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard"):
 				_adjust_stack_cohesion(battle, battle_id, 1)
 		if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
 			_adjust_stack_cohesion(battle, battle_id, 1)
@@ -11627,6 +11672,47 @@ static func _side_defending_count(battle: Dictionary, side: String) -> int:
 		if bool(stack.get("defending", false)):
 			total += 1
 	return total
+
+static func _brace_has_held_objective(stack: Dictionary, battle: Dictionary, brace: Dictionary) -> bool:
+	if stack.is_empty() or brace.is_empty() or float(brace.get("held_objective_retaliation_multiplier", 1.0)) <= 1.0:
+		return false
+	var side := String(stack.get("side", ""))
+	for objective_type in brace.get("held_objective_types", []):
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _brace_available(stack: Dictionary, battle: Dictionary) -> bool:
+	var brace := _ability_by_id(stack, "brace")
+	if brace.is_empty():
+		return false
+	var held_objective_types = brace.get("held_objective_types", [])
+	if not (held_objective_types is Array) or held_objective_types.is_empty():
+		return true
+	var side := String(stack.get("side", ""))
+	for objective_type in held_objective_types:
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _volley_has_protected_lane(stack: Dictionary, battle: Dictionary, volley: Dictionary) -> bool:
+	if stack.is_empty() or volley.is_empty():
+		return false
+	if not bool(volley.get("requires_protected_lane", false)):
+		return true
+	var side := String(stack.get("side", ""))
+	var battle_id := String(stack.get("battle_id", ""))
+	for ally in _alive_stacks_for_side(battle, side):
+		if (
+			String(ally.get("battle_id", "")) != battle_id
+			and bool(ally.get("defending", false))
+			and _stack_hex_distance(stack, ally) <= 1
+		):
+			return true
+	for objective_type in volley.get("protected_lane_objective_types", []):
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
 
 static func _allied_ranged_count(battle: Dictionary, side: String) -> int:
 	var total = 0
@@ -12355,8 +12441,8 @@ static func _field_objective_initiative_bonus(stack: Dictionary, battle: Diction
 					bonus += 1
 			"obstruction_line":
 				if not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and (
-					_has_ability(stack, "reach")
-					or _has_ability(stack, "brace")
+					_reach_available(stack, battle)
+					or _brace_available(stack, battle)
 					or _has_ability(stack, "formation_guard")
 				):
 					bonus += 1
@@ -12514,14 +12600,14 @@ static func _stack_is_cover_screened(stack: Dictionary, battle: Dictionary) -> b
 		return false
 	if bool(stack.get("ranged", false)):
 		return true
-	if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace"):
+	if _has_ability(stack, "formation_guard") or _brace_available(stack, battle):
 		return true
 	return bool(stack.get("defending", false)) and not _stack_is_isolated(battle, stack)
 
 static func _stack_can_breach_obstruction(stack: Dictionary, battle: Dictionary) -> bool:
 	if stack.is_empty() or bool(stack.get("ranged", false)):
 		return false
-	if _has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard"):
+	if _reach_available(stack, battle) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard"):
 		return true
 	if _stack_momentum_total(stack, battle) >= 2:
 		return true
@@ -12600,7 +12686,7 @@ static func _field_objective_action_influence(
 							return 2
 						return 2 if bool(target_stack.get("ranged", false)) else 1
 				"defend":
-					return 1 if acting_side == controller and (is_ranged or _has_ability(acting_stack, "brace") or _has_ability(acting_stack, "formation_guard")) else 0
+					return 1 if acting_side == controller and (is_ranged or _brace_available(acting_stack, battle) or _has_ability(acting_stack, "formation_guard")) else 0
 		"cover_line":
 			match action:
 				"advance":
@@ -12612,7 +12698,7 @@ static func _field_objective_action_influence(
 				"defend":
 					return 2 if acting_side == controller and (
 						is_ranged
-						or _has_ability(acting_stack, "brace")
+						or _brace_available(acting_stack, battle)
 						or _has_ability(acting_stack, "formation_guard")
 					) else (1 if contested and not is_ranged else 0)
 		"obstruction_line":
@@ -12624,9 +12710,9 @@ static func _field_objective_action_influence(
 				"defend":
 					return 2 if acting_side == controller and (
 						not is_ranged
-						or _has_ability(acting_stack, "brace")
+						or _brace_available(acting_stack, battle)
 						or _has_ability(acting_stack, "formation_guard")
-						or _has_ability(acting_stack, "reach")
+						or _reach_available(acting_stack, battle)
 					) else (1 if contested and not is_ranged else 0)
 		"ritual_pylon":
 			match action:

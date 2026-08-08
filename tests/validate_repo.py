@@ -10579,6 +10579,14 @@ def validate_content(errors: list[str]) -> None:
                     authored_unit_ability_ids.add(ability_id)
                 if ability_id == "reach":
                     ensure(float(ability.get("distance_one_multiplier", 0.0)) > 0.0, errors, f"Unit {unit_id} reach must define distance_one_multiplier > 0")
+                    if "held_objective_types" in ability:
+                        objective_types = ability.get("held_objective_types", [])
+                        ensure(isinstance(objective_types, list) and bool(objective_types), errors, f"Unit {unit_id} objective reach must list held_objective_types")
+                        ensure(
+                            isinstance(objective_types, list) and all(str(value) in SUPPORTED_FIELD_OBJECTIVE_TYPES for value in objective_types),
+                            errors,
+                            f"Unit {unit_id} objective reach uses an unsupported field objective type",
+                        )
                 elif ability_id == "hookline":
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} hookline must belong to a melee unit")
                     ensure(0.0 <= float(ability.get("distance_one_multiplier", -1.0)) < 1.0, errors, f"Unit {unit_id} hookline must trade normal damage for control")
@@ -10607,6 +10615,17 @@ def validate_content(errors: list[str]) -> None:
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} brace must define duration_rounds > 0")
                     modifiers = ability.get("modifiers", {})
                     ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} brace must define modifiers")
+                    if "grants_base_cohesion" in ability:
+                        ensure(isinstance(ability.get("grants_base_cohesion"), bool), errors, f"Unit {unit_id} brace grants_base_cohesion must be boolean")
+                    if "held_objective_retaliation_multiplier" in ability or "held_objective_types" in ability:
+                        ensure(float(ability.get("held_objective_retaliation_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} objective brace multiplier must be > 1")
+                        objective_types = ability.get("held_objective_types", [])
+                        ensure(isinstance(objective_types, list) and bool(objective_types), errors, f"Unit {unit_id} objective brace must list held_objective_types")
+                        ensure(
+                            isinstance(objective_types, list) and all(str(value) in SUPPORTED_FIELD_OBJECTIVE_TYPES for value in objective_types),
+                            errors,
+                            f"Unit {unit_id} objective brace uses an unsupported field objective type",
+                        )
                 elif ability_id == "harry":
                     ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} harry must define status_id")
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
@@ -10716,6 +10735,14 @@ def validate_content(errors: list[str]) -> None:
                         ensure(float(ability.get("status_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley status_damage_multiplier must be > 1")
                     if "ally_defending_multiplier" in ability:
                         ensure(float(ability.get("ally_defending_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley ally_defending_multiplier must be > 1")
+                    if bool(ability.get("requires_protected_lane", False)):
+                        objective_types = ability.get("protected_lane_objective_types", [])
+                        ensure(isinstance(objective_types, list) and bool(objective_types), errors, f"Unit {unit_id} protected volley must list protected_lane_objective_types")
+                        ensure(
+                            isinstance(objective_types, list) and all(str(value) in SUPPORTED_FIELD_OBJECTIVE_TYPES for value in objective_types),
+                            errors,
+                            f"Unit {unit_id} protected volley uses an unsupported field objective type",
+                        )
                 elif ability_id == "formation_guard":
                     ensure(float(ability.get("ally_ranged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} formation_guard must define ally_ranged_damage_multiplier > 1")
                     ensure(int(ability.get("ally_ranged_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define ally_ranged_initiative_bonus > 0")
@@ -10877,6 +10904,26 @@ def validate_content(errors: list[str]) -> None:
     ember_archer_harry = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
     ensure(int(ember_archer_harry.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Ember Archer harry must keep a cohesion-pressure rider authored")
     ensure(int(ember_archer_harry.get("momentum_gain", 0)) > 0, errors, "Ember Archer harry must keep its tempo-gain rider authored")
+
+    fordhook_cadets = units.get("unit_embercourt_fordhook_cadets", {})
+    fordhook_reach = next((ability for ability in fordhook_cadets.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "reach"), {})
+    fordhook_brace = next((ability for ability in fordhook_cadets.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "brace"), {})
+    ensure(str(fordhook_reach.get("name", "")) == "Fordhook Reach", errors, "Fordhook Cadets must own their reduced-leverage crossing reach")
+    ensure(float(fordhook_reach.get("distance_one_multiplier", 0.0)) == 0.5, errors, "Fordhook Reach must trade half its damage for crossing contact")
+    ensure(fordhook_reach.get("held_objective_types", []) == ["cover_line", "obstruction_line", "breach_point"], errors, "Fordhook Reach must remain scoped to crossing-shaped field objectives")
+    ensure(str(fordhook_brace.get("name", "")) == "Crossing Brace", errors, "Fordhook Cadets must own Crossing Brace")
+    ensure(float(fordhook_brace.get("retaliation_multiplier", 0.0)) == 1.0, errors, "Crossing Brace must not add retaliation damage away from a held objective")
+    ensure(float(fordhook_brace.get("held_objective_retaliation_multiplier", 0.0)) == 1.03, errors, "Crossing Brace must answer harder on a controlled crossing objective")
+    ensure(fordhook_brace.get("held_objective_types", []) == ["cover_line", "obstruction_line", "breach_point"], errors, "Crossing Brace must remain scoped to crossing-shaped field objectives")
+    ensure(fordhook_brace.get("grants_base_cohesion") is False, errors, "Crossing Brace must not grant a passive global cohesion tier")
+
+    bargebow_crews = units.get("unit_embercourt_bargebow_crews", {})
+    bargebow_volley = next((ability for ability in bargebow_crews.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})
+    ensure(int(bargebow_crews.get("shots", 0)) == 6, errors, "Bargebow Crews must retain their limited six-shot ammunition")
+    ensure(str(bargebow_volley.get("name", "")) == "Held-Line Barge Shot", errors, "Bargebow Crews must own Held-Line Barge Shot")
+    ensure(float(bargebow_volley.get("damage_multiplier", 0.0)) == 1.01, errors, "Held-Line Barge Shot must keep its bounded one-percent heavy pressure")
+    ensure(bargebow_volley.get("requires_protected_lane") is True, errors, "Held-Line Barge Shot must require an allied screen or controlled firing lane")
+    ensure(bargebow_volley.get("protected_lane_objective_types", []) == ["cover_line", "lane_battery"], errors, "Held-Line Barge Shot must remain scoped to cover and battery objectives")
 
     cutthroat = units.get("unit_blackbranch_cutthroat", {})
     cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})

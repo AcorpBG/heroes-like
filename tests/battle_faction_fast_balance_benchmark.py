@@ -993,7 +993,7 @@ class FastBattleBenchmark:
                 return 0.0
             modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
             score = 3.2 + sum(max(0, int(value)) for value in modifiers.values()) * 0.9
-            score += self._spell_ally_target_value(target)
+            score += self._spell_ally_target_value(target, battle)
             if int(modifiers.get("defense", 0)) > 0:
                 score += (1.0 - self._health_ratio(target)) * 4.0
                 if not bool(target.get("ranged", False)):
@@ -1012,9 +1012,9 @@ class FastBattleBenchmark:
             return score - (mana_cost * 0.2)
         if effect_type == "recover_ally":
             missing = self._stack_recoverable_health(target)
-            return (float(missing) / float(max(1, target.get("unit_hp", 1)))) + 2.5 + self._spell_ally_target_value(target) - (mana_cost * 0.2)
+            return (float(missing) / float(max(1, target.get("unit_hp", 1)))) + 2.5 + self._spell_ally_target_value(target, battle) - (mana_cost * 0.2)
         if effect_type == "cleanse_ally":
-            return (4.0 if target.get("effects") else 0.0) + self._spell_ally_target_value(target) - (mana_cost * 0.2)
+            return (4.0 if target.get("effects") else 0.0) + self._spell_ally_target_value(target, battle) - (mana_cost * 0.2)
         return 0.0
 
     def _cleanse_spell_has_value(self, target: dict[str, Any], battle: dict[str, Any], spell: dict[str, Any]) -> bool:
@@ -1028,14 +1028,14 @@ class FastBattleBenchmark:
         modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
         return bool(modifiers)
 
-    def _spell_ally_target_value(self, target: dict[str, Any]) -> float:
+    def _spell_ally_target_value(self, target: dict[str, Any], battle: dict[str, Any]) -> float:
         tier_value = max(1, int(target.get("tier", 1))) * 0.15
         average_damage = (int(target.get("min_damage", 1)) + int(target.get("max_damage", 1))) / 2.0
         offense_value = min(1.5, (self._alive_count(target) * average_damage) / 160.0)
         role_value = 0.0
         if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
             role_value += 0.3
-        if self._has_ability(target, "formation_guard") or self._has_ability(target, "brace"):
+        if self._has_ability(target, "formation_guard") or self._brace_available(target, battle):
             role_value += 0.2
         return tier_value + offense_value + role_value
 
@@ -1294,7 +1294,7 @@ class FastBattleBenchmark:
             not is_ranged
             and self._alive_count(target) > 0
             and int(target.get("retaliations_left", 0)) > 0
-            and self._can_make_retaliation(target, attack_distance)
+            and self._can_make_retaliation(target, attack_distance, battle)
         ):
             active_before = dict(active)
             retaliation_damage = self._calculate_damage(target, active, battle, rng, False, True, attack_distance)
@@ -1411,7 +1411,7 @@ class FastBattleBenchmark:
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if obituary and obituary_available and is_ranged and not self._has_effect_id(target, battle, "status_obituary_marked"):
             score += 0.25
-            if self._has_ability(target, "brace") and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+            if self._brace_available(target, battle) and int(target.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
                 score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
         if self._has_ability(attacker, "backstab") and not self._counter_ambush_flare_context(battle, target, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
@@ -1463,7 +1463,7 @@ class FastBattleBenchmark:
                 score -= (float(reflected_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
                 if reflected_damage >= int(attacker.get("total_health", 0)):
                     score -= 6.0
-        if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and self._alive_count(target) > 0 and self._can_make_retaliation(target, attack_distance):
+        if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and self._alive_count(target) > 0 and self._can_make_retaliation(target, attack_distance, battle):
             retaliation_damage = self._estimated_damage(target, attacker, battle, False, True, attack_distance)
             score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
         return score
@@ -1475,7 +1475,7 @@ class FastBattleBenchmark:
             score -= 3.0
         if int(battle.get("distance", 1)) > 0 and not bool(active.get("ranged", False)):
             score -= 2.0
-        if self._has_ability(active, "brace") and int(battle.get("distance", 1)) <= 1:
+        if self._brace_available(active, battle) and int(battle.get("distance", 1)) <= 1:
             score += 3.0
         if self._has_ability(active, "formation_guard") and self._allied_ranged_count(battle, str(active.get("side", ""))) > 0:
             score += 2.5
@@ -1540,14 +1540,16 @@ class FastBattleBenchmark:
     def _ability_damage_modifier(self, attacker: dict[str, Any], defender: dict[str, Any], battle: dict[str, Any], is_ranged: bool, is_retaliation: bool, attack_distance: int) -> float:
         modifier = 1.0
         reach = self._ability_by_id(attacker, "reach")
-        if not is_ranged and attack_distance == 1 and reach:
+        if not is_ranged and attack_distance == 1 and reach and self._reach_available(attacker, battle):
             modifier *= float(reach.get("distance_one_multiplier", 1.0))
         hookline = self._ability_by_id(attacker, "hookline")
         if not is_ranged and attack_distance == 1 and hookline and self._hookline_available(attacker, battle):
             modifier *= float(hookline.get("distance_one_multiplier", 0.5))
         brace = self._ability_by_id(attacker, "brace")
-        if is_retaliation and bool(attacker.get("defending", False)) and brace:
+        if is_retaliation and bool(attacker.get("defending", False)) and brace and self._brace_available(attacker, battle):
             modifier *= float(brace.get("retaliation_multiplier", 1.0))
+            if self._brace_has_held_objective(attacker, battle, brace):
+                modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
         if is_retaliation:
             retaliation_pressure = self._effect_bonus(attacker, battle, "retaliation")
             if retaliation_pressure < 0:
@@ -1565,11 +1567,12 @@ class FastBattleBenchmark:
             fogwake_retention = float(fogwake_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if fogwake_flare else 1.0
             modifier *= 1.0 + ((float(fogwake.get("isolated_damage_multiplier", 1.0)) - 1.0) * fogwake_retention)
         volley = self._ability_by_id(attacker, "volley")
-        if is_ranged and volley and attack_distance >= int(volley.get("min_distance", 1)):
+        volley_lane_ready = self._volley_has_protected_lane(attacker, battle, volley)
+        if is_ranged and volley and volley_lane_ready and attack_distance >= int(volley.get("min_distance", 1)):
             modifier *= float(volley.get("damage_multiplier", 1.0))
-        if is_ranged and volley and self._has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
+        if is_ranged and volley and volley_lane_ready and self._has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
             modifier *= float(volley.get("status_damage_multiplier", 1.0))
-        if is_ranged and volley and self._side_defending_count(battle, attacker["side"]) > 0:
+        if is_ranged and volley and volley_lane_ready and self._side_defending_count(battle, attacker["side"]) > 0:
             modifier *= float(volley.get("ally_defending_multiplier", 1.0))
         formation_guard = self._ability_by_id(attacker, "formation_guard")
         if formation_guard and self._has_effect_id(defender, battle, STATUS_STAGGERED):
@@ -1613,7 +1616,7 @@ class FastBattleBenchmark:
                 "ally_ranged_melee_damage_reduction_pct",
                 0.0,
             )
-            if self._has_ability(attacker, "brace") or self._has_ability(attacker, "reach"):
+            if self._brace_available(attacker, battle) or self._reach_available(attacker, battle):
                 screen_reduction_pct += self._side_max_ability_float(
                     battle,
                     str(defender.get("side", "")),
@@ -1725,7 +1728,11 @@ class FastBattleBenchmark:
         if self._battle_has_tag(battle, "open_lane") and is_ranged and attack_distance > 0:
             modifier *= 1.06
         if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]):
-            if not is_ranged and attack_distance <= 1 and any(self._has_ability(attacker, ability) for ability in ["reach", "brace", "formation_guard"]):
+            if not is_ranged and attack_distance <= 1 and (
+                self._reach_available(attacker, battle)
+                or self._brace_available(attacker, battle)
+                or self._has_ability(attacker, "formation_guard")
+            ):
                 modifier *= 1.08
             elif is_ranged and attack_distance > 0:
                 modifier *= 0.92
@@ -1848,7 +1855,7 @@ class FastBattleBenchmark:
         obituary_available = int(ability_uses.get("obituary", 0)) < int(obituary.get("uses_per_battle", 1))
         if is_ranged and obituary and obituary_available:
             modifiers = obituary.get("modifiers", {})
-            if self._has_ability(defender, "brace") and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
+            if self._brace_available(defender, battle) and int(defender.get("tier", 1)) >= int(obituary.get("braced_target_min_tier", 2)):
                 modifiers = obituary.get("braced_modifiers", {"cohesion": -2, "retaliation": -20})
             self._apply_effect(defender, {
                 "effect_id": str(obituary.get("status_id", "status_obituary_marked")),
@@ -1957,8 +1964,12 @@ class FastBattleBenchmark:
             base += 1
         for ability in unit.get("abilities", []):
             ability_id = str(ability.get("id", "")) if isinstance(ability, dict) else ""
-            if ability_id in ["brace", "formation_guard"] or (
+            if (
+                (ability_id == "brace" and bool(ability.get("grants_base_cohesion", True)))
+                or ability_id == "formation_guard"
+                or (
                 ability_id == "shielding" and int(ability.get("cohesion_hold_bonus", 0)) > 0
+                )
             ):
                 base += 1
                 break
@@ -2005,9 +2016,11 @@ class FastBattleBenchmark:
     def _contextual_defense_bonus(self, stack: dict[str, Any], battle: dict[str, Any]) -> int:
         bonus = 0
         side = str(stack.get("side", ""))
-        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", False)) and any(self._has_ability(stack, ability) for ability in ["reach", "brace", "formation_guard"]):
+        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", False)) and (
+            self._reach_available(stack, battle) or self._brace_available(stack, battle) or self._has_ability(stack, "formation_guard")
+        ):
             bonus += 1
-        if self._hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", False)) or self._has_ability(stack, "brace") or self._has_ability(stack, "formation_guard")):
+        if self._hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", False)) or self._brace_available(stack, battle) or self._has_ability(stack, "formation_guard")):
             bonus += 1
         if self._hero_has_trait(battle, side, "bogwise") and str(battle.get("terrain", "")) == "mire" and not bool(stack.get("ranged", False)):
             bonus += 1
@@ -2020,7 +2033,9 @@ class FastBattleBenchmark:
             bonus += 1
         if self._battle_has_tag(battle, "open_lane") and bool(stack.get("ranged", False)) and int(battle.get("round", 1)) <= 2:
             bonus += 1
-        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", False)) and any(self._has_ability(stack, ability) for ability in ["reach", "brace", "formation_guard"]):
+        if self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", False)) and (
+            self._reach_available(stack, battle) or self._brace_available(stack, battle) or self._has_ability(stack, "formation_guard")
+        ):
             bonus += 1
         if self._battle_has_tag(battle, "ambush_cover") and not bool(stack.get("ranged", False)) and int(battle.get("round", 1)) <= 2:
             bonus += 1
@@ -2122,11 +2137,21 @@ class FastBattleBenchmark:
         ability_uses = stack.get("ability_uses", {})
         return isinstance(ability_uses, dict) and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
 
+    def _reach_available(self, stack: dict[str, Any], battle: dict[str, Any]) -> bool:
+        reach = self._ability_by_id(stack, "reach")
+        if not reach:
+            return False
+        objective_types = reach.get("held_objective_types", [])
+        if not isinstance(objective_types, list) or not objective_types:
+            return True
+        side = str(stack.get("side", ""))
+        return any(self._side_controls_field_objective_type(battle, side, str(value)) for value in objective_types)
+
     def _attack_distance_for_action(self, stack: dict[str, Any], battle: dict[str, Any], is_ranged: bool) -> int:
         distance = int(battle.get("distance", 1))
         if is_ranged:
             return distance
-        if distance == 1 and (self._has_ability(stack, "reach") or self._hookline_available(stack, battle)):
+        if distance == 1 and (self._reach_available(stack, battle) or self._hookline_available(stack, battle)):
             return 1
         return 0
 
@@ -2136,10 +2161,10 @@ class FastBattleBenchmark:
         if target is not None and target and self._alive_count(target) <= 0:
             return False
         distance = int(battle.get("distance", 1))
-        return distance <= 0 or (distance == 1 and (self._has_ability(stack, "reach") or self._hookline_available(stack, battle)))
+        return distance <= 0 or (distance == 1 and (self._reach_available(stack, battle) or self._hookline_available(stack, battle)))
 
-    def _can_make_retaliation(self, stack: dict[str, Any], attack_distance: int) -> bool:
-        return attack_distance <= 0 or (attack_distance == 1 and self._has_ability(stack, "reach"))
+    def _can_make_retaliation(self, stack: dict[str, Any], attack_distance: int, battle: dict[str, Any]) -> bool:
+        return attack_distance <= 0 or (attack_distance == 1 and self._reach_available(stack, battle))
 
     def _apply_damage(self, stack: dict[str, Any], damage: int) -> None:
         stack["total_health"] = max(0, int(stack.get("total_health", 0)) - max(0, int(damage)))
@@ -2323,6 +2348,67 @@ class FastBattleBenchmark:
 
     def _side_defending_count(self, battle: dict[str, Any], side: str) -> int:
         return sum(1 for stack in self._alive_stacks_for_side(battle, side) if bool(stack.get("defending", False)))
+
+    def _side_controls_field_objective_type(self, battle: dict[str, Any], side: str, objective_type: str) -> bool:
+        objectives = battle.get("field_objectives", [])
+        if not isinstance(objectives, list):
+            return False
+        return any(
+            isinstance(objective, dict)
+            and str(objective.get("type", "")) == objective_type
+            and str(objective.get("control_side", "")) == side
+            for objective in objectives
+        )
+
+    def _brace_has_held_objective(self, stack: dict[str, Any], battle: dict[str, Any], brace: dict[str, Any]) -> bool:
+        if not stack or not brace or float(brace.get("held_objective_retaliation_multiplier", 1.0)) <= 1.0:
+            return False
+        side = str(stack.get("side", ""))
+        return any(
+            self._side_controls_field_objective_type(battle, side, str(objective_type))
+            for objective_type in brace.get("held_objective_types", [])
+        )
+
+    def _brace_available(self, stack: dict[str, Any], battle: dict[str, Any]) -> bool:
+        brace = self._ability_by_id(stack, "brace")
+        if not brace:
+            return False
+        objective_types = brace.get("held_objective_types", [])
+        if not isinstance(objective_types, list) or not objective_types:
+            return True
+        side = str(stack.get("side", ""))
+        return any(self._side_controls_field_objective_type(battle, side, str(value)) for value in objective_types)
+
+    def _stack_screen_distance(self, left: dict[str, Any], right: dict[str, Any]) -> int:
+        left_hex = left.get("hex", {})
+        right_hex = right.get("hex", {})
+        if not isinstance(left_hex, dict) or not isinstance(right_hex, dict) or not left_hex or not right_hex:
+            return 999
+        left_q, left_r = int(left_hex.get("q", 0)), int(left_hex.get("r", 0))
+        right_q, right_r = int(right_hex.get("q", 0)), int(right_hex.get("r", 0))
+        left_x, left_z = left_q - ((left_r - (left_r % 2)) // 2), left_r
+        right_x, right_z = right_q - ((right_r - (right_r % 2)) // 2), right_r
+        left_y, right_y = -left_x - left_z, -right_x - right_z
+        return (abs(left_x - right_x) + abs(left_y - right_y) + abs(left_z - right_z)) // 2
+
+    def _volley_has_protected_lane(self, stack: dict[str, Any], battle: dict[str, Any], volley: dict[str, Any]) -> bool:
+        if not stack or not volley:
+            return False
+        if not bool(volley.get("requires_protected_lane", False)):
+            return True
+        side = str(stack.get("side", ""))
+        battle_id = str(stack.get("battle_id", ""))
+        if any(
+            str(ally.get("battle_id", "")) != battle_id
+            and bool(ally.get("defending", False))
+            and self._stack_screen_distance(stack, ally) <= 1
+            for ally in self._alive_stacks_for_side(battle, side)
+        ):
+            return True
+        return any(
+            self._side_controls_field_objective_type(battle, side, str(objective_type))
+            for objective_type in volley.get("protected_lane_objective_types", [])
+        )
 
     def _pressure_artillery_secondary_target(
         self,

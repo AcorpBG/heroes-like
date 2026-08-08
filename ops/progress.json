@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the faction-bible Mireclaw tier-one through tier-three setup and payoff chain; the all-live matrix and active encounter breadth remain within their recorded bounds, while faction balance and overall game completion remain open.",
+  "currentNotes": "Completed the Embercourt early-ladder crossing-holder and protected-heavy-ranged implementation; selecting the next release slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-early-ladder-identity-10184",
-  "currentSliceId": "combat-mireclaw-early-ladder-identity-10184",
-  "currentSliceNotes": "Reedsnare support snares, Mudglass veteran blinds, and Bogplate marked-target payoff pass 109/109 focused ability instances, the 100-seed all-live matrix, and the clear 59-encounter breadth gate.",
+  "currentSlice": "combat-embercourt-early-ladder-completion-10184",
+  "currentSliceId": "combat-embercourt-early-ladder-completion-10184",
+  "currentSliceNotes": "Fordhook crossing reach and bracing plus Bargebow held-line heavy ranged pressure are implemented and fully validated without faction or matchup checks.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Early Ladder Identity",
-  "currentSliceUpdatedAt": "2026-08-05T11:52:38Z",
+  "currentSliceTitle": "Embercourt Early Ladder Completion",
+  "currentSliceUpdatedAt": "2026-08-08T20:08:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20286,7 +20286,7 @@
     {
       "id": "combat-embercourt-early-ladder-completion-10184",
       "title": "Embercourt Early Ladder Completion",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
@@ -20331,8 +20331,46 @@
         "claiming final Embercourt identity, final faction balance, or overall release completion"
       ],
       "createdAt": "2026-08-05T11:52:38Z",
-      "updatedAt": "2026-08-05T11:52:38Z",
-      "notes": "The faction bible names Fordhook Cadets as cheap crossing holders with reach, bracing, and objective-adjacent retaliation, and Bargebow Crews as limited-shot heavy ranged pressure that needs protection and lanes. Both production units currently have zero abilities; this is the remaining Embercourt ladder implementation gap."
+      "updatedAt": "2026-08-08T20:08:24Z",
+      "startedAt": "2026-08-05T11:56:12Z",
+      "notes": "The faction bible names Fordhook Cadets as cheap crossing holders with reach, bracing, and objective-adjacent retaliation, and Bargebow Crews as limited-shot heavy ranged pressure that needs protection and lanes. The accepted contracts remain generic and content-authored. New optional ability fields are normalized only when authored so legacy ability dictionary shape and deterministic battle behavior remain exact.",
+      "result": {
+        "production_fordhook_ability_count": 2,
+        "production_bargebow_ability_count": 1,
+        "fordhook_reach_distance_multiplier": 0.5,
+        "fordhook_held_objective_retaliation_multiplier": 1.03,
+        "fordhook_grants_base_cohesion": false,
+        "bargebow_damage_multiplier": 1.01,
+        "bargebow_shot_count": 6,
+        "bargebow_requires_protected_lane": true,
+        "ability_instance_count": 112,
+        "ability_runtime_consequence_count": 112,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 3.93,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 112/112 authored ability instances across 103 units)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; 28 outliers / 153.5 severity / 2 severe / 67.5 max dominance / 3.93 side bias / 0 structural failures)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failed sections; retained unsupported Native RMG fail-closed warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 -m json.tool content/units.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 28 outliers / 153.5 severity, and overall game completion remains open.",
+      "completedAt": "2026-08-08T20:08:24Z"
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
