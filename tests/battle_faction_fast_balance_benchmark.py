@@ -1557,9 +1557,10 @@ class FastBattleBenchmark:
         backstab = self._ability_by_id(attacker, "backstab")
         backstab_flare = self._counter_ambush_flare_context(battle, defender, "backstab")
         backstab_retention = float(backstab_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if backstab_flare else 1.0
-        if backstab and self._has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
+        backstab_attack_eligible = not bool(backstab.get("primary_melee_only", False)) or (not is_ranged and not is_retaliation)
+        if backstab and backstab_attack_eligible and self._has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
             modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
-        if backstab and self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
+        if backstab and backstab_attack_eligible and self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
             modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
         fogwake = self._ability_by_id(attacker, "fogwake")
         if fogwake and not is_ranged and not is_retaliation and self._stack_is_isolated(battle, defender):

@@ -10678,6 +10678,8 @@ def validate_content(errors: list[str]) -> None:
                 elif ability_id == "backstab":
                     ensure(float(ability.get("damage_multiplier", 0.0)) >= 1.0, errors, f"Unit {unit_id} backstab must define damage_multiplier >= 1")
                     ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} backstab must define momentum_gain > 0")
+                    if "primary_melee_only" in ability:
+                        ensure(isinstance(ability.get("primary_melee_only"), bool), errors, f"Unit {unit_id} backstab primary_melee_only must be boolean")
                     status_ids = ability.get("status_ids", [])
                     ensure(isinstance(status_ids, list) and bool(status_ids), errors, f"Unit {unit_id} backstab must define status_ids")
                     if "health_threshold_ratio" in ability:
@@ -10924,6 +10926,18 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(bargebow_volley.get("damage_multiplier", 0.0)) == 1.01, errors, "Held-Line Barge Shot must keep its bounded one-percent heavy pressure")
     ensure(bargebow_volley.get("requires_protected_lane") is True, errors, "Held-Line Barge Shot must require an allied screen or controlled firing lane")
     ensure(bargebow_volley.get("protected_lane_objective_types", []) == ["cover_line", "lane_battery"], errors, "Held-Line Barge Shot must remain scoped to cover and battery objectives")
+
+    mirror_duelists = units.get("unit_sunvault_mirror_duelists", {})
+    mirror_duelist_reach = next((ability for ability in mirror_duelists.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "reach"), {})
+    mirror_duelist_backstab = next((ability for ability in mirror_duelists.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})
+    ensure(str(mirror_duelist_reach.get("name", "")) == "Reflected-Lane Step", errors, "Mirror Duelists must own their reflected-lane reposition reach")
+    ensure(float(mirror_duelist_reach.get("distance_one_multiplier", 0.0)) == 0.75, errors, "Reflected-Lane Step must trade one quarter of its damage for reposition contact")
+    ensure(mirror_duelist_reach.get("held_objective_types", []) == ["cover_line", "lane_battery", "ritual_pylon"], errors, "Reflected-Lane Step must remain scoped to reflected-lane objectives")
+    ensure(str(mirror_duelist_backstab.get("name", "")) == "Broken-Timing Cut", errors, "Mirror Duelists must own Broken-Timing Cut")
+    ensure(float(mirror_duelist_backstab.get("damage_multiplier", 0.0)) == 1.01, errors, "Broken-Timing Cut must keep its bounded one-percent payoff")
+    ensure(int(mirror_duelist_backstab.get("momentum_gain", 0)) == 1, errors, "Broken-Timing Cut must convert disrupted timing into one momentum")
+    ensure(mirror_duelist_backstab.get("primary_melee_only") is True, errors, "Broken-Timing Cut must apply only to primary melee attacks")
+    ensure(mirror_duelist_backstab.get("status_ids", []) == ["status_harried", "status_staggered"], errors, "Broken-Timing Cut must remain scoped to harried or staggered targets")
 
     cutthroat = units.get("unit_blackbranch_cutthroat", {})
     cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})
