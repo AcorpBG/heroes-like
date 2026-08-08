@@ -731,6 +731,7 @@ func _probe_backstab(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _defender_stack()
 	var backstab := _ability_by_id(attacker, "backstab")
+	var primary_melee_only := bool(backstab.get("primary_melee_only", false))
 	var status_id := _first_status_id(backstab)
 	if status_id == "":
 		return {"ok": false, "probe": "backstab_status_damage_modifier", "reason": "backstab has no status_ids"}
@@ -740,14 +741,43 @@ func _probe_backstab(unit_id: String) -> Dictionary:
 	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, false, 0)
-	var ok := modifier_with > modifier_without
+	var ai_modifier_with := BattleAiRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
+	var clean_defender := _defender_stack()
+	var clean_battle := _battle_for_stacks([attacker.duplicate(true), clean_defender])
+	var clean_stripped := _without_ability(attacker, "backstab")
+	var clean_stripped_defender := clean_defender.duplicate(true)
+	var clean_stripped_battle := _battle_for_stacks([clean_stripped, clean_stripped_defender])
+	var clean_modifier := BattleRulesScript._ability_damage_modifier(attacker, clean_defender, clean_battle, false, false, 0)
+	var clean_modifier_without := BattleRulesScript._ability_damage_modifier(clean_stripped, clean_stripped_defender, clean_stripped_battle, false, false, 0)
+	var ranged_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, 1)
+	var ranged_modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, true, false, 1)
+	var retaliation_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, true, 0)
+	var retaliation_modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, true, 0)
+	var role_contract_ok := not primary_melee_only or (
+		is_equal_approx(ranged_modifier, ranged_modifier_without)
+		and is_equal_approx(retaliation_modifier, retaliation_modifier_without)
+	)
+	var ok := (
+		modifier_with > modifier_without
+		and is_equal_approx(ai_modifier_with, modifier_with)
+		and is_equal_approx(clean_modifier, clean_modifier_without)
+		and role_contract_ok
+	)
 	return {
 		"ok": ok,
-		"probe": "backstab_status_damage_modifier",
+		"probe": "backstab_primary_melee_status_damage_modifier",
 		"status_id": status_id,
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
-		"reason": "" if ok else "backstab did not increase damage against a status-marked target",
+		"ai_modifier_with": ai_modifier_with,
+		"clean_modifier": clean_modifier,
+		"clean_modifier_without": clean_modifier_without,
+		"primary_melee_only": primary_melee_only,
+		"ranged_modifier": ranged_modifier,
+		"ranged_modifier_without": ranged_modifier_without,
+		"retaliation_modifier": retaliation_modifier,
+		"retaliation_modifier_without": retaliation_modifier_without,
+		"reason": "" if ok else "backstab did not preserve status, clean-target, AI, and authored primary-melee scope",
 	}
 
 func _probe_fogwake(unit_id: String) -> Dictionary:

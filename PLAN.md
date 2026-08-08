@@ -2470,6 +2470,39 @@ Result:
 - the all-live 100-seed four-week matrix stays within bounds at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `3.93` maximum side bias / zero structural failures;
 - the 59-encounter active breadth queue remains clear at signature `829808c9`; autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning` and the game remains incomplete.
 
+## Sunvault Mirror Duelist Reposition
+
+id: `combat-sunvault-mirror-duelist-reposition-10184`
+
+Status: complete.
+
+Selected Phase 6 faction-identity implementation slice. Mirror Duelists are the
+only ability-empty production unit in Sunvault's seven-tier ladder despite the
+faction bible defining them as reposition melee that exploit reflected lanes and
+broken timing.
+
+Implementation target:
+- give Mirror Duelists bounded reflected-lane reach and a disrupted-target payoff through existing generic live contracts;
+- carry the role through live rules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof without faction or matchup checks;
+- preserve unit base stats, growth, recruitment, economy, spells, heroes, saves, strategic AI, campaigns, packaging, Native RMG, legacy ability dictionary shape, and benchmark thresholds.
+
+Completion criteria:
+- Mirror Duelists produce live objective-gated reposition reach and disrupted-target pressure with unsupported-lane, clean-target, stripped-ability, primary-melee, distance, retaliation, and tactical-AI controls;
+- the all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, `153.5` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or seven side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, or benchmark-only behavior;
+- do not change other units, broad combat rules, base stats, economy, saves, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not claim final Sunvault identity, final faction balance, or overall release completion.
+
+Result:
+- Mirror Duelists now use Reflected-Lane Step for three controlled lens-line objective types at 75 percent damage and Broken-Timing Cut for a one-percent primary-melee payoff plus one momentum against harried or staggered targets;
+- the new primary-melee-only field remains optional in normalized ability state, so every legacy Backstab dictionary and unrelated deterministic battle seed retains its prior shape;
+- all `114/114` authored ability instances across 103 units pass focused runtime consequence proof, including unsupported objective lanes, clean targets, ranged misuse, retaliation, stripped abilities, and live/tactical-AI parity;
+- the all-live 100-seed four-week matrix stays within bounds at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures;
+- the 59-encounter active breadth queue remains clear at signature `829808c9`; autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning` and the game remains incomplete.
+
 ## Work Selection Gates
 
 Before starting any worker:

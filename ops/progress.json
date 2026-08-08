@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Embercourt early-ladder crossing-holder and protected-heavy-ranged implementation; selecting the next release slice.",
+  "currentNotes": "Completed Sunvault Mirror Duelists' reflected-lane reposition and broken-timing production role; selecting the next release slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-embercourt-early-ladder-completion-10184",
-  "currentSliceId": "combat-embercourt-early-ladder-completion-10184",
-  "currentSliceNotes": "Fordhook crossing reach and bracing plus Bargebow held-line heavy ranged pressure are implemented and fully validated without faction or matchup checks.",
+  "currentSlice": "combat-sunvault-mirror-duelist-reposition-10184",
+  "currentSliceId": "combat-sunvault-mirror-duelist-reposition-10184",
+  "currentSliceNotes": "Objective-gated reflected-lane reach and primary-melee disrupted-target pressure are implemented and fully validated through generic combat contracts.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Early Ladder Completion",
-  "currentSliceUpdatedAt": "2026-08-08T20:08:24Z",
+  "currentSliceTitle": "Sunvault Mirror Duelist Reposition",
+  "currentSliceUpdatedAt": "2026-08-08T20:40:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20371,6 +20371,87 @@
       ],
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning at 28 outliers / 153.5 severity, and overall game completion remains open.",
       "completedAt": "2026-08-08T20:08:24Z"
+    },
+    {
+      "id": "combat-sunvault-mirror-duelist-reposition-10184",
+      "title": "Sunvault Mirror Duelist Reposition",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the remaining ability-empty Sunvault tier-three reposition-melee role through generic reflected-lane reach and broken-timing pressure without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_mirror_duelist_ability_count": 0,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 3.93,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Mirror Duelists consume objective-gated reposition reach and disrupted-target pressure through live rules, tactical AI, summaries, benchmark behavior, validation, and focused proof",
+        "Focused proof covers unsupported lanes, clean targets, stripped abilities, primary-melee scope, distance, retaliation, and tactical-AI parity",
+        "The all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, 153.5 severity, two rows at or above 65 percent, 67.5 percent maximum dominance, or seven side-bias points",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, or benchmark-only hard-coding",
+        "other-unit, broad combat-rule, base-stat, growth, recruitment, economy, spell, hero, save, strategic-AI, campaign, packaging, Native RMG, or benchmark-threshold changes",
+        "claiming final Sunvault identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-08T20:10:29Z",
+      "updatedAt": "2026-08-08T20:40:51Z",
+      "startedAt": "2026-08-08T20:10:29Z",
+      "notes": "The faction bible defines Mirror Duelists as reposition melee that exploit broken timing and reflected lanes. Objective-gated reach reuses the existing shared contract, while an optional primary-melee-only Backstab field scopes Broken-Timing Cut without changing legacy normalized ability shape or unrelated battle seeds.",
+      "result": {
+        "production_mirror_duelist_ability_count": 2,
+        "reflected_lane_step_distance_multiplier": 0.75,
+        "reflected_lane_step_objective_type_count": 3,
+        "broken_timing_cut_damage_multiplier": 1.01,
+        "broken_timing_cut_momentum_gain": 1,
+        "broken_timing_cut_primary_melee_only": true,
+        "ability_instance_count": 114,
+        "ability_runtime_consequence_count": 114,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 4.0,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 114/114 authored ability instances across 103 units)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate --json (passed; 28 outliers / 153.5 severity / 2 severe / 67.5 max dominance / 4.0 side bias / 0 structural failures)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failed sections; retained unsupported Native RMG fail-closed warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 -m json.tool content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Thornwake Seedcutters and Veilmourn Bellwake Oars remain the two ability-empty production units; faction balance and overall game completion remain open.",
+      "completedAt": "2026-08-08T20:40:51Z"
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",

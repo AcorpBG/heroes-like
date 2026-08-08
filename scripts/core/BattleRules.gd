@@ -9412,9 +9412,10 @@ static func _ability_damage_modifier(
 	var backstab = _ability_by_id(attacker, "backstab")
 	var backstab_flare := _counter_ambush_flare_context(battle, defender, "backstab")
 	var backstab_retention := float(backstab_flare.get("ability", {}).get("ambush_bonus_retention", 1.0)) if not backstab_flare.is_empty() else 1.0
-	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
+	var backstab_attack_eligible := not bool(backstab.get("primary_melee_only", false)) or (not is_ranged and not is_retaliation)
+	if not backstab.is_empty() and backstab_attack_eligible and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
 		modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
-	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
+	if not backstab.is_empty() and backstab_attack_eligible and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	var fogwake = _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
@@ -9963,6 +9964,8 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"health_threshold_ratio": clampf(float(entry.get("health_threshold_ratio", 0.0)), 0.0, 1.0),
 					"threshold_damage_multiplier": clampf(float(entry.get("threshold_damage_multiplier", 1.0)), 1.0, 2.0),
 				}
+				if entry.has("primary_melee_only"):
+					normalized["primary_melee_only"] = bool(entry.get("primary_melee_only", false))
 			"fogwake":
 				normalized = {
 					"id": ability_id,

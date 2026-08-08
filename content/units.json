@@ -1274,6 +1274,31 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Reflected-Lane Step",
+          "description": "Duelists cut through a half-open reflected lane while their side controls the lens line, sacrificing leverage to reposition into contact.",
+          "distance_one_multiplier": 0.75,
+          "held_objective_types": [
+            "cover_line",
+            "lane_battery",
+            "ritual_pylon"
+          ]
+        },
+        {
+          "id": "backstab",
+          "name": "Broken-Timing Cut",
+          "description": "Duelists read a harried or staggered cadence and turn the broken timing into a narrow momentum advantage.",
+          "damage_multiplier": 1.01,
+          "momentum_gain": 1,
+          "primary_melee_only": true,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ]
+        }
+      ],
       "growth": 4,
       "cost": {
         "gold": 165,
