@@ -3904,6 +3904,14 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		if _fog_screen_available(stack, battle, fog_screen):
 			return "%s is live in this fog bank, reducing incoming damage while the screen holds." % String(fog_screen.get("name", "Fog Screen"))
 		return "%s is waiting for a natural fog bank." % String(fog_screen.get("name", "Fog Screen"))
+	var readiness_writ := _readiness_writ_ability(stack)
+	if not readiness_writ.is_empty():
+		var readiness_uses = stack.get("ability_uses", {})
+		if readiness_uses is Dictionary and int(readiness_uses.get("readiness_writ", 0)) >= int(readiness_writ.get("uses_per_battle", 1)):
+			return "%s has already steadied one allied line this battle." % String(readiness_writ.get("name", "Readiness Writ"))
+		var readiness_target := _readiness_writ_target(battle, stack, readiness_writ)
+		if not readiness_target.is_empty():
+			return "%s will clear the disruption from %s after this shot." % [String(readiness_writ.get("name", "Readiness Writ")), _stack_label(readiness_target)]
 	var distance = int(battle.get("distance", 1))
 	if _reach_available(stack, battle) and not bool(stack.get("ranged", false)) and distance == 1:
 		return "Reach makes melee contact live from the current closing distance."
@@ -4035,6 +4043,9 @@ static func _active_ability_role_line(stack: Dictionary, battle: Dictionary, tar
 	if not fog_screen.is_empty():
 		var fog_state := "reduces incoming damage in a natural fog bank" if _fog_screen_available(stack, battle, fog_screen) else "waits for a natural fog bank before reducing incoming damage"
 		role_lines.append("%s %s" % [String(fog_screen.get("name", "Fog Screen")), fog_state])
+	var readiness_writ := _readiness_writ_ability(stack)
+	if not readiness_writ.is_empty():
+		role_lines.append("%s steadies one disrupted allied veteran reactively, after ranged fire, or from one held response" % String(readiness_writ.get("name", "Readiness Writ")))
 	for ability in stack.get("abilities", []):
 		if not (ability is Dictionary):
 			continue
@@ -8853,6 +8864,167 @@ static func _apply_sporeglass_mending_fire(battle: Dictionary, attacker: Diction
 		"target_battle_id": String(target.get("battle_id", "")),
 	}
 
+static func _readiness_writ_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "readiness_writ")
+
+static func _readiness_writ_effect_count(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
+	var count := 0
+	for status_id in ability.get("cleansed_status_ids", []):
+		if SpellRulesScript.has_effect_id(stack, battle, String(status_id)):
+			count += 1
+	return count
+
+static func _readiness_writ_target(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
+	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
+	if source.is_empty() or readiness_writ.is_empty():
+		return {}
+	var source_id := String(source.get("battle_id", ""))
+	var best := {}
+	var best_effect_count := 0
+	var best_cohesion := 999
+	var best_tier := 0
+	for candidate in _alive_stacks_for_side(battle, String(source.get("side", ""))):
+		if String(candidate.get("battle_id", "")) == source_id:
+			continue
+		var effect_count := _readiness_writ_effect_count(candidate, battle, readiness_writ)
+		if effect_count <= 0:
+			continue
+		var cohesion := _stack_cohesion_total(candidate, battle)
+		var tier := int(candidate.get("tier", 1))
+		var candidate_id := String(candidate.get("battle_id", ""))
+		var best_id := String(best.get("battle_id", ""))
+		if best.is_empty() or effect_count > best_effect_count \
+				or (effect_count == best_effect_count and cohesion < best_cohesion) \
+				or (effect_count == best_effect_count and cohesion == best_cohesion and tier > best_tier) \
+				or (effect_count == best_effect_count and cohesion == best_cohesion and tier == best_tier and candidate_id < best_id):
+			best = candidate
+			best_effect_count = effect_count
+			best_cohesion = cohesion
+			best_tier = tier
+	return best
+
+static func _readiness_writ_preparation_target(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
+	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
+	if source.is_empty() or readiness_writ.is_empty():
+		return {}
+	var source_id := String(source.get("battle_id", ""))
+	var preparation_status_id := String(readiness_writ.get("preparation_status_id", "status_readiness_prepared"))
+	var target_role := String(readiness_writ.get("preparation_target_role", ""))
+	var target_min_tier := int(readiness_writ.get("preparation_target_min_tier", 1))
+	var best := {}
+	var best_cohesion := 999
+	var best_tier := 0
+	for candidate in _alive_stacks_for_side(battle, String(source.get("side", ""))):
+		if String(candidate.get("battle_id", "")) == source_id:
+			continue
+		if target_role != "" and String(candidate.get("role", "melee")) != target_role:
+			continue
+		if int(candidate.get("tier", 1)) < target_min_tier:
+			continue
+		if preparation_status_id != "" and SpellRulesScript.has_effect_id(candidate, battle, preparation_status_id):
+			continue
+		var cohesion := _stack_cohesion_total(candidate, battle)
+		var tier := int(candidate.get("tier", 1))
+		var candidate_id := String(candidate.get("battle_id", ""))
+		var best_id := String(best.get("battle_id", ""))
+		if best.is_empty() or cohesion < best_cohesion \
+				or (cohesion == best_cohesion and tier > best_tier) \
+				or (cohesion == best_cohesion and tier == best_tier and candidate_id < best_id):
+			best = candidate
+			best_cohesion = cohesion
+			best_tier = tier
+	return best
+
+static func _readiness_writ_available(source: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
+	if source.is_empty() or readiness_writ.is_empty() or _alive_count(source) <= 0 or not bool(source.get("ranged", false)):
+		return false
+	var ability_uses = source.get("ability_uses", {})
+	if not (ability_uses is Dictionary) or int(ability_uses.get("readiness_writ", 0)) >= int(readiness_writ.get("uses_per_battle", 1)):
+		return false
+	return not _readiness_writ_target(battle, source, readiness_writ).is_empty() \
+		or not _readiness_writ_preparation_target(battle, source, readiness_writ).is_empty()
+
+static func _apply_readiness_writ(battle: Dictionary, attacker: Dictionary) -> Dictionary:
+	var source := _get_stack_by_id(battle, String(attacker.get("battle_id", "")))
+	var readiness_writ := _readiness_writ_ability(source)
+	if not _readiness_writ_available(source, battle, readiness_writ):
+		return {}
+	var target := _readiness_writ_target(battle, source, readiness_writ)
+	var preparing := target.is_empty()
+	if preparing:
+		var eligible_target := _readiness_writ_preparation_target(battle, source, readiness_writ)
+		if not eligible_target.is_empty():
+			target = source
+	if target.is_empty():
+		return {}
+	var target_id := String(target.get("battle_id", ""))
+	var cleansed := 0
+	if preparing:
+		var preparation_effect := SpellRulesScript.build_battle_effect(
+			String(readiness_writ.get("preparation_status_id", "status_readiness_prepared")),
+			String(readiness_writ.get("preparation_status_label", "Mustered")),
+			{},
+			int(readiness_writ.get("preparation_duration_rounds", 99)),
+			battle,
+			"ability",
+			"readiness_writ"
+		)
+		preparation_effect["blocked_status_ids"] = readiness_writ.get("cleansed_status_ids", []).duplicate(true)
+		preparation_effect["protected_side"] = String(source.get("side", ""))
+		preparation_effect["target_role"] = String(readiness_writ.get("preparation_target_role", ""))
+		preparation_effect["target_min_tier"] = int(readiness_writ.get("preparation_target_min_tier", 1))
+		_apply_stack_effect(
+			battle,
+			target_id,
+			preparation_effect
+		)
+	else:
+		cleansed = _cleanse_stack_effects(battle, target_id, readiness_writ.get("cleansed_status_ids", []))
+		if cleansed <= 0:
+			return {}
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != String(source.get("battle_id", "")):
+			continue
+		var ability_uses = stack.get("ability_uses", {})
+		if not (ability_uses is Dictionary):
+			ability_uses = {}
+		ability_uses["readiness_writ"] = int(ability_uses.get("readiness_writ", 0)) + 1
+		stack["ability_uses"] = ability_uses
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+	var visible_text := "%s sounds %s and holds one writ for the next disrupted veteran line." % [
+		_stack_label(source), String(readiness_writ.get("name", "Readiness Writ"))
+	] if preparing else "%s sounds %s and clears the disruption from %s." % [
+		_stack_label(source), String(readiness_writ.get("name", "Readiness Writ")), _stack_label(target)
+	]
+	_mark_stack_animation_event(battle, target_id, "battle_status_applied" if preparing else "battle_status_expired", {
+		"action_id": "readiness_writ",
+		"actor_battle_id": String(source.get("battle_id", "")),
+		"target_battle_id": target_id,
+	})
+	_append_presentation_event(
+		battle,
+		"effect" if preparing else "cleanse",
+		visible_text,
+		{
+			"action_id": "readiness_writ",
+			"actor_battle_id": String(source.get("battle_id", "")),
+			"target_battle_id": target_id,
+			"cleansed_effect_count": cleansed,
+			"effect_id": String(readiness_writ.get("preparation_status_id", "status_readiness_prepared")) if preparing else "",
+		}
+	)
+	return {
+		"message": visible_text,
+		"cleansed_effect_count": cleansed,
+		"target_battle_id": target_id,
+		"prepared": preparing,
+	}
+
 static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
@@ -9003,9 +9175,93 @@ static func _apply_foundry_aura_round_repair(battle: Dictionary) -> int:
 			_record_event(battle, "%s repairs %d allied health as the pressure cycle resets." % [_stack_label(aura_source), side_restored])
 	return total_restored
 
-static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_payload: Variant) -> void:
+static func _consume_readiness_writ_preparation(battle: Dictionary, battle_id: String, incoming_effect_id: String) -> Dictionary:
+	if incoming_effect_id == "":
+		return {}
+	var stacks = battle.get("stacks", [])
+	var target := _get_stack_by_id(battle, battle_id)
+	if target.is_empty():
+		return {}
+	for index in range(stacks.size()):
+		var source = stacks[index]
+		if not (source is Dictionary) or String(source.get("side", "")) != String(target.get("side", "")):
+			continue
+		source = SpellRulesScript.normalize_stack_effects(source)
+		var effects: Array = source.get("effects", []) if source.get("effects", []) is Array else []
+		for effect_index in range(effects.size() - 1, -1, -1):
+			var effect = effects[effect_index]
+			if not (effect is Dictionary) or String(effect.get("effect_id", "")) != "status_readiness_prepared":
+				continue
+			var blocked_status_ids: Array = effect.get("blocked_status_ids", []) if effect.get("blocked_status_ids", []) is Array else []
+			if incoming_effect_id not in blocked_status_ids:
+				continue
+			if String(effect.get("protected_side", "")) != "" and String(effect.get("protected_side", "")) != String(target.get("side", "")):
+				continue
+			if String(effect.get("target_role", "")) != "" and String(effect.get("target_role", "")) != String(target.get("role", "melee")):
+				continue
+			if int(target.get("tier", 1)) < int(effect.get("target_min_tier", 1)):
+				continue
+			effects.remove_at(effect_index)
+			source["effects"] = effects
+			stacks[index] = source
+			battle["stacks"] = stacks
+			var visible_text := "%s holds formation under Beacon Muster and resists %s." % [_stack_label(target), incoming_effect_id.trim_prefix("status_").replace("_", " ")]
+			_mark_stack_animation_event(battle, battle_id, "battle_status_expired", {
+				"action_id": "readiness_writ_block",
+				"actor_battle_id": String(source.get("battle_id", "")),
+				"target_battle_id": battle_id,
+				"effect_id": incoming_effect_id,
+			})
+			_append_presentation_event(battle, "guard", visible_text, {
+				"action_id": "readiness_writ_block",
+				"actor_battle_id": String(source.get("battle_id", "")),
+				"target_battle_id": battle_id,
+				"prevented_status_id": incoming_effect_id,
+			})
+			return {"blocked": true, "message": visible_text}
+	for index in range(stacks.size()):
+		var source = stacks[index]
+		if not (source is Dictionary) or _alive_count(source) <= 0 or String(source.get("side", "")) != String(target.get("side", "")):
+			continue
+		var readiness_writ := _readiness_writ_ability(source)
+		if readiness_writ.is_empty() or incoming_effect_id not in readiness_writ.get("cleansed_status_ids", []):
+			continue
+		if String(readiness_writ.get("preparation_target_role", "")) != "" and String(readiness_writ.get("preparation_target_role", "")) != String(target.get("role", "melee")):
+			continue
+		if int(target.get("tier", 1)) < int(readiness_writ.get("preparation_target_min_tier", 1)):
+			continue
+		var ability_uses = source.get("ability_uses", {})
+		if not (ability_uses is Dictionary):
+			ability_uses = {}
+		if int(ability_uses.get("readiness_writ", 0)) >= int(readiness_writ.get("uses_per_battle", 1)):
+			continue
+		ability_uses["readiness_writ"] = int(ability_uses.get("readiness_writ", 0)) + 1
+		source["ability_uses"] = ability_uses
+		stacks[index] = source
+		battle["stacks"] = stacks
+		var visible_text := "%s calls Beacon Muster and %s resists %s." % [_stack_label(source), _stack_label(target), incoming_effect_id.trim_prefix("status_").replace("_", " ")]
+		_mark_stack_animation_event(battle, battle_id, "battle_status_expired", {
+			"action_id": "readiness_writ_block",
+			"actor_battle_id": String(source.get("battle_id", "")),
+			"target_battle_id": battle_id,
+			"effect_id": incoming_effect_id,
+		})
+		_append_presentation_event(battle, "guard", visible_text, {
+			"action_id": "readiness_writ_block",
+			"actor_battle_id": String(source.get("battle_id", "")),
+			"target_battle_id": battle_id,
+			"prevented_status_id": incoming_effect_id,
+		})
+		return {"blocked": true, "message": visible_text}
+	return {}
+
+static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_payload: Variant) -> Dictionary:
 	if not (effect_payload is Dictionary):
-		return
+		return {}
+	var effect_id = String(effect_payload.get("effect_id", ""))
+	var readiness_block := _consume_readiness_writ_preparation(battle, battle_id, effect_id)
+	if not readiness_block.is_empty():
+		return readiness_block
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
 		var stack = stacks[index]
@@ -9013,7 +9269,6 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 			continue
 		stack = SpellRulesScript.normalize_stack_effects(stack)
 		var effects = stack.get("effects", [])
-		var effect_id = String(effect_payload.get("effect_id", ""))
 		var kind = String(effect_payload.get("kind", ""))
 		for effect_index in range(effects.size() - 1, -1, -1):
 			var existing = effects[effect_index]
@@ -9026,8 +9281,10 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 		effects.append(effect_payload.duplicate(true))
 		stack["effects"] = effects
 		stacks[index] = stack
-		break
+		battle["stacks"] = stacks
+		return {"applied": true}
 	battle["stacks"] = stacks
+	return {}
 
 static func _expired_stack_effect_count(stack: Dictionary, round_number: int) -> int:
 	var expired := 0
@@ -9250,6 +9507,9 @@ static func _apply_attack_ability_effects(
 		var mending_fire := _apply_sporeglass_mending_fire(battle, attacker)
 		if not mending_fire.is_empty():
 			messages.append(String(mending_fire.get("message", "")))
+		var readiness_writ := _apply_readiness_writ(battle, attacker)
+		if not readiness_writ.is_empty():
+			messages.append(String(readiness_writ.get("message", "")))
 	var ambush_target := defender_before if not defender_before.is_empty() else defender
 	var ambush_context_target := defender if not defender.is_empty() else ambush_target
 	var backstab := _ability_by_id(attacker, "backstab")
@@ -9271,29 +9531,35 @@ static func _apply_attack_ability_effects(
 		return messages
 	if hookline_triggered:
 		var pulled_into_contact := _apply_hookline_pull(battle, attacker, defender)
-		_apply_stack_effect(
+		var hookline_result := _apply_stack_effect(
 			battle,
 			String(defender.get("battle_id", "")),
 			_status_effect_from_ability(hookline, battle)
 		)
-		messages.append("%s is %s%s." % [
-			_stack_label(defender),
-			"pulled into contact and " if pulled_into_contact else "",
-			String(hookline.get("status_label", "Pinned")).to_lower(),
-		])
+		if bool(hookline_result.get("applied", false)):
+			messages.append("%s is %s%s." % [
+				_stack_label(defender),
+				"pulled into contact and " if pulled_into_contact else "",
+				String(hookline.get("status_label", "Pinned")).to_lower(),
+			])
+		elif String(hookline_result.get("message", "")) != "":
+			messages.append(String(hookline_result.get("message", "")))
 	var rot_cant := _ability_by_id(attacker, "rot_cant")
 	var rot_target_ready := int(defender.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1))
 	var rot_available := int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and rot_target_ready and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
 	if is_ranged and not rot_cant.is_empty() and rot_available:
-		_apply_stack_effect(
+		var rot_result := _apply_stack_effect(
 			battle,
 			String(defender.get("battle_id", "")),
 			_status_effect_from_ability(rot_cant, battle)
 		)
-		messages.append("%s is %s." % [
-			_stack_label(defender),
-			String(rot_cant.get("status_label", "Rot-Called")).to_lower(),
-		])
+		if bool(rot_result.get("applied", false)):
+			messages.append("%s is %s." % [
+				_stack_label(defender),
+				String(rot_cant.get("status_label", "Rot-Called")).to_lower(),
+			])
+		elif String(rot_result.get("message", "")) != "":
+			messages.append(String(rot_result.get("message", "")))
 		ability_uses["rot_cant"] = int(ability_uses.get("rot_cant", 0)) + 1
 		attacker["ability_uses"] = ability_uses
 	var harry = _ability_by_id(attacker, "harry")
@@ -9302,15 +9568,18 @@ static func _apply_attack_ability_effects(
 	var harry_target_ready := int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (harry_target_role == "" or bool(defender.get("ranged", false)) == (harry_target_role == "ranged"))
 	var harry_available := harry_target_ready and _harry_support_ready(attacker, defender, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
 	if not harry.is_empty() and harry_available:
-		_apply_stack_effect(
+		var harry_result := _apply_stack_effect(
 			battle,
 			String(defender.get("battle_id", "")),
 			_status_effect_from_ability(harry, battle)
 		)
-		messages.append("%s is %s." % [
-			_stack_label(defender),
-			String(harry.get("status_label", "Harried")).to_lower(),
-		])
+		if bool(harry_result.get("applied", false)):
+			messages.append("%s is %s." % [
+				_stack_label(defender),
+				String(harry.get("status_label", "Harried")).to_lower(),
+			])
+		elif String(harry_result.get("message", "")) != "":
+			messages.append(String(harry_result.get("message", "")))
 		if harry_limit > 0:
 			ability_uses["harry"] = int(ability_uses.get("harry", 0)) + 1
 			attacker["ability_uses"] = ability_uses
@@ -9362,15 +9631,18 @@ static func _apply_retaliation_ability_effects(
 			return messages
 	if not bool(retaliator.get("defending", false)):
 		return messages
-	_apply_stack_effect(
+	var retaliation_result := _apply_stack_effect(
 		battle,
 		String(attacker.get("battle_id", "")),
 		_status_effect_from_ability(retaliation_ability, battle)
 	)
-	messages.append("%s is %s." % [
-		_stack_label(attacker),
-		String(retaliation_ability.get("status_label", "Staggered")).to_lower(),
-	])
+	if bool(retaliation_result.get("applied", false)):
+		messages.append("%s is %s." % [
+			_stack_label(attacker),
+			String(retaliation_ability.get("status_label", "Staggered")).to_lower(),
+		])
+	elif String(retaliation_result.get("message", "")) != "":
+		messages.append(String(retaliation_result.get("message", "")))
 	return messages
 
 static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary) -> Dictionary:
@@ -10157,6 +10429,10 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 				# Fog screens are resolved from immutable authored content so their
 				# inactive metadata cannot perturb deterministic battle RNG state.
 				continue
+			"readiness_writ":
+				# Readiness writs are resolved from immutable authored content so their
+				# inactive metadata cannot perturb deterministic battle RNG state.
+				continue
 			_:
 				continue
 		abilities.append(normalized)
@@ -10197,6 +10473,10 @@ static func _stack_ability_summary(stack: Dictionary) -> String:
 	var fog_screen_name := String(fog_screen.get("name", ""))
 	if fog_screen_name != "" and fog_screen_name not in names:
 		names.append(fog_screen_name)
+	var readiness_writ := _readiness_writ_ability(stack)
+	var readiness_writ_name := String(readiness_writ.get("name", ""))
+	if readiness_writ_name != "" and readiness_writ_name not in names:
+		names.append(readiness_writ_name)
 	return ", ".join(names)
 
 static func _sync_player_force_from_battle(session: SessionStateStoreScript.SessionData) -> void:
@@ -13106,6 +13386,8 @@ static func _append_presentation_event(battle: Dictionary, event_type: String, v
 		"turn_index": int(battle.get("turn_index", 0)),
 		"animation_serial": max(0, int(context.get("animation_serial", battle.get(ANIMATION_EVENT_SERIAL_KEY, 0)))),
 	}
+	if context.has("cleansed_effect_count"):
+		record["cleansed_effect_count"] = max(0, int(context.get("cleansed_effect_count", 0)))
 	var events := _normalize_presentation_event_queue(battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
 	events.push_back(record)
 	while events.size() > PRESENTATION_EVENT_QUEUE_LIMIT:
@@ -13333,7 +13615,7 @@ static func _normalize_presentation_event_queue(value: Variant) -> Array:
 		var text := String(entry.get("visible_text", entry.get("text", ""))).strip_edges()
 		if event_type == "" or text == "":
 			continue
-		normalized.append({
+		var normalized_entry := {
 			"serial": max(0, int(entry.get("serial", 0))),
 			"event_type": event_type,
 			"action_id": String(entry.get("action_id", "")),
@@ -13355,7 +13637,10 @@ static func _normalize_presentation_event_queue(value: Variant) -> Array:
 			"round": max(1, int(entry.get("round", 1))),
 			"turn_index": max(0, int(entry.get("turn_index", 0))),
 			"animation_serial": max(0, int(entry.get("animation_serial", 0))),
-		})
+		}
+		if entry.has("cleansed_effect_count"):
+			normalized_entry["cleansed_effect_count"] = max(0, int(entry.get("cleansed_effect_count", 0)))
+		normalized.append(normalized_entry)
 	while normalized.size() > PRESENTATION_EVENT_QUEUE_LIMIT:
 		normalized.pop_front()
 	return normalized

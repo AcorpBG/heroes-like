@@ -12,6 +12,7 @@ const REQUIRED_ABILITY_IDS := [
 	"brace",
 	"bramble_ground",
 	"fog_screen",
+	"readiness_writ",
 	"harry",
 	"backstab",
 	"fogwake",
@@ -125,6 +126,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_bramble_ground(unit_id)
 		"fog_screen":
 			return _probe_fog_screen(unit_id)
+		"readiness_writ":
+			return _probe_readiness_writ(unit_id)
 		"harry":
 			return _probe_harry(unit_id)
 		"obituary":
@@ -547,6 +550,185 @@ func _probe_fog_screen(unit_id: String) -> Dictionary:
 		"waiting_window": waiting_window,
 		"role_line": role_line,
 		"reason": "" if ok else "fog screen did not preserve fog-only survival, AI parity, summaries, and immutable-state boundaries",
+	}
+
+func _probe_readiness_writ(unit_id: String) -> Dictionary:
+	var authored := _ability_by_id(ContentService.get_unit(unit_id), "readiness_writ")
+	var source := _stack_for_unit(unit_id, "player", 0)
+	var primary := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	var secondary := _stack_for_unit("unit_embercourt_sluicefire_lindworms", "player", 2)
+	var enemy := _defender_stack("enemy", 0)
+	_add_effect(primary, "status_mire_harried")
+	primary["effects"].append(SpellRulesScript.build_battle_effect(
+		"status_staggered", "Staggered", {"initiative": -1}, 2, {"round": 3},
+		"unit_ability_runtime_report", "status_staggered"
+	))
+	_add_effect(secondary, "status_harried")
+	secondary["effects"].append(SpellRulesScript.build_battle_effect(
+		"status_rooted", "Rooted", {"initiative": -1}, 2, {"round": 3},
+		"unit_ability_runtime_report", "status_rooted"
+	))
+	var battle := _battle_for_stacks([source, primary, secondary, enemy])
+	var control_source := source.duplicate(true)
+	control_source["unit_id"] = BASE_DEFENDER_UNIT_ID
+	var control_battle := _battle_for_stacks([control_source, primary.duplicate(true), secondary.duplicate(true), enemy.duplicate(true)])
+	var ai_score := BattleAiRulesScript._attack_score(source, enemy, battle, true)
+	var control_ai_score := BattleAiRulesScript._attack_score(control_source, control_battle["stacks"][3], control_battle, true)
+	var ready_window := BattleRulesScript._active_ability_window_summary(source, battle, enemy)
+	var role_line := BattleRulesScript._active_ability_role_line(source, battle, enemy)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, source, enemy, true, 1)
+	var primary_after := BattleRulesScript._get_stack_by_id(battle, String(primary.get("battle_id", "")))
+	var secondary_after := BattleRulesScript._get_stack_by_id(battle, String(secondary.get("battle_id", "")))
+	var source_after := BattleRulesScript._get_stack_by_id(battle, String(source.get("battle_id", "")))
+	var event_found := false
+	for event in battle.get("battle_presentation_events", []):
+		if event is Dictionary \
+				and String(event.get("event_type", "")) == "cleanse" \
+				and String(event.get("action_id", "")) == "readiness_writ" \
+				and String(event.get("target_battle_id", "")) == String(primary.get("battle_id", "")) \
+				and int(event.get("cleansed_effect_count", 0)) == 2:
+			event_found = true
+			break
+	var spent_window := BattleRulesScript._active_ability_window_summary(source_after, battle, enemy)
+	var second_messages := BattleRulesScript._apply_attack_ability_effects(battle, source_after, enemy, true, 1)
+	var secondary_after_second := BattleRulesScript._get_stack_by_id(battle, String(secondary.get("battle_id", "")))
+
+	var dead_source := _stack_for_unit(unit_id, "player", 0)
+	dead_source["total_health"] = 0
+	var dead_ally := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	_add_effect(dead_ally, "status_harried")
+	var dead_enemy := _defender_stack("enemy", 0)
+	var dead_battle := _battle_for_stacks([dead_source, dead_ally, dead_enemy])
+	var dead_messages := BattleRulesScript._apply_attack_ability_effects(dead_battle, dead_source, dead_enemy, true, 1)
+	var dead_ally_after := BattleRulesScript._get_stack_by_id(dead_battle, String(dead_ally.get("battle_id", "")))
+
+	var stripped_source := _stack_for_unit(unit_id, "player", 0)
+	stripped_source["unit_id"] = BASE_DEFENDER_UNIT_ID
+	var stripped_ally := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	_add_effect(stripped_ally, "status_harried")
+	var stripped_enemy := _defender_stack("enemy", 0)
+	var stripped_battle := _battle_for_stacks([stripped_source, stripped_ally, stripped_enemy])
+	var stripped_messages := BattleRulesScript._apply_attack_ability_effects(stripped_battle, stripped_source, stripped_enemy, true, 1)
+	var stripped_ally_after := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_ally.get("battle_id", "")))
+
+	var clean_source := _stack_for_unit(unit_id, "player", 0)
+	var clean_ally := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	var clean_enemy := _defender_stack("enemy", 0)
+	var clean_battle := _battle_for_stacks([clean_source, clean_ally, clean_enemy])
+	var clean_messages := BattleRulesScript._apply_attack_ability_effects(clean_battle, clean_source, clean_enemy, true, 1)
+	var clean_source_after := BattleRulesScript._get_stack_by_id(clean_battle, String(clean_source.get("battle_id", "")))
+	var preparation_status_id := String(authored.get("preparation_status_id", "status_readiness_prepared"))
+	var preparation_applied := SpellRulesScript.has_effect_id(clean_source_after, clean_battle, preparation_status_id)
+	var block_result := BattleRulesScript._apply_stack_effect(
+		clean_battle,
+		String(clean_ally.get("battle_id", "")),
+		SpellRulesScript.build_battle_effect(
+			"status_mire_harried", "Reedsnared", {"cohesion": -1}, 1, clean_battle,
+			"ability", "harry"
+		)
+	)
+	var clean_ally_after_block := BattleRulesScript._get_stack_by_id(clean_battle, String(clean_ally.get("battle_id", "")))
+	var clean_source_after_block := BattleRulesScript._get_stack_by_id(clean_battle, String(clean_source.get("battle_id", "")))
+
+	var reactive_source := _stack_for_unit(unit_id, "player", 0)
+	var reactive_ally := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	var reactive_enemy := _defender_stack("enemy", 0)
+	var reactive_battle := _battle_for_stacks([reactive_source, reactive_ally, reactive_enemy])
+	var reactive_result := BattleRulesScript._apply_stack_effect(
+		reactive_battle,
+		String(reactive_ally.get("battle_id", "")),
+		SpellRulesScript.build_battle_effect(
+			"status_mire_harried", "Reedsnared", {"cohesion": -1}, 1, reactive_battle,
+			"ability", "harry"
+		)
+	)
+	var reactive_source_after := BattleRulesScript._get_stack_by_id(reactive_battle, String(reactive_source.get("battle_id", "")))
+	var reactive_ally_after := BattleRulesScript._get_stack_by_id(reactive_battle, String(reactive_ally.get("battle_id", "")))
+	var reactive_first_status_absent := not SpellRulesScript.has_effect_id(reactive_ally_after, reactive_battle, "status_mire_harried")
+	var reactive_second_result := BattleRulesScript._apply_stack_effect(
+		reactive_battle,
+		String(reactive_ally.get("battle_id", "")),
+		SpellRulesScript.build_battle_effect(
+			"status_mire_harried", "Reedsnared", {"cohesion": -1}, 1, reactive_battle,
+			"ability", "harry"
+		)
+	)
+	var reactive_ally_after_second := BattleRulesScript._get_stack_by_id(reactive_battle, String(reactive_ally.get("battle_id", "")))
+
+	var reactive_dead_source := _stack_for_unit(unit_id, "player", 0)
+	reactive_dead_source["total_health"] = 0
+	var reactive_dead_ally := _stack_for_unit("unit_embercourt_charter_colossus", "player", 1)
+	var reactive_dead_battle := _battle_for_stacks([reactive_dead_source, reactive_dead_ally, _defender_stack("enemy", 0)])
+	var reactive_dead_result := BattleRulesScript._apply_stack_effect(
+		reactive_dead_battle,
+		String(reactive_dead_ally.get("battle_id", "")),
+		SpellRulesScript.build_battle_effect(
+			"status_mire_harried", "Reedsnared", {"cohesion": -1}, 1, reactive_dead_battle,
+			"ability", "harry"
+		)
+	)
+	var reactive_dead_ally_after := BattleRulesScript._get_stack_by_id(reactive_dead_battle, String(reactive_dead_ally.get("battle_id", "")))
+	var normalized_payload_absent := _ability_by_id(source, "readiness_writ").is_empty()
+	var ok: bool = (
+		not authored.is_empty()
+		and not SpellRulesScript.has_any_effect_ids(primary_after, battle, authored.get("cleansed_status_ids", []))
+		and SpellRulesScript.has_effect_id(secondary_after, battle, "status_harried")
+		and SpellRulesScript.has_effect_id(secondary_after, battle, "status_rooted")
+		and int(source_after.get("ability_uses", {}).get("readiness_writ", 0)) == 1
+		and messages.any(func(message): return String(message).contains("Beacon Muster"))
+		and event_found
+		and is_equal_approx(ai_score, control_ai_score + float(authored.get("ai_attack_score_bonus", 0.0)))
+		and ready_window.contains(String(primary.get("name", "")))
+		and spent_window.contains("already steadied")
+		and role_line.contains("steadies one disrupted allied veteran")
+		and not second_messages.any(func(message): return String(message).contains("Beacon Muster"))
+		and SpellRulesScript.has_effect_id(secondary_after_second, battle, "status_harried")
+		and not dead_messages.any(func(message): return String(message).contains("Beacon Muster"))
+		and SpellRulesScript.has_effect_id(dead_ally_after, dead_battle, "status_harried")
+		and not stripped_messages.any(func(message): return String(message).contains("Beacon Muster"))
+		and SpellRulesScript.has_effect_id(stripped_ally_after, stripped_battle, "status_harried")
+		and clean_messages.any(func(message): return String(message).contains("Beacon Muster") and String(message).contains("holds one writ"))
+		and preparation_applied
+		and bool(block_result.get("blocked", false))
+		and String(block_result.get("message", "")).contains("holds formation")
+		and not SpellRulesScript.has_effect_id(clean_ally_after_block, clean_battle, "status_mire_harried")
+		and not SpellRulesScript.has_effect_id(clean_source_after_block, clean_battle, preparation_status_id)
+		and bool(reactive_result.get("blocked", false))
+		and reactive_first_status_absent
+		and int(reactive_source_after.get("ability_uses", {}).get("readiness_writ", 0)) == 1
+		and bool(reactive_second_result.get("applied", false))
+		and SpellRulesScript.has_effect_id(reactive_ally_after_second, reactive_battle, "status_mire_harried")
+		and bool(reactive_dead_result.get("applied", false))
+		and SpellRulesScript.has_effect_id(reactive_dead_ally_after, reactive_dead_battle, "status_mire_harried")
+		and normalized_payload_absent
+	)
+	return {
+		"ok": ok,
+		"probe": "immutable_once_per_battle_post_shot_readiness_cleanse",
+		"selected_target": String(primary.get("battle_id", "")),
+		"cleansed_primary": not SpellRulesScript.has_any_effect_ids(primary_after, battle, authored.get("cleansed_status_ids", [])),
+		"secondary_harried_retained": SpellRulesScript.has_effect_id(secondary_after, battle, "status_harried"),
+		"secondary_rooted_retained": SpellRulesScript.has_effect_id(secondary_after, battle, "status_rooted"),
+		"uses_recorded": int(source_after.get("ability_uses", {}).get("readiness_writ", 0)),
+		"ai_attack_score": ai_score,
+		"control_ai_attack_score": control_ai_score,
+		"event_found": event_found,
+		"preparation_applied": preparation_applied,
+		"preparation_blocked_status": bool(block_result.get("blocked", false)),
+		"preparation_messages": clean_messages,
+		"preparation_block_message": String(block_result.get("message", "")),
+		"reactive_blocked_status": bool(reactive_result.get("blocked", false)),
+		"reactive_uses_recorded": int(reactive_source_after.get("ability_uses", {}).get("readiness_writ", 0)),
+		"reactive_first_status_absent": reactive_first_status_absent,
+		"reactive_second_status_applied": bool(reactive_second_result.get("applied", false)),
+		"reactive_second_status_present": SpellRulesScript.has_effect_id(reactive_ally_after_second, reactive_battle, "status_mire_harried"),
+		"reactive_dead_source_status_applied": bool(reactive_dead_result.get("applied", false)),
+		"reactive_dead_source_status_present": SpellRulesScript.has_effect_id(reactive_dead_ally_after, reactive_dead_battle, "status_mire_harried"),
+		"ready_window": ready_window,
+		"spent_window": spent_window,
+		"role_line": role_line,
+		"normalized_payload_absent": normalized_payload_absent,
+		"reason": "" if ok else "readiness writ did not preserve deterministic one-line cleanse, once-per-battle scope, AI valuation, summaries, and immutable-state boundaries",
 	}
 
 func _probe_harry(unit_id: String) -> Dictionary:

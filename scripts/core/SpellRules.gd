@@ -1273,6 +1273,17 @@ static func normalize_status_immunity_ids(value: Variant) -> Array:
 				ids.append(status_id)
 	return ids
 
+static func normalize_blocked_status_ids(value: Variant) -> Array:
+	var ids := []
+	if value is Array:
+		for status_id_value in value:
+			var status_id := String(status_id_value).strip_edges()
+			if status_id != "" and status_id not in ids:
+				ids.append(status_id)
+				if ids.size() >= 16:
+					break
+	return ids
+
 static func normalize_school_resistance(value: Variant) -> Dictionary:
 	var result := {}
 	if value is Dictionary:
@@ -1858,8 +1869,7 @@ static func _normalize_effects(value: Variant) -> Array:
 				var legacy_kind := String(effect.get("kind", ""))
 				if legacy_kind != "":
 					modifiers[legacy_kind] = int(effect.get("amount", 0))
-			effects.append(
-				{
+			var normalized_effect := {
 					"effect_id": String(effect.get("effect_id", String(effect.get("spell_id", effect.get("kind", ""))))),
 					"source_type": String(effect.get("source_type", "spell" if String(effect.get("spell_id", "")) != "" else "status")),
 					"source_id": String(effect.get("source_id", effect.get("spell_id", ""))),
@@ -1871,7 +1881,13 @@ static func _normalize_effects(value: Variant) -> Array:
 					"status_immunity_ids": normalize_status_immunity_ids(effect.get("status_immunity_ids", [])),
 					"expires_after_round": int(effect.get("expires_after_round", 0)),
 				}
-			)
+			var blocked_status_ids := normalize_blocked_status_ids(effect.get("blocked_status_ids", []))
+			if not blocked_status_ids.is_empty():
+				normalized_effect["blocked_status_ids"] = blocked_status_ids
+				normalized_effect["protected_side"] = String(effect.get("protected_side", ""))
+				normalized_effect["target_role"] = String(effect.get("target_role", ""))
+				normalized_effect["target_min_tier"] = max(1, int(effect.get("target_min_tier", 1)))
+			effects.append(normalized_effect)
 	return effects
 
 static func _hero_payload_for_target_side(battle: Dictionary, target_stack: Dictionary) -> Dictionary:
