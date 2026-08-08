@@ -3899,6 +3899,11 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
 	if stack.is_empty():
 		return ""
+	var fog_screen := _fog_screen_ability(stack)
+	if not fog_screen.is_empty():
+		if _fog_screen_available(stack, battle, fog_screen):
+			return "%s is live in this fog bank, reducing incoming damage while the screen holds." % String(fog_screen.get("name", "Fog Screen"))
+		return "%s is waiting for a natural fog bank." % String(fog_screen.get("name", "Fog Screen"))
 	var distance = int(battle.get("distance", 1))
 	if _reach_available(stack, battle) and not bool(stack.get("ranged", false)) and distance == 1:
 		return "Reach makes melee contact live from the current closing distance."
@@ -4026,6 +4031,10 @@ static func _active_ability_role_line(stack: Dictionary, battle: Dictionary, tar
 	if stack.is_empty():
 		return "No active ability role."
 	var role_lines := []
+	var fog_screen := _fog_screen_ability(stack)
+	if not fog_screen.is_empty():
+		var fog_state := "reduces incoming damage in a natural fog bank" if _fog_screen_available(stack, battle, fog_screen) else "waits for a natural fog bank before reducing incoming damage"
+		role_lines.append("%s %s" % [String(fog_screen.get("name", "Fog Screen")), fog_state])
 	for ability in stack.get("abilities", []):
 		if not (ability is Dictionary):
 			continue
@@ -9489,6 +9498,9 @@ static func _ability_damage_modifier(
 	var shielding = _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+	var fog_screen := _fog_screen_ability(defender)
+	if not fog_screen.is_empty() and _fog_screen_available(defender, battle, fog_screen):
+		modifier *= float(fog_screen.get("incoming_damage_multiplier", 1.0))
 	if is_ranged:
 		modifier *= _linked_ranged_attack_screen_multiplier(defender, battle)
 	if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", false)) or not shielding.is_empty()):
@@ -10141,6 +10153,10 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 				# Immutable authored content owns this conditional role so inactive
 				# bramble metadata cannot perturb deterministic battle RNG state.
 				continue
+			"fog_screen":
+				# Fog screens are resolved from immutable authored content so their
+				# inactive metadata cannot perturb deterministic battle RNG state.
+				continue
 			_:
 				continue
 		abilities.append(normalized)
@@ -10177,6 +10193,10 @@ static func _stack_ability_summary(stack: Dictionary) -> String:
 	var bramble_name := String(bramble_ground.get("name", ""))
 	if bramble_name != "" and bramble_name not in names:
 		names.append(bramble_name)
+	var fog_screen := _fog_screen_ability(stack)
+	var fog_screen_name := String(fog_screen.get("name", ""))
+	if fog_screen_name != "" and fog_screen_name not in names:
+		names.append(fog_screen_name)
 	return ", ".join(names)
 
 static func _sync_player_force_from_battle(session: SessionStateStoreScript.SessionData) -> void:
@@ -11739,6 +11759,21 @@ static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, abi
 	var side := String(stack.get("side", ""))
 	for objective_type in objective_types:
 		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _fog_screen_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "fog_screen")
+
+static func _fog_screen_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var fog_screen := ability if not ability.is_empty() else _fog_screen_ability(stack)
+	if stack.is_empty() or fog_screen.is_empty():
+		return false
+	var required_tags = fog_screen.get("required_battlefield_tags", [])
+	if not (required_tags is Array) or required_tags.is_empty():
+		return false
+	for tag in required_tags:
+		if _battle_has_tag(battle, String(tag)):
 			return true
 	return false
 

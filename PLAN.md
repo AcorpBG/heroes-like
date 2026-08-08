@@ -2535,6 +2535,39 @@ Outcome:
 - all `115/115` authored ability instances across 103 units pass focused runtime consequence proof, including unsupported ground, held retaliation/root, held cohesion, clean/rooted targets, ranged and retaliation exclusions, stripped authored identity, and live/AI parity;
 - the all-live 100-seed four-week matrix stays at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures; autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`, Bellwake Oars remain ability-empty, and the game remains incomplete.
 
+## Veilmourn Bellwake Oars Fog Screen
+
+id: `combat-veilmourn-bellwake-oars-fog-screen-10184`
+
+Status: complete.
+
+Selected Phase 6 faction-identity implementation slice. Bellwake Oars are the
+last ability-empty production unit across all six seven-tier faction ladders,
+while the faction bible defines them as evasive screens and scouts that survive
+better in fog.
+
+Implementation target:
+- give Bellwake Oars one bounded fog-screen survival role on authored `fog_bank` battlefields without adding unconditional durability;
+- resolve conditional fog metadata from immutable unit content so non-fog battles retain exact deterministic state while live rules, tactical AI, player summaries, and the fast benchmark consume the same contract;
+- preserve unit base stats, growth, recruitment, economy, saves, campaigns, packaging, Native RMG, and benchmark thresholds.
+
+Completion criteria:
+- Bellwake Oars take less incoming damage only in a fog bank, with clear-weather, stripped-authored-identity, melee, ranged, retaliation, live-rule, and tactical-AI controls;
+- the all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, `153.5` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or seven side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, encounter ids, or benchmark-only behavior;
+- do not change other units, base stats, economy, saves, campaigns, packaging, Native RMG, encounter rosters, or benchmark thresholds;
+- do not claim final Veilmourn identity, final faction balance, or overall release completion.
+
+Result:
+- Bellwake Oars now own Mistwake Screen, a bounded two-percent incoming-damage reduction that activates only on authored `fog_bank` battlefields and covers melee, ranged, and retaliation damage;
+- live rules and tactical AI resolve the conditional role from immutable unit content, keeping clear-weather normalized battle state and deterministic RNG unchanged while player summaries expose both active and waiting states;
+- focused runtime proof passes all 116 authored ability instances across 103 units, leaving zero ability-empty production units across the six faction ladders;
+- the active 59-encounter queue remains clear with signature `829808c9`, and the all-live 100-seed four-week matrix remains exact at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures;
+- autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`, the unsupported Native RMG exact-state chain remains fail-closed, and overall release completion remains open.
+
 ## Work Selection Gates
 
 Before starting any worker:

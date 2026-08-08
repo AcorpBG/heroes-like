@@ -11,6 +11,7 @@ const REQUIRED_ABILITY_IDS := [
 	"rot_cant",
 	"brace",
 	"bramble_ground",
+	"fog_screen",
 	"harry",
 	"backstab",
 	"fogwake",
@@ -122,6 +123,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_brace(unit_id)
 		"bramble_ground":
 			return _probe_bramble_ground(unit_id)
+		"fog_screen":
+			return _probe_fog_screen(unit_id)
 		"harry":
 			return _probe_harry(unit_id)
 		"obituary":
@@ -479,6 +482,71 @@ func _probe_bramble_ground(unit_id: String) -> Dictionary:
 		"control_cohesion_delta": control_cohesion,
 		"normalized_payload_absent": normalized_payload_absent,
 		"reason": "" if ok else "bramble ground did not preserve held-objective, rooted-target, AI, and immutable-state boundaries",
+	}
+
+func _probe_fog_screen(unit_id: String) -> Dictionary:
+	var authored := _ability_by_id(ContentService.get_unit(unit_id), "fog_screen")
+	var defender := _stack_for_unit(unit_id, "player", 0)
+	var attacker := _defender_stack("enemy", 0)
+	var clear_battle := _battle_for_stacks([defender.duplicate(true), attacker.duplicate(true)])
+	var clear_defender := BattleRulesScript._get_stack_by_id(clear_battle, String(defender.get("battle_id", "")))
+	var clear_attacker := BattleRulesScript._get_stack_by_id(clear_battle, String(attacker.get("battle_id", "")))
+	var clear_modifier := BattleRulesScript._ability_damage_modifier(clear_attacker, clear_defender, clear_battle, false, false, 0)
+
+	var fog_battle := _battle_for_stacks([defender.duplicate(true), attacker.duplicate(true)])
+	fog_battle["battlefield_tags"] = ["fog_bank"]
+	var fog_defender := BattleRulesScript._get_stack_by_id(fog_battle, String(defender.get("battle_id", "")))
+	var fog_attacker := BattleRulesScript._get_stack_by_id(fog_battle, String(attacker.get("battle_id", "")))
+	var melee_modifier := BattleRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, false, false, 0)
+	var ranged_modifier := BattleRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, true, false, 2)
+	var retaliation_modifier := BattleRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, false, true, 0)
+	var ai_melee_modifier := BattleAiRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, false, false, 0)
+	var ai_ranged_modifier := BattleAiRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, true, false, 2)
+	var ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(fog_attacker, fog_defender, fog_battle, false, true, 0)
+
+	var control_defender := defender.duplicate(true)
+	control_defender["unit_id"] = BASE_DEFENDER_UNIT_ID
+	var control_battle := _battle_for_stacks([control_defender, attacker.duplicate(true)])
+	control_battle["battlefield_tags"] = ["fog_bank"]
+	var control_attacker := BattleRulesScript._get_stack_by_id(control_battle, String(attacker.get("battle_id", "")))
+	var control_modifier := BattleRulesScript._ability_damage_modifier(control_attacker, control_defender, control_battle, false, false, 0)
+	var expected_multiplier := float(authored.get("incoming_damage_multiplier", 1.0))
+	var normalized_payload_absent := _ability_by_id(defender, "fog_screen").is_empty()
+	var active_window := BattleRulesScript._active_ability_window_summary(fog_defender, fog_battle, fog_attacker)
+	var waiting_window := BattleRulesScript._active_ability_window_summary(clear_defender, clear_battle, clear_attacker)
+	var role_line := BattleRulesScript._active_ability_role_line(fog_defender, fog_battle, fog_attacker)
+	var ok: bool = (
+		not authored.is_empty()
+		and authored.get("required_battlefield_tags", []) == ["fog_bank"]
+		and is_equal_approx(clear_modifier, 1.0)
+		and is_equal_approx(control_modifier, 1.0)
+		and is_equal_approx(melee_modifier, expected_multiplier)
+		and is_equal_approx(ranged_modifier, expected_multiplier)
+		and is_equal_approx(retaliation_modifier, expected_multiplier)
+		and is_equal_approx(ai_melee_modifier, melee_modifier)
+		and is_equal_approx(ai_ranged_modifier, ranged_modifier)
+		and is_equal_approx(ai_retaliation_modifier, retaliation_modifier)
+		and normalized_payload_absent
+		and active_window.contains("live in this fog bank")
+		and waiting_window.contains("waiting for a natural fog bank")
+		and role_line.contains(String(authored.get("name", "")))
+	)
+	return {
+		"ok": ok,
+		"probe": "immutable_fog_bank_incoming_damage_screen",
+		"clear_modifier": clear_modifier,
+		"control_modifier": control_modifier,
+		"fog_melee_modifier": melee_modifier,
+		"fog_ranged_modifier": ranged_modifier,
+		"fog_retaliation_modifier": retaliation_modifier,
+		"fog_ai_melee_modifier": ai_melee_modifier,
+		"fog_ai_ranged_modifier": ai_ranged_modifier,
+		"fog_ai_retaliation_modifier": ai_retaliation_modifier,
+		"normalized_payload_absent": normalized_payload_absent,
+		"active_window": active_window,
+		"waiting_window": waiting_window,
+		"role_line": role_line,
+		"reason": "" if ok else "fog screen did not preserve fog-only survival, AI parity, summaries, and immutable-state boundaries",
 	}
 
 func _probe_harry(unit_id: String) -> Dictionary:

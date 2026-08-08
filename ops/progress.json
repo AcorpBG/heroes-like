@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Thornwake Seedcutters' bramble-carrier and rooted-ground production role; Bellwake Oars remain the final ability-empty production unit.",
+  "currentNotes": "Completed Bellwake Oars' fog-screen production role; all six faction ladders now have no ability-empty production units.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-thornwake-seedcutter-bramble-ground-10184",
-  "currentSliceId": "combat-thornwake-seedcutter-bramble-ground-10184",
-  "currentSliceNotes": "Completed immutable-content Bramble Stake behavior with held-ground defense, retaliation rooting, and rooted-target primary-melee pressure while preserving unsupported encounter RNG state.",
+  "currentSlice": "combat-veilmourn-bellwake-oars-fog-screen-10184",
+  "currentSliceId": "combat-veilmourn-bellwake-oars-fog-screen-10184",
+  "currentSliceNotes": "Completed immutable-content Mistwake Screen with fog-only incoming-damage reduction, exact clear-weather state, live/AI parity, and player-visible active and waiting summaries.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Seedcutter Bramble Ground",
-  "currentSliceUpdatedAt": "2026-08-08T21:13:19Z",
+  "currentSliceTitle": "Veilmourn Bellwake Oars Fog Screen",
+  "currentSliceUpdatedAt": "2026-08-08T21:36:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20536,6 +20536,92 @@
       ],
       "remainingWork": "No work remains in this slice. Veilmourn Bellwake Oars remain the final ability-empty production unit; faction balance and overall game completion remain open.",
       "completedAt": "2026-08-08T21:13:19Z"
+    },
+    {
+      "id": "combat-veilmourn-bellwake-oars-fog-screen-10184",
+      "title": "Veilmourn Bellwake Oars Fog Screen",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the final ability-empty production unit as a bounded Veilmourn fog screen without unconditional durability, encounter-specific tuning, or inactive-state RNG drift.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_bellwake_oars_ability_count": 0,
+        "ability_empty_production_unit_count": 1,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 4.0,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Bellwake Oars take less incoming damage only on authored fog_bank battlefields through live rules, tactical AI, summaries, benchmark behavior, validation, and focused proof",
+        "Focused proof covers clear weather, stripped authored identity, melee, ranged, retaliation, normalized-state absence, and tactical-AI parity",
+        "The all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, 153.5 severity, two rows at or above 65 percent, 67.5 percent maximum dominance, or seven side-bias points",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, encounter-id, or benchmark-only hard-coding",
+        "other-unit, base-stat, growth, recruitment, economy, spell, hero, save, strategic-AI, campaign, packaging, Native RMG, encounter-roster, or benchmark-threshold changes",
+        "claiming final Veilmourn identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-08T21:16:42Z",
+      "updatedAt": "2026-08-08T21:36:21Z",
+      "startedAt": "2026-08-08T21:16:42Z",
+      "notes": "Bellwake Oars now own Mistwake Screen: immutable authored fog-bank identity drives a bounded two-percent incoming-damage reduction without changing clear-weather normalized battle state or deterministic RNG. Live rules, tactical AI, player summaries, and the fast benchmark share the contract.",
+      "result": {
+        "production_bellwake_oars_ability_count": 1,
+        "ability_empty_production_unit_count": 0,
+        "fog_screen_required_battlefield_tags": [
+          "fog_bank"
+        ],
+        "fog_screen_incoming_damage_multiplier": 0.98,
+        "ability_instance_count": 116,
+        "ability_runtime_consequence_count": 116,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 4.0,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 116/116 authored ability instances across 103 units)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate (passed; 28 outliers / 153.5 severity / 2 severe / 67.5 max dominance / 4.0 side bias / 0 structural failures)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failed sections; retained unsupported Native RMG fail-closed warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 -m json.tool content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning, unsupported Native RMG exact-state generation remains fail-closed, and overall game completion remains open.",
+      "completedAt": "2026-08-08T21:36:21Z"
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",

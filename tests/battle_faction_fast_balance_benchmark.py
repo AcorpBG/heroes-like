@@ -1619,6 +1619,9 @@ class FastBattleBenchmark:
         shielding = self._ability_by_id(defender, "shielding")
         if is_ranged and shielding:
             modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+        fog_screen = self._ability_by_id(defender, "fog_screen")
+        if fog_screen and self._fog_screen_available(defender, battle, fog_screen):
+            modifier *= float(fog_screen.get("incoming_damage_multiplier", 1.0))
         if is_ranged:
             modifier *= self._linked_ranged_attack_screen_multiplier(defender, battle)
         if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", False)) or bool(shielding)):
@@ -2405,6 +2408,15 @@ class FastBattleBenchmark:
             return False
         side = str(stack.get("side", ""))
         return any(self._side_controls_field_objective_type(battle, side, str(value)) for value in objective_types)
+
+    def _fog_screen_available(self, stack: dict[str, Any], battle: dict[str, Any], ability: dict[str, Any] | None = None) -> bool:
+        fog_screen = ability or self._ability_by_id(stack, "fog_screen")
+        if not stack or not fog_screen:
+            return False
+        required_tags = fog_screen.get("required_battlefield_tags", [])
+        if not isinstance(required_tags, list) or not required_tags:
+            return False
+        return any(self._battle_has_tag(battle, str(value)) for value in required_tags)
 
     def _stack_screen_distance(self, left: dict[str, Any], right: dict[str, Any]) -> int:
         left_hex = left.get("hex", {})
