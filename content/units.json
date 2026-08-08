@@ -548,6 +548,39 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Fordhook Reach",
+          "description": "Cadets cast their river hooks across a held crossing, trading leverage for contact before the lines fully close.",
+          "distance_one_multiplier": 0.5,
+          "held_objective_types": [
+            "cover_line",
+            "obstruction_line",
+            "breach_point"
+          ]
+        },
+        {
+          "id": "brace",
+          "name": "Crossing Brace",
+          "description": "Cadets set their hooks around a held crossing; while defending there, their answer checks the attacker and steadies the line.",
+          "retaliation_multiplier": 1.0,
+          "held_objective_retaliation_multiplier": 1.03,
+          "held_objective_types": [
+            "cover_line",
+            "obstruction_line",
+            "breach_point"
+          ],
+          "grants_base_cohesion": false,
+          "defending_cohesion_bonus": 1,
+          "status_id": "status_staggered",
+          "status_label": "Fordhooked",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1
+          }
+        }
+      ],
       "growth": 8,
       "cost": {
         "gold": 55
@@ -626,6 +659,20 @@
       "initiative": 7,
       "retaliations": 1,
       "ranged": true,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Held-Line Barge Shot",
+          "description": "Crews loose their heaviest barge bows only behind a defending screen or from a controlled firing lane.",
+          "damage_multiplier": 1.01,
+          "min_distance": 1,
+          "requires_protected_lane": true,
+          "protected_lane_objective_types": [
+            "cover_line",
+            "lane_battery"
+          ]
+        }
+      ],
       "growth": 4,
       "cost": {
         "gold": 170,

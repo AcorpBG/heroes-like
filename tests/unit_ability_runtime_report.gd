@@ -155,19 +155,36 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 func _probe_reach(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _defender_stack()
+	var reach := _ability_by_id(attacker, "reach")
+	var held_objective_types: Array = reach.get("held_objective_types", []) if reach.get("held_objective_types", []) is Array else []
 	_set_hex(attacker, 4, 3)
 	_set_hex(defender, 6, 3)
 	var battle := _battle_for_stacks([attacker, defender])
+	if not held_objective_types.is_empty():
+		battle["field_objectives"] = [{"type": String(held_objective_types[0]), "control_side": "player"}]
 	var stripped := _without_ability(attacker, "reach")
 	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
+	if not held_objective_types.is_empty():
+		stripped_battle["field_objectives"] = battle["field_objectives"].duplicate(true)
 	var legal_with := BattleRulesScript._can_make_melee_attack(attacker, battle, defender)
 	var legal_without := BattleRulesScript._can_make_melee_attack(stripped, stripped_battle, defender)
+	var ai_legal_with := BattleAiRulesScript._can_make_melee_attack(attacker, battle, defender)
+	var unsupported_attacker := attacker.duplicate(true)
+	var unsupported_defender := defender.duplicate(true)
+	var unsupported_battle := _battle_for_stacks([unsupported_attacker, unsupported_defender])
+	var unsupported_blocked := held_objective_types.is_empty() or (
+		not BattleRulesScript._can_make_melee_attack(unsupported_attacker, unsupported_battle, unsupported_defender)
+		and not BattleAiRulesScript._can_make_melee_attack(unsupported_attacker, unsupported_battle, unsupported_defender)
+	)
 	return {
-		"ok": legal_with and not legal_without,
-		"probe": "reach_hex_distance_two_melee_legality",
+		"ok": legal_with and ai_legal_with and not legal_without and unsupported_blocked,
+		"probe": "reach_hex_distance_two_held_objective_melee_legality",
 		"legal_with": legal_with,
+		"ai_legal_with": ai_legal_with,
 		"legal_without": legal_without,
-		"reason": "" if legal_with and not legal_without else "reach did not uniquely unlock distance-two melee",
+		"held_objective_types": held_objective_types,
+		"unsupported_lane_blocked": unsupported_blocked,
+		"reason": "" if legal_with and ai_legal_with and not legal_without and unsupported_blocked else "reach did not uniquely unlock its authored distance-two objective lane",
 	}
 
 func _probe_hookline(unit_id: String) -> Dictionary:
@@ -324,22 +341,50 @@ func _probe_brace(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _defender_stack()
 	attacker["defending"] = true
+	var brace := _ability_by_id(attacker, "brace")
 	var battle := _battle_for_stacks([attacker, defender])
 	var stripped := _without_ability(attacker, "brace")
 	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
 	var retaliation_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, true, 0)
 	var retaliation_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, true, 0)
-	var defend_with := _defend_cohesion_delta(attacker, "brace")
-	var defend_without := _defend_cohesion_delta(stripped, "brace_stripped")
-	var ok := retaliation_with > retaliation_without and defend_with > defend_without
+	var ai_retaliation_with := BattleAiRulesScript._ability_damage_modifier(attacker, defender, battle, false, true, 0)
+	var held_attacker := attacker.duplicate(true)
+	var held_defender := defender.duplicate(true)
+	var held_battle := _battle_for_stacks([held_attacker, held_defender])
+	var held_objective_types: Array = brace.get("held_objective_types", []) if brace.get("held_objective_types", []) is Array else []
+	if not held_objective_types.is_empty():
+		held_battle["field_objectives"] = [{"type": String(held_objective_types[0]), "control_side": "player"}]
+	var held_retaliation := BattleRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, false, true, 0)
+	var held_ai_retaliation := BattleAiRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, false, true, 0)
+	var defend_with := _defend_cohesion_delta(attacker, "brace", held_objective_types)
+	var defend_without := _defend_cohesion_delta(stripped, "brace_stripped", held_objective_types)
+	var base_retaliation_contract_ok := (
+		retaliation_with > retaliation_without
+		if held_objective_types.is_empty()
+		else is_equal_approx(retaliation_with, retaliation_without)
+	)
+	var held_objective_contract_ok := held_objective_types.is_empty() or (
+		held_retaliation > retaliation_with
+		and is_equal_approx(held_ai_retaliation, held_retaliation)
+	)
+	var ok := (
+		base_retaliation_contract_ok
+		and is_equal_approx(ai_retaliation_with, retaliation_with)
+		and defend_with > defend_without
+		and held_objective_contract_ok
+	)
 	return {
 		"ok": ok,
-		"probe": "brace_retaliation_and_defend_pressure",
+		"probe": "brace_retaliation_defend_and_held_objective_pressure",
 		"retaliation_modifier_with": retaliation_with,
 		"retaliation_modifier_without": retaliation_without,
+		"ai_retaliation_modifier_with": ai_retaliation_with,
+		"held_objective_types": held_objective_types,
+		"held_objective_retaliation_modifier": held_retaliation,
+		"held_objective_ai_retaliation_modifier": held_ai_retaliation,
 		"defend_cohesion_delta_with": defend_with,
 		"defend_cohesion_delta_without": defend_without,
-		"reason": "" if ok else "brace did not increase both retaliation modifier and defend cohesion",
+		"reason": "" if ok else "brace did not preserve live/AI retaliation, defend cohesion, and held-objective pressure",
 	}
 
 func _probe_harry(unit_id: String) -> Dictionary:
@@ -1588,6 +1633,7 @@ func _probe_volley(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _defender_stack()
 	var volley := _ability_by_id(attacker, "volley")
+	var requires_protected_lane := bool(volley.get("requires_protected_lane", false))
 	var min_distance: int = max(1, int(volley.get("min_distance", 1)))
 	var battle := _battle_for_stacks([attacker, defender])
 	var stripped := _without_ability(attacker, "volley")
@@ -1606,9 +1652,20 @@ func _probe_volley(unit_id: String) -> Dictionary:
 	defending_ally["defending"] = true
 	var held_attacker := attacker.duplicate(true)
 	var held_defender := _defender_stack()
+	_set_hex(held_attacker, 4, 3)
+	_set_hex(defending_ally, 3, 3)
+	_set_hex(held_defender, 7, 3)
 	var held_battle := _battle_for_stacks([held_attacker, defending_ally, held_defender])
 	var held_modifier := BattleRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, true, false, min_distance)
 	var held_ai_modifier := BattleAiRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, true, false, min_distance)
+	var objective_attacker := attacker.duplicate(true)
+	var objective_defender := defender.duplicate(true)
+	var objective_battle := _battle_for_stacks([objective_attacker, objective_defender])
+	var protected_objective_types: Array = volley.get("protected_lane_objective_types", []) if volley.get("protected_lane_objective_types", []) is Array else []
+	if not protected_objective_types.is_empty():
+		objective_battle["field_objectives"] = [{"type": String(protected_objective_types[0]), "control_side": "player"}]
+	var objective_modifier := BattleRulesScript._ability_damage_modifier(objective_attacker, objective_defender, objective_battle, true, false, min_distance)
+	var objective_ai_modifier := BattleAiRulesScript._ability_damage_modifier(objective_attacker, objective_defender, objective_battle, true, false, min_distance)
 	var below_distance_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, true, false, max(0, min_distance - 1))
 	var melee_modifier := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
 	var melee_control_modifier := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, false, 0)
@@ -1622,9 +1679,20 @@ func _probe_volley(unit_id: String) -> Dictionary:
 		and is_equal_approx(held_modifier, modifier_with * 1.05)
 		and marked_role.contains("marked targets")
 	)
+	var protected_lane_contract_ok := (
+		modifier_with > modifier_without
+		if not requires_protected_lane
+		else (
+			is_equal_approx(modifier_with, modifier_without)
+			and held_modifier > modifier_with
+			and not protected_objective_types.is_empty()
+			and objective_modifier > modifier_with
+			and is_equal_approx(objective_ai_modifier, objective_modifier)
+		)
+	)
 	var ok: bool = (
 		bool(attacker.get("ranged", false))
-		and modifier_with > modifier_without
+		and protected_lane_contract_ok
 		and is_equal_approx(ai_modifier_with, modifier_with)
 		and is_equal_approx(ai_modifier_without, modifier_without)
 		and is_equal_approx(status_ai_modifier, status_modifier)
@@ -1645,6 +1713,10 @@ func _probe_volley(unit_id: String) -> Dictionary:
 		"status_ai_modifier": status_ai_modifier,
 		"held_modifier": held_modifier,
 		"held_ai_modifier": held_ai_modifier,
+		"requires_protected_lane": requires_protected_lane,
+		"protected_lane_objective_types": protected_objective_types,
+		"objective_modifier": objective_modifier,
+		"objective_ai_modifier": objective_ai_modifier,
 		"below_distance_modifier": below_distance_modifier,
 		"melee_modifier": melee_modifier,
 		"melee_control_modifier": melee_control_modifier,
@@ -2228,7 +2300,7 @@ func _probe_foundry_aura(unit_id: String) -> Dictionary:
 		],
 	}
 
-func _defend_cohesion_delta(stack: Dictionary, label: String) -> int:
+func _defend_cohesion_delta(stack: Dictionary, label: String, held_objective_types: Array = []) -> int:
 	var actor := stack.duplicate(true)
 	actor["battle_id"] = "%s_%s" % [String(actor.get("battle_id", "stack")), label]
 	actor["cohesion_base"] = 4
@@ -2236,6 +2308,8 @@ func _defend_cohesion_delta(stack: Dictionary, label: String) -> int:
 	actor["defending"] = false
 	var defender := _defender_stack("enemy", 0)
 	var battle := _battle_for_stacks([actor, defender])
+	if not held_objective_types.is_empty():
+		battle["field_objectives"] = [{"type": String(held_objective_types[0]), "control_side": "player"}]
 	var before := BattleRulesScript._stack_cohesion_total(actor, battle)
 	BattleRulesScript._apply_defend_pressure(battle, String(actor.get("battle_id", "")))
 	var updated := BattleRulesScript._get_stack_by_id(battle, String(actor.get("battle_id", "")))

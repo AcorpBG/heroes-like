@@ -2439,7 +2439,7 @@ Result:
 
 id: `combat-embercourt-early-ladder-completion-10184`
 
-Status: pending.
+Status: complete.
 
 Selected Phase 6 faction-identity implementation slice. Fordhook Cadets and
 Bargebow Crews are the remaining ability-empty production units in Embercourt's
@@ -2461,6 +2461,14 @@ Non-goals:
 - do not hard-code faction ids, matchup ids, week numbers, army counts, or benchmark-only behavior;
 - do not change other units or broad combat rules unless a shared source-backed contract is required by these two roles;
 - do not claim final Embercourt identity, final faction balance, or overall release completion.
+
+Result:
+- Fordhook Cadets now gain half-damage reach only while their side controls a crossing-shaped field objective, and Crossing Brace adds defend cohesion plus a three-percent retaliation payoff only on that held objective without raising their global base cohesion;
+- Bargebow Crews now gain a bounded one-percent heavy-shot multiplier only behind an adjacent defending allied screen or from a controlled cover-line or lane-battery objective, while retaining six shots;
+- shared live rules, tactical AI, player summaries, the fast benchmark, content validation, and focused runtime proof consume the same authored contracts; optional fields remain absent from legacy normalized abilities so deterministic battle seeds and unrelated encounter outcomes remain exact;
+- all `112/112` authored ability instances across 103 units pass focused runtime consequence proof, including unsupported-lane, stripped-ability, role, distance, live-rule, and tactical-AI controls;
+- the all-live 100-seed four-week matrix stays within bounds at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `3.93` maximum side bias / zero structural failures;
+- the 59-encounter active breadth queue remains clear at signature `829808c9`; autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning` and the game remains incomplete.
 
 ## Work Selection Gates
 
