@@ -1261,7 +1261,11 @@ class FastBattleBenchmark:
             return
         if action_id == "defend":
             active["defending"] = True
-            self._adjust_cohesion(active, 1)
+            cohesion_gain = 1
+            bramble_ground = self._ability_by_id(active, "bramble_ground")
+            if bramble_ground and self._bramble_ground_available(active, battle, bramble_ground):
+                cohesion_gain += max(0, int(bramble_ground.get("defending_cohesion_bonus", 0)))
+            self._adjust_cohesion(active, cohesion_gain)
             return
         if action_id not in ["shoot", "strike"]:
             active["defending"] = True
@@ -1415,6 +1419,9 @@ class FastBattleBenchmark:
                 score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
         if self._has_ability(attacker, "backstab") and not self._counter_ambush_flare_context(battle, target, "backstab") and self._has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
             score += 2.5
+        bramble_ground = self._ability_by_id(attacker, "bramble_ground")
+        if not is_ranged and bramble_ground and self._has_effect_id(target, battle, str(bramble_ground.get("status_id", STATUS_ROOTED))):
+            score += float(bramble_ground.get("ai_rooted_target_priority_bonus", 0.0))
         fogwake = self._ability_by_id(attacker, "fogwake")
         if fogwake and not is_ranged and self._stack_is_isolated(battle, target) and not self._counter_ambush_flare_context(battle, target, "fogwake"):
             score += float(fogwake.get("ai_target_priority_bonus", 0.0))
@@ -1475,7 +1482,7 @@ class FastBattleBenchmark:
             score -= 3.0
         if int(battle.get("distance", 1)) > 0 and not bool(active.get("ranged", False)):
             score -= 2.0
-        if self._brace_available(active, battle) and int(battle.get("distance", 1)) <= 1:
+        if (self._brace_available(active, battle) or self._bramble_ground_available(active, battle)) and int(battle.get("distance", 1)) <= 1:
             score += 3.0
         if self._has_ability(active, "formation_guard") and self._allied_ranged_count(battle, str(active.get("side", ""))) > 0:
             score += 2.5
@@ -1550,6 +1557,9 @@ class FastBattleBenchmark:
             modifier *= float(brace.get("retaliation_multiplier", 1.0))
             if self._brace_has_held_objective(attacker, battle, brace):
                 modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+        bramble_ground = self._ability_by_id(attacker, "bramble_ground")
+        if is_retaliation and bool(attacker.get("defending", False)) and bramble_ground and self._bramble_ground_available(attacker, battle, bramble_ground):
+            modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))
         if is_retaliation:
             retaliation_pressure = self._effect_bonus(attacker, battle, "retaliation")
             if retaliation_pressure < 0:
@@ -1562,6 +1572,8 @@ class FastBattleBenchmark:
             modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
         if backstab and backstab_attack_eligible and self._health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
             modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
+        if bramble_ground and not is_ranged and not is_retaliation and self._has_effect_id(defender, battle, str(bramble_ground.get("status_id", STATUS_ROOTED))):
+            modifier *= float(bramble_ground.get("rooted_damage_multiplier", 1.0))
         fogwake = self._ability_by_id(attacker, "fogwake")
         if fogwake and not is_ranged and not is_retaliation and self._stack_is_isolated(battle, defender):
             fogwake_flare = self._counter_ambush_flare_context(battle, defender, "fogwake")
@@ -1892,13 +1904,17 @@ class FastBattleBenchmark:
 
     def _apply_retaliation_ability_effects(self, battle: dict[str, Any], retaliator: dict[str, Any], attacker: dict[str, Any], counts: Counter[str]) -> None:
         brace = self._ability_by_id(retaliator, "brace")
-        if brace and bool(retaliator.get("defending", False)):
+        bramble_ground = self._ability_by_id(retaliator, "bramble_ground")
+        retaliation_ability = brace if brace and self._brace_available(retaliator, battle) else {}
+        if not retaliation_ability and bramble_ground and self._bramble_ground_available(retaliator, battle, bramble_ground):
+            retaliation_ability = bramble_ground
+        if retaliation_ability and bool(retaliator.get("defending", False)):
             self._apply_effect(attacker, {
-                "effect_id": str(brace.get("status_id", "")),
-                "label": str(brace.get("status_label", "Staggered")),
-                "duration_rounds": int(brace.get("duration_rounds", 1)),
-                "modifiers": brace.get("modifiers", {}),
-            }, battle, "ability", "brace")
+                "effect_id": str(retaliation_ability.get("status_id", "")),
+                "label": str(retaliation_ability.get("status_label", "Staggered")),
+                "duration_rounds": int(retaliation_ability.get("duration_rounds", 1)),
+                "modifiers": retaliation_ability.get("modifiers", {}),
+            }, battle, "ability", str(retaliation_ability.get("id", "")))
             counts["status_applied"] += 1
 
     def _apply_damage_pressure(self, battle: dict[str, Any], attacker: dict[str, Any], before: dict[str, Any], after: dict[str, Any], is_ranged: bool, source_type: str, counts: Counter[str]) -> None:
@@ -2377,6 +2393,16 @@ class FastBattleBenchmark:
         objective_types = brace.get("held_objective_types", [])
         if not isinstance(objective_types, list) or not objective_types:
             return True
+        side = str(stack.get("side", ""))
+        return any(self._side_controls_field_objective_type(battle, side, str(value)) for value in objective_types)
+
+    def _bramble_ground_available(self, stack: dict[str, Any], battle: dict[str, Any], ability: dict[str, Any] | None = None) -> bool:
+        bramble_ground = ability or self._ability_by_id(stack, "bramble_ground")
+        if not stack or not bramble_ground:
+            return False
+        objective_types = bramble_ground.get("held_objective_types", [])
+        if not isinstance(objective_types, list) or not objective_types:
+            return False
         side = str(stack.get("side", ""))
         return any(self._side_controls_field_objective_type(battle, side, str(value)) for value in objective_types)
 

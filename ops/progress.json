@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Sunvault Mirror Duelists' reflected-lane reposition and broken-timing production role; selecting the next release slice.",
+  "currentNotes": "Completed Thornwake Seedcutters' bramble-carrier and rooted-ground production role; Bellwake Oars remain the final ability-empty production unit.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-sunvault-mirror-duelist-reposition-10184",
-  "currentSliceId": "combat-sunvault-mirror-duelist-reposition-10184",
-  "currentSliceNotes": "Objective-gated reflected-lane reach and primary-melee disrupted-target pressure are implemented and fully validated through generic combat contracts.",
+  "currentSlice": "combat-thornwake-seedcutter-bramble-ground-10184",
+  "currentSliceId": "combat-thornwake-seedcutter-bramble-ground-10184",
+  "currentSliceNotes": "Completed immutable-content Bramble Stake behavior with held-ground defense, retaliation rooting, and rooted-target primary-melee pressure while preserving unsupported encounter RNG state.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Mirror Duelist Reposition",
-  "currentSliceUpdatedAt": "2026-08-08T20:40:51Z",
+  "currentSliceTitle": "Thornwake Seedcutter Bramble Ground",
+  "currentSliceUpdatedAt": "2026-08-08T21:13:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20450,8 +20450,92 @@
         "python3 -m json.tool content/units.json ops/progress.json (passed)",
         "git diff --check (passed)"
       ],
-      "remainingWork": "No work remains in this slice. Thornwake Seedcutters and Veilmourn Bellwake Oars remain the two ability-empty production units; faction balance and overall game completion remain open.",
+      "remainingWork": "No work remains in this slice. Thornwake Seedcutters and Veilmourn Bellwake Oars were the two ability-empty production units at completion; the subsequent Seedcutter slice addresses the former while faction balance and overall game completion remain open.",
       "completedAt": "2026-08-08T20:40:51Z"
+    },
+    {
+      "id": "combat-thornwake-seedcutter-bramble-ground-10184",
+      "title": "Thornwake Seedcutter Bramble Ground",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the remaining ability-empty Thornwake tier-one bramble-carrier role through immutable-content held-ground rooting and rooted-target pressure without matchup-specific tuning or inactive-state RNG drift.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "production_seedcutter_ability_count": 0,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 4.0,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Seedcutters consume immutable-content objective-held bracing, rooted retaliation pressure, and rooted-target primary-melee payoff through live rules, tactical AI, summaries, benchmark behavior, validation, and focused proof",
+        "Focused proof covers unsupported objectives, clean targets, stripped authored identity, ranged misuse, retaliation scope, normalized-state absence, and tactical-AI parity",
+        "The all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, 153.5 severity, two rows at or above 65 percent, 67.5 percent maximum dominance, or seven side-bias points",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, or benchmark-only hard-coding",
+        "other-unit, base-stat, growth, recruitment, economy, spell, hero, save, strategic-AI, campaign, packaging, Native RMG, or benchmark-threshold changes",
+        "claiming final Thornwake identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-08T20:43:18Z",
+      "updatedAt": "2026-08-08T21:13:19Z",
+      "startedAt": "2026-08-08T20:43:18Z",
+      "notes": "The faction bible defines Seedcutters as low-tier bramble carriers that improve on rooted ground. Bramble Stake resolves from immutable unit content so unsupported encounters keep exact deterministic RNG state while eligible held ground gains live defense, retaliation-root, and rooted-target pressure.",
+      "result": {
+        "production_seedcutter_ability_count": 1,
+        "bramble_ground_objective_type_count": 3,
+        "bramble_ground_defending_cohesion_bonus": 1,
+        "bramble_ground_retaliation_multiplier": 1.01,
+        "bramble_ground_rooted_damage_multiplier": 1.01,
+        "ability_instance_count": 115,
+        "ability_runtime_consequence_count": 115,
+        "faction_balance_outlier_count": 28,
+        "faction_balance_excess_severity": 153.5,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 4.0,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 115/115 authored ability instances across 103 units)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live --gate (passed; 28 outliers / 153.5 severity / 2 severe / 67.5 max dominance / 4.0 side bias / 0 structural failures)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failed sections; retained unsupported Native RMG fail-closed warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 -m json.tool content/units.json ops/progress.json (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Veilmourn Bellwake Oars remain the final ability-empty production unit; faction balance and overall game completion remain open.",
+      "completedAt": "2026-08-08T21:13:19Z"
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",

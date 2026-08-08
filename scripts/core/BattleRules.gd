@@ -3880,6 +3880,9 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 	var brace = _ability_by_id(stack, "brace")
 	if not brace.is_empty() and _brace_available(stack, battle):
 		cohesion_gain += max(0, int(brace.get("defending_cohesion_bonus", 0)))
+	var bramble_ground := _bramble_ground_ability(stack)
+	if not bramble_ground.is_empty() and _bramble_ground_available(stack, battle, bramble_ground):
+		cohesion_gain += max(0, int(bramble_ground.get("defending_cohesion_bonus", 0)))
 	var formation_guard = _ability_by_id(stack, "formation_guard")
 	if not formation_guard.is_empty():
 		cohesion_gain += max(0, int(formation_guard.get("defending_cohesion_bonus", 0)))
@@ -8918,8 +8921,11 @@ static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> Str
 		return ""
 	var cohesion_gain = 1
 	var brace = _ability_by_id(stack, "brace")
-	if not brace.is_empty():
+	if not brace.is_empty() and _brace_available(stack, battle):
 		cohesion_gain += max(0, int(brace.get("defending_cohesion_bonus", 0)))
+	var bramble_ground := _bramble_ground_ability(stack)
+	if not bramble_ground.is_empty() and _bramble_ground_available(stack, battle, bramble_ground):
+		cohesion_gain += max(0, int(bramble_ground.get("defending_cohesion_bonus", 0)))
 	var formation_guard = _ability_by_id(stack, "formation_guard")
 	if not formation_guard.is_empty():
 		cohesion_gain += max(0, int(formation_guard.get("defending_cohesion_bonus", 0)))
@@ -9340,17 +9346,21 @@ static func _apply_retaliation_ability_effects(
 	var messages = []
 	if attacker.is_empty() or _alive_count(attacker) <= 0:
 		return messages
-	var brace = _ability_by_id(retaliator, "brace")
-	if brace.is_empty() or not _brace_available(retaliator, battle) or not bool(retaliator.get("defending", false)):
+	var retaliation_ability = _ability_by_id(retaliator, "brace")
+	if retaliation_ability.is_empty() or not _brace_available(retaliator, battle):
+		retaliation_ability = _bramble_ground_ability(retaliator)
+		if retaliation_ability.is_empty() or not _bramble_ground_available(retaliator, battle, retaliation_ability):
+			return messages
+	if not bool(retaliator.get("defending", false)):
 		return messages
 	_apply_stack_effect(
 		battle,
 		String(attacker.get("battle_id", "")),
-		_status_effect_from_ability(brace, battle)
+		_status_effect_from_ability(retaliation_ability, battle)
 	)
 	messages.append("%s is %s." % [
 		_stack_label(attacker),
-		String(brace.get("status_label", "Staggered")).to_lower(),
+		String(retaliation_ability.get("status_label", "Staggered")).to_lower(),
 	])
 	return messages
 
@@ -9404,6 +9414,9 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 		if _brace_has_held_objective(attacker, battle, brace):
 			modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+	var bramble_ground := _bramble_ground_ability(attacker)
+	if is_retaliation and bool(attacker.get("defending", false)) and not bramble_ground.is_empty() and _bramble_ground_available(attacker, battle, bramble_ground):
+		modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))
 	if is_retaliation:
 		var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(attacker, battle, "retaliation")
 		if retaliation_pressure < 0:
@@ -9417,6 +9430,13 @@ static func _ability_damage_modifier(
 		modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	if not backstab.is_empty() and backstab_attack_eligible and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
+	if (
+		not bramble_ground.is_empty()
+		and not is_ranged
+		and not is_retaliation
+		and SpellRulesScript.has_effect_id(defender, battle, String(bramble_ground.get("status_id", STATUS_ROOTED)))
+	):
+		modifier *= float(bramble_ground.get("rooted_damage_multiplier", 1.0))
 	var fogwake = _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
 		var fogwake_flare := _counter_ambush_flare_context(battle, defender, "fogwake")
@@ -10117,6 +10137,10 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"overheated_repair_bonus_pct": clampf(float(entry.get("overheated_repair_bonus_pct", 0.0)), 0.0, 0.1),
 					"ai_target_priority_bonus": clampf(float(entry.get("ai_target_priority_bonus", 0.0)), 0.0, 5.0),
 				}
+			"bramble_ground":
+				# Immutable authored content owns this conditional role so inactive
+				# bramble metadata cannot perturb deterministic battle RNG state.
+				continue
 			_:
 				continue
 		abilities.append(normalized)
@@ -10149,6 +10173,10 @@ static func _stack_ability_summary(stack: Dictionary) -> String:
 			var name = String(ability.get("name", ability.get("id", "")))
 			if name != "":
 				names.append(name)
+	var bramble_ground := _bramble_ground_ability(stack)
+	var bramble_name := String(bramble_ground.get("name", ""))
+	if bramble_name != "" and bramble_name not in names:
+		names.append(bramble_name)
 	return ", ".join(names)
 
 static func _sync_player_force_from_battle(session: SessionStateStoreScript.SessionData) -> void:
@@ -11694,6 +11722,22 @@ static func _brace_available(stack: Dictionary, battle: Dictionary) -> bool:
 		return true
 	var side := String(stack.get("side", ""))
 	for objective_type in held_objective_types:
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _bramble_ground_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "bramble_ground")
+
+static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var bramble_ground := ability if not ability.is_empty() else _bramble_ground_ability(stack)
+	if stack.is_empty() or bramble_ground.is_empty():
+		return false
+	var objective_types = bramble_ground.get("held_objective_types", [])
+	if not (objective_types is Array) or objective_types.is_empty():
+		return false
+	var side := String(stack.get("side", ""))
+	for objective_type in objective_types:
 		if _side_controls_field_objective_type(battle, side, String(objective_type)):
 			return true
 	return false

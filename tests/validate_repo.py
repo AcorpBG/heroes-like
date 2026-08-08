@@ -334,7 +334,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10626,6 +10626,23 @@ def validate_content(errors: list[str]) -> None:
                             errors,
                             f"Unit {unit_id} objective brace uses an unsupported field objective type",
                         )
+                elif ability_id == "bramble_ground":
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} bramble_ground must belong to a melee unit")
+                    objective_types = ability.get("held_objective_types", [])
+                    ensure(isinstance(objective_types, list) and bool(objective_types), errors, f"Unit {unit_id} bramble_ground must list held_objective_types")
+                    ensure(
+                        isinstance(objective_types, list) and all(str(value) in SUPPORTED_FIELD_OBJECTIVE_TYPES for value in objective_types),
+                        errors,
+                        f"Unit {unit_id} bramble_ground uses an unsupported field objective type",
+                    )
+                    ensure(int(ability.get("defending_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} bramble_ground must improve held defense")
+                    ensure(1.0 < float(ability.get("retaliation_multiplier", 0.0)) <= 1.25, errors, f"Unit {unit_id} bramble_ground retaliation_multiplier must be in (1, 1.25]")
+                    ensure(1.0 < float(ability.get("rooted_damage_multiplier", 0.0)) <= 1.25, errors, f"Unit {unit_id} bramble_ground rooted_damage_multiplier must be in (1, 1.25]")
+                    ensure(str(ability.get("status_id", "")) == "status_rooted", errors, f"Unit {unit_id} bramble_ground must apply status_rooted")
+                    ensure(int(ability.get("duration_rounds", 0)) == 1, errors, f"Unit {unit_id} bramble_ground must root for one round")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} bramble_ground must define rooted pressure modifiers")
+                    ensure(0.0 < float(ability.get("ai_rooted_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} bramble_ground AI priority must be in (0, 4]")
                 elif ability_id == "harry":
                     ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} harry must define status_id")
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
@@ -10832,9 +10849,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, bramble_ground, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10938,6 +10955,15 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(mirror_duelist_backstab.get("momentum_gain", 0)) == 1, errors, "Broken-Timing Cut must convert disrupted timing into one momentum")
     ensure(mirror_duelist_backstab.get("primary_melee_only") is True, errors, "Broken-Timing Cut must apply only to primary melee attacks")
     ensure(mirror_duelist_backstab.get("status_ids", []) == ["status_harried", "status_staggered"], errors, "Broken-Timing Cut must remain scoped to harried or staggered targets")
+
+    seedcutters = units.get("unit_thornwake_seedcutters", {})
+    seedcutter_bramble = next((ability for ability in seedcutters.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "bramble_ground"), {})
+    ensure(str(seedcutter_bramble.get("name", "")) == "Bramble Stake", errors, "Seedcutters must own Bramble Stake")
+    ensure(seedcutter_bramble.get("held_objective_types", []) == ["cover_line", "obstruction_line", "breach_point"], errors, "Bramble Stake must remain scoped to bramble-shaped objectives")
+    ensure(int(seedcutter_bramble.get("defending_cohesion_bonus", 0)) == 1, errors, "Bramble Stake must keep its held-ground defend payoff")
+    ensure(float(seedcutter_bramble.get("retaliation_multiplier", 0.0)) == 1.01, errors, "Bramble Stake must keep its bounded retaliation payoff")
+    ensure(float(seedcutter_bramble.get("rooted_damage_multiplier", 0.0)) == 1.01, errors, "Bramble Stake must keep its bounded rooted-target payoff")
+    ensure(str(seedcutter_bramble.get("status_id", "")) == "status_rooted", errors, "Bramble Stake must root the attacker on a live held-ground retaliation")
 
     cutthroat = units.get("unit_blackbranch_cutthroat", {})
     cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})

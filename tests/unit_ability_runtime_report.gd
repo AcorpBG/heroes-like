@@ -10,6 +10,7 @@ const REQUIRED_ABILITY_IDS := [
 	"hookline",
 	"rot_cant",
 	"brace",
+	"bramble_ground",
 	"harry",
 	"backstab",
 	"fogwake",
@@ -119,6 +120,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 			return _probe_rot_cant(unit_id)
 		"brace":
 			return _probe_brace(unit_id)
+		"bramble_ground":
+			return _probe_bramble_ground(unit_id)
 		"harry":
 			return _probe_harry(unit_id)
 		"obituary":
@@ -356,6 +359,13 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		held_battle["field_objectives"] = [{"type": String(held_objective_types[0]), "control_side": "player"}]
 	var held_retaliation := BattleRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, false, true, 0)
 	var held_ai_retaliation := BattleAiRulesScript._ability_damage_modifier(held_attacker, held_defender, held_battle, false, true, 0)
+	var status_id := String(brace.get("status_id", ""))
+	var unsupported_messages := BattleRulesScript._apply_retaliation_ability_effects(battle, attacker, defender)
+	var unsupported_updated := BattleRulesScript._get_stack_by_id(battle, String(defender.get("battle_id", "")))
+	var held_messages := BattleRulesScript._apply_retaliation_ability_effects(held_battle, held_attacker, held_defender)
+	var held_updated := BattleRulesScript._get_stack_by_id(held_battle, String(held_defender.get("battle_id", "")))
+	var unsupported_status_applied := SpellRulesScript.has_effect_id(unsupported_updated, battle, status_id)
+	var held_status_applied := SpellRulesScript.has_effect_id(held_updated, held_battle, status_id)
 	var defend_with := _defend_cohesion_delta(attacker, "brace", held_objective_types)
 	var defend_without := _defend_cohesion_delta(stripped, "brace_stripped", held_objective_types)
 	var base_retaliation_contract_ok := (
@@ -367,11 +377,17 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		held_retaliation > retaliation_with
 		and is_equal_approx(held_ai_retaliation, held_retaliation)
 	)
+	var status_contract_ok := (
+		unsupported_status_applied and not unsupported_messages.is_empty()
+		if held_objective_types.is_empty()
+		else not unsupported_status_applied and unsupported_messages.is_empty() and held_status_applied and not held_messages.is_empty()
+	)
 	var ok := (
 		base_retaliation_contract_ok
 		and is_equal_approx(ai_retaliation_with, retaliation_with)
 		and defend_with > defend_without
 		and held_objective_contract_ok
+		and status_contract_ok
 	)
 	return {
 		"ok": ok,
@@ -382,9 +398,87 @@ func _probe_brace(unit_id: String) -> Dictionary:
 		"held_objective_types": held_objective_types,
 		"held_objective_retaliation_modifier": held_retaliation,
 		"held_objective_ai_retaliation_modifier": held_ai_retaliation,
+		"unsupported_status_applied": unsupported_status_applied,
+		"held_status_applied": held_status_applied,
 		"defend_cohesion_delta_with": defend_with,
 		"defend_cohesion_delta_without": defend_without,
 		"reason": "" if ok else "brace did not preserve live/AI retaliation, defend cohesion, and held-objective pressure",
+	}
+
+func _probe_bramble_ground(unit_id: String) -> Dictionary:
+	var authored := _ability_by_id(ContentService.get_unit(unit_id), "bramble_ground")
+	var objective_types: Array = authored.get("held_objective_types", []) if authored.get("held_objective_types", []) is Array else []
+	var retaliator := _stack_for_unit(unit_id, "player", 0)
+	retaliator["defending"] = true
+	var incoming := _defender_stack("enemy", 0)
+	var unsupported_battle := _battle_for_stacks([retaliator.duplicate(true), incoming.duplicate(true)])
+	var unsupported_retaliator := BattleRulesScript._get_stack_by_id(unsupported_battle, String(retaliator.get("battle_id", "")))
+	var unsupported_incoming := BattleRulesScript._get_stack_by_id(unsupported_battle, String(incoming.get("battle_id", "")))
+	var unsupported_modifier := BattleRulesScript._ability_damage_modifier(unsupported_retaliator, unsupported_incoming, unsupported_battle, false, true, 0)
+	var unsupported_messages := BattleRulesScript._apply_retaliation_ability_effects(unsupported_battle, unsupported_retaliator, unsupported_incoming)
+	var unsupported_updated := BattleRulesScript._get_stack_by_id(unsupported_battle, String(incoming.get("battle_id", "")))
+
+	var held_battle := _battle_for_stacks([retaliator.duplicate(true), incoming.duplicate(true)])
+	held_battle["field_objectives"] = [{"type": String(objective_types[0]), "control_side": "player"}]
+	var held_retaliator := BattleRulesScript._get_stack_by_id(held_battle, String(retaliator.get("battle_id", "")))
+	var held_incoming := BattleRulesScript._get_stack_by_id(held_battle, String(incoming.get("battle_id", "")))
+	var held_modifier := BattleRulesScript._ability_damage_modifier(held_retaliator, held_incoming, held_battle, false, true, 0)
+	var held_ai_modifier := BattleAiRulesScript._ability_damage_modifier(held_retaliator, held_incoming, held_battle, false, true, 0)
+	var held_messages := BattleRulesScript._apply_retaliation_ability_effects(held_battle, held_retaliator, held_incoming)
+	var held_updated := BattleRulesScript._get_stack_by_id(held_battle, String(incoming.get("battle_id", "")))
+	var status_id := String(authored.get("status_id", ""))
+
+	var cutter := _stack_for_unit(unit_id, "player", 1)
+	var clean_target := _defender_stack("enemy", 1)
+	var clean_battle := _battle_for_stacks([cutter, clean_target])
+	var clean_modifier := BattleRulesScript._ability_damage_modifier(cutter, clean_target, clean_battle, false, false, 0)
+	var rooted_target := clean_target.duplicate(true)
+	_add_effect(rooted_target, status_id)
+	var rooted_battle := _battle_for_stacks([cutter.duplicate(true), rooted_target])
+	var rooted_cutter := BattleRulesScript._get_stack_by_id(rooted_battle, String(cutter.get("battle_id", "")))
+	var rooted_updated := BattleRulesScript._get_stack_by_id(rooted_battle, String(rooted_target.get("battle_id", "")))
+	var rooted_modifier := BattleRulesScript._ability_damage_modifier(rooted_cutter, rooted_updated, rooted_battle, false, false, 0)
+	var rooted_ai_modifier := BattleAiRulesScript._ability_damage_modifier(rooted_cutter, rooted_updated, rooted_battle, false, false, 0)
+	var ranged_modifier := BattleRulesScript._ability_damage_modifier(rooted_cutter, rooted_updated, rooted_battle, true, false, 1)
+	var retaliation_modifier := BattleRulesScript._ability_damage_modifier(rooted_cutter, rooted_updated, rooted_battle, false, true, 0)
+	var control := cutter.duplicate(true)
+	control["unit_id"] = BASE_DEFENDER_UNIT_ID
+	var held_cohesion := _defend_cohesion_delta(cutter, "bramble_held", objective_types)
+	var control_cohesion := _defend_cohesion_delta(control, "bramble_control", objective_types)
+	var normalized_payload_absent := _ability_by_id(cutter, "bramble_ground").is_empty()
+	var ok := (
+		not authored.is_empty()
+		and not objective_types.is_empty()
+		and is_equal_approx(unsupported_modifier, 1.0)
+		and unsupported_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(unsupported_updated, unsupported_battle, status_id)
+		and held_modifier > unsupported_modifier
+		and is_equal_approx(held_ai_modifier, held_modifier)
+		and not held_messages.is_empty()
+		and SpellRulesScript.has_effect_id(held_updated, held_battle, status_id)
+		and rooted_modifier > clean_modifier
+		and is_equal_approx(rooted_ai_modifier, rooted_modifier)
+		and is_equal_approx(ranged_modifier, clean_modifier)
+		and is_equal_approx(retaliation_modifier, clean_modifier)
+		and held_cohesion > control_cohesion
+		and normalized_payload_absent
+	)
+	return {
+		"ok": ok,
+		"probe": "immutable_bramble_ground_held_retaliation_root_and_primary_melee_payoff",
+		"objective_types": objective_types,
+		"unsupported_retaliation_modifier": unsupported_modifier,
+		"held_retaliation_modifier": held_modifier,
+		"held_ai_retaliation_modifier": held_ai_modifier,
+		"rooted_primary_modifier": rooted_modifier,
+		"rooted_ai_primary_modifier": rooted_ai_modifier,
+		"clean_primary_modifier": clean_modifier,
+		"ranged_modifier": ranged_modifier,
+		"retaliation_modifier": retaliation_modifier,
+		"held_cohesion_delta": held_cohesion,
+		"control_cohesion_delta": control_cohesion,
+		"normalized_payload_absent": normalized_payload_absent,
+		"reason": "" if ok else "bramble ground did not preserve held-objective, rooted-target, AI, and immutable-state boundaries",
 	}
 
 func _probe_harry(unit_id: String) -> Dictionary:
