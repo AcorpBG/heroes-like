@@ -1511,6 +1511,28 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "bramble_ground",
+          "name": "Bramble Stake",
+          "description": "On a held bramble line, Seedcutters steady their defense and root attackers they counter; their primary melee cuts bite harder into rooted targets.",
+          "held_objective_types": [
+            "cover_line",
+            "obstruction_line",
+            "breach_point"
+          ],
+          "defending_cohesion_bonus": 1,
+          "retaliation_multiplier": 1.01,
+          "rooted_damage_multiplier": 1.01,
+          "status_id": "status_rooted",
+          "status_label": "Bramble-Rooted",
+          "duration_rounds": 1,
+          "modifiers": {
+            "initiative": -1
+          },
+          "ai_rooted_target_priority_bonus": 1.0
+        }
+      ],
       "growth": 8,
       "cost": {
         "gold": 55,

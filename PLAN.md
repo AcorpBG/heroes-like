@@ -2503,6 +2503,38 @@ Result:
 - the all-live 100-seed four-week matrix stays within bounds at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures;
 - the 59-encounter active breadth queue remains clear at signature `829808c9`; autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning` and the game remains incomplete.
 
+## Thornwake Seedcutter Bramble Ground
+
+id: `combat-thornwake-seedcutter-bramble-ground-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity implementation slice. Seedcutters are the only
+ability-empty production unit in Thornwake's seven-tier ladder despite the
+faction bible defining them as low-tier bramble carriers that improve on rooted
+ground.
+
+Implementation target:
+- give Seedcutters one cohesive objective-held Bramble Stake role that steadies their defense, strengthens a held-ground retaliation, roots its attacker, and improves primary-melee cuts against rooted targets;
+- resolve the conditional role from immutable unit content in live rules and tactical AI so inactive ability metadata cannot perturb deterministic battle RNG state;
+- carry the role through player summaries, the fast benchmark, content validation, and focused runtime proof without faction or matchup checks while preserving unit base stats, growth, recruitment, economy, saves, campaigns, packaging, Native RMG, and benchmark thresholds.
+
+Completion criteria:
+- Seedcutters produce live objective-held bracing, rooted retaliation pressure, and rooted-target primary-melee payoff with unsupported-objective, clean-target, stripped-authored-identity, ranged, retaliation, and tactical-AI controls;
+- the all-live 100-seed four-week matrix keeps zero structural failures and does not exceed 28 outliers, `153.5` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or seven side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, or benchmark-only behavior;
+- do not change other units, unrelated broad combat rules, base stats, economy, saves, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not claim final Thornwake identity, final faction balance, or overall release completion.
+
+Outcome:
+- Seedcutters now own the `bramble_ground` Bramble Stake family: held cover, obstruction, or breach ground grants one extra defending cohesion, a 1.01 retaliation multiplier, a one-round rooted counter, and a 1.01 primary-melee payoff against rooted targets;
+- immutable content lookup keeps the ability player-visible and live in rules/AI while omitting inactive metadata from normalized battle state; the active 59-encounter queue therefore remains exactly clear at signature `829808c9` instead of rerolling unsupported Mireford fights;
+- all `115/115` authored ability instances across 103 units pass focused runtime consequence proof, including unsupported ground, held retaliation/root, held cohesion, clean/rooted targets, ranged and retaliation exclusions, stripped authored identity, and live/AI parity;
+- the all-live 100-seed four-week matrix stays at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures; autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`, Bellwake Oars remain ability-empty, and the game remains incomplete.
+
 ## Work Selection Gates
 
 Before starting any worker:

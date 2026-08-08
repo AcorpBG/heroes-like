@@ -1172,6 +1172,9 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 			score += float(obituary.get("braced_ai_target_priority_bonus", 0.25))
 	if _has_ability(attacker, "backstab") and _counter_ambush_flare_context(battle, target, "backstab").is_empty() and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
+	var bramble_ground := _bramble_ground_ability(attacker)
+	if not is_ranged and not bramble_ground.is_empty() and SpellRulesScript.has_effect_id(target, battle, String(bramble_ground.get("status_id", STATUS_ROOTED))):
+		score += float(bramble_ground.get("ai_rooted_target_priority_bonus", 0.0))
 	var fogwake := _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not fogwake.is_empty() and _stack_is_hex_isolated(battle, target) and _counter_ambush_flare_context(battle, target, "fogwake").is_empty():
 		score += float(fogwake.get("ai_target_priority_bonus", 0.0))
@@ -1654,7 +1657,7 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 		score -= 3.0
 	if int(battle.get("distance", 1)) > 0 and not bool(active_stack.get("ranged", false)):
 		score -= 2.0
-	if _brace_available(active_stack, battle) and int(battle.get("distance", 1)) <= 1:
+	if (_brace_available(active_stack, battle) or _bramble_ground_available(active_stack, battle)) and int(battle.get("distance", 1)) <= 1:
 		score += 3.0
 	if _has_ability(active_stack, "formation_guard") and _allied_ranged_count(battle, String(active_stack.get("side", ""))) > 0:
 		score += 2.5
@@ -2422,6 +2425,9 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 		if _brace_has_held_objective(attacker, battle, brace):
 			modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+	var bramble_ground := _bramble_ground_ability(attacker)
+	if is_retaliation and bool(attacker.get("defending", false)) and not bramble_ground.is_empty() and _bramble_ground_available(attacker, battle, bramble_ground):
+		modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))
 	if is_retaliation:
 		var retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(attacker, battle, "retaliation")
 		if retaliation_pressure < 0:
@@ -2435,6 +2441,13 @@ static func _ability_damage_modifier(
 		modifier *= 1.0 + ((float(backstab.get("damage_multiplier", 1.0)) - 1.0) * backstab_retention)
 	if not backstab.is_empty() and backstab_attack_eligible and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= 1.0 + ((float(backstab.get("threshold_damage_multiplier", 1.0)) - 1.0) * backstab_retention)
+	if (
+		not bramble_ground.is_empty()
+		and not is_ranged
+		and not is_retaliation
+		and SpellRulesScript.has_effect_id(defender, battle, String(bramble_ground.get("status_id", STATUS_ROOTED)))
+	):
+		modifier *= float(bramble_ground.get("rooted_damage_multiplier", 1.0))
 	var fogwake := _ability_by_id(attacker, "fogwake")
 	if not is_ranged and not is_retaliation and not fogwake.is_empty() and _stack_is_hex_isolated(battle, defender):
 		var fogwake_flare := _counter_ambush_flare_context(battle, defender, "fogwake")
@@ -2761,6 +2774,22 @@ static func _brace_available(stack: Dictionary, battle: Dictionary) -> bool:
 		return true
 	var side := String(stack.get("side", ""))
 	for objective_type in held_objective_types:
+		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _bramble_ground_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "bramble_ground")
+
+static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var bramble_ground := ability if not ability.is_empty() else _bramble_ground_ability(stack)
+	if stack.is_empty() or bramble_ground.is_empty():
+		return false
+	var objective_types = bramble_ground.get("held_objective_types", [])
+	if not (objective_types is Array) or objective_types.is_empty():
+		return false
+	var side := String(stack.get("side", ""))
+	for objective_type in objective_types:
 		if _side_controls_field_objective_type(battle, side, String(objective_type)):
 			return true
 	return false
