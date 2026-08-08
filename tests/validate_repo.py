@@ -334,7 +334,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -10643,6 +10643,16 @@ def validate_content(errors: list[str]) -> None:
                     modifiers = ability.get("modifiers", {})
                     ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} bramble_ground must define rooted pressure modifiers")
                     ensure(0.0 < float(ability.get("ai_rooted_target_priority_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} bramble_ground AI priority must be in (0, 4]")
+                elif ability_id == "fog_screen":
+                    ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} fog_screen must belong to a melee unit")
+                    required_tags = ability.get("required_battlefield_tags", [])
+                    ensure(isinstance(required_tags, list) and bool(required_tags), errors, f"Unit {unit_id} fog_screen must list required_battlefield_tags")
+                    ensure(
+                        isinstance(required_tags, list) and all(str(value) in SUPPORTED_BATTLEFIELD_TAGS for value in required_tags),
+                        errors,
+                        f"Unit {unit_id} fog_screen uses an unsupported battlefield tag",
+                    )
+                    ensure(0.9 <= float(ability.get("incoming_damage_multiplier", 0.0)) < 1.0, errors, f"Unit {unit_id} fog_screen incoming_damage_multiplier must be in [0.9, 1)")
                 elif ability_id == "harry":
                     ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} harry must define status_id")
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
@@ -10849,9 +10859,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, bramble_ground, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, bramble_ground, fog_screen, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10964,6 +10974,12 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(seedcutter_bramble.get("retaliation_multiplier", 0.0)) == 1.01, errors, "Bramble Stake must keep its bounded retaliation payoff")
     ensure(float(seedcutter_bramble.get("rooted_damage_multiplier", 0.0)) == 1.01, errors, "Bramble Stake must keep its bounded rooted-target payoff")
     ensure(str(seedcutter_bramble.get("status_id", "")) == "status_rooted", errors, "Bramble Stake must root the attacker on a live held-ground retaliation")
+
+    bellwake_oars = units.get("unit_veilmourn_bellwake_oars", {})
+    bellwake_fog_screen = next((ability for ability in bellwake_oars.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "fog_screen"), {})
+    ensure(str(bellwake_fog_screen.get("name", "")) == "Mistwake Screen", errors, "Bellwake Oars must own Mistwake Screen")
+    ensure(bellwake_fog_screen.get("required_battlefield_tags", []) == ["fog_bank"], errors, "Mistwake Screen must remain scoped to natural fog banks")
+    ensure(float(bellwake_fog_screen.get("incoming_damage_multiplier", 0.0)) == 0.98, errors, "Mistwake Screen must retain its bounded two-percent incoming-damage reduction")
 
     cutthroat = units.get("unit_blackbranch_cutthroat", {})
     cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})

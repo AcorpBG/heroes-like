@@ -2107,6 +2107,17 @@
       "initiative": 6,
       "retaliations": 1,
       "ranged": false,
+      "abilities": [
+        {
+          "id": "fog_screen",
+          "name": "Mistwake Screen",
+          "description": "Bellwake crews scatter their line through a natural fog bank, reducing incoming damage without hardening their clear-weather formation.",
+          "required_battlefield_tags": [
+            "fog_bank"
+          ],
+          "incoming_damage_multiplier": 0.98
+        }
+      ],
       "growth": 8,
       "cost": {
         "gold": 55

@@ -2496,6 +2496,9 @@ static func _ability_damage_modifier(
 	var shielding := _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
+	var fog_screen := _fog_screen_ability(defender)
+	if not fog_screen.is_empty() and _fog_screen_available(defender, battle, fog_screen):
+		modifier *= float(fog_screen.get("incoming_damage_multiplier", 1.0))
 	if is_ranged:
 		modifier *= _linked_ranged_attack_screen_multiplier(defender, battle)
 	if not is_ranged and attack_distance <= 0 and (bool(defender.get("ranged", false)) or not shielding.is_empty()):
@@ -2791,6 +2794,21 @@ static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, abi
 	var side := String(stack.get("side", ""))
 	for objective_type in objective_types:
 		if _side_controls_field_objective_type(battle, side, String(objective_type)):
+			return true
+	return false
+
+static func _fog_screen_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "fog_screen")
+
+static func _fog_screen_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var fog_screen := ability if not ability.is_empty() else _fog_screen_ability(stack)
+	if stack.is_empty() or fog_screen.is_empty():
+		return false
+	var required_tags = fog_screen.get("required_battlefield_tags", [])
+	if not (required_tags is Array) or required_tags.is_empty():
+		return false
+	for tag in required_tags:
+		if _battle_has_tag(battle, String(tag)):
 			return true
 	return false
 
