@@ -3899,6 +3899,17 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
 	if stack.is_empty():
 		return ""
+	var charter_brace := _ability_by_id(stack, "brace")
+	if float(charter_brace.get("ally_retaliation_multiplier", 1.0)) > 1.0:
+		for ally in _alive_stacks_for_side(battle, String(stack.get("side", ""))):
+			if String(ally.get("battle_id", "")) == String(stack.get("battle_id", "")):
+				continue
+			var aura_context := _charter_retaliation_aura_context(ally, battle)
+			if String(aura_context.get("source", {}).get("battle_id", "")) != String(stack.get("battle_id", "")):
+				continue
+			if bool(ally.get("defending", false)):
+				return "%s is raising %s's retaliation while that veteran line defends." % [String(charter_brace.get("name", "Charter Lock")), _stack_label(ally)]
+		return "%s is waiting for another veteran melee line to defend within the formation." % String(charter_brace.get("name", "Charter Lock"))
 	var fog_screen := _fog_screen_ability(stack)
 	if not fog_screen.is_empty():
 		if _fog_screen_available(stack, battle, fog_screen):
@@ -9695,6 +9706,11 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 		if _brace_has_held_objective(attacker, battle, brace):
 			modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+	if is_retaliation:
+		var charter_aura := _charter_retaliation_aura_context(attacker, battle)
+		var aura_ability: Dictionary = charter_aura.get("ability", {})
+		if not charter_aura.is_empty() and (not bool(aura_ability.get("ally_retaliation_requires_defending", true)) or bool(attacker.get("defending", false))):
+			modifier *= float(charter_aura.get("ability", {}).get("ally_retaliation_multiplier", 1.0))
 	var bramble_ground := _bramble_ground_ability(attacker)
 	if is_retaliation and bool(attacker.get("defending", false)) and not bramble_ground.is_empty() and _bramble_ground_available(attacker, battle, bramble_ground):
 		modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))
@@ -10001,6 +10017,23 @@ static func _side_ability_payloads(battle: Dictionary, side: String, ability_id:
 static func _side_has_ability(battle: Dictionary, side: String, ability_id: String) -> bool:
 	return not _side_ability_payloads(battle, side, ability_id).is_empty()
 
+static func _charter_retaliation_aura_context(stack: Dictionary, battle: Dictionary) -> Dictionary:
+	if stack.is_empty() or bool(stack.get("ranged", false)):
+		return {}
+	for source in _alive_stacks_for_side(battle, String(stack.get("side", ""))):
+		if String(source.get("battle_id", "")) == String(stack.get("battle_id", "")):
+			continue
+		var brace := _ability_by_id(source, "brace")
+		if float(brace.get("ally_retaliation_multiplier", 1.0)) <= 1.0:
+			continue
+		if int(stack.get("tier", 1)) < int(brace.get("ally_retaliation_min_tier", 1)):
+			continue
+		var role := String(brace.get("ally_retaliation_role", ""))
+		if role != "" and bool(stack.get("ranged", false)) != (role == "ranged"):
+			continue
+		return {"source": source, "ability": brace}
+	return {}
+
 static func _counter_ambush_flare_context(
 	battle: Dictionary,
 	protected_stack: Dictionary,
@@ -10220,6 +10253,12 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 				if entry.has("held_objective_retaliation_multiplier"):
 					normalized["held_objective_retaliation_multiplier"] = clampf(float(entry.get("held_objective_retaliation_multiplier", 1.0)), 1.0, 2.0)
 					normalized["held_objective_types"] = _normalize_string_array(entry.get("held_objective_types", []))
+				if entry.has("ally_retaliation_multiplier"):
+					normalized["ally_retaliation_multiplier"] = clampf(float(entry.get("ally_retaliation_multiplier", 1.0)), 1.0, 1.25)
+					normalized["ally_retaliation_min_tier"] = clampi(int(entry.get("ally_retaliation_min_tier", 1)), 1, 7)
+					normalized["ally_retaliation_role"] = String(entry.get("ally_retaliation_role", "melee"))
+					normalized["ally_retaliation_requires_defending"] = bool(entry.get("ally_retaliation_requires_defending", true))
+					normalized["ally_retaliation_ai_defend_bonus"] = clampf(float(entry.get("ally_retaliation_ai_defend_bonus", 0.0)), 0.0, 4.0)
 			"harry":
 				normalized = {
 					"id": ability_id,
@@ -12114,6 +12153,9 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 	var faction_id = _side_faction_id(battle, side)
 	match faction_id:
 		"faction_embercourt":
+			for stack in _alive_stacks_for_side(battle, side):
+				if bool(stack.get("defending", false)) and not _charter_retaliation_aura_context(stack, battle).is_empty():
+					return "The Charter Colossus is magnifying the compact line's retaliation"
 			if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side({"side": side}, battle):
 				if _reserve_wave_is_active_for_side(battle, side):
 					return "Fortress lanes are feeding reserve columns into the pike line"

@@ -1663,6 +1663,9 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 		score -= 2.0
 	if (_brace_available(active_stack, battle) or _bramble_ground_available(active_stack, battle)) and int(battle.get("distance", 1)) <= 1:
 		score += 3.0
+	var charter_aura := _charter_retaliation_aura_context(active_stack, battle)
+	if not charter_aura.is_empty() and _has_ability(active_stack, "brace"):
+		score += float(charter_aura.get("ability", {}).get("ally_retaliation_ai_defend_bonus", 0.0))
 	if _has_ability(active_stack, "formation_guard") and _allied_ranged_count(battle, String(active_stack.get("side", ""))) > 0:
 		score += 2.5
 	if _has_ability(active_stack, "overheat") and SpellRulesScript.has_effect_id(active_stack, battle, STATUS_OVERHEATED):
@@ -2163,6 +2166,23 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 			alive.append(stack)
 	return alive
 
+static func _charter_retaliation_aura_context(stack: Dictionary, battle: Dictionary) -> Dictionary:
+	if stack.is_empty() or bool(stack.get("ranged", false)):
+		return {}
+	for source in _alive_stacks_for_side(battle, String(stack.get("side", ""))):
+		if String(source.get("battle_id", "")) == String(stack.get("battle_id", "")):
+			continue
+		var brace := _ability_by_id(source, "brace")
+		if float(brace.get("ally_retaliation_multiplier", 1.0)) <= 1.0:
+			continue
+		if int(stack.get("tier", 1)) < int(brace.get("ally_retaliation_min_tier", 1)):
+			continue
+		var role := String(brace.get("ally_retaliation_role", ""))
+		if role != "" and bool(stack.get("ranged", false)) != (role == "ranged"):
+			continue
+		return {"source": source, "ability": brace}
+	return {}
+
 static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) -> bool:
 	var current_round := int(battle.get("round", 1))
 	for effect in SpellRulesScript.active_effects_for_round(stack, current_round):
@@ -2429,6 +2449,11 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 		if _brace_has_held_objective(attacker, battle, brace):
 			modifier *= float(brace.get("held_objective_retaliation_multiplier", 1.0))
+	if is_retaliation:
+		var charter_aura := _charter_retaliation_aura_context(attacker, battle)
+		var aura_ability: Dictionary = charter_aura.get("ability", {})
+		if not charter_aura.is_empty() and (not bool(aura_ability.get("ally_retaliation_requires_defending", true)) or bool(attacker.get("defending", false))):
+			modifier *= float(charter_aura.get("ability", {}).get("ally_retaliation_multiplier", 1.0))
 	var bramble_ground := _bramble_ground_ability(attacker)
 	if is_retaliation and bool(attacker.get("defending", false)) and not bramble_ground.is_empty() and _bramble_ground_available(attacker, battle, bramble_ground):
 		modifier *= float(bramble_ground.get("retaliation_multiplier", 1.0))

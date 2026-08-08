@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Bellwake Oars' fog-screen production role; all six faction ladders now have no ability-empty production units.",
+  "currentNotes": "Completed the Charter Colossus's missing allied retaliation-anchor role from authored content; native RMG remains outside this slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-embercourt-beacon-lector-readiness-writ-10184",
-  "currentSliceId": "combat-embercourt-beacon-lector-readiness-writ-10184",
-  "currentSliceNotes": "Completed Beacon Muster as one content-owned reactive, immediate, or reserved readiness response for an eligible allied melee veteran. Inactive battles retain exact normalized state.",
+  "currentSlice": "combat-embercourt-charter-colossus-retaliation-aura-10184",
+  "currentSliceId": "combat-embercourt-charter-colossus-retaliation-aura-10184",
+  "currentSliceNotes": "Charter Lock now projects a bounded living-source retaliation aura to another defending allied veteran melee line, with brace-role AI valuation and explicit player summaries.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Beacon Lector Readiness Writ",
-  "currentSliceUpdatedAt": "2026-08-08T22:41:39Z",
+  "currentSliceTitle": "Embercourt Charter Colossus Retaliation Aura",
+  "currentSliceUpdatedAt": "2026-08-08T23:31:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20710,6 +20710,91 @@
       ],
       "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning, unsupported Native RMG exact-state generation remains fail-closed, and overall game completion remains open.",
       "completedAt": "2026-08-08T22:41:39Z"
+    },
+    {
+      "id": "combat-embercourt-charter-colossus-retaliation-aura-10184",
+      "title": "Embercourt Charter Colossus Retaliation Aura",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
+      "purpose": "Implement the Charter Colossus's missing allied retaliation-anchor role as bounded compact-formation support without matchup-specific tuning.",
+      "implementationTargets": [
+        "content/units.json",
+        "scripts/core/BattleRules.gd",
+        "scripts/core/BattleAiRules.gd",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "charter_colossus_allied_retaliation_aura_count": 0,
+        "ability_instance_count": 117,
+        "faction_balance_outlier_count": 27,
+        "faction_balance_excess_severity": 153.0,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 3.87,
+        "faction_balance_structural_failure_count": 0,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Focused proof covers eligible allied retaliation, source-self exclusion, non-defending, ranged, low-tier, dead, and stripped-source controls, tactical AI, and readable summaries",
+        "The all-live 100-seed four-week matrix improves at least one accepted balance metric without exceeding the baseline bounds",
+        "The 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "runtime faction-id, matchup-id, week-number, army-count, encounter-id, or benchmark-only hard-coding",
+        "other-unit, base-stat, growth, recruitment, economy, save, campaign, packaging, Native RMG, encounter-roster, or benchmark-threshold changes",
+        "claiming final Embercourt identity, final faction balance, or overall release completion"
+      ],
+      "createdAt": "2026-08-08T22:49:10Z",
+      "updatedAt": "2026-08-08T23:31:21Z",
+      "startedAt": "2026-08-08T22:49:10Z",
+      "notes": "Charter Lock now projects an eight-percent retaliation bonus to another defending tier-four-or-higher melee ally while a living Colossus survives. Tactical AI values the aura only for an allied brace line; player summaries expose active and waiting states. Failed blanket-AI revisions were rejected before acceptance.",
+      "result": {
+        "charter_colossus_allied_retaliation_aura_count": 1,
+        "ally_retaliation_multiplier": 1.08,
+        "ally_retaliation_min_tier": 4,
+        "ability_instance_count": 117,
+        "ability_runtime_consequence_count": 117,
+        "faction_balance_battle_count": 12000,
+        "faction_balance_outlier_count": 27,
+        "faction_balance_excess_severity": 152.0,
+        "faction_balance_rows_at_or_above_65_pct": 2,
+        "faction_balance_max_dominance_pct": 67.5,
+        "faction_balance_max_side_bias_points": 3.73,
+        "faction_balance_structural_failure_count": 0,
+        "week_three_brasshollow_embercourt_dominance_pct": 62.0,
+        "week_three_brasshollow_embercourt_baseline_dominance_pct": 63.0,
+        "active_encounter_sample_count": 59,
+        "active_encounter_queue_count": 0,
+        "active_encounter_queue_signature": "829808c9",
+        "balance_status": "needs_tuning"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/unit_ability_runtime_report.tscn (passed; 117/117 authored ability instances across 103 units)",
+        "python3 tests/battle_faction_fast_balance_benchmark.py --seeds 100 --weeks 1,2,3,4 --hero-policy all-live (passed; 27 outliers / 152.0 severity / 2 severe / 67.5 max dominance / 3.73 side bias / 0 structural failures)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn (passed; 59/59 complete, zero queue items, signature 829808c9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failed sections; retained unsupported Native RMG fail-closed warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py (passed)",
+        "python3 -m py_compile tests/battle_faction_fast_balance_benchmark.py tests/validate_repo.py (passed)",
+        "python3 -m json.tool content/units.json >/dev/null and python3 -m json.tool ops/progress.json >/dev/null (passed)",
+        "git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Faction balance remains needs_tuning, unsupported Native RMG exact-state generation remains fail-closed, and overall game completion remains open.",
+      "completedAt": "2026-08-08T23:31:21Z"
     },
     {
       "id": "strategic-ai-role-state-fixture-reconciliation-10184",
@@ -73180,7 +73265,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 28 outliers / 153.0 severity / 68.0 percent maximum dominance.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 27 outliers / 152.0 severity / 67.5 percent maximum dominance / 3.73 side bias.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -73611,7 +73696,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "embercourt_beacon_lector_readiness_writ_complete_overall_release_in_progress",
+  "result": "embercourt_charter_colossus_retaliation_aura_complete_overall_release_in_progress",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -73712,9 +73797,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Beacon Lectors now provide one bounded content-owned readiness response through live combat, tactical AI, presentation, and the benchmark. Focused ability coverage passes 117/117, the 59-encounter queue remains clear, and the all-live matrix improves to 27 outliers / 153.0 severity / 67.5 percent maximum dominance / 3.87 side bias with zero structural failures. Faction balance, Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, Native RMG exact-state parity, release-channel integration, and overall release remain in progress.",
+  "summary": "Charter Lock now projects a bounded living-source retaliation aura to another defending allied veteran melee line through live combat, tactical AI, and player summaries. Focused ability coverage passes 117/117, the 59-encounter queue remains clear, and the all-live matrix improves to 27 outliers / 152.0 severity / 67.5 percent maximum dominance / 3.73 side bias with zero structural failures. Faction balance, Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, Native RMG exact-state parity, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-08T22:41:39Z",
+  "updatedAt": "2026-08-08T23:31:21Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -2605,6 +2605,43 @@ Completion result:
 - the accepted all-live 100-seed four-week matrix improves from 28 to 27 outliers, `153.5` to `153.0` excess severity, and `4.0` to `3.87` maximum side bias while keeping two rows at or above 65 percent, `67.5` percent maximum dominance, and zero structural failures. Week-two Embercourt/Mireclaw moves from `44.5/55.5` to `52/48`;
 - autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; unsupported Native RMG exact-state generation and overall release completion remain open.
 
+## Embercourt Charter Colossus Retaliation Aura
+
+id: `combat-embercourt-charter-colossus-retaliation-aura-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and balance implementation slice. The Charter
+Colossus is authored as a zone anchor that raises retaliation value, but Charter
+Lock currently increases only the Colossus stack's own retaliation.
+
+Implementation target:
+- extend Charter Lock with one bounded, content-owned aura that raises retaliation damage for another defending allied veteran melee line while a living Colossus anchors the formation;
+- resolve the aura from immutable authored content in live rules, tactical AI, player summaries, and the fast benchmark, with exact behavior when the source is dead, absent, or stripped;
+- preserve base stats, the Colossus's existing self-brace, economy, saves, campaigns, packaging, Native RMG, encounters, and benchmark thresholds.
+
+Completion criteria:
+- focused runtime proof covers eligible allied retaliation, source-self exclusion, non-defending/ranged/low-tier exclusions, dead and stripped-source controls, tactical-AI valuation, and readable active/waiting summaries;
+- the all-live 100-seed four-week matrix has zero structural failures and improves at least one accepted faction-balance metric without worsening 27 outliers, `153.0` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or `3.87` side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, encounter ids, or benchmark-only behavior;
+- do not change other units, base stats, growth, recruitment, economy, saves, campaigns, packaging, Native RMG, encounter rosters, or benchmark thresholds;
+- do not claim final Embercourt identity, final faction balance, or overall release completion.
+
+Measured revision evidence:
+- a four-percent aura with a blanket `+1.0` defend preference failed the accepted matrix, holding 27 outliers while worsening excess severity from `153.0` to `153.5` and maximum dominance from `67.5` to `68.0` percent;
+- raising retaliation to eight percent proved damage magnitude alone did not change the worst row. A reduced blanket AI preference preserved the maximum but still worsened Embercourt/Veilmourn, so the final decision bonus is limited to allied brace units while the live aura remains available to every eligible veteran melee line;
+- no revision inspects factions, opponents, weeks, army counts, encounters, seeds, or benchmark identity.
+
+Completion result:
+- Charter Lock now projects an eight-percent retaliation bonus to another defending tier-four-or-higher melee ally while a living Charter Colossus survives; the Colossus does not buff itself, and ranged, low-tier, non-defending, dead-source, absent-source, and stripped-source cases stay unchanged;
+- tactical AI values the aura only for an allied brace line, while player summaries expose active and waiting states and the live doctrine summary names the compact retaliation formation;
+- focused runtime proof passes all `117/117` authored ability instances across 103 units, including live/AI parity and every scope boundary;
+- the accepted all-live 100-seed four-week matrix keeps 27 outliers, two rows at or above 65 percent, `67.5` percent maximum dominance, and zero structural failures while improving excess severity from `153.0` to `152.0` and maximum side bias from `3.87` to `3.73` points;
+- the active 59-encounter queue remains clear at signature `829808c9`, and autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; unsupported Native RMG exact-state generation and overall release completion remain open.
+
 ## Work Selection Gates
 
 Before starting any worker:
