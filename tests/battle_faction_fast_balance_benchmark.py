@@ -1439,6 +1439,13 @@ class FastBattleBenchmark:
         overheat = self._ability_by_id(attacker, "overheat")
         if overheat and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
             score += 0.10
+        readiness_writ = self._ability_by_id(attacker, "readiness_writ")
+        if (
+            is_ranged
+            and self._readiness_writ_available(attacker, battle, readiness_writ)
+            and self._readiness_writ_target(battle, attacker, readiness_writ)
+        ):
+            score += float(readiness_writ.get("ai_attack_score_bonus", 0.0))
         if is_ranged:
             pressure_artillery = self._ability_by_id(attacker, "pressure_artillery")
             if pressure_artillery:
@@ -1789,13 +1796,13 @@ class FastBattleBenchmark:
             return
         overheat = self._ability_by_id(attacker, "overheat")
         if overheat and not is_ranged and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
-            self._apply_effect(attacker, {
+            retaliation_status_applied = self._apply_effect(attacker, {
                 "effect_id": str(overheat.get("status_id", STATUS_OVERHEATED)),
                 "label": str(overheat.get("status_label", "Overheated")),
                 "duration_rounds": int(overheat.get("duration_rounds", 2)),
                 "modifiers": overheat.get("modifiers", {}),
             }, battle, "ability", "overheat")
-            counts["status_applied"] += 1
+            counts["status_applied" if retaliation_status_applied else "readiness_writ_blocked"] += 1
         ability_uses = attacker.setdefault("ability_uses", {})
         hookline = self._ability_by_id(attacker, "hookline")
         hookline_triggered = bool(hookline) and not is_ranged and attack_distance == 1 and self._hookline_available(attacker, battle)
@@ -1829,42 +1836,71 @@ class FastBattleBenchmark:
                     restored = min(requested, self._stack_recoverable_health(target))
                     target["total_health"] = int(target.get("total_health", 0)) + restored
                     counts["sporeglass_mend"] += restored
+            readiness_writ = self._ability_by_id(attacker, "readiness_writ")
+            if self._readiness_writ_available(attacker, battle, readiness_writ):
+                readiness_target = self._readiness_writ_target(battle, attacker, readiness_writ)
+                if readiness_target:
+                    cleansed_ids = {str(value) for value in readiness_writ.get("cleansed_status_ids", [])}
+                    effects = readiness_target.get("effects", []) if isinstance(readiness_target.get("effects", []), list) else []
+                    retained_effects = [
+                        effect for effect in effects
+                        if not isinstance(effect, dict) or str(effect.get("effect_id", "")) not in cleansed_ids
+                    ]
+                    cleansed_count = len(effects) - len(retained_effects)
+                    if cleansed_count > 0:
+                        readiness_target["effects"] = retained_effects
+                        ability_uses["readiness_writ"] = int(ability_uses.get("readiness_writ", 0)) + 1
+                        counts["readiness_writ"] += cleansed_count
+                else:
+                    readiness_target = self._readiness_writ_preparation_target(battle, attacker, readiness_writ)
+                    if readiness_target:
+                        self._apply_effect(attacker, {
+                            "effect_id": str(readiness_writ.get("preparation_status_id", "status_readiness_prepared")),
+                            "label": str(readiness_writ.get("preparation_status_label", "Mustered")),
+                            "duration_rounds": int(readiness_writ.get("preparation_duration_rounds", 99)),
+                            "blocked_status_ids": readiness_writ.get("cleansed_status_ids", []),
+                            "protected_side": str(attacker.get("side", "")),
+                            "target_role": str(readiness_writ.get("preparation_target_role", "")),
+                            "target_min_tier": int(readiness_writ.get("preparation_target_min_tier", 1)),
+                        }, battle, "ability", "readiness_writ")
+                        ability_uses["readiness_writ"] = int(ability_uses.get("readiness_writ", 0)) + 1
+                        counts["readiness_writ_prepared"] += 1
         if self._alive_count(defender) <= 0:
             return
         if hookline_triggered:
             battle["distance"] = 0
-            self._apply_effect(defender, {
+            hookline_applied = self._apply_effect(defender, {
                 "effect_id": str(hookline.get("status_id", STATUS_ROOTED)),
                 "label": str(hookline.get("status_label", "Pinned")),
                 "duration_rounds": int(hookline.get("duration_rounds", 1)),
                 "modifiers": hookline.get("modifiers", {}),
             }, battle, "ability", "hookline")
-            counts["status_applied"] += 1
+            counts["status_applied" if hookline_applied else "readiness_writ_blocked"] += 1
         rot_cant = self._ability_by_id(attacker, "rot_cant")
         rot_target_ready = int(defender.get("tier", 1)) >= int(rot_cant.get("target_min_tier", 1))
         rot_available = int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and rot_target_ready and int(ability_uses.get("rot_cant", 0)) < int(rot_cant.get("uses_per_battle", 1))
         if is_ranged and rot_cant and rot_available:
-            self._apply_effect(defender, {
+            rot_applied = self._apply_effect(defender, {
                 "effect_id": str(rot_cant.get("status_id", STATUS_HARRIED)),
                 "label": str(rot_cant.get("status_label", "Rot-Called")),
                 "duration_rounds": int(rot_cant.get("duration_rounds", 1)),
                 "modifiers": rot_cant.get("modifiers", {}),
             }, battle, "ability", "rot_cant")
             ability_uses["rot_cant"] = int(ability_uses.get("rot_cant", 0)) + 1
-            counts["status_applied"] += 1
+            counts["status_applied" if rot_applied else "readiness_writ_blocked"] += 1
         harry = self._ability_by_id(attacker, "harry")
         harry_limit = int(harry.get("uses_per_battle", 0))
         harry_target_role = str(harry.get("target_role", ""))
         harry_target_ready = int(defender.get("tier", 1)) >= int(harry.get("target_min_tier", 1)) and (not harry_target_role or bool(defender.get("ranged", False)) == (harry_target_role == "ranged"))
         harry_available = harry_target_ready and self._harry_support_ready(attacker, defender, battle, harry) and (harry_limit <= 0 or int(ability_uses.get("harry", 0)) < harry_limit)
         if harry and harry_available:
-            self._apply_effect(defender, {
+            harry_applied = self._apply_effect(defender, {
                 "effect_id": str(harry.get("status_id", "")),
                 "label": str(harry.get("status_label", "Harried")),
                 "duration_rounds": int(harry.get("duration_rounds", 1)),
                 "modifiers": harry.get("modifiers", {}),
             }, battle, "ability", "harry")
-            counts["status_applied"] += 1
+            counts["status_applied" if harry_applied else "readiness_writ_blocked"] += 1
             if harry_limit > 0:
                 ability_uses["harry"] = int(ability_uses.get("harry", 0)) + 1
         obituary = self._ability_by_id(attacker, "obituary")
@@ -1963,10 +1999,50 @@ class FastBattleBenchmark:
         if momentum_gain > 0:
             counts["momentum_gain"] += 1
 
-    def _apply_effect(self, stack: dict[str, Any], effect: dict[str, Any], battle: dict[str, Any], source_type: str, source_id: str) -> None:
+    def _apply_effect(self, stack: dict[str, Any], effect: dict[str, Any], battle: dict[str, Any], source_type: str, source_id: str) -> bool:
+        incoming_effect_id = str(effect.get("effect_id", effect.get("type", source_id)))
+        for source in battle.get("stacks", []):
+            if not isinstance(source, dict) or str(source.get("side", "")) != str(stack.get("side", "")):
+                continue
+            effects = source.get("effects", []) if isinstance(source.get("effects", []), list) else []
+            for index in range(len(effects) - 1, -1, -1):
+                existing = effects[index]
+                if not isinstance(existing, dict) or str(existing.get("effect_id", "")) != "status_readiness_prepared":
+                    continue
+                blocked_status_ids = existing.get("blocked_status_ids", []) if isinstance(existing.get("blocked_status_ids", []), list) else []
+                target_role = str(existing.get("target_role", ""))
+                target_min_tier = int(existing.get("target_min_tier", 1))
+                if (
+                    incoming_effect_id in [str(value) for value in blocked_status_ids]
+                    and (not str(existing.get("protected_side", "")) or str(existing.get("protected_side", "")) == str(stack.get("side", "")))
+                    and (not target_role or target_role == str(stack.get("role", "melee")))
+                    and int(stack.get("tier", 1)) >= target_min_tier
+                ):
+                    effects.pop(index)
+                    source["effects"] = effects
+                    return False
+        for source in battle.get("stacks", []):
+            if (
+                not isinstance(source, dict)
+                or self._alive_count(source) <= 0
+                or str(source.get("side", "")) != str(stack.get("side", ""))
+            ):
+                continue
+            readiness_writ = self._ability_by_id(source, "readiness_writ")
+            target_role = str(readiness_writ.get("preparation_target_role", ""))
+            ability_uses = source.setdefault("ability_uses", {})
+            if (
+                readiness_writ
+                and incoming_effect_id in [str(value) for value in readiness_writ.get("cleansed_status_ids", [])]
+                and (not target_role or target_role == str(stack.get("role", "melee")))
+                and int(stack.get("tier", 1)) >= int(readiness_writ.get("preparation_target_min_tier", 1))
+                and int(ability_uses.get("readiness_writ", 0)) < int(readiness_writ.get("uses_per_battle", 1))
+            ):
+                ability_uses["readiness_writ"] = int(ability_uses.get("readiness_writ", 0)) + 1
+                return False
         modifiers = effect.get("modifiers", {}) if isinstance(effect.get("modifiers", {}), dict) else {}
         stack.setdefault("effects", []).append({
-            "effect_id": str(effect.get("effect_id", effect.get("type", source_id))),
+            "effect_id": incoming_effect_id,
             "source_type": source_type,
             "source_id": source_id,
             "label": str(effect.get("label", source_id)),
@@ -1975,8 +2051,13 @@ class FastBattleBenchmark:
                 str(value) for value in effect.get("status_immunity_ids", [])
                 if str(value) in STATUS_EFFECT_IDS
             ] if isinstance(effect.get("status_immunity_ids", []), list) else [],
+            "blocked_status_ids": [str(value) for value in effect.get("blocked_status_ids", [])] if isinstance(effect.get("blocked_status_ids", []), list) else [],
+            "protected_side": str(effect.get("protected_side", "")),
+            "target_role": str(effect.get("target_role", "")),
+            "target_min_tier": max(1, int(effect.get("target_min_tier", 1))),
             "expires_after_round": max(1, int(battle.get("round", 1))) + max(1, int(effect.get("duration_rounds", 1))) - 1,
         })
+        return True
 
     def _cohesion_base_for_unit(self, unit: dict[str, Any]) -> int:
         base = 5 + max(0, int(unit.get("tier", 1)) - 1)
@@ -2417,6 +2498,69 @@ class FastBattleBenchmark:
         if not isinstance(required_tags, list) or not required_tags:
             return False
         return any(self._battle_has_tag(battle, str(value)) for value in required_tags)
+
+    def _readiness_writ_effect_count(self, stack: dict[str, Any], battle: dict[str, Any], ability: dict[str, Any]) -> int:
+        return sum(1 for value in ability.get("cleansed_status_ids", []) if self._has_effect_id(stack, battle, str(value)))
+
+    def _readiness_writ_target(self, battle: dict[str, Any], source: dict[str, Any], ability: dict[str, Any] | None = None) -> dict[str, Any]:
+        readiness_writ = ability or self._ability_by_id(source, "readiness_writ")
+        if not source or not readiness_writ:
+            return {}
+        source_id = str(source.get("battle_id", ""))
+        candidates = [
+            stack for stack in self._alive_stacks_for_side(battle, str(source.get("side", "")))
+            if str(stack.get("battle_id", "")) != source_id
+            and self._readiness_writ_effect_count(stack, battle, readiness_writ) > 0
+        ]
+        if not candidates:
+            return {}
+        return min(
+            candidates,
+            key=lambda stack: (
+                -self._readiness_writ_effect_count(stack, battle, readiness_writ),
+                self._stack_cohesion_total(stack, battle),
+                -int(stack.get("tier", 1)),
+                str(stack.get("battle_id", "")),
+            ),
+        )
+
+    def _readiness_writ_preparation_target(self, battle: dict[str, Any], source: dict[str, Any], ability: dict[str, Any] | None = None) -> dict[str, Any]:
+        readiness_writ = ability or self._ability_by_id(source, "readiness_writ")
+        if not source or not readiness_writ:
+            return {}
+        source_id = str(source.get("battle_id", ""))
+        preparation_status_id = str(readiness_writ.get("preparation_status_id", "status_readiness_prepared"))
+        target_role = str(readiness_writ.get("preparation_target_role", ""))
+        target_min_tier = int(readiness_writ.get("preparation_target_min_tier", 1))
+        candidates = [
+            stack for stack in self._alive_stacks_for_side(battle, str(source.get("side", "")))
+            if str(stack.get("battle_id", "")) != source_id
+            and (not target_role or str(stack.get("role", "melee")) == target_role)
+            and int(stack.get("tier", 1)) >= target_min_tier
+            and not self._has_effect_id(stack, battle, preparation_status_id)
+        ]
+        if not candidates:
+            return {}
+        return min(
+            candidates,
+            key=lambda stack: (
+                self._stack_cohesion_total(stack, battle),
+                -int(stack.get("tier", 1)),
+                str(stack.get("battle_id", "")),
+            ),
+        )
+
+    def _readiness_writ_available(self, source: dict[str, Any], battle: dict[str, Any], ability: dict[str, Any] | None = None) -> bool:
+        readiness_writ = ability or self._ability_by_id(source, "readiness_writ")
+        if not source or not readiness_writ or self._alive_count(source) <= 0 or not bool(source.get("ranged", False)):
+            return False
+        ability_uses = source.get("ability_uses", {})
+        if not isinstance(ability_uses, dict) or int(ability_uses.get("readiness_writ", 0)) >= int(readiness_writ.get("uses_per_battle", 1)):
+            return False
+        return bool(
+            self._readiness_writ_target(battle, source, readiness_writ)
+            or self._readiness_writ_preparation_target(battle, source, readiness_writ)
+        )
 
     def _stack_screen_distance(self, left: dict[str, Any], right: dict[str, Any]) -> int:
         left_hex = left.get("hex", {})

@@ -765,6 +765,23 @@
           "momentum_gain": 0,
           "uses_per_battle": 1,
           "target_min_tier": 4
+        },
+        {
+          "id": "readiness_writ",
+          "name": "Beacon Muster",
+          "description": "Once per battle, the lectors steady one disrupted veteran line as the pressure lands, clear it after firing, or hold the same response for the next breach.",
+          "cleansed_status_ids": [
+            "status_harried",
+            "status_mire_harried",
+            "status_staggered"
+          ],
+          "preparation_status_id": "status_readiness_prepared",
+          "preparation_status_label": "Mustered",
+          "preparation_target_role": "melee",
+          "preparation_target_min_tier": 4,
+          "preparation_duration_rounds": 99,
+          "uses_per_battle": 1,
+          "ai_attack_score_bonus": 1.5
         }
       ],
       "content_status": "six_faction_scaffold",

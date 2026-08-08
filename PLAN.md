@@ -2568,6 +2568,43 @@ Result:
 - the active 59-encounter queue remains clear with signature `829808c9`, and the all-live 100-seed four-week matrix remains exact at 28 outliers / `153.5` severity / two rows at or above 65 percent / `67.5` maximum dominance / `4.0` maximum side bias / zero structural failures;
 - autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`, the unsupported Native RMG exact-state chain remains fail-closed, and overall release completion remains open.
 
+## Embercourt Beacon Lector Readiness Writ
+
+id: `combat-embercourt-beacon-lector-readiness-writ-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and balance implementation slice. Beacon
+Lectors are authored as support casters that refresh readiness and steady compact
+formations, but their current production behavior only marks an enemy veteran.
+
+Implementation target:
+- add one bounded once-per-battle readiness writ that reactively blocks the first listed disruption against one eligible allied melee veteran while a living Lector has not spent it, clears an existing listed disruption after a shot, or holds the response after a shot when no disruption is active yet;
+- resolve the new support role from immutable authored content so battles without an eligible allied disruption retain exact normalized state while live rules, tactical AI, player summaries, and the fast benchmark consume the same contract;
+- preserve base stats, existing Beacon Lane Citation behavior, economy, saves, campaigns, packaging, Native RMG, encounters, and benchmark thresholds.
+
+Measured revision evidence:
+- the first full matrix proved 32 post-status cleanses but none in a Mireclaw pairing, because the one-round setup marks expired before a later Lector shot could clear them; the matrix therefore remained exact at the accepted baseline;
+- the same writ must cover both initiative orders by holding one formation-level response after a shot when no eligible disruption is already active. The preparation is consumed only by the next listed status against one eligible allied melee veteran and does not inspect faction, matchup, week, army, or benchmark identity.
+- a second causal smoke proved the held response worked only when the Lector fired before the enemy mark. The final bounded contract therefore permits the living Lector to call the same once-per-battle writ reactively when a listed disruption arrives first; a later shot cannot prepare or cleanse again after that use.
+
+Completion criteria:
+- exactly one listed disruption is blocked reactively, cleared after a successful ranged attack, or reserved for one later eligible allied melee veteran; only the listed harried/staggered status families can consume the response, with deterministic target selection, spent/dead/stripped-source controls, readable presentation, and tactical-AI valuation;
+- the all-live 100-seed four-week matrix has zero structural failures and improves at least one accepted faction-balance metric without worsening outlier count, `153.5` severity, two rows at or above 65 percent, `67.5` percent maximum dominance, or seven side-bias points;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, encounter ids, or benchmark-only behavior;
+- do not change other units, base stats, the existing citation mark, economy, saves, campaigns, packaging, Native RMG, encounter rosters, or benchmark thresholds;
+- do not claim final Embercourt identity, final faction balance, or overall release completion.
+
+Completion result:
+- Beacon Muster now provides one content-owned once-per-battle readiness response: a living unspent Lector can block the first listed disruption against an allied tier-four melee veteran, a successful shot clears an existing listed disruption, or the shot reserves the same response for later;
+- readiness-only effect metadata is normalized only on the prepared writ, so battles without Beacon Muster retain exact state shape and the active 59-encounter queue remains clear at signature `829808c9`;
+- focused runtime proof passes all `117/117` authored ability instances across 103 units, including immediate, reserved, reactive, once-only, dead, stripped-source, presentation, summary, AI, and immutable-state boundaries;
+- the accepted all-live 100-seed four-week matrix improves from 28 to 27 outliers, `153.5` to `153.0` excess severity, and `4.0` to `3.87` maximum side bias while keeping two rows at or above 65 percent, `67.5` percent maximum dominance, and zero structural failures. Week-two Embercourt/Mireclaw moves from `44.5/55.5` to `52/48`;
+- autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; unsupported Native RMG exact-state generation and overall release completion remain open.
+
 ## Work Selection Gates
 
 Before starting any worker:

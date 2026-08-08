@@ -334,7 +334,7 @@ GDEXTENSION_MANIFEST_PATH = ROOT / "src" / "gdextension" / "map_persistence.gdex
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
-SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "readiness_writ", "harry", "backstab", "fogwake", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}
 VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
 SUPPORTED_BATTLEFIELD_TAGS = {
     "chokepoint",
@@ -370,7 +370,7 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
 }
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
 SUPPORTED_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"}
-SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_staggered", "status_rooted", "status_overheated", "status_fogbound"}
+SUPPORTED_STATUS_EFFECT_IDS = {"status_harried", "status_mire_harried", "status_staggered", "status_rooted", "status_overheated", "status_fogbound"}
 REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil"}
 SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
 SUPPORTED_SPELL_PRIMARY_ROLES = {
@@ -10653,6 +10653,23 @@ def validate_content(errors: list[str]) -> None:
                         f"Unit {unit_id} fog_screen uses an unsupported battlefield tag",
                     )
                     ensure(0.9 <= float(ability.get("incoming_damage_multiplier", 0.0)) < 1.0, errors, f"Unit {unit_id} fog_screen incoming_damage_multiplier must be in [0.9, 1)")
+                elif ability_id == "readiness_writ":
+                    ensure(str(unit.get("faction_id", "")) == "faction_embercourt", errors, f"Unit {unit_id} readiness_writ must belong to Embercourt")
+                    ensure(bool(unit.get("ranged", False)), errors, f"Unit {unit_id} readiness_writ must belong to a ranged unit")
+                    cleansed_status_ids = ability.get("cleansed_status_ids", [])
+                    ensure(isinstance(cleansed_status_ids, list) and bool(cleansed_status_ids), errors, f"Unit {unit_id} readiness_writ must list cleansed_status_ids")
+                    ensure(
+                        isinstance(cleansed_status_ids, list) and all(str(value) in SUPPORTED_STATUS_EFFECT_IDS for value in cleansed_status_ids),
+                        errors,
+                        f"Unit {unit_id} readiness_writ uses an unsupported status id",
+                    )
+                    ensure(str(ability.get("preparation_status_id", "")) == "status_readiness_prepared", errors, f"Unit {unit_id} readiness_writ must define its preparation status")
+                    ensure(bool(str(ability.get("preparation_status_label", ""))), errors, f"Unit {unit_id} readiness_writ must label its preparation status")
+                    ensure(str(ability.get("preparation_target_role", "")) == "melee", errors, f"Unit {unit_id} readiness_writ must prepare one melee line")
+                    ensure(int(ability.get("preparation_target_min_tier", 0)) == 4, errors, f"Unit {unit_id} readiness_writ must prepare a tier-four veteran line")
+                    ensure(int(ability.get("preparation_duration_rounds", 0)) >= 60, errors, f"Unit {unit_id} readiness_writ preparation must persist for the bounded battle horizon")
+                    ensure(int(ability.get("uses_per_battle", 0)) == 1, errors, f"Unit {unit_id} readiness_writ must be limited to one use per battle")
+                    ensure(0.0 < float(ability.get("ai_attack_score_bonus", 0.0)) <= 4.0, errors, f"Unit {unit_id} readiness_writ AI attack bonus must be in (0, 4]")
                 elif ability_id == "harry":
                     ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} harry must define status_id")
                     ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
@@ -10859,9 +10876,9 @@ def validate_content(errors: list[str]) -> None:
                     ensure(float(ability.get("ai_target_priority_bonus", 0.0)) > 0.0, errors, f"Unit {unit_id} foundry_aura ai_target_priority_bonus must be > 0")
 
     ensure(
-        {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
+        {"reach", "hookline", "rot_cant", "brace", "bramble_ground", "fog_screen", "readiness_writ", "harry", "backstab", "shielding", "volley", "formation_guard", "resonance_relay", "solar_array_lane", "bloodrush", "obituary", "overheat", "pressure_artillery", "counter_ambush_flare", "sporeglass_mend", "foundry_aura"}.issubset(authored_unit_ability_ids),
         errors,
-        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, bramble_ground, fog_screen, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
+        "Authored units must cover the combat-depth ability set: reach, hookline, rot_cant, brace, bramble_ground, fog_screen, readiness_writ, harry, backstab, shielding, volley, formation_guard, resonance_relay, solar_array_lane, bloodrush, obituary, overheat, pressure_artillery, counter_ambush_flare, sporeglass_mend, and foundry_aura",
     )
 
     obituary_scribes = units.get("unit_veilmourn_obituary_scribes", {})
@@ -10980,6 +10997,18 @@ def validate_content(errors: list[str]) -> None:
     ensure(str(bellwake_fog_screen.get("name", "")) == "Mistwake Screen", errors, "Bellwake Oars must own Mistwake Screen")
     ensure(bellwake_fog_screen.get("required_battlefield_tags", []) == ["fog_bank"], errors, "Mistwake Screen must remain scoped to natural fog banks")
     ensure(float(bellwake_fog_screen.get("incoming_damage_multiplier", 0.0)) == 0.98, errors, "Mistwake Screen must retain its bounded two-percent incoming-damage reduction")
+
+    beacon_lectors = units.get("unit_embercourt_beacon_lectors", {})
+    beacon_readiness_writ = next((ability for ability in beacon_lectors.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "readiness_writ"), {})
+    ensure(str(beacon_readiness_writ.get("name", "")) == "Beacon Muster", errors, "Beacon Lectors must own Beacon Muster")
+    ensure(beacon_readiness_writ.get("cleansed_status_ids", []) == ["status_harried", "status_mire_harried", "status_staggered"], errors, "Beacon Muster must clear only the listed disrupted-line statuses")
+    ensure(str(beacon_readiness_writ.get("preparation_status_id", "")) == "status_readiness_prepared", errors, "Beacon Muster must retain its prepared-line status")
+    ensure(str(beacon_readiness_writ.get("preparation_status_label", "")) == "Mustered", errors, "Beacon Muster must retain its prepared-line label")
+    ensure(str(beacon_readiness_writ.get("preparation_target_role", "")) == "melee", errors, "Beacon Muster must prepare a melee line")
+    ensure(int(beacon_readiness_writ.get("preparation_target_min_tier", 0)) == 4, errors, "Beacon Muster must prepare a tier-four veteran line")
+    ensure(int(beacon_readiness_writ.get("preparation_duration_rounds", 0)) == 99, errors, "Beacon Muster must persist through the bounded battle horizon")
+    ensure(int(beacon_readiness_writ.get("uses_per_battle", 0)) == 1, errors, "Beacon Muster must remain once per battle")
+    ensure(float(beacon_readiness_writ.get("ai_attack_score_bonus", 0.0)) == 1.5, errors, "Beacon Muster must retain its bounded tactical attack value")
 
     cutthroat = units.get("unit_blackbranch_cutthroat", {})
     cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})

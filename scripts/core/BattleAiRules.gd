@@ -1192,6 +1192,10 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var overheat := _ability_by_id(attacker, "overheat")
 	if not overheat.is_empty() and not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
 		score += 0.10
+	var readiness_writ := _readiness_writ_ability(attacker)
+	if is_ranged and _readiness_writ_available(attacker, battle, readiness_writ) \
+			and not _readiness_writ_target(battle, attacker, readiness_writ).is_empty():
+		score += float(readiness_writ.get("ai_attack_score_bonus", 0.0))
 	if is_ranged:
 		var pressure_artillery := _ability_by_id(attacker, "pressure_artillery")
 		if not pressure_artillery.is_empty():
@@ -2811,6 +2815,54 @@ static func _fog_screen_available(stack: Dictionary, battle: Dictionary, ability
 		if _battle_has_tag(battle, String(tag)):
 			return true
 	return false
+
+static func _readiness_writ_ability(stack: Dictionary) -> Dictionary:
+	return _authored_ability_by_id(stack, "readiness_writ")
+
+static func _readiness_writ_effect_count(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
+	var count := 0
+	for status_id in ability.get("cleansed_status_ids", []):
+		if SpellRulesScript.has_effect_id(stack, battle, String(status_id)):
+			count += 1
+	return count
+
+static func _readiness_writ_target(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
+	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
+	if source.is_empty() or readiness_writ.is_empty():
+		return {}
+	var source_id := String(source.get("battle_id", ""))
+	var best := {}
+	var best_effect_count := 0
+	var best_cohesion := 999
+	var best_tier := 0
+	for candidate in _alive_stacks_for_side(battle, String(source.get("side", ""))):
+		if String(candidate.get("battle_id", "")) == source_id:
+			continue
+		var effect_count := _readiness_writ_effect_count(candidate, battle, readiness_writ)
+		if effect_count <= 0:
+			continue
+		var cohesion := _stack_cohesion_total(candidate, battle)
+		var tier := int(candidate.get("tier", 1))
+		var candidate_id := String(candidate.get("battle_id", ""))
+		var best_id := String(best.get("battle_id", ""))
+		if best.is_empty() or effect_count > best_effect_count \
+				or (effect_count == best_effect_count and cohesion < best_cohesion) \
+				or (effect_count == best_effect_count and cohesion == best_cohesion and tier > best_tier) \
+				or (effect_count == best_effect_count and cohesion == best_cohesion and tier == best_tier and candidate_id < best_id):
+			best = candidate
+			best_effect_count = effect_count
+			best_cohesion = cohesion
+			best_tier = tier
+	return best
+
+static func _readiness_writ_available(source: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
+	if source.is_empty() or readiness_writ.is_empty() or _alive_count(source) <= 0 or not bool(source.get("ranged", false)):
+		return false
+	var ability_uses = source.get("ability_uses", {})
+	if not (ability_uses is Dictionary) or int(ability_uses.get("readiness_writ", 0)) >= int(readiness_writ.get("uses_per_battle", 1)):
+		return false
+	return not _readiness_writ_target(battle, source, readiness_writ).is_empty()
 
 static func _volley_has_protected_lane(stack: Dictionary, battle: Dictionary, volley: Dictionary) -> bool:
 	if stack.is_empty() or volley.is_empty():
