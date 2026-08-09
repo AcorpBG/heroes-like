@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, and post-RNG encounter requalification are complete. Faction balance still needs tuning and overall release readiness remains open.",
+  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, and unreachable town-defense retask correction are complete. Faction balance and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-gorefen-ripper-finisher-role-10184",
-  "currentSliceId": "combat-mireclaw-gorefen-ripper-finisher-role-10184",
-  "currentSliceNotes": "Accepted the production 25-percent execute contract: method-matched matrix improves severity, severe rows, and side bias without regression; corrected-RNG live breadth remains clear.",
+  "currentSlice": "strategic-ai-unreachable-town-defense-retask-10184",
+  "currentSliceId": "strategic-ai-unreachable-town-defense-retask-10184",
+  "currentSliceNotes": "Unreachable defense candidates are rejected and route-closed defenders clear stale lifecycle state before deterministic reachable retargeting; focused and broad strategic gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Gorefen Ripper Finisher Role",
-  "currentSliceUpdatedAt": "2026-08-09T20:21:45Z",
+  "currentSliceTitle": "Strategic AI Unreachable Town-Defense Retask",
+  "currentSliceUpdatedAt": "2026-08-09T20:42:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73523,6 +73523,77 @@
       ],
       "remainingWork": "Continue the broader production-release queue; this slice does not claim global strategic-AI tuning or overall game completion.",
       "completedAt": "2026-08-05T03:56:34Z"
+    },
+    {
+      "id": "strategic-ai-unreachable-town-defense-retask-10184",
+      "title": "Strategic AI Unreachable Town-Defense Retask",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/strategic-ai-foundation.md",
+        "docs/strategic-ai-town-defense-retask-report.md"
+      ],
+      "purpose": "Prevent active enemy raids from abandoning real pressure for an unreachable town-defense assignment and release an existing defense assignment when its route becomes unreachable.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_town_defense_retask_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "town_defense_unreachable_sentinel": 9999,
+        "new_unreachable_candidate_accepted": true,
+        "existing_unreachable_assignment_preserved": true,
+        "focused_reachable_retask_report_ok": true
+      },
+      "completionCriteria": [
+        "New town-defense candidate selection rejects path distance 9999 before scoring",
+        "An existing town-defense assignment is released or retargeted when its route becomes unreachable",
+        "No active raid adopts or preserves a town-defense target with goal_distance 9999",
+        "Reachable town defense, overcommit limits, movement, arrival, and public-safe events remain exact",
+        "Focused strategic-AI, baseline, core, editor parse, repository, JSON, and diff validation pass"
+      ],
+      "nonGoals": [
+        "scoring coefficients, faction personality, map topology, content, economy, combat, save schema, packaging, or Native RMG",
+        "long-run matrix accumulation, report-only progress, or broad strategic-AI and release completion claims"
+      ],
+      "createdAt": "2026-08-09T20:30:27Z",
+      "startedAt": "2026-08-09T20:30:27Z",
+      "updatedAt": "2026-08-09T20:42:34Z",
+      "notes": "Completed: unreachable defense candidates are rejected and an existing route-closed defense clears stale lifecycle state before deterministic reachable retargeting.",
+      "result": {
+        "new_unreachable_candidate_accepted": false,
+        "preserved_offensive_target_id": "river_free_company",
+        "preserved_offensive_goal_distance": 6,
+        "route_closed_defense_goal_distance": 9999,
+        "route_closed_retarget_id": "river_free_company",
+        "route_closed_retarget_goal_distance": 6,
+        "stale_defense_lifecycle_fields_cleared": true,
+        "focused_report_ok": true,
+        "headless_harness_signature": "ba73a1f3",
+        "strategic_baseline_signature": "dfa6d3fd"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/ai_town_defense_retask_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/ai_raid_movement_path_plan_reuse_regression.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/ai_hero_task_live_turn_execution_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/ai_raid_assault_grouping_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/strategic_ai_baseline_kpi_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "knownPreExistingValidationGap": "tests/ai_town_retake_assault_report.tscn fails identically on committed HEAD: the fixture expects a transient regroup target after the host has already reached the adjacent redoubt, gained 84 strength, and resumed Duskfen in the same enemy turn. The corrected town-defense branch is unreachable in that player-owned retake fixture.",
+      "remainingWork": "Select the next bounded product slice; player battle Quick Resolve and transactional cross-platform installer upgrades are the strongest audited release gaps.",
+      "completedAt": "2026-08-09T20:42:34Z"
     }
   ],
   "project": "heroes-like",

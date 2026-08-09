@@ -14,6 +14,12 @@ func _run() -> void:
 	var case_report := _river_pass_raid_retasks_to_stabilizing_town()
 	if case_report.is_empty():
 		return
+	var unreachable_assignment_case := _unreachable_town_defense_is_not_assigned()
+	if unreachable_assignment_case.is_empty():
+		return
+	var unreachable_release_case := _existing_town_defense_retargets_when_route_closes()
+	if unreachable_release_case.is_empty():
+		return
 	var overcommit_case := _covered_town_defense_does_not_retask_second_commander()
 	if overcommit_case.is_empty():
 		return
@@ -52,6 +58,8 @@ func _run() -> void:
 		"behavior_policy_legacy": "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
 		"case": case_report,
+		"unreachable_assignment_case": unreachable_assignment_case,
+		"unreachable_release_case": unreachable_release_case,
 		"overcommit_case": overcommit_case,
 		"resource_overcommit_case": resource_overcommit_case,
 		"derived_resource_sighting_case": derived_resource_sighting_case,
@@ -203,6 +211,95 @@ func _river_pass_raid_retasks_to_stabilizing_town() -> Dictionary:
 		"resource_controller_after": _resource_controller(session, "river_free_company"),
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
+	}
+
+func _unreachable_town_defense_is_not_assigned() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_stabilizing_front(session, "duskfen_bastion")
+	_set_resource_controller(session, "river_free_company", "player")
+	_block_duskfen_route(session)
+	var raid := EnemyAdventureRules._refresh_target(
+		session,
+		_defense_retask_raid(session),
+		MIRECLAW
+	)
+	if int(raid.get("goal_distance", 9999)) >= 9999:
+		_fail("Unreachable-defense assignment fixture lost its reachable offensive control: %s" % JSON.stringify(raid))
+		return {}
+	var redirected := EnemyAdventureRules._redirect_raid_to_threatened_town_defense(
+		session,
+		config,
+		raid,
+		MIRECLAW
+	)
+	var reason_codes := _string_array(redirected.get("target_reason_codes", []))
+	if String(redirected.get("target_placement_id", "")) == "duskfen_bastion" or "town_defense" in reason_codes:
+		_fail("Unreachable stabilizing town received a new defense assignment: %s" % JSON.stringify(redirected))
+		return {}
+	if String(redirected.get("target_placement_id", "")) != "river_free_company" \
+		or int(redirected.get("goal_distance", 9999)) >= 9999:
+		_fail("Rejecting unreachable town defense did not preserve reachable pressure: %s" % JSON.stringify(redirected))
+		return {}
+	return {
+		"case_id": "unreachable_stabilizing_town_is_not_assigned",
+		"preserved_target_kind": String(redirected.get("target_kind", "")),
+		"preserved_target_id": String(redirected.get("target_placement_id", "")),
+		"preserved_goal_distance": int(redirected.get("goal_distance", 9999)),
+		"town_defense_assigned": "town_defense" in reason_codes,
+	}
+
+func _existing_town_defense_retargets_when_route_closes() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_set_stabilizing_front(session, "duskfen_bastion")
+	_set_resource_controller(session, "river_free_company", "player")
+	var offense := EnemyAdventureRules._refresh_target(
+		session,
+		_defense_retask_raid(session),
+		MIRECLAW
+	)
+	var defending := EnemyAdventureRules._redirect_raid_to_threatened_town_defense(
+		session,
+		config,
+		offense,
+		MIRECLAW
+	)
+	if String(defending.get("target_placement_id", "")) != "duskfen_bastion" \
+		or "town_defense" not in _string_array(defending.get("target_reason_codes", [])) \
+		or int(defending.get("goal_distance", 9999)) >= 9999:
+		_fail("Route-loss fixture did not begin with a reachable town-defense assignment: %s" % JSON.stringify(defending))
+		return {}
+	_block_duskfen_route(session)
+	var blocked_defense := EnemyAdventureRules._refresh_target(session, defending.duplicate(true), MIRECLAW)
+	if int(blocked_defense.get("goal_distance", 0)) < 9999:
+		_fail("Route-loss fixture did not make the existing town defense unreachable: %s" % JSON.stringify(blocked_defense))
+		return {}
+	var retargeted := EnemyAdventureRules._redirect_raid_to_threatened_town_defense(
+		session,
+		config,
+		blocked_defense,
+		MIRECLAW
+	)
+	var reason_codes := _string_array(retargeted.get("target_reason_codes", []))
+	if String(retargeted.get("target_placement_id", "")) == "duskfen_bastion" or "town_defense" in reason_codes:
+		_fail("Existing unreachable town-defense assignment was preserved: %s" % JSON.stringify(retargeted))
+		return {}
+	if not EnemyAdventureRules._raid_target_valid(session, retargeted) \
+		or int(retargeted.get("goal_distance", 9999)) >= 9999:
+		_fail("Existing unreachable town defense did not retarget to reachable pressure: %s" % JSON.stringify(retargeted))
+		return {}
+	if retargeted.has("town_defense_started_day") or retargeted.has("town_defense_front_id"):
+		_fail("Released town-defense assignment retained stale defense lifecycle fields: %s" % JSON.stringify(retargeted))
+		return {}
+	return {
+		"case_id": "existing_town_defense_retargets_after_route_closes",
+		"blocked_target_id": String(blocked_defense.get("target_placement_id", "")),
+		"blocked_goal_distance": int(blocked_defense.get("goal_distance", 9999)),
+		"retargeted_kind": String(retargeted.get("target_kind", "")),
+		"retargeted_id": String(retargeted.get("target_placement_id", "")),
+		"retargeted_goal_distance": int(retargeted.get("goal_distance", 9999)),
+		"released_defense_fields": not retargeted.has("town_defense_started_day") and not retargeted.has("town_defense_front_id"),
 	}
 
 func _stationed_town_defender_releases_when_front_clears() -> Dictionary:
@@ -852,6 +949,14 @@ func _base_session():
 	EnemyTurnRules.normalize_enemy_states(session)
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
 	return session
+
+func _block_duskfen_route(session) -> void:
+	var map: Array = session.overworld.get("map", [])
+	for y in range(map.size()):
+		if map[y] is Array and map[y].size() > 7:
+			map[y][7] = "water"
+	session.overworld["map"] = map
+	EnemyAdventureRules._path_distance_surface_cache.clear()
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(RIVER_PASS)
