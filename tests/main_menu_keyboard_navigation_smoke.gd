@@ -78,6 +78,57 @@ func _run() -> void:
 	if not String(settings_snapshot.get("battle_playback_speed_tooltip", "")).contains("without changing combat results"):
 		_fail("Battle playback setting did not explain its presentation-only boundary: %s" % settings_snapshot)
 		return
+	for display_tooltip_key in ["presentation_mode_tooltip", "presentation_resolution_tooltip"]:
+		var display_tooltip := String(settings_snapshot.get(display_tooltip_key, ""))
+		if not display_tooltip.contains("stored only after Keep") or not display_tooltip.contains("Revert or timeout"):
+			_fail("Display selector did not explain its preview persistence boundary: %s" % display_tooltip)
+			return
+	var original_resolution := SettingsService.presentation_resolution_id()
+	var preview_resolution := ""
+	for option_value in settings_snapshot.get("presentation_resolution_options", []):
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		var option_id := String(option.get("id", ""))
+		if option_id != "" and option_id != original_resolution:
+			preview_resolution = option_id
+			break
+	if preview_resolution == "":
+		_fail("Settings board has no alternate resolution for rollback validation.")
+		return
+	var committed_settings_before := JSON.stringify(SettingsService.ensure_settings())
+	var settings_file_before := _settings_file_state()
+	if not bool(shell.call("validation_select_resolution", preview_resolution)):
+		_fail("Resolution picker could not start a display preview for %s." % preview_resolution)
+		return
+	await get_tree().process_frame
+	await get_tree().process_frame
+	settings_snapshot = shell.call("validation_snapshot")
+	var display_dialog: ConfirmationDialog = shell.get_node("DisplayChangeConfirmationDialog")
+	if not bool(settings_snapshot.get("display_change_dialog_visible", false)) \
+			or not bool(settings_snapshot.get("display_change_snapshot", {}).get("pending", false)) \
+			or String(settings_snapshot.get("display_change_ok_text", "")) != "Keep" \
+			or String(settings_snapshot.get("display_change_cancel_text", "")) != "Revert" \
+			or "automatically" not in String(settings_snapshot.get("display_change_dialog_text", "")).to_lower():
+		_fail("Resolution preview omitted its Keep/Revert countdown dialog: %s" % settings_snapshot)
+		return
+	if display_dialog.get_viewport().gui_get_focus_owner() != display_dialog.get_cancel_button():
+		_fail("Display preview did not put initial focus on Revert: owner=%s." % display_dialog.get_viewport().gui_get_focus_owner())
+		return
+	if SettingsService.presentation_resolution_id() != original_resolution \
+			or JSON.stringify(SettingsService.ensure_settings()) != committed_settings_before \
+			or _settings_file_state() != settings_file_before:
+		_fail("Display preview changed committed settings before Keep.")
+		return
+	await _press_joypad_button(JOY_BUTTON_B)
+	await get_tree().process_frame
+	if SettingsService.display_change_pending() or display_dialog.visible:
+		_fail("Controller B did not revert and close the display preview.")
+		return
+	if SettingsService.presentation_resolution_id() != original_resolution \
+			or JSON.stringify(SettingsService.ensure_settings()) != committed_settings_before \
+			or _settings_file_state() != settings_file_before:
+		_fail("Reverting the display preview changed committed settings or config bytes.")
+		return
+	_expect_focus("ResolutionPicker", "display preview Revert focus return")
 	await _capture_if_requested("settings_entry_focus")
 	if OS.get_environment("MAIN_MENU_KEYBOARD_CAPTURE") == "1":
 		var original_ui_scale := SettingsService.ui_scale_percent()
@@ -123,6 +174,12 @@ func _press_joypad_button(button_index: int) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await get_tree().process_frame
+
+func _settings_file_state() -> Dictionary:
+	return {
+		"exists": FileAccess.file_exists(SettingsService.SETTINGS_FILE),
+		"bytes": FileAccess.get_file_as_bytes(SettingsService.SETTINGS_FILE) if FileAccess.file_exists(SettingsService.SETTINGS_FILE) else PackedByteArray(),
+	}
 
 func _capture_if_requested(stem: String) -> void:
 	if OS.get_environment("MAIN_MENU_KEYBOARD_CAPTURE") != "1":

@@ -1272,6 +1272,13 @@ title = "Restore default settings?"
 initial_position = 1
 dialog_text = "Restore all device settings to their defaults?"
 
+[node name="DisplayChangeConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "Keep display settings?"
+initial_position = 1
+exclusive = true
+ok_button_text = "Keep"
+dialog_text = "Keep this display mode and resolution?"
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1348,4 +1355,6 @@ text = "Quit"
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow/RestoreSettingsDefaults" to="." method="_on_restore_settings_defaults_pressed"]
 [connection signal="confirmed" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_confirmed"]
 [connection signal="canceled" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_canceled"]
+[connection signal="confirmed" from="DisplayChangeConfirmationDialog" to="." method="_on_display_change_confirmed"]
+[connection signal="canceled" from="DisplayChangeConfirmationDialog" to="." method="_on_display_change_canceled"]
 [connection signal="dismissed" from="HeroKeybindingsDialog" to="." method="_on_hero_keybindings_dialog_dismissed"]

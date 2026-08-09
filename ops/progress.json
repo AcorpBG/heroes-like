@@ -1,5 +1,7 @@
 {
-  "actionableNextTasks": [],
+  "actionableNextTasks": [
+    "Select the next tracker-approved release-readiness implementation slice"
+  ],
   "active_slice": {
     "alignmentCheckpoints": [
       {
@@ -14322,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, player battle Quick Resolve, and transactional cross-platform installer upgrades are complete. Faction balance and overall release readiness remain open.",
+  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, player battle Quick Resolve, transactional cross-platform installer upgrades, and confirmed display-mode rollback are complete. Faction balance, native Windows hardware certification, and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-transactional-cross-platform-upgrade-10184",
-  "currentSliceId": "packaging-transactional-cross-platform-upgrade-10184",
-  "currentSliceNotes": "Completed matched staged, verified, rollback-safe upgrades for Linux, Windows archive, and generated NSIS installers while preserving external user data.",
+  "currentSlice": "settings-confirmed-display-mode-rollback-10184",
+  "currentSliceId": "settings-confirmed-display-mode-rollback-10184",
+  "currentSliceNotes": "Completed a SettingsService-owned display preview transaction with visible Keep/Revert countdown, exact rollback, save-failure recovery, monitor-usable window sizing, deferred Restore Defaults display handling, and Linux/X11 plus packaged Windows/Wine proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Transactional Cross-Platform Installer Upgrade",
-  "currentSliceUpdatedAt": "2026-08-09T22:50:10Z",
+  "currentSliceTitle": "Confirmed Display-Mode Preview And Rollback",
+  "currentSliceUpdatedAt": "2026-08-09T23:39:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73770,6 +73772,72 @@
       ],
       "remainingWork": "Continue the broader release queue. Signing, native Windows hardware certification, confirmed display-mode rollback, accessibility, remaining faction balance, and public prerelease execution remain open.",
       "completedAt": "2026-08-09T22:50:10Z"
+    },
+    {
+      "id": "settings-confirmed-display-mode-rollback-10184",
+      "title": "Confirmed Display-Mode Preview And Rollback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent an unusable player-selected window mode or resolution from being persisted and reapplied on every boot by adding an explicit preview, confirmation, and exact rollback transaction.",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/settings_display_mode_transaction_regression.gd",
+        "tests/settings_display_mode_transaction_regression.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "player_display_changes_apply_immediately": true,
+        "player_display_changes_persist_immediately": true,
+        "pending_display_transaction": false,
+        "keep_revert_countdown": false,
+        "timeout_rollback": false,
+        "monitor_usable_size_guard": false
+      },
+      "completionCriteria": [
+        "Player-facing mode and resolution selection previews one normalized candidate without mutating or saving committed settings",
+        "Keep persists once and survives reload while Revert, Escape/controller Back, timeout, menu exit, and save failure restore the exact prior committed/runtime presentation state",
+        "Only one preview can be pending and a second candidate safely replaces or rejects the prior preview without losing the rollback snapshot",
+        "Windowed and borderless runtime sizes fit the active monitor usable rectangle and Restore Defaults cannot bypass display confirmation",
+        "Focused settings transaction, main-menu keyboard/controller, packaged settings, repository, parse, JSON, Python, and diff gates pass",
+        "Linux compositor and Wine Windows packaged probes pass while native Windows hardware certification remains open"
+      ],
+      "nonGoals": [
+        "renderer rewrite, arbitrary custom resolutions, multi-monitor preference persistence, gameplay, content, balance, save schema, packaging, signing, public promotion, or Native RMG",
+        "claiming compositor parity, native Windows hardware certification, broader accessibility completion, or overall release readiness"
+      ],
+      "createdAt": "2026-08-09T22:56:25Z",
+      "startedAt": "2026-08-09T22:56:25Z",
+      "updatedAt": "2026-08-09T23:39:44Z",
+      "notes": "Player-facing display changes now preview without mutating committed settings or config bytes; Keep persists, all cancel/failure boundaries restore, monitor sizing clamps, and Restore Defaults uses the same confirmation.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/settings_display_mode_transaction_regression.tscn (passed; preview isolation, Keep/reload, Revert, timeout, replacement, clamp, and save-failure rollback all true)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn (passed; Revert owns modal focus and controller Back is non-mutating)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/settings_restore_defaults_regression.tscn (passed; exact cancel bytes, persisted defaults, custom keys cleared, player state preserved)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn (passed)",
+        "xvfb-run Godot X11 settings_display_mode_transaction_regression.tscn (passed; 2560x1440 request uniformly clamped to 1280x720 usable screen)",
+        "temporary test-main Windows Release export under fresh Wine prefix with dinput8 disabled (passed; packaged Windows preview, Revert, Keep, and reload; normal Boot main restored and probe resources removed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 -m json.tool ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.",
+      "completedAt": "2026-08-09T23:39:44Z"
     }
   ],
   "project": "heroes-like",

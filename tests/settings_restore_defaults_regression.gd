@@ -73,10 +73,26 @@ func _run() -> void:
 		return
 	var result: Dictionary = shell.call("validation_confirm_settings_restore_defaults")
 	var defaults := SettingsService.build_default_settings()
-	if bool(result.get("pending", true)) or SettingsService.settings != defaults:
+	if bool(result.get("pending", true)):
+		_fail("Confirmed restore left the first confirmation pending: %s." % JSON.stringify(result))
+		return
+	if bool(result.get("display_change_pending", false)):
+		var deferred_defaults := defaults.duplicate(true)
+		deferred_defaults["presentation"]["mode"] = String(custom.get("presentation", {}).get("mode", SettingsService.PRESENTATION_WINDOWED))
+		deferred_defaults["presentation"]["resolution"] = String(custom.get("presentation", {}).get("resolution", SettingsService.PRESENTATION_RESOLUTION_DEFAULT))
+		if SettingsService.settings != deferred_defaults or not bool(result.get("display_dialog_visible", false)):
+			_fail("Restore Defaults did not keep committed display values while previewing defaults: %s." % JSON.stringify(result))
+			return
+		var display_result: Dictionary = shell.call("validation_confirm_display_change")
+		if bool(display_result.get("pending", true)) or bool(display_result.get("dialog_visible", true)):
+			_fail("Keeping the default display preview did not finish the transaction: %s." % JSON.stringify(display_result))
+			return
+		result = display_result
+	if SettingsService.settings != defaults:
 		_fail("Confirmed restore did not apply the complete default settings object: %s." % JSON.stringify(result))
 		return
-	if not String(result.get("status", "")).contains("restored and saved"):
+	var restore_status := String(result.get("status", ""))
+	if not restore_status.contains("restored and saved") and not restore_status.contains("kept and saved"):
 		_fail("Confirmed restore did not report successful persistence: %s." % JSON.stringify(result))
 		return
 	if SettingsService.has_custom_hero_movement_bindings() or not _action_has_key(&"hero_move_up", KEY_W) or _action_has_key(&"hero_move_up", KEY_P):
