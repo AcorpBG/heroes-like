@@ -121,6 +121,7 @@ const TAB_HELP_TOPIC := {
 @onready var _restore_settings_defaults_button: Button = %RestoreSettingsDefaults
 @onready var _settings_restore_status_label: Label = %SettingsRestoreStatus
 @onready var _settings_restore_defaults_dialog: ConfirmationDialog = $SettingsRestoreDefaultsDialog
+@onready var _display_change_confirmation_dialog: ConfirmationDialog = $DisplayChangeConfirmationDialog
 @onready var _save_list: ItemList = %SaveList
 @onready var _save_details_label: Label = %SaveDetails
 @onready var _save_name_edit: LineEdit = %SaveNameEdit
@@ -165,6 +166,9 @@ var _support_bundle_status := "No bundle exported"
 var _support_bundle_result := {}
 var _settings_restore_status := ""
 var _settings_restore_pending := false
+var _display_change_ui_active := false
+var _display_change_focus_name := &"PresentationModePicker"
+var _display_change_last_seconds := -1
 
 func _ready() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -175,6 +179,7 @@ func _ready() -> void:
 	phase_started = ProfileLogScript.begin_usec()
 	SettingsService.ensure_settings()
 	buckets["settings"] = ProfileLogScript.elapsed_ms(phase_started)
+	_configure_display_change_confirmation()
 	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -577,19 +582,154 @@ func _on_help_selected(index: int) -> void:
 	_selected_help_topic_id = String(_help_entries[index].get("id", ""))
 	_refresh_help_browser()
 
+func _configure_display_change_confirmation() -> void:
+	_display_change_confirmation_dialog.get_ok_button().text = "Keep"
+	_display_change_confirmation_dialog.get_cancel_button().text = "Revert"
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	_display_change_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+	var callback := _on_display_change_state_changed
+	if not SettingsService.display_change_state_changed.is_connected(callback):
+		SettingsService.display_change_state_changed.connect(callback)
+
+func _request_display_change_preview(
+	mode_id: String,
+	resolution_id: String,
+	focus_name: StringName
+) -> Dictionary:
+	_display_change_ui_active = true
+	_display_change_focus_name = focus_name
+	_display_change_last_seconds = -1
+	var result: Dictionary = SettingsService.preview_display_change(mode_id, resolution_id, 15.0)
+	if not bool(result.get("ok", false)) or not SettingsService.display_change_pending():
+		_finish_display_change_ui(result, true, "Display settings were not changed.")
+		return result
+	_refresh_settings_panel()
+	_show_display_change_confirmation(SettingsService.display_change_snapshot())
+	return result
+
+func _show_display_change_confirmation(snapshot: Dictionary) -> void:
+	if not bool(snapshot.get("pending", SettingsService.display_change_pending())):
+		return
+	var seconds_remaining := maxi(SettingsService.display_change_countdown_seconds(), 0)
+	var mode_label := _display_mode_label(String(snapshot.get("mode", SettingsService.presentation_mode_id())))
+	var resolution_label := _display_resolution_label(String(snapshot.get("resolution", SettingsService.presentation_resolution_id())))
+	_display_change_confirmation_dialog.title = "Keep display settings?"
+	_display_change_confirmation_dialog.dialog_text = "Keep %s at %s?\n\nThe previous display settings return automatically in %d second%s." % [
+		mode_label,
+		resolution_label,
+		seconds_remaining,
+		"" if seconds_remaining == 1 else "s",
+	]
+	var dialog_label := _display_change_confirmation_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(520.0, 92.0)
+	if not _display_change_confirmation_dialog.visible:
+		_display_change_confirmation_dialog.popup_centered(Vector2i(640, 230))
+		call_deferred("_focus_display_change_revert")
+	_display_change_last_seconds = seconds_remaining
+
+func _focus_display_change_revert() -> void:
+	if not _display_change_confirmation_dialog.visible:
+		return
+	_display_change_confirmation_dialog.get_cancel_button().grab_focus()
+	await get_tree().process_frame
+	if _display_change_confirmation_dialog.visible:
+		_display_change_confirmation_dialog.get_cancel_button().grab_focus()
+
+func _on_display_change_state_changed(snapshot: Dictionary) -> void:
+	if not _display_change_ui_active:
+		return
+	if bool(snapshot.get("pending", false)):
+		var seconds_remaining := maxi(SettingsService.display_change_countdown_seconds(), 0)
+		if seconds_remaining != _display_change_last_seconds or not _display_change_confirmation_dialog.visible:
+			_show_display_change_confirmation(snapshot)
+		return
+	_finish_display_change_ui(snapshot, true, "Previous display settings restored.")
+
+func _on_display_change_confirmed() -> void:
+	if not _display_change_ui_active:
+		return
+	var result: Dictionary = SettingsService.confirm_display_change()
+	if _display_change_ui_active:
+		_finish_display_change_ui(result, true, "Display settings kept.")
+
+func _on_display_change_canceled() -> void:
+	if not _display_change_ui_active:
+		return
+	_revert_pending_display_change("canceled", true)
+
+func _revert_pending_display_change(reason: String, restore_focus: bool) -> Dictionary:
+	var result := {
+		"ok": true,
+		"pending": false,
+		"reason": reason,
+		"message": "Previous display settings restored.",
+	}
+	if SettingsService.display_change_pending():
+		result = SettingsService.revert_display_change(reason)
+	if _display_change_ui_active:
+		_finish_display_change_ui(result, restore_focus, "Previous display settings restored.")
+	return result
+
+func _finish_display_change_ui(
+	result: Dictionary,
+	restore_focus: bool,
+	fallback_message: String
+) -> void:
+	_display_change_confirmation_dialog.hide()
+	_display_change_ui_active = false
+	_display_change_last_seconds = -1
+	_settings_restore_status = String(result.get("message", fallback_message)).strip_edges()
+	if _settings_restore_status == "":
+		_settings_restore_status = fallback_message
+	_refresh_settings_panel()
+	if restore_focus:
+		call_deferred("_focus_display_change_origin")
+
+func _focus_display_change_origin() -> void:
+	if not is_inside_tree() or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+		return
+	var target := get_node_or_null("%%%s" % String(_display_change_focus_name)) as Control
+	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
+		_settings_scroll.ensure_control_visible(target)
+		target.grab_focus()
+
+func _display_mode_label(mode_id: String) -> String:
+	for option_value in SettingsService.build_presentation_options():
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		if String(option.get("id", "")) == mode_id:
+			return String(option.get("label", mode_id.capitalize()))
+	return mode_id.capitalize()
+
+func _display_resolution_label(resolution_id: String) -> String:
+	for option_value in SettingsService.build_resolution_options():
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		if String(option.get("id", "")) == resolution_id:
+			return String(option.get("label", resolution_id))
+	return resolution_id
+
 func _on_presentation_mode_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _presentation_mode_picker.get_item_count():
 		return
 	var mode_id := String(_presentation_mode_picker.get_item_metadata(index))
-	SettingsService.set_presentation_mode(mode_id)
-	_refresh_settings_panel()
+	_request_display_change_preview(
+		mode_id,
+		SettingsService.presentation_resolution_id(),
+		&"PresentationModePicker"
+	)
 
 func _on_resolution_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _resolution_picker.get_item_count():
 		return
 	var resolution_id := String(_resolution_picker.get_item_metadata(index))
-	SettingsService.set_presentation_resolution(resolution_id)
-	_refresh_settings_panel()
+	_request_display_change_preview(
+		SettingsService.presentation_mode_id(),
+		resolution_id,
+		&"ResolutionPicker"
+	)
 
 func _on_render_quality_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _render_quality_picker.get_item_count():
@@ -699,7 +839,7 @@ func _on_export_support_bundle_pressed() -> void:
 
 func _on_restore_settings_defaults_pressed() -> void:
 	_settings_restore_pending = true
-	_settings_restore_defaults_dialog.dialog_text = "Restore presentation, sound, gameplay, custom movement keys, and readability settings to their defaults? Campaign progress and expedition saves will stay unchanged."
+	_settings_restore_defaults_dialog.dialog_text = "Restore presentation, sound, gameplay, custom movement keys, and readability settings to their defaults? Campaign progress and expedition saves will stay unchanged. Display mode and resolution will be previewed separately before they are kept."
 	var dialog_label := _settings_restore_defaults_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(560.0, 86.0)
@@ -711,10 +851,27 @@ func _on_settings_restore_defaults_confirmed() -> void:
 	if not _settings_restore_pending:
 		return
 	_settings_restore_pending = false
-	var result: Dictionary = SettingsService.restore_default_settings()
+	var result: Dictionary = SettingsService.restore_default_settings(true)
 	_settings_restore_status = String(result.get("message", "Settings were not changed."))
 	_apply_visual_theme()
 	_refresh_settings_panel()
+	if not bool(result.get("ok", false)) or not bool(result.get("display_change_deferred", false)):
+		_restore_settings_defaults_button.call_deferred("grab_focus")
+		return
+	var display_candidate_value: Variant = result.get("display_candidate", {})
+	var display_candidate: Dictionary = display_candidate_value if display_candidate_value is Dictionary else {}
+	if display_candidate.is_empty():
+		_restore_settings_defaults_button.call_deferred("grab_focus")
+		return
+	var restore_status := _settings_restore_status
+	var preview_result := _request_display_change_preview(
+		String(display_candidate.get("mode", SettingsService.PRESENTATION_WINDOWED)),
+		String(display_candidate.get("resolution", SettingsService.PRESENTATION_RESOLUTION_DEFAULT)),
+		&"RestoreSettingsDefaults"
+	)
+	if bool(preview_result.get("ok", false)) and not bool(preview_result.get("changed", false)):
+		_settings_restore_status = restore_status
+		_refresh_settings_panel()
 
 func _on_settings_restore_defaults_canceled() -> void:
 	_settings_restore_defaults_dialog.hide()
@@ -736,6 +893,7 @@ func _export_support_bundle(reveal_in_file_manager: bool) -> Dictionary:
 	return result
 
 func _on_quit_pressed() -> void:
+	_revert_pending_display_change("menu_exit", false)
 	get_tree().quit()
 
 func _rebuild_campaign_browser() -> void:
@@ -1050,9 +1208,13 @@ func _select_help_topic(topic_id: String) -> void:
 func _refresh_settings_panel() -> void:
 	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
 	var settings_check := SettingsService.describe_settings_persistence_check()
+	var display_settings_check := "Display changes preview immediately and are stored only after Keep. Revert or timeout restores the previous display; campaign progress and expedition saves stay unchanged."
 	var settings_handoff := _settings_handoff_surface()
 	_set_compact_label(_settings_handoff_label, String(settings_handoff.get("visible_text", "")), 2, 96)
 	_settings_handoff_label.tooltip_text = String(settings_handoff.get("tooltip_text", ""))
+	var display_snapshot: Dictionary = SettingsService.display_change_snapshot()
+	var displayed_mode := String(display_snapshot.get("mode", SettingsService.presentation_mode_id())) if bool(display_snapshot.get("pending", false)) else SettingsService.presentation_mode_id()
+	var displayed_resolution := String(display_snapshot.get("resolution", SettingsService.presentation_resolution_id())) if bool(display_snapshot.get("pending", false)) else SettingsService.presentation_resolution_id()
 
 	_syncing_settings_ui = true
 	_presentation_mode_picker.clear()
@@ -1063,11 +1225,11 @@ func _refresh_settings_panel() -> void:
 		var label := String(option.get("label", option.get("id", "Window Mode")))
 		_presentation_mode_picker.add_item(label, index)
 		_presentation_mode_picker.set_item_metadata(index, String(option.get("id", "")))
-		if bool(option.get("selected", false)):
+		if String(option.get("id", "")) == displayed_mode:
 			selected_index = index
 	if selected_index >= 0:
 		_presentation_mode_picker.select(selected_index)
-		_presentation_mode_picker.tooltip_text = "%s\n%s" % [String(options[selected_index].get("summary", "")), settings_check]
+		_presentation_mode_picker.tooltip_text = "%s\n%s" % [String(options[selected_index].get("summary", "")), display_settings_check]
 
 	_resolution_picker.clear()
 	var resolution_options := SettingsService.build_resolution_options()
@@ -1077,11 +1239,11 @@ func _refresh_settings_panel() -> void:
 		var label := String(option.get("label", option.get("id", "Resolution")))
 		_resolution_picker.add_item(label, index)
 		_resolution_picker.set_item_metadata(index, String(option.get("id", "")))
-		if bool(option.get("selected", false)):
+		if String(option.get("id", "")) == displayed_resolution:
 			selected_resolution_index = index
 	if selected_resolution_index >= 0:
 		_resolution_picker.select(selected_resolution_index)
-		_resolution_picker.tooltip_text = "%s\n%s" % [String(resolution_options[selected_resolution_index].get("summary", "")), settings_check]
+		_resolution_picker.tooltip_text = "%s\n%s" % [String(resolution_options[selected_resolution_index].get("summary", "")), display_settings_check]
 
 	_render_quality_picker.clear()
 	var quality_options := SettingsService.build_render_quality_options()
@@ -2057,6 +2219,8 @@ func _show_stage_dock() -> void:
 	call_deferred("_focus_stage_entry")
 
 func _hide_stage_dock() -> void:
+	if SettingsService.display_change_pending() or _display_change_ui_active:
+		_revert_pending_display_change("menu_exit", false)
 	_stage_dock_panel.visible = false
 	_footer_pocket_panel.visible = true
 	_refresh_summary()
@@ -2104,7 +2268,14 @@ func _focus_first_view_command() -> void:
 		_open_campaign_button.grab_focus()
 
 func _focus_stage_entry() -> void:
-	if not _stage_dock_panel.visible or not is_inside_tree():
+	if (
+		not _stage_dock_panel.visible
+		or not is_inside_tree()
+		or _display_change_confirmation_dialog.visible
+		or _settings_restore_defaults_dialog.visible
+		or _campaign_restart_dialog.visible
+		or _save_delete_dialog.visible
+	):
 		return
 	var target: Control
 	match _menu_tabs.current_tab:
@@ -2349,6 +2520,15 @@ func validation_snapshot() -> Dictionary:
 		"settings_restore_dialog_title": _settings_restore_defaults_dialog.title,
 		"settings_restore_dialog_text": _settings_restore_defaults_dialog.dialog_text,
 		"settings_restore_pending": _settings_restore_pending,
+		"display_change_dialog_visible": _display_change_confirmation_dialog.visible,
+		"display_change_dialog_title": _display_change_confirmation_dialog.title,
+		"display_change_dialog_text": _display_change_confirmation_dialog.dialog_text,
+		"display_change_ok_text": _display_change_confirmation_dialog.get_ok_button().text,
+		"display_change_cancel_text": _display_change_confirmation_dialog.get_cancel_button().text,
+		"display_change_ui_active": _display_change_ui_active,
+		"display_change_focus_name": String(_display_change_focus_name),
+		"display_change_snapshot": SettingsService.display_change_snapshot(),
+		"display_change_countdown_seconds": SettingsService.display_change_countdown_seconds(),
 		"quit_check": quit_check.duplicate(true),
 		"quit_check_text": String(quit_check.get("visible_text", "")),
 		"quit_check_tooltip": String(quit_check.get("tooltip_text", "")),
@@ -2599,6 +2779,9 @@ func validation_confirm_settings_restore_defaults() -> Dictionary:
 		"pending": _settings_restore_pending,
 		"status": _settings_restore_status,
 		"settings": SettingsService.ensure_settings().duplicate(true),
+		"display_change_pending": SettingsService.display_change_pending(),
+		"display_change_snapshot": SettingsService.display_change_snapshot(),
+		"display_dialog_visible": _display_change_confirmation_dialog.visible,
 	}
 
 func validation_cancel_settings_restore_defaults() -> void:
@@ -2816,14 +2999,61 @@ func validation_start_generated_skirmish_staged_route_to_overworld() -> Dictiona
 	return result
 
 func validation_select_resolution(resolution_id: String) -> bool:
-	validation_open_settings_stage()
+	if not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+		validation_open_settings_stage()
 	for index in range(_resolution_picker.get_item_count()):
 		if String(_resolution_picker.get_item_metadata(index)) != resolution_id:
 			continue
 		_resolution_picker.select(index)
 		_on_resolution_selected(index)
-		return SettingsService.presentation_resolution_id() == resolution_id
+		var snapshot: Dictionary = SettingsService.display_change_snapshot()
+		return (
+			bool(snapshot.get("pending", false))
+			and String(snapshot.get("resolution", "")) == resolution_id
+		) or (
+			not bool(snapshot.get("pending", false))
+			and SettingsService.presentation_resolution_id() == resolution_id
+		)
 	return false
+
+func validation_select_presentation_mode(mode_id: String) -> bool:
+	if not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+		validation_open_settings_stage()
+	for index in range(_presentation_mode_picker.get_item_count()):
+		if String(_presentation_mode_picker.get_item_metadata(index)) != mode_id:
+			continue
+		_presentation_mode_picker.select(index)
+		_on_presentation_mode_selected(index)
+		var snapshot: Dictionary = SettingsService.display_change_snapshot()
+		return (
+			bool(snapshot.get("pending", false))
+			and String(snapshot.get("mode", "")) == mode_id
+		) or (
+			not bool(snapshot.get("pending", false))
+			and SettingsService.presentation_mode_id() == mode_id
+		)
+	return false
+
+func validation_confirm_display_change() -> Dictionary:
+	_on_display_change_confirmed()
+	return {
+		"pending": SettingsService.display_change_pending(),
+		"settings": SettingsService.ensure_settings().duplicate(true),
+		"snapshot": SettingsService.display_change_snapshot(),
+		"dialog_visible": _display_change_confirmation_dialog.visible,
+		"status": _settings_restore_status,
+	}
+
+func validation_revert_display_change(reason: String = "validation_canceled") -> Dictionary:
+	var result := _revert_pending_display_change(reason, true)
+	return {
+		"result": result,
+		"pending": SettingsService.display_change_pending(),
+		"settings": SettingsService.ensure_settings().duplicate(true),
+		"snapshot": SettingsService.display_change_snapshot(),
+		"dialog_visible": _display_change_confirmation_dialog.visible,
+		"status": _settings_restore_status,
+	}
 
 func validation_set_vsync(enabled: bool) -> bool:
 	validation_open_settings_stage()
@@ -3180,6 +3410,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and _stage_dock_panel.visible:
 		_hide_stage_dock()
 		get_viewport().set_input_as_handled()
+
+func _exit_tree() -> void:
+	if SettingsService.display_change_pending():
+		SettingsService.revert_display_change("menu_exit")
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)

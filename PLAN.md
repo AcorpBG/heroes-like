@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `settings-confirmed-display-mode-rollback-10184`. Player-facing window-mode and resolution changes now enter a SettingsService-owned preview without mutating committed settings or config bytes. A 15-second Keep/Revert modal gives Revert initial focus; Escape/controller Back, timeout, menu exit, replacement preview, and save failure restore the prior runtime display, while Keep persists and survives reload. Windowed/borderless requests clamp uniformly to the active monitor usable rectangle, and Restore Defaults defers its display portion through the same confirmation. Focused service, Main Menu, Restore Defaults, packaged persistence, active-play, Linux/X11, fresh-prefix packaged Windows/Wine, core, parse, repository, JSON, Python, and diff gates pass. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.
 - Latest completed implementation slice: `packaging-transactional-cross-platform-upgrade-10184`. Linux, Windows archive, and generated NSIS installers now stage and verify a complete manifest-owned payload before replacing an owned live install, remove obsolete prior-manifest files, and restore the prior bootable program set after an injected commit failure. Fresh install, same-version reinstall, A-to-B upgrade, unowned-directory refusal, user-data preservation, and uninstall behavior are matched across Linux and Wine validation. This does not claim signing, native Windows hardware certification, public release execution, stable-channel completion, or overall release readiness.
 - Completed implementation slice: `combat-sunvault-aurora-relay-front-10184`. Aurora Bastions' Aurora Facet Wall now screens allied ranged stacks by four percent against melee attackers carrying the authored `bloodrush` committed-assault contract while a Bastion survives. Live damage, tactical-AI estimates, role summaries, the fast benchmark, and focused runtime proof share the same content-owned field without adding inert metadata to normalized battle state. Generic four-percent and one-percent screens were rejected because each increased ordinary outliers from 28 to 30. The accepted all-live matrix keeps 28 outliers, lowers excess severity from 162.5 to 161.0, preserves four rows at or above 65 percent, 68.5 percent maximum dominance, 4.13-point maximum side bias, and zero structural failures, and improves week-four Embercourt/Sunvault from 67.5/32.5 to 66/34. The 59-encounter queue remains clear at signature `829808c9`; focused ability, autoplay, runtime consequence, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
 - Completed implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184`. Production Prism Adepts now own Refraction Volley and receive the missing two-percent linked ranged screen while a Shard Warden survives. The all-live matrix remains at 28 outliers and four severe rows while excess severity improves from 161.0 to 158.0, side bias improves from 4.13 to 4.07, maximum dominance remains 68.5, and structural failures remain zero. The 59-encounter active queue remains clear at signature `829808c9`; faction balance remains `needs_tuning` and the game remains incomplete.
@@ -2860,6 +2861,41 @@ Result:
 - the Windows archive uses a shipped deterministic BCrypt helper for strict manifest parsing, SHA-256, exact-root verification, bounded copying, and owned removal, avoiding PowerShell and Wine-incompatible batch parsing;
 - uninstall refuses unexpected program-root entries, removes only verified owned files and launchers/shortcuts, and preserves external Godot saves, settings, generated maps, and logs;
 - the real-export lifecycle passes Linux `.run`, Windows NSIS, and Windows archive/CMD fresh install, idempotent reinstall, rollback, upgrade, packaged boot, and uninstall with all three paths reporting `ok:true`.
+
+## Confirmed Display-Mode Preview And Rollback
+
+id: `settings-confirmed-display-mode-rollback-10184`
+
+Status: complete.
+
+Selected Phase 6 release-safety slice. Main-menu window-mode and resolution
+handlers call immediate SettingsService setters, which apply and save before the
+player can confirm that the new display remains usable. The same persisted mode
+is then reapplied at the next boot.
+
+Implementation target:
+- add one SettingsService-owned pending display preview with an exact prior settings/runtime snapshot and a bounded countdown that survives menu focus changes;
+- preview mode and resolution together without mutating or saving committed settings, then commit once on Keep or restore the exact prior committed/runtime state on Revert, Escape/controller Back, timeout, menu exit, or save failure;
+- keep existing explicit immediate setters for internal fixtures and route only player-facing main-menu mode/resolution changes and the display portion of Restore Defaults through the transaction;
+- constrain windowed and borderless runtime sizes to the current monitor usable rectangle while keeping authored 16:9 choices and compositor-owned positioning portable across Linux and Windows;
+- expose one compact dedicated confirmation modal whose safe Revert action owns initial focus and whose copy makes the countdown and persistence boundary clear.
+
+Completion criteria:
+- preview leaves committed settings and config bytes unchanged until Keep, and Keep persists exactly one normalized candidate that survives reload;
+- Revert, Escape/controller Back, timeout, menu exit, a second preview, and injected save failure restore the exact prior committed/runtime presentation state without touching campaign or expedition data;
+- windowed/borderless modes never request a size larger than the active monitor usable rectangle and restore defaults cannot bypass confirmation;
+- focused service/runtime, main-menu keyboard/controller, packaged settings, repository, parse, JSON, Python, and diff gates pass;
+- Linux compositor and Wine/Windows packaged probes exercise preview, Keep, and rollback, while native Windows hardware certification remains explicitly open.
+
+Non-goals:
+- no renderer rewrite, arbitrary custom resolutions, multi-monitor preference persistence, gameplay/content/balance, save-schema, packaging/signing, public promotion, Native RMG, or broad release-completion claim.
+
+Completion evidence:
+- the committed settings dictionary and `user://config/settings.cfg` stay byte-exact throughout preview, while Keep persists one normalized candidate and survives reload;
+- Revert, controller Back, timeout, replacement preview, menu exit, and injected save failure restore the prior runtime mode, borderless flag, window size, position, and screen without touching campaign or expedition state;
+- Restore Defaults saves non-display defaults first and routes its display candidate through the same confirmation boundary;
+- X11 at a 1280x720 usable screen uniformly clamps an authored 2560x1440 request to 1280x720, and a fresh Wine prefix runs the same preview/Revert/Keep/reload contract from an exported Windows executable and PCK;
+- focused transaction, keyboard/controller, menu visual, Restore Defaults, packaged settings, active-play settings, core, editor parse, repository, Python, JSON, and diff gates pass.
 
 ## Phase Roadmap
 

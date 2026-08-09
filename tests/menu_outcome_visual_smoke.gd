@@ -656,15 +656,31 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: settings resolution picker could not select 1600x900.")
 		get_tree().quit(1)
 		return false
+	var display_preview_snapshot: Dictionary = shell.call("validation_snapshot")
+	var display_preview: Dictionary = display_preview_snapshot.get("display_change_snapshot", {}) if display_preview_snapshot.get("display_change_snapshot", {}) is Dictionary else {}
+	if original_resolution != "1600x900" and (
+		not bool(display_preview.get("pending", false))
+		or String(display_preview.get("resolution", "")) != "1600x900"
+		or SettingsService.presentation_resolution_id() != original_resolution
+		or not bool(display_preview_snapshot.get("display_change_dialog_visible", false))
+	):
+		push_error("Main menu smoke: resolution selection did not remain an uncommitted preview: %s." % display_preview_snapshot)
+		get_tree().quit(1)
+		return false
+	var display_keep: Dictionary = shell.call("validation_confirm_display_change")
+	if SettingsService.display_change_pending() or SettingsService.presentation_resolution_id() != "1600x900" or bool(display_keep.get("dialog_visible", true)):
+		push_error("Main menu smoke: Keep did not commit and close the resolution preview: %s." % display_keep)
+		get_tree().quit(1)
+		return false
 	if not bool(shell.call("validation_select_render_quality", "high")):
 		if original_resolution != "1600x900":
-			shell.call("validation_select_resolution", original_resolution)
+			_keep_resolution(shell, original_resolution)
 		push_error("Main menu smoke: renderer-quality picker could not select High.")
 		get_tree().quit(1)
 		return false
 	if not bool(shell.call("validation_select_ui_scale", 130)):
 		if original_resolution != "1600x900":
-			shell.call("validation_select_resolution", original_resolution)
+			_keep_resolution(shell, original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
 		push_error("Main menu smoke: UI-scale picker could not select 130%.")
@@ -725,7 +741,7 @@ func _run_main_menu_smoke() -> bool:
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
 	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or String(settings_snapshot.get("render_quality", "")) != "high" or int(settings_snapshot.get("ui_scale_percent", 0)) != 130 or String(settings_snapshot.get("battle_camera_shake", "")) != "reduced" or not is_equal_approx(float(settings_snapshot.get("battle_camera_shake_scale", -1.0)), 0.35) or not bool(settings_snapshot.get("reduce_flashes_enabled", false)) or not bool(settings_snapshot.get("reduce_repetitive_sounds_enabled", false)) or not settings_summary.contains("1600 x 900") or not settings_summary.contains("High quality") or not settings_summary.contains("UI scale 130%") or not settings_summary.contains("Battle shake Reduced") or not settings_summary.contains("Reduced flashes On") or not settings_summary.contains("Reduced repetitive sounds On") or not settings_summary.contains("VSync") or not settings_summary.contains("Effects"):
 		if original_resolution != "1600x900":
-			shell.call("validation_select_resolution", original_resolution)
+			_keep_resolution(shell, original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
 		if original_ui_scale != 130:
@@ -758,7 +774,7 @@ func _run_main_menu_smoke() -> bool:
 		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged", "Settings handoff:", "Settings Handoff", "Close:"]
 	):
 		if original_resolution != "1600x900":
-			shell.call("validation_select_resolution", original_resolution)
+			_keep_resolution(shell, original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
 		if original_ui_scale != 130:
@@ -788,7 +804,7 @@ func _run_main_menu_smoke() -> bool:
 		]
 	):
 		if original_resolution != "1600x900":
-			shell.call("validation_select_resolution", original_resolution)
+			_keep_resolution(shell, original_resolution)
 		if original_render_quality != "high":
 			shell.call("validation_select_render_quality", original_render_quality)
 		if original_ui_scale != 130:
@@ -834,7 +850,7 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
-	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
+	if original_resolution != "1600x900" and not _keep_resolution(shell, original_resolution):
 		push_error("Main menu smoke: settings resolution picker could not restore %s." % original_resolution)
 		get_tree().quit(1)
 		return false
@@ -1253,6 +1269,15 @@ func _joined_action_payload_text(snapshot: Dictionary) -> String:
 				lines.append(String(action.get("summary", "")))
 				lines.append(String(action.get("action_cue", "")))
 	return "\n".join(lines)
+
+func _keep_resolution(shell: Node, resolution_id: String) -> bool:
+	if not bool(shell.call("validation_select_resolution", resolution_id)):
+		return false
+	if SettingsService.display_change_pending():
+		var result: Dictionary = shell.call("validation_confirm_display_change")
+		if bool(result.get("pending", true)) or bool(result.get("dialog_visible", true)):
+			return false
+	return SettingsService.presentation_resolution_id() == resolution_id
 
 func _joined_action_tooltip_text(snapshot: Dictionary) -> String:
 	var lines := []

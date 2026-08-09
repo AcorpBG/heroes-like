@@ -310,6 +310,8 @@ PACKAGED_SETTINGS_PERSISTENCE_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_set
 PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH = ROOT / "docs" / "packaged-settings-persistence-smoke-report.md"
 SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_restore_defaults_regression.gd"
 SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_restore_defaults_regression.tscn"
+SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_display_mode_transaction_regression.gd"
+SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_display_mode_transaction_regression.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.gd"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
@@ -12908,6 +12910,14 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func effects_audio_muted",
         "func set_presentation_mode",
         "func set_presentation_resolution",
+        "func preview_display_change",
+        "func confirm_display_change",
+        "func revert_display_change",
+        "func display_change_pending",
+        "func display_change_countdown_seconds",
+        "func display_change_snapshot",
+        "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE",
+        "func _clamped_display_size",
         "func set_large_ui_text_enabled",
         "func set_reduced_motion_enabled",
         "func set_reduced_flashes_enabled",
@@ -12985,8 +12995,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.set_ui_scale_percent",
         "SettingsService.set_high_contrast_ui_enabled",
         "SettingsService.set_color_cue_mode_id",
-        "SettingsService.set_presentation_mode",
-        "SettingsService.set_presentation_resolution",
+        "SettingsService.preview_display_change",
+        "SettingsService.confirm_display_change",
+        "SettingsService.revert_display_change",
+        "SettingsService.display_change_countdown_seconds",
         "SettingsService.set_reduced_motion_enabled",
         "SettingsService.set_reduced_flashes_enabled",
         "SettingsService.set_reduced_repetitive_sounds_enabled",
@@ -23087,6 +23099,8 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
         PACKAGED_SETTINGS_PERSISTENCE_SMOKE_DOC_PATH,
         SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH,
         SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH,
+        SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH,
+        SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing packaged settings persistence smoke file: {path.relative_to(ROOT)}")
@@ -23123,6 +23137,24 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "SessionState.SAVE_VERSION != 9",
         ):
             ensure(required_token in regression_text, errors, f"Settings restore-defaults regression is missing token: {required_token}")
+
+    if SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH.exists():
+        display_regression_text = SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION",
+            "preview_display_change",
+            "confirm_display_change",
+            "revert_display_change",
+            "display_change_countdown_seconds",
+            "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE",
+            "preview_preserved_committed_state",
+            "keep_persisted_reload",
+            "second_preview_safe",
+            "usable_size_clamped",
+            "aspect_preserved",
+            "save_failure_restored_exact",
+        ):
+            ensure(required_token in display_regression_text, errors, f"Settings display-mode transaction regression is missing token: {required_token}")
 
     if PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.exists():
         report_text = PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")

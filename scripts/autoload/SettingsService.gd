@@ -4,6 +4,7 @@ extends Node
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
+signal display_change_state_changed(snapshot: Dictionary)
 
 const SETTINGS_VERSION := 14
 const SETTINGS_DIR := "user://config"
@@ -13,6 +14,10 @@ const PRESENTATION_WINDOWED := "windowed"
 const PRESENTATION_BORDERLESS := "borderless"
 const PRESENTATION_FULLSCREEN := "fullscreen"
 const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
+const DISPLAY_CHANGE_TIMEOUT_SECONDS := 15.0
+const DISPLAY_CHANGE_MIN_TIMEOUT_SECONDS := 0.1
+const DISPLAY_CHANGE_MAX_TIMEOUT_SECONDS := 60.0
+const DISPLAY_CHANGE_FORCE_SAVE_FAILURE_ENV := "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE"
 const MUSIC_AUDIO_BUS := "Music"
 const EFFECTS_AUDIO_BUS := "Effects"
 const RENDER_QUALITY_LOW := "low"
@@ -229,10 +234,26 @@ const HELP_TOPICS := [
 ]
 
 var settings: Dictionary = {}
+var _pending_display_change: Dictionary = {}
+var _display_change_last_countdown := -1
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	set_process(false)
 	ensure_controller_ui_actions()
 	load_settings()
+
+func _process(_delta: float) -> void:
+	if not display_change_pending():
+		set_process(false)
+		return
+	if Time.get_ticks_msec() >= int(_pending_display_change.get("deadline_msec", 0)):
+		revert_display_change("timeout")
+		return
+	var countdown := display_change_countdown_seconds()
+	if countdown != _display_change_last_countdown:
+		_display_change_last_countdown = countdown
+		display_change_state_changed.emit(display_change_snapshot())
 
 func ensure_controller_ui_actions() -> void:
 	for action in CONTROLLER_UI_BUTTON_ACTIONS:
@@ -288,6 +309,8 @@ func build_default_settings() -> Dictionary:
 	}
 
 func load_settings() -> void:
+	if display_change_pending():
+		revert_display_change("settings_reload")
 	var defaults := build_default_settings()
 	settings = defaults.duplicate(true)
 
@@ -352,11 +375,20 @@ func save_settings() -> String:
 		return ""
 	return SETTINGS_FILE
 
-func restore_default_settings() -> Dictionary:
+func restore_default_settings(defer_display_change: bool = false) -> Dictionary:
+	if display_change_pending():
+		revert_display_change("restore_defaults")
 	ensure_settings()
 	var previous_settings := settings.duplicate(true)
 	var default_settings := build_default_settings()
-	var changed := previous_settings != default_settings
+	var display_candidate := {
+		"mode": String(default_settings.get("presentation", {}).get("mode", PRESENTATION_WINDOWED)),
+		"resolution": String(default_settings.get("presentation", {}).get("resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+	}
+	if defer_display_change:
+		default_settings["presentation"]["mode"] = presentation_mode_id()
+		default_settings["presentation"]["resolution"] = presentation_resolution_id()
+	var changed := previous_settings != build_default_settings()
 	settings = default_settings.duplicate(true)
 	apply_settings()
 	var saved_path := save_settings()
@@ -369,6 +401,8 @@ func restore_default_settings() -> Dictionary:
 			"path": "",
 			"settings": settings.duplicate(true),
 			"changed": false,
+			"display_change_deferred": defer_display_change,
+			"display_candidate": display_candidate,
 			"message": "Defaults could not be saved. Your previous settings remain active.",
 		}
 	settings_changed.emit(settings.duplicate(true))
@@ -377,7 +411,9 @@ func restore_default_settings() -> Dictionary:
 		"path": saved_path,
 		"settings": settings.duplicate(true),
 		"changed": changed,
-		"message": "Default settings restored and saved on this device.",
+		"display_change_deferred": defer_display_change,
+		"display_candidate": display_candidate,
+		"message": "Default sound, gameplay, readability, and quality settings restored and saved; display mode awaits confirmation." if defer_display_change else "Default settings restored and saved on this device.",
 	}
 
 func build_presentation_options() -> Array:
@@ -687,6 +723,174 @@ func animation_preferences(overrides: Dictionary = {}) -> Dictionary:
 		},
 	}
 
+func preview_display_change(
+	mode_id: String,
+	resolution_id: String,
+	timeout_seconds: float = DISPLAY_CHANGE_TIMEOUT_SECONDS
+) -> Dictionary:
+	ensure_settings()
+	var replaced := display_change_pending()
+	if replaced:
+		revert_display_change("replaced")
+	var normalized_mode := _normalize_presentation_mode(mode_id)
+	var normalized_resolution := _normalize_presentation_resolution(resolution_id)
+	var requested_size := _presentation_resolution_size_for_id(normalized_resolution)
+	var committed_mode := presentation_mode_id()
+	var committed_resolution := presentation_resolution_id()
+	if normalized_mode == committed_mode and normalized_resolution == committed_resolution:
+		var unchanged := display_change_snapshot()
+		unchanged.merge({
+			"ok": true,
+			"changed": false,
+			"replaced": replaced,
+			"message": "Display settings already match this selection.",
+		}, true)
+		return unchanged
+	var bounded_timeout := clampf(timeout_seconds, DISPLAY_CHANGE_MIN_TIMEOUT_SECONDS, DISPLAY_CHANGE_MAX_TIMEOUT_SECONDS)
+	var prior_runtime := _capture_runtime_display_state()
+	var applied_size := _apply_display_candidate(normalized_mode, requested_size)
+	_pending_display_change = {
+		"mode": normalized_mode,
+		"resolution": normalized_resolution,
+		"requested_size": requested_size,
+		"applied_size": applied_size,
+		"prior_mode": committed_mode,
+		"prior_resolution": committed_resolution,
+		"prior_runtime": prior_runtime,
+		"timeout_seconds": bounded_timeout,
+		"deadline_msec": Time.get_ticks_msec() + int(ceil(bounded_timeout * 1000.0)),
+	}
+	_display_change_last_countdown = display_change_countdown_seconds()
+	set_process(true)
+	var result := display_change_snapshot()
+	result.merge({
+		"ok": true,
+		"changed": true,
+		"replaced": replaced,
+		"message": "Previewing display settings. Keep the change before the countdown ends.",
+	}, true)
+	display_change_state_changed.emit(result.duplicate(true))
+	return result
+
+func confirm_display_change() -> Dictionary:
+	if not display_change_pending():
+		return {
+			"ok": false,
+			"pending": false,
+			"confirmed": false,
+			"reason": "no_pending_change",
+			"message": "There is no display change waiting for confirmation.",
+		}
+	var pending := _pending_display_change.duplicate(true)
+	var previous_settings := ensure_settings().duplicate(true)
+	var previous_file := _settings_file_state()
+	settings["presentation"]["mode"] = String(pending.get("mode", PRESENTATION_WINDOWED))
+	settings["presentation"]["resolution"] = String(pending.get("resolution", PRESENTATION_RESOLUTION_DEFAULT))
+	var forced_failure := OS.get_environment(DISPLAY_CHANGE_FORCE_SAVE_FAILURE_ENV) == "1"
+	var saved_path := "" if forced_failure else save_settings()
+	if saved_path == "":
+		settings = previous_settings
+		_restore_settings_file_state(previous_file)
+		_restore_runtime_display_state(pending.get("prior_runtime", {}))
+		_clear_pending_display_change()
+		var failure := {
+			"ok": false,
+			"pending": false,
+			"confirmed": false,
+			"reason": "save_failed",
+			"mode": String(pending.get("mode", PRESENTATION_WINDOWED)),
+			"resolution": String(pending.get("resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+			"message": "Display settings could not be saved. The previous display has been restored.",
+		}
+		display_change_state_changed.emit(failure.duplicate(true))
+		return failure
+	_clear_pending_display_change()
+	settings_changed.emit(settings.duplicate(true))
+	var result := {
+		"ok": true,
+		"pending": false,
+		"confirmed": true,
+		"reason": "confirmed",
+		"mode": presentation_mode_id(),
+		"resolution": presentation_resolution_id(),
+		"requested_size": pending.get("requested_size", Vector2i.ZERO),
+		"applied_size": pending.get("applied_size", Vector2i.ZERO),
+		"path": saved_path,
+		"message": "Display settings kept and saved on this device.",
+	}
+	display_change_state_changed.emit(result.duplicate(true))
+	return result
+
+func revert_display_change(reason: String = "canceled") -> Dictionary:
+	if not display_change_pending():
+		return {
+			"ok": true,
+			"pending": false,
+			"reverted": false,
+			"reason": "no_pending_change",
+			"message": "There is no display change to restore.",
+		}
+	var pending := _pending_display_change.duplicate(true)
+	_restore_runtime_display_state(pending.get("prior_runtime", {}))
+	_clear_pending_display_change()
+	var normalized_reason := reason.strip_edges().to_lower()
+	if normalized_reason == "":
+		normalized_reason = "canceled"
+	var result := {
+		"ok": true,
+		"pending": false,
+		"reverted": true,
+		"reason": normalized_reason,
+		"mode": String(pending.get("mode", PRESENTATION_WINDOWED)),
+		"resolution": String(pending.get("resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+		"prior_mode": String(pending.get("prior_mode", presentation_mode_id())),
+		"prior_resolution": String(pending.get("prior_resolution", presentation_resolution_id())),
+		"message": "Previous display settings restored.",
+	}
+	display_change_state_changed.emit(result.duplicate(true))
+	return result
+
+func display_change_pending() -> bool:
+	return not _pending_display_change.is_empty()
+
+func display_change_countdown_seconds() -> int:
+	if not display_change_pending():
+		return 0
+	var remaining_msec := maxi(0, int(_pending_display_change.get("deadline_msec", 0)) - Time.get_ticks_msec())
+	return int(ceil(float(remaining_msec) / 1000.0))
+
+func display_change_snapshot() -> Dictionary:
+	if not display_change_pending():
+		var committed_size := presentation_resolution_size()
+		return {
+			"pending": false,
+			"mode": presentation_mode_id(),
+			"resolution": presentation_resolution_id(),
+			"requested_size": committed_size,
+			"applied_size": DisplayServer.window_get_size(),
+			"seconds_remaining": 0,
+			"timeout_seconds": 0.0,
+			"deadline_msec": 0,
+			"prior_mode": presentation_mode_id(),
+			"prior_resolution": presentation_resolution_id(),
+			"prior_runtime": {},
+			"current_runtime": _capture_runtime_display_state(),
+		}
+	return {
+		"pending": true,
+		"mode": String(_pending_display_change.get("mode", PRESENTATION_WINDOWED)),
+		"resolution": String(_pending_display_change.get("resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+		"requested_size": _pending_display_change.get("requested_size", Vector2i.ZERO),
+		"applied_size": _pending_display_change.get("applied_size", Vector2i.ZERO),
+		"seconds_remaining": display_change_countdown_seconds(),
+		"timeout_seconds": float(_pending_display_change.get("timeout_seconds", DISPLAY_CHANGE_TIMEOUT_SECONDS)),
+		"deadline_msec": int(_pending_display_change.get("deadline_msec", 0)),
+		"prior_mode": String(_pending_display_change.get("prior_mode", PRESENTATION_WINDOWED)),
+		"prior_resolution": String(_pending_display_change.get("prior_resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+		"prior_runtime": (_pending_display_change.get("prior_runtime", {}) as Dictionary).duplicate(true),
+		"current_runtime": _capture_runtime_display_state(),
+	}
+
 func set_master_volume_percent(value: int) -> void:
 	ensure_settings()
 	settings["audio"]["master_volume_percent"] = clampi(value, 0, 100)
@@ -842,7 +1046,7 @@ func describe_settings() -> String:
 	)
 
 func describe_settings_persistence_check() -> String:
-	return "Settings check: applies immediately; stored in device config; campaign progress and expedition saves stay unchanged."
+	return "Settings check: most changes apply immediately and are stored in device config; display previews are stored only after Keep; campaign progress and expedition saves stay unchanged."
 
 func help_browser_summary() -> String:
 	return "Review the core modes and controls before launching a run. Campaign progression, skirmish starts, town growth, battle resolution, and save flow each have their own system boundaries."
@@ -887,6 +1091,8 @@ func apply_settings() -> void:
 	_apply_audio_settings()
 
 func _commit_settings() -> void:
+	if display_change_pending():
+		revert_display_change("direct_settings_commit")
 	apply_settings()
 	save_settings()
 	settings_changed.emit(settings.duplicate(true))
@@ -951,21 +1157,7 @@ func _ensure_hero_diagonal_numpad_actions() -> void:
 		InputMap.action_add_event(action, key_event)
 
 func _apply_presentation_settings() -> void:
-	var resolution := presentation_resolution_size()
-	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
-	match presentation_mode_id():
-		PRESENTATION_FULLSCREEN:
-			DisplayServer.window_set_size(resolution)
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-		PRESENTATION_BORDERLESS:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_size(resolution)
-			_center_window(resolution)
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
-		_:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_size(resolution)
-			_center_window(resolution)
+	_apply_display_candidate(presentation_mode_id(), presentation_resolution_size())
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled() else DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = frame_rate_limit()
 	var root := get_tree().root
@@ -977,6 +1169,25 @@ func _apply_presentation_settings() -> void:
 				root.msaa_2d = Viewport.MSAA_4X
 			_:
 				root.msaa_2d = Viewport.MSAA_2X
+
+func _apply_display_candidate(mode_id: String, requested_size: Vector2i) -> Vector2i:
+	var normalized_mode := _normalize_presentation_mode(mode_id)
+	var applied_size := _clamped_display_size(normalized_mode, requested_size)
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+	match normalized_mode:
+		PRESENTATION_FULLSCREEN:
+			DisplayServer.window_set_size(applied_size)
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		PRESENTATION_BORDERLESS:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_size(applied_size)
+			_center_window(applied_size)
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+		_:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_size(applied_size)
+			_center_window(applied_size)
+	return applied_size
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -1106,6 +1317,86 @@ func _presentation_resolution_option(resolution_id: String) -> Dictionary:
 		if String(option.get("id", "")) == normalized:
 			return option
 	return RESOLUTION_OPTIONS[2]
+
+func _presentation_resolution_size_for_id(resolution_id: String) -> Vector2i:
+	var option := _presentation_resolution_option(resolution_id)
+	return Vector2i(int(option.get("width", 1920)), int(option.get("height", 1080)))
+
+func _clamped_display_size(mode_id: String, requested_size: Vector2i) -> Vector2i:
+	var safe_requested := Vector2i(maxi(1, requested_size.x), maxi(1, requested_size.y))
+	if mode_id == PRESENTATION_FULLSCREEN:
+		return safe_requested
+	var screen_index := DisplayServer.window_get_current_screen()
+	if screen_index < 0:
+		return safe_requested
+	var usable_rect := DisplayServer.screen_get_usable_rect(screen_index)
+	if usable_rect.size.x <= 0 or usable_rect.size.y <= 0:
+		return safe_requested
+	var uniform_scale := minf(
+		1.0,
+		minf(
+			float(usable_rect.size.x) / float(safe_requested.x),
+			float(usable_rect.size.y) / float(safe_requested.y)
+		)
+	)
+	return Vector2i(
+		maxi(1, int(floor(float(safe_requested.x) * uniform_scale))),
+		maxi(1, int(floor(float(safe_requested.y) * uniform_scale)))
+	)
+
+func _capture_runtime_display_state() -> Dictionary:
+	return {
+		"mode": DisplayServer.window_get_mode(),
+		"borderless": DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS),
+		"size": DisplayServer.window_get_size(),
+		"position": DisplayServer.window_get_position(),
+		"screen": DisplayServer.window_get_current_screen(),
+	}
+
+func _restore_runtime_display_state(runtime_state: Variant) -> void:
+	if not (runtime_state is Dictionary) or (runtime_state as Dictionary).is_empty():
+		_apply_display_candidate(presentation_mode_id(), presentation_resolution_size())
+		return
+	var previous := runtime_state as Dictionary
+	var mode := int(previous.get("mode", DisplayServer.WINDOW_MODE_WINDOWED))
+	var size: Vector2i = previous.get("size", presentation_resolution_size())
+	var position: Vector2i = previous.get("position", DisplayServer.window_get_position())
+	var screen := int(previous.get("screen", DisplayServer.window_get_current_screen()))
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	if screen >= 0 and screen < DisplayServer.get_screen_count():
+		DisplayServer.window_set_current_screen(screen)
+	DisplayServer.window_set_size(size)
+	DisplayServer.window_set_position(position)
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, bool(previous.get("borderless", false)))
+	if mode != DisplayServer.WINDOW_MODE_WINDOWED:
+		DisplayServer.window_set_mode(mode)
+
+func _clear_pending_display_change() -> void:
+	_pending_display_change = {}
+	_display_change_last_countdown = -1
+	set_process(false)
+
+func _settings_file_state() -> Dictionary:
+	var exists := FileAccess.file_exists(SETTINGS_FILE)
+	return {
+		"exists": exists,
+		"bytes": FileAccess.get_file_as_bytes(SETTINGS_FILE) if exists else PackedByteArray(),
+	}
+
+func _restore_settings_file_state(file_state: Dictionary) -> bool:
+	if bool(file_state.get("exists", false)):
+		if not _ensure_settings_dir():
+			return false
+		var file := FileAccess.open(SETTINGS_FILE, FileAccess.WRITE)
+		if file == null:
+			return false
+		file.store_buffer(file_state.get("bytes", PackedByteArray()))
+		file.close()
+		return true
+	if not FileAccess.file_exists(SETTINGS_FILE):
+		return true
+	return DirAccess.remove_absolute(ProjectSettings.globalize_path(SETTINGS_FILE)) == OK
 
 func _center_window(resolution: Vector2i) -> void:
 	var screen_index := DisplayServer.window_get_current_screen()
