@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, and player battle Quick Resolve are complete. Faction balance and overall release readiness remain open.",
+  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, player battle Quick Resolve, and transactional cross-platform installer upgrades are complete. Faction balance and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "battle-player-quick-resolve-command-10184",
-  "currentSliceId": "battle-player-quick-resolve-command-10184",
-  "currentSliceNotes": "Confirmed Quick Resolve now uses shared production tactical policy and authoritative battle consequences; focused, active-breadth, controller, headless, core, and repository gates pass.",
+  "currentSlice": "packaging-transactional-cross-platform-upgrade-10184",
+  "currentSliceId": "packaging-transactional-cross-platform-upgrade-10184",
+  "currentSliceNotes": "Completed matched staged, verified, rollback-safe upgrades for Linux, Windows archive, and generated NSIS installers while preserving external user data.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Player Battle Quick Resolve",
-  "currentSliceUpdatedAt": "2026-08-09T21:14:12Z",
+  "currentSliceTitle": "Transactional Cross-Platform Installer Upgrade",
+  "currentSliceUpdatedAt": "2026-08-09T22:50:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73693,6 +73693,83 @@
       ],
       "remainingWork": "Continue the broader production-release queue. Transactional cross-platform installer upgrades, confirmed display-mode rollback, faction balance, strategic-AI breadth, signing, and native Windows certification remain open.",
       "completedAt": "2026-08-09T21:14:12Z"
+    },
+    {
+      "id": "packaging-transactional-cross-platform-upgrade-10184",
+      "title": "Transactional Cross-Platform Installer Upgrade",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent failed or membership-changing reinstalls from leaving a mixed or unbootable program set by staging, verifying, and rollback-committing matched Linux and Windows installer payloads.",
+      "implementationTargets": [
+        "packaging/installers/linux/install.sh",
+        "packaging/installers/linux/uninstall.sh",
+        "packaging/installers/windows/install.cmd",
+        "packaging/installers/windows/uninstall.cmd",
+        "tools/package_release.py",
+        "tests/packaging_user_local_installer_smoke.py",
+        "tests/packaging_release_artifact_verification_test.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "linux_live_directory_overwrite": true,
+        "windows_archive_live_directory_overwrite": true,
+        "nsis_live_directory_overwrite": true,
+        "upgrade_membership_reconciliation": false,
+        "injected_failure_rollback": false,
+        "fresh_install_boot_uninstall_smoke": true
+      },
+      "completionCriteria": [
+        "New payload is fully staged and manifest hash-verified before any live program file is replaced",
+        "Existing nonempty install roots require a valid ownership marker and bounded prior manifest",
+        "A-to-B upgrade removes prior manifest-owned files absent from B and leaves exact B build/manifest identity",
+        "Injected precommit and commit failures leave the prior install exact and bootable",
+        "Same-version reinstall is idempotent and user data outside the program root survives upgrade and uninstall",
+        "Linux, Wine Windows archive, NSIS generation, artifact verification, packaged boot, repository, Python, JSON, shell, and diff validation pass"
+      ],
+      "nonGoals": [
+        "signing, public release publication, stable-channel policy, native Windows hardware certification, gameplay, content, balance, strategic AI, save schema, or Native RMG",
+        "adopting or recursively deleting unowned directories, weakening manifest verification, or claiming overall release completion"
+      ],
+      "createdAt": "2026-08-09T21:17:28Z",
+      "startedAt": "2026-08-09T21:17:28Z",
+      "updatedAt": "2026-08-09T22:50:10Z",
+      "notes": "Completed after implementing exact manifest-owned stage, sibling-directory commit, byte-exact rollback, stale-owned-row removal, conservative uninstall, and external user-data preservation across Linux shell, Windows archive/CMD, and generated NSIS paths.",
+      "result": {
+        "linux_transactional_lifecycle": true,
+        "windows_archive_transactional_lifecycle": true,
+        "windows_nsis_transactional_lifecycle": true,
+        "fresh_install": true,
+        "same_version_idempotent": true,
+        "precommit_rollback_exact": true,
+        "after_backup_rollback_exact": true,
+        "stale_prior_owned_rows_removed": true,
+        "unowned_roots_refused_without_mutation": true,
+        "external_user_data_preserved": true,
+        "real_export_lifecycle_ok": true
+      },
+      "validation": [
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tests.packaging_release_artifact_verification_test (16/16 pass)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/packaging_user_local_installer_smoke.py (Linux run, Windows NSIS, and Windows archive all ok=true)",
+        "python3 tools/package_release.py --verify-only --output-dir .artifacts/packaging_user_local_installer_smoke",
+        "sh -n packaging/installers/linux/install.sh packaging/installers/linux/uninstall.sh",
+        "dash -n packaging/installers/linux/install.sh packaging/installers/linux/uninstall.sh",
+        "x86_64-w64-mingw32-gcc -Wall -Wextra -Os -s -Wl,--no-insert-timestamp -municode tools/windows_installer_helper.c -lbcrypt",
+        "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/package_release.py tests/packaging_user_local_installer_smoke.py tests/packaging_release_artifact_verification_test.py tests/validate_repo.py",
+        "python3 tests/validate_repo.py",
+        "python3 -m json.tool ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Continue the broader release queue. Signing, native Windows hardware certification, confirmed display-mode rollback, accessibility, remaining faction balance, and public prerelease execution remain open.",
+      "completedAt": "2026-08-09T22:50:10Z"
     }
   ],
   "project": "heroes-like",

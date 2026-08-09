@@ -29,6 +29,8 @@ BUILD_INFO_SCHEMA_ID = "heroes_like_build_info_v1"
 MAX_ARCHIVE_MEMBER_BYTES = 2 * 1024 * 1024 * 1024
 MAX_ARCHIVE_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
 INSTALLER_ROOT = ROOT / "packaging" / "installers"
+WINDOWS_INSTALLER_HELPER_SOURCE = ROOT / "tools" / "windows_installer_helper.c"
+WINDOWS_INSTALLER_HELPER_NAME = "heroes-like-installer-helper.exe"
 
 
 @dataclass(frozen=True)
@@ -53,7 +55,8 @@ class PlatformSpec:
 
     @property
     def staged_names(self) -> tuple[str, ...]:
-        return (*self.required_names, "README.txt", "build-info.json", *self.installer_names)
+        platform_helpers = (WINDOWS_INSTALLER_HELPER_NAME,) if self.platform_id.startswith("windows") else ()
+        return (*self.required_names, "README.txt", "build-info.json", *self.installer_names, *platform_helpers)
 
 
 PLATFORMS = (
@@ -156,6 +159,28 @@ def run(args: list[str], timeout: int = 900) -> None:
         raise RuntimeError(f"command failed ({completed.returncode}): {' '.join(args)}")
 
 
+def build_windows_installer_helper(destination: Path) -> None:
+    compiler = os.environ.get("MINGW_CC", shutil.which("x86_64-w64-mingw32-gcc") or "")
+    if not compiler:
+        raise RuntimeError("x86_64-w64-mingw32-gcc is required for the Windows installer helper")
+    if not WINDOWS_INSTALLER_HELPER_SOURCE.is_file():
+        raise RuntimeError(f"missing Windows installer helper source: {WINDOWS_INSTALLER_HELPER_SOURCE}")
+    run([
+        compiler,
+        "-Os",
+        "-s",
+        "-Wl,--no-insert-timestamp",
+        "-municode",
+        str(WINDOWS_INSTALLER_HELPER_SOURCE),
+        "-o",
+        str(destination),
+        "-lbcrypt",
+    ])
+    if not destination.is_file() or destination.stat().st_size <= 0:
+        raise RuntimeError("Windows installer helper build produced no executable")
+    verify_binary_header(PLATFORMS[1], destination.read_bytes()[:4096], destination.name)
+
+
 def export_platform(spec: PlatformSpec, export_dir: Path, godot: str) -> None:
     if export_dir.exists():
         shutil.rmtree(export_dir)
@@ -224,6 +249,8 @@ def stage_platform(
         if not source.is_file() or source.stat().st_size <= 0:
             raise RuntimeError(f"missing installer payload for {spec.platform_id}: {source}")
         shutil.copy2(source, bundle_root / installer_name)
+    if spec.platform_id.startswith("windows"):
+        build_windows_installer_helper(bundle_root / WINDOWS_INSTALLER_HELPER_NAME)
     payload_files = sorted(path for path in bundle_root.iterdir() if path.is_file())
     manifest = {
         "schema_id": PLATFORM_MANIFEST_SCHEMA_ID,
@@ -333,6 +360,43 @@ def nsis_string(value: str) -> str:
     return value.replace("$", "$$").replace('"', '$\\"')
 
 
+def windows_nsis_payload_rows(bundle_root: Path, platform_manifest: dict) -> list[dict[str, object]]:
+    values = platform_manifest.get("files")
+    if not isinstance(values, list):
+        raise RuntimeError("Windows setup platform manifest has no file rows")
+    rows: list[dict[str, object]] = []
+    seen: set[str] = set()
+    for value in values:
+        if not isinstance(value, dict):
+            raise RuntimeError("Windows setup platform manifest has invalid file rows")
+        name = str(value.get("path", ""))
+        folded = name.casefold()
+        if not name or "/" in name or "\\" in name or Path(name).name != name or folded in seen:
+            raise RuntimeError("Windows setup platform manifest has invalid or duplicate file rows")
+        size_bytes = value.get("size_bytes")
+        digest = str(value.get("sha256", "")).lower()
+        if not isinstance(size_bytes, int) or size_bytes <= 0 or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise RuntimeError(f"Windows setup platform manifest has invalid file identity: {name}")
+        path = bundle_root / name
+        if not path.is_file() or path.stat().st_size <= 0:
+            raise RuntimeError(f"missing Windows setup payload: {path}")
+        if path.stat().st_size != size_bytes or sha256(path) != digest:
+            raise RuntimeError(f"Windows setup platform manifest identity mismatch: {name}")
+        seen.add(folded)
+        rows.append({"path": name, "size_bytes": size_bytes, "sha256": digest})
+    manifest_path = bundle_root / "release-manifest.json"
+    if not manifest_path.is_file() or manifest_path.stat().st_size <= 0:
+        raise RuntimeError(f"missing Windows setup payload: {manifest_path}")
+    if manifest_path.name.casefold() in seen:
+        raise RuntimeError("Windows setup platform manifest must not own release-manifest.json")
+    rows.append({
+        "path": manifest_path.name,
+        "size_bytes": manifest_path.stat().st_size,
+        "sha256": sha256(manifest_path),
+    })
+    return sorted(rows, key=lambda row: str(row["path"]).casefold())
+
+
 def create_windows_nsis_installer(
     bundle_root: Path,
     destination: Path,
@@ -342,28 +406,51 @@ def create_windows_nsis_installer(
 ) -> None:
     if not makensis:
         raise RuntimeError("makensis is required to build the Windows setup executable")
-    manifest_values = platform_manifest.get("files")
-    if not isinstance(manifest_values, list):
-        raise RuntimeError("Windows setup platform manifest has no file rows")
-    payload_names = sorted(str(value.get("path", "")) for value in manifest_values if isinstance(value, dict))
-    if (
-        len(payload_names) != len(manifest_values)
-        or len(payload_names) != len(set(payload_names))
-        or any(not name or "/" in name or "\\" in name or Path(name).name != name for name in payload_names)
-    ):
-        raise RuntimeError("Windows setup platform manifest has invalid or duplicate file rows")
-    payload_names.append("release-manifest.json")
-    for name in payload_names:
-        path = bundle_root / name
-        if not path.is_file() or path.stat().st_size <= 0:
-            raise RuntimeError(f"missing Windows setup payload: {path}")
+    payload_rows = windows_nsis_payload_rows(bundle_root, platform_manifest)
+    payload_names = [str(row["path"]) for row in payload_rows]
     script_path = bundle_root.parent / "heroes-like-installer.nsi"
+    ownership_path = bundle_root.parent / "heroes-like-ownership.ini"
+    ownership_lines = [
+        "[Ownership]",
+        "Schema=heroes-like-windows-install-ownership-v1",
+        "Product=heroes-like",
+        "Platform=windows-x86_64",
+        "Marker=heroes-like-user-local-install-v1",
+        f"FileCount={len(payload_rows)}",
+    ]
+    for index, row in enumerate(payload_rows):
+        ownership_lines.extend([
+            "",
+            f"[File{index}]",
+            f"Path={row['path']}",
+            f"Size={row['size_bytes']}",
+            f"Sha256={row['sha256']}",
+        ])
+    ownership_path.write_text("\n".join(ownership_lines) + "\n", encoding="ascii", newline="\n")
+    ownership_size = ownership_path.stat().st_size
+    ownership_sha256 = sha256(ownership_path)
     file_rows = "\n".join(
         f'  File /oname={nsis_string(name)} "{nsis_string(str(bundle_root / name))}"'
         for name in payload_names
     )
-    delete_rows = "\n".join(f'  Delete "$INSTDIR\\{nsis_string(name)}"' for name in payload_names)
+    verify_stage_rows = "\n".join(
+        f'  !insertmacro VERIFY_FILE "$PLUGINSDIR\\payload" "{nsis_string(str(row["path"]))}" "{row["size_bytes"]}" "{row["sha256"]}" staged_verification_failed'
+        for row in payload_rows
+    )
+    copy_commit_rows = "\n".join(
+        f'  CopyFiles /SILENT "$PLUGINSDIR\\payload\\{nsis_string(str(row["path"]))}" "$1"'
+        for row in payload_rows
+    )
+    verify_commit_rows = "\n".join(
+        f'  !insertmacro VERIFY_FILE "$1" "{nsis_string(str(row["path"]))}" "{row["size_bytes"]}" "{row["sha256"]}" commit_candidate_failed_{index}'
+        for index, row in enumerate(payload_rows)
+    )
+    commit_candidate_failure_labels = "\n".join(
+        f"commit_candidate_failed_{index}:\n  RMDir /r \"$1\"\n  SetErrorLevel {40 + index}\n  Quit"
+        for index in range(len(payload_rows))
+    )
     script = f"""Unicode True
+!include "LogicLib.nsh"
 Name "heroes-like {nsis_string(version)}"
 OutFile "{nsis_string(str(destination))}"
 InstallDir "$LOCALAPPDATA\\Heroes Like"
@@ -373,22 +460,278 @@ SetDateSave off
 SilentInstall normal
 SilentUnInstall normal
 
+Var TxPath
+Var TxSize
+Var TxHash
+Var TxActual
+Var TxHandle
+Var TxOutput
+Var TxIndex
+Var TxCount
+Var TxName
+Var TxFind
+
+!macro VERIFY_FILE ROOT NAME SIZE HASH FAILURE
+  StrCpy $TxPath "${{ROOT}}\\${{NAME}}"
+  StrCpy $TxSize "${{SIZE}}"
+  StrCpy $TxHash "${{HASH}}"
+  Call VerifyFileIdentity
+  StrCmp $TxActual "ok" +2
+  Goto ${{FAILURE}}
+!macroend
+
+Function VerifyFileIdentity
+  StrCpy $TxActual "invalid"
+  IfFileExists "$TxPath" 0 verify_file_done
+  ClearErrors
+  FileOpen $TxHandle "$TxPath" r
+  IfErrors verify_file_done
+  FileSeek $TxHandle 0 END $TxOutput
+  FileClose $TxHandle
+  StrCmp $TxOutput $TxSize 0 verify_file_done
+  nsExec::ExecToStack '"$PLUGINSDIR\\payload\\{WINDOWS_INSTALLER_HELPER_NAME}" sha256 "$TxPath"'
+  Pop $TxOutput
+  Pop $TxActual
+  StrCmp $TxOutput "0" 0 verify_file_invalid
+  StrCpy $TxActual $TxActual 64
+  StrCmp $TxActual $TxHash 0 verify_file_invalid
+  StrCpy $TxActual "ok"
+  Goto verify_file_done
+verify_file_invalid:
+  StrCpy $TxActual "invalid"
+verify_file_done:
+FunctionEnd
+
+Function VerifyMarker
+  StrCpy $TxActual "invalid"
+  ClearErrors
+  FileOpen $TxHandle "$TxPath" r
+  IfErrors verify_marker_done
+  FileRead $TxHandle $TxOutput
+  FileClose $TxHandle
+  StrCmp $TxOutput "heroes-like-user-local-install-v1$\\r$\\n" marker_ok
+  StrCmp $TxOutput "heroes-like-user-local-install-v1$\\n" marker_ok
+  Goto verify_marker_done
+marker_ok:
+  StrCpy $TxActual "ok"
+verify_marker_done:
+FunctionEnd
+
+Function VerifyOwnedRoot
+  StrCpy $TxActual "invalid"
+  StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
+  Call VerifyMarker
+  StrCmp $TxActual "ok" 0 verify_owned_done
+  ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Schema"
+  StrCmp $TxOutput "heroes-like-windows-install-ownership-v1" 0 verify_owned_done
+  ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Product"
+  StrCmp $TxOutput "heroes-like" 0 verify_owned_done
+  ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Platform"
+  StrCmp $TxOutput "windows-x86_64" 0 verify_owned_done
+  ReadINIStr $TxCount "$INSTDIR\\install-ownership.ini" "Ownership" "FileCount"
+  IntCmp $TxCount 0 verify_owned_done verify_owned_done verify_owned_count_upper
+verify_owned_count_upper:
+  IntCmp $TxCount 64 verify_owned_rows verify_owned_rows verify_owned_done
+verify_owned_rows:
+  StrCpy $TxIndex 0
+verify_owned_loop:
+  IntCmp $TxIndex $TxCount verify_owned_entries verify_owned_row verify_owned_entries
+verify_owned_row:
+  ReadINIStr $TxName "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Path"
+  ReadINIStr $TxSize "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Size"
+  ReadINIStr $TxHash "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Sha256"
+  StrCmp $TxName "" verify_owned_done
+  StrCpy $TxPath "$INSTDIR\\$TxName"
+  Call VerifyFileIdentity
+  StrCmp $TxActual "ok" 0 verify_owned_done
+  IntOp $TxIndex $TxIndex + 1
+  Goto verify_owned_loop
+verify_owned_entries:
+  IntOp $TxCount $TxCount + 3
+  StrCpy $TxIndex 0
+  FindFirst $TxFind $TxName "$INSTDIR\\*.*"
+verify_owned_entry_loop:
+  StrCmp $TxName "" verify_owned_entry_count
+  StrCmp $TxName "." verify_owned_entry_next
+  StrCmp $TxName ".." verify_owned_entry_next
+  IfFileExists "$INSTDIR\\$TxName\\*.*" verify_owned_done
+  IntOp $TxIndex $TxIndex + 1
+verify_owned_entry_next:
+  FindNext $TxFind $TxName
+  Goto verify_owned_entry_loop
+verify_owned_entry_count:
+  FindClose $TxFind
+  IntCmp $TxIndex $TxCount verify_owned_exact verify_owned_done verify_owned_done
+verify_owned_exact:
+  nsExec::ExecToStack '"$PLUGINSDIR\\payload\\{WINDOWS_INSTALLER_HELPER_NAME}" verify "$INSTDIR\\release-manifest.json" "$INSTDIR" windows-x86_64 release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe'
+  Pop $TxOutput
+  Pop $TxActual
+  StrCmp $TxOutput "0" 0 verify_owned_done
+  StrCpy $TxActual "ok"
+verify_owned_done:
+FunctionEnd
+
 Section "Install"
-  SetOutPath "$INSTDIR"
+  InitPluginsDir
+  SetOutPath "$PLUGINSDIR\\payload"
 {file_rows}
-  WriteUninstaller "$INSTDIR\\uninstall.exe"
+  File /oname=install-ownership.ini "{nsis_string(str(ownership_path))}"
+  FileOpen $TxHandle "$PLUGINSDIR\\payload\\.heroes-like-install" w
+  FileWrite $TxHandle "heroes-like-user-local-install-v1$\\r$\\n"
+  FileClose $TxHandle
+  WriteUninstaller "$PLUGINSDIR\\payload\\uninstall.exe"
+  IfErrors staged_verification_failed
+  IfFileExists "$PLUGINSDIR\\payload\\uninstall.exe" +2
+  Goto staged_verification_failed
+{verify_stage_rows}
+  !insertmacro VERIFY_FILE "$PLUGINSDIR\\payload" "install-ownership.ini" "{ownership_size}" "{ownership_sha256}" staged_verification_failed
+  IfFileExists "$PLUGINSDIR\\payload\\.heroes-like-install" +2
+  Goto staged_verification_failed
+
+  IfFileExists "$INSTDIR\\*.*" 0 prior_verified
+  ; Legacy v1 roots are accepted only after dynamic bounded manifest/hash/exact-root verification.
+  IfFileExists "$INSTDIR\\install-ownership.ini" 0 legacy_prior
+  ReadRegStr $TxHash HKCU "Software\\Heroes Like" "OwnershipSha256"
+  ReadRegStr $TxSize HKCU "Software\\Heroes Like" "OwnershipSize"
+  StrCpy $TxPath "$INSTDIR\\install-ownership.ini"
+  Call VerifyFileIdentity
+  StrCmp $TxActual "ok" 0 ownership_refused
+  Call VerifyOwnedRoot
+  StrCmp $TxActual "ok" 0 ownership_refused
+  Goto prior_verified
+legacy_prior:
+  StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
+  Call VerifyMarker
+  StrCmp $TxActual "ok" 0 ownership_refused
+  nsExec::ExecToStack '"$PLUGINSDIR\\payload\\{WINDOWS_INSTALLER_HELPER_NAME}" verify "$INSTDIR\\release-manifest.json" "$INSTDIR" windows-x86_64 .heroes-like-install release-manifest.json'
+  Pop $TxOutput
+  Pop $TxActual
+  StrCmp $TxOutput "0" 0 ownership_refused
+prior_verified:
+  StrCpy $1 "$INSTDIR.commit"
+  StrCpy $2 "$INSTDIR.backup"
+  RMDir /r "$1"
+  RMDir /r "$2"
+  CreateDirectory "$1"
+{copy_commit_rows}
+  CopyFiles /SILENT "$PLUGINSDIR\\payload\\install-ownership.ini" "$1"
+  CopyFiles /SILENT "$PLUGINSDIR\\payload\\.heroes-like-install" "$1"
+  CopyFiles /SILENT "$PLUGINSDIR\\payload\\uninstall.exe" "$1"
+{verify_commit_rows}
+  ReadEnvStr $3 "HEROES_LIKE_INSTALL_FAIL_PHASE"
+  StrCmp $3 "" failure_phase_ok
+  StrCmp $3 "precommit" injected_precommit
+  StrCmp $3 "after_backup" failure_phase_ok
+  Goto commit_failed
+failure_phase_ok:
+  IfFileExists "$INSTDIR\\*.*" 0 no_backup
+  ClearErrors
+  Rename "$INSTDIR" "$2"
+  IfErrors backup_rename_failed
+  StrCmp $3 "after_backup" injected_after_backup
+no_backup:
+  RMDir "$INSTDIR"
+  ClearErrors
+  Rename "$1" "$INSTDIR"
+  IfErrors commit_rename_failed
+  RMDir /r "$2"
+  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSha256" "{ownership_sha256}"
+  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSize" "{ownership_size}"
+  ; User data is external to this manifest-owned root. Publish shortcut only after commit.
   CreateDirectory "$SMPROGRAMS\\Heroes Like"
   CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$INSTDIR\\heroes-like.exe"
+  Goto install_done
+injected_precommit:
+  DetailPrint "Injected precommit failure; live root was not mutated."
+  Goto commit_failed
+injected_after_backup:
+  DetailPrint "Injected after_backup failure; restoring prior exact program root."
+  RMDir /r "$INSTDIR"
+  IfFileExists "$2\\*.*" 0 commit_failed
+  Rename "$2" "$INSTDIR"
+  Goto commit_failed
+{commit_candidate_failure_labels}
+backup_rename_failed:
+  RMDir /r "$1"
+  SetErrorLevel 25
+  Quit
+commit_rename_failed:
+  RMDir /r "$INSTDIR"
+  IfFileExists "$2\\*.*" 0 commit_rename_failed_done
+  Rename "$2" "$INSTDIR"
+commit_rename_failed_done:
+  RMDir /r "$1"
+  SetErrorLevel 26
+  Quit
+commit_failed:
+  RMDir /r "$1"
+  SetErrorLevel 22
+  Quit
+staged_verification_failed:
+  DetailPrint "Staged payload hash or size verification failed before live mutation."
+  SetErrorLevel 20
+  Quit
+ownership_refused:
+  DetailPrint "Existing nonempty root lacks valid owned manifest state."
+  SetErrorLevel 21
+  Quit
+install_done:
 SectionEnd
 
 Section "Uninstall"
-{delete_rows}
+  InitPluginsDir
+  SetOutPath "$PLUGINSDIR\\payload"
+  File /oname={WINDOWS_INSTALLER_HELPER_NAME} "{nsis_string(str(bundle_root / WINDOWS_INSTALLER_HELPER_NAME))}"
+  StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
+  Call VerifyMarker
+  StrCmp $TxActual "ok" 0 uninstall_refused
+  ReadRegStr $TxHash HKCU "Software\\Heroes Like" "OwnershipSha256"
+  ReadRegStr $TxSize HKCU "Software\\Heroes Like" "OwnershipSize"
+  StrCpy $TxPath "$INSTDIR\\install-ownership.ini"
+  Call VerifyFileIdentity
+  StrCmp $TxActual "ok" 0 uninstall_refused
+  Call VerifyOwnedRoot
+  StrCmp $TxActual "ok" 0 uninstall_refused
+  ReadINIStr $TxCount "$INSTDIR\\install-ownership.ini" "Ownership" "FileCount"
+  StrCpy $TxIndex 0
+uninstall_owned_loop:
+  IntCmp $TxIndex $TxCount uninstall_owned_done uninstall_owned_row uninstall_owned_done
+uninstall_owned_row:
+  ReadINIStr $TxName "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Path"
+  Delete "$INSTDIR\\$TxName"
+  IntOp $TxIndex $TxIndex + 1
+  Goto uninstall_owned_loop
+uninstall_owned_done:
+  Delete "$INSTDIR\\install-ownership.ini"
+  Delete "$INSTDIR\\.heroes-like-install"
   Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
   RMDir "$SMPROGRAMS\\Heroes Like"
+  SetOutPath "$TEMP"
   Delete "$INSTDIR\\uninstall.exe"
   RMDir "$INSTDIR"
+  DeleteRegKey HKCU "Software\\Heroes Like"
+  Goto uninstall_done
+uninstall_refused:
+  DetailPrint "Uninstall refused invalid or unexpected unowned install entries."
+  SetErrorLevel 23
+  Quit
+uninstall_done:
 SectionEnd
 """
+    function_start = script.index("Function VerifyFileIdentity")
+    install_section = script.index('Section "Install"')
+    uninstall_functions = script[function_start:install_section]
+    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot"):
+        uninstall_functions = uninstall_functions.replace(
+            f"Function {function_name}", f"Function un.{function_name}"
+        ).replace(f"Call {function_name}", f"Call un.{function_name}")
+    script = script[:install_section] + uninstall_functions + script[install_section:]
+    uninstall_section = script.index('Section "Uninstall"')
+    uninstall_head = script[:uninstall_section]
+    uninstall_tail = script[uninstall_section:]
+    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot"):
+        uninstall_tail = uninstall_tail.replace(f"Call {function_name}", f"Call un.{function_name}")
+    script = uninstall_head + uninstall_tail
     script_path.write_text(script, encoding="utf-8", newline="\n")
     run([makensis, "-V2", str(script_path)])
     if not destination.is_file() or destination.stat().st_size <= 0:

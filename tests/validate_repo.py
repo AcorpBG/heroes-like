@@ -22863,12 +22863,20 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         smoke_text = PACKAGE_INSTALLER_SMOKE_PATH.read_text(encoding="utf-8")
         for required_token in (
             "PACKAGING_USER_LOCAL_INSTALLER_SMOKE",
-            "packaging_user_local_installer_smoke_v3",
+            "packaging_user_local_installer_smoke_v5",
             "linux_lifecycle",
             "windows_lifecycle",
+            "windows_archive_lifecycle",
+            "make_owned_prior_install",
+            "make_windows_owned_prior_install",
+            "precommit_rollback_exact",
+            "commit_rollback_exact",
+            "stale_prior_file_removed",
+            "unowned_refused_without_mutation",
             "user_data_preserved",
             "linux-x86_64.run",
             "windows-x86_64.setup.exe",
+            "windows-x86_64.zip",
             "Boot.scn",
             "MainMenu.scn",
             "build_info_verified",
@@ -22877,10 +22885,10 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             ensure(required_token in smoke_text, errors, f"Installer lifecycle smoke is missing required token: {required_token}")
 
     for path, required_tokens in (
-        (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install", "build-info.json")),
-        (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rm -rf", "were preserved")),
-        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install", "build-info.json")),
-        (PACKAGE_WINDOWS_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "rmdir /S /Q", "were preserved")),
+        (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
+        (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "release-manifest.json", "were preserved")),
+        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
+        (PACKAGE_WINDOWS_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "release-manifest.json", "were preserved")),
     ):
         if path.exists():
             installer_text = path.read_text(encoding="utf-8")
