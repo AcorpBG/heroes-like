@@ -35,6 +35,10 @@ const TRANSITION_AUTOSAVE_INTENT_FLAGS := [
 	"runtime_autosave_pending_game_state",
 	"runtime_autosave_pending_unix",
 ]
+const GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE_ENV := "HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE"
+const GENERATED_OPENING_AUTOSAVE_PENDING_FLAG := "generated_overworld_deferred_autosave_pending"
+const GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG := "generated_overworld_command_briefing_autosave_deferred"
+const GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG := "generated_overworld_initial_autosave_completed"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -1201,16 +1205,18 @@ func _save_generated_opening_autosave_fast(
 ) -> Dictionary:
 	_runtime_save_profile_step(profile, "generated_opening_payload_start")
 	var payload_started := ProfileLogScript.begin_usec()
-	var payload := session.to_dict()
+	var payload := _generated_opening_autosave_success_payload(session)
 	_runtime_save_profile_bucket(profile, "to_dict", ProfileLogScript.elapsed_ms(payload_started))
 	_runtime_save_profile_step(profile, "generated_opening_payload_done")
 	_runtime_save_profile_step(profile, "write_payload_start")
 	var saved_payload := {}
-	var path := _save_payload(payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
+	var forced_failure := OS.get_environment(GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE_ENV) == "1"
+	var path := "" if forced_failure else _save_payload(payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile)
 	_runtime_save_profile_step(profile, "write_payload_done")
 	if path == "":
 		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": {}, "message": "Save write failed."}
+	_apply_generated_opening_autosave_success_to_session(session)
 	if FileAccess.file_exists(path):
 		profile["written_bytes"] = FileAccess.get_size(path)
 		profile["path"] = path
@@ -1222,6 +1228,23 @@ func _save_generated_opening_autosave_fast(
 		"summary": {},
 		"message": "Autosave updated.",
 	}
+
+func _generated_opening_autosave_success_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var payload := _payload_without_transition_autosave_intent(session.to_dict())
+	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	flags.erase(GENERATED_OPENING_AUTOSAVE_PENDING_FLAG)
+	flags.erase(GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG)
+	flags[GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG] = true
+	payload["flags"] = flags
+	return payload
+
+func _apply_generated_opening_autosave_success_to_session(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	_clear_transition_autosave_intent_flags(session)
+	session.flags.erase(GENERATED_OPENING_AUTOSAVE_PENDING_FLAG)
+	session.flags.erase(GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG)
+	session.flags[GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG] = true
 
 func _runtime_save_profile_step(profile: Dictionary, step_name: String) -> void:
 	if profile.is_empty():

@@ -277,6 +277,8 @@ NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-r
 RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.gd"
 RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCENE_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.tscn"
 RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH = ROOT / "docs" / "random-map-generated-setup-pending-retry-surface-report.md"
+RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_post_open_tail_timing_report.gd"
+RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCENE_PATH = ROOT / "tests" / "random_map_post_open_tail_timing_report.tscn"
 EXPORT_PRESETS_PATH = ROOT / "export_presets.cfg"
 PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaging_platform_readiness_report.gd"
 PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_platform_readiness_report.tscn"
@@ -21145,6 +21147,72 @@ def validate_random_map_generated_setup_pending_retry_surface(errors: list[str])
             ensure(required_text in doc_text, errors, f"generated-map setup pending/retry report is missing required text: {required_text}")
 
 
+def validate_random_map_post_open_autosave_completion(errors: list[str]) -> None:
+    for path in (
+        RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCRIPT_PATH,
+        RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing generated-map post-open autosave completion report file: {path.relative_to(ROOT)}")
+
+    if RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCENE_PATH.exists():
+        scene_text = RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/random_map_post_open_tail_timing_report.gd"' in scene_text,
+            errors,
+            "Generated-map post-open autosave completion scene is not wired to its focused report script",
+        )
+
+    if RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCRIPT_PATH.exists():
+        report_text = RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT",
+            "HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE",
+            "SaveService.TRANSITION_AUTOSAVE_INTENT_FLAGS",
+            "generated_overworld_deferred_autosave_pending",
+            "generated_overworld_command_briefing_autosave_deferred",
+            "generated_overworld_initial_autosave_completed",
+            "SaveService.restore_autosave_session",
+            "AppRouter.validation_prepare_overworld_handoff_without_scene_change",
+            "SaveService.save_runtime_autosave_session(failure_session, false)",
+            "file_bytes_unchanged",
+            "live_retry_flags_unchanged",
+            "ordinary_autosave_control",
+            "payload_breadth_preserved",
+            "SessionState.SAVE_VERSION != 9",
+        ):
+            ensure(required_token in report_text, errors, f"Generated-map post-open autosave completion report is missing token: {required_token}")
+
+    if SAVE_SERVICE_PATH.exists():
+        save_service_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "TRANSITION_AUTOSAVE_INTENT_FLAGS",
+            "_save_generated_opening_autosave_fast",
+            "HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE",
+            "generated_overworld_deferred_autosave_pending",
+            "generated_overworld_command_briefing_autosave_deferred",
+            "generated_overworld_initial_autosave_completed",
+            "_payload_without_transition_autosave_intent",
+        ):
+            ensure(required_token in save_service_text, errors, f"SaveService.gd is missing generated-opening autosave completion token: {required_token}")
+
+    if OVERWORLD_SCRIPT_PATH.exists():
+        overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func _complete_deferred_generated_overworld_autosave",
+            "SaveService.save_runtime_autosave_session(_session, false)",
+        ):
+            ensure(required_token in overworld_text, errors, f"OverworldShell.gd is missing generated-opening autosave completion token: {required_token}")
+
+    if APP_ROUTER_PATH.exists():
+        app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func _should_defer_initial_generated_overworld_autosave",
+            "generated_overworld_initial_autosave_completed",
+            "validation_prepare_overworld_handoff_without_scene_change",
+        ):
+            ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing generated-opening autosave restore guard token: {required_token}")
+
+
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
@@ -25285,6 +25353,7 @@ def main() -> int:
     validate_map_editor_package_save_copy(errors)
     validate_native_rmg_no_godot_export_boundary(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
+    validate_random_map_post_open_autosave_completion(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
     validate_packaging_linux_export_smoke(errors)
