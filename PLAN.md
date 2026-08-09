@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `save-generated-opening-autosave-completion-persistence-10184`. The generated-map opening fast path now writes a detached post-success payload that removes ordinary transition intent plus generated opening/briefing defer flags and records initial-autosave completion. Only a successful write mirrors that state to the live session; failure preserves the existing autosave bytes and exact live retry intent. Restoring the saved session no longer schedules a second opening autosave. Focused generated route/save/restore/failure/ordinary-control, core, regression, deferred-payload, parse, repository, JSON, Python, and diff gates pass at save version 9. The unrelated legacy random-map replay fixture still stops before saves on its obsolete nonempty template-id assertion.
 - Latest completed implementation slice: `settings-confirmed-display-mode-rollback-10184`. Player-facing window-mode and resolution changes now enter a SettingsService-owned preview without mutating committed settings or config bytes. A 15-second Keep/Revert modal gives Revert initial focus; Escape/controller Back, timeout, menu exit, replacement preview, and save failure restore the prior runtime display, while Keep persists and survives reload. Windowed/borderless requests clamp uniformly to the active monitor usable rectangle, and Restore Defaults defers its display portion through the same confirmation. Focused service, Main Menu, Restore Defaults, packaged persistence, active-play, Linux/X11, fresh-prefix packaged Windows/Wine, core, parse, repository, JSON, Python, and diff gates pass. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.
 - Latest completed implementation slice: `packaging-transactional-cross-platform-upgrade-10184`. Linux, Windows archive, and generated NSIS installers now stage and verify a complete manifest-owned payload before replacing an owned live install, remove obsolete prior-manifest files, and restore the prior bootable program set after an injected commit failure. Fresh install, same-version reinstall, A-to-B upgrade, unowned-directory refusal, user-data preservation, and uninstall behavior are matched across Linux and Wine validation. This does not claim signing, native Windows hardware certification, public release execution, stable-channel completion, or overall release readiness.
 - Completed implementation slice: `combat-sunvault-aurora-relay-front-10184`. Aurora Bastions' Aurora Facet Wall now screens allied ranged stacks by four percent against melee attackers carrying the authored `bloodrush` committed-assault contract while a Bastion survives. Live damage, tactical-AI estimates, role summaries, the fast benchmark, and focused runtime proof share the same content-owned field without adding inert metadata to normalized battle state. Generic four-percent and one-percent screens were rejected because each increased ordinary outliers from 28 to 30. The accepted all-live matrix keeps 28 outliers, lowers excess severity from 162.5 to 161.0, preserves four rows at or above 65 percent, 68.5 percent maximum dominance, 4.13-point maximum side bias, and zero structural failures, and improves week-four Embercourt/Sunvault from 67.5/32.5 to 66/34. The 59-encounter queue remains clear at signature `829808c9`; focused ability, autoplay, runtime consequence, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
@@ -2896,6 +2897,39 @@ Completion evidence:
 - Restore Defaults saves non-display defaults first and routes its display candidate through the same confirmation boundary;
 - X11 at a 1280x720 usable screen uniformly clamps an authored 2560x1440 request to 1280x720, and a fresh Wine prefix runs the same preview/Revert/Keep/reload contract from an exported Windows executable and PCK;
 - focused transaction, keyboard/controller, menu visual, Restore Defaults, packaged settings, active-play settings, core, editor parse, repository, Python, JSON, and diff gates pass.
+
+## Generated Opening Autosave Completion Persistence
+
+id: `save-generated-opening-autosave-completion-persistence-10184`
+
+Status: complete.
+
+Selected Phase 6 save/runtime correction. The generated-map fast opening-autosave
+path writes `session.to_dict()` while the deferred-opening flags still describe
+an autosave that has not completed. The live shell clears those flags only after
+the write, so the restored payload can repeat the large opening autosave.
+
+Implementation target:
+- make the generated opening autosave persist the post-success flag state: deferred opening and briefing intent absent, initial autosave completion true, and ordinary transition-autosave intent absent;
+- apply the same post-success state to the live session only after the write succeeds, while a failed write retains pending intent for a later retry;
+- preserve the existing fast path, save version, ordinary manual/autosave behavior, generated-map payload contents, and opening handoff status/timing surfaces;
+- add focused save/restore proof that the persisted payload and restored session are complete and do not request another generated opening autosave.
+
+Completion criteria:
+- a successful fast generated opening autosave persists no deferred-opening intent and `generated_overworld_initial_autosave_completed=true`, then restores with no second opening autosave pending;
+- a failed write does not falsely mark completion or erase the live retry intent;
+- ordinary runtime autosaves and non-generated sessions remain exact, save version stays unchanged, and generated payload breadth is preserved;
+- focused opening-tail/save-resume, core, regression, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no save-version bump, generated-map generation change, Native RMG change, autosave UI redesign, summary-cache rewrite, broad save-format migration, or overall release-completion claim.
+
+Completion evidence:
+- the successful fast payload omits all active transition-autosave intent, generated opening pending, and briefing-defer flags, sets initial-autosave completion true, preserves canonical/generated overworld payload breadth, and mirrors the same canonical flags to the live session;
+- restore keeps completion true and AppRouter reports no deferred or generated-deferred autosave, so opening the restored session cannot repeat the opening autosave;
+- an injected pre-write failure leaves autosave bytes and every live retry flag exact, including completion false, while ordinary authored autosaves remain loadable and free of generated lifecycle flags;
+- the focused generated route remains within its budgets at 278 ms first-visible and 488 ms through the deferred autosave tail;
+- core, balance regression, ordinary deferred-payload, editor parse, repository, Python, JSON, and diff gates pass; save version remains 9.
 
 ## Phase Roadmap
 

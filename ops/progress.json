@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, player battle Quick Resolve, transactional cross-platform installer upgrades, and confirmed display-mode rollback are complete. Faction balance, native Windows hardware certification, and overall release readiness remain open.",
+  "currentNotes": "Confirmed display-mode rollback and generated-opening autosave completion persistence are complete. Faction balance, native Windows hardware certification, accessibility, and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-confirmed-display-mode-rollback-10184",
-  "currentSliceId": "settings-confirmed-display-mode-rollback-10184",
-  "currentSliceNotes": "Completed a SettingsService-owned display preview transaction with visible Keep/Revert countdown, exact rollback, save-failure recovery, monitor-usable window sizing, deferred Restore Defaults display handling, and Linux/X11 plus packaged Windows/Wine proof.",
+  "currentSlice": "save-generated-opening-autosave-completion-persistence-10184",
+  "currentSliceId": "save-generated-opening-autosave-completion-persistence-10184",
+  "currentSliceNotes": "Completed post-success generated opening-autosave persistence: successful files and live sessions carry completion without pending intent, restore cannot reschedule the opening save, and failure preserves exact retry state and prior bytes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Confirmed Display-Mode Preview And Rollback",
-  "currentSliceUpdatedAt": "2026-08-09T23:39:44Z",
+  "currentSliceTitle": "Generated Opening Autosave Completion Persistence",
+  "currentSliceUpdatedAt": "2026-08-09T23:58:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73838,6 +73838,61 @@
       ],
       "remainingWork": "No work remains in this slice. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.",
       "completedAt": "2026-08-09T23:39:44Z"
+    },
+    {
+      "id": "save-generated-opening-autosave-completion-persistence-10184",
+      "title": "Generated Opening Autosave Completion Persistence",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent a restored generated-map opening autosave from retaining the deferred-opening intent that caused the autosave and repeating the expensive opening-save lifecycle.",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/random_map_post_open_tail_timing_report.gd",
+        "tests/random_map_post_open_tail_timing_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "fast_opening_payload_retains_pending_flag": true,
+        "fast_opening_payload_marks_completed": false,
+        "restore_requests_second_opening_autosave": true,
+        "save_version": 9
+      },
+      "completionCriteria": [
+        "Successful fast generated opening autosave persists post-success flags and restores without a second opening autosave pending",
+        "Failed fast write retains live pending intent and does not falsely mark completion",
+        "Ordinary runtime autosaves and generated payload breadth remain exact without a save-version bump",
+        "Focused opening-tail/save-resume, core, regression, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "save-version bump, generated-map generation, Native RMG, autosave UI redesign, summary-cache rewrite, broad save migration, or overall release readiness"
+      ],
+      "createdAt": "2026-08-09T23:41:36Z",
+      "startedAt": "2026-08-09T23:41:36Z",
+      "updatedAt": "2026-08-09T23:58:15Z",
+      "notes": "The fast path writes a detached completed-opening payload, mirrors lifecycle flags only after success, retains exact retry state on failure, and restores without scheduling another opening autosave.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/random_map_post_open_tail_timing_report.tscn (passed; first visible 278 ms, deferred tail 488 ms, completion/restore/no-repeat/failure/ordinary-control assertions all true)",
+        "forced HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE=1 path (passed; autosave bytes and exact live retry flags unchanged, completion false)",
+        "ordinary authored autosave control (passed; loadable summary, restored canonical payload, transition intent cleared, no generated lifecycle flags, save version 9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/save_summary_deferred_payload_report.tscn (passed; 9831218-byte deferred outcome payload, 110 ms)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn (passed with zero failures; one expected deferred Native RMG exact-state-chain warning)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "python3 -m json.tool ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. The unrelated legacy random-map replay fixture still expects a nonempty template id before reaching its save checks; Native RMG exact-state-chain support and overall release readiness remain open.",
+      "completedAt": "2026-08-09T23:58:15Z"
     }
   ],
   "project": "heroes-like",

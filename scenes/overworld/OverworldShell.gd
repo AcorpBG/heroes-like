@@ -1469,9 +1469,6 @@ func _complete_deferred_generated_overworld_autosave() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_first_frame_after_return")
 	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_start")
 	var result := SaveService.save_runtime_autosave_session(_session, false)
-	_session.flags.erase("generated_overworld_deferred_autosave_pending")
-	_session.flags.erase("generated_overworld_command_briefing_autosave_deferred")
-	_session.flags["generated_overworld_initial_autosave_completed"] = bool(result.get("ok", false))
 	_set_deferred_generated_save_status("Save: generated autosave ready" if bool(result.get("ok", false)) else "Save: generated autosave failed")
 	AppRouter.note_overworld_handoff_step(
 		"overworld_deferred_autosave_done",
