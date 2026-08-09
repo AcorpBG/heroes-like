@@ -7,6 +7,8 @@ import os
 import shutil
 import subprocess
 import sys
+import time
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -20,7 +22,7 @@ ARTIFACT_DIR = Path(
 ).resolve()
 REPORT_PATH = ARTIFACT_DIR / "report.json"
 REPORT_ID = "PACKAGING_USER_LOCAL_INSTALLER_SMOKE"
-SCHEMA_ID = "packaging_user_local_installer_smoke_v3"
+SCHEMA_ID = "packaging_user_local_installer_smoke_v5"
 VERSION = "0.1.0-alpha.1-installer-smoke"
 SOURCE_REVISION = "c" * 40
 PACKAGER = ROOT / "tools" / "package_release.py"
@@ -150,6 +152,84 @@ def verify_installed_payload(install_dir: Path, expected_platform: str) -> dict:
     }
 
 
+def program_tree_identity(install_dir: Path) -> dict[str, str]:
+    if not install_dir.is_dir():
+        return {}
+    return {
+        path.relative_to(install_dir).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(install_dir.rglob("*"))
+        if path.is_file()
+    }
+
+
+def file_identity(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else ""
+
+
+def make_owned_prior_install(install_dir: Path, legacy_name: str) -> dict[str, str]:
+    manifest_path = install_dir / "release-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    rows = manifest.get("files")
+    if not isinstance(rows, list):
+        raise RuntimeError("installed release manifest has no file rows")
+    build_info_path = install_dir / "build-info.json"
+    build_info = json.loads(build_info_path.read_text(encoding="utf-8"))
+    build_info["version"] = VERSION + "-prior"
+    build_info_path.write_text(json.dumps(build_info, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    legacy_path = install_dir / legacy_name
+    legacy_path.write_text("owned only by prior release\n", encoding="utf-8")
+    for row in rows:
+        if isinstance(row, dict) and row.get("path") == "build-info.json":
+            row["size_bytes"] = build_info_path.stat().st_size
+            row["sha256"] = hashlib.sha256(build_info_path.read_bytes()).hexdigest()
+    rows.append(
+        {
+            "path": legacy_name,
+            "size_bytes": legacy_path.stat().st_size,
+            "sha256": hashlib.sha256(legacy_path.read_bytes()).hexdigest(),
+        }
+    )
+    manifest["version"] = VERSION + "-prior"
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return program_tree_identity(install_dir)
+
+
+def make_windows_owned_prior_install(install_dir: Path, legacy_name: str) -> tuple[dict[str, str], str, int]:
+    make_owned_prior_install(install_dir, legacy_name)
+    manifest_path = install_dir / "release-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    rows = list(manifest["files"])
+    rows.append(
+        {
+            "path": "release-manifest.json",
+            "size_bytes": manifest_path.stat().st_size,
+            "sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        }
+    )
+    ownership_lines = [
+        "[Ownership]",
+        "Schema=heroes-like-windows-install-ownership-v1",
+        "Product=heroes-like",
+        "Platform=windows-x86_64",
+        "Marker=heroes-like-user-local-install-v1",
+        f"FileCount={len(rows)}",
+    ]
+    for index, row in enumerate(rows):
+        ownership_lines.extend(
+            [
+                "",
+                f"[File{index}]",
+                f"Path={row['path']}",
+                f"Size={row['size_bytes']}",
+                f"Sha256={row['sha256']}",
+            ]
+        )
+    ownership_path = install_dir / "install-ownership.ini"
+    ownership_path.write_text("\n".join(ownership_lines) + "\n", encoding="ascii", newline="\n")
+    ownership_digest = hashlib.sha256(ownership_path.read_bytes()).hexdigest()
+    return program_tree_identity(install_dir), ownership_digest, ownership_path.stat().st_size
+
+
 def linux_lifecycle(installer: Path) -> dict:
     root = ARTIFACT_DIR / "linux-installed"
     install_dir = root / "program"
@@ -164,15 +244,68 @@ def linux_lifecycle(installer: Path) -> dict:
         "HEROES_LIKE_APPLICATIONS_DIR": str(applications_dir),
     }
     install = run([str(installer)], env=env, timeout=120)
+    unowned_dir = root / "unowned-program"
+    unowned_dir.mkdir(parents=True, exist_ok=True)
+    unowned_sentinel = unowned_dir / "keep.txt"
+    unowned_sentinel.write_text("do not adopt\n", encoding="utf-8")
+    unowned_failure = run(
+        [str(installer)], env={**env, "HEROES_LIKE_INSTALL_DIR": str(unowned_dir)}, timeout=120
+    ) if command_ok(install) else {
+        "returncode": None,
+        "timed_out": False,
+        "fatal_matches": [],
+        "output": "initial installer failed",
+        "output_tail": ["initial installer failed"],
+    }
+    unowned_refused_without_mutation = (
+        unowned_failure.get("returncode") not in (None, 0)
+        and program_tree_identity(unowned_dir) == {"keep.txt": hashlib.sha256(b"do not adopt\n").hexdigest()}
+    )
+    same_version_reinstall = run([str(installer)], env=env, timeout=120) if command_ok(install) else {
+        "returncode": None,
+        "timed_out": False,
+        "fatal_matches": [],
+        "output": "initial installer failed",
+        "output_tail": ["initial installer failed"],
+    }
+    prior_identity = make_owned_prior_install(install_dir, "legacy-linux-sidecar.dat") if command_ok(
+        same_version_reinstall
+    ) else {}
+    precommit_env = {**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"}
+    precommit_failure = run([str(installer)], env=precommit_env, timeout=120) if prior_identity else {
+        "returncode": None,
+        "timed_out": False,
+        "fatal_matches": [],
+        "output": "prior install unavailable",
+        "output_tail": ["prior install unavailable"],
+    }
+    precommit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    commit_env = {**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"}
+    commit_failure = run([str(installer)], env=commit_env, timeout=120) if prior_identity else {
+        "returncode": None,
+        "timed_out": False,
+        "fatal_matches": [],
+        "output": "prior install unavailable",
+        "output_tail": ["prior install unavailable"],
+    }
+    commit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    upgrade = run([str(installer)], env=env, timeout=120) if prior_identity else {
+        "returncode": None,
+        "timed_out": False,
+        "fatal_matches": [],
+        "output": "prior install unavailable",
+        "output_tail": ["prior install unavailable"],
+    }
     launcher = bin_dir / "heroes-like"
     payload_installed = (install_dir / "heroes-like.x86_64").is_file()
     payload_verification = verify_installed_payload(install_dir, "linux-x86_64")
     launcher_created = launcher.is_file()
     desktop_entry_created = (applications_dir / "heroes-like.desktop").is_file()
+    stale_prior_file_removed = not (install_dir / "legacy-linux-sidecar.dat").exists()
     boot = run(
         [str(launcher), "--headless", "--audio-driver", "Dummy", "--quit-after", "20"],
         timeout=90,
-    ) if command_ok(install) and launcher_created else {
+    ) if command_ok(upgrade) and launcher_created else {
         "returncode": None,
         "timed_out": False,
         "fatal_matches": [],
@@ -182,17 +315,30 @@ def linux_lifecycle(installer: Path) -> dict:
     uninstall = run(["sh", str(install_dir / "uninstall.sh")], env=env, timeout=60)
     return {
         "install": install,
+        "unowned_failure": unowned_failure,
+        "same_version_reinstall": same_version_reinstall,
+        "precommit_failure": precommit_failure,
+        "commit_failure": commit_failure,
+        "upgrade": upgrade,
         "boot": boot,
         "uninstall": uninstall,
         "payload_installed_before_uninstall": payload_installed,
         "payload_verification": payload_verification,
         "launcher_created_before_uninstall": launcher_created,
         "desktop_entry_created_before_uninstall": desktop_entry_created,
+        "precommit_rollback_exact": precommit_rollback_exact,
+        "commit_rollback_exact": commit_rollback_exact,
+        "stale_prior_file_removed": stale_prior_file_removed,
+        "unowned_refused_without_mutation": unowned_refused_without_mutation,
         "program_removed": not install_dir.exists(),
         "launcher_removed": not launcher.exists(),
         "desktop_entry_removed": not (applications_dir / "heroes-like.desktop").exists(),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-linux",
-        "ok": command_ok(install) and payload_installed and payload_verification["ok"] and launcher_created and desktop_entry_created
+        "ok": command_ok(install) and unowned_refused_without_mutation and command_ok(same_version_reinstall)
+            and precommit_failure.get("returncode") not in (None, 0) and precommit_rollback_exact
+            and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
+            and command_ok(upgrade) and stale_prior_file_removed
+            and payload_installed and payload_verification["ok"] and launcher_created and desktop_entry_created
             and command_ok(boot, reject_fatal=True) and command_ok(uninstall)
             and not install_dir.exists() and not launcher.exists() and user_data.is_file(),
     }
@@ -212,8 +358,58 @@ def windows_lifecycle(installer: Path) -> dict:
         "WINEDEBUG": "-all",
         "WINEDLLOVERRIDES": "dinput8=",
     }
+
+
     install = run([WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240)
+    unowned_dir = prefix / "drive_c" / "HeroesLikeUnowned"
+    unowned_dir.mkdir(parents=True, exist_ok=True)
+    unowned_sentinel = unowned_dir / "keep.txt"
+    unowned_sentinel.write_text("do not adopt\n", encoding="utf-8")
+    unowned_failure = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeUnowned"], env=env, timeout=240
+    ) if command_ok(install) else {"returncode": None, "output": "initial installer failed", "fatal_matches": []}
+    unowned_refused_without_mutation = (
+        unowned_failure.get("returncode") not in (None, 0)
+        and program_tree_identity(unowned_dir) == {"keep.txt": hashlib.sha256(b"do not adopt\n").hexdigest()}
+    )
+    same_version_reinstall = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
+    ) if command_ok(install) else {"returncode": None, "output": "initial installer failed", "fatal_matches": []}
+    if command_ok(same_version_reinstall):
+        prior_identity, prior_ownership_sha256, prior_ownership_size = make_windows_owned_prior_install(
+            install_dir, "legacy-windows-sidecar.dat"
+        )
+        ownership_registry_sha = run(
+            [WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSha256", "/d", prior_ownership_sha256, "/f"],
+            env=env,
+            timeout=60,
+        )
+        ownership_registry_size = run(
+            [WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSize", "/d", str(prior_ownership_size), "/f"],
+            env=env,
+            timeout=60,
+        )
+        if not command_ok(ownership_registry_sha) or not command_ok(ownership_registry_size):
+            prior_identity = {}
+    else:
+        prior_identity = {}
+    precommit_failure = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
+        env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"},
+        timeout=240,
+    ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
+    precommit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    commit_failure = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
+        env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"},
+        timeout=240,
+    ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
+    commit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    upgrade = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
+    ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
     payload_verification = verify_installed_payload(install_dir, "windows-x86_64")
+    stale_prior_file_removed = not (install_dir / "legacy-windows-sidecar.dat").exists()
     start_menu_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
     user_data.parent.mkdir(parents=True, exist_ok=True)
     user_data.write_text("preserve-windows", encoding="utf-8")
@@ -234,7 +430,7 @@ def windows_lifecycle(installer: Path) -> dict:
         ],
         env=boot_env,
         timeout=180,
-    ) if command_ok(install) and (install_dir / "heroes-like.exe").is_file() else {"returncode": None, "output": "installer failed", "fatal_matches": []}
+    ) if command_ok(upgrade) and (install_dir / "heroes-like.exe").is_file() else {"returncode": None, "output": "installer failed", "fatal_matches": []}
     uninstall = run([WINE, wine_path(install_dir / "uninstall.exe"), "/S"], env=env, timeout=180)
     if WINESERVER and prefix.exists():
         run([WINESERVER, "-k"], env={"WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}, timeout=30)
@@ -242,17 +438,164 @@ def windows_lifecycle(installer: Path) -> dict:
     markers = {marker: marker in output for marker in WINDOWS_MARKERS}
     return {
         "install": install,
+        "unowned_failure": unowned_failure,
+        "same_version_reinstall": same_version_reinstall,
+        "precommit_failure": precommit_failure,
+        "commit_failure": commit_failure,
+        "upgrade": upgrade,
         "boot": {key: value for key, value in boot.items() if key != "output"},
         "uninstall": uninstall,
         "boot_markers": markers,
         "payload_verification": payload_verification,
+        "precommit_rollback_exact": precommit_rollback_exact,
+        "commit_rollback_exact": commit_rollback_exact,
+        "stale_prior_file_removed": stale_prior_file_removed,
+        "unowned_refused_without_mutation": unowned_refused_without_mutation,
         "program_removed": not install_dir.exists(),
         "start_menu_shortcut_created_before_uninstall": bool(start_menu_shortcuts),
         "start_menu_shortcut_removed": not list(prefix.rglob("Heroes Like.lnk")),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-windows",
-        "ok": command_ok(install) and payload_verification["ok"] and command_ok(boot, reject_fatal=True) and all(markers.values())
+        "ok": command_ok(install) and unowned_refused_without_mutation and command_ok(same_version_reinstall)
+            and precommit_failure.get("returncode") not in (None, 0) and precommit_rollback_exact
+            and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
+            and command_ok(upgrade) and stale_prior_file_removed
+            and payload_verification["ok"] and command_ok(boot, reject_fatal=True) and all(markers.values())
             and bool(start_menu_shortcuts) and command_ok(uninstall) and not install_dir.exists()
             and not list(prefix.rglob("Heroes Like.lnk")) and user_data.is_file(),
+    }
+
+
+def windows_archive_lifecycle(archive: Path) -> dict:
+    if not WINE:
+        return {"ok": False, "error": "wine executable not found"}
+    bundle_parent = ARTIFACT_DIR / "windows archive bundle"
+    with zipfile.ZipFile(archive, "r") as handle:
+        handle.extractall(bundle_parent)
+    bundle_roots = [path for path in bundle_parent.iterdir() if path.is_dir()]
+    if len(bundle_roots) != 1:
+        return {"ok": False, "error": f"expected one archive bundle root, found {len(bundle_roots)}"}
+    installer = bundle_roots[0] / "install.cmd"
+    prefix = ARTIFACT_DIR / "wine-prefix-archive"
+    if prefix.exists():
+        shutil.rmtree(prefix)
+    install_dir = prefix / "drive_c" / "HeroesLikeArchiveInstall"
+    start_menu_dir = prefix / "drive_c" / "HeroesLikeArchiveMenu"
+    launcher = start_menu_dir / "Heroes Like.cmd"
+    user_data = (
+        prefix / "drive_c" / "users" / "root" / "AppData" / "Roaming" / "Godot"
+        / "app_userdata" / "Heroes Like" / "archive-save.json"
+    )
+    env = {
+        "WINEPREFIX": str(prefix),
+        "WINEARCH": "win64",
+        "WINEDEBUG": "-all",
+        "WINEDLLOVERRIDES": "dinput8=",
+        "HEROES_LIKE_INSTALL_DIR": "C:\\HeroesLikeArchiveInstall",
+        "HEROES_LIKE_START_MENU_DIR": "C:\\HeroesLikeArchiveMenu",
+    }
+
+    def run_installer(extra_env: dict[str, str] | None = None) -> dict:
+        return run(
+            [WINE, "cmd", "/d", "/c", wine_path(installer)],
+            env={**env, **(extra_env or {})},
+            timeout=240,
+        )
+
+    install = run_installer()
+    unowned_dir = prefix / "drive_c" / "HeroesLikeArchiveUnowned"
+    unowned_dir.mkdir(parents=True, exist_ok=True)
+    unowned_sentinel = unowned_dir / "keep.txt"
+    unowned_sentinel.write_text("do not adopt\n", encoding="utf-8")
+    unowned_failure = run(
+        [WINE, "cmd", "/d", "/c", wine_path(installer)],
+        env={**env, "HEROES_LIKE_INSTALL_DIR": "C:\\HeroesLikeArchiveUnowned"},
+        timeout=240,
+    ) if command_ok(install) else {"returncode": None, "output": "initial installer failed", "fatal_matches": []}
+    unowned_refused_without_mutation = (
+        unowned_failure.get("returncode") not in (None, 0)
+        and program_tree_identity(unowned_dir) == {"keep.txt": hashlib.sha256(b"do not adopt\n").hexdigest()}
+    )
+    same_version_reinstall = run_installer() if command_ok(install) else {
+        "returncode": None, "output": "initial installer failed", "fatal_matches": []
+    }
+    prior_identity = make_owned_prior_install(
+        install_dir, "legacy-windows-archive-sidecar.dat"
+    ) if command_ok(same_version_reinstall) else {}
+    prior_launcher_identity = file_identity(launcher)
+    precommit_failure = run_installer({"HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"}) if prior_identity else {
+        "returncode": None, "output": "prior install unavailable", "fatal_matches": []
+    }
+    precommit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and file_identity(launcher) == prior_launcher_identity
+    )
+    commit_failure = run_installer({"HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"}) if prior_identity else {
+        "returncode": None, "output": "prior install unavailable", "fatal_matches": []
+    }
+    commit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and file_identity(launcher) == prior_launcher_identity
+    )
+    upgrade = run_installer() if prior_identity else {
+        "returncode": None, "output": "prior install unavailable", "fatal_matches": []
+    }
+    payload_verification = verify_installed_payload(install_dir, "windows-x86_64")
+    stale_prior_file_removed = not (install_dir / "legacy-windows-archive-sidecar.dat").exists()
+    user_data.parent.mkdir(parents=True, exist_ok=True)
+    user_data.write_text("preserve-windows-archive", encoding="utf-8")
+    boot = run(
+        [
+            WINE,
+            wine_path(install_dir / "heroes-like.exe"),
+            "--headless",
+            "--audio-driver",
+            "Dummy",
+            "--rendering-method",
+            "gl_compatibility",
+            "--quit-after",
+            "30",
+        ],
+        env=env,
+        timeout=180,
+    ) if command_ok(upgrade) else {"returncode": None, "output": "installer failed", "fatal_matches": []}
+    uninstall = run(
+        [WINE, "cmd", "/d", "/c", "C:\\HeroesLikeArchiveInstall\\uninstall.cmd"],
+        env=env,
+        timeout=180,
+    )
+    for _attempt in range(100):
+        if not install_dir.exists() and not start_menu_dir.exists():
+            break
+        time.sleep(0.1)
+    if WINESERVER and prefix.exists():
+        run([WINESERVER, "-k"], env={"WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}, timeout=30)
+    return {
+        "install": install,
+        "unowned_failure": unowned_failure,
+        "same_version_reinstall": same_version_reinstall,
+        "precommit_failure": precommit_failure,
+        "commit_failure": commit_failure,
+        "upgrade": upgrade,
+        "boot": {key: value for key, value in boot.items() if key != "output"},
+        "uninstall": uninstall,
+        "payload_verification": payload_verification,
+        "precommit_rollback_exact": precommit_rollback_exact,
+        "commit_rollback_exact": commit_rollback_exact,
+        "stale_prior_file_removed": stale_prior_file_removed,
+        "unowned_refused_without_mutation": unowned_refused_without_mutation,
+        "launcher_created_before_uninstall": bool(prior_launcher_identity),
+        "program_removed": not install_dir.exists(),
+        "launcher_removed": not launcher.exists(),
+        "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-windows-archive",
+        "ok": command_ok(install) and unowned_refused_without_mutation and command_ok(same_version_reinstall)
+            and precommit_failure.get("returncode") not in (None, 0) and precommit_rollback_exact
+            and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
+            and command_ok(upgrade) and stale_prior_file_removed and payload_verification["ok"]
+            and bool(prior_launcher_identity) and command_ok(boot, reject_fatal=True)
+            and command_ok(uninstall) and not install_dir.exists() and not launcher.exists()
+            and user_data.is_file(),
     }
 
 
@@ -283,16 +626,23 @@ def main() -> int:
     archives = ARTIFACT_DIR / "archives"
     linux_installer = archives / f"heroes-like-{VERSION}-linux-x86_64.run"
     windows_installer = archives / f"heroes-like-{VERSION}-windows-x86_64.setup.exe"
+    windows_archive = archives / f"heroes-like-{VERSION}-windows-x86_64.zip"
     linux = linux_lifecycle(linux_installer)
     windows = windows_lifecycle(windows_installer)
+    windows_archive_result = windows_archive_lifecycle(windows_archive)
     report = {
         "schema_id": SCHEMA_ID,
         "report_id": REPORT_ID,
         "generated_at": utc_now(),
-        "ok": bool(linux.get("ok", False) and windows.get("ok", False)),
+        "ok": bool(
+            linux.get("ok", False)
+            and windows.get("ok", False)
+            and windows_archive_result.get("ok", False)
+        ),
         "package": {key: value for key, value in package.items() if key != "output"},
         "linux": linux,
         "windows": windows,
+        "windows_archive": windows_archive_result,
         "user_data_policy": "program uninstall preserves Godot user-data directories",
         "does_not_claim": [
             "code signing or package signing",
@@ -306,10 +656,18 @@ def main() -> int:
     summary = {
         "ok": report["ok"],
         "linux_install_boot_uninstall": linux.get("ok", False),
+        "linux_upgrade_rollback_exact": bool(linux.get("precommit_rollback_exact") and linux.get("commit_rollback_exact")),
         "linux_user_data_preserved": linux.get("user_data_preserved", False),
         "windows_install_boot_uninstall": windows.get("ok", False),
+        "windows_upgrade_rollback_exact": bool(windows.get("precommit_rollback_exact") and windows.get("commit_rollback_exact")),
         "windows_user_data_preserved": windows.get("user_data_preserved", False),
         "windows_boot_markers": windows.get("boot_markers", {}),
+        "windows_archive_install_boot_uninstall": windows_archive_result.get("ok", False),
+        "windows_archive_upgrade_rollback_exact": bool(
+            windows_archive_result.get("precommit_rollback_exact")
+            and windows_archive_result.get("commit_rollback_exact")
+        ),
+        "windows_archive_user_data_preserved": windows_archive_result.get("user_data_preserved", False),
         "report": str(REPORT_PATH.relative_to(ROOT)),
     }
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")

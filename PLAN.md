@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `packaging-transactional-cross-platform-upgrade-10184`. Linux, Windows archive, and generated NSIS installers now stage and verify a complete manifest-owned payload before replacing an owned live install, remove obsolete prior-manifest files, and restore the prior bootable program set after an injected commit failure. Fresh install, same-version reinstall, A-to-B upgrade, unowned-directory refusal, user-data preservation, and uninstall behavior are matched across Linux and Wine validation. This does not claim signing, native Windows hardware certification, public release execution, stable-channel completion, or overall release readiness.
 - Completed implementation slice: `combat-sunvault-aurora-relay-front-10184`. Aurora Bastions' Aurora Facet Wall now screens allied ranged stacks by four percent against melee attackers carrying the authored `bloodrush` committed-assault contract while a Bastion survives. Live damage, tactical-AI estimates, role summaries, the fast benchmark, and focused runtime proof share the same content-owned field without adding inert metadata to normalized battle state. Generic four-percent and one-percent screens were rejected because each increased ordinary outliers from 28 to 30. The accepted all-live matrix keeps 28 outliers, lowers excess severity from 162.5 to 161.0, preserves four rows at or above 65 percent, 68.5 percent maximum dominance, 4.13-point maximum side bias, and zero structural failures, and improves week-four Embercourt/Sunvault from 67.5/32.5 to 66/34. The 59-encounter queue remains clear at signature `829808c9`; focused ability, autoplay, runtime consequence, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Sunvault identity, final faction balance, or overall release completion.
 - Completed implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184`. Production Prism Adepts now own Refraction Volley and receive the missing two-percent linked ranged screen while a Shard Warden survives. The all-live matrix remains at 28 outliers and four severe rows while excess severity improves from 161.0 to 158.0, side bias improves from 4.13 to 4.07, maximum dominance remains 68.5, and structural failures remain zero. The 59-encounter active queue remains clear at signature `829808c9`; faction balance remains `needs_tuning` and the game remains incomplete.
 - Completed implementation slice: `combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184`. Successful Boiler Rivetcaster ranged attacks now throw up to ten damage into one deterministic enemy adjacent to the primary target, then apply a two-round shared Overheated state that reduces initiative by one and does not refresh before recovery. Live rules, tactical AI, summaries, events, benchmark behavior, content validation, and focused runtime proof share the authored contract. The all-live matrix remains at 28 outliers while severity improves from 158.0 to 153.0, severe rows fall from four to two, maximum dominance improves from 68.5 to 68.0, side bias remains 4.07, and structural failures remain zero. Week-three Brasshollow/Embercourt improves from `31.5/68.5` to `37/63`; the 59-encounter queue remains clear at signature `829808c9`. Faction balance remains `needs_tuning` and the game remains incomplete.
@@ -2824,6 +2825,41 @@ Result:
 - the battle shell adds one compact confirmed command whose dialog names permanent casualty, mana, outcome, and objective consequences; controller B/Back cancels without mutation and restores command focus;
 - focused runtime proof resolves two identical Hollow Mire sessions to byte-identical terminal state in four steps, spends mana `16 -> 1`, syncs casualties `15 -> 5`, grants `180` gold and `2` ore, clears the objective, and never chooses retreat or surrender;
 - zero-step/no-battle failures are non-mutating, a one-step limit preserves a normalizable live battle, the 59 active encounters remain clear at `829808c9`, and the shared headless harness remains `ba73a1f3`.
+
+## Transactional Cross-Platform Installer Upgrade
+
+id: `packaging-transactional-cross-platform-upgrade-10184`
+
+Status: completed.
+
+Selected Phase 6 release-safety slice. Linux shell, Windows archive, and generated
+NSIS installers currently copy directly into the live program directory. A
+failed or membership-changing reinstall can therefore leave mixed executable,
+PCK, native-library, and sidecar versions.
+
+Implementation target:
+- stage the complete new manifest-owned payload beside the live install and verify every bounded path, size, and SHA-256 identity before commit;
+- accept an existing install only when its ownership marker and prior bounded release manifest are valid;
+- atomically replace the owned program set, delete files owned only by the prior manifest, and restore the prior exact program set after an injected commit failure;
+- keep launcher/shortcut publication outside the live commit and preserve Godot saves, settings, generated maps, and logs outside the program directory;
+- keep Linux shell, Windows archive, and generated NSIS ownership and recovery semantics matched.
+
+Completion criteria:
+- fresh install, same-version reinstall, and sequential A-to-B upgrades install the exact B manifest/build identity with no stale A-only sidecar;
+- deterministic pre-commit and commit-failure injection leaves A exact and bootable;
+- missing/invalid payloads and nonempty unowned install directories fail closed without mutation;
+- user-data sentinels survive upgrade and uninstall, while uninstall removes only owned program and launcher/shortcut files;
+- Linux, Wine/Windows archive, generated NSIS, artifact verification, packaged boot, repository, Python, JSON, shell syntax, and diff gates pass.
+
+Non-goals:
+- no signing, public release creation/promotion, stable-channel policy, native Windows hardware certification, save schema, gameplay/content/balance, strategic AI, or Native RMG changes;
+- no silent adoption or recursive deletion of an unowned directory and no broad release-completion claim.
+
+Result:
+- Linux shell, Windows archive/CMD, and generated NSIS installers now verify exact bounded manifest membership before staging, accept only owned prior roots, commit through sibling program directories, remove stale prior-only rows, and restore byte-exact prior program sets for both precommit and after-backup failure injection;
+- the Windows archive uses a shipped deterministic BCrypt helper for strict manifest parsing, SHA-256, exact-root verification, bounded copying, and owned removal, avoiding PowerShell and Wine-incompatible batch parsing;
+- uninstall refuses unexpected program-root entries, removes only verified owned files and launchers/shortcuts, and preserves external Godot saves, settings, generated maps, and logs;
+- the real-export lifecycle passes Linux `.run`, Windows NSIS, and Windows archive/CMD fresh install, idempotent reinstall, rollback, upgrade, packaged boot, and uninstall with all three paths reporting `ok:true`.
 
 ## Phase Roadmap
 

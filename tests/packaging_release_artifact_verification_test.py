@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import stat
 import subprocess
 import sys
@@ -119,6 +120,34 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
             ),
             encoding="ascii",
         )
+
+    def _generated_nsis_sources(self) -> tuple[str, str, dict]:
+        self._package()
+        archive_path = self.output / "archives" / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        extract_root = Path(self.temp.name) / "nsis-source"
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            archive.extractall(extract_root)
+        bundle_root = extract_root / f"heroes-like-{VERSION}-windows-x86_64"
+        manifest = json.loads((bundle_root / "release-manifest.json").read_text(encoding="utf-8"))
+        destination = extract_root / "generated.setup.exe"
+        captured: dict[str, str] = {}
+
+        def fake_makensis(args: list[str], timeout: int = 900) -> None:
+            del timeout
+            script_path = Path(args[-1])
+            captured["script"] = script_path.read_text(encoding="utf-8")
+            captured["ownership"] = (script_path.parent / "heroes-like-ownership.ini").read_text(encoding="ascii")
+            destination.write_bytes(b"MZ" + b"transactional-nsis-test")
+
+        with mock.patch.object(package_release_module, "run", side_effect=fake_makensis):
+            package_release_module.create_windows_nsis_installer(
+                bundle_root,
+                destination,
+                VERSION,
+                "makensis-test",
+                manifest,
+            )
+        return captured["script"], captured["ownership"], manifest
 
     def test_generated_archives_verify_and_tampering_is_rejected(self) -> None:
         self._package()
@@ -383,6 +412,144 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         self.assertIn("Heroes Like.cmd", install_cmd)
         setup_head = windows_installer.read_bytes()[:4096]
         self.assertEqual(setup_head[:2], b"MZ")
+
+    def test_generated_nsis_uses_verified_transaction_and_owned_uninstall(self) -> None:
+        script, ownership, manifest = self._generated_nsis_sources()
+        required_script_tokens = (
+            'SetOutPath "$PLUGINSDIR\\payload"',
+            "heroes-like-installer-helper.exe",
+            "!insertmacro VERIFY_FILE",
+            'ReadEnvStr $3 "HEROES_LIKE_INSTALL_FAIL_PHASE"',
+            'StrCmp $3 "precommit" injected_precommit',
+            'StrCmp $3 "after_backup" injected_after_backup',
+            'Rename "$INSTDIR" "$2"',
+            'Rename "$2" "$INSTDIR"',
+            "Call VerifyOwnedRoot",
+            "Call un.VerifyOwnedRoot",
+            "dynamic bounded manifest/hash/exact-root verification",
+            'verify "$INSTDIR\\release-manifest.json" "$INSTDIR" windows-x86_64',
+            'release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe',
+            'FileWrite $TxHandle "heroes-like-user-local-install-v1',
+            'CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"',
+            'SetOutPath "$TEMP"',
+        )
+        for token in required_script_tokens:
+            self.assertIn(token, script)
+        self.assertLess(script.index("staged_verification_failed"), script.index('Rename "$INSTDIR" "$2"'))
+        self.assertLess(script.index('Rename "$1" "$INSTDIR"'), script.index("CreateShortcut"))
+        self.assertIn('CopyFiles /SILENT "$PLUGINSDIR\\payload\\README.txt" "$1"', script)
+        self.assertNotIn('CopyFiles /SILENT "$PLUGINSDIR\\payload\\README.txt" "$1\\README.txt"', script)
+        self.assertIn('commit_candidate_failed_0:\n  RMDir /r "$1"', script)
+        uninstall = script.split('Section "Uninstall"', 1)[1]
+        self.assertLess(uninstall.index("Call un.VerifyOwnedRoot"), uninstall.index('Delete "$INSTDIR'))
+        self.assertNotIn('RMDir /r "$INSTDIR"', uninstall)
+        self.assertIn("Schema=heroes-like-windows-install-ownership-v1", ownership)
+        self.assertIn("Marker=heroes-like-user-local-install-v1", ownership)
+        expected_rows = [*manifest["files"], {
+            "path": "release-manifest.json",
+            "size_bytes": None,
+            "sha256": None,
+        }]
+        for row in expected_rows:
+            self.assertIn(f"Path={row['path']}", ownership)
+            if row["size_bytes"] is not None:
+                self.assertIn(f"Size={row['size_bytes']}", ownership)
+                self.assertIn(f"Sha256={row['sha256']}", ownership)
+        helper_rows = [row for row in manifest["files"] if row["path"] == "heroes-like-installer-helper.exe"]
+        self.assertEqual(len(helper_rows), 1)
+
+    def test_windows_nsis_rejects_compile_time_manifest_identity_disagreement(self) -> None:
+        self._package()
+        archive_path = self.output / "archives" / f"heroes-like-{VERSION}-windows-x86_64.zip"
+        extract_root = Path(self.temp.name) / "nsis-negative"
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            archive.extractall(extract_root)
+        bundle_root = extract_root / f"heroes-like-{VERSION}-windows-x86_64"
+        manifest = json.loads((bundle_root / "release-manifest.json").read_text(encoding="utf-8"))
+        manifest["files"][0]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(RuntimeError, "identity mismatch"):
+            package_release_module.windows_nsis_payload_rows(bundle_root, manifest)
+
+    def test_windows_installer_helper_strict_copy_and_owned_remove(self) -> None:
+        wine = shutil.which("wine")
+        if wine is None:
+            self.skipTest("Wine is required for the Windows installer helper runtime contract")
+        probe_root = Path(self.temp.name) / "helper probe with spaces"
+        source = probe_root / "source root"
+        destination = probe_root / "destination root"
+        source.mkdir(parents=True)
+        (source / "alpha.exe").write_bytes(b"alpha")
+        (source / "beta.pck").write_bytes(b"beta payload")
+        rows = []
+        for name in ("alpha.exe", "beta.pck"):
+            path = source / name
+            rows.append({
+                "path": name,
+                "sha256": sha256(path),
+                "size_bytes": path.stat().st_size,
+            })
+        manifest = {
+            "files": rows,
+            "platform": "windows-x86_64",
+            "product_id": "heroes-like",
+            "schema_id": "heroes_like_platform_release_manifest_v2",
+            "source_date_epoch": 315532800,
+            "source_revision": SOURCE_REVISION,
+            "version": VERSION,
+        }
+        manifest_path = source / "release-manifest.json"
+        manifest_text = json.dumps(manifest, indent=2, sort_keys=True) + "\n"
+        manifest_path.write_text(manifest_text, encoding="utf-8")
+        helper = probe_root / "heroes-like-installer-helper.exe"
+        package_release_module.build_windows_installer_helper(helper)
+        env = os.environ.copy()
+        env.update({"WINEDEBUG": "-all", "WINEPREFIX": str(probe_root / "wine-prefix")})
+
+        def helper_run(*args: object) -> subprocess.CompletedProcess[str]:
+            return subprocess.run(
+                [wine, str(helper), *(str(value) for value in args)],
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                check=False,
+                timeout=120,
+            )
+
+        copied = helper_run("copy", manifest_path, source, destination, "windows-x86_64")
+        self.assertEqual(copied.returncode, 0, msg=copied.stdout)
+        verified = helper_run(
+            "verify", destination / "release-manifest.json", destination,
+            "windows-x86_64", "release-manifest.json",
+        )
+        self.assertEqual(verified.returncode, 0, msg=verified.stdout)
+        intruder = destination / "unowned-sentinel.txt"
+        intruder.write_text("preserve", encoding="utf-8")
+        refused = helper_run(
+            "remove", destination / "release-manifest.json", destination,
+            "windows-x86_64", "release-manifest.json",
+        )
+        self.assertNotEqual(refused.returncode, 0, msg=refused.stdout)
+        self.assertTrue((destination / "alpha.exe").is_file())
+        removed = helper_run(
+            "remove", destination / "release-manifest.json", destination,
+            "windows-x86_64", "release-manifest.json", intruder.name,
+        )
+        self.assertEqual(removed.returncode, 0, msg=removed.stdout)
+        self.assertFalse((destination / "alpha.exe").exists())
+        self.assertFalse((destination / "beta.pck").exists())
+        self.assertEqual(intruder.read_text(encoding="utf-8"), "preserve")
+
+        truncated = probe_root / "truncated-manifest.json"
+        truncated.write_text(manifest_text[:manifest_text.index('  "platform"')], encoding="utf-8")
+        self.assertNotEqual(helper_run("list", truncated, "windows-x86_64").returncode, 0)
+        injected = probe_root / "injected-manifest.json"
+        injected.write_text(
+            manifest_text.rstrip()[:-1] + ', "path": "alpha.exe", "sha256": "' +
+            ("0" * 64) + '", "size_bytes": 5}\n',
+            encoding="utf-8",
+        )
+        self.assertNotEqual(helper_run("list", injected, "windows-x86_64").returncode, 0)
 
 
 if __name__ == "__main__":
