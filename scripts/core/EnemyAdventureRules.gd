@@ -5484,6 +5484,16 @@ static func _redirect_raid_to_threatened_town_defense(
 	var active_reason_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if "active_front_support" in active_reason_codes or "awaiting_support" in active_reason_codes or String(raid.get("supporting_front_placement_id", "")) != "":
 		return raid
+	var current_is_town_defense := (
+		String(raid.get("target_kind", "")) == "town"
+		and "town_defense" in active_reason_codes
+	)
+	if current_is_town_defense:
+		var refreshed_defense := _refresh_target(session, raid, faction_id, preloaded_path_context)
+		if int(refreshed_defense.get("goal_distance", 9999)) >= 9999:
+			raid = _release_unreachable_town_defense_assignment(session, config, refreshed_defense)
+		else:
+			raid = refreshed_defense
 	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id, preloaded_path_context)
 	if defense_town.is_empty():
 		return raid
@@ -5494,7 +5504,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	var current_id := String(raid.get("target_placement_id", ""))
 	var current_codes := _normalize_string_array(raid.get("target_reason_codes", []))
 	if current_kind == "town" and current_id == town_id and "town_defense" in current_codes:
-		return _refresh_target(session, raid, faction_id, preloaded_path_context)
+		return raid
 	raid["previous_target_kind"] = current_kind
 	raid["previous_target_placement_id"] = current_id
 	raid["previous_target_label"] = String(raid.get("target_label", ""))
@@ -5520,6 +5530,16 @@ static func _redirect_raid_to_threatened_town_defense(
 	raid["town_defense_started_day"] = int(session.day)
 	raid["town_defense_front_id"] = commander_role_front_id(String(session.scenario_id), "town", town_id)
 	return _refresh_target(session, raid, faction_id, preloaded_path_context)
+
+static func _release_unreachable_town_defense_assignment(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary
+) -> Dictionary:
+	var released := _clear_regroup_target(raid.duplicate(true))
+	released.erase("town_defense_started_day")
+	released.erase("town_defense_front_id")
+	return assign_target(session, config, released)
 
 static func _best_threatened_defense_town(
 	session: SessionStateStoreScript.SessionData,
@@ -5551,6 +5571,8 @@ static func _best_threatened_defense_town(
 		var distance := _path_distance_with_context(preloaded_path_context, current, staging_tiles) \
 			if not preloaded_path_context.is_empty() \
 			else _path_distance(session, current, staging_tiles, String(raid.get("placement_id", "")), faction_id)
+		if distance >= 9999:
+			continue
 		var defense_need := _town_defense_commitment_need(town, front_state)
 		var current_defense := _town_garrison_strength(town)
 		var committed_defense := _committed_town_defense_strength(

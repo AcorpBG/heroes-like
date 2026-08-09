@@ -28,7 +28,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 - Completed implementation slice: `combat-sunvault-prism-adept-refraction-volley-10184`. Production Prism Adepts now own Refraction Volley and receive the missing two-percent linked ranged screen while a Shard Warden survives. The all-live matrix remains at 28 outliers and four severe rows while excess severity improves from 161.0 to 158.0, side bias improves from 4.13 to 4.07, maximum dominance remains 68.5, and structural failures remain zero. The 59-encounter active queue remains clear at signature `829808c9`; faction balance remains `needs_tuning` and the game remains incomplete.
 - Completed implementation slice: `combat-brasshollow-boiler-rivetcaster-pressure-artillery-10184`. Successful Boiler Rivetcaster ranged attacks now throw up to ten damage into one deterministic enemy adjacent to the primary target, then apply a two-round shared Overheated state that reduces initiative by one and does not refresh before recovery. Live rules, tactical AI, summaries, events, benchmark behavior, content validation, and focused runtime proof share the authored contract. The all-live matrix remains at 28 outliers while severity improves from 158.0 to 153.0, severe rows fall from four to two, maximum dominance improves from 68.5 to 68.0, side bias remains 4.07, and structural failures remain zero. Week-three Brasshollow/Embercourt improves from `31.5/68.5` to `37/63`; the 59-encounter queue remains clear at signature `829808c9`. Faction balance remains `needs_tuning` and the game remains incomplete.
 - Completed implementation slice: `combat-embercourt-lantern-sapper-counter-ambush-flare-10184`. A living Lantern Sapper now removes the authored bonus from enemy backstab and fogwake attacks against its side, prevents Fogbound, and flare-reveals a denied fogwake attacker for one round with `-1` defense and initiative. The focused runtime report passes all `106/106` authored ability instances, including lethal fogwake, dead/duplicate/stripped source, unrelated ability, direct-damage, player-summary, tactical-AI, and event paths. The all-live matrix remains exactly at 28 outliers / `153.0` severity / two rows at or above 65 percent / `68.0` maximum dominance / `4.07` side bias / zero structural failures. The originally cited week-three Embercourt/Mireclaw row remains `32/68` because Mireclaw owns neither countered ability and was removed as an invalid causal completion target; actual Embercourt/Veilmourn rows move at weeks one and four from `53.5/46.5` to `55/45` and `48/52` to `48.5/51.5`. The 59-encounter queue remains clear at signature `829808c9`; faction balance and overall release completion remain open.
-- Next registered implementation slice: `combat-mireclaw-early-ladder-identity-10184` (pending). Implement the faction-bible tier-one through tier-three Reedsnare, Mudglass, and Bogplate setup/payoff chain through generic live statuses and tactical-AI behavior, then screen the real week-two Mireclaw/Sunvault `34.5/65.5` deficit without matchup checks or base-stat tuning.
+- Completed implementation slice: `strategic-ai-unreachable-town-defense-retask-10184`. Enemy raid hosts now reject unreachable stabilizing-town defense candidates and release an existing town-defense assignment if its route closes, clearing stale defense lifecycle fields before deterministic retargeting. Focused proof covers both transitions while preserving reachable defense, arrival, overcommit, resource defense, movement, and emergency launch behavior. The shared headless harness and strategic baseline remain green; core, parse, repository, JSON, and diff gates pass. The unrelated town-retake fixture still fails identically on committed HEAD because it asserts the transient regroup target after the raid has already reached the adjacent redoubt, reinforced, and resumed its prior target in the same turn.
 - Completed corrective validation slice: `strategic-ai-role-state-fixture-reconciliation-10184`. The commander role-state report now matches the unchanged live full-breakdown target surface: River Signal Post and Glassroad Watch Relay both rank third, while the two Free Company cases and memory-continuity target remain first. Eight cases and the compact public leak check pass. Case execution is fail-fast; a forced first-case mismatch emits exactly one report/engine error with no script or later-case errors. Core, editor parse, repository, JSON, and diff gates pass. This changes no strategic-AI runtime behavior and is not gameplay implementation progress.
 - Completed implementation slice: `combat-veilmourn-undertow-screen-snare-10184`. Undertow Harpooners' Mourning Nets now gain an authored 1.25 ranged payoff and 2.0 tactical target bonus only against rigid `snare_vulnerable` screens; Ledger Plate, Rivet Hide, and Furnace Screen opt in while ordinary shields remain exact. The implementation resolves new metadata from immutable unit content instead of normalized battle state, preserving unrelated deterministic battle hashes. The all-live 100-seed four-week matrix keeps 28 outliers and 68.5 percent maximum dominance, lowers excess severity from 172.0 to 162.5 and rows at or above 65 percent from five to four, moves week-two Brasshollow/Veilmourn from 68/32 to 55.5/44.5 and week three from 55/45 to 50.5/49.5, and has zero structural failures; the existing week-four Veilmourn lead increases from 58.5 to 61.5 percent. Focused ability, autoplay, 59-encounter clear-queue, core, parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; this is not final Veilmourn identity, final faction balance, or overall release completion.
 - Completed implementation slice: `strategic-ai-live-resource-target-view-reuse-10184`. Live hero-task resource selection now reuses each already scored candidate's normalized reasons, public importance, and debug reason when constructing its commander role view, while ordinary report callers retain the full resource score breakdown. Focused proof matches all 15 behavior-facing fields and keeps the intended Free Company/Signal Post reservation outcomes exact. Medium ordinal 99 preserves row signature `59262e55`, all 171 activity events, 37 turns, the same defeat outcome, and zero behavior, integrity, or reachability failures; local row runtime falls from 298228 to 296997 ms and accumulated target-assignment time from 50029 to 49886 ms across 74 samples. This is a bounded redundant-score cleanup, not broad strategic-AI performance completion or overall release completion.
@@ -2756,6 +2756,38 @@ Before starting any worker:
 5. On completion, record validation/evidence in `ops/progress.json`; do not paste the evidence block into this file.
 
 If a requested task is not represented by a valid slice, first add or reconcile a compact slice entry. Do not invent untracked ad hoc implementation work.
+
+## Strategic AI Unreachable Town-Defense Retask
+
+id: `strategic-ai-unreachable-town-defense-retask-10184`
+
+Status: completed.
+
+Selected Phase 6 strategic-AI correctness slice. Town-defense candidate scoring
+currently accepts the pathfinder's unreachable sentinel while resource defense
+rejects it, and generic unreachable-target repair exempts defense assignments.
+That can repeatedly refresh an active raid at `goal_distance=9999` instead of
+preserving real pressure.
+
+Implementation target:
+- exclude unreachable owned towns before a new defense retask is scored;
+- release or retarget an existing town-defense assignment when its route becomes unreachable;
+- preserve reachable town defense, overcommit limits, public-safe events, movement, saves, combat, content, and Native RMG behavior.
+
+Completion criteria:
+- focused deterministic proof covers both an initially unreachable stabilizing town and a reachable assignment whose route later closes;
+- no active raid adopts or preserves `town_defense` with `goal_distance=9999`;
+- the existing reachable retask, arrival, overcommit, raid movement, strategic-AI baseline, core, parse, repository, JSON, and diff gates pass.
+
+Non-goals:
+- no scoring-coefficient, faction-personality, map-topology, content, economy, combat, save-schema, packaging, or Native RMG changes;
+- no long-run matrix accumulation or broad strategic-AI/release completion claim.
+
+Result:
+- unreachable Duskfen defense is rejected while the raid preserves reachable Free Company pressure at distance 6;
+- a valid Duskfen defense whose route later closes is observed at distance 9999, releases its defense lifecycle, and deterministically retargets to Free Company at distance 6;
+- the focused report retains every reachable town/resource defense, arrival, overcommit, stationing, release, battle, and emergency launch case;
+- the shared headless harness passes at signature `ba73a1f3` and the strategic baseline passes at `dfa6d3fd`; remaining warning/deferred states are the known generated-map provenance and Medium long-run coverage gaps.
 
 ## Phase Roadmap
 
