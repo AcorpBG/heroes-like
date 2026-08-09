@@ -7,11 +7,11 @@ const PLACEMENT_IDS := ["barrow_pickets", "reedbarrow_chain", "reedbarrow_levee_
 const LOCAL_ARMY_CONTRACTS := {
 	"barrow_pickets": {
 		"army_id": "army_reedbarrow_barrow_pickets_watch",
-		"stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 10},
+		"stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 8},
 	},
 	"reedbarrow_chain": {
 		"army_id": "army_reedbarrow_chain_watch",
-		"stack_counts": {"unit_bog_brute": 5, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
+		"stack_counts": {"unit_bog_brute": 3, "unit_mire_slinger": 7, "unit_blackbranch_cutthroat": 5},
 	},
 }
 const SHARED_ARMY_CONTRACTS := {
@@ -20,9 +20,9 @@ const SHARED_ARMY_CONTRACTS := {
 	"army_muckveil_harriers": {"unit_mire_slinger": 10, "unit_blackbranch_cutthroat": 6, "unit_gorefen_ripper": 2},
 }
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"barrow_pickets": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 58, "enemy_damage_per_round": 7},
-	"reedbarrow_chain": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 17, "enemy_damage_per_round": 21},
-	"reedbarrow_levee_totemists": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 30, "enemy_damage_per_round": 18},
+	"barrow_pickets": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 68, "enemy_damage_per_round": 7},
+	"reedbarrow_chain": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 42},
+	"reedbarrow_levee_totemists": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 58, "enemy_damage_per_round": 13},
 }
 
 func _ready() -> void:
@@ -49,7 +49,7 @@ func _run() -> void:
 		payload["samples"].append(_compact_sample(placement_id, sample))
 		var expected: Dictionary = UNCHANGED_SAMPLE_CONTRACTS[placement_id]
 		if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != String(expected.get("outcome_state", "")) or String(sample.get("pacing_band", "")) != String(expected.get("pacing_band", "")) or int(sample.get("round_reached", 0)) != int(expected.get("round_reached", -1)) or int(sample.get("terminal_health_margin_pct", -1)) != int(expected.get("terminal_health_margin_pct", -1)) or int(sample.get("damage_per_round", {}).get("enemy", -1)) != int(expected.get("enemy_damage_per_round", -1)):
-			failures.append("%s changed outside the Barrow Pickets correction" % placement_id)
+			failures.append("%s drifted from its post-RNG deterministic contract" % placement_id)
 	if not failures.is_empty():
 		payload["ok"] = false
 		payload["failures"] = failures

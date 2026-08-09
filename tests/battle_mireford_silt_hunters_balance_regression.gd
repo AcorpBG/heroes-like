@@ -4,7 +4,11 @@ const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/Batt
 const REPORT_ID := "BATTLE_MIREFORD_SILT_HUNTERS_BALANCE_REGRESSION"
 const SCENARIO_ID := "mireford-skirmish"
 const PLACEMENT_ID := "bridge_silt_hunters"
-const MAX_TERMINAL_MARGIN_PCT := 90
+const LOCAL_ARMY_ID := "army_mireford_silt_hunters_watch"
+const LOCAL_STACK_COUNTS := {"unit_bog_brute": 6, "unit_blackbranch_cutthroat": 9, "unit_mire_slinger": 5}
+const SHARED_ARMY_ID := "army_silt_hunters"
+const SHARED_STACK_COUNTS := {"unit_bog_brute": 4, "unit_blackbranch_cutthroat": 7}
+const MAX_TERMINAL_MARGIN_PCT := 74
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -13,6 +17,14 @@ func _run() -> void:
 	var encounter := _encounter()
 	if encounter.is_empty():
 		_fail("Mireford Skirmish is missing the Silt Hunters placement.", {})
+		return
+	var local_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+	var shared_army := ContentService.get_army_group(SHARED_ARMY_ID)
+	if String(local_army.get("id", "")) != LOCAL_ARMY_ID or _stack_counts(local_army) != LOCAL_STACK_COUNTS:
+		_fail("Mireford Silt Hunters placement-local army drifted from its bounded pressure roster.", {})
+		return
+	if String(shared_army.get("id", "")) != SHARED_ARMY_ID or _stack_counts(shared_army) != SHARED_STACK_COUNTS:
+		_fail("Shared Silt Hunters army changed with the placement-local correction.", {})
 		return
 	var sample := BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
 	var payload := {
@@ -47,6 +59,13 @@ func _encounter() -> Dictionary:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == PLACEMENT_ID:
 			return encounter
 	return {}
+
+func _stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack in army.get("stacks", []):
+		if stack is Dictionary:
+			counts[String(stack.get("unit_id", ""))] = int(stack.get("count", 0))
+	return counts
 
 func _fail_sample(message: String, payload: Dictionary, sample: Dictionary) -> void:
 	payload["turn_log"] = sample.get("turn_log", [])

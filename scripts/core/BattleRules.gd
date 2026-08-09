@@ -35,6 +35,11 @@ const PRESENTATION_SPEED_NORMAL := "normal"
 const PRESENTATION_SPEED_FAST := "fast"
 const PRESENTATION_SPEED_INSTANT := "instant"
 const PRESENTATION_SPEEDS := [PRESENTATION_SPEED_NORMAL, PRESENTATION_SPEED_FAST, PRESENTATION_SPEED_INSTANT]
+const DAMAGE_RNG_VERSION_KEY := "damage_rng_version"
+const DAMAGE_RNG_STATE_KEY := "damage_rng_state"
+const DAMAGE_RNG_ROLL_COUNT_KEY := "damage_rng_roll_count"
+const DAMAGE_RNG_INTEGRITY_KEY := "damage_rng_integrity"
+const DAMAGE_RNG_VERSION := 1
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
@@ -276,6 +281,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 
 	battle["stacks"] = stacks
 	_ensure_battle_hex_state(battle)
+	_initialize_damage_rng_state(session, battle)
 	_prepare_round(battle, 1)
 	buckets["stacks_and_round"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "payload", "create_battle_payload", ProfileLogScript.elapsed_ms(profile_started), buckets, {
@@ -1186,6 +1192,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	session.battle[TACTICAL_BRIEFING_KEY] = _normalize_tactical_briefing_state(session.battle.get(TACTICAL_BRIEFING_KEY, {}), session)
 	session.battle["round"] = max(1, int(session.battle.get("round", 1)))
 	session.battle["max_rounds"] = max(1, int(session.battle.get("max_rounds", 12)))
+	_ensure_damage_rng_state(session, session.battle)
 	session.battle[COMMANDER_SPELL_CAST_ROUNDS_KEY] = _normalize_commander_spell_cast_rounds(
 		session.battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
 	)
@@ -4035,9 +4042,12 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	if not target.is_empty() and _has_ability(stack, "bloodrush"):
 		var bloodrush := _ability_by_id(stack, "bloodrush")
 		if _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)) \
-				or SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+				or SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])) \
+				or (float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0 and _stack_is_hex_isolated(battle, target)):
 			return "Bloodrush is live through the prepared breach and can snowball momentum."
 		if float(bloodrush.get("clean_target_damage_multiplier", 1.0)) < 1.0:
+			if float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0:
+				return "Bloodrush needs wounded, disrupted, or isolated prey; a clean primary attack loses force."
 			return "Bloodrush needs a wounded or disrupted breach; a clean primary attack loses force."
 	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "shielding").get("payoff_status_ids", [STATUS_HARRIED])):
 		return "Shielding bites harder into a marked target once the line closes."
@@ -4179,9 +4189,12 @@ static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battl
 			]
 		"bloodrush":
 			var clean_penalty_pct := int(round((1.0 - float(ability.get("clean_target_damage_multiplier", 1.0))) * 100.0))
-			var target_is_prepared := target_is_marked or (not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)))
-			return "%s hits harder through wounded or disrupted lines%s%s" % [
+			var isolated_payoff := float(ability.get("isolated_damage_multiplier", 1.0)) > 1.0
+			var target_is_isolated := isolated_payoff and not target.is_empty() and _stack_is_hex_isolated(battle, target)
+			var target_is_prepared := target_is_marked or target_is_isolated or (not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)))
+			return "%s hits harder through wounded or disrupted lines%s%s%s" % [
 				name,
+				" or against isolated prey" if isolated_payoff else "",
 				" now" if target_is_prepared else "",
 				"; clean primary attacks lose %d%% damage" % clean_penalty_pct if clean_penalty_pct > 0 else "",
 			]
@@ -5807,9 +5820,7 @@ static func _resolve_attack_action(
 	elif not _can_make_melee_attack(attacker, session.battle, target):
 		return {"ok": false, "message": "This stack cannot reach that target.", "state": "invalid"}
 
-	var rng = RandomNumberGenerator.new()
-	rng.seed = _battle_seed(session)
-	rng.state = _battle_state_counter(session)
+	var rng := _damage_rng_for_battle(session)
 
 	var messages = []
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
@@ -6382,9 +6393,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 			return {"ok": false, "message": "", "state": "invalid"}
 	elif not _can_make_melee_attack(attacker, session.battle, target):
 		return {"ok": false, "message": "", "state": "invalid"}
-	var rng = RandomNumberGenerator.new()
-	rng.seed = _battle_seed(session)
-	rng.state = _battle_state_counter(session)
+	var rng := _damage_rng_for_battle(session)
 	var messages = []
 	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
@@ -8598,6 +8607,7 @@ static func _calculate_damage(
 ) -> int:
 	var attacker_count = max(1, _alive_count(attacker))
 	var base_roll = rng.randi_range(int(attacker.get("min_damage", 1)), max(int(attacker.get("min_damage", 1)), int(attacker.get("max_damage", 1))))
+	_commit_damage_rng_roll(battle, rng)
 	var base_damage = attacker_count * base_roll
 	var modifier = _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
 	return max(1, int(round(base_damage * modifier)))
@@ -9765,16 +9775,35 @@ static func _ability_damage_modifier(
 		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush = _ability_by_id(attacker, "bloodrush")
-	var bloodrush_prepared := not bloodrush.is_empty() and (
-		_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
-		or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
-	)
-	if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
-		modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
-		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
-		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+	if not bloodrush.is_empty() and bool(bloodrush.get("primary_melee_only", false)):
+		var bloodrush_attack_eligible := not is_ranged and not is_retaliation
+		var bloodrush_isolated := bloodrush_attack_eligible \
+			and float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0 \
+			and _stack_is_hex_isolated(battle, defender)
+		var bloodrush_prepared := (
+			_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+			or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+			or bloodrush_isolated
+		)
+		if bloodrush_attack_eligible and not bloodrush_prepared:
+			modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
+		if bloodrush_attack_eligible and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
+		if bloodrush_attack_eligible and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+			modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+		if bloodrush_isolated:
+			modifier *= float(bloodrush.get("isolated_damage_multiplier", 1.0))
+	else:
+		var bloodrush_prepared := not bloodrush.is_empty() and (
+			_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+			or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+		)
+		if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
+			modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
+		if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
+		if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+			modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
 
 	var overheat = _ability_by_id(attacker, "overheat")
 	if not overheat.is_empty():
@@ -10400,6 +10429,14 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					"kill_momentum_gain": max(0, int(entry.get("kill_momentum_gain", 0))),
 					"late_round_initiative_bonus": max(0, int(entry.get("late_round_initiative_bonus", 0))),
 				}
+				# Keep optional contract fields absent from legacy Bloodrush entries so
+				# normalized content preserves its authored schema and replay summaries.
+				if entry.has("primary_melee_only"):
+					normalized["primary_melee_only"] = bool(entry.get("primary_melee_only", false))
+				if entry.has("isolated_damage_multiplier"):
+					normalized["isolated_damage_multiplier"] = clampf(float(entry.get("isolated_damage_multiplier", 1.0)), 1.0, 1.25)
+				if entry.has("isolated_ai_target_priority_bonus"):
+					normalized["isolated_ai_target_priority_bonus"] = clampf(float(entry.get("isolated_ai_target_priority_bonus", 0.0)), 0.0, 5.0)
 			"overheat":
 				normalized = {
 					"id": ability_id,
@@ -13265,14 +13302,81 @@ static func _highest_momentum_stack_for_side(battle: Dictionary, side: String) -
 			best_score = score
 	return best
 
-static func _battle_seed(session: SessionStateStoreScript.SessionData) -> int:
-	var seed = int(session.battle.get("combat_seed", 0))
+static func _resolved_damage_seed(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> int:
+	var seed := int(battle.get("combat_seed", 0))
 	if seed != 0:
 		return seed
-	return hash("%s:%s:%d" % [session.session_id, String(session.battle.get("encounter_id", "")), int(session.battle.get("round", 1))])
+	seed = hash("%s:%s:%d" % [session.session_id, String(battle.get("encounter_id", "")), int(battle.get("round", 1))])
+	return seed if seed != 0 else 1
 
-static func _battle_state_counter(session: SessionStateStoreScript.SessionData) -> int:
-	return hash(JSON.stringify(session.battle))
+static func _initialize_damage_rng_state(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> void:
+	var seed := _resolved_damage_seed(session, battle)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	battle["combat_seed"] = seed
+	battle[DAMAGE_RNG_VERSION_KEY] = DAMAGE_RNG_VERSION
+	battle[DAMAGE_RNG_STATE_KEY] = str(rng.state)
+	battle[DAMAGE_RNG_ROLL_COUNT_KEY] = 0
+	battle[DAMAGE_RNG_INTEGRITY_KEY] = _damage_rng_integrity(seed, str(rng.state), 0)
+
+static func _ensure_damage_rng_state(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> void:
+	var version := int(battle.get(DAMAGE_RNG_VERSION_KEY, 0))
+	var state_text := String(battle.get(DAMAGE_RNG_STATE_KEY, "")).strip_edges()
+	var roll_count_value = battle.get(DAMAGE_RNG_ROLL_COUNT_KEY, 0)
+	var roll_count := int(roll_count_value)
+	var has_any_rng_field := (
+		battle.has(DAMAGE_RNG_VERSION_KEY)
+		or battle.has(DAMAGE_RNG_STATE_KEY)
+		or battle.has(DAMAGE_RNG_ROLL_COUNT_KEY)
+		or battle.has(DAMAGE_RNG_INTEGRITY_KEY)
+	)
+	if version == 0 and not has_any_rng_field:
+		_initialize_damage_rng_state(session, battle)
+		return
+	if version != DAMAGE_RNG_VERSION:
+		push_warning("Battle damage RNG version %d is unsupported; reinitializing from the authoritative combat seed." % version)
+		_initialize_damage_rng_state(session, battle)
+		return
+	var seed := _resolved_damage_seed(session, battle)
+	var canonical_state := state_text.is_valid_int() and str(int(state_text)) == state_text
+	var count_type := typeof(roll_count_value)
+	var canonical_count := (
+		count_type in [TYPE_INT, TYPE_FLOAT]
+		and is_equal_approx(float(roll_count_value), float(roll_count))
+		and roll_count >= 0
+	)
+	var expected_integrity := _damage_rng_integrity(seed, state_text, roll_count)
+	if (
+		not canonical_state
+		or not canonical_count
+		or String(battle.get(DAMAGE_RNG_INTEGRITY_KEY, "")) != expected_integrity
+	):
+		push_warning("Battle damage RNG state failed integrity validation; reinitializing from the authoritative combat seed.")
+		_initialize_damage_rng_state(session, battle)
+		return
+	battle["combat_seed"] = seed
+	battle[DAMAGE_RNG_VERSION_KEY] = DAMAGE_RNG_VERSION
+	battle[DAMAGE_RNG_STATE_KEY] = state_text
+	battle[DAMAGE_RNG_ROLL_COUNT_KEY] = roll_count
+	battle[DAMAGE_RNG_INTEGRITY_KEY] = expected_integrity
+
+static func _damage_rng_for_battle(session: SessionStateStoreScript.SessionData) -> RandomNumberGenerator:
+	_ensure_damage_rng_state(session, session.battle)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(session.battle.get("combat_seed", 1))
+	rng.state = int(String(session.battle.get(DAMAGE_RNG_STATE_KEY, "0")))
+	return rng
+
+static func _commit_damage_rng_roll(battle: Dictionary, rng: RandomNumberGenerator) -> void:
+	var state_text := str(rng.state)
+	var roll_count := int(battle.get(DAMAGE_RNG_ROLL_COUNT_KEY, 0)) + 1
+	battle[DAMAGE_RNG_VERSION_KEY] = DAMAGE_RNG_VERSION
+	battle[DAMAGE_RNG_STATE_KEY] = state_text
+	battle[DAMAGE_RNG_ROLL_COUNT_KEY] = roll_count
+	battle[DAMAGE_RNG_INTEGRITY_KEY] = _damage_rng_integrity(int(battle.get("combat_seed", 1)), state_text, roll_count)
+
+static func _damage_rng_integrity(seed: int, state_text: String, roll_count: int) -> String:
+	return ("damage_rng_v%d|%d|%s|%d" % [DAMAGE_RNG_VERSION, seed, state_text, roll_count]).sha256_text()
 
 static func _battle_exit_animation_snapshot(battle: Dictionary, outcome: String) -> Dictionary:
 	if battle.is_empty():

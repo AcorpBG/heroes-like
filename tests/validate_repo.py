@@ -94,6 +94,9 @@ UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
 UNIT_ABILITY_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "unit_ability_runtime_report.tscn"
+BATTLE_DETERMINISTIC_RNG_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_deterministic_rng_state_report.gd"
+BATTLE_DETERMINISTIC_RNG_REPORT_SCENE_PATH = ROOT / "tests" / "battle_deterministic_rng_state_report.tscn"
+BATTLE_DETERMINISTIC_RNG_CONTRACT_PATH = ROOT / "docs" / "battle-deterministic-rng-state-contract.md"
 UNIT_ROSTER_DEPLOYMENT_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_roster_deployment_report.gd"
 UNIT_ROSTER_DEPLOYMENT_REPORT_SCENE_PATH = ROOT / "tests" / "unit_roster_deployment_report.tscn"
 UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_runtime_asset_resolution_report.gd"
@@ -10817,17 +10820,26 @@ def validate_content(errors: list[str]) -> None:
                     ensure(linked_unit_ids == ["unit_sunvault_prism_adepts"], errors, f"Unit {unit_id} resonance_relay must link the Prism Adept stack")
                     ensure(0 < int(ability.get("linked_initiative_bonus", 0)) <= 3, errors, f"Unit {unit_id} resonance_relay linked initiative bonus must be in [1, 3]")
                 elif ability_id == "bloodrush":
+                    if "primary_melee_only" in ability:
+                        ensure(isinstance(ability.get("primary_melee_only"), bool), errors, f"Unit {unit_id} bloodrush primary_melee_only must be boolean")
+                    if bool(ability.get("primary_melee_only", False)):
+                        ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} primary-melee bloodrush must belong to a melee unit")
                     if "clean_target_damage_multiplier" in ability:
                         ensure(0.25 <= float(ability.get("clean_target_damage_multiplier", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush clean_target_damage_multiplier must be between 0.25 and 1")
                     ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush wounded_threshold_ratio must be between 0 and 1")
                     ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} bloodrush wounded_damage_multiplier must be > 1")
                     ensure(isinstance(ability.get("status_ids", []), list) and bool(ability.get("status_ids", [])), errors, f"Unit {unit_id} bloodrush must define status_ids")
                     ensure(float(ability.get("status_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} bloodrush status_damage_multiplier must be > 1")
+                    if "isolated_damage_multiplier" in ability:
+                        ensure(ability.get("primary_melee_only") is True, errors, f"Unit {unit_id} isolated bloodrush must be primary-melee only")
+                        ensure(1.0 < float(ability.get("isolated_damage_multiplier", 0.0)) <= 1.25, errors, f"Unit {unit_id} bloodrush isolated_damage_multiplier must be in (1, 1.25]")
+                        ensure(0.0 < float(ability.get("isolated_ai_target_priority_bonus", 0.0)) <= 5.0, errors, f"Unit {unit_id} isolated bloodrush must define bounded AI target priority")
                     ensure(int(ability.get("wounded_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush wounded_initiative_bonus must be > 0")
                     ensure(int(ability.get("max_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush max_initiative_bonus must be > 0")
-                    ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush momentum_gain must be > 0")
+                    ensure(int(ability.get("momentum_gain", 0)) >= 0, errors, f"Unit {unit_id} bloodrush momentum_gain must be >= 0")
                     ensure(int(ability.get("kill_momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush kill_momentum_gain must be > 0")
-                    ensure(int(ability.get("late_round_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be > 0")
+                    ensure(int(ability.get("momentum_gain", 0)) + int(ability.get("kill_momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush must gain momentum from wounded contact or a kill")
+                    ensure(0 <= int(ability.get("late_round_initiative_bonus", 0)) <= 3, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be between 0 and 3")
                 elif ability_id == "solar_array_lane":
                     ensure(str(unit.get("faction_id", "")) == "faction_sunvault", errors, f"Unit {unit_id} solar_array_lane must belong to Sunvault")
                     ensure(not bool(unit.get("ranged", False)), errors, f"Unit {unit_id} solar_array_lane must belong to a melee screen")
@@ -11137,6 +11149,23 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(sporewake_rot_cant.get("ai_target_priority_bonus", 0.0)) == 1.0, errors, "Sporewake Rot Cant must narrowly prioritize its opening veteran-line shot over a routine commander spell")
     ensure(int(sporewake_rot_cant.get("modifiers", {}).get("retaliation", 0)) < 0, errors, "Sporewake Rot Cant must weaken retaliation")
     ensure(float(sporewake_rot_cant.get("wounded_damage_multiplier", 1.0)) > 1.0, errors, "Sporewake Rot Cant must amplify wounded-prey pressure")
+    mireclaw_rippers = units.get("unit_mireclaw_gorefen_rippers", {})
+    gorefen_cull_rush = next((ability for ability in mireclaw_rippers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Gorefen Cull Rush"), {})
+    ensure(str(gorefen_cull_rush.get("id", "")) == "bloodrush", errors, "Production Gorefen Rippers must own Gorefen Cull Rush as their finisher role")
+    ensure(gorefen_cull_rush.get("primary_melee_only") is True, errors, "Gorefen Cull Rush damage must affect primary melee attacks only")
+    ensure(float(gorefen_cull_rush.get("clean_target_damage_multiplier", 1.0)) == 0.75, errors, "Gorefen Cull Rush must hesitate against clean supported prey")
+    ensure(float(gorefen_cull_rush.get("wounded_threshold_ratio", 0.0)) == 0.25, errors, "Gorefen Cull Rush must recognize its authored execute threshold")
+    ensure(float(gorefen_cull_rush.get("wounded_damage_multiplier", 1.0)) == 1.02, errors, "Gorefen Cull Rush must punish wounded prey")
+    ensure(float(gorefen_cull_rush.get("status_damage_multiplier", 1.0)) == 1.02, errors, "Gorefen Cull Rush must punish disrupted prey")
+    ensure(float(gorefen_cull_rush.get("isolated_damage_multiplier", 1.0)) == 1.02, errors, "Gorefen Cull Rush must punish isolated prey")
+    ensure(float(gorefen_cull_rush.get("isolated_ai_target_priority_bonus", 0.0)) == 0.05, errors, "Gorefen Cull Rush must make tactical AI prefer isolated prey")
+    ensure(int(gorefen_cull_rush.get("momentum_gain", -1)) == 0, errors, "Gorefen Cull Rush must reserve its extra momentum for a finishing kill")
+    ensure(int(gorefen_cull_rush.get("kill_momentum_gain", 0)) == 1, errors, "Gorefen Cull Rush must carry a kill into bounded momentum")
+    ensure(int(gorefen_cull_rush.get("late_round_initiative_bonus", -1)) == 0, errors, "Gorefen Cull Rush must gain initiative from wounded prey rather than an unconditional late-round tier")
+    ensure({"status_mire_harried", "status_harried", "status_staggered"}.issubset({str(value) for value in gorefen_cull_rush.get("status_ids", [])}), errors, "Gorefen Cull Rush must recognize Mireclaw and shared disruption marks")
+    ensure(not any(isinstance(ability, dict) and str(ability.get("id", "")) == "shielding" for ability in mireclaw_rippers.get("abilities", [])), errors, "Production Gorefen Rippers must not retain the contradictory missile-screen ability")
+    ensure("cohesion_hold_bonus" not in gorefen_cull_rush, errors, "Gorefen Cull Rush must not retain cohesion-screen data")
+    ensure("ranged_damage_multiplier" not in gorefen_cull_rush, errors, "Gorefen Cull Rush must not retain ranged mitigation")
     ensure(int(wake_lantern_mark.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Wake-Lantern Mark must drain cohesion")
     ensure(int(wake_lantern_mark.get("momentum_gain", -1)) == 0, errors, "Wake-Lantern Mark must not add momentum")
 
@@ -13939,6 +13968,77 @@ def validate_overworld_fog(errors: list[str]) -> None:
         "func _memory_cell_color",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required fog/scouting token: {required_token}")
+
+
+def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
+    for path in (
+        BATTLE_DETERMINISTIC_RNG_REPORT_SCRIPT_PATH,
+        BATTLE_DETERMINISTIC_RNG_REPORT_SCENE_PATH,
+        BATTLE_DETERMINISTIC_RNG_CONTRACT_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing deterministic battle RNG slice file: {path.relative_to(ROOT)}")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    ensure(
+        "hash(JSON.stringify(session.battle))" not in battle_rules_text,
+        errors,
+        "Battle damage RNG must not derive state from the serialized battle dictionary",
+    )
+    ensure(
+        "_battle_state_counter" not in battle_rules_text,
+        errors,
+        "BattleRules must not retain the misleading whole-battle RNG state counter",
+    )
+    for required_token in (
+        'const DAMAGE_RNG_VERSION_KEY := "damage_rng_version"',
+        'const DAMAGE_RNG_STATE_KEY := "damage_rng_state"',
+        'const DAMAGE_RNG_ROLL_COUNT_KEY := "damage_rng_roll_count"',
+        'const DAMAGE_RNG_INTEGRITY_KEY := "damage_rng_integrity"',
+        "_initialize_damage_rng_state(session, battle)",
+        "_ensure_damage_rng_state(session, session.battle)",
+        "rng.state = int(String(session.battle.get(DAMAGE_RNG_STATE_KEY",
+        "_commit_damage_rng_roll(battle, rng)",
+        "_damage_rng_integrity",
+        "failed integrity validation",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules deterministic RNG contract is missing token: {required_token}")
+
+    if BATTLE_DETERMINISTIC_RNG_REPORT_SCRIPT_PATH.exists():
+        report_text = BATTLE_DETERMINISTIC_RNG_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_DETERMINISTIC_RNG_STATE_REPORT",
+            "_validate_inert_metadata_invariance",
+            "_validate_consecutive_rolls_and_invalid_paths",
+            "_validate_player_ai_shared_stream",
+            "_validate_ai_scoring_mixed_stream_and_ranged",
+            "_validate_retaliation_draw_order",
+            "_validate_save_normalize_resume",
+            "_validate_legacy_missing_field_fallback",
+            "_validate_corrupt_state_recovery",
+            "PRESENTATION_SPEED_INSTANT",
+            "JSON.stringify(uninterrupted.to_dict())",
+            "normalize_battle_state(restored)",
+        ):
+            ensure(required_token in report_text, errors, f"Deterministic battle RNG report is missing token: {required_token}")
+    if BATTLE_DETERMINISTIC_RNG_REPORT_SCENE_PATH.exists():
+        scene_text = BATTLE_DETERMINISTIC_RNG_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/battle_deterministic_rng_state_report.gd" in scene_text,
+            errors,
+            "Deterministic battle RNG report scene must load its report script",
+        )
+    if BATTLE_DETERMINISTIC_RNG_CONTRACT_PATH.exists():
+        contract_text = BATTLE_DETERMINISTIC_RNG_CONTRACT_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "battle.combat_seed",
+            "Each real call that rolls damage consumes exactly one value",
+            "An older in-progress battle without them deterministically initializes",
+            "SHA-256 integrity guard",
+            "unsupported future stream version emits a warning",
+            "Godot documents its PCG implementation as an implementation detail",
+            "Windows and Linux release packages therefore use the same pinned Godot version",
+        ):
+            ensure(required_text in contract_text, errors, f"Deterministic battle RNG contract is missing required text: {required_text}")
 
 
 def validate_battle_ability_layer(errors: list[str]) -> None:
@@ -21788,8 +21888,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "army_blackbranch_raiders",
             "unit_mireclaw_mudglass_slingers",
             "SAMPLE_CONTRACTS",
-            '"normal": {"outcome_state": "victory"',
+            '"normal": {"outcome_state": "defeat"',
             '"hard": {"outcome_state": "defeat"',
+            "hard difficulty no longer applies at least the normal pressure margin",
             "get_tree().quit(1)",
         ):
             ensure(required_token in ghoul_grove_report_text, errors, f"Ghoul Grove balance regression is missing token: {required_token}")
@@ -24970,6 +25071,7 @@ def main() -> int:
     validate_hero_progression(errors)
     validate_hero_command(errors)
     validate_overworld_fog(errors)
+    validate_battle_deterministic_rng_state(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
@@ -25113,6 +25215,7 @@ def main() -> int:
     print("- hero-command roster, tavern recruitment, transfer flow, and thin UI wiring are present")
     print("- authored hero metadata, multi-faction campaign starts, dual-mode scenario replay, and lead-hero variety are present")
     print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
+    print("- battle damage now uses a persisted seed-owned RNG stream that is invariant to presentation metadata and save/resume boundaries")
     print("- retreat and surrender now preserve pre-resolution battle animation snapshots for board presentation before terminal routing")
     print("- battle autoplay balance sampling now exposes damage pacing, action mix, terrain, difficulty, role, ability, initiative, and cohort matrix diagnostics")
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")

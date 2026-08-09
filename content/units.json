@@ -1139,13 +1139,26 @@
       },
       "abilities": [
         {
-          "id": "shielding",
-          "name": "Gorefen Screen",
-          "description": "Boghide plates and reed-slick feints let the ripper pack cross killing lanes under missile pressure.",
-          "cohesion_hold_bonus": 1,
-          "ranged_damage_multiplier": 0.89,
-          "engaged_damage_multiplier": 1.05,
-          "harried_damage_multiplier": 1.05
+          "id": "bloodrush",
+          "name": "Gorefen Cull Rush",
+          "description": "The pack hesitates against an intact line, then tears through wounded, disrupted, or isolated prey and carries the kill into fresh momentum.",
+          "primary_melee_only": true,
+          "clean_target_damage_multiplier": 0.75,
+          "wounded_threshold_ratio": 0.25,
+          "wounded_damage_multiplier": 1.02,
+          "status_ids": [
+            "status_mire_harried",
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.02,
+          "isolated_damage_multiplier": 1.02,
+          "isolated_ai_target_priority_bonus": 0.05,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 1,
+          "momentum_gain": 0,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 0
         }
       ],
       "content_status": "six_faction_scaffold",

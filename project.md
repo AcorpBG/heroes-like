@@ -62,6 +62,10 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 - Save data stores mutable state plus content references, not copied authored definitions.
 - Map/scenario persistence must separate authored/generated map assets from mutable session deltas; full map payload rewrites are not an acceptable long-term save model.
 - Save/load must remain explicit, versioned, and backward-aware.
+- Battle damage randomness must use an explicit versioned stream seeded from the
+  authoritative combat seed and persisted with battle state; serialized battle
+  dictionaries, presentation state, and authored display metadata must never
+  influence damage rolls.
 - New map formats need load, validate, save, and migrate mechanisms before they become authoritative runtime content.
 - Autoloads are for cross-cutting services, not hiding gameplay rules.
 - Prefer deterministic rule helpers and fixtureable data for tests and reports.

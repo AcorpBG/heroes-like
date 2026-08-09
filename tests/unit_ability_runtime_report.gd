@@ -2220,27 +2220,83 @@ func _probe_formation_guard(unit_id: String) -> Dictionary:
 func _probe_bloodrush(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
 	var defender := _wounded_defender_for_ability(attacker, "bloodrush")
-	var battle := _battle_for_stacks([attacker, defender])
+	_set_hex(attacker, 4, 3)
+	_set_hex(defender, 5, 3)
+	var wounded_supporter := _defender_stack("enemy", 1)
+	_set_hex(wounded_supporter, 5, 2)
+	var battle := _battle_for_stacks([attacker, defender, wounded_supporter])
 	var stripped := _without_ability(attacker, "bloodrush")
-	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true)])
+	var stripped_battle := _battle_for_stacks([stripped, defender.duplicate(true), wounded_supporter.duplicate(true)])
 	var modifier_with := BattleRulesScript._ability_damage_modifier(attacker, defender, battle, false, false, 0)
 	var modifier_without := BattleRulesScript._ability_damage_modifier(stripped, defender, stripped_battle, false, false, 0)
 	var clean_defender := _defender_stack()
-	var clean_battle := _battle_for_stacks([attacker.duplicate(true), clean_defender])
+	_set_hex(clean_defender, 5, 3)
+	var clean_supporter := _defender_stack("enemy", 1)
+	_set_hex(clean_supporter, 5, 2)
+	var clean_battle := _battle_for_stacks([attacker.duplicate(true), clean_defender, clean_supporter])
 	var clean_attacker := BattleRulesScript._get_stack_by_id(clean_battle, String(attacker.get("battle_id", "")))
 	var clean_target := BattleRulesScript._get_stack_by_id(clean_battle, String(clean_defender.get("battle_id", "")))
 	var clean_modifier := BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, false, 0)
+	var clean_ranged_modifier := BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, true, false, 1)
 	var clean_retaliation_modifier := BattleRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, true, 0)
 	var clean_ai_modifier := BattleAiRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, false, 0)
+	var clean_ai_ranged_modifier := BattleAiRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, true, false, 1)
+	var clean_ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, true, 0)
 	var clean_role := BattleRulesScript._ability_role_sentence(clean_attacker, _ability_by_id(clean_attacker, "bloodrush"), clean_battle, clean_target)
+	var clean_window := BattleRulesScript._active_ability_window_summary(clean_attacker, clean_battle, clean_target)
 	var disrupted_defender := _defender_stack()
+	_set_hex(disrupted_defender, 5, 3)
 	_add_effect(disrupted_defender, "status_staggered")
-	var disrupted_battle := _battle_for_stacks([attacker.duplicate(true), disrupted_defender])
+	var disrupted_supporter := _defender_stack("enemy", 1)
+	_set_hex(disrupted_supporter, 5, 2)
+	var disrupted_battle := _battle_for_stacks([attacker.duplicate(true), disrupted_defender, disrupted_supporter])
 	var disrupted_attacker := BattleRulesScript._get_stack_by_id(disrupted_battle, String(attacker.get("battle_id", "")))
 	var disrupted_target := BattleRulesScript._get_stack_by_id(disrupted_battle, String(disrupted_defender.get("battle_id", "")))
 	var disrupted_modifier := BattleRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, false, 0)
+	var disrupted_ranged_modifier := BattleRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, true, false, 1)
+	var disrupted_retaliation_modifier := BattleRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, true, 0)
 	var disrupted_ai_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, false, 0)
+	var disrupted_ai_ranged_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, true, false, 1)
+	var disrupted_ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, true, 0)
 	var disrupted_role := BattleRulesScript._ability_role_sentence(disrupted_attacker, _ability_by_id(disrupted_attacker, "bloodrush"), disrupted_battle, disrupted_target)
+	var isolated_defender := _defender_stack()
+	_set_hex(isolated_defender, 5, 3)
+	var distant_supporter := _defender_stack("enemy", 1)
+	_set_hex(distant_supporter, 9, 6)
+	var isolated_battle := _battle_for_stacks([attacker.duplicate(true), isolated_defender, distant_supporter])
+	var isolated_attacker := BattleRulesScript._get_stack_by_id(isolated_battle, String(attacker.get("battle_id", "")))
+	var isolated_target := BattleRulesScript._get_stack_by_id(isolated_battle, String(isolated_defender.get("battle_id", "")))
+	var isolated_modifier := BattleRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, false, false, 0)
+	var isolated_ranged_modifier := BattleRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, true, false, 1)
+	var isolated_retaliation_modifier := BattleRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, false, true, 0)
+	var isolated_ai_modifier := BattleAiRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, false, false, 0)
+	var isolated_ai_ranged_modifier := BattleAiRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, true, false, 1)
+	var isolated_ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(isolated_attacker, isolated_target, isolated_battle, false, true, 0)
+	var isolated_role := BattleRulesScript._ability_role_sentence(isolated_attacker, _ability_by_id(isolated_attacker, "bloodrush"), isolated_battle, isolated_target)
+	var isolated_window := BattleRulesScript._active_ability_window_summary(isolated_attacker, isolated_battle, isolated_target)
+	var isolated_control_attacker := _without_ability(isolated_attacker, "bloodrush")
+	var isolated_control_battle := _battle_for_stacks([isolated_control_attacker, isolated_defender.duplicate(true), distant_supporter.duplicate(true)])
+	var isolated_control_target := BattleRulesScript._get_stack_by_id(isolated_control_battle, String(isolated_defender.get("battle_id", "")))
+	var isolated_control_modifier := BattleRulesScript._ability_damage_modifier(isolated_control_attacker, isolated_control_target, isolated_control_battle, false, false, 0)
+	var isolated_score := BattleAiRulesScript._attack_score(isolated_attacker, isolated_target, isolated_battle, false)
+	var isolated_control_score := BattleAiRulesScript._attack_score(isolated_control_attacker, isolated_control_target, isolated_control_battle, false)
+	var isolated_priority_control_attacker := _with_ability_field(isolated_attacker, "bloodrush", "isolated_ai_target_priority_bonus", 0.0)
+	var isolated_priority_control_battle := _battle_for_stacks([isolated_priority_control_attacker, isolated_defender.duplicate(true), distant_supporter.duplicate(true)])
+	var isolated_priority_control_target := BattleRulesScript._get_stack_by_id(isolated_priority_control_battle, String(isolated_defender.get("battle_id", "")))
+	var isolated_priority_control_score := BattleAiRulesScript._attack_score(isolated_priority_control_attacker, isolated_priority_control_target, isolated_priority_control_battle, false)
+	var wounded_initiative_with := BattleRulesScript._faction_initiative_bonus(attacker, battle)
+	var wounded_initiative_without := BattleRulesScript._faction_initiative_bonus(stripped, stripped_battle)
+	var momentum_target_after := clean_target.duplicate(true)
+	var target_full_health: int = max(1, int(momentum_target_after.get("base_count", 1)) * int(momentum_target_after.get("unit_hp", 1)))
+	momentum_target_after["total_health"] = max(1, int(floor(float(target_full_health) * float(_ability_by_id(clean_attacker, "bloodrush").get("wounded_threshold_ratio", 0.5)) * 0.8)))
+	var momentum_with := BattleRulesScript._attack_momentum_gain(clean_attacker, clean_target, momentum_target_after, clean_battle, false, "attack")
+	var momentum_without := BattleRulesScript._attack_momentum_gain(_without_ability(clean_attacker, "bloodrush"), clean_target, momentum_target_after, clean_battle, false, "attack")
+	var kill_momentum_with := BattleRulesScript._attack_momentum_gain(clean_attacker, clean_target, {}, clean_battle, false, "attack")
+	var kill_momentum_without := BattleRulesScript._attack_momentum_gain(_without_ability(clean_attacker, "bloodrush"), clean_target, {}, clean_battle, false, "attack")
+	var ranged_momentum_with := BattleRulesScript._attack_momentum_gain(clean_attacker, clean_target, momentum_target_after, clean_battle, true, "attack")
+	var ranged_momentum_without := BattleRulesScript._attack_momentum_gain(_without_ability(clean_attacker, "bloodrush"), clean_target, momentum_target_after, clean_battle, true, "attack")
+	var retaliation_momentum_with := BattleRulesScript._attack_momentum_gain(clean_attacker, clean_target, momentum_target_after, clean_battle, false, "retaliation")
+	var retaliation_momentum_without := BattleRulesScript._attack_momentum_gain(_without_ability(clean_attacker, "bloodrush"), clean_target, momentum_target_after, clean_battle, false, "retaliation")
 	var prepared_breach_contract_ok := unit_id != "unit_embercourt_sluicefire_lindworms" or (
 		clean_modifier < 1.0
 		and is_equal_approx(clean_retaliation_modifier, 1.0)
@@ -2250,7 +2306,46 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		and clean_role.contains("15%")
 		and disrupted_role.contains("now")
 	)
-	var ok := modifier_with > modifier_without and prepared_breach_contract_ok
+	var legacy_optional_field_preservation_ok := unit_id == "unit_mireclaw_gorefen_rippers" or (
+		not _ability_by_id(attacker, "bloodrush").has("primary_melee_only")
+		and not _ability_by_id(attacker, "bloodrush").has("isolated_damage_multiplier")
+		and not _ability_by_id(attacker, "bloodrush").has("isolated_ai_target_priority_bonus")
+	)
+	var gorefen_finisher_contract_ok := unit_id != "unit_mireclaw_gorefen_rippers" or (
+		bool(_ability_by_id(attacker, "bloodrush").get("primary_melee_only", false))
+		and clean_modifier < 1.0
+		and is_equal_approx(clean_ranged_modifier, 1.0)
+		and is_equal_approx(clean_retaliation_modifier, 1.0)
+		and is_equal_approx(disrupted_ranged_modifier, 1.0)
+		and is_equal_approx(disrupted_retaliation_modifier, 1.0)
+		and is_equal_approx(isolated_ranged_modifier, 1.0)
+		and is_equal_approx(isolated_retaliation_modifier, 1.0)
+		and modifier_with > 1.0
+		and disrupted_modifier > 1.0
+		and isolated_modifier > 1.0
+		and isolated_modifier > isolated_control_modifier
+		and is_equal_approx(clean_ai_modifier, clean_modifier)
+		and is_equal_approx(clean_ai_ranged_modifier, clean_ranged_modifier)
+		and is_equal_approx(clean_ai_retaliation_modifier, clean_retaliation_modifier)
+		and is_equal_approx(disrupted_ai_modifier, disrupted_modifier)
+		and is_equal_approx(disrupted_ai_ranged_modifier, disrupted_ranged_modifier)
+		and is_equal_approx(disrupted_ai_retaliation_modifier, disrupted_retaliation_modifier)
+		and is_equal_approx(isolated_ai_modifier, isolated_modifier)
+		and is_equal_approx(isolated_ai_ranged_modifier, isolated_ranged_modifier)
+		and is_equal_approx(isolated_ai_retaliation_modifier, isolated_retaliation_modifier)
+		and isolated_score > isolated_control_score
+		and isolated_score > isolated_priority_control_score
+		and isolated_role.contains("isolated prey")
+		and isolated_role.contains("now")
+		and isolated_window.contains("prepared breach")
+		and clean_window.contains("clean primary attack loses force")
+		and wounded_initiative_with > wounded_initiative_without
+		and momentum_with == momentum_without
+		and ranged_momentum_with == ranged_momentum_without
+		and retaliation_momentum_with == retaliation_momentum_without
+		and kill_momentum_with > kill_momentum_without
+	)
+	var ok := modifier_with > modifier_without and prepared_breach_contract_ok and legacy_optional_field_preservation_ok and gorefen_finisher_contract_ok
 	return {
 		"ok": ok,
 		"probe": "bloodrush_prepared_breach_damage_modifier",
@@ -2258,14 +2353,46 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		"modifier_with": modifier_with,
 		"modifier_without": modifier_without,
 		"clean_modifier": clean_modifier,
+		"clean_ranged_modifier": clean_ranged_modifier,
 		"clean_retaliation_modifier": clean_retaliation_modifier,
 		"clean_ai_modifier": clean_ai_modifier,
+		"clean_ai_ranged_modifier": clean_ai_ranged_modifier,
+		"clean_ai_retaliation_modifier": clean_ai_retaliation_modifier,
 		"clean_role": clean_role,
+		"clean_window": clean_window,
 		"disrupted_modifier": disrupted_modifier,
+		"disrupted_ranged_modifier": disrupted_ranged_modifier,
+		"disrupted_retaliation_modifier": disrupted_retaliation_modifier,
 		"disrupted_ai_modifier": disrupted_ai_modifier,
+		"disrupted_ai_ranged_modifier": disrupted_ai_ranged_modifier,
+		"disrupted_ai_retaliation_modifier": disrupted_ai_retaliation_modifier,
 		"disrupted_role": disrupted_role,
+		"isolated_modifier": isolated_modifier,
+		"isolated_ranged_modifier": isolated_ranged_modifier,
+		"isolated_retaliation_modifier": isolated_retaliation_modifier,
+		"isolated_control_modifier": isolated_control_modifier,
+		"isolated_ai_modifier": isolated_ai_modifier,
+		"isolated_ai_ranged_modifier": isolated_ai_ranged_modifier,
+		"isolated_ai_retaliation_modifier": isolated_ai_retaliation_modifier,
+		"isolated_score": isolated_score,
+		"isolated_control_score": isolated_control_score,
+		"isolated_priority_control_score": isolated_priority_control_score,
+		"isolated_role": isolated_role,
+		"isolated_window": isolated_window,
+		"wounded_initiative_with": wounded_initiative_with,
+		"wounded_initiative_without": wounded_initiative_without,
+		"momentum_with": momentum_with,
+		"momentum_without": momentum_without,
+		"kill_momentum_with": kill_momentum_with,
+		"kill_momentum_without": kill_momentum_without,
+		"ranged_momentum_with": ranged_momentum_with,
+		"ranged_momentum_without": ranged_momentum_without,
+		"retaliation_momentum_with": retaliation_momentum_with,
+		"retaliation_momentum_without": retaliation_momentum_without,
 		"prepared_breach_contract_ok": prepared_breach_contract_ok,
-		"reason": "" if ok else "bloodrush did not preserve its wounded payoff and bounded prepared-breach contract",
+		"legacy_optional_field_preservation_ok": legacy_optional_field_preservation_ok,
+		"gorefen_finisher_contract_ok": gorefen_finisher_contract_ok,
+		"reason": "" if ok else "bloodrush did not preserve its wounded payoff, prepared-breach contract, or Gorefen primary-melee isolated-prey scope",
 	}
 
 func _probe_overheat(unit_id: String) -> Dictionary:
@@ -2830,6 +2957,18 @@ func _without_ability(stack: Dictionary, ability_id: String) -> Dictionary:
 		if ability is Dictionary and String(ability.get("id", "")) == ability_id:
 			continue
 		abilities.append(ability)
+	copy["abilities"] = abilities
+	return copy
+
+func _with_ability_field(stack: Dictionary, ability_id: String, field: String, value: Variant) -> Dictionary:
+	var copy := stack.duplicate(true)
+	var abilities := []
+	for ability in copy.get("abilities", []):
+		if ability is Dictionary:
+			var normalized: Dictionary = ability.duplicate(true)
+			if String(normalized.get("id", "")) == ability_id:
+				normalized[field] = value
+			abilities.append(normalized)
 	copy["abilities"] = abilities
 	return copy
 

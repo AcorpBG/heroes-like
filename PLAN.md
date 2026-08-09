@@ -2642,6 +2642,110 @@ Completion result:
 - the accepted all-live 100-seed four-week matrix keeps 27 outliers, two rows at or above 65 percent, `67.5` percent maximum dominance, and zero structural failures while improving excess severity from `153.0` to `152.0` and maximum side bias from `3.87` to `3.73` points;
 - the active 59-encounter queue remains clear at signature `829808c9`, and autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; unsupported Native RMG exact-state generation and overall release completion remain open.
 
+## Mireclaw Gorefen Ripper Finisher Role
+
+id: `combat-mireclaw-gorefen-ripper-finisher-role-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and balance implementation slice. Production
+Gorefen Rippers are specified as fragile elite finishers for wounded or isolated
+prey, but their current production ability is a cohesion-bearing missile screen.
+
+Implementation target:
+- replace Gorefen Screen with one content-owned Bloodrush contract that loses force against clean prey and gains bounded damage/initiative/momentum against wounded, disrupted, or isolated prey;
+- add isolated-prey handling to the shared Bloodrush live rules, tactical AI, player summaries, normalization, focused proof, and fast benchmark without faction or matchup branches;
+- make the fast benchmark's reversed ordered rows keep the same seeded faction as initiative-tie owner, consuming the same random draw while removing correlated internal-side ownership from the paired comparison;
+- preserve base stats, growth, costs, buildings, army groups, economy, saves, campaigns, packaging, Native RMG, encounters, and benchmark thresholds.
+
+Completion criteria:
+- focused runtime proof covers clean, wounded, disrupted, isolated, supported-target, ranged, retaliation, live/AI parity, initiative, momentum, and player-summary behavior;
+- production Gorefen Rippers no longer own cohesion or ranged-damage mitigation, and repository validation enforces the finisher contract;
+- the corrected paired-tie benchmark shows the finisher against an old-content Gorefen Screen control under the same method before the all-live acceptance matrix is claimed;
+- the all-live 100-seed four-week matrix has zero structural failures and improves at least one method-matched Gorefen Screen control metric without worsening 38 outliers, `344.0` severity, 14 rows at or above 65 percent, `79.0` percent maximum dominance, or `1.67` side-bias points; the earlier `30` / `166.5` / five / `69.0` / `1.53` control omitted exact formation isolation and generic Mireclaw initiative parity, while the prior `27` / `152.0` / two / `67.5` / `3.73` baseline also used correlated internal-side tie ownership, so both are retained only as pre-parity history;
+- the 59-encounter active breadth queue remains clear and focused ability, autoplay, balance-regression, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not hard-code faction ids, matchup ids, week numbers, army counts, encounter ids, seeds, or benchmark-only combat behavior;
+- do not change other units, base stats, growth, recruitment, economy, saves, campaigns, packaging, Native RMG, encounter rosters, or benchmark thresholds;
+- do not claim final Mireclaw identity, final faction balance, or overall release completion.
+
+Completion result:
+- production Gorefen Rippers now own Gorefen Cull Rush instead of Gorefen Screen: primary melee attacks deal 75 percent damage into intact prey, then gain bounded 1.02 multipliers against prey below the 25-percent execute threshold, disrupted prey, and isolated prey; isolated targeting gains 0.05 AI priority, wounded windows grant one initiative, and a kill grants one momentum;
+- shared live and tactical-AI rules, player summaries, normalization, validation, focused proof, and the fast benchmark implement the same content-driven contract while legacy Bloodrush entries retain their existing optional-field shape and behavior;
+- the parity-correct method-matched Gorefen Screen control is 38 outliers / `344.0` severity / 14 severe / `79.0` percent maximum dominance / `1.67` side bias / zero structural failures. The accepted 25-percent execute contract is 38 / `332.0` / 13 / `79.0` / `1.60` / zero: severity improves 12 points, one severe row clears, side bias improves 0.07 points, and no control metric regresses;
+- focused proof passes all 117 ability instances across 103 units; the corrected-RNG 59-encounter breadth remains clear at repeated signature `829808c9`; autoplay, balance regression, core, editor parse, repository, JSON, Python, and diff gates pass. Faction balance remains `needs_tuning`; unsupported Native RMG exact-state generation and overall release completion remain open.
+
+## Deterministic Battle Damage RNG State Decoupling
+
+id: `battle-deterministic-rng-state-decoupling-10184`
+
+Status: completed.
+
+Selected Phase 6 prerequisite for trustworthy combat balance and save/resume
+behavior. The source audit found player and AI attacks assigning
+`hash(JSON.stringify(session.battle))` to Godot RNG state, so playback speed,
+tactical-briefing state, ability display text, and other inert metadata could
+reroll damage.
+
+Implementation target:
+- replace full-battle-dictionary hashing with one battle-local, versioned damage RNG stream initialized from the authoritative `combat_seed` and persisted after every real primary or retaliation damage roll;
+- resolve and persist a nonzero combat seed once, normalize old in-progress battles that lack RNG fields through one deterministic seed-based fallback, and preserve the same next roll across save/normalize/resume;
+- prove that presentation speed, briefing state, dictionary key order, and inert ability metadata do not change damage, while real consecutive player, AI, and retaliation rolls advance the shared stream;
+- keep Windows and Linux on the same packaged Godot version and record that cross-engine-version replay would require a future repository-owned RNG algorithm rather than relying on Godot's implementation-detail PCG stream.
+
+Completion criteria:
+- player and AI damage paths restore only a previously persisted RNG state and persist the next state immediately after each actual damage draw;
+- invalid orders, tactical previews, AI scoring, presentation changes, and save normalization consume no damage draws;
+- focused proof covers inert-metadata invariance, consecutive draws, retaliation ordering, player/AI parity, uninterrupted versus restored continuation, and missing-field legacy fallback;
+- core/save-resume, focused ability, autoplay combat, active 59-encounter breadth, balance-regression, editor parse, repository, JSON, Python, and diff gates pass, with any deterministic signature movement recorded rather than hidden.
+
+Non-goals:
+- do not tune Gorefen or any other unit, faction, encounter, roster, seed, benchmark threshold, economy, campaign, packaging, or Native RMG behavior;
+- do not claim exact replay compatibility across different future Godot RNG implementations;
+- do not carry pre-fix live balance signatures forward as method-matched evidence after the RNG architecture changes.
+
+Completion result:
+- live player and AI damage now share one versioned battle-local stream seeded from the authoritative combat seed, persist state plus roll count after every real damage draw, and validate a seed/state/count integrity guard before restoration;
+- invalid actions, previews, AI scoring, presentation state, briefing state, dictionary key order, and inert ability metadata consume no draws or alter outcomes; retaliation consumes the immediate next draw;
+- focused proof covers player, AI, ranged, retaliation, mixed action order, save/normalize/resume, legacy missing-field fallback, and malformed/current/future state recovery;
+- the post-RNG child requalified all 59 active encounters at clear signature `829808c9`; core, focused ability, autoplay, balance-regression, editor parse, repository, JSON, Python, and diff gates pass. The balance suite retains only the known unsupported Native RMG exact-state warning.
+
+## Post-RNG Active Encounter Breadth Requalification
+
+id: `combat-post-rng-active-breadth-requalification-10184`
+
+Status: completed.
+
+Selected Phase 6 content child required before the deterministic battle RNG
+prerequisite can ship. The corrected seed-owned stream intentionally changed the
+live deterministic baseline: all 59 active encounter samples complete without
+stalls or invalid orders, but the queue reopened with 13 items at repeatable
+signature `6446fd0b`.
+
+Implementation target:
+- retune only the smallest placement-local enemy-army counts needed to clear post-RNG sample margins, pacing, and scenario/ability-presence cohort watches;
+- keep shared encounter definitions, shared army groups, unit stats and abilities, combat seeds, objectives, difficulty labels, RNG rules, and queue thresholds unchanged;
+- update the existing focused placement regression fixtures to the new source-backed rosters and post-RNG deterministic outcomes;
+- preserve at least one non-victory in the three-sample Bellwake and Mireford cohorts, with Mireford's adjustment also clearing the four-sample Sporeglass presence watch.
+
+Completion criteria:
+- all 59 active authored encounters complete with zero stalls and invalid orders, every combat/runtime gate passes, and the queue is clear on a repeated deterministic signature;
+- the Prismhearth Relay Pickets matrix outlier and all seven remaining sample margin/pacing watches are removed without new queue items;
+- Bellwake, Mireford, and Sporeglass presence cohorts remain below the 100-percent single-outcome watch boundary;
+- focused placement regressions, autoplay combat, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not change shared units, abilities, encounters, army groups, seeds, difficulty labels, objectives, benchmark logic or thresholds, economy, campaigns, packaging, or Native RMG;
+- do not use runtime branches, retries, seed selection, or report/gate suppression as balance tuning;
+- do not claim final encounter balance, Gorefen completion, faction balance, or overall release readiness.
+
+Completion result:
+- ten placement-local count changes clear the post-RNG queue while preserving shared units, army groups, encounters, seeds, objectives, difficulty labels, and thresholds: Prismhearth Relay, Glassfen Relay, Ironbridge Reed Totemists, Ninefold Barrow Vault, Mireford Ford and Silt, Reedbarrow Pickets and Chain, River Ghoul Grove, and Bellwake Mirror Lancers;
+- all 59 active authored encounters complete with zero stalls or invalid orders; combat-feel, balance-matrix, runtime-consequence, and consequence-matrix gates pass; the queue is empty at repeated signature `829808c9`;
+- Bellwake, Mireford, Sporeglass-presence, player-disadvantaged, and scenario cohorts remain mixed without new sample or cohort watches;
+- all affected focused regressions plus autoplay combat, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass.
+
 ## Work Selection Gates
 
 Before starting any worker:

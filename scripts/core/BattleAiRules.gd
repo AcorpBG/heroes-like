@@ -1183,12 +1183,22 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	if _has_ability(attacker, "formation_guard") and SpellRulesScript.has_effect_id(target, battle, STATUS_STAGGERED):
 		score += 1.5
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
-	if not bloodrush.is_empty() and _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
-		score += 2.0
-	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
-		score += 1.5
-	if not bloodrush.is_empty() and int(battle.get("round", 1)) >= 3:
-		score += 0.75
+	if not bloodrush.is_empty() and bool(bloodrush.get("primary_melee_only", false)):
+		if not is_ranged and _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			score += 2.0
+		if not is_ranged and SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+			score += 1.5
+		if not is_ranged and float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0 and _stack_is_hex_isolated(battle, target):
+			score += float(bloodrush.get("isolated_ai_target_priority_bonus", 0.0))
+		if int(bloodrush.get("late_round_initiative_bonus", 0)) > 0 and int(battle.get("round", 1)) >= 3:
+			score += 0.75
+	else:
+		if not bloodrush.is_empty() and _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			score += 2.0
+		if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+			score += 1.5
+		if not bloodrush.is_empty() and int(bloodrush.get("late_round_initiative_bonus", 0)) > 0 and int(battle.get("round", 1)) >= 3:
+			score += 0.75
 	var overheat := _ability_by_id(attacker, "overheat")
 	if not overheat.is_empty() and not SpellRulesScript.has_effect_id(attacker, battle, STATUS_OVERHEATED):
 		score += 0.10
@@ -2504,16 +2514,35 @@ static func _ability_damage_modifier(
 		modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
 
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
-	var bloodrush_prepared := not bloodrush.is_empty() and (
-		_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
-		or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
-	)
-	if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
-		modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
-		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
-		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+	if not bloodrush.is_empty() and bool(bloodrush.get("primary_melee_only", false)):
+		var bloodrush_attack_eligible := not is_ranged and not is_retaliation
+		var bloodrush_isolated := bloodrush_attack_eligible \
+			and float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0 \
+			and _stack_is_hex_isolated(battle, defender)
+		var bloodrush_prepared := (
+			_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+			or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+			or bloodrush_isolated
+		)
+		if bloodrush_attack_eligible and not bloodrush_prepared:
+			modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
+		if bloodrush_attack_eligible and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
+		if bloodrush_attack_eligible and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+			modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+		if bloodrush_isolated:
+			modifier *= float(bloodrush.get("isolated_damage_multiplier", 1.0))
+	else:
+		var bloodrush_prepared := not bloodrush.is_empty() and (
+			_health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
+			or SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+		)
+		if not bloodrush.is_empty() and not is_retaliation and not bloodrush_prepared:
+			modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
+		if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+			modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
+		if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+			modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
 
 	var overheat := _ability_by_id(attacker, "overheat")
 	if not overheat.is_empty():
