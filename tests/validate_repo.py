@@ -82,6 +82,11 @@ TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
 BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
+BATTLE_AUTO_RESOLVE_RULES_PATH = ROOT / "scripts" / "core" / "BattleAutoResolveRules.gd"
+BATTLE_QUICK_RESOLVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.gd"
+BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.tscn"
+BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
@@ -14041,6 +14046,112 @@ def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
             ensure(required_text in contract_text, errors, f"Deterministic battle RNG contract is missing required text: {required_text}")
 
 
+def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
+    required_paths = (
+        BATTLE_AUTO_RESOLVE_RULES_PATH,
+        BATTLE_QUICK_RESOLVE_REPORT_SCRIPT_PATH,
+        BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH,
+        BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH,
+        BATTLE_SCRIPT_PATH,
+        BATTLE_SCENE_PATH,
+        HEADLESS_SIMULATION_HARNESS_RULES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle quick-resolve integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    helper_text = BATTLE_AUTO_RESOLVE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "class_name BattleAutoResolveRules",
+        "const DEFAULT_STEP_LIMIT := 72",
+        "func player_autoplay_decision(",
+        "func resolve_active_battle(",
+        "func is_terminal_state(",
+        'const PLAYER_EXIT_ACTIONS := ["retreat", "surrender"]',
+        "battle_ai_nonspell_tactical_order_v1",
+        'if String(result.get("state", "")) == "invalid" and action != "defend":',
+        'result = BattleRulesScript.perform_player_action(session, action)',
+        'stop_reason = "step_limit_reached"',
+        '"forbidden_exit_orders"',
+        '"terminal_result"',
+        '"battle_active"',
+    ):
+        ensure(required_token in helper_text, errors, f"BattleAutoResolveRules.gd is missing required quick-resolve token: {required_token}")
+
+    report_text = BATTLE_QUICK_RESOLVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BATTLE_QUICK_RESOLVE_RUNTIME_REPORT",
+        "_validate_deterministic_terminal_resolution",
+        "_validate_non_mutating_failure_boundaries",
+        "_validate_live_battle_safety_guards",
+        "BattleAutoResolveRulesScript.resolve_active_battle(first)",
+        "JSON.stringify(first.to_dict()) != JSON.stringify(second.to_dict())",
+        'action_counts.get("cast_spell", 0)',
+        'first.flags.get("mire_cleared", false)',
+        'first.overworld.get("resolved_encounters", [])',
+        'invalid_limit_before := JSON.stringify(invalid_limit_session.to_dict())',
+        'no_battle_before := JSON.stringify(no_battle_session.to_dict())',
+        "BattleRulesScript.normalize_battle_state(step_limited)",
+        'step_result.get("invalid_orders", -1)',
+        'first_result.get("forbidden_exit_orders", -1)',
+    ):
+        ensure(required_token in report_text, errors, f"Battle quick-resolve runtime report is missing required token: {required_token}")
+
+    report_scene_text = BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/battle_quick_resolve_runtime_report.gd" in report_scene_text,
+        errors,
+        "Battle quick-resolve report scene must load its runtime report script",
+    )
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'preload("res://scripts/core/BattleAutoResolveRules.gd")',
+        "func _on_quick_resolve_pressed()",
+        "func _on_quick_resolve_canceled()",
+        "func _on_quick_resolve_confirmed()",
+        "BattleAutoResolveRulesScript.resolve_active_battle(_session)",
+        "_quick_resolve_confirmation_dialog.popup_centered()",
+    ):
+        ensure(required_token in shell_text, errors, f"BattleShell.gd is missing required quick-resolve token: {required_token}")
+    if "func _on_quick_resolve_canceled()" in shell_text:
+        cancel_body = shell_text.split("func _on_quick_resolve_canceled()", 1)[1].split("\nfunc ", 1)[0]
+        ensure(
+            "resolve_active_battle" not in cancel_body,
+            errors,
+            "Canceling the BattleShell quick-resolve confirmation must not invoke the resolver",
+        )
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '[node name="QuickResolve" type="Button"',
+        '[node name="QuickResolveConfirmationDialog" type="ConfirmationDialog"',
+        'method="_on_quick_resolve_pressed"',
+        'method="_on_quick_resolve_canceled"',
+        'method="_on_quick_resolve_confirmed"',
+    ):
+        ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing required quick-resolve token: {required_token}")
+
+    cancel_smoke_text = BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'shell.get_node("%QuickResolve")',
+        'shell.get_node("QuickResolveConfirmationDialog")',
+        "quick_resolve_battle_before := JSON.stringify(session.battle)",
+        "JSON.stringify(session.battle) != quick_resolve_battle_before",
+        'if _focus_name() != "QuickResolve"',
+    ):
+        ensure(required_token in cancel_smoke_text, errors, f"Active-play quick-resolve cancel smoke is missing required token: {required_token}")
+
+    harness_text = HEADLESS_SIMULATION_HARNESS_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'preload("res://scripts/core/BattleAutoResolveRules.gd")',
+        "func _strategic_ai_auto_resolve_battle_interrupt(",
+        "BattleAutoResolveRulesScript.resolve_active_battle(session, step_limit)",
+    ):
+        ensure(required_token in harness_text, errors, f"Headless simulation harness is missing quick-resolve delegation token: {required_token}")
+
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -21229,8 +21340,6 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "damage_per_round",
             "initial_stack_profile",
             "player_autoplay_decision_report",
-            "battle_ai_nonspell_tactical_order_v1",
-            "battle_ai_spell_tactical_order_v1",
             "autoplay_decision",
             "func _stack_profile",
             "func _action_mix_summary",
@@ -25072,6 +25181,7 @@ def main() -> int:
     validate_hero_command(errors)
     validate_overworld_fog(errors)
     validate_battle_deterministic_rng_state(errors)
+    validate_battle_quick_resolve_runtime(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)

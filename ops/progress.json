@@ -14322,14 +14322,14 @@
       }
     }
   ],
-  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, and unreachable town-defense retask correction are complete. Faction balance and overall release readiness remain open.",
+  "currentNotes": "The production Gorefen finisher, deterministic damage RNG prerequisite, unreachable town-defense retask correction, and player battle Quick Resolve are complete. Faction balance and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-unreachable-town-defense-retask-10184",
-  "currentSliceId": "strategic-ai-unreachable-town-defense-retask-10184",
-  "currentSliceNotes": "Unreachable defense candidates are rejected and route-closed defenders clear stale lifecycle state before deterministic reachable retargeting; focused and broad strategic gates pass.",
+  "currentSlice": "battle-player-quick-resolve-command-10184",
+  "currentSliceId": "battle-player-quick-resolve-command-10184",
+  "currentSliceNotes": "Confirmed Quick Resolve now uses shared production tactical policy and authoritative battle consequences; focused, active-breadth, controller, headless, core, and repository gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Unreachable Town-Defense Retask",
-  "currentSliceUpdatedAt": "2026-08-09T20:42:34Z",
+  "currentSliceTitle": "Player Battle Quick Resolve",
+  "currentSliceUpdatedAt": "2026-08-09T21:14:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73594,6 +73594,105 @@
       "knownPreExistingValidationGap": "tests/ai_town_retake_assault_report.tscn fails identically on committed HEAD: the fixture expects a transient regroup target after the host has already reached the adjacent redoubt, gained 84 strength, and resumed Duskfen in the same enemy turn. The corrected town-defense branch is unreachable in that player-owned retake fixture.",
       "remainingWork": "Select the next bounded product slice; player battle Quick Resolve and transactional cross-platform installer upgrades are the strongest audited release gaps.",
       "completedAt": "2026-08-09T20:42:34Z"
+    },
+    {
+      "id": "battle-player-quick-resolve-command-10184",
+      "title": "Player Battle Quick Resolve",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "docs/battle-deterministic-rng-state-contract.md",
+        "docs/battle-autoplay-active-scenario-breadth-report.md"
+      ],
+      "purpose": "Promote the proven deterministic player tactical-order policy into production gameplay and expose one confirmed Quick Resolve command that uses authoritative live battle rules and consequences.",
+      "implementationTargets": [
+        "scripts/core/BattleAutoResolveRules.gd",
+        "scripts/core/BattleAutoplayBalanceHarnessRules.gd",
+        "scripts/core/HeadlessSimulationHarnessRules.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_quick_resolve_runtime_report.gd",
+        "tests/battle_quick_resolve_runtime_report.tscn",
+        "tests/battle_layout_smoke.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "wireframe_auto_command_required": true,
+        "live_quick_resolve_command_present": false,
+        "report_owned_player_autoplay_policy": true,
+        "active_breadth_sample_count": 59,
+        "active_breadth_queue_item_count": 0,
+        "active_breadth_queue_signature": "829808c9"
+      },
+      "completionCriteria": [
+        "Production code owns bounded player order, spell, target, fallback, and auto-resolution behavior; live shell does not import report harness code",
+        "Report and headless autoplay delegate to the production player policy without changing deterministic active breadth outcomes",
+        "Battle action strip exposes a compact Quick Resolve command with explicit permanent-consequence confirmation",
+        "Cancel mutates no session state; confirm preserves combat RNG, mana, casualties, objectives, rewards, snapshots, and terminal routing",
+        "Equivalent starting sessions resolve to identical terminal state and auto-resolution never selects retreat or surrender",
+        "Step-limit or invalid-order exhaustion returns control to a valid live battle with a clear message",
+        "Focused runtime, 59-encounter breadth, layout, keyboard/controller focus, core, editor parse, repository, JSON, and diff gates pass"
+      ],
+      "nonGoals": [
+        "combat balance, AI-score, content, unit, encounter, difficulty, save schema, RNG algorithm, strategic AI, packaging, or Native RMG",
+        "animated spectated autobattle, mid-resolution cancellation, undo, player auto-retreat, broad battle-UX, or release completion claims"
+      ],
+      "createdAt": "2026-08-09T20:44:12Z",
+      "startedAt": "2026-08-09T20:44:12Z",
+      "updatedAt": "2026-08-09T21:14:12Z",
+      "notes": "Completed: production owns deterministic spell-aware battle auto-resolution, the live shell exposes a confirmed non-mutating-cancel Quick Resolve command, and headless/report callers delegate to the same policy.",
+      "result": {
+        "production_policy_owner": "scripts/core/BattleAutoResolveRules.gd",
+        "live_quick_resolve_command_present": true,
+        "confirmation_cancel_non_mutating": true,
+        "controller_cancel_focus_restored": true,
+        "terminal_state": "victory",
+        "terminal_steps": 4,
+        "player_orders": 4,
+        "action_counts": {
+          "advance": 1,
+          "cast_spell": 3
+        },
+        "mana_before": 16,
+        "mana_after": 1,
+        "player_troops_before": 15,
+        "player_troops_after": 5,
+        "gold_reward": 180,
+        "ore_reward": 2,
+        "objective_completed": true,
+        "forbidden_exit_order_count": 0,
+        "invalid_order_count": 0,
+        "active_breadth_sample_count": 59,
+        "active_breadth_queue_item_count": 0,
+        "active_breadth_queue_signature": "829808c9",
+        "headless_harness_signature": "ba73a1f3",
+        "balance_regression_suite_signature": "b8b1d3ed"
+      },
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_quick_resolve_runtime_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/tactical_order_spell_autoplay_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_autoplay_combat_balance_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/headless_simulation_harness_report.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_layout_smoke.tscn (completed naturally without assertions; detached runner did not retain numeric exit)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/balance_regression_report_suite.tscn",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "remainingWork": "Continue the broader production-release queue. Transactional cross-platform installer upgrades, confirmed display-mode rollback, faction balance, strategic-AI breadth, signing, and native Windows certification remain open.",
+      "completedAt": "2026-08-09T21:14:12Z"
     }
   ],
   "project": "heroes-like",

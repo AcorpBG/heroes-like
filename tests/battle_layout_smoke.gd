@@ -265,6 +265,11 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: primary battle controls are not visible at %s." % [viewport_size])
 		get_tree().quit(1)
 		return false
+	var quick_resolve_button: Button = shell.get_node_or_null("%QuickResolve")
+	if quick_resolve_button == null or not viewport_rect.intersects(quick_resolve_button.get_global_rect()):
+		push_error("Battle layout smoke: Quick Resolve is not visible in the battle action strip at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
 	if not await _run_direct_actionable_after_move_empty_handoff_case(frame, viewport_size, false):
 		return false
 	if not await _run_direct_actionable_after_move_empty_handoff_case(frame, viewport_size, true):
