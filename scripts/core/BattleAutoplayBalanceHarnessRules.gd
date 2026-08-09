@@ -3,7 +3,7 @@ extends RefCounted
 
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
-const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
+const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const DEFAULT_SAMPLE_LIMIT := 12
@@ -517,78 +517,7 @@ static func run_battle_sample(scenario_id: String, encounter: Dictionary, step_l
 	}
 
 static func player_autoplay_decision_report(session: SessionStateStoreScript.SessionData, apply_selection: bool = false) -> Dictionary:
-	if session == null or session.battle.is_empty():
-		return {"action": "defend", "reason": "no_active_battle", "scoring_policy": "battle_ai_nonspell_tactical_order_v1"}
-	var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
-	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
-		return {"action": "defend", "reason": "no_active_player_stack", "scoring_policy": "battle_ai_nonspell_tactical_order_v1"}
-	var commander_payload: Dictionary = session.battle.get("player_hero", {}) if session.battle.get("player_hero", {}) is Dictionary else {}
-	if commander_payload.is_empty() and session.battle.get("player_commander_state", {}) is Dictionary:
-		commander_payload = session.battle.get("player_commander_state", {})
-	var decision := BattleAiRulesScript.choose_stack_tactical_order(session.battle, active_stack, "enemy", commander_payload)
-	if decision.is_empty():
-		_select_focus_enemy(session)
-		return _fallback_player_autoplay_decision(session, "no_scored_tactical_order", apply_selection)
-	var target_id := String(decision.get("target_battle_id", ""))
-	var action := String(decision.get("action", "defend"))
-	if target_id != "":
-		if apply_selection and action in ["shoot", "strike"]:
-			var selection_result := BattleRules.select_target(session, target_id)
-			decision["target_selection_ok"] = bool(selection_result.get("ok", false))
-			decision["target_selection_message"] = String(selection_result.get("message", ""))
-		elif apply_selection and action == "cast_spell":
-			BattleRules._set_selected_target(session.battle, target_id, true)
-			var selected_spell_target: Dictionary = BattleRules._get_stack_by_id(session.battle, target_id)
-			decision["target_selection_ok"] = not selected_spell_target.is_empty()
-			decision["target_selection_message"] = "Spell target selected for autoplay." if not selected_spell_target.is_empty() else "Spell target missing for autoplay."
-		else:
-			decision["target_selection_ok"] = true
-	if action == "cast_spell":
-		var spell_id := String(decision.get("spell_id", ""))
-		var spell_target_stack: Dictionary = BattleRules._get_stack_by_id(session.battle, target_id)
-		var validation := SpellRulesScript.validate_battle_spell(
-			commander_payload,
-			session.battle,
-			active_stack,
-			spell_target_stack,
-			spell_id,
-			"player"
-		)
-		if bool(validation.get("ok", false)):
-			decision["reason"] = "scored_tactical_spell_order"
-			return decision
-		decision["spell_validation_message"] = String(validation.get("message", "Spell order unavailable."))
-		return _fallback_player_autoplay_decision(session, "scored_spell_order_unavailable", apply_selection, decision)
-	var availability: Dictionary = BattleRules.action_availability(session.battle)
-	if bool(availability.get(action, false)):
-		decision["reason"] = "scored_tactical_order"
-		return decision
-	return _fallback_player_autoplay_decision(session, "scored_order_unavailable", apply_selection, decision)
-
-static func _fallback_player_autoplay_decision(
-	session: SessionStateStoreScript.SessionData,
-	reason: String,
-	apply_selection: bool,
-	scored_decision: Dictionary = {}
-) -> Dictionary:
-	_select_focus_enemy(session)
-	var availability: Dictionary = BattleRules.action_availability(session.battle)
-	var fallback_action := "defend"
-	if bool(availability.get("shoot", false)):
-		fallback_action = "shoot"
-	elif bool(availability.get("strike", false)):
-		fallback_action = "strike"
-	elif bool(availability.get("advance", false)):
-		fallback_action = "advance"
-	return {
-		"action": fallback_action,
-		"target_battle_id": String(session.battle.get("selected_target_id", "")),
-		"reason": reason,
-		"scoring_policy": "battle_ai_nonspell_tactical_order_v1",
-		"fallback_policy": "legacy_availability_order",
-		"scored_decision": scored_decision,
-		"applied_selection": apply_selection,
-	}
+	return BattleAutoResolveRulesScript.player_autoplay_decision(session, apply_selection)
 
 static func _compact_decision(decision: Dictionary) -> Dictionary:
 	var compact := {
@@ -606,23 +535,6 @@ static func _compact_decision(decision: Dictionary) -> Dictionary:
 	if decision.has("fallback_reason"):
 		compact["fallback_reason"] = String(decision.get("fallback_reason", ""))
 	return compact
-
-static func _select_focus_enemy(session: SessionStateStoreScript.SessionData) -> void:
-	var best_id := ""
-	var best_score := 2147483647
-	for stack in session.battle.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		if String(stack.get("side", "")) != "enemy":
-			continue
-		if int(stack.get("count", 0)) <= 0 or int(stack.get("total_health", 0)) <= 0:
-			continue
-		var score := int(stack.get("total_health", 0)) * 1000 + int(stack.get("count", 0))
-		if score < best_score:
-			best_score = score
-			best_id = String(stack.get("battle_id", ""))
-	if best_id != "":
-		BattleRules.select_target(session, best_id)
 
 static func _aggregate_samples(samples: Array) -> Dictionary:
 	var distribution := {}

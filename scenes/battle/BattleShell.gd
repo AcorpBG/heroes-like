@@ -2,6 +2,7 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 
 const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_bar.png"
 const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
@@ -53,6 +54,7 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 @onready var _strike_button: Button = %Strike
 @onready var _shoot_button: Button = %Shoot
 @onready var _defend_button: Button = %Defend
+@onready var _quick_resolve_button: Button = %QuickResolve
 @onready var _retreat_button: Button = %Retreat
 @onready var _surrender_button: Button = %Surrender
 @onready var _speed_normal_button: Button = %SpeedNormal
@@ -63,6 +65,7 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 @onready var _system_body_label: Label = %SystemBody
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
+@onready var _quick_resolve_confirmation_dialog: ConfirmationDialog = $QuickResolveConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -84,6 +87,7 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	_configure_quick_resolve_confirmation()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -150,6 +154,13 @@ func _ready() -> void:
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
 	call_deferred("_configure_battle_keyboard_focus", true)
+
+func _configure_quick_resolve_confirmation() -> void:
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	_quick_resolve_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
 
 func _battle_music_metadata() -> Dictionary:
 	if _session == null:
@@ -359,6 +370,54 @@ func _on_shoot_pressed() -> void:
 func _on_defend_pressed() -> void:
 	_perform_action("defend")
 
+func _on_quick_resolve_pressed() -> void:
+	if _session == null or _session.battle.is_empty() or _session.scenario_status != "in_progress":
+		_last_message = "Quick Resolve is unavailable because there is no active battle to resolve."
+		if _session != null and not _session.battle.is_empty():
+			_refresh()
+		return
+	_quick_resolve_confirmation_dialog.popup_centered()
+	_quick_resolve_confirmation_dialog.get_ok_button().call_deferred("grab_focus")
+
+func _on_quick_resolve_canceled() -> void:
+	_quick_resolve_button.call_deferred("grab_focus")
+
+func _on_quick_resolve_confirmed() -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(_session)
+	var terminal_value: Variant = result.get("terminal_result", {})
+	var terminal_result: Dictionary = terminal_value if terminal_value is Dictionary else {}
+	if bool(result.get("completed", false)) and not terminal_result.is_empty():
+		_last_message = String(terminal_result.get("message", "Quick Resolve completed the battle."))
+		_dismiss_tactical_briefing()
+		if _handle_battle_resolution(terminal_result):
+			ProfileLogScript.emit_general("battle", "action", "quick_resolve", ProfileLogScript.elapsed_ms(profile_started), {}, _battle_profile_metadata(false).merged({
+				"result_ok": bool(result.get("ok", false)),
+				"routed": true,
+				"steps": int(result.get("steps", 0)),
+			}, true), _session)
+			return
+	_last_message = _quick_resolve_failure_message(result)
+	_refresh()
+	call_deferred("_configure_battle_keyboard_focus", true)
+	ProfileLogScript.emit_general("battle", "action", "quick_resolve", ProfileLogScript.elapsed_ms(profile_started), {}, _battle_profile_metadata(false).merged({
+		"result_ok": bool(result.get("ok", false)),
+		"routed": false,
+		"steps": int(result.get("steps", 0)),
+		"stop_reason": String(result.get("stop_reason", "")),
+	}, true), _session)
+
+func _quick_resolve_failure_message(result: Dictionary) -> String:
+	var last_value: Variant = result.get("last_result", {})
+	if last_value is Dictionary:
+		var last_message := String(last_value.get("message", "")).strip_edges()
+		if last_message != "":
+			return "Quick Resolve stopped: %s" % last_message
+	var stop_reason := String(result.get("stop_reason", "resolution_incomplete")).strip_edges()
+	if stop_reason == "":
+		stop_reason = "resolution_incomplete"
+	return "Quick Resolve stopped before the battle ended (%s). You can continue issuing orders." % stop_reason.replace("_", " ")
+
 func _on_retreat_pressed() -> void:
 	_perform_action("retreat")
 
@@ -536,7 +595,7 @@ func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: Stri
 	return true
 
 func _disable_battle_exit_handoff_inputs() -> void:
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
 		if button != null:
 			button.disabled = true
 	for child in _spell_actions.get_children():
@@ -743,7 +802,7 @@ func _refresh() -> void:
 	call_deferred("_configure_battle_keyboard_focus", false)
 
 func _configure_battle_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
+	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible):
 		return
 	var surfaces := [
 		_battle_board_view,
@@ -754,6 +813,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_shoot_button,
 		_defend_button,
 		_spell_actions,
+		_quick_resolve_button,
 		_retreat_button,
 		_surrender_button,
 		_speed_normal_button,
@@ -835,6 +895,10 @@ func _refresh_action_buttons() -> void:
 	_apply_action_surface(_strike_button, surface.get("strike", {}), true)
 	_apply_action_surface(_shoot_button, surface.get("shoot", {}), true)
 	_apply_action_surface(_defend_button, surface.get("defend", {}), true)
+	_quick_resolve_button.text = "Quick Resolve"
+	_quick_resolve_button.disabled = _battle_exit_handoff_in_progress or _session.battle.is_empty() or _session.scenario_status != "in_progress"
+	_quick_resolve_button.tooltip_text = "Resolve the remaining battle automatically. Confirmation is required because casualties, mana use, and objective consequences are permanent."
+	_style_action_button(_quick_resolve_button, true, 112.0)
 	_apply_action_surface(_retreat_button, surface.get("retreat", {}))
 	_apply_action_surface(_surrender_button, surface.get("surrender", {}))
 	_append_battle_exit_order_cues(surface)
@@ -1901,12 +1965,16 @@ func validation_snapshot() -> Dictionary:
 		"strike_text": _strike_button.text,
 		"shoot_text": _shoot_button.text,
 		"defend_text": _defend_button.text,
+		"quick_resolve_text": _quick_resolve_button.text,
 		"retreat_text": _retreat_button.text,
 		"surrender_text": _surrender_button.text,
 		"advance_tooltip": _advance_button.tooltip_text,
 		"strike_tooltip": _strike_button.tooltip_text,
 		"shoot_tooltip": _shoot_button.tooltip_text,
 		"defend_tooltip": _defend_button.tooltip_text,
+		"quick_resolve_tooltip": _quick_resolve_button.tooltip_text,
+		"quick_resolve_disabled": _quick_resolve_button.disabled,
+		"quick_resolve_confirmation_text": _quick_resolve_confirmation_dialog.dialog_text,
 		"retreat_tooltip": _retreat_button.tooltip_text,
 		"surrender_tooltip": _surrender_button.tooltip_text,
 		"battle_exit_order_cues": _battle_exit_order_cue_surface(action_surface),
@@ -2728,7 +2796,7 @@ func _apply_visual_theme() -> void:
 
 	for button in [_prev_target_button, _next_target_button]:
 		_style_action_button(button, false, 88)
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button]:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button]:
 		_style_action_button(button, true)
 	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
 		_style_action_button(button, false, 78)

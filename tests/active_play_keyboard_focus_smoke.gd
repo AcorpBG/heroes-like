@@ -233,6 +233,29 @@ func _check_battle_keyboard_defend() -> bool:
 		if _focus_name() != "PrevTarget":
 			return _fail("Battle target cycling did not preserve focus on the target command: %s." % _focus_name())
 
+	var quick_resolve: Button = shell.get_node("%QuickResolve")
+	var quick_resolve_dialog: ConfirmationDialog = shell.get_node("QuickResolveConfirmationDialog")
+	if quick_resolve.disabled:
+		return _fail("Battle Quick Resolve command is disabled during an active battle.")
+	var quick_resolve_battle_before := JSON.stringify(session.battle)
+	quick_resolve.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if not quick_resolve_dialog.visible:
+		return _fail("Controller-confirmed Quick Resolve did not open its confirmation dialog.")
+	var confirmation_copy := quick_resolve_dialog.dialog_text.to_lower()
+	for required_copy in ["permanent casualties", "mana", "outcome", "objective consequences"]:
+		if required_copy not in confirmation_copy:
+			return _fail("Quick Resolve confirmation omitted required consequence copy '%s': %s." % [required_copy, quick_resolve_dialog.dialog_text])
+	await _press_joypad_button(JOY_BUTTON_B)
+	await _settle()
+	if quick_resolve_dialog.visible:
+		return _fail("Controller cancel did not close the Quick Resolve confirmation.")
+	if JSON.stringify(session.battle) != quick_resolve_battle_before:
+		return _fail("Canceling Quick Resolve changed battle state.")
+	if _focus_name() != "QuickResolve":
+		return _fail("Canceling Quick Resolve did not restore focus to its action-strip command: %s." % _focus_name())
+
 	var defend: Button = shell.get_node("%Defend")
 	if defend.disabled:
 		return _fail("Battle Defend command is disabled on a player turn.")

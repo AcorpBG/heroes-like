@@ -6,6 +6,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
@@ -1398,47 +1399,16 @@ static func _strategic_ai_long_run_row_progress_payload(event_name: String, row:
 	}
 
 static func _strategic_ai_auto_resolve_battle_interrupt(session: SessionStateStoreScript.SessionData, step_limit: int) -> Dictionary:
-	var steps := 0
-	var player_orders := 0
-	var invalid_orders := 0
-	var final_state := "continue"
 	var context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
-	while steps < step_limit and not session.battle.is_empty():
-		steps += 1
-		var ready_result: Dictionary = BattleRules.resolve_if_battle_ready(session)
-		final_state = String(ready_result.get("state", "continue"))
-		if _strategic_ai_battle_terminal_state(final_state):
-			break
-		if session.battle.is_empty():
-			break
-		var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
-		if String(active_stack.get("side", "")) != "player":
-			continue
-		var decision := BattleAutoplayBalanceHarnessRulesScript.player_autoplay_decision_report(session, true)
-		var action := String(decision.get("action", "defend"))
-		var result: Dictionary = {}
-		if action == "cast_spell":
-			result = BattleRules.cast_player_spell(session, String(decision.get("spell_id", "")))
-		else:
-			result = BattleRules.perform_player_action(session, action)
-		if String(result.get("state", "")) == "invalid" and action != "defend":
-			invalid_orders += 1
-			action = "defend"
-			result = BattleRules.perform_player_action(session, action)
-		player_orders += 1
-		final_state = String(result.get("state", final_state))
-		if _strategic_ai_battle_terminal_state(final_state):
-			break
-	if not _strategic_ai_battle_terminal_state(final_state) and steps >= step_limit:
-		final_state = "stalled_step_limit"
-	if _strategic_ai_battle_terminal_state(final_state):
+	var resolve_result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(session, step_limit)
+	if bool(resolve_result.get("completed", false)):
 		_strategic_ai_apply_battle_interrupt_handoff(session)
 	return {
-		"ok": _strategic_ai_battle_terminal_state(final_state) and final_state != "stalled_step_limit",
-		"state": final_state,
-		"steps": steps,
-		"player_orders": player_orders,
-		"invalid_orders": invalid_orders,
+		"ok": bool(resolve_result.get("ok", false)),
+		"state": String(resolve_result.get("state", "invalid")),
+		"steps": int(resolve_result.get("steps", 0)),
+		"player_orders": int(resolve_result.get("player_orders", 0)),
+		"invalid_orders": int(resolve_result.get("invalid_orders", 0)),
 		"context_type": String(context.get("type", "")),
 		"town_placement_id": String(context.get("town_placement_id", "")),
 		"scenario_status": String(session.scenario_status),
@@ -1454,9 +1424,6 @@ static func _strategic_ai_apply_battle_interrupt_handoff(session: SessionStateSt
 		OverworldRules.mark_runtime_normalized_transition_state(session)
 	else:
 		session.game_state = "outcome"
-
-static func _strategic_ai_battle_terminal_state(state: String) -> bool:
-	return state in ["victory", "defeat", "hero_defeat", "town_lost", "retreat", "surrender", "stalemate"]
 
 static func _strategic_ai_count_event_types(output: Dictionary, events: Array) -> void:
 	for event in events:
