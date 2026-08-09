@@ -6,11 +6,11 @@ const SCENARIO_ID := "ninefold-confluence"
 const PLACEMENT_ID := "ninefold_barrow_vault_watch"
 const LOCAL_ARMY_ID := "army_ninefold_barrow_vault_watch"
 const SHARED_ARMY_ID := "army_neutral_bramble_hedge_watch"
-const MAX_TERMINAL_MARGIN_PCT := 90
+const MAX_TERMINAL_MARGIN_PCT := 74
 const MIN_ROUND := 3
 const MAX_ROUND := 8
 const EXPECTED_STACK_COUNTS := {
-	"unit_neutral_hedgehook_watch": 8,
+	"unit_neutral_hedgehook_watch": 10,
 	"unit_neutral_thornbow_scouts": 6,
 }
 const SHARED_STACK_COUNTS := {

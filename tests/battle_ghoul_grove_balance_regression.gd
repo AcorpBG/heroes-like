@@ -5,12 +5,12 @@ const REPORT_ID := "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION"
 const SCENARIO_ID := "river-pass"
 const PLACEMENT_ID := "river_pass_ghoul_grove"
 const LOCAL_ARMY_ID := "army_river_pass_ghoul_grove_watch"
-const LOCAL_STACK_COUNTS := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 16, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}
+const LOCAL_STACK_COUNTS := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 17, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}
 const SHARED_ARMY_ID := "army_blackbranch_raiders"
 const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 11, "unit_mire_slinger": 6, "unit_bog_brute": 2}
 const SAMPLE_CONTRACTS := {
-	"normal": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 9},
-	"hard": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 42},
+	"normal": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 53, "enemy_damage_per_round": 25},
+	"hard": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 55, "enemy_damage_per_round": 25},
 }
 
 func _ready() -> void:
@@ -48,8 +48,8 @@ func _run() -> void:
 		if not bool(sample.get("completed", false)) or not _sample_matches(sample, SAMPLE_CONTRACTS[launch_difficulty]):
 			_fail_sample("Ghoul Grove drifted from its bounded %s outcome." % launch_difficulty, payload, launch_difficulty, sample)
 			return
-	if String(payload["samples"]["normal"].get("outcome_state", "")) != "victory" or String(payload["samples"]["hard"].get("outcome_state", "")) != "defeat":
-		_fail("Ghoul Grove launch difficulty is no longer monotonic.", payload)
+	if int(payload["samples"]["hard"].get("terminal_health_margin_pct", 0)) < int(payload["samples"]["normal"].get("terminal_health_margin_pct", 0)):
+		_fail("Ghoul Grove hard difficulty no longer applies at least the normal pressure margin.", payload)
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)

@@ -4,10 +4,10 @@ const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd
 const REPORT_ID := "BATTLE_PRISMHEARTH_RELAY_PICKETS_BALANCE_REGRESSION"
 const SCENARIO_ID := "prismhearth-watch"
 const PLACEMENT_IDS := ["prismhearth_relay_pickets", "prismhearth_glasswing_sortie", "prismhearth_halo_reserve"]
-const LOCAL_STACK_COUNTS := {"unit_shard_guard": 6, "unit_prism_adept": 2}
+const LOCAL_STACK_COUNTS := {"unit_shard_guard": 6, "unit_prism_adept": 4}
 const SHARED_STACK_COUNTS := {"unit_shard_guard": 5, "unit_prism_adept": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"prismhearth_glasswing_sortie": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 49, "enemy_damage_per_round": 24},
+	"prismhearth_glasswing_sortie": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 33, "enemy_damage_per_round": 24},
 	"prismhearth_halo_reserve": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 32, "enemy_damage_per_round": 28},
 }
 

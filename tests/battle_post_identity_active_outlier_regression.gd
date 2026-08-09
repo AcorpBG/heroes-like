@@ -7,11 +7,11 @@ const CASES := [
 		"scenario_id": "glassfen-breakers",
 		"placement_id": "glassfen_relay_pickets",
 		"local_army_id": "army_glassfen_relay_pickets_watch",
-		"local_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2},
+		"local_counts": {"unit_shard_guard": 6, "unit_prism_adept": 2, "unit_mirror_duelist": 1},
 		"shared_army_id": "army_relay_pickets",
 		"shared_counts": {"unit_shard_guard": 5, "unit_prism_adept": 2},
 		"matchup_band": "player_advantaged",
-		"expected": {"round_reached": 4, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 8},
+		"expected": {"round_reached": 5, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 6},
 	},
 	{
 		"scenario_id": "ninefold-confluence",

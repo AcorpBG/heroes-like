@@ -5,10 +5,10 @@ const REPORT_ID := "BATTLE_FORD_REAVERS_BALANCE_REGRESSION"
 const PLACEMENT_ID := "bridge_ford_reavers"
 const LOCAL_ARMY_CONTRACTS := {
 	"ironbridge-stand": {"army_id": "army_ironbridge_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 12, "unit_bog_brute": 3}},
-	"mireford-skirmish": {"army_id": "army_mireford_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 14, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2}},
+	"mireford-skirmish": {"army_id": "army_mireford_ford_reavers_watch", "stack_counts": {"unit_blackbranch_cutthroat": 15, "unit_mire_slinger": 11, "unit_mireclaw_gorefen_rippers": 2}},
 }
 const SHARED_STACK_COUNTS := {"unit_blackbranch_cutthroat": 13, "unit_mire_slinger": 8}
-const MIREFORD_SAMPLE := {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 42}
+const MIREFORD_SAMPLE := {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 7, "terminal_health_margin_pct": 7, "enemy_damage_per_round": 42}
 const CASES := [
 	{"scenario_id": "ironbridge-stand"},
 	{"scenario_id": "mireford-skirmish"},

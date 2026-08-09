@@ -56,6 +56,17 @@ FACTION_SPELL_SCHOOL_ACCESS = {
     "faction_brasshollow": {"furnace", "old_measure"},
     "faction_veilmourn": {"veil", "old_measure"},
 }
+GOREFEN_SCREEN_CONTROL_ABILITIES = [
+    {
+        "id": "shielding",
+        "name": "Gorefen Screen",
+        "description": "Boghide plates and reed-slick feints let the ripper pack cross killing lanes under missile pressure.",
+        "ranged_damage_multiplier": 0.89,
+        "engaged_damage_multiplier": 1.05,
+        "harried_damage_multiplier": 1.05,
+        "cohesion_hold_bonus": 1,
+    }
+]
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -91,8 +102,13 @@ def import_town_balance_module():
 
 
 class FastBattleBenchmark:
-    def __init__(self) -> None:
+    def __init__(self, gorefen_screen_control: bool = False) -> None:
+        self.gorefen_screen_control = gorefen_screen_control
         self.units = load_items("units.json")
+        if self.gorefen_screen_control:
+            self.units["unit_mireclaw_gorefen_rippers"]["abilities"] = [
+                dict(ability) for ability in GOREFEN_SCREEN_CONTROL_ABILITIES
+            ]
         self.buildings = load_items("buildings.json")
         self.towns = load_items("towns.json")
         self.factions = load_items("factions.json")
@@ -429,6 +445,14 @@ class FastBattleBenchmark:
             "ok": not structural_failures,
             "balance_status": "needs_tuning" if outliers else "within_target",
             "policy": "python_fast_faction_battle_benchmark",
+            "content_variant": "gorefen_screen_control" if self.gorefen_screen_control else "current_content",
+            "control_policy": (
+                "method-matched control using current benchmark methods with only "
+                "unit_mireclaw_gorefen_rippers abilities replaced by the exact pre-slice Gorefen Screen contract"
+                if self.gorefen_screen_control
+                else "current content with no in-memory ability override"
+            ),
+            "initiative_tie_policy": "paired ordered matchups keep the same seeded faction tie owner when internal sides reverse",
             "parity_scope": "ported BattleRules/BattleAiRules tactical math without Godot runtime",
             "spellbook_policy": (
                 "heroes use starting battle spells plus Native-RMG week-tier town study spells "
@@ -632,6 +656,8 @@ class FastBattleBenchmark:
             "distance": 2,
             "terrain": context["terrain"],
             "battlefield_tags": list(context.get("battlefield_tags", [])),
+            "side_a_faction_id": side_a_faction,
+            "side_b_faction_id": side_b_faction,
             "side_a_hero": self._hero_snapshot_for_sample(side_a_model, week, seed_index, 1, hero_policy),
             "side_b_hero": self._hero_snapshot_for_sample(side_b_model, week, seed_index, side_a_hero_count, hero_policy),
             "commander_spell_cast_rounds": {},
@@ -685,11 +711,42 @@ class FastBattleBenchmark:
                 "effects": [],
             }
             stacks.append(stack)
+        formation_rows = self._initial_formation_rows(len(stacks))
+        for formation_index, stack in enumerate(stacks):
+            row = formation_rows[formation_index] if formation_index < len(formation_rows) else int(clamp(formation_index, 0, 6))
+            column = 1 if side == INTERNAL_SIDE_A else 9
+            if bool(stack.get("ranged", False)):
+                column += -1 if side == INTERNAL_SIDE_A else 1
+            stack["benchmark_formation_hex"] = {
+                "q": int(clamp(column, 0, 10)),
+                "r": int(clamp(row, 0, 6)),
+            }
         return stacks
+
+    def _initial_formation_rows(self, stack_count: int) -> list[int]:
+        rows_by_count = {
+            0: [],
+            1: [3],
+            2: [2, 4],
+            3: [1, 3, 5],
+            4: [1, 2, 4, 5],
+            5: [0, 2, 3, 4, 6],
+            6: [0, 1, 2, 4, 5, 6],
+        }
+        return list(rows_by_count.get(stack_count, [0, 1, 2, 3, 4, 5, 6]))
 
     def _simulate_battle(self, battle: dict[str, Any], seed: int) -> dict[str, Any]:
         rng = random.Random(seed)
-        battle["initiative_tie_side"] = INTERNAL_SIDE_A if rng.getrandbits(1) == 0 else INTERNAL_SIDE_B
+        ordered_factions = sorted([
+            str(battle.get("side_a_faction_id", "")),
+            str(battle.get("side_b_faction_id", "")),
+        ])
+        initiative_tie_faction = ordered_factions[rng.getrandbits(1)]
+        battle["initiative_tie_side"] = (
+            INTERNAL_SIDE_A
+            if str(battle.get("side_a_faction_id", "")) == initiative_tie_faction
+            else INTERNAL_SIDE_B
+        )
         battle["resistance_seed"] = seed
         initial_health = self._side_healths(battle)
         action_mix: Counter[str] = Counter()
@@ -1430,11 +1487,14 @@ class FastBattleBenchmark:
         if self._has_ability(attacker, "formation_guard") and self._has_effect_id(target, battle, STATUS_STAGGERED):
             score += 1.5
         bloodrush = self._ability_by_id(attacker, "bloodrush")
-        if bloodrush and self._health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+        bloodrush_attack_eligible = not bool(bloodrush.get("primary_melee_only", False)) or not is_ranged
+        if bloodrush and bloodrush_attack_eligible and self._health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
             score += 2.0
-        if bloodrush and self._has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+        if bloodrush and bloodrush_attack_eligible and self._has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
             score += 1.5
-        if bloodrush and round_number >= 3:
+        if bloodrush and bloodrush_attack_eligible and float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0 and self._stack_is_formation_isolated(battle, target):
+            score += float(bloodrush.get("isolated_ai_target_priority_bonus", 0.0))
+        if bloodrush and int(bloodrush.get("late_round_initiative_bonus", 0)) > 0 and round_number >= 3:
             score += 0.75
         overheat = self._ability_by_id(attacker, "overheat")
         if overheat and not self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
@@ -1615,16 +1675,25 @@ class FastBattleBenchmark:
         if is_ranged and rot_cant and int(battle.get("round", 1)) >= int(rot_cant.get("available_from_round", 1)) and self._health_ratio(defender) <= float(rot_cant.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(rot_cant.get("wounded_damage_multiplier", 1.0))
         bloodrush = self._ability_by_id(attacker, "bloodrush")
+        bloodrush_attack_eligible = not bool(bloodrush.get("primary_melee_only", False)) or (not is_ranged and not is_retaliation)
+        bloodrush_isolated = (
+            bloodrush_attack_eligible
+            and float(bloodrush.get("isolated_damage_multiplier", 1.0)) > 1.0
+            and self._stack_is_formation_isolated(battle, defender)
+        )
         bloodrush_prepared = bool(bloodrush) and (
             self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0))
             or self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", []))
+            or bloodrush_isolated
         )
-        if bloodrush and not is_retaliation and not bloodrush_prepared:
+        if bloodrush and bloodrush_attack_eligible and not is_retaliation and not bloodrush_prepared:
             modifier *= float(bloodrush.get("clean_target_damage_multiplier", 1.0))
-        if bloodrush and self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
+        if bloodrush and bloodrush_attack_eligible and self._health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
             modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
-        if bloodrush and self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+        if bloodrush and bloodrush_attack_eligible and self._has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
             modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
+        if bloodrush and bloodrush_isolated:
+            modifier *= float(bloodrush.get("isolated_damage_multiplier", 1.0))
         overheat = self._ability_by_id(attacker, "overheat")
         if overheat:
             if self._has_effect_id(attacker, battle, STATUS_OVERHEATED):
@@ -2150,6 +2219,20 @@ class FastBattleBenchmark:
             bonus += 1
         if self._battle_has_tag(battle, "bog_channels") and any(self._has_ability(stack, ability) for ability in ["harry", "backstab", "bloodrush"]):
             bonus += 1
+        bloodrush = self._ability_by_id(stack, "bloodrush")
+        if str(stack.get("faction_id", "")) == "faction_mireclaw":
+            wounded_count = self._opposing_wounded_count(battle, side)
+            if wounded_count > 0:
+                bonus += 1
+            if bloodrush and wounded_count > 0:
+                bonus += min(
+                    int(bloodrush.get("max_initiative_bonus", 0)),
+                    wounded_count * max(1, int(bloodrush.get("wounded_initiative_bonus", 0))),
+                )
+            if not bool(stack.get("ranged", False)) and int(battle.get("round", 1)) >= 3:
+                bonus += 1
+            if bloodrush and int(battle.get("round", 1)) >= 3:
+                bonus += int(bloodrush.get("late_round_initiative_bonus", 0))
         if self._hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", False)) or self._battle_has_any_tags(battle, ["chokepoint", "fortified_line"])):
             bonus += 1
         if self._hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", False)) and self._battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
@@ -2436,6 +2519,27 @@ class FastBattleBenchmark:
         if bool(stack.get("ranged", False)):
             return not any(not bool(ally.get("ranged", False)) for ally in allies)
         return False
+
+    def _stack_is_formation_isolated(self, battle: dict[str, Any], stack: dict[str, Any]) -> bool:
+        stack_hex = stack.get("benchmark_formation_hex", {})
+        if not isinstance(stack_hex, dict) or not stack_hex:
+            return self._stack_is_isolated(battle, stack)
+        battle_id = str(stack.get("battle_id", ""))
+        for ally in self._alive_stacks_for_side(battle, str(stack.get("side", ""))):
+            if str(ally.get("battle_id", "")) == battle_id:
+                continue
+            ally_hex = ally.get("benchmark_formation_hex", {})
+            if isinstance(ally_hex, dict) and ally_hex and self._formation_hex_distance(stack_hex, ally_hex) <= 1:
+                return False
+        return True
+
+    def _formation_hex_distance(self, left: dict[str, Any], right: dict[str, Any]) -> int:
+        left_q, left_r = int(left.get("q", 0)), int(left.get("r", 0))
+        right_q, right_r = int(right.get("q", 0)), int(right.get("r", 0))
+        left_x, left_z = left_q - ((left_r - (left_r % 2)) // 2), left_r
+        right_x, right_z = right_q - ((right_r - (right_r % 2)) // 2), right_r
+        left_y, right_y = -left_x - left_z, -right_x - right_z
+        return (abs(left_x - right_x) + abs(left_y - right_y) + abs(left_z - right_z)) // 2
 
     def _harry_support_ready(
         self,
@@ -2920,6 +3024,11 @@ def main() -> int:
     parser.add_argument("--gate", action="store_true", help="Return non-zero on structural benchmark failure.")
     parser.add_argument("--include-contexts", action="store_true", help="Add report-only terrain/tag context rows.")
     parser.add_argument(
+        "--gorefen-screen-control",
+        action="store_true",
+        help="Run a method-matched control with only Gorefen Rippers abilities restored in memory to the pre-slice Gorefen Screen contract.",
+    )
+    parser.add_argument(
         "--hero-policy",
         choices=["curated-lead", "all-live"],
         default="curated-lead",
@@ -2929,7 +3038,7 @@ def main() -> int:
 
     seeds = 10 if args.quick else max(1, int(args.seeds))
     weeks = [1] if args.quick else args.weeks
-    report = FastBattleBenchmark().run(
+    report = FastBattleBenchmark(gorefen_screen_control=bool(args.gorefen_screen_control)).run(
         weeks=weeks,
         seeds=seeds,
         include_contexts=bool(args.include_contexts),
