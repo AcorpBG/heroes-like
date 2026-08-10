@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184` (completed). Verified alternate autosaves reconcile shell-local generated-opening recovery only after canonical live flags are confirmed; failed saves remain honest, stale direct retries self-heal without writing, and ordinary Save resumes immediately.
+- Current implementation slice: `accessibility-town-management-tab-controller-navigation-10184` (completed). Town's native five-tab management bar now participates in one authoritative controller/keyboard focus cycle with boundary retention and deterministic active-command handoff; tab refresh previews no longer consume live market quota.
+- Latest completed implementation slice: `accessibility-town-management-tab-controller-navigation-10184`. Wide/narrow five-tab keyboard/controller/mouse traversal, exact Town/save authority, market apply controls, Town visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass; the generated-large cache timing red is method-matched pre-existing at HEAD.
 - Latest completed implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184`. Three alternate End Turn success rows, exact failed-End-Turn authority, zero-write stale recovery, original retry controls, End Turn/transaction/timing/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `save-latest-summary-subsecond-recency-10184`. Both fractional orderings, warm/cold cache, Main Menu selection/Continue parity, integer and mtime legacy fallbacks, exact byte/mtime immutability, transaction/menu/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184`. Ten owner states, short-lived repeat races, ordinary focused movement, right-stick controls, keyboard/controller/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged input matrices pass at save version 9.
@@ -3830,6 +3831,31 @@ Completion criteria:
 
 Non-goals:
 - no End Turn rules/autosave policy, generated-map rules, SaveService canonicalization, save schema/version, manual-slot redesign, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Town Management Tab Controller Navigation
+
+id: `accessibility-town-management-tab-controller-navigation-10184`
+
+Status: completed.
+
+Selected Phase 6 controller-accessibility correction. Town exposes Build, Muster, Spells, Trade, and Log
+through a native TabContainer, but the authoritative focus cycle contains only the current tab's controls
+and no input path can intentionally move controller focus between management tabs.
+
+Implementation target:
+- add the native management TabBar to the Town focus cycle and expose a stable entry path from current-tab commands;
+- let ordinary left/right keyboard and D-pad input select each visible enabled tab through native GUI behavior;
+- after a tab changes, preserve deterministic focus ownership and make the selected tab's first enabled action reachable without trapping focus.
+- keep tab-driven readiness refresh strictly read-only by simulating market coverage against a duplicated town state rather than consuming live weekly market usage.
+
+Completion criteria:
+- real keyboard/controller navigation reaches the visible management TabBar, selects all five tabs, and reaches each selected tab's first enabled command;
+- traversal alone leaves session, resources, town state, save authority, and routes exact while visible focus remains owned by Town;
+- Build confirmation, Save, Settings, Return to Field, Menu, mouse tab selection, narrow-layout drawer behavior, and B/Escape semantics remain exact;
+- focused, active-focus, town visual/cache, core, repository, and Linux/Windows packaged controller gates pass without rules, content, or save-version changes.
+
+Non-goals:
+- no town rule/economy/recruitment/spell/market/log behavior, tab content/layout redesign, new shortcuts, input remapping, save/routing policy, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

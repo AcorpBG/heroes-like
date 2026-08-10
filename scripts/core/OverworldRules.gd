@@ -4424,7 +4424,8 @@ static func town_cost_readiness(town: Dictionary, pool: Dictionary, cost: Varian
 	var market_actions := []
 	if bool(readiness.get("market_affordable", false)):
 		var simulated_pool: Dictionary = readiness.get("pool", {}).duplicate(true)
-		market_actions = _apply_market_cost_coverage(town, simulated_pool, readiness.get("cost", {}), current_day)
+		var simulated_town: Dictionary = town.duplicate(true)
+		market_actions = _apply_market_cost_coverage(simulated_town, simulated_pool, readiness.get("cost", {}), current_day)
 	readiness["market_actions"] = market_actions
 	return readiness
 
