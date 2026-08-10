@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `accessibility-town-management-tab-controller-navigation-10184` (completed). Town's native five-tab management bar now participates in one authoritative controller/keyboard focus cycle with boundary retention and deterministic active-command handoff; tab refresh previews no longer consume live market quota.
+- Current implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184` (completed). Verified alternate autosaves reconcile command-briefing recovery only through commit-derived exact identity proof; failed saves remain pending and truthful, historical issues remain intact, and ordinary Save resumes after durable completion.
+- Latest completed implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184`. Successful and failed End Turn rows, unverified-authority refusal, zero-write stale checks, Battle/generated controls, transaction/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-town-management-tab-controller-navigation-10184`. Wide/narrow five-tab keyboard/controller/mouse traversal, exact Town/save authority, market apply controls, Town visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass; the generated-large cache timing red is method-matched pre-existing at HEAD.
 - Latest completed implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184`. Three alternate End Turn success rows, exact failed-End-Turn authority, zero-write stale recovery, original retry controls, End Turn/transaction/timing/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `save-latest-summary-subsecond-recency-10184`. Both fractional orderings, warm/cold cache, Main Menu selection/Continue parity, integer and mtime legacy fallbacks, exact byte/mtime immutability, transaction/menu/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
@@ -3856,6 +3857,30 @@ Completion criteria:
 
 Non-goals:
 - no town rule/economy/recruitment/spell/market/log behavior, tab content/layout redesign, new shortcuts, input remapping, save/routing policy, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Briefing Consumption Alternate Autosave Reconciliation
+
+id: `save-briefing-consumption-alternate-autosave-reconciliation-10184`
+
+Status: completed.
+
+Selected Phase 6 recovery-state consistency fix. Command briefing consumption mutates live `shown` state
+before its entry autosave. If that write fails and a later End Turn autosave succeeds, the durable payload
+is canonical but Overworld retains its local failure flag, stale warning semantics, and forced Save focus.
+
+Implementation target:
+- define the authoritative consumed-briefing predicate and reconcile local recovery only after a verified in-place alternate autosave persists that state;
+- preserve the historical issue record while clearing stale pending/copy/focus behavior and restoring ordinary Save flow;
+- keep failed End Turn saves honest and make stale preflight/direct recovery self-heal without a write when authority is already durable.
+
+Completion criteria:
+- precommit and after-backup entry failures preserve exact old bytes/cache/residue and emit one briefing issue;
+- clearing injection and completing one nonterminal End Turn applies rules once, saves once, leaves live/restored briefing shown state canonical, clears local pending/stale copy, retains EndTurn focus, and returns next Save to ordinary manual/overwrite flow;
+- a failing End Turn preserves briefing recovery and exact durable authority with truthful retry guidance and deduplicated historical issue;
+- focused briefing, End Turn, transaction, focus/visual, core, repository, and Linux/Windows packaged gates pass without SaveService, rules, or save-version changes.
+
+Non-goals:
+- no briefing content/consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing change, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

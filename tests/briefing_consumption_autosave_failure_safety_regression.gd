@@ -10,6 +10,7 @@ const FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
 const FAILURE_PHASES := ["precommit", "after_backup"]
 const SURFACES := ["overworld", "battle"]
 const FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
+const END_TURN_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const AUTOSAVE_PATH := "user://saves/autosave.json"
 const MANUAL_PATH := "user://saves/slot1.json"
 const ISSUE_LOG_PATH := "user://debug/heroes_runtime_issues.jsonl"
@@ -44,6 +45,17 @@ func _run() -> void:
 				return
 			failure_matrix["%s:%s" % [phase, surface]] = row
 
+	var alternate_end_turn := {}
+	for phase_value in FAILURE_PHASES:
+		var phase := String(phase_value)
+		var row: Dictionary = await _prove_alternate_end_turn_reconciliation(phase)
+		if row.is_empty():
+			return
+		alternate_end_turn[phase] = row
+	var failed_end_turn: Dictionary = await _prove_alternate_end_turn_failure("after_backup")
+	if failed_end_turn.is_empty():
+		return
+
 	var ordinary := {}
 	for surface_value in SURFACES:
 		var surface := String(surface_value)
@@ -59,6 +71,8 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"failure_matrix": failure_matrix,
+		"alternate_end_turn": alternate_end_turn,
+		"failed_end_turn": failed_end_turn,
 		"ordinary_success": ordinary,
 		"generated_overworld_defer": generated_defer,
 		"save_version": SessionState.SAVE_VERSION,
@@ -78,6 +92,19 @@ func _require_hooks() -> bool:
 				shell.free()
 				return _fail_bool("Briefing shell is missing validation hook %s." % method_name)
 		shell.free()
+	var overworld_shell: Node = OverworldShellScene.instantiate()
+	for method_name in [
+		"validation_reconcile_briefing_consumption_autosave_recovery_direct",
+		"validation_request_manual_save",
+		"validation_cancel_manual_save_overwrite",
+		"validation_request_end_turn",
+		"validation_confirm_end_turn",
+		"validation_end_turn_confirmation_snapshot",
+	]:
+		if not overworld_shell.has_method(method_name):
+			overworld_shell.free()
+			return _fail_bool("Overworld briefing shell is missing validation hook %s." % method_name)
+	overworld_shell.free()
 	for method_name in [
 		"validation_summary_cache_snapshot",
 		"validation_clear_summary_cache",
@@ -86,6 +113,194 @@ func _require_hooks() -> bool:
 		if not SaveService.has_method(method_name):
 			return _fail_bool("SaveService is missing transaction hook %s." % method_name)
 	return true
+
+
+func _prove_alternate_end_turn_reconciliation(phase: String) -> Dictionary:
+	_clear_runtime_files()
+	var prior: SessionStateStoreScript.SessionData = _prior_session(110 + FAILURE_PHASES.find(phase))
+	if not bool(SaveService.save_runtime_autosave_session(prior).get("ok", false)) \
+			or not bool(SaveService.save_runtime_manual_session(prior, 1).get("ok", false)):
+		return _fail_dictionary("Could not seed alternate End Turn saves for %s." % phase)
+	SaveService.inspect_autosave()
+	var fixture: SessionStateStoreScript.SessionData = _overworld_end_turn_fixture(120 + FAILURE_PHASES.find(phase))
+	OS.set_environment(FAILURE_ENV, phase)
+	var shell: Node = await _create_shell("overworld", fixture)
+	OS.unset_environment(FAILURE_ENV)
+	if shell == null:
+		return {}
+	var initial: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	var opening_issue: Dictionary = initial.get("last_runtime_issue", {}).duplicate(true)
+	if not bool(initial.get("failure_pending", false)) \
+			or not bool(initial.get("authoritative_briefing_canonical", false)) \
+			or bool(initial.get("verified_alternate_proof_current", true)) \
+			or RuntimeIssueLog.issue_record_count() != 1:
+		await _discard_shell(shell)
+		return _fail_dictionary("Alternate %s entry failure did not establish proof-bound briefing recovery: %s" % [phase, JSON.stringify(_compact_snapshot(initial))])
+
+	var autosave_before: Dictionary = _file_state(AUTOSAVE_PATH)
+	var cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var canonical_state: Dictionary = initial.get("authoritative_briefing_state", {}).duplicate(true)
+	var live: SessionStateStoreScript.SessionData = SessionState.ensure_active_session()
+	var malformed_state := canonical_state.duplicate(true)
+	malformed_state["shown_day"] = 0
+	live.overworld[OverworldRules.COMMAND_BRIEFING_KEY] = malformed_state
+	var malformed_reconcile: Dictionary = shell.call("validation_reconcile_briefing_consumption_autosave_recovery_direct")
+	live.overworld[OverworldRules.COMMAND_BRIEFING_KEY] = canonical_state
+	var unverified_reconcile: Dictionary = shell.call("validation_reconcile_briefing_consumption_autosave_recovery_direct")
+	if String(malformed_reconcile.get("reason", "")) != "authority_not_canonical" \
+			or bool(malformed_reconcile.get("reconciled", true)) \
+			or String(unverified_reconcile.get("reason", "")) != "alternate_save_not_verified" \
+			or bool(unverified_reconcile.get("reconciled", true)) \
+			or not bool(shell.call("validation_briefing_consumption_autosave_snapshot").get("failure_pending", false)) \
+			or _file_state(AUTOSAVE_PATH) != autosave_before \
+			or SaveService.validation_summary_cache_snapshot() != cache_before:
+		await _discard_shell(shell)
+		return _fail_dictionary("Alternate %s recovery self-healed without canonical durable proof." % phase)
+
+	if not bool(shell.call("validation_select_save_slot", 1)):
+		await _discard_shell(shell)
+		return _fail_dictionary("Could not select occupied manual slot for alternate %s control." % phase)
+	var first_save: Dictionary = shell.call("validation_request_manual_save")
+	await _settle()
+	var after_first_save: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	if not bool(first_save.get("visible", false)) \
+			or int(first_save.get("pending_slot", 0)) != 1 \
+			or not bool(after_first_save.get("failure_pending", false)) \
+			or int(after_first_save.get("reconciliation_count", -1)) != 0 \
+			or _file_state(AUTOSAVE_PATH) != autosave_before \
+			or SaveService.validation_summary_cache_snapshot() != cache_before:
+		await _discard_shell(shell)
+		return _fail_dictionary("First Save after %s entry failure bypassed proof or failed ordinary overwrite gating." % phase)
+	shell.call("validation_cancel_manual_save_overwrite")
+	await _settle()
+
+	var control := _duplicate_session(SessionState.ensure_active_session())
+	var control_result: Dictionary = OverworldRules.end_turn(control)
+	control.flags["last_action"] = "ended_turn"
+	var end_result: Dictionary = shell.call("validation_request_end_turn")
+	if bool(end_result.get("confirmation_required", false)):
+		end_result = shell.call("validation_confirm_end_turn")
+	await _settle(4)
+	var end_snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	var recovery: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	var reconciliation: Dictionary = recovery.get("last_reconciliation_result", {}) if recovery.get("last_reconciliation_result", {}) is Dictionary else {}
+	live = SessionState.ensure_active_session()
+	var restored = SaveService.restore_autosave_session()
+	if not bool(end_result.get("ok", false)) \
+			or not bool(end_result.get("committed", false)) \
+			or bool(end_result.get("resolved", false)) \
+			or int(end_snapshot.get("rules_end_turn_call_count", -1)) != 1 \
+			or int(end_snapshot.get("autosave_call_count", -1)) != 1 \
+			or int(end_snapshot.get("autosave_failure_count", -1)) != 0 \
+			or int(end_snapshot.get("resolution_attempt_count", -1)) != 0 \
+			or not bool(control_result.get("ok", false)) \
+			or bool(recovery.get("failure_pending", true)) \
+			or int(recovery.get("reconciliation_count", -1)) != 1 \
+			or not bool(recovery.get("authoritative_briefing_canonical", false)) \
+			or not bool(recovery.get("verified_alternate_proof_current", false)) \
+			or String(reconciliation.get("source", "")) != "end_turn_autosave" \
+			or String(reconciliation.get("reason", "")) != "alternate_autosave_saved" \
+			or not bool(reconciliation.get("saved", false)) \
+			or bool(reconciliation.get("write_attempted", true)) \
+			or bool(reconciliation.get("reconciliation_write_attempted", true)) \
+			or not bool(reconciliation.get("alternate_save_verified", false)) \
+			or recovery.get("last_runtime_issue", {}) != opening_issue \
+			or RuntimeIssueLog.issue_record_count() != 1 \
+			or String(recovery.get("visible_message", "")) == FAILURE_MESSAGE \
+			or String(recovery.get("visible_action_feedback", "")).contains(FAILURE_MESSAGE) \
+			or String(recovery.get("focus_owner", "")) != "EndTurn" \
+			or restored == null \
+			or not _briefing_authority_canonical(live) \
+			or not _briefing_authority_canonical(restored) \
+			or _gameplay_payload(live) != _gameplay_payload(control) \
+			or _gameplay_payload(restored) != _gameplay_payload(live) \
+			or not _transaction_artifacts_absent(AUTOSAVE_PATH):
+		await _discard_shell(shell)
+		return _fail_dictionary("Alternate %s End Turn did not reconcile briefing recovery exactly: %s" % [phase, JSON.stringify({"end": end_result, "end_snapshot": _compact_end_turn(end_snapshot), "recovery": _compact_snapshot(recovery), "reconciliation": reconciliation, "live_difference": _first_difference(_gameplay_payload(control), _gameplay_payload(live)), "restore_difference": _first_difference(_gameplay_payload(live), _gameplay_payload(restored)) if restored != null else {"restored": false}})])
+
+	var autosave_after: Dictionary = _file_state(AUTOSAVE_PATH)
+	var manual_after: Dictionary = _file_state(MANUAL_PATH)
+	var next_save: Dictionary = shell.call("validation_request_manual_save")
+	await _settle()
+	var after_next_save: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	if not bool(next_save.get("visible", false)) \
+			or int(next_save.get("pending_slot", 0)) != 1 \
+			or bool(after_next_save.get("failure_pending", true)) \
+			or String(after_next_save.get("last_reconciliation_result", {}).get("reason", "")) == "not_pending" \
+			or _file_state(AUTOSAVE_PATH) != autosave_after \
+			or _file_state(MANUAL_PATH) != manual_after:
+		await _discard_shell(shell)
+		return _fail_dictionary("Save after alternate %s reconciliation did not enter ordinary overwrite flow." % phase)
+	shell.call("validation_cancel_manual_save_overwrite")
+	await _discard_shell(shell)
+	return {"rules": 1, "autosaves": 1, "reconciled": true, "issue_count": 1, "focus": "EndTurn", "next_save": "manual_overwrite"}
+
+
+func _prove_alternate_end_turn_failure(phase: String) -> Dictionary:
+	_clear_runtime_files()
+	var prior: SessionStateStoreScript.SessionData = _prior_session(140)
+	if not bool(SaveService.save_runtime_autosave_session(prior).get("ok", false)):
+		return _fail_dictionary("Could not seed failed alternate End Turn autosave.")
+	SaveService.inspect_autosave()
+	var fixture: SessionStateStoreScript.SessionData = _overworld_end_turn_fixture(141)
+	OS.set_environment(FAILURE_ENV, phase)
+	var shell: Node = await _create_shell("overworld", fixture)
+	if shell == null:
+		return {}
+	var opening: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	var opening_issue: Dictionary = opening.get("last_runtime_issue", {}).duplicate(true)
+	var autosave_before: Dictionary = _file_state(AUTOSAVE_PATH)
+	var cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var control := _duplicate_session(SessionState.ensure_active_session())
+	var control_result: Dictionary = OverworldRules.end_turn(control)
+	control.flags["last_action"] = "ended_turn"
+	var end_result: Dictionary = shell.call("validation_request_end_turn")
+	if bool(end_result.get("confirmation_required", false)):
+		end_result = shell.call("validation_confirm_end_turn")
+	await _settle(4)
+	var end_snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	var recovery: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	var issues: Array = RuntimeIssueLog.last_issue_records(3)
+	var last_issue: Dictionary = issues[issues.size() - 1] if not issues.is_empty() and issues[issues.size() - 1] is Dictionary else {}
+	if bool(end_result.get("ok", true)) \
+			or not bool(end_result.get("committed", false)) \
+			or String(end_result.get("reason", "")) != "autosave_failed" \
+			or String(end_result.get("retry_action", "")) != "save" \
+			or not bool(end_result.get("rules_applied", false)) \
+			or int(end_snapshot.get("rules_end_turn_call_count", -1)) != 1 \
+			or int(end_snapshot.get("autosave_call_count", -1)) != 1 \
+			or int(end_snapshot.get("autosave_failure_count", -1)) != 1 \
+			or int(end_snapshot.get("resolution_attempt_count", -1)) != 0 \
+			or not bool(control_result.get("ok", false)) \
+			or not bool(recovery.get("failure_pending", false)) \
+			or int(recovery.get("reconciliation_count", -1)) != 0 \
+			or recovery.get("last_runtime_issue", {}) != opening_issue \
+			or RuntimeIssueLog.issue_record_count() != 2 \
+			or String(last_issue.get("event", "")) != "end_turn_autosave_failed" \
+			or String(last_issue.get("metadata", {}).get("retry_action", "")) != "save" \
+			or String(recovery.get("visible_message", "")) != END_TURN_FAILURE_MESSAGE \
+			or String(recovery.get("focus_owner", "")) != "EndTurn" \
+			or _gameplay_payload(SessionState.ensure_active_session()) != _gameplay_payload(control) \
+			or _file_state(AUTOSAVE_PATH) != autosave_before \
+			or SaveService.validation_summary_cache_snapshot() != cache_before \
+			or not _transaction_artifacts_absent(AUTOSAVE_PATH):
+		await _discard_shell(shell)
+		return _fail_dictionary("Failed alternate End Turn did not preserve briefing recovery authority: %s" % JSON.stringify({"end": end_result, "end_snapshot": _compact_end_turn(end_snapshot), "recovery": _compact_snapshot(recovery), "issues": issues}))
+
+	OS.unset_environment(FAILURE_ENV)
+	var stale_direct: Dictionary = shell.call("validation_reconcile_briefing_consumption_autosave_recovery_direct")
+	await _settle()
+	var after_stale: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	if String(stale_direct.get("reason", "")) != "alternate_save_not_verified" \
+			or bool(stale_direct.get("reconciled", true)) \
+			or not bool(after_stale.get("failure_pending", false)) \
+			or int(after_stale.get("reconciliation_count", -1)) != 0 \
+			or _file_state(AUTOSAVE_PATH) != autosave_before \
+			or SaveService.validation_summary_cache_snapshot() != cache_before:
+		await _discard_shell(shell)
+		return _fail_dictionary("Failed alternate End Turn stale direct retry cleared unprotected briefing recovery.")
+	await _discard_shell(shell)
+	return {"rules": 1, "autosave_failure": 1, "retry_action": "save", "pending": true, "issues": 2, "stale_direct_write_attempts": 0}
 
 
 func _prove_failure_and_manual_recovery(surface: String, phase: String) -> Dictionary:
@@ -264,6 +479,16 @@ func _overworld_fixture(seed_offset: int) -> SessionStateStoreScript.SessionData
 	return session
 
 
+func _overworld_end_turn_fixture(seed_offset: int) -> SessionStateStoreScript.SessionData:
+	var session: SessionStateStoreScript.SessionData = _overworld_fixture(seed_offset)
+	var movement: Dictionary = session.overworld.get("movement", {}) if session.overworld.get("movement", {}) is Dictionary else {}
+	movement["current"] = 0
+	session.overworld["movement"] = movement
+	OverworldRules.consume_command_risk_forecast(session)
+	OverworldRules.mark_runtime_normalized_transition_state(session)
+	return session
+
+
 func _battle_fixture(seed_offset: int) -> SessionStateStoreScript.SessionData:
 	var session = ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	session.session_id = "%s-briefing-battle-%d" % [session.session_id, seed_offset]
@@ -311,6 +536,72 @@ func _live_briefing_shown(session: SessionStateStoreScript.SessionData, surface:
 		return false
 	var state_value: Variant = session.overworld.get(OverworldRules.COMMAND_BRIEFING_KEY, {}) if surface == "overworld" else session.battle.get(BattleRulesScript.TACTICAL_BRIEFING_KEY, {})
 	return state_value is Dictionary and bool(state_value.get("shown", false))
+
+
+func _briefing_authority_canonical(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null:
+		return false
+	var state_value: Variant = session.overworld.get(OverworldRules.COMMAND_BRIEFING_KEY, {})
+	if not (state_value is Dictionary):
+		return false
+	var state: Dictionary = state_value
+	var expected_signature := "%s|%s" % [session.scenario_id, SessionStateStoreScript.normalize_launch_mode(session.launch_mode)]
+	var shown_day := int(state.get("shown_day", 0))
+	return String(state.get("signature", "")) == expected_signature \
+		and bool(state.get("shown", false)) \
+		and shown_day > 0 \
+		and shown_day <= session.day
+
+
+func _duplicate_session(session: SessionStateStoreScript.SessionData) -> SessionStateStoreScript.SessionData:
+	var duplicate: SessionStateStoreScript.SessionData = SessionStateStoreScript.new_session_data()
+	duplicate.from_dict(session.to_dict())
+	return duplicate
+
+
+func _gameplay_payload(session) -> Dictionary:
+	if session == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(JSON.stringify(session.to_dict()))
+	var payload: Dictionary = parsed if parsed is Dictionary else {}
+	for metadata_key in ["saved_at_unix", "save_slot_type", "saved_from_game_state", "saved_from_scenario_status", "saved_from_launch_mode", "manual_slot_name"]:
+		payload.erase(metadata_key)
+	var overworld: Dictionary = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
+	overworld.erase("command_risk_forecast")
+	payload["overworld"] = overworld
+	return payload
+
+
+func _first_difference(expected: Variant, actual: Variant, path: String = "$") -> Dictionary:
+	if typeof(expected) != typeof(actual):
+		return {"path": path, "expected_type": type_string(typeof(expected)), "actual_type": type_string(typeof(actual))}
+	if expected is Dictionary:
+		var expected_dictionary: Dictionary = expected
+		var actual_dictionary: Dictionary = actual
+		var expected_keys: Array = expected_dictionary.keys()
+		var actual_keys: Array = actual_dictionary.keys()
+		expected_keys.sort()
+		actual_keys.sort()
+		if expected_keys != actual_keys:
+			return {"path": path, "expected_keys": expected_keys, "actual_keys": actual_keys}
+		for key in expected_keys:
+			var nested: Dictionary = _first_difference(expected_dictionary.get(key), actual_dictionary.get(key), "%s.%s" % [path, key])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected is Array:
+		var expected_array: Array = expected
+		var actual_array: Array = actual
+		if expected_array.size() != actual_array.size():
+			return {"path": path, "expected_size": expected_array.size(), "actual_size": actual_array.size()}
+		for index in range(expected_array.size()):
+			var nested: Dictionary = _first_difference(expected_array[index], actual_array[index], "%s[%d]" % [path, index])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected != actual:
+		return {"path": path, "expected": expected, "actual": actual}
+	return {}
 
 
 func _settle(frames: int = 3) -> void:
@@ -408,9 +699,22 @@ func _compact_snapshot(snapshot: Dictionary) -> Dictionary:
 		"success": snapshot.get("autosave_success_count", -1),
 		"failure": snapshot.get("autosave_failure_count", -1),
 		"deferred": snapshot.get("generated_defer_count", -1),
+		"reconciliation": snapshot.get("reconciliation_count", -1),
+		"canonical": snapshot.get("authoritative_briefing_canonical", null),
+		"verified_proof": snapshot.get("verified_alternate_proof_current", null),
 		"message": snapshot.get("visible_message", ""),
 		"focus": snapshot.get("focus_owner", ""),
 		"routes": snapshot.get("resolution_route_attempt_count", -1),
+	}
+
+
+func _compact_end_turn(snapshot: Dictionary) -> Dictionary:
+	return {
+		"rules": snapshot.get("rules_end_turn_call_count", -1),
+		"autosaves": snapshot.get("autosave_call_count", -1),
+		"failures": snapshot.get("autosave_failure_count", -1),
+		"routes": snapshot.get("resolution_attempt_count", -1),
+		"message": snapshot.get("visible_message", ""),
 	}
 
 
