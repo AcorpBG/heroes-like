@@ -82,6 +82,8 @@ APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "appli
 APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.tscn"
 APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_active_play_return_autosave_failure_regression.gd"
 APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_active_play_return_autosave_failure_regression.tscn"
+APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_battle_entry_autosave_failure_regression.gd"
+APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_battle_entry_autosave_failure_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -12641,6 +12643,44 @@ def validate_save_management(errors: list[str]) -> None:
             "Active-play return autosave-failure regression scene must load its script",
         )
 
+    for path in (
+        APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH,
+        APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing battle-entry autosave-failure regression file: {path.relative_to(ROOT)}")
+    if APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        battle_entry_text = APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION",
+            'const FAILURE_PHASES := ["precommit", "after_backup"]',
+            "validation_request_pending_battle_entry",
+            "validation_battle_entry_snapshot",
+            "validation_set_battle_entry_routing_suppressed",
+            "validation_save_to_selected_slot",
+            "validation_summary_cache_snapshot",
+            "validation_transaction_artifact_paths",
+            'battle_entry_autosave_failed',
+            'autosave_failed',
+            'manual_save',
+            'already_saved',
+            'missing_session',
+            'missing_battle_payload',
+            'terminal_redirect',
+            'String(shell_snapshot.get("focus_owner", "")) != "Save"',
+            "AppRouter.resume_active_session()",
+            "SaveService.restore_autosave_session()",
+            "SaveService.restore_manual_session(1)",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in battle_entry_text, errors, f"application_battle_entry_autosave_failure_regression.gd is missing token: {required_token}")
+    if APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.exists():
+        battle_entry_scene_text = APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/application_battle_entry_autosave_failure_regression.gd" in battle_entry_scene_text,
+            errors,
+            "Battle-entry autosave-failure regression scene must load its script",
+        )
+
     app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func request_safe_quit",
@@ -20939,7 +20979,7 @@ def validate_town_defense_battle_flow(errors: list[str]) -> None:
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required town-defense token: {required_token}")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
-    ensure("AppRouter.go_to_battle()" in overworld_script_text, errors, "OverworldShell.gd must route queued town-defense battles into the battle scene")
+    ensure("_request_battle_entry(" in overworld_script_text, errors, "OverworldShell.gd must route queued town-defense battles through the forced-save boundary")
 
     battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in ("BattleRules.resolve_if_battle_ready", '"town_lost"', "AppRouter.go_to_overworld()"):
