@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `campaign-progression-completion-write-failure-atomicity-10184`. Campaign completion now persists a detached profile candidate before publishing it live. A failed write restores the same pre-terminal session object and returns a visible retry message; clearing either injected failure phase lets one reevaluation persist and publish the outcome exactly once. Focused failure/retry, first-defeat, skirmish, campaign replay, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-risk-gated-end-turn-confirmation-10184`. Warned remaining-movement/available-order and unconsumed core-risk End Turn requests now open a compact confirmation with Keep Waiting initially focused. First press, cancel, and stale session/day/status/payload rejection are read-only; valid confirmation consumes the one-shot forecast and enters the unchanged End Turn/autosave path exactly once. Exhausted low-risk turns remain one-click. Focused parity/save, controller, full and targeted 1280x720 visual, generated-profile, core, broad headless, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `campaign-replay-defeat-preserves-cleared-progress-10184`. Campaign completion now preserves an already-banked victory record, exported flags, carryover, victory count, and downstream unlock when a later replay loses, while incrementing attempts and retaining the live defeat outcome. First defeat, defeat-to-victory upgrade, and later-victory refresh remain unchanged. Focused transition-matrix, normalization/progression reload, campaign breadth/frontier/restart/menu/outcome, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `application-safe-close-autosave-10184`. AppRouter now disables native auto-accepted quit and owns root-window close, WM-close fallback, and Main Menu Quit through one guarded request. Active overworld, town, battle, or outcome state is transactionally autosaved before exactly one clean exit; save failure leaves the game open with exact live/prior state, records a runtime issue, and shows a bounded desktop error. Reentrant/completed requests cannot save or quit twice, while explicit harness quits remain unaffected. Focused, real Linux/X11, fresh packaged Windows/Wine, core, menu, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3105,6 +3106,39 @@ Completion evidence:
 - the focused runtime report matches the direct `OverworldRules.end_turn()` result and gameplay state, verifies the raw autosave payload and overworld restore route, and covers movement/order warning, core-risk gate, three stale families, and one-click low-risk behavior at save version 9;
 - controller A opens the dialog, Keep Waiting owns native-popup focus, controller Back and Escape cancel byte-exactly and restore End Turn focus; actual 1280x720 size is 696x262;
 - full overworld visual, generated-overworld profile, transactional save, core systems, broad headless simulation, editor parse, repository, JSON, Python, and diff gates pass. The visual fixture's stale Ghoul Grove count was aligned with the already-authored 28-troop roster.
+
+## Campaign Completion Persistence Atomicity
+
+id: `campaign-progression-completion-write-failure-atomicity-10184`
+
+Status: completed.
+
+Selected Phase 6 progression durability slice. Campaign completion currently
+publishes its new profile and terminal session before the transactional progression
+write is known to have committed. A precommit or after-backup failure can therefore
+show victory, carryover, and the next chapter in memory while disk remains old;
+the terminal session then bypasses later completion evaluation and cannot retry.
+
+Implementation target:
+- build a detached campaign-profile candidate, transactionally persist it, and assign the singleton only after a verified nonempty save path;
+- return a structured completion result to `ScenarioRules`; on persistence failure restore the exact pre-terminal session and keep the chapter evaluable, with a visible retry message;
+- after the failure hook clears, one reevaluation records the terminal result, attempts, carryover, unlock, disk profile, and live profile exactly once;
+- preserve first-defeat, skirmish, profile/save schema, and ordinary successful campaign completion behavior.
+
+Completion criteria:
+- precommit and after-backup failures preserve exact prior progression bytes/cache/profile, exact pre-terminal campaign session, locks/carryover/attempt counts, and leave no transaction residue;
+- clearing the hook and reevaluating succeeds once, publishes the terminal session/profile, persists/reloads exactly, and repeated terminal evaluation does not duplicate attempts;
+- first defeat and skirmish completion remain compatible;
+- focused atomicity, transactional save, campaign replay/arc/outcome, core, editor parse, repository, Linux/Windows transaction semantics, JSON, Python, and diff gates pass without version changes.
+
+Non-goals:
+- no campaign content/copy redesign, cloud saves, save/profile version change, outcome-layout redesign, End Turn work, Native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- `CampaignProgression.record_session_completion()` saves a detached candidate and assigns the singleton only after a nonempty committed path;
+- `ScenarioRules` restores the same full pre-terminal session object after persistence failure and returns an in-progress retry message;
+- focused precommit and after-backup cases preserve exact prior bytes, cache, live profile, session, locks, attempts, and carryover with no residue, then retry to one persisted/reloaded victory and remain idempotent;
+- first defeat, skirmish, campaign replay, core, editor parse, repository, JSON, Python, and diff gates pass without changing save version 9 or profile schema.
 
 ## Phase Roadmap
 

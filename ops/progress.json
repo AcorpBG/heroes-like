@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Risk-gated End Turn confirmation is complete: warned turns now require an exact, cancelable confirmation before one authoritative rules/autosave commit, while exhausted low-risk turns remain direct. Overall release readiness remains open.",
+  "currentNotes": "Campaign completion persistence atomicity is complete: failed progression writes preserve exact live/disk/session state and retry once, while successful completion publishes only after commit. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-risk-gated-end-turn-confirmation-10184",
-  "currentSliceId": "overworld-risk-gated-end-turn-confirmation-10184",
-  "currentSliceNotes": "Completed compact End Turn confirmation for remaining movement/orders and unconsumed core risk, exact cancel/stale rejection, and exactly-once authoritative commit while retaining direct exhausted low-risk turns.",
+  "currentSlice": "campaign-progression-completion-write-failure-atomicity-10184",
+  "currentSliceId": "campaign-progression-completion-write-failure-atomicity-10184",
+  "currentSliceNotes": "Completed detached progression commit before live publication, exact pre-terminal session rollback on failure, and one idempotent retry after either transaction failure phase.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Risk-Gated End Turn Confirmation",
-  "currentSliceUpdatedAt": "2026-08-10T02:17:06Z",
+  "currentSliceTitle": "Campaign Completion Persistence Atomicity",
+  "currentSliceUpdatedAt": "2026-08-10T02:32:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74171,6 +74171,57 @@
       ],
       "remainingWork": "No work remains in this slice. Release signing, native Windows hardware certification, publication, broader accessibility/content/performance work, and overall release readiness remain open.",
       "completedAt": "2026-08-10T02:17:06Z"
+    },
+    {
+      "id": "campaign-progression-completion-write-failure-atomicity-10184",
+      "title": "Campaign Completion Persistence Atomicity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent a failed progression write from publishing a terminal campaign outcome and live unlock that disappear after restart and cannot retry.",
+      "implementationTargets": [
+        "scripts/autoload/CampaignProgression.gd",
+        "scripts/core/ScenarioRules.gd",
+        "tests/campaign_completion_persistence_atomicity_regression.gd",
+        "tests/campaign_completion_persistence_atomicity_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "live_profile_published_before_save": true,
+        "terminal_session_on_progression_save_failure": true,
+        "failure_retry_available": false,
+        "disk_live_profile_divergence": true
+      },
+      "completionCriteria": [
+        "Precommit and after-backup failures preserve exact prior disk/cache/live profile and exact retryable pre-terminal session with no artifacts",
+        "Cleared failure hook allows one reevaluation to persist and publish the completion exactly once",
+        "First defeat, skirmish completion, profile normalization, and save/profile versions remain compatible",
+        "Focused atomicity, transaction, campaign, outcome, core, parse, repository, Linux/Windows semantics, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "campaign content/copy redesign, cloud saves, save/profile version change, outcome layout redesign, End Turn work, Native RMG work, public release, signing, or overall release readiness"
+      ],
+      "createdAt": "2026-08-10T02:23:03Z",
+      "startedAt": "2026-08-10T02:23:03Z",
+      "updatedAt": "2026-08-10T02:32:20Z",
+      "notes": "CampaignProgression now commits a detached completion candidate before publishing it live; ScenarioRules restores the same pre-terminal session on failure so one later evaluation can retry without duplicate progress.",
+      "validation": [
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/campaign_completion_persistence_atomicity_regression.tscn (passed; precommit/after-backup exact rollback, one retry, idempotent terminal repeat, first defeat, skirmish, save version 9)",
+        "isolated campaign_replay_progress_preservation_regression.tscn and core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Town departure copy integrity, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T02:32:20Z"
     }
   ],
   "project": "heroes-like",

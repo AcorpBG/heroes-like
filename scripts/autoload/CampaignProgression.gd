@@ -155,6 +155,18 @@ func start_scenario(scenario_id: String, difficulty: String = "normal", campaign
 	SessionState.active_session = session
 	return session
 
-func record_session_completion(session: SessionStateStoreScript.SessionData) -> void:
-	profile = CampaignRulesScript.record_session_completion_bridge(ensure_profile(), session)
-	save_profile()
+func record_session_completion(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var next_profile: Dictionary = CampaignRulesScript.record_session_completion_bridge(ensure_profile(), session)
+	var saved_path := SaveService.save_progression(next_profile)
+	if saved_path == "":
+		return {
+			"ok": false,
+			"path": "",
+			"message": "Campaign progression could not be saved. The chapter remains active and will retry completion.",
+		}
+	profile = next_profile
+	return {
+		"ok": true,
+		"path": saved_path,
+		"message": "",
+	}

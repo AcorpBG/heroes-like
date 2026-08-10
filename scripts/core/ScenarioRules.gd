@@ -782,12 +782,22 @@ static func perform_outcome_action(session: SessionStateStoreScript.SessionData,
 	return {"ok": false, "route": "stay", "message": "That outcome action is not supported."}
 
 static func _complete_session(session: SessionStateStoreScript.SessionData, status: String, summary: String) -> Dictionary:
+	var pre_completion_snapshot := session.to_dict()
 	session.scenario_status = status
 	session.scenario_summary = summary
 	session.flags["scenario_result"] = status
 	if SessionStateStoreScript.normalize_launch_mode(session.launch_mode) == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		session.flags["campaign"] = status
-		CampaignProgression.record_session_completion(session)
+		var completion_result: Dictionary = CampaignProgression.record_session_completion(session)
+		if not bool(completion_result.get("ok", false)):
+			session.from_dict(pre_completion_snapshot)
+			return {
+				"status": session.scenario_status,
+				"message": String(completion_result.get(
+					"message",
+					"Campaign progression could not be saved. The chapter remains active and will retry completion."
+				)),
+			}
 	return {"status": status, "message": summary}
 
 static func _merge_result_messages(result: Dictionary, prefix_message: String) -> Dictionary:
