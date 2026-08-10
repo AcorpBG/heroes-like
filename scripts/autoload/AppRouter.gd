@@ -29,6 +29,7 @@ const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, s
 const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
 const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
+const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
 var _active_overworld_handoff_profile := {}
@@ -65,6 +66,21 @@ var _battle_entry_last_result := {}
 var _battle_entry_last_route := {}
 var _battle_entry_last_runtime_issue := {}
 var _validation_battle_entry_routing_suppressed := false
+var _scenario_outcome_request_count := 0
+var _scenario_outcome_save_attempt_count := 0
+var _scenario_outcome_save_failure_count := 0
+var _scenario_outcome_retry_attempt_count := 0
+var _scenario_outcome_retry_success_count := 0
+var _scenario_outcome_retry_failure_count := 0
+var _scenario_outcome_route_attempt_count := 0
+var _scenario_outcome_suppressed_route_count := 0
+var _scenario_outcome_skipped_durable_route_count := 0
+var _scenario_outcome_runtime_issue_count := 0
+var _scenario_outcome_recovery := {}
+var _scenario_outcome_last_result := {}
+var _scenario_outcome_last_route := {}
+var _scenario_outcome_last_runtime_issue := {}
+var _validation_scenario_outcome_routing_suppressed := false
 
 func _ready() -> void:
 	# Native window close requests must pass through the same transactional save
@@ -158,7 +174,9 @@ func request_safe_quit(source: String = "application") -> Dictionary:
 			"message": "Expedition saved. Closing game.",
 			"path": String(save_result.get("path", "")),
 		}
+		_clear_scenario_outcome_recovery()
 	else:
+		_clear_scenario_outcome_recovery()
 		_safe_quit_last_result = {
 			"ok": true,
 			"saved": false,
@@ -239,6 +257,7 @@ func go_to_main_menu() -> void:
 func return_to_main_menu_from_active_play() -> Dictionary:
 	_active_play_return_request_count += 1
 	if SessionState.request_editor_return_from_active_play():
+		_clear_scenario_outcome_recovery()
 		_menu_notice = ""
 		_route_active_play_return(MAP_EDITOR_SCENE, "editor_return")
 		_active_play_return_last_result = _active_play_return_result(
@@ -253,6 +272,7 @@ func return_to_main_menu_from_active_play() -> Dictionary:
 		return _active_play_return_last_result.duplicate(true)
 
 	if not SessionState.has_playable_session():
+		_clear_scenario_outcome_recovery()
 		_menu_notice = ""
 		_route_active_play_return(MAIN_MENU_SCENE, "no_active_session")
 		_active_play_return_last_result = _active_play_return_result(
@@ -294,6 +314,7 @@ func return_to_main_menu_from_active_play() -> Dictionary:
 		)
 		return _active_play_return_last_result.duplicate(true)
 
+	_clear_scenario_outcome_recovery()
 	_menu_notice = String(save_result.get("message", ""))
 	_route_active_play_return(MAIN_MENU_SCENE, "saved")
 	_active_play_return_last_result = _active_play_return_result(
@@ -647,17 +668,303 @@ func validation_battle_entry_snapshot() -> Dictionary:
 		"last_runtime_issue": _battle_entry_last_runtime_issue.duplicate(true),
 	}
 
-func go_to_scenario_outcome() -> void:
+func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
+	_scenario_outcome_request_count += 1
 	if not SessionState.has_playable_session():
-		_change_scene(MAIN_MENU_SCENE)
-		return
+		_clear_scenario_outcome_recovery()
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			true,
+			"missing_session",
+			"Cannot open an outcome without an active expedition.",
+			"",
+			false,
+			false,
+			{}
+		)
+		if _record_scenario_outcome_route(MAIN_MENU_SCENE, "missing_session"):
+			_change_scene(MAIN_MENU_SCENE)
+		return _scenario_outcome_last_result.duplicate(true)
+
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status == "in_progress":
-		go_to_overworld()
-		return
+		_clear_scenario_outcome_recovery()
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			true,
+			"scenario_in_progress",
+			"The active expedition is returning to the field.",
+			"",
+			false,
+			false,
+			{}
+		)
+		if _record_scenario_outcome_route(OVERWORLD_SCENE, "in_progress_redirect"):
+			go_to_overworld()
+		return _scenario_outcome_last_result.duplicate(true)
+
 	session.game_state = "outcome"
-	SaveService.save_runtime_autosave_session(session)
-	_change_scene(SCENARIO_OUTCOME_SCENE)
+	var save_result := {}
+	var reason := "already_saved" if skip_required_save else "saved"
+	if skip_required_save:
+		_scenario_outcome_skipped_durable_route_count += 1
+		_clear_scenario_outcome_recovery()
+	else:
+		_scenario_outcome_save_attempt_count += 1
+		save_result = SaveService.save_runtime_autosave_session(session)
+		if not bool(save_result.get("ok", false)):
+			_scenario_outcome_save_failure_count += 1
+			_scenario_outcome_runtime_issue_count += 1
+			var identity := _scenario_outcome_session_identity(session)
+			_scenario_outcome_last_runtime_issue = RuntimeIssueLog.emit_error(
+				"router",
+				"scenario_outcome_autosave_failed",
+				SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
+				{
+					"save_reason": String(save_result.get("reason", "unknown")).left(80),
+					"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(180),
+					"scenario_id": String(identity.get("scenario_id", "")).left(96),
+					"scenario_status": String(identity.get("scenario_status", "")).left(32),
+					"day": int(identity.get("day", 0)),
+				},
+				session
+			)
+			_scenario_outcome_last_result = _scenario_outcome_result(
+				false,
+				false,
+				true,
+				"autosave_failed",
+				SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
+				"retry_outcome_autosave",
+				true,
+				true,
+				save_result
+			)
+			_scenario_outcome_recovery = {
+				"pending": true,
+				"message": SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
+				"identity": identity,
+				"last_result": _scenario_outcome_last_result.duplicate(true),
+			}
+			if _record_scenario_outcome_route(SCENARIO_OUTCOME_SCENE, "autosave_failed_recovery"):
+				_change_scene(SCENARIO_OUTCOME_SCENE)
+			return _scenario_outcome_last_result.duplicate(true)
+		_clear_scenario_outcome_recovery()
+
+	_scenario_outcome_last_result = _scenario_outcome_result(
+		true,
+		true,
+		true,
+		reason,
+		"Outcome checkpoint already saved. Opening outcome review." if skip_required_save else "Outcome checkpoint saved. Opening outcome review.",
+		"",
+		false,
+		false,
+		save_result
+	)
+	if _record_scenario_outcome_route(SCENARIO_OUTCOME_SCENE, reason):
+		_change_scene(SCENARIO_OUTCOME_SCENE)
+	return _scenario_outcome_last_result.duplicate(true)
+
+func retry_scenario_outcome_autosave() -> Dictionary:
+	_scenario_outcome_retry_attempt_count += 1
+	if _scenario_outcome_recovery.is_empty() or not bool(_scenario_outcome_recovery.get("pending", false)):
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			false,
+			"no_recovery_pending",
+			"No outcome autosave recovery is pending.",
+			"",
+			false,
+			false,
+			{}
+		)
+		return _scenario_outcome_last_result.duplicate(true)
+	if not SessionState.has_playable_session():
+		_clear_scenario_outcome_recovery()
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			false,
+			"stale_session",
+			"The pending outcome belongs to another expedition.",
+			"",
+			false,
+			false,
+			{}
+		)
+		return _scenario_outcome_last_result.duplicate(true)
+
+	var session := SessionState.ensure_active_session()
+	var pending_identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
+	if session.scenario_status == "in_progress" or not _scenario_outcome_identity_matches(session, pending_identity):
+		_clear_scenario_outcome_recovery()
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			false,
+			"stale_session",
+			"The pending outcome belongs to another expedition.",
+			"",
+			false,
+			false,
+			{}
+		)
+		return _scenario_outcome_last_result.duplicate(true)
+
+	session.game_state = "outcome"
+	_scenario_outcome_save_attempt_count += 1
+	var save_result: Dictionary = SaveService.save_runtime_autosave_session(session)
+	if not bool(save_result.get("ok", false)):
+		_scenario_outcome_save_failure_count += 1
+		_scenario_outcome_retry_failure_count += 1
+		_scenario_outcome_last_result = _scenario_outcome_result(
+			false,
+			false,
+			false,
+			"autosave_failed",
+			SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE,
+			"retry_outcome_autosave",
+			true,
+			true,
+			save_result
+		)
+		_scenario_outcome_recovery["message"] = SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE
+		_scenario_outcome_recovery["last_result"] = _scenario_outcome_last_result.duplicate(true)
+		return _scenario_outcome_last_result.duplicate(true)
+
+	_scenario_outcome_retry_success_count += 1
+	_scenario_outcome_last_result = _scenario_outcome_result(
+		true,
+		true,
+		false,
+		"saved",
+		"Outcome checkpoint saved.",
+		"",
+		false,
+		false,
+		save_result
+	)
+	_clear_scenario_outcome_recovery()
+	return _scenario_outcome_last_result.duplicate(true)
+
+func scenario_outcome_recovery_state() -> Dictionary:
+	return scenario_outcome_recovery_snapshot()
+
+func scenario_outcome_recovery_snapshot() -> Dictionary:
+	_reconcile_scenario_outcome_recovery()
+	var pending := not _scenario_outcome_recovery.is_empty() and bool(_scenario_outcome_recovery.get("pending", false))
+	var identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
+	return {
+		"pending": pending,
+		"recovery_pending": pending,
+		"message": String(_scenario_outcome_recovery.get("message", "")) if pending else "",
+		"identity": identity.duplicate(true),
+		"last_result": _scenario_outcome_last_result.duplicate(true),
+		"request_count": _scenario_outcome_request_count,
+		"save_attempt_count": _scenario_outcome_save_attempt_count,
+		"save_failure_count": _scenario_outcome_save_failure_count,
+		"retry_attempt_count": _scenario_outcome_retry_attempt_count,
+		"retry_success_count": _scenario_outcome_retry_success_count,
+		"retry_failure_count": _scenario_outcome_retry_failure_count,
+		"route_attempt_count": _scenario_outcome_route_attempt_count,
+		"suppressed_route_count": _scenario_outcome_suppressed_route_count,
+		"skipped_durable_route_count": _scenario_outcome_skipped_durable_route_count,
+		"runtime_issue_count": _scenario_outcome_runtime_issue_count,
+		"routing_suppressed": _validation_scenario_outcome_routing_suppressed,
+		"last_route": _scenario_outcome_last_route.duplicate(true),
+		"last_runtime_issue": _scenario_outcome_last_runtime_issue.duplicate(true),
+	}
+
+func validation_set_scenario_outcome_routing_suppressed(suppressed: bool) -> void:
+	_validation_scenario_outcome_routing_suppressed = suppressed
+
+func validation_reset_scenario_outcome_route_state() -> void:
+	_scenario_outcome_request_count = 0
+	_scenario_outcome_save_attempt_count = 0
+	_scenario_outcome_save_failure_count = 0
+	_scenario_outcome_retry_attempt_count = 0
+	_scenario_outcome_retry_success_count = 0
+	_scenario_outcome_retry_failure_count = 0
+	_scenario_outcome_route_attempt_count = 0
+	_scenario_outcome_suppressed_route_count = 0
+	_scenario_outcome_skipped_durable_route_count = 0
+	_scenario_outcome_runtime_issue_count = 0
+	_scenario_outcome_recovery = {}
+	_scenario_outcome_last_result = {}
+	_scenario_outcome_last_route = {}
+	_scenario_outcome_last_runtime_issue = {}
+
+func validation_scenario_outcome_route_snapshot() -> Dictionary:
+	return scenario_outcome_recovery_snapshot()
+
+func _scenario_outcome_result(
+	ok: bool,
+	saved: bool,
+	routed: bool,
+	reason: String,
+	message: String,
+	retry_action: String,
+	outcome_pending: bool,
+	recovery_pending: bool,
+	save_result: Dictionary
+) -> Dictionary:
+	return {
+		"ok": ok,
+		"saved": saved,
+		"routed": routed,
+		"reason": reason,
+		"retry_action": retry_action,
+		"outcome_pending": outcome_pending,
+		"recovery_pending": recovery_pending,
+		"message": message,
+		"save_result": save_result.duplicate(true),
+	}
+
+func _record_scenario_outcome_route(scene_path: String, reason: String) -> bool:
+	_scenario_outcome_route_attempt_count += 1
+	_scenario_outcome_last_route = {
+		"target_scene": scene_path,
+		"reason": reason,
+		"suppressed": _validation_scenario_outcome_routing_suppressed,
+	}
+	if _validation_scenario_outcome_routing_suppressed:
+		_scenario_outcome_suppressed_route_count += 1
+		return false
+	return true
+
+func _scenario_outcome_session_identity(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	return {
+		"session_id": String(session.session_id).left(128),
+		"session_id_hash": String(session.session_id).sha256_text(),
+		"scenario_id": String(session.scenario_id).left(128),
+		"scenario_id_hash": String(session.scenario_id).sha256_text(),
+		"launch_mode": String(session.launch_mode).left(32),
+		"scenario_status": String(session.scenario_status).left(32),
+		"day": int(session.day),
+		"summary_hash": String(session.scenario_summary).sha256_text(),
+	}
+
+func _scenario_outcome_identity_matches(session: SessionStateStoreScript.SessionData, identity: Dictionary) -> bool:
+	return not identity.is_empty() and _scenario_outcome_session_identity(session) == identity
+
+func _reconcile_scenario_outcome_recovery() -> void:
+	if _scenario_outcome_recovery.is_empty() or not bool(_scenario_outcome_recovery.get("pending", false)):
+		return
+	if not SessionState.has_playable_session():
+		_clear_scenario_outcome_recovery()
+		return
+	var identity: Dictionary = _scenario_outcome_recovery.get("identity", {}) if _scenario_outcome_recovery.get("identity", {}) is Dictionary else {}
+	if not _scenario_outcome_identity_matches(SessionState.ensure_active_session(), identity):
+		_clear_scenario_outcome_recovery()
+
+func _clear_scenario_outcome_recovery() -> void:
+	_scenario_outcome_recovery = {}
 
 func go_to_map_editor() -> void:
 	_change_scene(MAP_EDITOR_SCENE)
@@ -676,7 +983,7 @@ func resume_active_session() -> void:
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
-		go_to_scenario_outcome()
+		go_to_scenario_outcome(true)
 		return
 
 	match SaveService.resume_target_for_session(session):
@@ -685,7 +992,7 @@ func resume_active_session() -> void:
 		"town":
 			go_to_town()
 		"outcome":
-			go_to_scenario_outcome()
+			go_to_scenario_outcome(true)
 		_:
 			go_to_overworld()
 

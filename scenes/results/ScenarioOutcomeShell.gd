@@ -3,6 +3,7 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
+const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 
 @onready var _backdrop: ColorRect = %Backdrop
 @onready var _header_label: Label = %Header
@@ -39,6 +40,14 @@ var _model: Dictionary = {}
 var _last_action_message := ""
 var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
+var _outcome_recovery_pending := false
+var _outcome_recovery_entry_result: Dictionary = {}
+var _last_outcome_recovery_retry_result: Dictionary = {}
+var _validation_outcome_recovery_request_count := 0
+var _validation_outcome_recovery_retry_attempt_count := 0
+var _validation_outcome_recovery_retry_failure_count := 0
+var _validation_outcome_recovery_retry_success_count := 0
+var _validation_outcome_recovery_blocked_action_count := 0
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -50,8 +59,11 @@ func _ready() -> void:
 		AppRouter.resume_active_session()
 		return
 	_configure_save_slot_picker()
+	_sync_outcome_recovery_state(true)
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	_refresh()
+	if _outcome_recovery_pending:
+		_save_button.call_deferred("grab_focus")
 
 func _outcome_music_metadata() -> Dictionary:
 	if _session == null:
@@ -235,18 +247,45 @@ func _rebuild_actions() -> void:
 	for action in actions:
 		if not (action is Dictionary):
 			continue
+		var action_id := String(action.get("id", ""))
+		var recovery_blocked := _outcome_recovery_pending and _outcome_action_starts_new_session(action_id)
 		var button := Button.new()
-		button.text = String(action.get("label", action.get("id", "Action")))
-		button.disabled = bool(action.get("disabled", false))
+		button.text = String(action.get("label", action_id if action_id != "" else "Action"))
+		button.disabled = bool(action.get("disabled", false)) or recovery_blocked
 		button.tooltip_text = _outcome_action_tooltip(action)
+		if recovery_blocked:
+			button.tooltip_text = _join_tooltip_sections([
+				OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
+				button.tooltip_text,
+			])
 		FrontierVisualKit.apply_button(button, "primary", 172.0, 36.0)
-		button.pressed.connect(_on_action_pressed.bind(String(action.get("id", ""))))
+		button.pressed.connect(_on_action_pressed.bind(action_id))
 		_actions_bar.add_child(button)
 
 func _on_action_pressed(action_id: String) -> void:
 	_perform_outcome_action(action_id)
 
 func _perform_outcome_action(action_id: String) -> Dictionary:
+	_sync_outcome_recovery_state(false, true)
+	if _outcome_recovery_pending and _outcome_action_starts_new_session(action_id):
+		_validation_outcome_recovery_blocked_action_count += 1
+		var blocked_result := {
+			"ok": false,
+			"routed": false,
+			"reason": "outcome_autosave_recovery_pending",
+			"retry_action": "retry_outcome_autosave",
+			"action_id": action_id,
+			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
+		}
+		_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE
+		_refresh()
+		_save_button.call_deferred("grab_focus")
+		return blocked_result
+	if action_id == "return_to_menu":
+		var return_result := _on_menu_pressed()
+		return_result["action_id"] = action_id
+		return_result["route"] = "main_menu" if bool(return_result.get("routed", false)) else "stay"
+		return return_result
 	var result := ScenarioRules.perform_outcome_action(_session, action_id)
 	_last_action_message = String(result.get("message", ""))
 	match String(result.get("route", "stay")):
@@ -258,21 +297,42 @@ func _perform_outcome_action(action_id: String) -> Dictionary:
 			_refresh()
 	return result
 
-func _on_save_pressed() -> void:
+func _on_save_pressed() -> Dictionary:
+	_sync_outcome_recovery_state(false, true)
+	var recovery_result: Dictionary = {}
+	if _outcome_recovery_pending:
+		_validation_outcome_recovery_request_count += 1
+		_validation_outcome_recovery_retry_attempt_count += 1
+		recovery_result = AppRouter.retry_scenario_outcome_autosave()
+		_last_outcome_recovery_retry_result = recovery_result.duplicate(true)
+		_sync_outcome_recovery_state()
+		if not bool(recovery_result.get("ok", false)) or _outcome_recovery_pending:
+			_validation_outcome_recovery_retry_failure_count += 1
+			_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE if _outcome_recovery_pending else String(
+				recovery_result.get("message", "Outcome autosave recovery is no longer available.")
+			).strip_edges().left(180)
+			_refresh()
+			_save_button.call_deferred("grab_focus")
+			return _outcome_recovery_shell_result(recovery_result, false, false)
+		_validation_outcome_recovery_retry_success_count += 1
+		_last_action_message = ""
+		_refresh()
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_action_message = String(action.get("summary", "The outcome could not be saved."))
 		_refresh()
-		return
+		return _outcome_recovery_shell_result(action, false, false, recovery_result)
 	if bool(action.get("requires_confirmation", false)):
 		_manual_save_overwrite_dialog.open_action(action)
-		return
-	_commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
+		return _outcome_recovery_shell_result(action, false, true, recovery_result)
+	var manual_result := _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
+	return _outcome_recovery_shell_result(manual_result, bool(manual_result.get("ok", false)), false, recovery_result)
 
-func _commit_manual_save(manual_slot: int) -> void:
+func _commit_manual_save(manual_slot: int) -> Dictionary:
 	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
 	_last_action_message = String(result.get("message", ""))
 	_refresh()
+	return result
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
@@ -298,10 +358,69 @@ func _on_menu_pressed() -> Dictionary:
 	if message == "":
 		message = RETURN_TO_MENU_FAILURE_MESSAGE
 	_last_return_to_menu_result["message"] = message
-	_last_action_message = message
+	_sync_outcome_recovery_state()
+	_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE if _outcome_recovery_pending else message
 	_refresh()
 	_menu_button.call_deferred("grab_focus")
 	return _last_return_to_menu_result.duplicate(true)
+
+func _sync_outcome_recovery_state(capture_entry: bool = false, refresh_on_clear: bool = false) -> Dictionary:
+	var was_pending := _outcome_recovery_pending
+	var snapshot: Dictionary = AppRouter.scenario_outcome_recovery_snapshot()
+	_outcome_recovery_pending = bool(snapshot.get("recovery_pending", snapshot.get("pending", false)))
+	var entry_value: Variant = snapshot.get("last_result", snapshot.get("entry_result", {}))
+	if capture_entry and entry_value is Dictionary:
+		_outcome_recovery_entry_result = (entry_value as Dictionary).duplicate(true)
+	if _outcome_recovery_pending:
+		_last_action_message = OUTCOME_AUTOSAVE_RECOVERY_MESSAGE
+	elif was_pending and _last_action_message == OUTCOME_AUTOSAVE_RECOVERY_MESSAGE:
+		_last_action_message = ""
+		if refresh_on_clear:
+			_refresh()
+	return snapshot
+
+func _outcome_action_starts_new_session(action_id: String) -> bool:
+	return action_id.begins_with("campaign_start:") or action_id.begins_with("skirmish_start:")
+
+func _outcome_action_effectively_disabled(action: Dictionary) -> bool:
+	return bool(action.get("disabled", false)) or (
+		_outcome_recovery_pending
+		and _outcome_action_starts_new_session(String(action.get("id", "")))
+	)
+
+func _outcome_recovery_blocked_action_ids() -> Array[String]:
+	var blocked_ids: Array[String] = []
+	if not _outcome_recovery_pending:
+		return blocked_ids
+	var actions: Variant = _model.get("actions", [])
+	if actions is Array:
+		for action in actions:
+			if action is Dictionary:
+				var action_id := String(action.get("id", ""))
+				if _outcome_action_starts_new_session(action_id):
+					blocked_ids.append(action_id)
+	return blocked_ids
+
+func _outcome_recovery_shell_result(
+	result: Dictionary,
+	manual_saved: bool,
+	confirmation_required: bool,
+	recovery_result: Dictionary = {}
+) -> Dictionary:
+	var result_ok := bool(result.get("ok", false)) or confirmation_required
+	var reason := String(result.get("reason", ""))
+	if reason == "" and confirmation_required:
+		reason = "confirmation_required"
+	return {
+		"ok": result_ok,
+		"saved": manual_saved,
+		"confirmation_required": confirmation_required,
+		"recovery_pending": _outcome_recovery_pending,
+		"reason": reason,
+		"message": _last_action_message,
+		"result": result.duplicate(true),
+		"recovery_result": recovery_result.duplicate(true),
+	}
 
 func _on_guide_pressed() -> void:
 	_guide_panel.visible = not _guide_panel.visible
@@ -317,6 +436,7 @@ func validation_snapshot() -> Dictionary:
 				action_ids.append(String(action.get("id", "")))
 				action_payloads.append(action.duplicate(true))
 	var save_surface := AppRouter.active_save_surface()
+	var outcome_recovery_router_snapshot := _sync_outcome_recovery_state(false, true)
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
@@ -324,6 +444,18 @@ func validation_snapshot() -> Dictionary:
 		"return_to_menu_visible_message": _last_action_message,
 		"return_to_menu_focus_owner": _return_to_menu_focus_owner_name(),
 		"return_to_menu_request_count": _validation_return_to_menu_request_count,
+		"outcome_recovery_pending": _outcome_recovery_pending,
+		"outcome_recovery_message": _last_action_message if _outcome_recovery_pending else "",
+		"outcome_recovery_focus_owner": _outcome_recovery_focus_owner_name(),
+		"outcome_recovery_entry_result": _outcome_recovery_entry_result.duplicate(true),
+		"outcome_recovery_last_retry_result": _last_outcome_recovery_retry_result.duplicate(true),
+		"outcome_recovery_request_count": _validation_outcome_recovery_request_count,
+		"outcome_recovery_retry_attempt_count": _validation_outcome_recovery_retry_attempt_count,
+		"outcome_recovery_retry_failure_count": _validation_outcome_recovery_retry_failure_count,
+		"outcome_recovery_retry_success_count": _validation_outcome_recovery_retry_success_count,
+		"outcome_recovery_blocked_action_count": _validation_outcome_recovery_blocked_action_count,
+		"outcome_recovery_blocked_action_ids": _outcome_recovery_blocked_action_ids(),
+		"outcome_recovery_router_snapshot": outcome_recovery_router_snapshot,
 		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
@@ -406,6 +538,38 @@ func validation_save_to_selected_slot() -> Dictionary:
 		"summary": summary,
 		"message": _last_action_message,
 	}
+
+func validation_request_save_outcome() -> Dictionary:
+	return _on_save_pressed()
+
+func validation_reset_outcome_recovery_state() -> void:
+	_validation_outcome_recovery_request_count = 0
+	_validation_outcome_recovery_retry_attempt_count = 0
+	_validation_outcome_recovery_retry_failure_count = 0
+	_validation_outcome_recovery_retry_success_count = 0
+	_validation_outcome_recovery_blocked_action_count = 0
+	_last_outcome_recovery_retry_result = {}
+
+func validation_outcome_recovery_snapshot() -> Dictionary:
+	var router_snapshot := _sync_outcome_recovery_state(false, true)
+	return {
+		"pending": _outcome_recovery_pending,
+		"message": _last_action_message if _outcome_recovery_pending else "",
+		"focus_owner": _outcome_recovery_focus_owner_name(),
+		"entry_result": _outcome_recovery_entry_result.duplicate(true),
+		"last_retry_result": _last_outcome_recovery_retry_result.duplicate(true),
+		"request_count": _validation_outcome_recovery_request_count,
+		"retry_attempt_count": _validation_outcome_recovery_retry_attempt_count,
+		"retry_failure_count": _validation_outcome_recovery_retry_failure_count,
+		"retry_success_count": _validation_outcome_recovery_retry_success_count,
+		"blocked_action_count": _validation_outcome_recovery_blocked_action_count,
+		"blocked_action_ids": _outcome_recovery_blocked_action_ids(),
+		"router_snapshot": router_snapshot,
+	}
+
+func _outcome_recovery_focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_request_manual_save() -> Dictionary:
 	_on_save_pressed()
@@ -786,12 +950,12 @@ func _primary_outcome_action_label() -> String:
 	if not (actions is Array):
 		return ""
 	for action in actions:
-		if action is Dictionary and not bool(action.get("disabled", false)):
+		if action is Dictionary and not _outcome_action_effectively_disabled(action):
 			var action_id := String(action.get("id", ""))
 			if action_id != "" and action_id != "return_to_menu":
 				return String(action.get("label", action_id)).strip_edges()
 	for action in actions:
-		if action is Dictionary and not bool(action.get("disabled", false)):
+		if action is Dictionary and not _outcome_action_effectively_disabled(action):
 			var label := String(action.get("label", action.get("id", ""))).strip_edges()
 			if label != "":
 				return label
@@ -804,7 +968,7 @@ func _retry_or_replay_outcome_action() -> Dictionary:
 	var same_scenario_action := {}
 	var first_fresh_action := {}
 	for action in actions:
-		if not (action is Dictionary) or bool(action.get("disabled", false)):
+		if not (action is Dictionary) or _outcome_action_effectively_disabled(action):
 			continue
 		var action_id := String(action.get("id", ""))
 		if not (action_id.begins_with("campaign_start:") or action_id.begins_with("skirmish_start:")):
@@ -822,12 +986,12 @@ func _primary_outcome_action_id() -> String:
 	if not (actions is Array):
 		return ""
 	for action in actions:
-		if action is Dictionary and not bool(action.get("disabled", false)):
+		if action is Dictionary and not _outcome_action_effectively_disabled(action):
 			var action_id := String(action.get("id", ""))
 			if action_id != "" and action_id != "return_to_menu":
 				return action_id
 	for action in actions:
-		if action is Dictionary and not bool(action.get("disabled", false)):
+		if action is Dictionary and not _outcome_action_effectively_disabled(action):
 			return String(action.get("id", ""))
 	return ""
 

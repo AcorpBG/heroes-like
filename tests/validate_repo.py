@@ -84,6 +84,8 @@ APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / 
 APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_active_play_return_autosave_failure_regression.tscn"
 APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_battle_entry_autosave_failure_regression.gd"
 APPLICATION_BATTLE_ENTRY_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_battle_entry_autosave_failure_regression.tscn"
+APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_scenario_outcome_autosave_failure_recovery_regression.gd"
+APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_scenario_outcome_autosave_failure_recovery_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -12681,6 +12683,50 @@ def validate_save_management(errors: list[str]) -> None:
             "res://tests/application_battle_entry_autosave_failure_regression.gd" in battle_entry_scene_text,
             errors,
             "Battle-entry autosave-failure regression scene must load its script",
+        )
+
+    for path in (
+        APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCRIPT_PATH,
+        APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing scenario-outcome autosave recovery regression file: {path.relative_to(ROOT)}")
+    if APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCRIPT_PATH.exists():
+        outcome_recovery_text = APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION",
+            'const FAILURE_PHASES := ["precommit", "after_backup"]',
+            "go_to_scenario_outcome",
+            "retry_scenario_outcome_autosave",
+            "scenario_outcome_recovery_snapshot",
+            "validation_scenario_outcome_route_snapshot",
+            "validation_request_save_outcome",
+            "validation_outcome_recovery_snapshot",
+            "validation_perform_action",
+            'scenario_outcome_autosave_failed',
+            'retry_outcome_autosave',
+            'outcome_autosave_recovery_pending',
+            'stale_session',
+            'already_saved',
+            'scenario_in_progress',
+            'missing_session',
+            "validation_summary_cache_snapshot",
+            "validation_transaction_artifact_paths",
+            "RuntimeIssueLog.last_issue_records",
+            "CampaignProgression.record_session_completion",
+            "CampaignRules.get_scenario_record",
+            "SaveService.restore_autosave_session",
+            "SaveService.resume_target_for_session",
+            'validation_perform_action("return_to_menu")',
+            "request_safe_quit",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in outcome_recovery_text, errors, f"application_scenario_outcome_autosave_failure_recovery_regression.gd is missing token: {required_token}")
+    if APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH.exists():
+        outcome_recovery_scene_text = APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/application_scenario_outcome_autosave_failure_recovery_regression.gd" in outcome_recovery_scene_text,
+            errors,
+            "Scenario-outcome autosave recovery regression scene must load its script",
         )
 
     app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")

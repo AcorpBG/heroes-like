@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Controller right-stick route selection is complete across source, live input, route compatibility, and packaged Linux/Windows probes. Overall release readiness remains open.",
+  "currentNotes": "Scenario Outcome now exposes and repairs failed terminal autosaves before follow-up play. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-controller-right-stick-route-selection-10184",
-  "currentSliceId": "overworld-controller-right-stick-route-selection-10184",
-  "currentSliceNotes": "Completed right-stick route cursor, non-mutating preview, A/B commit/reset, left-stick and D-pad preservation, modal blocking, compatibility repair, and packaged cross-platform proof.",
+  "currentSlice": "application-scenario-outcome-autosave-failure-recovery-10184",
+  "currentSliceId": "application-scenario-outcome-autosave-failure-recovery-10184",
+  "currentSliceNotes": "Completed session-bound Outcome recovery, visible Save guidance/focus, follow-up blocking, canonical retry without completion replay, and packaged Linux/Windows proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Controller Right-Stick Route Selection",
-  "currentSliceUpdatedAt": "2026-08-10T06:03:58Z",
+  "currentSliceTitle": "Application Scenario-Outcome Autosave Failure Recovery",
+  "currentSliceUpdatedAt": "2026-08-10T06:42:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74560,6 +74560,39 @@
       "notes": "Completed independent right-stick route selection/repeat, non-mutating preview/camera follow, A/B commit/reset, left-stick and D-pad preservation, modal blocking, live controller integration, route compatibility, and packaged Linux/Windows proof at save version 9.",
       "remainingWork": "No work remains in this slice. Outcome-transition save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T06:03:58Z"
+    },
+    {
+      "id": "application-scenario-outcome-autosave-failure-recovery-10184",
+      "title": "Application Scenario-Outcome Autosave Failure Recovery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md"],
+      "purpose": "Expose and repair failed terminal autosaves before Outcome follow-up actions can begin another session.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/application_scenario_outcome_autosave_failure_recovery_regression.gd",
+        "tests/application_scenario_outcome_autosave_failure_recovery_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"terminal_autosave_failure_visible": false, "follow_up_blocked_until_repair": false},
+      "completionCriteria": [
+        "Both injected phases preserve exact prior autosave/cache and terminal live/profile state with one issue, one Outcome route, and visible recovery guidance",
+        "Outcome follow-up starts remain blocked until a canonical autosave retry succeeds without replaying completion",
+        "Ordinary victory/defeat, campaign/skirmish, no-session, in-progress, Return to Menu, and safe-close controls remain correct",
+        "Focused outcome/save/UI/controller/core/editor/repository and packaged Linux/Windows-Wine compatible gates pass"
+      ],
+      "nonGoals": ["campaign result rules, new outcome screen, cloud saves, version bump, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T06:10:37Z",
+      "startedAt": "2026-08-10T06:10:37Z",
+      "updatedAt": "2026-08-10T06:42:09Z",
+      "notes": "Completed session-bound recovery routing, visible Outcome warning/Save focus, follow-up blocking, canonical retry without completion replay, compatibility controls, and packaged Linux/Windows proof at save/profile versions 9/1.",
+      "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T06:42:09Z"
     }
   ],
   "project": "heroes-like",

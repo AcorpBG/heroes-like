@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `application-scenario-outcome-autosave-failure-recovery-10184`. Failed terminal autosaves now carry a session-bound recovery state into Outcome, surface bounded Save Outcome guidance with Save focus, and block campaign/skirmish follow-up until a verified retry persists the exact terminal session. Return and safe-close recovery remain usable, campaign completion is not replayed, and focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save/profile versions 9/1.
 - Latest completed implementation slice: `overworld-controller-right-stick-route-selection-10184`. Controller users can now move a bounded route cursor with the right stick, inspect the existing route/destination surface without mutating session or save state, press A to invoke the existing primary action once, and press B to return selection/camera to the hero. Left-stick movement, D-pad focus, mouse/keyboard control, and modal ownership remain intact. Focused, live-controller, route/cache/visual, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-entry-forced-autosave-failure-route-safety-10184`. Required battle-entry autosave failure now restores the exact pre-route state, keeps the pending encounter in Overworld, records one bounded issue, shows Save-now guidance with Save focus, and performs zero routes. End-turn/manual/resume checkpoints avoid redundant writes and route once from already-durable state. Focused failure/recovery/control, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `campaign-progression-semantic-storage-fail-closed-10184`. Campaign progression storage is now classified before load or write. Malformed, partial, nested-wrong-shape, and future-version data remains byte-exact and non-overwritable; all campaign mutations fail closed without changing profile/session, while the Main Menu keeps local browsing and non-campaign paths usable. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1 and save version 9.
@@ -3430,6 +3431,37 @@ Completion evidence:
 - focused coverage passes dead/release/opposed/cardinal/repeat/boundary, accept/cancel/left-stick, and drawer/settings/save-popup/manual-overwrite/end-turn blockers, while live controller A/B, D-pad focus, 1280x720 visual, full/incremental/cached/destination route, core, editor, repository, JSON, Python, and diff gates pass;
 - the cached and destination fixtures were independently reproduced stale at committed pre-slice HEAD, then updated test-only to the already-live compact recap contract and rerun green;
 - fresh packaged Linux and Windows/Wine focused probes pass at save version 9; Linux reports only two fixture-shutdown signal-disconnect errors and Wine only normal fresh-prefix/X shutdown lines.
+
+## Application Scenario-Outcome Autosave Failure Recovery
+
+id: `application-scenario-outcome-autosave-failure-recovery-10184`
+
+Status: complete.
+
+Selected Phase 6 terminal-state integrity slice. Campaign completion is transactionally
+recorded before Outcome routing, but AppRouter ignores failure of the required terminal
+autosave. The player reaches Outcome with no warning while Continue can still restore
+the preceding in-progress session.
+
+Implementation target:
+- return a structured scenario-outcome route result, preserve the terminal live session and exact prior autosave on failure, emit one sanitized issue, and carry one persistent recovery state into ScenarioOutcomeShell;
+- show bounded Save Outcome guidance with Save focus, block campaign/skirmish follow-up actions while recovery is pending, and keep Return to Menu/safe-close recovery available;
+- make Save Outcome repair the runtime autosave first, then retain its existing selected-manual-slot behavior, clearing the recovery state only after a verified terminal autosave without replaying campaign completion.
+
+Completion criteria:
+- precommit and after-backup terminal-route failures preserve exact prior bytes/cache and terminal live/profile state with no transaction residue, one issue, one Outcome route, and visible recovery guidance;
+- campaign/skirmish follow-up is blocked until Save Outcome or another canonical save path repairs the terminal autosave; a verified retry reloads with resume target Outcome and does not add completion attempts or replay rules;
+- ordinary success, victory/defeat, campaign/skirmish, no-session, in-progress redirect, Return to Menu, and safe-close controls retain correct behavior;
+- focused outcome/save/UI, controller, core, editor, repository, JSON, Python, and packaged Linux/Windows-Wine compatible gates pass at save/profile versions 9/1.
+
+Non-goals:
+- no campaign result rules, new outcome screen, cloud saves, save/profile version bump, Native RMG, publication, or overall release-completion claim.
+
+Completion evidence:
+- precommit and after-backup failures across campaign/skirmish victory/defeat preserve exact prior autosave bytes/cache, terminal live/profile authority, and clean transaction artifacts while emitting one sanitized issue and routing to Outcome once;
+- Outcome shows the bounded recovery warning with Save Outcome focus, blocks both presented and direct follow-up actions, and retries the canonical autosave before the existing manual-slot flow without replaying completion;
+- stale-session, ordinary success, durable resume, missing/in-progress redirect, dynamic Return, safe close, campaign completion/replay, save transaction, manual overwrite, controller, visual, and core controls pass;
+- fresh packaged Linux and Windows/Wine focused runs pass at save version 9 and profile version 1; production project and export presets remain untouched.
 
 ## Phase Roadmap
 
