@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. Brasshollow's tier-2 Rivet Hounds are specified as fast anti-raider machine skirmishers that reveal armor weakness, but the shipped unit has the same speed and initiative as tier-1 Scrip Haulers and only a defensive shielding passive. This slice restores that normal-path faction role through one bounded supported melee breach effect, shared tactical-AI valuation, and live encounter validation.
+- Current implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184` (completed). Rivet Hounds retain their validated speed-4/initiative-6 tempo and Rivet Hide while gaining the once-per-battle supported `Seam Mark`: a primary melee hit on a surviving veteran target exposes one defense for the round. Runtime/AI parity, exact old-content controls, the 59-encounter queue, method-matched faction balance, repository gates, and packaged Linux/Windows content proof pass.
+- Latest completed implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. The final Seam-only form preserves the accepted Brasshollow tempo and all 18 active-cohort signatures; the 59-encounter queue remains clear, and the 12,000-battle matrix changes only four outcomes by one sample each with unchanged maximum dominance and side bias. Universal speed/initiative increases were rejected after proving they materially redistributed live matchups.
 - Latest completed implementation slice: `packaging-windows-uninstall-registration-and-pe-version-coherence-10184`. The per-user Windows setup now publishes a standard transactional HKCU Apps & Features registration plus Play and Uninstall shortcuts only after a verified commit, removes them only after an ownership-verified uninstall, and preserves prior program/registry/shortcut state across injected failures and refused uninstalls. Canonical `0.1.0-alpha.1` maps to coherent `0.1.0.1001` game/setup PE resources. Artifact, candidate, repository, full Linux installer, Windows setup/archive, and fresh Wine lifecycle gates pass; signing, native-Windows certification, publication, and overall release readiness remain open.
 - Latest completed implementation slice: `ux-overworld-1600-command-band-responsive-fit-10184`. The selectable 1600x900 Overworld layout now reduces only the four command-row gaps at that constrained noncompact width, moving the full band from x=-3/width1606 to x=1/width1598 while retaining every command, map dominance, focus, and compact/full behavior. Strengthened 1024/1280/1600/1920 containment, active focus, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `accessibility-scenario-outcome-normal-entry-focus-10184`. Ordinary campaign and skirmish victory/defeat Outcomes now enter with the existing enabled primary follow-up focused, expose a deterministic six-control keyboard/controller cycle, preserve valid focus through refresh, keep recovery on Save, and never steal native overwrite-dialog focus. The same Outcome-only responsive pass keeps banner, actions, Save panel, and Save inside 1280x720 while retaining full overflow text in tooltips. Focused, recovery, overwrite, visual, active-focus, repository, Linux package, and Windows/Wine gates pass.
@@ -3628,26 +3629,27 @@ Non-goals:
 
 id: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`
 
-Status: in_progress.
+Status: completed.
 
 Selected Phase 6 combat-identity correction. Brasshollow's tier-2 Rivet Hounds are authored as
-fast machine skirmishers for anti-raider work and armor-weakness reveal, but live content gives
-them tier-1 movement timing and only a defensive Rivet Hide passive.
+machine skirmishers for anti-raider work and armor-weakness reveal, but live content gives them
+only a defensive Rivet Hide passive. This bounded slice owns the missing breach/reveal behavior;
+global tempo changes remain outside the accepted balance envelope.
 
 Implementation target:
-- make Rivet Hounds materially faster than Scrip Haulers while preserving Rivet Hide and their existing economy/recruitment identity;
+- preserve the validated speed-4/initiative-6 tempo, Rivet Hide, and existing economy/recruitment identity after rejecting balance-breaking universal tempo increases;
 - add one bounded supported primary-melee breach that marks a surviving veteran target with a one-round defense reduction and spends its authored use exactly once;
 - surface the effect through shared battle summaries/events and give tactical AI the same availability, support, target, and spent-use contract;
 - validate the production unit in a method-matched stripped control and representative Orevein/Ninefold live encounters without tuning final-map or aggregate reports in place of behavior.
 
 Completion criteria:
-- ability-versus-stripped fixtures preserve identical first-hit RNG/damage while only the authored unit applies the mark and only a later defense-derived hit changes;
+- ability-versus-stripped fixtures preserve identical tempo and first-hit RNG/damage while only the authored unit applies the mark and only a later defense-derived hit changes;
 - unsupported, low-tier, lethal, retaliation, expired, and spent-use cases fail closed, and mid-battle save/reload preserves the mark and use count;
 - Scrip Haulers and a method-matched existing melee support-mark unit remain exact, while tactical AI preview/selection agrees with runtime availability;
 - focused ability, live Orevein/Ninefold, fast benchmark, active 59-encounter breadth, all-live faction matrix, repository, and Linux/Windows packaged content gates pass without a save-schema change.
 
 Non-goals:
-- no broad Brasshollow ladder redesign, repair/machine-class system, economy/recruitment rebalance, art replacement, final faction-balance claim, Native RMG work, publication, signing, or overall release-completion claim.
+- no broad Brasshollow ladder redesign, universal speed/initiative retuning, repair/machine-class system, economy/recruitment rebalance, art replacement, final faction-balance claim, Native RMG work, publication, signing, or overall release-completion claim.
 
 ## Phase Roadmap
 

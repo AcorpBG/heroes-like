@@ -1897,6 +1897,25 @@
           "snare_vulnerable": true,
           "cohesion_hold_bonus": 0,
           "ranged_damage_multiplier": 0.92
+        },
+        {
+          "id": "harry",
+          "name": "Seam Mark",
+          "description": "Once per battle, a supported primary melee strike seam-marks a surviving veteran target and exposes one point of defense for the round.",
+          "status_id": "status_rivet_exposed",
+          "status_label": "Seam-Marked",
+          "duration_rounds": 1,
+          "modifiers": {
+            "defense": -1
+          },
+          "momentum_gain": 0,
+          "uses_per_battle": 1,
+          "target_min_tier": 2,
+          "ai_target_priority_bonus": 0.1,
+          "min_adjacent_allies_to_target": 1,
+          "support_ai_target_priority_bonus": 0.15,
+          "support_blocked_summary": "Seam Mark needs one allied stack beside the target before the hounds can expose its armor seam.",
+          "support_ready_summary": "Seam Mark will expose this veteran target's armor seam for the supported follow-up."
         }
       ],
       "growth": 5,

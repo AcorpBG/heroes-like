@@ -14328,10 +14328,10 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-brasshollow-rivet-hound-breach-skirmisher-10184",
   "currentSliceId": "combat-brasshollow-rivet-hound-breach-skirmisher-10184",
-  "currentSliceNotes": "Restore the production Rivet Hounds' fast supported armor-reveal role with runtime/AI parity and method-matched live controls.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Completed the production Rivet Hounds' supported Seam Mark armor-reveal role with runtime/AI parity, exact live controls, and packaged Linux/Windows proof while preserving their validated 4/6 tempo.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Brasshollow Rivet Hound Breach Skirmisher",
-  "currentSliceUpdatedAt": "2026-08-10T12:32:04Z",
+  "currentSliceUpdatedAt": "2026-08-10T13:51:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74770,21 +74770,22 @@
     {
       "id": "combat-brasshollow-rivet-hound-breach-skirmisher-10184",
       "title": "Brasshollow Rivet Hound Breach Skirmisher",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
-      "purpose": "Restore Rivet Hounds' authored fast anti-raider and armor-weakness reveal role in normal shipped combat.",
+      "purpose": "Restore Rivet Hounds' missing supported armor-weakness reveal role in normal shipped combat without destabilizing validated faction tempo.",
       "implementationTargets": ["content/units.json", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
       "baseline": {"speed": 4, "initiative": 6, "tier1_speed_parity": true, "armor_reveal_live": false, "rivet_hide_live": true},
-      "completionCriteria": ["Rivet Hounds are materially faster than Scrip Haulers and preserve Rivet Hide", "A supported primary melee hit marks only a surviving eligible target for one round and spends one use", "Unsupported, low-tier, lethal, retaliation, expired, and spent-use cases fail closed and save/reload is exact", "Runtime, tactical AI, method-matched controls, live Orevein/Ninefold, benchmark, breadth, matrix, repository, and package gates pass"],
-      "nonGoals": ["broad Brasshollow ladder redesign, machine repair system, economy/recruitment rebalance, art replacement, final faction balance, Native RMG, publication, signing, or release-completion claim"],
+      "completionCriteria": ["Rivet Hounds preserve their validated 4/6 tempo and Rivet Hide while gaining a distinct supported Seam Mark decision", "A supported primary melee hit marks only a surviving eligible target for one round and spends one use", "Unsupported, low-tier, lethal, retaliation, expired, and spent-use cases fail closed and save/reload is exact", "Runtime, tactical AI, method-matched controls, live Orevein/Ninefold, benchmark, breadth, matrix, repository, and package gates pass"],
+      "nonGoals": ["broad Brasshollow ladder redesign, universal speed or initiative retuning, machine repair system, economy/recruitment rebalance, art replacement, final faction balance, Native RMG, publication, signing, or release-completion claim"],
       "createdAt": "2026-08-10T12:32:04Z",
       "startedAt": "2026-08-10T12:32:04Z",
-      "updatedAt": "2026-08-10T12:32:04Z",
-      "notes": "Selected after three independent current-HEAD audits. Two ranked the normal-path Rivet Hound role collapse above the rarer Battle speed persistence-failure false-success; the latter remains an explicit follow-up.",
-      "remainingWork": "Implement the bounded live effect and complete method-matched, live encounter, balance breadth, repository, and cross-platform packaged validation."
+      "updatedAt": "2026-08-10T13:51:56Z",
+      "notes": "Completed content-driven Seam Mark with shared harry runtime/AI parity, authored support summaries, exact negative gates, one-round expiry, and save round-trip. Focused runtime passes 103 units and 118/118 consequences. Active cohort is exact 18/18; the 59-encounter queue is clear at 0/0/0; the final 12,000-battle matrix preserves maximum dominance 79 and side bias 1.60 with only four one-sample outcome shifts. Core, editor, validator, diff, native Linux package, and fresh Windows/Wine package gates pass. Controlled 6/8, 5/7, 5/6, and 4/7 variants were rejected because movement or turn-order changes materially redistributed live faction matchups; final speed/initiative remains 4/6.",
+      "remainingWork": "No work remains in this slice. Battle direct-speed write-failure recovery, broader balance needs_tuning work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T13:51:56Z"
     }
   ],
   "project": "heroes-like",
