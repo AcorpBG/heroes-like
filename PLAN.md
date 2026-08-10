@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-scenario-outcome-normal-entry-focus-10184`. Ordinary campaign and skirmish victory/defeat Outcomes now enter with the existing enabled primary follow-up focused, expose a deterministic six-control keyboard/controller cycle, preserve valid focus through refresh, keep recovery on Save, and never steal native overwrite-dialog focus. The same Outcome-only responsive pass keeps banner, actions, Save panel, and Save inside 1280x720 while retaining full overflow text in tooltips. Focused, recovery, overwrite, visual, active-focus, repository, Linux package, and Windows/Wine gates pass.
 - Latest completed implementation slice: `briefing-consumption-autosave-failure-safety-10184`. Overworld first-turn and Battle tactical briefings now inspect their transactional autosave result. A failed write preserves the visible consumed briefing, emits one bounded issue, shows Save guidance with Save focus, and routes nowhere; one verified manual Save persists `shown=true` so restore does not replay the briefing. Focused failure/recovery, generated-opening defer, Battle/focus/save compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-resolution-autosave-failure-route-safety-10184`. Finalized nonterminal battles now checkpoint transactionally before exit animation or Overworld routing. Write failure retains the exact completed result in Battle with combat disabled, Save Battle guidance/focus, and zero route; one Save retry persists the canonical autosave and resumes the stored animation/route without replaying rules or rewards. Focused failure/retry, withdrawal, Quick Resolve, animation, controller, save, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `map-editor-dirty-working-copy-destructive-transition-safety-10184`. Dirty Map Editor working copies now require one captured-action confirmation before Main Menu, package replacement, or native close. `Keep Editing` owns initial focus, Back/Escape preserve the exact working copy and origin focus, confirmed native close reuses transactional safe quit, and clean transitions remain direct. Focused, editor package, keyboard, core, repository, real Linux WM_DELETE, and packaged Windows/Wine WM_CLOSE gates pass.
@@ -3547,6 +3548,30 @@ Completion criteria:
 
 Non-goals:
 - no briefing copy/content redesign, tutorial system, generated-opening lifecycle change, gameplay rule change, save/schema bump, Native RMG, publication, signing, or overall release-completion claim.
+
+## Scenario Outcome Normal Entry Focus
+
+id: `accessibility-scenario-outcome-normal-entry-focus-10184`
+
+Status: completed.
+
+Selected Phase 6 controller/keyboard accessibility slice. Ordinary Outcome entry rebuilds the
+dynamic follow-up actions but assigns no focus owner; only autosave-recovery entry explicitly
+focuses Save. Controller and keyboard players can therefore reach a mandatory victory/defeat
+screen with no deterministic command target.
+
+Implementation target:
+- configure a live focus cycle spanning enabled dynamic follow-up actions, Save Slot, Save Outcome, Return to Menu, and Guide;
+- on ordinary entry prefer the enabled action identified by the existing primary-outcome policy, with a safe enabled fallback, while recovery entry continues to prefer Save;
+- preserve existing valid focus during refresh and never steal native manual-overwrite confirmation focus.
+
+Completion criteria:
+- ordinary campaign/skirmish victory and defeat entry own a visible enabled focus target and controller/keyboard forward/reverse navigation skips disabled controls;
+- controller accept invokes the focused command exactly once, recovery continues to focus Save, and occupied-slot overwrite keeps its safe native Cancel focus and exact origin restoration;
+- outcome visual, active focus, manual overwrite, recovery, 1280 layout, core, parse, repository, Linux package, and Windows/Wine gates pass without save/schema or gameplay changes.
+
+Non-goals:
+- no Outcome composition/copy redesign, action-policy change, save/router/rules change, broader input remap, Native RMG, publication, signing, or overall release-completion claim.
 
 ## Phase Roadmap
 

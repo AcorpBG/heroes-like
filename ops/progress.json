@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld and Battle briefing consumption now reports transactional autosave failure honestly and remains recoverable through a verified manual Save. Overall release readiness remains open.",
+  "currentNotes": "Ordinary Outcome entry now owns a deterministic enabled keyboard/controller focus target and fits the complete action/save surface at 1280x720. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "briefing-consumption-autosave-failure-safety-10184",
-  "currentSliceId": "briefing-consumption-autosave-failure-safety-10184",
-  "currentSliceNotes": "Both briefing surfaces preserve visible consumed state on failed autosave, emit bounded guidance and issues, route nowhere, and persist shown state through one verified Save without changing generated-opening deferral.",
+  "currentSlice": "accessibility-scenario-outcome-normal-entry-focus-10184",
+  "currentSliceId": "accessibility-scenario-outcome-normal-entry-focus-10184",
+  "currentSliceNotes": "Completed normal Outcome primary focus, enabled focus cycling, refresh/recovery/overwrite ownership, and bounded 1280x720 composition with packaged Linux and Windows-Wine proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Briefing Consumption Autosave Failure Safety",
-  "currentSliceUpdatedAt": "2026-08-10T09:01:33Z",
+  "currentSliceTitle": "Scenario Outcome Normal Entry Focus",
+  "currentSliceUpdatedAt": "2026-08-10T09:44:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74693,6 +74693,39 @@
       "notes": "Completed structured briefing autosave handling on both shells. Both injected phases preserve prior autosave bytes/cache with no residue, keep the shown briefing visible, emit one bounded issue, focus Save, and route nowhere; a verified manual Save restores with the briefing still consumed. Focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.",
       "remainingWork": "No work remains in this slice. Normal Outcome entry focus, the pre-existing 1600x900 Overworld command-band geometry debt, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T09:01:33Z"
+    },
+    {
+      "id": "accessibility-scenario-outcome-normal-entry-focus-10184",
+      "title": "Scenario Outcome Normal Entry Focus",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Give ordinary terminal Outcome entry a deterministic enabled keyboard/controller focus target and live focus cycle without changing outcome actions or persistence.",
+      "implementationTargets": [
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/scenario_outcome_normal_entry_focus_regression.gd",
+        "tests/scenario_outcome_normal_entry_focus_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"normal_entry_focus_owned": false, "recovery_save_focus_preserved": true, "outcome_controller_coverage": false},
+      "completionCriteria": [
+        "Ordinary campaign and skirmish victory/defeat entry owns one enabled visible focus target selected from existing primary-outcome policy",
+        "Forward and reverse controller/keyboard navigation skips disabled controls and accept invokes the focused command exactly once",
+        "Recovery Save focus and occupied-slot native overwrite Cancel/origin focus remain exact",
+        "Outcome visual, active focus, manual overwrite, recovery, 1280, repository, Linux, and Windows-Wine gates pass"
+      ],
+      "nonGoals": ["Outcome composition or copy redesign, action-policy changes, save/router/rules changes, broader input remapping, Native RMG, publication, signing, or release-completion claim"],
+      "createdAt": "2026-08-10T09:06:42Z",
+      "startedAt": "2026-08-10T09:06:42Z",
+      "updatedAt": "2026-08-10T09:44:48Z",
+      "notes": "Completed one enabled focus cycle and primary normal-entry focus across campaign/skirmish victory/defeat, with exact refresh preservation, recovery Save preference, native overwrite Cancel/origin ownership, real accept-once coverage, and an Outcome-only responsive pass keeping all required controls within 1280x720. Focused, compatibility, repository, Linux package, and Windows/Wine gates pass.",
+      "remainingWork": "No work remains in this slice. The pre-existing 1600x900 Overworld command-band geometry debt, Windows numeric version metadata, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T09:44:48Z"
     }
   ],
   "project": "heroes-like",

@@ -34,6 +34,23 @@ const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed
 @onready var _action_status_label: Label = %ActionStatus
 @onready var _actions_bar: HFlowContainer = %Actions
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
+@onready var _content_margin: MarginContainer = $ContentMargin
+@onready var _content_box: VBoxContainer = $ContentMargin/Content
+@onready var _banner_pad: MarginContainer = $ContentMargin/Content/Banner/BannerPad
+@onready var _banner_columns: HBoxContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns
+@onready var _banner_art_panel: PanelContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel
+@onready var _banner_art_pad: MarginContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad
+@onready var _banner_info: VBoxContainer = $ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo
+@onready var _main_row: HBoxContainer = $ContentMargin/Content/MainRow
+@onready var _command_column: VBoxContainer = $ContentMargin/Content/MainRow/CommandColumn
+@onready var _force_cards: HBoxContainer = $ContentMargin/Content/MainRow/CommandColumn/ForceCards
+@onready var _actions_pad: MarginContainer = $ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad
+@onready var _actions_box: VBoxContainer = $ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox
+@onready var _sidebar_shell: PanelContainer = $ContentMargin/Content/MainRow/SidebarShell
+@onready var _sidebar_pad: MarginContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad
+@onready var _sidebar_box: VBoxContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox
+@onready var _save_pad: MarginContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad
+@onready var _save_box: VBoxContainer = $ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox
 
 var _session: SessionStateStore.SessionData
 var _model: Dictionary = {}
@@ -48,9 +65,17 @@ var _validation_outcome_recovery_retry_attempt_count := 0
 var _validation_outcome_recovery_retry_failure_count := 0
 var _validation_outcome_recovery_retry_success_count := 0
 var _validation_outcome_recovery_blocked_action_count := 0
+var _validation_outcome_focus_accept_count := 0
+var _validation_outcome_focus_action_execution_suppressed := false
+var _last_outcome_focus_accept_result: Dictionary = {}
+var _last_outcome_focus_cycle: Array = []
+var _last_outcome_focus_preferred_action_id := ""
+var _compact_layout_active := false
 
 func _ready() -> void:
 	_apply_visual_theme()
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		AppRouter.go_to_main_menu()
@@ -62,8 +87,49 @@ func _ready() -> void:
 	_sync_outcome_recovery_state(true)
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	_refresh()
-	if _outcome_recovery_pending:
-		_save_button.call_deferred("grab_focus")
+	call_deferred("_configure_outcome_keyboard_focus", true)
+
+func _apply_responsive_layout() -> void:
+	if _content_margin == null:
+		return
+	var available_size := size
+	var parent_control := get_parent() as Control
+	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
+		available_size = parent_control.size
+	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	var layout_changed := _compact_layout_active != compact_layout
+	_compact_layout_active = compact_layout
+	_set_margin(_content_margin, 8 if compact_layout else 12)
+	_content_box.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	_set_margin(_banner_pad, 6 if compact_layout else 10)
+	_banner_columns.add_theme_constant_override("separation", 8 if compact_layout else 10)
+	_banner_art_panel.custom_minimum_size.x = 300.0 if compact_layout else 356.0
+	_set_margin(_banner_art_pad, 4 if compact_layout else 8)
+	_outcome_banner.custom_minimum_size.y = 112.0 if compact_layout else 220.0
+	_banner_info.add_theme_constant_override("separation", 4 if compact_layout else 6)
+	_main_row.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	_command_column.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	_force_cards.add_theme_constant_override("separation", 6 if compact_layout else 8)
+	_set_margin(_actions_pad, 6 if compact_layout else 10)
+	_actions_box.add_theme_constant_override("separation", 4 if compact_layout else 6)
+	_sidebar_shell.custom_minimum_size.x = 320.0 if compact_layout else 332.0
+	_set_margin(_sidebar_pad, 6 if compact_layout else 10)
+	_sidebar_box.add_theme_constant_override("separation", 4 if compact_layout else 8)
+	_set_margin(_save_pad, 6 if compact_layout else 10, 4 if compact_layout else 8)
+	_save_box.add_theme_constant_override("separation", 2 if compact_layout else 4)
+	_actions_hint_label.visible = not compact_layout
+	_return_cue_label.visible = not compact_layout
+	if layout_changed and _session != null:
+		call_deferred("_refresh")
+
+func _set_margin(container: MarginContainer, horizontal: int, vertical: int = -1) -> void:
+	if container == null:
+		return
+	var vertical_margin := horizontal if vertical < 0 else vertical
+	container.add_theme_constant_override("margin_left", horizontal)
+	container.add_theme_constant_override("margin_top", vertical_margin)
+	container.add_theme_constant_override("margin_right", horizontal)
+	container.add_theme_constant_override("margin_bottom", vertical_margin)
 
 func _outcome_music_metadata() -> Dictionary:
 	if _session == null:
@@ -81,16 +147,16 @@ func _refresh() -> void:
 	var status := String(_session.scenario_status)
 	_apply_result_palette(status)
 	_header_label.text = String(_model.get("header", "Scenario Outcome"))
-	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 4)
+	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 2 if _compact_layout_active else 4)
 	_mode_label.text = String(_model.get("mode_summary", ""))
 	_result_badge_label.text = _result_status_label(status)
 	if _outcome_banner.has_method("set_outcome"):
 		_outcome_banner.call("set_outcome", status)
-	_set_compact_label(_hero_label, String(_model.get("hero_summary", "Hero data unavailable.")), 5)
-	_set_compact_label(_army_label, String(_model.get("army_summary", "Army data unavailable.")), 5)
-	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 5)
-	_set_compact_label(_progression_label, String(_model.get("progression_summary", "")), 4)
-	_set_compact_label(_campaign_arc_label, String(_model.get("campaign_arc_summary", "")), 4)
+	_set_compact_label(_hero_label, String(_model.get("hero_summary", "Hero data unavailable.")), 2 if _compact_layout_active else 5)
+	_set_compact_label(_army_label, String(_model.get("army_summary", "Army data unavailable.")), 2 if _compact_layout_active else 5)
+	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 2 if _compact_layout_active else 5)
+	_set_compact_label(_progression_label, String(_model.get("progression_summary", "")), 2 if _compact_layout_active else 4)
+	_set_compact_label(_campaign_arc_label, String(_model.get("campaign_arc_summary", "")), 2 if _compact_layout_active else 4)
 	var carryover_check := _outcome_carryover_check(AppRouter.active_save_surface())
 	_set_compact_label(
 		_carryover_label,
@@ -98,14 +164,14 @@ func _refresh() -> void:
 			String(carryover_check.get("visible_text", "")),
 			String(_model.get("carryover_summary", "")),
 		]),
-		4
+		2 if _compact_layout_active else 4
 	)
 	_carryover_label.tooltip_text = _join_tooltip_sections([
 		String(carryover_check.get("tooltip_text", "")),
 		String(_model.get("carryover_summary", "")),
 	])
-	_set_compact_label(_aftermath_label, String(_model.get("aftermath_summary", "")), 4)
-	_set_compact_label(_journal_label, String(_model.get("journal_summary", "")), 4)
+	_set_compact_label(_aftermath_label, String(_model.get("aftermath_summary", "")), 2 if _compact_layout_active else 4)
+	_set_compact_label(_journal_label, String(_model.get("journal_summary", "")), 2 if _compact_layout_active else 4)
 	_refresh_save_surface()
 	var next_step_summary := String(_model.get("next_step_summary", ""))
 	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
@@ -149,7 +215,7 @@ func _refresh() -> void:
 	_set_compact_label(
 		_action_status_label,
 		_last_action_message if _last_action_message != "" else (action_status_text if action_status_text != "" else "Review the outcome, then choose the next step."),
-		3
+		1 if _compact_layout_active else 3
 	)
 	_set_compact_label(
 		_actions_hint_label,
@@ -192,7 +258,7 @@ func _refresh_save_surface() -> void:
 		outcome_save_check_text,
 		save_check if save_check != "" else (current_save_recap if current_save_recap != "" else latest_context),
 	])
-	_set_compact_label(_save_status_label, visible_save_text, 3)
+	_set_compact_label(_save_status_label, visible_save_text, 2 if _compact_layout_active else 3)
 	var return_cue := _outcome_return_cue_text(surface)
 	_set_compact_label(_return_cue_label, return_cue, 2, 108)
 	var save_tooltip_lines := [latest_context]
@@ -234,6 +300,7 @@ func _refresh_save_surface() -> void:
 	_refresh_guide_surface()
 
 func _rebuild_actions() -> void:
+	var focused_action_id := _focused_outcome_action_id()
 	for child in _actions_bar.get_children():
 		child.queue_free()
 
@@ -242,6 +309,7 @@ func _rebuild_actions() -> void:
 		var placeholder := Label.new()
 		placeholder.text = "No follow-up actions are available."
 		_actions_bar.add_child(placeholder)
+		call_deferred("_configure_outcome_keyboard_focus", false, focused_action_id)
 		return
 
 	for action in actions:
@@ -250,6 +318,7 @@ func _rebuild_actions() -> void:
 		var action_id := String(action.get("id", ""))
 		var recovery_blocked := _outcome_recovery_pending and _outcome_action_starts_new_session(action_id)
 		var button := Button.new()
+		button.set_meta("outcome_action_id", action_id)
 		button.text = String(action.get("label", action_id if action_id != "" else "Action"))
 		button.disabled = bool(action.get("disabled", false)) or recovery_blocked
 		button.tooltip_text = _outcome_action_tooltip(action)
@@ -261,9 +330,80 @@ func _rebuild_actions() -> void:
 		FrontierVisualKit.apply_button(button, "primary", 172.0, 36.0)
 		button.pressed.connect(_on_action_pressed.bind(action_id))
 		_actions_bar.add_child(button)
+	call_deferred("_configure_outcome_keyboard_focus", false, focused_action_id)
 
-func _on_action_pressed(action_id: String) -> void:
-	_perform_outcome_action(action_id)
+func _on_action_pressed(action_id: String) -> Dictionary:
+	_validation_outcome_focus_accept_count += 1
+	if _validation_outcome_focus_action_execution_suppressed:
+		_last_outcome_focus_accept_result = {
+			"ok": true,
+			"performed": false,
+			"routed": false,
+			"suppressed": true,
+			"action_id": action_id,
+			"message": "Outcome focus activation recorded without changing the active expedition.",
+		}
+		return _last_outcome_focus_accept_result.duplicate(true)
+	_last_outcome_focus_accept_result = _perform_outcome_action(action_id).duplicate(true)
+	_last_outcome_focus_accept_result["action_id"] = action_id
+	_last_outcome_focus_accept_result["suppressed"] = false
+	return _last_outcome_focus_accept_result.duplicate(true)
+
+func _configure_outcome_keyboard_focus(
+	force: bool = false,
+	preferred_action_id: String = ""
+) -> void:
+	if not is_inside_tree() or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible):
+		return
+	var surfaces := [
+		_actions_bar,
+		_recap_tabs,
+		_save_slot_picker,
+		_save_button,
+		_menu_button,
+		_guide_button,
+	]
+	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
+	_last_outcome_focus_cycle = []
+	for control in controls:
+		if control is Control:
+			_last_outcome_focus_cycle.append({
+				"node_name": String(control.name),
+				"action_id": String(control.get_meta("outcome_action_id", "")),
+				"disabled": bool(control.disabled) if control is BaseButton else false,
+			})
+	var preferred: Control = null
+	_last_outcome_focus_preferred_action_id = ""
+	if _outcome_recovery_pending:
+		preferred = _save_button
+	else:
+		var action_id := preferred_action_id
+		if action_id == "":
+			action_id = _primary_outcome_action_id()
+		preferred = _outcome_action_button(action_id)
+		if not FrontierVisualKit.is_keyboard_focusable(preferred):
+			action_id = _primary_outcome_action_id()
+			preferred = _outcome_action_button(action_id)
+		if FrontierVisualKit.is_keyboard_focusable(preferred):
+			_last_outcome_focus_preferred_action_id = action_id
+		else:
+			preferred = _save_button if FrontierVisualKit.is_keyboard_focusable(_save_button) else _menu_button
+	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
+
+func _focused_outcome_action_id() -> String:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	if focus_owner is Control and _actions_bar.is_ancestor_of(focus_owner):
+		return String(focus_owner.get_meta("outcome_action_id", ""))
+	return ""
+
+func _outcome_action_button(action_id: String) -> Button:
+	if action_id == "":
+		return null
+	for child in _actions_bar.get_children():
+		if child is Button and not child.is_queued_for_deletion() and String(child.get_meta("outcome_action_id", "")) == action_id:
+			return child
+	return null
 
 func _perform_outcome_action(action_id: String) -> Dictionary:
 	_sync_outcome_recovery_state(false, true)
@@ -439,6 +579,7 @@ func validation_snapshot() -> Dictionary:
 	var outcome_recovery_router_snapshot := _sync_outcome_recovery_state(false, true)
 	return {
 		"scene_path": scene_file_path,
+		"outcome_focus": validation_outcome_focus_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
 		"return_to_menu_visible_message": _last_action_message,
@@ -541,6 +682,52 @@ func validation_save_to_selected_slot() -> Dictionary:
 
 func validation_request_save_outcome() -> Dictionary:
 	return _on_save_pressed()
+
+func validation_set_outcome_focus_action_execution_suppressed(suppressed: bool) -> bool:
+	_validation_outcome_focus_action_execution_suppressed = suppressed
+	return _validation_outcome_focus_action_execution_suppressed == suppressed
+
+func validation_reset_outcome_focus_state() -> Dictionary:
+	_validation_outcome_focus_accept_count = 0
+	_last_outcome_focus_accept_result = {}
+	return validation_outcome_focus_snapshot()
+
+func validation_refresh_outcome_focus() -> Dictionary:
+	_refresh()
+	return validation_outcome_focus_snapshot()
+
+func validation_outcome_focus_snapshot() -> Dictionary:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var enabled_action_ids: Array[String] = []
+	var disabled_action_ids: Array[String] = []
+	for child in _actions_bar.get_children():
+		if not (child is Button):
+			continue
+		var action_id := String(child.get_meta("outcome_action_id", ""))
+		if child.disabled:
+			disabled_action_ids.append(action_id)
+		else:
+			enabled_action_ids.append(action_id)
+	return {
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"focused_action_id": String(focus_owner.get_meta("outcome_action_id", "")) if focus_owner is Control else "",
+		"focus_inside_outcome": focus_owner is Control and (focus_owner == self or is_ancestor_of(focus_owner)),
+		"focus_has_visible_style": focus_owner is Control and focus_owner.get_theme_stylebox("focus") != null,
+		"preferred_action_id": _last_outcome_focus_preferred_action_id,
+		"primary_action_id": _primary_outcome_action_id(),
+		"enabled_action_ids": enabled_action_ids,
+		"disabled_action_ids": disabled_action_ids,
+		"focus_cycle": _last_outcome_focus_cycle.duplicate(true),
+		"accept_count": _validation_outcome_focus_accept_count,
+		"last_accept_result": _last_outcome_focus_accept_result.duplicate(true),
+		"action_execution_suppressed": _validation_outcome_focus_action_execution_suppressed,
+		"recovery_pending": _outcome_recovery_pending,
+		"manual_overwrite_visible": _manual_save_overwrite_dialog.visible,
+		"save_button_name": String(_save_button.name),
+		"menu_button_name": String(_menu_button.name),
+		"guide_button_name": String(_guide_button.name),
+	}
 
 func validation_reset_outcome_recovery_state() -> void:
 	_validation_outcome_recovery_request_count = 0

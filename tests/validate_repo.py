@@ -112,6 +112,8 @@ BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "ba
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.tscn"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.gd"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.tscn"
+SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.gd"
+SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -14840,6 +14842,55 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
             ensure(required_token in shell_text, errors, f"{shell_path.name} is missing required briefing-consumption autosave safety token: {required_token}")
 
 
+def validate_scenario_outcome_normal_entry_focus(errors: list[str]) -> None:
+    for path in (
+        SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH,
+        SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH,
+        OUTCOME_SCRIPT_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing Scenario Outcome normal-entry focus file: {path.relative_to(ROOT)}")
+    if not SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH.exists():
+        return
+
+    report_text = SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION",
+        "SessionState.LAUNCH_MODE_SKIRMISH, SessionState.LAUNCH_MODE_CAMPAIGN",
+        'for status in ["victory", "defeat"]',
+        'await _press_action("ui_focus_next")',
+        'await _press_action("ui_focus_prev")',
+        'await _press_action("ui_accept")',
+        "validation_set_outcome_focus_action_execution_suppressed",
+        "validation_refresh_outcome_focus",
+        'String(recovery_focus.get("focus_owner", "")) != "Save"',
+        'String(dialog_snapshot.get("cancel_text", "")) != "Keep Save"',
+        "dialog_viewport.gui_get_focus_owner()",
+        "await _press_key(KEY_ESCAPE)",
+        "_outcome_controls_fit",
+        "Vector2i(1280, 720)",
+    ):
+        ensure(required_token in report_text, errors, f"Scenario Outcome normal-entry focus regression is missing required token: {required_token}")
+
+    scene_text = SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/scenario_outcome_normal_entry_focus_regression.gd" in scene_text,
+        errors,
+        "Scenario Outcome normal-entry focus scene must load its regression script",
+    )
+    outcome_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _configure_outcome_keyboard_focus(",
+        "FrontierVisualKit.configure_focus_cycle",
+        "FrontierVisualKit.grab_keyboard_focus",
+        'button.set_meta("outcome_action_id", action_id)',
+        "func validation_outcome_focus_snapshot()",
+        '"preferred_action_id"',
+        '"focus_cycle"',
+        '"manual_overwrite_visible"',
+    ):
+        ensure(required_token in outcome_text, errors, f"ScenarioOutcomeShell.gd is missing required normal-entry focus token: {required_token}")
+
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -26234,6 +26285,7 @@ def main() -> int:
     validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_resolution_autosave_failure_route_safety(errors)
     validate_briefing_consumption_autosave_failure_safety(errors)
+    validate_scenario_outcome_normal_entry_focus(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
