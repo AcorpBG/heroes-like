@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `campaign-progression-semantic-storage-fail-closed-10184`. Campaign progression storage is now classified before load or write. Malformed, partial, nested-wrong-shape, and future-version data remains byte-exact and non-overwritable; all campaign mutations fail closed without changing profile/session, while the Main Menu keeps local browsing and non-campaign paths usable. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1 and save version 9.
 - Latest completed implementation slice: `active-play-return-to-menu-autosave-failure-safety-10184`. Return to Menu from Overworld, Town, Battle, and Outcome now fails closed when the forced autosave fails: the exact shell/session/intent and prior durable state remain, one bounded issue and Save/retry message appear, and Menu focus returns. One verified retry saves and routes once; no-session/editor direct controls remain intact. The eight-case failure matrix plus safe-close, save transaction, controller, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-pending-battle-manual-save-failure-route-10184`. Failed overworld manual writes now return before pending-battle resolution routing, preserve exact live battle and durable slot state, keep bounded retry feedback and Save focus, and expose the actual write result instead of inferring success from an occupied slot. One verified retry persists the canonical battle payload and routes exactly once. Both failure phases across empty and occupied slots plus compatibility, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-destructive-confirmation-safe-cancel-10184`. Manual overwrite plus Restart Arc, Delete Save, and Restore Defaults now enter on named safe actions (`Keep Save`, `Keep Progress`, or `Keep Settings`). Controller Back/Escape cancels without mutation and restores the originating command; deliberate confirmation remains exactly once. Focused persistence/progression/settings, controller, compact 1280x720, core, parse, repository, JSON, Python, and diff gates pass.
@@ -3332,6 +3333,37 @@ Completion evidence:
 - each shell surfaces the structured failure and bounded Save/retry guidance, restores Menu focus, and the router emits exactly one sanitized `active_play_return_autosave_failed` issue;
 - clearing the hook lets one retry persist the canonical active-play payload and record one Main Menu route, while no-session and editor-return controls route directly without a save attempt;
 - safe-close, transactional save, controller focus, core, editor parse, repository validator, JSON, Python, and diff gates pass at save version 9.
+
+## Campaign Progression Semantic Storage Fail-Closed Safety
+
+id: `campaign-progression-semantic-storage-fail-closed-10184`
+
+Status: completed.
+
+Selected Phase 6 progression data-integrity slice. Save recovery currently accepts any
+profile version at or above the local schema and raw loading returns parseable partial
+dictionaries even when semantic recovery rejected them. Campaign normalization then
+drops unknown fields, and ordinary selection can permanently overwrite the only bytes.
+
+Implementation target:
+- classify progression storage as missing, current-valid, recovered, malformed/partial, or unsupported-future before load or write, and refuse to overwrite existing incompatible bytes;
+- keep CampaignProgression profile/session state unchanged on blocked selection, launch, restart, or completion while returning structured failures;
+- surface one bounded persistent Main Menu warning, disable campaign-mutating actions, and keep Skirmish, Load, Settings, and support export usable.
+
+Completion criteria:
+- malformed, partial, wrong-type, and future-version profiles remain byte-exact with unchanged live profile/session across selection, launch, restart, and completion;
+- missing first-run, current-valid, and valid-backup recovery paths remain functional without a profile/save-version bump or candidate/backup residue;
+- existing replay, restart, completion atomicity, transactional save, menu/controller, core, editor parse, repository, JSON, Python, and packaged Linux/Windows-Wine compatible gates pass.
+
+Non-goals:
+- no progression migration from unknown future schemas, destructive repair command, campaign content change, save/profile version bump, Native RMG work, publication, or overall release-completion claim.
+
+Completion evidence:
+- SaveService classifies missing, current-valid, recovered, invalid, and future-version progression storage; validates nested campaign-state, record, and carryover shapes; never promotes candidate staging; and never replaces a future live file with an older backup;
+- CampaignProgression persists detached candidates before publishing state and returns structured failures for load, selection, launch, restart, save, and completion when storage becomes incompatible, including late invalidation between precheck and write;
+- the live Main Menu keeps campaign/chapter browsing local, disables and revalidates campaign mutations with one bounded warning, and leaves Skirmish, Saves, Settings, and support usable;
+- the focused regression passes malformed, partial, top-level and nested wrong-type, future-live/current-backup, missing/current/recovered, direct-write, all-mutation, and live-menu cases at profile version 1/save version 9;
+- replay, restart, completion atomicity, menu/controller, core, editor parse, repository validator, JSON, Python, and diff gates pass; fresh packaged Linux and Windows/Wine focused probes also pass.
 
 ## Phase Roadmap
 

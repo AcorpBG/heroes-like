@@ -141,6 +141,11 @@ var _campaign_chapter_entries: Array = []
 var _selected_campaign_scenario_id := ""
 var _pending_campaign_restart_id := ""
 var _campaign_restart_notice := ""
+var _campaign_storage_state: Dictionary = {}
+var _campaign_storage_blocked := false
+var _campaign_storage_warning := ""
+var _campaign_last_mutation_result: Dictionary = {}
+var _validation_campaign_blocked_command_count := 0
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
@@ -183,6 +188,7 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	CampaignProgression.ensure_profile()
+	_sync_campaign_storage_state()
 	buckets["campaign_progression"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	SettingsService.ensure_settings()
@@ -269,33 +275,63 @@ func _refresh_summary() -> void:
 		84
 	)
 
-func _on_campaign_selected(index: int) -> void:
+func _on_campaign_selected(index: int) -> Dictionary:
 	if index < 0 or index >= _campaign_entries.size():
-		return
+		return _campaign_ui_failure_result("select_campaign", "Choose a campaign arc to browse.")
 	_selected_campaign_id = String(_campaign_entries[index].get("campaign_id", ""))
 	_selected_campaign_scenario_id = ""
 	_campaign_restart_notice = ""
-	CampaignProgression.select_campaign(_selected_campaign_id)
+	var result := {}
+	if _campaign_storage_is_blocked_now():
+		result = _campaign_storage_blocked_result("select_campaign", {
+			"campaign_id": _selected_campaign_id,
+		})
+	else:
+		result = _consume_campaign_mutation_result(
+			CampaignProgression.select_campaign(_selected_campaign_id),
+			"select_campaign"
+		)
 	_rebuild_campaign_chapter_browser()
 	_refresh_campaign_browser()
+	return result.duplicate(true)
 
-func _on_chapter_selected(index: int) -> void:
+func _on_chapter_selected(index: int) -> Dictionary:
 	if index < 0 or index >= _campaign_chapter_entries.size():
-		return
+		return _campaign_ui_failure_result("select_scenario", "Choose a campaign chapter to browse.")
 	_selected_campaign_scenario_id = String(_campaign_chapter_entries[index].get("scenario_id", ""))
-	CampaignProgression.select_scenario(_selected_campaign_id, _selected_campaign_scenario_id)
+	var result := {}
+	if _campaign_storage_is_blocked_now():
+		result = _campaign_storage_blocked_result("select_scenario", {
+			"campaign_id": _selected_campaign_id,
+			"scenario_id": _selected_campaign_scenario_id,
+		})
+	else:
+		result = _consume_campaign_mutation_result(
+			CampaignProgression.select_scenario(_selected_campaign_id, _selected_campaign_scenario_id),
+			"select_scenario"
+		)
 	_refresh_campaign_browser()
+	return result.duplicate(true)
 
-func _on_campaign_primary_pressed() -> void:
-	_launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
+func _on_campaign_primary_pressed() -> Dictionary:
+	return _launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
 
-func _on_start_chapter_pressed() -> void:
-	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
+func _on_start_chapter_pressed() -> Dictionary:
+	return _launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
 
-func _on_campaign_restart_pressed() -> void:
+func _on_campaign_restart_pressed() -> Dictionary:
+	if _campaign_storage_is_blocked_now():
+		var blocked := _campaign_storage_blocked_result("restart_campaign", {
+			"campaign_id": _selected_campaign_id,
+		})
+		_refresh_campaign_browser()
+		return blocked
 	var action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
 	if bool(action.get("disabled", true)):
-		return
+		return _campaign_ui_failure_result(
+			"restart_campaign",
+			String(action.get("summary", "Campaign arc has no recorded progress."))
+		)
 	_campaign_restart_return_focus = _capture_confirmation_origin(_campaign_restart_button)
 	_pending_campaign_restart_id = String(action.get("campaign_id", ""))
 	_count_destructive_confirmation("campaign_restart", "request_count")
@@ -307,23 +343,37 @@ func _on_campaign_restart_pressed() -> void:
 	_campaign_restart_dialog.get_ok_button().text = "Restart Arc"
 	_campaign_restart_dialog.popup_centered(Vector2i(640, 210))
 	_focus_destructive_confirmation_cancel.call_deferred(_campaign_restart_dialog, "campaign_restart")
+	return {
+		"ok": true,
+		"pending": true,
+		"operation": "restart_campaign",
+		"campaign_id": _pending_campaign_restart_id,
+	}
 
-func _on_campaign_restart_confirmed() -> void:
+func _on_campaign_restart_confirmed() -> Dictionary:
 	_campaign_restart_dialog.hide()
 	var campaign_id := _pending_campaign_restart_id
 	_pending_campaign_restart_id = ""
 	if campaign_id == "":
-		return
+		return _campaign_ui_failure_result("restart_campaign", "No campaign restart is pending.")
 	_campaign_restart_return_focus = null
 	_count_destructive_confirmation("campaign_restart", "confirm_count")
+	if _campaign_storage_is_blocked_now():
+		var blocked := _campaign_storage_blocked_result("restart_campaign", {
+			"campaign_id": campaign_id,
+		})
+		_refresh_campaign_browser()
+		return blocked
 	var result := CampaignProgression.restart_campaign(campaign_id)
+	_consume_campaign_mutation_result(result, "restart_campaign")
 	_campaign_restart_notice = String(result.get("message", ""))
 	if not bool(result.get("ok", false)):
 		_refresh_campaign_browser()
-		return
+		return _campaign_last_mutation_result.duplicate(true)
 	_selected_campaign_id = campaign_id
 	_selected_campaign_scenario_id = ""
 	_rebuild_campaign_browser()
+	return _campaign_last_mutation_result.duplicate(true)
 
 func _on_campaign_restart_canceled() -> Dictionary:
 	var had_pending := _pending_campaign_restart_id != ""
@@ -334,16 +384,31 @@ func _on_campaign_restart_canceled() -> Dictionary:
 		_restore_destructive_confirmation_origin.call_deferred("campaign_restart")
 	return {"ok": true, "canceled": had_pending, "pending": false}
 
-func _launch_campaign_action(action: Dictionary) -> void:
+func _launch_campaign_action(action: Dictionary) -> Dictionary:
 	var started := ProfileLogScript.begin_usec()
 	var buckets := {}
+	if _campaign_storage_is_blocked_now():
+		var blocked := _campaign_storage_blocked_result("start_scenario", {
+			"campaign_id": String(action.get("campaign_id", _selected_campaign_id)),
+			"scenario_id": String(action.get("scenario_id", "")),
+		})
+		_refresh_campaign_browser()
+		return blocked
 	if bool(action.get("disabled", false)):
+		var disabled_result := _campaign_ui_failure_result(
+			"start_scenario",
+			String(action.get("summary", "This campaign chapter is unavailable.")),
+			{
+				"campaign_id": String(action.get("campaign_id", _selected_campaign_id)),
+				"scenario_id": String(action.get("scenario_id", "")),
+			}
+		)
 		ProfileLogScript.emit_general("menu", "scenario_launch", "campaign_launch_blocked", ProfileLogScript.elapsed_ms(started), buckets, {
 			"scenario_id": String(action.get("scenario_id", "")),
 			"campaign_id": String(action.get("campaign_id", _selected_campaign_id)),
 			"difficulty": _selected_difficulty,
 		}, SessionState.ensure_active_session())
-		return
+		return disabled_result
 	var scenario_id := String(action.get("scenario_id", ""))
 	var campaign_id := String(action.get("campaign_id", _selected_campaign_id))
 	var start_started := ProfileLogScript.begin_usec()
@@ -354,6 +419,15 @@ func _launch_campaign_action(action: Dictionary) -> void:
 	)
 	buckets["scenario_start"] = ProfileLogScript.elapsed_ms(start_started)
 	if session.scenario_id == "":
+		var failure := CampaignProgression.last_failure_result()
+		if failure.is_empty():
+			failure = _campaign_ui_failure_result(
+				"start_scenario",
+				"The campaign expedition could not be started.",
+				{"campaign_id": campaign_id, "scenario_id": scenario_id}
+			)
+		else:
+			failure = _consume_campaign_mutation_result(failure, "start_scenario")
 		var refresh_started := ProfileLogScript.begin_usec()
 		_refresh_menu()
 		buckets["refresh_after_block"] = ProfileLogScript.elapsed_ms(refresh_started)
@@ -362,7 +436,17 @@ func _launch_campaign_action(action: Dictionary) -> void:
 			"campaign_id": campaign_id,
 			"difficulty": _selected_difficulty,
 		}, SessionState.ensure_active_session())
-		return
+		return failure.duplicate(true)
+	_campaign_last_mutation_result = {
+		"ok": true,
+		"changed": true,
+		"operation": "start_scenario",
+		"reason": "started",
+		"message": "",
+		"campaign_id": campaign_id,
+		"scenario_id": scenario_id,
+		"storage_state": CampaignProgression.storage_state(),
+	}
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh_menu()
 	buckets["refresh_before_route"] = ProfileLogScript.elapsed_ms(refresh_started)
@@ -372,6 +456,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 		"difficulty": _selected_difficulty,
 	}, session)
 	AppRouter.go_to_overworld()
+	return _campaign_last_mutation_result.duplicate(true)
 
 func _on_continue_pressed() -> void:
 	if not AppRouter.resume_latest_session():
@@ -1070,7 +1155,77 @@ func _on_quit_pressed() -> Dictionary:
 func validation_request_safe_quit() -> Dictionary:
 	return _on_quit_pressed()
 
+func _sync_campaign_storage_state() -> Dictionary:
+	_campaign_storage_blocked = CampaignProgression.is_storage_blocked()
+	_campaign_storage_state = CampaignProgression.storage_state()
+	_campaign_storage_warning = CampaignProgression.storage_warning().strip_edges()
+	if _campaign_storage_blocked and _campaign_storage_warning == "":
+		_campaign_storage_warning = "Campaign progress is unavailable. Existing data was preserved and cannot be overwritten."
+	elif not _campaign_storage_blocked:
+		_campaign_storage_warning = ""
+	if _campaign_storage_blocked and _campaign_last_mutation_result.is_empty():
+		var failure := CampaignProgression.last_failure_result()
+		if not failure.is_empty():
+			_campaign_last_mutation_result = failure.duplicate(true)
+	return _campaign_storage_state.duplicate(true)
+
+func _campaign_storage_is_blocked_now() -> bool:
+	_sync_campaign_storage_state()
+	return _campaign_storage_blocked
+
+func _campaign_storage_blocked_result(operation: String, context: Dictionary = {}) -> Dictionary:
+	_sync_campaign_storage_state()
+	_validation_campaign_blocked_command_count += 1
+	var reason := "future_version" if String(_campaign_storage_state.get("status", "")) == "future_version" else "invalid_storage"
+	_campaign_last_mutation_result = {
+		"ok": false,
+		"changed": false,
+		"path": "",
+		"operation": operation,
+		"reason": reason,
+		"message": _campaign_storage_warning,
+		"storage_state": _campaign_storage_state.duplicate(true),
+		"blocked": true,
+	}
+	for key in context.keys():
+		_campaign_last_mutation_result[key] = context[key]
+	_campaign_restart_notice = _campaign_storage_warning
+	return _campaign_last_mutation_result.duplicate(true)
+
+func _campaign_ui_failure_result(
+	operation: String,
+	message: String,
+	context: Dictionary = {}
+) -> Dictionary:
+	_campaign_last_mutation_result = {
+		"ok": false,
+		"changed": false,
+		"path": "",
+		"operation": operation,
+		"reason": "unavailable",
+		"message": message.strip_edges(),
+		"storage_state": _campaign_storage_state.duplicate(true),
+		"blocked": false,
+	}
+	for key in context.keys():
+		_campaign_last_mutation_result[key] = context[key]
+	return _campaign_last_mutation_result.duplicate(true)
+
+func _consume_campaign_mutation_result(result: Dictionary, operation: String) -> Dictionary:
+	_campaign_last_mutation_result = result.duplicate(true)
+	if not _campaign_last_mutation_result.has("operation"):
+		_campaign_last_mutation_result["operation"] = operation
+	_sync_campaign_storage_state()
+	if not bool(_campaign_last_mutation_result.get("ok", false)):
+		var message := String(_campaign_last_mutation_result.get("message", "")).strip_edges()
+		if message == "" and _campaign_storage_blocked:
+			message = _campaign_storage_warning
+		_campaign_last_mutation_result["message"] = message
+		_campaign_restart_notice = message
+	return _campaign_last_mutation_result.duplicate(true)
+
 func _rebuild_campaign_browser() -> void:
+	_sync_campaign_storage_state()
 	_campaign_entries = CampaignProgression.campaign_browser_entries()
 	_campaign_list.clear()
 
@@ -1130,9 +1285,15 @@ func _rebuild_campaign_chapter_browser() -> void:
 		_selected_campaign_scenario_id = ""
 
 func _refresh_campaign_browser() -> void:
+	_sync_campaign_storage_state()
 	if _campaign_entries.is_empty():
 		_set_compact_label(_campaign_details_label, "Campaign board: archived campaign arcs are not active in this build.", 2, 82)
-		_set_compact_label(_campaign_arc_status_label, "Campaign reset: no player-facing campaign progression is exposed.", 2, 82)
+		_set_compact_label(
+			_campaign_arc_status_label,
+			_campaign_storage_warning if _campaign_storage_blocked else "Campaign reset: no player-facing campaign progression is exposed.",
+			3,
+			86
+		)
 		_set_compact_label(_chapter_details_label, "No campaign chapters are selectable from the main menu.", 2, 82)
 		_set_compact_label(_campaign_commander_preview_label, "Skirmish fronts remain available for fresh expeditions.", 3, 82)
 		_set_compact_label(_campaign_operational_board_label, "Use Skirmish to launch playable authored fronts while campaign arcs stay archived.", 3, 82)
@@ -1151,7 +1312,9 @@ func _refresh_campaign_browser() -> void:
 
 	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 4, 86)
 	var arc_status := CampaignProgression.campaign_arc_status(_selected_campaign_id)
-	if _campaign_restart_notice != "":
+	if _campaign_storage_blocked:
+		arc_status = _campaign_storage_warning
+	elif _campaign_restart_notice != "":
 		arc_status = "%s\n%s" % [_campaign_restart_notice, arc_status]
 	_set_compact_label(_campaign_arc_status_label, arc_status, 3, 86)
 	_set_compact_label(_campaign_journal_label, CampaignProgression.campaign_journal(_selected_campaign_id), 3, 86)
@@ -1164,12 +1327,12 @@ func _refresh_campaign_browser() -> void:
 	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty)
 	var restart_action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
 	_campaign_restart_button.text = String(restart_action.get("label", "Restart Arc"))
-	_campaign_restart_button.disabled = bool(restart_action.get("disabled", true))
+	_campaign_restart_button.disabled = _campaign_storage_blocked or bool(restart_action.get("disabled", true))
 	_campaign_restart_button.visible = not _campaign_restart_button.disabled
-	_campaign_restart_button.tooltip_text = String(restart_action.get("summary", ""))
+	_campaign_restart_button.tooltip_text = _campaign_storage_warning if _campaign_storage_blocked else String(restart_action.get("summary", ""))
 	_campaign_primary_button.text = String(primary_action.get("label", "Advance Campaign"))
-	_campaign_primary_button.disabled = bool(primary_action.get("disabled", false))
-	_campaign_primary_button.tooltip_text = String(primary_action.get("summary", ""))
+	_campaign_primary_button.disabled = _campaign_storage_blocked or bool(primary_action.get("disabled", false))
+	_campaign_primary_button.tooltip_text = _campaign_storage_warning if _campaign_storage_blocked else String(primary_action.get("summary", ""))
 
 	if _selected_campaign_scenario_id == "":
 		_set_compact_label(_chapter_details_label, "Select a chapter to inspect carryover and the latest result.", 3, 86)
@@ -1177,7 +1340,7 @@ func _refresh_campaign_browser() -> void:
 		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 86)
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
-		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
+		_start_chapter_button.tooltip_text = _campaign_storage_warning if _campaign_storage_blocked else "Select a chapter to start or replay it."
 		return
 
 	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
@@ -1205,11 +1368,15 @@ func _refresh_campaign_browser() -> void:
 	)
 
 	_start_chapter_button.text = String(chapter_action.get("label", "Start Chapter"))
-	_start_chapter_button.disabled = bool(chapter_action.get("disabled", false))
-	_start_chapter_button.tooltip_text = _join_nonempty_lines([
-		String(chapter_check.get("tooltip_text", "")),
-		String(chapter_action.get("summary", "")),
-	])
+	_start_chapter_button.disabled = _campaign_storage_blocked or bool(chapter_action.get("disabled", false))
+	_start_chapter_button.tooltip_text = (
+		_campaign_storage_warning
+		if _campaign_storage_blocked
+		else _join_nonempty_lines([
+			String(chapter_check.get("tooltip_text", "")),
+			String(chapter_action.get("summary", "")),
+		])
+	)
 
 func _campaign_chapter_check_payload(chapter_action: Dictionary, primary_action: Dictionary) -> Dictionary:
 	if chapter_action.is_empty():
@@ -2565,6 +2732,11 @@ func validation_snapshot() -> Dictionary:
 		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
 		"campaign_count": _campaign_entries.size(),
 		"campaign_board_status": "active" if not _campaign_entries.is_empty() else "archived_empty",
+		"campaign_storage_state": _campaign_storage_state.duplicate(true),
+		"campaign_storage_blocked": _campaign_storage_blocked,
+		"campaign_storage_warning": _campaign_storage_warning,
+		"campaign_last_mutation_result": _campaign_last_mutation_result.duplicate(true),
+		"campaign_storage_blocked_command_count": _validation_campaign_blocked_command_count,
 		"campaign_empty_state_text": _campaign_details_label.text,
 		"campaign_empty_state_tooltip": _campaign_details_label.tooltip_text,
 		"selected_campaign_id": _selected_campaign_id,
@@ -2787,6 +2959,28 @@ func validation_snapshot() -> Dictionary:
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,
+	}
+
+func validation_campaign_storage_snapshot() -> Dictionary:
+	_sync_campaign_storage_state()
+	return {
+		"storage_state": _campaign_storage_state.duplicate(true),
+		"blocked": _campaign_storage_blocked,
+		"warning": _campaign_storage_warning,
+		"last_mutation_result": _campaign_last_mutation_result.duplicate(true),
+		"blocked_command_count": _validation_campaign_blocked_command_count,
+		"selected_campaign_id": _selected_campaign_id,
+		"selected_scenario_id": _selected_campaign_scenario_id,
+		"campaign_browsing_enabled": _campaign_list.focus_mode != Control.FOCUS_NONE and _campaign_list.mouse_filter != Control.MOUSE_FILTER_IGNORE,
+		"chapter_browsing_enabled": _chapter_list.focus_mode != Control.FOCUS_NONE and _chapter_list.mouse_filter != Control.MOUSE_FILTER_IGNORE,
+		"campaign_list_disabled": _campaign_list.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"chapter_list_disabled": _chapter_list.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"primary_disabled": _campaign_primary_button.disabled,
+		"chapter_start_disabled": _start_chapter_button.disabled,
+		"restart_disabled": _campaign_restart_button.disabled,
+		"restart_dialog_visible": _campaign_restart_dialog.visible,
+		"warning_surface": _campaign_arc_status_label.text,
+		"warning_surface_full": _campaign_arc_status_label.tooltip_text,
 	}
 
 func validation_generated_random_map_snapshot() -> Dictionary:
@@ -3042,23 +3236,25 @@ func validation_set_campaign_difficulty(difficulty_id: String) -> bool:
 	return false
 
 func validation_request_campaign_restart() -> Dictionary:
-	_on_campaign_restart_pressed()
+	var mutation_result := _on_campaign_restart_pressed()
 	var result := {
 		"pending_campaign_id": _pending_campaign_restart_id,
 		"dialog_visible": _campaign_restart_dialog.visible,
 		"title": _campaign_restart_dialog.title,
 		"text": _campaign_restart_dialog.dialog_text,
+		"mutation_result": mutation_result.duplicate(true),
 	}
 	result.merge(_destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog), true)
 	return result
 
 func validation_confirm_campaign_restart() -> Dictionary:
-	_on_campaign_restart_confirmed()
+	var mutation_result := _on_campaign_restart_confirmed()
 	var result := {
 		"pending_campaign_id": _pending_campaign_restart_id,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_scenario_id": _selected_campaign_scenario_id,
 		"notice": _campaign_restart_notice,
+		"mutation_result": mutation_result.duplicate(true),
 	}
 	result.merge(_destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog), true)
 	return result
@@ -3532,7 +3728,7 @@ func validation_start_selected_campaign_chapter() -> Dictionary:
 	var requested_difficulty := _selected_difficulty
 	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id, requested_difficulty)
 	var action_disabled := _start_chapter_button.disabled or bool(action.get("disabled", false))
-	_on_start_chapter_pressed()
+	var mutation_result := _on_start_chapter_pressed()
 	var active_session := SessionState.ensure_active_session()
 	var active_campaign_id := String(active_session.flags.get("campaign_id", ""))
 	return {
@@ -3540,6 +3736,8 @@ func validation_start_selected_campaign_chapter() -> Dictionary:
 		"requested_scenario_id": requested_scenario_id,
 		"requested_difficulty": requested_difficulty,
 		"action_disabled": action_disabled,
+		"mutation_result": mutation_result.duplicate(true),
+		"campaign_storage": validation_campaign_storage_snapshot(),
 		"started": not action_disabled
 			and active_session.scenario_id == requested_scenario_id
 			and active_session.difficulty == requested_difficulty

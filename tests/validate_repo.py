@@ -66,6 +66,8 @@ CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / 
 CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_replay_progress_preservation_regression.tscn"
 CAMPAIGN_COMPLETION_PERSISTENCE_ATOMICITY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_completion_persistence_atomicity_regression.gd"
 CAMPAIGN_COMPLETION_PERSISTENCE_ATOMICITY_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_completion_persistence_atomicity_regression.tscn"
+CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_progression_semantic_storage_fail_closed_regression.gd"
+CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_progression_semantic_storage_fail_closed_regression.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_regression.gd"
@@ -13070,6 +13072,84 @@ def validate_campaign_browser(errors: list[str]) -> None:
             errors,
             "Campaign completion persistence atomicity regression scene must load its script",
         )
+
+    for path in (
+        CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCRIPT_PATH,
+        CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing campaign progression semantic storage regression file: {path.relative_to(ROOT)}")
+    if CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCRIPT_PATH.exists():
+        semantic_storage_text = CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION",
+            "inspect_progression_storage",
+            '"partial_top_level"',
+            '"top_level_wrong_type"',
+            '"nested_state_wrong_type"',
+            '"nested_collection_wrong_type"',
+            '"nested_entry_wrong_type"',
+            '"malformed_json"',
+            '"future_version"',
+            "SaveService.save_progression",
+            "SaveService.load_progression",
+            "CampaignProgression.select_campaign",
+            "CampaignProgression.select_scenario",
+            "CampaignProgression.start_scenario",
+            "CampaignProgression.restart_campaign",
+            "CampaignProgression.record_session_completion",
+            "validation_campaign_storage_snapshot",
+            "validation_start_selected_campaign_chapter",
+            "validation_request_campaign_restart",
+            "validation_open_skirmish_stage",
+            "validation_open_saves_stage",
+            "validation_open_settings_stage",
+            "candidate_never_adopted",
+            "future_live_exact",
+            "current_backup_exact",
+            "CampaignRules.PROFILE_VERSION",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in semantic_storage_text, errors, f"campaign progression semantic storage regression is missing required token: {required_token}")
+    if CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCENE_PATH.exists():
+        semantic_storage_scene_text = CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/campaign_progression_semantic_storage_fail_closed_regression.gd" in semantic_storage_scene_text,
+            errors,
+            "Campaign progression semantic storage regression scene must load its script",
+        )
+
+    for required_token in (
+        "func inspect_progression_storage() -> Dictionary",
+        'const PROGRESSION_STORAGE_STATUS_MISSING := "missing"',
+        'const PROGRESSION_STORAGE_STATUS_CURRENT_VALID := "current_valid"',
+        'const PROGRESSION_STORAGE_STATUS_RECOVERED := "recovered"',
+        'const PROGRESSION_STORAGE_STATUS_INVALID := "invalid"',
+        'const PROGRESSION_STORAGE_STATUS_FUTURE_VERSION := "future_version"',
+        "CampaignRulesScript.PROFILE_VERSION",
+        "func _progression_payload_semantic_report",
+        '"campaign_state_wrong_type"',
+        'for collection_key in ["scenario_records", "carryover_bundles"]',
+        '"%s_entry_wrong_type" % collection_key',
+    ):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing semantic campaign progression storage token: {required_token}")
+
+    campaign_progression_text = CAMPAIGN_PROGRESSION_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func storage_state() -> Dictionary",
+        "func is_storage_blocked() -> bool",
+        "func last_failure_result() -> Dictionary",
+        "func _blocked_storage_result",
+        '"invalid_storage"',
+        '"future_version"',
+    ):
+        ensure(required_token in campaign_progression_text, errors, f"CampaignProgression.gd is missing semantic storage fail-closed token: {required_token}")
+    for required_token in (
+        "func validation_campaign_storage_snapshot() -> Dictionary",
+        '"campaign_storage_blocked"',
+        '"campaign_storage_warning"',
+        '"campaign_storage_blocked_command_count"',
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing semantic campaign storage UI token: {required_token}")
 
     ensure(MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists(), errors, "Missing main menu outcome visual smoke script")
     if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():
