@@ -13,6 +13,8 @@ func _run() -> void:
 		return
 	if not await _check_overworld_controller_movement():
 		return
+	if not await _check_overworld_end_turn_confirmation_cancel():
+		return
 	if not await _check_town_keyboard_build():
 		return
 	if not await _check_narrow_town_keyboard_entry():
@@ -155,6 +157,74 @@ func _check_overworld_controller_movement() -> bool:
 		return _fail("Overworld left-stick movement discarded focused UI state.")
 	shell.queue_free()
 	await get_tree().process_frame
+	return true
+
+func _check_overworld_end_turn_confirmation_cancel() -> bool:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var end_turn: Button = shell.get_node_or_null("%EndTurn")
+	var dialog: ConfirmationDialog = shell.get_node_or_null("EndTurnConfirmationDialog")
+	if end_turn == null or dialog == null:
+		return _fail("Overworld End Turn confirmation controls are missing.")
+	var live_snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	if not bool(live_snapshot.get("confirmation_required", false)) or not String(live_snapshot.get("surface_button_text", "")).begins_with("End?"):
+		return _fail("Fresh overworld fixture does not expose a live warned End Turn state: %s." % live_snapshot)
+	var session_before := JSON.stringify(session.to_dict())
+	end_turn.grab_focus()
+	await get_tree().process_frame
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if not _assert_overworld_end_turn_dialog(shell, dialog, live_snapshot):
+		return false
+	await _press_joypad_button(JOY_BUTTON_B)
+	await _settle()
+	if dialog.visible:
+		return _fail("Controller B did not close the warned End Turn confirmation.")
+	if JSON.stringify(session.to_dict()) != session_before:
+		return _fail("Controller B changed the byte-exact overworld session while canceling End Turn.")
+	if get_viewport().gui_get_focus_owner() != end_turn:
+		return _fail("Controller B did not restore focus to the exact EndTurn command: %s." % _focus_name())
+
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	if not _assert_overworld_end_turn_dialog(shell, dialog, live_snapshot):
+		return false
+	await _press_key(KEY_ESCAPE)
+	await _settle()
+	if dialog.visible:
+		return _fail("Keyboard Escape did not close the warned End Turn confirmation.")
+	if JSON.stringify(session.to_dict()) != session_before:
+		return _fail("Keyboard Escape changed the byte-exact overworld session while canceling End Turn.")
+	if get_viewport().gui_get_focus_owner() != end_turn:
+		return _fail("Keyboard Escape did not restore focus to the exact EndTurn command: %s." % _focus_name())
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _assert_overworld_end_turn_dialog(shell: Node, dialog: ConfirmationDialog, live_snapshot: Dictionary) -> bool:
+	if not dialog.visible:
+		return _fail("Controller A did not open the warned End Turn confirmation.")
+	if dialog.title != "Confirm End Turn?" or dialog.get_ok_button().text != "End Turn" or dialog.get_cancel_button().text != "Keep Waiting":
+		return _fail("End Turn confirmation actions are unclear: title=%s confirm=%s cancel=%s." % [dialog.title, dialog.get_ok_button().text, dialog.get_cancel_button().text])
+	for key in ["surface_confirmation", "surface_spend_check"]:
+		var required_copy := String(live_snapshot.get(key, "")).strip_edges()
+		if required_copy != "" and required_copy not in dialog.dialog_text:
+			return _fail("End Turn confirmation omitted live %s copy: expected=%s dialog=%s." % [key, required_copy, dialog.dialog_text])
+	if bool(live_snapshot.get("risk_unconsumed", false)):
+		var risk_summary := String(live_snapshot.get("risk_summary", "")).strip_edges()
+		var risk_copy := "Next-day risk: %s." % risk_summary.trim_suffix(".") if risk_summary != "" else ""
+		if risk_copy != "" and risk_copy not in dialog.dialog_text:
+			return _fail("End Turn confirmation omitted the compact live unconsumed risk summary: expected=%s dialog=%s." % [risk_copy, dialog.dialog_text])
+	var pending_snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	if not bool(pending_snapshot.get("pending", false)) or not bool(pending_snapshot.get("dialog_visible", false)):
+		return _fail("End Turn confirmation did not retain a pending request identity: %s." % pending_snapshot)
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+	if dialog_focus_owner != dialog.get_cancel_button():
+		return _fail("End Turn confirmation did not focus the safer Keep Waiting action in its native dialog viewport: %s." % dialog_focus_owner)
 	return true
 
 func _check_narrow_town_keyboard_entry() -> bool:

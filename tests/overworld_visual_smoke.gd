@@ -4,6 +4,9 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var end_turn_dialog_only := OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1"
+	if end_turn_dialog_only:
+		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -32,6 +35,13 @@ func _run() -> void:
 	if not _assert_status_forecast_cue_contract(shell):
 		return
 	if not _assert_end_turn_readiness_confirmation_contract(shell):
+		return
+	if not _assert_end_turn_warning_dialog_layout_contract(shell):
+		return
+	if end_turn_dialog_only:
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if not _assert_drawer_handoff_cue_contract(shell):
 		return
@@ -578,6 +588,67 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 		return false
 	return true
 
+func _assert_end_turn_warning_dialog_layout_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_request_end_turn") \
+			or not shell.has_method("validation_cancel_end_turn_confirmation") \
+			or not shell.has_method("validation_end_turn_confirmation_snapshot"):
+		push_error("Overworld smoke: shell is missing warned End Turn dialog validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session_before := JSON.stringify(SessionState.ensure_active_session().to_dict())
+	var request: Dictionary = shell.call("validation_request_end_turn")
+	var snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	if not bool(request.get("ok", false)) or not bool(request.get("confirmation_required", false)) \
+			or not bool(snapshot.get("pending", false)) or not bool(snapshot.get("dialog_visible", false)):
+		push_error("Overworld smoke: warned End Turn request did not open a pending confirmation: request=%s snapshot=%s" % [request, snapshot])
+		get_tree().quit(1)
+		return false
+	var joined := "\n".join([
+		String(snapshot.get("text", "")),
+		String(snapshot.get("surface_confirmation", "")),
+		String(snapshot.get("surface_spend_check", "")),
+		String(snapshot.get("risk_summary", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld warned End Turn dialog",
+		[joined, String(snapshot.get("title", "")), String(snapshot.get("confirm_text", "")), String(snapshot.get("cancel_text", ""))],
+		["Confirm End Turn?", "End Turn", "Keep Waiting", String(snapshot.get("surface_confirmation", "")), String(snapshot.get("surface_spend_check", ""))]
+	):
+		return false
+	if bool(snapshot.get("risk_unconsumed", false)):
+		var risk_summary := String(snapshot.get("risk_summary", "")).strip_edges()
+		var risk_copy := "Next-day risk: %s." % risk_summary.trim_suffix(".") if risk_summary != "" else ""
+		if risk_copy == "" or risk_copy not in String(snapshot.get("text", "")):
+			push_error("Overworld smoke: compact End Turn dialog omitted its live risk summary: expected=%s text=%s" % [risk_copy, snapshot.get("text", "")])
+			get_tree().quit(1)
+			return false
+	var requested_size: Vector2i = snapshot.get("dialog_requested_size", Vector2i.ZERO)
+	var dialog_size: Vector2i = snapshot.get("dialog_size", Vector2i.ZERO)
+	var label_minimum: Vector2 = snapshot.get("dialog_label_minimum_size", Vector2.ZERO)
+	if requested_size != Vector2i(760, 300) \
+			or dialog_size.x <= 0 or dialog_size.y <= 0 \
+			or dialog_size.x > 1024 or dialog_size.y > 540 \
+			or label_minimum.x != 680.0 or label_minimum.y != 0.0:
+		push_error("Overworld smoke: End Turn confirmation is not compact within a 1280x720 composition: requested=%s actual=%s label_min=%s" % [requested_size, dialog_size, label_minimum])
+		get_tree().quit(1)
+		return false
+	if OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1":
+		print("OVERWORLD_END_TURN_DIALOG_LAYOUT %s" % JSON.stringify({
+			"viewport": {"width": 1280, "height": 720},
+			"requested": {"width": requested_size.x, "height": requested_size.y},
+			"actual": {"width": dialog_size.x, "height": dialog_size.y},
+			"label_minimum": {"width": label_minimum.x, "height": label_minimum.y},
+			"compact": true,
+		}))
+	var canceled: Dictionary = shell.call("validation_cancel_end_turn_confirmation")
+	var after: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	if not bool(canceled.get("ok", false)) or bool(after.get("pending", true)) or bool(after.get("dialog_visible", true)) \
+			or JSON.stringify(SessionState.ensure_active_session().to_dict()) != session_before:
+		push_error("Overworld smoke: canceling the compact End Turn dialog changed live state or left it pending: cancel=%s after=%s" % [canceled, after])
+		get_tree().quit(1)
+		return false
+	return true
+
 func _assert_status_forecast_cue_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
 		push_error("Overworld smoke: shell is missing status forecast validation hooks.")
@@ -1035,7 +1106,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Risk Light",
 			"Difficulty Low",
 			"Army: River Pass Ghoul Grove Watch",
-			"27 troops/4 groups",
+			"28 troops/4 groups",
 			"Blackbranch Cutthroat x8",
 			"Mudglass Slingers x1",
 			"Readiness: your army",
@@ -1052,7 +1123,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass encounter hover tooltip",
 		[String(encounter_hover.get("map_tooltip", ""))],
-		["Ghoul Grove", "Risk Light", "Difficulty Low", "River Pass Ghoul Grove Watch", "27 troops/4 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
+		["Ghoul Grove", "Risk Light", "Difficulty Low", "River Pass Ghoul Grove Watch", "28 troops/4 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
 	):
 		return false
 
