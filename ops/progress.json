@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Campaign completion persistence atomicity is complete: failed progression writes preserve exact live/disk/session state and retry once, while successful completion publishes only after commit. Overall release readiness remains open.",
+  "currentNotes": "Town departure copy integrity is complete: core, cached, and live surfaces now promise only Return to Field, with exact remaining/exhausted guidance and unchanged route-only behavior. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-progression-completion-write-failure-atomicity-10184",
-  "currentSliceId": "campaign-progression-completion-write-failure-atomicity-10184",
-  "currentSliceNotes": "Completed detached progression commit before live publication, exact pre-terminal session rollback on failure, and one idempotent retry after either transaction failure phase.",
+  "currentSlice": "ux-town-departure-end-turn-copy-integrity-10184",
+  "currentSliceId": "ux-town-departure-end-turn-copy-integrity-10184",
+  "currentSliceNotes": "Completed authoritative Return to Field copy, full cached-surface refresh, exact movement/response guidance, and route-only no-save validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Completion Persistence Atomicity",
-  "currentSliceUpdatedAt": "2026-08-10T02:32:20Z",
+  "currentSliceTitle": "Town Departure End-Turn Copy Integrity",
+  "currentSliceUpdatedAt": "2026-08-10T02:46:08Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74222,6 +74222,49 @@
       ],
       "remainingWork": "No work remains in this slice. Town departure copy integrity, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T02:32:20Z"
+    },
+    {
+      "id": "ux-town-departure-end-turn-copy-integrity-10184",
+      "title": "Town Departure End-Turn Copy Integrity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/lessons-learned.md"],
+      "purpose": "Stop the exhausted-town departure command from falsely promising an End Turn when it only routes back to the overworld.",
+      "implementationTargets": [
+        "scripts/core/TownRules.gd",
+        "scenes/town/TownShell.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/town_exit_profile_accuracy_regression.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"exhausted_label": "Leave / End Turn", "departure_ends_turn": false, "departure_autosaves": false},
+      "completionCriteria": [
+        "Authoritative and cached departure surfaces use Return to Field and never promise End Turn",
+        "Remaining/exhausted guidance and response-order priority are explicit",
+        "Departure preserves day/status/session and performs no End Turn/autosave",
+        "Town visual, exit, controller, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": ["automatic town-side End Turn, new modal, turn math, save behavior, economy, scenario balance, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T02:33:34Z",
+      "startedAt": "2026-08-10T02:33:34Z",
+      "updatedAt": "2026-08-10T02:46:08Z",
+      "notes": "TownRules, cached TownShell refresh, and the live command now use Return to Field with exact response-priority and movement guidance; the unchanged handler remains route-only.",
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn (passed; authoritative, cached, and live copy agree)",
+        "godot4 --headless --path . --scene res://tests/town_exit_profile_accuracy_regression.tscn (passed; same day/status/movement and zero save/autosave records)",
+        "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn (passed; Return to Field routes to overworld and separate End Turn remains focusable)",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T02:46:08Z"
     }
   ],
   "project": "heroes-like",
