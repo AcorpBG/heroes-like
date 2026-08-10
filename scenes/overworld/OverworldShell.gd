@@ -113,6 +113,10 @@ const CONTROLLER_MOVE_DEAD_ZONE := 0.62
 const CONTROLLER_MOVE_RELEASE_ZONE := 0.34
 const CONTROLLER_MOVE_INITIAL_REPEAT_MSEC := 360
 const CONTROLLER_MOVE_REPEAT_MSEC := 180
+const CONTROLLER_ROUTE_DEAD_ZONE := 0.62
+const CONTROLLER_ROUTE_RELEASE_ZONE := 0.34
+const CONTROLLER_ROUTE_INITIAL_REPEAT_MSEC := 360
+const CONTROLLER_ROUTE_REPEAT_MSEC := 180
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. Try Save again before continuing."
@@ -193,6 +197,19 @@ var _last_save_surface_compact_reason := ""
 var _controller_move_axis := Vector2.ZERO
 var _controller_move_direction := Vector2i.ZERO
 var _controller_move_repeat_timer: Timer = null
+var _controller_route_axis := Vector2.ZERO
+var _controller_route_direction := Vector2i.ZERO
+var _controller_route_repeat_timer: Timer = null
+var _controller_route_cursor_active := false
+var _validation_controller_route_step_count := 0
+var _validation_controller_route_repeat_count := 0
+var _validation_controller_route_accept_count := 0
+var _validation_controller_route_cancel_count := 0
+var _validation_controller_route_blocked_count := 0
+var _validation_controller_route_primary_invocation_count := 0
+var _validation_controller_left_move_count := 0
+var _validation_controller_route_last_step: Dictionary = {}
+var _validation_controller_route_last_accept: Dictionary = {}
 var _pending_end_turn_confirmation: Dictionary = {}
 var _last_end_turn_confirmation_result: Dictionary = {}
 var _last_end_turn_rule_result: Dictionary = {}
@@ -225,6 +242,7 @@ var _validation_manual_save_route_attempt_count := 0
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
+	_configure_controller_route_repeat_timer()
 	_configure_end_turn_confirmation()
 	_apply_visual_theme()
 	resized.connect(_apply_responsive_layout)
@@ -334,10 +352,16 @@ func _input(event: InputEvent) -> void:
 		return
 	if _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible:
 		return
+	if _handle_controller_route_action_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
 		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
 			return
 		_on_close_drawers_pressed()
+		get_viewport().set_input_as_handled()
+		return
+	if _handle_controller_route_axis_input(event):
 		get_viewport().set_input_as_handled()
 		return
 	if _handle_controller_move_axis_input(event):
@@ -419,6 +443,9 @@ func _controller_hero_movement_available() -> bool:
 	)
 
 func _move_from_controller_direction(direction: Vector2i) -> void:
+	if _controller_route_cursor_active:
+		_deactivate_controller_route_cursor(true, false)
+	_validation_controller_left_move_count += 1
 	match direction:
 		Vector2i.UP:
 			_move_north()
@@ -434,6 +461,187 @@ func _clear_controller_move_state() -> void:
 	_controller_move_direction = Vector2i.ZERO
 	if _controller_move_repeat_timer != null:
 		_controller_move_repeat_timer.stop()
+
+func _handle_controller_route_action_input(event: InputEvent) -> bool:
+	if not _controller_route_cursor_active:
+		return false
+	var cancel_pressed := event.is_action_pressed("ui_cancel")
+	var accept_pressed := event.is_action_pressed("ui_accept")
+	if not cancel_pressed and not accept_pressed:
+		return false
+	var blocked_reason := _controller_route_cursor_blocked_reason()
+	if blocked_reason != "":
+		_validation_controller_route_blocked_count += 1
+		_validation_controller_route_last_step = {
+			"ok": false,
+			"blocked": true,
+			"reason": blocked_reason,
+			"input": "cancel" if cancel_pressed else "accept",
+		}
+		return false
+	if cancel_pressed:
+		_cancel_controller_route_cursor()
+		return true
+	_commit_controller_route_primary_action()
+	return true
+
+func _handle_controller_route_axis_input(event: InputEvent) -> bool:
+	if not (event is InputEventJoypadMotion):
+		return false
+	var axis := int(event.axis)
+	if axis != JOY_AXIS_RIGHT_X and axis != JOY_AXIS_RIGHT_Y:
+		return false
+	if axis == JOY_AXIS_RIGHT_X:
+		_controller_route_axis.x = event.axis_value
+	else:
+		_controller_route_axis.y = event.axis_value
+	var next_direction := _controller_route_direction_from_axis(_controller_route_axis)
+	if next_direction == _controller_route_direction:
+		return true
+	_controller_route_direction = next_direction
+	_controller_route_repeat_timer.stop()
+	if next_direction == Vector2i.ZERO:
+		return true
+	var blocked_reason := _controller_route_cursor_blocked_reason()
+	if blocked_reason != "":
+		_validation_controller_route_blocked_count += 1
+		_validation_controller_route_last_step = {
+			"ok": false,
+			"blocked": true,
+			"reason": blocked_reason,
+			"direction": _debug_tile_payload(next_direction),
+		}
+		_clear_controller_route_motion()
+		return true
+	_move_controller_route_cursor(next_direction, false)
+	_controller_route_repeat_timer.start(float(CONTROLLER_ROUTE_INITIAL_REPEAT_MSEC) / 1000.0)
+	return true
+
+func _configure_controller_route_repeat_timer() -> void:
+	_controller_route_repeat_timer = Timer.new()
+	_controller_route_repeat_timer.name = "ControllerRouteRepeatTimer"
+	_controller_route_repeat_timer.one_shot = true
+	_controller_route_repeat_timer.timeout.connect(_on_controller_route_repeat_timeout)
+	add_child(_controller_route_repeat_timer)
+
+func _on_controller_route_repeat_timeout() -> void:
+	if _controller_route_direction == Vector2i.ZERO:
+		return
+	var blocked_reason := _controller_route_cursor_blocked_reason()
+	if blocked_reason != "":
+		_validation_controller_route_blocked_count += 1
+		_validation_controller_route_last_step = {
+			"ok": false,
+			"blocked": true,
+			"reason": blocked_reason,
+			"repeat": true,
+		}
+		_clear_controller_route_motion()
+		return
+	_validation_controller_route_repeat_count += 1
+	_move_controller_route_cursor(_controller_route_direction, true)
+	_controller_route_repeat_timer.start(float(CONTROLLER_ROUTE_REPEAT_MSEC) / 1000.0)
+
+func _controller_route_direction_from_axis(axis: Vector2) -> Vector2i:
+	var strongest := maxf(absf(axis.x), absf(axis.y))
+	if strongest <= CONTROLLER_ROUTE_RELEASE_ZONE:
+		return Vector2i.ZERO
+	if strongest < CONTROLLER_ROUTE_DEAD_ZONE:
+		return _controller_route_direction
+	if absf(axis.x) > absf(axis.y):
+		return Vector2i.RIGHT if axis.x > 0.0 else Vector2i.LEFT
+	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
+
+func _controller_route_cursor_blocked_reason() -> String:
+	if _session == null:
+		return "missing_session"
+	if _session.game_state != "overworld":
+		return "not_overworld"
+	if _active_drawer != "":
+		return "drawer_open"
+	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		return "settings_open"
+	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
+		return "save_popup_open"
+	if _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible:
+		return "save_confirmation_open"
+	if _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible:
+		return "end_turn_confirmation_open"
+	if _end_turn_commit_in_progress:
+		return "end_turn_committing"
+	if _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled:
+		return "debug_active"
+	return ""
+
+func _move_controller_route_cursor(direction: Vector2i, repeated: bool) -> Dictionary:
+	var before := _selected_tile
+	var requested := Vector2i(
+		clampi(before.x + direction.x, 0, maxi(0, _map_size.x - 1)),
+		clampi(before.y + direction.y, 0, maxi(0, _map_size.y - 1))
+	)
+	_controller_route_cursor_active = true
+	_opening_route_suggested = false
+	_opening_route_suggestion_kind = ""
+	_set_selected_tile(requested)
+	var changed := _selected_tile != before
+	if changed:
+		_validation_controller_route_step_count += 1
+		_pan_map(_selected_tile - before)
+		_refresh_selected_route_preview("controller_route_cursor_repeat" if repeated else "controller_route_cursor_step")
+	_validation_controller_route_last_step = {
+		"ok": true,
+		"changed": changed,
+		"bounded": requested == before and not changed,
+		"repeat": repeated,
+		"direction": _debug_tile_payload(direction),
+		"before": _debug_tile_payload(before),
+		"selected_tile": _debug_tile_payload(_selected_tile),
+	}
+	return _validation_controller_route_last_step.duplicate(true)
+
+func _commit_controller_route_primary_action() -> Dictionary:
+	_validation_controller_route_accept_count += 1
+	_validation_controller_route_primary_invocation_count += 1
+	var selected_before := _selected_tile
+	var action := _current_primary_action().duplicate(true)
+	var activated := _activate_primary_action()
+	if activated:
+		_deactivate_controller_route_cursor(false, false)
+	_validation_controller_route_last_accept = {
+		"ok": activated,
+		"activated": activated,
+		"invocation_count_delta": 1,
+		"action_id": String(action.get("id", "")),
+		"selected_tile_before": _debug_tile_payload(selected_before),
+		"selected_tile_after": _debug_tile_payload(_selected_tile),
+	}
+	return _validation_controller_route_last_accept.duplicate(true)
+
+func _cancel_controller_route_cursor() -> Dictionary:
+	_validation_controller_route_cancel_count += 1
+	_deactivate_controller_route_cursor(true, true)
+	return {
+		"ok": true,
+		"canceled": true,
+		"active": _controller_route_cursor_active,
+		"selected_tile": _debug_tile_payload(_selected_tile),
+	}
+
+func _deactivate_controller_route_cursor(reset_to_hero: bool, refresh_preview: bool) -> void:
+	_controller_route_cursor_active = false
+	_clear_controller_route_motion()
+	if not reset_to_hero or _session == null:
+		return
+	_set_selected_tile(OverworldRules.hero_position(_session))
+	_focus_camera_on_hero()
+	if refresh_preview:
+		_refresh_selected_route_preview("controller_route_cursor_canceled")
+
+func _clear_controller_route_motion() -> void:
+	_controller_route_axis = Vector2.ZERO
+	_controller_route_direction = Vector2i.ZERO
+	if _controller_route_repeat_timer != null:
+		_controller_route_repeat_timer.stop()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
@@ -1157,6 +1365,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	var handler_started_usec := Time.get_ticks_usec()
 	if not _tile_in_bounds(tile):
 		return
+	if _controller_route_cursor_active:
+		_deactivate_controller_route_cursor(false, false)
 	_opening_route_suggested = false
 	_opening_route_suggestion_kind = ""
 	var debug_started := _debug_begin_path_command("click", tile)
@@ -7868,6 +8078,98 @@ func validation_click_tile(x: int, y: int) -> Dictionary:
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = true
 	return snapshot
+
+func validation_reset_controller_route_cursor() -> Dictionary:
+	_deactivate_controller_route_cursor(true, true)
+	_validation_controller_route_step_count = 0
+	_validation_controller_route_repeat_count = 0
+	_validation_controller_route_accept_count = 0
+	_validation_controller_route_cancel_count = 0
+	_validation_controller_route_blocked_count = 0
+	_validation_controller_route_primary_invocation_count = 0
+	_validation_controller_left_move_count = 0
+	_validation_controller_route_last_step = {}
+	_validation_controller_route_last_accept = {}
+	return validation_controller_route_cursor_snapshot()
+
+func validation_controller_route_axis(axis: int, value: float) -> Dictionary:
+	var event := InputEventJoypadMotion.new()
+	event.axis = axis as JoyAxis
+	event.axis_value = clampf(value, -1.0, 1.0)
+	var consumed := _handle_controller_route_axis_input(event)
+	var snapshot := validation_controller_route_cursor_snapshot()
+	snapshot["consumed"] = consumed
+	return snapshot
+
+func validation_controller_route_repeat() -> Dictionary:
+	if _controller_route_repeat_timer != null:
+		_controller_route_repeat_timer.stop()
+	_on_controller_route_repeat_timeout()
+	return validation_controller_route_cursor_snapshot()
+
+func validation_controller_route_accept() -> Dictionary:
+	var handled := false
+	if _controller_route_cursor_active and _controller_route_cursor_blocked_reason() == "":
+		_commit_controller_route_primary_action()
+		handled = true
+	elif _controller_route_cursor_active:
+		_validation_controller_route_blocked_count += 1
+	var snapshot := validation_controller_route_cursor_snapshot()
+	snapshot["handled"] = handled
+	return snapshot
+
+func validation_controller_route_cancel() -> Dictionary:
+	var handled := false
+	if _controller_route_cursor_active and _controller_route_cursor_blocked_reason() == "":
+		_cancel_controller_route_cursor()
+		handled = true
+	elif _controller_route_cursor_active:
+		_validation_controller_route_blocked_count += 1
+	var snapshot := validation_controller_route_cursor_snapshot()
+	snapshot["handled"] = handled
+	return snapshot
+
+func validation_controller_route_cursor_snapshot() -> Dictionary:
+	var hero_tile := OverworldRules.hero_position(_session) if _session != null else Vector2i(-1, -1)
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	var map_metrics := {}
+	if _map_view != null and _map_view.has_method("validation_view_metrics"):
+		map_metrics = _map_view.call("validation_view_metrics")
+	var blocked_reason := _controller_route_cursor_blocked_reason()
+	return {
+		"active": _controller_route_cursor_active,
+		"axis": {"x": _controller_route_axis.x, "y": _controller_route_axis.y},
+		"direction": _debug_tile_payload(_controller_route_direction),
+		"selected_tile": _debug_tile_payload(_selected_tile),
+		"hero_tile": _debug_tile_payload(hero_tile),
+		"camera_focus_tile": _duplicate_dictionary(map_metrics.get("camera_focus_tile", {})),
+		"camera_focus_tile_precise": _duplicate_dictionary(map_metrics.get("camera_focus_tile_precise", {})),
+		"route_preview": _duplicate_dictionary(map_metrics.get("route_preview", {})),
+		"primary_action": _current_primary_action().duplicate(true),
+		"step_count": _validation_controller_route_step_count,
+		"repeat_count": _validation_controller_route_repeat_count,
+		"accept_count": _validation_controller_route_accept_count,
+		"cancel_count": _validation_controller_route_cancel_count,
+		"blocked_count": _validation_controller_route_blocked_count,
+		"primary_action_invocation_count": _validation_controller_route_primary_invocation_count,
+		"left_move_count": _validation_controller_left_move_count,
+		"last_step": _validation_controller_route_last_step.duplicate(true),
+		"last_accept": _validation_controller_route_last_accept.duplicate(true),
+		"available": blocked_reason == "",
+		"blocked_reason": blocked_reason,
+		"repeat_timer_active": _controller_route_repeat_timer != null and not _controller_route_repeat_timer.is_stopped(),
+		"repeat_wait_seconds": _controller_route_repeat_timer.wait_time if _controller_route_repeat_timer != null else 0.0,
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"active_drawer": _active_drawer,
+		"settings_open": _active_play_settings_dialog != null and _active_play_settings_dialog.is_open(),
+		"save_popup_open": _save_slot_picker != null and _save_slot_picker.get_popup().visible,
+		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
+		"end_turn_confirmation_open": _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible,
+		"debug_active": _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled,
+		"scenario_status": _session.scenario_status if _session != null else "",
+		"game_state": _session.game_state if _session != null else "",
+		"day": _session.day if _session != null else 0,
+	}
 
 func validation_hover_tile(x: int, y: int) -> Dictionary:
 	var tile := Vector2i(x, y)

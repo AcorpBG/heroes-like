@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Required battle-entry autosave failure now stays in Overworld with an exact pending encounter and routes only after a verified checkpoint. Overall release readiness remains open.",
+  "currentNotes": "Controller right-stick route selection is complete across source, live input, route compatibility, and packaged Linux/Windows probes. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "battle-entry-forced-autosave-failure-route-safety-10184",
-  "currentSliceId": "battle-entry-forced-autosave-failure-route-safety-10184",
-  "currentSliceNotes": "Completed fail-closed required-save routing, exact pending-battle preservation, visible Save retry, durable manual/end-turn/resume route reuse, and cross-platform packaged proof.",
+  "currentSlice": "overworld-controller-right-stick-route-selection-10184",
+  "currentSliceId": "overworld-controller-right-stick-route-selection-10184",
+  "currentSliceNotes": "Completed right-stick route cursor, non-mutating preview, A/B commit/reset, left-stick and D-pad preservation, modal blocking, compatibility repair, and packaged cross-platform proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle-Entry Forced-Autosave Failure Route Safety",
-  "currentSliceUpdatedAt": "2026-08-10T05:30:04Z",
+  "currentSliceTitle": "Overworld Controller Right-Stick Route Selection",
+  "currentSliceUpdatedAt": "2026-08-10T06:03:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74527,6 +74527,39 @@
       "notes": "Completed structured fail-closed battle entry, exact failure preservation, one bounded issue and Save retry surface, already-durable manual/end-turn/resume routing, and deterministic failure/recovery/control coverage. Focused source, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.",
       "remainingWork": "No work remains in this slice. Controller right-stick route selection, outcome-transition save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T05:30:04Z"
+    },
+    {
+      "id": "overworld-controller-right-stick-route-selection-10184",
+      "title": "Overworld Controller Right-Stick Route Selection",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md"],
+      "purpose": "Let controller-only players inspect and plan remote Overworld routes without spending movement.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_controller_route_selection_regression.gd",
+        "tests/overworld_controller_route_selection_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"right_stick_changes_selected_tile": false, "controller_remote_route_preview_available": false},
+      "completionCriteria": [
+        "Right-stick dead-zone, release, repeat, cardinal, opposed-axis, boundary, cancel, and confirm behavior is deterministic",
+        "Preview changes route selection/camera while session/day/movement/save bytes remain exact until A confirms once",
+        "Left-stick movement, D-pad focus, mouse/keyboard control, and modal/drawer input ownership remain unchanged",
+        "Focused controller/route/cache/visual/core/editor/repository and Linux/Windows compatible gates pass"
+      ],
+      "nonGoals": ["new movement/pathfinding rules, renderer redesign, transition safety, save version, balance, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T05:31:46Z",
+      "startedAt": "2026-08-10T05:31:46Z",
+      "updatedAt": "2026-08-10T06:03:58Z",
+      "notes": "Completed independent right-stick route selection/repeat, non-mutating preview/camera follow, A/B commit/reset, left-stick and D-pad preservation, modal blocking, live controller integration, route compatibility, and packaged Linux/Windows proof at save version 9.",
+      "remainingWork": "No work remains in this slice. Outcome-transition save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T06:03:58Z"
     }
   ],
   "project": "heroes-like",

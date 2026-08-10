@@ -78,14 +78,21 @@ func _assert_cached_execution_skips_full_revalidation() -> bool:
 		return _fail("Route execution result did not expose cached validation mode.", result)
 	if String(movement_details.get("cached_execution_mode", "")) != "open_fast_path":
 		return _fail("Open cached route did not use the open fast path.", movement_details)
-	if not bool(movement_details.get("post_action_recap_skipped", false)):
-		return _fail("Open cached route did not skip post-action recap.", movement_details)
+	if bool(movement_details.get("post_action_recap_skipped", true)):
+		return _fail("Open cached route unexpectedly skipped its compact post-action recap.", movement_details)
 	if not bool(movement_details.get("scenario_eval_skipped", false)):
 		return _fail("Open cached route did not skip scenario evaluation.", movement_details)
 	if String(movement_details.get("interaction_dispatch_mode", "")) != "none":
 		return _fail("Open cached route unexpectedly dispatched an interaction.", movement_details)
-	if not (result.get("post_action_recap", {}) is Dictionary) or not result.get("post_action_recap", {}).is_empty():
-		return _fail("Open cached route produced a post-action recap.", result)
+	var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+	if recap.is_empty():
+		return _fail("Open cached route did not produce its compact post-action recap.", result)
+	var recap_profile: Dictionary = movement_details.get("post_action_recap", {}) if movement_details.get("post_action_recap", {}) is Dictionary else {}
+	if String(recap_profile.get("mode", "")) != "compact" or not bool(recap_profile.get("rich_surface_skipped", false)):
+		return _fail("Open cached route did not use the compact recap contract.", movement_details)
+	var sub_buckets: Dictionary = movement_details.get("sub_buckets_ms", {}) if movement_details.get("sub_buckets_ms", {}) is Dictionary else {}
+	if not sub_buckets.has("post_action_recap_total_ms") or float(sub_buckets.get("post_action_recap_total_ms", -1.0)) < 0.0 or float(sub_buckets.get("post_action_recap_total_ms", 51.0)) > 50.0:
+		return _fail("Open cached route compact recap exceeded its 50 ms timing budget.", movement_details)
 	var pathing_profile: Dictionary = OverworldRules.validation_pathing_profile_snapshot()
 	if int(pathing_profile.get("post_move_global_discovery_count", 0)) != 0:
 		return _fail("Open cached route used global post-move discovery.", pathing_profile)

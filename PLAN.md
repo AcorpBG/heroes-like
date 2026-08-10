@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `overworld-controller-right-stick-route-selection-10184`. Controller users can now move a bounded route cursor with the right stick, inspect the existing route/destination surface without mutating session or save state, press A to invoke the existing primary action once, and press B to return selection/camera to the hero. Left-stick movement, D-pad focus, mouse/keyboard control, and modal ownership remain intact. Focused, live-controller, route/cache/visual, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-entry-forced-autosave-failure-route-safety-10184`. Required battle-entry autosave failure now restores the exact pre-route state, keeps the pending encounter in Overworld, records one bounded issue, shows Save-now guidance with Save focus, and performs zero routes. End-turn/manual/resume checkpoints avoid redundant writes and route once from already-durable state. Focused failure/recovery/control, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `campaign-progression-semantic-storage-fail-closed-10184`. Campaign progression storage is now classified before load or write. Malformed, partial, nested-wrong-shape, and future-version data remains byte-exact and non-overwritable; all campaign mutations fail closed without changing profile/session, while the Main Menu keeps local browsing and non-campaign paths usable. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1 and save version 9.
 - Latest completed implementation slice: `active-play-return-to-menu-autosave-failure-safety-10184`. Return to Menu from Overworld, Town, Battle, and Outcome now fails closed when the forced autosave fails: the exact shell/session/intent and prior durable state remain, one bounded issue and Save/retry message appear, and Menu focus returns. One verified retry saves and routes once; no-session/editor direct controls remain intact. The eight-case failure matrix plus safe-close, save transaction, controller, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3397,6 +3398,38 @@ Completion evidence:
 - precommit and after-backup focused cases preserve exact prior autosave bytes/cache, transaction cleanliness, and full live pending battle, then one actual Manual Save persists the normalized battle and records one route without replaying gameplay;
 - ordinary saved entry, missing session, missing payload, terminal redirect, and durable resume controls pass alongside End Turn, active-play return, safe close, transactional save, controller, core, editor, repository, JSON, Python, and diff gates;
 - fresh packaged Linux and Windows/Wine focused probes pass at save version 9; only deliberate injected-failure/control diagnostics and a Linux fixture-exit resource warning appear.
+
+## Overworld Controller Right-Stick Route Selection
+
+id: `overworld-controller-right-stick-route-selection-10184`
+
+Status: completed.
+
+Selected Phase 6 controller-accessibility slice. The Overworld accepts only left-stick
+axes and converts them directly into hero movement; right-stick input is ignored. A
+controller-only player therefore cannot inspect a remote tile, preview a route, or pan
+the map before committing movement.
+
+Implementation target:
+- add independent right-stick dead-zone, release, direction, and repeat handling that moves a bounded route cursor through the existing selected-tile and route-preview surfaces;
+- pan/follow the route cursor without mutating the session, spending movement, or writing a save; B returns selection/camera to the hero and A continues to use the existing primary action exactly once;
+- block route-cursor input while drawers, settings, save popups, or confirmations own interaction, preserving left-stick immediate movement and D-pad command focus.
+
+Completion criteria:
+- cardinal, opposed-axis, dead-zone/release, repeat, map-boundary, cancel, and primary-confirm cases are deterministic;
+- route preview changes selected tile/camera and exposes the existing destination/action surface while exact session/day/movement/save bytes remain unchanged before confirmation;
+- left-stick movement, D-pad focus, mouse selection, keyboard movement/pan, drawers, settings, and confirmations retain current behavior;
+- focused controller route, active-play focus, route-cache/full/incremental/destination, visual/layout, core, editor, repository, JSON, Python, and Linux/Windows compatible gates pass.
+
+Non-goals:
+- no new movement/pathfinding rules, camera renderer redesign, battle/outcome transition changes, save schema/version, balance, Native RMG, publication, or overall release-completion claim.
+
+Completion evidence:
+- OverworldShell owns independent right-stick dead-zone/release hysteresis, cardinal selection, repeat timing, map bounds, cursor/camera reset, and modal/debug input guards while reusing the existing selected-tile, route-preview, and primary-action paths;
+- preview selection and camera movement preserve exact full session/day/movement and autosave bytes; B cancels to the hero, A commits exactly once, and left-stick movement clears cursor mode only when immediate movement is actually allowed;
+- focused coverage passes dead/release/opposed/cardinal/repeat/boundary, accept/cancel/left-stick, and drawer/settings/save-popup/manual-overwrite/end-turn blockers, while live controller A/B, D-pad focus, 1280x720 visual, full/incremental/cached/destination route, core, editor, repository, JSON, Python, and diff gates pass;
+- the cached and destination fixtures were independently reproduced stale at committed pre-slice HEAD, then updated test-only to the already-live compact recap contract and rerun green;
+- fresh packaged Linux and Windows/Wine focused probes pass at save version 9; Linux reports only two fixture-shutdown signal-disconnect errors and Wine only normal fresh-prefix/X shutdown lines.
 
 ## Phase Roadmap
 
