@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `overworld-end-turn-autosave-failure-surface-10184`. When an in-progress End Turn commits but autosave fails, the live advanced day is retained while the shell now returns `saved:false`, shows bounded Save-now guidance, and records one runtime issue. Pending battles remain on the overworld until a successful manual Save persists the exact battle-ready state, then route once. Both failure phases, direct/warned/terminal controls, pending-battle recovery, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `settings-transactional-cross-platform-persistence-10184`. Device settings now commit through verified same-directory candidate/backup files with bounded recovery. Failed ordinary changes restore exact config bytes, settings, runtime display/audio/accessibility state, and InputMap; valid live files win, only semantically valid backups recover, and candidate artifacts are never promoted. Main Menu, active-play settings, and keybindings report failure truthfully and refresh to committed values. Focused, compatibility, core, repository, and fresh packaged Linux/Windows-Wine gates pass at settings version 14.
 - Latest completed implementation slice: `ux-town-departure-end-turn-copy-integrity-10184`. Town departure now uses one authoritative `Return to Field` surface across core, cached, and live states. Remaining movement, exhausted movement, and response-order priority are explicit; the unchanged handler still routes only to the overworld without advancing the day, spending movement, or autosaving. Focused town visual/exit/controller, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `campaign-progression-completion-write-failure-atomicity-10184`. Campaign completion now persists a detached profile candidate before publishing it live. A failed write restores the same pre-terminal session object and returns a visible retry message; clearing either injected failure phase lets one reevaluation persist and publish the outcome exactly once. Focused failure/retry, first-defeat, skirmish, campaign replay, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3205,6 +3206,38 @@ Completion evidence:
 - Main Menu, active-play settings, and hero keybindings consume the structured result, show bounded failure copy, and refresh from committed values rather than claiming success;
 - focused transaction, display confirmation, Restore Defaults, packaged persistence, keybinding, active-play, Main Menu, core, editor parse, repository, JSON, Python, and diff gates pass;
 - fresh packaged Linux and Windows/Wine runs execute the full transaction matrix successfully at settings version 14.
+
+## End Turn Autosave Failure Visibility
+
+id: `overworld-end-turn-autosave-failure-surface-10184`
+
+Status: completed.
+
+Selected Phase 6 command-integrity slice. End Turn commits the strategic day before
+its autosave. A transactional write failure preserves the prior disk checkpoint but
+the live shell currently returns success and keeps normal completion copy, leaving
+the player unaware that the advanced day is not durable.
+
+Implementation target:
+- preserve the already-committed live turn on autosave failure, but return an honest `saved: false`, `reason: autosave_failed` result while retaining `committed: true`;
+- show compact persistent guidance that the turn advanced but was not saved and direct the player to the existing Save action;
+- record a bounded runtime issue and let manual Save or safe close persist the advanced state without rerunning End Turn.
+
+Completion criteria:
+- precommit and after-backup failures preserve exact prior autosave bytes and transaction cleanliness while advancing live rules exactly once;
+- the result and visible shell state distinguish committed-but-unsaved from ordinary success, with one bounded runtime issue;
+- clearing the failure hook and using existing manual Save persists/reloads the exact advanced state without a second End Turn;
+- ordinary low-risk, warned-confirmation, terminal-resolution, autosave-success, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no rollback of an already-resolved strategic day, automatic retry loop, new save UI, End Turn math/AI/economy changes, save schema change, Native RMG work, publication, or overall release-completion claim.
+
+Completion evidence:
+- precommit and after-backup failures leave prior autosave bytes, summary cache, and transaction artifacts exact while the live session matches one direct rules execution;
+- the shell returns `ok:false`, `committed:true`, `saved:false`, `reason:autosave_failed`, shows the exact Save-now guidance, and emits one `end_turn_autosave_failed` runtime issue;
+- a successful existing manual Save reloads the canonical advanced state without a second End Turn or autosave attempt;
+- when enemy resolution leaves a pending battle, failure performs zero routes; manual Save persists the exact battle state and then takes the existing battle route exactly once;
+- direct low-risk, warned confirmation, terminal-unavailable, save transaction, controller, core, editor parse, repository, JSON, Python, and diff gates pass at save version 9.
 
 ## Phase Roadmap
 

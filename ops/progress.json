@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Transactional device settings persistence is complete: verified commit/recovery, exact runtime and InputMap rollback, truthful UI failure handling, and packaged Linux/Windows-Wine proof all pass. Overall release readiness remains open.",
+  "currentNotes": "End Turn autosave-failure visibility is complete: committed live days are retained, failure is explicit, and manual Save persists the advanced or battle-ready state before routing. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-transactional-cross-platform-persistence-10184",
-  "currentSliceId": "settings-transactional-cross-platform-persistence-10184",
-  "currentSliceNotes": "Completed verified same-directory settings commit/recovery, exact runtime and InputMap rollback, truthful UI failure handling, and packaged cross-platform proof.",
+  "currentSlice": "overworld-end-turn-autosave-failure-surface-10184",
+  "currentSliceId": "overworld-end-turn-autosave-failure-surface-10184",
+  "currentSliceNotes": "Completed honest committed-but-unsaved results, Save-now guidance, runtime issue evidence, and exact manual-save recovery including pending-battle routing.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Transactional Device Settings Persistence",
-  "currentSliceUpdatedAt": "2026-08-10T03:14:32Z",
+  "currentSliceTitle": "End Turn Autosave Failure Visibility",
+  "currentSliceUpdatedAt": "2026-08-10T03:38:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74315,6 +74315,47 @@
       ],
       "remainingWork": "No work remains in this slice. Destructive-dialog safe focus, End Turn autosave-failure visibility, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T03:14:32Z"
+    },
+    {
+      "id": "overworld-end-turn-autosave-failure-surface-10184",
+      "title": "End Turn Autosave Failure Visibility",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Stop a fully advanced strategic day from being reported as durably successful when its transactional autosave failed.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_end_turn_autosave_failure_regression.gd",
+        "tests/overworld_end_turn_autosave_failure_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"turn_commits_before_autosave": true, "autosave_failure_visible": false, "result_saved_field": false, "manual_recovery_available": true},
+      "completionCriteria": [
+        "Both transaction failure phases preserve prior bytes and advance live rules exactly once",
+        "Committed-but-unsaved result and shell guidance are explicit and one runtime issue is recorded",
+        "Existing manual Save persists and reloads the advanced state without a second End Turn",
+        "Ordinary direct/warned/terminal success and broad compatibility gates remain green"
+      ],
+      "nonGoals": ["strategic-day rollback, automatic retry, new save UI, End Turn math, schema change, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T03:16:02Z",
+      "startedAt": "2026-08-10T03:16:02Z",
+      "updatedAt": "2026-08-10T03:38:53Z",
+      "notes": "Committed End Turns now surface autosave failure explicitly, retain advanced live state, and require successful manual Save before routing a pending battle.",
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/overworld_end_turn_autosave_failure_regression.tscn (passed; both failure phases, direct-rule parity, exact prior bytes/cache/no residue, one runtime issue, manual reload, pending-battle zero-route then one-route recovery)",
+        "godot4 --headless --path . --scene res://tests/overworld_end_turn_confirmation_runtime_report.tscn (passed; direct/warned/stale/low-risk controls)",
+        "godot4 --headless --path . --scene res://tests/save_transactional_commit_regression.tscn and res://tests/active_play_keyboard_focus_smoke.tscn (passed)",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Destructive-dialog safe focus, forced route-save failure handling, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T03:38:53Z"
     }
   ],
   "project": "heroes-like",

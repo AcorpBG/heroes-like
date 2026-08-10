@@ -347,6 +347,8 @@ OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
 OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_end_turn_confirmation_runtime_report.gd"
 OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_confirmation_runtime_report.tscn"
+OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.gd"
+OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.tscn"
 AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
 AMBIENT_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ambient_sfx_assets.py"
 AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
@@ -15559,6 +15561,41 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "res://tests/overworld_end_turn_confirmation_runtime_report.gd" in end_turn_scene_text,
             errors,
             "Overworld End Turn confirmation report scene must load its script",
+        )
+    for path in (OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH, OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing overworld End Turn autosave-failure regression file: {path.relative_to(ROOT)}")
+    if OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        end_turn_failure_text = OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION",
+            "HEROES_LIKE_SAVE_FAIL_PHASE",
+            '"precommit"',
+            '"after_backup"',
+            "validation_request_end_turn",
+            "validation_confirm_end_turn",
+            "validation_save_to_selected_slot",
+            "validation_set_end_turn_resolution_routing_enabled",
+            "validation_transaction_artifact_paths",
+            "validation_summary_cache_snapshot",
+            "RuntimeIssueLog.last_issue_records",
+            '"end_turn_autosave_failed"',
+            '"autosave_failed"',
+            '"manual_save"',
+            "SaveService.restore_manual_session",
+            "rules_end_turn_call_count",
+            "autosave_call_count",
+            "battle_pending",
+            "resolution_attempt_count",
+            '"target", "")) != "battle"',
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in end_turn_failure_text, errors, f"overworld_end_turn_autosave_failure_regression.gd is missing token: {required_token}")
+    if OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.exists():
+        end_turn_failure_scene_text = OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/overworld_end_turn_autosave_failure_regression.gd" in end_turn_failure_scene_text,
+            errors,
+            "Overworld End Turn autosave-failure regression scene must load its script",
         )
     for required_token in (
         "func validation_request_end_turn",
