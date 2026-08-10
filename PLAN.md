@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184` (completed). Generated-opening autosave failure now remains visibly retryable with one issue and Save focus; the first Save retries the authoritative autosave, and every verified runtime fallback save canonicalizes completion flags only after commit. Reload no longer repeats the opening checkpoint.
+- Current implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184` (completed). Overworld keyboard, arrow fallback, immediate/repeated left-stick, and right-stick route input now share one interaction-owner boundary; owner activation clears pending analog repeats, and blocked keyboard input remains available to GUI navigation.
+- Latest completed implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184`. Ten owner states, short-lived repeat races, ordinary focused movement, right-stick controls, keyboard/controller/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged input matrices pass at save version 9.
 - Latest completed implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184`. Forced, precommit, and after-backup exactness, retry deduplication, fast/manual/menu/ordinary controls, generated timing, return/close, focus, visual, core, repository, Linux package, and fresh Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184`. Physical controller, real mouse, direct-result parity, checkpoint, animation, active focus, 1280 layout, core, repository, Linux package, and fresh non-headless Windows/Wine native-dialog gates pass.
 - Latest completed implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184`. Five campaign/skirmish action rows, immutable duplicate capture, stale identity/action/recovery guards, Save/Menu/overwrite controls, 1280 native-dialog bounds, Outcome compatibility, core, repository, Linux package, and fresh Windows/Wine package gates pass. Save Outcome and Return to Menu remain direct.
@@ -3755,6 +3756,30 @@ Completion criteria:
 
 Non-goals:
 - no generated-map rules or parity change, random-map performance redesign, save schema/version bump, manual-slot redesign, Native RMG recovery work, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Overworld Gameplay Movement Input Ownership
+
+id: `accessibility-overworld-gameplay-movement-input-ownership-10184`
+
+Status: completed.
+
+Selected Phase 6 input-ownership correction. Configured keyboard movement currently reaches live hero
+movement without consulting interaction-owning drawers or save/debug surfaces, while left-stick movement
+omits several modal owners already enforced by the adjacent controller-route input path.
+
+Implementation target:
+- introduce one authoritative gameplay-movement blocked reason shared by physical keyboard movement, immediate left-stick movement, and controller repeat;
+- cover drawers, active settings, save-slot popup, manual overwrite confirmation, End Turn confirmation/commit, and debug ownership without suppressing ordinary movement merely because a regular command has focus;
+- allow blocked keyboard events to remain available to their owning GUI surface instead of consuming them as hero movement.
+
+Completion criteria:
+- physical configured movement keys and raw left-stick input cannot mutate hero position, movement points, day/session state, selection, camera, autosave authority, or focus while an owning surface is active;
+- repeat state clears safely when ownership changes, and closing the owner lets the same keyboard/axis input move exactly once with the existing cadence;
+- normal focused-command movement, right-stick route selection, save/overwrite, End Turn, debug, focus, and layout behavior remain exact;
+- focused, controller-route, active-focus, core, repository, and Linux/Windows packaged input gates pass without save-schema or gameplay-rule changes.
+
+Non-goals:
+- no movement cost/pathfinding/camera policy, route-selection semantics, input remapping redesign, drawer layout, save behavior, rules/AI/content, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

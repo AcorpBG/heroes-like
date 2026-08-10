@@ -375,6 +375,8 @@ OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "o
 OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.tscn"
 OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.gd"
 OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.tscn"
+OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_gameplay_movement_input_ownership_regression.gd"
+OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_gameplay_movement_input_ownership_regression.tscn"
 AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
 AMBIENT_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ambient_sfx_assets.py"
 AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
@@ -16218,6 +16220,58 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "res://tests/overworld_controller_route_selection_regression.gd" in controller_route_scene_text,
             errors,
             "Overworld controller route-selection regression scene must load its script",
+        )
+    for path in (
+        OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH,
+        OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing overworld gameplay movement-input ownership regression file: {path.relative_to(ROOT)}")
+    if OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH.exists():
+        movement_input_text = OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION",
+            '"frontier_drawer"',
+            '"drawer_open"',
+            '"settings_open"',
+            '"save_popup_open"',
+            '"save_confirmation_open"',
+            '"end_turn_confirmation_open"',
+            '"end_turn_committing"',
+            '"debug_active"',
+            "validation_reset_gameplay_movement_input_state",
+            "validation_gameplay_movement_input_snapshot",
+            "validation_controller_move_repeat",
+            "validation_set_end_turn_commit_in_progress",
+            "validation_set_debug_command_in_progress",
+            "SettingsService.hero_movement_keycode",
+            "InputEventKey.new()",
+            "InputEventJoypadMotion.new()",
+            "get_tree().create_timer(0.40).timeout",
+            "validation_open_command_drawer",
+            "validation_open_frontier_drawer",
+            "validation_request_manual_save",
+            "validation_request_end_turn",
+            "validation_controller_route_cursor_snapshot",
+            "SaveService.validation_summary_cache_snapshot",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in movement_input_text, errors, f"overworld_gameplay_movement_input_ownership_regression.gd is missing token: {required_token}")
+        for required_token in (
+            "_overworld_gameplay_movement_blocked_reason",
+            "validation_reset_gameplay_movement_input_state",
+            "validation_controller_move_axis",
+            "validation_controller_move_repeat",
+            "validation_set_end_turn_commit_in_progress",
+            "validation_set_debug_command_in_progress",
+            "validation_gameplay_movement_input_snapshot",
+        ):
+            ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing gameplay movement-input ownership token: {required_token}")
+    if OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH.exists():
+        movement_input_scene_text = OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/overworld_gameplay_movement_input_ownership_regression.gd" in movement_input_scene_text,
+            errors,
+            "Overworld gameplay movement-input ownership regression scene must load its script",
         )
     for path in (OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH, OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing overworld End Turn autosave-failure regression file: {path.relative_to(ROOT)}")

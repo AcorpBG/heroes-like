@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Generated-opening autosave recovery is complete with exact transactional failure handling, authoritative retry, canonical fallback persistence, and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Overworld movement input ownership is complete across keyboard, arrow fallback, immediate/repeated left-stick, and route input, with exact owner activation and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-generated-opening-autosave-failure-retry-safety-10184",
-  "currentSliceId": "save-generated-opening-autosave-failure-retry-safety-10184",
-  "currentSliceNotes": "Completed generated-opening autosave recovery with one visible Save retry and post-commit canonical pending-flag completion on every verified runtime fallback save.",
+  "currentSlice": "accessibility-overworld-gameplay-movement-input-ownership-10184",
+  "currentSliceId": "accessibility-overworld-gameplay-movement-input-ownership-10184",
+  "currentSliceNotes": "Completed one shared movement owner boundary, fail-closed owner activation/repeat clearing, GUI-preserving keyboard behavior, focused ten-owner coverage, and Linux/Windows package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Opening Autosave Failure Retry Safety",
-  "currentSliceUpdatedAt": "2026-08-10T16:05:35Z",
+  "currentSliceTitle": "Overworld Gameplay Movement Input Ownership",
+  "currentSliceUpdatedAt": "2026-08-10T16:49:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74866,6 +74866,26 @@
       "notes": "Completed central post-commit canonicalization for every runtime save while generated-opening is pending plus explicit Overworld recovery, one issue, persistent guidance, Save focus, first-press authoritative autosave retry, and next-press manual flow. Forced, precommit, and after-backup rows preserve exact authority and deduplicate retry failure; successful retry/fallback reloads canonically without repeat. Save transaction, generated post-open timing, active return, safe close, focus, visual, core, editor, validator, diff, Linux package, and fresh non-headless Windows/Wine package gates pass at save version 9.",
       "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T16:05:35Z"
+    },
+    {
+      "id": "accessibility-overworld-gameplay-movement-input-ownership-10184",
+      "title": "Overworld Gameplay Movement Input Ownership",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Prevent configured keyboard and left-stick hero movement from mutating live Overworld gameplay while another drawer, popup, confirmation, commit, or debug surface owns input.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/active_play_keyboard_focus_smoke.gd", "tests/overworld_controller_route_selection_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"keyboard_checks_input_ownership": false, "left_stick_checks_full_input_ownership": false, "route_stick_checks_full_input_ownership": true},
+      "completionCriteria": ["Configured physical movement keys and raw left-stick input preserve exact live gameplay, save authority, selection, camera, and focus while each interaction-owning surface is active", "Immediate and repeated controller movement share the same fail-closed owner boundary and clear repeat state safely", "Closing the owner lets the same key or axis move exactly once while ordinary focused-command movement remains enabled", "Focused, route-controller, focus, core, repository, and Linux/Windows packaged input gates pass"],
+      "nonGoals": ["movement rules or pathfinding, camera policy, input remapping redesign, route-selection semantics, drawer layout, save behavior, rules/AI/content, Native RMG, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T16:14:03Z",
+      "startedAt": "2026-08-10T16:14:03Z",
+      "updatedAt": "2026-08-10T16:49:49Z",
+      "notes": "Completed one authoritative owner reason across configured keyboard, unhandled arrow fallback, immediate/repeated left-stick, and right-stick route input. Drawer, settings, SaveSlot popup, overwrite, End Turn dialog/commit, and debug activation clear pending analog state; blocked keyboard remains available to GUI navigation. The ten-owner focused matrix, activation race, ordinary movement, route/controller/focus/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. Package-only shutdown diagnostics occurred after the success report and did not reproduce in source-focused runs.",
+      "remainingWork": "No work remains in this slice. Generated alternate-save recovery reconciliation, precise latest-save ordering, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T16:49:49Z"
     }
   ],
   "project": "heroes-like",
