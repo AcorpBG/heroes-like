@@ -125,6 +125,8 @@ const PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. The pending ba
 const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
+const GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE := "Generated map is ready, but autosave failed. Press Save to protect this checkpoint."
+const GENERATED_OPENING_AUTOSAVE_SUCCESS_MESSAGE := "Generated opening checkpoint saved. Press Save again to use a manual slot."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
@@ -172,6 +174,16 @@ var _validation_briefing_consumption_autosave_attempt_count := 0
 var _validation_briefing_consumption_autosave_success_count := 0
 var _validation_briefing_consumption_autosave_failure_count := 0
 var _validation_briefing_consumption_generated_defer_count := 0
+var _generated_opening_autosave_failure_pending := false
+var _last_generated_opening_autosave_result: Dictionary = {}
+var _last_generated_opening_autosave_retry_result: Dictionary = {}
+var _last_generated_opening_autosave_runtime_issue: Dictionary = {}
+var _validation_generated_opening_autosave_initial_attempt_count := 0
+var _validation_generated_opening_autosave_retry_attempt_count := 0
+var _validation_generated_opening_autosave_success_count := 0
+var _validation_generated_opening_autosave_failure_count := 0
+var _validation_generated_opening_autosave_issue_count := 0
+var _validation_generated_opening_manual_fallback_count := 0
 var _opening_route_suggested := false
 var _opening_route_suggestion_kind := ""
 var _active_drawer := ""
@@ -1118,16 +1130,30 @@ func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
 		"autosave_result": _last_end_turn_autosave_result.duplicate(true),
 	}
 
-func _on_save_pressed() -> void:
+func _on_save_pressed() -> Dictionary:
+	if _generated_opening_autosave_failure_pending:
+		return _retry_generated_opening_autosave()
+	_validation_generated_opening_manual_fallback_count += 1
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
 		_last_message = String(action.get("summary", "The expedition could not be saved."))
 		_refresh()
-		return
+		return {
+			"ok": false,
+			"saved": false,
+			"reason": "save_unavailable",
+			"message": _last_message,
+		}
 	if bool(action.get("requires_confirmation", false)):
 		_manual_save_overwrite_dialog.open_action(action)
-		return
-	_commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
+		return {
+			"ok": true,
+			"saved": false,
+			"pending": true,
+			"reason": "confirmation_required",
+			"message": String(action.get("summary", "Confirm the manual save overwrite.")),
+		}
+	return _commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 
 func _commit_manual_save(manual_slot: int) -> Dictionary:
 	_validation_manual_save_attempt_count += 1
@@ -1969,7 +1995,11 @@ func _refresh_action_rails(request: Dictionary = {}) -> void:
 func _refresh_save_surface() -> int:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
 	var generated_surface_start := 0
-	if _generated_initial_open_pending():
+	if _generated_opening_autosave_failure_pending:
+		generated_surface_start = _profile_begin("refresh_generated_surfaces")
+		_set_generated_opening_autosave_failure_surface()
+		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_generated_failure")
+	elif _generated_initial_open_pending():
 		generated_surface_start = _profile_begin("refresh_generated_surfaces")
 		_set_deferred_generated_save_status("Save: generated autosave pending")
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_deferred")
@@ -2164,13 +2194,99 @@ func _complete_deferred_generated_overworld_autosave() -> void:
 	await get_tree().process_frame
 	AppRouter.note_overworld_handoff_step("overworld_first_frame_after_return")
 	AppRouter.note_overworld_handoff_step("overworld_deferred_autosave_start")
-	var result := SaveService.save_runtime_autosave_session(_session, false)
-	_set_deferred_generated_save_status("Save: generated autosave ready" if bool(result.get("ok", false)) else "Save: generated autosave failed")
+	_validation_generated_opening_autosave_initial_attempt_count += 1
+	var save_result := SaveService.save_runtime_autosave_session(_session, false)
+	_last_generated_opening_autosave_result = _generated_opening_autosave_result(save_result, false)
+	if bool(_last_generated_opening_autosave_result.get("ok", false)):
+		_validation_generated_opening_autosave_success_count += 1
+		_set_deferred_generated_save_status("Save: generated autosave ready")
+	else:
+		_validation_generated_opening_autosave_failure_count += 1
+		_generated_opening_autosave_failure_pending = true
+		_surface_generated_opening_autosave_failure(save_result)
+		_refresh()
+		_save_button.call_deferred("grab_focus")
 	AppRouter.note_overworld_handoff_step(
 		"overworld_deferred_autosave_done",
-		{"ok": bool(result.get("ok", false)), "path": String(result.get("path", ""))}
+		{"ok": bool(save_result.get("ok", false)), "path": String(save_result.get("path", ""))}
 	)
-	AppRouter.finish_overworld_handoff_profile({"deferred_autosave": true, "autosave_ok": bool(result.get("ok", false))})
+	AppRouter.finish_overworld_handoff_profile({"deferred_autosave": true, "autosave_ok": bool(save_result.get("ok", false))})
+
+func _retry_generated_opening_autosave() -> Dictionary:
+	if not _generated_opening_autosave_failure_pending or not _generated_initial_open_pending():
+		return {
+			"ok": false,
+			"saved": false,
+			"pending": _generated_opening_autosave_failure_pending,
+			"reason": "not_pending",
+			"retry_action": "",
+			"message": "No generated opening checkpoint retry is pending.",
+			"save_result": {},
+		}
+	_validation_generated_opening_autosave_retry_attempt_count += 1
+	var save_result := SaveService.save_runtime_autosave_session(_session, false)
+	_last_generated_opening_autosave_retry_result = _generated_opening_autosave_result(save_result, true)
+	if not bool(_last_generated_opening_autosave_retry_result.get("ok", false)):
+		_validation_generated_opening_autosave_failure_count += 1
+		_surface_generated_opening_autosave_failure(save_result)
+		_refresh()
+		_save_button.call_deferred("grab_focus")
+		return _last_generated_opening_autosave_retry_result.duplicate(true)
+
+	_validation_generated_opening_autosave_success_count += 1
+	_generated_opening_autosave_failure_pending = false
+	_last_message = GENERATED_OPENING_AUTOSAVE_SUCCESS_MESSAGE
+	_record_action_feedback("system", _last_message, "Press Save again for a manual slot.")
+	_refresh()
+	_save_button.call_deferred("grab_focus")
+	return _last_generated_opening_autosave_retry_result.duplicate(true)
+
+func _generated_opening_autosave_result(save_result: Dictionary, retry: bool) -> Dictionary:
+	var save_ok := bool(save_result.get("ok", false))
+	return {
+		"ok": save_ok,
+		"saved": save_ok,
+		"routed": false,
+		"pending": not save_ok,
+		"reason": "saved" if save_ok else "autosave_failed",
+		"retry_action": "" if save_ok else "save",
+		"retried": retry,
+		"message": String(save_result.get("message", "")) if save_ok else GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE,
+		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
+		"generated_opening_pending": bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)),
+		"save_result": save_result.duplicate(true),
+	}
+
+func _surface_generated_opening_autosave_failure(save_result: Dictionary) -> void:
+	_generated_opening_autosave_failure_pending = true
+	_last_message = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
+	_record_action_feedback("system", _last_message, "Press Save to protect this checkpoint.")
+	if _last_generated_opening_autosave_runtime_issue.is_empty():
+		_validation_generated_opening_autosave_issue_count += 1
+		_last_generated_opening_autosave_runtime_issue = RuntimeIssueLog.emit_error(
+			"overworld",
+			"generated_opening_autosave_failed",
+			GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE,
+			{
+				"surface": "overworld",
+				"day": _session.day,
+				"scenario_status": String(_session.scenario_status).left(32),
+				"save_reason": String(save_result.get("reason", "unknown")).left(80),
+				"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(180),
+				"retry_action": "save",
+				"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
+				"generated_opening_pending": bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)),
+			},
+			_session
+		)
+
+func _set_generated_opening_autosave_failure_surface() -> void:
+	_save_status_label.text = "Save: opening autosave failed"
+	_save_status_label.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
+	_save_button.text = "Save"
+	_save_button.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
+	_menu_button.text = "Menu: Field"
+	_menu_button.tooltip_text = "Return to the main menu. The generated opening checkpoint is not yet protected."
 
 func _configure_save_slot_picker(refresh_now: bool = true) -> void:
 	_save_slot_picker.clear()
@@ -5804,7 +5920,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
 	var preferred := _primary_action_button
-	if _briefing_consumption_autosave_failure_pending:
+	if _briefing_consumption_autosave_failure_pending or _generated_opening_autosave_failure_pending:
 		preferred = _save_button
 	elif _active_drawer == "command":
 		preferred = _close_command_button
@@ -7792,6 +7908,7 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
+		"generated_opening_autosave_recovery": validation_generated_opening_autosave_recovery_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"last_battle_entry_result": _last_battle_entry_result.duplicate(true),
 		"last_battle_entry_resolution_result": _last_battle_entry_resolution_result.duplicate(true),
@@ -8020,6 +8137,58 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 		"day": _session.day,
 		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
 		"generated_autosave_deferred": bool(_session.flags.get("generated_overworld_command_briefing_autosave_deferred", false)),
+	}
+
+func validation_retry_generated_opening_autosave() -> Dictionary:
+	return _on_save_pressed()
+
+func validation_reset_generated_opening_autosave_recovery_state() -> Dictionary:
+	if _generated_opening_autosave_failure_pending:
+		return validation_generated_opening_autosave_recovery_snapshot()
+	_validation_generated_opening_autosave_initial_attempt_count = 0
+	_validation_generated_opening_autosave_retry_attempt_count = 0
+	_validation_generated_opening_autosave_success_count = 0
+	_validation_generated_opening_autosave_failure_count = 0
+	_validation_generated_opening_autosave_issue_count = 0
+	_validation_generated_opening_manual_fallback_count = 0
+	_last_generated_opening_autosave_result = {}
+	_last_generated_opening_autosave_retry_result = {}
+	_last_generated_opening_autosave_runtime_issue = {}
+	return validation_generated_opening_autosave_recovery_snapshot()
+
+func validation_generated_opening_autosave_recovery_snapshot() -> Dictionary:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	return {
+		"pending": _generated_opening_autosave_failure_pending,
+		"failure_pending": _generated_opening_autosave_failure_pending,
+		"initial_attempt_count": _validation_generated_opening_autosave_initial_attempt_count,
+		"retry_attempt_count": _validation_generated_opening_autosave_retry_attempt_count,
+		"attempt_count": _validation_generated_opening_autosave_initial_attempt_count + _validation_generated_opening_autosave_retry_attempt_count,
+		"success_count": _validation_generated_opening_autosave_success_count,
+		"failure_count": _validation_generated_opening_autosave_failure_count,
+		"issue_count": _validation_generated_opening_autosave_issue_count,
+		"manual_fallback_count": _validation_generated_opening_manual_fallback_count,
+		"last_result": _last_generated_opening_autosave_result.duplicate(true),
+		"last_retry_result": _last_generated_opening_autosave_retry_result.duplicate(true),
+		"last_issue": _last_generated_opening_autosave_runtime_issue.duplicate(true),
+		"last_runtime_issue": _last_generated_opening_autosave_runtime_issue.duplicate(true),
+		"message": _last_message,
+		"visible_message": _last_message,
+		"visible_action_feedback": _action_feedback_text(),
+		"save_status": _save_status_label.text,
+		"save_button_text": _save_button.text,
+		"save_button_tooltip": _save_button.tooltip_text,
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"resolution_route_attempt_count": _validation_end_turn_resolution_attempt_count,
+		"last_resolution_route": _validation_last_end_turn_resolution_route.duplicate(true),
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+		"day": _session.day,
+		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
+		"generated_overworld_deferred_autosave_pending": bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)),
+		"generated_overworld_command_briefing_autosave_deferred": bool(_session.flags.get("generated_overworld_command_briefing_autosave_deferred", false)),
+		"generated_overworld_initial_autosave_completed": bool(_session.flags.get("generated_overworld_initial_autosave_completed", false)),
 	}
 
 func _validation_uses_compact_save_surface() -> bool:
