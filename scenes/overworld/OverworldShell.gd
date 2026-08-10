@@ -114,6 +114,7 @@ const CONTROLLER_MOVE_RELEASE_ZONE := 0.34
 const CONTROLLER_MOVE_INITIAL_REPEAT_MSEC := 360
 const CONTROLLER_MOVE_REPEAT_MSEC := 180
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
+const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
@@ -192,6 +193,7 @@ var _pending_end_turn_confirmation: Dictionary = {}
 var _last_end_turn_confirmation_result: Dictionary = {}
 var _last_end_turn_rule_result: Dictionary = {}
 var _last_end_turn_autosave_result: Dictionary = {}
+var _last_end_turn_runtime_issue: Dictionary = {}
 var _end_turn_commit_in_progress := false
 var _validation_end_turn_request_count := 0
 var _validation_end_turn_cancel_count := 0
@@ -199,6 +201,10 @@ var _validation_end_turn_confirm_count := 0
 var _validation_end_turn_commit_count := 0
 var _validation_end_turn_rules_call_count := 0
 var _validation_end_turn_autosave_call_count := 0
+var _validation_end_turn_autosave_failure_count := 0
+var _validation_end_turn_resolution_routing_enabled := true
+var _validation_end_turn_resolution_attempt_count := 0
+var _validation_last_end_turn_resolution_route: Dictionary = {}
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
@@ -719,6 +725,7 @@ func _commit_end_turn() -> Dictionary:
 	_validation_end_turn_commit_count += 1
 	_last_end_turn_rule_result = {}
 	_last_end_turn_autosave_result = {}
+	_last_end_turn_runtime_issue = {}
 	var profile_start := _profile_begin("end_turn")
 	var general_profile_start := ProfileLogScript.begin_usec()
 	var general_buckets := {}
@@ -737,15 +744,34 @@ func _commit_end_turn() -> Dictionary:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
+	var autosave_failed := false
 	if _session.scenario_status == "in_progress":
 		var save_profile_start := _profile_begin("end_turn_autosave")
 		var save_started := ProfileLogScript.begin_usec()
 		_validation_end_turn_autosave_call_count += 1
 		var autosave_result = SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
 		_last_end_turn_autosave_result = autosave_result.duplicate(true) if autosave_result is Dictionary else {}
+		autosave_failed = not bool(_last_end_turn_autosave_result.get("ok", false))
 		general_buckets["autosave"] = ProfileLogScript.elapsed_ms(save_started)
 		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
+		if autosave_failed:
+			_surface_end_turn_autosave_failure()
 	_end_turn_commit_in_progress = false
+	if autosave_failed:
+		var failure_refresh_started := ProfileLogScript.begin_usec()
+		_refresh()
+		general_buckets["refresh_after_end_turn"] = ProfileLogScript.elapsed_ms(failure_refresh_started)
+		_profile_end("end_turn", profile_start, {"resolved": false, "autosave_failed": true})
+		ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
+			"resolved": false,
+			"result_ok": false,
+			"autosave_ok": false,
+			"battle_pending": not _session.battle.is_empty(),
+			"scenario_status": _session.scenario_status,
+			"save_profile": SaveService.validation_last_runtime_save_profile(),
+		}, _session)
+		_end_turn_button.call_deferred("grab_focus")
+		return _end_turn_autosave_failure_result(result)
 	if _handle_session_resolution():
 		_profile_end("end_turn", profile_start, {"resolved": true})
 		ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
@@ -775,6 +801,42 @@ func _commit_end_turn() -> Dictionary:
 		"committed": true,
 		"resolved": false,
 		"result": result.duplicate(true),
+	}
+
+func _surface_end_turn_autosave_failure() -> void:
+	_validation_end_turn_autosave_failure_count += 1
+	_last_message = END_TURN_AUTOSAVE_FAILURE_MESSAGE
+	_record_action_feedback("system", _last_message, "Use Save now.")
+	_last_end_turn_runtime_issue = RuntimeIssueLog.emit_error(
+		"overworld",
+		"end_turn_autosave_failed",
+		END_TURN_AUTOSAVE_FAILURE_MESSAGE,
+		{
+			"day": _session.day,
+			"scenario_status": _session.scenario_status,
+			"save_reason": String(_last_end_turn_autosave_result.get("reason", "unknown")).left(80),
+			"retry_action": "manual_save",
+			"battle_pending": not _session.battle.is_empty(),
+			"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
+		},
+		_session
+	)
+
+func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
+	return {
+		"ok": false,
+		"committed": true,
+		"saved": false,
+		"resolved": false,
+		"reason": "autosave_failed",
+		"save_failed": true,
+		"rules_applied": bool(rule_result.get("ok", false)),
+		"retry_action": "manual_save",
+		"battle_pending": not _session.battle.is_empty(),
+		"message": END_TURN_AUTOSAVE_FAILURE_MESSAGE,
+		"result": rule_result.duplicate(true),
+		"rule_result": rule_result.duplicate(true),
+		"autosave_result": _last_end_turn_autosave_result.duplicate(true),
 	}
 
 func _on_save_pressed() -> void:
@@ -7868,12 +7930,21 @@ func validation_cancel_end_turn_confirmation() -> Dictionary:
 func validation_confirm_end_turn() -> Dictionary:
 	return _on_end_turn_confirmation_confirmed()
 
+func validation_set_end_turn_resolution_routing_enabled(enabled: bool) -> Dictionary:
+	_validation_end_turn_resolution_routing_enabled = enabled
+	return {
+		"enabled": _validation_end_turn_resolution_routing_enabled,
+		"attempt_count": _validation_end_turn_resolution_attempt_count,
+		"last_route": _validation_last_end_turn_resolution_route.duplicate(true),
+	}
+
 func validation_reset_end_turn_confirmation_state() -> Dictionary:
 	_end_turn_confirmation_dialog.hide()
 	_pending_end_turn_confirmation = {}
 	_last_end_turn_confirmation_result = {}
 	_last_end_turn_rule_result = {}
 	_last_end_turn_autosave_result = {}
+	_last_end_turn_runtime_issue = {}
 	_end_turn_commit_in_progress = false
 	_validation_end_turn_request_count = 0
 	_validation_end_turn_cancel_count = 0
@@ -7881,6 +7952,9 @@ func validation_reset_end_turn_confirmation_state() -> Dictionary:
 	_validation_end_turn_commit_count = 0
 	_validation_end_turn_rules_call_count = 0
 	_validation_end_turn_autosave_call_count = 0
+	_validation_end_turn_autosave_failure_count = 0
+	_validation_end_turn_resolution_attempt_count = 0
+	_validation_last_end_turn_resolution_route = {}
 	return validation_end_turn_confirmation_snapshot()
 
 func validation_end_turn_confirmation_snapshot() -> Dictionary:
@@ -7916,9 +7990,16 @@ func validation_end_turn_confirmation_snapshot() -> Dictionary:
 		"commit_count": _validation_end_turn_commit_count,
 		"rules_end_turn_call_count": _validation_end_turn_rules_call_count,
 		"autosave_call_count": _validation_end_turn_autosave_call_count,
+		"autosave_failure_count": _validation_end_turn_autosave_failure_count,
+		"resolution_routing_enabled": _validation_end_turn_resolution_routing_enabled,
+		"resolution_attempt_count": _validation_end_turn_resolution_attempt_count,
+		"last_resolution_route": _validation_last_end_turn_resolution_route.duplicate(true),
 		"last_result": _last_end_turn_confirmation_result.duplicate(true),
 		"last_rule_result": _last_end_turn_rule_result.duplicate(true),
 		"last_autosave_result": _last_end_turn_autosave_result.duplicate(true),
+		"last_runtime_issue": _last_end_turn_runtime_issue.duplicate(true),
+		"visible_message": _last_message,
+		"visible_action_feedback": _action_feedback_text(),
 		"title": _end_turn_confirmation_dialog.title,
 		"text": _end_turn_confirmation_dialog.dialog_text,
 		"confirm_text": _end_turn_confirmation_dialog.get_ok_button().text,
@@ -9058,9 +9139,25 @@ func _dismiss_command_briefing() -> void:
 
 func _handle_session_resolution() -> bool:
 	if _session.scenario_status == "in_progress" and not _session.battle.is_empty():
-		AppRouter.go_to_battle()
+		_session.game_state = "battle"
+		_validation_end_turn_resolution_attempt_count += 1
+		_validation_last_end_turn_resolution_route = {
+			"target": "battle",
+			"scenario_status": _session.scenario_status,
+			"game_state": _session.game_state,
+		}
+		if _validation_end_turn_resolution_routing_enabled:
+			AppRouter.go_to_battle()
 		return true
 	if _session.scenario_status == "in_progress":
 		return false
-	AppRouter.go_to_scenario_outcome()
+	_session.game_state = "outcome"
+	_validation_end_turn_resolution_attempt_count += 1
+	_validation_last_end_turn_resolution_route = {
+		"target": "outcome",
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+	}
+	if _validation_end_turn_resolution_routing_enabled:
+		AppRouter.go_to_scenario_outcome()
 	return true
