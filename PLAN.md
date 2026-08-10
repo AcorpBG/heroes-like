@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184` (completed). Battle's live Normal/Fast/Instant controls now persist first and apply the committed speed only after success. Transaction failure resynchronizes the session and button selection to the prior committed speed, reports truthful bounded recovery, and restores focus to the still-enabled requested control without changing combat simulation state.
+- Current implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184` (completed). Campaign/skirmish start, retry, and replay actions now require one captured-action native confirmation before replacing the resolved Outcome session. `Keep Outcome` owns initial focus; controller A/B, Escape, and mouse cancellation preserve the exact review and restore the originating dynamic action; confirm revalidates identity/action/recovery and executes once.
+- Latest completed implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184`. Five campaign/skirmish action rows, immutable duplicate capture, stale identity/action/recovery guards, Save/Menu/overwrite controls, 1280 native-dialog bounds, Outcome compatibility, core, repository, Linux package, and fresh Windows/Wine package gates pass. Save Outcome and Return to Menu remain direct.
 - Latest completed implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184`. Precommit, after-backup, and non-regular-live-file failures preserve exact settings bytes/cache, transaction residue state, session/routes, and control focus; cleared success persists once and a fresh Battle consumes it. Focused, settings, animation, ActivePlay, focus, core, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. The final Seam-only form preserves the accepted Brasshollow tempo and all 18 active-cohort signatures; the 59-encounter queue remains clear, and the 12,000-battle matrix changes only four outcomes by one sample each with unchanged maximum dominance and side bias. Universal speed/initiative increases were rejected after proving they materially redistributed live matchups.
 - Latest completed implementation slice: `packaging-windows-uninstall-registration-and-pe-version-coherence-10184`. The per-user Windows setup now publishes a standard transactional HKCU Apps & Features registration plus Play and Uninstall shortcuts only after a verified commit, removes them only after an ownership-verified uninstall, and preserves prior program/registry/shortcut state across injected failures and refused uninstalls. Canonical `0.1.0-alpha.1` maps to coherent `0.1.0.1001` game/setup PE resources. Artifact, candidate, repository, full Linux installer, Windows setup/archive, and fresh Wine lifecycle gates pass; signing, native-Windows certification, publication, and overall release readiness remain open.
@@ -3676,6 +3677,32 @@ Completion criteria:
 
 Non-goals:
 - no battle timing rebalance, animation-system redesign, settings-schema change, display-confirmation redesign, Native RMG work, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Scenario Outcome New-Session Confirmation Safe Cancel
+
+id: `scenario-outcome-new-session-confirmation-safe-cancel-10184`
+
+Status: completed.
+
+Selected Phase 6 destructive-transition safety correction. Normal Outcome entry now focuses its
+authored primary follow-up, while campaign and skirmish start/retry/replay actions immediately
+replace the resolved active session despite explicit Save Outcome guidance. One controller accept
+or accidental click can therefore replace Continue Latest before the player preserves the review.
+
+Implementation target:
+- gate only `campaign_start:*` and `skirmish_start:*` Outcome actions behind one compact native confirmation while Save Outcome and Return to Menu remain direct;
+- capture the exact action id/label, source session identity/status, and origin control, with `Keep Outcome` initially focused and B/Escape cancellation restoring the exact origin;
+- on confirm, revalidate the captured session/action and recovery state before invoking the existing action path exactly once; stale or disabled actions fail closed without routing;
+- preserve the resolved session, campaign profile, autosave/manual slots, settings, and route state byte-for-byte on cancel.
+
+Completion criteria:
+- real controller A and mouse activation open the modal for skirmish retry, campaign replay/retry, and next-chapter start, while Return to Menu and Save Outcome keep their existing behavior;
+- immediate A, B, and Escape cancel safely with exact state preservation and origin-focus restoration, and the modal remains contained at 1280x720;
+- deliberate navigation to the destructive confirm button performs the immutable captured action and routes exactly once, while stale identity/action and Outcome autosave recovery pending remain blocked;
+- normal Outcome focus, recovery, manual overwrite, visual, controller, core, repository, and Linux/Windows native-dialog package gates pass.
+
+Non-goals:
+- no campaign progression redesign, new autosave policy, Save Outcome behavior change, action copy rewrite, broad Outcome layout redesign, Native RMG work, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 
