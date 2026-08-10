@@ -734,33 +734,29 @@ func _on_resolution_selected(index: int) -> void:
 func _on_render_quality_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _render_quality_picker.get_item_count():
 		return
-	SettingsService.set_render_quality_id(String(_render_quality_picker.get_item_metadata(index)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_render_quality_id(String(_render_quality_picker.get_item_metadata(index))))
 
 func _on_vsync_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_vsync_enabled(enabled)
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_vsync_enabled(enabled))
 
 func _on_frame_rate_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _frame_rate_picker.get_item_count():
 		return
-	SettingsService.set_frame_rate_limit(int(_frame_rate_picker.get_item_metadata(index)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_frame_rate_limit(int(_frame_rate_picker.get_item_metadata(index))))
 
 func _on_battle_playback_speed_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _battle_playback_speed_picker.get_item_count():
 		return
-	SettingsService.set_battle_playback_speed_id(String(_battle_playback_speed_picker.get_item_metadata(index)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_battle_playback_speed_id(String(_battle_playback_speed_picker.get_item_metadata(index))))
 
 func _on_keyboard_navigation_layout_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _keyboard_navigation_layout_picker.get_item_count():
 		return
-	SettingsService.set_keyboard_navigation_layout_id(String(_keyboard_navigation_layout_picker.get_item_metadata(index)))
+	var result: Dictionary = SettingsService.set_keyboard_navigation_layout_id(String(_keyboard_navigation_layout_picker.get_item_metadata(index)))
 	_hero_keybindings_dialog.refresh_dialog()
-	_refresh_settings_panel()
+	_finish_settings_commit(result)
 
 func _on_customize_movement_keys_pressed() -> void:
 	_hero_keybindings_dialog.open_dialog(_customize_movement_keys_button)
@@ -771,68 +767,76 @@ func _on_hero_keybindings_dialog_dismissed() -> void:
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_master_volume_percent(int(round(value)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_master_volume_percent(int(round(value))))
 
 func _on_music_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_music_volume_percent(int(round(value)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_music_volume_percent(int(round(value))))
 
 func _on_effects_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_effects_volume_percent(int(round(value)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_effects_volume_percent(int(round(value))))
 
 func _on_ui_scale_selected(index: int) -> void:
 	if _syncing_settings_ui:
 		return
 	if index < 0 or index >= _ui_scale_picker.get_item_count():
 		return
-	SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index))))
 
 func _on_battle_camera_shake_selected(index: int) -> void:
 	if _syncing_settings_ui or index < 0 or index >= _battle_camera_shake_picker.get_item_count():
 		return
-	SettingsService.set_battle_camera_shake_mode_id(String(_battle_camera_shake_picker.get_item_metadata(index)))
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_battle_camera_shake_mode_id(String(_battle_camera_shake_picker.get_item_metadata(index))))
 
 func _on_high_contrast_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_high_contrast_ui_enabled(enabled)
+	var result: Dictionary = SettingsService.set_high_contrast_ui_enabled(enabled)
 	_apply_visual_theme()
-	_refresh_settings_panel()
+	_finish_settings_commit(result)
 
 func _on_color_cue_selected(index: int) -> void:
 	if _syncing_settings_ui:
 		return
 	if index < 0 or index >= _color_cue_picker.get_item_count():
 		return
-	SettingsService.set_color_cue_mode_id(String(_color_cue_picker.get_item_metadata(index)))
+	var result: Dictionary = SettingsService.set_color_cue_mode_id(String(_color_cue_picker.get_item_metadata(index)))
 	_apply_visual_theme()
-	_refresh_settings_panel()
+	_finish_settings_commit(result)
 
 func _on_reduce_motion_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_reduced_motion_enabled(enabled)
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_reduced_motion_enabled(enabled))
 
 func _on_reduce_flashes_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_reduced_flashes_enabled(enabled)
-	_refresh_settings_panel()
+	_finish_settings_commit(SettingsService.set_reduced_flashes_enabled(enabled))
 
 func _on_reduce_repetitive_sounds_toggled(enabled: bool) -> void:
 	if _syncing_settings_ui:
 		return
-	SettingsService.set_reduced_repetitive_sounds_enabled(enabled)
+	_finish_settings_commit(SettingsService.set_reduced_repetitive_sounds_enabled(enabled))
+
+func _finish_settings_commit(result: Dictionary) -> bool:
+	if bool(result.get("ok", false)):
+		var success_message := String(result.get("message", "")).strip_edges()
+		_settings_restore_status = success_message if success_message != "" else "Saved on this device."
+	else:
+		_settings_restore_status = _settings_commit_failure_text(result)
 	_refresh_settings_panel()
+	return bool(result.get("ok", false))
+
+func _settings_commit_failure_text(result: Dictionary) -> String:
+	var detail := String(result.get("message", "")).strip_edges()
+	var message := "Settings not saved; previous settings restored."
+	if detail != "" and detail.to_lower() not in message.to_lower():
+		message = "%s %s" % [message, detail]
+	return message.substr(0, 180)
 
 func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
@@ -852,7 +856,11 @@ func _on_settings_restore_defaults_confirmed() -> void:
 		return
 	_settings_restore_pending = false
 	var result: Dictionary = SettingsService.restore_default_settings(true)
-	_settings_restore_status = String(result.get("message", "Settings were not changed."))
+	_settings_restore_status = (
+		String(result.get("message", "Settings restored and saved.")).strip_edges()
+		if bool(result.get("ok", false))
+		else _settings_commit_failure_text(result)
+	)
 	_apply_visual_theme()
 	_refresh_settings_panel()
 	if not bool(result.get("ok", false)) or not bool(result.get("display_change_deferred", false)):
