@@ -39,6 +39,9 @@ const GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE_ENV := "HEROES_LIKE_GENERATED_OPE
 const GENERATED_OPENING_AUTOSAVE_PENDING_FLAG := "generated_overworld_deferred_autosave_pending"
 const GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG := "generated_overworld_command_briefing_autosave_deferred"
 const GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG := "generated_overworld_initial_autosave_completed"
+const SAVE_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
+const SAVE_TRANSACTION_CANDIDATE_SUFFIX := ".candidate"
+const SAVE_TRANSACTION_BACKUP_SUFFIX := ".backup"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -66,6 +69,18 @@ func validation_end_summary_inspection_trace() -> Dictionary:
 
 func validation_last_runtime_save_profile() -> Dictionary:
 	return _last_runtime_save_profile.duplicate(true)
+
+func validation_summary_cache_snapshot() -> Dictionary:
+	return _slot_summary_cache.duplicate(true)
+
+func validation_clear_summary_cache() -> void:
+	_slot_summary_cache.clear()
+
+func validation_transaction_artifact_paths(file_path: String) -> Dictionary:
+	return {
+		"candidate": _save_transaction_candidate_path(file_path),
+		"backup": _save_transaction_backup_path(file_path),
+	}
 
 func validation_clear_general_profile_log() -> Dictionary:
 	return ProfileLogScript.clear_general_log()
@@ -377,10 +392,13 @@ func load_progression() -> Dictionary:
 	return _load_raw_dictionary(_progression_path(), false)
 
 func has_progression() -> bool:
+	_recover_save_transaction(_progression_path())
 	return FileAccess.file_exists(_progression_path())
 
 func has_slot(slot: int) -> bool:
-	return FileAccess.file_exists(_slot_path(_normalize_manual_slot(slot)))
+	var path := _slot_path(_normalize_manual_slot(slot))
+	_recover_save_transaction(path)
+	return FileAccess.file_exists(path)
 
 func has_any_loadable_session() -> bool:
 	return not latest_loadable_summary().is_empty()
@@ -989,6 +1007,7 @@ func _save_payload(
 	saved_payload_out: Dictionary = {},
 	profile: Dictionary = {}
 ) -> String:
+	_recover_save_transaction(file_path)
 	var normalize_started := ProfileLogScript.begin_usec()
 	var retained_manual_name := ""
 	if slot_type == SLOT_TYPE_MANUAL and FileAccess.file_exists(file_path):
@@ -1297,50 +1316,260 @@ func _runtime_save_profile_finish(profile: Dictionary) -> void:
 func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dictionary = {}) -> String:
 	if not _ensure_save_dir():
 		return ""
+	var recovery := _recover_save_transaction(file_path)
+	if String(recovery.get("reason", "")) in [
+		"invalid_live_remove_failed",
+		"backup_restore_failed",
+		"backup_restore_verification_failed",
+	]:
+		push_error("Save transaction recovery could not establish a safe commit base for %s: %s" % [file_path, recovery])
+		return ""
 
 	var stringify_started := ProfileLogScript.begin_usec()
 	var json_text := JSON.stringify(payload, "\t")
 	_runtime_save_profile_bucket(profile, "stringify", ProfileLogScript.elapsed_ms(stringify_started))
+	var candidate_path := _save_transaction_candidate_path(file_path)
+	var backup_path := _save_transaction_backup_path(file_path)
+	if not _remove_save_transaction_artifact(candidate_path):
+		push_error("Unable to clear stale save candidate: %s" % candidate_path)
+		return ""
 
 	var write_started := ProfileLogScript.begin_usec()
-	var file := FileAccess.open(file_path, FileAccess.WRITE)
+	var file := FileAccess.open(candidate_path, FileAccess.WRITE)
 	if file == null:
-		push_error("Unable to open save file for writing: %s" % file_path)
+		push_error("Unable to open save candidate for writing: %s" % candidate_path)
 		return ""
 	file.store_string(json_text)
+	file.flush()
+	var write_error := file.get_error()
+	var written_bytes := file.get_length()
 	file.close()
+	var expected_bytes := json_text.to_utf8_buffer().size()
+	if write_error != OK or written_bytes != expected_bytes:
+		push_error("Save candidate write failed for %s (error %d, bytes %d/%d)." % [candidate_path, write_error, written_bytes, expected_bytes])
+		_remove_save_transaction_artifact(candidate_path)
+		return ""
+	var candidate_read := _read_json_dictionary_unrecovered(candidate_path)
+	if not bool(candidate_read.get("ok", false)) or String(candidate_read.get("text", "")) != json_text:
+		push_error("Save candidate verification failed: %s" % candidate_path)
+		_remove_save_transaction_artifact(candidate_path)
+		return ""
+	if OS.get_environment(SAVE_TRANSACTION_FAILURE_ENV) == "precommit":
+		_remove_save_transaction_artifact(candidate_path)
+		return ""
+
+	var had_live := FileAccess.file_exists(file_path)
+	if FileAccess.file_exists(backup_path) and not _remove_save_transaction_artifact(backup_path):
+		push_error("Unable to clear stale save backup: %s" % backup_path)
+		_remove_save_transaction_artifact(candidate_path)
+		return ""
+	if had_live:
+		var backup_error := _rename_save_transaction_path(file_path, backup_path)
+		if backup_error != OK:
+			push_error("Unable to preserve prior save %s (error %d)." % [file_path, backup_error])
+			_remove_save_transaction_artifact(candidate_path)
+			return ""
+	if OS.get_environment(SAVE_TRANSACTION_FAILURE_ENV) == "after_backup":
+		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
+		return ""
+
+	var commit_error := _rename_save_transaction_path(candidate_path, file_path)
+	if commit_error != OK:
+		push_error("Unable to commit save candidate %s (error %d)." % [candidate_path, commit_error])
+		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
+		return ""
+	var committed_read := _read_json_dictionary_unrecovered(file_path)
+	if not bool(committed_read.get("ok", false)) or String(committed_read.get("text", "")) != json_text:
+		push_error("Committed save verification failed: %s" % file_path)
+		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
+		return ""
+	_remove_save_transaction_artifact(backup_path)
 	_runtime_save_profile_bucket(profile, "write", ProfileLogScript.elapsed_ms(write_started))
 	_invalidate_summary_cache_for_path(file_path)
 	return file_path
 
+func _save_transaction_candidate_path(file_path: String) -> String:
+	return "%s%s" % [file_path, SAVE_TRANSACTION_CANDIDATE_SUFFIX]
+
+func _save_transaction_backup_path(file_path: String) -> String:
+	return "%s%s" % [file_path, SAVE_TRANSACTION_BACKUP_SUFFIX]
+
+func _read_json_dictionary_unrecovered(file_path: String) -> Dictionary:
+	var result := {
+		"exists": FileAccess.file_exists(file_path),
+		"readable": false,
+		"ok": false,
+		"text": "",
+		"payload": {},
+		"error_line": 0,
+		"error_message": "",
+	}
+	if not bool(result.get("exists", false)):
+		return result
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		result["error_message"] = "Unable to open file for reading."
+		return result
+	var text := file.get_as_text()
+	var read_error := file.get_error()
+	file.close()
+	result["readable"] = read_error == OK
+	result["text"] = text
+	if read_error != OK:
+		result["error_message"] = "File read failed with error %d." % read_error
+		return result
+	var parser := JSON.new()
+	var parse_error := parser.parse(text)
+	if parse_error != OK:
+		result["error_line"] = parser.get_error_line()
+		result["error_message"] = parser.get_error_message()
+		return result
+	if not (parser.data is Dictionary):
+		result["error_message"] = "JSON root is not a dictionary."
+		return result
+	result["ok"] = true
+	result["payload"] = (parser.data as Dictionary).duplicate(true)
+	return result
+
+func _recover_save_transaction(file_path: String) -> Dictionary:
+	var candidate_path := _save_transaction_candidate_path(file_path)
+	var backup_path := _save_transaction_backup_path(file_path)
+	var live := _read_json_dictionary_unrecovered(file_path)
+	if _save_transaction_payload_valid(file_path, live):
+		_remove_save_transaction_artifact(candidate_path)
+		_remove_save_transaction_artifact(backup_path)
+		return {
+			"ok": true,
+			"recovered": false,
+			"live_valid": true,
+		}
+
+	var backup := _read_json_dictionary_unrecovered(backup_path)
+	if _save_transaction_payload_valid(file_path, backup):
+		if bool(live.get("exists", false)) and not _remove_save_transaction_artifact(file_path):
+			return {
+				"ok": false,
+				"recovered": false,
+				"live_valid": false,
+				"reason": "invalid_live_remove_failed",
+			}
+		var restore_error := _rename_save_transaction_path(backup_path, file_path)
+		if restore_error != OK:
+			return {
+				"ok": false,
+				"recovered": false,
+				"live_valid": false,
+				"reason": "backup_restore_failed",
+				"error": restore_error,
+			}
+		var restored := _read_json_dictionary_unrecovered(file_path)
+		if not _save_transaction_payload_valid(file_path, restored) or String(restored.get("text", "")) != String(backup.get("text", "")):
+			return {
+				"ok": false,
+				"recovered": false,
+				"live_valid": false,
+				"reason": "backup_restore_verification_failed",
+			}
+		_remove_save_transaction_artifact(candidate_path)
+		_invalidate_summary_cache_for_path(file_path)
+		return {
+			"ok": true,
+			"recovered": true,
+			"live_valid": true,
+		}
+
+	# A candidate is never recovery authority. Without a valid backup, retain any
+	# malformed live/backup bytes for diagnostics and discard staging only.
+	_remove_save_transaction_artifact(candidate_path)
+	return {
+		"ok": not bool(live.get("exists", false)),
+		"recovered": false,
+		"live_valid": false,
+		"reason": "no_valid_backup" if bool(live.get("exists", false)) else "live_missing",
+	}
+
+func _save_transaction_payload_valid(file_path: String, raw: Dictionary) -> bool:
+	if not bool(raw.get("ok", false)):
+		return false
+	var payload_value: Variant = raw.get("payload", {})
+	if not (payload_value is Dictionary):
+		return false
+	var payload: Dictionary = payload_value
+	if file_path == _progression_path():
+		return (
+			payload.has("version")
+			and int(payload.get("version", 0)) >= CampaignRulesScript.PROFILE_VERSION
+			and payload.has("last_campaign_id")
+			and payload.get("last_campaign_id") is String
+			and payload.has("last_scenario_id")
+			and payload.get("last_scenario_id") is String
+			and payload.has("campaign_states")
+			and payload.get("campaign_states") is Dictionary
+		)
+	var slot_type := ""
+	if file_path == _autosave_path():
+		slot_type = SLOT_TYPE_AUTOSAVE
+	else:
+		for slot in MANUAL_SLOT_IDS:
+			if file_path == _slot_path(int(slot)):
+				slot_type = SLOT_TYPE_MANUAL
+				break
+	if slot_type == "":
+		return false
+	var recorded_slot_type := String(payload.get(SAVE_METADATA_SLOT_TYPE_KEY, ""))
+	if recorded_slot_type != "" and recorded_slot_type != slot_type:
+		return false
+	return bool(_payload_structure_report(payload, slot_type).get("ok", false))
+
+func _rollback_save_transaction(
+	file_path: String,
+	candidate_path: String,
+	backup_path: String,
+	had_live: bool
+) -> bool:
+	var rolled_back := true
+	if FileAccess.file_exists(file_path):
+		rolled_back = _remove_save_transaction_artifact(file_path) and rolled_back
+	if had_live and FileAccess.file_exists(backup_path):
+		var restore_error := _rename_save_transaction_path(backup_path, file_path)
+		rolled_back = restore_error == OK and rolled_back
+	elif not had_live:
+		_remove_save_transaction_artifact(backup_path)
+	_remove_save_transaction_artifact(candidate_path)
+	return rolled_back
+
+func _remove_save_transaction_artifact(file_path: String) -> bool:
+	if not FileAccess.file_exists(file_path):
+		return true
+	return DirAccess.remove_absolute(ProjectSettings.globalize_path(file_path)) == OK
+
+func _rename_save_transaction_path(from_path: String, to_path: String) -> int:
+	return DirAccess.rename_absolute(
+		ProjectSettings.globalize_path(from_path),
+		ProjectSettings.globalize_path(to_path)
+	)
+
 func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionary:
-	if !FileAccess.file_exists(file_path):
+	_recover_save_transaction(file_path)
+	var raw := _read_json_dictionary_unrecovered(file_path)
+	if not bool(raw.get("exists", false)):
 		if warn_if_missing:
 			push_warning("Missing save file: %s" % file_path)
 		return {}
-
-	var file := FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
+	if not bool(raw.get("readable", false)):
 		push_error("Unable to read save file: %s" % file_path)
 		return {}
-
-	var text := file.get_as_text()
-	file.close()
-
-	var parser := JSON.new()
-	var error := parser.parse(text)
-	if error != OK:
+	if not bool(raw.get("ok", false)):
 		push_error(
 			"Invalid save JSON in %s at line %d: %s"
-			% [file_path, parser.get_error_line(), parser.get_error_message()]
+			% [file_path, int(raw.get("error_line", 0)), String(raw.get("error_message", "Invalid JSON dictionary."))]
 		)
 		return {}
-
-	var payload = parser.data
-	return payload if payload is Dictionary else {}
+	return (raw.get("payload", {}) as Dictionary).duplicate(true)
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	_trace_summary_inspection("slot_file_inspections")
+	_recover_save_transaction(file_path)
 	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
 	if not cached_summary.is_empty():
 		return cached_summary
