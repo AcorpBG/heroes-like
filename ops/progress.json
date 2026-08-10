@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Windows Apps & Features and PE identity slice is complete with full Linux/Windows lifecycle proof. The selected next implementation restores Rivet Hounds' missing fast armor-reveal combat role. Overall release readiness remains open.",
+  "currentNotes": "Generated-opening autosave recovery is complete with exact transactional failure handling, authoritative retry, canonical fallback persistence, and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-battle-quick-resolve-safe-cancel-focus-10184",
-  "currentSliceId": "accessibility-battle-quick-resolve-safe-cancel-focus-10184",
-  "currentSliceNotes": "Completed Quick Resolve safe-cancel focus: Keep Fighting owns native focus, immediate A/B/Escape cancel exactly, origin returns, and deliberate confirm preserves existing resolver/checkpoint parity exactly once.",
+  "currentSlice": "save-generated-opening-autosave-failure-retry-safety-10184",
+  "currentSliceId": "save-generated-opening-autosave-failure-retry-safety-10184",
+  "currentSliceNotes": "Completed generated-opening autosave recovery with one visible Save retry and post-commit canonical pending-flag completion on every verified runtime fallback save.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Accessibility Battle Quick Resolve Safe-Cancel Focus",
-  "currentSliceUpdatedAt": "2026-08-10T15:40:14Z",
+  "currentSliceTitle": "Generated Opening Autosave Failure Retry Safety",
+  "currentSliceUpdatedAt": "2026-08-10T16:05:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74846,6 +74846,26 @@
       "notes": "Completed Keep Fighting native focus, stable cancel ownership, explicit modal teardown, pending guard, exact origin restoration, and exactly-once confirm. Physical JOY A/B, Escape, real mouse, direct resolver parity, terminal Outcome checkpoint/route suppression, repeat no-op, Quick Resolve/event/checkpoint compatibility, active focus, 1280 layout, core, editor, validator, diff, Linux package, and fresh non-headless Windows/Wine package gates pass. The 1280 detached routed-snapshot runner still emits pre-existing null-tree teardown diagnostics after all layout assertions pass.",
       "remainingWork": "No work remains in this slice. Generated-opening autosave retry recovery, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T15:40:14Z"
+    },
+    {
+      "id": "save-generated-opening-autosave-failure-retry-safety-10184",
+      "title": "Generated Opening Autosave Failure Retry Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Make generated-map opening autosave failures visibly retryable and prevent verified fallback saves from persisting stale opening-pending lifecycle flags.",
+      "implementationTargets": ["scripts/autoload/SaveService.gd", "scenes/overworld/OverworldShell.gd", "tests/generated_opening_autosave_failure_retry_regression.gd", "tests/generated_opening_autosave_failure_retry_regression.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"deferred_attempts": 1, "failure_retry_state": false, "failure_issue": false, "save_focus": false, "fallback_can_persist_pending": true},
+      "completionCriteria": ["Forced, precommit, and after-backup failures preserve exact prior bytes/cache/artifacts and pending live state while emitting one issue and actionable Save focus", "Retry failure is exact and nonduplicating; one verified retry clears pending/deferred flags, sets completion, reloads canonically, and does not repeat", "Manual, menu, and safe-close verified fallback saves cannot persist stale generated-opening pending flags", "Generated timing, save transaction, Overworld focus/visual, core, repository, and Linux/Windows packaged gates pass"],
+      "nonGoals": ["generated-map rules or parity, random-map performance redesign, save schema bump, manual-slot redesign, Native RMG recovery, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T15:41:44Z",
+      "startedAt": "2026-08-10T15:41:44Z",
+      "updatedAt": "2026-08-10T16:05:35Z",
+      "notes": "Completed central post-commit canonicalization for every runtime save while generated-opening is pending plus explicit Overworld recovery, one issue, persistent guidance, Save focus, first-press authoritative autosave retry, and next-press manual flow. Forced, precommit, and after-backup rows preserve exact authority and deduplicate retry failure; successful retry/fallback reloads canonically without repeat. Save transaction, generated post-open timing, active return, safe close, focus, visual, core, editor, validator, diff, Linux package, and fresh non-headless Windows/Wine package gates pass at save version 9.",
+      "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T16:05:35Z"
     }
   ],
   "project": "heroes-like",

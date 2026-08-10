@@ -1164,6 +1164,9 @@ func _save_runtime_session(
 	var cache_slot_id := ""
 	var saved_payload := {}
 	var write_payload := _payload_without_transition_autosave_intent(payload_for_write)
+	var generated_opening_pending := _is_generated_opening_autosave_pending(session)
+	if generated_opening_pending:
+		write_payload = _generated_opening_autosave_success_payload_from_payload(write_payload)
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
 			_runtime_save_profile_step(profile, "write_payload_start")
@@ -1215,7 +1218,10 @@ func _save_runtime_session(
 	if path == "":
 		_runtime_save_profile_finish(profile)
 		return {"ok": false, "path": "", "summary": summary, "message": "Save write failed."}
-	_clear_transition_autosave_intent_flags(session)
+	if generated_opening_pending:
+		_apply_generated_opening_autosave_success_to_session(session)
+	else:
+		_clear_transition_autosave_intent_flags(session)
 	if FileAccess.file_exists(path):
 		profile["written_bytes"] = FileAccess.get_size(path)
 		profile["path"] = path
@@ -1283,11 +1289,16 @@ func _can_fast_save_generated_opening_autosave(
 	include_summary: bool
 ) -> bool:
 	return (
-		session != null
+		_is_generated_opening_autosave_pending(session)
 		and slot_type == SLOT_TYPE_AUTOSAVE
 		and not include_summary
+	)
+
+func _is_generated_opening_autosave_pending(session: SessionStateStoreScript.SessionData) -> bool:
+	return (
+		session != null
 		and bool(session.flags.get("generated_random_map", false))
-		and bool(session.flags.get("generated_overworld_deferred_autosave_pending", false))
+		and bool(session.flags.get(GENERATED_OPENING_AUTOSAVE_PENDING_FLAG, false))
 	)
 
 func _save_generated_opening_autosave_fast(
@@ -1321,13 +1332,16 @@ func _save_generated_opening_autosave_fast(
 	}
 
 func _generated_opening_autosave_success_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var payload := _payload_without_transition_autosave_intent(session.to_dict())
-	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	return _generated_opening_autosave_success_payload_from_payload(session.to_dict())
+
+func _generated_opening_autosave_success_payload_from_payload(payload: Dictionary) -> Dictionary:
+	var canonical_payload := _payload_without_transition_autosave_intent(payload)
+	var flags: Dictionary = canonical_payload.get("flags", {}) if canonical_payload.get("flags", {}) is Dictionary else {}
 	flags.erase(GENERATED_OPENING_AUTOSAVE_PENDING_FLAG)
 	flags.erase(GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG)
 	flags[GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG] = true
-	payload["flags"] = flags
-	return payload
+	canonical_payload["flags"] = flags
+	return canonical_payload
 
 func _apply_generated_opening_autosave_success_to_session(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:

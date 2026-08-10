@@ -112,6 +112,8 @@ BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "ba
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.tscn"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.gd"
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.tscn"
+GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_opening_autosave_failure_retry_regression.gd"
+GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCENE_PATH = ROOT / "tests" / "generated_opening_autosave_failure_retry_regression.tscn"
 SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.gd"
 SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.tscn"
 SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.gd"
@@ -22241,6 +22243,53 @@ def validate_random_map_post_open_autosave_completion(errors: list[str]) -> None
             ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing generated-opening autosave restore guard token: {required_token}")
 
 
+def validate_generated_opening_autosave_failure_retry(errors: list[str]) -> None:
+    for path in (
+        GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCRIPT_PATH,
+        GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing generated-opening autosave failure retry regression file: {path.relative_to(ROOT)}")
+    if GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCENE_PATH.exists():
+        scene_text = GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/generated_opening_autosave_failure_retry_regression.gd"' in scene_text,
+            errors,
+            "Generated-opening autosave failure retry scene is not wired to its focused script",
+        )
+    if GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCRIPT_PATH.exists():
+        script_text = GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "GENERATED_OPENING_AUTOSAVE_FAILURE_RETRY_REGRESSION",
+            "HEROES_LIKE_GENERATED_OPENING_AUTOSAVE_FORCE_FAILURE",
+            'FAILURE_ROWS := ["forced", "precommit", "after_backup"]',
+            "validation_retry_generated_opening_autosave",
+            "validation_generated_opening_autosave_recovery_snapshot",
+            "generated_opening_autosave_failed",
+            "Generated map is ready, but autosave failed. Press Save to protect this checkpoint.",
+            "RuntimeIssueLog.issue_record_count() != 1",
+            "SaveService.validation_summary_cache_snapshot() != cache_before",
+            "SessionState.ensure_active_session().to_dict() != live_before",
+            "SaveService.save_runtime_autosave_session(session, false)",
+            "SaveService.save_runtime_autosave_session(session, true)",
+            "SaveService.save_runtime_manual_session(session, 1)",
+            "AppRouter.return_to_main_menu_from_active_play()",
+            "SaveService.restore_autosave_session()",
+            "SaveService.restore_manual_session(1)",
+            "ordinary_non_generated_exact",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in script_text, errors, f"Generated-opening autosave failure retry regression is missing token: {required_token}")
+    if OVERWORLD_SCRIPT_PATH.exists():
+        overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func validation_retry_generated_opening_autosave",
+            "func validation_generated_opening_autosave_recovery_snapshot",
+            "generated_opening_autosave_failed",
+            "Generated map is ready, but autosave failed. Press Save to protect this checkpoint.",
+        ):
+            ensure(required_token in overworld_text, errors, f"OverworldShell.gd is missing generated-opening recovery token: {required_token}")
+
+
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
@@ -26561,6 +26610,7 @@ def main() -> int:
     validate_native_rmg_no_godot_export_boundary(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_random_map_post_open_autosave_completion(errors)
+    validate_generated_opening_autosave_failure_retry(errors)
     validate_packaging_platform_readiness(errors)
     validate_packaging_pack_export_smoke(errors)
     validate_packaging_linux_export_smoke(errors)

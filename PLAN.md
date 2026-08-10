@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184` (completed). Quick Resolve now opens with `Keep Fighting` focused, so immediate controller A, B, or Escape cancels byte-exactly and restores Quick Resolve focus. Deliberate navigation to `Resolve Battle` retains direct resolver/checkpoint parity and executes once.
+- Current implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184` (completed). Generated-opening autosave failure now remains visibly retryable with one issue and Save focus; the first Save retries the authoritative autosave, and every verified runtime fallback save canonicalizes completion flags only after commit. Reload no longer repeats the opening checkpoint.
+- Latest completed implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184`. Forced, precommit, and after-backup exactness, retry deduplication, fast/manual/menu/ordinary controls, generated timing, return/close, focus, visual, core, repository, Linux package, and fresh Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184`. Physical controller, real mouse, direct-result parity, checkpoint, animation, active focus, 1280 layout, core, repository, Linux package, and fresh non-headless Windows/Wine native-dialog gates pass.
 - Latest completed implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184`. Five campaign/skirmish action rows, immutable duplicate capture, stale identity/action/recovery guards, Save/Menu/overwrite controls, 1280 native-dialog bounds, Outcome compatibility, core, repository, Linux package, and fresh Windows/Wine package gates pass. Save Outcome and Return to Menu remain direct.
 - Latest completed implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184`. Precommit, after-backup, and non-regular-live-file failures preserve exact settings bytes/cache, transaction residue state, session/routes, and control focus; cleared success persists once and a fresh Battle consumes it. Focused, settings, animation, ActivePlay, focus, core, repository, Linux package, and Windows/Wine package gates pass.
@@ -3729,6 +3730,31 @@ Completion criteria:
 
 Non-goals:
 - no Quick Resolve policy, battle math, AI, reward, withdrawal, save-schema, animation, routing, broad Battle layout, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion change.
+
+## Generated Opening Autosave Failure Retry Safety
+
+id: `save-generated-opening-autosave-failure-retry-safety-10184`
+
+Status: completed.
+
+Selected Phase 6 generated-session durability correction. The deferred opening autosave is scheduled
+only once. On failure the shell shows compact failed text but retains no actionable recovery state,
+does not focus Save, and ordinary fallback persistence can preserve stale opening-pending flags.
+
+Implementation target:
+- retain one explicit Overworld recovery state with sanitized issue, bounded Save guidance, and Save focus after generated-opening autosave failure;
+- make the first Save retry the existing authoritative generated-opening autosave path, keeping exact pending state on failure and restoring ordinary manual Save only after verified success;
+- canonicalize generated-opening success flags in any verified runtime save made while pending, mirroring them into the live session only after commit;
+- preserve exact prior bytes/cache/artifacts on forced, precommit, and after-backup failures and prevent briefing/opening replay after reload.
+
+Completion criteria:
+- failed opening writes keep exact prior authority, emit one issue, route nowhere, and expose a retryable Save surface without allowing gameplay actions to hide the durability warning;
+- retry failure is exact and nonduplicating; one successful retry clears pending/deferred flags, sets completion, reloads canonically, and is not attempted again;
+- manual, menu, and safe-close fallback saves cannot durably retain stale generated-opening pending state; ordinary/non-generated controls remain exact;
+- save transaction, generated timing, Overworld focus/visual, core, repository, and Linux/Windows packaged focused gates pass without a save-version change.
+
+Non-goals:
+- no generated-map rules or parity change, random-map performance redesign, save schema/version bump, manual-slot redesign, Native RMG recovery work, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 
