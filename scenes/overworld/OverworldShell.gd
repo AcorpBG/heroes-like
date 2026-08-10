@@ -117,6 +117,7 @@ const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. Try Save again before continuing."
 const PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. The pending battle remains open; try Save again before continuing."
+const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
@@ -197,6 +198,8 @@ var _last_end_turn_rule_result: Dictionary = {}
 var _last_end_turn_autosave_result: Dictionary = {}
 var _last_end_turn_runtime_issue: Dictionary = {}
 var _last_manual_save_result: Dictionary = {}
+var _last_return_to_menu_result: Dictionary = {}
+var _validation_return_to_menu_request_count := 0
 var _end_turn_commit_in_progress := false
 var _validation_end_turn_request_count := 0
 var _validation_end_turn_cancel_count := 0
@@ -927,8 +930,21 @@ func _on_save_slot_selected(index: int) -> void:
 	SaveService.set_selected_manual_slot(_save_slot_picker.get_item_id(index))
 	_refresh_save_slot_picker()
 
-func _on_menu_pressed() -> void:
-	AppRouter.return_to_main_menu_from_active_play()
+func _on_menu_pressed() -> Dictionary:
+	_validation_return_to_menu_request_count += 1
+	var result: Dictionary = AppRouter.return_to_main_menu_from_active_play()
+	_last_return_to_menu_result = result.duplicate(true)
+	if bool(result.get("ok", false)):
+		return _last_return_to_menu_result.duplicate(true)
+	var message := String(result.get("message", "")).strip_edges().left(180)
+	if message == "":
+		message = RETURN_TO_MENU_FAILURE_MESSAGE
+	_last_return_to_menu_result["message"] = message
+	_last_message = message
+	_record_action_feedback("system", message, "Use Save, then try Menu again.")
+	_refresh()
+	_menu_button.call_deferred("grab_focus")
+	return _last_return_to_menu_result.duplicate(true)
 
 func _on_settings_pressed() -> void:
 	_active_play_settings_dialog.open_dialog()
@@ -7479,6 +7495,10 @@ func validation_snapshot() -> Dictionary:
 		"manual_save_success_count": _validation_manual_save_success_count,
 		"manual_save_failure_count": _validation_manual_save_failure_count,
 		"manual_save_route_attempt_count": _validation_manual_save_route_attempt_count,
+		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
+		"return_to_menu_visible_message": _last_message,
+		"return_to_menu_focus_owner": _return_to_menu_focus_owner_name(),
+		"return_to_menu_request_count": _validation_return_to_menu_request_count,
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
@@ -7938,14 +7958,21 @@ func validation_active_play_settings_dialog():
 	return _active_play_settings_dialog
 
 func validation_return_to_menu() -> Dictionary:
-	var scenario_id := _session.scenario_id
-	var resume_target := SaveService.resume_target_for_session(_session)
-	_on_menu_pressed()
+	return _on_menu_pressed()
+
+func validation_active_play_return_snapshot() -> Dictionary:
 	return {
-		"ok": true,
-		"scenario_id": scenario_id,
-		"resume_target": resume_target,
+		"last_result": _last_return_to_menu_result.duplicate(true),
+		"visible_message": _last_message,
+		"focus_owner": _return_to_menu_focus_owner_name(),
+		"request_count": _validation_return_to_menu_request_count,
+		"scenario_id": _session.scenario_id,
+		"resume_target": SaveService.resume_target_for_session(_session),
 	}
+
+func _return_to_menu_focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_end_turn() -> Dictionary:
 	var day_before := _session.day
