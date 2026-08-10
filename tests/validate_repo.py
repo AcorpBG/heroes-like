@@ -108,6 +108,8 @@ BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_quick_resolve_
 BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
 BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.gd"
 BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.tscn"
+BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.gd"
+BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -14710,6 +14712,84 @@ def validate_battle_withdrawal_confirmation_runtime(errors: list[str]) -> None:
     ):
         ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing required withdrawal-confirmation token: {required_token}")
 
+
+def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) -> None:
+    for path in (
+        BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH,
+        BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH,
+        BATTLE_SCRIPT_PATH,
+        APP_ROUTER_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing battle-resolution autosave safety file: {path.relative_to(ROOT)}")
+    if not BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        return
+
+    report_text = BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BATTLE_RESOLUTION_AUTOSAVE_FAILURE_ROUTE_SAFETY_REGRESSION",
+        'const FAILURE_PHASES := ["precommit", "after_backup"]',
+        'const RESOLUTION_MODES := ["quick_resolve_victory", "confirmed_retreat"]',
+        "BattleAutoResolveRulesScript.resolve_active_battle(direct)",
+        'BattleRulesScript.perform_player_action(direct, "retreat")',
+        'shell.call("_on_quick_resolve_confirmed")',
+        'shell.validation_confirm_withdrawal()',
+        "validation_retry_battle_resolution_save",
+        "validation_battle_resolution_checkpoint_snapshot",
+        'String(checkpoint_result.get("reason", "")) != "autosave_failed"',
+        'String(checkpoint_result.get("retry_action", "")) != "manual_save"',
+        'router_snapshot.get("save_attempt_count", -1)) != 1',
+        'router_snapshot.get("route_attempt_count", -1)) != 0',
+        'after_router.get("save_attempt_count", -1)) != 2',
+        'after_router.get("route_attempt_count", -1)) != 1',
+        'String(issue.get("event", "")) != "battle_resolution_autosave_failed"',
+        'String(shell_snapshot.get("save_button_text", "")) != "Save Battle"',
+        'String(shell_snapshot.get("focus_owner", "")) != "Save"',
+        '_file_state(AUTOSAVE_PATH) != autosave_before',
+        'SaveService.validation_summary_cache_snapshot() != cache_before',
+        '_transaction_artifacts_absent(AUTOSAVE_PATH)',
+        '_gameplay_payload_without_shell_presentation(live)',
+        'flags.erase("last_battle_action_recap")',
+        'overworld.erase("command_risk_forecast")',
+        "_prove_ordinary_success_and_exit_animation",
+        "_prove_terminal_outcome_bypass",
+        "_prove_nonterminal_control",
+        "_prove_router_preconditions",
+    ):
+        ensure(required_token in report_text, errors, f"Battle-resolution autosave safety regression is missing required token: {required_token}")
+
+    scene_text = BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/battle_resolution_autosave_failure_route_safety_regression.gd" in scene_text,
+        errors,
+        "Battle-resolution autosave safety scene must load its regression script",
+    )
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_reset_battle_resolution_checkpoint_state()",
+        "func validation_retry_battle_resolution_save()",
+        "func validation_battle_resolution_checkpoint_snapshot()",
+        "_checkpoint_battle_resolution_for_overworld(result, false)",
+        "_retry_battle_resolution_checkpoint()",
+        'return _battle_resolution_checkpoint_block_result(action)',
+        '"Save Battle"',
+    ):
+        ensure(required_token in shell_text, errors, f"BattleShell.gd is missing required battle-resolution checkpoint token: {required_token}")
+
+    router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func checkpoint_battle_resolution_for_overworld(",
+        "func route_checkpointed_battle_resolution()",
+        "func validation_set_battle_resolution_checkpoint_routing_suppressed(",
+        "func validation_reset_battle_resolution_checkpoint_state()",
+        "func validation_battle_resolution_checkpoint_snapshot()",
+        '"battle_resolution_autosave_failed"',
+        '"autosave_failed"',
+        '"manual_save"',
+    ):
+        ensure(required_token in router_text, errors, f"AppRouter.gd is missing required battle-resolution checkpoint token: {required_token}")
+
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -26102,6 +26182,7 @@ def main() -> int:
     validate_battle_deterministic_rng_state(errors)
     validate_battle_quick_resolve_runtime(errors)
     validate_battle_withdrawal_confirmation_runtime(errors)
+    validate_battle_resolution_autosave_failure_route_safety(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)

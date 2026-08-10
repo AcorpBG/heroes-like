@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Dirty Map Editor Menu, package replacement, and native close transitions are now guarded by one safe-cancel confirmation with transactional quit recovery. Overall release readiness remains open.",
+  "currentNotes": "Finalized nonterminal battle results now checkpoint before animation/routing and remain recoverable in Battle when the write fails. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "map-editor-dirty-working-copy-destructive-transition-safety-10184",
-  "currentSliceId": "map-editor-dirty-working-copy-destructive-transition-safety-10184",
-  "currentSliceNotes": "Completed captured-action dirty editor confirmation, central native-close guard, exact cancel preservation, transactional quit retry, and Linux/Windows desktop-close proof.",
+  "currentSlice": "battle-resolution-autosave-failure-route-safety-10184",
+  "currentSliceId": "battle-resolution-autosave-failure-route-safety-10184",
+  "currentSliceNotes": "Completed transactional finalized-battle checkpointing, exact failure retention with Save Battle retry, durable animation/route continuation, and packaged Linux/Windows proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Dirty Working-Copy Destructive Transition Safety",
-  "currentSliceUpdatedAt": "2026-08-10T07:47:13Z",
+  "currentSliceTitle": "Battle Resolution Autosave Failure Route Safety",
+  "currentSliceUpdatedAt": "2026-08-10T08:25:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74627,6 +74627,39 @@
       "notes": "Completed one captured-action confirmation for dirty Menu, package replacement, and native close; Keep Editing owns safe focus, cancellation is exact, confirmed quit reuses transactional safe close, and focused plus real Linux/packaged Windows desktop-close gates pass.",
       "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T07:47:13Z"
+    },
+    {
+      "id": "battle-resolution-autosave-failure-route-safety-10184",
+      "title": "Battle Resolution Autosave Failure Route Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Prevent completed nonterminal battle results from being lost or replayed because the normal post-battle Overworld route has no durable checkpoint.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_resolution_autosave_failure_route_safety_regression.gd",
+        "tests/battle_resolution_autosave_failure_route_safety_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"post_resolution_checkpoint": false, "failure_route_blocked": false, "manual_retry_routes_once": false},
+      "completionCriteria": [
+        "Finalized nonterminal battle state is transactionally saved exactly once before exit animation or Overworld routing",
+        "Both failure phases preserve prior bytes/cache and exact finalized live state with one issue, visible Save Battle guidance, and zero route",
+        "One successful Save retry persists the canonical finalized autosave and routes once without replaying gameplay or rewards",
+        "Victory, withdrawal or secondary-defeat, Quick Resolve, animation, terminal Outcome, compatibility, repository, Linux, and Windows-Wine gates pass"
+      ],
+      "nonGoals": ["battle outcome math or reward tuning, broader autosave policy, save/schema changes, Native RMG, publication, signing, or release-completion claim"],
+      "createdAt": "2026-08-10T07:55:34Z",
+      "startedAt": "2026-08-10T07:55:34Z",
+      "updatedAt": "2026-08-10T08:25:20Z",
+      "notes": "Completed one transactional checkpoint before nonterminal exit animation/routing; both failure phases retain exact finalized state with Save Battle recovery, and focused plus packaged Linux/Windows gates pass at save version 9.",
+      "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, normal Outcome entry focus, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T08:25:20Z"
     }
   ],
   "project": "heroes-like",

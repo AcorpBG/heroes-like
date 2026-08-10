@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `battle-resolution-autosave-failure-route-safety-10184`. Finalized nonterminal battles now checkpoint transactionally before exit animation or Overworld routing. Write failure retains the exact completed result in Battle with combat disabled, Save Battle guidance/focus, and zero route; one Save retry persists the canonical autosave and resumes the stored animation/route without replaying rules or rewards. Focused failure/retry, withdrawal, Quick Resolve, animation, controller, save, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `map-editor-dirty-working-copy-destructive-transition-safety-10184`. Dirty Map Editor working copies now require one captured-action confirmation before Main Menu, package replacement, or native close. `Keep Editing` owns initial focus, Back/Escape preserve the exact working copy and origin focus, confirmed native close reuses transactional safe quit, and clean transitions remain direct. Focused, editor package, keyboard, core, repository, real Linux WM_DELETE, and packaged Windows/Wine WM_CLOSE gates pass.
 - Latest completed implementation slice: `application-scenario-outcome-autosave-failure-recovery-10184`. Failed terminal autosaves now carry a session-bound recovery state into Outcome, surface bounded Save Outcome guidance with Save focus, and block campaign/skirmish follow-up until a verified retry persists the exact terminal session. Return and safe-close recovery remain usable, campaign completion is not replayed, and focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save/profile versions 9/1.
 - Latest completed implementation slice: `overworld-controller-right-stick-route-selection-10184`. Controller users can now move a bounded route cursor with the right stick, inspect the existing route/destination surface without mutating session or save state, press A to invoke the existing primary action once, and press B to return selection/camera to the hero. Left-stick movement, D-pad focus, mouse/keyboard control, and modal ownership remain intact. Focused, live-controller, route/cache/visual, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
@@ -3492,6 +3493,35 @@ Completion evidence:
 - dirty Menu, immutable captured-package replacement, and native close share one compact confirmation with `Keep Editing` focused; controller Back and Escape preserve exact working-copy/session/tool/selection/package/save state and restore the exact origin;
 - confirmed actions execute once, duplicate close requests fail closed, both transactional safe-quit failure phases retain the dirty editor and retry successfully, and clean Menu/package/close controls remain direct;
 - focused runtime, validator, Python, editor parse, package save-copy/load, Main Menu keyboard, core, real 1280x720 Linux WM_DELETE, and fresh packaged Windows/Wine WM_CLOSE gates pass at save version 9; production project and export presets remain untouched.
+
+## Battle Resolution Autosave Failure Route Safety
+
+id: `battle-resolution-autosave-failure-route-safety-10184`
+
+Status: complete.
+
+Selected Phase 6 gameplay data-safety slice. Nonterminal battle finalizers already commit casualties,
+rewards, resolved encounters, commander continuity, pressure/task state, and aftermath to the live
+session, but the following Overworld route intentionally skips saving. A crash can therefore reload
+the pre-resolution battle and discard or duplicate the completed result.
+
+Implementation target:
+- transactionally checkpoint finalized nonterminal victory, retreat, surrender, stalemate, secondary-hero defeat, and town-loss state before exit animation or Overworld routing;
+- on write failure, retain the exact finalized live result in Battle, route zero times, emit one bounded issue, show `Save Battle` recovery guidance, and focus Save;
+- a successful Save retry persists the canonical finalized autosave and routes once without replaying BattleRules, rewards, or aftermath; terminal scenario outcomes retain the existing Outcome recovery path.
+
+Completion criteria:
+- ordinary nonterminal resolution saves exactly once before animation/routing, while both injected failure phases preserve exact prior autosave bytes/cache and leave no transaction artifacts;
+- failed resolution remains visibly recoverable in Battle with exact finalized live state and zero route; one Save retry yields canonical reload plus one Overworld route without another gameplay action;
+- representative victory and withdrawal/secondary-defeat paths, Quick Resolve, exit animation, terminal Outcome, safe-close/Return, core, parse, repository, Linux package, and packaged Windows/Wine gates pass at save version 9.
+
+Non-goals:
+- no BattleRules outcome math, reward/casualty tuning, autosave frequency outside the post-resolution boundary, save/schema bump, Native RMG, publication, signing, or overall release-completion claim.
+
+Completion evidence:
+- precommit and after-backup failure across Quick Resolve victory and confirmed retreat preserve exact prior autosave bytes/cache, leave no transaction artifacts, match direct finalized gameplay state, emit one bounded issue, and route zero times with Save Battle focused;
+- one Save retry makes total checkpoint attempts two, persists a canonical battle-empty Overworld resume payload, and resumes the stored exit animation/route once without another gameplay action, reward, or finalization;
+- ordinary animation checkpoints and routes once, terminal Outcome bypass remains exact, and withdrawal, Quick Resolve, event animation, active focus, save transaction, core, validator, parse, Linux package, and fresh Windows/Wine package gates pass at save version 9.
 
 ## Phase Roadmap
 
