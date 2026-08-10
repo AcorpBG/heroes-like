@@ -115,6 +115,8 @@ const CONTROLLER_MOVE_INITIAL_REPEAT_MSEC := 360
 const CONTROLLER_MOVE_REPEAT_MSEC := 180
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
+const MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. Try Save again before continuing."
+const PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. The pending battle remains open; try Save again before continuing."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
@@ -194,6 +196,7 @@ var _last_end_turn_confirmation_result: Dictionary = {}
 var _last_end_turn_rule_result: Dictionary = {}
 var _last_end_turn_autosave_result: Dictionary = {}
 var _last_end_turn_runtime_issue: Dictionary = {}
+var _last_manual_save_result: Dictionary = {}
 var _end_turn_commit_in_progress := false
 var _validation_end_turn_request_count := 0
 var _validation_end_turn_cancel_count := 0
@@ -205,6 +208,10 @@ var _validation_end_turn_autosave_failure_count := 0
 var _validation_end_turn_resolution_routing_enabled := true
 var _validation_end_turn_resolution_attempt_count := 0
 var _validation_last_end_turn_resolution_route: Dictionary = {}
+var _validation_manual_save_attempt_count := 0
+var _validation_manual_save_success_count := 0
+var _validation_manual_save_failure_count := 0
+var _validation_manual_save_route_attempt_count := 0
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
@@ -850,21 +857,66 @@ func _on_save_pressed() -> void:
 		return
 	_commit_manual_save(int(action.get("slot", SaveService.get_selected_manual_slot())))
 
-func _commit_manual_save(manual_slot: int) -> void:
-	var result = AppRouter.save_active_session_to_manual_slot(manual_slot)
-	_last_message = String(result.get("message", ""))
+func _commit_manual_save(manual_slot: int) -> Dictionary:
+	_validation_manual_save_attempt_count += 1
+	var save_result: Dictionary = AppRouter.save_active_session_to_manual_slot(manual_slot)
+	var save_ok := bool(save_result.get("ok", false))
+	_last_message = String(save_result.get("message", "")) if save_ok else _manual_save_failure_message()
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
 	_last_action_recap = {}
-	_record_result_feedback("system", result, "Save updated.")
-	if _handle_session_resolution():
-		return
-	_refresh()
+	if not save_ok:
+		_validation_manual_save_failure_count += 1
+		_last_manual_save_result = _manual_save_commit_result(save_result, false, 0)
+		_record_result_feedback("system", _last_manual_save_result, "Save failed.")
+		_refresh()
+		_save_button.call_deferred("grab_focus")
+		return _last_manual_save_result.duplicate(true)
 
-func _on_manual_save_overwrite_confirmed() -> void:
+	_validation_manual_save_success_count += 1
+	_record_result_feedback("system", save_result, "Save updated.")
+	var route_attempts_before := _validation_end_turn_resolution_attempt_count
+	var routed := _handle_session_resolution()
+	var route_attempt_delta := maxi(0, _validation_end_turn_resolution_attempt_count - route_attempts_before)
+	_validation_manual_save_route_attempt_count += route_attempt_delta
+	_last_manual_save_result = _manual_save_commit_result(save_result, routed, route_attempt_delta)
+	if routed:
+		return _last_manual_save_result.duplicate(true)
+	_refresh()
+	return _last_manual_save_result.duplicate(true)
+
+func _manual_save_commit_result(save_result: Dictionary, routed: bool, route_attempt_delta: int) -> Dictionary:
+	var save_ok := bool(save_result.get("ok", false))
+	return {
+		"ok": save_ok,
+		"saved": save_ok,
+		"routed": routed,
+		"route_attempt_delta": route_attempt_delta,
+		"reason": "saved" if save_ok else "manual_save_failed",
+		"retry_action": "" if save_ok else "manual_save",
+		"battle_pending": not _session.battle.is_empty(),
+		"message": String(save_result.get("message", "")) if save_ok else _manual_save_failure_message(),
+		"save_result": save_result.duplicate(true),
+	}
+
+func _manual_save_failure_message() -> String:
+	return PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE if not _session.battle.is_empty() else MANUAL_SAVE_FAILURE_MESSAGE
+
+func _on_manual_save_overwrite_confirmed() -> Dictionary:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
 	if SaveService.get_manual_slot_ids().has(manual_slot):
-		_commit_manual_save(manual_slot)
+		return _commit_manual_save(manual_slot)
+	return {
+		"ok": false,
+		"saved": false,
+		"routed": false,
+		"route_attempt_delta": 0,
+		"reason": "invalid_manual_slot",
+		"retry_action": "manual_save",
+		"battle_pending": not _session.battle.is_empty(),
+		"message": "Choose a valid manual save slot.",
+		"save_result": {},
+	}
 
 func _on_manual_save_overwrite_canceled() -> void:
 	_manual_save_overwrite_dialog.clear_pending()
@@ -7422,6 +7474,11 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
+		"last_manual_save_result": _last_manual_save_result.duplicate(true),
+		"manual_save_attempt_count": _validation_manual_save_attempt_count,
+		"manual_save_success_count": _validation_manual_save_success_count,
+		"manual_save_failure_count": _validation_manual_save_failure_count,
+		"manual_save_route_attempt_count": _validation_manual_save_route_attempt_count,
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
@@ -7849,14 +7906,13 @@ func validation_select_save_slot(slot: int) -> bool:
 
 func validation_save_to_selected_slot() -> Dictionary:
 	var selected_slot := SaveService.get_selected_manual_slot()
-	_commit_manual_save(selected_slot)
+	var result := _commit_manual_save(selected_slot)
 	var summary := SaveService.inspect_manual_slot(selected_slot)
-	return {
-		"ok": SaveService.can_load_summary(summary),
+	result.merge({
 		"selected_slot": selected_slot,
 		"summary": summary,
-		"message": _last_message,
-	}
+	}, true)
+	return result
 
 func validation_request_manual_save() -> Dictionary:
 	_on_save_pressed()
@@ -7864,12 +7920,12 @@ func validation_request_manual_save() -> Dictionary:
 
 func validation_confirm_manual_save_overwrite() -> Dictionary:
 	var pending_slot := int(_manual_save_overwrite_dialog.validation_snapshot().get("pending_slot", 0))
-	_on_manual_save_overwrite_confirmed()
-	return {
+	var result := _on_manual_save_overwrite_confirmed()
+	result.merge({
 		"pending_slot": pending_slot,
 		"summary": SaveService.inspect_manual_slot(pending_slot) if SaveService.get_manual_slot_ids().has(pending_slot) else {},
-		"message": _last_message,
-	}
+	}, true)
+	return result
 
 func validation_cancel_manual_save_overwrite() -> void:
 	_on_manual_save_overwrite_canceled()
@@ -7945,6 +8001,7 @@ func validation_reset_end_turn_confirmation_state() -> Dictionary:
 	_last_end_turn_rule_result = {}
 	_last_end_turn_autosave_result = {}
 	_last_end_turn_runtime_issue = {}
+	_last_manual_save_result = {}
 	_end_turn_commit_in_progress = false
 	_validation_end_turn_request_count = 0
 	_validation_end_turn_cancel_count = 0
@@ -7955,6 +8012,10 @@ func validation_reset_end_turn_confirmation_state() -> Dictionary:
 	_validation_end_turn_autosave_failure_count = 0
 	_validation_end_turn_resolution_attempt_count = 0
 	_validation_last_end_turn_resolution_route = {}
+	_validation_manual_save_attempt_count = 0
+	_validation_manual_save_success_count = 0
+	_validation_manual_save_failure_count = 0
+	_validation_manual_save_route_attempt_count = 0
 	return validation_end_turn_confirmation_snapshot()
 
 func validation_end_turn_confirmation_snapshot() -> Dictionary:
@@ -7998,6 +8059,11 @@ func validation_end_turn_confirmation_snapshot() -> Dictionary:
 		"last_rule_result": _last_end_turn_rule_result.duplicate(true),
 		"last_autosave_result": _last_end_turn_autosave_result.duplicate(true),
 		"last_runtime_issue": _last_end_turn_runtime_issue.duplicate(true),
+		"last_manual_save_result": _last_manual_save_result.duplicate(true),
+		"manual_save_attempt_count": _validation_manual_save_attempt_count,
+		"manual_save_success_count": _validation_manual_save_success_count,
+		"manual_save_failure_count": _validation_manual_save_failure_count,
+		"manual_save_route_attempt_count": _validation_manual_save_route_attempt_count,
 		"visible_message": _last_message,
 		"visible_action_feedback": _action_feedback_text(),
 		"title": _end_turn_confirmation_dialog.title,

@@ -33,9 +33,16 @@ func _run() -> void:
 	var after_backup := await _prove_failure_and_manual_recovery("after_backup", true)
 	if after_backup.is_empty():
 		return
-	var pending_battle := await _prove_pending_battle_failure_route()
-	if pending_battle.is_empty():
-		return
+	var pending_battle := {}
+	for phase_value in ["precommit", "after_backup"]:
+		var phase := String(phase_value)
+		for occupied_value in [false, true]:
+			var occupied := bool(occupied_value)
+			var case_id := "%s_%s" % [phase, "occupied" if occupied else "empty"]
+			var pending_case: Dictionary = await _prove_pending_battle_manual_save_failure(phase, occupied)
+			if pending_case.is_empty():
+				return
+			pending_battle[case_id] = pending_case
 	var controls := await _prove_controls()
 	if controls.is_empty():
 		return
@@ -185,13 +192,20 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 	}
 
 
-func _prove_pending_battle_failure_route() -> Dictionary:
+func _prove_pending_battle_manual_save_failure(phase: String, occupied: bool) -> Dictionary:
 	_clear_tracked_save_files()
 	var prior_session: SessionStateStoreScript.SessionData = _movement_fixture(1, true)
 	var prior_save: Dictionary = SaveService.save_runtime_autosave_session(prior_session)
 	if not bool(prior_save.get("ok", false)):
-		return _fail_dictionary("Could not seed prior autosave for pending-battle control.")
-	var old_file_state := _file_state(AUTOSAVE_PATH)
+		return _fail_dictionary("Could not seed prior autosave for pending-battle %s/%s control." % [phase, "occupied" if occupied else "empty"])
+	if occupied:
+		var prior_manual: Dictionary = SaveService.save_runtime_manual_session(prior_session, 1)
+		if not bool(prior_manual.get("ok", false)):
+			return _fail_dictionary("Could not seed occupied Manual Slot 1 for pending-battle %s control." % phase)
+	var old_autosave_state := _file_state(AUTOSAVE_PATH)
+	var old_manual_state := _file_state(MANUAL_PATH)
+	if bool(old_manual_state.get("exists", false)) != occupied:
+		return _fail_dictionary("Pending-battle %s fixture did not establish the requested %s manual slot." % [phase, "occupied" if occupied else "empty"])
 	var session: SessionStateStoreScript.SessionData = _movement_fixture(2, true)
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	var encounter: Dictionary = {}
@@ -210,11 +224,10 @@ func _prove_pending_battle_failure_route() -> Dictionary:
 		return {}
 	session = SessionState.ensure_active_session()
 	shell.validation_set_end_turn_resolution_routing_enabled(false)
-	OS.set_environment(FAILURE_ENV, "precommit")
+	OS.set_environment(FAILURE_ENV, phase)
 	var failed: Dictionary = shell.validation_request_end_turn()
 	if bool(failed.get("confirmation_required", false)):
 		failed = shell.validation_confirm_end_turn()
-	OS.unset_environment(FAILURE_ENV)
 	var failed_snapshot: Dictionary = shell.validation_end_turn_confirmation_snapshot()
 	if String(failed.get("reason", "")) != "autosave_failed" \
 			or not bool(failed.get("battle_pending", false)) \
@@ -222,21 +235,71 @@ func _prove_pending_battle_failure_route() -> Dictionary:
 			or int(failed_snapshot.get("autosave_call_count", -1)) != 1 \
 			or int(failed_snapshot.get("resolution_attempt_count", -1)) != 0 \
 			or session.battle.is_empty() \
-			or _file_state(AUTOSAVE_PATH) != old_file_state \
+			or _file_state(AUTOSAVE_PATH) != old_autosave_state \
 			or not _transaction_artifacts_absent(AUTOSAVE_PATH):
+		OS.unset_environment(FAILURE_ENV)
 		await _discard_shell(shell)
-		return _fail_dictionary("Pending-battle autosave failure routed early, lost its warning/state, or changed prior autosave: %s" % JSON.stringify({"result": failed, "snapshot": _compact_snapshot(failed_snapshot)}))
+		return _fail_dictionary("Pending-battle %s/%s autosave failure routed early, lost its warning/state, or changed prior autosave: %s" % [phase, "occupied" if occupied else "empty", JSON.stringify({"result": failed, "snapshot": _compact_snapshot(failed_snapshot)})])
 	if not shell.validation_select_save_slot(1):
+		OS.unset_environment(FAILURE_ENV)
 		await _discard_shell(shell)
-		return _fail_dictionary("Pending-battle control could not select Manual Slot 1.")
-	var manual: Dictionary = shell.validation_save_to_selected_slot()
-	var after_manual: Dictionary = shell.validation_end_turn_confirmation_snapshot()
-	var route: Dictionary = after_manual.get("last_resolution_route", {}) if after_manual.get("last_resolution_route", {}) is Dictionary else {}
+		return _fail_dictionary("Pending-battle %s/%s control could not select Manual Slot 1." % [phase, "occupied" if occupied else "empty"])
+	SaveService.inspect_manual_slot(1)
+	var cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	if cache_before.is_empty():
+		OS.unset_environment(FAILURE_ENV)
+		await _discard_shell(shell)
+		return _fail_dictionary("Pending-battle %s/%s control could not prime the manual summary cache." % [phase, "occupied" if occupied else "empty"])
+	var live_before_manual: Dictionary = session.to_dict()
+	var rules_calls := int(failed_snapshot.get("rules_end_turn_call_count", -1))
+	var autosave_calls := int(failed_snapshot.get("autosave_call_count", -1))
+	var manual_failed: Dictionary = shell.validation_save_to_selected_slot()
+	var after_failed_manual: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	var failed_save_result: Dictionary = manual_failed.get("save_result", {}) if manual_failed.get("save_result", {}) is Dictionary else {}
+	var failure_visible_message := String(after_failed_manual.get("visible_message", "")).strip_edges()
+	var failure_feedback := String(after_failed_manual.get("visible_action_feedback", "")).strip_edges()
+	if bool(manual_failed.get("ok", true)) \
+			or bool(manual_failed.get("saved", true)) \
+			or bool(manual_failed.get("routed", true)) \
+			or int(manual_failed.get("route_attempt_delta", -1)) != 0 \
+			or String(manual_failed.get("reason", "")) != "manual_save_failed" \
+			or String(manual_failed.get("retry_action", "")) != "manual_save" \
+			or not bool(manual_failed.get("battle_pending", false)) \
+			or bool(failed_save_result.get("ok", true)) \
+			or String(manual_failed.get("message", "")).strip_edges() == "" \
+			or failure_visible_message != String(manual_failed.get("message", "")).strip_edges() \
+			or failure_feedback == "":
+		OS.unset_environment(FAILURE_ENV)
+		await _discard_shell(shell)
+		return _fail_dictionary("Pending-battle %s/%s manual failure result or retry surface was dishonest: %s" % [phase, "occupied" if occupied else "empty", JSON.stringify(_compact_manual_result(manual_failed, after_failed_manual))])
+	if _file_state(MANUAL_PATH) != old_manual_state \
+			or SaveService.validation_summary_cache_snapshot() != cache_before \
+			or session.to_dict() != live_before_manual \
+			or not _transaction_artifacts_absent(MANUAL_PATH) \
+			or int(after_failed_manual.get("resolution_attempt_count", -1)) != 0 \
+			or int(after_failed_manual.get("manual_save_attempt_count", -1)) != 1 \
+			or int(after_failed_manual.get("manual_save_success_count", -1)) != 0 \
+			or int(after_failed_manual.get("manual_save_failure_count", -1)) != 1 \
+			or int(after_failed_manual.get("manual_save_route_attempt_count", -1)) != 0 \
+			or int(after_failed_manual.get("rules_end_turn_call_count", -1)) != rules_calls \
+			or int(after_failed_manual.get("autosave_call_count", -1)) != autosave_calls:
+		OS.unset_environment(FAILURE_ENV)
+		await _discard_shell(shell)
+		return _fail_dictionary("Pending-battle %s/%s manual failure changed bytes/cache/live state, routed, or left residue: %s" % [phase, "occupied" if occupied else "empty", JSON.stringify(_compact_manual_result(manual_failed, after_failed_manual))])
+
+	OS.unset_environment(FAILURE_ENV)
+	var manual_saved: Dictionary = shell.validation_save_to_selected_slot()
+	var after_saved_manual: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	var route: Dictionary = after_saved_manual.get("last_resolution_route", {}) if after_saved_manual.get("last_resolution_route", {}) is Dictionary else {}
 	var persisted_dictionary: Dictionary = SaveService.load_session(1)
 	var restored = SaveService.restore_manual_session(1)
 	var session_payload := _gameplay_payload_dictionary(persisted_dictionary)
 	var restored_payload := _gameplay_payload(restored) if restored != null else {}
-	if not bool(manual.get("ok", false)) \
+	if not bool(manual_saved.get("ok", false)) \
+			or not bool(manual_saved.get("saved", false)) \
+			or not bool(manual_saved.get("routed", false)) \
+			or int(manual_saved.get("route_attempt_delta", -1)) != 1 \
+			or String(manual_saved.get("reason", "")) != "saved" \
 			or restored == null \
 			or restored_payload != session_payload \
 			or String(restored.session_id) != String(session.session_id) \
@@ -244,24 +307,39 @@ func _prove_pending_battle_failure_route() -> Dictionary:
 			or String(restored.scenario_status) != String(session.scenario_status) \
 			or String(restored.battle.get("id", "")) != String(session.battle.get("id", "")) \
 			or SaveService.resume_target_for_session(restored) != "battle" \
-			or int(after_manual.get("resolution_attempt_count", -1)) != 1 \
+			or int(after_saved_manual.get("resolution_attempt_count", -1)) != 1 \
 			or String(route.get("target", "")) != "battle" \
-			or int(after_manual.get("rules_end_turn_call_count", -1)) != 1 \
-			or int(after_manual.get("autosave_call_count", -1)) != 1:
+			or int(after_saved_manual.get("manual_save_attempt_count", -1)) != 2 \
+			or int(after_saved_manual.get("manual_save_success_count", -1)) != 1 \
+			or int(after_saved_manual.get("manual_save_failure_count", -1)) != 1 \
+			or int(after_saved_manual.get("manual_save_route_attempt_count", -1)) != 1 \
+			or int(after_saved_manual.get("rules_end_turn_call_count", -1)) != rules_calls \
+			or int(after_saved_manual.get("autosave_call_count", -1)) != autosave_calls \
+			or not _transaction_artifacts_absent(MANUAL_PATH):
 		await _discard_shell(shell)
-		return _fail_dictionary("Manual Save did not persist and route the pending battle exactly once: %s" % JSON.stringify({
-			"manual_ok": manual.get("ok", false),
-			"snapshot": _compact_snapshot(after_manual),
+		return _fail_dictionary("Pending-battle %s/%s retry did not persist canonical battle state and route exactly once: %s" % [phase, "occupied" if occupied else "empty", JSON.stringify({
+			"manual": _compact_manual_result(manual_saved, after_saved_manual),
 			"route": route,
 			"restored": restored != null,
 			"resume_target": SaveService.resume_target_for_session(restored) if restored != null else "",
 			"payload_difference": _first_difference(session_payload, restored_payload),
-		}))
+		})])
 	await _discard_shell(shell)
 	return {
+		"phase": phase,
+		"occupied": occupied,
 		"battle_pending_on_failure": true,
+		"old_manual_bytes_exact": true,
+		"cache_exact": true,
+		"live_pending_battle_exact": true,
+		"no_transaction_residue": true,
+		"failure_result_honest": true,
+		"visible_retry": true,
 		"failure_route_attempts": 0,
 		"manual_reload_exact": true,
+		"manual_attempts": 2,
+		"manual_failures": 1,
+		"manual_successes": 1,
 		"manual_route_attempts": 1,
 		"manual_route_target": "battle",
 		"second_end_turn_calls": 0,
@@ -430,6 +508,34 @@ func _compact_snapshot(snapshot: Dictionary) -> Dictionary:
 		"visible_message": snapshot.get("visible_message", snapshot.get("message", "")),
 		"resolution_attempt_count": snapshot.get("resolution_attempt_count", -1),
 		"last_resolution_route": snapshot.get("last_resolution_route", {}),
+	}
+
+
+func _compact_manual_result(result: Dictionary, snapshot: Dictionary) -> Dictionary:
+	var save_result: Dictionary = result.get("save_result", {}) if result.get("save_result", {}) is Dictionary else {}
+	return {
+		"result": {
+			"ok": result.get("ok", false),
+			"saved": result.get("saved", false),
+			"routed": result.get("routed", false),
+			"route_attempt_delta": result.get("route_attempt_delta", -1),
+			"reason": result.get("reason", ""),
+			"retry_action": result.get("retry_action", ""),
+			"battle_pending": result.get("battle_pending", false),
+			"message": result.get("message", ""),
+			"save_ok": save_result.get("ok", false),
+		},
+		"snapshot": {
+			"manual_attempts": snapshot.get("manual_save_attempt_count", -1),
+			"manual_successes": snapshot.get("manual_save_success_count", -1),
+			"manual_failures": snapshot.get("manual_save_failure_count", -1),
+			"manual_route_attempts": snapshot.get("manual_save_route_attempt_count", -1),
+			"resolution_attempts": snapshot.get("resolution_attempt_count", -1),
+			"rules": snapshot.get("rules_end_turn_call_count", -1),
+			"autosaves": snapshot.get("autosave_call_count", -1),
+			"visible_message": snapshot.get("visible_message", ""),
+			"visible_action_feedback": snapshot.get("visible_action_feedback", ""),
+		},
 	}
 
 

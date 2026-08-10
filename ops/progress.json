@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Destructive confirmations now enter on named safe actions, cancel without mutation, and restore their exact originating controls. Overall release readiness remains open.",
+  "currentNotes": "Pending battles now remain on the overworld after failed manual writes and route only after a verified retry persists the checkpoint. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-destructive-confirmation-safe-cancel-10184",
-  "currentSliceId": "accessibility-destructive-confirmation-safe-cancel-10184",
-  "currentSliceNotes": "Completed named safe focus, Back/Escape cancellation, exact origin restoration, compact layout, and exactly-once confirmation across all targeted workflows.",
+  "currentSlice": "overworld-pending-battle-manual-save-failure-route-10184",
+  "currentSliceId": "overworld-pending-battle-manual-save-failure-route-10184",
+  "currentSliceNotes": "Completed write-derived failure handling, zero-route retry state, occupied-slot safety, canonical reload, and exactly-once success routing.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Destructive Confirmation Safe Cancel Focus",
-  "currentSliceUpdatedAt": "2026-08-10T03:59:54Z",
+  "currentSliceTitle": "Pending-Battle Manual Save Failure Route Safety",
+  "currentSliceUpdatedAt": "2026-08-10T04:15:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74393,6 +74393,37 @@
       "notes": "Completed named safe focus, Back/Escape exact cancellation, origin-focus restoration, compact 1280x720 layout, and confirm-once coverage for all targeted workflows.",
       "remainingWork": "No work remains in this slice. Broader accessibility, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T03:59:54Z"
+    },
+    {
+      "id": "overworld-pending-battle-manual-save-failure-route-10184",
+      "title": "Pending-Battle Manual Save Failure Route Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent a failed manual Save from routing a newly pending battle before its checkpoint is durable.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_end_turn_autosave_failure_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"failed_manual_save_routes_pending_battle": true, "failed_manual_save_route_attempts": 1},
+      "completionCriteria": [
+        "Both injected failure phases preserve exact pending-battle state, prior slot bytes/cache, and zero transaction residue",
+        "Failed empty and occupied manual writes perform zero resolution routes and remain visibly retryable",
+        "One successful retry persists the exact canonical battle state and routes exactly once",
+        "Focused save-route, transaction, controller, core, editor, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": ["battle generation, new save UI, automatic retry, save schema, broader router policy, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T04:05:48Z",
+      "startedAt": "2026-08-10T04:05:48Z",
+      "updatedAt": "2026-08-10T04:15:47Z",
+      "notes": "Completed write-derived manual-save results, zero-route failure handling, exact empty/occupied-slot preservation, and one verified retry route.",
+      "remainingWork": "No work remains in this slice. Broader forced-transition save-failure handling, incompatible campaign-profile protection, controller map navigation, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T04:15:47Z"
     }
   ],
   "project": "heroes-like",

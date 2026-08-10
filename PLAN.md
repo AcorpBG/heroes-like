@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `overworld-pending-battle-manual-save-failure-route-10184`. Failed overworld manual writes now return before pending-battle resolution routing, preserve exact live battle and durable slot state, keep bounded retry feedback and Save focus, and expose the actual write result instead of inferring success from an occupied slot. One verified retry persists the canonical battle payload and routes exactly once. Both failure phases across empty and occupied slots plus compatibility, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-destructive-confirmation-safe-cancel-10184`. Manual overwrite plus Restart Arc, Delete Save, and Restore Defaults now enter on named safe actions (`Keep Save`, `Keep Progress`, or `Keep Settings`). Controller Back/Escape cancels without mutation and restores the originating command; deliberate confirmation remains exactly once. Focused persistence/progression/settings, controller, compact 1280x720, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `overworld-end-turn-autosave-failure-surface-10184`. When an in-progress End Turn commits but autosave fails, the live advanced day is retained while the shell now returns `saved:false`, shows bounded Save-now guidance, and records one runtime issue. Pending battles remain on the overworld until a successful manual Save persists the exact battle-ready state, then route once. Both failure phases, direct/warned/terminal controls, pending-battle recovery, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `settings-transactional-cross-platform-persistence-10184`. Device settings now commit through verified same-directory candidate/backup files with bounded recovery. Failed ordinary changes restore exact config bytes, settings, runtime display/audio/accessibility state, and InputMap; valid live files win, only semantically valid backups recover, and candidate artifacts are never promoted. Main Menu, active-play settings, and keybindings report failure truthfully and refresh to committed values. Focused, compatibility, core, repository, and fresh packaged Linux/Windows-Wine gates pass at settings version 14.
@@ -3270,6 +3271,35 @@ Completion evidence:
 - controller Back and physical Escape preserve exact save bytes, campaign profile, settings, and active session state while restoring the exact originating control;
 - focused workflows prove deliberate confirmation executes once, dialogs remain compact at 1280x720, and existing persistence/progression/settings consequences remain unchanged;
 - controller suites, core regression, editor parse, repository validator, JSON, Python, and diff gates pass.
+
+## Pending-Battle Manual Save Failure Route Safety
+
+id: `overworld-pending-battle-manual-save-failure-route-10184`
+
+Status: complete.
+
+Selected Phase 6 save-and-route safety slice. The overworld manual Save path records a
+failed transactional write but still evaluates the pending battle and routes away,
+so the player can lose the only chance to persist the newly spawned battle checkpoint.
+
+Implementation target:
+- make the overworld manual Save path branch on the actual write result and retain the live pending battle without routing when persistence fails;
+- keep bounded visible retry guidance, exact live session and prior slot bytes/cache, and zero transaction residue across both injected failure phases;
+- after the hook clears, let one successful existing manual Save persist the exact battle-ready state and take the existing battle route exactly once.
+
+Completion criteria:
+- failed empty-slot and occupied-slot writes preserve the pending battle, prior durable bytes/cache, and exact live retry state with zero route attempts;
+- successful retry writes the exact canonical battle payload and routes once without a second End Turn or duplicated rule resolution;
+- precommit and after-backup failures, direct/manual controls, save transaction, controller, core, editor parse, repository, JSON, Python, and diff gates pass at save version 9.
+
+Non-goals:
+- no battle-generation changes, new save UI, automatic retry, save schema change, broader router policy, Native RMG work, publication, or overall release-completion claim.
+
+Completion evidence:
+- precommit and after-backup failures across empty and occupied manual slots preserve exact prior bytes, summary cache, live pending battle, and transaction cleanliness while performing zero resolution routes;
+- failed writes return an honest `manual_save_failed` result, bounded visible retry guidance, and usable Save focus instead of treating an old loadable slot as a successful overwrite;
+- clearing the hook lets one retry persist and reload the canonical battle payload, then records exactly one battle route without another End Turn rule or autosave call;
+- End Turn confirmation, save transaction, controller, core, editor parse, repository validator, JSON, Python, and diff gates pass at save version 9.
 
 ## Phase Roadmap
 
