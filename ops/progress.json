@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "End Turn autosave-failure visibility is complete: committed live days are retained, failure is explicit, and manual Save persists the advanced or battle-ready state before routing. Overall release readiness remains open.",
+  "currentNotes": "Destructive confirmations now enter on named safe actions, cancel without mutation, and restore their exact originating controls. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-end-turn-autosave-failure-surface-10184",
-  "currentSliceId": "overworld-end-turn-autosave-failure-surface-10184",
-  "currentSliceNotes": "Completed honest committed-but-unsaved results, Save-now guidance, runtime issue evidence, and exact manual-save recovery including pending-battle routing.",
+  "currentSlice": "accessibility-destructive-confirmation-safe-cancel-10184",
+  "currentSliceId": "accessibility-destructive-confirmation-safe-cancel-10184",
+  "currentSliceNotes": "Completed named safe focus, Back/Escape cancellation, exact origin restoration, compact layout, and exactly-once confirmation across all targeted workflows.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "End Turn Autosave Failure Visibility",
-  "currentSliceUpdatedAt": "2026-08-10T03:38:53Z",
+  "currentSliceTitle": "Destructive Confirmation Safe Cancel Focus",
+  "currentSliceUpdatedAt": "2026-08-10T03:59:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74354,8 +74354,45 @@
         "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
         "jq empty ops/progress.json and git diff --check (passed)"
       ],
-      "remainingWork": "No work remains in this slice. Destructive-dialog safe focus, forced route-save failure handling, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "remainingWork": "No work remains in this slice. Release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T03:38:53Z"
+    },
+    {
+      "id": "accessibility-destructive-confirmation-safe-cancel-10184",
+      "title": "Destructive Confirmation Safe Cancel Focus",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent repeated controller or keyboard accept from immediately triggering irreversible confirmed actions.",
+      "implementationTargets": [
+        "scenes/shared/ManualSaveOverwriteDialog.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/manual_save_overwrite_regression.gd",
+        "tests/campaign_arc_restart_regression.gd",
+        "tests/save_slot_delete_regression.gd",
+        "tests/settings_restore_defaults_regression.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"manual_overwrite_safe_focus": false, "campaign_restart_safe_focus": false, "save_delete_safe_focus": false, "restore_defaults_safe_focus": false},
+      "completionCriteria": [
+        "All destructive dialogs enter on a named safe cancel action in the native dialog viewport",
+        "Controller Back and keyboard Escape cancel without mutation and restore origin focus",
+        "Deliberate confirm executes the existing operation exactly once",
+        "Focused persistence/progression/settings/controller/layout and broad compatibility gates pass"
+      ],
+      "nonGoals": ["consequence changes, new modal framework, schema change, layout redesign, balance, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T03:40:13Z",
+      "startedAt": "2026-08-10T03:40:13Z",
+      "updatedAt": "2026-08-10T03:59:54Z",
+      "notes": "Completed named safe focus, Back/Escape exact cancellation, origin-focus restoration, compact 1280x720 layout, and confirm-once coverage for all targeted workflows.",
+      "remainingWork": "No work remains in this slice. Broader accessibility, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T03:59:54Z"
     }
   ],
   "project": "heroes-like",

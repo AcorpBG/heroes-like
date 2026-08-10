@@ -59,8 +59,13 @@ func _run() -> void:
 	if not bool(manual_snapshot.get("save_delete_visible", false)) or not bool(manual_snapshot.get("save_delete_enabled", false)):
 		_fail("Occupied manual slot did not expose Delete Save: %s." % JSON.stringify(manual_snapshot))
 		return
+	var origin_button: Button = shell.get_node("%DeleteSelectedSave")
+	var dialog: ConfirmationDialog = shell.get_node("SaveDeleteDialog")
+	origin_button.grab_focus()
+	var cancel_file_states := _capture_file_states(_tracked_paths())
 
 	var manual_request: Dictionary = shell.call("validation_request_selected_save_delete")
+	await _settle()
 	if not bool(manual_request.get("dialog_visible", false)) or manual_request.get("pending_identity", {}) != {"slot_type": SaveService.SLOT_TYPE_MANUAL, "slot_id": "2"}:
 		_fail("Manual deletion did not require exact slot-bound confirmation: %s." % JSON.stringify(manual_request))
 		return
@@ -69,15 +74,28 @@ func _run() -> void:
 		if not manual_confirmation_text.contains(token):
 			_fail("Manual delete confirmation omitted %s: %s." % [token, manual_confirmation_text])
 			return
+	if not _safe_dialog_ready(dialog, "Keep Save"):
+		_fail("Delete Save confirmation did not focus its compact Keep Save action in the native dialog viewport.")
+		return
 	await _capture("delete_manual_confirmation")
 
-	shell.call("validation_cancel_selected_save_delete")
-	if not FileAccess.file_exists(slot2_path):
-		_fail("Canceling manual deletion removed the selected file.")
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _delete_cancel_exact(dialog, origin_button, cancel_file_states, active_payload_before, campaign_before_delete, settings_before_delete):
+		_fail("Joypad B did not cancel Delete Save exactly and restore Delete Save focus.")
 		return
 	manual_request = shell.call("validation_request_selected_save_delete")
-	if not bool(manual_request.get("dialog_visible", false)) or not FileAccess.file_exists(slot2_path):
-		_fail("Reopened manual confirmation mutated the selected file.")
+	await _settle()
+	if not bool(manual_request.get("dialog_visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
+		_fail("Delete Save confirmation did not reopen safely after joypad cancellation.")
+		return
+	await _press_key(KEY_ESCAPE)
+	if not _delete_cancel_exact(dialog, origin_button, cancel_file_states, active_payload_before, campaign_before_delete, settings_before_delete):
+		_fail("Escape did not cancel Delete Save exactly and restore Delete Save focus.")
+		return
+	manual_request = shell.call("validation_request_selected_save_delete")
+	await _settle()
+	if not bool(manual_request.get("dialog_visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
+		_fail("Delete Save confirmation did not reopen safely for confirmation.")
 		return
 	var manual_result: Dictionary = shell.call("validation_confirm_selected_save_delete")
 	if FileAccess.file_exists(slot2_path):
@@ -89,6 +107,9 @@ func _run() -> void:
 	var manual_after: Dictionary = shell.call("validation_snapshot")
 	if bool(manual_after.get("save_delete_visible", true)) or bool(manual_after.get("save_delete_enabled", true)):
 		_fail("Empty Manual Slot 2 still exposed Delete Save: %s." % JSON.stringify(manual_after))
+		return
+	if int(manual_after.get("save_delete_confirm_count", -1)) != 1:
+		_fail("Delete Save confirmation did not execute exactly once: %s." % JSON.stringify(manual_after.get("save_delete_confirm_count", -1)))
 		return
 	if not _require_file_states(protected_after_seed, "manual deletion changed protected files"):
 		return
@@ -176,6 +197,11 @@ func _run() -> void:
 		"campaign_progress_preserved": true,
 		"device_settings_preserved": true,
 		"active_session_preserved": true,
+		"safe_cancel_focus": "Keep Save",
+		"joypad_b_cancel_exact": true,
+		"escape_cancel_exact": true,
+		"origin_focus_restored": true,
+		"confirm_exactly_once": true,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	get_tree().quit(0)
@@ -234,6 +260,56 @@ func _file_state(path: String) -> Dictionary:
 		"exists": FileAccess.file_exists(path),
 		"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
 	}
+
+func _delete_cancel_exact(
+	dialog: ConfirmationDialog,
+	origin_button: Button,
+	expected_files: Dictionary,
+	expected_active_payload: Dictionary,
+	expected_campaign_profile: Dictionary,
+	expected_settings: Dictionary
+) -> bool:
+	return not dialog.visible \
+		and get_viewport().gui_get_focus_owner() == origin_button \
+		and _capture_file_states(_tracked_paths()) == expected_files \
+		and SessionState.active_session != null \
+		and SessionState.active_session.to_dict() == expected_active_payload \
+		and CampaignProgression.ensure_profile() == expected_campaign_profile \
+		and SettingsService.settings == expected_settings
+
+func _safe_dialog_ready(dialog: ConfirmationDialog, expected_cancel_text: String) -> bool:
+	if dialog == null or not dialog.visible or dialog.get_cancel_button().text != expected_cancel_text:
+		return false
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	return dialog_viewport != null \
+		and dialog_viewport.gui_get_focus_owner() == dialog.get_cancel_button() \
+		and dialog.size.x <= 960 and dialog.size.y <= 540
+
+func _press_key(keycode: Key) -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = keycode
+	pressed.physical_keycode = keycode
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = keycode
+	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
 
 func _restore_original_state() -> void:
 	for path_value in _original_file_states.keys():

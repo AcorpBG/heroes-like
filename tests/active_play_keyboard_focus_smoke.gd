@@ -15,6 +15,8 @@ func _run() -> void:
 		return
 	if not await _check_overworld_end_turn_confirmation_cancel():
 		return
+	if not await _check_overworld_manual_save_overwrite_cancel():
+		return
 	if not await _check_town_keyboard_build():
 		return
 	if not await _check_narrow_town_keyboard_entry():
@@ -205,6 +207,107 @@ func _check_overworld_end_turn_confirmation_cancel() -> bool:
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _check_overworld_manual_save_overwrite_cancel() -> bool:
+	const MANUAL_SLOT := 2
+	var manual_path := _manual_slot_path(MANUAL_SLOT)
+	var original_manual_state := _controller_route_file_state(manual_path)
+	var original_selected_slot := SaveService.get_selected_manual_slot()
+	var old_fixture = ScenarioFactory.create_session("river-pass", "hard", SessionState.LAUNCH_MODE_SKIRMISH)
+	old_fixture.day = 3
+	if SaveService.save_manual_session(old_fixture.to_dict(), MANUAL_SLOT) == "":
+		return _fail("Could not seed the occupied manual save for controller overwrite confirmation.")
+
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	session.day = 8
+	session = SessionState.set_active_session(session)
+	SaveService.set_selected_manual_slot(MANUAL_SLOT)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var save_button: Button = shell.get_node_or_null("%Save")
+	var dialog: ConfirmationDialog = shell.get_node_or_null("ManualSaveOverwriteDialog")
+	if save_button == null or dialog == null or save_button.disabled:
+		return _fail("Occupied active-play manual slot did not expose a live Save overwrite origin.")
+	var protected_before := _manual_overwrite_protected_state(session, MANUAL_SLOT)
+	for cancel_kind in ["controller_b", "escape"]:
+		save_button.grab_focus()
+		await get_tree().process_frame
+		if get_viewport().gui_get_focus_owner() != save_button:
+			return _fail("Manual overwrite could not establish exact Save origin focus before %s." % cancel_kind)
+		await _press_joypad_button(JOY_BUTTON_A)
+		await _settle()
+		var dialog_snapshot_value: Variant = shell.call("validation_snapshot").get("manual_save_overwrite_dialog", {})
+		var dialog_snapshot: Dictionary = dialog_snapshot_value if dialog_snapshot_value is Dictionary else {}
+		if not dialog.visible or int(dialog_snapshot.get("pending_slot", 0)) != MANUAL_SLOT:
+			return _fail("Controller A did not open a slot-bound active-play overwrite confirmation: %s." % dialog_snapshot)
+		if dialog.get_cancel_button().text != "Keep Save":
+			return _fail("Manual overwrite safe-cancel action expected 'Keep Save', got '%s'." % dialog.get_cancel_button().text)
+		var dialog_viewport := dialog.get_cancel_button().get_viewport()
+		var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+		if dialog_focus_owner != dialog.get_cancel_button():
+			return _fail("Manual overwrite did not initially focus Keep Save in its native dialog viewport: %s." % dialog_focus_owner)
+		if not _dialog_fits_root_viewport(dialog):
+			return _fail("Manual overwrite confirmation exceeded the live viewport: position=%s size=%s viewport=%s." % [dialog.position, dialog.size, get_viewport().get_visible_rect().size])
+		if _manual_overwrite_protected_state(session, MANUAL_SLOT) != protected_before:
+			return _fail("Opening active-play manual overwrite mutated live session or save state.")
+		if cancel_kind == "controller_b":
+			await _press_joypad_button(JOY_BUTTON_B)
+		else:
+			await _press_key(KEY_ESCAPE)
+		await _settle()
+		dialog_snapshot_value = shell.call("validation_snapshot").get("manual_save_overwrite_dialog", {})
+		dialog_snapshot = dialog_snapshot_value if dialog_snapshot_value is Dictionary else {}
+		if dialog.visible or int(dialog_snapshot.get("pending_slot", -1)) != 0:
+			return _fail("Active-play manual overwrite did not close and clear after %s: %s." % [cancel_kind, dialog_snapshot])
+		if _manual_overwrite_protected_state(session, MANUAL_SLOT) != protected_before:
+			return _fail("Canceling active-play manual overwrite with %s mutated live session or save state." % cancel_kind)
+		if get_viewport().gui_get_focus_owner() != save_button:
+			return _fail("Canceling active-play manual overwrite with %s did not restore the exact Save origin: %s." % [cancel_kind, _focus_name()])
+	var final_dialog_value: Variant = shell.call("validation_snapshot").get("manual_save_overwrite_dialog", {})
+	var final_dialog: Dictionary = final_dialog_value if final_dialog_value is Dictionary else {}
+	if int(final_dialog.get("request_count", -1)) != 2 \
+			or int(final_dialog.get("cancel_count", -1)) != 2 \
+			or int(final_dialog.get("confirm_count", -1)) != 0 \
+			or String(final_dialog.get("return_focus_name", "")) != "" \
+			or String(final_dialog.get("origin_focus_owner", "")) != String(save_button.name):
+		return _fail("Active-play manual overwrite controller cancel counts/origin snapshot were not exact: %s." % final_dialog)
+
+	shell.queue_free()
+	await get_tree().process_frame
+	_restore_controller_file_state(manual_path, original_manual_state)
+	SaveService.set_selected_manual_slot(original_selected_slot)
+	SaveService.validation_clear_summary_cache()
+	return true
+
+func _manual_overwrite_protected_state(session, slot: int) -> Dictionary:
+	var save_states := {}
+	for manual_slot in SaveService.get_manual_slot_ids():
+		save_states["manual_%d" % int(manual_slot)] = _controller_route_file_state(_manual_slot_path(int(manual_slot)))
+	save_states["autosave"] = _controller_route_file_state("%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE])
+	save_states["progression"] = _controller_route_file_state("%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE])
+	return {
+		"session": session.to_dict(),
+		"selected_slot": SaveService.get_selected_manual_slot(),
+		"bound_slot": slot,
+		"save_files": save_states,
+		"settings": SettingsService.ensure_settings().duplicate(true),
+		"settings_file": _controller_route_file_state(SettingsService.SETTINGS_FILE),
+		"campaign_profile": CampaignProgression.ensure_profile().duplicate(true),
+	}
+
+func _manual_slot_path(slot: int) -> String:
+	return "%s/manual_slot_%d.json" % [SaveService.SAVE_DIR, slot]
+
+func _restore_controller_file_state(path: String, state: Dictionary) -> void:
+	if bool(state.get("exists", false)):
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(path.get_base_dir()))
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		if file != null:
+			file.store_buffer(state.get("bytes", PackedByteArray()))
+			file.close()
+	elif FileAccess.file_exists(path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func _assert_overworld_end_turn_dialog(shell: Node, dialog: ConfirmationDialog, live_snapshot: Dictionary) -> bool:
 	if not dialog.visible:
@@ -622,6 +725,14 @@ func _first_encounter(session) -> Dictionary:
 func _focus_name() -> String:
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	return "none" if focus_owner == null else String(focus_owner.name)
+
+func _dialog_fits_root_viewport(dialog: Window) -> bool:
+	var viewport_size := Vector2i(get_viewport().get_visible_rect().size)
+	if viewport_size.x <= 0 or viewport_size.y <= 0:
+		return true
+	var dialog_end := dialog.position + dialog.size
+	return dialog.position.x >= 0 and dialog.position.y >= 0 \
+		and dialog_end.x <= viewport_size.x and dialog_end.y <= viewport_size.y
 
 func _assert_accessible_surface(shell: Node, context: String, minimum_live_regions: int) -> bool:
 	var snapshot: Dictionary = UiAccessibility.validation_snapshot(shell)

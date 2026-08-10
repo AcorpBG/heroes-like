@@ -70,6 +70,8 @@ MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boo
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_regression.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_slot_delete_regression.tscn"
+MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_overwrite_regression.gd"
+MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_overwrite_regression.tscn"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_transactional_commit_regression.gd"
@@ -12466,12 +12468,40 @@ def validate_save_management(errors: list[str]) -> None:
             "corrupt_slot_deleted",
             "forged_path_rejected",
             "active_session_preserved",
+            '"Keep Save"',
+            "JOY_BUTTON_B",
+            "KEY_ESCAPE",
+            "gui_get_focus_owner",
+            "save_delete_confirm_count",
+            "confirm_exactly_once",
             "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in delete_text, errors, f"save_slot_delete_regression.gd is missing required token: {required_token}")
     if SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.exists():
         delete_scene_text = SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/save_slot_delete_regression.gd" in delete_scene_text, errors, "Save-slot deletion regression scene must load its script")
+
+    for path in (MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH, MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing manual-save overwrite regression file: {path.relative_to(ROOT)}")
+    if MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH.exists():
+        overwrite_text = MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "MANUAL_SAVE_OVERWRITE_REGRESSION",
+            "validation_request_manual_save",
+            "validation_confirm_manual_save_overwrite",
+            '"Keep Save"',
+            "JOY_BUTTON_B",
+            "KEY_ESCAPE",
+            "gui_get_focus_owner",
+            "confirm_count",
+            "cancel_preserved_exact_bytes",
+            "confirm_exactly_once",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in overwrite_text, errors, f"manual_save_overwrite_regression.gd is missing required token: {required_token}")
+    if MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH.exists():
+        overwrite_scene_text = MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure("res://tests/manual_save_overwrite_regression.gd" in overwrite_scene_text, errors, "Manual-save overwrite regression scene must load its script")
 
     for path in (MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH, MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing manual-save naming regression file: {path.relative_to(ROOT)}")
@@ -12913,6 +12943,12 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "other_campaign_preserved",
             "expedition_save_files_preserved",
             "device_settings_preserved",
+            '"Keep Progress"',
+            "JOY_BUTTON_B",
+            "KEY_ESCAPE",
+            "gui_get_focus_owner",
+            "campaign_restart_confirm_count",
+            "confirm_exactly_once",
             "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in restart_text, errors, f"campaign_arc_restart_regression.gd is missing required token: {required_token}")
@@ -23567,6 +23603,12 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "validation_confirm_settings_restore_defaults",
             "cancel_preserved_exact_bytes",
             "player_state_preserved",
+            '"Keep Settings"',
+            "JOY_BUTTON_B",
+            "KEY_ESCAPE",
+            "gui_get_focus_owner",
+            "settings_restore_confirm_count",
+            "confirm_exactly_once",
             "SessionState.SAVE_VERSION != 9",
         ):
             ensure(required_token in regression_text, errors, f"Settings restore-defaults regression is missing token: {required_token}")
