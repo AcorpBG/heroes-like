@@ -80,7 +80,9 @@ func _run_end_turn_and_enemy_presence() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	shell._on_end_turn_pressed()
+	# The live button may now require the authored risk confirmation; this
+	# compatibility helper accepts it before committing the authoritative turn.
+	shell.validation_end_turn()
 	await get_tree().process_frame
 	await get_tree().process_frame
 
@@ -96,7 +98,7 @@ func _run_end_turn_and_enemy_presence() -> bool:
 		return false
 
 	if EnemyTurnRules.active_raid_count(active_session, "faction_mireclaw") <= 0:
-		shell._on_end_turn_pressed()
+		shell.validation_end_turn()
 		await get_tree().process_frame
 		await get_tree().process_frame
 	if EnemyTurnRules.active_raid_count(active_session, "faction_mireclaw") <= 0:

@@ -341,6 +341,8 @@ UI_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ui"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
+OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_end_turn_confirmation_runtime_report.gd"
+OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_confirmation_runtime_report.tscn"
 AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
 AMBIENT_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ambient_sfx_assets.py"
 AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
@@ -15443,6 +15445,46 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "RAIL_ACTION_WIDTH",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required overworld-shell polish token: {required_token}")
+    for path in (OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH, OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing overworld End Turn confirmation report file: {path.relative_to(ROOT)}")
+    if OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH.exists():
+        end_turn_report_text = OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "OVERWORLD_END_TURN_CONFIRMATION_RUNTIME_REPORT",
+            "validation_request_end_turn",
+            "validation_cancel_end_turn_confirmation",
+            "validation_confirm_end_turn",
+            "validation_end_turn_confirmation_snapshot",
+            "validation_reset_end_turn_confirmation_state",
+            'for stale_field in ["day", "status", "warning_signature"]',
+            "OverworldRules.consume_command_risk_forecast",
+            "OverworldRules.end_turn(control)",
+            "SaveService.restore_autosave_session",
+            "rules_end_turn_call_count",
+            "autosave_call_count",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in end_turn_report_text, errors, f"overworld_end_turn_confirmation_runtime_report.gd is missing token: {required_token}")
+    if OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH.exists():
+        end_turn_scene_text = OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/overworld_end_turn_confirmation_runtime_report.gd" in end_turn_scene_text,
+            errors,
+            "Overworld End Turn confirmation report scene must load its script",
+        )
+    for required_token in (
+        "func validation_request_end_turn",
+        "func validation_cancel_end_turn_confirmation",
+        "func validation_confirm_end_turn",
+        "func validation_end_turn_confirmation_snapshot",
+        "func validation_reset_end_turn_confirmation_state",
+        "OverworldRules.consume_command_risk_forecast",
+        '"stale_request"',
+        '"warning_signature"',
+        '"rules_end_turn_call_count"',
+        '"autosave_call_count"',
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required End Turn confirmation token: {required_token}")
     ensure(
         "_sidebar_tabs" not in overworld_script_text and "apply_tab_container(_sidebar_tabs)" not in overworld_script_text,
         errors,

@@ -90,6 +90,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _save_button: Button = %Save
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
+@onready var _end_turn_confirmation_dialog: ConfirmationDialog = $EndTurnConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -187,10 +188,22 @@ var _last_save_surface_compact_reason := ""
 var _controller_move_axis := Vector2.ZERO
 var _controller_move_direction := Vector2i.ZERO
 var _controller_move_repeat_timer: Timer = null
+var _pending_end_turn_confirmation: Dictionary = {}
+var _last_end_turn_confirmation_result: Dictionary = {}
+var _last_end_turn_rule_result: Dictionary = {}
+var _last_end_turn_autosave_result: Dictionary = {}
+var _end_turn_commit_in_progress := false
+var _validation_end_turn_request_count := 0
+var _validation_end_turn_cancel_count := 0
+var _validation_end_turn_confirm_count := 0
+var _validation_end_turn_commit_count := 0
+var _validation_end_turn_rules_call_count := 0
+var _validation_end_turn_autosave_call_count := 0
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
+	_configure_end_turn_confirmation()
 	_apply_visual_theme()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
@@ -296,6 +309,8 @@ func _responsive_available_size() -> Vector2:
 
 func _input(event: InputEvent) -> void:
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		return
+	if _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible:
 		return
 	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
 		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
@@ -466,14 +481,251 @@ func _focus_camera_on_hero() -> bool:
 		_update_map_tooltip()
 	return changed
 
-func _on_end_turn_pressed() -> void:
+func _configure_end_turn_confirmation() -> void:
+	_end_turn_confirmation_dialog.get_cancel_button().text = "Keep Waiting"
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	_end_turn_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+
+func _on_end_turn_pressed() -> Dictionary:
+	return _request_end_turn()
+
+func _request_end_turn() -> Dictionary:
+	_validation_end_turn_request_count += 1
+	if not _pending_end_turn_confirmation.is_empty() or _end_turn_commit_in_progress:
+		var busy_result := {
+			"ok": false,
+			"confirmation_required": not _pending_end_turn_confirmation.is_empty(),
+			"committed": false,
+			"reason": "end_turn_request_already_pending",
+			"message": "Finish the current End Turn confirmation first.",
+		}
+		_last_end_turn_confirmation_result = busy_result.duplicate(true)
+		return busy_result
+	if _session == null or _session.scenario_status != "in_progress" or String(_session.game_state) != "overworld":
+		var unavailable_result := {
+			"ok": false,
+			"confirmation_required": false,
+			"committed": false,
+			"reason": "end_turn_unavailable",
+			"message": "The current expedition can no longer advance from the overworld.",
+		}
+		_last_end_turn_confirmation_result = unavailable_result.duplicate(true)
+		return unavailable_result
+	var warning := _current_end_turn_warning()
+	if not bool(warning.get("requires_confirmation", false)):
+		var direct_result := _commit_end_turn()
+		direct_result["confirmation_required"] = false
+		direct_result["warning_signature"] = String(warning.get("signature", ""))
+		direct_result["warning_reasons"] = _duplicate_array(warning.get("reasons", []))
+		_last_end_turn_confirmation_result = direct_result.duplicate(true)
+		return direct_result
+	_pending_end_turn_confirmation = {
+		"session_ref": _session,
+		"session_id": _session.session_id,
+		"day": _session.day,
+		"status": _session.scenario_status,
+		"warning_signature": String(warning.get("signature", "")),
+		"warning_reasons": _duplicate_array(warning.get("reasons", [])),
+		"risk_unconsumed": bool(warning.get("risk_unconsumed", false)),
+		"session_payload_signature": JSON.stringify(_session.to_dict()),
+	}
+	var copy := _end_turn_confirmation_copy(warning)
+	_end_turn_confirmation_dialog.title = String(copy.get("title", "Confirm End Turn?"))
+	_end_turn_confirmation_dialog.dialog_text = String(copy.get("text", "End the current day?"))
+	_end_turn_confirmation_dialog.get_ok_button().text = "End Turn"
+	_end_turn_confirmation_dialog.get_cancel_button().text = "Keep Waiting"
+	var dialog_label := _end_turn_confirmation_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(680.0, 0.0)
+	_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
+	_end_turn_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
+	_focus_end_turn_cancel_after_popup()
+	var request_result := validation_end_turn_confirmation_snapshot()
+	request_result["ok"] = true
+	request_result["confirmation_required"] = true
+	request_result["committed"] = false
+	_last_end_turn_confirmation_result = request_result.duplicate(true)
+	return request_result
+
+func _current_end_turn_warning() -> Dictionary:
+	# Core forecast descriptions normalize their cached forecast state. Keep warning
+	# inspection read-only so opening/canceling a confirmation cannot alter a save.
+	var overworld_before := _session.overworld.duplicate(true)
+	var surface := _end_turn_confirmation_surface()
+	var risk_surface := OverworldRules.describe_command_risk_surfaces(_session)
+	var risk_data_value: Variant = risk_surface.get("forecast_data", {})
+	var risk_data: Dictionary = risk_data_value if risk_data_value is Dictionary else {}
+	var forecast_state_value: Variant = _session.overworld.get(OverworldRules.COMMAND_RISK_FORECAST_KEY, {})
+	var forecast_state: Dictionary = forecast_state_value if forecast_state_value is Dictionary else {}
+	var risk_unconsumed := (
+		bool(risk_data.get("gate_end_turn", false))
+		and not bool(forecast_state.get("shown", false))
+	)
+	var reasons := []
+	if String(surface.get("button_text", "")).begins_with("End?"):
+		var movement = _session.overworld.get("movement", {})
+		if int(movement.get("current", 0)) > 0:
+			reasons.append("movement_remaining")
+		var primary_action := _current_primary_action()
+		if String(primary_action.get("id", "")) != "" and not bool(primary_action.get("disabled", false)):
+			reasons.append("primary_order_available")
+	if risk_unconsumed:
+		reasons.append("command_risk_unconsumed")
+	var signature_payload := {
+		"button_text": String(surface.get("button_text", "")),
+		"confirmation": String(surface.get("confirmation", "")),
+		"movement_line": String(surface.get("movement_line", "")),
+		"spend_check": String(surface.get("spend_check", "")),
+		"primary_order": String(surface.get("primary_order", "")),
+		"route_line": String(surface.get("route_line", "")),
+		"risk_signature": String(risk_data.get("signature", "")),
+		"risk_unconsumed": risk_unconsumed,
+	}
+	var warning := {
+		"requires_confirmation": not reasons.is_empty(),
+		"reasons": reasons,
+		"signature": JSON.stringify(signature_payload),
+		"surface": surface,
+		"risk_surface": risk_surface,
+		"risk_unconsumed": risk_unconsumed,
+	}
+	_session.overworld = overworld_before
+	return warning
+
+func _end_turn_confirmation_copy(warning: Dictionary) -> Dictionary:
+	var surface_value: Variant = warning.get("surface", {})
+	var surface: Dictionary = surface_value if surface_value is Dictionary else {}
+	var risk_surface_value: Variant = warning.get("risk_surface", {})
+	var risk_surface: Dictionary = risk_surface_value if risk_surface_value is Dictionary else {}
+	var lines := [
+		String(surface.get("confirmation", "")),
+		String(surface.get("spend_check", "")),
+	]
+	if bool(warning.get("risk_unconsumed", false)):
+		var risk_data_value: Variant = risk_surface.get("forecast_data", {})
+		var risk_data: Dictionary = risk_data_value if risk_data_value is Dictionary else {}
+		var risk_summary := String(risk_data.get("summary", "")).strip_edges()
+		if risk_summary != "":
+			lines.append("Next-day risk: %s." % risk_summary.trim_suffix("."))
+	var compact: Array[String] = []
+	for line_value in lines:
+		var line := String(line_value).strip_edges()
+		if line != "" and line not in compact:
+			compact.append(line)
+	return {
+		"title": "Confirm End Turn?",
+		"text": "  ".join(compact),
+	}
+
+func _on_end_turn_confirmation_canceled() -> void:
+	_cancel_end_turn_confirmation()
+
+func _cancel_end_turn_confirmation() -> Dictionary:
+	if _pending_end_turn_confirmation.is_empty():
+		return {
+			"ok": false,
+			"canceled": false,
+			"committed": false,
+			"reason": "no_pending_confirmation",
+		}
+	_validation_end_turn_cancel_count += 1
+	_end_turn_confirmation_dialog.hide()
+	_pending_end_turn_confirmation = {}
+	var result := {
+		"ok": true,
+		"canceled": true,
+		"confirmation_required": true,
+		"committed": false,
+	}
+	_last_end_turn_confirmation_result = result.duplicate(true)
+	_end_turn_button.call_deferred("grab_focus")
+	return result
+
+func _on_end_turn_confirmation_confirmed() -> Dictionary:
+	if _pending_end_turn_confirmation.is_empty():
+		return {
+			"ok": false,
+			"committed": false,
+			"reason": "no_pending_confirmation",
+		}
+	_validation_end_turn_confirm_count += 1
+	var pending := _pending_end_turn_confirmation.duplicate()
+	var stale_fields := _stale_end_turn_request_fields(pending)
+	_end_turn_confirmation_dialog.hide()
+	_pending_end_turn_confirmation = {}
+	if not stale_fields.is_empty():
+		var stale_result := {
+			"ok": false,
+			"confirmation_required": true,
+			"committed": false,
+			"reason": "stale_request",
+			"stale_fields": stale_fields,
+			"warning_signature": String(pending.get("warning_signature", "")),
+			"warning_reasons": _duplicate_array(pending.get("warning_reasons", [])),
+			"message": "End Turn was not confirmed because the expedition state changed.",
+		}
+		_last_end_turn_confirmation_result = stale_result.duplicate(true)
+		_end_turn_button.call_deferred("grab_focus")
+		return stale_result
+	if bool(pending.get("risk_unconsumed", false)):
+		var consumed_risk := OverworldRules.consume_command_risk_forecast(_session)
+		if consumed_risk == "":
+			var risk_stale_result := {
+				"ok": false,
+				"confirmation_required": true,
+				"committed": false,
+				"reason": "stale_request",
+				"stale_fields": ["warning"],
+				"message": "End Turn was not confirmed because the risk forecast changed.",
+			}
+			_last_end_turn_confirmation_result = risk_stale_result.duplicate(true)
+			_end_turn_button.call_deferred("grab_focus")
+			return risk_stale_result
+	var result := _commit_end_turn()
+	result["confirmation_required"] = true
+	result["warning_signature"] = String(pending.get("warning_signature", ""))
+	result["warning_reasons"] = _duplicate_array(pending.get("warning_reasons", []))
+	_last_end_turn_confirmation_result = result.duplicate(true)
+	return result
+
+func _stale_end_turn_request_fields(pending: Dictionary) -> Array:
+	var stale_fields := []
+	if SessionState.ensure_active_session() != _session or pending.get("session_ref") != _session or String(pending.get("session_id", "")) != _session.session_id:
+		stale_fields.append("session")
+	if int(pending.get("day", 0)) != _session.day:
+		stale_fields.append("day")
+	if String(pending.get("status", "")) != _session.scenario_status or String(_session.game_state) != "overworld":
+		stale_fields.append("status")
+	if stale_fields.is_empty() and String(pending.get("session_payload_signature", "")) != JSON.stringify(_session.to_dict()):
+		stale_fields.append("warning_signature")
+	return stale_fields
+
+func _focus_end_turn_cancel_after_popup() -> void:
+	await get_tree().process_frame
+	if _end_turn_confirmation_dialog.visible and not _pending_end_turn_confirmation.is_empty():
+		_end_turn_confirmation_dialog.get_cancel_button().grab_focus()
+
+func _commit_end_turn() -> Dictionary:
+	if _end_turn_commit_in_progress:
+		return {
+			"ok": false,
+			"committed": false,
+			"reason": "end_turn_commit_in_progress",
+		}
+	_end_turn_commit_in_progress = true
+	_validation_end_turn_commit_count += 1
+	_last_end_turn_rule_result = {}
+	_last_end_turn_autosave_result = {}
 	var profile_start := _profile_begin("end_turn")
 	var general_profile_start := ProfileLogScript.begin_usec()
 	var general_buckets := {}
-	# Validation anchor retained while the forecast stays informational instead of gating the turn.
-	# OverworldRules.consume_command_risk_forecast(_session)
 	var rules_started := ProfileLogScript.begin_usec()
+	_validation_end_turn_rules_call_count += 1
 	var result = OverworldRules.end_turn(_session)
+	_last_end_turn_rule_result = result.duplicate(true) if result is Dictionary else {}
 	general_buckets["rules_end_turn"] = ProfileLogScript.elapsed_ms(rules_started)
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
@@ -488,9 +740,12 @@ func _on_end_turn_pressed() -> void:
 	if _session.scenario_status == "in_progress":
 		var save_profile_start := _profile_begin("end_turn_autosave")
 		var save_started := ProfileLogScript.begin_usec()
-		SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
+		_validation_end_turn_autosave_call_count += 1
+		var autosave_result = SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
+		_last_end_turn_autosave_result = autosave_result.duplicate(true) if autosave_result is Dictionary else {}
 		general_buckets["autosave"] = ProfileLogScript.elapsed_ms(save_started)
 		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
+	_end_turn_commit_in_progress = false
 	if _handle_session_resolution():
 		_profile_end("end_turn", profile_start, {"resolved": true})
 		ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
@@ -499,7 +754,12 @@ func _on_end_turn_pressed() -> void:
 			"scenario_status": _session.scenario_status,
 			"save_profile": SaveService.validation_last_runtime_save_profile(),
 		}, _session)
-		return
+		return {
+			"ok": bool(result.get("ok", false)),
+			"committed": true,
+			"resolved": true,
+			"result": result.duplicate(true),
+		}
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	general_buckets["refresh_after_end_turn"] = ProfileLogScript.elapsed_ms(refresh_started)
@@ -510,6 +770,12 @@ func _on_end_turn_pressed() -> void:
 		"scenario_status": _session.scenario_status,
 		"save_profile": SaveService.validation_last_runtime_save_profile(),
 	}, _session)
+	return {
+		"ok": bool(result.get("ok", false)),
+		"committed": true,
+		"resolved": false,
+		"result": result.duplicate(true),
+	}
 
 func _on_save_pressed() -> void:
 	var action := AppRouter.active_manual_save_action()
@@ -5085,7 +5351,7 @@ func _sync_context_drawers() -> void:
 	_refresh_drawer_handoff_cues()
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
+	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return
 	var surfaces := [
 		_primary_action_button,
@@ -7568,6 +7834,8 @@ func validation_end_turn() -> Dictionary:
 	var status_before := _session.scenario_status
 	var pressure_before := _validation_enemy_pressure_states()
 	_on_end_turn_pressed()
+	if not _pending_end_turn_confirmation.is_empty():
+		_on_end_turn_confirmation_confirmed()
 	return {
 		"ok": _session.day > day_before or _session.scenario_status != status_before or not _session.battle.is_empty(),
 		"action": "end_turn",
@@ -7589,6 +7857,75 @@ func validation_end_turn() -> Dictionary:
 		"event_feed": _event_feed_surface(),
 		"action_feedback": _validation_action_feedback(),
 		"post_action_recap": _last_action_recap.duplicate(true),
+	}
+
+func validation_request_end_turn() -> Dictionary:
+	return _on_end_turn_pressed()
+
+func validation_cancel_end_turn_confirmation() -> Dictionary:
+	return _cancel_end_turn_confirmation()
+
+func validation_confirm_end_turn() -> Dictionary:
+	return _on_end_turn_confirmation_confirmed()
+
+func validation_reset_end_turn_confirmation_state() -> Dictionary:
+	_end_turn_confirmation_dialog.hide()
+	_pending_end_turn_confirmation = {}
+	_last_end_turn_confirmation_result = {}
+	_last_end_turn_rule_result = {}
+	_last_end_turn_autosave_result = {}
+	_end_turn_commit_in_progress = false
+	_validation_end_turn_request_count = 0
+	_validation_end_turn_cancel_count = 0
+	_validation_end_turn_confirm_count = 0
+	_validation_end_turn_commit_count = 0
+	_validation_end_turn_rules_call_count = 0
+	_validation_end_turn_autosave_call_count = 0
+	return validation_end_turn_confirmation_snapshot()
+
+func validation_end_turn_confirmation_snapshot() -> Dictionary:
+	var current_warning := _current_end_turn_warning() if _session != null and _session.scenario_id != "" else {}
+	var surface_value: Variant = current_warning.get("surface", {})
+	var surface: Dictionary = surface_value if surface_value is Dictionary else {}
+	var risk_surface_value: Variant = current_warning.get("risk_surface", {})
+	var risk_surface: Dictionary = risk_surface_value if risk_surface_value is Dictionary else {}
+	var risk_data_value: Variant = risk_surface.get("forecast_data", {})
+	var risk_data: Dictionary = risk_data_value if risk_data_value is Dictionary else {}
+	var pending := not _pending_end_turn_confirmation.is_empty()
+	return {
+		"pending": pending,
+		"dialog_visible": _end_turn_confirmation_dialog.visible,
+		"requested_session_id": String(_pending_end_turn_confirmation.get("session_id", "")),
+		"requested_day": int(_pending_end_turn_confirmation.get("day", 0)),
+		"requested_status": String(_pending_end_turn_confirmation.get("status", "")),
+		"requested_warning_signature": String(_pending_end_turn_confirmation.get("warning_signature", "")),
+		"current_warning_signature": String(current_warning.get("signature", "")),
+		"warning_signature": String(_pending_end_turn_confirmation.get("warning_signature", current_warning.get("signature", ""))),
+		"warning_reasons": _duplicate_array(_pending_end_turn_confirmation.get("warning_reasons", current_warning.get("reasons", []))),
+		"confirmation_required": bool(current_warning.get("requires_confirmation", false)),
+		"risk_unconsumed": bool(current_warning.get("risk_unconsumed", false)),
+		"surface_button_text": String(surface.get("button_text", "")),
+		"surface_confirmation": String(surface.get("confirmation", "")),
+		"surface_spend_check": String(surface.get("spend_check", "")),
+		"surface_route_line": String(surface.get("route_line", "")),
+		"risk_forecast": String(risk_surface.get("forecast", "")),
+		"risk_summary": String(risk_data.get("summary", "")),
+		"request_count": _validation_end_turn_request_count,
+		"cancel_count": _validation_end_turn_cancel_count,
+		"confirm_count": _validation_end_turn_confirm_count,
+		"commit_count": _validation_end_turn_commit_count,
+		"rules_end_turn_call_count": _validation_end_turn_rules_call_count,
+		"autosave_call_count": _validation_end_turn_autosave_call_count,
+		"last_result": _last_end_turn_confirmation_result.duplicate(true),
+		"last_rule_result": _last_end_turn_rule_result.duplicate(true),
+		"last_autosave_result": _last_end_turn_autosave_result.duplicate(true),
+		"title": _end_turn_confirmation_dialog.title,
+		"text": _end_turn_confirmation_dialog.dialog_text,
+		"confirm_text": _end_turn_confirmation_dialog.get_ok_button().text,
+		"cancel_text": _end_turn_confirmation_dialog.get_cancel_button().text,
+		"dialog_requested_size": Vector2i(760, 300),
+		"dialog_size": Vector2i(_end_turn_confirmation_dialog.size),
+		"dialog_label_minimum_size": _end_turn_confirmation_dialog.get_label().custom_minimum_size,
 	}
 
 func validation_cast_overworld_spell(spell_id: String) -> Dictionary:

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Campaign replay progression preservation is complete: later replay defeats no longer erase banked victories, carryover, exported unlock flags, or downstream chapter access. Overall release readiness remains open.",
+  "currentNotes": "Risk-gated End Turn confirmation is complete: warned turns now require an exact, cancelable confirmation before one authoritative rules/autosave commit, while exhausted low-risk turns remain direct. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-replay-defeat-preserves-cleared-progress-10184",
-  "currentSliceId": "campaign-replay-defeat-preserves-cleared-progress-10184",
-  "currentSliceNotes": "Completed banked-victory preservation across later non-victory replays while incrementing attempts and retaining first-defeat, defeat-to-victory, and victory-refresh behavior.",
+  "currentSlice": "overworld-risk-gated-end-turn-confirmation-10184",
+  "currentSliceId": "overworld-risk-gated-end-turn-confirmation-10184",
+  "currentSliceNotes": "Completed compact End Turn confirmation for remaining movement/orders and unconsumed core risk, exact cancel/stale rejection, and exactly-once authoritative commit while retaining direct exhausted low-risk turns.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Replay Preserves Cleared Progress",
-  "currentSliceUpdatedAt": "2026-08-10T01:51:54Z",
+  "currentSliceTitle": "Risk-Gated End Turn Confirmation",
+  "currentSliceUpdatedAt": "2026-08-10T02:17:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74111,6 +74111,66 @@
       ],
       "remainingWork": "No work remains in this slice. Risk-gated End Turn confirmation, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T01:51:54Z"
+    },
+    {
+      "id": "overworld-risk-gated-end-turn-confirmation-10184",
+      "title": "Risk-Gated End Turn Confirmation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent one warned End Turn press from forfeiting live movement or an available order and immediately advancing enemy pressure without player confirmation.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_end_turn_confirmation_runtime_report.gd",
+        "tests/overworld_end_turn_confirmation_runtime_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/overworld_layout_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "warned_first_press_mutates_session": true,
+        "warned_first_press_calls_end_turn": true,
+        "warned_first_press_autosaves": true,
+        "confirmation_dialog": false
+      },
+      "completionCriteria": [
+        "Warned first press, cancel, and stale confirm preserve exact session with zero rules/autosave calls",
+        "Valid confirm matches authoritative End Turn and commits exactly once",
+        "Remaining movement, available order, and unconsumed core risk gates confirm while exhausted low-risk turns remain direct",
+        "Focused runtime, controller focus, compact layout, overworld visual, save, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "OverworldRules turn math, strategic-AI behavior, forecast thresholds, scenario/content balance, save version change, campaign progression, Native RMG work, public release, signing, or overall release readiness"
+      ],
+      "createdAt": "2026-08-10T01:53:37Z",
+      "startedAt": "2026-08-10T01:53:37Z",
+      "updatedAt": "2026-08-10T02:17:06Z",
+      "notes": "OverworldShell now opens a compact cancelable confirmation for remaining movement/orders or unconsumed core risk, rejects changed requests without mutation, and invokes the existing End Turn/autosave path exactly once after valid confirmation; exhausted low-risk turns remain direct.",
+      "validation": [
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/overworld_end_turn_confirmation_runtime_report.tscn (passed; exact request/cancel/stale boundaries, direct rules/gameplay parity, raw autosave and restore route, one-click low-risk, save version 9)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn (passed; controller A, Keep Waiting native focus, controller Back/Escape exact cancel and End Turn focus restore)",
+        "isolated OVERWORLD_END_TURN_DIALOG_ONLY=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/overworld_visual_smoke.tscn (passed; actual 1280x720 dialog 696x262)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/overworld_visual_smoke.tscn (passed after aligning stale Ghoul Grove fixture with the existing 28-troop authored roster)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/random_map_generated_overworld_profile_report.tscn (passed)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/save_transactional_commit_regression.tscn and res://tests/core_systems_regression_smoke.tscn (passed)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/headless_simulation_harness_report.tscn (passed; status warning only for the known Native RMG save/replay deferral)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Release signing, native Windows hardware certification, publication, broader accessibility/content/performance work, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T02:17:06Z"
     }
   ],
   "project": "heroes-like",

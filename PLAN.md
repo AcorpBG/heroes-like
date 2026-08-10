@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `overworld-risk-gated-end-turn-confirmation-10184`. Warned remaining-movement/available-order and unconsumed core-risk End Turn requests now open a compact confirmation with Keep Waiting initially focused. First press, cancel, and stale session/day/status/payload rejection are read-only; valid confirmation consumes the one-shot forecast and enters the unchanged End Turn/autosave path exactly once. Exhausted low-risk turns remain one-click. Focused parity/save, controller, full and targeted 1280x720 visual, generated-profile, core, broad headless, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `campaign-replay-defeat-preserves-cleared-progress-10184`. Campaign completion now preserves an already-banked victory record, exported flags, carryover, victory count, and downstream unlock when a later replay loses, while incrementing attempts and retaining the live defeat outcome. First defeat, defeat-to-victory upgrade, and later-victory refresh remain unchanged. Focused transition-matrix, normalization/progression reload, campaign breadth/frontier/restart/menu/outcome, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `application-safe-close-autosave-10184`. AppRouter now disables native auto-accepted quit and owns root-window close, WM-close fallback, and Main Menu Quit through one guarded request. Active overworld, town, battle, or outcome state is transactionally autosaved before exactly one clean exit; save failure leaves the game open with exact live/prior state, records a runtime issue, and shows a bounded desktop error. Reentrant/completed requests cannot save or quit twice, while explicit harness quits remain unaffected. Focused, real Linux/X11, fresh packaged Windows/Wine, core, menu, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `save-transactional-cross-platform-commit-10184`. Autosave, manual-slot, generated-opening, and campaign-progression writes now use one same-directory candidate/backup transaction. Candidate bytes, length, JSON root, and exact text are verified before commit; the prior valid live file is restored after precommit or after-backup failures; bounded missing/corrupt-live recovery accepts only a semantically valid destination-matched backup and never promotes a candidate. Cache invalidation and live intent clearing occur only after verified success. Focused recovery, ordinary save, core, repository, fresh packaged Linux, and fresh packaged Windows/Wine gates pass at save version 9.
@@ -3071,6 +3072,39 @@ Completion evidence:
 - the focused transition matrix proves victory-to-defeat preserves the exact prior victory snapshot except attempts, keeps exported `gate_marshals_broken`, carryover, two-victory progress, completion pointers, and Fen Crown access while the replay session remains defeated;
 - first defeat stays locked without carryover, defeat-to-victory unlocks normally, victory-to-victory refreshes its snapshot and bundle, and normalized transactional progression reload is exact at save version 9;
 - campaign replayability, Frontier Claims, campaign arc restart, player campaign menu, outcome menu, core systems, editor parse, repository, JSON, Python, and diff gates pass.
+
+## Risk-Gated End Turn Confirmation
+
+id: `overworld-risk-gated-end-turn-confirmation-10184`
+
+Status: completed.
+
+Selected Phase 6 irreversible-command safety slice. The overworld already builds
+an authored End Turn warning surface and a core next-day risk forecast, but the
+live button consumes neither warning before resolving the enemy turn. A single
+press can therefore forfeit movement or an available order and immediately
+expose towns, objectives, routes, or the active hero to next-day pressure.
+
+Implementation target:
+- factor the existing authoritative End Turn body into one commit path and open a compact confirmation when the live End Turn surface is warned or the current unconsumed core forecast gates the turn;
+- first press and cancel leave the exact session unchanged, perform no End Turn/autosave, and restore End Turn focus for keyboard/controller users;
+- confirm revalidates the same live day/session/status and warning surface, consumes the one-shot risk forecast only at commit, then calls the existing rules/autosave/resolution path exactly once;
+- preserve one-click End Turn when movement is spent and no unconsumed core risk gate is active.
+
+Completion criteria:
+- warned first press/cancel and stale confirmation are exact and non-mutating, while valid confirmation matches direct authoritative End Turn state/result with one rules call and one autosave;
+- both remaining-movement/available-order and core-risk-gated cases require confirmation, while an exhausted low-risk case remains direct;
+- compact 1280x720 layout, keyboard/controller focus, overworld visual/runtime, save, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no OverworldRules turn math, strategic-AI behavior, forecast thresholds, scenario/content balance, save schema/version, campaign progression, native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- `OverworldShell` now inspects the authored End Turn and core risk surfaces without changing session state, opens one compact action-bound dialog for warned turns, and preserves the existing direct path for exhausted low-risk turns;
+- pending requests capture exact session/day/status/payload identity; cancel and stale confirmation perform zero rule/autosave calls, while valid confirmation consumes an unshown risk forecast and commits the existing rules/autosave/resolution path once;
+- the focused runtime report matches the direct `OverworldRules.end_turn()` result and gameplay state, verifies the raw autosave payload and overworld restore route, and covers movement/order warning, core-risk gate, three stale families, and one-click low-risk behavior at save version 9;
+- controller A opens the dialog, Keep Waiting owns native-popup focus, controller Back and Escape cancel byte-exactly and restore End Turn focus; actual 1280x720 size is 696x262;
+- full overworld visual, generated-overworld profile, transactional save, core systems, broad headless simulation, editor parse, repository, JSON, Python, and diff gates pass. The visual fixture's stale Ghoul Grove count was aligned with the already-authored 28-troop roster.
 
 ## Phase Roadmap
 
