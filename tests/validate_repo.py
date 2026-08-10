@@ -89,6 +89,8 @@ APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH = R
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
+MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.gd"
+MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.tscn"
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
@@ -13786,6 +13788,51 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
     ensure("Map Package |" in editor_script_text, errors, "MapEditorShell.gd must label active editor load entries as map packages")
 
 
+def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
+    for path in (
+        MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH,
+        MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing map-editor dirty-transition regression file: {path.relative_to(ROOT)}")
+    if not MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH.exists():
+        return
+
+    report_text = MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "MAP_EDITOR_DIRTY_WORKING_COPY_DESTRUCTIVE_TRANSITION_REGRESSION",
+        "small-dawn-cairn-marsh-80034c5e",
+        "small-thorn-lantern-bend-b78aa337",
+        "validation_skip_initial_package_index",
+        "validation_request_dirty_transition",
+        "validation_confirm_dirty_transition",
+        "validation_set_safe_close_guard_target",
+        "validation_set_dirty_transition_routing_enabled",
+        "validation_select_map_package_id",
+        "get_tree().root.close_requested.emit()",
+        "NOTIFICATION_WM_CLOSE_REQUEST",
+        "JOY_BUTTON_A",
+        "JOY_BUTTON_B",
+        "KEY_ESCAPE",
+        "Keep Editing",
+        'const FAILURE_PHASES := ["precommit", "after_backup"]',
+        "_validate_safe_quit_failure_retry",
+        "_validate_clean_controls",
+        "_assert_canceled_exact",
+        "_package_file_state",
+        "_save_file_state",
+        "SessionState.SAVE_VERSION",
+    ):
+        ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
+
+    if MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH.exists():
+        scene_text = MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/map_editor_dirty_working_copy_destructive_transition_regression.gd"' in scene_text,
+            errors,
+            "Map-editor dirty-transition regression scene must load its focused script",
+        )
+
+
 def validate_scenario_outcome_shell(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -26046,6 +26093,7 @@ def main() -> int:
     validate_native_screen_reader_semantics(errors)
     validate_main_menu_first_view(errors)
     validate_map_editor_shell_slice(errors)
+    validate_map_editor_dirty_transition_regression(errors)
     validate_scenario_outcome_shell(errors)
     validate_difficulty_integration(errors)
     validate_hero_progression(errors)

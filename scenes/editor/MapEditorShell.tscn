@@ -359,3 +359,14 @@ layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Tile inspection"
+
+[node name="DirtyTransitionConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "Unsaved Map Changes"
+initial_position = 1
+exclusive = true
+unresizable = true
+ok_button_text = "Continue"
+dialog_text = "This working copy has unsaved changes."
+
+[connection signal="canceled" from="DirtyTransitionConfirmationDialog" to="." method="_on_dirty_transition_canceled"]
+[connection signal="confirmed" from="DirtyTransitionConfirmationDialog" to="." method="_on_dirty_transition_confirmed"]
