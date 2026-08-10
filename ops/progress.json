@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Active-play Return to Menu now fails closed on autosave failure across all four shells and routes only after a verified retry. Overall release readiness remains open.",
+  "currentNotes": "Campaign progression semantic storage now fails closed and preserves incompatible user data across source and packaged Linux/Windows probes. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "active-play-return-to-menu-autosave-failure-safety-10184",
-  "currentSliceId": "active-play-return-to-menu-autosave-failure-safety-10184",
-  "currentSliceNotes": "Completed four-shell fail-closed routing, success-only intent clearing, visible retry guidance, exact failure preservation, and one-save/one-route retry.",
+  "currentSlice": "campaign-progression-semantic-storage-fail-closed-10184",
+  "currentSliceId": "campaign-progression-semantic-storage-fail-closed-10184",
+  "currentSliceNotes": "Completed semantic storage classification, nested-shape validation, future-version preservation, fail-closed campaign mutation, and live Main Menu warning/non-campaign usability.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active-Play Return-to-Menu Autosave Failure Safety",
-  "currentSliceUpdatedAt": "2026-08-10T04:36:02Z",
+  "currentSliceTitle": "Campaign Progression Semantic Storage Fail-Closed Safety",
+  "currentSliceUpdatedAt": "2026-08-10T05:04:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74460,6 +74460,40 @@
       "notes": "Completed four-shell fail-closed routing, success-only transition-intent clearing, visible retry state, exact failure preservation, and one verified retry route.",
       "remainingWork": "No work remains in this slice. Incompatible campaign-profile protection, controller map navigation, other forced-transition save-failure paths, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T04:36:02Z"
+    },
+    {
+      "id": "campaign-progression-semantic-storage-fail-closed-10184",
+      "title": "Campaign Progression Semantic Storage Fail-Closed Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent parseable incompatible or future campaign progression from being normalized and permanently overwritten.",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scripts/autoload/CampaignProgression.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/campaign_progression_semantic_storage_fail_closed_regression.gd",
+        "tests/campaign_progression_semantic_storage_fail_closed_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"future_profile_overwrite_blocked": false, "partial_profile_overwrite_blocked": false},
+      "completionCriteria": [
+        "Malformed, partial, wrong-type, and future profiles remain byte-exact with unchanged profile/session across every campaign mutation path",
+        "Missing, current-valid, and valid-backup recovery controls remain functional and residue-free",
+        "Main Menu shows a bounded persistent warning and disables campaign mutation while non-campaign paths stay usable",
+        "Focused campaign/save/menu/core/editor/repository and packaged Linux/Windows-Wine compatible gates pass"
+      ],
+      "nonGoals": ["future-schema migration, destructive repair, campaign content, schema/version bump, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T04:37:32Z",
+      "startedAt": "2026-08-10T04:37:32Z",
+      "updatedAt": "2026-08-10T05:04:18Z",
+      "notes": "Completed semantic classification/recovery, nested-shape validation, future-version preservation, detached candidate publication, fail-closed campaign mutations, and live Main Menu warning/non-campaign usability. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1/save version 9.",
+      "remainingWork": "No work remains in this slice. Controller map navigation, other forced-transition save-failure paths, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T05:04:18Z"
     }
   ],
   "project": "heroes-like",

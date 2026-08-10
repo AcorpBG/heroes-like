@@ -42,6 +42,11 @@ const GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG := "generated_overworld_initial_
 const SAVE_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
 const SAVE_TRANSACTION_CANDIDATE_SUFFIX := ".candidate"
 const SAVE_TRANSACTION_BACKUP_SUFFIX := ".backup"
+const PROGRESSION_STORAGE_STATUS_MISSING := "missing"
+const PROGRESSION_STORAGE_STATUS_CURRENT_VALID := "current_valid"
+const PROGRESSION_STORAGE_STATUS_RECOVERED := "recovered"
+const PROGRESSION_STORAGE_STATUS_INVALID := "invalid"
+const PROGRESSION_STORAGE_STATUS_FUTURE_VERSION := "future_version"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -386,14 +391,81 @@ func save_progression(payload: Dictionary) -> String:
 	if payload.is_empty():
 		push_warning("Refusing to save an empty campaign progression payload.")
 		return ""
+	var payload_report := _progression_payload_semantic_report(payload)
+	if String(payload_report.get("status", "")) != PROGRESSION_STORAGE_STATUS_CURRENT_VALID:
+		push_warning("Refusing to save incompatible campaign progression: %s" % String(payload_report.get("reason", "invalid_payload")))
+		return ""
+	var storage := inspect_progression_storage()
+	if not bool(storage.get("writable", false)):
+		push_warning(String(storage.get("message", "Campaign progress storage cannot be overwritten safely.")))
+		return ""
 	return _save_raw_dictionary(payload, _progression_path())
 
 func load_progression() -> Dictionary:
-	return _load_raw_dictionary(_progression_path(), false)
+	var storage := inspect_progression_storage()
+	if not bool(storage.get("usable", false)):
+		return {}
+	var raw := _read_json_dictionary_unrecovered(_progression_path())
+	if not bool(raw.get("ok", false)):
+		return {}
+	var payload: Dictionary = raw.get("payload", {}) if raw.get("payload", {}) is Dictionary else {}
+	if String(_progression_payload_semantic_report(payload).get("status", "")) != PROGRESSION_STORAGE_STATUS_CURRENT_VALID:
+		return {}
+	return payload.duplicate(true)
 
 func has_progression() -> bool:
-	_recover_save_transaction(_progression_path())
-	return FileAccess.file_exists(_progression_path())
+	return bool(inspect_progression_storage().get("usable", false))
+
+func inspect_progression_storage() -> Dictionary:
+	var path := _progression_path()
+	var live_before := _read_json_dictionary_unrecovered(path)
+	if bool(live_before.get("ok", false)):
+		var before_payload: Dictionary = live_before.get("payload", {}) if live_before.get("payload", {}) is Dictionary else {}
+		var before_report := _progression_payload_semantic_report(before_payload)
+		if String(before_report.get("status", "")) == PROGRESSION_STORAGE_STATUS_FUTURE_VERSION:
+			# A parseable future profile is authoritative user data. Never replace it
+			# with an older backup; only staging is safe to discard.
+			_remove_save_transaction_artifact(_save_transaction_candidate_path(path))
+			return _progression_storage_result(
+				PROGRESSION_STORAGE_STATUS_FUTURE_VERSION,
+				path,
+				live_before,
+				before_report,
+				{"reason": "future_version", "recovered": false}
+			)
+
+	var recovery := _recover_save_transaction(path)
+	var live := _read_json_dictionary_unrecovered(path)
+	if not bool(live.get("exists", false)):
+		var missing_status := PROGRESSION_STORAGE_STATUS_MISSING
+		var missing_reason := String(recovery.get("reason", "missing"))
+		if missing_reason in ["backup_restore_failed", "backup_restore_verification_failed"]:
+			missing_status = PROGRESSION_STORAGE_STATUS_INVALID
+		return _progression_storage_result(
+			missing_status,
+			path,
+			live,
+			{"status": missing_status, "reason": missing_reason, "version": -1},
+			recovery
+		)
+	if not bool(live.get("ok", false)):
+		return _progression_storage_result(
+			PROGRESSION_STORAGE_STATUS_INVALID,
+			path,
+			live,
+			{
+				"status": PROGRESSION_STORAGE_STATUS_INVALID,
+				"reason": "corrupt_json" if bool(live.get("readable", false)) else "unreadable",
+				"version": -1,
+			},
+			recovery
+		)
+	var payload: Dictionary = live.get("payload", {}) if live.get("payload", {}) is Dictionary else {}
+	var semantic_report := _progression_payload_semantic_report(payload)
+	var status := String(semantic_report.get("status", PROGRESSION_STORAGE_STATUS_INVALID))
+	if status == PROGRESSION_STORAGE_STATUS_CURRENT_VALID and bool(recovery.get("recovered", false)):
+		status = PROGRESSION_STORAGE_STATUS_RECOVERED
+	return _progression_storage_result(status, path, live, semantic_report, recovery)
 
 func has_slot(slot: int) -> bool:
 	var path := _slot_path(_normalize_manual_slot(slot))
@@ -1321,6 +1393,7 @@ func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dicti
 		"invalid_live_remove_failed",
 		"backup_restore_failed",
 		"backup_restore_verification_failed",
+		"future_version",
 	]:
 		push_error("Save transaction recovery could not establish a safe commit base for %s: %s" % [file_path, recovery])
 		return ""
@@ -1435,6 +1508,20 @@ func _recover_save_transaction(file_path: String) -> Dictionary:
 	var candidate_path := _save_transaction_candidate_path(file_path)
 	var backup_path := _save_transaction_backup_path(file_path)
 	var live := _read_json_dictionary_unrecovered(file_path)
+	if file_path == _progression_path() and bool(live.get("ok", false)):
+		var live_payload: Dictionary = live.get("payload", {}) if live.get("payload", {}) is Dictionary else {}
+		var live_report := _progression_payload_semantic_report(live_payload)
+		if String(live_report.get("status", "")) == PROGRESSION_STORAGE_STATUS_FUTURE_VERSION:
+			# Future live data wins over every current-version backup. Candidate data
+			# is staging only and may never become recovery authority.
+			_remove_save_transaction_artifact(candidate_path)
+			return {
+				"ok": false,
+				"recovered": false,
+				"live_valid": false,
+				"reason": "future_version",
+				"version": int(live_report.get("version", -1)),
+			}
 	if _save_transaction_payload_valid(file_path, live):
 		_remove_save_transaction_artifact(candidate_path)
 		_remove_save_transaction_artifact(backup_path)
@@ -1496,16 +1583,7 @@ func _save_transaction_payload_valid(file_path: String, raw: Dictionary) -> bool
 		return false
 	var payload: Dictionary = payload_value
 	if file_path == _progression_path():
-		return (
-			payload.has("version")
-			and int(payload.get("version", 0)) >= CampaignRulesScript.PROFILE_VERSION
-			and payload.has("last_campaign_id")
-			and payload.get("last_campaign_id") is String
-			and payload.has("last_scenario_id")
-			and payload.get("last_scenario_id") is String
-			and payload.has("campaign_states")
-			and payload.get("campaign_states") is Dictionary
-		)
+		return String(_progression_payload_semantic_report(payload).get("status", "")) == PROGRESSION_STORAGE_STATUS_CURRENT_VALID
 	var slot_type := ""
 	if file_path == _autosave_path():
 		slot_type = SLOT_TYPE_AUTOSAVE
@@ -1520,6 +1598,176 @@ func _save_transaction_payload_valid(file_path: String, raw: Dictionary) -> bool
 	if recorded_slot_type != "" and recorded_slot_type != slot_type:
 		return false
 	return bool(_payload_structure_report(payload, slot_type).get("ok", false))
+
+func _progression_payload_semantic_report(payload: Dictionary) -> Dictionary:
+	var expected_version := int(CampaignRulesScript.PROFILE_VERSION)
+	if not payload.has("version"):
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "missing_version",
+			"version": -1,
+			"expected_version": expected_version,
+		}
+	var version_value: Variant = payload.get("version")
+	if not (version_value is int or version_value is float):
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "version_wrong_type",
+			"version": -1,
+			"expected_version": expected_version,
+		}
+	var version_number := float(version_value)
+	var version := int(version_number)
+	if version_number != float(version):
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "version_not_integer",
+			"version": -1,
+			"expected_version": expected_version,
+		}
+	if version > expected_version:
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_FUTURE_VERSION,
+			"reason": "future_version",
+			"version": version,
+			"expected_version": expected_version,
+		}
+	if version != expected_version:
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "unsupported_version",
+			"version": version,
+			"expected_version": expected_version,
+		}
+	for string_key in ["last_campaign_id", "last_scenario_id"]:
+		if not payload.has(string_key):
+			return {
+				"status": PROGRESSION_STORAGE_STATUS_INVALID,
+				"reason": "missing_%s" % string_key,
+				"version": version,
+				"expected_version": expected_version,
+			}
+		if not (payload.get(string_key) is String):
+			return {
+				"status": PROGRESSION_STORAGE_STATUS_INVALID,
+				"reason": "%s_wrong_type" % string_key,
+				"version": version,
+				"expected_version": expected_version,
+			}
+	if not payload.has("campaign_states"):
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "missing_campaign_states",
+			"version": version,
+			"expected_version": expected_version,
+		}
+	if not (payload.get("campaign_states") is Dictionary):
+		return {
+			"status": PROGRESSION_STORAGE_STATUS_INVALID,
+			"reason": "campaign_states_wrong_type",
+			"version": version,
+			"expected_version": expected_version,
+		}
+	var campaign_states: Dictionary = payload.get("campaign_states", {})
+	for campaign_id_value in campaign_states.keys():
+		var campaign_id := String(campaign_id_value)
+		var state_value: Variant = campaign_states.get(campaign_id_value)
+		if not (state_value is Dictionary):
+			return {
+				"status": PROGRESSION_STORAGE_STATUS_INVALID,
+				"reason": "campaign_state_wrong_type",
+				"campaign_id": campaign_id,
+				"version": version,
+				"expected_version": expected_version,
+			}
+		var state: Dictionary = state_value
+		for state_id_key in ["last_selected_scenario_id", "last_completed_scenario_id"]:
+			if state.has(state_id_key) and not (state.get(state_id_key) is String):
+				return {
+					"status": PROGRESSION_STORAGE_STATUS_INVALID,
+					"reason": "%s_wrong_type" % state_id_key,
+					"campaign_id": campaign_id,
+					"version": version,
+					"expected_version": expected_version,
+				}
+		for collection_key in ["scenario_records", "carryover_bundles"]:
+			if not state.has(collection_key):
+				continue
+			if not (state.get(collection_key) is Dictionary):
+				return {
+					"status": PROGRESSION_STORAGE_STATUS_INVALID,
+					"reason": "%s_wrong_type" % collection_key,
+					"campaign_id": campaign_id,
+					"version": version,
+					"expected_version": expected_version,
+				}
+			var collection: Dictionary = state.get(collection_key, {})
+			for entry_id in collection.keys():
+				if not (collection.get(entry_id) is Dictionary):
+					return {
+						"status": PROGRESSION_STORAGE_STATUS_INVALID,
+						"reason": "%s_entry_wrong_type" % collection_key,
+						"campaign_id": campaign_id,
+						"entry_id": String(entry_id),
+						"version": version,
+						"expected_version": expected_version,
+					}
+	return {
+		"status": PROGRESSION_STORAGE_STATUS_CURRENT_VALID,
+		"reason": "current_valid",
+		"version": version,
+		"expected_version": expected_version,
+	}
+
+func _progression_storage_result(
+	status: String,
+	path: String,
+	raw: Dictionary,
+	semantic_report: Dictionary,
+	recovery: Dictionary
+) -> Dictionary:
+	var normalized_status := status
+	if normalized_status not in [
+		PROGRESSION_STORAGE_STATUS_MISSING,
+		PROGRESSION_STORAGE_STATUS_CURRENT_VALID,
+		PROGRESSION_STORAGE_STATUS_RECOVERED,
+		PROGRESSION_STORAGE_STATUS_INVALID,
+		PROGRESSION_STORAGE_STATUS_FUTURE_VERSION,
+	]:
+		normalized_status = PROGRESSION_STORAGE_STATUS_INVALID
+	var accepted := normalized_status in [
+		PROGRESSION_STORAGE_STATUS_MISSING,
+		PROGRESSION_STORAGE_STATUS_CURRENT_VALID,
+		PROGRESSION_STORAGE_STATUS_RECOVERED,
+	]
+	var usable := normalized_status in [
+		PROGRESSION_STORAGE_STATUS_CURRENT_VALID,
+		PROGRESSION_STORAGE_STATUS_RECOVERED,
+	]
+	var message := "Campaign progress is unreadable or incomplete. Existing data was preserved and cannot be overwritten."
+	match normalized_status:
+		PROGRESSION_STORAGE_STATUS_MISSING:
+			message = "No campaign progress file exists yet."
+		PROGRESSION_STORAGE_STATUS_CURRENT_VALID:
+			message = "Campaign progress storage is current and valid."
+		PROGRESSION_STORAGE_STATUS_RECOVERED:
+			message = "Campaign progress was recovered from the last valid backup."
+		PROGRESSION_STORAGE_STATUS_FUTURE_VERSION:
+			message = "Campaign progress was written by a newer game version. Existing data was preserved and cannot be overwritten."
+	return {
+		"ok": accepted,
+		"status": normalized_status,
+		"path": path,
+		"exists": bool(raw.get("exists", false)),
+		"usable": usable,
+		"writable": accepted,
+		"recovered": normalized_status == PROGRESSION_STORAGE_STATUS_RECOVERED,
+		"version": int(semantic_report.get("version", -1)),
+		"expected_version": int(CampaignRulesScript.PROFILE_VERSION),
+		"reason": String(semantic_report.get("reason", normalized_status)),
+		"recovery_reason": String(recovery.get("reason", "")),
+		"message": message,
+	}
 
 func _rollback_save_transaction(
 	file_path: String,
