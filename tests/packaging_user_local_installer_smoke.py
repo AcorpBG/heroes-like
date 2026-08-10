@@ -14,6 +14,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from tools import package_release as package_release_module
+
 ARTIFACT_DIR = Path(
     os.environ.get(
         "HEROES_PACKAGING_INSTALLER_ARTIFACT_DIR",
@@ -22,11 +25,17 @@ ARTIFACT_DIR = Path(
 ).resolve()
 REPORT_PATH = ARTIFACT_DIR / "report.json"
 REPORT_ID = "PACKAGING_USER_LOCAL_INSTALLER_SMOKE"
-SCHEMA_ID = "packaging_user_local_installer_smoke_v5"
-VERSION = "0.1.0-alpha.1-installer-smoke"
+SCHEMA_ID = "packaging_user_local_installer_smoke_v6"
+VERSION = next(
+    line.split('"', 2)[1]
+    for line in (ROOT / "project.godot").read_text(encoding="utf-8").splitlines()
+    if line.startswith('config/version="')
+)
+WINDOWS_NUMERIC_VERSION = package_release_module.windows_numeric_version(VERSION)
 SOURCE_REVISION = "c" * 40
 PACKAGER = ROOT / "tools" / "package_release.py"
 WINE = os.environ.get("WINE", shutil.which("wine") or "")
+WINEBOOT = shutil.which("wineboot") or ""
 WINESERVER = shutil.which("wineserver") or ""
 FATAL_PATTERNS = (
     "SCRIPT ERROR",
@@ -45,6 +54,7 @@ WINDOWS_MARKERS = (
     "MainMenu.scn",
     "aurelion_map_persistence.windows.template_release.x86_64.dll",
 )
+WINDOWS_UNINSTALL_REGISTRY_KEY = r"HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\Heroes Like"
 
 
 def utc_now() -> str:
@@ -100,6 +110,58 @@ def command_ok(result: dict, *, reject_fatal: bool = False) -> bool:
         and not result.get("timed_out", False)
         and (not reject_fatal or not result.get("fatal_matches", []))
     )
+
+
+def windows_registry_values(env: dict[str, str], registry_view: str = "64") -> dict[str, dict[str, str]]:
+    query = run(
+        [WINE, "reg", "query", WINDOWS_UNINSTALL_REGISTRY_KEY, f"/reg:{registry_view}"],
+        env=env,
+        timeout=60,
+    )
+    if not command_ok(query):
+        return {}
+    values: dict[str, dict[str, str]] = {}
+    for raw_line in str(query.get("output", "")).splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("HKEY_"):
+            continue
+        fields = line.split(None, 2)
+        if len(fields) == 3 and fields[1].startswith("REG_"):
+            values[fields[0]] = {"type": fields[1], "value": fields[2]}
+    return values
+
+
+def expected_windows_uninstall_values(install_dir: str) -> dict[str, dict[str, str]]:
+    quoted_uninstaller = f'"{install_dir}\\uninstall.exe"'
+    return {
+        "DisplayName": {"type": "REG_SZ", "value": "Heroes Like"},
+        "DisplayVersion": {"type": "REG_SZ", "value": VERSION},
+        "Publisher": {"type": "REG_SZ", "value": "Heroes Like"},
+        "InstallLocation": {"type": "REG_SZ", "value": install_dir},
+        "DisplayIcon": {"type": "REG_SZ", "value": f'"{install_dir}\\heroes-like.exe",0'},
+        "UninstallString": {"type": "REG_SZ", "value": quoted_uninstaller},
+        "QuietUninstallString": {"type": "REG_SZ", "value": f"{quoted_uninstaller} /S"},
+        "NoModify": {"type": "REG_DWORD", "value": "0x1"},
+        "NoRepair": {"type": "REG_DWORD", "value": "0x1"},
+    }
+
+
+def windows_pe_version_summary(path: Path, string_version: str | None = None) -> dict:
+    try:
+        identity = package_release_module.verify_windows_pe_version(
+            path,
+            VERSION,
+            string_version=string_version,
+        )
+    except (OSError, RuntimeError, ValueError) as exc:
+        return {"ok": False, "path": str(path), "error": str(exc)}
+    return {
+        "ok": True,
+        "path": str(path),
+        "file_version": identity.get("file_version"),
+        "product_version": identity.get("product_version"),
+        "strings": identity.get("strings", {}),
+    }
 
 
 def wine_path(path: Path) -> str:
@@ -358,9 +420,27 @@ def windows_lifecycle(installer: Path) -> dict:
         "WINEDEBUG": "-all",
         "WINEDLLOVERRIDES": "dinput8=",
     }
-
-
-    install = run([WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240)
+    expected_registry = expected_windows_uninstall_values(r"C:\HeroesLikeInstall")
+    setup_pe_version = windows_pe_version_summary(installer)
+    prefix_init = run([WINEBOOT, "--init"], env=env, timeout=180) if WINEBOOT else {
+        "returncode": None,
+        "output": "wineboot executable not found",
+        "fatal_matches": [],
+    }
+    prefix_init_wait = run([WINESERVER, "-w"], env=env, timeout=60) if WINESERVER else {
+        "returncode": None,
+        "output": "wineserver executable not found",
+        "fatal_matches": [],
+    }
+    install = run(
+        [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
+    ) if command_ok(prefix_init) and command_ok(prefix_init_wait) else {
+        "returncode": None,
+        "output": "Wine prefix initialization failed",
+        "fatal_matches": [],
+    }
+    registry_after_install = windows_registry_values(env) if command_ok(install) else {}
+    install_registry_exact = registry_after_install == expected_registry
     unowned_dir = prefix / "drive_c" / "HeroesLikeUnowned"
     unowned_dir.mkdir(parents=True, exist_ok=True)
     unowned_sentinel = unowned_dir / "keep.txt"
@@ -372,6 +452,7 @@ def windows_lifecycle(installer: Path) -> dict:
         unowned_failure.get("returncode") not in (None, 0)
         and program_tree_identity(unowned_dir) == {"keep.txt": hashlib.sha256(b"do not adopt\n").hexdigest()}
     )
+    unowned_failure_registry_preserved = windows_registry_values(env) == registry_after_install
     same_version_reinstall = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
     ) if command_ok(install) else {"returncode": None, "output": "initial installer failed", "fatal_matches": []}
@@ -391,26 +472,49 @@ def windows_lifecycle(installer: Path) -> dict:
         )
         if not command_ok(ownership_registry_sha) or not command_ok(ownership_registry_size):
             prior_identity = {}
+        unmanaged_registry_seed = run(
+            [
+                WINE, "reg", "add", WINDOWS_UNINSTALL_REGISTRY_KEY,
+                "/v", "UnmanagedSentinel", "/t", "REG_SZ", "/d", "preserve", "/f", "/reg:64",
+            ],
+            env=env,
+            timeout=60,
+        )
+        if not command_ok(unmanaged_registry_seed):
+            prior_identity = {}
     else:
         prior_identity = {}
+    registry_before_failures = windows_registry_values(env) if prior_identity else {}
     precommit_failure = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
         env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"},
         timeout=240,
     ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
     precommit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    precommit_registry_preserved = bool(registry_before_failures) and windows_registry_values(env) == registry_before_failures
     commit_failure = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
         env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"},
         timeout=240,
     ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
     commit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    commit_registry_preserved = bool(registry_before_failures) and windows_registry_values(env) == registry_before_failures
     upgrade = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
     ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
     payload_verification = verify_installed_payload(install_dir, "windows-x86_64")
+    registry_after_upgrade = windows_registry_values(env) if command_ok(upgrade) else {}
+    upgrade_registry_exact = all(registry_after_upgrade.get(key) == value for key, value in expected_registry.items())
+    upgrade_unmanaged_registry_preserved = registry_after_upgrade.get("UnmanagedSentinel") == {
+        "type": "REG_SZ",
+        "value": "preserve",
+    }
+    game_pe_version = windows_pe_version_summary(install_dir / "heroes-like.exe")
     stale_prior_file_removed = not (install_dir / "legacy-windows-sidecar.dat").exists()
-    start_menu_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
+    game_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
+    uninstall_shortcuts = list(prefix.rglob("Uninstall Heroes Like.lnk"))
+    shortcut_paths = [*game_shortcuts, *uninstall_shortcuts]
+    shortcut_identity_before_refusals = {str(path): file_identity(path) for path in shortcut_paths}
     user_data.parent.mkdir(parents=True, exist_ok=True)
     user_data.write_text("preserve-windows", encoding="utf-8")
     boot_env = dict(env)
@@ -431,12 +535,129 @@ def windows_lifecycle(installer: Path) -> dict:
         env=boot_env,
         timeout=180,
     ) if command_ok(upgrade) and (install_dir / "heroes-like.exe").is_file() else {"returncode": None, "output": "installer failed", "fatal_matches": []}
+    ownership_path = install_dir / "install-ownership.ini"
+    if command_ok(upgrade) and (install_dir / "uninstall.exe").is_file() and ownership_path.is_file():
+        ownership_bytes = ownership_path.read_bytes()
+        malformed_bytes = ownership_bytes.replace(
+            b"Schema=heroes-like-windows-install-ownership-v1",
+            b"Schema=heroes-like-windows-install-ownership-tampered",
+            1,
+        )
+        ownership_path.write_bytes(malformed_bytes)
+        malformed_ownership_sha = run(
+            [
+                WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSha256",
+                "/d", hashlib.sha256(malformed_bytes).hexdigest(), "/f",
+            ],
+            env=env,
+            timeout=60,
+        )
+        malformed_ownership_size = run(
+            [
+                WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSize",
+                "/d", str(len(malformed_bytes)), "/f",
+            ],
+            env=env,
+            timeout=60,
+        )
+        malformed_uninstall_root_before = program_tree_identity(install_dir)
+        malformed_uninstall = run(
+            [WINE, wine_path(install_dir / "uninstall.exe"), "/S"], env=env, timeout=180
+        ) if command_ok(malformed_ownership_sha) and command_ok(malformed_ownership_size) else {
+            "returncode": None,
+            "output": "malformed ownership identity seed failed",
+            "fatal_matches": [],
+        }
+        malformed_uninstall_wait = run([WINESERVER, "-w"], env=env, timeout=60) if WINESERVER else {
+            "returncode": None,
+            "output": "wineserver executable not found",
+            "fatal_matches": [],
+        }
+    else:
+        ownership_bytes = b""
+        malformed_bytes = b""
+        malformed_uninstall_root_before = {}
+        malformed_ownership_sha = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+        malformed_ownership_size = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+        malformed_uninstall = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+        malformed_uninstall_wait = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+    malformed_uninstall_preserved = (
+        bool(ownership_bytes)
+        and malformed_bytes != ownership_bytes
+        and malformed_uninstall.get("returncode") is not None
+        and not malformed_uninstall.get("timed_out", False)
+        and command_ok(malformed_uninstall_wait)
+        and program_tree_identity(install_dir) == malformed_uninstall_root_before
+        and windows_registry_values(env) == registry_after_upgrade
+        and {str(path): file_identity(path) for path in shortcut_paths} == shortcut_identity_before_refusals
+    )
+    ownership_restore_sha = {"returncode": None, "output": "malformed refusal failed", "fatal_matches": []}
+    ownership_restore_size = {"returncode": None, "output": "malformed refusal failed", "fatal_matches": []}
+    if malformed_uninstall_preserved:
+        ownership_path.write_bytes(ownership_bytes)
+        ownership_restore_sha = run(
+            [
+                WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSha256",
+                "/d", hashlib.sha256(ownership_bytes).hexdigest(), "/f",
+            ],
+            env=env,
+            timeout=60,
+        )
+        ownership_restore_size = run(
+            [
+                WINE, "reg", "add", "HKCU\\Software\\Heroes Like", "/v", "OwnershipSize",
+                "/d", str(len(ownership_bytes)), "/f",
+            ],
+            env=env,
+            timeout=60,
+        )
+    unowned_uninstall_sentinel = install_dir / "unowned-uninstall-sentinel.txt"
+    if command_ok(upgrade) and (install_dir / "uninstall.exe").is_file():
+        unowned_uninstall_sentinel.write_text("preserve\n", encoding="utf-8")
+        refused_uninstall_root_before = program_tree_identity(install_dir)
+        refused_uninstall = run([WINE, wine_path(install_dir / "uninstall.exe"), "/S"], env=env, timeout=180)
+        refused_uninstall_wait = run([WINESERVER, "-w"], env=env, timeout=60) if WINESERVER else {
+            "returncode": None,
+            "output": "wineserver executable not found",
+            "fatal_matches": [],
+        }
+    else:
+        refused_uninstall_root_before = {}
+        refused_uninstall = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+        refused_uninstall_wait = {"returncode": None, "output": "installer failed", "fatal_matches": []}
+    refused_uninstall_root_preserved = (
+        bool(refused_uninstall_root_before)
+        and command_ok(ownership_restore_sha)
+        and command_ok(ownership_restore_size)
+        and command_ok(refused_uninstall_wait)
+        and program_tree_identity(install_dir) == refused_uninstall_root_before
+        and {str(path): file_identity(path) for path in shortcut_paths} == shortcut_identity_before_refusals
+    )
+    refused_uninstall_registry_preserved = (
+        refused_uninstall.get("returncode") is not None
+        and not refused_uninstall.get("timed_out", False)
+        and command_ok(refused_uninstall_wait)
+        and windows_registry_values(env) == registry_after_upgrade
+    )
+    unowned_uninstall_sentinel.unlink(missing_ok=True)
     uninstall = run([WINE, wine_path(install_dir / "uninstall.exe"), "/S"], env=env, timeout=180)
+    uninstall_wait = run([WINESERVER, "-w"], env=env, timeout=60) if WINESERVER else {
+        "returncode": None,
+        "output": "wineserver executable not found",
+        "fatal_matches": [],
+    }
+    uninstall_registry_removed = (
+        command_ok(uninstall)
+        and command_ok(uninstall_wait)
+        and windows_registry_values(env) == {}
+    )
     if WINESERVER and prefix.exists():
         run([WINESERVER, "-k"], env={"WINEPREFIX": str(prefix), "WINEDEBUG": "-all"}, timeout=30)
     output = str(boot.get("output", ""))
     markers = {marker: marker in output for marker in WINDOWS_MARKERS}
     return {
+        "prefix_init": prefix_init,
+        "prefix_init_wait": prefix_init_wait,
         "install": install,
         "unowned_failure": unowned_failure,
         "same_version_reinstall": same_version_reinstall,
@@ -445,23 +666,60 @@ def windows_lifecycle(installer: Path) -> dict:
         "upgrade": upgrade,
         "boot": {key: value for key, value in boot.items() if key != "output"},
         "uninstall": uninstall,
+        "uninstall_wait": uninstall_wait,
+        "malformed_uninstall": malformed_uninstall,
+        "malformed_uninstall_wait": malformed_uninstall_wait,
+        "malformed_ownership_sha": malformed_ownership_sha,
+        "malformed_ownership_size": malformed_ownership_size,
+        "ownership_restore_sha": ownership_restore_sha,
+        "ownership_restore_size": ownership_restore_size,
+        "refused_uninstall": refused_uninstall,
+        "refused_uninstall_wait": refused_uninstall_wait,
         "boot_markers": markers,
         "payload_verification": payload_verification,
         "precommit_rollback_exact": precommit_rollback_exact,
         "commit_rollback_exact": commit_rollback_exact,
+        "setup_pe_version": setup_pe_version,
+        "game_pe_version": game_pe_version,
+        "registry_after_install": registry_after_install,
+        "install_registry_exact": install_registry_exact,
+        "unowned_failure_registry_preserved": unowned_failure_registry_preserved,
+        "precommit_registry_preserved": precommit_registry_preserved,
+        "commit_registry_preserved": commit_registry_preserved,
+        "registry_after_upgrade": registry_after_upgrade,
+        "upgrade_registry_exact": upgrade_registry_exact,
+        "upgrade_unmanaged_registry_preserved": upgrade_unmanaged_registry_preserved,
+        "malformed_uninstall_preserved": malformed_uninstall_preserved,
+        "refused_uninstall_root_preserved": refused_uninstall_root_preserved,
+        "refused_uninstall_registry_preserved": refused_uninstall_registry_preserved,
+        "uninstall_registry_removed": uninstall_registry_removed,
         "stale_prior_file_removed": stale_prior_file_removed,
         "unowned_refused_without_mutation": unowned_refused_without_mutation,
         "program_removed": not install_dir.exists(),
-        "start_menu_shortcut_created_before_uninstall": bool(start_menu_shortcuts),
-        "start_menu_shortcut_removed": not list(prefix.rglob("Heroes Like.lnk")),
+        "game_shortcut_created_before_uninstall": len(game_shortcuts) == 1,
+        "uninstall_shortcut_created_before_uninstall": len(uninstall_shortcuts) == 1,
+        "game_shortcut_removed": not list(prefix.rglob("Heroes Like.lnk")),
+        "uninstall_shortcut_removed": not list(prefix.rglob("Uninstall Heroes Like.lnk")),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-windows",
-        "ok": command_ok(install) and unowned_refused_without_mutation and command_ok(same_version_reinstall)
+        "ok": command_ok(prefix_init) and command_ok(prefix_init_wait)
+            and command_ok(install) and install_registry_exact and setup_pe_version["ok"]
+            and unowned_refused_without_mutation and unowned_failure_registry_preserved
+            and command_ok(same_version_reinstall)
             and precommit_failure.get("returncode") not in (None, 0) and precommit_rollback_exact
+            and precommit_registry_preserved
             and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
+            and commit_registry_preserved
             and command_ok(upgrade) and stale_prior_file_removed
-            and payload_verification["ok"] and command_ok(boot, reject_fatal=True) and all(markers.values())
-            and bool(start_menu_shortcuts) and command_ok(uninstall) and not install_dir.exists()
-            and not list(prefix.rglob("Heroes Like.lnk")) and user_data.is_file(),
+            and payload_verification["ok"] and game_pe_version["ok"] and upgrade_registry_exact
+            and upgrade_unmanaged_registry_preserved
+            and command_ok(boot, reject_fatal=True) and all(markers.values())
+            and len(game_shortcuts) == 1 and len(uninstall_shortcuts) == 1
+            and malformed_uninstall_preserved
+            and refused_uninstall_root_preserved and refused_uninstall_registry_preserved
+            and command_ok(uninstall) and command_ok(uninstall_wait)
+            and uninstall_registry_removed and not install_dir.exists()
+            and not list(prefix.rglob("Heroes Like.lnk"))
+            and not list(prefix.rglob("Uninstall Heroes Like.lnk")) and user_data.is_file(),
     }
 
 
@@ -634,6 +892,8 @@ def main() -> int:
         "schema_id": SCHEMA_ID,
         "report_id": REPORT_ID,
         "generated_at": utc_now(),
+        "version": VERSION,
+        "windows_numeric_version": WINDOWS_NUMERIC_VERSION,
         "ok": bool(
             linux.get("ok", False)
             and windows.get("ok", False)
@@ -660,6 +920,19 @@ def main() -> int:
         "linux_user_data_preserved": linux.get("user_data_preserved", False),
         "windows_install_boot_uninstall": windows.get("ok", False),
         "windows_upgrade_rollback_exact": bool(windows.get("precommit_rollback_exact") and windows.get("commit_rollback_exact")),
+        "windows_registry_transaction_exact": bool(
+            windows.get("install_registry_exact")
+            and windows.get("precommit_registry_preserved")
+            and windows.get("commit_registry_preserved")
+            and windows.get("upgrade_registry_exact")
+            and windows.get("upgrade_unmanaged_registry_preserved")
+            and windows.get("refused_uninstall_registry_preserved")
+            and windows.get("uninstall_registry_removed")
+        ),
+        "windows_pe_versions_coherent": bool(
+            windows.get("setup_pe_version", {}).get("ok")
+            and windows.get("game_pe_version", {}).get("ok")
+        ),
         "windows_user_data_preserved": windows.get("user_data_preserved", False),
         "windows_boot_markers": windows.get("boot_markers", {}),
         "windows_archive_install_boot_uninstall": windows_archive_result.get("ok", False),
@@ -668,7 +941,7 @@ def main() -> int:
             and windows_archive_result.get("commit_rollback_exact")
         ),
         "windows_archive_user_data_preserved": windows_archive_result.get("user_data_preserved", False),
-        "report": str(REPORT_PATH.relative_to(ROOT)),
+        "report": str(REPORT_PATH.relative_to(ROOT)) if REPORT_PATH.is_relative_to(ROOT) else str(REPORT_PATH),
     }
     print(f"{REPORT_ID} {json.dumps(summary, sort_keys=True)}")
     return 0 if report["ok"] else 1

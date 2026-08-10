@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Current implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. Brasshollow's tier-2 Rivet Hounds are specified as fast anti-raider machine skirmishers that reveal armor weakness, but the shipped unit has the same speed and initiative as tier-1 Scrip Haulers and only a defensive shielding passive. This slice restores that normal-path faction role through one bounded supported melee breach effect, shared tactical-AI valuation, and live encounter validation.
+- Latest completed implementation slice: `packaging-windows-uninstall-registration-and-pe-version-coherence-10184`. The per-user Windows setup now publishes a standard transactional HKCU Apps & Features registration plus Play and Uninstall shortcuts only after a verified commit, removes them only after an ownership-verified uninstall, and preserves prior program/registry/shortcut state across injected failures and refused uninstalls. Canonical `0.1.0-alpha.1` maps to coherent `0.1.0.1001` game/setup PE resources. Artifact, candidate, repository, full Linux installer, Windows setup/archive, and fresh Wine lifecycle gates pass; signing, native-Windows certification, publication, and overall release readiness remain open.
 - Latest completed implementation slice: `ux-overworld-1600-command-band-responsive-fit-10184`. The selectable 1600x900 Overworld layout now reduces only the four command-row gaps at that constrained noncompact width, moving the full band from x=-3/width1606 to x=1/width1598 while retaining every command, map dominance, focus, and compact/full behavior. Strengthened 1024/1280/1600/1920 containment, active focus, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `accessibility-scenario-outcome-normal-entry-focus-10184`. Ordinary campaign and skirmish victory/defeat Outcomes now enter with the existing enabled primary follow-up focused, expose a deterministic six-control keyboard/controller cycle, preserve valid focus through refresh, keep recovery on Save, and never steal native overwrite-dialog focus. The same Outcome-only responsive pass keeps banner, actions, Save panel, and Save inside 1280x720 while retaining full overflow text in tooltips. Focused, recovery, overwrite, visual, active-focus, repository, Linux package, and Windows/Wine gates pass.
 - Latest completed implementation slice: `briefing-consumption-autosave-failure-safety-10184`. Overworld first-turn and Battle tactical briefings now inspect their transactional autosave result. A failed write preserves the visible consumed briefing, emits one bounded issue, shows Save guidance with Save focus, and routes nowhere; one verified manual Save persists `shown=true` so restore does not replay the briefing. Focused failure/recovery, generated-opening defer, Battle/focus/save compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.
@@ -3595,6 +3597,57 @@ Completion criteria:
 
 Non-goals:
 - no command copy redesign, new panels, gameplay/rules/save changes, global UI-scale redesign, Native RMG, publication, signing, or overall release-completion claim.
+
+## Windows Uninstall Registration And PE Version Coherence
+
+id: `packaging-windows-uninstall-registration-and-pe-version-coherence-10184`
+
+Status: completed.
+
+Selected Phase 6 packaging-hardening correction. The transactional per-user Windows installer
+writes a verified `uninstall.exe` but does not register the install in the standard current-user
+Apps & Features registry surface or expose an uninstall shortcut. Separately, exported game and
+setup executables do not carry release-coherent Windows version resources.
+
+Implementation target:
+- derive one bounded four-part Windows numeric version from the canonical project semantic version and enforce the same value in the Godot Windows preset, release-candidate tooling, and generated NSIS metadata;
+- publish the standard HKCU Uninstall registration only after a verified install commit, including bounded display identity, semantic DisplayVersion, install location, icon, uninstall command, and no-modify/no-repair policy;
+- remove that registration only after an ownership-verified successful uninstall, while failed install/upgrade/uninstall paths preserve the prior registration exactly;
+- verify both game/setup PE version resources and the registry lifecycle through production packaging tests and fresh Wine install/upgrade/uninstall probes.
+
+Completion criteria:
+- Windows game and setup PEs expose the expected numeric version and bounded product/file identity with no nonnumeric Godot version warning;
+- a successful per-user install appears under the standard HKCU Apps & Features key and offers a discoverable uninstall path, while successful uninstall removes the key and owned files;
+- injected precommit/after-backup install failures and refused uninstall preserve prior registered values and program bytes exactly;
+- Linux release artifacts remain unchanged and repository, archive/manifest, Windows export, installer, Wine lifecycle, validator, and diff gates pass.
+
+Non-goals:
+- no machine-wide install, elevation, MSI migration, auto-update channel, signing/notarization, native-Windows hardware certification, publication, gameplay/content change, Native RMG work, or overall release-completion claim.
+
+## Brasshollow Rivet Hound Breach Skirmisher
+
+id: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`
+
+Status: in_progress.
+
+Selected Phase 6 combat-identity correction. Brasshollow's tier-2 Rivet Hounds are authored as
+fast machine skirmishers for anti-raider work and armor-weakness reveal, but live content gives
+them tier-1 movement timing and only a defensive Rivet Hide passive.
+
+Implementation target:
+- make Rivet Hounds materially faster than Scrip Haulers while preserving Rivet Hide and their existing economy/recruitment identity;
+- add one bounded supported primary-melee breach that marks a surviving veteran target with a one-round defense reduction and spends its authored use exactly once;
+- surface the effect through shared battle summaries/events and give tactical AI the same availability, support, target, and spent-use contract;
+- validate the production unit in a method-matched stripped control and representative Orevein/Ninefold live encounters without tuning final-map or aggregate reports in place of behavior.
+
+Completion criteria:
+- ability-versus-stripped fixtures preserve identical first-hit RNG/damage while only the authored unit applies the mark and only a later defense-derived hit changes;
+- unsupported, low-tier, lethal, retaliation, expired, and spent-use cases fail closed, and mid-battle save/reload preserves the mark and use count;
+- Scrip Haulers and a method-matched existing melee support-mark unit remain exact, while tactical AI preview/selection agrees with runtime availability;
+- focused ability, live Orevein/Ninefold, fast benchmark, active 59-encounter breadth, all-live faction matrix, repository, and Linux/Windows packaged content gates pass without a save-schema change.
+
+Non-goals:
+- no broad Brasshollow ladder redesign, repair/machine-class system, economy/recruitment rebalance, art replacement, final faction-balance claim, Native RMG work, publication, signing, or overall release-completion claim.
 
 ## Phase Roadmap
 
