@@ -69,6 +69,7 @@ func _check_town_keyboard_build() -> bool:
 	var town := _first_player_town(session)
 	if town.is_empty():
 		return _fail("Town fixture has no player-owned town.")
+	_seed_town_management_navigation_fixture(session, town)
 	_move_active_hero_to_town(session, town)
 	var built_before: Array = town.get("built_buildings", []).duplicate()
 	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
@@ -78,6 +79,8 @@ func _check_town_keyboard_build() -> bool:
 	add_child(shell)
 	await _settle()
 	if not _assert_accessible_surface(shell, "town", 3):
+		return false
+	if not await _check_town_management_tab_navigation(shell, session, "wide"):
 		return false
 
 	var build_actions: Control = shell.get_node("%BuildActions")
@@ -430,6 +433,7 @@ func _check_narrow_town_keyboard_entry() -> bool:
 	var town := _first_player_town(session)
 	if town.is_empty():
 		return _fail("Narrow town fixture has no player-owned town.")
+	_seed_town_management_navigation_fixture(session, town)
 	_move_active_hero_to_town(session, town)
 	session = SessionState.set_active_session(session)
 	var frame := Control.new()
@@ -449,6 +453,8 @@ func _check_narrow_town_keyboard_entry() -> bool:
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	if focus_owner == null or not build_actions.is_ancestor_of(focus_owner) or not (focus_owner is BaseButton) or focus_owner.disabled:
 		return _fail("Narrow town management did not move focus into a ready construction order: %s." % _focus_name())
+	if not await _check_town_management_tab_navigation(shell, session, "narrow"):
+		return false
 	await _press_joypad_button(JOY_BUTTON_B)
 	await _settle()
 	if shell.get_node("%SidebarShell").visible or not shell.get_node("%StageColumn").visible:
@@ -458,6 +464,234 @@ func _check_narrow_town_keyboard_entry() -> bool:
 	frame.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _check_town_management_tab_navigation(shell: Node, session, layout: String) -> bool:
+	if not shell.has_method("validation_reset_town_management_tab_navigation_state") \
+			or not shell.has_method("validation_town_management_tab_navigation_snapshot"):
+		return _fail("Town %s management navigation validation API is missing." % layout)
+	var management_tabs: TabContainer = shell.get_node_or_null("%ManagementTabs")
+	if management_tabs == null:
+		return _fail("Town %s management navigation is missing ManagementTabs." % layout)
+	var tab_bar: TabBar = management_tabs.get_tab_bar()
+	if tab_bar == null:
+		return _fail("Town %s management navigation is missing its native TabBar." % layout)
+	var authority_before := _town_management_authority_snapshot(session)
+	var reset: Dictionary = shell.call("validation_reset_town_management_tab_navigation_state")
+	var expected_titles := ["Build", "Muster", "Spells", "Trade", "Log"]
+	if int(reset.get("active_tab", -1)) != 0 \
+			or int(reset.get("tab_count", -1)) != expected_titles.size() \
+			or int(reset.get("tab_bar_focus_mode", Control.FOCUS_NONE)) != Control.FOCUS_ALL:
+		return _fail("Town %s management navigation did not expose five focusable native tabs: %s." % [layout, reset])
+	var raw_titles: Array = reset.get("tab_titles", []) if reset.get("tab_titles", []) is Array else []
+	if raw_titles.size() != expected_titles.size():
+		return _fail("Town %s management navigation exposed the wrong tab-title count: %s." % [layout, raw_titles])
+	for index in range(expected_titles.size()):
+		if not String(raw_titles[index]).begins_with(String(expected_titles[index])):
+			return _fail("Town %s management tab %d lost its %s title: %s." % [layout, index, expected_titles[index], raw_titles[index]])
+
+	await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
+	if get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Town %s controller could not reach the native TabBar from the first Build command: %s." % [layout, _focus_name()])
+	await _press_joypad_button(JOY_BUTTON_DPAD_LEFT)
+	var boundary_start: Dictionary = shell.call("validation_town_management_tab_navigation_snapshot")
+	if int(boundary_start.get("active_tab", -1)) != 0 \
+			or int(boundary_start.get("change_count", -1)) != 0 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Town %s native TabBar wrapped left from Build instead of holding the boundary: %s." % [layout, boundary_start])
+
+	for expected_tab in range(1, expected_titles.size()):
+		if expected_tab == 2:
+			await _press_key(KEY_RIGHT)
+		else:
+			await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+		if not _assert_town_management_tab_handoff(shell, expected_tab, expected_tab, layout):
+			return false
+		var forward_authority := _town_management_authority_snapshot(session)
+		if forward_authority != authority_before:
+			return _fail("Town %s forward management-tab traversal mutated authority at tab %d: %s." % [layout, expected_tab, _first_town_management_difference(authority_before, forward_authority)])
+		await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
+		if get_viewport().gui_get_focus_owner() != tab_bar:
+			return _fail("Town %s controller could not return from tab %d's first command to the native TabBar: %s." % [layout, expected_tab, _focus_name()])
+
+	await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+	var boundary_end: Dictionary = shell.call("validation_town_management_tab_navigation_snapshot")
+	if int(boundary_end.get("active_tab", -1)) != 4 \
+			or int(boundary_end.get("change_count", -1)) != 4 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Town %s native TabBar wrapped right from Log instead of holding the boundary: %s." % [layout, boundary_end])
+
+	for expected_tab in [3, 2, 1, 0]:
+		if expected_tab == 3:
+			await _press_key(KEY_LEFT)
+		else:
+			await _press_joypad_button(JOY_BUTTON_DPAD_LEFT)
+		var expected_change_count: int = 8 - int(expected_tab)
+		if not _assert_town_management_tab_handoff(shell, expected_tab, expected_change_count, layout):
+			return false
+		var reverse_authority := _town_management_authority_snapshot(session)
+		if reverse_authority != authority_before:
+			return _fail("Town %s reverse management-tab traversal mutated authority at tab %d: %s." % [layout, expected_tab, _first_town_management_difference(authority_before, reverse_authority)])
+		await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
+		if get_viewport().gui_get_focus_owner() != tab_bar:
+			return _fail("Town %s reverse traversal could not return to the native TabBar from tab %d." % [layout, expected_tab])
+
+	await _press_key(KEY_LEFT)
+	var reverse_boundary: Dictionary = shell.call("validation_town_management_tab_navigation_snapshot")
+	if int(reverse_boundary.get("active_tab", -1)) != 0 \
+			or int(reverse_boundary.get("change_count", -1)) != 8 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Town %s keyboard Left wrapped from Build instead of holding the native boundary: %s." % [layout, reverse_boundary])
+
+	await _click_town_management_tab(tab_bar, 3)
+	if not _assert_town_management_tab_handoff(shell, 3, 9, layout):
+		return false
+	await _click_town_management_tab(tab_bar, 0)
+	if not _assert_town_management_tab_handoff(shell, 0, 10, layout):
+		return false
+	if _town_management_authority_snapshot(session) != authority_before:
+		return _fail("Town %s mouse management-tab controls mutated session, town, save, settings, profile, or route authority." % layout)
+	if not await _town_management_core_controls_reachable(shell):
+		return _fail("Town %s management traversal lost Save, Settings, Return, or Menu focus authority." % layout)
+	var final_snapshot: Dictionary = shell.call("validation_town_management_tab_navigation_snapshot")
+	var final_first: Dictionary = final_snapshot.get("first_enabled_command", {}) if final_snapshot.get("first_enabled_command", {}) is Dictionary else {}
+	var final_focus := shell.find_child(String(final_first.get("node_name", "")), true, false) as Control
+	if final_focus == null:
+		return _fail("Town %s management traversal could not restore its first Build command for downstream controls: %s." % [layout, final_snapshot])
+	final_focus.grab_focus()
+	await get_tree().process_frame
+	return true
+
+func _assert_town_management_tab_handoff(shell: Node, expected_tab: int, expected_change_count: int, layout: String) -> bool:
+	var snapshot: Dictionary = shell.call("validation_town_management_tab_navigation_snapshot")
+	var first: Dictionary = snapshot.get("first_enabled_command", {}) if snapshot.get("first_enabled_command", {}) is Dictionary else {}
+	var last: Dictionary = snapshot.get("last_change_result", {}) if snapshot.get("last_change_result", {}) is Dictionary else {}
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if int(snapshot.get("active_tab", -1)) != expected_tab \
+			or int(snapshot.get("change_count", -1)) != expected_change_count \
+			or int(snapshot.get("focus_handoff_count", -1)) != expected_change_count \
+			or first.is_empty() \
+			or bool(first.get("disabled", true)) \
+			or int(first.get("focus_mode", Control.FOCUS_NONE)) == Control.FOCUS_NONE \
+			or focus_owner == null \
+			or String(focus_owner.name) != String(first.get("node_name", "")) \
+			or not bool(snapshot.get("focus_owner_in_active_tab", false)) \
+			or int(last.get("to_tab", -1)) != expected_tab \
+			or not bool(last.get("focus_handoff", false)) \
+			or not bool(last.get("focus_owner_in_active_tab", false)):
+		return _fail("Town %s tab %d did not hand focus exactly once to its first enabled command: %s." % [layout, expected_tab, snapshot])
+	return true
+
+func _town_management_core_controls_reachable(shell: Node) -> bool:
+	var required := {
+		"Save": shell.get_node_or_null("%Save"),
+		"Settings": shell.get_node_or_null("%Settings"),
+		"Leave": shell.get_node_or_null("%Leave"),
+		"Menu": shell.get_node_or_null("%Menu"),
+	}
+	var reached := {}
+	for _step in range(96):
+		var owner := get_viewport().gui_get_focus_owner()
+		for key in required:
+			if owner == required[key]:
+				reached[key] = true
+		if reached.size() == required.size():
+			return true
+		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+	return false
+
+func _click_town_management_tab(tab_bar: TabBar, tab_index: int) -> void:
+	var rect := tab_bar.get_tab_rect(tab_index)
+	var position := tab_bar.global_position + rect.position + rect.size * 0.5
+	var viewport := tab_bar.get_viewport()
+	var window_id: int = int(viewport.get_window_id()) if viewport is Window else 0
+	var pressed := InputEventMouseButton.new()
+	pressed.window_id = window_id
+	pressed.button_index = MOUSE_BUTTON_LEFT
+	pressed.position = position
+	pressed.global_position = position
+	pressed.pressed = true
+	viewport.push_input(pressed, true)
+	await get_tree().process_frame
+	var released := InputEventMouseButton.new()
+	released.window_id = window_id
+	released.button_index = MOUSE_BUTTON_LEFT
+	released.position = position
+	released.global_position = position
+	released.pressed = false
+	viewport.push_input(released, true)
+	await _settle()
+
+func _town_management_authority_snapshot(session) -> Dictionary:
+	var settings := SettingsService.ensure_settings().duplicate(true)
+	var campaign_profile := CampaignProgression.ensure_profile().duplicate(true)
+	var files := {}
+	for path in [
+		"user://saves/autosave.json",
+		"user://saves/manual_slot_1.json",
+		"user://saves/manual_slot_2.json",
+		"user://saves/manual_slot_3.json",
+		"user://saves/campaign_progression.json",
+		SettingsService.SETTINGS_FILE,
+		"%s.candidate" % SettingsService.SETTINGS_FILE,
+		"%s.backup" % SettingsService.SETTINGS_FILE,
+	]:
+		files[path] = _controller_route_file_state(path)
+	return {
+		"session": session.to_dict(),
+		"active_session_same": SessionState.active_session == session,
+		"selected_manual_slot": SaveService.get_selected_manual_slot(),
+		"save_files": files,
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": settings,
+		"campaign_profile": campaign_profile,
+		"battle_entry": AppRouter.validation_battle_entry_snapshot(),
+		"outcome": AppRouter.validation_scenario_outcome_route_snapshot(),
+		"return_to_menu": AppRouter.validation_active_play_return_snapshot(),
+		"safe_quit": AppRouter.validation_safe_quit_snapshot(),
+	}
+
+func _seed_town_management_navigation_fixture(session, town: Dictionary) -> void:
+	var built: Array = town.get("built_buildings", []).duplicate()
+	for building_id in ["building_lantern_archive", "building_market_square"]:
+		if building_id not in built:
+			built.append(building_id)
+	town["built_buildings"] = built
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for index in range(towns.size()):
+		if towns[index] is Dictionary and String(towns[index].get("placement_id", "")) == String(town.get("placement_id", "")):
+			towns[index] = town
+	session.overworld["towns"] = towns
+
+func _first_town_management_difference(expected: Variant, actual: Variant, path: String = "$") -> Dictionary:
+	if typeof(expected) != typeof(actual):
+		return {"path": path, "expected_type": type_string(typeof(expected)), "actual_type": type_string(typeof(actual))}
+	if expected is Dictionary:
+		var expected_dictionary: Dictionary = expected
+		var actual_dictionary: Dictionary = actual
+		var expected_keys: Array = expected_dictionary.keys()
+		expected_keys.sort()
+		var actual_keys: Array = actual_dictionary.keys()
+		actual_keys.sort()
+		if expected_keys != actual_keys:
+			return {"path": path, "expected_keys": expected_keys, "actual_keys": actual_keys}
+		for key in expected_keys:
+			var nested: Dictionary = _first_town_management_difference(expected_dictionary.get(key), actual_dictionary.get(key), "%s.%s" % [path, key])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected is Array:
+		var expected_array: Array = expected
+		var actual_array: Array = actual
+		if expected_array.size() != actual_array.size():
+			return {"path": path, "expected_size": expected_array.size(), "actual_size": actual_array.size()}
+		for index in range(expected_array.size()):
+			var nested: Dictionary = _first_town_management_difference(expected_array[index], actual_array[index], "%s[%d]" % [path, index])
+			if not nested.is_empty():
+				return nested
+		return {}
+	if expected != actual:
+		return {"path": path, "expected": expected, "actual": actual}
+	return {}
 
 func _check_battle_keyboard_defend() -> bool:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)

@@ -15871,6 +15871,10 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "_response_label",
         "_response_actions",
         "_style_action_button",
+        "validation_reset_town_management_tab_navigation_state",
+        "validation_town_management_tab_navigation_snapshot",
+        "_management_tabs.get_tab_bar()",
+        "_complete_management_tab_focus_handoff",
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town-shell polish token: {required_token}")
 
@@ -15912,6 +15916,12 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     active_play_focus_text = active_play_focus_path.read_text(encoding="utf-8")
     for required_token in (
         "_check_town_return_to_field_controller",
+        "_check_town_management_tab_navigation",
+        "_assert_town_management_tab_handoff",
+        "JOY_BUTTON_DPAD_RIGHT",
+        "JOY_BUTTON_DPAD_LEFT",
+        "_click_town_management_tab",
+        "_town_management_authority_snapshot",
         'return_to_field.text != "Return to Field"',
         'get_node_or_null("%EndTurn")',
         "JOY_BUTTON_RIGHT_SHOULDER",

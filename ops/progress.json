@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Generated-opening alternate-autosave reconciliation is complete with verified canonical authority, honest failure recovery, zero-write stale self-healing, ordinary Save restoration, and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Town management-tab controller navigation is complete across wide/narrow layouts with exact state preservation, read-only market previews, and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-generated-opening-alternate-autosave-reconciliation-10184",
-  "currentSliceId": "save-generated-opening-alternate-autosave-reconciliation-10184",
-  "currentSliceNotes": "Completed canonical shell reconciliation after verified alternate autosave, honest failed-End-Turn recovery, zero-write stale retry healing, ordinary Save restoration, and cross-platform package proof.",
+  "currentSlice": "accessibility-town-management-tab-controller-navigation-10184",
+  "currentSliceId": "accessibility-town-management-tab-controller-navigation-10184",
+  "currentSliceNotes": "Completed native five-tab keyboard/controller traversal, boundary retention, deterministic command handoff, read-only market readiness simulation, exact Town authority, and cross-platform package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Opening Alternate Autosave Reconciliation",
-  "currentSliceUpdatedAt": "2026-08-10T17:37:49Z",
+  "currentSliceTitle": "Town Management Tab Controller Navigation",
+  "currentSliceUpdatedAt": "2026-08-10T18:29:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74926,6 +74926,26 @@
       "notes": "Completed verified local reconciliation gated by successful save plus canonical live flags, with generated issue history preserved and EndTurn focus restored. All three initial failure origins reconcile through one nonterminal End Turn with rules1/save1/reconcile1/canonical reload; after-backup End Turn failure preserves exact old bytes/cache/live state and reports retry_action save; direct stale retry heals with zero write and the next Save reaches ordinary overwrite flow. Original retry controls, End Turn/transaction/generated timing/focus/visual/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. SaveService remains unchanged.",
       "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T17:37:49Z"
+    },
+    {
+      "id": "accessibility-town-management-tab-controller-navigation-10184",
+      "title": "Town Management Tab Controller Navigation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Make all five Town management tabs and their first enabled actions reachable through native keyboard and controller focus navigation.",
+      "implementationTargets": ["scenes/town/TownShell.gd", "scripts/core/OverworldRules.gd", "tests/active_play_keyboard_focus_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"tab_count": 5, "entry_tab": 0, "tab_bar_in_focus_cycle": false, "controller_tabs_reachable": 1},
+      "completionCriteria": ["Real keyboard/controller input reaches the native TabBar and selects Build, Muster, Spells, Trade, and Log", "Each selected tab exposes its first enabled command without trapping focus and traversal leaves Town/session/save authority exact", "Build, Save, Settings, Return, Menu, mouse tabs, narrow-layout drawer, and cancel behavior remain exact", "Focused, active-focus, Town visual/cache, core, repository, and Linux/Windows packaged controller gates pass"],
+      "nonGoals": ["town rules/economy/recruitment/spells/market/log behavior, tab content/layout redesign, new shortcuts, input remapping, save/routing policy, Native RMG, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T17:45:46Z",
+      "startedAt": "2026-08-10T17:45:46Z",
+      "updatedAt": "2026-08-10T18:29:06Z",
+      "notes": "Completed exact native TabBar inclusion in one focus cycle, disabled/hidden-aware boundary retention, sequence-guarded first-enabled action handoff, and wide/narrow keyboard/controller/mouse traversal across all five tabs. Strict authority testing exposed and fixed town_cost_readiness mutating live weekly market_usage during preview by deep-copying town and pool; real market application remains mutating. Focused active-play PASS, market cap persistence, Town visual, core, editor, validator, diff, authoritative Linux export/package, and fresh Windows/Wine export/package pass. The generated-large cache gate remains rc1 at 6477.788ms, but isolated committed HEAD has the identical rc1 at 6533.621ms and is 55.833ms slower, classifying it as pre-existing timing debt rather than slice regression.",
+      "remainingWork": "No work remains in this slice. Briefing-consumption alternate-autosave reconciliation, pre-existing generated-large Town cache performance, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T18:29:06Z"
     }
   ],
   "project": "heroes-like",
