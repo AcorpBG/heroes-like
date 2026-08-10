@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184` (completed). Verified alternate autosaves reconcile command-briefing recovery only through commit-derived exact identity proof; failed saves remain pending and truthful, historical issues remain intact, and ordinary Save resumes after durable completion.
+- Current implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184` (completed). Generated-Large same-town re-entry now reuses context-validated cached economy and departure models with live affordability/movement refresh, reducing first refresh from about 6.5 seconds to about 34 milliseconds without stale copy or authority drift.
+- Latest completed implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184`. Exact ledger/action/departure parity, resource/context/action invalidation, authority, Town economy/transition/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged performance all pass.
 - Latest completed implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184`. Successful and failed End Turn rows, unverified-authority refusal, zero-write stale checks, Battle/generated controls, transaction/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-town-management-tab-controller-navigation-10184`. Wide/narrow five-tab keyboard/controller/mouse traversal, exact Town/save authority, market apply controls, Town visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass; the generated-large cache timing red is method-matched pre-existing at HEAD.
 - Latest completed implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184`. Three alternate End Turn success rows, exact failed-End-Turn authority, zero-write stale recovery, original retry controls, End Turn/transaction/timing/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
@@ -3881,6 +3882,30 @@ Completion criteria:
 
 Non-goals:
 - no briefing content/consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing change, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Generated-Large Town Cache-Hit First Refresh Performance
+
+id: `performance-town-generated-large-cache-hit-first-refresh-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. A generated Large 108x108 same-town re-entry reports
+a true entity-cache hit with zero rebuild and sub-millisecond signature work, yet synchronous first refresh
+takes about 6.5 seconds because the dynamic Resource Ledger recomputes full build/recruit economy projections.
+
+Implementation target:
+- derive the Resource Ledger economy plan from cached build/recruit action models after their dynamic affordability refresh instead of calling full TownRules action builders on cache hits;
+- preserve identical player-readable build/muster readiness, bottleneck, income, field-site, and stockpile copy against direct cold controls;
+- retain current cache invalidation and full recomputation after real build, recruit, market, session, or town authority changes.
+
+Completion criteria:
+- the unchanged deterministic generated-Large same-town regression remains a cache hit with build time zero, signature below 50ms, and synchronous first refresh below the existing 1000ms limit;
+- resource changes update cached affordability, bottleneck, build/muster counts, commands, and ledger copy exactly against direct rules controls;
+- refresh leaves session, town, resources, market usage, save bytes, routes, and focus authority exact, while real build/recruit/market actions remain mutating and invalidate once;
+- focused cache/economy, Town navigation/visual, core, repository, and Linux/Windows packaged performance gates pass without TownRules, save, rules, or content changes unless profiling proves a smaller shared memoization boundary is required.
+
+Non-goals:
+- no generated-map/RMG rules or parity, Town economy/rules/content change, UI composition redesign, cache-policy rewrite beyond the selected economy model, save schema/version, broad performance tuning, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

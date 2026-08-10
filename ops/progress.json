@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Command-briefing alternate-autosave reconciliation is complete with commit-derived identity proof, honest failed-save recovery, preserved issue history, ordinary Save restoration, and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Generated-Large Town cache-hit first refresh is complete at roughly 33-35ms across source, Linux package, and fresh Windows/Wine, with exact economy/departure copy and invalidation. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-briefing-consumption-alternate-autosave-reconciliation-10184",
-  "currentSliceId": "save-briefing-consumption-alternate-autosave-reconciliation-10184",
-  "currentSliceNotes": "Completed commit-proven briefing reconciliation after alternate autosave, failed-save honesty, historical issue preservation, zero-write stale refusal, ordinary Save restoration, and cross-platform package proof.",
+  "currentSlice": "performance-town-generated-large-cache-hit-first-refresh-10184",
+  "currentSliceId": "performance-town-generated-large-cache-hit-first-refresh-10184",
+  "currentSliceNotes": "Completed context-validated cached economy/departure models, live dynamic refresh, exact parity/invalidation, and cross-platform reduction from about 6.5s to about 34ms.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Briefing Consumption Alternate Autosave Reconciliation",
-  "currentSliceUpdatedAt": "2026-08-10T18:57:10Z",
+  "currentSliceTitle": "Generated-Large Town Cache-Hit First Refresh Performance",
+  "currentSliceUpdatedAt": "2026-08-10T20:01:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74966,6 +74966,26 @@
       "notes": "Completed canonical signature/shown/shown-day validation plus commit-derived exact identity proof so live-only state cannot prematurely clear briefing recovery after initial or failed saves. Successful precommit/after-backup-origin End Turn rows apply rules1/save1 and reconcile with EndTurn focus, canonical reload, issue1, and ordinary next Save; failed after-backup End Turn preserves exact authority, pending state, retry_action save, and separate issue, while unverified/malformed proof refuses zero-write reconciliation. Battle briefing, generated defer/opening recovery, End Turn/transaction/focus/visual/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. SaveService and rules remain unchanged.",
       "remainingWork": "No work remains in this slice. Pre-existing generated-large Town cache performance, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T18:57:10Z"
+    },
+    {
+      "id": "performance-town-generated-large-cache-hit-first-refresh-10184",
+      "title": "Generated-Large Town Cache-Hit First Refresh Performance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Remove the deterministic multi-second same-town cache-hit stall on generated Large maps by reusing refreshed cached economy action models for the Resource Ledger.",
+      "implementationTargets": ["scenes/town/TownShell.gd", "tests/town_entity_cache_active_refresh_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"map_size": "108x108", "resource_nodes": 592, "cache_hit": true, "cache_build_ms": 0.0, "signature_ms": 0.088, "dynamic_ms": 6551.225, "first_refresh_ms": 6554.454, "first_refresh_limit_ms": 1000.0},
+      "completionCriteria": ["Existing deterministic generated-Large same-town re-entry remains cache hit/build0/signature<50ms and first refresh<1000ms", "Cached ledger build/muster readiness, bottleneck, income, field-site, stockpile, and action copy match cold/direct controls after resource changes", "Refresh preserves exact session/town/resources/market_usage/save/routes/focus and real build/recruit/market invalidation remains exact", "Focused cache/economy, Town navigation/visual, core, repository, and Linux/Windows packaged performance gates pass"],
+      "nonGoals": ["generated-map or Native RMG rules/parity, Town economy/rules/content, UI redesign, broad cache-policy rewrite, save schema/version, broad performance tuning, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T19:05:53Z",
+      "startedAt": "2026-08-10T19:05:53Z",
+      "updatedAt": "2026-08-10T20:01:57Z",
+      "notes": "Completed v5 economy-context signature and immutable cached build/recruit/context models with live resource affordability, action summary/recommendation, response, departure, and movement reconstruction. Resolved encounter/resource-node/logistics changes invalidate; build/recruit/market each miss once then hit below 82ms; exact rendered/direct ledger, Build/Recruit/departure copy and session/town/resources/market/save/routes/focus authority pass. Generated Large source first_refresh34.021ms/refresh33.506ms/entity31.034ms/signature22.623ms/dynamic8.381ms/build0; Linux packaged first_refresh32.703ms; fresh Windows/Wine first_refresh34.959ms. Town economy/transition/focus/core/exit-profile/repository and both package gates pass with clean runtime logs.",
+      "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T20:01:57Z"
     }
   ],
   "project": "heroes-like",

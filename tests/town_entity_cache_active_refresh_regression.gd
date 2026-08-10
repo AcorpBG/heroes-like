@@ -131,43 +131,41 @@ func _run() -> void:
 	var first_again_snapshot: Dictionary = shell.call("validation_force_refresh")
 	if not _assert_snapshot(first_again_snapshot, first_id, true, true, "first-town return"):
 		return
+	_warm_save_summary_cache()
+	var resource_hit_authority := _authority_snapshot(session, shell)
+	var resource_hit_ledger: Dictionary = shell.call("validation_resource_ledger_snapshot")
+	if not _assert_economy_ledger_parity(shell, resource_hit_ledger, "resource-only full cache hit"):
+		return
+	if not _assert_departure_parity(shell, session, "resource-only full cache hit"):
+		return
+	if not _assert_exact_authority(_authority_snapshot(session, shell), resource_hit_authority, "resource-only full cache-hit parity"):
+		return
+	var context_invalidation_row: Dictionary = await _assert_economy_context_invalidates_once_then_hits_fast(
+		shell,
+		session,
+		first_id,
+		second_id
+	)
+	if context_invalidation_row.is_empty():
+		return
 
-	var build_action := _first_enabled_build_action(shell)
-	if build_action == "":
-		_finish_fail("No enabled build action was available for active-town invalidation coverage.", shell.call("validation_action_catalog"))
-		return
-	var build_result: Dictionary = shell.call("validation_perform_town_action", build_action)
-	if not bool(build_result.get("ok", false)):
-		_finish_fail("Build action did not change town state for cache invalidation coverage.", build_result)
-		return
-	var after_build_snapshot: Dictionary = shell.call("validation_town_entity_cache_snapshot")
-	var cached_placements: Array = after_build_snapshot.get("cached_placements", []) if after_build_snapshot.get("cached_placements", []) is Array else []
-	if not cached_placements.has(second_id):
-		_finish_fail("Build action invalidated a non-active town cache entry.", after_build_snapshot)
-		return
-	if not _assert_snapshot(after_build_snapshot, first_id, false, true, "after active-town build"):
-		return
-
-	var refresh_records: Array = SaveService.validation_general_profile_log_last_records(40)
-	var cache_hit_record := _find_town_refresh_record(refresh_records, true)
-	if cache_hit_record.is_empty():
-		_finish_fail("Town refresh profile records did not expose a cache hit.", refresh_records)
-		return
-	var cache_miss_record := _find_town_refresh_record(refresh_records, false)
-	if cache_miss_record.is_empty():
-		_finish_fail("Town refresh profile records did not expose a cache miss.", refresh_records)
-		return
-	var hit_metadata: Dictionary = cache_hit_record.get("metadata", {}) if cache_hit_record.get("metadata", {}) is Dictionary else {}
-	if not bool(hit_metadata.get("save_surface_skipped_hidden", false)):
-		_finish_fail("Town refresh profile did not expose hidden save-surface skip.", cache_hit_record)
-		return
-	var hit_buckets: Dictionary = cache_hit_record.get("buckets_ms", {}) if cache_hit_record.get("buckets_ms", {}) is Dictionary else {}
-	if not hit_buckets.has("town_entity_cache_signature") or not hit_buckets.has("town_entity_cache_build"):
-		_finish_fail("Town refresh profile did not expose town cache signature/build sub-buckets.", cache_hit_record)
-		return
-	if float(hit_buckets.get("town_entity_cache_signature", 99999.0)) > 50.0:
-		_finish_fail("Town cache signature bucket stayed too expensive.", hit_buckets)
-		return
+	var action_invalidation_rows := []
+	for lane in ["build", "recruit", "market"]:
+		var action_id := _first_enabled_action(shell, lane)
+		if action_id == "":
+			_finish_fail("No enabled %s action was available for cache invalidation coverage." % lane, shell.call("validation_action_catalog"))
+			return
+		var invalidation_row: Dictionary = await _assert_action_invalidates_once_then_hits_fast(
+			shell,
+			session,
+			lane,
+			action_id,
+			first_id,
+			second_id
+		)
+		if invalidation_row.is_empty():
+			return
+		action_invalidation_rows.append(invalidation_row)
 
 	var generated_large_metrics: Dictionary = await _assert_generated_large_reentry_fast()
 	if generated_large_metrics.is_empty():
@@ -179,9 +177,9 @@ func _run() -> void:
 		"scenario_id": session.scenario_id,
 		"first_town": first_id,
 		"second_town": second_id,
-		"build_action": build_action,
+		"action_invalidation_rows": action_invalidation_rows,
+		"economy_context_invalidation": context_invalidation_row,
 		"same_town_minimal_full_entry_count": int(full_again_snapshot.get("entry_count", 0)),
-		"cache_hit_buckets": cache_hit_record.get("buckets_ms", {}),
 		"generated_large_reentry": generated_large_metrics,
 	})])
 	ContentService.clear_generated_scenario_drafts()
@@ -273,6 +271,16 @@ func _assert_generated_large_reentry_fast() -> Dictionary:
 		return {}
 	if not _assert_cache_hit_refresh_is_light(refresh_record, "generated Large same-town cache-hit re-entry refresh"):
 		return {}
+	_warm_save_summary_cache()
+	var authority_before_ledger := _authority_snapshot(large_session, reentry_shell)
+	var ledger_snapshot: Dictionary = reentry_shell.call("validation_resource_ledger_snapshot")
+	if not _assert_economy_ledger_parity(reentry_shell, ledger_snapshot, "generated Large cache-hit resource refresh"):
+		return {}
+	if not _assert_departure_parity(reentry_shell, large_session, "generated Large cache-hit resource refresh"):
+		return {}
+	var authority_after_ledger := _authority_snapshot(large_session, reentry_shell)
+	if not _assert_exact_authority(authority_after_ledger, authority_before_ledger, "generated Large cached/direct ledger comparison"):
+		return {}
 	reentry_shell.queue_free()
 	await get_tree().process_frame
 	var refresh_buckets: Dictionary = refresh_record.get("buckets_ms", {}) if refresh_record.get("buckets_ms", {}) is Dictionary else {}
@@ -288,6 +296,8 @@ func _assert_generated_large_reentry_fast() -> Dictionary:
 		"town_refresh_save_surface_ms": float(refresh_buckets.get("save_surface", 0.0)),
 		"town_refresh_cache_build_ms": float(refresh_buckets.get("town_entity_cache_build", 0.0)),
 		"town_refresh_stage_ms": float(refresh_buckets.get("stage", 0.0)),
+		"rendered_economy_readability_surface": ledger_snapshot.get("rendered_economy_readability_surface", {}),
+		"direct_economy_readability_surface": ledger_snapshot.get("economy_readability_surface", {}),
 	}
 
 func _assert_snapshot(snapshot: Dictionary, expected_placement_id: String, expected_hit: bool, expected_save_skip: bool, label: String) -> bool:
@@ -377,13 +387,412 @@ func _set_active_hero_position(session, position: Dictionary) -> void:
 			heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
 
-func _first_enabled_build_action(shell: Node) -> String:
+func _first_enabled_action(shell: Node, lane: String) -> String:
 	var catalog: Dictionary = shell.call("validation_action_catalog")
-	var actions: Array = catalog.get("build", []) if catalog.get("build", []) is Array else []
+	var actions: Array = catalog.get(lane, []) if catalog.get(lane, []) is Array else []
 	for action in actions:
 		if action is Dictionary and not bool(action.get("disabled", false)):
 			return String(action.get("id", ""))
 	return ""
+
+func _assert_economy_context_invalidates_once_then_hits_fast(
+	shell: Node,
+	session,
+	expected_placement_id: String,
+	preserved_placement_id: String
+) -> Dictionary:
+	var encounter_id := _first_unresolved_encounter_id(session)
+	if encounter_id == "":
+		_finish_fail("Town economy-context cache coverage could not find an unresolved encounter.", session.overworld.get("encounters", []))
+		return {}
+	var stable_focus := shell.get_node_or_null("%Leave")
+	if not (stable_focus is Control):
+		_finish_fail("Town economy-context cache coverage could not find the stable Leave focus control.")
+		return {}
+	stable_focus.grab_focus()
+	await get_tree().process_frame
+	_warm_save_summary_cache()
+	var save_before := _save_authority_snapshot()
+	var route_before := _route_authority_snapshot(shell, session)
+	var focus_before := _focus_owner_name()
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	resolved = resolved.duplicate(true)
+	resolved.append(encounter_id)
+	session.overworld["resolved_encounters"] = resolved
+	var post_mutation_authority := _authority_snapshot(session, shell)
+	SaveService.validation_clear_general_profile_log()
+	var miss_snapshot: Dictionary = shell.call("validation_force_refresh")
+	await get_tree().process_frame
+	if not _assert_snapshot(miss_snapshot, expected_placement_id, false, true, "after economy-context encounter resolution"):
+		return {}
+	var cached_placements: Array = miss_snapshot.get("cached_placements", []) if miss_snapshot.get("cached_placements", []) is Array else []
+	if not cached_placements.has(preserved_placement_id):
+		_finish_fail("Economy-context invalidation removed a non-active town cache entry.", miss_snapshot)
+		return {}
+	var miss_records := _town_refresh_records(SaveService.validation_general_profile_log_last_records(20))
+	if miss_records.size() != 1 or bool((miss_records[0] as Dictionary).get("metadata", {}).get("town_entity_cache_hit", false)):
+		_finish_fail("Economy-context mutation did not produce exactly one cache-miss refresh.", miss_records)
+		return {}
+	if _save_authority_snapshot() != save_before or _route_authority_snapshot(shell, session) != route_before or _focus_owner_name() != focus_before:
+		_finish_fail("Economy-context cache miss changed save, route, or focus authority.", {
+			"save_before": save_before,
+			"save_after": _save_authority_snapshot(),
+			"route_before": route_before,
+			"route_after": _route_authority_snapshot(shell, session),
+			"focus_before": focus_before,
+			"focus_after": _focus_owner_name(),
+		})
+		return {}
+	SaveService.validation_clear_general_profile_log()
+	var hit_snapshot: Dictionary = shell.call("validation_force_refresh")
+	await get_tree().process_frame
+	if not _assert_snapshot(hit_snapshot, expected_placement_id, true, true, "after economy-context cache rebuild"):
+		return {}
+	var hit_records := _town_refresh_records(SaveService.validation_general_profile_log_last_records(20))
+	if hit_records.size() != 1 or not _assert_cache_hit_refresh_is_light(hit_records[0], "economy-context follow-up cache hit"):
+		return {}
+	var ledger_snapshot: Dictionary = shell.call("validation_resource_ledger_snapshot")
+	if not _assert_economy_ledger_parity(shell, ledger_snapshot, "economy-context follow-up cache hit"):
+		return {}
+	if not _assert_exact_authority(_authority_snapshot(session, shell), post_mutation_authority, "economy-context follow-up cache hit"):
+		return {}
+	return {
+		"resolved_encounter_id": encounter_id,
+		"miss_refresh_count": miss_records.size(),
+		"hit_refresh_count": hit_records.size(),
+		"hit_total_ms": float((hit_records[0] as Dictionary).get("total_ms", 0.0)),
+		"signature": String((hit_snapshot.get("last_cache_result", {}) as Dictionary).get("signature", "")),
+	}
+
+func _first_unresolved_encounter_id(session) -> String:
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter_id := String(encounter_value.get("placement_id", encounter_value.get("id", encounter_value.get("encounter_id", ""))))
+		if encounter_id != "" and not resolved.has(encounter_id):
+			return encounter_id
+	return ""
+
+func _assert_action_invalidates_once_then_hits_fast(
+	shell: Node,
+	session,
+	lane: String,
+	action_id: String,
+	expected_placement_id: String,
+	preserved_placement_id: String
+) -> Dictionary:
+	var stable_focus := shell.get_node_or_null("%Leave")
+	if not (stable_focus is Control):
+		_finish_fail("Town cache action coverage could not find the stable Leave focus control.", {"lane": lane})
+		return {}
+	stable_focus.grab_focus()
+	await get_tree().process_frame
+	_warm_save_summary_cache()
+	var before_action := _action_domain_snapshot(session)
+	var save_before := _save_authority_snapshot()
+	var route_before := _route_authority_snapshot(shell, session)
+	var focus_before := _focus_owner_name()
+	SaveService.validation_clear_general_profile_log()
+	var action_result: Dictionary = shell.call("validation_perform_town_action", action_id)
+	await get_tree().process_frame
+	if not bool(action_result.get("ok", false)) or not bool(action_result.get("state_changed", false)):
+		_finish_fail("Real %s action did not change its authoritative domain." % lane, action_result)
+		return {}
+	var after_action := _action_domain_snapshot(session)
+	if not _assert_expected_action_domain_change(lane, before_action, after_action):
+		return {}
+	var miss_snapshot: Dictionary = shell.call("validation_town_entity_cache_snapshot")
+	if not _assert_snapshot(miss_snapshot, expected_placement_id, false, true, "after real %s action" % lane):
+		return {}
+	var cached_placements: Array = miss_snapshot.get("cached_placements", []) if miss_snapshot.get("cached_placements", []) is Array else []
+	if not cached_placements.has(preserved_placement_id):
+		_finish_fail("Real %s action invalidated a non-active town cache entry." % lane, miss_snapshot)
+		return {}
+	var miss_records := _town_refresh_records(SaveService.validation_general_profile_log_last_records(20))
+	if miss_records.size() != 1 or bool((miss_records[0] as Dictionary).get("metadata", {}).get("town_entity_cache_hit", false)):
+		_finish_fail("Real %s action did not produce exactly one cache-miss refresh." % lane, miss_records)
+		return {}
+	if _save_authority_snapshot() != save_before:
+		_finish_fail("Real %s action changed save bytes or the SaveService summary cache." % lane, {
+			"before": save_before,
+			"after": _save_authority_snapshot(),
+		})
+		return {}
+	if _route_authority_snapshot(shell, session) != route_before:
+		_finish_fail("Real %s action changed route authority." % lane, {
+			"before": route_before,
+			"after": _route_authority_snapshot(shell, session),
+		})
+		return {}
+	if _focus_owner_name() != focus_before:
+		_finish_fail("Real %s action displaced stable Town focus." % lane, {
+			"before": focus_before,
+			"after": _focus_owner_name(),
+		})
+		return {}
+
+	var post_action_authority := _authority_snapshot(session, shell)
+	SaveService.validation_clear_general_profile_log()
+	var hit_snapshot: Dictionary = shell.call("validation_force_refresh")
+	await get_tree().process_frame
+	if not _assert_snapshot(hit_snapshot, expected_placement_id, true, true, "cache hit after real %s action" % lane):
+		return {}
+	var hit_records := _town_refresh_records(SaveService.validation_general_profile_log_last_records(20))
+	if hit_records.size() != 1:
+		_finish_fail("Post-%s refresh did not emit exactly one cache-hit profile record." % lane, hit_records)
+		return {}
+	var hit_record: Dictionary = hit_records[0]
+	if not _assert_cache_hit_refresh_is_light(hit_record, "post-%s cache-hit refresh" % lane):
+		return {}
+	var ledger_snapshot: Dictionary = shell.call("validation_resource_ledger_snapshot")
+	if not _assert_economy_ledger_parity(shell, ledger_snapshot, "post-%s cache-hit refresh" % lane):
+		return {}
+	if not _assert_exact_authority(_authority_snapshot(session, shell), post_action_authority, "post-%s cache-hit refresh" % lane):
+		return {}
+	return {
+		"lane": lane,
+		"action_id": action_id,
+		"miss_refresh_count": miss_records.size(),
+		"hit_refresh_count": hit_records.size(),
+		"hit_total_ms": float(hit_record.get("total_ms", 0.0)),
+		"hit_dynamic_ms": float((hit_snapshot.get("last_cache_result", {}) as Dictionary).get("dynamic_ms", 0.0)),
+	}
+
+func _assert_expected_action_domain_change(lane: String, before: Dictionary, after: Dictionary) -> bool:
+	var changed := false
+	match lane:
+		"build":
+			changed = before.get("built_buildings", []) != after.get("built_buildings", []) and before.get("resources", {}) != after.get("resources", {})
+		"recruit":
+			changed = before.get("available_recruits", {}) != after.get("available_recruits", {}) and before.get("army", {}) != after.get("army", {})
+		"market":
+			changed = before.get("market_usage", {}) != after.get("market_usage", {}) and before.get("resources", {}) != after.get("resources", {})
+	if not changed:
+		_finish_fail("Real %s action did not change the expected live town domain." % lane, {"before": before, "after": after})
+	return changed
+
+func _action_domain_snapshot(session) -> Dictionary:
+	var town := TownRules.get_active_town(session)
+	return {
+		"built_buildings": (town.get("built_buildings", []) as Array).duplicate(true) if town.get("built_buildings", []) is Array else [],
+		"available_recruits": (town.get("available_recruits", {}) as Dictionary).duplicate(true) if town.get("available_recruits", {}) is Dictionary else {},
+		"market_usage": (town.get("market_usage", {}) as Dictionary).duplicate(true) if town.get("market_usage", {}) is Dictionary else {},
+		"resources": (session.overworld.get("resources", {}) as Dictionary).duplicate(true) if session.overworld.get("resources", {}) is Dictionary else {},
+		"army": (session.overworld.get("army", {}) as Dictionary).duplicate(true) if session.overworld.get("army", {}) is Dictionary else {},
+	}
+
+func _assert_economy_ledger_parity(shell: Node, snapshot: Dictionary, label: String) -> bool:
+	var rendered: Dictionary = snapshot.get("rendered_economy_readability_surface", {}) if snapshot.get("rendered_economy_readability_surface", {}) is Dictionary else {}
+	var direct: Dictionary = snapshot.get("economy_readability_surface", {}) if snapshot.get("economy_readability_surface", {}) is Dictionary else {}
+	if rendered.is_empty() or rendered != direct:
+		_finish_fail("%s rendered cached economy ledger diverged from the direct rules control." % label, {"rendered": rendered, "direct": direct})
+		return false
+	if String(snapshot.get("resources_visible_text", "")) != String(snapshot.get("resources_text", "")):
+		_finish_fail("%s rendered stale stockpile text." % label, snapshot)
+		return false
+	var full_ledger := String(snapshot.get("resources_full_ledger_text", ""))
+	var tooltip := String(snapshot.get("resources_tooltip_text", ""))
+	if full_ledger == "" or tooltip.find(full_ledger) < 0:
+		_finish_fail("%s rendered tooltip omitted the exact full stockpile ledger." % label, snapshot)
+		return false
+	var direct_catalog: Dictionary = shell.call("validation_action_catalog")
+	var readiness := _direct_economy_action_readiness(direct_catalog)
+	if not _assert_rendered_action_copy_parity(
+		snapshot.get("rendered_build_actions", []),
+		direct_catalog.get("build", []),
+		"build",
+		label
+	):
+		return false
+	if not _assert_rendered_action_copy_parity(
+		snapshot.get("rendered_recruit_actions", []),
+		direct_catalog.get("recruit", []),
+		"recruit",
+		label
+	):
+		return false
+	for key in readiness.keys():
+		if int(direct.get(String(key), -1)) != int(readiness.get(key, -2)):
+			_finish_fail("%s cached economy action readiness diverged at %s." % [label, key], {"surface": direct, "control": readiness})
+			return false
+	for required_key in [
+		"tooltip_text",
+		"daily_town_income",
+		"daily_field_income",
+		"field_site_count",
+		"build_bottleneck_resource_id",
+		"player_readable_next_build",
+		"player_readable_build_bottleneck",
+		"player_readable_next_muster",
+	]:
+		if not direct.has(required_key):
+			_finish_fail("%s economy ledger omitted %s." % [label, required_key], direct)
+			return false
+	return true
+
+func _assert_departure_parity(shell: Node, session, label: String) -> bool:
+	var direct: Dictionary = TownRules.town_departure_confirmation(session)
+	if direct.is_empty():
+		_finish_fail("%s direct departure control was empty." % label)
+		return false
+	var leave_button := shell.get_node_or_null("%Leave")
+	if not (leave_button is Button):
+		_finish_fail("%s could not inspect the rendered departure button." % label)
+		return false
+	if leave_button.text != String(direct.get("button_label", "")):
+		_finish_fail("%s rendered departure button copy diverged from the direct control." % label, {"rendered": leave_button.text, "direct": direct})
+		return false
+	if leave_button.tooltip_text != String(direct.get("tooltip_text", "")):
+		_finish_fail("%s rendered departure tooltip diverged from the direct control." % label, {"rendered": leave_button.tooltip_text, "direct": direct})
+		return false
+	for key in [
+		"ready_response_action_count",
+		"affected",
+		"why_it_matters",
+		"next_step",
+		"movement_current",
+		"movement_max",
+	]:
+		if not direct.has(key):
+			_finish_fail("%s direct departure control omitted %s." % [label, key], direct)
+			return false
+	return true
+
+func _assert_rendered_action_copy_parity(rendered_value: Variant, direct_value: Variant, lane: String, label: String) -> bool:
+	if not (rendered_value is Array) or rendered_value.is_empty():
+		return true
+	var direct_by_id := {}
+	if direct_value is Array:
+		for action_value in direct_value:
+			if action_value is Dictionary:
+				direct_by_id[String(action_value.get("id", ""))] = action_value
+	var fields := [
+		"summary",
+		"recommendation_line",
+		"affordability_label",
+		"button_label",
+		"disabled",
+		"disabled_reason",
+	]
+	if lane == "build":
+		fields.append_array(["ledger_line", "direct_affordable", "market_coverable", "shortfall_summary"])
+	else:
+		fields.append_array(["available_count", "direct_affordable_count", "market_affordable_count", "shortfall_summary"])
+	for rendered_action_value in rendered_value:
+		if not (rendered_action_value is Dictionary):
+			continue
+		var action_id := String(rendered_action_value.get("id", ""))
+		var direct_action: Dictionary = direct_by_id.get(action_id, {}) if direct_by_id.get(action_id, {}) is Dictionary else {}
+		if direct_action.is_empty():
+			_finish_fail("%s rendered %s action %s was absent from the direct control." % [label, lane, action_id], rendered_action_value)
+			return false
+		for field in fields:
+			if rendered_action_value.get(String(field)) != direct_action.get(String(field)):
+				_finish_fail("%s rendered %s action %s diverged at %s." % [label, lane, action_id, field], {
+					"rendered": rendered_action_value,
+					"direct": direct_action,
+				})
+				return false
+	return true
+
+func _direct_economy_action_readiness(catalog: Dictionary) -> Dictionary:
+	var summary := {
+		"build_ready_order_count": 0,
+		"build_market_order_count": 0,
+		"build_blocked_order_count": 0,
+		"muster_ready_unit_count": 0,
+		"muster_market_unit_count": 0,
+		"muster_blocked_unit_count": 0,
+	}
+	var build_actions: Array = catalog.get("build", []) if catalog.get("build", []) is Array else []
+	for action_value in build_actions:
+		if not (action_value is Dictionary):
+			continue
+		if bool(action_value.get("direct_affordable", false)):
+			summary["build_ready_order_count"] += 1
+		elif bool(action_value.get("market_coverable", false)):
+			summary["build_market_order_count"] += 1
+		else:
+			summary["build_blocked_order_count"] += 1
+	var recruit_actions: Array = catalog.get("recruit", []) if catalog.get("recruit", []) is Array else []
+	for action_value in recruit_actions:
+		if not (action_value is Dictionary):
+			continue
+		var available: int = max(0, int(action_value.get("available_count", 0)))
+		var direct_count: int = max(0, int(action_value.get("direct_affordable_count", 0)))
+		var market_count: int = max(0, int(action_value.get("market_affordable_count", 0)))
+		if direct_count > 0:
+			summary["muster_ready_unit_count"] += direct_count
+		elif market_count > 0:
+			summary["muster_market_unit_count"] += market_count
+		else:
+			summary["muster_blocked_unit_count"] += available
+	return summary
+
+func _authority_snapshot(session, shell: Node) -> Dictionary:
+	return {
+		"session": JSON.stringify(session.to_dict()),
+		"town": JSON.stringify(TownRules.get_active_town(session)),
+		"resources": JSON.stringify(session.overworld.get("resources", {})),
+		"market_usage": JSON.stringify(TownRules.get_active_town(session).get("market_usage", {})),
+		"save": _save_authority_snapshot(),
+		"route": _route_authority_snapshot(shell, session),
+		"focus_owner": _focus_owner_name(),
+	}
+
+func _assert_exact_authority(actual: Dictionary, expected: Dictionary, label: String) -> bool:
+	if actual != expected:
+		_finish_fail("%s changed session, town, resource, market, save, route, or focus authority." % label, {"expected": expected, "actual": actual})
+		return false
+	return true
+
+func _save_authority_snapshot() -> Dictionary:
+	var files := {}
+	for path in [
+		"user://saves/autosave.json",
+		"user://saves/slot1.json",
+		"user://saves/slot2.json",
+		"user://saves/slot3.json",
+		"user://saves/campaign_progression.json",
+	]:
+		files[path] = {
+			"exists": FileAccess.file_exists(path),
+			"size": FileAccess.get_size(path) if FileAccess.file_exists(path) else -1,
+			"sha256": FileAccess.get_sha256(path) if FileAccess.file_exists(path) else "",
+		}
+	return {
+		"files": files,
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+	}
+
+func _warm_save_summary_cache() -> void:
+	SaveService.inspect_autosave()
+	for slot in [1, 2, 3]:
+		SaveService.inspect_manual_slot(slot)
+
+func _route_authority_snapshot(shell: Node, session) -> Dictionary:
+	var current_scene := get_tree().current_scene
+	return {
+		"current_scene_instance_id": current_scene.get_instance_id() if current_scene != null else 0,
+		"shell_inside_tree": shell.is_inside_tree(),
+		"shell_scene_path": shell.scene_file_path,
+		"scenario_id": session.scenario_id,
+		"scenario_status": session.scenario_status,
+		"game_state": session.game_state,
+		"day": session.day,
+	}
+
+func _focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
+
+func _town_refresh_records(records: Array) -> Array:
+	var matches := []
+	for record in records:
+		if record is Dictionary and String(record.get("surface", "")) == "town" and String(record.get("phase", "")) == "refresh":
+			matches.append(record)
+	return matches
 
 func _has_save_surface_build_record(records: Array) -> bool:
 	for record in records:

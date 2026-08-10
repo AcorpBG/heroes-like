@@ -82,6 +82,9 @@ var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
 var _last_action_recap := {}
 var _last_town_entity_cache_result := {}
+var _last_economy_readability_surface := {}
+var _last_rendered_build_actions := []
+var _last_rendered_recruit_actions := []
 var _last_save_surface_profile := {}
 var _last_refresh_minimal := false
 var _last_town_stage_signature := ""
@@ -434,6 +437,9 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_status_label.text = String(view_state.get("status_text", ""))
 	_resource_label.text = String(view_state.get("resources_text", ""))
 	_resource_label.tooltip_text = String(view_state.get("resources_tooltip_text", ""))
+	_last_economy_readability_surface = _duplicate_dictionary(view_state.get("economy_readability_surface", {}))
+	_last_rendered_build_actions = _duplicate_action_array(view_state.get("build_actions", []))
+	_last_rendered_recruit_actions = _duplicate_action_array(view_state.get("recruit_actions", []))
 	_crest_label.text = _crest_text()
 	if _crest_glyph.has_method("set_glyph"):
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
@@ -779,44 +785,95 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 
 func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dictionary, minimal: bool = false) -> void:
 	var current_lanes := _current_town_tab_lanes()
+	var cached_economy_build_actions: Variant = view_state.get("economy_build_actions", view_state.get("build_actions", []))
+	var cached_economy_recruit_actions: Variant = view_state.get("economy_recruit_actions", view_state.get("recruit_actions", []))
+	var economy_build_actions := _refresh_cached_cost_actions(cached_economy_build_actions, town)
+	var economy_recruit_actions := _refresh_cached_recruit_actions(cached_economy_recruit_actions, town)
+	view_state["economy_build_actions"] = _duplicate_action_array(economy_build_actions)
+	view_state["economy_recruit_actions"] = _duplicate_action_array(economy_recruit_actions)
 	view_state["resources_text"] = OverworldRules.describe_resources(_session)
-	view_state["resources_tooltip_text"] = _resource_ledger_tooltip_text()
-	view_state["departure"] = _cached_departure_dynamic(view_state.get("departure", {}))
+	var economy_surface := _economy_readability_surface(
+		economy_build_actions,
+		economy_recruit_actions,
+		view_state.get("economy_context_surface", {})
+	)
+	view_state["economy_readability_surface"] = economy_surface.duplicate(true)
+	view_state["resources_tooltip_text"] = _resource_ledger_tooltip_text_from_surface(economy_surface)
+	var cached_stage: Dictionary = view_state.get("stage_state", {}) if view_state.get("stage_state", {}) is Dictionary else {}
+	var departure_build_actions := _refresh_cached_cost_actions(
+		cached_stage.get("build_actions", []),
+		town,
+		view_state.get("build_action_copy_models", {})
+	)
+	var departure_recruit_actions := _refresh_cached_recruit_actions(
+		cached_stage.get("recruit_actions", []),
+		town,
+		view_state.get("recruit_action_copy_models", {})
+	)
+	var departure_response_actions := _refresh_cached_response_actions(cached_stage.get("response_actions", []), town)
+	var departure_study_actions := _refresh_cached_cost_actions(cached_stage.get("study_actions", []), town)
+	var departure_market_actions := _refresh_cached_cost_actions(cached_stage.get("market_actions", []), town)
+	view_state["departure"] = _cached_departure_dynamic(
+		view_state.get("departure", {}),
+		town,
+		departure_build_actions,
+		departure_recruit_actions,
+		departure_response_actions,
+		departure_study_actions,
+		departure_market_actions,
+		String(view_state.get("departure_fallback_next_action", "")),
+		view_state.get("departure_context_surface", {})
+	)
 	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(String(view_state.get("dispatch_text", "")))
 	if not minimal:
 		view_state["hero_actions"] = _duplicate_action_array(view_state.get("hero_actions", []))
 		view_state["specialty_actions"] = _duplicate_action_array(view_state.get("specialty_actions", []))
 	if not minimal or current_lanes.has("build"):
-		var build_actions := _refresh_cached_cost_actions(view_state.get("build_actions", []), town)
+		var build_actions := _refresh_cached_cost_actions(
+			view_state.get("build_actions", []),
+			town,
+			view_state.get("build_action_copy_models", {})
+		)
 		view_state["build_actions"] = build_actions
 		_update_cached_build_readiness(view_state, build_actions, town)
 	if not minimal or current_lanes.has("market"):
 		view_state["market_actions"] = _refresh_cached_cost_actions(view_state.get("market_actions", []), town)
 	if not minimal or current_lanes.has("recruit"):
-		view_state["recruit_actions"] = _refresh_cached_recruit_actions(view_state.get("recruit_actions", []), town)
+		view_state["recruit_actions"] = _refresh_cached_recruit_actions(
+			view_state.get("recruit_actions", []),
+			town,
+			view_state.get("recruit_action_copy_models", {})
+		)
 	if not minimal or current_lanes.has("study"):
 		view_state["study_actions"] = _refresh_cached_cost_actions(view_state.get("study_actions", []), town)
 	if not minimal or current_lanes.has("logistics"):
 		view_state["tavern_actions"] = _refresh_cached_cost_actions(view_state.get("tavern_actions", []), town)
 		view_state["transfer_actions"] = _duplicate_action_array(view_state.get("transfer_actions", []))
-		view_state["response_actions"] = _duplicate_action_array(view_state.get("response_actions", []))
+		view_state["response_actions"] = _refresh_cached_response_actions(view_state.get("response_actions", []), town)
 		view_state["artifact_actions"] = _duplicate_action_array(view_state.get("artifact_actions", []))
 	view_state["stage_state"] = _refresh_cached_stage_dynamic(view_state, town)
 
-func _refresh_cached_cost_actions(actions: Variant, town: Dictionary) -> Array:
+func _refresh_cached_cost_actions(actions: Variant, town: Dictionary, copy_models: Variant = null) -> Array:
 	var refreshed := _duplicate_action_array(actions)
+	var models: Dictionary = copy_models if copy_models is Dictionary else {}
 	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	for index in range(refreshed.size()):
 		var action: Dictionary = refreshed[index]
 		var cost: Dictionary = action.get("cost", {}) if action.get("cost", {}) is Dictionary else {}
 		if cost.is_empty():
 			continue
-		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, cost)
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(
+			town,
+			resources,
+			cost,
+			int(_session.day) if _session != null else -1
+		)
 		var direct_affordable := bool(readiness.get("direct_affordable", false))
 		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
 		var market_summary := TownRules._market_coverage_line(readiness)
 		var shortfall_summary := TownRules._cost_shortfall_line(readiness)
-		var affordability_line := TownRules._cost_readiness_line(resources, cost, readiness).trim_suffix(".")
+		var full_affordability_line := TownRules._cost_readiness_line(resources, cost, readiness)
+		var affordability_line := full_affordability_line.trim_suffix(".")
 		action["direct_affordable"] = direct_affordable
 		action["market_coverable"] = market_coverable
 		action["disabled"] = not direct_affordable
@@ -826,11 +883,36 @@ func _refresh_cached_cost_actions(actions: Variant, town: Dictionary) -> Array:
 		action["disabled_reason"] = TownRules._disabled_reason_line(direct_affordable, market_coverable, market_summary, shortfall_summary)
 		if action.has("button_label"):
 			action["button_label"] = "%s | %s" % [_cached_action_label_prefix(String(action.get("button_label", ""))), _cached_cost_badge(direct_affordable, market_coverable)]
+		var copy_model: Dictionary = models.get(String(action.get("id", "")), {}) if models.get(String(action.get("id", "")), {}) is Dictionary else {}
+		if not copy_model.is_empty():
+			var summary_lines := _duplicate_array(copy_model.get("static_summary_lines", []))
+			summary_lines.append(full_affordability_line)
+			if direct_affordable:
+				var after_spend_line := TownRules._stores_after_cost_line(resources, cost)
+				if after_spend_line != "":
+					summary_lines.append("After build stores: %s." % after_spend_line)
+			elif market_coverable and market_summary != "":
+				summary_lines.append("Exchange path: %s" % market_summary)
+			elif shortfall_summary != "":
+				summary_lines.append("Blocker: %s" % shortfall_summary)
+			action["summary"] = "\n".join(summary_lines)
+			var ledger_prefix := String(copy_model.get("ledger_prefix", ""))
+			if ledger_prefix != "":
+				action["ledger_line"] = "%s | %s" % [ledger_prefix, affordability_line]
+			action["recommendation_line"] = TownRules._action_recommendation_line(
+				"Build",
+				String(copy_model.get("action_name", "Build order")),
+				direct_affordable,
+				market_coverable,
+				shortfall_summary,
+				String(action.get("impact_line", ""))
+			)
 		refreshed[index] = action
 	return refreshed
 
-func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary) -> Array:
+func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary, copy_models: Variant = null) -> Array:
 	var refreshed := _duplicate_action_array(actions)
+	var models: Dictionary = copy_models if copy_models is Dictionary else {}
 	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	for index in range(refreshed.size()):
 		var action: Dictionary = refreshed[index]
@@ -850,7 +932,12 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary) -> Arra
 			))
 		var shortfall_summary: String = ""
 		if market_count <= 0:
-			shortfall_summary = TownRules._cost_shortfall_line(OverworldRules.town_cost_readiness(town, resources, unit_cost))
+			shortfall_summary = TownRules._cost_shortfall_line(OverworldRules.town_cost_readiness(
+				town,
+				resources,
+				unit_cost,
+				int(_session.day) if _session != null else -1
+			))
 		action["direct_affordable_count"] = direct_count
 		action["market_affordable_count"] = market_count
 		action["market_coverable"] = market_count > direct_count
@@ -861,6 +948,68 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary) -> Arra
 		action["disabled_reason"] = TownRules._disabled_reason_line(direct_count > 0, market_count > direct_count, market_summary, shortfall_summary)
 		if action.has("button_label"):
 			action["button_label"] = "%s | %s" % [_cached_action_label_prefix(String(action.get("button_label", ""))), _cached_recruit_badge(direct_count, market_count)]
+		var copy_model: Dictionary = models.get(String(action.get("id", "")), {}) if models.get(String(action.get("id", "")), {}) is Dictionary else {}
+		if not copy_model.is_empty():
+			var summary_lines := _duplicate_array(copy_model.get("static_summary_lines", []))
+			var impact_line := TownRules._recruit_choice_impact_line(
+				String(copy_model.get("unit_id", "")),
+				direct_count,
+				available
+			)
+			action["impact_line"] = impact_line
+			if impact_line != "":
+				summary_lines.append(impact_line)
+			if direct_count > 0:
+				var direct_recruit_cost: Dictionary = TownRules._multiply_resource_cost(unit_cost, direct_count)
+				summary_lines.append("Ready: current stores can field %d now for %s." % [
+					direct_count,
+					TownRules._describe_resources(direct_recruit_cost),
+				])
+				var after_recruit_line := TownRules._stores_after_cost_line(resources, direct_recruit_cost)
+				if after_recruit_line != "":
+					summary_lines.append("After recruit stores: %s | Town reserve remains %d." % [
+						after_recruit_line,
+						max(0, available - direct_count),
+					])
+			elif market_count > 0 and market_summary != "":
+				summary_lines.append("Exchange can unlock %d now: %s" % [market_count, market_summary])
+			elif shortfall_summary != "":
+				summary_lines.append("Blocker: %s" % shortfall_summary)
+			action["summary"] = "\n".join(summary_lines)
+			action["recommendation_line"] = TownRules._action_recommendation_line(
+				"Recruit",
+				String(copy_model.get("action_name", "Recruit order")),
+				direct_count > 0,
+				market_count > direct_count,
+				shortfall_summary,
+				impact_line
+			)
+		refreshed[index] = action
+	return refreshed
+
+func _refresh_cached_response_actions(actions: Variant, town: Dictionary) -> Array:
+	var refreshed := _duplicate_action_array(actions)
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var movement_left := int(movement.get("current", 0))
+	for index in range(refreshed.size()):
+		var action: Dictionary = refreshed[index]
+		var cost: Dictionary = action.get("resource_cost", {}) if action.get("resource_cost", {}) is Dictionary else {}
+		var readiness := OverworldRules.town_cost_readiness(
+			town,
+			resources,
+			cost,
+			int(_session.day) if _session != null else -1
+		)
+		var resource_blocked := not bool(readiness.get("direct_affordable", false))
+		var movement_cost := int(action.get("movement_cost", 0))
+		var movement_blocked := movement_left < movement_cost
+		action["disabled"] = resource_blocked or movement_blocked
+		action["resource_blocked"] = resource_blocked
+		action["movement_blocked"] = movement_blocked
+		action["remaining_movement_after_order"] = max(0, movement_left - movement_cost)
+		action["market_coverable"] = bool(readiness.get("market_affordable", false)) and resource_blocked
+		action["market_summary"] = TownRules._market_coverage_line(readiness) if bool(action.get("market_coverable", false)) else ""
 		refreshed[index] = action
 	return refreshed
 
@@ -918,30 +1067,177 @@ func _refresh_cached_stage_dynamic(view_state: Dictionary, town: Dictionary) -> 
 			refreshed[lane] = _duplicate_action_array(view_state.get(lane, []))
 	return refreshed
 
-func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
+func _cached_departure_dynamic(
+	departure_value: Variant,
+	town: Dictionary,
+	build_actions: Array,
+	recruit_actions: Array,
+	response_actions: Array,
+	study_actions: Array,
+	market_actions: Array,
+	fallback_next_action: String,
+	context_value: Variant
+) -> Dictionary:
 	# Movement and response availability can change while the broader town view is
-	# cached. Rebuild this compact action surface so its tooltip and next step stay
-	# authoritative alongside the live button label and readiness copy.
-	var departure: Dictionary = TownRules.town_departure_confirmation(_session)
-	if departure.is_empty() and departure_value is Dictionary:
-		departure = departure_value.duplicate(true)
+	# cached. Rebuild this compact action surface from cached action models so its
+	# tooltip and next step stay authoritative without reconstructing projections.
+	var departure: Dictionary = departure_value.duplicate(true) if departure_value is Dictionary else {}
 	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
 	var move_current := int(movement.get("current", 0))
 	var move_max := int(movement.get("max", move_current))
+	var ready_response := _first_enabled_validation_action(response_actions)
+	var context: Dictionary = context_value if context_value is Dictionary else {}
+	var affected := String(departure.get("affected", ""))
+	var why_it_matters := String(departure.get("why_it_matters", ""))
+	if not context.is_empty():
+		affected = TownRules._town_handoff_affected_line(
+			String(context.get("town_name", "Town")),
+			context.get("front", {}),
+			context.get("occupation", {}),
+			context.get("logistics", {}),
+			ready_response
+		)
+		why_it_matters = TownRules._town_handoff_why_line(
+			town,
+			context.get("front", {}),
+			context.get("occupation", {}),
+			context.get("logistics", {}),
+			context.get("recovery", {}),
+			ready_response
+		)
+	var recommendation := _cached_town_recommendation_line(town, build_actions, recruit_actions, fallback_next_action)
+	var next_action := _cached_next_town_action_line(
+		town,
+		build_actions,
+		recruit_actions,
+		response_actions,
+		study_actions,
+		market_actions,
+		fallback_next_action
+	)
+	var next_step := ""
+	if not ready_response.is_empty():
+		var response_label := TownRules._short_action_label(ready_response, "Response order")
+		var move_left := int(ready_response.get("remaining_movement_after_order", move_current))
+		next_step = "Use %s in Logistics, then return to the field route with %d move." % [response_label, move_left]
+	elif move_current <= 0:
+		next_step = "%s Then return to the field and choose End Turn to refresh movement." % next_action
+	else:
+		next_step = "%s Then return to the field route with %d/%d move." % [next_action, move_current, move_max]
 	departure["movement_current"] = move_current
 	departure["movement_max"] = move_max
 	departure["button_label"] = "Return to Field"
-	if int(departure.get("ready_response_action_count", 0)) > 0:
+	departure["ready_response_action_count"] = 1 if not ready_response.is_empty() else 0
+	departure["town_readiness"] = recommendation
+	departure["affected"] = affected
+	departure["why_it_matters"] = why_it_matters
+	departure["next_step"] = next_step
+	if not ready_response.is_empty():
 		departure["visible_text"] = "Ready check: response order is open before returning to the field."
 	elif move_current <= 0:
 		departure["visible_text"] = "Ready check: movement is spent; return to the field, then choose End Turn."
 	else:
 		departure["visible_text"] = "Ready check: finish town orders, then return to the field with %d/%d move." % [move_current, move_max]
+	departure["tooltip_text"] = "Departure Check\n- Town readiness: %s\n- Affected: %s\n- Why it matters: %s\n- Next practical action: %s" % [
+		recommendation,
+		affected,
+		why_it_matters,
+		next_step,
+	]
 	_last_departure_confirmation = departure.duplicate(true)
 	return departure
 
-func _resource_ledger_tooltip_text() -> String:
-	var economy_plan := _economy_readability_surface()
+func _cached_town_recommendation_line(town: Dictionary, build_actions: Array, recruit_actions: Array, fallback: String) -> String:
+	var recommendation := {}
+	var best_score := -999999
+	for action_value in build_actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var score := TownRules._town_build_recommendation_score(town, action)
+		if score > best_score:
+			best_score = score
+			recommendation = action
+	for action_value in recruit_actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var score := TownRules._town_recruit_recommendation_score(action)
+		if score > best_score:
+			best_score = score
+			recommendation = action
+	if recommendation.is_empty():
+		return fallback
+	var label := TownRules._short_action_label(recommendation, "Town order")
+	var impact := String(recommendation.get("impact_line", "")).trim_suffix(".")
+	var readiness := String(recommendation.get("affordability_label", ""))
+	if readiness == "":
+		readiness = String(recommendation.get("disabled_reason", ""))
+	if impact != "" and readiness != "":
+		return "%s | %s | %s" % [label, readiness, impact]
+	if impact != "":
+		return "%s | %s" % [label, impact]
+	if readiness != "":
+		return "%s | %s" % [label, readiness]
+	return "%s is the clearest town order." % label
+
+func _cached_next_town_action_line(
+	town: Dictionary,
+	build_actions: Array,
+	recruit_actions: Array,
+	response_actions: Array,
+	study_actions: Array,
+	market_actions: Array,
+	fallback: String
+) -> String:
+	for action_value in build_actions:
+		if not (action_value is Dictionary) or bool(action_value.get("disabled", false)):
+			continue
+		var action: Dictionary = action_value
+		var projection := TownRules._action_projection_line(action)
+		if projection != "":
+			return "%s: %s" % [TownRules._short_action_label(action, "Build order"), projection]
+		return "%s is ready." % TownRules._short_action_label(action, "Build order")
+	for action_value in recruit_actions:
+		if not (action_value is Dictionary) or int(action_value.get("direct_affordable_count", 0)) <= 0:
+			continue
+		return "%s fields %d now." % [
+			TownRules._short_action_label(action_value, "Recruit order"),
+			int(action_value.get("direct_affordable_count", 0)),
+		]
+	for action_value in response_actions:
+		if action_value is Dictionary and not bool(action_value.get("disabled", false)):
+			return "%s secures the frontier chain." % TownRules._short_action_label(action_value, "Response order")
+	for action_value in study_actions:
+		if action_value is Dictionary and not bool(action_value.get("disabled", false)):
+			return "%s expands the hero spellbook." % TownRules._short_action_label(action_value, "Study order")
+	for action_value in market_actions:
+		if action_value is Dictionary and not bool(action_value.get("disabled", false)):
+			return "%s converts stores for blocked orders." % TownRules._short_action_label(action_value, "Exchange")
+	for action_value in build_actions:
+		if action_value is Dictionary and bool(action_value.get("market_coverable", false)):
+			return "Trade first for %s." % TownRules._short_action_label(action_value, "Build order")
+	for action_value in recruit_actions:
+		if action_value is Dictionary and bool(action_value.get("market_coverable", false)):
+			return "Trade first for %s." % TownRules._short_action_label(action_value, "Recruit order")
+	for action_value in build_actions:
+		if action_value is Dictionary:
+			return "%s blocked: %s." % [
+				TownRules._short_action_label(action_value, "Build order"),
+				String(action_value.get("disabled_reason", "stores are too thin")).trim_prefix("Blocked: "),
+			]
+	for action_value in recruit_actions:
+		if action_value is Dictionary:
+			return "%s blocked: %s." % [
+				TownRules._short_action_label(action_value, "Recruit order"),
+				String(action_value.get("disabled_reason", "stores are too thin")).trim_prefix("Blocked: "),
+			]
+	return fallback if fallback != "" else "Leave town; no production order is open."
+
+func _resource_ledger_tooltip_text(build_actions_override: Variant = null, recruit_actions_override: Variant = null) -> String:
+	return _resource_ledger_tooltip_text_from_surface(_economy_readability_surface(build_actions_override, recruit_actions_override))
+
+func _resource_ledger_tooltip_text_from_surface(economy_plan: Dictionary) -> String:
 	return _join_tooltip_sections([
 		"Resource Ledger\nFull stockpile: %s" % OverworldRules.describe_resource_stockpile(
 			_session.overworld.get("resources", {}),
@@ -950,14 +1246,19 @@ func _resource_ledger_tooltip_text() -> String:
 		String(economy_plan.get("tooltip_text", "")),
 	])
 
-func _economy_readability_surface() -> Dictionary:
+func _economy_readability_surface(
+	build_actions_override: Variant = null,
+	recruit_actions_override: Variant = null,
+	context_override: Variant = null
+) -> Dictionary:
 	var town := TownRules.get_active_town(_session)
 	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
-	var town_income := OverworldRules.town_income(town, _session) if not town.is_empty() else {}
-	var site_income := OverworldRules.controlled_resource_site_income(_session, "player")
-	var build_plan := _economy_build_plan_surface(town, resources)
-	var muster_plan := _economy_muster_plan_surface(town, resources)
-	var field_site_count := _player_controlled_economy_site_count()
+	var cached_context: Dictionary = context_override if context_override is Dictionary else {}
+	var town_income := _duplicate_dictionary(cached_context.get("daily_town_income", {})) if not cached_context.is_empty() else (OverworldRules.town_income(town, _session) if not town.is_empty() else {})
+	var site_income := _duplicate_dictionary(cached_context.get("daily_field_income", {})) if not cached_context.is_empty() else OverworldRules.controlled_resource_site_income(_session, "player")
+	var build_plan := _economy_build_plan_surface(town, resources, build_actions_override)
+	var muster_plan := _economy_muster_plan_surface(town, resources, recruit_actions_override)
+	var field_site_count := int(cached_context.get("field_site_count", 0)) if not cached_context.is_empty() else _player_controlled_economy_site_count()
 	var field_site_line := "Field sites: %d controlled, daily %s." % [
 		field_site_count,
 		_economy_delta_line(site_income, "no field-site income"),
@@ -995,8 +1296,19 @@ func _economy_readability_surface() -> Dictionary:
 		"field_site_line": field_site_line,
 	}
 
-func _economy_build_plan_surface(town: Dictionary, resources: Dictionary) -> Dictionary:
-	var actions := TownRules.get_build_actions(_session)
+func _economy_context_surface_from_readability(economy_surface: Dictionary) -> Dictionary:
+	return {
+		"daily_town_income": _duplicate_dictionary(economy_surface.get("daily_town_income", {})),
+		"daily_field_income": _duplicate_dictionary(economy_surface.get("daily_field_income", {})),
+		"field_site_count": int(economy_surface.get("field_site_count", 0)),
+	}
+
+func _economy_build_plan_surface(town: Dictionary, resources: Dictionary, actions_override: Variant = null) -> Dictionary:
+	var actions: Array
+	if actions_override is Array:
+		actions = _duplicate_action_array(actions_override)
+	else:
+		actions = TownRules.get_build_actions(_session)
 	var ready_orders := 0
 	var market_orders := 0
 	var blocked_orders := 0
@@ -1059,8 +1371,12 @@ func _economy_build_plan_surface(town: Dictionary, resources: Dictionary) -> Dic
 		"has_bottleneck": not bottleneck.is_empty(),
 	}
 
-func _economy_muster_plan_surface(town: Dictionary, resources: Dictionary) -> Dictionary:
-	var actions := TownRules.get_recruit_actions(_session)
+func _economy_muster_plan_surface(town: Dictionary, resources: Dictionary, actions_override: Variant = null) -> Dictionary:
+	var actions: Array
+	if actions_override is Array:
+		actions = _duplicate_action_array(actions_override)
+	else:
+		actions = TownRules.get_recruit_actions(_session)
 	var ready_units := 0
 	var market_units := 0
 	var blocked_units := 0
@@ -1100,6 +1416,113 @@ func _economy_muster_plan_surface(town: Dictionary, resources: Dictionary) -> Di
 		"blocked_unit_count": blocked_units,
 		"player_line": "%s - %s" % [selected_name, readiness_line],
 	}
+
+func _economy_build_action_models(actions: Variant) -> Array:
+	var models := []
+	if not (actions is Array):
+		return models
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		models.append({
+			"id": String(action.get("id", "")),
+			"label": String(action.get("label", "")),
+			"button_label": String(action.get("button_label", "")),
+			"cost": _duplicate_dictionary(action.get("cost", {})),
+			"direct_affordable": bool(action.get("direct_affordable", false)),
+			"market_coverable": bool(action.get("market_coverable", false)),
+			"affordability_label": String(action.get("affordability_label", "")),
+			"disabled_reason": String(action.get("disabled_reason", "")),
+			"shortfall_summary": String(action.get("shortfall_summary", "")),
+		})
+	return models
+
+func _economy_recruit_action_models(actions: Variant) -> Array:
+	var models := []
+	if not (actions is Array):
+		return models
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		models.append({
+			"id": String(action.get("id", "")),
+			"label": String(action.get("label", "")),
+			"button_label": String(action.get("button_label", "")),
+			"unit_cost": _duplicate_dictionary(action.get("unit_cost", {})),
+			"available_count": int(action.get("available_count", 0)),
+			"direct_affordable_count": int(action.get("direct_affordable_count", 0)),
+			"market_affordable_count": int(action.get("market_affordable_count", 0)),
+			"affordability_label": String(action.get("affordability_label", "")),
+			"disabled_reason": String(action.get("disabled_reason", "")),
+		})
+	return models
+
+func _build_action_copy_models(actions: Variant) -> Dictionary:
+	var models := {}
+	if not (actions is Array):
+		return models
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var action_id := String(action.get("id", ""))
+		if action_id == "":
+			continue
+		var summary_lines := _summary_lines_without_dynamic_tail(
+			String(action.get("summary", "")),
+			["After build stores:", "Exchange path:", "Blocker:"],
+			true
+		)
+		var ledger_line := String(action.get("ledger_line", ""))
+		var ledger_separator := ledger_line.rfind(" | ")
+		models[action_id] = {
+			"static_summary_lines": summary_lines,
+			"ledger_prefix": ledger_line.left(ledger_separator) if ledger_separator >= 0 else ledger_line,
+			"action_name": String(action.get("label", "Build order")).trim_prefix("Build "),
+		}
+	return models
+
+func _recruit_action_copy_models(actions: Variant) -> Dictionary:
+	var models := {}
+	if not (actions is Array):
+		return models
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var action_id := String(action.get("id", ""))
+		if action_id == "":
+			continue
+		var static_summary_lines := _summary_lines_without_dynamic_tail(
+			String(action.get("summary", "")),
+			["Ready:", "After recruit stores:", "Exchange can unlock", "Blocker:"],
+			false
+		)
+		var cached_impact_line := String(action.get("impact_line", ""))
+		if not static_summary_lines.is_empty() and cached_impact_line != "" and String(static_summary_lines.back()) == cached_impact_line:
+			static_summary_lines.pop_back()
+		models[action_id] = {
+			"static_summary_lines": static_summary_lines,
+			"action_name": String(action.get("label", "Recruit order")).trim_prefix("Recruit "),
+			"unit_id": action_id.trim_prefix("recruit:"),
+		}
+	return models
+
+func _summary_lines_without_dynamic_tail(summary: String, dynamic_prefixes: Array, remove_affordability_line: bool) -> Array:
+	var lines := Array(summary.split("\n", false))
+	while not lines.is_empty() and _line_begins_with_any(String(lines.back()), dynamic_prefixes):
+		lines.pop_back()
+	if remove_affordability_line and not lines.is_empty():
+		lines.pop_back()
+	return lines
+
+func _line_begins_with_any(line: String, prefixes: Array) -> bool:
+	for prefix_value in prefixes:
+		if line.begins_with(String(prefix_value)):
+			return true
+	return false
 
 func _economy_action_name(action: Dictionary, fallback: String) -> String:
 	if action.is_empty():
@@ -1146,6 +1569,27 @@ func _player_controlled_economy_site_count() -> int:
 
 func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var current_lanes := _current_town_tab_lanes()
+	var active_town := TownRules.get_active_town(_session)
+	# The Resource Ledger needs both action models even when the first render only
+	# builds the active tab. Retain only the identity, cost, and affordability data
+	# that the ledger reads; contextual projection/impact copy remains on the full
+	# action surfaces and follows their existing invalidation boundary.
+	var full_build_actions := _duplicate_action_array(TownRules.get_build_actions(_session))
+	var full_recruit_actions := _duplicate_action_array(TownRules.get_recruit_actions(_session))
+	var economy_build_actions := _economy_build_action_models(full_build_actions)
+	var economy_recruit_actions := _economy_recruit_action_models(full_recruit_actions)
+	var build_action_copy_models := _build_action_copy_models(full_build_actions)
+	var recruit_action_copy_models := _recruit_action_copy_models(full_recruit_actions)
+	var economy_surface := _economy_readability_surface(economy_build_actions, economy_recruit_actions)
+	var economy_context_surface := _economy_context_surface_from_readability(economy_surface)
+	var stage_state := _build_town_stage_view_state(active_town)
+	var departure_context_surface := {
+		"town_name": TownRules._town_name(active_town),
+		"front": OverworldRules.town_front_state(_session, active_town).duplicate(true),
+		"occupation": OverworldRules.town_occupation_state(_session, active_town).duplicate(true),
+		"logistics": _duplicate_dictionary(stage_state.get("logistics", {})),
+		"recovery": _duplicate_dictionary(stage_state.get("recovery", {})),
+	}
 	var defense_check := _defense_check_surface()
 	var production_overview := TownRules.describe_production_overview(_session) if (not minimal or current_lanes.has("build")) else ""
 	var production_text := _production_overview_with_defense_check(
@@ -1179,7 +1623,13 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"header_text": TownRules.describe_header(_session),
 		"status_text": TownRules.describe_status(_session),
 		"resources_text": OverworldRules.describe_resources(_session),
-		"resources_tooltip_text": _resource_ledger_tooltip_text(),
+		"resources_tooltip_text": _resource_ledger_tooltip_text_from_surface(economy_surface),
+		"economy_readability_surface": economy_surface.duplicate(true),
+		"economy_context_surface": economy_context_surface.duplicate(true),
+		"economy_build_actions": _duplicate_action_array(economy_build_actions),
+		"economy_recruit_actions": _duplicate_action_array(economy_recruit_actions),
+		"build_action_copy_models": build_action_copy_models.duplicate(true),
+		"recruit_action_copy_models": recruit_action_copy_models.duplicate(true),
 		"outlook_text": TownRules.describe_outlook_board(_session),
 		"command_ledger_text": TownRules.describe_command_ledger(_session),
 		"hero_text": OverworldRules.describe_hero(_session),
@@ -1211,19 +1661,21 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 		"artifact_tooltip_text": _join_tooltip_sections([String(artifact_readiness.get("tooltip_text", "")), artifact_text]),
 		"dispatch_text": dispatch_text,
 		"departure": departure,
+		"departure_fallback_next_action": TownRules._next_town_action_line(_session, TownRules.get_active_town(_session)),
+		"departure_context_surface": departure_context_surface.duplicate(true),
 		"order_target": order_target,
 		"town_context_surface": town_context_surface,
 		"hero_actions": [] if minimal else _duplicate_action_array(TownRules.get_hero_actions(_session)),
-		"build_actions": _duplicate_action_array(TownRules.get_build_actions(_session)) if (not minimal or current_lanes.has("build")) else [],
+		"build_actions": _duplicate_action_array(full_build_actions) if (not minimal or current_lanes.has("build")) else [],
 		"market_actions": _duplicate_action_array(TownRules.get_market_actions(_session)) if (not minimal or current_lanes.has("market")) else [],
-		"recruit_actions": _duplicate_action_array(TownRules.get_recruit_actions(_session)) if (not minimal or current_lanes.has("recruit")) else [],
+		"recruit_actions": _duplicate_action_array(full_recruit_actions) if (not minimal or current_lanes.has("recruit")) else [],
 		"tavern_actions": _duplicate_action_array(TownRules.get_tavern_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 		"transfer_actions": _duplicate_action_array(TownRules.get_transfer_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 		"response_actions": _duplicate_action_array(TownRules.get_response_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
 		"study_actions": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)) if (not minimal or current_lanes.has("study")) else [],
 		"specialty_actions": [] if minimal else _duplicate_action_array(TownRules.get_specialty_actions(_session)),
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)) if (not minimal or current_lanes.has("logistics")) else [],
-		"stage_state": _build_town_stage_view_state(),
+		"stage_state": stage_state,
 	}
 
 func _build_town_stage_view_state(town_override: Dictionary = {}) -> Dictionary:
@@ -1307,10 +1759,10 @@ func _collection_size(value: Variant) -> int:
 
 func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	if _session == null:
-		return "v4|missing-session"
+		return "v5|missing-session"
 	var parts := []
 	var active_tab := _management_tabs.current_tab if _management_tabs != null else -1
-	parts.append("v4")
+	parts.append("v5")
 	parts.append("mode:%s" % ("minimal" if minimal else "full"))
 	parts.append("tab:%d" % active_tab)
 	parts.append("day:%d" % int(_session.day))
@@ -1326,7 +1778,34 @@ func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	parts.append("occupation:%s" % _compact_local_state_signature(town.get("occupation", {})))
 	parts.append("market:%s" % _compact_local_state_signature(town.get("market_state", town.get("market", {}))))
 	parts.append("response:%s" % _compact_local_state_signature(town.get("response_state", town.get("responses", {}))))
+	parts.append("economy_context:%s" % _town_economy_context_signature())
 	return "|".join(parts)
+
+func _town_economy_context_signature() -> String:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var resolved_encounters := _normalize_string_array(_session.overworld.get("resolved_encounters", []))
+	resolved_encounters.sort()
+	var town_links := []
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var linked_town: Dictionary = town_value
+		town_links.append({
+			"placement_id": String(linked_town.get("placement_id", "")),
+			"owner": String(linked_town.get("owner", "")),
+			"x": int(linked_town.get("x", 0)),
+			"y": int(linked_town.get("y", 0)),
+		})
+	var context := {
+		"town_links": town_links,
+		"resource_nodes": _session.overworld.get("resource_nodes", []),
+		"encounters": _session.overworld.get("encounters", []),
+		"resolved_encounters": resolved_encounters,
+		"active_hero_id": String(_session.overworld.get("active_hero_id", hero.get("id", ""))),
+		"active_hero_level": int(hero.get("level", 0)),
+		"active_hero_command": _duplicate_dictionary(hero.get("command", {})),
+	}
+	return JSON.stringify(context).sha256_text()
 
 func _active_hero_cache_signature(town: Dictionary) -> String:
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
@@ -1971,6 +2450,9 @@ func validation_resource_ledger_snapshot() -> Dictionary:
 		"resources_visible_text": _resource_label.text,
 		"resources_tooltip_text": _resource_label.tooltip_text,
 		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
+		"rendered_economy_readability_surface": _last_economy_readability_surface.duplicate(true),
+		"rendered_build_actions": _duplicate_action_array(_last_rendered_build_actions),
+		"rendered_recruit_actions": _duplicate_action_array(_last_rendered_recruit_actions),
 		"economy_readability_surface": _economy_readability_surface(),
 	}
 
