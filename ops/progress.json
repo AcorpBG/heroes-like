@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Confirmed display-mode rollback and generated-opening autosave completion persistence are complete. Faction balance, native Windows hardware certification, accessibility, and overall release readiness remain open.",
+  "currentNotes": "Player withdrawal confirmation is complete: Retreat and Surrender now require a live, controller-safe, stale-validated confirmation before existing irreversible aftermath runs. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-generated-opening-autosave-completion-persistence-10184",
-  "currentSliceId": "save-generated-opening-autosave-completion-persistence-10184",
-  "currentSliceNotes": "Completed post-success generated opening-autosave persistence: successful files and live sessions carry completion without pending intent, restore cannot reschedule the opening save, and failure preserves exact retry state and prior bytes.",
+  "currentSlice": "battle-player-withdrawal-confirmation-10184",
+  "currentSliceId": "battle-player-withdrawal-confirmation-10184",
+  "currentSliceNotes": "Completed the shared Retreat/Surrender confirmation with live authored consequences, exact cancel/focus restoration, stale-action rejection, and exactly-once existing BattleRules resolution.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Opening Autosave Completion Persistence",
-  "currentSliceUpdatedAt": "2026-08-09T23:58:15Z",
+  "currentSliceTitle": "Player Withdrawal Confirmation",
+  "currentSliceUpdatedAt": "2026-08-10T00:33:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -73893,6 +73893,62 @@
       ],
       "remainingWork": "No work remains in this slice. The unrelated legacy random-map replay fixture still expects a nonempty template id before reaching its save checks; Native RMG exact-state-chain support and overall release readiness remain open.",
       "completedAt": "2026-08-09T23:58:15Z"
+    },
+    {
+      "id": "battle-player-withdrawal-confirmation-10184",
+      "title": "Player Withdrawal Confirmation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Protect irreversible player Retreat and Surrender aftermath behind a live, controller-safe confirmation without changing withdrawal rules.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_withdrawal_confirmation_runtime_report.gd",
+        "tests/battle_withdrawal_confirmation_runtime_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/battle_layout_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "retreat_executes_on_first_press": true,
+        "surrender_executes_on_first_press": true,
+        "withdrawal_confirmation": false,
+        "cancel_session_mutation": "not_applicable"
+      },
+      "completionCriteria": [
+        "Retreat and Surrender first press opens live consequence confirmation instead of resolving",
+        "Cancel and controller Back preserve exact session bytes and restore originating focus",
+        "Confirm revalidates availability, fails closed when stale, and otherwise resolves the existing action exactly once",
+        "Focused runtime/controller, battle layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "withdrawal aftermath, AI withdrawal, combat balance/math, Quick Resolve, save schema, battle exit redesign, or overall release readiness"
+      ],
+      "createdAt": "2026-08-09T23:59:18Z",
+      "startedAt": "2026-08-09T23:59:18Z",
+      "updatedAt": "2026-08-10T00:33:13Z",
+      "notes": "BattleShell now opens one shared compact modal from both withdrawal buttons, uses the live action surface, restores exact focus/state on cancel, revalidates on confirm, and calls the existing resolver exactly once.",
+      "validation": [
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_withdrawal_confirmation_runtime_report.tscn (passed; exact cancel/stale rejection and direct BattleRules parity for Retreat and Surrender, perform and route deltas exactly one on valid confirm)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn (passed; native-dialog Keep Fighting focus, controller Back exact cancel, originating focus restored for both actions)",
+        "BATTLE_LAYOUT_SMOKE_VIEWPORT_INDEX=1 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_layout_smoke.tscn (passed; scoped 1280x720 case exited zero naturally)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/battle_event_animation_state_report.tscn (passed; 23 cases including Retreat and Surrender)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed; only expected timed scan-abort warning)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Withdrawal aftermath math, AI withdrawal, broader accessibility, balance, certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T00:33:13Z"
     }
   ],
   "project": "heroes-like",

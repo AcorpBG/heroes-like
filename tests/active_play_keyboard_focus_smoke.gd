@@ -255,6 +255,10 @@ func _check_battle_keyboard_defend() -> bool:
 		return _fail("Canceling Quick Resolve changed battle state.")
 	if _focus_name() != "QuickResolve":
 		return _fail("Canceling Quick Resolve did not restore focus to its action-strip command: %s." % _focus_name())
+	if not await _check_battle_withdrawal_controller_cancel(shell, session, "retreat", "Retreat"):
+		return false
+	if not await _check_battle_withdrawal_controller_cancel(shell, session, "surrender", "Surrender"):
+		return false
 
 	var defend: Button = shell.get_node("%Defend")
 	if defend.disabled:
@@ -278,6 +282,57 @@ func _check_battle_keyboard_defend() -> bool:
 		return _fail("Battle post-action focus did not follow the next suggested order: expected=%s got=%s." % [post_expected, post_owner.name])
 	shell.queue_free()
 	await get_tree().process_frame
+	return true
+
+func _check_battle_withdrawal_controller_cancel(shell: Node, session, action_id: String, button_name: String) -> bool:
+	var origin_button: Button = shell.get_node_or_null("%%%s" % button_name)
+	var dialog: ConfirmationDialog = shell.get_node_or_null("WithdrawalConfirmationDialog")
+	if origin_button == null or dialog == null:
+		return _fail("Battle %s confirmation controls are missing." % button_name)
+	if origin_button.disabled:
+		return _fail("Battle %s command is disabled during the active player turn." % button_name)
+
+	var action_surface: Dictionary = BattleRules.get_action_surface(session)
+	var action_value: Variant = action_surface.get(action_id, {})
+	var action: Dictionary = action_value if action_value is Dictionary else {}
+	if action.is_empty() or bool(action.get("disabled", true)):
+		return _fail("Battle %s fixture has no ready live action surface: %s." % [button_name, action])
+	var snapshot_before := JSON.stringify(session.to_dict())
+	origin_button.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+
+	if not dialog.visible:
+		return _fail("Controller-confirmed %s did not open the shared withdrawal confirmation." % button_name)
+	if dialog.title != "Confirm %s?" % button_name:
+		return _fail("%s confirmation title is not action-specific: %s." % [button_name, dialog.title])
+	if dialog.get_ok_button().text != "Confirm %s" % button_name or dialog.get_cancel_button().text != "Keep Fighting":
+		return _fail("%s confirmation actions are unclear: confirm=%s cancel=%s." % [button_name, dialog.get_ok_button().text, dialog.get_cancel_button().text])
+	for field in ["summary", "consequence", "confirmation"]:
+		var required_copy := String(action.get(field, "")).strip_edges()
+		if required_copy == "" or required_copy not in dialog.dialog_text:
+			return _fail("%s confirmation omitted the live %s copy: expected=%s dialog=%s." % [button_name, field, required_copy, dialog.dialog_text])
+	var shell_snapshot: Dictionary = shell.call("validation_snapshot")
+	var exit_cues_value: Variant = shell_snapshot.get("battle_exit_order_cues", {})
+	var exit_cues: Dictionary = exit_cues_value if exit_cues_value is Dictionary else {}
+	for field in ["route", "save"]:
+		var required_cue := String(exit_cues.get(field, "")).strip_edges()
+		if required_cue == "" or required_cue not in dialog.dialog_text:
+			return _fail("%s confirmation omitted the live %s cue: expected=%s dialog=%s." % [button_name, field, required_cue, dialog.dialog_text])
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+	if dialog_focus_owner != dialog.get_cancel_button():
+		return _fail("%s confirmation did not place initial focus on the safer Keep Fighting action in its native dialog viewport: %s." % [button_name, dialog_focus_owner])
+
+	await _press_joypad_button(JOY_BUTTON_B)
+	await _settle()
+	if dialog.visible:
+		return _fail("Controller B did not close the %s confirmation." % button_name)
+	var snapshot_after := JSON.stringify(session.to_dict())
+	if snapshot_after != snapshot_before:
+		return _fail("Controller-canceling %s changed the byte-exact session snapshot." % button_name)
+	if get_viewport().gui_get_focus_owner() != origin_button:
+		return _fail("Canceling %s did not restore focus to the exact originating command: %s." % [button_name, _focus_name()])
 	return true
 
 func _legal_cardinal_move(session, minimum_steps: int = 1) -> Dictionary:

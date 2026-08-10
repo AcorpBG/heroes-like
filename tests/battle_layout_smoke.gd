@@ -270,6 +270,14 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: Quick Resolve is not visible in the battle action strip at %s." % [viewport_size])
 		get_tree().quit(1)
 		return false
+	for withdrawal_button_name in ["Retreat", "Surrender"]:
+		var withdrawal_button: Button = shell.get_node_or_null("%%%s" % withdrawal_button_name)
+		if withdrawal_button == null or not viewport_rect.intersects(withdrawal_button.get_global_rect()):
+			push_error("Battle layout smoke: %s is not visible in the battle action strip at %s." % [withdrawal_button_name, viewport_size])
+			get_tree().quit(1)
+			return false
+	if viewport_size == TARGET_VIEWPORT_SIZES[1] and not await _run_withdrawal_confirmation_layout_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
 	if not await _run_direct_actionable_after_move_empty_handoff_case(frame, viewport_size, false):
 		return false
 	if not await _run_direct_actionable_after_move_empty_handoff_case(frame, viewport_size, true):
@@ -285,6 +293,50 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		if not await _run_direct_actionable_after_move_routed_resolution_case(viewport_size, false, true):
 			return false
 		if not await _run_direct_actionable_after_move_routed_resolution_case(viewport_size, true, true):
+			return false
+	return true
+
+func _run_withdrawal_confirmation_layout_case(shell: Node, session, viewport_size: Vector2) -> bool:
+	if not shell.has_method("validation_request_withdrawal") or not shell.has_method("validation_cancel_withdrawal"):
+		push_error("Battle layout smoke: battle shell does not expose withdrawal confirmation validation hooks at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var dialog: ConfirmationDialog = shell.get_node_or_null("WithdrawalConfirmationDialog")
+	if dialog == null:
+		push_error("Battle layout smoke: shared withdrawal confirmation is missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+
+	for action_id in ["retreat", "surrender"]:
+		var action_surface: Dictionary = BattleRules.get_action_surface(session)
+		var action_value: Variant = action_surface.get(action_id, {})
+		var action: Dictionary = action_value if action_value is Dictionary else {}
+		if action.is_empty() or bool(action.get("disabled", true)):
+			push_error("Battle layout smoke: %s is not ready for compact confirmation coverage at %s: %s." % [action_id, viewport_size, action])
+			get_tree().quit(1)
+			return false
+		var request: Dictionary = shell.call("validation_request_withdrawal", action_id)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if not bool(request.get("ok", false)) or not dialog.visible:
+			push_error("Battle layout smoke: %s confirmation did not open at %s: %s." % [action_id, viewport_size, request])
+			get_tree().quit(1)
+			return false
+		var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+		var visible_rect := get_viewport().get_visible_rect()
+		if not visible_rect.encloses(dialog_rect):
+			push_error("Battle layout smoke: %s confirmation overflowed the 1280x720 viewport: dialog=%s viewport=%s." % [action_id, dialog_rect, visible_rect])
+			get_tree().quit(1)
+			return false
+		if dialog_rect.size.x > viewport_size.x * 0.7 or dialog_rect.size.y > viewport_size.y * 0.7 or dialog_rect.size.x * dialog_rect.size.y > viewport_size.x * viewport_size.y * 0.42:
+			push_error("Battle layout smoke: %s confirmation covers too much of the battle surface at %s: dialog=%s." % [action_id, viewport_size, dialog_rect])
+			get_tree().quit(1)
+			return false
+		var cancel_result: Dictionary = shell.call("validation_cancel_withdrawal")
+		await get_tree().process_frame
+		if not bool(cancel_result.get("ok", false)) or dialog.visible:
+			push_error("Battle layout smoke: %s confirmation did not close cleanly after compact-layout coverage at %s: %s." % [action_id, viewport_size, cancel_result])
+			get_tree().quit(1)
 			return false
 	return true
 
