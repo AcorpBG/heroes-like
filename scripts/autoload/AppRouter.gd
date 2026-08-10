@@ -29,6 +29,7 @@ const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, s
 const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
 const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
+const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Use Save Battle now to protect the result."
 const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
@@ -77,6 +78,21 @@ var _battle_entry_last_result := {}
 var _battle_entry_last_route := {}
 var _battle_entry_last_runtime_issue := {}
 var _validation_battle_entry_routing_suppressed := false
+var _battle_resolution_checkpoint_request_count := 0
+var _battle_resolution_checkpoint_save_attempt_count := 0
+var _battle_resolution_checkpoint_save_failure_count := 0
+var _battle_resolution_checkpoint_already_durable_count := 0
+var _battle_resolution_checkpoint_route_request_count := 0
+var _battle_resolution_checkpoint_route_attempt_count := 0
+var _battle_resolution_checkpoint_suppressed_route_count := 0
+var _battle_resolution_checkpoint_skipped_durable_route_count := 0
+var _battle_resolution_checkpoint_runtime_issue_count := 0
+var _battle_resolution_checkpoint_durable := false
+var _battle_resolution_checkpoint_identity := {}
+var _battle_resolution_checkpoint_last_result := {}
+var _battle_resolution_checkpoint_last_route := {}
+var _battle_resolution_checkpoint_last_runtime_issue := {}
+var _validation_battle_resolution_checkpoint_routing_suppressed := false
 var _scenario_outcome_request_count := 0
 var _scenario_outcome_save_attempt_count := 0
 var _scenario_outcome_save_failure_count := 0
@@ -592,6 +608,326 @@ func go_to_overworld() -> void:
 	}
 	metadata.merge(autosave_intent, true)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
+
+func checkpoint_battle_resolution_for_overworld(route_after_checkpoint: bool = false) -> Dictionary:
+	_battle_resolution_checkpoint_request_count += 1
+	if not SessionState.has_playable_session():
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"missing_session",
+			"Cannot checkpoint a resolved battle without an active expedition.",
+			"",
+			false,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+	var session := SessionState.ensure_active_session()
+	if session.scenario_status != "in_progress":
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"scenario_terminal",
+			"Resolved expeditions must use the outcome checkpoint.",
+			"",
+			true,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+	if not session.battle.is_empty():
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"battle_still_active",
+			"The active battle must resolve before its return checkpoint can be saved.",
+			"",
+			false,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+	if _battle_resolution_checkpoint_durable:
+		if _battle_resolution_checkpoint_identity_matches(session):
+			_battle_resolution_checkpoint_already_durable_count += 1
+			_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+				true,
+				true,
+				false,
+				"already_saved",
+				"Battle result checkpoint is already saved.",
+				"",
+				true,
+				_battle_resolution_checkpoint_last_result.get("save_result", {})
+			)
+			if route_after_checkpoint:
+				return _battle_resolution_checkpoint_route_after_save(_battle_resolution_checkpoint_last_result)
+			return _battle_resolution_checkpoint_last_result.duplicate(true)
+		_clear_battle_resolution_checkpoint_authority()
+
+	var pre_route_snapshot: Dictionary = session.to_dict()
+	_prepare_battle_resolution_overworld_state(session)
+	_battle_resolution_checkpoint_save_attempt_count += 1
+	var save_result: Dictionary = SaveService.save_runtime_autosave_session(session)
+	if not bool(save_result.get("ok", false)):
+		session.from_dict(pre_route_snapshot)
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_save_failure_count += 1
+		_battle_resolution_checkpoint_runtime_issue_count += 1
+		_battle_resolution_checkpoint_last_runtime_issue = RuntimeIssueLog.emit_error(
+			"battle",
+			"battle_resolution_autosave_failed",
+			BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE,
+			{
+				"save_reason": String(save_result.get("reason", "unknown")).left(80),
+				"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(180),
+				"scenario_id": String(session.scenario_id).left(96),
+				"scenario_status": String(session.scenario_status).left(32),
+				"game_state": String(session.game_state).left(40),
+				"battle_active": not session.battle.is_empty(),
+				"battle_outcome": String(session.flags.get("last_battle_outcome", "")).left(48),
+			},
+			session
+		)
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"autosave_failed",
+			BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE,
+			"manual_save",
+			true,
+			save_result
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+	_battle_resolution_checkpoint_durable = true
+	_battle_resolution_checkpoint_identity = _battle_resolution_checkpoint_session_identity(session)
+	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+		true,
+		true,
+		false,
+		"saved",
+		"Battle result checkpoint saved.",
+		"",
+		true,
+		save_result
+	)
+	if route_after_checkpoint:
+		return _battle_resolution_checkpoint_route_after_save(_battle_resolution_checkpoint_last_result)
+	return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+func route_checkpointed_battle_resolution() -> Dictionary:
+	_battle_resolution_checkpoint_route_request_count += 1
+	if not SessionState.has_playable_session():
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"missing_session",
+			"Cannot route a resolved battle without an active expedition.",
+			"",
+			false,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+	var session := SessionState.ensure_active_session()
+	if session.scenario_status != "in_progress":
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"scenario_terminal",
+			"Resolved expeditions must use the outcome route.",
+			"",
+			true,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+	if not session.battle.is_empty():
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"battle_still_active",
+			"The battle is still active and cannot return to the field.",
+			"",
+			false,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+	if not _battle_resolution_checkpoint_durable:
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"checkpoint_required",
+			"Save the resolved battle checkpoint before returning to the field.",
+			"manual_save",
+			true,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+	if not _battle_resolution_checkpoint_identity_matches(session):
+		_clear_battle_resolution_checkpoint_authority()
+		_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+			false,
+			false,
+			false,
+			"stale_checkpoint",
+			"The resolved battle changed after its checkpoint; save it again before returning.",
+			"manual_save",
+			true,
+			{}
+		)
+		return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+	var save_result_value: Variant = _battle_resolution_checkpoint_last_result.get("save_result", {})
+	var save_result: Dictionary = save_result_value if save_result_value is Dictionary else {}
+	_clear_battle_resolution_checkpoint_authority()
+	_battle_resolution_checkpoint_skipped_durable_route_count += 1
+	var routed := _record_battle_resolution_checkpoint_route(OVERWORLD_SCENE, "already_saved")
+	if routed:
+		_change_scene(OVERWORLD_SCENE)
+	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
+		true,
+		true,
+		true,
+		"already_saved",
+		"Battle result saved. Returning to the field.",
+		"",
+		true,
+		save_result
+	)
+	return _battle_resolution_checkpoint_last_result.duplicate(true)
+
+func _battle_resolution_checkpoint_route_after_save(checkpoint_result: Dictionary) -> Dictionary:
+	var routed_result := route_checkpointed_battle_resolution()
+	if bool(routed_result.get("ok", false)):
+		routed_result["reason"] = "saved"
+		routed_result["message"] = "Battle result saved. Returning to the field."
+		routed_result["save_result"] = checkpoint_result.get("save_result", {}).duplicate(true)
+		_battle_resolution_checkpoint_last_result = routed_result.duplicate(true)
+	return routed_result
+
+func _prepare_battle_resolution_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
+	session.game_state = "overworld"
+	OverworldRules.clear_active_town_visit(session)
+	OverworldRules.mark_runtime_normalized_transition_state(session)
+
+func _battle_resolution_checkpoint_result(
+	ok: bool,
+	saved: bool,
+	routed: bool,
+	reason: String,
+	message: String,
+	retry_action: String,
+	battle_resolved: bool,
+	save_result: Dictionary
+) -> Dictionary:
+	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
+	return {
+		"ok": ok,
+		"saved": saved,
+		"routed": routed,
+		"reason": reason,
+		"retry_action": retry_action,
+		"battle_resolved": battle_resolved,
+		"battle_active": not session.battle.is_empty() if session != null else false,
+		"battle_pending": not session.battle.is_empty() if session != null else false,
+		"scenario_status": String(session.scenario_status) if session != null else "",
+		"game_state": String(session.game_state) if session != null else "",
+		"checkpoint_durable": _battle_resolution_checkpoint_durable,
+		"message": message,
+		"save_result": save_result.duplicate(true),
+	}
+
+func _record_battle_resolution_checkpoint_route(scene_path: String, reason: String) -> bool:
+	_battle_resolution_checkpoint_route_attempt_count += 1
+	_battle_resolution_checkpoint_last_route = {
+		"target_scene": scene_path,
+		"target": "overworld" if scene_path == OVERWORLD_SCENE else scene_path,
+		"reason": reason,
+		"suppressed": _validation_battle_resolution_checkpoint_routing_suppressed,
+	}
+	if _validation_battle_resolution_checkpoint_routing_suppressed:
+		_battle_resolution_checkpoint_suppressed_route_count += 1
+		return false
+	return true
+
+func _battle_resolution_checkpoint_session_identity(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	return {
+		"session_id_hash": String(session.session_id).sha256_text(),
+		"scenario_id": String(session.scenario_id).left(128),
+		"scenario_status": String(session.scenario_status).left(32),
+		"day": int(session.day),
+		"battle_outcome": String(session.flags.get("last_battle_outcome", "")).left(48),
+		"payload_hash": JSON.stringify(session.to_dict()).sha256_text(),
+	}
+
+func _battle_resolution_checkpoint_identity_matches(session: SessionStateStoreScript.SessionData) -> bool:
+	return (
+		_battle_resolution_checkpoint_durable
+		and not _battle_resolution_checkpoint_identity.is_empty()
+		and _battle_resolution_checkpoint_identity == _battle_resolution_checkpoint_session_identity(session)
+	)
+
+func _clear_battle_resolution_checkpoint_authority() -> void:
+	_battle_resolution_checkpoint_durable = false
+	_battle_resolution_checkpoint_identity = {}
+
+func validation_set_battle_resolution_checkpoint_routing_suppressed(suppressed: bool) -> void:
+	_validation_battle_resolution_checkpoint_routing_suppressed = suppressed
+
+func validation_reset_battle_resolution_checkpoint_state() -> void:
+	_battle_resolution_checkpoint_request_count = 0
+	_battle_resolution_checkpoint_save_attempt_count = 0
+	_battle_resolution_checkpoint_save_failure_count = 0
+	_battle_resolution_checkpoint_already_durable_count = 0
+	_battle_resolution_checkpoint_route_request_count = 0
+	_battle_resolution_checkpoint_route_attempt_count = 0
+	_battle_resolution_checkpoint_suppressed_route_count = 0
+	_battle_resolution_checkpoint_skipped_durable_route_count = 0
+	_battle_resolution_checkpoint_runtime_issue_count = 0
+	_clear_battle_resolution_checkpoint_authority()
+	_battle_resolution_checkpoint_last_result = {}
+	_battle_resolution_checkpoint_last_route = {}
+	_battle_resolution_checkpoint_last_runtime_issue = {}
+
+func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
+	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
+	return {
+		"request_count": _battle_resolution_checkpoint_request_count,
+		"save_attempt_count": _battle_resolution_checkpoint_save_attempt_count,
+		"save_failure_count": _battle_resolution_checkpoint_save_failure_count,
+		"already_durable_count": _battle_resolution_checkpoint_already_durable_count,
+		"route_request_count": _battle_resolution_checkpoint_route_request_count,
+		"route_attempt_count": _battle_resolution_checkpoint_route_attempt_count,
+		"suppressed_route_count": _battle_resolution_checkpoint_suppressed_route_count,
+		"skipped_durable_route_count": _battle_resolution_checkpoint_skipped_durable_route_count,
+		"runtime_issue_count": _battle_resolution_checkpoint_runtime_issue_count,
+		"routing_suppressed": _validation_battle_resolution_checkpoint_routing_suppressed,
+		"checkpoint_durable": _battle_resolution_checkpoint_durable,
+		"checkpoint_identity": _battle_resolution_checkpoint_identity.duplicate(true),
+		"battle_active": not session.battle.is_empty() if session != null else false,
+		"battle_pending": not session.battle.is_empty() if session != null else false,
+		"scenario_status": String(session.scenario_status) if session != null else "",
+		"game_state": String(session.game_state) if session != null else "",
+		"last_result": _battle_resolution_checkpoint_last_result.duplicate(true),
+		"last_route": _battle_resolution_checkpoint_last_route.duplicate(true),
+		"last_runtime_issue": _battle_resolution_checkpoint_last_runtime_issue.duplicate(true),
+	}
 
 func go_to_town() -> void:
 	var started := ProfileLogScript.begin_usec()
