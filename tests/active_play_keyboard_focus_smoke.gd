@@ -21,6 +21,8 @@ func _run() -> void:
 		return
 	if not await _check_battle_keyboard_defend():
 		return
+	if not await _check_town_return_to_field_controller():
+		return
 	print("%s PASS" % REPORT_ID)
 	get_tree().quit(0)
 
@@ -353,6 +355,92 @@ func _check_battle_keyboard_defend() -> bool:
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _check_town_return_to_field_controller() -> bool:
+	_detach_for_scene_transition()
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var town := _first_player_town(session)
+	if town.is_empty():
+		return _fail("Town return controller fixture has no player-owned town.")
+	_move_active_hero_to_town(session, town)
+	var visit_result: Dictionary = OverworldRules.set_active_town_visit(session, String(town.get("placement_id", "")))
+	if not bool(visit_result.get("ok", false)):
+		return _fail("Town return controller fixture could not establish its active visit: %s." % visit_result)
+	session.game_state = "town"
+	session = SessionState.set_active_session(session)
+	var session_identity = session
+	var day_before := int(session.day)
+	var status_before := String(session.scenario_status)
+	var movement_before := _controller_route_movement_snapshot(session)
+	var autosave_before := _controller_route_file_state("user://saves/autosave.json")
+	if get_tree().change_scene_to_file("res://scenes/town/TownShell.tscn") != OK:
+		return _fail("Town return controller fixture could not enter TownShell.")
+	for _frame in range(8):
+		await get_tree().process_frame
+	var town_shell := get_tree().current_scene
+	if town_shell == null or String(town_shell.scene_file_path) != "res://scenes/town/TownShell.tscn":
+		return _fail("Town return controller fixture did not reach TownShell.")
+	var return_to_field: Button = town_shell.get_node_or_null("%Leave")
+	if return_to_field == null or return_to_field.text != "Return to Field":
+		return _fail("Town controller route did not expose the exact Return to Field command.")
+	return_to_field.grab_focus()
+	await get_tree().process_frame
+	await _press_joypad_button(JOY_BUTTON_A)
+	var overworld_shell = null
+	for _frame in range(180):
+		await get_tree().process_frame
+		var current = get_tree().current_scene
+		if current != null and String(current.scene_file_path) == "res://scenes/overworld/OverworldShell.tscn":
+			overworld_shell = current
+			break
+	if overworld_shell == null:
+		return _fail("Controller A on Return to Field did not reach OverworldShell.")
+	var active_session = SessionState.ensure_active_session()
+	if active_session != session_identity \
+			or int(active_session.day) != day_before \
+			or String(active_session.scenario_status) != status_before \
+			or _controller_route_movement_snapshot(active_session) != movement_before \
+			or _controller_route_file_state("user://saves/autosave.json") != autosave_before:
+		return _fail("Controller Return to Field changed session identity, day, status, movement, or autosave bytes.")
+	var end_turn: Button = overworld_shell.get_node_or_null("%EndTurn")
+	if end_turn == null:
+		return _fail("Returned overworld is missing EndTurn.")
+	var reached_end_turn := get_viewport().gui_get_focus_owner() == end_turn
+	for _step in range(24):
+		if reached_end_turn:
+			break
+		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+		reached_end_turn = get_viewport().gui_get_focus_owner() == end_turn
+	if not reached_end_turn:
+		return _fail("Controller could not reach the separate overworld EndTurn command after Return to Field: %s." % _focus_name())
+	return true
+
+func _detach_for_scene_transition() -> void:
+	var tree := get_tree()
+	if tree == null or tree.current_scene != self:
+		return
+	var parent := get_parent()
+	if parent != null:
+		parent.remove_child(self)
+	tree.root.add_child(self)
+	var anchor := Node.new()
+	anchor.name = "ActivePlayKeyboardFocusSceneAnchor"
+	tree.root.add_child(anchor)
+	tree.current_scene = anchor
+
+func _controller_route_movement_snapshot(session) -> Dictionary:
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
+	return {
+		"current": int(movement.get("current", session.overworld.get("movement", {}).get("current", 0))),
+		"max": int(movement.get("max", session.overworld.get("movement", {}).get("max", 0))),
+	}
+
+func _controller_route_file_state(path: String) -> Dictionary:
+	return {
+		"exists": FileAccess.file_exists(path),
+		"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
+	}
 
 func _check_battle_withdrawal_controller_cancel(shell: Node, session, action_id: String, button_name: String) -> bool:
 	var origin_button: Button = shell.get_node_or_null("%%%s" % button_name)

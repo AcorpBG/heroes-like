@@ -5,6 +5,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "TOWN_EXIT_PROFILE_ACCURACY_REGRESSION"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
+const AUTOSAVE_PATH := "user://saves/autosave.json"
 const EXIT_BUDGET_MS := 1000.0
 const WALL_PROFILE_TOLERANCE_MS := 120.0
 const BUCKET_SUM_TOLERANCE_MS := 35.0
@@ -97,6 +98,13 @@ func _run_exit_case(label: String, session) -> Dictionary:
 		return {}
 
 	SaveService.validation_clear_general_profile_log()
+	var session_identity = session
+	var session_id_before := String(session.session_id)
+	var day_before := int(session.day)
+	var status_before := String(session.scenario_status)
+	var movement_before: Dictionary = _active_movement_snapshot(session)
+	var route_invariant_before: Dictionary = _route_invariant_session_payload(session)
+	var autosave_before := _file_state(AUTOSAVE_PATH)
 	var wall_started_usec := Time.get_ticks_usec()
 	var leave_result: Dictionary = town_shell.call("validation_leave_town")
 	if not bool(leave_result.get("ok", false)):
@@ -118,6 +126,29 @@ func _run_exit_case(label: String, session) -> Dictionary:
 		return {}
 	if profile.is_empty() or bool(profile.get("active", true)):
 		_fail("%s did not finish town-exit handoff profile: %s" % [label, JSON.stringify(profile)])
+		return {}
+	var active_session = SessionState.ensure_active_session()
+	if active_session != session_identity \
+			or String(active_session.session_id) != session_id_before \
+			or int(active_session.day) != day_before \
+			or String(active_session.scenario_status) != status_before:
+		_fail("%s Return to Field replaced the session or changed its exact day/status identity: %s" % [label, JSON.stringify({
+			"same_session": active_session == session_identity,
+			"session_id_before": session_id_before,
+			"session_id_after": active_session.session_id,
+			"day_before": day_before,
+			"day_after": active_session.day,
+			"status_before": status_before,
+			"status_after": active_session.scenario_status,
+		})])
+		return {}
+	if active_session.game_state != "overworld" \
+			or _active_movement_snapshot(active_session) != movement_before \
+			or _route_invariant_session_payload(active_session) != route_invariant_before:
+		_fail("%s Return to Field changed gameplay state beyond its route-only handoff." % label)
+		return {}
+	if _file_state(AUTOSAVE_PATH) != autosave_before:
+		_fail("%s Return to Field changed autosave bytes despite the route-only contract." % label)
 		return {}
 
 	var records: Array = SaveService.validation_general_profile_log_last_records(80)
@@ -175,6 +206,12 @@ func _run_exit_case(label: String, session) -> Dictionary:
 	return {
 		"label": label,
 		"town_placement_id": placement_id,
+		"same_session": true,
+		"day_exact": true,
+		"status_exact": true,
+		"movement_exact": true,
+		"route_only": true,
+		"autosave_bytes_exact": true,
 		"wall_ms": snapped(wall_ms, 0.001),
 		"profile_total_ms": snapped(record_total_ms, 0.001),
 		"router_only_ms": snapped(router_only_ms, 0.001),
@@ -182,6 +219,26 @@ func _run_exit_case(label: String, session) -> Dictionary:
 		"first_frame_ms": snapped(first_frame_ms, 0.001),
 		"bucket_sum_ms": snapped(bucket_sum_ms, 0.001),
 		"top_buckets": _top_buckets(buckets, 8),
+	}
+
+func _active_movement_snapshot(session) -> Dictionary:
+	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
+	return {
+		"current": int(movement.get("current", session.overworld.get("movement", {}).get("current", 0))),
+		"max": int(movement.get("max", session.overworld.get("movement", {}).get("max", 0))),
+	}
+
+func _route_invariant_session_payload(session) -> Dictionary:
+	var payload: Dictionary = session.to_dict()
+	payload.erase("game_state")
+	payload.erase("flags")
+	return payload
+
+func _file_state(path: String) -> Dictionary:
+	return {
+		"exists": FileAccess.file_exists(path),
+		"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
 	}
 
 func _generated_large_session():

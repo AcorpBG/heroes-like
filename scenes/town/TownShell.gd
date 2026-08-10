@@ -792,17 +792,24 @@ func _refresh_cached_stage_dynamic(view_state: Dictionary, town: Dictionary) -> 
 	return refreshed
 
 func _cached_departure_dynamic(departure_value: Variant) -> Dictionary:
-	var departure: Dictionary = departure_value.duplicate(true) if departure_value is Dictionary else {}
+	# Movement and response availability can change while the broader town view is
+	# cached. Rebuild this compact action surface so its tooltip and next step stay
+	# authoritative alongside the live button label and readiness copy.
+	var departure: Dictionary = TownRules.town_departure_confirmation(_session)
+	if departure.is_empty() and departure_value is Dictionary:
+		departure = departure_value.duplicate(true)
 	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
 	var move_current := int(movement.get("current", 0))
 	var move_max := int(movement.get("max", move_current))
 	departure["movement_current"] = move_current
 	departure["movement_max"] = move_max
-	departure["button_label"] = "Leave / End Turn" if move_current <= 0 else "Leave: %d/%d Move" % [move_current, move_max]
-	if move_current <= 0:
-		departure["visible_text"] = "Ready check: finish town orders, then leave and end turn."
+	departure["button_label"] = "Return to Field"
+	if int(departure.get("ready_response_action_count", 0)) > 0:
+		departure["visible_text"] = "Ready check: response order is open before returning to the field."
+	elif move_current <= 0:
+		departure["visible_text"] = "Ready check: movement is spent; return to the field, then choose End Turn."
 	else:
-		departure["visible_text"] = "Ready check: finish town orders, then leave with %d/%d move." % [move_current, move_max]
+		departure["visible_text"] = "Ready check: finish town orders, then return to the field with %d/%d move." % [move_current, move_max]
 	_last_departure_confirmation = departure.duplicate(true)
 	return departure
 

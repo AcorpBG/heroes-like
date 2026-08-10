@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `ux-town-departure-end-turn-copy-integrity-10184`. Town departure now uses one authoritative `Return to Field` surface across core, cached, and live states. Remaining movement, exhausted movement, and response-order priority are explicit; the unchanged handler still routes only to the overworld without advancing the day, spending movement, or autosaving. Focused town visual/exit/controller, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `campaign-progression-completion-write-failure-atomicity-10184`. Campaign completion now persists a detached profile candidate before publishing it live. A failed write restores the same pre-terminal session object and returns a visible retry message; clearing either injected failure phase lets one reevaluation persist and publish the outcome exactly once. Focused failure/retry, first-defeat, skirmish, campaign replay, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-risk-gated-end-turn-confirmation-10184`. Warned remaining-movement/available-order and unconsumed core-risk End Turn requests now open a compact confirmation with Keep Waiting initially focused. First press, cancel, and stale session/day/status/payload rejection are read-only; valid confirmation consumes the one-shot forecast and enters the unchanged End Turn/autosave path exactly once. Exhausted low-risk turns remain one-click. Focused parity/save, controller, full and targeted 1280x720 visual, generated-profile, core, broad headless, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `campaign-replay-defeat-preserves-cleared-progress-10184`. Campaign completion now preserves an already-banked victory record, exported flags, carryover, victory count, and downstream unlock when a later replay loses, while incrementing attempts and retaining the live defeat outcome. First defeat, defeat-to-victory upgrade, and later-victory refresh remain unchanged. Focused transition-matrix, normalization/progression reload, campaign breadth/frontier/restart/menu/outcome, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3139,6 +3140,37 @@ Completion evidence:
 - `ScenarioRules` restores the same full pre-terminal session object after persistence failure and returns an in-progress retry message;
 - focused precommit and after-backup cases preserve exact prior bytes, cache, live profile, session, locks, attempts, and carryover with no residue, then retry to one persisted/reloaded victory and remain idempotent;
 - first defeat, skirmish, campaign replay, core, editor parse, repository, JSON, Python, and diff gates pass without changing save version 9 or profile schema.
+
+## Town Departure End-Turn Copy Integrity
+
+id: `ux-town-departure-end-turn-copy-integrity-10184`
+
+Status: completed.
+
+Selected Phase 6 command-integrity slice. The exhausted-town Leave control claims
+to end the turn, while its production handler only prepares the town handoff and
+returns to the overworld. This became more misleading after overworld End Turn
+gained a real risk confirmation boundary.
+
+Implementation target:
+- make `Return to Field` the authoritative town departure label in both the core surface and live cached refresh;
+- when movement remains, state the exact remaining movement; when exhausted, say movement is spent and direct the player to choose End Turn after returning to the field;
+- preserve ready-response warning priority, exact town-to-overworld route-only behavior, current day/session, and zero departure autosaves.
+
+Completion criteria:
+- authoritative and cached surfaces never promise that town departure ends the turn and agree for remaining/exhausted movement;
+- exhausted and remaining-movement copy is explicit, response-order priority remains, and controller activation reaches overworld with End Turn available;
+- town exit preserves exact day/status/session gameplay state and performs no End Turn/autosave;
+- focused town visual/exit/controller, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no automatic town-side End Turn, new modal, turn math, save behavior, town economy, scenario balance, Native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- `TownRules` and the live cached town surface use the exact `Return to Field` label and explicit response-priority, remaining-movement, and exhausted-movement guidance;
+- cached refresh rebuilds the full authoritative departure surface, preventing stale tooltip and next-step copy after movement changes;
+- focused exit proof preserves the same session, day, status, and movement, routes only to overworld, and records no save or autosave;
+- controller activation reaches overworld with the separate End Turn command focusable, and town visual, core, editor parse, repository, JSON, Python, and diff gates pass.
 
 ## Phase Roadmap
 

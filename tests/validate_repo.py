@@ -15096,7 +15096,18 @@ def validate_town_faction_progression(errors: list[str]) -> None:
 
 
 def validate_town_shell_release_polish(errors: list[str]) -> None:
-    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
+    town_visual_smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    town_exit_profile_path = ROOT / "tests" / "town_exit_profile_accuracy_regression.gd"
+    active_play_focus_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+    required_paths = (
+        TOWN_SCENE_PATH,
+        TOWN_SCRIPT_PATH,
+        TOWN_RULES_PATH,
+        OVERWORLD_RULES_PATH,
+        town_visual_smoke_path,
+        town_exit_profile_path,
+        active_play_focus_path,
+    )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing town-shell polish file: {path.relative_to(ROOT)}")
     if not all(path.exists() for path in required_paths):
@@ -15186,6 +15197,50 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "_style_action_button",
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town-shell polish token: {required_token}")
+
+    for source_name, source_text in (
+        ("TownRules.gd", town_rules_text),
+        ("TownShell.gd", town_script_text),
+    ):
+        for required_token in (
+            '"Return to Field"',
+            "Ready check: response order is open before returning to the field.",
+            "Ready check: movement is spent; return to the field, then choose End Turn.",
+            "Ready check: finish town orders, then return to the field with %d/%d move.",
+        ):
+            ensure(required_token in source_text, errors, f"{source_name} is missing authoritative town-departure copy token: {required_token}")
+
+    town_visual_text = town_visual_smoke_path.read_text(encoding="utf-8")
+    for required_token in (
+        "_assert_town_departure_movement_copy_matrix",
+        "ready response order did not retain departure-copy priority",
+        "authoritative/cache/live remaining-movement",
+        "authoritative/cache/live exhausted-movement",
+        '"Leave / End Turn"',
+        '"leave and end turn"',
+    ):
+        ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing town-departure integrity token: {required_token}")
+
+    town_exit_profile_text = town_exit_profile_path.read_text(encoding="utf-8")
+    for required_token in (
+        "same_session",
+        "day_exact",
+        "status_exact",
+        "movement_exact",
+        "route_only",
+        "autosave_bytes_exact",
+        "_route_invariant_session_payload",
+    ):
+        ensure(required_token in town_exit_profile_text, errors, f"town_exit_profile_accuracy_regression.gd is missing route-only integrity token: {required_token}")
+
+    active_play_focus_text = active_play_focus_path.read_text(encoding="utf-8")
+    for required_token in (
+        "_check_town_return_to_field_controller",
+        'return_to_field.text != "Return to Field"',
+        'get_node_or_null("%EndTurn")',
+        "JOY_BUTTON_RIGHT_SHOULDER",
+    ):
+        ensure(required_token in active_play_focus_text, errors, f"active_play_keyboard_focus_smoke.gd is missing Return-to-Field controller token: {required_token}")
 
 
 def validate_town_defense_outlook_board(errors: list[str]) -> None:

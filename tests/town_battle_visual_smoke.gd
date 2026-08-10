@@ -1662,31 +1662,124 @@ func _assert_town_departure_confirmation_contract(shell: Node) -> bool:
 		String(departure.get("why_it_matters", "")),
 		String(departure.get("next_step", "")),
 	])
-	for token in ["Ready check:", "Departure Check", "Town readiness:", "Next practical action:", "Leave"]:
+	for token in ["Ready check:", "Departure Check", "Town readiness:", "Next practical action:", "Return to Field"]:
 		if not departure_text.contains(token):
 			push_error("Town smoke: town departure confirmation lost %s clarity: %s." % [token, departure_text])
 			return false
-	if not String(snapshot.get("leave_button_text", "")).contains("Leave"):
-		push_error("Town smoke: departure confirmation is not visible on the Leave control: %s." % snapshot)
+	if String(departure.get("button_label", "")) != "Return to Field" or String(snapshot.get("leave_button_text", "")) != "Return to Field":
+		push_error("Town smoke: authoritative and live departure labels are not exact Return to Field commands: %s." % snapshot)
 		return false
 	for key in ["button_label", "visible_text", "tooltip_text", "town_readiness", "affected", "why_it_matters", "next_step"]:
 		if String(departure.get(key, "")) == "":
 			push_error("Town smoke: departure confirmation is missing structured %s: %s." % [key, departure])
 			return false
 	var decision_text := String(departure.get("visible_text", "")) + "\n" + String(departure.get("next_step", ""))
-	if not (
-		decision_text.contains("town orders")
-		or decision_text.contains("response order")
-		or decision_text.contains("end turn")
-		or decision_text.contains("field route")
-	):
+	if not (decision_text.to_lower().contains("field") or decision_text.to_lower().contains("response order")):
 		push_error("Town smoke: departure confirmation did not help decide town action, field route, or end turn: %s." % departure_text)
 		return false
+	if String(departure.get("visible_text", "")) != "Ready check: response order is open before returning to the field." or int(departure.get("ready_response_action_count", 0)) <= 0:
+		push_error("Town smoke: ready response order did not retain departure-copy priority: %s." % departure)
+		return false
+	if not _assert_town_departure_movement_copy_matrix(shell):
+		return false
+	for forbidden in ["Leave / End Turn", "leave and end turn"]:
+		if departure_text.contains(forbidden):
+			push_error("Town smoke: departure copy retained the misleading combined command %s: %s." % [forbidden, departure_text])
+			return false
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
 		if departure_text.contains(leak_token):
 			push_error("Town smoke: departure confirmation leaked internal strategy token %s: %s." % [leak_token, departure_text])
 			return false
 	return true
+
+func _assert_town_departure_movement_copy_matrix(shell: Node) -> bool:
+	var session = SessionState.ensure_active_session()
+	var towns_before: Array = session.overworld.get("towns", []).duplicate(true)
+	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var movement_before: Dictionary = session.overworld.get("movement", {}).duplicate(true)
+	var hero_before: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+	var player_heroes_before: Array = session.overworld.get("player_heroes", []).duplicate(true)
+	var active_town_id := String(TownRules.get_active_town(session).get("placement_id", ""))
+
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != active_town_id:
+			continue
+		var recovery: Dictionary = town.get("recovery", {}).duplicate(true) if town.get("recovery", {}) is Dictionary else {}
+		recovery["pressure"] = 0
+		town["recovery"] = recovery
+		towns[index] = town
+		break
+	session.overworld["towns"] = towns
+	var empty_resources: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	for resource_id in empty_resources.keys():
+		empty_resources[resource_id] = 0
+	session.overworld["resources"] = empty_resources
+
+	var move_max := int(hero_before.get("movement", {}).get("max", movement_before.get("max", 0)))
+	_set_town_departure_test_movement(session, move_max, move_max)
+	shell.call("validation_force_refresh")
+	var remaining_snapshot: Dictionary = shell.call("validation_snapshot")
+	var remaining: Dictionary = remaining_snapshot.get("town_departure_confirmation", {}) if remaining_snapshot.get("town_departure_confirmation", {}) is Dictionary else {}
+	var expected_remaining := "Ready check: finish town orders, then return to the field with %d/%d move." % [move_max, move_max]
+	var cached_remaining: Dictionary = shell.call("_cached_departure_dynamic", remaining)
+	if int(remaining.get("ready_response_action_count", -1)) != 0 \
+			or String(remaining.get("button_label", "")) != "Return to Field" \
+			or String(remaining.get("visible_text", "")) != expected_remaining \
+			or String(cached_remaining.get("button_label", "")) != "Return to Field" \
+			or String(cached_remaining.get("visible_text", "")) != expected_remaining \
+			or String(remaining_snapshot.get("leave_button_text", "")) != "Return to Field" \
+			or String(remaining_snapshot.get("leave_button_tooltip_text", "")) != String(remaining.get("tooltip_text", "")):
+		_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
+		push_error("Town smoke: authoritative/cache/live remaining-movement departure copy diverged: expected=%s authoritative=%s cached=%s." % [expected_remaining, remaining, cached_remaining])
+		return false
+
+	_set_town_departure_test_movement(session, 0, move_max)
+	shell.call("validation_force_refresh")
+	var exhausted_snapshot: Dictionary = shell.call("validation_snapshot")
+	var exhausted: Dictionary = exhausted_snapshot.get("town_departure_confirmation", {}) if exhausted_snapshot.get("town_departure_confirmation", {}) is Dictionary else {}
+	var expected_exhausted := "Ready check: movement is spent; return to the field, then choose End Turn."
+	var cached_exhausted: Dictionary = shell.call("_cached_departure_dynamic", exhausted)
+	if int(exhausted.get("ready_response_action_count", -1)) != 0 \
+			or String(exhausted.get("button_label", "")) != "Return to Field" \
+			or String(exhausted.get("visible_text", "")) != expected_exhausted \
+			or String(cached_exhausted.get("button_label", "")) != "Return to Field" \
+			or String(cached_exhausted.get("visible_text", "")) != expected_exhausted \
+			or String(exhausted_snapshot.get("leave_button_text", "")) != "Return to Field" \
+			or String(exhausted_snapshot.get("leave_button_tooltip_text", "")) != String(exhausted.get("tooltip_text", "")):
+		_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
+		push_error("Town smoke: authoritative/cache/live exhausted-movement departure copy diverged: expected=%s authoritative=%s cached=%s." % [expected_exhausted, exhausted, cached_exhausted])
+		return false
+	for text in [String(remaining.get("button_label", "")), String(remaining.get("visible_text", "")), String(exhausted.get("button_label", "")), String(exhausted.get("visible_text", ""))]:
+		if text.contains("Leave / End Turn") or text.to_lower().contains("leave and end turn"):
+			_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
+			push_error("Town smoke: movement copy matrix retained a misleading combined departure command: %s." % text)
+			return false
+
+	_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
+	return true
+
+func _set_town_departure_test_movement(session, current: int, maximum: int) -> void:
+	session.overworld["movement"] = {"current": current, "max": maximum}
+	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+	hero["movement"] = {"current": current, "max": maximum}
+	session.overworld["hero"] = hero
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var candidate = heroes[index]
+		if candidate is Dictionary and String(candidate.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			candidate["movement"] = {"current": current, "max": maximum}
+			heroes[index] = candidate
+	session.overworld["player_heroes"] = heroes
+
+func _restore_town_departure_test_state(session, towns: Array, resources: Dictionary, movement: Dictionary, hero: Dictionary, player_heroes: Array, shell: Node) -> void:
+	session.overworld["towns"] = towns
+	session.overworld["resources"] = resources
+	session.overworld["movement"] = movement
+	session.overworld["hero"] = hero
+	session.overworld["player_heroes"] = player_heroes
+	shell.call("validation_force_refresh")
 
 func _assert_town_return_handoff_payload(handoff: Dictionary) -> bool:
 	var handoff_text := "\n".join([

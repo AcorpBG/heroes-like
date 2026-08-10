@@ -503,7 +503,7 @@ static func town_departure_confirmation(session: SessionStateStoreScript.Session
 	if town.is_empty():
 		return {
 			"active": false,
-			"button_label": "Leave",
+			"button_label": "Return to Field",
 			"visible_text": "Ready check: no active town.",
 			"tooltip_text": "Departure Check\n- No active town.",
 			"next_step": "Return to the overworld.",
@@ -515,14 +515,14 @@ static func town_departure_confirmation(session: SessionStateStoreScript.Session
 	var move_max := int(movement.get("max", 0))
 	var recommendation := _town_recommendation_line(session, town)
 	var next_step := String(handoff.get("next_step", _next_town_action_line(session, town)))
-	var button_label := "Leave / End Turn" if move_current <= 0 else "Leave: %d/%d Move" % [move_current, move_max]
+	var button_label := "Return to Field"
 	var visible_text := ""
 	if int(handoff.get("ready_response_action_count", 0)) > 0:
-		visible_text = "Ready check: response order is open before leaving."
+		visible_text = "Ready check: response order is open before returning to the field."
 	elif move_current <= 0:
-		visible_text = "Ready check: finish town orders, then leave and end turn."
+		visible_text = "Ready check: movement is spent; return to the field, then choose End Turn."
 	else:
-		visible_text = "Ready check: finish town orders, then leave with %d/%d move." % [move_current, move_max]
+		visible_text = "Ready check: finish town orders, then return to the field with %d/%d move." % [move_current, move_max]
 	var tooltip := "Departure Check\n- Town readiness: %s\n- Affected: %s\n- Why it matters: %s\n- Next practical action: %s" % [
 		recommendation,
 		String(handoff.get("affected", "")),
@@ -2057,11 +2057,11 @@ static func _town_handoff_next_line(
 	if not ready_response.is_empty():
 		var label := _short_action_label(ready_response, "Response order")
 		var move_left := int(ready_response.get("remaining_movement_after_order", movement.get("current", 0)))
-		return "Use %s in Logistics, then leave for the field route with %d move." % [label, move_left]
+		return "Use %s in Logistics, then return to the field route with %d move." % [label, move_left]
 	var next_town_action := _next_town_action_line(session, town)
 	if int(movement.get("current", 0)) <= 0:
-		return "%s Then leave town and end the day to refresh movement." % next_town_action
-	return "%s Then Leave to resume the field route with %d/%d move." % [
+		return "%s Then return to the field and choose End Turn to refresh movement." % next_town_action
+	return "%s Then return to the field route with %d/%d move." % [
 		next_town_action,
 		int(movement.get("current", 0)),
 		int(movement.get("max", 0)),
