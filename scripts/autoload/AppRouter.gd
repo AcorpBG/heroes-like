@@ -46,6 +46,17 @@ var _safe_quit_visible_error := ""
 var _validation_quit_suppressed := false
 var _validation_safe_quit_reentrant_probe := false
 var _validation_safe_quit_reentrant_result := {}
+var _safe_close_guard_request_count := 0
+var _safe_close_guard_handled_count := 0
+var _safe_close_guard_bypass_request_count := 0
+var _safe_close_guard_bypass_consume_count := 0
+var _safe_close_guard_bypass_reject_count := 0
+var _safe_close_guard_in_progress := false
+var _safe_close_guard_bypass_active := false
+var _safe_close_guard_last_source := ""
+var _safe_close_guard_last_result := {}
+var _safe_close_guard_last_authorization := {}
+var _validation_safe_close_guard_target: Node = null
 var _active_play_return_request_count := 0
 var _active_play_return_save_attempt_count := 0
 var _active_play_return_save_failure_count := 0
@@ -107,9 +118,7 @@ func _on_root_window_close_requested() -> void:
 	request_safe_quit("window_close")
 
 func request_safe_quit(source: String = "application") -> Dictionary:
-	var normalized_source := source.strip_edges().left(64)
-	if normalized_source == "":
-		normalized_source = "application"
+	var normalized_source := _normalized_safe_quit_source(source)
 	_safe_quit_request_count += 1
 	if _safe_quit_in_progress:
 		return {
@@ -127,6 +136,21 @@ func request_safe_quit(source: String = "application") -> Dictionary:
 			"reason": "completed",
 			"message": "Application close was already requested.",
 		}
+	if not _safe_close_guard_bypass_active:
+		var guard_result := _request_current_scene_safe_close_guard(normalized_source)
+		if bool(guard_result.get("handled", false)):
+			_safe_quit_last_result = {
+				"ok": false,
+				"saved": false,
+				"quit_requested": false,
+				"guarded": true,
+				"pending": bool(guard_result.get("pending", false)),
+				"source": normalized_source,
+				"reason": String(guard_result.get("reason", "guarded")),
+				"message": String(guard_result.get("message", "Close confirmation is pending.")),
+				"guard_result": guard_result.duplicate(true),
+			}
+			return _safe_quit_last_result.duplicate(true)
 
 	_safe_quit_last_source = normalized_source
 	_safe_quit_in_progress = true
@@ -195,11 +219,112 @@ func request_safe_quit(source: String = "application") -> Dictionary:
 		get_tree().quit()
 	return _safe_quit_last_result.duplicate(true)
 
+func request_safe_quit_after_close_guard(source: String = "map_editor_confirmed") -> Dictionary:
+	var normalized_source := _normalized_safe_quit_source(source)
+	_safe_close_guard_bypass_request_count += 1
+	var scene := _safe_close_guard_target()
+	if scene == null or not scene.has_method("consume_safe_close_guard_confirmation"):
+		_safe_close_guard_bypass_reject_count += 1
+		_safe_close_guard_last_authorization = {
+			"ok": false,
+			"authorized": false,
+			"reason": "guard_consumer_unavailable",
+			"source": normalized_source,
+		}
+		return {
+			"ok": false,
+			"saved": false,
+			"quit_requested": false,
+			"guarded": true,
+			"source": normalized_source,
+			"reason": "guard_not_confirmed",
+			"message": "Close confirmation is no longer active.",
+		}
+
+	var authorization_value: Variant = scene.call("consume_safe_close_guard_confirmation", normalized_source)
+	var authorization: Dictionary = authorization_value.duplicate(true) if authorization_value is Dictionary else {}
+	_safe_close_guard_last_authorization = _bounded_safe_close_guard_authorization(authorization, normalized_source)
+	if (
+		not bool(_safe_close_guard_last_authorization.get("ok", false))
+		or not bool(_safe_close_guard_last_authorization.get("authorized", false))
+	):
+		_safe_close_guard_bypass_reject_count += 1
+		return {
+			"ok": false,
+			"saved": false,
+			"quit_requested": false,
+			"guarded": true,
+			"source": normalized_source,
+			"reason": "guard_not_confirmed",
+			"message": String(_safe_close_guard_last_authorization.get("message", "Close confirmation is no longer active.")),
+			"authorization": _safe_close_guard_last_authorization.duplicate(true),
+		}
+
+	_safe_close_guard_bypass_consume_count += 1
+	_safe_close_guard_bypass_active = true
+	var result := request_safe_quit(normalized_source)
+	_safe_close_guard_bypass_active = false
+	return result
+
+func _request_current_scene_safe_close_guard(source: String) -> Dictionary:
+	var scene := _safe_close_guard_target()
+	if scene == null or not scene.has_method("request_safe_close_guard"):
+		return {"handled": false}
+	if _safe_close_guard_in_progress:
+		return {
+			"handled": true,
+			"pending": true,
+			"reason": "guard_in_progress",
+			"message": "Close confirmation is already being prepared.",
+		}
+	_safe_close_guard_request_count += 1
+	_safe_close_guard_last_source = source
+	_safe_close_guard_in_progress = true
+	var guard_value: Variant = scene.call("request_safe_close_guard", source)
+	_safe_close_guard_in_progress = false
+	var guard_result: Dictionary = guard_value if guard_value is Dictionary else {}
+	_safe_close_guard_last_result = _bounded_safe_close_guard_result(guard_result, source, scene)
+	if bool(_safe_close_guard_last_result.get("handled", false)):
+		_safe_close_guard_handled_count += 1
+	return _safe_close_guard_last_result.duplicate(true)
+
+func _bounded_safe_close_guard_result(result: Dictionary, source: String, scene: Node) -> Dictionary:
+	return {
+		"handled": bool(result.get("handled", false)),
+		"pending": bool(result.get("pending", false)),
+		"reason": String(result.get("reason", "")).strip_edges().left(64),
+		"action": String(result.get("action", "")).strip_edges().left(32),
+		"message": String(result.get("message", "")).strip_edges().left(240),
+		"source": source,
+		"scene": String(scene.scene_file_path).left(160),
+	}
+
+func _bounded_safe_close_guard_authorization(result: Dictionary, source: String) -> Dictionary:
+	return {
+		"ok": bool(result.get("ok", false)),
+		"authorized": bool(result.get("authorized", false)),
+		"reason": String(result.get("reason", "")).strip_edges().left(64),
+		"message": String(result.get("message", "")).strip_edges().left(240),
+		"source": source,
+	}
+
+func _normalized_safe_quit_source(source: String) -> String:
+	var normalized_source := source.strip_edges().left(64)
+	return normalized_source if normalized_source != "" else "application"
+
+func _safe_close_guard_target() -> Node:
+	if is_instance_valid(_validation_safe_close_guard_target):
+		return _validation_safe_close_guard_target
+	return get_tree().current_scene if get_tree() != null else null
+
 func validation_set_quit_suppressed(suppressed: bool) -> void:
 	_validation_quit_suppressed = suppressed
 
 func validation_set_safe_quit_reentrant_probe(enabled: bool) -> void:
 	_validation_safe_quit_reentrant_probe = enabled
+
+func validation_set_safe_close_guard_target(target: Node) -> void:
+	_validation_safe_close_guard_target = target
 
 func validation_reset_safe_quit_state() -> void:
 	_safe_quit_in_progress = false
@@ -213,6 +338,17 @@ func validation_reset_safe_quit_state() -> void:
 	_safe_quit_visible_error = ""
 	_validation_safe_quit_reentrant_probe = false
 	_validation_safe_quit_reentrant_result = {}
+	_safe_close_guard_request_count = 0
+	_safe_close_guard_handled_count = 0
+	_safe_close_guard_bypass_request_count = 0
+	_safe_close_guard_bypass_consume_count = 0
+	_safe_close_guard_bypass_reject_count = 0
+	_safe_close_guard_in_progress = false
+	_safe_close_guard_bypass_active = false
+	_safe_close_guard_last_source = ""
+	_safe_close_guard_last_result = {}
+	_safe_close_guard_last_authorization = {}
+	_validation_safe_close_guard_target = null
 
 func validation_safe_quit_snapshot() -> Dictionary:
 	return {
@@ -226,6 +362,25 @@ func validation_safe_quit_snapshot() -> Dictionary:
 		"last_source": _safe_quit_last_source,
 		"visible_error": _safe_quit_visible_error,
 		"reentrant_result": _validation_safe_quit_reentrant_result.duplicate(true),
+		"close_guard": validation_safe_close_guard_snapshot(),
+	}
+
+func validation_safe_close_guard_snapshot() -> Dictionary:
+	var target := _safe_close_guard_target()
+	return {
+		"request_count": _safe_close_guard_request_count,
+		"handled_count": _safe_close_guard_handled_count,
+		"bypass_request_count": _safe_close_guard_bypass_request_count,
+		"bypass_consume_count": _safe_close_guard_bypass_consume_count,
+		"bypass_reject_count": _safe_close_guard_bypass_reject_count,
+		"guard_in_progress": _safe_close_guard_in_progress,
+		"bypass_active": _safe_close_guard_bypass_active,
+		"last_source": _safe_close_guard_last_source,
+		"last_result": _safe_close_guard_last_result.duplicate(true),
+		"last_authorization": _safe_close_guard_last_authorization.duplicate(true),
+		"target_override_active": is_instance_valid(_validation_safe_close_guard_target),
+		"target_name": String(target.name).left(80) if target != null else "",
+		"target_path": String(target.scene_file_path).left(160) if target != null else "",
 	}
 
 func go_to_main_menu() -> void:

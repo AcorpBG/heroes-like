@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `map-editor-dirty-working-copy-destructive-transition-safety-10184`. Dirty Map Editor working copies now require one captured-action confirmation before Main Menu, package replacement, or native close. `Keep Editing` owns initial focus, Back/Escape preserve the exact working copy and origin focus, confirmed native close reuses transactional safe quit, and clean transitions remain direct. Focused, editor package, keyboard, core, repository, real Linux WM_DELETE, and packaged Windows/Wine WM_CLOSE gates pass.
 - Latest completed implementation slice: `application-scenario-outcome-autosave-failure-recovery-10184`. Failed terminal autosaves now carry a session-bound recovery state into Outcome, surface bounded Save Outcome guidance with Save focus, and block campaign/skirmish follow-up until a verified retry persists the exact terminal session. Return and safe-close recovery remain usable, campaign completion is not replayed, and focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save/profile versions 9/1.
 - Latest completed implementation slice: `overworld-controller-right-stick-route-selection-10184`. Controller users can now move a bounded route cursor with the right stick, inspect the existing route/destination surface without mutating session or save state, press A to invoke the existing primary action once, and press B to return selection/camera to the hero. Left-stick movement, D-pad focus, mouse/keyboard control, and modal ownership remain intact. Focused, live-controller, route/cache/visual, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-entry-forced-autosave-failure-route-safety-10184`. Required battle-entry autosave failure now restores the exact pre-route state, keeps the pending encounter in Overworld, records one bounded issue, shows Save-now guidance with Save focus, and performs zero routes. End-turn/manual/resume checkpoints avoid redundant writes and route once from already-durable state. Focused failure/recovery/control, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
@@ -3462,6 +3463,35 @@ Completion evidence:
 - Outcome shows the bounded recovery warning with Save Outcome focus, blocks both presented and direct follow-up actions, and retries the canonical autosave before the existing manual-slot flow without replaying completion;
 - stale-session, ordinary success, durable resume, missing/in-progress redirect, dynamic Return, safe close, campaign completion/replay, save transaction, manual overwrite, controller, visual, and core controls pass;
 - fresh packaged Linux and Windows/Wine focused runs pass at save version 9 and profile version 1; production project and export presets remain untouched.
+
+## Map Editor Dirty Working-Copy Destructive Transition Safety
+
+id: `map-editor-dirty-working-copy-destructive-transition-safety-10184`
+
+Status: complete.
+
+Selected Phase 6 editor data-safety slice. The shipped Map Editor labels dirty work as
+unsaved but currently discards the in-memory working copy without confirmation when the
+player opens Main Menu, loads another package, or closes the native window.
+
+Implementation target:
+- add one compact exact-action confirmation for dirty Menu, package replacement, and application close, with `Keep Editing` as the initially focused safe cancel and captured target identity;
+- add a bounded AppRouter current-scene close-guard handshake so native close waits for the editor decision, while clean editor and ordinary safe-close behavior remain direct;
+- cancel must preserve the exact editor working copy, dirty/tool/selection metadata, authored package files, active expedition/save data, and originating focus; confirm performs only the captured transition once.
+
+Completion criteria:
+- dirty Menu, package replacement, and native close each open one compact confirmation; controller Back/Escape cancel exactly and restore origin focus;
+- confirmation cannot be redirected by later selection changes, and confirm performs one menu route, captured package replacement, or guarded safe-quit request respectively;
+- clean transitions remain one-step, safe-quit save failure stays in the editor, and existing editor play-copy/return behavior remains exact;
+- focused editor/runtime, 1280x720 layout, controller, safe-close, core, editor parse, repository, real Linux WM_DELETE, and packaged Windows/Wine WM_CLOSE gates pass.
+
+Non-goals:
+- no authored-map export implementation, editor undo/history, map format change, SaveService/schema change, Native RMG behavior, publication, signing, or overall release-completion claim.
+
+Completion evidence:
+- dirty Menu, immutable captured-package replacement, and native close share one compact confirmation with `Keep Editing` focused; controller Back and Escape preserve exact working-copy/session/tool/selection/package/save state and restore the exact origin;
+- confirmed actions execute once, duplicate close requests fail closed, both transactional safe-quit failure phases retain the dirty editor and retry successfully, and clean Menu/package/close controls remain direct;
+- focused runtime, validator, Python, editor parse, package save-copy/load, Main Menu keyboard, core, real 1280x720 Linux WM_DELETE, and fresh packaged Windows/Wine WM_CLOSE gates pass at save version 9; production project and export presets remain untouched.
 
 ## Phase Roadmap
 

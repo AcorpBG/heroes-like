@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Scenario Outcome now exposes and repairs failed terminal autosaves before follow-up play. Overall release readiness remains open.",
+  "currentNotes": "Dirty Map Editor Menu, package replacement, and native close transitions are now guarded by one safe-cancel confirmation with transactional quit recovery. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "application-scenario-outcome-autosave-failure-recovery-10184",
-  "currentSliceId": "application-scenario-outcome-autosave-failure-recovery-10184",
-  "currentSliceNotes": "Completed session-bound Outcome recovery, visible Save guidance/focus, follow-up blocking, canonical retry without completion replay, and packaged Linux/Windows proof.",
+  "currentSlice": "map-editor-dirty-working-copy-destructive-transition-safety-10184",
+  "currentSliceId": "map-editor-dirty-working-copy-destructive-transition-safety-10184",
+  "currentSliceNotes": "Completed captured-action dirty editor confirmation, central native-close guard, exact cancel preservation, transactional quit retry, and Linux/Windows desktop-close proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Application Scenario-Outcome Autosave Failure Recovery",
-  "currentSliceUpdatedAt": "2026-08-10T06:42:09Z",
+  "currentSliceTitle": "Map Editor Dirty Working-Copy Destructive Transition Safety",
+  "currentSliceUpdatedAt": "2026-08-10T07:47:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74593,6 +74593,40 @@
       "notes": "Completed session-bound recovery routing, visible Outcome warning/Save focus, follow-up blocking, canonical retry without completion replay, compatibility controls, and packaged Linux/Windows proof at save/profile versions 9/1.",
       "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T06:42:09Z"
+    },
+    {
+      "id": "map-editor-dirty-working-copy-destructive-transition-safety-10184",
+      "title": "Map Editor Dirty Working-Copy Destructive Transition Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md"],
+      "purpose": "Prevent unconfirmed loss of the shipped Map Editor's dirty in-memory working copy across Menu, package replacement, and native application close.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/editor/MapEditorShell.tscn",
+        "tests/map_editor_dirty_working_copy_destructive_transition_regression.gd",
+        "tests/map_editor_dirty_working_copy_destructive_transition_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"dirty_menu_guarded": false, "dirty_package_replacement_guarded": false, "dirty_native_close_guarded": false},
+      "completionCriteria": [
+        "Dirty Menu, captured package replacement, and native close each require one compact confirmation with Keep Editing focused",
+        "Controller Back and Escape preserve the exact working copy and restore origin focus while confirm performs only the captured action once",
+        "Clean transitions remain direct and confirmed native quit retains existing transactional safe-close behavior",
+        "Focused editor/runtime, controller, safe-close, repository, Linux WM_DELETE, and packaged Windows-Wine WM_CLOSE gates pass"
+      ],
+      "nonGoals": ["authored map export implementation, undo/history, map format or save schema changes, Native RMG behavior, publication, signing, or release-completion claim"],
+      "createdAt": "2026-08-10T06:49:18Z",
+      "startedAt": "2026-08-10T06:49:18Z",
+      "updatedAt": "2026-08-10T07:47:13Z",
+      "notes": "Completed one captured-action confirmation for dirty Menu, package replacement, and native close; Keep Editing owns safe focus, cancellation is exact, confirmed quit reuses transactional safe close, and focused plus real Linux/packaged Windows desktop-close gates pass.",
+      "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T07:47:13Z"
     }
   ],
   "project": "heroes-like",

@@ -44,6 +44,12 @@ const PROPERTY_COLLECTED := "collected"
 const TOWN_OWNER_OPTIONS := ["neutral", "player", "enemy"]
 const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scripted"]
 const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
+const DIRTY_TRANSITION_MENU := "menu"
+const DIRTY_TRANSITION_PACKAGE := "package"
+const DIRTY_TRANSITION_QUIT := "quit"
+const DIRTY_TRANSITION_CANCEL_TEXT := "Keep Editing"
+const DIRTY_TRANSITION_QUIT_SOURCE := "map_editor_confirmed"
+const DIRTY_TRANSITION_PENDING_MESSAGE := "Finish the current unsaved-work confirmation first."
 
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
@@ -69,6 +75,7 @@ const PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY := KEY_F4
 @onready var _map_view = %Map
 @onready var _play_button: Button = %PlayWorkingCopy
 @onready var _menu_button: Button = %Menu
+@onready var _dirty_transition_dialog: ConfirmationDialog = $DirtyTransitionConfirmationDialog
 @onready var _object_family_picker: OptionButton = %ObjectFamilyPicker
 @onready var _object_content_picker: OptionButton = %ObjectContentPicker
 @onready var _object_taxonomy_summary_label: Label = %ObjectTaxonomySummary
@@ -108,10 +115,24 @@ var _authored_baseline_cache = null
 var _authored_baseline_cache_id := ""
 var _placement_debug_overlay_enabled := false
 var _last_save_copy_result := {}
+var _pending_dirty_transition := {}
+var _dirty_transition_return_focus: Control = null
+var _safe_close_guard_authorized := false
+var _safe_close_guard_authorized_source := ""
+var _validation_dirty_transition_routing_enabled := true
+var _validation_dirty_transition_request_count := 0
+var _validation_dirty_transition_cancel_count := 0
+var _validation_dirty_transition_confirm_count := 0
+var _validation_dirty_transition_duplicate_request_count := 0
+var _validation_dirty_transition_menu_route_count := 0
+var _validation_dirty_transition_package_action_count := 0
+var _validation_dirty_transition_quit_attempt_count := 0
+var _last_dirty_transition_result := {}
 var validation_skip_initial_package_index := false
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_configure_dirty_transition_confirmation()
 	_connect_ui()
 	_rebuild_terrain_picker()
 	_rebuild_object_family_picker()
@@ -129,6 +150,8 @@ func _ready() -> void:
 	_refresh_state()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _dirty_transition_dialog != null and _dirty_transition_dialog.visible:
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == PLACEMENT_DEBUG_OVERLAY_TOGGLE_KEY:
 			_set_placement_debug_overlay_enabled(not _placement_debug_overlay_enabled)
@@ -162,6 +185,19 @@ func _connect_ui() -> void:
 	if _map_view != null:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
+
+func _configure_dirty_transition_confirmation() -> void:
+	_dirty_transition_dialog.exclusive = true
+	_dirty_transition_dialog.unresizable = true
+	_dirty_transition_dialog.get_cancel_button().text = DIRTY_TRANSITION_CANCEL_TEXT
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	_dirty_transition_dialog.get_cancel_button().shortcut = cancel_shortcut
+	var dialog_label := _dirty_transition_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(560.0, 0.0)
 
 func _rebuild_map_package_picker() -> void:
 	_map_package_index_status = ScenarioSelectRulesScript.maps_folder_package_index({
@@ -3221,14 +3257,17 @@ func _current_scenario_display_name() -> String:
 	return String(scenario.get("name", _session.scenario_id))
 
 func _selected_map_package_label() -> String:
-	if _selected_map_package_id == "":
+	return _map_package_label_for_id(_selected_map_package_id)
+
+func _map_package_label_for_id(package_id: String) -> String:
+	if package_id == "":
 		return ""
 	for entry in _map_package_entries:
 		if not (entry is Dictionary):
 			continue
-		if String(entry.get("package_id", "")) == _selected_map_package_id:
-			return String(entry.get("display_name", entry.get("package_stem", _selected_map_package_id)))
-	return _selected_map_package_id
+		if String(entry.get("package_id", "")) == package_id:
+			return String(entry.get("display_name", entry.get("package_stem", package_id)))
+	return package_id
 
 func _tool_label(tool: String) -> String:
 	match tool:
@@ -3337,12 +3376,37 @@ func _on_map_package_selected(index: int) -> void:
 		_last_message = "No map package selected."
 	_refresh_state()
 
-func _on_load_map_pressed() -> void:
+func _on_load_map_pressed() -> Dictionary:
 	if _selected_map_package_id == "":
 		_last_message = "No map package selected. Generate a map so maps/ contains a paired .amap and .ascenario package."
 		_refresh_state()
-		return
-	_load_maps_folder_package_working_copy(_selected_map_package_id)
+		return {
+			"ok": false,
+			"handled": true,
+			"pending": false,
+			"reason": "package_not_selected",
+			"message": _last_message,
+		}
+	if _dirty:
+		return _request_dirty_transition(
+			DIRTY_TRANSITION_PACKAGE,
+			_selected_map_package_id,
+			_map_package_label_for_id(_selected_map_package_id),
+			"load_map",
+			_load_map_button
+		)
+	var loaded := _load_maps_folder_package_working_copy(_selected_map_package_id)
+	return {
+		"ok": loaded,
+		"handled": true,
+		"pending": false,
+		"direct": true,
+		"action": DIRTY_TRANSITION_PACKAGE,
+		"package_id": _selected_map_package_id,
+		"reason": "loaded" if loaded else "load_failed",
+		"message": _last_message,
+		"load_attempt_delta": 1,
+	}
 
 func _on_save_copy_pressed() -> void:
 	_save_package_working_copy()
@@ -6276,8 +6340,309 @@ func _prepare_working_copy_for_play(session) -> void:
 	session.battle = {}
 	OverworldRules.refresh_fog_of_war(session)
 
-func _on_menu_pressed() -> void:
-	AppRouter.go_to_main_menu()
+func _on_menu_pressed() -> Dictionary:
+	if _dirty:
+		return _request_dirty_transition(
+			DIRTY_TRANSITION_MENU,
+			"",
+			"",
+			"menu",
+			_menu_button
+		)
+	return _perform_clean_menu_transition()
+
+func request_safe_close_guard(source: String) -> Dictionary:
+	if not _dirty:
+		return {
+			"handled": false,
+			"pending": false,
+			"reason": "clean",
+			"action": DIRTY_TRANSITION_QUIT,
+			"message": "",
+		}
+	return _request_dirty_transition(
+		DIRTY_TRANSITION_QUIT,
+		"",
+		"",
+		source.strip_edges().left(64),
+		_capture_dirty_transition_origin(_menu_button)
+	)
+
+func consume_safe_close_guard_confirmation(source: String) -> Dictionary:
+	var normalized_source := source.strip_edges().left(64)
+	var authorized := (
+		_safe_close_guard_authorized
+		and normalized_source == _safe_close_guard_authorized_source
+	)
+	_safe_close_guard_authorized = false
+	_safe_close_guard_authorized_source = ""
+	if not authorized:
+		return {
+			"ok": false,
+			"authorized": false,
+			"reason": "not_confirmed",
+			"message": "Close confirmation is no longer active.",
+		}
+	return {
+		"ok": true,
+		"authorized": true,
+		"reason": "confirmed",
+		"message": "Unsaved editor close confirmed.",
+	}
+
+func _request_dirty_transition(
+	action: String,
+	package_id: String = "",
+	package_label: String = "",
+	source: String = "",
+	origin: Control = null
+) -> Dictionary:
+	if not _pending_dirty_transition.is_empty():
+		_validation_dirty_transition_duplicate_request_count += 1
+		var duplicate_result := {
+			"ok": false,
+			"handled": true,
+			"pending": true,
+			"reason": "transition_pending",
+			"action": String(_pending_dirty_transition.get("action", "")),
+			"package_id": String(_pending_dirty_transition.get("package_id", "")),
+			"package_label": String(_pending_dirty_transition.get("package_label", "")),
+			"source": String(_pending_dirty_transition.get("source", "")),
+			"message": DIRTY_TRANSITION_PENDING_MESSAGE,
+			"route_attempt_delta": 0,
+			"load_attempt_delta": 0,
+		}
+		_last_dirty_transition_result = duplicate_result.duplicate(true)
+		return duplicate_result
+	if not _dirty:
+		return {
+			"ok": true,
+			"handled": false,
+			"pending": false,
+			"reason": "clean",
+			"action": action,
+			"message": "",
+			"route_attempt_delta": 0,
+			"load_attempt_delta": 0,
+		}
+	if not action in [DIRTY_TRANSITION_MENU, DIRTY_TRANSITION_PACKAGE, DIRTY_TRANSITION_QUIT]:
+		return {
+			"ok": false,
+			"handled": false,
+			"pending": false,
+			"reason": "invalid_action",
+			"action": action,
+			"message": "Unknown editor transition.",
+			"route_attempt_delta": 0,
+			"load_attempt_delta": 0,
+		}
+	var normalized_package_id := package_id.strip_edges().left(160)
+	if action == DIRTY_TRANSITION_PACKAGE and normalized_package_id == "":
+		return {
+			"ok": false,
+			"handled": false,
+			"pending": false,
+			"reason": "package_not_selected",
+			"action": action,
+			"message": "Choose a map package before replacing this working copy.",
+			"route_attempt_delta": 0,
+			"load_attempt_delta": 0,
+		}
+	_dirty_transition_return_focus = _capture_dirty_transition_origin(origin)
+	_pending_dirty_transition = {
+		"action": action,
+		"package_id": normalized_package_id,
+		"package_label": package_label.strip_edges().left(120),
+		"source": source.strip_edges().left(64),
+	}
+	_validation_dirty_transition_request_count += 1
+	_safe_close_guard_authorized = false
+	_safe_close_guard_authorized_source = ""
+	_apply_dirty_transition_copy(_pending_dirty_transition)
+	_dirty_transition_dialog.popup_centered(Vector2i(680, 250))
+	_focus_dirty_transition_cancel()
+	var result := {
+		"ok": true,
+		"handled": true,
+		"pending": true,
+		"reason": "editor_dirty",
+		"action": action,
+		"package_id": normalized_package_id,
+		"package_label": String(_pending_dirty_transition.get("package_label", "")),
+		"source": String(_pending_dirty_transition.get("source", "")),
+		"message": "Unsaved editor changes need confirmation.",
+		"route_attempt_delta": 0,
+		"load_attempt_delta": 0,
+	}
+	_last_dirty_transition_result = result.duplicate(true)
+	return result
+
+func _apply_dirty_transition_copy(pending: Dictionary) -> void:
+	var action := String(pending.get("action", ""))
+	_dirty_transition_dialog.get_cancel_button().text = DIRTY_TRANSITION_CANCEL_TEXT
+	match action:
+		DIRTY_TRANSITION_MENU:
+			_dirty_transition_dialog.title = "Leave Unsaved Map?"
+			_dirty_transition_dialog.dialog_text = "This working copy has unsaved changes. Leave for the Main Menu and discard them?"
+			_dirty_transition_dialog.get_ok_button().text = "Leave for Menu"
+		DIRTY_TRANSITION_PACKAGE:
+			var label := String(pending.get("package_label", pending.get("package_id", "selected map")))
+			_dirty_transition_dialog.title = "Replace Unsaved Map?"
+			_dirty_transition_dialog.dialog_text = "This working copy has unsaved changes. Load %s and discard them?" % label
+			_dirty_transition_dialog.get_ok_button().text = "Load Map"
+		DIRTY_TRANSITION_QUIT:
+			_dirty_transition_dialog.title = "Quit With Unsaved Changes?"
+			_dirty_transition_dialog.dialog_text = "This working copy has unsaved changes. Quit the game and discard them?"
+			_dirty_transition_dialog.get_ok_button().text = "Quit Game"
+
+func _capture_dirty_transition_origin(fallback: Control) -> Control:
+	var focus_owner := get_viewport().gui_get_focus_owner() as Control
+	if (
+		is_instance_valid(focus_owner)
+		and focus_owner.is_inside_tree()
+		and focus_owner.is_visible_in_tree()
+		and focus_owner.focus_mode != Control.FOCUS_NONE
+		and is_ancestor_of(focus_owner)
+	):
+		return focus_owner
+	return fallback
+
+func _focus_dirty_transition_cancel() -> void:
+	if not _dirty_transition_dialog.visible or _pending_dirty_transition.is_empty():
+		return
+	_dirty_transition_dialog.get_cancel_button().grab_focus()
+	await get_tree().process_frame
+	if _dirty_transition_dialog.visible and not _pending_dirty_transition.is_empty():
+		_dirty_transition_dialog.get_cancel_button().grab_focus()
+
+func _restore_dirty_transition_origin(target: Control) -> void:
+	await get_tree().process_frame
+	if (
+		is_instance_valid(target)
+		and target.is_inside_tree()
+		and target.is_visible_in_tree()
+		and target.focus_mode != Control.FOCUS_NONE
+	):
+		target.grab_focus()
+
+func _on_dirty_transition_canceled() -> Dictionary:
+	if _pending_dirty_transition.is_empty():
+		return {
+			"ok": false,
+			"canceled": false,
+			"pending": false,
+			"reason": "no_pending_transition",
+		}
+	var pending := _pending_dirty_transition.duplicate(true)
+	var return_focus := _dirty_transition_return_focus
+	_pending_dirty_transition = {}
+	_dirty_transition_return_focus = null
+	_safe_close_guard_authorized = false
+	_safe_close_guard_authorized_source = ""
+	_validation_dirty_transition_cancel_count += 1
+	_dirty_transition_dialog.hide()
+	var result := {
+		"ok": true,
+		"canceled": true,
+		"pending": false,
+		"action": String(pending.get("action", "")),
+		"package_id": String(pending.get("package_id", "")),
+		"reason": "canceled",
+		"message": "Kept the current editor working copy.",
+		"route_attempt_delta": 0,
+		"load_attempt_delta": 0,
+	}
+	_last_dirty_transition_result = result.duplicate(true)
+	_restore_dirty_transition_origin(return_focus)
+	return result
+
+func _on_dirty_transition_confirmed() -> Dictionary:
+	if _pending_dirty_transition.is_empty():
+		return {
+			"ok": false,
+			"pending": false,
+			"confirmed": false,
+			"reason": "no_pending_transition",
+			"route_attempt_delta": 0,
+			"load_attempt_delta": 0,
+		}
+	var pending := _pending_dirty_transition.duplicate(true)
+	var return_focus := _dirty_transition_return_focus
+	_pending_dirty_transition = {}
+	_dirty_transition_return_focus = null
+	_dirty_transition_dialog.hide()
+	_validation_dirty_transition_confirm_count += 1
+	var action := String(pending.get("action", ""))
+	var result := {}
+	match action:
+		DIRTY_TRANSITION_MENU:
+			result = _perform_clean_menu_transition()
+			result["confirmed"] = true
+		DIRTY_TRANSITION_PACKAGE:
+			_validation_dirty_transition_package_action_count += 1
+			var package_id := String(pending.get("package_id", ""))
+			var loaded := _load_maps_folder_package_working_copy(package_id)
+			result = {
+				"ok": loaded,
+				"handled": true,
+				"pending": false,
+				"confirmed": true,
+				"action": action,
+				"package_id": package_id,
+				"package_label": String(pending.get("package_label", "")),
+				"reason": "loaded" if loaded else "load_failed",
+				"message": _last_message,
+				"route_attempt_delta": 0,
+				"load_attempt_delta": 1,
+			}
+			if not loaded:
+				_restore_dirty_transition_origin(return_focus)
+		DIRTY_TRANSITION_QUIT:
+			_validation_dirty_transition_quit_attempt_count += 1
+			_safe_close_guard_authorized = true
+			_safe_close_guard_authorized_source = DIRTY_TRANSITION_QUIT_SOURCE
+			var quit_value: Variant = AppRouter.request_safe_quit_after_close_guard(DIRTY_TRANSITION_QUIT_SOURCE)
+			var quit_result: Dictionary = quit_value if quit_value is Dictionary else {}
+			result = quit_result.duplicate(true)
+			result["confirmed"] = true
+			result["pending"] = false
+			result["action"] = action
+			result["route_attempt_delta"] = 0
+			result["load_attempt_delta"] = 0
+			if not bool(result.get("ok", false)):
+				_last_message = String(result.get("message", "The editor remains open because the application could not close.")).strip_edges().left(240)
+				_refresh_state()
+				_restore_dirty_transition_origin(return_focus)
+		_:
+			result = {
+				"ok": false,
+				"confirmed": false,
+				"pending": false,
+				"action": action,
+				"reason": "invalid_action",
+				"message": "Unknown editor transition.",
+				"route_attempt_delta": 0,
+				"load_attempt_delta": 0,
+			}
+	_last_dirty_transition_result = result.duplicate(true)
+	return result
+
+func _perform_clean_menu_transition() -> Dictionary:
+	_validation_dirty_transition_menu_route_count += 1
+	if _validation_dirty_transition_routing_enabled:
+		AppRouter.go_to_main_menu()
+	return {
+		"ok": true,
+		"handled": true,
+		"pending": false,
+		"routed": true,
+		"route_suppressed": not _validation_dirty_transition_routing_enabled,
+		"action": DIRTY_TRANSITION_MENU,
+		"reason": "main_menu",
+		"message": "Returning to the Main Menu.",
+		"route_attempt_delta": 1,
+		"load_attempt_delta": 0,
+	}
 
 func _tile_inspection_text(tile: Vector2i) -> String:
 	if _session == null:
@@ -6831,6 +7196,10 @@ func _apply_visual_theme() -> void:
 		button.add_theme_stylebox_override("normal", button_style.duplicate())
 		button.add_theme_stylebox_override("pressed", button_hover.duplicate())
 		button.add_theme_stylebox_override("hover", button_hover.duplicate())
+	# Destructive transition origins must be controller-focusable so cancellation
+	# can return to the exact command that opened the confirmation.
+	_load_map_button.focus_mode = Control.FOCUS_ALL
+	_menu_button.focus_mode = Control.FOCUS_ALL
 
 func _panel_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -6846,6 +7215,116 @@ func _panel_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat
 	style.content_margin_right = 8
 	style.content_margin_bottom = 8
 	return style
+
+func validation_request_dirty_transition(action: String, target_package_id: String = "") -> Dictionary:
+	match action:
+		DIRTY_TRANSITION_MENU:
+			return _request_dirty_transition(action, "", "", "validation_menu", _menu_button)
+		DIRTY_TRANSITION_PACKAGE:
+			var package_id := target_package_id.strip_edges()
+			if package_id == "":
+				package_id = _selected_map_package_id
+			return _request_dirty_transition(
+				action,
+				package_id,
+				_map_package_label_for_id(package_id),
+				"validation_package",
+				_load_map_button
+			)
+		DIRTY_TRANSITION_QUIT:
+			return request_safe_close_guard("window_close")
+	return {
+		"ok": false,
+		"handled": false,
+		"pending": false,
+		"reason": "invalid_action",
+		"action": action,
+		"message": "Unknown editor transition.",
+		"route_attempt_delta": 0,
+		"load_attempt_delta": 0,
+	}
+
+func validation_cancel_dirty_transition() -> Dictionary:
+	return _on_dirty_transition_canceled()
+
+func validation_confirm_dirty_transition() -> Dictionary:
+	return _on_dirty_transition_confirmed()
+
+func validation_set_dirty_transition_routing_enabled(enabled: bool) -> void:
+	_validation_dirty_transition_routing_enabled = enabled
+
+func validation_select_map_package_id(package_id: String) -> Dictionary:
+	if not _select_map_package_picker_by_id(package_id):
+		return {
+			"ok": false,
+			"selected_map_package_id": _selected_map_package_id,
+			"reason": "package_not_indexed",
+			"message": "Map package is not available in the editor picker.",
+		}
+	_selected_map_package_id = package_id
+	_last_message = "Selected map package %s. Press Load Map to open it." % _map_package_label_for_id(package_id)
+	_refresh_state()
+	return {
+		"ok": true,
+		"selected_map_package_id": _selected_map_package_id,
+		"package_label": _map_package_label_for_id(package_id),
+		"message": _last_message,
+	}
+
+func validation_reset_dirty_transition_state() -> void:
+	_dirty_transition_dialog.hide()
+	_pending_dirty_transition = {}
+	_dirty_transition_return_focus = null
+	_safe_close_guard_authorized = false
+	_safe_close_guard_authorized_source = ""
+	_validation_dirty_transition_request_count = 0
+	_validation_dirty_transition_cancel_count = 0
+	_validation_dirty_transition_confirm_count = 0
+	_validation_dirty_transition_duplicate_request_count = 0
+	_validation_dirty_transition_menu_route_count = 0
+	_validation_dirty_transition_package_action_count = 0
+	_validation_dirty_transition_quit_attempt_count = 0
+	_last_dirty_transition_result = {}
+
+func validation_dirty_transition_snapshot() -> Dictionary:
+	var pending := _pending_dirty_transition.duplicate(true)
+	var cancel_button := _dirty_transition_dialog.get_cancel_button()
+	var dialog_focus_owner := cancel_button.get_viewport().gui_get_focus_owner()
+	var origin_focus_owner := get_viewport().gui_get_focus_owner()
+	var session_payload: Dictionary = _session.to_dict() if _session != null else {}
+	return {
+		"pending": not pending.is_empty(),
+		"dialog_visible": _dirty_transition_dialog.visible,
+		"action": String(pending.get("action", "")),
+		"package_id": String(pending.get("package_id", "")),
+		"package_label": String(pending.get("package_label", "")),
+		"source": String(pending.get("source", "")),
+		"title": _dirty_transition_dialog.title,
+		"text": _dirty_transition_dialog.dialog_text,
+		"confirm_text": _dirty_transition_dialog.get_ok_button().text,
+		"cancel_text": cancel_button.text,
+		"dialog_focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"return_focus_name": String(_dirty_transition_return_focus.name) if is_instance_valid(_dirty_transition_return_focus) else "",
+		"origin_focus_owner": String(origin_focus_owner.name) if origin_focus_owner != null else "",
+		"dialog_position": _dirty_transition_dialog.position,
+		"dialog_size": _dirty_transition_dialog.size,
+		"dirty": _dirty,
+		"selected_map_package_id": _selected_map_package_id,
+		"tool": _tool,
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"working_copy_signature": JSON.stringify(session_payload).sha256_text(),
+		"request_count": _validation_dirty_transition_request_count,
+		"cancel_count": _validation_dirty_transition_cancel_count,
+		"confirm_count": _validation_dirty_transition_confirm_count,
+		"duplicate_request_count": _validation_dirty_transition_duplicate_request_count,
+		"menu_route_count": _validation_dirty_transition_menu_route_count,
+		"package_action_count": _validation_dirty_transition_package_action_count,
+		"quit_attempt_count": _validation_dirty_transition_quit_attempt_count,
+		"safe_close_authorized": _safe_close_guard_authorized,
+		"routing_enabled": _validation_dirty_transition_routing_enabled,
+		"last_result": _last_dirty_transition_result.duplicate(true),
+	}
 
 func validation_snapshot() -> Dictionary:
 	var map_size := OverworldRules.derive_map_size(_session) if _session != null else Vector2i.ZERO
@@ -6866,6 +7345,7 @@ func validation_snapshot() -> Dictionary:
 		"restored_from_play_copy": _restored_from_play_copy,
 		"return_model": String(_session.flags.get("editor_return_model", "")) if _session != null else "",
 		"dirty": _dirty,
+		"dirty_transition": validation_dirty_transition_snapshot(),
 		"status_text": _last_message,
 		"visible_status_text": _status_label.text if _status_label != null else "",
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
