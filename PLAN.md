@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `save-latest-summary-subsecond-recency-10184` (completed). Save summaries retain the existing fractional payload timestamp for recency ordering while preserving legacy integer fields and display, so Continue Latest selects the genuinely newest same-second save.
+- Current implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184` (completed). Verified alternate autosaves reconcile shell-local generated-opening recovery only after canonical live flags are confirmed; failed saves remain honest, stale direct retries self-heal without writing, and ordinary Save resumes immediately.
+- Latest completed implementation slice: `save-generated-opening-alternate-autosave-reconciliation-10184`. Three alternate End Turn success rows, exact failed-End-Turn authority, zero-write stale recovery, original retry controls, End Turn/transaction/timing/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `save-latest-summary-subsecond-recency-10184`. Both fractional orderings, warm/cold cache, Main Menu selection/Continue parity, integer and mtime legacy fallbacks, exact byte/mtime immutability, transaction/menu/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184`. Ten owner states, short-lived repeat races, ordinary focused movement, right-stick controls, keyboard/controller/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged input matrices pass at save version 9.
 - Latest completed implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184`. Forced, precommit, and after-backup exactness, retry deduplication, fast/manual/menu/ordinary controls, generated timing, return/close, focus, visual, core, repository, Linux package, and fresh Windows/Wine package gates pass at save version 9.
@@ -3805,6 +3806,30 @@ Completion criteria:
 
 Non-goals:
 - no wall-clock redesign, slot priority policy beyond timestamp ordering, save payload/schema/version change, UI date-format change, autosave timing, gameplay/rules/content, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Generated Opening Alternate Autosave Reconciliation
+
+id: `save-generated-opening-alternate-autosave-reconciliation-10184`
+
+Status: completed.
+
+Selected Phase 6 recovery-state consistency fix. After an opening autosave failure, a successful End Turn
+uses the central SaveService canonicalizer and durably clears the authoritative pending flags, but the live
+Overworld shell retains its local failure boolean and continues intercepting Save with stale failure guidance.
+
+Implementation target:
+- reconcile generated-opening recovery state after any verified in-place alternate autosave that canonically clears the live pending flags;
+- clear only stale shell-local warning/retry state, preserve the single historical issue record, and restore ordinary Save behavior without scene exit;
+- make the retry entry fail closed but self-heal if authoritative live state is already complete.
+
+Completion criteria:
+- after an initial forced/precommit/after-backup opening failure, clearing injection and completing one nonterminal End Turn applies rules once, saves once, and leaves live plus restored completion flags canonical;
+- shell recovery pending, stale warning, and forced Save focus clear immediately; the next Save enters ordinary manual/overwrite behavior instead of returning `not_pending`;
+- a failing End Turn autosave preserves honest opening recovery and exact durable authority, while issue count remains deduplicated;
+- focused generated-opening, End Turn, transaction, focus/visual, core, repository, and Linux/Windows packaged gates pass without SaveService or save-version changes.
+
+Non-goals:
+- no End Turn rules/autosave policy, generated-map rules, SaveService canonicalization, save schema/version, manual-slot redesign, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

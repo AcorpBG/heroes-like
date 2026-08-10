@@ -184,6 +184,8 @@ var _validation_generated_opening_autosave_success_count := 0
 var _validation_generated_opening_autosave_failure_count := 0
 var _validation_generated_opening_autosave_issue_count := 0
 var _validation_generated_opening_manual_fallback_count := 0
+var _validation_generated_opening_autosave_reconciliation_count := 0
+var _last_generated_opening_autosave_reconciliation_result: Dictionary = {}
 var _opening_route_suggested := false
 var _opening_route_suggestion_kind := ""
 var _active_drawer := ""
@@ -1074,6 +1076,14 @@ func _commit_end_turn() -> Dictionary:
 		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
 		if autosave_failed:
 			_surface_end_turn_autosave_failure()
+		else:
+			var opening_reconciliation := _reconcile_generated_opening_autosave_recovery(
+				"end_turn_autosave",
+				_last_end_turn_autosave_result,
+				false
+			)
+			if bool(opening_reconciliation.get("reconciled", false)):
+				_end_turn_button.call_deferred("grab_focus")
 	_end_turn_commit_in_progress = false
 	if autosave_failed:
 		var failure_refresh_started := ProfileLogScript.begin_usec()
@@ -1130,6 +1140,7 @@ func _surface_end_turn_autosave_failure() -> void:
 	_validation_end_turn_autosave_failure_count += 1
 	_last_message = END_TURN_AUTOSAVE_FAILURE_MESSAGE
 	_record_action_feedback("system", _last_message, "Use Save now.")
+	var retry_action := "save" if _generated_opening_autosave_failure_pending else "manual_save"
 	_last_end_turn_runtime_issue = RuntimeIssueLog.emit_error(
 		"overworld",
 		"end_turn_autosave_failed",
@@ -1138,7 +1149,7 @@ func _surface_end_turn_autosave_failure() -> void:
 			"day": _session.day,
 			"scenario_status": _session.scenario_status,
 			"save_reason": String(_last_end_turn_autosave_result.get("reason", "unknown")).left(80),
-			"retry_action": "manual_save",
+			"retry_action": retry_action,
 			"battle_pending": not _session.battle.is_empty(),
 			"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
 		},
@@ -1168,6 +1179,7 @@ func _surface_briefing_consumption_autosave_failure() -> void:
 	)
 
 func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
+	var retry_action := "save" if _generated_opening_autosave_failure_pending else "manual_save"
 	return {
 		"ok": false,
 		"committed": true,
@@ -1176,7 +1188,7 @@ func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
 		"reason": "autosave_failed",
 		"save_failed": true,
 		"rules_applied": bool(rule_result.get("ok", false)),
-		"retry_action": "manual_save",
+		"retry_action": retry_action,
 		"battle_pending": not _session.battle.is_empty(),
 		"message": END_TURN_AUTOSAVE_FAILURE_MESSAGE,
 		"result": rule_result.duplicate(true),
@@ -1185,6 +1197,9 @@ func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
 	}
 
 func _on_save_pressed() -> Dictionary:
+	if _generated_opening_autosave_failure_pending and _generated_opening_autosave_authority_canonical():
+		_reconcile_generated_opening_autosave_recovery("save_preflight", {}, true)
+		_refresh()
 	if _generated_opening_autosave_failure_pending:
 		return _retry_generated_opening_autosave()
 	_validation_generated_opening_manual_fallback_count += 1
@@ -2269,14 +2284,32 @@ func _complete_deferred_generated_overworld_autosave() -> void:
 	AppRouter.finish_overworld_handoff_profile({"deferred_autosave": true, "autosave_ok": bool(save_result.get("ok", false))})
 
 func _retry_generated_opening_autosave() -> Dictionary:
-	if not _generated_opening_autosave_failure_pending or not _generated_initial_open_pending():
+	if _generated_opening_autosave_failure_pending and _generated_opening_autosave_authority_canonical():
+		_last_generated_opening_autosave_retry_result = _reconcile_generated_opening_autosave_recovery(
+			"retry_not_pending",
+			{},
+			true
+		)
+		_refresh()
+		return _last_generated_opening_autosave_retry_result.duplicate(true)
+	if not _generated_opening_autosave_failure_pending:
 		return {
 			"ok": false,
 			"saved": false,
-			"pending": _generated_opening_autosave_failure_pending,
+			"pending": false,
 			"reason": "not_pending",
 			"retry_action": "",
 			"message": "No generated opening checkpoint retry is pending.",
+			"save_result": {},
+		}
+	if not _generated_initial_open_pending():
+		return {
+			"ok": false,
+			"saved": false,
+			"pending": true,
+			"reason": "authority_not_canonical",
+			"retry_action": "save",
+			"message": GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE,
 			"save_result": {},
 		}
 	_validation_generated_opening_autosave_retry_attempt_count += 1
@@ -2296,6 +2329,67 @@ func _retry_generated_opening_autosave() -> Dictionary:
 	_refresh()
 	_save_button.call_deferred("grab_focus")
 	return _last_generated_opening_autosave_retry_result.duplicate(true)
+
+func _generated_opening_autosave_authority_canonical() -> bool:
+	return (
+		_session != null
+		and bool(_session.flags.get("generated_random_map", false))
+		and not bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false))
+		and not bool(_session.flags.get("generated_overworld_command_briefing_autosave_deferred", false))
+		and bool(_session.flags.get("generated_overworld_initial_autosave_completed", false))
+	)
+
+func _reconcile_generated_opening_autosave_recovery(
+	source: String,
+	save_result: Dictionary,
+	allow_canonical_without_save_result: bool
+) -> Dictionary:
+	var had_local_pending := _generated_opening_autosave_failure_pending
+	var save_verified := bool(save_result.get("ok", false))
+	var canonical := _generated_opening_autosave_authority_canonical()
+	if not had_local_pending:
+		return {
+			"ok": false,
+			"reconciled": false,
+			"saved": false,
+			"write_attempted": false,
+			"pending": false,
+			"reason": "not_pending",
+			"source": source,
+			"save_result": save_result.duplicate(true),
+		}
+	if not canonical or (not save_verified and not allow_canonical_without_save_result):
+		return {
+			"ok": false,
+			"reconciled": false,
+			"saved": false,
+			"write_attempted": false,
+			"pending": true,
+			"reason": "authority_not_canonical" if not canonical else "save_not_verified",
+			"source": source,
+			"message": GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE,
+			"save_result": save_result.duplicate(true),
+		}
+	_generated_opening_autosave_failure_pending = false
+	_validation_generated_opening_autosave_reconciliation_count += 1
+	if _last_message == GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE:
+		_last_message = ""
+	if String(_action_feedback.get("full_text", "")).contains(GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE):
+		_action_feedback = {}
+	_last_generated_opening_autosave_reconciliation_result = {
+		"ok": true,
+		"reconciled": true,
+		"saved": save_verified,
+		"write_attempted": false,
+		"reconciliation_write_attempted": false,
+		"alternate_save_verified": save_verified,
+		"pending": false,
+		"reason": "not_pending" if not save_verified else "alternate_autosave_saved",
+		"source": source,
+		"message": "Generated opening checkpoint is protected; ordinary Save is available.",
+		"save_result": save_result.duplicate(true),
+	}
+	return _last_generated_opening_autosave_reconciliation_result.duplicate(true)
 
 func _generated_opening_autosave_result(save_result: Dictionary, retry: bool) -> Dictionary:
 	var save_ok := bool(save_result.get("ok", false))
@@ -8207,6 +8301,9 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 func validation_retry_generated_opening_autosave() -> Dictionary:
 	return _on_save_pressed()
 
+func validation_retry_generated_opening_autosave_direct() -> Dictionary:
+	return _retry_generated_opening_autosave()
+
 func validation_reset_generated_opening_autosave_recovery_state() -> Dictionary:
 	if _generated_opening_autosave_failure_pending:
 		return validation_generated_opening_autosave_recovery_snapshot()
@@ -8216,8 +8313,10 @@ func validation_reset_generated_opening_autosave_recovery_state() -> Dictionary:
 	_validation_generated_opening_autosave_failure_count = 0
 	_validation_generated_opening_autosave_issue_count = 0
 	_validation_generated_opening_manual_fallback_count = 0
+	_validation_generated_opening_autosave_reconciliation_count = 0
 	_last_generated_opening_autosave_result = {}
 	_last_generated_opening_autosave_retry_result = {}
+	_last_generated_opening_autosave_reconciliation_result = {}
 	_last_generated_opening_autosave_runtime_issue = {}
 	return validation_generated_opening_autosave_recovery_snapshot()
 
@@ -8234,8 +8333,10 @@ func validation_generated_opening_autosave_recovery_snapshot() -> Dictionary:
 		"failure_count": _validation_generated_opening_autosave_failure_count,
 		"issue_count": _validation_generated_opening_autosave_issue_count,
 		"manual_fallback_count": _validation_generated_opening_manual_fallback_count,
+		"reconciliation_count": _validation_generated_opening_autosave_reconciliation_count,
 		"last_result": _last_generated_opening_autosave_result.duplicate(true),
 		"last_retry_result": _last_generated_opening_autosave_retry_result.duplicate(true),
+		"last_reconciliation_result": _last_generated_opening_autosave_reconciliation_result.duplicate(true),
 		"last_issue": _last_generated_opening_autosave_runtime_issue.duplicate(true),
 		"last_runtime_issue": _last_generated_opening_autosave_runtime_issue.duplicate(true),
 		"message": _last_message,
@@ -8254,6 +8355,7 @@ func validation_generated_opening_autosave_recovery_snapshot() -> Dictionary:
 		"generated_overworld_deferred_autosave_pending": bool(_session.flags.get("generated_overworld_deferred_autosave_pending", false)),
 		"generated_overworld_command_briefing_autosave_deferred": bool(_session.flags.get("generated_overworld_command_briefing_autosave_deferred", false)),
 		"generated_overworld_initial_autosave_completed": bool(_session.flags.get("generated_overworld_initial_autosave_completed", false)),
+		"authoritative_opening_canonical": _generated_opening_autosave_authority_canonical(),
 	}
 
 func _validation_uses_compact_save_surface() -> bool:
