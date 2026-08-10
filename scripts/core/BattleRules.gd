@@ -3994,11 +3994,17 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 			return "%s is waiting for a %s veteran line." % [String(supported_harry.get("name", "Harry")), target_role]
 		var required_support := int(supported_harry.get("min_adjacent_allies_to_target", 0))
 		if not _harry_support_ready(stack, target, battle, supported_harry):
+			var authored_blocked_summary := String(supported_harry.get("support_blocked_summary", ""))
+			if authored_blocked_summary != "":
+				return authored_blocked_summary
 			return "%s needs %d allied stack%s on the target's far lane before the snare closes." % [
 				String(supported_harry.get("name", "Harry")),
 				required_support,
 				"" if required_support == 1 else "s",
 			]
+		var authored_ready_summary := String(supported_harry.get("support_ready_summary", ""))
+		if authored_ready_summary != "":
+			return authored_ready_summary
 		return "%s will close the supported snare and mark this target for the pack." % String(supported_harry.get("name", "Harry"))
 	if _brace_available(stack, battle) and int(stack.get("retaliations_left", 0)) > 0:
 		return "Brace can stagger the next attacker if this stack holds."
@@ -10311,6 +10317,10 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 					normalized["min_adjacent_allies_to_target"] = clampi(int(entry.get("min_adjacent_allies_to_target", 0)), 0, 3)
 				if entry.has("support_ai_target_priority_bonus"):
 					normalized["support_ai_target_priority_bonus"] = clampf(float(entry.get("support_ai_target_priority_bonus", 0.0)), 0.0, 4.0)
+				if entry.has("support_blocked_summary"):
+					normalized["support_blocked_summary"] = String(entry.get("support_blocked_summary", ""))
+				if entry.has("support_ready_summary"):
+					normalized["support_ready_summary"] = String(entry.get("support_ready_summary", ""))
 			"obituary":
 				normalized = {
 					"id": ability_id,

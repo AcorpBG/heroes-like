@@ -11231,6 +11231,25 @@ def validate_content(errors: list[str]) -> None:
     ensure(float(furnace_pavis_shielding.get("ranged_damage_multiplier", 1.0)) < 1.0, errors, "Furnace Pavis Teams must blunt incoming ranged damage")
     ensure(int(furnace_pavis_shielding.get("linebreaker_screen_bonus_pct", 0)) > 0, errors, "Furnace Pavis Teams must strengthen their engine screen against Brace and Reach line breakers")
 
+    scrip_haulers = units.get("unit_brasshollow_scrip_haulers", {})
+    ledger_plate = next((ability for ability in scrip_haulers.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    rivet_hounds = units.get("unit_brasshollow_rivet_hounds", {})
+    rivet_hide = next((ability for ability in rivet_hounds.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    seam_mark = next((ability for ability in rivet_hounds.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
+    ensure(str(rivet_hounds.get("role", "")) == "melee" and int(rivet_hounds.get("tier", 0)) == 2, errors, "Rivet Hounds must remain the Brasshollow tier-2 melee pack")
+    ensure(int(rivet_hounds.get("speed", 0)) == 4 and int(rivet_hounds.get("initiative", 0)) == 6, errors, "Rivet Hounds must retain their original 4/6 tempo; Seam Mark supplies the distinct pack role")
+    ensure(str(rivet_hide.get("name", "")) == "Rivet Hide" and float(rivet_hide.get("ranged_damage_multiplier", 0.0)) == 0.92, errors, "Rivet Hounds must retain their original Rivet Hide missile screen")
+    ensure(str(seam_mark.get("name", "")) == "Seam Mark", errors, "Rivet Hounds must own the Seam Mark harry contract")
+    ensure(str(seam_mark.get("status_id", "")) == "status_rivet_exposed" and seam_mark.get("modifiers", {}) == {"defense": -1}, errors, "Seam Mark must expose exactly one point of defense")
+    ensure(int(seam_mark.get("duration_rounds", 0)) == 1 and int(seam_mark.get("uses_per_battle", 0)) == 1, errors, "Seam Mark must last one round and be limited to one use")
+    ensure(int(seam_mark.get("target_min_tier", 0)) == 2 and int(seam_mark.get("min_adjacent_allies_to_target", 0)) == 1, errors, "Seam Mark must require a supported tier-2-or-higher target")
+    ensure(float(seam_mark.get("ai_target_priority_bonus", 0.0)) == 0.1 and float(seam_mark.get("support_ai_target_priority_bonus", 0.0)) == 0.15, errors, "Seam Mark must keep its bounded base and supported AI priority")
+    ensure(str(seam_mark.get("support_blocked_summary", "")) == "Seam Mark needs one allied stack beside the target before the hounds can expose its armor seam.", errors, "Seam Mark must explain its blocked support geometry without Mireclaw snare copy")
+    ensure(str(seam_mark.get("support_ready_summary", "")) == "Seam Mark will expose this veteran target's armor seam for the supported follow-up.", errors, "Seam Mark must explain its ready supported follow-up")
+    ensure(str(scrip_haulers.get("role", "")) == "melee" and int(scrip_haulers.get("tier", 0)) == 1, errors, "Scrip Haulers must remain the tier-1 melee control for Rivet Hounds")
+    ensure(str(ledger_plate.get("name", "")) == "Ledger Plate" and float(ledger_plate.get("ranged_damage_multiplier", 0.0)) == 0.95, errors, "Scrip Haulers must retain Ledger Plate unchanged")
+    ensure(int(rivet_hounds.get("speed", 0)) == int(scrip_haulers.get("speed", -1)) and int(rivet_hounds.get("initiative", 0)) == int(scrip_haulers.get("initiative", -1)), errors, "Rivet Hounds and Scrip Haulers must keep equal baseline tempo while Seam Mark supplies Rivet Hounds' distinct role")
+
     citadel_pikeward = units.get("unit_citadel_pikeward", {})
     pikeward_screen = next((ability for ability in citadel_pikeward.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "formation_guard"), {})
     ensure(float(pikeward_screen.get("ally_ranged_damage_multiplier", 0.0)) > 1.0, errors, "Citadel Pikeward must keep its formation_guard ranged-support payoff authored")
@@ -20331,6 +20350,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "REQUIRED_ABILITY_IDS",
         "func _runtime_consequence_for_ability",
         "func _probe_harry",
+        "func _probe_rivet_hound_seam_mark",
+        "rivet_hound_content_driven_supported_seam_mark",
         "func _probe_obituary",
         "func _probe_fogwake",
         "func _probe_resonance_relay",

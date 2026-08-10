@@ -3,6 +3,7 @@ extends Node
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const OUTPUT_DIR := "res://.artifacts/unit_ability_runtime_report"
 const REQUIRED_ABILITY_IDS := [
@@ -30,6 +31,7 @@ const REQUIRED_ABILITY_IDS := [
 	"foundry_aura",
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
+const RIVET_HOUND_UNIT_ID := "unit_brasshollow_rivet_hounds"
 
 var _errors: Array[String] = []
 var _report := {
@@ -129,6 +131,8 @@ func _runtime_consequence_for_ability(unit_id: String, ability_id: String) -> Di
 		"readiness_writ":
 			return _probe_readiness_writ(unit_id)
 		"harry":
+			if unit_id == RIVET_HOUND_UNIT_ID:
+				return _probe_rivet_hound_seam_mark(unit_id)
 			return _probe_harry(unit_id)
 		"obituary":
 			return _probe_obituary(unit_id)
@@ -925,6 +929,10 @@ func _probe_harry(unit_id: String) -> Dictionary:
 			1 if bool(unsupported_attacker.get("ranged", false)) else 0
 		)
 		var unsupported_updated := BattleRulesScript._get_stack_by_id(unsupported_battle, String(unsupported_defender.get("battle_id", "")))
+		var authored_ready_summary := String(harry.get("support_ready_summary", ""))
+		var authored_blocked_summary := String(harry.get("support_blocked_summary", ""))
+		var ready_summary_ok := preview == authored_ready_summary if authored_ready_summary != "" else preview.contains("supported snare")
+		var blocked_summary_ok := unsupported_preview == authored_blocked_summary if authored_blocked_summary != "" else unsupported_preview.contains("needs 1 allied stack")
 		support_gate_ok = (
 			BattleRulesScript._harry_support_ready(attacker, defender, battle, harry)
 			and BattleAiRulesScript._harry_support_ready(attacker, defender, battle, harry)
@@ -932,8 +940,8 @@ func _probe_harry(unit_id: String) -> Dictionary:
 			and not BattleAiRulesScript._harry_support_ready(unsupported_attacker, unsupported_defender, unsupported_battle, harry)
 			and not SpellRulesScript.has_effect_id(unsupported_updated, unsupported_battle, status_id)
 			and unsupported_messages.is_empty()
-			and preview.contains("supported snare")
-			and unsupported_preview.contains("needs 1 allied stack")
+			and ready_summary_ok
+			and blocked_summary_ok
 		)
 		support_ai_gate_ok = supported_harry_score > unsupported_score
 	var uses_per_battle := int(harry.get("uses_per_battle", 0))
@@ -1068,6 +1076,277 @@ func _probe_harry(unit_id: String) -> Dictionary:
 		"ordinary_shield_preview": ordinary_shield_preview,
 		"screen_snare_ok": screen_snare_ok,
 		"reason": "" if ok else "harry did not uniquely apply its authored status and optional shield-screen pressure",
+	}
+
+func _probe_rivet_hound_seam_mark(unit_id: String) -> Dictionary:
+	var generic_result := _probe_harry(unit_id)
+	var authored := ContentService.get_unit(unit_id)
+	var seam_mark := _ability_by_id(authored, "harry")
+	var rivet_hide := _ability_by_id(authored, "shielding")
+	var scrip_hauler := ContentService.get_unit("unit_brasshollow_scrip_haulers")
+	var ledger_plate := _ability_by_id(scrip_hauler, "shielding")
+	var expected_ready := "Seam Mark will expose this veteran target's armor seam for the supported follow-up."
+	var expected_blocked := "Seam Mark needs one allied stack beside the target before the hounds can expose its armor seam."
+	var content_contract_ok: bool = (
+		String(authored.get("role", "")) == "melee"
+		and int(authored.get("tier", 0)) == 2
+		and int(authored.get("speed", 0)) == 4
+		and int(authored.get("initiative", 0)) == 6
+		and String(rivet_hide.get("name", "")) == "Rivet Hide"
+		and is_equal_approx(float(rivet_hide.get("ranged_damage_multiplier", 0.0)), 0.92)
+		and String(seam_mark.get("name", "")) == "Seam Mark"
+		and String(seam_mark.get("status_id", "")) == "status_rivet_exposed"
+		and String(seam_mark.get("status_label", "")) == "Seam-Marked"
+		and int(seam_mark.get("duration_rounds", 0)) == 1
+		and seam_mark.get("modifiers", {}) is Dictionary
+		and (seam_mark.get("modifiers", {}) as Dictionary).size() == 1
+		and int(seam_mark.get("modifiers", {}).get("defense", 0)) == -1
+		and int(seam_mark.get("uses_per_battle", 0)) == 1
+		and int(seam_mark.get("target_min_tier", 0)) == 2
+		and int(seam_mark.get("min_adjacent_allies_to_target", 0)) == 1
+		and is_equal_approx(float(seam_mark.get("ai_target_priority_bonus", 0.0)), 0.1)
+		and is_equal_approx(float(seam_mark.get("support_ai_target_priority_bonus", 0.0)), 0.15)
+		and String(seam_mark.get("support_ready_summary", "")) == expected_ready
+		and String(seam_mark.get("support_blocked_summary", "")) == expected_blocked
+		and String(scrip_hauler.get("role", "")) == "melee"
+		and int(scrip_hauler.get("tier", 0)) == 1
+		and int(scrip_hauler.get("speed", 0)) == 4
+		and int(scrip_hauler.get("initiative", 0)) == 6
+		and int(authored.get("speed", 0)) == int(scrip_hauler.get("speed", -1))
+		and int(authored.get("initiative", 0)) == int(scrip_hauler.get("initiative", -1))
+		and String(ledger_plate.get("name", "")) == "Ledger Plate"
+		and is_equal_approx(float(ledger_plate.get("ranged_damage_multiplier", 0.0)), 0.95)
+	)
+
+	var hound := _stack_for_unit(unit_id, "player", 0)
+	var target := _defender_stack("enemy", 0)
+	var supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	target["tier"] = 2
+	_set_hex(hound, 4, 3)
+	_set_hex(target, 5, 3)
+	_set_hex(supporter, 5, 2)
+	var battle := _battle_for_stacks([hound, target, supporter])
+	var ready_summary := BattleRulesScript._active_ability_window_summary(hound, battle, target)
+	var stripped_hound := _without_ability(hound, "harry")
+	var stripped_target: Dictionary = target.duplicate(true)
+	var stripped_supporter: Dictionary = supporter.duplicate(true)
+	var stripped_battle := _battle_for_stacks([stripped_hound, stripped_target, stripped_supporter])
+	var supported_ai_score := BattleAiRulesScript._attack_score(hound, target, battle, false)
+	var stripped_ai_score := BattleAiRulesScript._attack_score(stripped_hound, stripped_target, stripped_battle, false)
+	var bog_hound: Dictionary = hound.duplicate(true)
+	var bog_target: Dictionary = target.duplicate(true)
+	var bog_supporter: Dictionary = supporter.duplicate(true)
+	var bog_battle := _battle_for_stacks([bog_hound, bog_target, bog_supporter], ["bog_channels"])
+	var bog_stripped_hound := _without_ability(bog_hound, "harry")
+	var bog_stripped_battle := _battle_for_stacks([
+		bog_stripped_hound,
+		bog_target.duplicate(true),
+		bog_supporter.duplicate(true),
+	], ["bog_channels"])
+	var bog_ai_score := BattleAiRulesScript._attack_score(bog_hound, bog_target, bog_battle, false)
+	var bog_stripped_ai_score := BattleAiRulesScript._attack_score(
+		bog_stripped_hound,
+		bog_stripped_battle["stacks"][1],
+		bog_stripped_battle,
+		false
+	)
+	var target_defense_before := BattleRulesScript._stack_defense_total(target, battle)
+	var messages := BattleRulesScript._apply_attack_ability_effects(battle, hound, target, false, 1)
+	var marked := BattleRulesScript._get_stack_by_id(battle, String(target.get("battle_id", "")))
+	var updated_hound := BattleRulesScript._get_stack_by_id(battle, String(hound.get("battle_id", "")))
+	var target_defense_after := BattleRulesScript._stack_defense_total(marked, battle)
+	var followup_modifier_with := BattleRulesScript._damage_modifier(supporter, marked, battle, false, false, 1)
+	var followup_modifier_without := BattleRulesScript._damage_modifier(
+		stripped_supporter,
+		stripped_target,
+		stripped_battle,
+		false,
+		false,
+		1
+	)
+	BattleRulesScript._apply_attack_ability_effects(
+		stripped_battle,
+		stripped_hound,
+		stripped_target,
+		false,
+		1
+	)
+	var stripped_after := BattleRulesScript._get_stack_by_id(stripped_battle, String(stripped_target.get("battle_id", "")))
+
+	var unsupported_hound := _stack_for_unit(unit_id, "player", 0)
+	var unsupported_target := _defender_stack("enemy", 0)
+	var distant_supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	unsupported_target["tier"] = 2
+	_set_hex(unsupported_hound, 4, 3)
+	_set_hex(unsupported_target, 5, 3)
+	_set_hex(distant_supporter, 9, 6)
+	var unsupported_battle := _battle_for_stacks([unsupported_hound, unsupported_target, distant_supporter])
+	var blocked_summary := BattleRulesScript._active_ability_window_summary(unsupported_hound, unsupported_battle, unsupported_target)
+	var unsupported_messages := BattleRulesScript._apply_attack_ability_effects(unsupported_battle, unsupported_hound, unsupported_target, false, 1)
+	var unsupported_after := BattleRulesScript._get_stack_by_id(unsupported_battle, String(unsupported_target.get("battle_id", "")))
+
+	var low_hound := _stack_for_unit(unit_id, "player", 0)
+	var low_target := _defender_stack("enemy", 0)
+	var low_supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	low_target["tier"] = 1
+	_set_hex(low_hound, 4, 3)
+	_set_hex(low_target, 5, 3)
+	_set_hex(low_supporter, 5, 2)
+	var low_battle := _battle_for_stacks([low_hound, low_target, low_supporter])
+	var low_messages := BattleRulesScript._apply_attack_ability_effects(low_battle, low_hound, low_target, false, 1)
+	var low_after := BattleRulesScript._get_stack_by_id(low_battle, String(low_target.get("battle_id", "")))
+
+	var lethal_hound := _stack_for_unit(unit_id, "player", 0)
+	var lethal_target := _defender_stack("enemy", 0)
+	var lethal_supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	lethal_target["tier"] = 2
+	lethal_target["total_health"] = 0
+	_set_hex(lethal_hound, 4, 3)
+	_set_hex(lethal_target, 5, 3)
+	_set_hex(lethal_supporter, 5, 2)
+	var lethal_battle := _battle_for_stacks([lethal_hound, lethal_target, lethal_supporter])
+	var lethal_messages := BattleRulesScript._apply_attack_ability_effects(lethal_battle, lethal_hound, lethal_target, false, 1)
+	var lethal_after := BattleRulesScript._get_stack_by_id(lethal_battle, String(lethal_target.get("battle_id", "")))
+
+	var spent_hound := _stack_for_unit(unit_id, "player", 0)
+	var spent_target := _defender_stack("enemy", 0)
+	var spent_supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	spent_hound["ability_uses"] = {"harry": 1}
+	spent_target["tier"] = 2
+	_set_hex(spent_hound, 4, 3)
+	_set_hex(spent_target, 5, 3)
+	_set_hex(spent_supporter, 5, 2)
+	var spent_battle := _battle_for_stacks([spent_hound, spent_target, spent_supporter])
+	var spent_messages := BattleRulesScript._apply_attack_ability_effects(spent_battle, spent_hound, spent_target, false, 1)
+	var spent_after := BattleRulesScript._get_stack_by_id(spent_battle, String(spent_target.get("battle_id", "")))
+
+	var retaliation_hound := _stack_for_unit(unit_id, "player", 0)
+	var retaliation_target := _defender_stack("enemy", 0)
+	var retaliation_supporter := _stack_for_unit("unit_brasshollow_scrip_haulers", "player", 1)
+	retaliation_target["tier"] = 2
+	_set_hex(retaliation_hound, 4, 3)
+	_set_hex(retaliation_target, 5, 3)
+	_set_hex(retaliation_supporter, 5, 2)
+	var retaliation_battle := _battle_for_stacks([retaliation_hound, retaliation_target, retaliation_supporter])
+	var retaliation_messages := BattleRulesScript._apply_retaliation_ability_effects(retaliation_battle, retaliation_hound, retaliation_target)
+	var retaliation_after := BattleRulesScript._get_stack_by_id(retaliation_battle, String(retaliation_target.get("battle_id", "")))
+
+	var checkpoint_battle: Dictionary = battle.duplicate(true)
+	var checkpoint_session := SessionStateStoreScript.SessionData.new("rivet_hound_checkpoint", "unit_ability_runtime")
+	checkpoint_session.game_state = "battle"
+	checkpoint_session.battle = checkpoint_battle.duplicate(true)
+	var restored_session := SessionStateStoreScript.SessionData.new()
+	restored_session.from_dict(checkpoint_session.to_dict())
+	var restored_hound := BattleRulesScript._get_stack_by_id(restored_session.battle, String(hound.get("battle_id", "")))
+	var restored_target := BattleRulesScript._get_stack_by_id(restored_session.battle, String(target.get("battle_id", "")))
+	var serialization_ok: bool = (
+		restored_session.battle == checkpoint_battle
+		and SpellRulesScript.has_effect_id(restored_target, restored_session.battle, "status_rivet_exposed")
+		and int(restored_hound.get("ability_uses", {}).get("harry", 0)) == 1
+	)
+	battle["round"] = 4
+	var expired := not SpellRulesScript.has_effect_id(marked, battle, "status_rivet_exposed")
+
+	var reedsnare := _stack_for_unit("unit_mireclaw_reedsnare_kin", "player", 0)
+	var reedsnare_target := _defender_stack("enemy", 0)
+	var reedsnare_supporter := _defender_stack("player", 1)
+	reedsnare_target["tier"] = 4
+	reedsnare_target["ranged"] = false
+	_set_hex(reedsnare, 4, 3)
+	_set_hex(reedsnare_target, 5, 3)
+	_set_hex(reedsnare_supporter, 5, 2)
+	var reedsnare_battle := _battle_for_stacks([reedsnare, reedsnare_target, reedsnare_supporter])
+	var reedsnare_ready := BattleRulesScript._active_ability_window_summary(reedsnare, reedsnare_battle, reedsnare_target)
+	_set_hex(reedsnare_supporter, 9, 6)
+	var reedsnare_blocked_battle := _battle_for_stacks([reedsnare, reedsnare_target, reedsnare_supporter])
+	var reedsnare_blocked := BattleRulesScript._active_ability_window_summary(reedsnare, reedsnare_blocked_battle, reedsnare_target)
+	var reedsnare_copy_ok: bool = (
+		reedsnare_ready == "Reed-Circle Snare will close the supported snare and mark this target for the pack."
+		and reedsnare_blocked == "Reed-Circle Snare needs 1 allied stack on the target's far lane before the snare closes."
+	)
+
+	var status_id := "status_rivet_exposed"
+	var supported_ok: bool = (
+		SpellRulesScript.has_effect_id(marked, checkpoint_battle, status_id)
+		and int(updated_hound.get("ability_uses", {}).get("harry", 0)) == 1
+		and target_defense_after == target_defense_before - 1
+		and followup_modifier_with > followup_modifier_without
+		and messages.any(func(message): return String(message).contains("seam-marked"))
+		and not SpellRulesScript.has_effect_id(stripped_after, stripped_battle, status_id)
+	)
+	var negative_gates_ok: bool = (
+		blocked_summary == expected_blocked
+		and unsupported_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(unsupported_after, unsupported_battle, status_id)
+		and int(unsupported_hound.get("ability_uses", {}).get("harry", 0)) == 0
+		and low_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(low_after, low_battle, status_id)
+		and int(low_hound.get("ability_uses", {}).get("harry", 0)) == 0
+		and lethal_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(lethal_after, lethal_battle, status_id)
+		and int(lethal_hound.get("ability_uses", {}).get("harry", 0)) == 0
+		and spent_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(spent_after, spent_battle, status_id)
+		and int(spent_hound.get("ability_uses", {}).get("harry", 0)) == 1
+		and retaliation_messages.is_empty()
+		and not SpellRulesScript.has_effect_id(retaliation_after, retaliation_battle, status_id)
+		and int(retaliation_hound.get("ability_uses", {}).get("harry", 0)) == 0
+	)
+	var ai_ok: bool = (
+		BattleRulesScript._harry_support_ready(hound, target, checkpoint_battle, seam_mark)
+		and BattleAiRulesScript._harry_support_ready(hound, target, checkpoint_battle, seam_mark)
+		and is_equal_approx(supported_ai_score - stripped_ai_score, 0.25)
+		and bog_ai_score > bog_stripped_ai_score
+		and bog_ai_score - bog_stripped_ai_score > supported_ai_score - stripped_ai_score
+	)
+	var ok: bool = (
+		bool(generic_result.get("ok", false))
+		and content_contract_ok
+		and ready_summary == expected_ready
+		and supported_ok
+		and negative_gates_ok
+		and expired
+		and serialization_ok
+		and ai_ok
+		and reedsnare_copy_ok
+	)
+	return {
+		"ok": ok,
+		"probe": "rivet_hound_content_driven_supported_seam_mark",
+		"generic_harry_ok": bool(generic_result.get("ok", false)),
+		"content_contract_ok": content_contract_ok,
+		"content_contract": {
+			"role": String(authored.get("role", "")),
+			"tier": int(authored.get("tier", 0)),
+			"speed": int(authored.get("speed", 0)),
+			"initiative": int(authored.get("initiative", 0)),
+			"rivet_hide": rivet_hide.duplicate(true),
+			"seam_mark": seam_mark.duplicate(true),
+			"scrip_role": String(scrip_hauler.get("role", "")),
+			"scrip_tier": int(scrip_hauler.get("tier", 0)),
+			"scrip_speed": int(scrip_hauler.get("speed", 0)),
+			"scrip_initiative": int(scrip_hauler.get("initiative", 0)),
+			"tempo_matches_scrip": (
+				int(authored.get("speed", 0)) == int(scrip_hauler.get("speed", -1))
+				and int(authored.get("initiative", 0)) == int(scrip_hauler.get("initiative", -1))
+			),
+			"ledger_plate": ledger_plate.duplicate(true),
+		},
+		"ready_summary": ready_summary,
+		"blocked_summary": blocked_summary,
+		"supported_status": SpellRulesScript.has_effect_id(marked, checkpoint_battle, status_id),
+		"uses_recorded": int(updated_hound.get("ability_uses", {}).get("harry", 0)),
+		"target_defense_before": target_defense_before,
+		"target_defense_after": target_defense_after,
+		"followup_modifier_with": followup_modifier_with,
+		"followup_modifier_without": followup_modifier_without,
+		"negative_gates_ok": negative_gates_ok,
+		"expired_after_round": expired,
+		"serialization_ok": serialization_ok,
+		"ai_score_delta": supported_ai_score - stripped_ai_score,
+		"bog_channel_ai_score_delta": bog_ai_score - bog_stripped_ai_score,
+		"reedsnare_copy_ok": reedsnare_copy_ok,
+		"reason": "" if ok else "Rivet Hound Seam Mark did not preserve baseline Scrip tempo equality or its distinct support, survival, tier, use, expiry, follow-up, serialization, AI, and legacy-control role",
 	}
 
 func _probe_obituary(unit_id: String) -> Dictionary:
