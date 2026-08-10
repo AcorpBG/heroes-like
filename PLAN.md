@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184` (completed). Overworld keyboard, arrow fallback, immediate/repeated left-stick, and right-stick route input now share one interaction-owner boundary; owner activation clears pending analog repeats, and blocked keyboard input remains available to GUI navigation.
+- Current implementation slice: `save-latest-summary-subsecond-recency-10184` (completed). Save summaries retain the existing fractional payload timestamp for recency ordering while preserving legacy integer fields and display, so Continue Latest selects the genuinely newest same-second save.
+- Latest completed implementation slice: `save-latest-summary-subsecond-recency-10184`. Both fractional orderings, warm/cold cache, Main Menu selection/Continue parity, integer and mtime legacy fallbacks, exact byte/mtime immutability, transaction/menu/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-overworld-gameplay-movement-input-ownership-10184`. Ten owner states, short-lived repeat races, ordinary focused movement, right-stick controls, keyboard/controller/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged input matrices pass at save version 9.
 - Latest completed implementation slice: `save-generated-opening-autosave-failure-retry-safety-10184`. Forced, precommit, and after-backup exactness, retry deduplication, fast/manual/menu/ordinary controls, generated timing, return/close, focus, visual, core, repository, Linux package, and fresh Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184`. Physical controller, real mouse, direct-result parity, checkpoint, animation, active focus, 1280 layout, core, repository, Linux package, and fresh non-headless Windows/Wine native-dialog gates pass.
@@ -3780,6 +3781,30 @@ Completion criteria:
 
 Non-goals:
 - no movement cost/pathfinding/camera policy, route-selection semantics, input remapping redesign, drawer layout, save behavior, rules/AI/content, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Latest Save Subsecond Recency
+
+id: `save-latest-summary-subsecond-recency-10184`
+
+Status: completed.
+
+Selected Phase 6 save-selection correctness fix. Runtime save payloads already record fractional Unix
+timestamps, but summary construction truncates them to integer seconds. Autosave is inspected first and
+strict comparison retains it on a same-second tie, allowing Continue Latest to restore older state.
+
+Implementation target:
+- retain a precise floating-point recorded timestamp in inspected summaries while preserving the existing integer timestamp and minute-formatted player copy;
+- use the precise timestamp for SaveService and Main Menu latest ordering with an integer/modified-time fallback for legacy summaries;
+- keep save payload bytes, save version, slot format, integrity checks, and explicit slot loading unchanged.
+
+Completion criteria:
+- an older autosave at second fraction .1 followed by a newer manual save at .9 selects the manual save, while the reverse ordering selects autosave;
+- runtime-cached and cold-disk inspection agree, integer-only legacy summaries remain loadable/orderable, and summary display copy remains unchanged;
+- inspection and selection never rewrite save bytes or transaction artifacts;
+- focused, transactional save, Continue Latest/menu, core, repository, and Linux/Windows packaged gates pass without a save-version change.
+
+Non-goals:
+- no wall-clock redesign, slot priority policy beyond timestamp ordering, save payload/schema/version change, UI date-format change, autosave timing, gameplay/rules/content, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 

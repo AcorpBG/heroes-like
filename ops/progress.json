@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld movement input ownership is complete across keyboard, arrow fallback, immediate/repeated left-stick, and route input, with exact owner activation and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Latest-save subsecond recency is complete with precise summary ordering, legacy fallbacks, exact inspection immutability, Main Menu parity, and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-overworld-gameplay-movement-input-ownership-10184",
-  "currentSliceId": "accessibility-overworld-gameplay-movement-input-ownership-10184",
-  "currentSliceNotes": "Completed one shared movement owner boundary, fail-closed owner activation/repeat clearing, GUI-preserving keyboard behavior, focused ten-owner coverage, and Linux/Windows package proof.",
+  "currentSlice": "save-latest-summary-subsecond-recency-10184",
+  "currentSliceId": "save-latest-summary-subsecond-recency-10184",
+  "currentSliceNotes": "Completed precise summary recency ordering from the existing fractional payload timestamp with legacy integer/mtime fallback, unchanged save bytes/display, and cross-platform package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Gameplay Movement Input Ownership",
-  "currentSliceUpdatedAt": "2026-08-10T16:49:49Z",
+  "currentSliceTitle": "Latest Save Subsecond Recency",
+  "currentSliceUpdatedAt": "2026-08-10T17:09:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74886,6 +74886,26 @@
       "notes": "Completed one authoritative owner reason across configured keyboard, unhandled arrow fallback, immediate/repeated left-stick, and right-stick route input. Drawer, settings, SaveSlot popup, overwrite, End Turn dialog/commit, and debug activation clear pending analog state; blocked keyboard remains available to GUI navigation. The ten-owner focused matrix, activation race, ordinary movement, route/controller/focus/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. Package-only shutdown diagnostics occurred after the success report and did not reproduce in source-focused runs.",
       "remainingWork": "No work remains in this slice. Generated alternate-save recovery reconciliation, precise latest-save ordering, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T16:49:49Z"
+    },
+    {
+      "id": "save-latest-summary-subsecond-recency-10184",
+      "title": "Latest Save Subsecond Recency",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Prevent Continue Latest and the Saves board from preferring an older autosave when a newer manual save was written within the same Unix second.",
+      "implementationTargets": ["scripts/autoload/SaveService.gd", "tests/save_latest_summary_subsecond_recency_regression.gd", "tests/save_latest_summary_subsecond_recency_regression.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"payload_timestamp_fractional": true, "summary_timestamp_fractional": false, "autosave_wins_same_second_tie": true},
+      "completionCriteria": ["Fractional .1 then .9 ordering selects the newer manual save and reverse ordering selects autosave", "Warm-cache and cold-disk inspection agree while integer-only legacy summaries retain deterministic fallback behavior", "Existing integer timestamp and player-visible formatting remain unchanged and inspection rewrites no save bytes", "Focused, transaction, menu/Continue Latest, core, repository, and Linux/Windows packaged gates pass"],
+      "nonGoals": ["wall-clock redesign, slot priority policy beyond timestamp ordering, save payload/schema/version change, date-format change, autosave timing, gameplay/rules/content, Native RMG, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T16:50:38Z",
+      "startedAt": "2026-08-10T16:50:38Z",
+      "updatedAt": "2026-08-10T17:09:51Z",
+      "notes": "Completed summary-only precise timestamp capture and shared float recency ordering while retaining the integer recorded timestamp and minute display. Both 1000.1/1000.9 directions, cold/warm cache, Main Menu default and Continue restore parity, integer legacy and missing-timestamp mtime fallback/load, unchanged display, exact bytes+mtime, zero residues/writes, transaction/deferred/menu/focus/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9.",
+      "remainingWork": "No work remains in this slice. Generated-opening alternate-autosave recovery reconciliation, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T17:09:51Z"
     }
   ],
   "project": "heroes-like",
