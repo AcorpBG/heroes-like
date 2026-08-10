@@ -13,6 +13,8 @@ func _run() -> void:
 		return
 	if not await _check_overworld_controller_movement():
 		return
+	if not await _check_overworld_controller_route_selection():
+		return
 	if not await _check_overworld_end_turn_confirmation_cancel():
 		return
 	if not await _check_overworld_manual_save_overwrite_cancel():
@@ -159,6 +161,95 @@ func _check_overworld_controller_movement() -> bool:
 	await _send_joypad_axis(axis, 0.0)
 	if get_viewport().gui_get_focus_owner() == null:
 		return _fail("Overworld left-stick movement discarded focused UI state.")
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _check_overworld_controller_route_selection() -> bool:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	for method_name in [
+		"validation_reset_controller_route_cursor",
+		"validation_controller_route_cursor_snapshot",
+	]:
+		if not shell.has_method(method_name):
+			return _fail("Overworld right-stick route cursor is missing %s." % method_name)
+	shell.call("validation_reset_controller_route_cursor")
+	var focus_before_dpad := get_viewport().gui_get_focus_owner()
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	var focus_after_dpad := get_viewport().gui_get_focus_owner()
+	if focus_before_dpad == null or focus_after_dpad == null or focus_after_dpad == focus_before_dpad or not shell.is_ancestor_of(focus_after_dpad):
+		return _fail("Overworld D-pad focus was not available before right-stick route selection: before=%s after=%s." % [focus_before_dpad, focus_after_dpad])
+
+	var move := _legal_cardinal_move(session)
+	if move.is_empty():
+		return _fail("Overworld right-stick fixture has no legal cardinal preview destination.")
+	var hero_before := OverworldRules.hero_position(session)
+	var expected_tile: Vector2i = hero_before + move.get("delta", Vector2i.ZERO)
+	var session_before_preview := JSON.stringify(session.to_dict())
+	var route_axis := _controller_route_axis_for_delta(move.get("delta", Vector2i.ZERO))
+	var route_axis_id := int(route_axis.get("axis", -1))
+	var route_axis_value := float(route_axis.get("value", 0.0))
+	await _send_joypad_axis(route_axis_id, route_axis_value)
+	await _send_joypad_axis(route_axis_id, 0.0)
+	var preview: Dictionary = shell.call("validation_controller_route_cursor_snapshot")
+	if not bool(preview.get("active", false)) \
+			or _controller_snapshot_tile(preview.get("selected_tile", {})) != expected_tile \
+			or not (preview.get("route_preview", {}) is Dictionary) \
+			or (preview.get("route_preview", {}) as Dictionary).is_empty() \
+			or String((preview.get("primary_action", {}) as Dictionary).get("id", "")) == "" \
+			or bool((preview.get("primary_action", {}) as Dictionary).get("disabled", false)):
+		return _fail("Live right-stick input did not expose the existing route preview/action surface: expected=%s preview=%s." % [expected_tile, preview])
+	if JSON.stringify(session.to_dict()) != session_before_preview:
+		return _fail("Right-stick route preview mutated the live expedition before confirmation.")
+	if get_viewport().gui_get_focus_owner() != focus_after_dpad:
+		return _fail("Right-stick route preview stole D-pad command focus: expected=%s got=%s." % [focus_after_dpad, get_viewport().gui_get_focus_owner()])
+
+	await _press_joypad_button(JOY_BUTTON_B)
+	var canceled: Dictionary = shell.call("validation_controller_route_cursor_snapshot")
+	if bool(canceled.get("active", true)) \
+			or int(canceled.get("cancel_count", 0)) != 1 \
+			or _controller_snapshot_tile(canceled.get("selected_tile", {})) != hero_before \
+			or _controller_snapshot_tile(canceled.get("camera_focus_tile", {})) != hero_before:
+		return _fail("Controller B did not reset the route cursor selection/camera to the hero: %s." % canceled)
+	if JSON.stringify(session.to_dict()) != session_before_preview:
+		return _fail("Controller route cancel changed the expedition.")
+	if get_viewport().gui_get_focus_owner() != focus_after_dpad:
+		return _fail("Controller route cancel did not preserve the originating D-pad focus: expected=%s got=%s." % [focus_after_dpad, get_viewport().gui_get_focus_owner()])
+
+	await _send_joypad_axis(route_axis_id, route_axis_value)
+	await _send_joypad_axis(route_axis_id, 0.0)
+	await _press_joypad_button(JOY_BUTTON_A)
+	var committed: Dictionary = shell.call("validation_controller_route_cursor_snapshot")
+	if OverworldRules.hero_position(session) != expected_tile \
+			or bool(committed.get("active", true)) \
+			or int(committed.get("accept_count", 0)) != 1 \
+			or int(committed.get("primary_action_invocation_count", 0)) != 1 \
+			or not bool((committed.get("last_accept", {}) as Dictionary).get("activated", false)):
+		return _fail("Controller A did not commit the previewed route exactly once: expected=%s actual=%s snapshot=%s." % [expected_tile, OverworldRules.hero_position(session), committed])
+	if get_viewport().gui_get_focus_owner() != focus_after_dpad:
+		return _fail("Controller route commit changed command focus: expected=%s got=%s." % [focus_after_dpad, get_viewport().gui_get_focus_owner()])
+
+	await _press_joypad_button(JOY_BUTTON_DPAD_UP)
+	var focus_after_route_dpad := get_viewport().gui_get_focus_owner()
+	if focus_after_route_dpad == null or focus_after_route_dpad == focus_after_dpad or not shell.is_ancestor_of(focus_after_route_dpad):
+		return _fail("D-pad command focus did not remain usable after route commit: before=%s after=%s." % [focus_after_dpad, focus_after_route_dpad])
+	var left_move := _legal_cardinal_move(session)
+	if left_move.is_empty():
+		return _fail("Overworld right-stick integration fixture has no legal follow-up left-stick move.")
+	var left_before := OverworldRules.hero_position(session)
+	var left_axis := _controller_axis_for_delta(left_move.get("delta", Vector2i.ZERO))
+	await _send_joypad_axis(int(left_axis.get("axis", -1)), float(left_axis.get("value", 0.0)))
+	await _send_joypad_axis(int(left_axis.get("axis", -1)), 0.0)
+	var left_after := OverworldRules.hero_position(session)
+	var after_left: Dictionary = shell.call("validation_controller_route_cursor_snapshot")
+	if left_after != left_before + left_move.get("delta", Vector2i.ZERO) or int(after_left.get("left_move_count", 0)) != 1:
+		return _fail("Left-stick immediate movement changed after route-cursor use: before=%s after=%s move=%s snapshot=%s." % [left_before, left_after, left_move, after_left])
+	if get_viewport().gui_get_focus_owner() == null:
+		return _fail("Left-stick movement after route-cursor use discarded D-pad focus.")
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -678,6 +769,19 @@ func _controller_axis_for_delta(delta: Vector2i) -> Dictionary:
 		Vector2i.LEFT: {"axis": JOY_AXIS_LEFT_X, "value": -1.0},
 		Vector2i.RIGHT: {"axis": JOY_AXIS_LEFT_X, "value": 1.0},
 	}.get(delta, {})
+
+func _controller_route_axis_for_delta(delta: Vector2i) -> Dictionary:
+	return {
+		Vector2i.UP: {"axis": JOY_AXIS_RIGHT_Y, "value": -1.0},
+		Vector2i.DOWN: {"axis": JOY_AXIS_RIGHT_Y, "value": 1.0},
+		Vector2i.LEFT: {"axis": JOY_AXIS_RIGHT_X, "value": -1.0},
+		Vector2i.RIGHT: {"axis": JOY_AXIS_RIGHT_X, "value": 1.0},
+	}.get(delta, {})
+
+func _controller_snapshot_tile(value: Variant) -> Vector2i:
+	if not (value is Dictionary):
+		return Vector2i(-1, -1)
+	return Vector2i(int(value.get("x", -1)), int(value.get("y", -1)))
 
 func _settle() -> void:
 	await get_tree().process_frame

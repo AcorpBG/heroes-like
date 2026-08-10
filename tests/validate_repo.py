@@ -357,6 +357,8 @@ OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld
 OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_confirmation_runtime_report.tscn"
 OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.gd"
 OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.tscn"
+OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.gd"
+OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.tscn"
 AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
 AMBIENT_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ambient_sfx_assets.py"
 AMBIENT_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ambient"
@@ -15777,6 +15779,44 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "res://tests/overworld_end_turn_confirmation_runtime_report.gd" in end_turn_scene_text,
             errors,
             "Overworld End Turn confirmation report scene must load its script",
+        )
+    for path in (
+        OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH,
+        OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing overworld controller route-selection regression file: {path.relative_to(ROOT)}")
+    if OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH.exists():
+        controller_route_text = OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION",
+            "validation_reset_controller_route_cursor",
+            "validation_controller_route_axis",
+            "validation_controller_route_repeat",
+            "validation_controller_route_cursor_snapshot",
+            "JOY_AXIS_RIGHT_X",
+            "JOY_AXIS_RIGHT_Y",
+            "JOY_AXIS_LEFT_X",
+            "JOY_BUTTON_A",
+            "JOY_BUTTON_B",
+            '"drawer_open"',
+            '"settings_open"',
+            '"save_popup_open"',
+            '"save_confirmation_open"',
+            '"end_turn_confirmation_open"',
+            "primary_action_invocation_count",
+            "repeat_timer_active",
+            "camera_focus_tile",
+            "route_preview",
+            "SaveService.save_runtime_autosave_session",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in controller_route_text, errors, f"overworld_controller_route_selection_regression.gd is missing token: {required_token}")
+    if OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH.exists():
+        controller_route_scene_text = OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/overworld_controller_route_selection_regression.gd" in controller_route_scene_text,
+            errors,
+            "Overworld controller route-selection regression scene must load its script",
         )
     for path in (OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH, OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing overworld End Turn autosave-failure regression file: {path.relative_to(ROOT)}")

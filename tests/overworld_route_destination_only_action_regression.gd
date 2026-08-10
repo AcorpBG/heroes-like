@@ -47,7 +47,14 @@ func _assert_plain_route_selection_and_confirmation_skip_broad_actions() -> bool
 	var confirm_sub_buckets: Dictionary = confirm_movement_details.get("sub_buckets_ms", {}) if confirm_movement_details.get("sub_buckets_ms", {}) is Dictionary else {}
 	if not bool(confirm_movement_details.get("scenario_eval_skipped", false)):
 		return _fail("Open route confirmation should still skip scenario evaluation.", confirm_movement_details)
-	for forbidden_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "artifact_collect_total_ms", "post_action_recap_total_ms"]:
+	if bool(confirm_movement_details.get("post_action_recap_skipped", true)):
+		return _fail("Open route confirmation unexpectedly skipped its compact post-action recap.", confirm_movement_details)
+	var confirm_recap_profile: Dictionary = confirm_movement_details.get("post_action_recap", {}) if confirm_movement_details.get("post_action_recap", {}) is Dictionary else {}
+	if String(confirm_recap_profile.get("mode", "")) != "compact" or not bool(confirm_recap_profile.get("rich_surface_skipped", false)):
+		return _fail("Open route confirmation did not use the compact recap contract.", confirm_movement_details)
+	if not confirm_sub_buckets.has("post_action_recap_total_ms") or float(confirm_sub_buckets.get("post_action_recap_total_ms", -1.0)) < 0.0 or float(confirm_sub_buckets.get("post_action_recap_total_ms", 51.0)) > 50.0:
+		return _fail("Open route confirmation compact recap exceeded its 50 ms timing budget.", confirm_movement_details)
+	for forbidden_bucket in ["descriptor_dispatch_total_ms", "descriptor_lookup_ms", "resource_collect_total_ms", "artifact_collect_total_ms"]:
 		if confirm_sub_buckets.has(forbidden_bucket):
 			return _fail("Open route confirmation exposed an irrelevant descriptor bucket %s." % forbidden_bucket, confirm_movement_details)
 	if int(confirm_command.get("route_cache_hits", 0)) <= 0:
