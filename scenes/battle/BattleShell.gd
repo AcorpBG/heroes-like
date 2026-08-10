@@ -10,6 +10,7 @@ const UI_ART_BATTLE_UNIT_CARD := "res://art/ui/runtime/battle/unit_card.png"
 const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_panel.png"
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
+const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -102,6 +103,12 @@ var _validation_battle_resolution_checkpoint_success_count := 0
 var _validation_battle_resolution_checkpoint_failure_count := 0
 var _validation_battle_resolution_checkpoint_retry_count := 0
 var _validation_battle_resolution_durable_route_count := 0
+var _briefing_consumption_autosave_failure_pending := false
+var _last_briefing_consumption_autosave_result := {}
+var _last_briefing_consumption_runtime_issue := {}
+var _validation_briefing_consumption_save_attempt_count := 0
+var _validation_briefing_consumption_save_success_count := 0
+var _validation_briefing_consumption_save_failure_count := 0
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -163,7 +170,7 @@ func _ready() -> void:
 	buckets["consume_payload_briefing"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _tactical_briefing_text != "":
 		phase_started = ProfileLogScript.begin_usec()
-		SaveService.save_runtime_autosave_session(_session)
+		_checkpoint_consumed_tactical_briefing()
 		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_refresh()
@@ -196,6 +203,60 @@ func _battle_music_metadata() -> Dictionary:
 		"encounter_id": String(_session.battle.get("encounter_id", "")) if _session.battle is Dictionary else "",
 		"encounter_difficulty": String(_session.battle.get("difficulty", _session.difficulty)) if _session.battle is Dictionary else _session.difficulty,
 	}
+
+func _checkpoint_consumed_tactical_briefing() -> Dictionary:
+	_validation_briefing_consumption_save_attempt_count += 1
+	var save_value: Variant = SaveService.save_runtime_autosave_session(_session)
+	var save_result: Dictionary = save_value if save_value is Dictionary else {}
+	if bool(save_result.get("ok", false)):
+		_validation_briefing_consumption_save_success_count += 1
+		_briefing_consumption_autosave_failure_pending = false
+		_last_briefing_consumption_autosave_result = {
+			"ok": true,
+			"saved": true,
+			"reason": "saved",
+			"retry_action": "",
+			"briefing_shown": _tactical_briefing_is_shown(),
+			"message": String(save_result.get("message", "Autosave updated.")).strip_edges().left(220),
+			"save_result": save_result.duplicate(true),
+		}
+		return _last_briefing_consumption_autosave_result.duplicate(true)
+
+	_validation_briefing_consumption_save_failure_count += 1
+	_briefing_consumption_autosave_failure_pending = true
+	_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	_last_briefing_consumption_runtime_issue = RuntimeIssueLog.emit_error(
+		"battle",
+		"briefing_consumption_autosave_failed",
+		BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE,
+		{
+			"scenario_id": _session.scenario_id.left(100),
+			"encounter_id": String(_session.battle.get("encounter_id", "")).left(100),
+			"round": int(_session.battle.get("round", 0)),
+			"briefing_shown": _tactical_briefing_is_shown(),
+			"save_reason": String(save_result.get("reason", "write_failed")).strip_edges().left(80),
+			"retry_action": "manual_save",
+		},
+		_session
+	)
+	_last_briefing_consumption_autosave_result = {
+		"ok": false,
+		"saved": false,
+		"routed": false,
+		"reason": "autosave_failed",
+		"retry_action": "manual_save",
+		"briefing_shown": _tactical_briefing_is_shown(),
+		"briefing_visible": _tactical_briefing_text.strip_edges() != "",
+		"message": BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE,
+		"save_result": save_result.duplicate(true),
+	}
+	return _last_briefing_consumption_autosave_result.duplicate(true)
+
+func _tactical_briefing_is_shown() -> bool:
+	if _session == null or _session.battle.is_empty():
+		return false
+	var state_value: Variant = _session.battle.get(BattleRules.TACTICAL_BRIEFING_KEY, {})
+	return state_value is Dictionary and bool(state_value.get("shown", false))
 
 func _on_prev_target_pressed() -> void:
 	if not _battle_resolution_checkpoint_pending.is_empty():
@@ -701,12 +762,21 @@ func _on_save_pressed() -> Dictionary:
 func _commit_manual_save(manual_slot: int) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
+	var briefing_checkpoint_pending := _briefing_consumption_autosave_failure_pending
 	var save_started := ProfileLogScript.begin_usec()
 	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
 	buckets["save"] = ProfileLogScript.elapsed_ms(save_started)
-	_last_message = String(result.get("message", ""))
+	if briefing_checkpoint_pending and bool(result.get("ok", false)):
+		_briefing_consumption_autosave_failure_pending = false
+		_last_message = String(result.get("message", ""))
+	elif briefing_checkpoint_pending:
+		_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	else:
+		_last_message = String(result.get("message", ""))
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	if briefing_checkpoint_pending and not bool(result.get("ok", false)):
+		_save_button.call_deferred("grab_focus")
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("battle", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	return result
@@ -896,6 +966,23 @@ func _apply_battle_resolution_checkpoint_failure_surface(
 	_save_button.disabled = false
 	_save_slot_picker.disabled = true
 	_disable_battle_exit_handoff_inputs()
+	if focus_save:
+		_save_button.call_deferred("grab_focus")
+
+func _apply_briefing_consumption_autosave_failure_surface(focus_save: bool = true) -> void:
+	_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	var visible_surface := BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	if _tactical_briefing_text.strip_edges() != "":
+		visible_surface = "%s\n%s" % [visible_surface, _tactical_briefing_text.strip_edges()]
+	_status_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	_set_compact_label(_event_label, visible_surface, 3)
+	_event_label.tooltip_text = visible_surface
+	_system_body_label.visible = true
+	_system_body_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
+	_system_body_label.tooltip_text = visible_surface
+	_save_button.text = "Save Battle"
+	_save_button.tooltip_text = "Save the shown tactical briefing checkpoint to the selected manual slot."
+	_save_button.disabled = false
 	if focus_save:
 		_save_button.call_deferred("grab_focus")
 
@@ -1146,6 +1233,8 @@ func _refresh() -> void:
 	_set_compact_label(_player_roster, "\n".join(player_lines) if not player_lines.is_empty() else "No survivors remain.", 6)
 	_set_compact_label(_enemy_roster, "\n".join(enemy_lines) if not enemy_lines.is_empty() else "Enemy resistance has collapsed.", 6)
 	buckets["rosters"] = ProfileLogScript.elapsed_ms(section_started)
+	if _briefing_consumption_autosave_failure_pending:
+		_apply_briefing_consumption_autosave_failure_surface(false)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	call_deferred("_configure_battle_keyboard_focus", false)
 
@@ -1176,6 +1265,8 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 	FrontierVisualKit.grab_keyboard_focus(self, _preferred_battle_keyboard_focus(), controls, force)
 
 func _preferred_battle_keyboard_focus() -> Control:
+	if _briefing_consumption_autosave_failure_pending:
+		return _save_button
 	var action_id := String(BattleRules.intent_forecast_payload(_session).get("action_id", ""))
 	match action_id:
 		"advance":
@@ -2197,6 +2288,7 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"battle_resolution_checkpoint": validation_battle_resolution_checkpoint_snapshot(),
+		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
 		"return_to_menu_visible_message": _last_message,
@@ -2369,6 +2461,52 @@ func validation_snapshot() -> Dictionary:
 		"save_button_tooltip_text": _save_button.tooltip_text,
 		"save_status_visible_text": _system_body_label.text,
 		"save_status_tooltip_text": _system_body_label.tooltip_text,
+	}
+
+func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var briefing_first_line := ""
+	for raw_line in _tactical_briefing_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line != "":
+			briefing_first_line = line
+			break
+	var visible_surface := "%s\n%s" % [_event_label.text, _event_label.tooltip_text]
+	var raw_autosave_result := {}
+	var raw_result_value: Variant = _last_briefing_consumption_autosave_result.get("save_result", {})
+	if raw_result_value is Dictionary:
+		raw_autosave_result = raw_result_value.duplicate(true)
+	return {
+		"briefing_consumed": _validation_briefing_consumption_save_attempt_count > 0,
+		"failure_pending": _briefing_consumption_autosave_failure_pending,
+		"briefing_shown": _tactical_briefing_is_shown(),
+		"briefing_active": _tactical_briefing_text.strip_edges() != "",
+		"briefing_visible": briefing_first_line != "" and briefing_first_line in visible_surface,
+		"briefing_title": "Briefing",
+		"briefing_text": _tactical_briefing_text.strip_edges().left(800),
+		"visible_message": _last_message.strip_edges().left(220),
+		"visible_action_feedback": _system_body_label.text.left(800),
+		"event_visible_text": _event_label.text.left(800),
+		"save_button_text": _save_button.text,
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"consumption_count": _validation_briefing_consumption_save_attempt_count,
+		"autosave_attempt_count": _validation_briefing_consumption_save_attempt_count,
+		"autosave_success_count": _validation_briefing_consumption_save_success_count,
+		"autosave_failure_count": _validation_briefing_consumption_save_failure_count,
+		"save_attempt_count": _validation_briefing_consumption_save_attempt_count,
+		"save_success_count": _validation_briefing_consumption_save_success_count,
+		"save_failure_count": _validation_briefing_consumption_save_failure_count,
+		"generated_defer_count": 0,
+		"last_autosave_result": raw_autosave_result,
+		"last_result": _last_briefing_consumption_autosave_result.duplicate(true),
+		"last_runtime_issue": _last_briefing_consumption_runtime_issue.duplicate(true),
+		"resolution_route_attempt_count": _validation_battle_resolution_attempt_count,
+		"last_resolution_route": _validation_last_battle_resolution_route.duplicate(true),
+		"scenario_status": _session.scenario_status if _session != null else "",
+		"game_state": _session.game_state if _session != null else "",
+		"day": _session.day if _session != null else 0,
+		"generated_random_map": bool(_session.flags.get("generated_random_map", false)) if _session != null else false,
 	}
 
 func validation_reset_battle_resolution_checkpoint_state() -> void:

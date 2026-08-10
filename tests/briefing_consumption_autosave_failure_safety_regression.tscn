@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/briefing_consumption_autosave_failure_safety_regression.gd" id="1"]
+
+[node name="BriefingConsumptionAutosaveFailureSafetyRegression" type="Node"]
+script = ExtResource("1")

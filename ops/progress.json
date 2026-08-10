@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Finalized nonterminal battle results now checkpoint before animation/routing and remain recoverable in Battle when the write fails. Overall release readiness remains open.",
+  "currentNotes": "Overworld and Battle briefing consumption now reports transactional autosave failure honestly and remains recoverable through a verified manual Save. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "battle-resolution-autosave-failure-route-safety-10184",
-  "currentSliceId": "battle-resolution-autosave-failure-route-safety-10184",
-  "currentSliceNotes": "Completed transactional finalized-battle checkpointing, exact failure retention with Save Battle retry, durable animation/route continuation, and packaged Linux/Windows proof.",
+  "currentSlice": "briefing-consumption-autosave-failure-safety-10184",
+  "currentSliceId": "briefing-consumption-autosave-failure-safety-10184",
+  "currentSliceNotes": "Both briefing surfaces preserve visible consumed state on failed autosave, emit bounded guidance and issues, route nowhere, and persist shown state through one verified Save without changing generated-opening deferral.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Resolution Autosave Failure Route Safety",
-  "currentSliceUpdatedAt": "2026-08-10T08:25:20Z",
+  "currentSliceTitle": "Briefing Consumption Autosave Failure Safety",
+  "currentSliceUpdatedAt": "2026-08-10T09:01:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74660,6 +74660,39 @@
       "notes": "Completed one transactional checkpoint before nonterminal exit animation/routing; both failure phases retain exact finalized state with Save Battle recovery, and focused plus packaged Linux/Windows gates pass at save version 9.",
       "remainingWork": "No work remains in this slice. Briefing-consumption save-failure safety, normal Outcome entry focus, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T08:25:20Z"
+    },
+    {
+      "id": "briefing-consumption-autosave-failure-safety-10184",
+      "title": "Briefing Consumption Autosave Failure Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Make authored Overworld and Battle one-shot briefing consumption report and recover transactional autosave failure instead of silently diverging live and durable state.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/briefing_consumption_autosave_failure_safety_regression.gd",
+        "tests/briefing_consumption_autosave_failure_safety_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"overworld_failure_visible": false, "battle_failure_visible": false, "save_retry_verified": false},
+      "completionCriteria": [
+        "Both shells and both failure phases preserve prior bytes/cache and visible live consumed briefing state with no transaction residue",
+        "Each failed briefing autosave emits one bounded issue, shows Save guidance/focus, and routes nowhere",
+        "One verified Save/reload retains consumed briefing state without gameplay mutation or repetition",
+        "Ordinary success, generated defer, compatibility, repository, Linux, and Windows-Wine gates pass"
+      ],
+      "nonGoals": ["briefing content redesign, tutorial system, generated-opening lifecycle changes, gameplay rules, save/schema changes, Native RMG, publication, signing, or release-completion claim"],
+      "createdAt": "2026-08-10T08:27:10Z",
+      "startedAt": "2026-08-10T08:27:10Z",
+      "updatedAt": "2026-08-10T09:01:33Z",
+      "notes": "Completed structured briefing autosave handling on both shells. Both injected phases preserve prior autosave bytes/cache with no residue, keep the shown briefing visible, emit one bounded issue, focus Save, and route nowhere; a verified manual Save restores with the briefing still consumed. Focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.",
+      "remainingWork": "No work remains in this slice. Normal Outcome entry focus, the pre-existing 1600x900 Overworld command-band geometry debt, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T09:01:33Z"
     }
   ],
   "project": "heroes-like",
