@@ -114,6 +114,8 @@ BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / 
 BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.tscn"
 SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.gd"
 SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.tscn"
+SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.gd"
+SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -14912,6 +14914,85 @@ def validate_scenario_outcome_normal_entry_focus(errors: list[str]) -> None:
         ensure(required_token in outcome_text, errors, f"ScenarioOutcomeShell.gd is missing required normal-entry focus token: {required_token}")
 
 
+def validate_scenario_outcome_new_session_confirmation(errors: list[str]) -> None:
+    for path in (
+        SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH,
+        SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCENE_PATH,
+        OUTCOME_SCRIPT_PATH,
+        OUTCOME_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing Scenario Outcome new-session confirmation file: {path.relative_to(ROOT)}")
+    if not SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH.exists():
+        return
+
+    report_text = SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_SAFE_CANCEL_REGRESSION",
+        '"skirmish_start:river-pass"',
+        '"campaign_start:causeway-stand"',
+        '"campaign_start:river-pass"',
+        '"status": "victory"',
+        '"status": "defeat"',
+        '"cancel": "accept"',
+        '"cancel": "back"',
+        '"cancel": "escape"',
+        "InputEventMouseButton.new()",
+        "MOUSE_BUTTON_LEFT",
+        'await _press_action("ui_accept")',
+        'await _press_joypad_button(JOY_BUTTON_A)',
+        'await _press_joypad_button(JOY_BUTTON_B)',
+        'await _press_key(KEY_ESCAPE)',
+        'String(snapshot.get("cancel_text", "")) == "Keep Outcome"',
+        'cancel_button.get_viewport().gui_get_focus_owner() == cancel_button',
+        'get_viewport().gui_get_focus_owner() != origin',
+        '_authority_snapshot(session) != before',
+        'String(duplicate_result.get("reason", "")) != "confirmation_already_pending"',
+        'String(recovery_result.get("reason", "")) != "outcome_autosave_recovery_pending"',
+        'String(stale_result.get("reason", "")) != "stale_request"',
+        '"action" not in action_stale_result.get("stale_fields", [])',
+        'dialog.get_ok_button().grab_focus()',
+        'int(confirmed.get("perform_count", 0)) != 1',
+        'int(confirmed.get("route_count", 0)) != 1',
+        'String(repeat_result.get("reason", "")) != "no_pending_confirmation"',
+        'shell.validation_request_save_outcome()',
+        'shell.validation_return_to_menu()',
+        'String(overwrite_snapshot.get("cancel_text", "")) != "Keep Save"',
+        'Vector2i(1280, 720)',
+    ):
+        ensure(required_token in report_text, errors, f"Scenario Outcome new-session confirmation regression is missing required token: {required_token}")
+
+    scene_text = SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/scenario_outcome_new_session_confirmation_safe_cancel_regression.gd" in scene_text,
+        errors,
+        "Scenario Outcome new-session confirmation scene must load its regression script",
+    )
+    outcome_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _request_outcome_new_session_confirmation(",
+        "func _on_outcome_new_session_confirmation_canceled(",
+        "func _on_outcome_new_session_confirmation_confirmed(",
+        "func _outcome_new_session_stale_fields(",
+        "func validation_request_outcome_new_session_confirmation(",
+        "func validation_cancel_outcome_new_session_confirmation(",
+        "func validation_confirm_outcome_new_session_confirmation(",
+        "func validation_set_outcome_new_session_routing_suppressed(",
+        "func validation_outcome_new_session_confirmation_snapshot(",
+        '"confirmation_already_pending"',
+        '"outcome_autosave_recovery_pending"',
+        '"stale_request"',
+        '"Keep Outcome"',
+    ):
+        ensure(required_token in outcome_text, errors, f"ScenarioOutcomeShell.gd is missing required new-session confirmation token: {required_token}")
+    outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '[node name="NewSessionConfirmationDialog" type="ConfirmationDialog" parent="."]',
+        'signal="canceled" from="NewSessionConfirmationDialog"',
+        'signal="confirmed" from="NewSessionConfirmationDialog"',
+    ):
+        ensure(required_token in outcome_scene_text, errors, f"ScenarioOutcomeShell.tscn is missing required new-session confirmation token: {required_token}")
+
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -26392,6 +26473,7 @@ def main() -> int:
     validate_battle_resolution_autosave_failure_route_safety(errors)
     validate_briefing_consumption_autosave_failure_safety(errors)
     validate_scenario_outcome_normal_entry_focus(errors)
+    validate_scenario_outcome_new_session_confirmation(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)

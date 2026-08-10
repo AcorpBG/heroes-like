@@ -484,11 +484,20 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Outcome guide"
 
+[node name="NewSessionConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "Start Fresh Expedition?"
+initial_position = 1
+exclusive = true
+ok_button_text = "Start Fresh"
+dialog_text = "Start a fresh expedition?"
+
 [node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
 
 [connection signal="item_selected" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Menu" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Guide" to="." method="_on_guide_pressed"]
+[connection signal="canceled" from="NewSessionConfirmationDialog" to="." method="_on_outcome_new_session_confirmation_canceled"]
+[connection signal="confirmed" from="NewSessionConfirmationDialog" to="." method="_on_outcome_new_session_confirmation_confirmed"]
 [connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
 [connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]

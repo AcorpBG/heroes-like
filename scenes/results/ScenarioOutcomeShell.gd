@@ -4,6 +4,8 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
+const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
+const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the outcome and try again."
 
 @onready var _backdrop: ColorRect = %Backdrop
 @onready var _header_label: Label = %Header
@@ -34,6 +36,7 @@ const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed
 @onready var _action_status_label: Label = %ActionStatus
 @onready var _actions_bar: HFlowContainer = %Actions
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
+@onready var _new_session_confirmation_dialog: ConfirmationDialog = $NewSessionConfirmationDialog
 @onready var _content_margin: MarginContainer = $ContentMargin
 @onready var _content_box: VBoxContainer = $ContentMargin/Content
 @onready var _banner_pad: MarginContainer = $ContentMargin/Content/Banner/BannerPad
@@ -70,10 +73,23 @@ var _validation_outcome_focus_action_execution_suppressed := false
 var _last_outcome_focus_accept_result: Dictionary = {}
 var _last_outcome_focus_cycle: Array = []
 var _last_outcome_focus_preferred_action_id := ""
+var _pending_outcome_new_session_confirmation: Dictionary = {}
+var _outcome_new_session_source_session: SessionStateStore.SessionData
+var _outcome_new_session_return_focus: Control = null
+var _last_outcome_new_session_confirmation_result: Dictionary = {}
+var _validation_outcome_new_session_request_count := 0
+var _validation_outcome_new_session_duplicate_request_count := 0
+var _validation_outcome_new_session_cancel_count := 0
+var _validation_outcome_new_session_confirm_count := 0
+var _validation_outcome_new_session_stale_count := 0
+var _validation_outcome_new_session_perform_count := 0
+var _validation_outcome_new_session_route_count := 0
+var _validation_outcome_new_session_routing_suppressed := false
 var _compact_layout_active := false
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_configure_outcome_new_session_confirmation()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	_session = SessionState.ensure_active_session()
@@ -88,6 +104,18 @@ func _ready() -> void:
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	_refresh()
 	call_deferred("_configure_outcome_keyboard_focus", true)
+
+func _configure_outcome_new_session_confirmation() -> void:
+	var cancel_button := _new_session_confirmation_dialog.get_cancel_button()
+	cancel_button.text = OUTCOME_NEW_SESSION_CANCEL_TEXT
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	cancel_button.shortcut = cancel_shortcut
+	var dialog_label := _new_session_confirmation_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(620.0, 0.0)
 
 func _apply_responsive_layout() -> void:
 	if _content_margin == null:
@@ -344,7 +372,13 @@ func _on_action_pressed(action_id: String) -> Dictionary:
 			"message": "Outcome focus activation recorded without changing the active expedition.",
 		}
 		return _last_outcome_focus_accept_result.duplicate(true)
-	_last_outcome_focus_accept_result = _perform_outcome_action(action_id).duplicate(true)
+	if _outcome_action_starts_new_session(action_id):
+		_last_outcome_focus_accept_result = _request_outcome_new_session_confirmation(
+			action_id,
+			_outcome_action_button(action_id)
+		).duplicate(true)
+	else:
+		_last_outcome_focus_accept_result = _perform_outcome_action(action_id).duplicate(true)
 	_last_outcome_focus_accept_result["action_id"] = action_id
 	_last_outcome_focus_accept_result["suppressed"] = false
 	return _last_outcome_focus_accept_result.duplicate(true)
@@ -353,7 +387,10 @@ func _configure_outcome_keyboard_focus(
 	force: bool = false,
 	preferred_action_id: String = ""
 ) -> void:
-	if not is_inside_tree() or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible):
+	if not is_inside_tree() \
+			or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible) \
+			or not _pending_outcome_new_session_confirmation.is_empty() \
+			or (_new_session_confirmation_dialog != null and _new_session_confirmation_dialog.visible):
 		return
 	var surfaces := [
 		_actions_bar,
@@ -405,6 +442,305 @@ func _outcome_action_button(action_id: String) -> Button:
 			return child
 	return null
 
+func _request_outcome_new_session_confirmation(action_id: String, focus_origin: Control = null) -> Dictionary:
+	_validation_outcome_new_session_request_count += 1
+	if not _pending_outcome_new_session_confirmation.is_empty():
+		_validation_outcome_new_session_duplicate_request_count += 1
+		var duplicate_result := {
+			"ok": false,
+			"pending": true,
+			"confirmation_required": true,
+			"performed": false,
+			"routed": false,
+			"reason": "confirmation_already_pending",
+			"action_id": String(_pending_outcome_new_session_confirmation.get("action_id", "")),
+			"requested_action_id": action_id,
+			"message": "Finish the current outcome confirmation first.",
+		}
+		_last_outcome_new_session_confirmation_result = duplicate_result.duplicate(true)
+		return duplicate_result
+
+	_sync_outcome_recovery_state(false, true)
+	if _outcome_recovery_pending:
+		var recovery_result := {
+			"ok": false,
+			"pending": false,
+			"confirmation_required": false,
+			"performed": false,
+			"routed": false,
+			"reason": "outcome_autosave_recovery_pending",
+			"action_id": action_id,
+			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
+		}
+		_last_outcome_new_session_confirmation_result = recovery_result.duplicate(true)
+		_save_button.call_deferred("grab_focus")
+		return recovery_result
+
+	var action := _outcome_action_record(action_id)
+	if action.is_empty() or bool(action.get("disabled", false)) or not _outcome_action_starts_new_session(action_id):
+		var unavailable_result := {
+			"ok": false,
+			"pending": false,
+			"confirmation_required": false,
+			"performed": false,
+			"routed": false,
+			"reason": "action_unavailable",
+			"action_id": action_id,
+			"message": "That outcome follow-up is not available.",
+		}
+		_last_outcome_new_session_confirmation_result = unavailable_result.duplicate(true)
+		_restore_outcome_new_session_origin(focus_origin, action_id)
+		return unavailable_result
+
+	var active_session := SessionState.ensure_active_session()
+	if active_session != _session:
+		var stale_result := {
+			"ok": false,
+			"pending": false,
+			"confirmation_required": false,
+			"performed": false,
+			"routed": false,
+			"reason": "stale_request",
+			"stale_fields": ["session_reference"],
+			"action_id": action_id,
+			"message": OUTCOME_NEW_SESSION_STALE_MESSAGE,
+		}
+		_last_outcome_new_session_confirmation_result = stale_result.duplicate(true)
+		_restore_outcome_new_session_origin(focus_origin, action_id)
+		return stale_result
+
+	var label := String(action.get("label", action_id)).strip_edges()
+	var identity := _outcome_new_session_identity(_session)
+	_pending_outcome_new_session_confirmation = identity.merged({
+		"action_id": action_id,
+		"action_label": label,
+	}, true)
+	_outcome_new_session_source_session = _session
+	_outcome_new_session_return_focus = _capture_outcome_new_session_origin(
+		focus_origin if focus_origin != null else _outcome_action_button(action_id)
+	)
+	_new_session_confirmation_dialog.title = "Start Fresh Expedition?"
+	_new_session_confirmation_dialog.dialog_text = "%s starts a fresh expedition and replaces Continue Latest after its opening checkpoint. Save Outcome first if you want to keep this review." % label
+	_new_session_confirmation_dialog.get_ok_button().text = label
+	_new_session_confirmation_dialog.get_cancel_button().text = OUTCOME_NEW_SESSION_CANCEL_TEXT
+	_new_session_confirmation_dialog.popup_centered(Vector2i(700, 220))
+	_new_session_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
+	_focus_outcome_new_session_cancel_after_popup()
+	var request_result := {
+		"ok": true,
+		"pending": true,
+		"confirmation_required": true,
+		"performed": false,
+		"routed": false,
+		"reason": "confirmation_required",
+		"action_id": action_id,
+		"action_label": label,
+		"message": "Confirm %s or keep this outcome." % label,
+	}
+	_last_outcome_new_session_confirmation_result = request_result.duplicate(true)
+	return request_result
+
+func _capture_outcome_new_session_origin(fallback: Control) -> Control:
+	if (
+		is_instance_valid(fallback)
+		and fallback.is_inside_tree()
+		and fallback.is_visible_in_tree()
+		and fallback.focus_mode != Control.FOCUS_NONE
+		and is_ancestor_of(fallback)
+	):
+		return fallback
+	var focus_owner := get_viewport().gui_get_focus_owner() as Control
+	if (
+		is_instance_valid(focus_owner)
+		and focus_owner.is_inside_tree()
+		and focus_owner.is_visible_in_tree()
+		and focus_owner.focus_mode != Control.FOCUS_NONE
+		and is_ancestor_of(focus_owner)
+	):
+		return focus_owner
+	return fallback
+
+func _focus_outcome_new_session_cancel_after_popup() -> void:
+	if not _new_session_confirmation_dialog.visible or _pending_outcome_new_session_confirmation.is_empty():
+		return
+	_new_session_confirmation_dialog.get_cancel_button().grab_focus()
+	await get_tree().process_frame
+	if _new_session_confirmation_dialog.visible and not _pending_outcome_new_session_confirmation.is_empty():
+		_new_session_confirmation_dialog.get_cancel_button().grab_focus()
+
+func _restore_outcome_new_session_origin(target: Control, action_id: String) -> void:
+	await get_tree().process_frame
+	var resolved_target := target
+	if not is_instance_valid(resolved_target) \
+			or not resolved_target.is_inside_tree() \
+			or resolved_target.is_queued_for_deletion() \
+			or not resolved_target.is_visible_in_tree() \
+			or resolved_target.focus_mode == Control.FOCUS_NONE:
+		resolved_target = _outcome_action_button(action_id)
+	if FrontierVisualKit.is_keyboard_focusable(resolved_target):
+		resolved_target.grab_focus()
+
+func _on_outcome_new_session_confirmation_canceled() -> Dictionary:
+	if _pending_outcome_new_session_confirmation.is_empty():
+		return {
+			"ok": false,
+			"canceled": false,
+			"pending": false,
+			"performed": false,
+			"routed": false,
+			"reason": "no_pending_confirmation",
+		}
+	var pending := _pending_outcome_new_session_confirmation.duplicate(true)
+	var return_focus := _outcome_new_session_return_focus
+	_clear_outcome_new_session_confirmation()
+	_new_session_confirmation_dialog.hide()
+	_validation_outcome_new_session_cancel_count += 1
+	var result := {
+		"ok": true,
+		"canceled": true,
+		"pending": false,
+		"confirmation_required": false,
+		"performed": false,
+		"routed": false,
+		"reason": "canceled",
+		"action_id": String(pending.get("action_id", "")),
+		"action_label": String(pending.get("action_label", "")),
+		"message": "Kept this outcome review.",
+	}
+	_last_outcome_new_session_confirmation_result = result.duplicate(true)
+	_restore_outcome_new_session_origin(return_focus, String(pending.get("action_id", "")))
+	return result
+
+func _on_outcome_new_session_confirmation_confirmed() -> Dictionary:
+	if _pending_outcome_new_session_confirmation.is_empty():
+		return {
+			"ok": false,
+			"confirmed": false,
+			"pending": false,
+			"performed": false,
+			"routed": false,
+			"reason": "no_pending_confirmation",
+		}
+	_validation_outcome_new_session_confirm_count += 1
+	var pending := _pending_outcome_new_session_confirmation.duplicate(true)
+	var source_session := _outcome_new_session_source_session
+	var return_focus := _outcome_new_session_return_focus
+	var action_id := String(pending.get("action_id", ""))
+	_sync_outcome_recovery_state(false, false)
+	if _outcome_recovery_pending:
+		_clear_outcome_new_session_confirmation()
+		_new_session_confirmation_dialog.hide()
+		var recovery_result := {
+			"ok": false,
+			"confirmed": false,
+			"pending": false,
+			"confirmation_required": false,
+			"performed": false,
+			"routed": false,
+			"reason": "outcome_autosave_recovery_pending",
+			"action_id": action_id,
+			"message": OUTCOME_AUTOSAVE_RECOVERY_MESSAGE,
+		}
+		_last_outcome_new_session_confirmation_result = recovery_result.duplicate(true)
+		_save_button.call_deferred("grab_focus")
+		return recovery_result
+
+	var stale_fields := _outcome_new_session_stale_fields(pending, source_session)
+	if not stale_fields.is_empty():
+		_clear_outcome_new_session_confirmation()
+		_new_session_confirmation_dialog.hide()
+		_validation_outcome_new_session_stale_count += 1
+		_last_action_message = OUTCOME_NEW_SESSION_STALE_MESSAGE
+		var stale_result := {
+			"ok": false,
+			"confirmed": false,
+			"pending": false,
+			"confirmation_required": false,
+			"performed": false,
+			"routed": false,
+			"reason": "stale_request",
+			"stale_fields": stale_fields,
+			"action_id": action_id,
+			"message": OUTCOME_NEW_SESSION_STALE_MESSAGE,
+		}
+		_last_outcome_new_session_confirmation_result = stale_result.duplicate(true)
+		_restore_outcome_new_session_origin(return_focus, action_id)
+		return stale_result
+
+	_clear_outcome_new_session_confirmation()
+	_new_session_confirmation_dialog.hide()
+	_validation_outcome_new_session_perform_count += 1
+	var action_result := _perform_outcome_action(action_id)
+	var routed := String(action_result.get("route", "stay")) == "overworld"
+	var result := {
+		"ok": bool(action_result.get("ok", false)),
+		"confirmed": true,
+		"pending": false,
+		"confirmation_required": false,
+		"performed": true,
+		"routed": routed,
+		"route_suppressed": routed and _validation_outcome_new_session_routing_suppressed,
+		"reason": "confirmed" if bool(action_result.get("ok", false)) else "action_failed",
+		"action_id": action_id,
+		"action_label": String(pending.get("action_label", "")),
+		"route": String(action_result.get("route", "stay")),
+		"action_result": action_result.duplicate(true),
+		"message": String(action_result.get("message", "")),
+	}
+	_last_outcome_new_session_confirmation_result = result.duplicate(true)
+	if not bool(result.get("ok", false)):
+		_restore_outcome_new_session_origin(return_focus, action_id)
+	return result
+
+func _clear_outcome_new_session_confirmation() -> void:
+	_pending_outcome_new_session_confirmation = {}
+	_outcome_new_session_source_session = null
+	_outcome_new_session_return_focus = null
+
+func _outcome_new_session_stale_fields(pending: Dictionary, source_session: SessionStateStore.SessionData) -> Array[String]:
+	var stale_fields: Array[String] = []
+	var active_session := SessionState.ensure_active_session()
+	if active_session != source_session or source_session != _session:
+		stale_fields.append("session_reference")
+	var current_identity := _outcome_new_session_identity(active_session)
+	for field in ["session_id", "scenario_id", "scenario_status", "launch_mode", "day"]:
+		if current_identity.get(field) != pending.get(field):
+			stale_fields.append(field)
+	var action_id := String(pending.get("action_id", ""))
+	var action := _outcome_action_record(action_id)
+	var action_button := _outcome_action_button(action_id)
+	if action.is_empty() \
+			or bool(action.get("disabled", false)) \
+			or not FrontierVisualKit.is_keyboard_focusable(action_button) \
+			or not _outcome_action_starts_new_session(action_id):
+		stale_fields.append("action")
+	return stale_fields
+
+func _outcome_new_session_identity(session: SessionStateStore.SessionData) -> Dictionary:
+	if session == null:
+		return {
+			"session_id": "",
+			"scenario_id": "",
+			"scenario_status": "",
+			"launch_mode": "",
+			"day": 0,
+		}
+	return {
+		"session_id": session.session_id,
+		"scenario_id": session.scenario_id,
+		"scenario_status": session.scenario_status,
+		"launch_mode": session.launch_mode,
+		"day": session.day,
+	}
+
+func _outcome_action_record(action_id: String) -> Dictionary:
+	var actions = _model.get("actions", [])
+	if actions is Array:
+		for action in actions:
+			if action is Dictionary and String(action.get("id", "")) == action_id:
+				return action.duplicate(true)
+	return {}
+
 func _perform_outcome_action(action_id: String) -> Dictionary:
 	_sync_outcome_recovery_state(false, true)
 	if _outcome_recovery_pending and _outcome_action_starts_new_session(action_id):
@@ -430,10 +766,18 @@ func _perform_outcome_action(action_id: String) -> Dictionary:
 	_last_action_message = String(result.get("message", ""))
 	match String(result.get("route", "stay")):
 		"overworld":
-			AppRouter.go_to_overworld()
+			if _outcome_action_starts_new_session(action_id):
+				_validation_outcome_new_session_route_count += 1
+				result["routed"] = true
+				result["route_suppressed"] = _validation_outcome_new_session_routing_suppressed
+				if not _validation_outcome_new_session_routing_suppressed:
+					AppRouter.go_to_overworld()
+			else:
+				AppRouter.go_to_overworld()
 		"main_menu":
 			AppRouter.return_to_main_menu_from_active_play()
 		_:
+			result["routed"] = false
 			_refresh()
 	return result
 
@@ -580,6 +924,7 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"outcome_focus": validation_outcome_focus_snapshot(),
+		"new_session_confirmation": validation_outcome_new_session_confirmation_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
 		"return_to_menu_visible_message": _last_action_message,
@@ -682,6 +1027,82 @@ func validation_save_to_selected_slot() -> Dictionary:
 
 func validation_request_save_outcome() -> Dictionary:
 	return _on_save_pressed()
+
+func validation_request_outcome_new_session_confirmation(action_id: String) -> Dictionary:
+	return _request_outcome_new_session_confirmation(action_id, _outcome_action_button(action_id))
+
+func validation_cancel_outcome_new_session_confirmation() -> Dictionary:
+	return _on_outcome_new_session_confirmation_canceled()
+
+func validation_confirm_outcome_new_session_confirmation() -> Dictionary:
+	return _on_outcome_new_session_confirmation_confirmed()
+
+func validation_set_outcome_new_session_routing_suppressed(suppressed: bool) -> bool:
+	_validation_outcome_new_session_routing_suppressed = suppressed
+	return _validation_outcome_new_session_routing_suppressed == suppressed
+
+func validation_reset_outcome_new_session_confirmation_state() -> void:
+	_new_session_confirmation_dialog.hide()
+	_clear_outcome_new_session_confirmation()
+	_last_outcome_new_session_confirmation_result = {}
+	_validation_outcome_new_session_request_count = 0
+	_validation_outcome_new_session_duplicate_request_count = 0
+	_validation_outcome_new_session_cancel_count = 0
+	_validation_outcome_new_session_confirm_count = 0
+	_validation_outcome_new_session_stale_count = 0
+	_validation_outcome_new_session_perform_count = 0
+	_validation_outcome_new_session_route_count = 0
+
+func validation_outcome_new_session_confirmation_snapshot() -> Dictionary:
+	var pending := _pending_outcome_new_session_confirmation.duplicate(true)
+	var cancel_button := _new_session_confirmation_dialog.get_cancel_button()
+	var dialog_viewport := cancel_button.get_viewport() if cancel_button != null else null
+	var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+	var root_viewport := get_viewport()
+	var origin_focus_owner := root_viewport.gui_get_focus_owner() if root_viewport != null else null
+	var current_session := SessionState.ensure_active_session()
+	var current_identity := _outcome_new_session_identity(current_session)
+	return {
+		"pending": not pending.is_empty(),
+		"dialog_visible": _new_session_confirmation_dialog.visible,
+		"action_id": String(pending.get("action_id", "")),
+		"action_label": String(pending.get("action_label", "")),
+		"captured_action_id": String(pending.get("action_id", "")),
+		"captured_action_label": String(pending.get("action_label", "")),
+		"captured_session_id": String(pending.get("session_id", "")),
+		"captured_scenario_id": String(pending.get("scenario_id", "")),
+		"captured_scenario_status": String(pending.get("scenario_status", "")),
+		"captured_launch_mode": String(pending.get("launch_mode", "")),
+		"captured_day": int(pending.get("day", 0)),
+		"captured_identity": {
+			"session_id": String(pending.get("session_id", "")),
+			"scenario_id": String(pending.get("scenario_id", "")),
+			"scenario_status": String(pending.get("scenario_status", "")),
+			"launch_mode": String(pending.get("launch_mode", "")),
+			"day": int(pending.get("day", 0)),
+		},
+		"current_identity": current_identity,
+		"title": _new_session_confirmation_dialog.title,
+		"text": _new_session_confirmation_dialog.dialog_text,
+		"confirm_text": _new_session_confirmation_dialog.get_ok_button().text,
+		"cancel_text": cancel_button.text if cancel_button != null else "",
+		"dialog_focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"return_focus_name": String(_outcome_new_session_return_focus.name) if is_instance_valid(_outcome_new_session_return_focus) else "",
+		"origin_focus_owner": String(origin_focus_owner.name) if origin_focus_owner != null else "",
+		"dialog_position": _new_session_confirmation_dialog.position,
+		"dialog_size": _new_session_confirmation_dialog.size,
+		"request_count": _validation_outcome_new_session_request_count,
+		"duplicate_request_count": _validation_outcome_new_session_duplicate_request_count,
+		"cancel_count": _validation_outcome_new_session_cancel_count,
+		"confirm_count": _validation_outcome_new_session_confirm_count,
+		"stale_count": _validation_outcome_new_session_stale_count,
+		"perform_count": _validation_outcome_new_session_perform_count,
+		"route_count": _validation_outcome_new_session_route_count,
+		"route_suppressed": _validation_outcome_new_session_routing_suppressed,
+		"routing_suppressed": _validation_outcome_new_session_routing_suppressed,
+		"last_result": _last_outcome_new_session_confirmation_result.duplicate(true),
+	}
 
 func validation_set_outcome_focus_action_execution_suppressed(suppressed: bool) -> bool:
 	_validation_outcome_focus_action_execution_suppressed = suppressed
